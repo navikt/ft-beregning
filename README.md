@@ -1,4 +1,6 @@
-# FP Beregningsgrunnlag (fra folketrygdloven kapittel 8)
+# WIP
+
+# Beregningsgrunnlag (fra folketrygdloven kapittel 8)
 Regelmodell for beregningsgrunnlag (Lov om folketrygd kapittel 8) som gir grunnlag for beregning av dagsats
 
 # Struktur
