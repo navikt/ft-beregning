@@ -223,31 +223,13 @@
 				</plugins>
 			</build>
 		</profile>
-        <profile>
-            <id>iapp</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <distributionManagement>
-                <repository>
-                    <id>iapp-releases</id>
-                    <name>NAV internal Nexus</name>
-                    <url>https://repo.adeo.no/repository/maven-releases</url>
-                </repository>
-                <snapshotRepository>
-                    <id>iapp-snapshots</id>
-                    <name>NAV Snapshot Repository</name>
-                    <url>https://repo.adeo.no/repository/maven-snapshots</url>
-                    <uniqueVersion>false</uniqueVersion>
-                </snapshotRepository>
-            </distributionManagement>
-        </profile>
+      
 	</profiles>
 
 	<scm>
-		<connection>scm:git:ssh://git@github.com:navikt/fp-folketrygdloven-k8-beregningsgrunnlag.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com:navikt/fp-folketrygdloven-k8-beregningsgrunnlag.git</developerConnection>
-		<url>https://github.com/navikt/fp-folketrygdloven-k8-beregningsgrunnlag</url>
+		<connection>scm:git:ssh://git@github.com:navikt/folketrygdloven-beregningsgrunnlag-regelmodell.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com:navikt/folketrygdloven-beregningsgrunnlag-regelmodell.git</developerConnection>
+		<url>https://github.com/navikt/folketrygdloven-beregningsgrunnlag-regelmodell</url>
 	</scm>
 	<distributionManagement>
 		<repository>
