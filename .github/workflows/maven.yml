@@ -16,4 +16,4 @@ jobs:
     - name: Build with Maven
       env: 
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: mvn --file pom.xml -s ./.m2/settings.xml -e deploy 
+      run: mvn --file pom.xml -s ./.m2/settings.xml -e -X deploy 
