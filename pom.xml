@@ -251,13 +251,9 @@
 	</scm>
 	<distributionManagement>
 		<repository>
-			<id>repo.adeo.no-releases</id>
-			<url>https://repo.adeo.no/repository/maven-releases</url>
+			<id>github</id>
+                	<name>GitHub navikt Apache Maven Packages</name>
+                    	<url>https://maven.pkg.github.com/navikt</url>
 		</repository>
-		<snapshotRepository>
-			<id>repo.adeo.no-snapshots</id>
-			<url>https://repo.adeo.no/repository/maven-snapshots</url>
-			<uniqueVersion>false</uniqueVersion>
-		</snapshotRepository>
 	</distributionManagement>	
 </project>
