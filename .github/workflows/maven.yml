@@ -16,7 +16,7 @@ jobs:
     - name: Build with Maven
       env: 
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: mvn deploy -e -Dregistry=https://maven.pkg.github.com/navikt -Dtoken=$GITHUB_TOKEN
+      run: mvn deploy -e -s .m2/settings.xml
       
       
       
