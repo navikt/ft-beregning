@@ -16,5 +16,5 @@ jobs:
     - name: Build with Maven
       env: 
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: mvn -e deploy 
+      run: mvn -e -Dserver.password=${env.GITHUB_TOKEN} -Dserver.username=${env.GITHUB_ACTOR} deploy 
       
