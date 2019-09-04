@@ -192,6 +192,7 @@
 	<scm>
 		<connection>scm:git:ssh://git@github.com:navikt/folketrygdloven-beregningsgrunnlag-regelmodell.git</connection>
 		<developerConnection>scm:git:ssh://git@github.com:navikt/folketrygdloven-beregningsgrunnlag-regelmodell.git</developerConnection>
+		<url>https://github.com/navikt/folketrygdloven-beregningsgrunnlag-regelmodell</url>
 	</scm>
 	<distributionManagement>
 		<repository>
