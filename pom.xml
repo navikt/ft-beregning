@@ -5,7 +5,7 @@
 	<name>Folketrygdloven Beregningsgrunnlag</name>
 	<groupId>no.nav.folketrygdloven</groupId>
 	<artifactId>folketrygdloven-beregningsgrunnlag</artifactId>
-	<version>1.0</version>
+	<version>${revision}${sha1}${changelist}</version>
 	<packaging>jar</packaging>
 
 	<properties>
@@ -69,9 +69,9 @@
 		</dependency>
 		
 		<dependency>
-            <groupId>no.nav.fpsak.nare</groupId>
-            <artifactId>fpsak-nare-core</artifactId>
-        </dependency>
+		    <groupId>no.nav.fpsak.nare</groupId>
+		    <artifactId>fpsak-nare-core</artifactId>
+		</dependency>
 		
 		<dependency>
 			<groupId>org.assertj</groupId>
@@ -95,6 +95,7 @@
 					<configuration>
 						<source>${java.version}</source>
 						<target>${java.version}</target>
+						<release>${java.version}</release>
 						<encoding>UTF-8</encoding>
 					</configuration>
 				</plugin>
@@ -129,76 +130,6 @@
 		</plugins>
 
 	</build>
-
-	<profiles>
-		<profile>
-			<id>runSonar</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<properties>
-				<!-- maven.root bør overstyres fra cmdline -->
-				<maven.root>${project.basedir}</maven.root>
-
-				<sonar.language />
-				<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
-				<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
-				<sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
-				<sonar.java.source>1.8</sonar.java.source>
-				<sonar.exclusions>**/test/**,**/testutilities/**,**/fitnesse/**</sonar.exclusions>
-				<sonar.coverage.exclusions>${sonar.exclusions}</sonar.coverage.exclusions>
-				<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
-				<sonar.jacoco.itReportPath>${maven.root}/target/jacoco-it.exec</sonar.jacoco.itReportPath>
-				<sonar.jacoco.reportPath>${maven.root}/target/jacoco.exec</sonar.jacoco.reportPath>
-				<sonar.javascript.lcov.reportPath>${maven.root}/target/lcov.info</sonar.javascript.lcov.reportPath>
-				<sonar.javascript.file.suffixes>.js,.jsx</sonar.javascript.file.suffixes>
-			</properties>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.jacoco</groupId>
-						<artifactId>jacoco-maven-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>agent</id>
-								<goals>
-									<goal>prepare-agent</goal>
-								</goals>
-								<configuration>
-									<propertyName>jacoco.agent.argLine</propertyName>
-									<destFile>${sonar.jacoco.reportPath}</destFile>
-									<append>true</append>
-									<excludes>${sonar.coverage.exclusions}</excludes>
-								</configuration>
-							</execution>
-							<execution>
-								<id>agent-it</id>
-								<goals>
-									<goal>prepare-agent-integration</goal>
-								</goals>
-								<configuration>
-									<propertyName>jacoco.agent.itArgLine</propertyName>
-									<destFile>${sonar.jacoco.itReportPath}</destFile>
-									<append>true</append>
-									<excludes>${sonar.coverage.exclusions}</excludes>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-surefire-plugin</artifactId>
-						<configuration>
-							<argLine>${jacoco.agent.argLine} -Xms128M -Dfile.encoding=UTF-8</argLine>
-						</configuration>
-					</plugin>
-
-				</plugins>
-			</build>
-		</profile>
-      
-	</profiles>
 
 	<scm>
 		<connection>scm:git:ssh://git@github.com:navikt/folketrygdloven-beregningsgrunnlag.git</connection>
