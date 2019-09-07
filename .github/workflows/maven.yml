@@ -14,9 +14,12 @@ jobs:
       with:
         java-version: 11
     - name: Build with Maven
-      run: mvn install deploy -e -s .m2/settings.xml; ls -l target/
+      run: mvn install deploy -e -s .m2/settings.xml
       env: 
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: List target
+      if: failure()
+      run: ls -l target
       
       
       
