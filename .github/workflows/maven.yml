@@ -16,7 +16,7 @@ jobs:
     - name: Maven version
       run: mvn --version
     - name: Build with Maven
-      run: mvn deploy -e -s .m2/settings.xml --file pom.xml -Dchangelist=""
+      run: mvn deploy -e -s .m2/settings.xml --file pom.xml -Dchangelist="-$(date +%F-%H%I%S).$(git rev-parse --short HEAD)"
       env: 
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: List target
