@@ -178,10 +178,5 @@
                 	<name>GitHub navikt Apache Maven Packages</name>
                     	<url>https://maven.pkg.github.com/navikt/folketrygdloven-beregningsgrunnlag</url>
 		</repository>
-		<snapshotRepository>
-			<id>github</id>
-                	<name>GitHub navikt Apache Maven Packages</name>
-                    	<url>https://maven.pkg.github.com/navikt/folketrygdloven-beregningsgrunnlag</url>
-		</snapshotRepository>
 	</distributionManagement>	
 </project>
