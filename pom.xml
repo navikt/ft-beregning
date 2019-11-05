@@ -165,7 +165,6 @@
 		</plugins>
 
 	</build>
-
 	<scm>
 		<connection>scm:git:ssh://git@github.com:navikt/folketrygdloven-beregningsgrunnlag.git</connection>
 		<developerConnection>scm:git:ssh://git@github.com:navikt/folketrygdloven-beregningsgrunnlag.git</developerConnection>
