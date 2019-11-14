@@ -19,8 +19,7 @@ jobs:
       run: |
            mvn deploy -e -B -s .m2/settings.xml --file pom.xml -Dmaven.wagon.provider.http=httpclient -Dchangelist="-$(date +%F-%H%I%S).$(git rev-parse --short HEAD)"
       env:
-        GITHUB_USER: ${{ secrets.GITHUB_USER }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: List target
       if: failure()
       run: ls -l target
