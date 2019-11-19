@@ -193,6 +193,7 @@
 		<url>https://github.com/navikt/folketrygdloven-beregningsgrunnlag</url>
 		<tag>HEAD</tag>
 	</scm>
+	
 	<distributionManagement>
 		<repository>
 			<id>github</id>
