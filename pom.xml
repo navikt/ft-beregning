@@ -7,6 +7,27 @@
 	<artifactId>folketrygdloven-beregningsgrunnlag</artifactId>
 	<version>${revision}${sha1}${changelist}</version>
 	<packaging>jar</packaging>
+	<url>https://github.com/navikt/folketrygdloven-beregningsgrunnlag</url>	
+	
+	<organization>
+		<name>no.nav</name>
+		<url>https://github.com/navikt</url>
+	</organization>
+
+	<licenses>
+		<license>
+		    <name>MIT License</name>
+		    <url>https://opensource.org/licenses/MIT</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+		    <organization>NAV (Arbeids- og velferdsdirektoratet) - The Norwegian Labour and Welfare Administration
+		    </organization>
+		    <organizationUrl>https://www.nav.no</organizationUrl>
+		</developer>
+	</developers>
 
 	<properties>
 		<revision>2.0</revision>
