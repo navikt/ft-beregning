@@ -22,8 +22,8 @@ import java.time.Month;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
@@ -37,7 +37,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SammenligningsGrunnlag;
-import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.RegelBeregningsgrunnlagSN;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 
@@ -45,7 +44,7 @@ public class RegelBeregningsgrunnlagSNTest {
 
     private LocalDate skjæringstidspunkt;
 
-    @Before
+    @BeforeEach
     public void setup() {
         skjæringstidspunkt = LocalDate.of(2018, Month.JANUARY, 15);
     }

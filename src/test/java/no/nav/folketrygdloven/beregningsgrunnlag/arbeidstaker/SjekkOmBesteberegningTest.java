@@ -6,9 +6,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker.SjekkOmBesteberegning;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;

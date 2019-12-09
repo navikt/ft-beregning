@@ -26,12 +26,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import no.finn.unleash.FakeUnleash;
 import no.nav.folketrygdloven.beregningsgrunnlag.RegelmodellOversetter;
-import no.nav.folketrygdloven.beregningsgrunnlag.foreslå.RegelForeslåBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel;
@@ -59,10 +58,10 @@ public class RegelForeslåBeregningsgrunnlagTest {
     private FakeUnleash unleash = new FakeUnleash();
     private static final String TOGGLE_SPLITTE_SAMMENLIGNING = "fpsak.splitteSammenligningATFL";
 
-    @Before
+    @BeforeEach
     public void setup() {
         skjæringstidspunkt = LocalDate.of(2018, Month.JANUARY, 15);
-        orgnr = "987654321";
+        orgnr = "987";
         arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr);
     }
 

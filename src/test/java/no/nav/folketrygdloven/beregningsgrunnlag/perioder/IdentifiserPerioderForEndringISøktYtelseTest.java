@@ -7,9 +7,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.perioder.IdentifiserPerioderForEndringISøktYtelseSvangerskapspenger;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusV2;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AndelGraderingImpl;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Gradering;

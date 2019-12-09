@@ -12,8 +12,8 @@ import java.time.Period;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.AfterClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
@@ -29,7 +29,7 @@ public class FastsettSammenligningsgrunnlagATTest {
 
     private static final String FUNKSJONELT_TIDSOFFSET = DateUtil.SystemConfiguredClockProvider.PROPERTY_KEY_OFFSET_PERIODE;
 
-    @AfterClass
+    @AfterAll
     public static void after() {
         System.clearProperty(DateUtil.SystemConfiguredClockProvider.PROPERTY_KEY_OFFSET_PERIODE);
         DateUtil.init();
@@ -137,7 +137,7 @@ public class FastsettSammenligningsgrunnlagATTest {
     @Test
     public void skalIkkeLageSammenligningsperiodeIHenholdTilRapporteringsfristNårAlleInntektesmeldingerForeligger() {
         //Arrange
-        String orgnrArbeidsforholdNr1 = "987654321";
+        String orgnrArbeidsforholdNr1 = "987";
         String orgnrArbeidsforholdNr2 = "987654322";
         settSimulertNåtidTil(LocalDate.of(2019, 10, 8));
         LocalDate skjæringstidspunkt = LocalDate.of(2019, 11, 1);
@@ -164,7 +164,7 @@ public class FastsettSammenligningsgrunnlagATTest {
     @Test
     public void skalLageSammenligningsperiodeIHenholdTilRapporteringsfristNårInntektsmeldingManglerForMinstEttArbeidsforhold() {
         //Arrange
-        String orgnrArbeidsforholdNr1 = "987654321";
+        String orgnrArbeidsforholdNr1 = "987";
         String orgnrArbeidsforholdNr2 = "987654322";
         settSimulertNåtidTil(LocalDate.of(2019, 10, 8));
         LocalDate skjæringstidspunkt = LocalDate.of(2019, 11, 1);

@@ -6,9 +6,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.fordel.OmfordelFraArbeid;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
@@ -19,8 +18,8 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 public class OmfordelFraArbeidTest {
 
     private static final LocalDate STP = LocalDate.now();
-    private static final String ORGNR1 = "995428563";
-    private static final String ORGNR2 = "910909088";    private static final String ORGNR3 = "973861778";
+    private static final String ORGNR1 = "995";
+    private static final String ORGNR2 = "910";    private static final String ORGNR3 = "973";
 
 
     @Test

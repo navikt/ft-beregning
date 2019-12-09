@@ -12,12 +12,11 @@ import java.time.Month;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import no.finn.unleash.FakeUnleash;
 import no.nav.folketrygdloven.beregningsgrunnlag.RegelmodellOversetter;
-import no.nav.folketrygdloven.beregningsgrunnlag.foreslå.RegelForeslåBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
@@ -35,11 +34,11 @@ import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 
 public class BeregningsgrunnlagFlerePerioderTest {
 
-    private static final String ORGNR2 = "456321987";
+    private static final String ORGNR2 = "456";
     private LocalDate skjæringstidspunkt;
     private FakeUnleash unleash = new FakeUnleash();
 
-    @Before
+    @BeforeEach
     public void setup() {
         skjæringstidspunkt = LocalDate.of(2018, Month.JANUARY, 15);
     }

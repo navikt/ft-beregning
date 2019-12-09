@@ -8,7 +8,7 @@ import java.time.Month;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusV2;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AndelGraderingImpl;

@@ -21,10 +21,9 @@ import java.time.Month;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import no.finn.unleash.FakeUnleash;
-import no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker.BeregnRapportertInntektVedManuellFastsettelse;
 import no.nav.folketrygdloven.beregningsgrunnlag.foreslå.RegelForeslåBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
