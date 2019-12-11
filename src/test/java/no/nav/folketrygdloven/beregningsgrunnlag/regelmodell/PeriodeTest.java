@@ -4,9 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 
-import org.junit.Test;
-
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
+import org.junit.jupiter.api.Test;
 
 public class PeriodeTest {
 

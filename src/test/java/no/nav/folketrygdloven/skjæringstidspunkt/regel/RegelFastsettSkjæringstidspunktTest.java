@@ -6,12 +6,11 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.stream.Collectors;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
-import no.nav.folketrygdloven.skjæringstidspunkt.regel.RegelFastsettSkjæringstidspunkt;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivPeriode;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModell;
 import no.nav.fpsak.nare.evaluation.Evaluation;
@@ -23,7 +22,7 @@ public class RegelFastsettSkjæringstidspunktTest {
     private final LocalDate skjæringstidspunktForOpptjening = LocalDate.of(2017, Month.DECEMBER, 5);
     private AktivitetStatusModell regelmodell;
 
-    @Before
+    @BeforeEach
     public void setup() {
         regelmodell = new AktivitetStatusModell();
         regelmodell.setSkjæringstidspunktForOpptjening(skjæringstidspunktForOpptjening);

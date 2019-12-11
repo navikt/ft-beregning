@@ -6,7 +6,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.RegelmodellOversetter;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
@@ -21,7 +21,7 @@ import no.nav.fpsak.nare.evaluation.Evaluation;
 
 public class RegelFinnGrenseverdiTest {
 
-    public static final String ORGNR = "910909088";
+    public static final String ORGNR = "910";
     private static final String ORGNR_2 = "974760673";
     private static final String ORGNR_3 = "976967631";
 

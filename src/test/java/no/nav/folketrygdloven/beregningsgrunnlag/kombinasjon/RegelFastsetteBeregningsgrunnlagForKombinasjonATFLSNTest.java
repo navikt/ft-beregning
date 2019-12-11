@@ -20,10 +20,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.kombinasjon.RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
@@ -50,7 +49,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
     private BigDecimal Gverdi;
     private static final BigDecimal TOLV = new BigDecimal("12");
 
-    @Before
+    @BeforeEach
     public void setup() {
         skjæringstidspunkt = LocalDate.of(2018, Month.JANUARY, 15);
         arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("123");

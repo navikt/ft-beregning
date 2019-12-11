@@ -4,8 +4,8 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.Arrays;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.Grunnbeløp;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
@@ -15,7 +15,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.In
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
-import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.RegelBeregningsgrunnlagSN;
 import no.nav.fpsak.nare.doc.RuleDescriptionDigraph;
 import no.nav.fpsak.nare.specification.Specification;
 
@@ -24,7 +23,7 @@ public class BeregningsgrunnlagDocTest {
     private static final LocalDate skjæringstidspunkt = LocalDate.of(2018, Month.JANUARY, 15);
     private BeregningsgrunnlagPeriode regelmodell;
 
-    @Before
+    @BeforeEach
     public void setup() {
         regelmodell = BeregningsgrunnlagPeriode.builder()
                 .medPeriode(Periode.of(skjæringstidspunkt, null))

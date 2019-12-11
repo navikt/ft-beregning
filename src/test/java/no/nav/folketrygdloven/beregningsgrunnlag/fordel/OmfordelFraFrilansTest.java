@@ -5,9 +5,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.fordel.OmfordelFraFrilans;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
@@ -18,7 +17,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 public class OmfordelFraFrilansTest {
 
     private static final LocalDate STP = LocalDate.now();
-    private static final String ORGNR = "995428563";
+    private static final String ORGNR = "995";
 
     @Test
     public void skal_ikkje_flytte_om_det_ikkje_finnes_frilans() {

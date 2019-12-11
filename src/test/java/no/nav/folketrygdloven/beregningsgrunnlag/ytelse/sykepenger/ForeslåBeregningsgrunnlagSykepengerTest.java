@@ -12,8 +12,8 @@ import java.time.Month;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import no.finn.unleash.FakeUnleash;
 import no.nav.folketrygdloven.beregningsgrunnlag.RegelmodellOversetter;
@@ -34,7 +34,7 @@ public class ForeslåBeregningsgrunnlagSykepengerTest {
     private LocalDate skjæringstidspunkt;
     private FakeUnleash unleash = new FakeUnleash();
 
-    @Before
+    @BeforeEach
     public void setup() {
         skjæringstidspunkt = LocalDate.of(2018, Month.JANUARY, 15);
     }

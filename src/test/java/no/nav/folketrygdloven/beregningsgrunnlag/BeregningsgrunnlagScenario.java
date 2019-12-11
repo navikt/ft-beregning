@@ -10,7 +10,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.Grunnbeløp;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
@@ -26,7 +25,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 
 public class BeregningsgrunnlagScenario {
 
-    private static final String ORGNR = "987654321";
+    private static final String ORGNR = "987";
     private static final long GRUNNBELØP_2018 = 94562;
     public static final long GRUNNBELØP_2017 = 93634;
     private static final long GSNITT_2018 = 94725;

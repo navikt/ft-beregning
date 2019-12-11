@@ -7,9 +7,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collections;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker.SjekkÅrsinntektMotSammenligningsgrunnlagAT;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
@@ -40,14 +40,16 @@ public class SjekkÅrsinntektMotSammenligningsgrunnlagATTest {
         assertThat(grunnlag.getSammenligningsGrunnlagPrAktivitetstatus().get(AktivitetStatus.AT).getAvvikPromille()).isEqualTo(1000L);
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void skalKasteExceptionNårSammenligningsgrunnlagErNull() {
         //Arrange
         Beregningsgrunnlag grunnlag = settoppGrunnlagMedEnPeriode(LocalDate.now(), new Inntektsgrunnlag(),
             Collections.singletonList(AktivitetStatus.ATFL), Collections.singletonList(arbeidsforhold));
         BeregningsgrunnlagPeriode periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
         //Act
-        new SjekkÅrsinntektMotSammenligningsgrunnlagAT().evaluate(periode);
+        Assertions.assertThrows(IllegalStateException.class, () -> {
+            new SjekkÅrsinntektMotSammenligningsgrunnlagAT().evaluate(periode);
+        });
     }
 
     @Test
