@@ -26,6 +26,3 @@ jobs:
         env:
           GITHUB_USERNAME: x-access-token
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: List target
-        if: failure()
-        run: ls -l target
