@@ -1,6 +1,9 @@
-name: Java CI
+name: Bygg og deploy
 
-on: [push]
+on:
+  push:
+    branches:
+      - master         # Push events on master branch
 
 jobs:
   build:
@@ -8,18 +11,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
-    - name: Set up JDK 11
-      uses: actions/setup-java@v1
-      with:
-        java-version: "11.x"
-    - name: Maven version
-      run: mvn --version
-    - name: Build with Maven
-      run: |
-           mvn deploy -e -B -s .m2/settings.xml --file pom.xml -Dmaven.wagon.http.pool=false -Dchangelist="-$(date +%F-%H%I%S).$(git rev-parse --short HEAD)"
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - name: List target
-      if: failure()
-      run: ls -l target
+      - uses: actions/checkout@v1
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: "11.x"
+      - name: Maven version
+        run: mvn --version
+      - name: Build with Maven
+        run: |
+          echo "Building artifacts $(echo $GITHUB_SHA | cut -c1-7)"
+          mvn clean deploy --batch-mode --settings ./.m2/settings.xml -Dmaven.wagon.http.pool=false --file pom.xml -Dchangelist= -Dsha1=-$(git log -1 --pretty='%ad' --date=format:'%Y%m%d%H%M%S')-$(echo $GITHUB_SHA | cut -c1-7) -Dfile.encoding=UTF-8 -DinstallAtEnd=true -DdeployAtEnd=true
+          echo "Deployed artifacts"
+        env:
+          GITHUB_USERNAME: x-access-token
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: List target
+        if: failure()
+        run: ls -l target
