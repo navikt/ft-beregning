@@ -20,6 +20,3 @@ jobs:
            mvn deploy -e -B -s .m2/settings.xml --file pom.xml -Dmaven.wagon.http.pool=false -Dchangelist="-$(date +%F-%H%I%S).$(git rev-parse --short HEAD)"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - name: List target
-      if: failure()
-      run: ls -l target
