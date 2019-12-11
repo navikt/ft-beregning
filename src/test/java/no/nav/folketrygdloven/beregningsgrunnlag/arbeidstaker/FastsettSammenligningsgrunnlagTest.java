@@ -8,8 +8,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Period;
 
-import org.junit.AfterClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
@@ -26,7 +26,7 @@ public class FastsettSammenligningsgrunnlagTest {
 
     private static final String FUNKSJONELT_TIDSOFFSET = DateUtil.SystemConfiguredClockProvider.PROPERTY_KEY_OFFSET_PERIODE;
 
-    @AfterClass
+    @AfterAll
     public static void after() {
         System.clearProperty(DateUtil.SystemConfiguredClockProvider.PROPERTY_KEY_OFFSET_PERIODE);
         DateUtil.init();

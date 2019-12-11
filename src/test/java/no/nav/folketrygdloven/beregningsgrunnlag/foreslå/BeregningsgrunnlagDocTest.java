@@ -9,10 +9,9 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import no.finn.unleash.FakeUnleash;
-import no.nav.folketrygdloven.beregningsgrunnlag.foreslå.RegelForeslåBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
@@ -26,7 +25,7 @@ public class BeregningsgrunnlagDocTest {
 
     @Test
     public void test_documentation() throws Exception {
-        String orgnr = "987654321";
+        String orgnr = "987";
         LocalDate skjæringstidspunkt = LocalDate.of(2018, Month.JANUARY, 15);
         BigDecimal månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
         Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr);

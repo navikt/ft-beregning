@@ -9,9 +9,9 @@ import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker.BeregnPrArbeidsforholdFraAOrdningen;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
@@ -29,7 +29,7 @@ public class BeregnPrArbeidsforholdFraAOrdningenTest {
     private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.now();
     private Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("12345");
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void skalKasteExceptionNårBeregningperiodeErNull() {
         //Arrange
         Beregningsgrunnlag grunnlag = opprettBeregningsgrunnlagFraInntektskomponenten(SKJÆRINGSTIDSPUNKT, BigDecimal.valueOf(35000), BigDecimal.ZERO, false);
@@ -37,7 +37,9 @@ public class BeregnPrArbeidsforholdFraAOrdningenTest {
         BeregningsgrunnlagPrArbeidsforhold.builder(periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0)).medBeregningsperiode(null);
         BeregningsgrunnlagPrArbeidsforhold arbeidstakerStatus = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
         //Act
-        new BeregnPrArbeidsforholdFraAOrdningen(arbeidstakerStatus).evaluate(periode);
+        Assertions.assertThrows(IllegalStateException.class, () -> {
+            new BeregnPrArbeidsforholdFraAOrdningen(arbeidstakerStatus).evaluate(periode);
+        });
     }
 
     @Test

@@ -15,8 +15,8 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import no.finn.unleash.FakeUnleash;
 import no.nav.folketrygdloven.beregningsgrunnlag.foreslå.RegelForeslåBeregningsgrunnlag;
@@ -34,10 +34,10 @@ public class RegelBeregningsgrunnlagKombinasjonATFLogSNTest {
     private String orgnr;
     private FakeUnleash unleash = new FakeUnleash();
 
-    @Before
+    @BeforeEach
     public void setup() {
         skjæringstidspunkt = LocalDate.of(2018, Month.JANUARY, 15);
-        orgnr = "987654321";
+        orgnr = "987";
     }
 
     @Test

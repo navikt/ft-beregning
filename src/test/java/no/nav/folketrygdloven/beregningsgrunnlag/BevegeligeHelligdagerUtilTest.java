@@ -5,9 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.junit.Test;
-
-import no.nav.folketrygdloven.beregningsgrunnlag.BevegeligeHelligdagerUtil;
+import org.junit.jupiter.api.Test;
 
 public class BevegeligeHelligdagerUtilTest {
 

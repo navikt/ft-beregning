@@ -54,7 +54,7 @@ public class RegelmodellForDokumentasjon {
     private static Arbeidsforhold opprettArbeidsforhold() {
         return Arbeidsforhold.builder()
                 .medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT)
-                .medOrgnr("987654321")
+                .medOrgnr("987")
                 .medArbeidsforholdId(UUID.randomUUID().toString())
                 .build();
     }

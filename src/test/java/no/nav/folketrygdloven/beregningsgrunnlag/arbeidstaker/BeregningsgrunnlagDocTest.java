@@ -1,6 +1,6 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import no.finn.unleash.FakeUnleash;
 import no.finn.unleash.Unleash;
