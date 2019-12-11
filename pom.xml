@@ -2,12 +2,12 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<name>Folketrygdloven Beregningsgrunnlag</name>
+	<name>Folketrygdloven Beregningsgrunnlag Regelmodell</name>
 	<groupId>no.nav.folketrygdloven</groupId>
-	<artifactId>folketrygdloven-beregningsgrunnlag</artifactId>
+	<artifactId>beregningsgrunnlag-regelmodell</artifactId>
 	<version>${revision}${sha1}${changelist}</version>
 	<packaging>jar</packaging>
-	<url>https://github.com/navikt/folketrygdloven-beregningsgrunnlag</url>	
+	<url>https://github.com/navikt/folketrygdloven-beregningsgrunnlag-regelmodell</url>
 	
 	<organization>
 		<name>no.nav</name>
@@ -30,7 +30,7 @@
 	</developers>
 
 	<properties>
-		<revision>2.0</revision>
+		<revision>2.1</revision>
 		<sha1></sha1>
 		<changelist>-SNAPSHOT</changelist>
 
@@ -203,9 +203,9 @@
 	</build>
 
 	<scm>
-		<connection>scm:git:ssh://git@github.com:navikt/folketrygdloven-beregningsgrunnlag.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com:navikt/folketrygdloven-beregningsgrunnlag.git</developerConnection>
-		<url>https://github.com/navikt/folketrygdloven-beregningsgrunnlag</url>
+		<connection>scm:git:ssh://git@github.com:navikt/folketrygdloven-beregningsgrunnlag-regelmodell.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com:navikt/folketrygdloven-beregningsgrunnlag-regelmodell.git</developerConnection>
+		<url>https://github.com/navikt/folketrygdloven-beregningsgrunnlag-regelmodell</url>
 		<tag>HEAD</tag>
 	</scm>
 	
@@ -213,7 +213,7 @@
 		<repository>
 			<id>github</id>
                 	<name>GitHub navikt Apache Maven Packages</name>
-                    	<url>https://maven.pkg.github.com/navikt/folketrygdloven-beregningsgrunnlag</url>
+                    	<url>https://maven.pkg.github.com/navikt/folketrygdloven-beregningsgrunnlag-regelmodell</url>
 		</repository>
 	</distributionManagement>	
 </project>
