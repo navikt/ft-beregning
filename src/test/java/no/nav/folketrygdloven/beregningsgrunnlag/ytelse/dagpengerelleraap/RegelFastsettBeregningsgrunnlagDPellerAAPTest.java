@@ -14,7 +14,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import no.finn.unleash.FakeUnleash;
 import no.nav.folketrygdloven.beregningsgrunnlag.foreslå.RegelForeslåBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
@@ -35,7 +34,6 @@ import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 public class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
 
     private LocalDate skjæringstidspunkt = LocalDate.of(2018, Month.JANUARY, 15);
-    private FakeUnleash unleash = new FakeUnleash();
     @Test
     public void skalForeslåBeregningsgrunnlagForDagpenger() {
         //Arrange
@@ -219,7 +217,7 @@ public class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
             .build());
 
         //Act
-        Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag, unleash).evaluer(grunnlag);
+        Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
 
         //Assert
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");

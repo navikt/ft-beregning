@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import no.finn.unleash.FakeUnleash;
 import no.nav.folketrygdloven.beregningsgrunnlag.RegelmodellOversetter;
 import no.nav.folketrygdloven.beregningsgrunnlag.foreslå.RegelForeslåBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
@@ -32,7 +31,6 @@ import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 public class ForeslåBeregningsgrunnlagSykepengerTest {
 
     private LocalDate skjæringstidspunkt;
-    private FakeUnleash unleash = new FakeUnleash();
 
     @BeforeEach
     public void setup() {
@@ -55,7 +53,7 @@ public class ForeslåBeregningsgrunnlagSykepengerTest {
         BeregningsgrunnlagPrArbeidsforhold bgArbeidsforhold = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
         BeregningsgrunnlagPrArbeidsforhold.builder(bgArbeidsforhold).medArbeidsgiverperioder(arbeidsgiversPeriode).build();
         // Act
-        Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag, unleash).evaluer(grunnlag);
+        Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
         // Assert
         @SuppressWarnings("unused")
         String sporing = EvaluationSerializer.asJson(evaluation);
@@ -83,7 +81,7 @@ public class ForeslåBeregningsgrunnlagSykepengerTest {
         BeregningsgrunnlagPrArbeidsforhold bgArbeidsforhold = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
         BeregningsgrunnlagPrArbeidsforhold.builder(bgArbeidsforhold).medArbeidsgiverperioder(arbeidsgiversPeriode).build();
         // Act
-        Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag, unleash).evaluer(grunnlag);
+        Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
         // Assert
         @SuppressWarnings("unused")
         String sporing = EvaluationSerializer.asJson(evaluation);
@@ -109,7 +107,7 @@ public class ForeslåBeregningsgrunnlagSykepengerTest {
         BeregningsgrunnlagPrArbeidsforhold bgArbeidsforhold = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
         BeregningsgrunnlagPrArbeidsforhold.builder(bgArbeidsforhold).medArbeidsgiverperioder(arbeidsgiversPeriode).build();
         // Act
-        new RegelForeslåBeregningsgrunnlag(grunnlag, unleash).evaluer(grunnlag);
+        new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
         // Assert
         assertThat(bgArbeidsforhold.getNaturalytelseBortfaltPrÅr()).isEmpty();
         assertBeregningsgrunnlag(grunnlag, månedsinntekt, 0);

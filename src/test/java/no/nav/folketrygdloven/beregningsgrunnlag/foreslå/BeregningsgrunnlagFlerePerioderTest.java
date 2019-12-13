@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import no.finn.unleash.FakeUnleash;
 import no.nav.folketrygdloven.beregningsgrunnlag.RegelmodellOversetter;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
@@ -36,7 +35,6 @@ public class BeregningsgrunnlagFlerePerioderTest {
 
     private static final String ORGNR2 = "456";
     private LocalDate skjæringstidspunkt;
-    private FakeUnleash unleash = new FakeUnleash();
 
     @BeforeEach
     public void setup() {
@@ -70,8 +68,8 @@ public class BeregningsgrunnlagFlerePerioderTest {
             .build();
 
         // Act
-        RegelForeslåBeregningsgrunnlag regel1 = new RegelForeslåBeregningsgrunnlag(førstePeriode, unleash);
-        RegelForeslåBeregningsgrunnlag regel2 = new RegelForeslåBeregningsgrunnlag(andrePeriode, unleash);
+        RegelForeslåBeregningsgrunnlag regel1 = new RegelForeslåBeregningsgrunnlag(førstePeriode);
+        RegelForeslåBeregningsgrunnlag regel2 = new RegelForeslåBeregningsgrunnlag(andrePeriode);
         Evaluation evaluation1 = regel1.evaluer(førstePeriode);
         Evaluation evaluation2 = regel2.evaluer(andrePeriode);
         // Assert
@@ -132,9 +130,9 @@ public class BeregningsgrunnlagFlerePerioderTest {
             .build();
 
         // Act
-        RegelForeslåBeregningsgrunnlag regel1 = new RegelForeslåBeregningsgrunnlag(periode1, unleash);
-        RegelForeslåBeregningsgrunnlag regel2 = new RegelForeslåBeregningsgrunnlag(periode2, unleash);
-        RegelForeslåBeregningsgrunnlag regel3 = new RegelForeslåBeregningsgrunnlag(periode3, unleash);
+        RegelForeslåBeregningsgrunnlag regel1 = new RegelForeslåBeregningsgrunnlag(periode1);
+        RegelForeslåBeregningsgrunnlag regel2 = new RegelForeslåBeregningsgrunnlag(periode2);
+        RegelForeslåBeregningsgrunnlag regel3 = new RegelForeslåBeregningsgrunnlag(periode3);
         Evaluation evaluation1 = regel1.evaluer(periode1);
         Evaluation evaluation2 = regel2.evaluer(periode2);
         Evaluation evaluation3 = regel3.evaluer(periode3);
