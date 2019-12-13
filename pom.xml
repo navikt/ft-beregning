@@ -8,7 +8,7 @@
 	<version>${revision}${sha1}${changelist}</version>
 	<packaging>jar</packaging>
 	<url>https://github.com/navikt/folketrygdloven-beregningsgrunnlag-regelmodell</url>
-	
+
 	<organization>
 		<name>no.nav</name>
 		<url>https://github.com/navikt</url>
@@ -46,7 +46,7 @@
 
 	<dependencyManagement>
 		<dependencies>
-		
+
 		    <dependency>
 	            <groupId>no.nav.fpsak.nare</groupId>
 	            <artifactId>fpsak-nare-core</artifactId>
@@ -72,12 +72,6 @@
 				<artifactId>threeten-extra</artifactId>
 				<version>[1.5,)</version>
 			</dependency>
-
-			<dependency>
-				<groupId>no.finn.unleash</groupId>
-				<artifactId>unleash-client-java</artifactId>
-				<version>3.2.8</version>
-			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -92,17 +86,12 @@
 			<artifactId>threeten-extra</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<dependency>
 		    <groupId>no.nav.fpsak.nare</groupId>
 		    <artifactId>fpsak-nare-core</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>no.finn.unleash</groupId>
-			<artifactId>unleash-client-java</artifactId>
-		</dependency>
-		
 		<dependency>
 			<groupId>org.assertj</groupId>
 			<artifactId>assertj-core</artifactId>
@@ -208,12 +197,12 @@
 		<url>https://github.com/navikt/folketrygdloven-beregningsgrunnlag-regelmodell</url>
 		<tag>HEAD</tag>
 	</scm>
-	
+
 	<distributionManagement>
 		<repository>
 			<id>github</id>
                 	<name>GitHub navikt Apache Maven Packages</name>
                     	<url>https://maven.pkg.github.com/navikt/folketrygdloven-beregningsgrunnlag-regelmodell</url>
 		</repository>
-	</distributionManagement>	
+	</distributionManagement>
 </project>

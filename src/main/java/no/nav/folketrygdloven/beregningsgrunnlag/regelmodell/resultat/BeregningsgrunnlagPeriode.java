@@ -152,6 +152,8 @@ public class BeregningsgrunnlagPeriode {
         return splitteATFLToggleErPå;
     }
 
+    // Denne skal kun brukes i test og fjernes etter toggle er live
+    @Deprecated
     public void setSplitteATFLToggleErPå(boolean splitteATFLToggleErPå) {
         this.splitteATFLToggleErPå = splitteATFLToggleErPå;
     }
@@ -182,6 +184,11 @@ public class BeregningsgrunnlagPeriode {
 
         public Builder medPeriode(Periode beregningsgrunnlagPeriode) {
             beregningsgrunnlagPeriodeMal.bgPeriode = beregningsgrunnlagPeriode;
+            return this;
+        }
+
+        public Builder medskalSplitteATFL(boolean skalSplitteATFL) {
+            beregningsgrunnlagPeriodeMal.splitteATFLToggleErPå = skalSplitteATFL;
             return this;
         }
 

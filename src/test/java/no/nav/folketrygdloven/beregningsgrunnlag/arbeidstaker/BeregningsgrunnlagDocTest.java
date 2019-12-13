@@ -2,8 +2,6 @@ package no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker;
 
 import org.junit.jupiter.api.Test;
 
-import no.finn.unleash.FakeUnleash;
-import no.finn.unleash.Unleash;
 import no.nav.folketrygdloven.beregningsgrunnlag.avkorting.RegelFastsettUtbetalingsbeløpTilBruker;
 import no.nav.folketrygdloven.beregningsgrunnlag.dok.DokumentasjonRegelBeregnBruttoPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.dok.DokumentasjonRegelBeregningsgrunnlagATFL;
@@ -19,7 +17,6 @@ import no.nav.fpsak.nare.doc.RuleDescriptionDigraph;
 import no.nav.fpsak.nare.specification.Specification;
 
 public class BeregningsgrunnlagDocTest {
-    private Unleash unleash = new FakeUnleash();
 
     @Test
     public void testKombinasjonATFLSN() throws Exception {
@@ -111,7 +108,7 @@ public class BeregningsgrunnlagDocTest {
 
     @Test
     public void testRegelForeslåBeregningsgrunnlag() throws Exception {
-        Specification<BeregningsgrunnlagPeriode> beregning = new DokumentasjonRegelForeslåBeregningsgrunnlag(unleash).getSpecification();
+        Specification<BeregningsgrunnlagPeriode> beregning = new DokumentasjonRegelForeslåBeregningsgrunnlag().getSpecification();
         RuleDescriptionDigraph digraph = new RuleDescriptionDigraph(beregning.ruleDescription());
 
         @SuppressWarnings("unused")
