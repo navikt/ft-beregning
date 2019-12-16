@@ -5,7 +5,7 @@ import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenar
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.leggTilMånedsinntekterPrStatus;
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.opprettBeregningsgrunnlagFraInntektskomponenten;
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.opprettBeregningsgrunnlagFraInntektsmelding;
-import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.opprettSammenligningsgrunnlag;
+import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.opprettSammenligningsgrunnlagPrAktivitet;
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.settoppGrunnlagMedEnPeriode;
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.settoppMånedsinntekter;
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.settoppÅrsinntekter;
@@ -49,7 +49,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 
-public class RegelForeslåBeregningsgrunnlagTest {
+public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
 
     private LocalDate skjæringstidspunkt;
     private String orgnr;
@@ -70,6 +70,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
         BigDecimal refusjonskrav = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
         Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektskomponenten(skjæringstidspunkt, månedsinntekt, refusjonskrav, true);
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        grunnlag.setSplitteATFLToggleErPå(true);
         // Act
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
         // Assert
@@ -87,6 +88,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
         BigDecimal refusjonskrav = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
         Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektskomponenten(skjæringstidspunkt, månedsinntekt, refusjonskrav, false);
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        grunnlag.setSplitteATFLToggleErPå(true);
         // Act
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
         // Assert
@@ -109,6 +111,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
 
         BeregningsgrunnlagPeriode grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL_SN),
             List.of(arbeidsforhold), Collections.singletonList(refusjonskrav.multiply(BigDecimal.valueOf(12)))).getBeregningsgrunnlagPerioder().get(0);
+        grunnlag.setSplitteATFLToggleErPå(true);
         // Act
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
         // Assert
@@ -136,6 +139,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
 
         BeregningsgrunnlagPeriode grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL_SN),
             List.of(arbeidsforhold), Collections.singletonList(refusjonskrav.multiply(BigDecimal.valueOf(12)))).getBeregningsgrunnlagPerioder().get(0);
+        grunnlag.setSplitteATFLToggleErPå(true);
         // Act
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
         // Assert
@@ -161,6 +165,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
 
         BeregningsgrunnlagPeriode grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL_SN),
             List.of(arbeidsforhold), Collections.singletonList(refusjonskrav.multiply(BigDecimal.valueOf(12)))).getBeregningsgrunnlagPerioder().get(0);
+        grunnlag.setSplitteATFLToggleErPå(true);
         // Act
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
         // Assert
@@ -183,8 +188,9 @@ public class RegelForeslåBeregningsgrunnlagTest {
         BigDecimal naturalytelse = BigDecimal.valueOf(2000);
         LocalDate naturalytelseOpphørFom = skjæringstidspunkt;
         Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektsmelding(skjæringstidspunkt, månedsinntekt, refusjonskrav, naturalytelse, naturalytelseOpphørFom);
-        opprettSammenligningsgrunnlag(beregningsgrunnlag.getInntektsgrunnlag(), skjæringstidspunkt, BigDecimal.valueOf(30000));
+        opprettSammenligningsgrunnlagPrAktivitet(beregningsgrunnlag.getInntektsgrunnlag(), skjæringstidspunkt, BigDecimal.valueOf(30000), AktivitetStatus.AT);
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        grunnlag.setSplitteATFLToggleErPå(true);
         // Act
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
         // Assert
@@ -195,7 +201,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
 
         assertThat(resultat.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5038");
         assertThat(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).samletNaturalytelseBortfaltMinusTilkommetPrÅr()).isEqualTo(BigDecimal.valueOf(24000));
-        assertThat(grunnlag.getSammenligningsGrunnlag().getAvvikPromille()).isEqualTo(400);
+        assertThat(grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.AT).getAvvikPromille()).isEqualTo(400);
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.HJEMMEL_BARE_ARBEIDSTAKER, AktivitetStatus.ATFL, 12 * månedsinntekt.doubleValue());
         verifiserBeregningsgrunnlagBeregnet(grunnlag, 12 * månedsinntekt.doubleValue());
     }
@@ -213,6 +219,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
             .build());
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.DP));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        grunnlag.setSplitteATFLToggleErPå(true);
         // Act
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
         // Assert
@@ -239,6 +246,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag,
             List.of(AktivitetStatus.SN, AktivitetStatus.DP));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        grunnlag.setSplitteATFLToggleErPå(true);
         // Act
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
         // Assert
@@ -273,6 +281,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
             List.of(AktivitetStatus.ATFL_SN, AktivitetStatus.AAP), Collections.singletonList(arbeidsforhold),
             Collections.singletonList(månedsinntektATFL.multiply(BigDecimal.valueOf(12))));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        grunnlag.setSplitteATFLToggleErPå(true);
         // Act
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
         // Assert
@@ -293,10 +302,11 @@ public class RegelForeslåBeregningsgrunnlagTest {
     @Test
     public void skalTesteNyoppstartetFrilanser() {
         Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
-        opprettSammenligningsgrunnlag(inntektsgrunnlag, skjæringstidspunkt, BigDecimal.valueOf(25000));
+        opprettSammenligningsgrunnlagPrAktivitet(inntektsgrunnlag, skjæringstidspunkt, BigDecimal.valueOf(25000), AktivitetStatus.FL);
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag,
             Collections.singletonList(AktivitetStatus.ATFL), Collections.singletonList(Arbeidsforhold.frilansArbeidsforhold()));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        grunnlag.setSplitteATFLToggleErPå(true);
         BeregningsgrunnlagPrArbeidsforhold.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0))
             .medFastsattAvSaksbehandler(true)
             .medBeregnetPrÅr(BigDecimal.valueOf(300000))
@@ -320,8 +330,9 @@ public class RegelForeslåBeregningsgrunnlagTest {
         Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag,
             Collections.singletonList(AktivitetStatus.ATFL), Collections.singletonList(arbeidsforhold));
-        opprettSammenligningsgrunnlag(inntektsgrunnlag, skjæringstidspunkt, BigDecimal.valueOf(18000));
+        opprettSammenligningsgrunnlagPrAktivitet(inntektsgrunnlag, skjæringstidspunkt, BigDecimal.valueOf(18000), AktivitetStatus.AT);
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        grunnlag.setSplitteATFLToggleErPå(true);
         BeregningsgrunnlagPrArbeidsforhold.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0))
             .medFastsattAvSaksbehandler(true)
             .medBeregnetPrÅr(BigDecimal.valueOf(200000))
@@ -338,7 +349,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
         LocalDate tom = skjæringstidspunkt.minusMonths(1).with(TemporalAdjusters.lastDayOfMonth());
         assertThat(af.getBeregningsperiode()).isEqualTo(Periode.of(fom, tom));
         assertThat(af.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(200000));
-        assertThat(beregningsgrunnlag.getSammenligningsGrunnlag()).isNotNull();
+        assertThat(beregningsgrunnlag.getSammenligningsGrunnlagPrAktivitetstatus(AktivitetStatus.AT)).isNotNull();
     }
 
     @Test
@@ -346,6 +357,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, new Inntektsgrunnlag(),
             Collections.singletonList(AktivitetStatus.KUN_YTELSE));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        grunnlag.setSplitteATFLToggleErPå(true);
         BeregningsgrunnlagPrStatus prStatus = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.BA);
         BeregningsgrunnlagPrStatus.builder(prStatus).medBeregnetPrÅr(BigDecimal.valueOf(100000));
         // Act
@@ -366,6 +378,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
         Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektskomponenten(skjæringstidspunkt, månedsinntekt, refusjonskrav, true, true);
         leggtilStatus(beregningsgrunnlag, AktivitetStatus.UDEFINERT);
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        grunnlag.setSplitteATFLToggleErPå(true);
         // Act
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
         // Assert
@@ -387,6 +400,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
             refusjonskrav, true, true);
         leggtilStatus(beregningsgrunnlag, AktivitetStatus.KUN_YTELSE);
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        grunnlag.setSplitteATFLToggleErPå(true);
         // Act
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
         // Assert
@@ -408,6 +422,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
             månedsinntekt, refusjonskrav, true, true);
         leggtilStatus(beregningsgrunnlag, AktivitetStatus.KUN_YTELSE);
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        grunnlag.setSplitteATFLToggleErPå(true);
         // Act
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
         // Assert
@@ -429,6 +444,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
             månedsinntekt, refusjonskrav, true, true);
         leggtilStatus(beregningsgrunnlag, AktivitetStatus.KUN_YTELSE);
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        grunnlag.setSplitteATFLToggleErPå(true);
         // Act
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
         // Assert
@@ -455,6 +471,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
             List.of(arbeidsforhold), Collections.singletonList(refusjonskrav.multiply(BigDecimal.valueOf(12))));
 
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        grunnlag.setSplitteATFLToggleErPå(true);
 
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
 
@@ -467,6 +484,296 @@ public class RegelForeslåBeregningsgrunnlagTest {
         LocalDate tom = skjæringstidspunkt.minusMonths(1).with(TemporalAdjusters.lastDayOfMonth());
         assertThat(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0)
             .getBeregningsperiode()).isEqualTo(Periode.of(fom, tom));
+    }
+
+    @Test
+    public void skalBeregneGrunnlagNårKunATOgInntektsmeldingForeliggerOgIngenNaturalytelserOgToggleErPå() {
+        // Arrange
+        BigDecimal månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
+        BigDecimal månedsinntektInntektsmelding = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 3);
+        BigDecimal refusjonskrav = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
+        Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
+        List<BigDecimal> månedsinntekter = Collections.nCopies(13, månedsinntekt);
+        List<BigDecimal> månedsinntekterInntektsmelding = Collections.nCopies(13, månedsinntektInntektsmelding);
+        leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, månedsinntekter, Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, arbeidsforhold, AktivitetStatus.AT);
+        leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, Collections.singletonList(månedsinntektInntektsmelding), Inntektskilde.INNTEKTSMELDING, arbeidsforhold, AktivitetStatus.AT);
+        BeregningsgrunnlagPeriode grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL),
+            List.of(arbeidsforhold), Collections.singletonList(refusjonskrav.multiply(BigDecimal.valueOf(12)))).getBeregningsgrunnlagPerioder().get(0);
+        grunnlag.setSplitteATFLToggleErPå(true);
+        // Act
+        @SuppressWarnings("unused")
+        Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+        // Assert
+        verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.HJEMMEL_BARE_ARBEIDSTAKER, AktivitetStatus.ATFL, 12 * månedsinntektInntektsmelding.doubleValue());
+        verifiserBeregningsgrunnlagHjemmel(grunnlag, AktivitetStatus.ATFL, BeregningsgrunnlagHjemmel.F_14_7_8_30);
+        verifiserBeregningsgrunnlagBeregnet(grunnlag, 12 * månedsinntektInntektsmelding.doubleValue());
+        assertThat(grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.AT).getAvvikProsent().doubleValue()).isCloseTo(33.33, within(0.05));
+        assertThat(grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.AT).getRapportertPrÅr()).isEqualTo(månedsinntekt.multiply(BigDecimal.valueOf(12)));
+    }
+
+    @Test
+    public void skalIkkeBenytteSammenligningsgrunnlagNårSøkerHarMilitærstatusOgATOgTjenerMindreEnn3GOgToggleErPå() {
+        // Arrange
+        BigDecimal månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
+        BigDecimal refusjonskrav = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
+        Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
+        List<BigDecimal> månedsinntekter = Collections.nCopies(12, månedsinntekt);
+        leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, månedsinntekter, Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, arbeidsforhold, AktivitetStatus.AT);
+        leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, Collections.singletonList(månedsinntekt), Inntektskilde.INNTEKTSMELDING, arbeidsforhold, AktivitetStatus.AT);
+        BeregningsgrunnlagPeriode grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL, AktivitetStatus.MS),
+            List.of(arbeidsforhold), Collections.singletonList(refusjonskrav.multiply(BigDecimal.valueOf(12)))).getBeregningsgrunnlagPerioder().get(0);
+        grunnlag.setSplitteATFLToggleErPå(true);
+        // Act
+        @SuppressWarnings("unused")
+        Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+        // Assert
+        assertThat(grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.AT)).isNull();
+    }
+
+
+    @Test
+    public void skalBeregneGrunnlagNårFLMedVarierendeInntekterOgToggleErPå() {
+        // Arrange
+        BigDecimal lavInntekt = BigDecimal.valueOf(1000);
+        BigDecimal høyInntekt = BigDecimal.valueOf(100_000);
+        List<BigDecimal> månedsinntekter = Arrays.asList(lavInntekt, lavInntekt, lavInntekt, lavInntekt, høyInntekt, høyInntekt, høyInntekt, lavInntekt, lavInntekt, lavInntekt, lavInntekt, lavInntekt);
+        Arbeidsforhold arbeidsforhold = Arbeidsforhold.frilansArbeidsforhold();
+        Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
+        leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, månedsinntekter, Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold, AktivitetStatus.FL);
+        leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, månedsinntekter, Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, arbeidsforhold, AktivitetStatus.FL);
+        BeregningsgrunnlagPeriode grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL),
+            List.of(arbeidsforhold), Collections.emptyList()).getBeregningsgrunnlagPerioder().get(0);
+        grunnlag.setSplitteATFLToggleErPå(true);
+
+        // Act
+        @SuppressWarnings("unused")
+        Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+        // Assert
+        verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.HJEMMEL_BARE_FRILANSER, AktivitetStatus.ATFL, 12 * lavInntekt.doubleValue());
+        verifiserBeregningsgrunnlagHjemmel(grunnlag, AktivitetStatus.ATFL, BeregningsgrunnlagHjemmel.F_14_7_8_38);
+        verifiserBeregningsgrunnlagBeregnet(grunnlag, 12 * lavInntekt.doubleValue());
+        assertThat(grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.FL).getAvvikProsent().doubleValue()).isCloseTo(96.1, within(0.1));
+        assertThat(grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.FL).getRapportertPrÅr()).isEqualTo(lavInntekt.multiply(BigDecimal.valueOf(9)).add(høyInntekt.multiply(BigDecimal.valueOf(3))));
+    }
+
+    @Test
+    public void skalBeregneGrunnlagNårFLOgATOgInntektsmeldingForeliggerOgIngenNaturalytelserOgToggleErPå() {
+        // Arrange
+        BigDecimal månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
+        Arbeidsforhold arbeidsforholdFrilans = Arbeidsforhold.frilansArbeidsforhold();
+        Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
+        List<BigDecimal> månedsinntekter = Collections.nCopies(13, månedsinntekt);
+        leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, månedsinntekter, Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, arbeidsforhold, AktivitetStatus.AT);
+        leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, Collections.singletonList(månedsinntekt), Inntektskilde.INNTEKTSMELDING, arbeidsforhold, AktivitetStatus.AT);
+        leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, månedsinntekter, Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforholdFrilans, AktivitetStatus.FL);
+        leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, månedsinntekter, Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, arbeidsforholdFrilans, AktivitetStatus.FL);
+
+        BeregningsgrunnlagPeriode grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL),
+            List.of(arbeidsforhold, arbeidsforholdFrilans), Collections.emptyList()).getBeregningsgrunnlagPerioder().get(0);
+        grunnlag.setSplitteATFLToggleErPå(true);
+
+        // Act
+        @SuppressWarnings("unused")
+        Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+        // Assert
+        verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.HJEMMEL_ARBEIDSTAKER_OG_FRILANSER, AktivitetStatus.ATFL, 12 * 2 *månedsinntekt.doubleValue());
+        verifiserBeregningsgrunnlagHjemmel(grunnlag, AktivitetStatus.ATFL, BeregningsgrunnlagHjemmel.F_14_7_8_40);
+        verifiserBeregningsgrunnlagBeregnet(grunnlag, 12 * 2 * månedsinntekt.doubleValue());
+        assertThat(grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.AT).getAvvikProsent().doubleValue()).isCloseTo(0, within(0.0001));
+        assertThat(grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.AT).getRapportertPrÅr()).isEqualTo(månedsinntekt.multiply(BigDecimal.valueOf(12)));
+        assertThat(grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.FL).getAvvikProsent().doubleValue()).isCloseTo(0, within(0.0001));
+        assertThat(grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.FL).getRapportertPrÅr()).isEqualTo(månedsinntekt.multiply(BigDecimal.valueOf(12)));
+    }
+
+    @Test
+    public void skalIkkeBenytteSammenligningsgrunnlagNårSøkerHarMilitærstatusOgFLOgTjenerMindreEnn3GOgToggleErPå() {
+        // Arrange
+        BigDecimal månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
+        List<BigDecimal> månedsinntekter = Collections.nCopies(12, månedsinntekt);
+        Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
+        Arbeidsforhold arbeidsforhold = Arbeidsforhold.frilansArbeidsforhold();
+        leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, månedsinntekter, Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, arbeidsforhold, AktivitetStatus.FL);
+        leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, Collections.singletonList(månedsinntekt), Inntektskilde.INNTEKTSMELDING, arbeidsforhold, AktivitetStatus.FL);
+        BeregningsgrunnlagPeriode grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL, AktivitetStatus.MS),
+            List.of(arbeidsforhold), Collections.emptyList()).getBeregningsgrunnlagPerioder().get(0);
+        grunnlag.setSplitteATFLToggleErPå(true);
+
+        // Act
+        @SuppressWarnings("unused")
+        Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+        // Assert
+        assertThat(grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.FL)).isNull();
+    }
+
+    @Test
+    public void skalBeregneGrunnlagForATNårIngenInntektsmeldingOgIngenNaturalytelseOgToggleErPå() {
+        // Arrange
+        BigDecimal månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
+        BigDecimal refusjonskrav = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
+        Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
+        List<BigDecimal> månedsinntekter = Collections.nCopies(13, månedsinntekt);
+        leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, månedsinntekter, Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, arbeidsforhold, AktivitetStatus.AT);
+        leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, månedsinntekter, Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold, AktivitetStatus.AT);
+        BeregningsgrunnlagPeriode grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL),
+            List.of(arbeidsforhold), List.of(refusjonskrav)).getBeregningsgrunnlagPerioder().get(0);
+        grunnlag.setSplitteATFLToggleErPå(true);
+
+        // Act
+        @SuppressWarnings("unused")
+        Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+        // Assert
+        verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.HJEMMEL_BARE_ARBEIDSTAKER, AktivitetStatus.ATFL, 12 *månedsinntekt.doubleValue());
+        verifiserBeregningsgrunnlagHjemmel(grunnlag, AktivitetStatus.ATFL, BeregningsgrunnlagHjemmel.F_14_7_8_30);
+        verifiserBeregningsgrunnlagBeregnet(grunnlag, 12 * månedsinntekt.doubleValue());
+        assertThat(grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.AT).getAvvikProsent().doubleValue()).isCloseTo(0, within(0.0001));
+        assertThat(grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.AT).getRapportertPrÅr()).isEqualTo(månedsinntekt.multiply(BigDecimal.valueOf(12)));
+    }
+
+    @Test
+    public void skalBeregneGrunnlagForATNårAvvikMellomBergenetOgSammenligningsgrunnlagOgToggleErPå() {
+        // Arrange
+        BigDecimal månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
+        BigDecimal månedsinntektInntektsmelding = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2 * 1.5 );
+        BigDecimal refusjonskrav = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
+        Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
+        List<BigDecimal> månedsinntekter = Collections.nCopies(14, månedsinntekt);
+        leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, månedsinntekter, Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, arbeidsforhold, AktivitetStatus.AT);
+        leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, Collections.nCopies(3, månedsinntektInntektsmelding), Inntektskilde.INNTEKTSMELDING, arbeidsforhold, AktivitetStatus.AT);
+        BeregningsgrunnlagPeriode grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL),
+            List.of(arbeidsforhold), List.of(refusjonskrav)).getBeregningsgrunnlagPerioder().get(0);
+        grunnlag.setSplitteATFLToggleErPå(true);
+
+        // Act
+        @SuppressWarnings("unused")
+        Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+        // Assert
+        RegelResultat regelResultat = getRegelResultat(evaluation, "input");
+        assertThat(regelResultat.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5038");
+        verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.HJEMMEL_BARE_ARBEIDSTAKER, AktivitetStatus.ATFL, 12 * månedsinntektInntektsmelding.doubleValue());
+        verifiserBeregningsgrunnlagHjemmel(grunnlag, AktivitetStatus.ATFL, BeregningsgrunnlagHjemmel.F_14_7_8_30);
+        verifiserBeregningsgrunnlagBeregnet(grunnlag, 12 * månedsinntektInntektsmelding.doubleValue());
+        assertThat(grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.AT).getAvvikProsent().doubleValue()).isCloseTo(50, within(0.0001));
+        assertThat(grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.AT).getRapportertPrÅr()).isEqualTo((månedsinntekt.multiply(BigDecimal.valueOf(12))));
+    }
+
+    @Test
+    public void skalIkkeFastsetteSammenlingningsgrunnlagNårArbeidstakerOgFrilansISammeOrganisasjonOgToggleErPå() {
+        // Arrange
+        BigDecimal månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
+        Arbeidsforhold arbeidsforholdFrilans = Arbeidsforhold.frilansArbeidsforhold();
+        Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
+        List<BigDecimal> månedsinntekter = Collections.nCopies(13, månedsinntekt);
+        leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, månedsinntekter, Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, arbeidsforhold, AktivitetStatus.AT);
+        leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, Collections.singletonList(månedsinntekt), Inntektskilde.INNTEKTSMELDING, arbeidsforhold, AktivitetStatus.AT);
+        leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, månedsinntekter, Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforholdFrilans, AktivitetStatus.FL);
+        leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, månedsinntekter, Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, arbeidsforholdFrilans, AktivitetStatus.FL);
+        BeregningsgrunnlagPeriode grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL),
+            List.of(arbeidsforhold, arbeidsforholdFrilans), Collections.emptyList()).getBeregningsgrunnlagPerioder().get(0);
+        BeregningsgrunnlagPrStatus.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL)).medFlOgAtISammeOrganisasjon(true).build();
+        grunnlag.setSplitteATFLToggleErPå(true);
+
+        // Act
+        @SuppressWarnings("unused")
+        Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+        // Assert
+        verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.HJEMMEL_ARBEIDSTAKER_OG_FRILANSER, AktivitetStatus.ATFL, 12 * 2 *månedsinntekt.doubleValue());
+        verifiserBeregningsgrunnlagHjemmel(grunnlag, AktivitetStatus.ATFL, BeregningsgrunnlagHjemmel.F_14_7_8_40);
+        verifiserBeregningsgrunnlagBeregnet(grunnlag, 12 * 2 * månedsinntekt.doubleValue());
+        assertThat(grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.AT)).isNull();
+        assertThat(grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.FL)).isNull();
+    }
+
+    @Test
+    public void skalBeregneSammenligningsgrunnlagOgSetteRiktigAvvikNårSNiKombinasjonMedFLOgToggleErPå() {
+        // Arrange
+        BigDecimal månedsinntektFL = BigDecimal.valueOf(10000);
+        BigDecimal bruttoPrÅrFL = BigDecimal.valueOf(120000);
+        Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(skjæringstidspunkt,
+            årsinntekterFor3SisteÅr(5.0d, 3.0d, 4.0d),
+            Inntektskilde.SIGRUN);
+        Arbeidsforhold arbeidsforhold = Arbeidsforhold.frilansArbeidsforhold();
+        leggTilMånedsinntekter(inntektsgrunnlag, skjæringstidspunkt, Collections.singletonList(BigDecimal.valueOf(30000 * 12)), Inntektskilde.SØKNAD, null);
+        leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, Collections.nCopies(12,månedsinntektFL), Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, arbeidsforhold, AktivitetStatus.FL);
+        leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, Collections.nCopies(12,månedsinntektFL), Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold, AktivitetStatus.FL);
+        BeregningsgrunnlagPeriode grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL_SN),
+            List.of(arbeidsforhold), Collections.emptyList()).getBeregningsgrunnlagPerioder().get(0);
+        grunnlag.setSplitteATFLToggleErPå(true);
+
+        // Act
+        @SuppressWarnings("unused")
+        Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+
+        // Assert
+        double actualBruttoSN = 4.0d * GRUNNBELØP_2017 - bruttoPrÅrFL.doubleValue();
+        assertThat(grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.SN)).isNotNull();
+        int oppgittSN = 30000 * 12;
+        assertThat(grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.SN).getRapportertPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(oppgittSN + bruttoPrÅrFL.doubleValue()));
+        assertThat(grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.SN).getAvvikPromille()).isEqualTo(282);
+        verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.HJEMMEL_FRILANSER_OG_SELVSTENDIG, AktivitetStatus.ATFL, 12 * månedsinntektFL.doubleValue());
+        verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.HJEMMEL_FRILANSER_OG_SELVSTENDIG, AktivitetStatus.SN, actualBruttoSN, 4.0d * GRUNNBELØP_2017);
+    }
+
+    @Test
+    public void skalBeregneSammenligningsgrunnlagOgSetteRiktigAvvikNårSNiKombinasjonMedATOgToggleErPå() {
+        // Arrange
+        BigDecimal månedsinntektAT = BigDecimal.valueOf(10000);
+        BigDecimal bruttoPrÅrAt = BigDecimal.valueOf(120000);
+        BigDecimal refusjonskrav = BigDecimal.valueOf(10000);
+        Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(skjæringstidspunkt,
+            årsinntekterFor3SisteÅr(5.0d, 3.0d, 4.0d),
+            Inntektskilde.SIGRUN);
+        Arbeidsforhold arbeidsforhold = Arbeidsforhold.anonymtArbeidsforhold(Aktivitet.ARBEIDSTAKERINNTEKT);
+        leggTilMånedsinntekter(inntektsgrunnlag, skjæringstidspunkt, Collections.singletonList(BigDecimal.valueOf(30000 * 12)), Inntektskilde.SØKNAD, null);
+        leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, Collections.nCopies(12,månedsinntektAT), Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, arbeidsforhold, AktivitetStatus.AT);
+        leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, Collections.singletonList(månedsinntektAT), Inntektskilde.INNTEKTSMELDING, arbeidsforhold, AktivitetStatus.AT);
+        BeregningsgrunnlagPeriode grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL_SN),
+            List.of(arbeidsforhold), Collections.singletonList(refusjonskrav.multiply(BigDecimal.valueOf(12)))).getBeregningsgrunnlagPerioder().get(0);
+        grunnlag.setSplitteATFLToggleErPå(true);
+
+        // Act
+        @SuppressWarnings("unused")
+        Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+
+        // Assert
+        double actualBruttoSN = 4.0d * GRUNNBELØP_2017 - bruttoPrÅrAt.doubleValue();
+        assertThat(grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.SN)).isNotNull();
+        int oppgittSN = 30000 * 12;
+        assertThat(grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.SN).getRapportertPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(oppgittSN + bruttoPrÅrAt.doubleValue()));
+        assertThat(grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.SN).getAvvikPromille()).isEqualTo(282);
+        verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, AktivitetStatus.ATFL, 12 * månedsinntektAT.doubleValue());
+        verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, AktivitetStatus.SN, actualBruttoSN, 4.0d * GRUNNBELØP_2017);
+    }
+
+    @Test
+    public void skalReturnereAksjonspunktNårAvvikMellomBeregnetOgSammenligningsgrunnlagForBådeFLOgATUtenTidsbegrensetArbeidsforholdOgToggleErPå() {
+        // Arrange
+        BigDecimal månedsinntektSammenligning = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
+        BigDecimal månedsinntektBeregnet = BigDecimal.valueOf(GRUNNBELØP_2017 / 12);
+        Arbeidsforhold arbeidsforholdFrilans = Arbeidsforhold.frilansArbeidsforhold();
+        Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
+        List<BigDecimal> månedsinntekterSammenligning = Collections.nCopies(13, månedsinntektSammenligning);
+        List<BigDecimal> månedsinntekterBeregnet = Collections.nCopies(13, månedsinntektBeregnet);
+        leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, månedsinntekterSammenligning, Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, arbeidsforhold, AktivitetStatus.AT);
+        leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, Collections.singletonList(månedsinntektBeregnet), Inntektskilde.INNTEKTSMELDING, arbeidsforhold, AktivitetStatus.AT);
+        leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, månedsinntekterBeregnet, Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforholdFrilans, AktivitetStatus.FL);
+        leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, månedsinntekterSammenligning, Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, arbeidsforholdFrilans, AktivitetStatus.FL);
+        BeregningsgrunnlagPeriode grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL),
+            List.of(arbeidsforhold, arbeidsforholdFrilans), Collections.emptyList()).getBeregningsgrunnlagPerioder().get(0);
+        grunnlag.setSplitteATFLToggleErPå(true);
+
+        // Act
+        @SuppressWarnings("unused")
+        Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+        // Assert
+        RegelResultat regelResultat = getRegelResultat(evaluation, "input");
+        assertThat(regelResultat.getMerknader().size()).isOne();
+        assertThat(regelResultat.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5038");
+        verifiserBeregningsgrunnlagHjemmel(grunnlag, AktivitetStatus.ATFL, BeregningsgrunnlagHjemmel.F_14_7_8_40);
+        verifiserBeregningsgrunnlagBeregnet(grunnlag, 12 * 2 * månedsinntektBeregnet.doubleValue());
+        assertThat(grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.AT).getAvvikProsent().doubleValue()).isCloseTo(100, within(0.0001));
+        assertThat(grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.AT).getRapportertPrÅr()).isEqualTo((månedsinntektSammenligning.multiply(BigDecimal.valueOf(12))));
+        assertThat(grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.FL).getAvvikProsent().doubleValue()).isCloseTo(100, within(0.0001));
+        assertThat(grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.FL).getRapportertPrÅr()).isEqualTo(månedsinntektSammenligning.multiply(BigDecimal.valueOf(12)));
     }
 
     private void verifiserBeregningsgrunnlagHjemmel(BeregningsgrunnlagPeriode grunnlag, AktivitetStatus aktivitetStatus,
