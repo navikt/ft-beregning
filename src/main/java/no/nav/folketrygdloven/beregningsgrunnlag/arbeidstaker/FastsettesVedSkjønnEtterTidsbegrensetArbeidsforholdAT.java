@@ -14,7 +14,7 @@ import no.nav.fpsak.nare.evaluation.RuleReasonRefImpl;
 @RuleDocumentation(FastsettesVedSkjønnEtterTidsbegrensetArbeidsforholdAT.ID)
 class FastsettesVedSkjønnEtterTidsbegrensetArbeidsforholdAT extends IkkeBeregnet {
 
-    static final String ID = "5047";
+    static final String ID = "5038";
     static final String BESKRIVELSE = "Avvik er > 25% og bruker har tidsbegrenset arbeidsforhold i foregående periode, beregningsgrunnlag fastsettes ved skjønn";
     private static final RuleReasonRef AVVIK_MER_ENN_25_PROSENT_MED_TIDSBEGRENSET_ARBEIDSFORHOLD_I_FOREGÅENDE_PERIODE = new RuleReasonRefImpl(ID, BESKRIVELSE);
 
