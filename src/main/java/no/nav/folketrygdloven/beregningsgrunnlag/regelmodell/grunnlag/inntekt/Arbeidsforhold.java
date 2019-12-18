@@ -1,9 +1,8 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt;
 
-import java.util.Objects;
-import java.util.UUID;
-
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
+
+import java.util.Objects;
 
 public class Arbeidsforhold {
     private Aktivitet aktivitet;
@@ -85,7 +84,6 @@ public class Arbeidsforhold {
         }
 
         public Builder medArbeidsforholdId(String arbeidsforholdId) {
-            valider(arbeidsforholdId);
             arbeidsforhold.arbeidsforholdId = arbeidsforholdId;
             return this;
         }
@@ -123,13 +121,6 @@ public class Arbeidsforhold {
         private void verifiserReferanseType() {
             if (arbeidsforhold.referanseType != null) {
                 throw new IllegalStateException("Referansetype er allerede satt på arbeidsforholdet: " + arbeidsforhold.referanseType);
-            }
-        }
-
-        private void valider(String arbeidsforholdId) {
-            if (arbeidsforholdId != null) {
-                // kjapp validering, takler kun interne arbeidsforholdId her
-                UUID.fromString(arbeidsforholdId);
             }
         }
     }
