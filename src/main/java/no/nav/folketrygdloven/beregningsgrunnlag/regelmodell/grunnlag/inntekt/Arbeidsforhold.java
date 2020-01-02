@@ -1,6 +1,7 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 
 import java.util.Objects;
 
@@ -10,6 +11,7 @@ public class Arbeidsforhold {
     private String arbeidsforholdId;
     private String aktørId;
     private ReferanseType referanseType;
+    private Periode ansettelsesPeriode;
 
     private Arbeidsforhold() {
     }
@@ -36,6 +38,10 @@ public class Arbeidsforhold {
 
     public ReferanseType getReferanseType() {
         return referanseType;
+    }
+
+    public Periode getAnsettelsesPeriode() {
+        return ansettelsesPeriode;
     }
 
     @Override
@@ -69,11 +75,19 @@ public class Arbeidsforhold {
         return new Builder();
     }
 
+    public static Builder builder(Arbeidsforhold arbeidsforhold) {
+        return new Builder(arbeidsforhold);
+    }
+
     public static class Builder {
         private Arbeidsforhold arbeidsforhold;
 
         private Builder() {
             arbeidsforhold = new Arbeidsforhold();
+        }
+
+        private Builder(Arbeidsforhold arbeidsforhold) {
+            this.arbeidsforhold = arbeidsforhold;
         }
 
         public Builder medOrgnr(String orgnr) {
@@ -97,6 +111,11 @@ public class Arbeidsforhold {
             verifiserReferanseType();
             arbeidsforhold.aktørId = aktørId;
             arbeidsforhold.referanseType = ReferanseType.AKTØR_ID;
+            return this;
+        }
+
+        public Builder medAnsettelsesPeriode(Periode periode) {
+            arbeidsforhold.ansettelsesPeriode = periode;
             return this;
         }
 
