@@ -107,6 +107,20 @@ public class BeregningsgrunnlagPrStatus {
         return sumBortfaltNaturalYtelse.subtract(sumTilkommetNaturalYtelse);
     }
 
+    public BigDecimal samletGradertNaturalytelseBortfaltMinusTilkommetPrÅr() {
+        BigDecimal sumBortfaltNaturalYtelse = arbeidsforhold.stream()
+                .map(BeregningsgrunnlagPrArbeidsforhold::getGradertNaturalytelseBortfaltPrÅr)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal sumTilkommetNaturalYtelse = arbeidsforhold.stream()
+                .map(BeregningsgrunnlagPrArbeidsforhold::getGradertNaturalytelseTilkommetPrÅr)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return sumBortfaltNaturalYtelse.subtract(sumTilkommetNaturalYtelse);
+    }
+
     public BigDecimal getBruttoPrÅr() {
         return bruttoPrÅr != null ? bruttoPrÅr : arbeidsforhold.stream()
             .map(BeregningsgrunnlagPrArbeidsforhold::getBruttoPrÅr)
@@ -114,11 +128,29 @@ public class BeregningsgrunnlagPrStatus {
             .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
+    public BigDecimal getGradertBruttoPrÅr() {
+        return bruttoPrÅr != null ? finnGradert(bruttoPrÅr) : arbeidsforhold.stream()
+                .map(BeregningsgrunnlagPrArbeidsforhold::getGradertBruttoPrÅr)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    private BigDecimal finnGradert(BigDecimal verdi) {
+        return verdi == null ? null : verdi.multiply(utbetalingsprosent.scaleByPowerOfTen(-2));
+    }
+
     public BigDecimal getBruttoInkludertNaturalytelsePrÅr() {
         BigDecimal brutto = getBruttoPrÅr();
         BigDecimal samletNaturalytelse = samletNaturalytelseBortfaltMinusTilkommetPrÅr();
         return brutto.add(samletNaturalytelse);
     }
+
+    public BigDecimal getGradertBruttoInkludertNaturalytelsePrÅr() {
+        BigDecimal brutto = getBruttoPrÅr();
+        BigDecimal samletNaturalytelse = samletNaturalytelseBortfaltMinusTilkommetPrÅr();
+        return finnGradert(brutto.add(samletNaturalytelse));
+    }
+
 
     public List<BeregningsgrunnlagPrArbeidsforhold> getArbeidsforhold() {
         return Collections.unmodifiableList(arbeidsforhold);

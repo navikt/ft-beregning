@@ -26,7 +26,7 @@ class FastsettAvkortetLikBruttoBG extends LeafSpecification<BeregningsgrunnlagPe
         for (BeregningsgrunnlagPrStatus beregningsgrunnlagPrStatus : grunnlag.getBeregningsgrunnlagPrStatusSomSkalBrukes()) {
             if (AktivitetStatus.erArbeidstaker(beregningsgrunnlagPrStatus.getAktivitetStatus())) {
                 for (BeregningsgrunnlagPrArbeidsforhold af : beregningsgrunnlagPrStatus.getArbeidsforholdSomSkalBrukes()) {
-                    BigDecimal bruttoInkludertNaturalytelsePrÅr = af.getBruttoInkludertNaturalytelsePrÅr().orElse(null);
+                    BigDecimal bruttoInkludertNaturalytelsePrÅr = af.getGradertBruttoInkludertNaturalytelsePrÅr().orElse(null);
                     BeregningsgrunnlagPrArbeidsforhold.builder(af)
                         .medAvkortetPrÅr(bruttoInkludertNaturalytelsePrÅr)
                         .medAvkortetRefusjonPrÅr(af.getMaksimalRefusjonPrÅr())

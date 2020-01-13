@@ -60,8 +60,14 @@ public class BeregningsgrunnlagPeriode {
 
     public BigDecimal getBruttoPrÅr() {
         return beregningsgrunnlagPrStatus.stream()
-            .map(BeregningsgrunnlagPrStatus::getBruttoPrÅr)
-            .reduce(BigDecimal.ZERO, BigDecimal::add);
+                .map(BeregningsgrunnlagPrStatus::getBruttoPrÅr)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public BigDecimal getGradertBruttoPrÅr() {
+        return beregningsgrunnlagPrStatus.stream()
+                .map(BeregningsgrunnlagPrStatus::getGradertBruttoPrÅr)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public BigDecimal getAvkortetPrÅr() {
@@ -86,11 +92,22 @@ public class BeregningsgrunnlagPeriode {
         return brutto.add(naturalytelser);
     }
 
+    public BigDecimal getGradertBruttoPrÅrInkludertNaturalytelser() {
+        BigDecimal naturalytelser = getGradertNaturalytelserBortfaltMinusTilkommetPrÅr();
+        BigDecimal brutto = getGradertBruttoPrÅr();
+        return brutto.add(naturalytelser);
+    }
 
     private BigDecimal getNaturalytelserBortfaltMinusTilkommetPrÅr() {
         return beregningsgrunnlagPrStatus.stream()
             .map(BeregningsgrunnlagPrStatus::samletNaturalytelseBortfaltMinusTilkommetPrÅr)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    private BigDecimal getGradertNaturalytelserBortfaltMinusTilkommetPrÅr() {
+        return beregningsgrunnlagPrStatus.stream()
+                .map(BeregningsgrunnlagPrStatus::samletGradertNaturalytelseBortfaltMinusTilkommetPrÅr)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public Periode getBeregningsgrunnlagPeriode() {

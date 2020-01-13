@@ -91,16 +91,16 @@ class FastsettAndelTilFordeling extends LeafSpecification<BeregningsgrunnlagPeri
     private void forsøkÅFastsetteBrukersAndeler(List<BeregningsgrunnlagPrArbeidsforhold> ikkeFastsattAf, Map<String, Object> resultater,
             BigDecimal sumFastsattAvkortetRefusjon, BigDecimal ikkeFordelt) {
         BigDecimal sumBruttoBG = ikkeFastsattAf.stream()
-                .map(af -> af.getBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO))
+                .map(af -> af.getGradertBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         resultater.put("tidligereFastsattRefusjon", sumFastsattAvkortetRefusjon);
         resultater.put("gjenstårÅFastsetteRefusjon", ikkeFordelt);
         ikkeFastsattAf.forEach(af -> {
             BigDecimal prosentandel = BigDecimal.valueOf(100)
-                .multiply(af.getBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO))
+                .multiply(af.getGradertBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO))
                 .divide(sumBruttoBG, 10, RoundingMode.HALF_EVEN);
             resultater.put("gjenstårÅFastsetteRefusjon.prosentandel." + af.getArbeidsgiverId(), prosentandel);
-            BigDecimal andel = ikkeFordelt.multiply(af.getBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO))
+            BigDecimal andel = ikkeFordelt.multiply(af.getGradertBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO))
                 .divide(sumBruttoBG, 10, RoundingMode.HALF_EVEN)
                 .subtract(af.getMaksimalRefusjonPrÅr());
             BeregningsgrunnlagPrArbeidsforhold.builder(af)

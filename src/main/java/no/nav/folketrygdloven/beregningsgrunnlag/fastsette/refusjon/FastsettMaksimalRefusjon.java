@@ -32,7 +32,7 @@ public class FastsettMaksimalRefusjon extends LeafSpecification<Beregningsgrunnl
 
                 if (af.getMaksimalRefusjonPrÅr() == null) {
                     BeregningsgrunnlagPrArbeidsforhold.Builder bgArbeidsforholdBuilder = BeregningsgrunnlagPrArbeidsforhold.builder(af);
-                    BigDecimal maksimalRefusjon = af.getBruttoPrÅr().min(refusjonskravPrArbeidsforholdPrÅr);
+                    BigDecimal maksimalRefusjon = af.getGradertBruttoPrÅr().min(refusjonskravPrArbeidsforholdPrÅr);
                     bgArbeidsforholdBuilder.medMaksimalRefusjonPrÅr(maksimalRefusjon);
                     bgArbeidsforholdBuilder.build();
                 }
