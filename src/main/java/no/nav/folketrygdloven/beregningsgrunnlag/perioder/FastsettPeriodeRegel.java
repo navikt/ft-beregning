@@ -38,11 +38,9 @@ public class FastsettPeriodeRegel {
         // lag alle periodene, med riktige andeler
         Map<LocalDate, Set<PeriodeSplittData>> periodeMap = identifisertePeriodeÅrsaker.getPeriodeMap();
 
-
         List<Map.Entry<LocalDate, Set<PeriodeSplittData>>> entries = new ArrayList<>(periodeMap.entrySet());
 
         ListIterator<Map.Entry<LocalDate, Set<PeriodeSplittData>>> listIterator = entries.listIterator();
-
 
         List<SplittetPeriode> list = new ArrayList<>();
         while (listIterator.hasNext()) {
@@ -70,6 +68,12 @@ public class FastsettPeriodeRegel {
                 .map(FastsettPeriodeRegel::mapSplittetAndelFLSN)
                 .collect(Collectors.toList()));
 
+            nyeAndeler.addAll(input.getEndringerISøktYtelse().stream()
+                    .filter(AndelGradering::erNyAktivitet)
+                    .filter(andel -> harUtbetalingIPeriode(andel, periodeFom))
+                    .map(gradering -> mapSplittetAndel(gradering, periodeFom))
+                    .collect(Collectors.toList()));
+
             LocalDate tom = utledPeriodeTom(entries, listIterator);
             Periode periode = new Periode(periodeFom, tom);
             SplittetPeriode splittetPeriode = SplittetPeriode.builder()
@@ -81,6 +85,10 @@ public class FastsettPeriodeRegel {
             list.add(splittetPeriode);
         }
         return list;
+    }
+
+    private static boolean harUtbetalingIPeriode(AndelGradering andel, LocalDate periodeFom) {
+        return andel.getGraderinger().stream().anyMatch(g -> g.getPeriode().inneholder(periodeFom) & g.getUtbetalingsprosent().compareTo(BigDecimal.ZERO) > 0);
     }
 
     private static LocalDate utledPeriodeTom(List<Map.Entry<LocalDate, Set<PeriodeSplittData>>> entries, ListIterator<Map.Entry<LocalDate, Set<PeriodeSplittData>>> listIterator) {
@@ -114,14 +122,32 @@ public class FastsettPeriodeRegel {
 
         Periode ansettelsesPeriode = im.getAnsettelsesperiode();
 
-        return SplittetAndel.builder()
-            .medAktivitetstatus(im.getAktivitetStatus())
-            .medArbeidsforhold(im.getArbeidsforhold())
-            .medRefusjonskravPrÅr(refusjonPrÅr)
-            .medArbeidsperiodeFom(ansettelsesPeriode.getFom())
-            .medArbeidsperiodeTom(ansettelsesPeriode.getTom())
-            .build();
+        SplittetAndel.Builder builder = SplittetAndel.builder()
+                .medAktivitetstatus(im.getAktivitetStatus())
+                .medArbeidsforhold(im.getArbeidsforhold())
+                .medRefusjonskravPrÅr(refusjonPrÅr);
+        settAnsettelsesPeriodeHvisFinnes(ansettelsesPeriode, builder);
+        return builder.build();
     }
+
+    private static SplittetAndel mapSplittetAndel(AndelGradering gradering, LocalDate periodeFom) {
+        Periode ansettelsesPeriode = gradering.getArbeidsforhold().getAnsettelsesPeriode();
+
+        SplittetAndel.Builder builder = SplittetAndel.builder()
+                .medAktivitetstatus(gradering.getAktivitetStatus())
+                .medArbeidsforhold(gradering.getArbeidsforhold());
+        settAnsettelsesPeriodeHvisFinnes(ansettelsesPeriode, builder);
+        return builder.build();
+    }
+
+    private static void settAnsettelsesPeriodeHvisFinnes(Periode ansettelsesPeriode, SplittetAndel.Builder builder) {
+        if (ansettelsesPeriode != null) {
+            builder
+                    .medArbeidsperiodeFom(ansettelsesPeriode.getFom())
+                    .medArbeidsperiodeTom(ansettelsesPeriode.getTom());
+        }
+    }
+
 
     private static BeregningsgrunnlagPrArbeidsforhold mapToArbeidsforhold(ArbeidsforholdOgInntektsmelding im, LocalDate fom) {
         Optional<BigDecimal> refusjonskravPrÅr = im.getGyldigeRefusjonskrav().stream()
