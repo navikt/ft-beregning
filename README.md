@@ -3,7 +3,8 @@
 [![SonarCloud Coverage](https://sonarcloud.io/api/project_badges/measure?project=navikt_folketrygdloven-beregningsgrunnlag-regelmodell&metric=coverage)](https://sonarcloud.io/component_measures/metric/coverage/list?id=navikt_fp-abakus)
 [![SonarCloud Bugs](https://sonarcloud.io/api/project_badges/measure?project=navikt_folketrygdloven-beregningsgrunnlag-regelmodell&metric=bugs)](https://sonarcloud.io/component_measures/metric/reliability_rating/list?id=navikt_fp-abakus)
 [![SonarCloud Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=navikt_folketrygdloven-beregningsgrunnlag-regelmodell&metric=vulnerabilities)](https://sonarcloud.io/component_measures/metric/security_rating/list?id=navikt_fp-abakus)
-
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/navikt/folketrygdloven-beregningsgrunnlag-regelmodell)
+![GitHub](https://img.shields.io/github/license/navikt/folketrygdloven-beregningsgrunnlag-regelmodell)
 # Beregningsgrunnlag (fra folketrygdloven kapittel 8)
 Regelmodell for beregningsgrunnlag (Lov om folketrygd kapittel 8) som gir grunnlag for beregning av dagsats
 
