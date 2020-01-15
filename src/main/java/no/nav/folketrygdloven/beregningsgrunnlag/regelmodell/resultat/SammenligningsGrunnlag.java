@@ -22,8 +22,16 @@ public class SammenligningsGrunnlag {
         return rapportertPrÅr;
     }
 
+    /**
+     * @deprecated erstattes av #getAvvikPromilleUtenAvrunding
+     */
+    @Deprecated
     public Long getAvvikPromille() {
         return avvikProsent.scaleByPowerOfTen(1).setScale(0, RoundingMode.HALF_UP).longValue();
+    }
+
+    public Long getAvvikPromilleUtenAvrunding() {
+        return avvikProsent.scaleByPowerOfTen(1).longValue();
     }
 
     public BigDecimal getAvvikProsent() {
