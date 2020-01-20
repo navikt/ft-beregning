@@ -96,5 +96,24 @@ public class SjekkÅrsinntektMotSammenligningsgrunnlagTest {
         assertThat(grunnlag.getSammenligningsGrunnlag().getAvvikProsent()).isEqualByComparingTo(BigDecimal.valueOf(25.001));
     }
 
+    @Test
+    public void skalTesteAtAvvikKanReturneresMedFullNøyaktighet() {
+        //Arrange
+        Beregningsgrunnlag grunnlag = settoppGrunnlagMedEnPeriode(LocalDate.now(), new Inntektsgrunnlag(),
+            Collections.singletonList(AktivitetStatus.ATFL), Collections.singletonList(arbeidsforhold));
+        BeregningsgrunnlagPeriode periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
+        SammenligningsGrunnlag sg = SammenligningsGrunnlag.builder()
+            .medSammenligningsperiode(null)
+            .medRapportertPrÅr(BigDecimal.valueOf(100000)).build();
+        Beregningsgrunnlag.builder(grunnlag).medSammenligningsgrunnlag(sg);
+        BeregningsgrunnlagPrArbeidsforhold bgAT = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
+        BeregningsgrunnlagPrArbeidsforhold.builder(bgAT).medBeregnetPrÅr(BigDecimal.valueOf(125001));
+
+        //Act
+        Evaluation resultat = new SjekkÅrsinntektMotSammenligningsgrunnlag().evaluate(periode);
+        //Assert
+        assertThat(resultat.result()).isEqualTo(Resultat.JA);
+        assertThat(grunnlag.getSammenligningsGrunnlag().getAvvikPromilleUtenAvrunding()).isEqualByComparingTo(BigDecimal.valueOf(250.010000000));
+    }
 
 }
