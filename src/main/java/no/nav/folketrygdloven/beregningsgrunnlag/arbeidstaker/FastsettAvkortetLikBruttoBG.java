@@ -34,7 +34,7 @@ class FastsettAvkortetLikBruttoBG extends LeafSpecification<BeregningsgrunnlagPe
                         .build();
                 }
             } else {
-                BigDecimal avkortetPrStatus = beregningsgrunnlagPrStatus.getBruttoPrÅr();
+                BigDecimal avkortetPrStatus = beregningsgrunnlagPrStatus.getGradertBruttoPrÅr();
                 BeregningsgrunnlagPrStatus.builder(beregningsgrunnlagPrStatus).medAvkortetPrÅr(avkortetPrStatus).build();
             }
         }
