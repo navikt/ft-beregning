@@ -30,8 +30,8 @@ public class SammenligningsGrunnlag {
         return avvikProsent.scaleByPowerOfTen(1).setScale(0, RoundingMode.HALF_UP).longValue();
     }
 
-    public Long getAvvikPromilleUtenAvrunding() {
-        return avvikProsent.scaleByPowerOfTen(1).longValue();
+    public BigDecimal getAvvikPromilleUtenAvrunding() {
+        return avvikProsent.scaleByPowerOfTen(1);
     }
 
     public BigDecimal getAvvikProsent() {
@@ -65,6 +65,11 @@ public class SammenligningsGrunnlag {
 
         public Builder medAvvikProsentFraPromille(long avvikPromille) {
             mal.avvikProsent = BigDecimal.valueOf(avvikPromille).scaleByPowerOfTen(-1);
+            return this;
+        }
+
+        public Builder medAvvikProsentFraPromilleNy(BigDecimal avvikPromilleNy) {
+            mal.avvikProsent = avvikPromilleNy.scaleByPowerOfTen(-1);
             return this;
         }
 

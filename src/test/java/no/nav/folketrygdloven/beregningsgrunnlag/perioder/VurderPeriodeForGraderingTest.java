@@ -324,6 +324,32 @@ public class VurderPeriodeForGraderingTest {
         assertThat(resultatList).isEmpty();
     }
 
+    @Test
+    public void totalRefusjonUnder6GNyAktivitetHarIkkeRefusjonPåDato() {
+        // Arrange
+        ArbeidsforholdOgInntektsmelding andelUtenGradering = ArbeidsforholdOgInntektsmelding.builder()
+            .medRefusjonskrav(List.of(REFUSJONSKRAV_UNDER_6G))
+            .medGyldigeRefusjonskrav(List.of(REFUSJONSKRAV_UNDER_6G))
+            .medAndelsnr(1L) // eksisterende aktivitet
+            .build();
+
+        Periode gradering = new Periode(LocalDate.of(2019, Month.MARCH, 1), LocalDate.of(2019, Month.MARCH, 8));
+        ArbeidsforholdOgInntektsmelding andelGradering = ArbeidsforholdOgInntektsmelding.builder()
+            .medRefusjonskrav(List.of())
+            .medAndelsnr(null) // ny aktivitet
+            .build();
+        PeriodeModell input = PeriodeModell.builder()
+            .medInntektsmeldinger(List.of(andelUtenGradering, andelGradering))
+            .medGrunnbeløp(BigDecimal.valueOf(90000))
+            .build();
+
+        // Act
+        List<PeriodeSplittData> resultatList = VurderPeriodeForGradering.vurder(input, andelGradering, gradering);
+
+        // Assert
+        assertGraderingFom(resultatList, List.of(gradering.getFom(), gradering.getTom().plusDays(1)));
+    }
+
     private void assertGraderingFom(List<PeriodeSplittData> resultatList, List<LocalDate> foms) {
         assertThat(resultatList.size()).isEqualTo(foms.size());
         for (int i = 0; i < resultatList.size(); i++) {
