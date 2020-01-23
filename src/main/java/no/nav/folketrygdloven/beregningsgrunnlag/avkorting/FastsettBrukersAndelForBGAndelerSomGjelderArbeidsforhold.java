@@ -31,7 +31,7 @@ class FastsettBrukersAndelForBGAndelerSomGjelderArbeidsforhold extends LeafSpeci
             resultat.setEvaluationProperties(resultater);
             atfl.getArbeidsforholdSomSkalBrukesIkkeFrilans().forEach(arbeidsforhold -> {
                 BigDecimal avkortetRefusjonPrÅr = arbeidsforhold.getMaksimalRefusjonPrÅr() == null ? BigDecimal.ZERO : arbeidsforhold.getMaksimalRefusjonPrÅr();
-                BigDecimal avkortetBrukersAndel = arbeidsforhold.getBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO).subtract(avkortetRefusjonPrÅr);
+                BigDecimal avkortetBrukersAndel = arbeidsforhold.getGradertBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO).subtract(avkortetRefusjonPrÅr);
                 BeregningsgrunnlagPrArbeidsforhold.builder(arbeidsforhold)
                     .medAvkortetPrÅr(avkortetRefusjonPrÅr.add(avkortetBrukersAndel))
                     .medAvkortetRefusjonPrÅr(avkortetRefusjonPrÅr)

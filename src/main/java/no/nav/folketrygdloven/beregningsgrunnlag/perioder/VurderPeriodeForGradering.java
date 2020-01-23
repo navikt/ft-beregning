@@ -37,7 +37,7 @@ class VurderPeriodeForGradering {
         boolean totaltRefusjonskravStørreEnn6GVedOgEtterOpphørtGradering = ErTotaltRefusjonskravStørreEnnEllerLikSeksG.vurder(input, graderingTom)
             && (DateUtil.TIDENES_ENDE.isEqual(graderingTom) || ErTotaltRefusjonskravStørreEnnEllerLikSeksG.vurder(input, graderingTom.plusDays(1)));
         boolean harRefusjonskravVedOpphørtGradering = harRefusjonPåDato(andelGradering, graderingTom);
-        if (totaltRefusjonskravStørreEnn6GVedOgEtterOpphørtGradering && !harRefusjonskravVedOpphørtGradering && !DateUtil.TIDENES_ENDE.isEqual(graderingTom)) {
+        if ((totaltRefusjonskravStørreEnn6GVedOgEtterOpphørtGradering || andelGradering.erNyAktivitet()) && !harRefusjonskravVedOpphørtGradering && !DateUtil.TIDENES_ENDE.isEqual(graderingTom)) {
             PeriodeSplittData opphørGraderingSplitt = lagSplittForOpphørAvGradering(graderingTom);
             return List.of(periodeSplitt, opphørGraderingSplitt);
         }

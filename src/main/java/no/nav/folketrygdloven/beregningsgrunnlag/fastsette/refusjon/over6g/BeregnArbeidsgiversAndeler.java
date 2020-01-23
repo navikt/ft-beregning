@@ -66,7 +66,7 @@ class BeregnArbeidsgiversAndeler extends LeafSpecification<BeregningsgrunnlagPer
                 .medAvkortetRefusjonPrÅr(andel)
                 .build();
             resultater.put(AVKORTET_REFUSJON_PR_ÅR + af.getArbeidsgiverId(), af.getAvkortetRefusjonPrÅr());
-            resultater.put(PROSENTANDEL + af.getArbeidsgiverId(), BigDecimal.valueOf(100).multiply(af.getBruttoPrÅr()).divide(bruttoSum, 10, RoundingMode.HALF_EVEN));
+            resultater.put(PROSENTANDEL + af.getArbeidsgiverId(), BigDecimal.valueOf(100).multiply(af.getGradertBruttoPrÅr()).divide(bruttoSum, 10, RoundingMode.HALF_EVEN));
         });
 
         // Hvis noen er tildelt mer enn kravet - reduser disse til kravet og sett andre til null

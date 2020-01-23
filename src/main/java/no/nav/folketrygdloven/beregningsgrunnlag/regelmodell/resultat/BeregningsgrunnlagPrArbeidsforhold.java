@@ -64,8 +64,16 @@ public class BeregningsgrunnlagPrArbeidsforhold {
         return Optional.ofNullable(naturalytelseBortfaltPrÅr);
     }
 
+    public Optional<BigDecimal> getGradertNaturalytelseBortfaltPrÅr() {
+        return Optional.ofNullable(finnGradert(naturalytelseBortfaltPrÅr));
+    }
+
     public Optional<BigDecimal> getNaturalytelseTilkommetPrÅr() {
         return Optional.ofNullable(naturalytelseTilkommetPrÅr);
+    }
+
+    public Optional<BigDecimal> getGradertNaturalytelseTilkommetPrÅr() {
+        return Optional.ofNullable(finnGradert(naturalytelseTilkommetPrÅr));
     }
 
     public BigDecimal getBeregnetPrÅr() {
@@ -82,6 +90,10 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 
     public BigDecimal getBruttoPrÅr() {
         return bruttoPrÅr;
+    }
+
+    public BigDecimal getGradertBruttoPrÅr() {
+        return finnGradert(bruttoPrÅr);
     }
 
     public BigDecimal getFordeltPrÅr() {
@@ -119,6 +131,11 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 
     public Optional<BigDecimal> getGradertRefusjonskravPrÅr() {
         return Optional.ofNullable(finnGradert(refusjonskravPrÅr));
+    }
+
+    public Optional<BigDecimal> getGradertBruttoInkludertNaturalytelsePrÅr() {
+        Optional<BigDecimal> brutto = getBruttoInkludertNaturalytelsePrÅr();
+        return brutto.map(this::finnGradert);
     }
 
     public BigDecimal getMaksimalRefusjonPrÅr() {

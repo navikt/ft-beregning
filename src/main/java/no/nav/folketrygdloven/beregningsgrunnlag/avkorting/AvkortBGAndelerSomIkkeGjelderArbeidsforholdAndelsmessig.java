@@ -32,7 +32,7 @@ public class AvkortBGAndelerSomIkkeGjelderArbeidsforholdAndelsmessig extends Lea
         BeregningsgrunnlagPrStatus atfl = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
         BigDecimal sumBeregningsgrunnlagArbeidsforhold = atfl == null ? BigDecimal.ZERO : atfl.getArbeidsforholdSomSkalBrukesIkkeFrilans()
             .stream()
-            .map(BeregningsgrunnlagPrArbeidsforhold::getBruttoInkludertNaturalytelsePrÅr)
+            .map(BeregningsgrunnlagPrArbeidsforhold::getGradertBruttoInkludertNaturalytelsePrÅr)
             .filter(Optional::isPresent)
             .map(Optional::get)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -45,7 +45,7 @@ public class AvkortBGAndelerSomIkkeGjelderArbeidsforholdAndelsmessig extends Lea
             Optional<BeregningsgrunnlagPrArbeidsforhold> frilansArbeidsforholdOpt = atfl.getFrilansArbeidsforholdSomSkalBrukes();
             if (frilansArbeidsforholdOpt.isPresent()) {
                 BeregningsgrunnlagPrArbeidsforhold af = frilansArbeidsforholdOpt.get();
-                BigDecimal bruttoBeregningsgrunnlagForAndelen = af.getBruttoInkludertNaturalytelsePrÅr().orElse(null);
+                BigDecimal bruttoBeregningsgrunnlagForAndelen = af.getGradertBruttoInkludertNaturalytelsePrÅr().orElse(null);
                 BigDecimal avkortetBrukersAndel;
                 if (bruttoBeregningsgrunnlagForAndelen.compareTo(bGUtenArbeidsforholdTilFordeling) >= 0) {
                     avkortetBrukersAndel = bGUtenArbeidsforholdTilFordeling;
@@ -67,7 +67,7 @@ public class AvkortBGAndelerSomIkkeGjelderArbeidsforholdAndelsmessig extends Lea
         Iterator<BeregningsgrunnlagPrStatus> bgpsIter = bgpsSorted.iterator();
         while (bgpsIter.hasNext()) {
             BeregningsgrunnlagPrStatus bgps = bgpsIter.next();
-            BigDecimal bruttoBeregningsgrunnlagForAndelen = bgps.getBruttoInkludertNaturalytelsePrÅr();
+            BigDecimal bruttoBeregningsgrunnlagForAndelen = bgps.getGradertBruttoInkludertNaturalytelsePrÅr();
             BigDecimal avkortetBrukersAndel;
             if (bruttoBeregningsgrunnlagForAndelen.compareTo(bGUtenArbeidsforholdTilFordeling) >= 0) {
                 avkortetBrukersAndel = bGUtenArbeidsforholdTilFordeling;
