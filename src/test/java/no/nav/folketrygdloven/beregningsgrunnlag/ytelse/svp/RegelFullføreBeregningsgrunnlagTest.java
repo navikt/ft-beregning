@@ -607,6 +607,25 @@ public class RegelFullføreBeregningsgrunnlagTest {
         assertThat(regelResultat).isNotNull();
     }
 
+    @Test
+    public void skal_teste_to_arbeidsforhold_hos_en_arbeidsgiver_med_beregningsgrunnlag_over_6G_ikke_full_utbetaling() {
+        // Arrange
+        leggTilArbeidsforhold(PERIODE, 2L, ORGNR1, ARB_ID_1, 624_000, 300_000, 50);
+        leggTilArbeidsforhold(PERIODE, 3L, ORGNR2, ARB_ID_2, 576_000, 200_000, 100);
+
+        // Assert
+        var grenseverdiRegelesultat = kjørRegelFinnGrenseverdi(PERIODE);
+        var regelResultat = kjørRegelFullførBeregningsgrunnlag(PERIODE);
+
+        // Assert
+        assertPeriode(1_200_000, 444_000, 444_000);
+        List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
+        assertArbeidsforhold(arbeidsforhold, ORGNR1,  BigDecimal.valueOf(6_000), BigDecimal.valueOf(150_000), BigDecimal.valueOf(156_000));
+        assertArbeidsforhold(arbeidsforhold, ORGNR2,  BigDecimal.valueOf(88_000), BigDecimal.valueOf(200_000), BigDecimal.valueOf(288_000));
+        assertThat(grenseverdiRegelesultat).isNotNull();
+        assertThat(regelResultat).isNotNull();
+    }
+
     private void assertPeriode(int brutto, int avkortet, int redusert) {
         assertPeriode(BigDecimal.valueOf(brutto), BigDecimal.valueOf(avkortet), BigDecimal.valueOf(redusert));
     }
