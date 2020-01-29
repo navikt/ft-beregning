@@ -20,7 +20,7 @@ public class DateUtil {
     /** Null object pattern - for å unngå håndtere null (men må av og til håndtere denne). */
     public static final LocalDate TIDENES_ENDE = LocalDate.of(9999, Month.DECEMBER, 31);
 
-    private static volatile ClockProvider clockProvider;
+    private static ClockProvider clockProvider;
 
     /**
      * Bare for enhetstest
