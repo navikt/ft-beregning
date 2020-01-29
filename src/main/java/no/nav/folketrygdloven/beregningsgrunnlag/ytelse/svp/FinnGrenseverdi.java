@@ -35,7 +35,7 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
             }
         }
         resultater.put("grenseverdi", sumAvkortetSkalBrukes);
-        grunnlag.setGrenseverdi(sumAvkortetSkalBrukes);
+        grunnlag.setYtelsesspesifikkGrenseverdi(sumAvkortetSkalBrukes);
         SingleEvaluation resultat = ja();
         resultat.setEvaluationProperties(resultater);
         return resultat;

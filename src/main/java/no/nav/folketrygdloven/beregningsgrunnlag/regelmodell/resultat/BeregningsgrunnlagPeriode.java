@@ -30,7 +30,8 @@ public class BeregningsgrunnlagPeriode {
     private List<PeriodeÅrsak> periodeÅrsaker = new ArrayList<>();
     @JsonBackReference
     private Beregningsgrunnlag beregningsgrunnlag;
-    private BigDecimal grenseverdi;
+    private BigDecimal generellGrenseverdi;
+    private BigDecimal ytelsesspesifikkGrenseverdi;
     private boolean splitteATFLToggleErPå = false;
 
     private BeregningsgrunnlagPeriode() {
@@ -155,14 +156,18 @@ public class BeregningsgrunnlagPeriode {
     }
 
     public BigDecimal getGrenseverdi() {
-        if (grenseverdi == null) {
-            return getBeregningsgrunnlag().getGrunnbeløp().multiply(BigDecimal.valueOf(6));
+        if (ytelsesspesifikkGrenseverdi != null) {
+            return ytelsesspesifikkGrenseverdi;
         }
-        return grenseverdi;
+        if (generellGrenseverdi != null) {
+            return generellGrenseverdi;
+        }
+        // TODO fjern denne etter at fpsak har gjort tilsvarende endringer
+        return getBeregningsgrunnlag().getGrunnbeløp().multiply(BigDecimal.valueOf(6));
     }
 
-    public void setGrenseverdi(BigDecimal grenseverdi) {
-        this.grenseverdi = grenseverdi;
+    public void setYtelsesspesifikkGrenseverdi(BigDecimal ytelsesspesifikkGrenseverdi) {
+        this.ytelsesspesifikkGrenseverdi = ytelsesspesifikkGrenseverdi;
     }
 
     public boolean isSplitteATFLToggleErPå() {
@@ -221,6 +226,11 @@ public class BeregningsgrunnlagPeriode {
 
         public Builder medPeriodeÅrsaker(List<PeriodeÅrsak> periodeÅrsaker) {
             beregningsgrunnlagPeriodeMal.periodeÅrsaker = periodeÅrsaker;
+            return this;
+        }
+
+        public Builder medGenerellGrenseverdi(BigDecimal generellGrenseverdi) {
+            beregningsgrunnlagPeriodeMal.generellGrenseverdi = generellGrenseverdi;
             return this;
         }
 
