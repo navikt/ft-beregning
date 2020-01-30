@@ -121,7 +121,7 @@ public class Beregningsgrunnlag {
         return new Builder();
     }
 
-    // FIXME: Dette er en skjult mutator siden den endrer på oppgitt beregningsgrunnlag.  endre metode navn eller pattern?
+    // FIXME: Dette er en skjult mutator siden den endrer på oppgitt beregningsgrunnlag. Endre metode navn eller pattern?
     public static Builder builder(Beregningsgrunnlag beregningsgrunnlag) {
         return new Builder(beregningsgrunnlag);
     }
