@@ -45,7 +45,8 @@ public class AvkortBGAndelerSomIkkeGjelderArbeidsforholdAndelsmessig extends Lea
             Optional<BeregningsgrunnlagPrArbeidsforhold> frilansArbeidsforholdOpt = atfl.getFrilansArbeidsforhold();
             if (frilansArbeidsforholdOpt.isPresent()) {
                 BeregningsgrunnlagPrArbeidsforhold af = frilansArbeidsforholdOpt.get();
-                BigDecimal bruttoBeregningsgrunnlagForAndelen = af.getBruttoInkludertNaturalytelsePrÅr().orElse(null);
+                BigDecimal bruttoBeregningsgrunnlagForAndelen = af.getBruttoInkludertNaturalytelsePrÅr()
+                    .orElseThrow(() -> new IllegalStateException("Brutto er ikke satt for arbeidsforhold " + af.toString()));
                 BigDecimal avkortetBrukersAndel;
                 if (bruttoBeregningsgrunnlagForAndelen.compareTo(bGUtenArbeidsforholdTilFordeling) >= 0) {
                     avkortetBrukersAndel = bGUtenArbeidsforholdTilFordeling;

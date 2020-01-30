@@ -89,7 +89,7 @@ public class AktivitetStatusModell {
             throw new IllegalStateException("Dagen før skjæringstidspunkt ligger ikke i helga.");
         }
         int daysBetween = skjæringstidspunktForOpptjening.minusDays(1).getDayOfWeek().getValue() - DayOfWeek.FRIDAY.getValue();
-        return skjæringstidspunktForOpptjening.minusDays(daysBetween+1);
+        return skjæringstidspunktForOpptjening.minusDays(daysBetween+1L);
     }
 
     private boolean harAktivitetSomSlutterPåDato(LocalDate fredagFørStpOpptjening) {
