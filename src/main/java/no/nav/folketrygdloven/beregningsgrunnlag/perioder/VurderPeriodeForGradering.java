@@ -22,10 +22,15 @@ class VurderPeriodeForGradering {
         LocalDate graderingTom = gradering.getTom();
 
         boolean totaltRefusjonskravStørreEnn6G = ErTotaltRefusjonskravStørreEnnEllerLikSeksG.vurder(input, graderingFom);
+
         if ((totaltRefusjonskravStørreEnn6G || andelGradering.erNyAktivitet())
             && !harRefusjonPåDato(andelGradering, graderingFom)) {
             return splittPeriodeGrunnetRefusjonOver6GEllerNyAktivitet(input, andelGradering, graderingFom, graderingTom);
         }
+        if (!andelGradering.erNyAktivitet() && ErbruttoinntektForGradertAndelLikNull.vurder(input, andelGradering, graderingFom)){
+            return splittPeriodeGrunnetBruttoinntektForAndelErNull(input, andelGradering, graderingFom, graderingTom);
+        }
+
         return splittPeriodeGrunnetHøyerePrioriterteAndeler(input, andelGradering, gradering, graderingTom);
     }
 
@@ -38,6 +43,20 @@ class VurderPeriodeForGradering {
             && (DateUtil.TIDENES_ENDE.isEqual(graderingTom) || ErTotaltRefusjonskravStørreEnnEllerLikSeksG.vurder(input, graderingTom.plusDays(1)));
         boolean harRefusjonskravVedOpphørtGradering = harRefusjonPåDato(andelGradering, graderingTom);
         if ((totaltRefusjonskravStørreEnn6GVedOgEtterOpphørtGradering || andelGradering.erNyAktivitet()) && !harRefusjonskravVedOpphørtGradering && !DateUtil.TIDENES_ENDE.isEqual(graderingTom)) {
+            PeriodeSplittData opphørGraderingSplitt = lagSplittForOpphørAvGradering(graderingTom);
+            return List.of(periodeSplitt, opphørGraderingSplitt);
+        }
+        return List.of(periodeSplitt);
+    }
+
+    private static List<PeriodeSplittData> splittPeriodeGrunnetBruttoinntektForAndelErNull(PeriodeModell input,
+                                                                                              AndelGradering andelGradering,
+                                                                                              LocalDate graderingFom,
+                                                                                              LocalDate graderingTom) {
+        PeriodeSplittData periodeSplitt = lagSplittForStartAvGradering(graderingFom);
+        boolean bruttoinntektErNullVedOgEtterOpphørtGradering = ErbruttoinntektForGradertAndelLikNull.vurder(input, andelGradering, graderingTom)
+            && (DateUtil.TIDENES_ENDE.isEqual(graderingTom) || ErbruttoinntektForGradertAndelLikNull.vurder(input, andelGradering, graderingTom.plusDays(1)));
+        if (bruttoinntektErNullVedOgEtterOpphørtGradering) {
             PeriodeSplittData opphørGraderingSplitt = lagSplittForOpphørAvGradering(graderingTom);
             return List.of(periodeSplitt, opphørGraderingSplitt);
         }
@@ -82,5 +101,4 @@ class VurderPeriodeForGradering {
             .filter(refusjonskrav -> refusjonskrav.getMånedsbeløp().compareTo(BigDecimal.ZERO) > 0)
             .anyMatch(refusjonskrav -> refusjonskrav.getPeriode().inneholder(graderingFom));
     }
-
 }
