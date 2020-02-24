@@ -3,6 +3,7 @@ package no.nav.folketrygdloven.beregningsgrunnlag.perioder;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusV2;
@@ -56,7 +57,7 @@ class ErbruttoinntektForGradertAndelLikNull {
 
     private static Optional<BruttoBeregningsgrunnlag> finnMatchendeBruttoBeregningsgrunnlagForArbeidsforhold(List<BruttoBeregningsgrunnlag> beregningsgrunnlag, Arbeidsforhold arbeidsforhold){
         return beregningsgrunnlag.stream()
-            .filter(b -> b.getArbeidsforhold().equals(arbeidsforhold))
+            .filter(b -> b.getArbeidsforhold().map(a -> a.equals(arbeidsforhold)).orElse(false))
             .findFirst();
     }
 
