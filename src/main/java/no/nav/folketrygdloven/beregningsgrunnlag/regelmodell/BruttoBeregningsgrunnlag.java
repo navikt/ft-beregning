@@ -2,6 +2,7 @@ package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell;
 
 import java.math.BigDecimal;
 import java.util.Objects;
+import java.util.Optional;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 
@@ -22,8 +23,8 @@ public class BruttoBeregningsgrunnlag {
         return aktivitetStatus;
     }
 
-    public Arbeidsforhold getArbeidsforhold() {
-        return arbeidsforhold;
+    public Optional<Arbeidsforhold> getArbeidsforhold() {
+        return Optional.ofNullable(arbeidsforhold);
     }
 
     public static Builder builder() {
