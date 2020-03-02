@@ -57,22 +57,29 @@ public class RegelBeregningsgrunnlagSN implements RuleService<Beregningsgrunnlag
             rs.beregningsRegel("FP_BR 2.8", "Beregn brutto beregningsgrunnlag selvstendig næringsdrivende",
                 new BeregnBruttoBeregningsgrunnlagSN(), sjekkOmVarigEndringIVirksomhet);
 
+//      FP_BR 2.19 Har saksbehandler fastsatt beregningsgrunnlaget manuelt?
+        Specification<BeregningsgrunnlagPeriode> sjekkOmManueltFastsattInntekt =
+            rs.beregningHvisRegel(new SjekkOmManueltFastsattBeregningsgrunnlagSN(), sjekkOmVarigEndringIVirksomhet,
+                beregnBruttoSN);
+
 //      FP_BR 2.18 Er bruker SN som er ny i arbeidslivet?
         Specification<BeregningsgrunnlagPeriode> sjekkOmNyIArbeidslivetSN =
             rs.beregningHvisRegel(new SjekkOmBrukerErNyIArbeidslivet(), new IkkeBeregnet(SjekkOmBrukerErNyIArbeidslivet.FASTSETT_BG_FOR_SN_NY_I_ARBEIDSLIVET),
-                beregnBruttoSN);
+                sjekkOmManueltFastsattInntekt);
 
-//      FP_BR 2.19 Har saksbehandler fastsatt beregningsgrunnlaget manuelt?
-        Specification<BeregningsgrunnlagPeriode> sjekkOmManueltFastsattInntekt =
-            rs.beregningHvisRegel(new SjekkOmManueltFastsattBeregningsgrunnlagSN(), new Beregnet(),
+
+        // FP_BR 2.20 Er beregningsgrunnlaget besteberegnet?
+        Specification<BeregningsgrunnlagPeriode> erBeregningsgrunnlagetBesteberegnet =
+            rs.beregningHvisRegel(new SjekkOmBeregninsgrunnlagErBesteberegnet(), new Beregnet(),
                 sjekkOmNyIArbeidslivetSN);
+
 
 //      FP_BR 2.2 Beregn gjennomsnittlig PGI
 //      FP_BR 2.9 Beregn oppjustert inntekt for årene i beregningsperioden
 //      FP_BR 2.1 Fastsett beregningsperiode
         Specification<BeregningsgrunnlagPeriode> foreslåBeregningsgrunnlagForSelvstendigNæringsdrivende =
             rs.beregningsRegel("FP_BR 2", "Foreslå beregningsgrunnlag for selvstendig næringsdrivende",
-                Arrays.asList(new FastsettBeregningsperiode(), new BeregnOppjustertInntekt(), new BeregnGjennomsnittligPGI()), sjekkOmManueltFastsattInntekt);
+                Arrays.asList(new FastsettBeregningsperiode(), new BeregnOppjustertInntekt(), new BeregnGjennomsnittligPGI()), erBeregningsgrunnlagetBesteberegnet);
 
         return foreslåBeregningsgrunnlagForSelvstendigNæringsdrivende;
     }

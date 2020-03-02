@@ -32,6 +32,7 @@ public class Beregningsgrunnlag {
     private List<Grunnbeløp> grunnbeløpSatser = new ArrayList<>();
     private boolean beregningForSykepenger = false; //Alltid false i FPSAK
     private boolean hattMilitærIOpptjeningsperioden = false;
+    private boolean besteberegnet = false;
     private int antallGrunnbeløpMilitærHarKravPå = 3; //TODO : Denne burde mappes for SVP (og eventuelt FP) fra f. eks konfig-verdi
 
     private Beregningsgrunnlag() {
@@ -57,6 +58,10 @@ public class Beregningsgrunnlag {
         return beregningsgrunnlagPerioder.stream()
             .sorted(Comparator.comparing(bg -> bg.getBeregningsgrunnlagPeriode().getFom()))
             .collect(Collectors.toUnmodifiableList());
+    }
+
+    public boolean erBesteberegnet() {
+        return besteberegnet;
     }
 
     public Dekningsgrad getDekningsgrad() {
@@ -154,6 +159,11 @@ public class Beregningsgrunnlag {
 
         public Builder medSammenligningsgrunnlag(SammenligningsGrunnlag sammenligningsGrunnlag) {
             beregningsgrunnlagMal.sammenligningsGrunnlag = sammenligningsGrunnlag;
+            return this;
+        }
+
+        public Builder medBesteberegnet(boolean harVærtBesteberegnet) {
+            beregningsgrunnlagMal.besteberegnet = harVærtBesteberegnet;
             return this;
         }
 
