@@ -135,34 +135,7 @@ public class FastsettSammenligningsgrunnlagATTest {
     }
 
     @Test
-    public void skalIkkeLageSammenligningsperiodeIHenholdTilRapporteringsfristNårAlleInntektesmeldingerForeligger() {
-        //Arrange
-        String orgnrArbeidsforholdNr1 = "987";
-        String orgnrArbeidsforholdNr2 = "987654322";
-        settSimulertNåtidTil(LocalDate.of(2019, 10, 8));
-        LocalDate skjæringstidspunkt = LocalDate.of(2019, 11, 1);
-        Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
-        inntektsgrunnlag.setInntektRapporteringFristDag(5);
-        Arbeidsforhold arbeidsforhold1 = Arbeidsforhold.builder().medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT).medOrgnr(orgnrArbeidsforholdNr1).build();
-        Arbeidsforhold arbeidsforhold2 = Arbeidsforhold.builder().medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT).medOrgnr(orgnrArbeidsforholdNr2).build();
-        Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.ATFL),
-            List.of(arbeidsforhold1, arbeidsforhold2), Collections.emptyList(), Collections.emptyList());
-        Periode periode = Periode.of(LocalDate.of(2018, 10, 1), LocalDate.of(2019, 8, 1));
-        opprettSammenligningsgrunnlagIPeriode(beregningsgrunnlag.getInntektsgrunnlag(), periode, BigDecimal.valueOf(25000), AktivitetStatus.AT);
-        opprettInntektsmeldingIPeriode(inntektsgrunnlag, periode, BigDecimal.valueOf(25000), AktivitetStatus.AT, arbeidsforhold1);
-        opprettInntektsmeldingIPeriode(inntektsgrunnlag, periode, BigDecimal.valueOf(25000), AktivitetStatus.AT, arbeidsforhold2);
-        BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        //Act
-        new FastsettSammenligningsgrunnlagAT().evaluate(grunnlag);
-        //Assert
-        SammenligningsGrunnlag sg = grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.AT);
-        assertThat(sg.getSammenligningsperiode().getFom()).isEqualTo(LocalDate.of(2018, 9, 1));
-        assertThat(sg.getSammenligningsperiode().getTom()).isEqualTo(LocalDate.of(2019, 8, 31));
-        assertThat(sg.getRapportertPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(275000));
-    }
-
-    @Test
-    public void skalLageSammenligningsperiodeIHenholdTilRapporteringsfristNårInntektsmeldingManglerForMinstEttArbeidsforhold() {
+    public void skalLageSammenligningsperiodeIHenholdTilRapporteringsfrist() {
         //Arrange
         String orgnrArbeidsforholdNr1 = "987";
         String orgnrArbeidsforholdNr2 = "987654322";
