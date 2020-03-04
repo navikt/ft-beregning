@@ -165,6 +165,10 @@ public class BeregningsgrunnlagPeriode {
         this.grenseverdi = grenseverdi;
     }
 
+    public boolean erBesteberegnet() {
+        return getBeregningsgrunnlag().erBesteberegnet();
+    }
+
     public boolean isSplitteATFLToggleErPå() {
         return splitteATFLToggleErPå;
     }

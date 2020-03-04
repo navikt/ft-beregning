@@ -48,7 +48,8 @@ public class SjekkOmBesteberegningTest {
     @Test
     public void skalReturnereJaNårDagpengerStatusOgBesteberegning() {
         //Arrange
-        Beregningsgrunnlag grunnlag = settoppGrunnlagMedEnPeriode(LocalDate.now(), new Inntektsgrunnlag(), List.of(AktivitetStatus.ATFL, AktivitetStatus.DP), List.of(arbeidsforhold));
+        Beregningsgrunnlag grunnlag = Beregningsgrunnlag.builder(settoppGrunnlagMedEnPeriode(LocalDate.now(), new Inntektsgrunnlag(), List.of(AktivitetStatus.ATFL, AktivitetStatus.DP), List.of(arbeidsforhold))).medBesteberegnet(true).build();
+
         BeregningsgrunnlagPeriode periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
         BeregningsgrunnlagPrStatus dagpengerStatus = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP);
         BeregningsgrunnlagPrStatus.builder(dagpengerStatus).medFastsattAvSaksbehandler(true);
