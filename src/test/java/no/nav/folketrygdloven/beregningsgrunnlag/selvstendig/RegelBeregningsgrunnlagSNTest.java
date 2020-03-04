@@ -455,4 +455,54 @@ public class RegelBeregningsgrunnlagSNTest {
         assertThat(beregningsgrunnlag.getSammenligningsGrunnlag()).isNull();
         assertThat(bgpsa.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(33333));
     }
+
+    @Test
+    public void skalIkkeBeregneBruttoNårGrunnlagErBesteberegnet() {
+        // Arrange
+        Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(skjæringstidspunkt,
+            årsinntekterFor3SisteÅr(5.0d, 3.0d, 4.0d), Inntektskilde.SIGRUN);
+        Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.SN));
+
+        Beregningsgrunnlag besteberegnetGrunnlag = Beregningsgrunnlag.builder(beregningsgrunnlag).medBesteberegnet(true).build();
+        BeregningsgrunnlagPeriode grunnlag = besteberegnetGrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        BeregningsgrunnlagPrStatus status = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
+        BeregningsgrunnlagPrStatus.builder(status).medFastsattAvSaksbehandler(false).medBeregnetPrÅr(BigDecimal.valueOf(33333));
+        // Act
+        Evaluation evaluation = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
+        // Assert
+        RegelResultat regelResultat = getRegelResultat(evaluation, "input");
+        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+        Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
+        verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.HJEMMEL_BARE_SELVSTENDIG, grunnlag, beregningsperiode);
+        BeregningsgrunnlagPrStatus bgpsa = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
+        assertThat(bgpsa.getGjennomsnittligPGI()).isEqualByComparingTo(BigDecimal.valueOf(4.0d * GRUNNBELØP_2017));
+        assertThat(besteberegnetGrunnlag.getSammenligningsGrunnlag()).isNull();
+        assertThat(bgpsa.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(33333));
+    }
+
+    @Test
+    public void skalGjøreAvviksberegningSelvOmFastsattAvSaksbehandlerOgIkkeBesteberegnet() {
+        // Arrange
+        Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(skjæringstidspunkt,
+            årsinntekterFor3SisteÅr(5.0d, 3.0d, 4.0d), Inntektskilde.SIGRUN);
+        leggTilMånedsinntekter(inntektsgrunnlag, skjæringstidspunkt, Collections.singletonList(BigDecimal.valueOf(GRUNNBELØP_2017 * 1.245 * 12)), Inntektskilde.SØKNAD, null);
+        Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.SN));
+
+        Beregningsgrunnlag besteberegnetGrunnlag = Beregningsgrunnlag.builder(beregningsgrunnlag).medBesteberegnet(false).build();
+        BeregningsgrunnlagPeriode grunnlag = besteberegnetGrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        BeregningsgrunnlagPrStatus status = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
+        BeregningsgrunnlagPrStatus.builder(status).medFastsattAvSaksbehandler(true).medBeregnetPrÅr(BigDecimal.valueOf(33333));
+        // Act
+        Evaluation evaluation = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
+        // Assert
+        RegelResultat regelResultat = getRegelResultat(evaluation, "input");
+        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
+        Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
+        verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.HJEMMEL_BARE_SELVSTENDIG, grunnlag, beregningsperiode);
+        BeregningsgrunnlagPrStatus bgpsa = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
+        assertThat(bgpsa.getGjennomsnittligPGI()).isEqualByComparingTo(BigDecimal.valueOf(4.0d * GRUNNBELØP_2017));
+        assertThat(besteberegnetGrunnlag.getSammenligningsGrunnlag()).isNotNull();
+        assertThat(bgpsa.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(33333));
+    }
+
 }

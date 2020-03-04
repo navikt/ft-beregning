@@ -3,8 +3,6 @@ package no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
@@ -21,12 +19,7 @@ class SjekkOmBesteberegning extends LeafSpecification<BeregningsgrunnlagPeriode>
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        BeregningsgrunnlagPrStatus dp = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP);
-        if (dp == null || !dp.erFastsattAvSaksbehandler()) {
-            return nei();
-        }
-        BeregningsgrunnlagPrStatus atfl = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
-        if (atfl.getArbeidsforhold().stream().allMatch(this::erFastsattAvSaksbehandler)) {
+        if (grunnlag.erBesteberegnet()) {
             setHjemmel(grunnlag, AktivitetStatus.ATFL, BeregningsgrunnlagHjemmel.F_14_7);
             setHjemmel(grunnlag, AktivitetStatus.ATFL_SN, BeregningsgrunnlagHjemmel.F_14_7);
             return ja();
@@ -38,9 +31,5 @@ class SjekkOmBesteberegning extends LeafSpecification<BeregningsgrunnlagPeriode>
         grunnlag.getBeregningsgrunnlag().getAktivitetStatuser().stream()
             .filter(as -> status.equals(as.getAktivitetStatus()))
             .forEach(as -> as.setHjemmel(hjemmel));
-    }
-
-    private boolean erFastsattAvSaksbehandler(BeregningsgrunnlagPrArbeidsforhold bpaf) {
-        return bpaf.getFastsattAvSaksbehandler() != null && bpaf.getFastsattAvSaksbehandler();
     }
 }
