@@ -4,17 +4,14 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.BevegeligeHelligdagerUtil;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SammenligningsGrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
@@ -53,7 +50,7 @@ class FastsettSammenligningsgrunnlagAT extends LeafSpecification<Beregningsgrunn
         LocalDate behandlingsTidspunkt = DateUtil.iDag();
         LocalDate gjeldendeTidspunkt = behandlingsTidspunkt.isBefore(skjæringstidspunkt) ? behandlingsTidspunkt : skjæringstidspunkt;
         LocalDate sisteØnskedeInntektMåned = gjeldendeTidspunkt.minusMonths(1).withDayOfMonth(1);
-        if (manglerInntektsmeldingForArbeidsforhold(grunnlag) && erEtterRapporteringsFrist(inntektsgrunnlag.getInntektRapporteringFristDag(), gjeldendeTidspunkt, behandlingsTidspunkt)) {
+        if (erEtterRapporteringsFrist(inntektsgrunnlag.getInntektRapporteringFristDag(), gjeldendeTidspunkt, behandlingsTidspunkt)) {
             return lag12MånedersPeriodeTilOgMed(sisteØnskedeInntektMåned);
         }
         return lag12MånedersPeriodeTilOgMed(sisteØnskedeInntektMåned.minusMonths(1));
@@ -69,10 +66,5 @@ class FastsettSammenligningsgrunnlagAT extends LeafSpecification<Beregningsgrunn
         LocalDate tom = periodeTom.with(TemporalAdjusters.lastDayOfMonth());
         LocalDate fom = tom.minusYears(1).plusMonths(1).withDayOfMonth(1);
         return Periode.of(fom, tom);
-    }
-
-    private boolean manglerInntektsmeldingForArbeidsforhold(BeregningsgrunnlagPeriode grunnlag){
-        List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforholdIkkeFrilans();
-        return arbeidsforhold.stream().anyMatch(a -> !grunnlag.getInntektsgrunnlag().finnesInntektsdata(Inntektskilde.INNTEKTSMELDING, a));
     }
 }
