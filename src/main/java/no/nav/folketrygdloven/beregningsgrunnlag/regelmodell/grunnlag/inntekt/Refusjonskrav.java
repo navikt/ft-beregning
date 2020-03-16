@@ -29,4 +29,12 @@ public class Refusjonskrav {
     public BigDecimal getMånedsbeløp() {
         return månedsbeløp;
     }
+
+    @Override
+    public String toString() {
+        return "Refusjonskrav{" +
+            "periode=" + periode +
+            ", månedsbeløp=" + månedsbeløp +
+            '}';
+    }
 }

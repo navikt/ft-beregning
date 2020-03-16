@@ -26,7 +26,7 @@ class ErbruttoinntektForGradertAndelLikNull {
                 if(grunnlag.isPresent()){
                     return grunnlag.get().getBruttoBeregningsgrunnlag().equals(BigDecimal.ZERO);
                 } else{
-                    throw new IllegalStateException("Finner ikke matchende bruttoberegningsgrunnlag for andel som skal graderes");
+                    throw new IllegalStateException("Finner ikke matchende bruttoberegningsgrunnlag for andel som skal graderes " + andelGradering);
                 }
             }
         }

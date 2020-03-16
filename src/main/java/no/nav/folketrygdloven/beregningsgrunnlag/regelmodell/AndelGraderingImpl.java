@@ -76,4 +76,14 @@ public class AndelGraderingImpl implements AndelGradering {
             return kladd;
         }
     }
+
+    @Override
+    public String toString() {
+        return "AndelGraderingImpl{" +
+            "aktivitetStatus=" + aktivitetStatus +
+            ", graderinger=" + graderinger +
+            ", arbeidsforhold=" + arbeidsforhold +
+            ", andelsnr=" + andelsnr +
+            '}';
+    }
 }

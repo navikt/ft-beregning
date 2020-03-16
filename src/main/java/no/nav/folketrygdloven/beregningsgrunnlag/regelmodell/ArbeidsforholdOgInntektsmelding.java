@@ -159,4 +159,20 @@ public class ArbeidsforholdOgInntektsmelding implements AndelGradering {
             return kladd;
         }
     }
+
+    @Override
+    public String toString() {
+        return "ArbeidsforholdOgInntektsmelding{" +
+            "arbeidsforhold=" + arbeidsforhold +
+            ", refusjoner=" + refusjoner +
+            ", gyldigeRefusjonskrav=" + gyldigeRefusjonskrav +
+            ", graderinger=" + graderinger +
+            ", naturalYtelser=" + naturalYtelser +
+            ", ansettelsesperiode=" + ansettelsesperiode +
+            ", startdatoPermisjon=" + startdatoPermisjon +
+            ", andelsnr=" + andelsnr +
+            ", innsendingsdatoFørsteInntektsmeldingMedRefusjon=" + innsendingsdatoFørsteInntektsmeldingMedRefusjon +
+            ", overstyrtRefusjonsFrist=" + overstyrtRefusjonsFrist +
+            '}';
+    }
 }
