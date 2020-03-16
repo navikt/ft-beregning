@@ -28,4 +28,12 @@ public class Gradering {
     public BigDecimal getUtbetalingsprosent() {
         return utbetalingsprosent;
     }
+
+    @Override
+    public String toString() {
+        return "Gradering{" +
+            "periode=" + periode +
+            ", utbetalingsprosent=" + utbetalingsprosent +
+            '}';
+    }
 }

@@ -31,4 +31,13 @@ public class NaturalYtelse {
     public LocalDate getTom() {
         return tom;
     }
+
+    @Override
+    public String toString() {
+        return "NaturalYtelse{" +
+            "beløp=" + beløp +
+            ", fom=" + fom +
+            ", tom=" + tom +
+            '}';
+    }
 }
