@@ -26,7 +26,7 @@ public class RegelVurderBeregningsgrunnlag extends DynamicRuleService<Beregnings
         Specification<BeregningsgrunnlagPeriode> avslagUnderEnHalvG = new AvslagUnderEnHalvG();
 
         // FP_VK_32.1 1. Brutto BG > 0,5G ?
-        Specification<BeregningsgrunnlagPeriode> sjekkOmBGUnderHalvG = rs.beregningHvisRegel(new SjekkBeregningsgrunnlagMindreEnn(new BigDecimal("0.5")),
+        Specification<BeregningsgrunnlagPeriode> sjekkOmBGUnderHalvG = rs.beregningHvisRegel(new SjekkBeregningsgrunnlagMindreEnn(),
             avslagUnderEnHalvG, new Beregnet());
 
         return sjekkOmBGUnderHalvG;

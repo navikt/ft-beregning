@@ -33,7 +33,11 @@ public class Beregningsgrunnlag {
     private boolean beregningForSykepenger = false; //Alltid false i FPSAK
     private boolean hattMilitærIOpptjeningsperioden = false;
     private boolean besteberegnet = false;
-    private int antallGrunnbeløpMilitærHarKravPå = 3; //TODO : Denne burde mappes for SVP (og eventuelt FP) fra f. eks konfig-verdi
+    private int antallGrunnbeløpMilitærHarKravPå = 3;
+    private BigDecimal generellGrenseverdi;
+    private BigDecimal ytelsedagerIPrÅr;
+    private BigDecimal avviksgrenseProsent;
+    private BigDecimal antallGMinstekravVilkår;
 
     private Beregningsgrunnlag() {
     }
@@ -92,6 +96,32 @@ public class Beregningsgrunnlag {
             throw new IllegalArgumentException("Kjenner ikke G-verdi for året " + dato.getYear());
         }
     }
+
+    public BigDecimal getGenerellGrenseverdi() {
+        return generellGrenseverdi;
+    }
+
+    public BigDecimal getYtelsedagerPrÅr() {
+        if (ytelsedagerIPrÅr == null) {
+            return BigDecimal.valueOf(260);
+        }
+        return ytelsedagerIPrÅr;
+    }
+
+    public BigDecimal getAvviksgrenseProsent() {
+        if (avviksgrenseProsent == null) {
+            return BigDecimal.valueOf(25);
+        }
+        return avviksgrenseProsent;
+    }
+
+    public BigDecimal getAntallGMinstekravVilkår() {
+        if (antallGMinstekravVilkår == null) {
+            return BigDecimal.valueOf(0.5);
+        }
+        return antallGMinstekravVilkår;
+    }
+
 
     public long snittverdiAvG(int år) {
         Optional<Grunnbeløp> optional = grunnbeløpSatser.stream().filter(g -> g.getFom().getYear() == år).findFirst();
@@ -208,6 +238,26 @@ public class Beregningsgrunnlag {
 
         public Builder medAntallGrunnbeløpMilitærHarKravPå(int antallGrunnbeløpMilitærHarKravPå) {
             beregningsgrunnlagMal.antallGrunnbeløpMilitærHarKravPå = antallGrunnbeløpMilitærHarKravPå;
+            return this;
+        }
+
+        public Builder medGenerellGrenseverdi(BigDecimal grenseverdi) {
+            beregningsgrunnlagMal.generellGrenseverdi = grenseverdi;
+            return this;
+        }
+
+        public Builder medYtelsesdagerIEtÅr(BigDecimal ytelsesdagerIEtÅr) {
+            beregningsgrunnlagMal.ytelsedagerIPrÅr = ytelsesdagerIEtÅr;
+            return this;
+        }
+
+        public Builder medAvviksgrenseProsent(BigDecimal avviksgrenseProsent) {
+            beregningsgrunnlagMal.avviksgrenseProsent = avviksgrenseProsent;
+            return this;
+        }
+
+        public Builder medAntallGMinstekravBrutto(BigDecimal antallGMinstekravVilkår) {
+            beregningsgrunnlagMal.antallGMinstekravVilkår = antallGMinstekravVilkår;
             return this;
         }
 

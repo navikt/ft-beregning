@@ -161,6 +161,18 @@ public class BeregningsgrunnlagPeriode {
         return grenseverdi;
     }
 
+    public BigDecimal getAvviksgrenseProsent() {
+        return getBeregningsgrunnlag().getAvviksgrenseProsent();
+    }
+
+    public BigDecimal getYtelsedagerPrÅr() {
+        return getBeregningsgrunnlag().getYtelsedagerPrÅr();
+    }
+
+    public BigDecimal getAntallGMinstekravVilkår() {
+        return beregningsgrunnlag.getAntallGMinstekravVilkår();
+    }
+
     public void setGrenseverdi(BigDecimal grenseverdi) {
         this.grenseverdi = grenseverdi;
     }
