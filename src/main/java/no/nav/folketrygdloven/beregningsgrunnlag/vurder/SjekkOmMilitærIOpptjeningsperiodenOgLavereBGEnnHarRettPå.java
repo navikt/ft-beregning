@@ -22,7 +22,7 @@ class SjekkOmMilitærIOpptjeningsperiodenOgLavereBGEnnHarRettPå extends LeafSpe
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
         Beregningsgrunnlag bg = grunnlag.getBeregningsgrunnlag();
-        BigDecimal beløpMilitærHarKravPå = grunnlag.getGrunnbeløp().multiply(BigDecimal.valueOf(bg.getAntallGrunnbeløpMilitærHarKravPå()));
+        BigDecimal beløpMilitærHarKravPå = grunnlag.getGrunnbeløp().multiply(BigDecimal.valueOf(bg.getAntallGMilitærHarKravPå()));
         boolean bruttoBGUnderKravPå = grunnlag.getBruttoPrÅrInkludertNaturalytelser().compareTo(beløpMilitærHarKravPå) < 0;
 
         SingleEvaluation resultat = bruttoBGUnderKravPå && bg.harHattMilitærIOpptjeningsperioden() ? ja() : nei();

@@ -33,11 +33,11 @@ public class Beregningsgrunnlag {
     private boolean beregningForSykepenger = false; //Alltid false i FPSAK
     private boolean hattMilitærIOpptjeningsperioden = false;
     private boolean besteberegnet = false;
-    private int antallGrunnbeløpMilitærHarKravPå = 3;
-    private BigDecimal generellGrenseverdi;
+    private int antallGMilitærHarKravPå = 3;
+    private BigDecimal antallGØvreGrenseverdi;
+    private BigDecimal antallGMinstekravVilkår;
     private BigDecimal ytelsedagerIPrÅr;
     private BigDecimal avviksgrenseProsent;
-    private BigDecimal antallGMinstekravVilkår;
 
     private Beregningsgrunnlag() {
     }
@@ -77,7 +77,7 @@ public class Beregningsgrunnlag {
     }
 
     public BigDecimal getMinsteinntektMilitærHarKravPå() {
-        return grunnbeløp.multiply(BigDecimal.valueOf(antallGrunnbeløpMilitærHarKravPå));
+        return grunnbeløp.multiply(BigDecimal.valueOf(antallGMilitærHarKravPå));
     }
 
     public AktivitetStatusMedHjemmel getAktivitetStatus(AktivitetStatus aktivitetStatus) {
@@ -97,8 +97,8 @@ public class Beregningsgrunnlag {
         }
     }
 
-    public BigDecimal getGenerellGrenseverdi() {
-        return generellGrenseverdi;
+    public BigDecimal getAntallGØvreGrenseverdi() {
+        return antallGØvreGrenseverdi;
     }
 
     public BigDecimal getYtelsedagerPrÅr() {
@@ -140,8 +140,8 @@ public class Beregningsgrunnlag {
         return hattMilitærIOpptjeningsperioden;
     }
 
-    public int getAntallGrunnbeløpMilitærHarKravPå() {
-        return antallGrunnbeløpMilitærHarKravPå;
+    public int getAntallGMilitærHarKravPå() {
+        return antallGMilitærHarKravPå;
     }
 
     public EnumMap<AktivitetStatus, SammenligningsGrunnlag> getSammenligningsGrunnlagPrAktivitetstatus() {
@@ -236,13 +236,13 @@ public class Beregningsgrunnlag {
             return this;
         }
 
-        public Builder medAntallGrunnbeløpMilitærHarKravPå(int antallGrunnbeløpMilitærHarKravPå) {
-            beregningsgrunnlagMal.antallGrunnbeløpMilitærHarKravPå = antallGrunnbeløpMilitærHarKravPå;
+        public Builder medAntallGMilitærHarKravPå(int antallGMilitærHarKravPå) {
+            beregningsgrunnlagMal.antallGMilitærHarKravPå = antallGMilitærHarKravPå;
             return this;
         }
 
-        public Builder medGenerellGrenseverdi(BigDecimal grenseverdi) {
-            beregningsgrunnlagMal.generellGrenseverdi = grenseverdi;
+        public Builder medAntallGØvreGrenseverdi(BigDecimal grenseverdi) {
+            beregningsgrunnlagMal.antallGØvreGrenseverdi = grenseverdi;
             return this;
         }
 
@@ -256,7 +256,7 @@ public class Beregningsgrunnlag {
             return this;
         }
 
-        public Builder medAntallGMinstekravBrutto(BigDecimal antallGMinstekravVilkår) {
+        public Builder medAntallGMinstekravVilkår(BigDecimal antallGMinstekravVilkår) {
             beregningsgrunnlagMal.antallGMinstekravVilkår = antallGMinstekravVilkår;
             return this;
         }

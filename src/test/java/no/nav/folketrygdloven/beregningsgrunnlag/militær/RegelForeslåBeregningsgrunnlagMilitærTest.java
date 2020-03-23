@@ -50,7 +50,7 @@ public class RegelForeslåBeregningsgrunnlagMilitærTest {
         //Arrange
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(SKJÆRINGSTIDSPUNKT, new Inntektsgrunnlag(),
             Collections.singletonList(AktivitetStatus.MS));
-        Beregningsgrunnlag.builder(beregningsgrunnlag).medGrunnbeløp(GRUNNBELØP_2018).medAntallGrunnbeløpMilitærHarKravPå(ANTALL_G_MILITÆR_HAR_KRAV_PÅ_FP.intValue()).build();
+        Beregningsgrunnlag.builder(beregningsgrunnlag).medGrunnbeløp(GRUNNBELØP_2018).medAntallGMilitærHarKravPå(ANTALL_G_MILITÆR_HAR_KRAV_PÅ_FP.intValue()).build();
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         BeregningsgrunnlagPrStatus.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.MS))
             .medBeregnetPrÅr(BigDecimal.valueOf(250_000))
@@ -93,7 +93,7 @@ public class RegelForeslåBeregningsgrunnlagMilitærTest {
         BigDecimal snInntekt = BigDecimal.valueOf(76783);
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(SKJÆRINGSTIDSPUNKT, new Inntektsgrunnlag(),
             Arrays.asList(AktivitetStatus.MS, AktivitetStatus.SN));
-        Beregningsgrunnlag.builder(beregningsgrunnlag).medGrunnbeløp(GRUNNBELØP_2018).medAntallGrunnbeløpMilitærHarKravPå(ANTALL_G_MILITÆR_HAR_KRAV_PÅ_FP.intValue()).build();
+        Beregningsgrunnlag.builder(beregningsgrunnlag).medGrunnbeløp(GRUNNBELØP_2018).medAntallGMilitærHarKravPå(ANTALL_G_MILITÆR_HAR_KRAV_PÅ_FP.intValue()).build();
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         BeregningsgrunnlagPrStatus.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.MS))
             .medBeregnetPrÅr(BigDecimal.ZERO)
@@ -117,7 +117,7 @@ public class RegelForeslåBeregningsgrunnlagMilitærTest {
         //Arrange
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(SKJÆRINGSTIDSPUNKT, new Inntektsgrunnlag(),
             Arrays.asList(AktivitetStatus.MS, AktivitetStatus.SN, AktivitetStatus.DP));
-        Beregningsgrunnlag.builder(beregningsgrunnlag).medGrunnbeløp(GRUNNBELØP_2018).medAntallGrunnbeløpMilitærHarKravPå(ANTALL_G_MILITÆR_HAR_KRAV_PÅ_FP.intValue()).build();
+        Beregningsgrunnlag.builder(beregningsgrunnlag).medGrunnbeløp(GRUNNBELØP_2018).medAntallGMilitærHarKravPå(ANTALL_G_MILITÆR_HAR_KRAV_PÅ_FP.intValue()).build();
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         BeregningsgrunnlagPrStatus.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.MS))
             .medBeregnetPrÅr(BigDecimal.ZERO)
