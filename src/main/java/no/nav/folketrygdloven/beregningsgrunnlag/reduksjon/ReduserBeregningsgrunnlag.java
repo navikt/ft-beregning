@@ -34,8 +34,8 @@ public class ReduserBeregningsgrunnlag extends LeafSpecification<Beregningsgrunn
                     BigDecimal redusertAF = dekningsgrad.multiply(af.getAvkortetPrÅr());
                     BeregningsgrunnlagPrArbeidsforhold.builder(af)
                         .medRedusertPrÅr(dekningsgrad.multiply(af.getAvkortetPrÅr()))
-                        .medRedusertRefusjonPrÅr(dekningsgrad.multiply(af.getAvkortetRefusjonPrÅr()))
-                        .medRedusertBrukersAndelPrÅr(dekningsgrad.multiply(af.getAvkortetBrukersAndelPrÅr()))
+                        .medRedusertRefusjonPrÅr(dekningsgrad.multiply(af.getAvkortetRefusjonPrÅr()), grunnlag.getYtelsedagerPrÅr())
+                        .medRedusertBrukersAndelPrÅr(dekningsgrad.multiply(af.getAvkortetBrukersAndelPrÅr()), grunnlag.getYtelsedagerPrÅr())
                         .build();
                     resultater.put("redusertPrÅr.ATFL." + af.getArbeidsgiverId(), redusertAF);
                 });

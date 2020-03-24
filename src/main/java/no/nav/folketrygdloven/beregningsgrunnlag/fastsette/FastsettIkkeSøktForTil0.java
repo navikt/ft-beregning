@@ -34,9 +34,9 @@ class FastsettIkkeSøktForTil0 extends LeafSpecification<BeregningsgrunnlagPerio
                     .medAvkortetBrukersAndelPrÅr(BigDecimal.ZERO)
                     .medAvkortetRefusjonPrÅr(BigDecimal.ZERO)
                     .medAvkortetPrÅr(BigDecimal.ZERO)
-                    .medRedusertRefusjonPrÅr(BigDecimal.ZERO)
+                    .medRedusertRefusjonPrÅr(BigDecimal.ZERO, grunnlag.getYtelsedagerPrÅr())
                     .medRedusertPrÅr(BigDecimal.ZERO)
-                    .medRedusertBrukersAndelPrÅr(BigDecimal.ZERO)
+                    .medRedusertBrukersAndelPrÅr(BigDecimal.ZERO, grunnlag.getYtelsedagerPrÅr())
                     .medMaksimalRefusjonPrÅr(BigDecimal.ZERO)
                     .build();
                 resultater.put("brukersAndel." + af.getArbeidsgiverId(), BigDecimal.ZERO);

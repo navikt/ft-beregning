@@ -19,7 +19,6 @@ class SjekkÅrsinntektMotSammenligningsgrunnlag extends LeafSpecification<Beregn
 
     static final String ID = "FP_BR 27.1";
     static final String BESKRIVELSE = "Har beregnet årsinntekt avvik mot sammenligningsgrunnlag mer enn 25% ?";
-    private static final BigDecimal TJUEFEM = new BigDecimal("25");
 
 
     SjekkÅrsinntektMotSammenligningsgrunnlag() {
@@ -48,7 +47,7 @@ class SjekkÅrsinntektMotSammenligningsgrunnlag extends LeafSpecification<Beregn
         BigDecimal avvikProsent = diff.divide(sg.getRapportertPrÅr(), 10, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100));
         sg.setAvvikProsent(avvikProsent);
 
-        SingleEvaluation resultat = avvikProsent.compareTo(TJUEFEM) > 0 ? ja() : nei();
+        SingleEvaluation resultat = avvikProsent.compareTo(grunnlag.getAvviksgrenseProsent()) > 0 ? ja() : nei();
         regelsporing(grunnlag, sg, resultat);
         return resultat;
     }

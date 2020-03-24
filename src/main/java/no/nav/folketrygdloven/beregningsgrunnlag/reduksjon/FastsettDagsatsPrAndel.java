@@ -30,7 +30,7 @@ public class FastsettDagsatsPrAndel extends LeafSpecification<Beregningsgrunnlag
                     resultater.put("dagsats." + af.getArbeidsgiverId(), af.getDagsats())
                 );
             } else {
-                Long dagsats = bgps.getRedusertPrÅr().divide(BigDecimal.valueOf(260), 0, RoundingMode.HALF_UP).longValue();
+                Long dagsats = bgps.getRedusertPrÅr().divide(grunnlag.getYtelsedagerPrÅr(), 0, RoundingMode.HALF_UP).longValue();
                 resultater.put("dagsats." + bgps.getAktivitetStatus().name(), dagsats);
             }
 

@@ -1,6 +1,7 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -315,9 +316,9 @@ public class BeregningsgrunnlagPrArbeidsforhold {
             return this;
         }
 
-        public Builder medRedusertRefusjonPrÅr(BigDecimal redusertRefusjonPrÅr) {
+        public Builder medRedusertRefusjonPrÅr(BigDecimal redusertRefusjonPrÅr, BigDecimal ytelsesdagerPrÅr) {
             mal.redusertRefusjonPrÅr = redusertRefusjonPrÅr;
-            mal.dagsatsArbeidsgiver = redusertRefusjonPrÅr == null ? null : Math.round(redusertRefusjonPrÅr.doubleValue() / 260);
+            mal.dagsatsArbeidsgiver = redusertRefusjonPrÅr == null || ytelsesdagerPrÅr == null ? null : redusertRefusjonPrÅr.divide(ytelsesdagerPrÅr, 0, RoundingMode.HALF_UP).longValue();
             return this;
         }
 
@@ -326,9 +327,9 @@ public class BeregningsgrunnlagPrArbeidsforhold {
             return this;
         }
 
-        public Builder medRedusertBrukersAndelPrÅr(BigDecimal redusertBrukersAndelPrÅr) {
+        public Builder medRedusertBrukersAndelPrÅr(BigDecimal redusertBrukersAndelPrÅr, BigDecimal ytelsesdagerPrÅr) {
             mal.redusertBrukersAndelPrÅr = redusertBrukersAndelPrÅr;
-            mal.dagsatsBruker = redusertBrukersAndelPrÅr == null ? null : Math.round(redusertBrukersAndelPrÅr.doubleValue() / 260);
+            mal.dagsatsBruker = redusertBrukersAndelPrÅr == null || ytelsesdagerPrÅr == null ? null : redusertBrukersAndelPrÅr.divide(ytelsesdagerPrÅr, 0, RoundingMode.HALF_UP).longValue();
             return this;
         }
 

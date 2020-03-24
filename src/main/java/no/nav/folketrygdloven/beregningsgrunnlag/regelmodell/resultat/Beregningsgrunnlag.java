@@ -33,7 +33,11 @@ public class Beregningsgrunnlag {
     private boolean beregningForSykepenger = false; //Alltid false i FPSAK
     private boolean hattMilitærIOpptjeningsperioden = false;
     private boolean besteberegnet = false;
-    private int antallGrunnbeløpMilitærHarKravPå = 3; //TODO : Denne burde mappes for SVP (og eventuelt FP) fra f. eks konfig-verdi
+    private int antallGMilitærHarKravPå = 3;
+    private BigDecimal antallGØvreGrenseverdi;
+    private BigDecimal antallGMinstekravVilkår;
+    private BigDecimal ytelsedagerIPrÅr;
+    private BigDecimal avviksgrenseProsent;
 
     private Beregningsgrunnlag() {
     }
@@ -73,7 +77,7 @@ public class Beregningsgrunnlag {
     }
 
     public BigDecimal getMinsteinntektMilitærHarKravPå() {
-        return grunnbeløp.multiply(BigDecimal.valueOf(antallGrunnbeløpMilitærHarKravPå));
+        return grunnbeløp.multiply(BigDecimal.valueOf(antallGMilitærHarKravPå));
     }
 
     public AktivitetStatusMedHjemmel getAktivitetStatus(AktivitetStatus aktivitetStatus) {
@@ -93,6 +97,32 @@ public class Beregningsgrunnlag {
         }
     }
 
+    public BigDecimal getAntallGØvreGrenseverdi() {
+        return antallGØvreGrenseverdi;
+    }
+
+    public BigDecimal getYtelsedagerPrÅr() {
+        if (ytelsedagerIPrÅr == null) {
+            return BigDecimal.valueOf(260);
+        }
+        return ytelsedagerIPrÅr;
+    }
+
+    public BigDecimal getAvviksgrenseProsent() {
+        if (avviksgrenseProsent == null) {
+            return BigDecimal.valueOf(25);
+        }
+        return avviksgrenseProsent;
+    }
+
+    public BigDecimal getAntallGMinstekravVilkår() {
+        if (antallGMinstekravVilkår == null) {
+            return BigDecimal.valueOf(0.5);
+        }
+        return antallGMinstekravVilkår;
+    }
+
+
     public long snittverdiAvG(int år) {
         Optional<Grunnbeløp> optional = grunnbeløpSatser.stream().filter(g -> g.getFom().getYear() == år).findFirst();
         if (optional.isPresent()) {
@@ -110,8 +140,8 @@ public class Beregningsgrunnlag {
         return hattMilitærIOpptjeningsperioden;
     }
 
-    public int getAntallGrunnbeløpMilitærHarKravPå() {
-        return antallGrunnbeløpMilitærHarKravPå;
+    public int getAntallGMilitærHarKravPå() {
+        return antallGMilitærHarKravPå;
     }
 
     public EnumMap<AktivitetStatus, SammenligningsGrunnlag> getSammenligningsGrunnlagPrAktivitetstatus() {
@@ -206,8 +236,28 @@ public class Beregningsgrunnlag {
             return this;
         }
 
-        public Builder medAntallGrunnbeløpMilitærHarKravPå(int antallGrunnbeløpMilitærHarKravPå) {
-            beregningsgrunnlagMal.antallGrunnbeløpMilitærHarKravPå = antallGrunnbeløpMilitærHarKravPå;
+        public Builder medAntallGMilitærHarKravPå(int antallGMilitærHarKravPå) {
+            beregningsgrunnlagMal.antallGMilitærHarKravPå = antallGMilitærHarKravPå;
+            return this;
+        }
+
+        public Builder medAntallGØvreGrenseverdi(BigDecimal grenseverdi) {
+            beregningsgrunnlagMal.antallGØvreGrenseverdi = grenseverdi;
+            return this;
+        }
+
+        public Builder medYtelsesdagerIEtÅr(BigDecimal ytelsesdagerIEtÅr) {
+            beregningsgrunnlagMal.ytelsedagerIPrÅr = ytelsesdagerIEtÅr;
+            return this;
+        }
+
+        public Builder medAvviksgrenseProsent(BigDecimal avviksgrenseProsent) {
+            beregningsgrunnlagMal.avviksgrenseProsent = avviksgrenseProsent;
+            return this;
+        }
+
+        public Builder medAntallGMinstekravVilkår(BigDecimal antallGMinstekravVilkår) {
+            beregningsgrunnlagMal.antallGMinstekravVilkår = antallGMinstekravVilkår;
             return this;
         }
 

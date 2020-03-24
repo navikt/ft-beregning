@@ -13,20 +13,18 @@ class SjekkBeregningsgrunnlagMindreEnn extends LeafSpecification<Beregningsgrunn
 
     static final String ID = "FP_VK_32.1";
     static final String BESKRIVELSE = "Er beregningsgrunnlag mindre enn en 0,5G?";
-    private BigDecimal antallGrunnbeløp;
 
-    SjekkBeregningsgrunnlagMindreEnn(BigDecimal antallGrunnbeløp) {
+    SjekkBeregningsgrunnlagMindreEnn() {
         super(ID, BESKRIVELSE);
-        this.antallGrunnbeløp = antallGrunnbeløp;
     }
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        BigDecimal halvG = grunnlag.getGrunnbeløp().multiply(antallGrunnbeløp);
+        BigDecimal minstekrav = grunnlag.getGrunnbeløp().multiply(grunnlag.getAntallGMinstekravVilkår());
 
-        SingleEvaluation resultat = (grunnlag.getBruttoPrÅrInkludertNaturalytelser().compareTo(halvG) < 0) ? ja() : nei();
+        SingleEvaluation resultat = (grunnlag.getBruttoPrÅrInkludertNaturalytelser().compareTo(minstekrav) < 0) ? ja() : nei();
         resultat.setEvaluationProperty("grunnbeløp", grunnlag.getGrunnbeløp());
-        resultat.setEvaluationProperty("halvtGrunnbeløp", halvG);
+        resultat.setEvaluationProperty("halvtGrunnbeløp", minstekrav);
         resultat.setEvaluationProperty("bruttoPrÅr", grunnlag.getBruttoPrÅrInkludertNaturalytelser());
         return resultat;
     }
