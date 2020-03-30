@@ -8,6 +8,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.BeregnGjennomsnittl
 import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.BeregnOppjustertInntekt;
 import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.FastsettBeregningsperiode;
 import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.FastsettSammenligningsgrunnlagForSN;
+import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.SjekkOmBeregninsgrunnlagErBesteberegnet;
 import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.SjekkOmBrukerErNyIArbeidslivet;
 import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.SjekkOmDifferanseStørreEnn25Prosent;
 import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.SjekkOmManueltFastsattBeregningsgrunnlagSN;
@@ -58,21 +59,26 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN extends Dynami
         Specification<BeregningsgrunnlagPeriode> beregnBruttoSN =
             rs.beregningsRegel("FP_BR 2.2 - 2.10", "Beregn SN-andel", new BeregnSelvstendigAndelForKombinasjon(), sjekkOmVarigEndringIVirksomhet);
 
+    //      FP_BR 2.19 Har saksbehandler fastsatt beregningsgrunnlaget manuelt?
+    Specification<BeregningsgrunnlagPeriode> sjekkOmManueltFastsattInntekt =
+        rs.beregningHvisRegel(new SjekkOmManueltFastsattBeregningsgrunnlagSN(), sjekkOmVarigEndringIVirksomhet,
+            beregnBruttoSN);
+
         // FP_BR 2.18 Er bruker SN som er ny i arbeidslivet?
         Specification<BeregningsgrunnlagPeriode> sjekkOmNyIArbeidslivetSN =
             rs.beregningHvisRegel(new SjekkOmBrukerErNyIArbeidslivet(), new IkkeBeregnet(SjekkOmBrukerErNyIArbeidslivet.FASTSETT_BG_FOR_SN_NY_I_ARBEIDSLIVET),
-                beregnBruttoSN);
+                sjekkOmManueltFastsattInntekt);
 
-        //FP_BR 2.19 Har saksbehandler fastsatt beregningsgrunnlaget manuelt?
-        Specification<BeregningsgrunnlagPeriode> sjekkOmManueltFastsattInntekt =
-            rs.beregningHvisRegel(new SjekkOmManueltFastsattBeregningsgrunnlagSN(), new Beregnet(),
+        // FP_BR 2.20 Er beregningsgrunnlaget besteberegnet?
+        Specification<BeregningsgrunnlagPeriode> sjekkOmBesteberegnet =
+            rs.beregningHvisRegel(new SjekkOmBeregninsgrunnlagErBesteberegnet(), new Beregnet(),
                 sjekkOmNyIArbeidslivetSN);
 
         // FP_BR 2.9 Beregn oppjustert inntekt for årene i beregningsperioden
         // FP_BR 2.1 Fastsett beregningsperiode
         Specification<BeregningsgrunnlagPeriode> beregnPGI =
             rs.beregningsRegel("FP_BR 2", "Fastsett beregningsperiode og beregn oppjusterte inntekter og pgi-snitt.",
-                Arrays.asList(new FastsettBeregningsperiode(), new BeregnOppjustertInntekt(), new BeregnGjennomsnittligPGI()), sjekkOmManueltFastsattInntekt);
+                Arrays.asList(new FastsettBeregningsperiode(), new BeregnOppjustertInntekt(), new BeregnGjennomsnittligPGI()), sjekkOmBesteberegnet);
 
         Specification<BeregningsgrunnlagPeriode> beregningsgrunnlagKombinasjon;
         if(regelmodell.isSplitteATFLToggleErPå()){
