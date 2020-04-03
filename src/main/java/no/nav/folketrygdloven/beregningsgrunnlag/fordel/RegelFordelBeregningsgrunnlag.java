@@ -21,11 +21,8 @@ public class RegelFordelBeregningsgrunnlag extends DynamicRuleService<Beregnings
 
         Specification<BeregningsgrunnlagPeriode> fastsettFordelingAvBeregningsgrunnlag = new FastsettNyFordeling(regelmodell).getSpecification();
 
-        Specification<BeregningsgrunnlagPeriode> overstigerTotalRefusjonBeregningsgrunnlag = rs.beregningHvisRegel(new SjekkOverstigerTotalRefusjonBeregningsgrunnlag(),
-            new Beregnet(), fastsettFordelingAvBeregningsgrunnlag);
-
         Specification<BeregningsgrunnlagPeriode> sjekkRefusjonMotBeregningsgrunnlag = rs.beregningHvisRegel(new SjekkHarRefusjonSomOverstigerBeregningsgrunnlag(),
-            overstigerTotalRefusjonBeregningsgrunnlag, new Beregnet());
+            fastsettFordelingAvBeregningsgrunnlag, new Beregnet());
 
         return sjekkRefusjonMotBeregningsgrunnlag;
     }
