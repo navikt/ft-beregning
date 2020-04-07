@@ -101,7 +101,7 @@ public class AktivitetStatusModell {
         return dagenFørStpOpptjening.getDayOfWeek().equals(SUNDAY) || dagenFørStpOpptjening.getDayOfWeek().equals(SATURDAY);
     }
 
-    private LocalDate finnSisteAktivitetsdatoFraSistePeriode() {
+    protected LocalDate finnSisteAktivitetsdatoFraSistePeriode() {
         AktivPeriode sistePeriode = aktivePerioder.stream().min(this::slutterEtter)
             .orElseThrow(() -> new IllegalStateException("Klarte ikke å finne siste avsluttede aktivitet"));
         if (sistePeriode.inneholder(skjæringstidspunktForOpptjening)) {
