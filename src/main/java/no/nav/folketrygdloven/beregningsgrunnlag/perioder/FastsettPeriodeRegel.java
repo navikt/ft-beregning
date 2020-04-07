@@ -71,7 +71,7 @@ public class FastsettPeriodeRegel {
             nyeAndeler.addAll(input.getEndringerISøktYtelse().stream()
                     .filter(AndelGradering::erNyAktivitet)
                     .filter(andel -> harUtbetalingIPeriode(andel, periodeFom))
-                    .map(gradering -> mapSplittetAndel(gradering, periodeFom))
+                    .map(gradering -> mapSplittetAndel(gradering))
                     .collect(Collectors.toList()));
 
             LocalDate tom = utledPeriodeTom(entries, listIterator);
@@ -130,8 +130,8 @@ public class FastsettPeriodeRegel {
         return builder.build();
     }
 
-    private static SplittetAndel mapSplittetAndel(AndelGradering gradering, LocalDate periodeFom) {
-        Periode ansettelsesPeriode = gradering.getArbeidsforhold().getAnsettelsesPeriode();
+    private static SplittetAndel mapSplittetAndel(AndelGradering gradering) {
+        Periode ansettelsesPeriode = gradering.getArbeidsforhold() == null ? null : gradering.getArbeidsforhold().getAnsettelsesPeriode();
 
         SplittetAndel.Builder builder = SplittetAndel.builder()
                 .medAktivitetstatus(gradering.getAktivitetStatus())
