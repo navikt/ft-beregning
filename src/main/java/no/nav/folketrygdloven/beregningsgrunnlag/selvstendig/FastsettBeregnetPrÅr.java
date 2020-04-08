@@ -11,12 +11,12 @@ import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(FastsettBeregnetPrÅr.ID)
-class FastsettBeregnetPrÅr extends LeafSpecification<BeregningsgrunnlagPeriode> {
+public class FastsettBeregnetPrÅr extends LeafSpecification<BeregningsgrunnlagPeriode> {
 
     static final String ID = "FP_BR 2.7";
     private static final String BESKRIVELSE = "Fastsett beregnet pr år";
 
-    FastsettBeregnetPrÅr() {
+    public FastsettBeregnetPrÅr() {
         super(ID, BESKRIVELSE);
     }
 
