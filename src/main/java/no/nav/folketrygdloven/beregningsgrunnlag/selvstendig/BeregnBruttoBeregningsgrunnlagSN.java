@@ -12,12 +12,12 @@ import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(BeregnBruttoBeregningsgrunnlagSN.ID)
-class BeregnBruttoBeregningsgrunnlagSN extends LeafSpecification<BeregningsgrunnlagPeriode> {
+public class BeregnBruttoBeregningsgrunnlagSN extends LeafSpecification<BeregningsgrunnlagPeriode> {
 
     static final String ID = "FP_BR 2.8";
     static final String BESKRIVELSE = "Beregn brutto beregningsgrunnlag selvstendig næringsdrivende";
 
-    BeregnBruttoBeregningsgrunnlagSN() {
+    public BeregnBruttoBeregningsgrunnlagSN() {
         super(ID, BESKRIVELSE);
     }
 

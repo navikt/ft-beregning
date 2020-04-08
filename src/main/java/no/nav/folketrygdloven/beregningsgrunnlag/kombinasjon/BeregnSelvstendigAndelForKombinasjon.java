@@ -12,12 +12,12 @@ import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(BeregnSelvstendigAndelForKombinasjon.ID)
-class BeregnSelvstendigAndelForKombinasjon extends LeafSpecification<BeregningsgrunnlagPeriode> {
+public class BeregnSelvstendigAndelForKombinasjon extends LeafSpecification<BeregningsgrunnlagPeriode> {
 
     static final String ID = "FP_BR 2.10";
     static final String BESKRIVELSE = "Beregn selvstendig næringsdrivendeandel for kombinasjonen av statusene ATFL og SN";
 
-    BeregnSelvstendigAndelForKombinasjon() {
+    public BeregnSelvstendigAndelForKombinasjon() {
         super(ID, BESKRIVELSE);
     }
 

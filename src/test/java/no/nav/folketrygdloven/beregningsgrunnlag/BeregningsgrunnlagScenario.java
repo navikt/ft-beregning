@@ -26,9 +26,11 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 public class BeregningsgrunnlagScenario {
 
     private static final String ORGNR = "987";
+    public static final long GRUNNBELØP_2019 = 99858;
     private static final long GRUNNBELØP_2018 = 94562;
     public static final long GRUNNBELØP_2017 = 93634;
-    private static final long GSNITT_2018 = 94725;
+    public static final long GSNITT_2019 = 98866;
+    public static final long GSNITT_2018 = 94725;
     public static final long GSNITT_2017 = 93281;
     public static final long GSNITT_2016 = 91740;
     public static final long GSNITT_2015 = 89502;
@@ -41,7 +43,8 @@ public class BeregningsgrunnlagScenario {
         new Grunnbeløp(LocalDate.of(2015, 5, 1), LocalDate.of(2016, 4, 30), 90068L, GSNITT_2015),
         new Grunnbeløp(LocalDate.of(2016, 5, 1), LocalDate.of(2017, 4, 30), 92576L, GSNITT_2016),
         new Grunnbeløp(LocalDate.of(2017, 5, 1), LocalDate.of(2018, 4, 30), GRUNNBELØP_2017, GSNITT_2017),
-        new Grunnbeløp(LocalDate.of(2018, 5, 1), LocalDate.MAX, GRUNNBELØP_2018, GSNITT_2018));
+        new Grunnbeløp(LocalDate.of(2018, 5, 1), LocalDate.of(2019,4,30), GRUNNBELØP_2018, GSNITT_2018),
+        new Grunnbeløp(LocalDate.of(2019, 5, 1), LocalDate.MAX, 99858L, GSNITT_2019));
 
 
     public static Beregningsgrunnlag settoppGrunnlagMedEnPeriode(LocalDate skjæringstidspunkt, Inntektsgrunnlag inntektsgrunnlag, List<AktivitetStatus> aktivitetStatuser) {
@@ -194,6 +197,17 @@ public class BeregningsgrunnlagScenario {
             månederSiden--;
         }
     }
+
+    public static void leggTilSøknadsinntekt(Inntektsgrunnlag inntektsgrunnlag, BigDecimal inntekt) {
+        inntektsgrunnlag.leggTilPeriodeinntekt(
+            Periodeinntekt.builder()
+                .medInntekt(inntekt)
+                .medInntektskildeOgPeriodeType(Inntektskilde.SØKNAD)
+                .medMåned(LocalDate.of(2019,1,1))
+                .build()
+        );
+    }
+
 
     public static void leggTilMånedsinntekterPrStatus(Inntektsgrunnlag inntektsgrunnlag, LocalDate skjæringstidspunkt, List<BigDecimal> månedsinntekt, Inntektskilde inntektskilde, Arbeidsforhold arbeidsforhold, AktivitetStatus aktivitetStatus) {
         int månederSiden = månedsinntekt.size();
@@ -371,6 +385,10 @@ public class BeregningsgrunnlagScenario {
 
     public static List<BigDecimal> årsinntekterFor3SisteÅr(double pgi3, double pgi2, double pgi1) {
         return Arrays.asList(BigDecimal.valueOf(pgi3 * GSNITT_2015), BigDecimal.valueOf(pgi2 * GSNITT_2016), BigDecimal.valueOf(pgi1 * GSNITT_2017));
+    }
+
+    public static List<BigDecimal> årsinntekterFor2SisteÅr(double pgi2, double pgi1) {
+        return Arrays.asList(BigDecimal.valueOf(pgi2 * GSNITT_2017), BigDecimal.valueOf(pgi1 * GSNITT_2018));
     }
 
     public static List<BigDecimal> årsinntektForOppgittÅrene(double pgiMultiplicand, int... åreneArray) {
