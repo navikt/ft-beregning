@@ -36,7 +36,7 @@ class SjekkBeregningsgrunnlagFLSNMindreEnnFRISINN extends LeafSpecification<Bere
             ? BigDecimal.ZERO
             : snStatus.getBruttoInkludertNaturalytelsePrÅr();
         BigDecimal sumFLSN = snInntekt.add(frilansInntekt);
-        SingleEvaluation resultat = sumFLSN.compareTo(minstekrav) <= 0 ? ja() : nei();
+        SingleEvaluation resultat = sumFLSN.compareTo(minstekrav) < 0 ? ja() : nei();
         resultat.setEvaluationProperty("grunnbeløp", grunnlag.getGrunnbeløp());
         resultat.setEvaluationProperty("treKvartGrunnbeløp", minstekrav);
         resultat.setEvaluationProperty("bruttoPrÅrSNFL", sumFLSN);
