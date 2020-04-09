@@ -13,10 +13,13 @@ import java.util.stream.Collectors;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusV2;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AndelGradering;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ArbeidsforholdOgInntektsmelding;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.MeldekortPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.PeriodeModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.PeriodeÅrsak;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.PeriodisertBruttoBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.NaturalYtelse;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.RelatertYtelseType;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.IdentifisertePeriodeÅrsaker;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.PeriodeSplittData;
@@ -71,8 +74,11 @@ public class FastsettPeriodeRegel {
             nyeAndeler.addAll(input.getEndringerISøktYtelse().stream()
                     .filter(AndelGradering::erNyAktivitet)
                     .filter(andel -> harUtbetalingIPeriode(andel, periodeFom))
-                    .map(gradering -> mapSplittetAndel(gradering))
+                    .map(FastsettPeriodeRegel::mapSplittetAndel)
                     .collect(Collectors.toList()));
+
+
+            nyeAndeler.addAll(finnNyeAndelerFraMeldekort(input, periodeSplittData));
 
             LocalDate tom = utledPeriodeTom(entries, listIterator);
             Periode periode = new Periode(periodeFom, tom);
@@ -85,6 +91,22 @@ public class FastsettPeriodeRegel {
             list.add(splittetPeriode);
         }
         return list;
+    }
+
+    private static List<SplittetAndel> finnNyeAndelerFraMeldekort(PeriodeModell input, Set<PeriodeSplittData> periodeSplittData) {
+        return periodeSplittData.stream()
+            .filter(data -> data.getPeriodeÅrsak().equals(PeriodeÅrsak.ENDRING_I_MELDEKORTUTBETALING))
+            .filter(data -> data.getMeldekortPeriode() != null)
+            .filter(data -> data.getMeldekortPeriode().finnUtbetaling().compareTo(BigDecimal.ZERO) > 0)
+            .filter(data -> {
+                AktivitetStatusV2 aktivitetStatus = data.getMeldekortPeriode().getAktivitetStatus();
+                PeriodisertBruttoBeregningsgrunnlag førstePeriode = input.getPeriodisertBruttoBeregningsgrunnlagList().get(0);
+                return førstePeriode.getBruttoBeregningsgrunnlag().stream()
+                    .noneMatch(bruttoBeregningsgrunnlag -> bruttoBeregningsgrunnlag.getAktivitetStatus().equals(aktivitetStatus));
+            })
+            .map(PeriodeSplittData::getMeldekortPeriode)
+            .map(FastsettPeriodeRegel::mapTilkommetMeldekort)
+            .collect(Collectors.toList());
     }
 
     private static boolean harUtbetalingIPeriode(AndelGradering andel, LocalDate periodeFom) {
@@ -137,6 +159,12 @@ public class FastsettPeriodeRegel {
                 .medAktivitetstatus(gradering.getAktivitetStatus())
                 .medArbeidsforhold(gradering.getArbeidsforhold());
         settAnsettelsesPeriodeHvisFinnes(ansettelsesPeriode, builder);
+        return builder.build();
+    }
+
+    private static SplittetAndel mapTilkommetMeldekort(MeldekortPeriode meldekortPeriode) {
+        SplittetAndel.Builder builder = SplittetAndel.builder()
+            .medAktivitetstatus(meldekortPeriode.getAktivitetStatus());
         return builder.build();
     }
 

@@ -16,9 +16,16 @@ public class PeriodeModell {
     private List<SplittetPeriode> eksisterendePerioder = new ArrayList<>();
     private List<PeriodisertBruttoBeregningsgrunnlag> periodisertBruttoBeregningsgrunnlagList = Collections.emptyList();
     private List<AndelGradering> endringerISøktYtelse = new ArrayList<>();
+    private List<MeldekortPeriode> meldekortPerioder = new ArrayList<>();
+
+
 
     public List<ArbeidsforholdOgInntektsmelding> getArbeidsforholdOgInntektsmeldinger() {
         return arbeidsforholdOgInntektsmeldinger;
+    }
+
+    public List<MeldekortPeriode> getMeldekortPerioder() {
+        return meldekortPerioder;
     }
 
     public LocalDate getSkjæringstidspunkt() {
@@ -63,6 +70,11 @@ public class PeriodeModell {
 
         public Builder medGrunnbeløp(BigDecimal grunnbeløp) {
             kladd.grunnbeløp = grunnbeløp;
+            return this;
+        }
+
+        public Builder medMeldekortPerioder(List<MeldekortPeriode> meldekortPerioder) {
+            kladd.meldekortPerioder = meldekortPerioder;
             return this;
         }
 

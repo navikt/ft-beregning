@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ArbeidsforholdOgInntektsmelding;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.MeldekortPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.PeriodeÅrsak;
 
 public class PeriodeSplittData {
@@ -14,6 +15,7 @@ public class PeriodeSplittData {
     private PeriodeÅrsak periodeÅrsak;
     private BigDecimal refusjonskravPrMåned;
     private ArbeidsforholdOgInntektsmelding inntektsmelding;
+    private MeldekortPeriode meldekortPeriode;
 
     private PeriodeSplittData() {
         //private constructor
@@ -41,6 +43,10 @@ public class PeriodeSplittData {
 
     public ArbeidsforholdOgInntektsmelding getInntektsmelding() {
         return inntektsmelding;
+    }
+
+    public MeldekortPeriode getMeldekortPeriode() {
+        return meldekortPeriode;
     }
 
     @Override
@@ -97,6 +103,11 @@ public class PeriodeSplittData {
 
         public Builder medInntektsmelding(ArbeidsforholdOgInntektsmelding inntektsmelding) {
             kladd.inntektsmelding = inntektsmelding;
+            return this;
+        }
+
+        public Builder medMeldekortPeriode(MeldekortPeriode meldekortPeriode) {
+            kladd.meldekortPeriode = meldekortPeriode;
             return this;
         }
 

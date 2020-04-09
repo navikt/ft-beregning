@@ -15,6 +15,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AndelGradering;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AndelGraderingImpl;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BruttoBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Gradering;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.MeldekortPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.PeriodeModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.PeriodisertBruttoBeregningsgrunnlag;
@@ -27,6 +28,45 @@ class FastsettPeriodeRegelTest {
     private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.now();
     private static final String ORGNR = "1234657";
     private static final String ORGNR2 = "89729572935";
+
+
+    @Test
+    void skalLageNyAndelForNyMeldekortperiodeEtterSkjæringstidspunktet() {
+        PeriodeModell inputMedMeldekort = lagPeriodeInputMedEnAndelFraStart()
+            .medMeldekortPerioder(List.of(new MeldekortPeriode(
+                new Periode(SKJÆRINGSTIDSPUNKT.plusDays(12), SKJÆRINGSTIDSPUNKT.plusMonths(1)),
+                BigDecimal.TEN,
+                BigDecimal.valueOf(1),
+                AktivitetStatusV2.DP)))
+            .build();
+        List<SplittetPeriode> perioder = FastsettPeriodeRegel.fastsett(inputMedMeldekort);
+        assertThat(perioder.size()).isEqualTo(3);
+        assertThat(perioder.get(1).getNyeAndeler().size()).isEqualTo(1);
+        assertThat(perioder.get(2).getNyeAndeler().size()).isEqualTo(0);
+    }
+
+    @Test
+    void skalLageSplittForEndretMeldekortperiodeEtterSkjæringstidspunktet() {
+        PeriodeModell inputMedMeldekort = lagPeriodeInputMedEnDagpengeandelFraStart()
+            .medMeldekortPerioder(List.of(
+                new MeldekortPeriode(
+                new Periode(SKJÆRINGSTIDSPUNKT.minusDays(2), SKJÆRINGSTIDSPUNKT.plusDays(11)),
+                BigDecimal.TEN,
+                BigDecimal.valueOf(0.5),
+                AktivitetStatusV2.DP),
+                new MeldekortPeriode(
+                new Periode(SKJÆRINGSTIDSPUNKT.plusDays(12), SKJÆRINGSTIDSPUNKT.plusMonths(1)),
+                BigDecimal.TEN,
+                BigDecimal.valueOf(1),
+                AktivitetStatusV2.DP)))
+            .build();
+        List<SplittetPeriode> perioder = FastsettPeriodeRegel.fastsett(inputMedMeldekort);
+        assertThat(perioder.size()).isEqualTo(3);
+        assertThat(perioder.get(1).getNyeAndeler().size()).isEqualTo(0);
+        assertThat(perioder.get(2).getNyeAndeler().size()).isEqualTo(0);
+
+    }
+
 
     @Test
     void skalLageNyAndelForSVPForArbeidsforholdMedSøktYtelseFraSTP() {
@@ -62,5 +102,28 @@ class FastsettPeriodeRegelTest {
                         .medFørstePeriodeAndeler(List.of(BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(arbeidsforhold).medAndelNr(1L).build()))
                         .medPeriode(Periode.of(SKJÆRINGSTIDSPUNKT, null))
                         .build()));
+    }
+
+
+    private PeriodeModell.Builder lagPeriodeInputMedEnDagpengeandelFraStart() {
+        Arbeidsforhold arbeidsforhold = Arbeidsforhold.builder().medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT)
+            .medAnsettelsesPeriode(Periode.of(SKJÆRINGSTIDSPUNKT.minusMonths(12), SKJÆRINGSTIDSPUNKT.plusMonths(12))).medOrgnr(ORGNR).build();
+        BruttoBeregningsgrunnlag bruttoBeregningsgrunnlag = BruttoBeregningsgrunnlag.builder().medAktivitetStatus(AktivitetStatusV2.AT).medBruttoBeregningsgrunnlag(BigDecimal.valueOf(500_000)).medArbeidsforhold(arbeidsforhold).build();
+        BruttoBeregningsgrunnlag dagpengeGrunnlag = BruttoBeregningsgrunnlag.builder().medAktivitetStatus(AktivitetStatusV2.DP).medBruttoBeregningsgrunnlag(BigDecimal.valueOf(500_000)).build();
+
+        PeriodisertBruttoBeregningsgrunnlag periodisertBruttoBeregningsgrunnlag = PeriodisertBruttoBeregningsgrunnlag.builder()
+            .medPeriode(Periode.of(SKJÆRINGSTIDSPUNKT, null))
+            .leggTilBruttoBeregningsgrunnlag(bruttoBeregningsgrunnlag)
+            .leggTilBruttoBeregningsgrunnlag(dagpengeGrunnlag)
+            .build();
+        return PeriodeModell.builder()
+            .medGrunnbeløp(BigDecimal.valueOf(90_000))
+            .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT)
+            .medPeriodisertBruttoBeregningsgrunnlag(List.of(periodisertBruttoBeregningsgrunnlag))
+            .medEksisterendePerioder(List.of(SplittetPeriode.builder()
+                .medPeriodeÅrsaker(List.of())
+                .medFørstePeriodeAndeler(List.of(BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(arbeidsforhold).medAndelNr(1L).build()))
+                .medPeriode(Periode.of(SKJÆRINGSTIDSPUNKT, null))
+                .build()));
     }
 }

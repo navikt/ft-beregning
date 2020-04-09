@@ -50,6 +50,9 @@ public class IdentifiserPeriodeÅrsaker {
         });
 
 
+        Set<PeriodeSplittData> meldekortSplitt = IdentifiserPerioderForMeldekort.identifiserPerioderForEndringerIMeldekort(input);
+        meldekortSplitt.forEach(map::leggTilPeriodeÅrsak);
+
         // må alltid ha en første periode, også når ingen gradering/refusjon/naturalytelse fra start
         if (!map.getPeriodeMap().containsKey(input.getSkjæringstidspunkt())) {
             PeriodeSplittData førstePeriode = PeriodeSplittData.builder()
