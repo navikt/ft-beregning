@@ -30,7 +30,8 @@ public class FastsettForSN extends LeafSpecification<BeregningsgrunnlagPeriode> 
         Map<String, Object> resultater = new HashMap<>();
 
 
-        BigDecimal fastsattTilFrilans = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL)
+        BeregningsgrunnlagPrStatus atflAndel = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+        BigDecimal fastsattTilFrilans = atflAndel == null ? BigDecimal.ZERO : atflAndel
             .getFrilansArbeidsforhold()
             .map(BeregningsgrunnlagPrArbeidsforhold::getAvkortetPrÅr)
             .orElse(BigDecimal.ZERO);

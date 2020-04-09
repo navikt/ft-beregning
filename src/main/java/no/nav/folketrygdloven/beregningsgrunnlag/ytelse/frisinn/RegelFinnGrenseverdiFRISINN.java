@@ -9,6 +9,7 @@ import no.nav.fpsak.nare.specification.Specification;
 public class RegelFinnGrenseverdiFRISINN extends DynamicRuleService<BeregningsgrunnlagPeriode> {
 
     public static final String ID = "FRISINN 6.1";
+    public static final String BESKRIVELSE = "Finner grenseverdi for FRISINN ytelsen";
 
     public RegelFinnGrenseverdiFRISINN(BeregningsgrunnlagPeriode regelmodell) {
         super(regelmodell);

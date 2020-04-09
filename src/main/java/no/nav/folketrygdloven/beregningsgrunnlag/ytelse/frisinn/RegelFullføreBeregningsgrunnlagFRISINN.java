@@ -29,8 +29,8 @@ public class RegelFullføreBeregningsgrunnlagFRISINN extends DynamicRuleService<
         Specification<BeregningsgrunnlagPeriode> fastsettIkkeSøktForTilNull = rs.beregningsRegel(FastsettIkkeSøktForTil0.ID, FastsettIkkeSøktForTil0.BESKRIVELSE,
                 new FastsettIkkeSøktForTil0(), fastsettForFrilans);
 
-        Specification<BeregningsgrunnlagPeriode> fastsettBeregningsgrunnlag = rs.beregningsRegel(FinnGrenseverdi.ID, FinnGrenseverdi.BESKRIVELSE,
-                new FinnGrenseverdi(), fastsettIkkeSøktForTilNull);
+        Specification<BeregningsgrunnlagPeriode> fastsettBeregningsgrunnlag = rs.beregningsRegel(RegelFinnGrenseverdiFRISINN.ID, RegelFinnGrenseverdiFRISINN.BESKRIVELSE,
+                new RegelFinnGrenseverdiFRISINN(regelmodell).getSpecification(), fastsettIkkeSøktForTilNull);
 
         return fastsettBeregningsgrunnlag;
     }

@@ -31,7 +31,8 @@ public class FastsettForFrilans extends LeafSpecification<BeregningsgrunnlagPeri
 
         BigDecimal totalTilFastsetting = grunnlag.getGrenseverdi();
 
-        Optional<BeregningsgrunnlagPrArbeidsforhold> frilansArbeidsforhold = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL)
+        BeregningsgrunnlagPrStatus atflAndel = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+        Optional<BeregningsgrunnlagPrArbeidsforhold> frilansArbeidsforhold = atflAndel == null ? Optional.empty() : atflAndel
             .getFrilansArbeidsforhold();
 
         if (frilansArbeidsforhold.isPresent()) {
@@ -42,10 +43,14 @@ public class FastsettForFrilans extends LeafSpecification<BeregningsgrunnlagPeri
             if (bortfaltFL.compareTo(totalTilFastsetting) > 0) {
                 BeregningsgrunnlagPrArbeidsforhold.builder(beregningsgrunnlagPrArbeidsforhold)
                     .medAvkortetPrÅr(totalTilFastsetting)
+                    .medAvkortetBrukersAndelPrÅr(totalTilFastsetting)
+                    .medAvkortetRefusjonPrÅr(BigDecimal.ZERO)
                     .build();
             } else {
                 BeregningsgrunnlagPrArbeidsforhold.builder(beregningsgrunnlagPrArbeidsforhold)
                     .medAvkortetPrÅr(bortfaltFL)
+                    .medAvkortetBrukersAndelPrÅr(bortfaltFL)
+                    .medAvkortetRefusjonPrÅr(BigDecimal.ZERO)
                     .build();
             }
             resultater.put("avkortetFrilans", beregningsgrunnlagPrArbeidsforhold.getAvkortetPrÅr());

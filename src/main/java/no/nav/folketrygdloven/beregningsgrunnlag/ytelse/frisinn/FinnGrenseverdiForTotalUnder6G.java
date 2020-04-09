@@ -7,6 +7,7 @@ import java.util.Map;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.node.SingleEvaluation;
@@ -27,10 +28,9 @@ public class FinnGrenseverdiForTotalUnder6G extends LeafSpecification<Beregnings
         Map<String, Object> resultater = new HashMap<>();
 
         BigDecimal totalATGrunnlag = finnTotalGrunnlagAT(grunnlag);
-        BigDecimal totalDPGrunnlag = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP)
-            .getBruttoInkludertNaturalytelsePrÅr();
-        BigDecimal totalAAPGrunnlag = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.AAP)
-            .getBruttoInkludertNaturalytelsePrÅr();
+
+        BigDecimal totalDPGrunnlag = finnInntektForStatus(grunnlag, AktivitetStatus.DP);
+        BigDecimal totalAAPGrunnlag = finnInntektForStatus(grunnlag, AktivitetStatus.AAP);
         BigDecimal løpendeBgFL = finnLøpendeBgFL(grunnlag);
         BigDecimal løpendeSN = finnLøpendeBgSN(grunnlag);
 
@@ -50,6 +50,13 @@ public class FinnGrenseverdiForTotalUnder6G extends LeafSpecification<Beregnings
 
     }
 
+    private BigDecimal finnInntektForStatus(BeregningsgrunnlagPeriode grunnlag, AktivitetStatus status) {
+        BeregningsgrunnlagPrStatus andel = grunnlag.getBeregningsgrunnlagPrStatus(status);
+        if (andel == null) {
+            return BigDecimal.ZERO;
+        } return andel.getBruttoInkludertNaturalytelsePrÅr();
+    }
+
     private BigDecimal finnLøpendeBgSN(BeregningsgrunnlagPeriode grunnlag) {
         BigDecimal bruttoSN = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN)
             .getBruttoInkludertNaturalytelsePrÅr();
@@ -59,7 +66,11 @@ public class FinnGrenseverdiForTotalUnder6G extends LeafSpecification<Beregnings
     }
 
     private BigDecimal finnTotalGrunnlagAT(BeregningsgrunnlagPeriode grunnlag) {
-        return grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL)
+        BeregningsgrunnlagPrStatus atflAndel = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+        if (atflAndel == null) {
+            return BigDecimal.ZERO;
+        }
+        return atflAndel
                 .getArbeidsforholdIkkeFrilans()
                 .stream()
                 .flatMap(arbeid -> arbeid.getBruttoInkludertNaturalytelsePrÅr().stream())
@@ -68,11 +79,15 @@ public class FinnGrenseverdiForTotalUnder6G extends LeafSpecification<Beregnings
     }
 
     private BigDecimal finnLøpendeBgFL(BeregningsgrunnlagPeriode grunnlag) {
-        BigDecimal totalBgFL = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL)
+        BeregningsgrunnlagPrStatus atflAndel = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+        if (atflAndel == null) {
+            return BigDecimal.ZERO;
+        }
+        BigDecimal totalBgFL = atflAndel
             .getFrilansArbeidsforhold()
             .flatMap(BeregningsgrunnlagPrArbeidsforhold::getBruttoInkludertNaturalytelsePrÅr)
             .orElse(BigDecimal.ZERO);
-        BigDecimal bortfaltBgFL = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL)
+        BigDecimal bortfaltBgFL = atflAndel
             .getFrilansArbeidsforhold()
             .flatMap(BeregningsgrunnlagPrArbeidsforhold::getGradertBruttoInkludertNaturalytelsePrÅr)
             .orElse(BigDecimal.ZERO);
