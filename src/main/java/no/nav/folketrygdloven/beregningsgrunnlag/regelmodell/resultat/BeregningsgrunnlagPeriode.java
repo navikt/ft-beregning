@@ -27,6 +27,8 @@ public class BeregningsgrunnlagPeriode {
     @JsonManagedReference
     private List<BeregningsgrunnlagPrStatus> beregningsgrunnlagPrStatus = new ArrayList<>();
     private Periode bgPeriode;
+    private BigDecimal maksRefusjonForPeriode;
+    private boolean skalVurdereAvviksvurdering;
     private List<PeriodeÅrsak> periodeÅrsaker = new ArrayList<>();
     @JsonBackReference
     private Beregningsgrunnlag beregningsgrunnlag;
@@ -173,6 +175,14 @@ public class BeregningsgrunnlagPeriode {
         return beregningsgrunnlag.getAntallGMinstekravVilkår();
     }
 
+    public BigDecimal getMaksRefusjonForPeriode() {
+        return maksRefusjonForPeriode;
+    }
+
+    public boolean isSkalVurdereAvviksvurdering() {
+        return skalVurdereAvviksvurdering;
+    }
+
     public void setGrenseverdi(BigDecimal grenseverdi) {
         this.grenseverdi = grenseverdi;
     }
@@ -222,6 +232,16 @@ public class BeregningsgrunnlagPeriode {
 
         public Builder medskalSplitteATFL(boolean skalSplitteATFL) {
             beregningsgrunnlagPeriodeMal.splitteATFLToggleErPå = skalSplitteATFL;
+            return this;
+        }
+
+        public Builder medMaksRefusjonForPeriode(BigDecimal maksRefusjonForPeriode) {
+            beregningsgrunnlagPeriodeMal.maksRefusjonForPeriode = maksRefusjonForPeriode;
+            return this;
+        }
+
+        public Builder medSkalVurdereAvviksvurdering(boolean skalVurdereAvviksvurdering) {
+            beregningsgrunnlagPeriodeMal.skalVurdereAvviksvurdering = skalVurdereAvviksvurdering;
             return this;
         }
 
