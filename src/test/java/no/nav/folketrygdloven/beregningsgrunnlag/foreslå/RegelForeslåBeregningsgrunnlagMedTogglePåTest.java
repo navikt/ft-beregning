@@ -6,6 +6,7 @@ import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenar
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.opprettBeregningsgrunnlagFraInntektskomponenten;
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.opprettBeregningsgrunnlagFraInntektsmelding;
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.opprettSammenligningsgrunnlagPrAktivitet;
+import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.settOppGrunnlagMedEnPeriode;
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.settoppGrunnlagMedEnPeriode;
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.settoppMånedsinntekter;
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.settoppÅrsinntekter;
@@ -774,6 +775,32 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
         assertThat(grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.AT).getRapportertPrÅr()).isEqualTo((månedsinntektSammenligning.multiply(BigDecimal.valueOf(12))));
         assertThat(grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.FL).getAvvikProsent().doubleValue()).isCloseTo(100, within(0.0001));
         assertThat(grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.FL).getRapportertPrÅr()).isEqualTo(månedsinntektSammenligning.multiply(BigDecimal.valueOf(12)));
+    }
+
+    @Test
+    public void skalIkkeVurdere25ProsentAvvikForATMedVarierendeInntekterNårRefusjonLikBeregnetOgRefusjonSkalSjekkesFørAvviksvurderingOgToggleErPå() {
+        // Arrange
+        BigDecimal månedsinntektGammel = BigDecimal.valueOf(GRUNNBELØP_2017 / 12);
+        BigDecimal månedsinntektNy = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
+        BigDecimal månedsinntektInntektsmelding = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
+        BigDecimal refusjonskravPrÅr = BigDecimal.valueOf(GRUNNBELØP_2017 / 2);
+        Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
+        List<BigDecimal> månedsinntekter = List.of(månedsinntektGammel, månedsinntektGammel, månedsinntektGammel, månedsinntektGammel, månedsinntektGammel, månedsinntektGammel,
+            månedsinntektNy, månedsinntektNy, månedsinntektNy, månedsinntektNy, månedsinntektNy, månedsinntektNy);
+        leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, månedsinntekter, Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, arbeidsforhold, AktivitetStatus.AT);
+        leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, Collections.singletonList(månedsinntektInntektsmelding), Inntektskilde.INNTEKTSMELDING, arbeidsforhold, AktivitetStatus.AT);
+        BeregningsgrunnlagPeriode grunnlag = settOppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, AktivitetStatus.ATFL,
+            List.of(arbeidsforhold), Collections.singletonList(refusjonskravPrÅr), true, refusjonskravPrÅr).getBeregningsgrunnlagPerioder().get(0);
+        grunnlag.setSplitteATFLToggleErPå(true);
+
+        // Act
+        @SuppressWarnings("unused")
+        Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+        // Assert
+        verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.HJEMMEL_BARE_ARBEIDSTAKER, AktivitetStatus.ATFL, 12 * månedsinntektInntektsmelding.doubleValue());
+        verifiserBeregningsgrunnlagHjemmel(grunnlag, AktivitetStatus.ATFL, BeregningsgrunnlagHjemmel.F_14_7_8_30);
+        verifiserBeregningsgrunnlagBeregnet(grunnlag, 12 * månedsinntektInntektsmelding.doubleValue());
+        assertThat(grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.AT).getAvvikProsent()).isZero();
     }
 
     private void verifiserBeregningsgrunnlagHjemmel(BeregningsgrunnlagPeriode grunnlag, AktivitetStatus aktivitetStatus,

@@ -28,7 +28,7 @@ public class BeregningsgrunnlagPeriode {
     private List<BeregningsgrunnlagPrStatus> beregningsgrunnlagPrStatus = new ArrayList<>();
     private Periode bgPeriode;
     private BigDecimal maksRefusjonForPeriode;
-    private boolean skalVurdereAvviksvurdering;
+    private boolean skalSjekkeRefusjonFørAvviksvurdering;
     private List<PeriodeÅrsak> periodeÅrsaker = new ArrayList<>();
     @JsonBackReference
     private Beregningsgrunnlag beregningsgrunnlag;
@@ -179,8 +179,8 @@ public class BeregningsgrunnlagPeriode {
         return maksRefusjonForPeriode;
     }
 
-    public boolean isSkalVurdereAvviksvurdering() {
-        return skalVurdereAvviksvurdering;
+    public boolean isSkalSjekkeRefusjonFørAvviksvurdering() {
+        return skalSjekkeRefusjonFørAvviksvurdering;
     }
 
     public void setGrenseverdi(BigDecimal grenseverdi) {
@@ -240,8 +240,8 @@ public class BeregningsgrunnlagPeriode {
             return this;
         }
 
-        public Builder medSkalVurdereAvviksvurdering(boolean skalVurdereAvviksvurdering) {
-            beregningsgrunnlagPeriodeMal.skalVurdereAvviksvurdering = skalVurdereAvviksvurdering;
+        public Builder medSkalSjekkeRefusjonFørAvviksvurdering(boolean skalSjekkeRefusjonFørAvviksvurdering) {
+            beregningsgrunnlagPeriodeMal.skalSjekkeRefusjonFørAvviksvurdering = skalSjekkeRefusjonFørAvviksvurdering;
             return this;
         }
 
