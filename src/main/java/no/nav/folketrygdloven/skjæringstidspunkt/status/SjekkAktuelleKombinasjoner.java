@@ -15,7 +15,7 @@ public class SjekkAktuelleKombinasjoner extends LeafSpecification<AktivitetStatu
     static final String ID = "FP_BR_19_3";
     static final String BESKRIVELSE = "Sjekk aktuelle kombinasjoner?";
 
-    SjekkAktuelleKombinasjoner() {
+    public SjekkAktuelleKombinasjoner() {
         super(ID, BESKRIVELSE);
     }
 

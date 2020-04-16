@@ -17,7 +17,7 @@ public class FastsettKombinasjoner extends LeafSpecification<AktivitetStatusMode
     static final String ID = "FP_BR_19_4";
     static final String BESKRIVELSE = "Sett kombinasjoner";
 
-    FastsettKombinasjoner() {
+    public FastsettKombinasjoner() {
         super(ID, BESKRIVELSE);
     }
 
