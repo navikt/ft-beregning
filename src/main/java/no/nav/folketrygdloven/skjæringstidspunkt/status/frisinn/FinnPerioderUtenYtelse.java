@@ -1,7 +1,6 @@
 package no.nav.folketrygdloven.skjæringstidspunkt.status.frisinn;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -11,7 +10,6 @@ import java.util.stream.Collectors;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
-import no.nav.folketrygdloven.beregningsgrunnlag.util.HeleMånederUtil;
 
 public class FinnPerioderUtenYtelse {
 
@@ -93,14 +91,27 @@ public class FinnPerioderUtenYtelse {
     }
 
     private static void leggTilMånederMellom(List<Periode> beregningsperioder, LocalDate førsteDato, LocalDate sisteDato) {
-        long månederMellom = HeleMånederUtil.heleMånederMellom(førsteDato, sisteDato);
-        for (int k = 1; k < månederMellom; k++) {
+        long månederMellom = finnHeleMånederMellom(førsteDato, sisteDato);
+        for (int k = 1; k <= månederMellom; k++) {
             LocalDate måned = førsteDato.plusMonths(k);
             beregningsperioder.add(Periode.of(måned.withDayOfMonth(1), måned.withDayOfMonth(måned.lengthOfMonth())));
         }
     }
 
     private static boolean erMinstEnMånedMellom(LocalDate dato1, LocalDate dato2) {
-        return dato1.isBefore(dato2) && HeleMånederUtil.heleMånederMellom(dato1, dato2) > 1;
+        return dato1.isBefore(dato2) && finnHeleMånederMellom(dato1, dato2) > 1;
+    }
+
+    private static long finnHeleMånederMellom(LocalDate dato1, LocalDate dato2) {
+        int årMellom = dato2.getYear() - dato1.getYear();
+        int månederMellom = dato2.getMonthValue() - dato1.getMonthValue();
+
+        // Hvis start og slutt er i samme måned
+        if (månederMellom == 0 && årMellom == 0) {
+            return 0;
+        }
+
+        // Antall lyktestolper minus 1
+        return (årMellom * 12) + (månederMellom -1);
     }
 }
