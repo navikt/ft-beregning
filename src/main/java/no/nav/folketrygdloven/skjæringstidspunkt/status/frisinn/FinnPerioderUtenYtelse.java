@@ -1,5 +1,9 @@
 package no.nav.folketrygdloven.skjæringstidspunkt.status.frisinn;
 
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -7,14 +11,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
-
 public class FinnPerioderUtenYtelse {
 
     private FinnPerioderUtenYtelse() {
-        // skjul
+        // Vedskjul
     }
 
     public static List<Periode> finnPerioder(Inntektsgrunnlag inntektsgrunnlag, LocalDate skjæringstidspunktForBeregning, Map<String, Object> resultater) {
@@ -61,7 +61,8 @@ public class FinnPerioderUtenYtelse {
 
     private static List<Periode> finnPerioderUtenYtelseFra36MndFørStp(LocalDate skjæringstidspunktForBeregning, List<Periode> ytelseperioder) {
         List<Periode> beregningsperioder = new ArrayList<>();
-        LocalDate gjeldendeTom = skjæringstidspunktForBeregning.minusMonths(36);
+        // Må starte på måneden før opplysningsperioden startet for 3 år siden
+        LocalDate gjeldendeTom = skjæringstidspunktForBeregning.minusMonths(37);
         int i = 0;
         while (gjeldendeTom.isBefore(skjæringstidspunktForBeregning)) {
             Periode periode = ytelseperioder.get(i);
@@ -99,7 +100,7 @@ public class FinnPerioderUtenYtelse {
     }
 
     private static boolean erMinstEnMånedMellom(LocalDate dato1, LocalDate dato2) {
-        return dato1.isBefore(dato2) && finnHeleMånederMellom(dato1, dato2) > 1;
+        return dato1.isBefore(dato2) && finnHeleMånederMellom(dato1, dato2) >= 1;
     }
 
     private static long finnHeleMånederMellom(LocalDate dato1, LocalDate dato2) {
