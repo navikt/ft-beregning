@@ -36,12 +36,16 @@ public class RegelSammenligningsgrunnlagAT implements RuleService<Beregningsgrun
         Specification<BeregningsgrunnlagPeriode> sjekkÅrsinntektMotSammenligningsgrunnlag =
             rs.beregningHvisRegel(new SjekkÅrsinntektMotSammenligningsgrunnlagAT(), sjekkOmPeriodenErEtterTidsbegrensetArbeidsforhold, new Beregnet());
 
+        // FP_BR 26.1 Skal vi sjekke avvik?
+
+        Specification<BeregningsgrunnlagPeriode> skalSjekkeAvvik =
+            rs.beregningHvisRegel(new SkalSjekkeAvvik(), sjekkÅrsinntektMotSammenligningsgrunnlag, new Beregnet());
 
         // FP_BR 28.6 Sammenligningsgrunnlag pr år = sum av 12 siste måneder
 
         Specification<BeregningsgrunnlagPeriode> fastsettSammenligningsgrunnlag =
             rs.beregningsRegel("FP_BR 28.6", "Fastsett sammenligningsgrunnlag for AT",
-                new FastsettSammenligningsgrunnlagAT(), sjekkÅrsinntektMotSammenligningsgrunnlag);
+                new FastsettSammenligningsgrunnlagAT(), skalSjekkeAvvik);
 
         return fastsettSammenligningsgrunnlag;
     }

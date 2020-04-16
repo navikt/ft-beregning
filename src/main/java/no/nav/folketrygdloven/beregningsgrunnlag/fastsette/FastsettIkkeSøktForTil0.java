@@ -13,12 +13,12 @@ import no.nav.fpsak.nare.evaluation.node.SingleEvaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(FastsettIkkeSøktForTil0.ID)
-class FastsettIkkeSøktForTil0 extends LeafSpecification<BeregningsgrunnlagPeriode> {
+public class FastsettIkkeSøktForTil0 extends LeafSpecification<BeregningsgrunnlagPeriode> {
 
-    static final String ID = "FP_BR_29_1";
-    static final String BESKRIVELSE = "Fastsett andeler ikke søkt for til 0";
+    public static final String ID = "FP_BR_29_1";
+    public static final String BESKRIVELSE = "Fastsett andeler ikke søkt for til 0";
 
-    FastsettIkkeSøktForTil0() {
+    public FastsettIkkeSøktForTil0() {
         super(ID, BESKRIVELSE);
     }
 
