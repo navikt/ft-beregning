@@ -112,7 +112,7 @@ public class FinnPerioderUtenYtelse {
             return 0;
         }
 
-        // Antall lyktestolper minus 1
+        // Antall måneder i perioden ikke medregnet start og slutt
         return (årMellom * 12) + (månederMellom -1);
     }
 }
