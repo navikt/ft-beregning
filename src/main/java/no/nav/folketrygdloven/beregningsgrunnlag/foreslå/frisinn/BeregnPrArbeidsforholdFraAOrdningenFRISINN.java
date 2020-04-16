@@ -12,7 +12,9 @@ import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +23,7 @@ import java.util.Objects;
 @RuleDocumentation(BeregnPrArbeidsforholdFraAOrdningenFRISINN.ID)
 class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<BeregningsgrunnlagPeriode> {
 
+    private static final BigDecimal ANTALL_MÅNEDER_I_ÅR = BigDecimal.valueOf(12);
     static final String ID = "FRISINN 2.3";
     static final String BESKRIVELSE = "Rapportert inntekt = snitt av mnd-inntekter i beregningsperioden * 12";
     private BeregningsgrunnlagPrArbeidsforhold arbeidsforhold;
@@ -38,18 +41,40 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
         LocalDate skjæringstidspunkt = grunnlag.getSkjæringstidspunkt();
         List<Periode> perioderSomSkalBrukesForInntekter = FinnPerioderUtenYtelse.finnPerioder(inntektsgrunnlag, skjæringstidspunkt, resultater);
 
-        BigDecimal sum = BigDecimal.ZERO;
+        verifiserPerioder(perioderSomSkalBrukesForInntekter);
+
+        BigDecimal totalSumForArbeidsforhold = BigDecimal.ZERO;
         for (Periode periode : perioderSomSkalBrukesForInntekter) {
             List<Periodeinntekt> inntekterHosAgForPeriode = inntektsgrunnlag.getInntektForArbeidsforholdIPeriode(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold, periode);
             BigDecimal sumForPeriode = inntekterHosAgForPeriode.stream().map(Periodeinntekt::getInntekt).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
-            sum = sum.add(sumForPeriode);
-            resultater.put("sumForPeriode" + periode.toString(), sum);
+            totalSumForArbeidsforhold = totalSumForArbeidsforhold.add(sumForPeriode);
+            resultater.put("sumForPeriode" + periode.toString(), sumForPeriode);
         }
+
+        BigDecimal antallPerioder = BigDecimal.valueOf(perioderSomSkalBrukesForInntekter.size());
+        BigDecimal snittlønnPrMnd = totalSumForArbeidsforhold.divide(antallPerioder, 10, RoundingMode.HALF_EVEN);
+        BigDecimal årslønn = snittlønnPrMnd.multiply(ANTALL_MÅNEDER_I_ÅR);
+
         BeregningsgrunnlagPrArbeidsforhold.builder(arbeidsforhold)
-            .medBeregnetPrÅr(sum)
+            .medBeregnetPrÅr(årslønn)
             .build();
-        resultater.put("beregnetPrÅr", arbeidsforhold.getBeregnetPrÅr());
+
         resultater.put("arbeidsforhold", arbeidsforhold.getBeskrivelse());
+        resultater.put("sumForArbeidsforhold", totalSumForArbeidsforhold);
+        resultater.put("antallPerioder", antallPerioder);
+        resultater.put("beregnetPrÅr", årslønn);
         return beregnet(resultater);
+    }
+
+    private void verifiserPerioder(List<Periode> perioderSomSkalBrukesForInntekter) {
+        // Alle perioder skal vare nøyaktig en hel måned, fra første dag i måneden til siste dag i måneden.
+        perioderSomSkalBrukesForInntekter.forEach(periode -> {
+            if (!periode.getFom().equals(periode.getFom().with(TemporalAdjusters.firstDayOfMonth()))) {
+                throw new IllegalStateException("Periode starter ikke på første dag i måneden. Periode var: " + periode.toString());
+            }
+            if (!periode.getTom().equals(periode.getTom().with(TemporalAdjusters.lastDayOfMonth()))) {
+                throw new IllegalStateException("Periode slutter ikke på siste dag i måneden. Periode var: " + periode.toString());
+            }
+        });
     }
 }
