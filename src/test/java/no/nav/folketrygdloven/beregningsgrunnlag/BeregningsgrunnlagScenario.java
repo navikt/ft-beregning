@@ -103,6 +103,27 @@ public class BeregningsgrunnlagScenario {
             .build();
     }
 
+    public static Beregningsgrunnlag settOppGrunnlagMedEnPeriode(LocalDate skjæringstidspunkt, Inntektsgrunnlag inntektsgrunnlag, AktivitetStatus aktivitetStatus, List<Arbeidsforhold> arbeidsforhold, List<BigDecimal> refusjonskravPrår, boolean skalVurdereAvviksvurdering, BigDecimal maksRefusjon) {
+        BeregningsgrunnlagPrStatus bgps = BeregningsgrunnlagPrStatus.builder()
+            .medAktivitetStatus(aktivitetStatus)
+            .medArbeidsforhold(arbeidsforhold, refusjonskravPrår, skjæringstidspunkt)
+            .build();
+        BeregningsgrunnlagPeriode.Builder periodeBuilder = BeregningsgrunnlagPeriode.builder()
+            .medBeregningsgrunnlagPrStatus(bgps)
+            .medPeriode(Periode.of(skjæringstidspunkt, null))
+            .medSkalSjekkeRefusjonFørAvviksvurdering(skalVurdereAvviksvurdering)
+            .medMaksRefusjonForPeriode(maksRefusjon);
+
+        return Beregningsgrunnlag.builder()
+            .medInntektsgrunnlag(inntektsgrunnlag)
+            .medSkjæringstidspunkt(skjæringstidspunkt)
+            .medGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2017))
+            .medAktivitetStatuser(List.of(new AktivitetStatusMedHjemmel(aktivitetStatus, null)))
+            .medBeregningsgrunnlagPeriode(periodeBuilder.build())
+            .medGrunnbeløpSatser(GRUNNBELØPLISTE)
+            .build();
+    }
+
     private static Inntektsgrunnlag settoppÅrsinntekterATFL(LocalDate skjæringstidspunkt, List<BigDecimal> årsinntekt, Inntektskilde inntektskilde) {
         LocalDate førsteMåned = skjæringstidspunkt.minusYears(årsinntekt.size()).withMonth(1).withDayOfMonth(1);
         int år = 0;

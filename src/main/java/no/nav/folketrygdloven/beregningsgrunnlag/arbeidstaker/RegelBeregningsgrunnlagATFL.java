@@ -1,5 +1,7 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker;
 
+import java.util.List;
+
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Beregnet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.IkkeBeregnet;
@@ -8,8 +10,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.specification.Specification;
-
-import java.util.List;
 
 public class RegelBeregningsgrunnlagATFL implements RuleService<BeregningsgrunnlagPeriode> {
 
@@ -42,11 +42,16 @@ public class RegelBeregningsgrunnlagATFL implements RuleService<Beregningsgrunnl
         Specification<BeregningsgrunnlagPeriode> sjekkÅrsinntektMotSammenligningsgrunnlag =
                 rs.beregningHvisRegel(new SjekkÅrsinntektMotSammenligningsgrunnlag(), sjekkOmPeriodenErEtterTidsbegrensetArbeidsforhold, new Beregnet());
 
+        // FP_BR 26.1 Skal vi sjekke avvik?
+
+        Specification<BeregningsgrunnlagPeriode> skalSjekkeAvvik =
+            rs.beregningHvisRegel(new SkalSjekkeAvvik(), sjekkÅrsinntektMotSammenligningsgrunnlag, new Beregnet());
+
         // FP_BR 17.1 17.2 27.1 Sammenligningsgrunnlag pr år = sum av 12 siste måneder
 
         Specification<BeregningsgrunnlagPeriode> fastsettSammenligningsgrunnlag =
                 rs.beregningsRegel("FP_BR 17.1", "Fastsett sammenligningsgrunnlag for ATFL",
-                        new FastsettSammenligningsgrunnlag(), sjekkÅrsinntektMotSammenligningsgrunnlag);
+                        new FastsettSammenligningsgrunnlag(), skalSjekkeAvvik);
 
         // FP_BR 27.2 Skal vi sammeligne inntekt mot sammenligningsgrunnlaget?
         Specification<BeregningsgrunnlagPeriode> skalÅrsinntektVurderesMotSammenligningsgrunnlaget =
