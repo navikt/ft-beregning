@@ -13,10 +13,15 @@ public class AktivitetStatusModellFRISINN extends AktivitetStatusModell {
     private Inntektsgrunnlag inntektsgrunnlag;
     private List<Periode> beregningsperioder;
 
+    public AktivitetStatusModellFRISINN() {
+        super();
+    }
+
     public AktivitetStatusModellFRISINN(Inntektsgrunnlag inntektsgrunnlag, AktivitetStatusModell aktivitetStatusModell) {
         super(aktivitetStatusModell);
         this.inntektsgrunnlag = inntektsgrunnlag;
     }
+
 
     @Override
     public LocalDate sisteAktivitetsdato() {
