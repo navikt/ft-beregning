@@ -51,7 +51,7 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
     }
 
     @Test
-    public void skalOppretteRegelmerknadForAvslagNårSNErLikTreKvartG() {
+    public void skalIkkeOppretteRegelmerknadForAvslagNårSNErLikTreKvartG() {
         //Arrange
         double beregnetPrÅr = GRUNNBELØP_2019 * 0.75;
         Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(beregnetPrÅr, null, null);
@@ -61,7 +61,7 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
         RegelResultat resultat = kjørRegel(grunnlag);
 
         //Assert
-        assertThat(resultat.getMerknader().stream().map(RegelMerknad::getMerknadKode)).containsOnly("1041");
+        assertThat(resultat.getMerknader()).hasSize(0);
         assertThat(grunnlag.getBruttoPrÅr().doubleValue()).isEqualTo(beregnetPrÅr, offset);
     }
 
@@ -96,7 +96,7 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
     }
 
     @Test
-    public void skalOppretteRegelmerknadForAvslagNårFLErLikTreKvartG() {
+    public void skalIkkeOppretteRegelmerknadForAvslagNårFLErLikTreKvartG() {
         //Arrange
         double beregnetPrÅr = GRUNNBELØP_2019 * 0.75;
         Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(null, beregnetPrÅr, null);
@@ -106,7 +106,7 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
         RegelResultat resultat = kjørRegel(grunnlag);
 
         //Assert
-        assertThat(resultat.getMerknader().stream().map(RegelMerknad::getMerknadKode)).containsOnly("1041");
+        assertThat(resultat.getMerknader()).hasSize(0);
         assertThat(grunnlag.getBruttoPrÅr().doubleValue()).isEqualTo(beregnetPrÅr, offset);
     }
 
@@ -143,7 +143,7 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
     }
 
     @Test
-    public void skalOppretteRegelmerknadForAvslagNårFLOgSNErLikTreKvartG() {
+    public void skalIkkeOppretteRegelmerknadForAvslagNårFLOgSNErLikTreKvartG() {
         //Arrange
         double beregnetPrÅrFL = GRUNNBELØP_2019 * 0.5;
         double beregnetPrÅrSN = GRUNNBELØP_2019 * 0.25;
@@ -155,7 +155,7 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
         RegelResultat resultat = kjørRegel(grunnlag);
 
         //Assert
-        assertThat(resultat.getMerknader().stream().map(RegelMerknad::getMerknadKode)).containsOnly("1041");
+        assertThat(resultat.getMerknader()).hasSize(0);
         assertThat(grunnlag.getBruttoPrÅr().doubleValue()).isEqualTo(beregnetPrÅrFL + beregnetPrÅrSN, offset);
     }
 
