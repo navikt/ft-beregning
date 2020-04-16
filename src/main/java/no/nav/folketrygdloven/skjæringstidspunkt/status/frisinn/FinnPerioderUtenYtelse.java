@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
+import no.nav.folketrygdloven.beregningsgrunnlag.util.HeleMånederUtil;
 
 public class FinnPerioderUtenYtelse {
 
@@ -92,7 +93,7 @@ public class FinnPerioderUtenYtelse {
     }
 
     private static void leggTilMånederMellom(List<Periode> beregningsperioder, LocalDate førsteDato, LocalDate sisteDato) {
-        long månederMellom = finnHeleMånederMellom(førsteDato, sisteDato);
+        long månederMellom = HeleMånederUtil.heleMånederMellom(førsteDato, sisteDato);
         for (int k = 1; k < månederMellom; k++) {
             LocalDate måned = førsteDato.plusMonths(k);
             beregningsperioder.add(Periode.of(måned.withDayOfMonth(1), måned.withDayOfMonth(måned.lengthOfMonth())));
@@ -100,20 +101,6 @@ public class FinnPerioderUtenYtelse {
     }
 
     private static boolean erMinstEnMånedMellom(LocalDate dato1, LocalDate dato2) {
-        return dato1.isBefore(dato2) && finnHeleMånederMellom(dato1, dato2) > 1;
+        return dato1.isBefore(dato2) && HeleMånederUtil.heleMånederMellom(dato1, dato2) > 1;
     }
-
-    private static long finnHeleMånederMellom(LocalDate dato1, LocalDate dato2) {
-        int årMellom = dato2.getYear() - dato1.getYear();
-        int månederMellom = dato2.getMonthValue() - dato1.getMonthValue();
-        if (månederMellom >= 2 || årMellom >= 1) {
-            if (årMellom >= 1) {
-                return årMellom * 11 + månederMellom;
-            }
-            return månederMellom;
-        }
-        return 0;
-    }
-
-
 }
