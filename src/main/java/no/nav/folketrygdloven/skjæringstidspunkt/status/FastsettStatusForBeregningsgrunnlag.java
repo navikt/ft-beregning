@@ -14,7 +14,7 @@ public class FastsettStatusForBeregningsgrunnlag extends LeafSpecification<Aktiv
     static final String ID = "FP_BR 19.5";
     static final String BESKRIVELSE = "Fastsett status for beregningsgrunnlag";
 
-    FastsettStatusForBeregningsgrunnlag(){
+    public FastsettStatusForBeregningsgrunnlag(){
         super(ID, BESKRIVELSE);
     }
 
