@@ -32,6 +32,7 @@ public class FastsettStatusOgAndelPrPeriodeFRISINN extends LeafSpecification<Akt
     public Evaluation evaluate(AktivitetStatusModellFRISINN regelmodell) {
         Map<String, Object> resultater = new HashMap<>();
         List<Periode> beregningsperioden = finnBeregningsperioder(regelmodell, resultater);
+        regelmodell.setBeregningsperioder(beregningsperioden);
         beregningsperioden.forEach(bp -> resultater.put("Periode " + bp.getFom() + " - " + bp.getTom(), "Beregningsperiode"));
         opprettAktivitetStatuserForAllePerioder(beregningsperioden, regelmodell);
         regelmodell.getAktivitetStatuser()

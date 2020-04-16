@@ -24,6 +24,17 @@ public class AktivitetStatusModell {
     private List<AktivitetStatus> aktivitetStatuser = new ArrayList<>();
     private List<BeregningsgrunnlagPrStatus> beregningsgrunnlagPrStatusListe = new ArrayList<>();
 
+    public AktivitetStatusModell() {
+    }
+
+    public AktivitetStatusModell(AktivitetStatusModell kopi) {
+        this.skjæringstidspunktForBeregning = kopi.skjæringstidspunktForBeregning;
+        this.skjæringstidspunktForOpptjening = kopi.skjæringstidspunktForOpptjening;
+        this.aktivePerioder = kopi.aktivePerioder;
+        this.aktivitetStatuser = kopi.aktivitetStatuser;
+        this.beregningsgrunnlagPrStatusListe = kopi.beregningsgrunnlagPrStatusListe;
+    }
+
     public LocalDate getSkjæringstidspunktForBeregning() {
         return skjæringstidspunktForBeregning;
     }
