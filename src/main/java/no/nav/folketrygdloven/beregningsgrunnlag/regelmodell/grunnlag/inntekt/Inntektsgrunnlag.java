@@ -43,6 +43,24 @@ public class Inntektsgrunnlag {
             .findFirst();
     }
 
+    public List<Periodeinntekt> getInntektForArbeidsforholdIPeriode(Inntektskilde inntektskilde, BeregningsgrunnlagPrArbeidsforhold arbeidsforhold, Periode periode) {
+        if (arbeidsforhold.erFrilanser()) {
+            return getPeriodeinntektMedKilde(inntektskilde)
+                .filter(pi -> pi.getArbeidsgiver().isPresent())
+                .filter(pi -> pi.getArbeidsgiver().get().erFrilanser()) //NOSONAR
+                .filter(pi -> pi.getArbeidsgiver().get().equals(arbeidsforhold.getArbeidsforhold())) //NOSONAR
+                .filter(pi -> pi.erInnenforPeriode(periode))
+                .collect(Collectors.toList());
+        } else {
+            return getPeriodeinntektMedKilde(inntektskilde)
+                .filter(pi -> pi.erInnenforPeriode(periode))
+                .filter(pi -> pi.getArbeidsgiver().isPresent())
+                .filter(pi -> pi.getArbeidsgiver().get().equals(arbeidsforhold.getArbeidsforhold()))
+                .collect(Collectors.toList());
+        }
+    }
+
+
     public Optional<LocalDate> sistePeriodeMedInntektFørDato(Inntektskilde inntektskilde, LocalDate dato) {
         Optional<Periodeinntekt> perioder = getPeriodeinntektMedKilde(inntektskilde)
             .filter(pi -> dato.isAfter(pi.getTom()))
