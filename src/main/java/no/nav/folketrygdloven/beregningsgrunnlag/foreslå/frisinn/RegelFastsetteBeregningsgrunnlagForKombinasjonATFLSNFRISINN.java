@@ -1,6 +1,5 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.foreslå.frisinn;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.kombinasjon.BeregnSelvstendigAndelForKombinasjon;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Beregnet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.fpsak.nare.DynamicRuleService;
@@ -23,7 +22,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNFRISINN extends
         Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
 
         Specification<BeregningsgrunnlagPeriode> beregnBruttoSN =
-            rs.beregningsRegel("FP_BR 2.2 - 2.10", "Beregn SN-andel", new BeregnSelvstendigAndelForKombinasjon(), new Beregnet());
+            rs.beregningsRegel("FP_BR 2.2 - 2.10", "Beregn SN-andel", new BeregnBruttoBeregningsgrunnlagSNFRISINN(), new Beregnet());
 
         Specification<BeregningsgrunnlagPeriode> beregnPGI =
             rs.beregningsRegel("FP_BR 2", "Fastsett beregningsperiode og beregn oppjusterte inntekter og pgi-snitt.",

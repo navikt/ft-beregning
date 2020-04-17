@@ -88,7 +88,6 @@ class RegelForeslåBeregningsgrunnlagFRISINNTest {
     public void skalBeregneGrunnlagAGVedKombinasjonATFLogSN() {
         // Arrange
         BigDecimal månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
-        BigDecimal refusjonskrav = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
         Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(skjæringstidspunkt,
             årsinntekterFor2SisteÅr(5, 3), Inntektskilde.SIGRUN);
 
@@ -109,7 +108,7 @@ class RegelForeslåBeregningsgrunnlagFRISINNTest {
         LocalDate FRISINN_TOM = LocalDate.of(2019, 12, 31);
         Periode beregningsperiode = Periode.of(FRISINN_FOM, FRISINN_TOM);
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, grunnlag, beregningsperiode);
-        double beløpSN = ((3.0d * GSNITT_2019) - (12 * månedsinntekt.doubleValue())); // Differanse siden SN > ATFL: SN - ATFL
+        double beløpSN = GSNITT_2019;
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, AktivitetStatus.SN, beløpSN, 3.0 * GSNITT_2019);
         verifiserBeregningsgrunnlagBeregnet(grunnlag, beløpSN + 12 * månedsinntekt.doubleValue());
     }
@@ -119,10 +118,10 @@ class RegelForeslåBeregningsgrunnlagFRISINNTest {
         // ATFL > 6G, SN < ATFL: ATFL blir avkortet til 6G og SN blir satt til 0.
         // Arrange
         BigDecimal månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 1.5);
-        BigDecimal refusjonskrav = BigDecimal.valueOf(GRUNNBELØP_2017 / 1.5);
         Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(skjæringstidspunkt,
             årsinntekterFor2SisteÅr(2, 2), Inntektskilde.SIGRUN);
-        leggTilSøknadsinntekt(inntektsgrunnlag, BigDecimal.valueOf(GSNITT_2019).multiply(BigDecimal.valueOf(2)));
+        BigDecimal inntektSn = BigDecimal.valueOf(GSNITT_2019).multiply(BigDecimal.valueOf(2));
+        leggTilSøknadsinntekt(inntektsgrunnlag, inntektSn);
 
         List<BigDecimal> månedsinntekter = Collections.nCopies(12, månedsinntekt);
         leggTilMånedsinntekter(inntektsgrunnlag, skjæringstidspunkt, månedsinntekter, Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold);
@@ -135,10 +134,10 @@ class RegelForeslåBeregningsgrunnlagFRISINNTest {
         @SuppressWarnings("unused")
         String sporing = EvaluationSerializer.asJson(evaluation);
 
-        verifiserBeregningsgrunnlagBeregnet(grunnlag, 12 * månedsinntekt.doubleValue());
+        verifiserBeregningsgrunnlagBeregnet(grunnlag, 12 * månedsinntekt.doubleValue() + inntektSn.intValue());
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, AktivitetStatus.ATFL, 12 * månedsinntekt.doubleValue());
         double forventetPGI = 2 * GSNITT_2019;
-        verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, AktivitetStatus.SN, 0.0, forventetPGI);
+        verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, AktivitetStatus.SN, inntektSn.intValue(), forventetPGI);
     }
 
     @Test
@@ -164,7 +163,7 @@ class RegelForeslåBeregningsgrunnlagFRISINNTest {
 
         double expectedbruttoDP = dagsats.doubleValue() * 260 * utbetalingsgrad.intValue()/200;
         double expectedPGIsnitt = 5.0 * GSNITT_2019;
-        double expectedBruttoSN = expectedPGIsnitt - expectedbruttoDP;
+        double expectedBruttoSN = 5.0 * GSNITT_2019;
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.F_14_7_8_49, AktivitetStatus.DP, expectedbruttoDP);
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.HJEMMEL_BARE_SELVSTENDIG, AktivitetStatus.SN, expectedBruttoSN, expectedPGIsnitt);
         verifiserBeregningsgrunnlagBeregnet(grunnlag, expectedbruttoDP + expectedBruttoSN);
@@ -200,7 +199,7 @@ class RegelForeslåBeregningsgrunnlagFRISINNTest {
         double expectedbruttoAAP = dagsatsAAP.doubleValue() * 260 * utbetalingsgrad.intValue()/200;
         double expectedPGIsnitt = 6.0 * GSNITT_2019;
         double expectedBruttoATFL = 12 * månedsinntektATFL.doubleValue();
-        double expectedBruttoSN = expectedPGIsnitt - expectedbruttoAAP - expectedBruttoATFL;
+        double expectedBruttoSN = 6.0 * GSNITT_2019;
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.F_14_7, AktivitetStatus.AAP, expectedbruttoAAP);
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, AktivitetStatus.ATFL, expectedBruttoATFL);
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, AktivitetStatus.SN, expectedBruttoSN, expectedPGIsnitt);
