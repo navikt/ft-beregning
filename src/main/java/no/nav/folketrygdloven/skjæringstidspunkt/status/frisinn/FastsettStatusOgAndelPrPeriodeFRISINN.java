@@ -48,7 +48,8 @@ public class FastsettStatusOgAndelPrPeriodeFRISINN extends LeafSpecification<Akt
         for (AktivPeriode ap : aktivePerioderVedStp) {
             AktivitetStatus aktivitetStatus = mapAktivitetTilStatus(ap.getAktivitet());
             regelmodell.leggTilAktivitetStatus(aktivitetStatus);
-            regelmodell.leggTilBeregningsgrunnlagPrStatus(new BeregningsgrunnlagPrStatus(aktivitetStatus));
+            var arbeidsforhold = AktivitetStatus.ATFL.equals(aktivitetStatus) ? ap.getArbeidsforhold() : null;
+            regelmodell.leggTilBeregningsgrunnlagPrStatus(new BeregningsgrunnlagPrStatus(aktivitetStatus, arbeidsforhold));
         }
     }
 
