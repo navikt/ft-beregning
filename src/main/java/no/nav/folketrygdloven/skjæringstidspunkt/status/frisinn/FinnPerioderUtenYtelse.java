@@ -5,6 +5,8 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.In
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -24,10 +26,12 @@ public class FinnPerioderUtenYtelse {
         if (ytelseperioder.isEmpty()) {
             List<Periode> beregningsperioder = new ArrayList<>();
             leggTilMånederMellom(beregningsperioder, skjæringstidspunktForBeregning.minusMonths(13), skjæringstidspunktForBeregning);
+            verifiserPerioder(beregningsperioder);
             return beregningsperioder;
         }
 
         List<Periode> beregningsperioder = finnPerioderUtenYtelseFra36MndFørStp(skjæringstidspunktForBeregning, ytelseperioder);
+        verifiserPerioder(beregningsperioder);
         List<Periode> perioderEtter12MndFørStp = finnPerioderUtenYtelse12MndFørStp(skjæringstidspunktForBeregning, beregningsperioder);
         return finnMinst6MndUtenYtelse(beregningsperioder, perioderEtter12MndFørStp);
     }
@@ -115,4 +119,22 @@ public class FinnPerioderUtenYtelse {
         // Antall måneder i perioden ikke medregnet start og slutt
         return (årMellom * 12) + (månederMellom -1);
     }
+
+    private static void verifiserPerioder(List<Periode> perioder) {
+        // Alle perioder skal vare nøyaktig en hel måned, fra første dag i måneden til siste dag i måneden.
+        perioder.forEach(periode -> {
+            YearMonth fomÅrMåned = YearMonth.of(periode.getFom().getYear(), periode.getFom().getMonth());
+            YearMonth tomÅrMåned = YearMonth.of(periode.getTom().getYear(), periode.getTom().getMonth());
+            if (!fomÅrMåned.equals(tomÅrMåned)) {
+                throw new IllegalStateException("Periode har ikke start og slutt i samme måned / år. Periode var: " + periode.toString());
+            }
+            if (!periode.getFom().equals(periode.getFom().with(TemporalAdjusters.firstDayOfMonth()))) {
+                throw new IllegalStateException("Periode starter ikke på første dag i måneden. Periode var: " + periode.toString());
+            }
+            if (!periode.getTom().equals(periode.getTom().with(TemporalAdjusters.lastDayOfMonth()))) {
+                throw new IllegalStateException("Periode slutter ikke på siste dag i måneden. Periode var: " + periode.toString());
+            }
+        });
+    }
+
 }

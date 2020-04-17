@@ -14,7 +14,6 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.time.temporal.TemporalAdjusters;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,8 +40,6 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
         LocalDate skjæringstidspunkt = grunnlag.getSkjæringstidspunkt();
         List<Periode> perioderSomSkalBrukesForInntekter = FinnPerioderUtenYtelse.finnPerioder(inntektsgrunnlag, skjæringstidspunkt, resultater);
 
-        verifiserPerioder(perioderSomSkalBrukesForInntekter);
-
         BigDecimal totalSumForArbeidsforhold = BigDecimal.ZERO;
         for (Periode periode : perioderSomSkalBrukesForInntekter) {
             List<Periodeinntekt> inntekterHosAgForPeriode = inntektsgrunnlag.getInntektForArbeidsforholdIPeriode(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold, periode);
@@ -64,17 +61,5 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
         resultater.put("antallPerioder", antallPerioder);
         resultater.put("beregnetPrÅr", årslønn);
         return beregnet(resultater);
-    }
-
-    private void verifiserPerioder(List<Periode> perioderSomSkalBrukesForInntekter) {
-        // Alle perioder skal vare nøyaktig en hel måned, fra første dag i måneden til siste dag i måneden.
-        perioderSomSkalBrukesForInntekter.forEach(periode -> {
-            if (!periode.getFom().equals(periode.getFom().with(TemporalAdjusters.firstDayOfMonth()))) {
-                throw new IllegalStateException("Periode starter ikke på første dag i måneden. Periode var: " + periode.toString());
-            }
-            if (!periode.getTom().equals(periode.getTom().with(TemporalAdjusters.lastDayOfMonth()))) {
-                throw new IllegalStateException("Periode slutter ikke på siste dag i måneden. Periode var: " + periode.toString());
-            }
-        });
     }
 }
