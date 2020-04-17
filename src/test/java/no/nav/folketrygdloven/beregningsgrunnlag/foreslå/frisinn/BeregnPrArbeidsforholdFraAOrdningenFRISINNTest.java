@@ -1,0 +1,210 @@
+package no.nav.folketrygdloven.beregningsgrunnlag.foreslå.frisinn;
+
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+
+import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.GRUNNBELØPLISTE;
+import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.GRUNNBELØP_2019;
+import static org.assertj.core.api.Assertions.assertThat;
+
+class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
+    private static final LocalDate STP = LocalDate.of(2020,3,1);
+    private static final Arbeidsforhold ARBFOR_MED_REF = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("999999999", "ARBFOR-REF");
+    private static final Arbeidsforhold ARBFOR_UTEN_REF = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("999999999");
+    private static final Arbeidsforhold ARBFOR_FL = Arbeidsforhold.frilansArbeidsforhold();
+
+    private static Inntektsgrunnlag inntektsgrunnlag;
+
+    @BeforeEach
+    void setup() {
+        inntektsgrunnlag = new Inntektsgrunnlag();
+    }
+
+    @Test
+    public void kun_inntekt_før_stp_ingen_ytelser() {
+        // Arrange
+        BeregningsgrunnlagPrArbeidsforhold andel = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_MED_REF).medAndelNr(1L).build();
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,2,1), LocalDate.of(2020,2,29)), ARBFOR_MED_REF, 3));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,1,1), LocalDate.of(2020,1,31)), ARBFOR_MED_REF, 3));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,12,1), LocalDate.of(2019,12,31)), ARBFOR_MED_REF, 3));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,11,1), LocalDate.of(2019,11,30)), ARBFOR_MED_REF, 3));
+
+        Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(inntektsgrunnlag);
+
+        // Act
+        kjørRegel(beregningsgrunnlag, andel);
+
+        // Assert
+        assertThat(andel.getBeregnetPrÅr().intValue()).isEqualTo(12);
+    }
+
+    @Test
+    public void skal_ignorere_inntekt_fra_frilans() {
+        // Arrange
+        BeregningsgrunnlagPrArbeidsforhold andel = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_MED_REF).medAndelNr(1L).build();
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,2,1), LocalDate.of(2020,2,29)), ARBFOR_MED_REF, 12));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,1,1), LocalDate.of(2020,1,31)), ARBFOR_FL, 100_000));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,12,1), LocalDate.of(2019,12,31)), ARBFOR_FL, 100_000));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,11,1), LocalDate.of(2019,11,30)), ARBFOR_FL, 100_000));
+        Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(inntektsgrunnlag);
+
+        // Act
+        kjørRegel(beregningsgrunnlag, andel);
+
+        // Assert
+        assertThat(andel.getBeregnetPrÅr().intValue()).isEqualTo(12);
+    }
+
+
+    @Test
+    public void skal_ignorere_inntekt_etter_stp() {
+        // Arrange
+        BeregningsgrunnlagPrArbeidsforhold andel = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_MED_REF).medAndelNr(1L).build();
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,3,1), LocalDate.of(2020,3,31)), ARBFOR_MED_REF, 100_000)); // Etter STP, skal ignoreres
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,2,1), LocalDate.of(2020,2,29)), ARBFOR_MED_REF, 3));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,1,1), LocalDate.of(2020,1,31)), ARBFOR_MED_REF, 3));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,12,1), LocalDate.of(2019,12,31)), ARBFOR_MED_REF, 3));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,11,1), LocalDate.of(2019,11,30)), ARBFOR_MED_REF, 3));
+        Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(inntektsgrunnlag);
+
+        // Act
+        kjørRegel(beregningsgrunnlag, andel);
+
+        // Assert
+        assertThat(andel.getBeregnetPrÅr().intValue()).isEqualTo(12);
+    }
+
+    @Test
+    public void skal_ikke_matche_på_inntekt_som_ikke_har_arbfor_ref() {
+        // Arrange
+        BeregningsgrunnlagPrArbeidsforhold andel = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_MED_REF).medAndelNr(1L).build();
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,2,1), LocalDate.of(2020,2,29)), ARBFOR_UTEN_REF, 100000));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,1,1), LocalDate.of(2020,1,31)), ARBFOR_UTEN_REF, 100000));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,12,1), LocalDate.of(2019,12,31)), ARBFOR_MED_REF, 6));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,11,1), LocalDate.of(2019,11,30)), ARBFOR_MED_REF, 6));
+        Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(inntektsgrunnlag);
+
+        // Act
+        kjørRegel(beregningsgrunnlag, andel);
+
+        // Assert
+        assertThat(andel.getBeregnetPrÅr().intValue()).isEqualTo(12);
+    }
+
+    @Test
+    public void skal_ikke_ta_med_inntekt_som_overlapper_med_ytelser() {
+        // Arrange
+        BeregningsgrunnlagPrArbeidsforhold andel = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_MED_REF).medAndelNr(1L).build();
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,2,1), LocalDate.of(2020,2,29)), ARBFOR_MED_REF, 3));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,1,15), LocalDate.of(2020,2,15)), ARBFOR_MED_REF, 100000));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggYtelse(Periode.of(LocalDate.of(2020,1,1), LocalDate.of(2020,1,31))));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,12,1), LocalDate.of(2019,12,31)), ARBFOR_MED_REF, 3));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,11,1), LocalDate.of(2019,11,30)), ARBFOR_MED_REF, 2));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,10,1), LocalDate.of(2019,10,31)), ARBFOR_MED_REF, 2));
+
+        Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(inntektsgrunnlag);
+
+        // Act
+        kjørRegel(beregningsgrunnlag, andel);
+
+        // Assert
+        assertThat(andel.getBeregnetPrÅr().intValue()).isEqualTo(12);
+    }
+
+    @Test
+    public void skal_ta_inntekt_langt_tilbake_hvis_alle_nylige_måneder_har_hatt_ytelse() {
+        // Arrange
+        BeregningsgrunnlagPrArbeidsforhold andel = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_MED_REF).medAndelNr(1L).build();
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,2,1), LocalDate.of(2020,2,29)), ARBFOR_MED_REF, 1));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,1,1), LocalDate.of(2020,1,31)), ARBFOR_MED_REF, 1));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggYtelse(Periode.of(LocalDate.of(2019,1,1), LocalDate.of(2019,12,31))));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,12,1), LocalDate.of(2019,12,31)), ARBFOR_MED_REF, 100000));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,11,1), LocalDate.of(2019,11,30)), ARBFOR_MED_REF, 100000));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2018,12,1), LocalDate.of(2018,12,31)), ARBFOR_MED_REF, 1));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2018,11,1), LocalDate.of(2018,11,30)), ARBFOR_MED_REF, 1));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2018,10,1), LocalDate.of(2018,10,31)), ARBFOR_MED_REF, 1));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2018,9,1), LocalDate.of(2018,9,30)), ARBFOR_MED_REF, 1));
+
+        Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(inntektsgrunnlag);
+
+        // Act
+        kjørRegel(beregningsgrunnlag, andel);
+
+        // Assert
+        assertThat(andel.getBeregnetPrÅr().intValue()).isEqualTo(12);
+    }
+
+    @Test
+    public void skal_ta_inntekt_langt_tilbake_hvis_alle_nylige_måneder_har_hatt_ytelse_frilans() {
+        // Arrange
+        BeregningsgrunnlagPrArbeidsforhold andel = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_FL).medAndelNr(1L).build();
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,2,1), LocalDate.of(2020,2,29)), ARBFOR_FL, 1));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,1,1), LocalDate.of(2020,1,31)), ARBFOR_FL, 1));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggYtelse(Periode.of(LocalDate.of(2019,1,1), LocalDate.of(2019,12,31))));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,12,1), LocalDate.of(2019,12,31)), ARBFOR_FL, 100000));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,11,1), LocalDate.of(2019,11,30)), ARBFOR_FL, 100000));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2018,12,1), LocalDate.of(2018,12,31)), ARBFOR_FL, 1));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2018,11,1), LocalDate.of(2018,11,30)), ARBFOR_FL, 1));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2018,10,1), LocalDate.of(2018,10,31)), ARBFOR_FL, 1));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2018,9,1), LocalDate.of(2018,9,30)), ARBFOR_FL, 1));
+
+        Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(inntektsgrunnlag);
+
+        // Act
+        kjørRegel(beregningsgrunnlag, andel);
+
+        // Assert
+        assertThat(andel.getBeregnetPrÅr().intValue()).isEqualTo(12);
+    }
+
+    private Periodeinntekt byggYtelse(Periode periode) {
+        return Periodeinntekt.builder()
+            .medPeriode(periode)
+            .medInntekt(BigDecimal.ONE)
+            .medInntektskildeOgPeriodeType(Inntektskilde.YTELSER)
+            .build();
+    }
+
+    private Periodeinntekt byggInntekt(Periode periode, Arbeidsforhold arbeidsforhold, int beløp) {
+        return Periodeinntekt.builder()
+            .medPeriode(periode)
+            .medArbeidsgiver(arbeidsforhold)
+            .medInntekt(BigDecimal.valueOf(beløp))
+            .medInntektskildeOgPeriodeType(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING)
+            .build();
+    }
+
+    private void kjørRegel(Beregningsgrunnlag beregningsgrunnlag, BeregningsgrunnlagPrArbeidsforhold andel) {
+        BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        new BeregnPrArbeidsforholdFraAOrdningenFRISINN(andel).evaluate(grunnlag);
+    }
+
+    private Beregningsgrunnlag lagBeregningsgrunnlag(Inntektsgrunnlag ig) {
+        BeregningsgrunnlagPeriode.Builder periodeBuilder = BeregningsgrunnlagPeriode.builder()
+            .medPeriode(new Periode(STP, null));
+        BeregningsgrunnlagPeriode periode = periodeBuilder.build();
+        return Beregningsgrunnlag.builder()
+            .medInntektsgrunnlag(ig)
+            .medGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2019))
+            .medSkjæringstidspunkt(STP)
+            .medAntallGMinstekravVilkår(BigDecimal.valueOf(0.75))
+            .medGrunnbeløpSatser(GRUNNBELØPLISTE)
+            .medAktivitetStatuser(List.of(new AktivitetStatusMedHjemmel(AktivitetStatus.ATFL_SN, null)))
+            .medBeregningsgrunnlagPeriode(periode)
+            .build();
+    }
+}
