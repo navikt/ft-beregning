@@ -9,12 +9,12 @@ import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(FastsettSkjæringstidspunktLikOpptjening.ID)
-class FastsettSkjæringstidspunktLikOpptjening extends LeafSpecification<AktivitetStatusModell> {
+public class FastsettSkjæringstidspunktLikOpptjening extends LeafSpecification<AktivitetStatusModell> {
 
     static final String ID = "FP_BR 21.6";
     static final String BESKRIVELSE = "Skjæringstidspunkt for beregning settes lik Skjæringstidspunkt for opptjening";
 
-    FastsettSkjæringstidspunktLikOpptjening() {
+    public FastsettSkjæringstidspunktLikOpptjening() {
         super(ID, BESKRIVELSE);
     }
 

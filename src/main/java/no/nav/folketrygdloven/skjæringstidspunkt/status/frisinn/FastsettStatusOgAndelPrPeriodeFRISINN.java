@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivPeriode;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModellFRISINN;
@@ -51,6 +52,23 @@ public class FastsettStatusOgAndelPrPeriodeFRISINN extends LeafSpecification<Akt
             var arbeidsforhold = AktivitetStatus.ATFL.equals(aktivitetStatus) ? ap.getArbeidsforhold() : null;
             regelmodell.leggTilBeregningsgrunnlagPrStatus(new BeregningsgrunnlagPrStatus(aktivitetStatus, arbeidsforhold));
         }
+        if (harIkkeOpprettetFrilans(regelmodell)) {
+            regelmodell.leggTilBeregningsgrunnlagPrStatus(new BeregningsgrunnlagPrStatus(AktivitetStatus.ATFL, Arbeidsforhold.frilansArbeidsforhold()));
+        }
+        if (harIkkeOpprettetNæring(regelmodell)) {
+            regelmodell.leggTilBeregningsgrunnlagPrStatus(new BeregningsgrunnlagPrStatus(AktivitetStatus.SN));
+        }
+    }
+
+    private boolean harIkkeOpprettetFrilans(AktivitetStatusModellFRISINN regelmodell) {
+        return regelmodell.getBeregningsgrunnlagPrStatusListe().stream()
+            .noneMatch(st -> st.getAktivitetStatus().equals(AktivitetStatus.ATFL)
+                && st.getArbeidsforholdList().stream().noneMatch(arb -> arb.getAktivitet().equals(Aktivitet.FRILANSINNTEKT)));
+    }
+
+    private boolean harIkkeOpprettetNæring(AktivitetStatusModellFRISINN regelmodell) {
+        return regelmodell.getBeregningsgrunnlagPrStatusListe().stream()
+            .noneMatch(st -> st.getAktivitetStatus().equals(AktivitetStatus.SN));
     }
 
     private List<Periode> finnBeregningsperioder(AktivitetStatusModellFRISINN regelmodell, Map<String, Object> resultater) {
