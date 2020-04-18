@@ -6,6 +6,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.In
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
+import no.nav.folketrygdloven.beregningsgrunnlag.util.Virkedager;
 import no.nav.folketrygdloven.skjæringstidspunkt.status.frisinn.FinnPerioderUtenYtelse;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
@@ -18,10 +19,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @RuleDocumentation(BeregnPrArbeidsforholdFraAOrdningenFRISINN.ID)
 class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<BeregningsgrunnlagPeriode> {
-
+    public static final int VIRKEDAGER_I_ET_ÅR = 260;
     private static final BigDecimal ANTALL_MÅNEDER_I_ÅR = BigDecimal.valueOf(12);
     static final String ID = "FRISINN 2.3";
     static final String BESKRIVELSE = "Rapportert inntekt = snitt av mnd-inntekter i beregningsperioden * 12";
@@ -47,10 +49,14 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
             totalSumForArbeidsforhold = totalSumForArbeidsforhold.add(sumForPeriode);
             resultater.put("sumForPeriode" + periode.toString(), sumForPeriode);
         }
-
         BigDecimal antallPerioder = BigDecimal.valueOf(perioderSomSkalBrukesForInntekter.size());
         BigDecimal snittlønnPrMnd = totalSumForArbeidsforhold.divide(antallPerioder, 10, RoundingMode.HALF_EVEN);
         BigDecimal årslønn = snittlønnPrMnd.multiply(ANTALL_MÅNEDER_I_ÅR);
+
+        if (arbeidsforhold.erFrilanser()) {
+            BigDecimal oppgittÅrslønn = finnOppgittÅrsinntektFL(inntektsgrunnlag);
+            årslønn = årslønn.max(oppgittÅrslønn); // Hvis det søker har oppgitt gir høyere årslønn enn vi har kommet frem til, er det denne si skal legge til grunn.
+        }
 
         BeregningsgrunnlagPrArbeidsforhold.builder(arbeidsforhold)
             .medBeregnetPrÅr(årslønn)
@@ -61,5 +67,33 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
         resultater.put("antallPerioder", antallPerioder);
         resultater.put("beregnetPrÅr", årslønn);
         return beregnet(resultater);
+    }
+
+    private BigDecimal finnOppgittÅrsinntektFL(Inntektsgrunnlag inntektsgrunnlag) {
+        Optional<Periodeinntekt> oppgittInntektFL = inntektsgrunnlag.getOppgittInntektFL();
+        if (oppgittInntektFL.isEmpty()) {
+            return BigDecimal.ZERO;
+        }
+        Periodeinntekt periodeinntekt = oppgittInntektFL.get();
+        return finnEffektivÅrsinntektForLøpenedeInntekt(periodeinntekt);
+    }
+
+    public static BigDecimal finnEffektivÅrsinntektForLøpenedeInntekt(Periodeinntekt oppgittInntekt) {
+        BigDecimal dagsats = finnEffektivDagsatsIPeriode(oppgittInntekt);
+        return dagsats.multiply(BigDecimal.valueOf(VIRKEDAGER_I_ET_ÅR));
+    }
+
+    /**
+     * Finner opptjent inntekt pr dag i periode
+     *
+     * @param oppgittInntekt Informasjon om oppgitt inntekt
+     * @return dagsats i periode
+     */
+    private static BigDecimal finnEffektivDagsatsIPeriode(Periodeinntekt oppgittInntekt) {
+        long dagerIRapportertPeriode = Virkedager.beregnAntallVirkedager(oppgittInntekt.getFom(), oppgittInntekt.getTom());
+        if (dagerIRapportertPeriode == 0) {
+            return BigDecimal.ZERO;
+        }
+        return oppgittInntekt.getInntekt().divide(BigDecimal.valueOf(dagerIRapportertPeriode), RoundingMode.HALF_UP);
     }
 }
