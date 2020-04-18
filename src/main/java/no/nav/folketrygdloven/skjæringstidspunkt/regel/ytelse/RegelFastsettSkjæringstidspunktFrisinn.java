@@ -1,5 +1,6 @@
 package no.nav.folketrygdloven.skjæringstidspunkt.regel.ytelse;
 
+import no.nav.folketrygdloven.skjæringstidspunkt.regel.FastsettSkjæringstidspunktLikOpptjening;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModell;
 import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
@@ -20,12 +21,6 @@ public class RegelFastsettSkjæringstidspunktFrisinn implements RuleService<Akti
     @SuppressWarnings("unchecked")
     @Override
     public Specification<AktivitetStatusModell> getSpecification() {
-
-        Ruleset<AktivitetStatusModell> rs = new Ruleset<>();
-
-        Specification<AktivitetStatusModell> startFastsettSkjæringstidspunktForBeregning =
-            rs.beregningHvisRegel(new SjekkOmSNEllerFLErSisteAktivitet(), new ErAktivSomSNEllerFLPåSKjæringstidspunktForOpptjening(), new KunneIkkeFastsetteSkjæringstidspunkt());
-
-        return startFastsettSkjæringstidspunktForBeregning;
+        return new FastsettSkjæringstidspunktLikOpptjening();
     }
 }
