@@ -63,7 +63,7 @@ public class FastsettStatusOgAndelPrPeriodeFRISINN extends LeafSpecification<Akt
     private boolean harIkkeOpprettetFrilans(AktivitetStatusModellFRISINN regelmodell) {
         return regelmodell.getBeregningsgrunnlagPrStatusListe().stream()
             .noneMatch(st -> st.getAktivitetStatus().equals(AktivitetStatus.ATFL)
-                && st.getArbeidsforholdList().stream().noneMatch(arb -> arb.getAktivitet().equals(Aktivitet.FRILANSINNTEKT)));
+                && st.getArbeidsforholdList().stream().anyMatch(arb -> arb.getAktivitet().equals(Aktivitet.FRILANSINNTEKT)));
     }
 
     private boolean harIkkeOpprettetNæring(AktivitetStatusModellFRISINN regelmodell) {
