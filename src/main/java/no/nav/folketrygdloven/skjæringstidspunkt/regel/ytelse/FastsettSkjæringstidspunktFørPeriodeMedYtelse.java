@@ -29,7 +29,7 @@ class FastsettSkjæringstidspunktFørPeriodeMedYtelse extends LeafSpecification<
     public Evaluation evaluate(AktivitetStatusModellFRISINN regelmodell) {
         Map<String, Object> resultater = new HashMap<>();
         List<Periode> perioder = finnBeregningsperioder(regelmodell, resultater);
-        perioder.forEach(bp -> resultater.put("Periode " + bp.getFom() + " - " + bp.getTom(), "Beregningsperiode"));
+        resultater.put("beregningsperioder", "Perioder: " + perioder.stream().map(Periode::toString).reduce("", (p1, p2) -> p1 + ", " + p2));
         regelmodell.setBeregningsperioder(perioder);
         LocalDate sisteDatoIBeregningsperioden = perioder.stream().map(Periode::getTom)
             .max(Comparator.naturalOrder())
