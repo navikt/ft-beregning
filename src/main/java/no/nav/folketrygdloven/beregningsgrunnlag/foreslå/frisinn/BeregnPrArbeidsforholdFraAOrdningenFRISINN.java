@@ -42,6 +42,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
         LocalDate skjæringstidspunkt = grunnlag.getSkjæringstidspunkt();
         List<Periode> perioderSomSkalBrukesForInntekter = FinnPerioderUtenYtelse.finnPerioder(inntektsgrunnlag, skjæringstidspunkt, resultater);
 
+        resultater.put("arbeidsforhold", arbeidsforhold.getBeskrivelse());
         BigDecimal årsinntekt;
         if (arbeidsforhold.erFrilanser()) {
             årsinntekt = beregnÅrsinntektFrilans(perioderSomSkalBrukesForInntekter, inntektsgrunnlag, resultater);
@@ -52,7 +53,6 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
         BeregningsgrunnlagPrArbeidsforhold.builder(arbeidsforhold)
             .medBeregnetPrÅr(årsinntekt)
             .build();
-        resultater.put("arbeidsforhold", arbeidsforhold.getBeskrivelse());
         resultater.put("antallPerioder", perioderSomSkalBrukesForInntekter.size());
         resultater.put("beregnetPrÅr", årsinntekt);
         return beregnet(resultater);

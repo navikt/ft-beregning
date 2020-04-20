@@ -1,7 +1,5 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.vurder.frisinn;
 
-import java.math.BigDecimal;
-
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
@@ -10,6 +8,8 @@ import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.node.SingleEvaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
+
+import java.math.BigDecimal;
 
 @RuleDocumentation(SjekkBeregningsgrunnlagFLSNMindreEnnFRISINN.ID)
 class SjekkBeregningsgrunnlagFLSNMindreEnnFRISINN extends LeafSpecification<BeregningsgrunnlagPeriode> {
@@ -24,22 +24,26 @@ class SjekkBeregningsgrunnlagFLSNMindreEnnFRISINN extends LeafSpecification<Bere
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
         BigDecimal minstekrav = grunnlag.getGrunnbeløp().multiply(grunnlag.getAntallGMinstekravVilkår());
+        BigDecimal bruttoForSøkteAndeler = BigDecimal.ZERO;
 
         BeregningsgrunnlagPrStatus atflStatus = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
-        BigDecimal frilansInntekt = atflStatus == null
-            ? BigDecimal.ZERO
-            : atflStatus.getFrilansArbeidsforhold()
-            .flatMap(BeregningsgrunnlagPrArbeidsforhold::getBruttoInkludertNaturalytelsePrÅr)
-            .orElse(BigDecimal.ZERO);
+        BeregningsgrunnlagPrArbeidsforhold frilansandel = atflStatus == null ? null : atflStatus.getFrilansArbeidsforhold().orElse(null);
+        if (frilansandel != null && frilansandel.getUtbetalingsprosentSVP() != null) {
+            if (frilansandel.getUtbetalingsprosentSVP().compareTo(BigDecimal.ZERO) > 0) {
+                bruttoForSøkteAndeler = bruttoForSøkteAndeler.add(frilansandel.getBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO));
+           }
+        }
         BeregningsgrunnlagPrStatus snStatus = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
-        BigDecimal snInntekt = snStatus == null
-            ? BigDecimal.ZERO
-            : snStatus.getBruttoInkludertNaturalytelsePrÅr();
-        BigDecimal sumFLSN = snInntekt.add(frilansInntekt);
-        SingleEvaluation resultat = sumFLSN.compareTo(minstekrav) < 0 ? ja() : nei();
+        if (snStatus != null && snStatus.getUtbetalingsprosent() != null) {
+            if (snStatus.getUtbetalingsprosent().compareTo(BigDecimal.ZERO) > 0) {
+                bruttoForSøkteAndeler = bruttoForSøkteAndeler.add(snStatus.getBruttoInkludertNaturalytelsePrÅr());
+            }
+        }
+
+        SingleEvaluation resultat = bruttoForSøkteAndeler.compareTo(minstekrav) < 0 ? ja() : nei();
         resultat.setEvaluationProperty("grunnbeløp", grunnlag.getGrunnbeløp());
         resultat.setEvaluationProperty("treKvartGrunnbeløp", minstekrav);
-        resultat.setEvaluationProperty("bruttoPrÅrSNFL", sumFLSN);
+        resultat.setEvaluationProperty("bruttoPrÅrSNFL", bruttoForSøkteAndeler);
         return resultat;
     }
 }
