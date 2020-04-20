@@ -73,6 +73,12 @@ public class Inntektsgrunnlag {
             .max(Comparator.comparing(Periodeinntekt::getFom));
     }
 
+    public Optional<Periodeinntekt> getOppgittInntektFL() {
+        return getPeriodeinntektMedKilde(Inntektskilde.SØKNAD)
+            .filter(Periodeinntekt::erFrilans)
+            .findFirst();
+    }
+
     public BigDecimal getInntektFraInntektsmelding(BeregningsgrunnlagPrArbeidsforhold arbeidsforhold) {
         return getPeriodeinntektInntektsmeldingForArbeidsgiver(arbeidsforhold.getArbeidsforhold())
             .findFirst()
