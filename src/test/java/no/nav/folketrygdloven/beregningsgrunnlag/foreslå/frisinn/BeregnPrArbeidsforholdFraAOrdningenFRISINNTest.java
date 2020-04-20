@@ -38,10 +38,10 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
     public void kun_inntekt_før_stp_ingen_ytelser() {
         // Arrange
         BeregningsgrunnlagPrArbeidsforhold andel = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_MED_REF).medAndelNr(1L).build();
-        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,2,1), LocalDate.of(2020,2,29)), ARBFOR_MED_REF, 3));
-        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,1,1), LocalDate.of(2020,1,31)), ARBFOR_MED_REF, 3));
-        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,12,1), LocalDate.of(2019,12,31)), ARBFOR_MED_REF, 3));
-        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,11,1), LocalDate.of(2019,11,30)), ARBFOR_MED_REF, 3));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,2,1), LocalDate.of(2020,2,29)), ARBFOR_MED_REF, 1));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,1,1), LocalDate.of(2020,1,31)), ARBFOR_MED_REF, 1));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,12,1), LocalDate.of(2019,12,31)), ARBFOR_MED_REF, 1));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,11,1), LocalDate.of(2019,11,30)), ARBFOR_MED_REF, 1));
 
         Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(inntektsgrunnlag);
 
@@ -56,7 +56,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
     public void skal_ignorere_inntekt_fra_frilans() {
         // Arrange
         BeregningsgrunnlagPrArbeidsforhold andel = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_MED_REF).medAndelNr(1L).build();
-        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,2,1), LocalDate.of(2020,2,29)), ARBFOR_MED_REF, 12));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,2,1), LocalDate.of(2020,2,29)), ARBFOR_MED_REF, 1));
         inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,1,1), LocalDate.of(2020,1,31)), ARBFOR_FL, 100_000));
         inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,12,1), LocalDate.of(2019,12,31)), ARBFOR_FL, 100_000));
         inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,11,1), LocalDate.of(2019,11,30)), ARBFOR_FL, 100_000));
@@ -75,10 +75,10 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
         // Arrange
         BeregningsgrunnlagPrArbeidsforhold andel = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_MED_REF).medAndelNr(1L).build();
         inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,3,1), LocalDate.of(2020,3,31)), ARBFOR_MED_REF, 100_000)); // Etter STP, skal ignoreres
-        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,2,1), LocalDate.of(2020,2,29)), ARBFOR_MED_REF, 3));
-        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,1,1), LocalDate.of(2020,1,31)), ARBFOR_MED_REF, 3));
-        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,12,1), LocalDate.of(2019,12,31)), ARBFOR_MED_REF, 3));
-        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,11,1), LocalDate.of(2019,11,30)), ARBFOR_MED_REF, 3));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,2,1), LocalDate.of(2020,2,29)), ARBFOR_MED_REF, 1));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,1,1), LocalDate.of(2020,1,31)), ARBFOR_MED_REF, 1));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,12,1), LocalDate.of(2019,12,31)), ARBFOR_MED_REF, 1));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,11,1), LocalDate.of(2019,11,30)), ARBFOR_MED_REF, 1));
         Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(inntektsgrunnlag);
 
         // Act
@@ -94,8 +94,8 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
         BeregningsgrunnlagPrArbeidsforhold andel = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_MED_REF).medAndelNr(1L).build();
         inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,2,1), LocalDate.of(2020,2,29)), ARBFOR_UTEN_REF, 100000));
         inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,1,1), LocalDate.of(2020,1,31)), ARBFOR_UTEN_REF, 100000));
-        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,12,1), LocalDate.of(2019,12,31)), ARBFOR_MED_REF, 6));
-        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,11,1), LocalDate.of(2019,11,30)), ARBFOR_MED_REF, 6));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,12,1), LocalDate.of(2019,12,31)), ARBFOR_MED_REF, 1));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,11,1), LocalDate.of(2019,11,30)), ARBFOR_MED_REF, 1));
         Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(inntektsgrunnlag);
 
         // Act
@@ -109,12 +109,12 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
     public void skal_ikke_ta_med_inntekt_som_overlapper_med_ytelser() {
         // Arrange
         BeregningsgrunnlagPrArbeidsforhold andel = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_MED_REF).medAndelNr(1L).build();
-        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,2,1), LocalDate.of(2020,2,29)), ARBFOR_MED_REF, 3));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,2,1), LocalDate.of(2020,2,29)), ARBFOR_MED_REF, 1));
         inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,1,15), LocalDate.of(2020,2,15)), ARBFOR_MED_REF, 100000));
         inntektsgrunnlag.leggTilPeriodeinntekt(byggYtelse(Periode.of(LocalDate.of(2020,1,1), LocalDate.of(2020,1,31))));
-        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,12,1), LocalDate.of(2019,12,31)), ARBFOR_MED_REF, 3));
-        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,11,1), LocalDate.of(2019,11,30)), ARBFOR_MED_REF, 2));
-        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,10,1), LocalDate.of(2019,10,31)), ARBFOR_MED_REF, 2));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,12,1), LocalDate.of(2019,12,31)), ARBFOR_MED_REF, 1));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,11,1), LocalDate.of(2019,11,30)), ARBFOR_MED_REF, 1));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,10,1), LocalDate.of(2019,10,31)), ARBFOR_MED_REF, 1));
 
         Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(inntektsgrunnlag);
 
@@ -152,15 +152,15 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
     public void skal_ta_inntekt_langt_tilbake_hvis_alle_nylige_måneder_har_hatt_ytelse_frilans() {
         // Arrange
         BeregningsgrunnlagPrArbeidsforhold andel = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_FL).medAndelNr(1L).build();
-        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,2,1), LocalDate.of(2020,2,29)), ARBFOR_FL, 1));
-        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,1,1), LocalDate.of(2020,1,31)), ARBFOR_FL, 1));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,2,1), LocalDate.of(2020,2,29)), ARBFOR_FL, 2));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,1,1), LocalDate.of(2020,1,31)), ARBFOR_FL, 2));
         inntektsgrunnlag.leggTilPeriodeinntekt(byggYtelse(Periode.of(LocalDate.of(2019,1,1), LocalDate.of(2019,12,31))));
         inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,12,1), LocalDate.of(2019,12,31)), ARBFOR_FL, 100000));
         inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,11,1), LocalDate.of(2019,11,30)), ARBFOR_FL, 100000));
-        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2018,12,1), LocalDate.of(2018,12,31)), ARBFOR_FL, 1));
-        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2018,11,1), LocalDate.of(2018,11,30)), ARBFOR_FL, 1));
-        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2018,10,1), LocalDate.of(2018,10,31)), ARBFOR_FL, 1));
-        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2018,9,1), LocalDate.of(2018,9,30)), ARBFOR_FL, 1));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2018,12,1), LocalDate.of(2018,12,31)), ARBFOR_FL, 2));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2018,11,1), LocalDate.of(2018,11,30)), ARBFOR_FL, 2));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2018,10,1), LocalDate.of(2018,10,31)), ARBFOR_FL, 2));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2018,9,1), LocalDate.of(2018,9,30)), ARBFOR_FL, 2));
 
         Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(inntektsgrunnlag);
 
@@ -168,7 +168,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
         kjørRegel(beregningsgrunnlag, andel);
 
         // Assert
-        assertThat(andel.getBeregnetPrÅr().intValue()).isEqualTo(12);
+        assertThat(andel.getBeregnetPrÅr().intValue()).isEqualTo(24);
     }
 
     private Periodeinntekt byggYtelse(Periode periode) {
