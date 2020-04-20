@@ -1,6 +1,9 @@
 package no.nav.folketrygdloven.skjæringstidspunkt.status.frisinn;
 
-import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModellFRISINN;
+import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModell;
+import no.nav.folketrygdloven.skjæringstidspunkt.status.FastsettKombinasjoner;
+import no.nav.folketrygdloven.skjæringstidspunkt.status.FastsettStatusForBeregningsgrunnlag;
+import no.nav.folketrygdloven.skjæringstidspunkt.status.SjekkAktuelleKombinasjoner;
 import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
@@ -9,38 +12,38 @@ import no.nav.fpsak.nare.specification.Specification;
 
 
 @RuleDocumentation(value = RegelFastsettStatusVedSkjæringstidspunktFRISINN.ID, specificationReference = "https://confluence.adeo.no/display/SIF/30.+Beregningsgrunnlag")
-public class RegelFastsettStatusVedSkjæringstidspunktFRISINN implements RuleService<AktivitetStatusModellFRISINN> {
+public class RegelFastsettStatusVedSkjæringstidspunktFRISINN implements RuleService<AktivitetStatusModell> {
 
     static final String ID = "FP_BR_19";
 
     @Override
-    public Evaluation evaluer(AktivitetStatusModellFRISINN regelmodell) {
+    public Evaluation evaluer(AktivitetStatusModell regelmodell) {
         return getSpecification().evaluate(regelmodell);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public Specification<AktivitetStatusModellFRISINN> getSpecification() {
+    public Specification<AktivitetStatusModell> getSpecification() {
 
-        Ruleset<AktivitetStatusModellFRISINN> rs = new Ruleset<>();
+        Ruleset<AktivitetStatusModell> rs = new Ruleset<>();
 
 //      FP_BR_19_5 Fastsett status for beregningsrunnlag (liste)
 
-        Specification<AktivitetStatusModellFRISINN> fastsettStatusUtenKombinasjonerForBG = new FastsettStatusForBeregningsgrunnlagFRISINN();
+        Specification<AktivitetStatusModell> fastsettStatusUtenKombinasjonerForBG = new FastsettStatusForBeregningsgrunnlag();
 
 //      FP_BR_19_4 Sett kombinasjoner
 
-        Specification<AktivitetStatusModellFRISINN> fastsettKombinasjoner = new FastsettKombinasjonerFRISINN();
+        Specification<AktivitetStatusModell> fastsettKombinasjoner = new FastsettKombinasjoner();
 
 //      FP_BR_19_3 Aktuelle kombinasjoner?
 
-        Specification<AktivitetStatusModellFRISINN> sjekkAktuelleKombinasjoner =
-            rs.beregningHvisRegel(new SjekkAktuelleKombinasjonerFRISINN(), fastsettKombinasjoner, fastsettStatusUtenKombinasjonerForBG);
+        Specification<AktivitetStatusModell> sjekkAktuelleKombinasjoner =
+            rs.beregningHvisRegel(new SjekkAktuelleKombinasjoner(), fastsettKombinasjoner, fastsettStatusUtenKombinasjonerForBG);
 
 //      FP_BR_19_1 Hent aktiviteter på skjæringstidspunkt
 //      FP_BR_19_2 Fastsett status per andel og periode
 
-        Specification<AktivitetStatusModellFRISINN> startFastsettStatusVedSkjæringtidspunktForBeregning =
+        Specification<AktivitetStatusModell> startFastsettStatusVedSkjæringtidspunktForBeregning =
             rs.beregningsRegel(FastsettStatusOgAndelPrPeriodeFRISINN.ID, FastsettStatusOgAndelPrPeriodeFRISINN.BESKRIVELSE,
                 new FastsettStatusOgAndelPrPeriodeFRISINN(), sjekkAktuelleKombinasjoner);
 
