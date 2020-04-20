@@ -41,8 +41,7 @@ class FastsettSkjæringstidspunktFørPeriodeMedYtelse extends LeafSpecification<
 
     private List<Periode> finnBeregningsperioder(AktivitetStatusModellFRISINN regelmodell, Map<String, Object> resultater) {
         Inntektsgrunnlag inntektsgrunnlag = regelmodell.getInntektsgrunnlag();
-        LocalDate skjæringstidspunktForBeregning = regelmodell.getSkjæringstidspunktForBeregning();
-        return FinnPerioderUtenYtelse.finnPerioder(inntektsgrunnlag, skjæringstidspunktForBeregning, resultater);
+        return FinnPerioderUtenYtelse.finnPerioder(inntektsgrunnlag, regelmodell.getSkjæringstidspunktForOpptjening(), resultater);
     }
 
 }

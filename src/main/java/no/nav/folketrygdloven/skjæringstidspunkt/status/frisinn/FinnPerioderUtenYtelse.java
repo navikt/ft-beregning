@@ -19,20 +19,20 @@ public class FinnPerioderUtenYtelse {
         // Vedskjul
     }
 
-    public static List<Periode> finnPerioder(Inntektsgrunnlag inntektsgrunnlag, LocalDate skjæringstidspunktForBeregning, Map<String, Object> resultater) {
-        List<Periode> ytelseperioder = finnPerioderMedYtelseFørDato(inntektsgrunnlag, skjæringstidspunktForBeregning);
+    public static List<Periode> finnPerioder(Inntektsgrunnlag inntektsgrunnlag, LocalDate skjæringstidspunktForOpptjening, Map<String, Object> resultater) {
+        List<Periode> ytelseperioder = finnPerioderMedYtelseFørDato(inntektsgrunnlag, skjæringstidspunktForOpptjening);
         ytelseperioder.forEach(p -> resultater.put("Periode: " + p.getFom() + " - " + p.getTom(), "Ytelseperiode"));
 
         if (ytelseperioder.isEmpty()) {
             List<Periode> beregningsperioder = new ArrayList<>();
-            leggTilMånederMellom(beregningsperioder, skjæringstidspunktForBeregning.minusMonths(13), skjæringstidspunktForBeregning);
+            leggTilMånederMellom(beregningsperioder, skjæringstidspunktForOpptjening.minusMonths(13), skjæringstidspunktForOpptjening);
             verifiserPerioder(beregningsperioder);
             return beregningsperioder;
         }
 
-        List<Periode> beregningsperioder = finnPerioderUtenYtelseFra36MndFørStp(skjæringstidspunktForBeregning, ytelseperioder);
+        List<Periode> beregningsperioder = finnPerioderUtenYtelseFra36MndFørStp(skjæringstidspunktForOpptjening, ytelseperioder);
         verifiserPerioder(beregningsperioder);
-        List<Periode> perioderEtter12MndFørStp = finnPerioderUtenYtelse12MndFørStp(skjæringstidspunktForBeregning, beregningsperioder);
+        List<Periode> perioderEtter12MndFørStp = finnPerioderUtenYtelse12MndFørStp(skjæringstidspunktForOpptjening, beregningsperioder);
         return finnMinst6MndUtenYtelse(beregningsperioder, perioderEtter12MndFørStp);
     }
 
