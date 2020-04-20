@@ -42,31 +42,61 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
         LocalDate skjæringstidspunkt = grunnlag.getSkjæringstidspunkt();
         List<Periode> perioderSomSkalBrukesForInntekter = FinnPerioderUtenYtelse.finnPerioder(inntektsgrunnlag, skjæringstidspunkt, resultater);
 
-        BigDecimal totalSumForArbeidsforhold = BigDecimal.ZERO;
-        for (Periode periode : perioderSomSkalBrukesForInntekter) {
-            List<Periodeinntekt> inntekterHosAgForPeriode = inntektsgrunnlag.getInntektForArbeidsforholdIPeriode(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold, periode);
-            BigDecimal sumForPeriode = inntekterHosAgForPeriode.stream().map(Periodeinntekt::getInntekt).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
-            totalSumForArbeidsforhold = totalSumForArbeidsforhold.add(sumForPeriode);
-            resultater.put("sumForPeriode" + periode.toString(), sumForPeriode);
-        }
-        BigDecimal antallPerioder = BigDecimal.valueOf(perioderSomSkalBrukesForInntekter.size());
-        BigDecimal snittlønnPrMnd = totalSumForArbeidsforhold.divide(antallPerioder, 10, RoundingMode.HALF_EVEN);
-        BigDecimal årslønn = snittlønnPrMnd.multiply(ANTALL_MÅNEDER_I_ÅR);
-
+        BigDecimal årsinntekt;
         if (arbeidsforhold.erFrilanser()) {
-            BigDecimal oppgittÅrslønn = finnOppgittÅrsinntektFL(inntektsgrunnlag);
-            årslønn = årslønn.max(oppgittÅrslønn); // Hvis det søker har oppgitt gir høyere årslønn enn vi har kommet frem til, er det denne si skal legge til grunn.
+            årsinntekt = beregnÅrsinntektFrilans(perioderSomSkalBrukesForInntekter, inntektsgrunnlag, resultater);
+        } else {
+            årsinntekt = beregnÅrsinntektArbeidstaker(perioderSomSkalBrukesForInntekter, inntektsgrunnlag, resultater);
         }
 
         BeregningsgrunnlagPrArbeidsforhold.builder(arbeidsforhold)
-            .medBeregnetPrÅr(årslønn)
+            .medBeregnetPrÅr(årsinntekt)
             .build();
-
         resultater.put("arbeidsforhold", arbeidsforhold.getBeskrivelse());
-        resultater.put("sumForArbeidsforhold", totalSumForArbeidsforhold);
-        resultater.put("antallPerioder", antallPerioder);
-        resultater.put("beregnetPrÅr", årslønn);
+        resultater.put("antallPerioder", perioderSomSkalBrukesForInntekter.size());
+        resultater.put("beregnetPrÅr", årsinntekt);
         return beregnet(resultater);
+    }
+
+    private BigDecimal beregnÅrsinntektFrilans(List<Periode> inntektsperioder, Inntektsgrunnlag inntektsgrunnlag, Map<String, Object> resultater) {
+        BigDecimal samletInntekt = BigDecimal.ZERO;
+        for (Periode periode : inntektsperioder) {
+            samletInntekt = samletInntekt.add(finnInntektForPeriode(periode, inntektsgrunnlag, resultater));
+        }
+        BigDecimal antallPerioder = BigDecimal.valueOf(inntektsperioder.size());
+        BigDecimal snittMånedslønnFraRegister = samletInntekt.divide(antallPerioder, 10, RoundingMode.HALF_EVEN);
+        BigDecimal årslønnFraRegister = snittMånedslønnFraRegister.multiply(ANTALL_MÅNEDER_I_ÅR);
+        BigDecimal årsinntektFraSøknad = finnOppgittÅrsinntektFL(inntektsgrunnlag);
+        resultater.put("årsinntektFraRegister", snittMånedslønnFraRegister);
+        resultater.put("årsinntektFraSøknad", årsinntektFraSøknad);
+        return årslønnFraRegister.max(årsinntektFraSøknad);
+    }
+
+    private BigDecimal beregnÅrsinntektArbeidstaker(List<Periode> inntektsperioder, Inntektsgrunnlag inntektsgrunnlag, Map<String, Object> resultater) {
+        BigDecimal samletInntekt = BigDecimal.ZERO;
+        int antallPerioderMedInntekt = 0;
+        for (Periode periode : inntektsperioder) {
+            BigDecimal inntektForPeriode = finnInntektForPeriode(periode, inntektsgrunnlag, resultater);
+            if (inntektForPeriode.compareTo(BigDecimal.ZERO) > 0) {
+                antallPerioderMedInntekt++;
+                samletInntekt = samletInntekt.add(inntektForPeriode);
+            }
+        }
+        resultater.put("perioderMedInntekter ", antallPerioderMedInntekt);
+        if (antallPerioderMedInntekt == 0) {
+            return BigDecimal.ZERO;
+        }
+        BigDecimal antallPerioder = BigDecimal.valueOf(antallPerioderMedInntekt);
+        BigDecimal snittMånedslønn =  samletInntekt.divide(antallPerioder, 10, RoundingMode.HALF_EVEN);
+        return snittMånedslønn.multiply(ANTALL_MÅNEDER_I_ÅR);
+    }
+
+    private BigDecimal finnInntektForPeriode(Periode periode, Inntektsgrunnlag inntektsgrunnlag, Map<String, Object> resultater) {
+        List<Periodeinntekt> inntekterHosAgForPeriode = inntektsgrunnlag.getInntektForArbeidsforholdIPeriode(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold, periode);
+        BigDecimal sumForPeriode = inntekterHosAgForPeriode.stream().map(Periodeinntekt::getInntekt).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+        resultater.put("sumForPeriode" + periode.toString(), sumForPeriode);
+        return sumForPeriode;
+
     }
 
     private BigDecimal finnOppgittÅrsinntektFL(Inntektsgrunnlag inntektsgrunnlag) {
