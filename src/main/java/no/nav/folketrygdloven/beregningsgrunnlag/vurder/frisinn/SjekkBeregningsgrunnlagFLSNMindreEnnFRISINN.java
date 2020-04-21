@@ -28,16 +28,12 @@ class SjekkBeregningsgrunnlagFLSNMindreEnnFRISINN extends LeafSpecification<Bere
 
         BeregningsgrunnlagPrStatus atflStatus = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
         BeregningsgrunnlagPrArbeidsforhold frilansandel = atflStatus == null ? null : atflStatus.getFrilansArbeidsforhold().orElse(null);
-        if (frilansandel != null && frilansandel.getUtbetalingsprosentSVP() != null) {
-            if (frilansandel.getUtbetalingsprosentSVP().compareTo(BigDecimal.ZERO) > 0) {
-                bruttoForSøkteAndeler = bruttoForSøkteAndeler.add(frilansandel.getBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO));
-           }
+        if (frilansandel != null && frilansandel.getErSøktYtelseFor()) {
+            bruttoForSøkteAndeler = bruttoForSøkteAndeler.add(frilansandel.getBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO));
         }
         BeregningsgrunnlagPrStatus snStatus = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
-        if (snStatus != null && snStatus.getUtbetalingsprosent() != null) {
-            if (snStatus.getUtbetalingsprosent().compareTo(BigDecimal.ZERO) > 0) {
-                bruttoForSøkteAndeler = bruttoForSøkteAndeler.add(snStatus.getBruttoInkludertNaturalytelsePrÅr());
-            }
+        if (snStatus != null && snStatus.erSøktYtelseFor()) {
+            bruttoForSøkteAndeler = bruttoForSøkteAndeler.add(snStatus.getBruttoInkludertNaturalytelsePrÅr());
         }
 
         SingleEvaluation resultat = bruttoForSøkteAndeler.compareTo(minstekrav) < 0 ? ja() : nei();
