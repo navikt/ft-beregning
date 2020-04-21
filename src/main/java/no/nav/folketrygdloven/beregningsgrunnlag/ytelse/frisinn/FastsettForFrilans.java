@@ -45,12 +45,14 @@ public class FastsettForFrilans extends LeafSpecification<BeregningsgrunnlagPeri
                     .medAvkortetPrÅr(totalTilFastsetting)
                     .medAvkortetBrukersAndelPrÅr(totalTilFastsetting)
                     .medAvkortetRefusjonPrÅr(BigDecimal.ZERO)
+                    .medMaksimalRefusjonPrÅr(BigDecimal.ZERO)
                     .build();
             } else {
                 BeregningsgrunnlagPrArbeidsforhold.builder(beregningsgrunnlagPrArbeidsforhold)
                     .medAvkortetPrÅr(bortfaltFL)
                     .medAvkortetBrukersAndelPrÅr(bortfaltFL)
                     .medAvkortetRefusjonPrÅr(BigDecimal.ZERO)
+                    .medMaksimalRefusjonPrÅr(BigDecimal.ZERO)
                     .build();
             }
             resultater.put("avkortetFrilans", beregningsgrunnlagPrArbeidsforhold.getAvkortetPrÅr());
