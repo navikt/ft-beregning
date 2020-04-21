@@ -37,6 +37,14 @@ public class Inntektsgrunnlag {
         return periodeinntekter;
     }
 
+    public List<Periodeinntekt> getPeriodeinntekterForSNFraSøknad(Periode periode){
+        return periodeinntekter.stream()
+            .filter(i -> i.getInntektskilde().equals(Inntektskilde.SØKNAD)
+                && !i.erFrilans()
+                && periode.overlapper(Periode.of(i.getFom(), i.getTom())))
+            .collect(Collectors.toUnmodifiableList());
+    }
+
     public Optional<Periodeinntekt> getPeriodeinntekt(Inntektskilde inntektskilde, LocalDate dato) {
         return getPeriodeinntektMedKilde(inntektskilde)
             .filter(pi -> pi.inneholder(dato))

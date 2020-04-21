@@ -47,11 +47,8 @@ public class BeregnBruttoBeregningsgrunnlagSNFRISINN extends LeafSpecification<B
     }
 
     private BigDecimal finnEffektivDagsatsIPeriode(BeregningsgrunnlagPeriode grunnlag) {
-        return grunnlag.getInntektsgrunnlag().getPeriodeinntekter()
+        return grunnlag.getInntektsgrunnlag().getPeriodeinntekterForSNFraSøknad(grunnlag.getBeregningsgrunnlagPeriode())
             .stream()
-            .filter(i -> i.getInntektskilde().equals(Inntektskilde.SØKNAD)
-                && !i.erFrilans()
-                && grunnlag.getBeregningsgrunnlagPeriode().overlapper(Periode.of(i.getFom(), i.getTom())))
             .map(BeregnBruttoBeregningsgrunnlagSNFRISINN::mapTilEffektivDagsatsIPeriode)
             .reduce(BigDecimal::add)
             .orElse(BigDecimal.ZERO);
