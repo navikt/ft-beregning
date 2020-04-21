@@ -32,21 +32,13 @@ public class BeregnBruttoBeregningsgrunnlagSNFRISINN extends LeafSpecification<B
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-
         BeregningsgrunnlagPrStatus bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
         BigDecimal årsInntekt2019 = finnÅrsinntekt2019(grunnlag);
         BigDecimal årsinntektPeriode = finnÅrsinntektPeriode(grunnlag);
-
-        BigDecimal bruttoSN = årsInntekt2019;
-        if (årsinntektPeriode.compareTo(årsInntekt2019) > 0) {
-            bruttoSN = årsinntektPeriode;
-        }
-
+        BigDecimal bruttoSN = årsInntekt2019.max(årsinntektPeriode);
         BeregningsgrunnlagPrStatus.builder(bgps).medBeregnetPrÅr(bruttoSN).build();
-
         Map<String, Object> resultater = new HashMap<>();
         resultater.put("oppgittInntekt", bruttoSN);
-
         return beregnet(resultater);
     }
 
