@@ -1,5 +1,7 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.foreslå.frisinn;
 
+import static no.nav.folketrygdloven.beregningsgrunnlag.foreslå.frisinn.BeregnOppjustertInntektFRISINN.ÅRET_2019;
+
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.InntektPeriodeType;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
@@ -12,6 +14,7 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -59,11 +62,14 @@ public class BeregnGjennomsnittligPGIFRISINN extends LeafSpecification<Beregning
     }
 
     private BigDecimal finnOppgittInntekt(BeregningsgrunnlagPeriode grunnlag) {
-        Optional<Periodeinntekt> inntektFraSøknad = grunnlag.getInntektsgrunnlag().getSistePeriodeinntektMedTypeSøknad();
+        List<Periodeinntekt> inntektFraSøknad = grunnlag.getInntektsgrunnlag().getPeriodeinntekterForSNFraSøknad(ÅRET_2019);
         if (inntektFraSøknad.isEmpty()) {
-            throw new IllegalStateException("Søker må ha oppgitt inntekt i søknaden når det er snakk om næringsinntekt for FRISINN ytelse");
+            return BigDecimal.ZERO;
         }
-        Periodeinntekt oppgittInntekt = inntektFraSøknad.get();
+        if (inntektFraSøknad.size() > 1) {
+            throw new IllegalStateException("Har flere næringsinntekter for 2019 for FRISINN ytelse");
+        }
+        Periodeinntekt oppgittInntekt = inntektFraSøknad.get(0);
         if (!InntektPeriodeType.ÅRLIG.equals(oppgittInntekt.getInntektPeriodeType()) || oppgittInntekt.getInntekt() == null) {
             throw new IllegalStateException("Næringsinntekt for FRISINN er ikke oppgitt for et helt år");
         }
