@@ -1,17 +1,24 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.foreslå.frisinn;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.BeregnBruttoBeregningsgrunnlagSN;
+import no.nav.folketrygdloven.beregningsgrunnlag.util.Virkedager;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RuleDocumentation(BeregnBruttoBeregningsgrunnlagSNFRISINN.ID)
 public class BeregnBruttoBeregningsgrunnlagSNFRISINN extends LeafSpecification<BeregningsgrunnlagPeriode> {
@@ -27,16 +34,55 @@ public class BeregnBruttoBeregningsgrunnlagSNFRISINN extends LeafSpecification<B
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
 
         BeregningsgrunnlagPrStatus bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
+        BigDecimal årsInntekt2019 = finnÅrsinntekt2019(grunnlag);
+        BigDecimal årsinntektPeriode = finnÅrsinntektPeriode(grunnlag);
 
-        Optional<Periodeinntekt> sistePeriodeinntektMedTypeSøknad = grunnlag.getInntektsgrunnlag().getSistePeriodeinntektMedTypeSøknad();
-        BigDecimal bruttoSN = sistePeriodeinntektMedTypeSøknad.map(Periodeinntekt::getInntekt)
-            .orElseThrow(() -> new IllegalStateException("Finner ikke oppgitt inntekt for søker av FRISINN ytelse som er selvstendig næringsdrivende"));
+        BigDecimal bruttoSN = årsInntekt2019;
+        if (årsinntektPeriode.compareTo(årsInntekt2019) > 0) {
+            bruttoSN = årsinntektPeriode;
+        }
+
         BeregningsgrunnlagPrStatus.builder(bgps).medBeregnetPrÅr(bruttoSN).build();
 
         Map<String, Object> resultater = new HashMap<>();
         resultater.put("oppgittInntekt", bruttoSN);
 
         return beregnet(resultater);
+    }
+
+    private BigDecimal finnÅrsinntektPeriode(BeregningsgrunnlagPeriode grunnlag) {
+        BigDecimal effektivDagsatsIPeriode = finnEffektivDagsatsIPeriode(grunnlag);
+        return effektivDagsatsIPeriode.multiply(BigDecimal.valueOf(260));
+    }
+
+    private BigDecimal finnEffektivDagsatsIPeriode(BeregningsgrunnlagPeriode grunnlag) {
+        return grunnlag.getInntektsgrunnlag().getPeriodeinntekter()
+            .stream()
+            .filter(i -> i.getInntektskilde().equals(Inntektskilde.SØKNAD)
+                && !i.erFrilans()
+                && grunnlag.getBeregningsgrunnlagPeriode().overlapper(Periode.of(i.getFom(), i.getTom())))
+            .map(BeregnBruttoBeregningsgrunnlagSNFRISINN::mapTilEffektivDagsatsIPeriode)
+            .reduce(BigDecimal::add)
+            .orElse(BigDecimal.ZERO);
+    }
+
+    private static BigDecimal mapTilEffektivDagsatsIPeriode(Periodeinntekt i) {
+        int virkedagerIOverlappendePeriode = Virkedager.beregnAntallVirkedager(Periode.of(i.getFom(), i.getTom()));
+        if (virkedagerIOverlappendePeriode == 0) {
+            return BigDecimal.ZERO;
+        }
+        return i.getInntekt().divide(BigDecimal.valueOf(virkedagerIOverlappendePeriode), RoundingMode.HALF_EVEN);
+    }
+
+    private BigDecimal finnÅrsinntekt2019(BeregningsgrunnlagPeriode grunnlag) {
+        List<Periodeinntekt> inntekter2019 = grunnlag.getInntektsgrunnlag().getPeriodeinntekter()
+            .stream()
+            .filter(i -> i.getInntektskilde().equals(Inntektskilde.SØKNAD)
+                && !i.erFrilans()
+                && !i.getFom().isBefore(LocalDate.of(2019, 1, 1))
+                && i.getTom().isBefore(LocalDate.of(2020, 1, 1)))
+            .collect(Collectors.toList());
+        return inntekter2019.stream().map(Periodeinntekt::getInntekt).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
     }
 
 }
