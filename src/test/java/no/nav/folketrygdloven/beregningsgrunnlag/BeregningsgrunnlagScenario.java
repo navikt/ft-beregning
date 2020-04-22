@@ -103,7 +103,7 @@ public class BeregningsgrunnlagScenario {
             .build();
     }
 
-    public static Beregningsgrunnlag settOppGrunnlagMedEnPeriode(LocalDate skjæringstidspunkt, Inntektsgrunnlag inntektsgrunnlag, AktivitetStatus aktivitetStatus, List<Arbeidsforhold> arbeidsforhold, List<BigDecimal> refusjonskravPrår, boolean skalVurdereAvviksvurdering, BigDecimal maksRefusjon) {
+    public static Beregningsgrunnlag settOppGrunnlagMedEnPeriode(LocalDate skjæringstidspunkt, Inntektsgrunnlag inntektsgrunnlag, AktivitetStatus aktivitetStatus, List<Arbeidsforhold> arbeidsforhold, List<BigDecimal> refusjonskravPrår, boolean skalSjekkeRefusjonFørSetteAksjonspunkt, BigDecimal maksRefusjon) {
         BeregningsgrunnlagPrStatus bgps = BeregningsgrunnlagPrStatus.builder()
             .medAktivitetStatus(aktivitetStatus)
             .medArbeidsforhold(arbeidsforhold, refusjonskravPrår, skjæringstidspunkt)
@@ -111,7 +111,7 @@ public class BeregningsgrunnlagScenario {
         BeregningsgrunnlagPeriode.Builder periodeBuilder = BeregningsgrunnlagPeriode.builder()
             .medBeregningsgrunnlagPrStatus(bgps)
             .medPeriode(Periode.of(skjæringstidspunkt, null))
-            .medSkalSjekkeRefusjonFørAvviksvurdering(skalVurdereAvviksvurdering)
+            .medSkalSjekkeRefusjonFørAvviksvurdering(skalSjekkeRefusjonFørSetteAksjonspunkt)
             .medMaksRefusjonForPeriode(maksRefusjon);
 
         return Beregningsgrunnlag.builder()
