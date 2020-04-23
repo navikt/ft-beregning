@@ -28,13 +28,15 @@ import no.nav.fpsak.nare.doc.RuleDocumentationGrunnlag;
 @RuleDocumentationGrunnlag
 public class BeregningsgrunnlagPeriode {
     @JsonManagedReference
-    protected List<BeregningsgrunnlagPrStatus> beregningsgrunnlagPrStatus = new ArrayList<>();
+    private List<BeregningsgrunnlagPrStatus> beregningsgrunnlagPrStatus = new ArrayList<>();
     private Periode bgPeriode;
     private List<PeriodeÅrsak> periodeÅrsaker = new ArrayList<>();
     @JsonBackReference
-    protected Beregningsgrunnlag beregningsgrunnlag;
+    private Beregningsgrunnlag beregningsgrunnlag;
     private BigDecimal grenseverdi;
     private boolean splitteATFLToggleErPå = false;
+
+    private BeregningsgrunnlagPeriode() { }
 
     public BeregningsgrunnlagPrStatus getBeregningsgrunnlagPrStatus(AktivitetStatus aktivitetStatus) {
         return getBeregningsgrunnlagPrStatus().stream()
@@ -173,7 +175,7 @@ public class BeregningsgrunnlagPeriode {
         return beregningsgrunnlag.getAntallGMinstekravVilkår();
     }
 
-    public BigDecimal getMaksRefusjonForPeriode() {
+    public BigDecimal finnMaksRefusjonForPeriode() {
         YtelsesSpesifiktGrunnlag ytelsesSpesifiktGrunnlag = beregningsgrunnlag.getYtelsesSpesifiktGrunnlag();
         if (ytelsesSpesifiktGrunnlag instanceof OmsorgspengerGrunnlag) {
             OmsorgspengerGrunnlag ompGrunnlag = (OmsorgspengerGrunnlag) ytelsesSpesifiktGrunnlag;
@@ -182,7 +184,7 @@ public class BeregningsgrunnlagPeriode {
         return BigDecimal.ZERO;
     }
 
-    public boolean isSkalSjekkeRefusjonFørAvviksvurdering() {
+    public boolean skalSjekkeRefusjonFørAvviksvurdering() {
         YtelsesSpesifiktGrunnlag ytelsesSpesifiktGrunnlag = beregningsgrunnlag.getYtelsesSpesifiktGrunnlag();
         return ytelsesSpesifiktGrunnlag instanceof OmsorgspengerGrunnlag;
     }
