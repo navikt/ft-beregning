@@ -20,10 +20,10 @@ public class SkalSetteAksjonspunkt extends LeafSpecification<BeregningsgrunnlagP
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        if(!grunnlag.isSkalSjekkeRefusjonFørAvviksvurdering()){
+        if(!grunnlag.skalSjekkeRefusjonFørAvviksvurdering()){
             return ja();
         }
-        BigDecimal maksimalRefusjon = grunnlag.getGrenseverdi().min(grunnlag.getMaksRefusjonForPeriode());
+        BigDecimal maksimalRefusjon = grunnlag.getGrenseverdi().min(grunnlag.finnMaksRefusjonForPeriode());
         BigDecimal totaltBeregningsgrunnlag = grunnlag.getBeregningsgrunnlagPrStatus().stream()
             .map(BeregningsgrunnlagPrStatus::getBruttoPrÅr)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
