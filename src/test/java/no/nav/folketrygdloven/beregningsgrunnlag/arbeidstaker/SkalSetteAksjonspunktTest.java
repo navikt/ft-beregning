@@ -22,6 +22,8 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.omp.OmsorgspengerGrunnlag;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.omp.OmsorgspengerGrunnlagPeriode;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.Resultat;
 
@@ -100,9 +102,9 @@ public class SkalSetteAksjonspunktTest {
         BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
             .medPeriode(Periode.of(now(), null))
             .medBeregningsgrunnlagPrStatus(beregningsgrunnlagPrStatus)
-            .medSkalSjekkeRefusjonFørAvviksvurdering(avviksVurdere)
-            .medMaksRefusjonForPeriode(maksRefusjonForPeriode)
             .build();
+
+        var ompPeriode = new OmsorgspengerGrunnlagPeriode(Periode.of(now(), null), maksRefusjonForPeriode);
 
         return Beregningsgrunnlag.builder()
             .medInntektsgrunnlag(new Inntektsgrunnlag())
@@ -110,6 +112,7 @@ public class SkalSetteAksjonspunktTest {
             .medGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2017))
             .medAktivitetStatuser(List.of(new AktivitetStatusMedHjemmel(AktivitetStatus.ATFL, BeregningsgrunnlagHjemmel.HJEMMEL_BARE_ARBEIDSTAKER)))
             .medBeregningsgrunnlagPeriode(periode)
+            .medYtelsesSpesifiktGrunnlag(avviksVurdere ? new OmsorgspengerGrunnlag(List.of(ompPeriode)) : null)
             .medGrunnbeløpSatser(List.of(
                 new Grunnbeløp(LocalDate.of(2019, 5, 1), LocalDate.MAX, gVerdi, GSNITT_2019)))
             .build();

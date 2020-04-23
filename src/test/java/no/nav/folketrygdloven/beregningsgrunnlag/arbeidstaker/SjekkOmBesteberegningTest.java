@@ -16,6 +16,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.fp.ForeldrepengerGrunnlag;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.Resultat;
 
@@ -48,7 +49,8 @@ public class SjekkOmBesteberegningTest {
     @Test
     public void skalReturnereJaNårDagpengerStatusOgBesteberegning() {
         //Arrange
-        Beregningsgrunnlag grunnlag = Beregningsgrunnlag.builder(settoppGrunnlagMedEnPeriode(LocalDate.now(), new Inntektsgrunnlag(), List.of(AktivitetStatus.ATFL, AktivitetStatus.DP), List.of(arbeidsforhold))).medBesteberegnet(true).build();
+        Beregningsgrunnlag grunnlag = Beregningsgrunnlag.builder(settoppGrunnlagMedEnPeriode(LocalDate.now(), new Inntektsgrunnlag(), List.of(AktivitetStatus.ATFL, AktivitetStatus.DP), List.of(arbeidsforhold)))
+            .medYtelsesSpesifiktGrunnlag(new ForeldrepengerGrunnlag(true)).build();
 
         BeregningsgrunnlagPeriode periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
         BeregningsgrunnlagPrStatus dagpengerStatus = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP);

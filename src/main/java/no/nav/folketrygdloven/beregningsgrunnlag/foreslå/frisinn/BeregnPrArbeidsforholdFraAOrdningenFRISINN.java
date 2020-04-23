@@ -1,24 +1,28 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.foreslå.frisinn;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.YtelsesSpesifiktGrunnlag;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.frisinn.FrisinnGrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.util.Virkedager;
 import no.nav.folketrygdloven.skjæringstidspunkt.status.frisinn.FinnPerioderUtenYtelse;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 @RuleDocumentation(BeregnPrArbeidsforholdFraAOrdningenFRISINN.ID)
 class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<BeregningsgrunnlagPeriode> {
@@ -44,6 +48,10 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
         resultater.put("arbeidsforhold", arbeidsforhold.getBeskrivelse());
         BigDecimal årsinntekt;
         if (arbeidsforhold.erFrilanser()) {
+            YtelsesSpesifiktGrunnlag ytelsesSpesifiktGrunnlag = grunnlag.getBeregningsgrunnlag().getYtelsesSpesifiktGrunnlag();
+            if (ytelsesSpesifiktGrunnlag instanceof FrisinnGrunnlag && ((FrisinnGrunnlag) ytelsesSpesifiktGrunnlag).isErNyoppstartetFrilans()) {
+                perioderSomSkalBrukesForInntekter = lag6MånederFørStpOpptjening();
+            }
             årsinntekt = beregnÅrsinntektFrilans(perioderSomSkalBrukesForInntekter, inntektsgrunnlag, grunnlag, resultater);
         } else {
             årsinntekt = beregnÅrsinntektArbeidstaker(perioderSomSkalBrukesForInntekter, inntektsgrunnlag, resultater);
@@ -55,6 +63,15 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
         resultater.put("antallPerioder", perioderSomSkalBrukesForInntekter.size());
         resultater.put("beregnetPrÅr", årsinntekt);
         return beregnet(resultater);
+    }
+
+    private List<Periode> lag6MånederFørStpOpptjening() {
+        LocalDate stpOpptjening = LocalDate.of(2020, 3, 1);
+        List<Periode> perioder = new ArrayList<>();
+        for (int i = 6; i >= 1; i--) {
+            perioder.add(Periode.of(stpOpptjening.minusMonths(i).withDayOfMonth(1), stpOpptjening.minusMonths(i).with(TemporalAdjusters.lastDayOfMonth())));
+        }
+        return perioder;
     }
 
     private BigDecimal beregnÅrsinntektFrilans(List<Periode> inntektsperioder, Inntektsgrunnlag inntektsgrunnlag, BeregningsgrunnlagPeriode grunnlag, Map<String, Object> resultater) {

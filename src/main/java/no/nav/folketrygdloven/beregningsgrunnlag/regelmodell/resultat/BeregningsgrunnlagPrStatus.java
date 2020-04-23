@@ -19,10 +19,10 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.In
 
 public class BeregningsgrunnlagPrStatus {
     @JsonBackReference
-    private BeregningsgrunnlagPeriode beregningsgrunnlagPeriode;
+    protected BeregningsgrunnlagPeriode beregningsgrunnlagPeriode;
     private AktivitetStatus aktivitetStatus;
     private Periode beregningsperiode;
-    private List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = new ArrayList<>();
+    protected List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = new ArrayList<>();
 
     private BigDecimal overstyrtPrÅr;
     private BigDecimal fordeltPrÅr;
@@ -46,8 +46,6 @@ public class BeregningsgrunnlagPrStatus {
     private BigDecimal andelsmessigFørGraderingPrAar;
     private boolean flOgAtISammeOrganisasjon;
 
-    private BeregningsgrunnlagPrStatus() { }
-
     @JsonIgnore
     public BeregningsgrunnlagPeriode getBeregningsgrunnlagPeriode() {
         return beregningsgrunnlagPeriode;
@@ -62,7 +60,7 @@ public class BeregningsgrunnlagPrStatus {
     }
 
     public BigDecimal getAvkortetPrÅr() {
-        return avkortetPrÅr != null ? avkortetPrÅr : arbeidsforhold.stream()
+        return avkortetPrÅr != null ? avkortetPrÅr : getArbeidsforhold().stream()
             .map(BeregningsgrunnlagPrArbeidsforhold::getAvkortetPrÅr)
             .filter(Objects::nonNull)
             .reduce(BigDecimal::add)
@@ -70,7 +68,7 @@ public class BeregningsgrunnlagPrStatus {
     }
 
     public BigDecimal getRedusertPrÅr() {
-        return redusertPrÅr != null ? redusertPrÅr : arbeidsforhold.stream()
+        return redusertPrÅr != null ? redusertPrÅr : getArbeidsforhold().stream()
             .map(BeregningsgrunnlagPrArbeidsforhold::getRedusertPrÅr)
             .filter(Objects::nonNull)
             .reduce(BigDecimal::add)
@@ -82,7 +80,7 @@ public class BeregningsgrunnlagPrStatus {
     }
 
     public BigDecimal getFordeltPrÅr() {
-        return fordeltPrÅr != null ? fordeltPrÅr : arbeidsforhold.stream()
+        return fordeltPrÅr != null ? fordeltPrÅr : getArbeidsforhold().stream()
             .map(BeregningsgrunnlagPrArbeidsforhold::getFordeltPrÅr)
             .filter(Objects::nonNull)
             .reduce(BigDecimal::add)
@@ -94,12 +92,12 @@ public class BeregningsgrunnlagPrStatus {
     }
 
     public BigDecimal samletNaturalytelseBortfaltMinusTilkommetPrÅr() {
-        BigDecimal sumBortfaltNaturalYtelse = arbeidsforhold.stream()
+        BigDecimal sumBortfaltNaturalYtelse = getArbeidsforhold().stream()
             .map(BeregningsgrunnlagPrArbeidsforhold::getNaturalytelseBortfaltPrÅr)
             .filter(Optional::isPresent)
             .map(Optional::get)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal sumTilkommetNaturalYtelse = arbeidsforhold.stream()
+        BigDecimal sumTilkommetNaturalYtelse = getArbeidsforhold().stream()
             .map(BeregningsgrunnlagPrArbeidsforhold::getNaturalytelseTilkommetPrÅr)
             .filter(Optional::isPresent)
             .map(Optional::get)
@@ -108,12 +106,12 @@ public class BeregningsgrunnlagPrStatus {
     }
 
     public BigDecimal samletGradertNaturalytelseBortfaltMinusTilkommetPrÅr() {
-        BigDecimal sumBortfaltNaturalYtelse = arbeidsforhold.stream()
+        BigDecimal sumBortfaltNaturalYtelse = getArbeidsforhold().stream()
                 .map(BeregningsgrunnlagPrArbeidsforhold::getGradertNaturalytelseBortfaltPrÅr)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal sumTilkommetNaturalYtelse = arbeidsforhold.stream()
+        BigDecimal sumTilkommetNaturalYtelse = getArbeidsforhold().stream()
                 .map(BeregningsgrunnlagPrArbeidsforhold::getGradertNaturalytelseTilkommetPrÅr)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
@@ -122,14 +120,14 @@ public class BeregningsgrunnlagPrStatus {
     }
 
     public BigDecimal getBruttoPrÅr() {
-        return bruttoPrÅr != null ? bruttoPrÅr : arbeidsforhold.stream()
+        return bruttoPrÅr != null ? bruttoPrÅr : getArbeidsforhold().stream()
             .map(BeregningsgrunnlagPrArbeidsforhold::getBruttoPrÅr)
             .filter(Objects::nonNull)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public BigDecimal getGradertBruttoPrÅr() {
-        return bruttoPrÅr != null ? finnGradert(bruttoPrÅr) : arbeidsforhold.stream()
+        return bruttoPrÅr != null ? finnGradert(bruttoPrÅr) : getArbeidsforhold().stream()
                 .map(BeregningsgrunnlagPrArbeidsforhold::getGradertBruttoPrÅr)
                 .filter(Objects::nonNull)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -157,7 +155,7 @@ public class BeregningsgrunnlagPrStatus {
     }
 
     public List<BeregningsgrunnlagPrArbeidsforhold> getArbeidsforholdSomSkalBrukes() {
-        return arbeidsforhold.stream().filter(BeregningsgrunnlagPrArbeidsforhold::getErSøktYtelseFor).collect(Collectors.toUnmodifiableList());
+        return getArbeidsforhold().stream().filter(BeregningsgrunnlagPrArbeidsforhold::getErSøktYtelseFor).collect(Collectors.toUnmodifiableList());
     }
 
     public List<BeregningsgrunnlagPrArbeidsforhold> getArbeidsforholdSomSkalBrukesIkkeFrilans() {
@@ -165,19 +163,19 @@ public class BeregningsgrunnlagPrStatus {
     }
 
     public List<BeregningsgrunnlagPrArbeidsforhold> getArbeidsforholdIkkeFrilans() {
-        return arbeidsforhold.stream().filter(af -> !af.erFrilanser()).collect(Collectors.toList());
+        return getArbeidsforhold().stream().filter(af -> !af.erFrilanser()).collect(Collectors.toList());
     }
 
     public Optional<BeregningsgrunnlagPrArbeidsforhold> getFrilansArbeidsforholdSomSkalBrukes() {
-        return arbeidsforhold.stream().filter(BeregningsgrunnlagPrArbeidsforhold::erFrilanser).filter(BeregningsgrunnlagPrArbeidsforhold::getErSøktYtelseFor).findAny();
+        return getArbeidsforhold().stream().filter(BeregningsgrunnlagPrArbeidsforhold::erFrilanser).filter(BeregningsgrunnlagPrArbeidsforhold::getErSøktYtelseFor).findAny();
     }
 
     public Optional<BeregningsgrunnlagPrArbeidsforhold> getFrilansArbeidsforhold() {
-        return arbeidsforhold.stream().filter(BeregningsgrunnlagPrArbeidsforhold::erFrilanser).findAny();
+        return getArbeidsforhold().stream().filter(BeregningsgrunnlagPrArbeidsforhold::erFrilanser).findAny();
     }
 
     public BigDecimal getBeregnetPrÅr() {
-        return beregnetPrÅr != null ? beregnetPrÅr : arbeidsforhold.stream()
+        return beregnetPrÅr != null ? beregnetPrÅr : getArbeidsforhold().stream()
             .map(BeregningsgrunnlagPrArbeidsforhold::getBeregnetPrÅr)
             .filter(Objects::nonNull)
             .reduce(BigDecimal::add)
@@ -185,7 +183,7 @@ public class BeregningsgrunnlagPrStatus {
     }
 
     public BigDecimal getBeregnetPrÅrForAT() {
-        return arbeidsforhold.stream()
+        return getArbeidsforhold().stream()
             .filter(a -> !a.erFrilanser())
             .map(BeregningsgrunnlagPrArbeidsforhold::getBeregnetPrÅr)
             .filter(Objects::nonNull)
@@ -194,7 +192,7 @@ public class BeregningsgrunnlagPrStatus {
     }
 
     public BigDecimal getBeregnetPrÅrForFL() {
-        return arbeidsforhold.stream()
+        return getArbeidsforhold().stream()
             .filter(BeregningsgrunnlagPrArbeidsforhold::erFrilanser)
             .map(BeregningsgrunnlagPrArbeidsforhold::getBeregnetPrÅr)
             .filter(Objects::nonNull)

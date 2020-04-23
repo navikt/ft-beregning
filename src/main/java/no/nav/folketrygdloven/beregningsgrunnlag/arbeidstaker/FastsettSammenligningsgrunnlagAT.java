@@ -31,7 +31,7 @@ class FastsettSammenligningsgrunnlagAT extends LeafSpecification<Beregningsgrunn
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
         if (grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.AT) == null) {
-            Periode sammenligningsPeriode = lagSammenligningsPeriode(grunnlag.getInntektsgrunnlag(), grunnlag.getSkjæringstidspunkt(), grunnlag);
+            Periode sammenligningsPeriode = lagSammenligningsPeriode(grunnlag.getInntektsgrunnlag(), grunnlag.getSkjæringstidspunkt());
             BigDecimal sammenligningsgrunnlagInntekt = grunnlag.getInntektsgrunnlag().getSamletInntektISammenligningsperiodeAT(sammenligningsPeriode);
             SammenligningsGrunnlag sg = SammenligningsGrunnlag.builder()
                 .medSammenligningsperiode(sammenligningsPeriode)
@@ -46,7 +46,7 @@ class FastsettSammenligningsgrunnlagAT extends LeafSpecification<Beregningsgrunn
         return beregnet(resultater);
     }
 
-    private Periode lagSammenligningsPeriode(Inntektsgrunnlag inntektsgrunnlag, LocalDate skjæringstidspunkt, BeregningsgrunnlagPeriode grunnlag) {
+    private Periode lagSammenligningsPeriode(Inntektsgrunnlag inntektsgrunnlag, LocalDate skjæringstidspunkt) {
         LocalDate behandlingsTidspunkt = DateUtil.iDag();
         LocalDate gjeldendeTidspunkt = behandlingsTidspunkt.isBefore(skjæringstidspunkt) ? behandlingsTidspunkt : skjæringstidspunkt;
         LocalDate sisteØnskedeInntektMåned = gjeldendeTidspunkt.minusMonths(1).withDayOfMonth(1);
