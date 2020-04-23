@@ -57,10 +57,12 @@ public class FinnGrenseverdiForTotalOver6G extends LeafSpecification<Beregningsg
     }
 
     private BigDecimal finnLøpendeBgSN(BeregningsgrunnlagPeriode grunnlag) {
-        BigDecimal bruttoSN = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN)
-            .getBruttoInkludertNaturalytelsePrÅr();
-        BigDecimal bortfaltSN = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN)
-            .getGradertBruttoInkludertNaturalytelsePrÅr();
+        BeregningsgrunnlagPrStatus snStatus = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
+        if (snStatus == null) {
+            return BigDecimal.ZERO;
+        }
+        BigDecimal bruttoSN = snStatus.getBruttoInkludertNaturalytelsePrÅr();
+        BigDecimal bortfaltSN = snStatus.getGradertBruttoInkludertNaturalytelsePrÅr();
         return bruttoSN.subtract(bortfaltSN).max(BigDecimal.ZERO);
     }
 
