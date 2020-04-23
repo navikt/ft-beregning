@@ -37,6 +37,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SammenligningsGrunnlag;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.fp.ForeldrepengerGrunnlag;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 
@@ -463,7 +464,8 @@ public class RegelBeregningsgrunnlagSNTest {
             årsinntekterFor3SisteÅr(5.0d, 3.0d, 4.0d), Inntektskilde.SIGRUN);
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.SN));
 
-        Beregningsgrunnlag besteberegnetGrunnlag = Beregningsgrunnlag.builder(beregningsgrunnlag).medBesteberegnet(true).build();
+        Beregningsgrunnlag besteberegnetGrunnlag = Beregningsgrunnlag.builder(beregningsgrunnlag)
+            .medYtelsesSpesifiktGrunnlag(new ForeldrepengerGrunnlag(true)).build();
         BeregningsgrunnlagPeriode grunnlag = besteberegnetGrunnlag.getBeregningsgrunnlagPerioder().get(0);
         BeregningsgrunnlagPrStatus status = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
         BeregningsgrunnlagPrStatus.builder(status).medFastsattAvSaksbehandler(false).medBeregnetPrÅr(BigDecimal.valueOf(33333));
@@ -488,7 +490,8 @@ public class RegelBeregningsgrunnlagSNTest {
         leggTilMånedsinntekter(inntektsgrunnlag, skjæringstidspunkt, Collections.singletonList(BigDecimal.valueOf(GRUNNBELØP_2017 * 1.245 * 12)), Inntektskilde.SØKNAD, null);
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.SN));
 
-        Beregningsgrunnlag besteberegnetGrunnlag = Beregningsgrunnlag.builder(beregningsgrunnlag).medBesteberegnet(false).build();
+        Beregningsgrunnlag besteberegnetGrunnlag = Beregningsgrunnlag.builder(beregningsgrunnlag)
+            .medYtelsesSpesifiktGrunnlag(new ForeldrepengerGrunnlag(false)).build();
         BeregningsgrunnlagPeriode grunnlag = besteberegnetGrunnlag.getBeregningsgrunnlagPerioder().get(0);
         BeregningsgrunnlagPrStatus status = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
         BeregningsgrunnlagPrStatus.builder(status).medFastsattAvSaksbehandler(true).medBeregnetPrÅr(BigDecimal.valueOf(33333));

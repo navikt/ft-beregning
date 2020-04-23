@@ -20,26 +20,24 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Dekningsgrad;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.PeriodeÅrsak;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.YtelsesSpesifiktGrunnlag;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.omp.OmsorgspengerGrunnlag;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.omp.OmsorgspengerGrunnlagPeriode;
 import no.nav.fpsak.nare.doc.RuleDocumentationGrunnlag;
 
 @RuleDocumentationGrunnlag
 public class BeregningsgrunnlagPeriode {
     @JsonManagedReference
-    private List<BeregningsgrunnlagPrStatus> beregningsgrunnlagPrStatus = new ArrayList<>();
+    protected List<BeregningsgrunnlagPrStatus> beregningsgrunnlagPrStatus = new ArrayList<>();
     private Periode bgPeriode;
-    private BigDecimal maksRefusjonForPeriode;
-    private boolean skalSjekkeRefusjonFørAvviksvurdering;
     private List<PeriodeÅrsak> periodeÅrsaker = new ArrayList<>();
     @JsonBackReference
-    private Beregningsgrunnlag beregningsgrunnlag;
+    protected Beregningsgrunnlag beregningsgrunnlag;
     private BigDecimal grenseverdi;
     private boolean splitteATFLToggleErPå = false;
 
-    private BeregningsgrunnlagPeriode() {
-    }
-
     public BeregningsgrunnlagPrStatus getBeregningsgrunnlagPrStatus(AktivitetStatus aktivitetStatus) {
-        return beregningsgrunnlagPrStatus.stream()
+        return getBeregningsgrunnlagPrStatus().stream()
             .filter(af -> aktivitetStatus.equals(af.getAktivitetStatus()))
             .findFirst()
             .orElse(null);
@@ -61,19 +59,19 @@ public class BeregningsgrunnlagPeriode {
     }
 
     public BigDecimal getBruttoPrÅr() {
-        return beregningsgrunnlagPrStatus.stream()
+        return getBeregningsgrunnlagPrStatus().stream()
                 .map(BeregningsgrunnlagPrStatus::getBruttoPrÅr)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public BigDecimal getGradertBruttoPrÅr() {
-        return beregningsgrunnlagPrStatus.stream()
+        return getBeregningsgrunnlagPrStatus().stream()
                 .map(BeregningsgrunnlagPrStatus::getGradertBruttoPrÅr)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public BigDecimal getAvkortetPrÅr() {
-        return beregningsgrunnlagPrStatus.stream()
+        return getBeregningsgrunnlagPrStatus().stream()
             .map(BeregningsgrunnlagPrStatus::getAvkortetPrÅr)
             .filter(Objects::nonNull)
             .reduce(BigDecimal::add)
@@ -176,11 +174,17 @@ public class BeregningsgrunnlagPeriode {
     }
 
     public BigDecimal getMaksRefusjonForPeriode() {
-        return maksRefusjonForPeriode;
+        YtelsesSpesifiktGrunnlag ytelsesSpesifiktGrunnlag = beregningsgrunnlag.getYtelsesSpesifiktGrunnlag();
+        if (ytelsesSpesifiktGrunnlag instanceof OmsorgspengerGrunnlag) {
+            OmsorgspengerGrunnlag ompGrunnlag = (OmsorgspengerGrunnlag) ytelsesSpesifiktGrunnlag;
+            return ompGrunnlag.finnMaksRefusjonForPeriode(getBeregningsgrunnlagPeriode());
+        }
+        return BigDecimal.ZERO;
     }
 
     public boolean isSkalSjekkeRefusjonFørAvviksvurdering() {
-        return skalSjekkeRefusjonFørAvviksvurdering;
+        YtelsesSpesifiktGrunnlag ytelsesSpesifiktGrunnlag = beregningsgrunnlag.getYtelsesSpesifiktGrunnlag();
+        return ytelsesSpesifiktGrunnlag instanceof OmsorgspengerGrunnlag;
     }
 
     public void setGrenseverdi(BigDecimal grenseverdi) {
@@ -232,16 +236,6 @@ public class BeregningsgrunnlagPeriode {
 
         public Builder medskalSplitteATFL(boolean skalSplitteATFL) {
             beregningsgrunnlagPeriodeMal.splitteATFLToggleErPå = skalSplitteATFL;
-            return this;
-        }
-
-        public Builder medMaksRefusjonForPeriode(BigDecimal maksRefusjonForPeriode) {
-            beregningsgrunnlagPeriodeMal.maksRefusjonForPeriode = maksRefusjonForPeriode;
-            return this;
-        }
-
-        public Builder medSkalSjekkeRefusjonFørAvviksvurdering(boolean skalSjekkeRefusjonFørAvviksvurdering) {
-            beregningsgrunnlagPeriodeMal.skalSjekkeRefusjonFørAvviksvurdering = skalSjekkeRefusjonFørAvviksvurdering;
             return this;
         }
 

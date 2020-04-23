@@ -18,8 +18,12 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedH
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Dekningsgrad;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.Grunnbeløp;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.YtelsesSpesifiktGrunnlag;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.fp.ForeldrepengerGrunnlag;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.sp.SykepengerGrunnlag;
 
 public class Beregningsgrunnlag {
+    private YtelsesSpesifiktGrunnlag ytelsesSpesifiktGrunnlag;
     private final List<AktivitetStatusMedHjemmel> aktivitetStatuser = new ArrayList<>();
     private LocalDate skjæringstidspunkt;
     private Inntektsgrunnlag inntektsgrunnlag;
@@ -30,16 +34,17 @@ public class Beregningsgrunnlag {
     private Dekningsgrad dekningsgrad = Dekningsgrad.DEKNINGSGRAD_100;
     private BigDecimal grunnbeløp;
     private List<Grunnbeløp> grunnbeløpSatser = new ArrayList<>();
-    private boolean beregningForSykepenger = false; //Alltid false i FPSAK
     private boolean hattMilitærIOpptjeningsperioden = false;
-    private boolean besteberegnet = false;
     private int antallGMilitærHarKravPå = 3;
     private BigDecimal antallGØvreGrenseverdi;
     private BigDecimal antallGMinstekravVilkår;
     private BigDecimal ytelsedagerIPrÅr;
     private BigDecimal avviksgrenseProsent;
 
-    private Beregningsgrunnlag() {
+    private Beregningsgrunnlag() { }
+
+    public YtelsesSpesifiktGrunnlag getYtelsesSpesifiktGrunnlag() {
+        return ytelsesSpesifiktGrunnlag;
     }
 
     public LocalDate getSkjæringstidspunkt() {
@@ -65,7 +70,10 @@ public class Beregningsgrunnlag {
     }
 
     public boolean erBesteberegnet() {
-        return besteberegnet;
+        if (ytelsesSpesifiktGrunnlag != null && ytelsesSpesifiktGrunnlag instanceof ForeldrepengerGrunnlag) {
+            return ((ForeldrepengerGrunnlag) ytelsesSpesifiktGrunnlag).erBesteberegnet();
+        }
+        return false;
     }
 
     public Dekningsgrad getDekningsgrad() {
@@ -133,7 +141,7 @@ public class Beregningsgrunnlag {
     }
 
     public boolean isBeregningForSykepenger() {
-        return beregningForSykepenger;
+        return ytelsesSpesifiktGrunnlag != null && ytelsesSpesifiktGrunnlag instanceof SykepengerGrunnlag;
     }
 
     public boolean harHattMilitærIOpptjeningsperioden() {
@@ -192,11 +200,6 @@ public class Beregningsgrunnlag {
             return this;
         }
 
-        public Builder medBesteberegnet(boolean harVærtBesteberegnet) {
-            beregningsgrunnlagMal.besteberegnet = harVærtBesteberegnet;
-            return this;
-        }
-
         public Builder medBeregningsgrunnlagPeriode(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
             beregningsgrunnlagMal.beregningsgrunnlagPerioder.add(beregningsgrunnlagPeriode);
             beregningsgrunnlagPeriode.setBeregningsgrunnlag(beregningsgrunnlagMal);
@@ -227,7 +230,9 @@ public class Beregningsgrunnlag {
 
         //Brukes bare i sykepenger og i enhetstest
         public Builder medBeregningForSykepenger(boolean beregningForSykepenger) {
-            beregningsgrunnlagMal.beregningForSykepenger = beregningForSykepenger;
+            if (beregningForSykepenger) {
+                beregningsgrunnlagMal.ytelsesSpesifiktGrunnlag = new SykepengerGrunnlag();
+            }
             return this;
         }
 
@@ -265,6 +270,12 @@ public class Beregningsgrunnlag {
             beregningsgrunnlagMal.sammenligningsGrunnlagPrStatus.put(aktivitetStatus, sammenligningsGrunnlag);
             return this;
         }
+
+        public Builder medYtelsesSpesifiktGrunnlag(YtelsesSpesifiktGrunnlag ytelsesSpesifiktGrunnlag) {
+            beregningsgrunnlagMal.ytelsesSpesifiktGrunnlag = ytelsesSpesifiktGrunnlag;
+            return this;
+        }
+
 
         public Beregningsgrunnlag build() {
             verifyStateForBuild();
