@@ -30,22 +30,23 @@ public class RegelSammenligningsgrunnlagAT implements RuleService<Beregningsgrun
         Specification<BeregningsgrunnlagPeriode> sjekkOmPeriodenErEtterTidsbegrensetArbeidsforhold =
             rs.beregningHvisRegel(new SjekkPeriodeÅrsakErTidsbegrensetArbeidsforhold(), fastsettesVedSkjønnEtterTidsbegrensetArbeidsforhold, fastsettesVedSkjønnUtenTidsbegrensetArbeidsforhold);
 
+        // FP_BR 26.1 Skal vi sette aksjonspunkt?
+
+        Specification<BeregningsgrunnlagPeriode> skalSetteAksjonspunkt =
+            rs.beregningHvisRegel(new SkalSetteAksjonspunkt(), sjekkOmPeriodenErEtterTidsbegrensetArbeidsforhold, new Beregnet());
 
         // FP_BR 28.7 Har rapportert inntekt inkludert bortfaltnaturalytelse for 1. periode avvik mot sammenligningsgrunnlag > 25%?
 
         Specification<BeregningsgrunnlagPeriode> sjekkÅrsinntektMotSammenligningsgrunnlag =
-            rs.beregningHvisRegel(new SjekkÅrsinntektMotSammenligningsgrunnlagAT(), sjekkOmPeriodenErEtterTidsbegrensetArbeidsforhold, new Beregnet());
+            rs.beregningHvisRegel(new SjekkÅrsinntektMotSammenligningsgrunnlagAT(), skalSetteAksjonspunkt, new Beregnet());
 
-        // FP_BR 26.1 Skal vi sjekke avvik?
 
-        Specification<BeregningsgrunnlagPeriode> skalSjekkeAvvik =
-            rs.beregningHvisRegel(new SkalSjekkeAvvik(), sjekkÅrsinntektMotSammenligningsgrunnlag, new Beregnet());
 
         // FP_BR 28.6 Sammenligningsgrunnlag pr år = sum av 12 siste måneder
 
         Specification<BeregningsgrunnlagPeriode> fastsettSammenligningsgrunnlag =
             rs.beregningsRegel("FP_BR 28.6", "Fastsett sammenligningsgrunnlag for AT",
-                new FastsettSammenligningsgrunnlagAT(), skalSjekkeAvvik);
+                new FastsettSammenligningsgrunnlagAT(), sjekkÅrsinntektMotSammenligningsgrunnlag);
 
         return fastsettSammenligningsgrunnlag;
     }

@@ -8,13 +8,13 @@ import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
-@RuleDocumentation(SkalSjekkeAvvik.ID)
-public class SkalSjekkeAvvik extends LeafSpecification<BeregningsgrunnlagPeriode> {
+@RuleDocumentation(SkalSetteAksjonspunkt.ID)
+public class SkalSetteAksjonspunkt extends LeafSpecification<BeregningsgrunnlagPeriode> {
 
     static final String ID = "FP_BR 26.1";
-    static final String BESKRIVELSE = "Skal vi sjekke avvik?";
+    static final String BESKRIVELSE = "Skal vi sette aksjonspunkt?";
 
-    public SkalSjekkeAvvik() {
+    public SkalSetteAksjonspunkt() {
         super(ID, BESKRIVELSE);
     }
 

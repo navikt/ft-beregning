@@ -25,7 +25,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.Resultat;
 
-public class SkalSjekkeAvvikTest {
+public class SkalSetteAksjonspunktTest {
     private Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("12345");
     private long gVerdi = 99858L;
 
@@ -39,7 +39,7 @@ public class SkalSjekkeAvvikTest {
         BeregningsgrunnlagPeriode periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         //Act
-        Evaluation resultat = new SkalSjekkeAvvik().evaluate(periode);
+        Evaluation resultat = new SkalSetteAksjonspunkt().evaluate(periode);
         //Assert
         assertThat(resultat.result()).isEqualTo(Resultat.JA);
     }
@@ -54,7 +54,7 @@ public class SkalSjekkeAvvikTest {
         BeregningsgrunnlagPeriode periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         //Act
-        Evaluation resultat = new SkalSjekkeAvvik().evaluate(periode);
+        Evaluation resultat = new SkalSetteAksjonspunkt().evaluate(periode);
         //Assert
         assertThat(resultat.result()).isEqualTo(Resultat.NEI);
     }
@@ -69,7 +69,7 @@ public class SkalSjekkeAvvikTest {
         BeregningsgrunnlagPeriode periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         //Act
-        Evaluation resultat = new SkalSjekkeAvvik().evaluate(periode);
+        Evaluation resultat = new SkalSetteAksjonspunkt().evaluate(periode);
         //Assert
         assertThat(resultat.result()).isEqualTo(Resultat.NEI);
     }
@@ -84,7 +84,7 @@ public class SkalSjekkeAvvikTest {
         BeregningsgrunnlagPeriode periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         //Act
-        Evaluation resultat = new SkalSjekkeAvvik().evaluate(periode);
+        Evaluation resultat = new SkalSetteAksjonspunkt().evaluate(periode);
         //Assert
         assertThat(resultat.result()).isEqualTo(Resultat.JA);
     }
