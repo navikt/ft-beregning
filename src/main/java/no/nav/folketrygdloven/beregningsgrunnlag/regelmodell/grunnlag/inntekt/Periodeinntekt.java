@@ -77,6 +77,10 @@ public class Periodeinntekt {
         return AktivitetStatus.FL.equals(this.aktivitetStatus);
     }
 
+    public boolean erSelvstendingNæringsdrivende(){
+        return AktivitetStatus.SN.equals(this.aktivitetStatus);
+    }
+
     //Eneste tillate oppretting av en periodeinntekt da feltene skal være effektivt final (uten å være det for builderens skyld)
     public static Builder builder() {
         return new Builder();
