@@ -36,7 +36,7 @@ public class BeregnGjennomsnittligPGIFRISINN extends LeafSpecification<Beregning
         BigDecimal bidragTilBGSum = BigDecimal.ZERO;
         Map<String, Object> resultater = new HashMap<>();
 
-        BigDecimal oppgittInntekt = finnOppgittInntekt(grunnlag);
+        BigDecimal oppgittInntekt = FinnRapportertÅrsinntektSN.finnRapportertÅrsinntekt(grunnlag);
         BigDecimal gSnittNytt = BigDecimal.valueOf(grunnlag.getBeregningsgrunnlag().snittverdiAvG(2019));
         bidragTilBGSum = bidragTilBGSum.add(finnSkalertBidragIAntallGSnitt(resultater, 2019, gSnittNytt, oppgittInntekt));
 
@@ -59,21 +59,6 @@ public class BeregnGjennomsnittligPGIFRISINN extends LeafSpecification<Beregning
             .build();
 
         return beregnet(resultater);
-    }
-
-    private BigDecimal finnOppgittInntekt(BeregningsgrunnlagPeriode grunnlag) {
-        List<Periodeinntekt> inntektFraSøknad = grunnlag.getInntektsgrunnlag().getPeriodeinntekterForSNFraSøknad(ÅRET_2019);
-        if (inntektFraSøknad.isEmpty()) {
-            return BigDecimal.ZERO;
-        }
-        if (inntektFraSøknad.size() > 1) {
-            throw new IllegalStateException("Har flere næringsinntekter for 2019 for FRISINN ytelse");
-        }
-        Periodeinntekt oppgittInntekt = inntektFraSøknad.get(0);
-        if (!InntektPeriodeType.ÅRLIG.equals(oppgittInntekt.getInntektPeriodeType()) || oppgittInntekt.getInntekt() == null) {
-            throw new IllegalStateException("Næringsinntekt for FRISINN er ikke oppgitt for et helt år");
-        }
-        return oppgittInntekt.getInntekt();
     }
 
     private BigDecimal finnSkalertBidragIAntallGSnitt(Map<String, Object> resultater, int årstall, BigDecimal gSnitt, BigDecimal pgiÅr) {

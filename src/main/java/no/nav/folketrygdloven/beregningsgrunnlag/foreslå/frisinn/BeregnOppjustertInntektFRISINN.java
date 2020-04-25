@@ -39,7 +39,7 @@ public class BeregnOppjustertInntektFRISINN extends LeafSpecification<Beregnings
         Map<String, Object> resultater = new HashMap<>();
         List<BigDecimal> pgiListe = new ArrayList<>();
 
-        pgiListe.add(hentOppgittInntekt(grunnlag));
+        pgiListe.add(FinnRapportertÅrsinntektSN.finnRapportertÅrsinntekt(grunnlag));
 
         for (int årSiden = 1; årSiden <= 2; årSiden++) {
             int årstall = beregningsperiodeTom.getYear() - årSiden;
@@ -57,18 +57,4 @@ public class BeregnOppjustertInntektFRISINN extends LeafSpecification<Beregnings
         return beregnet(resultater);
     }
 
-    private BigDecimal hentOppgittInntekt(BeregningsgrunnlagPeriode grunnlag) {
-        List<Periodeinntekt> inntektFraSøknad = grunnlag.getInntektsgrunnlag().getPeriodeinntekterForSNFraSøknad(ÅRET_2019);
-        if (inntektFraSøknad.isEmpty()) {
-            return BigDecimal.ZERO;
-        }
-        if (inntektFraSøknad.size() > 1) {
-            throw new IllegalStateException("Har flere næringsinntekter for 2019 for FRISINN ytelse");
-        }
-        Periodeinntekt oppgittInntekt = inntektFraSøknad.get(0);
-        if (!InntektPeriodeType.ÅRLIG.equals(oppgittInntekt.getInntektPeriodeType()) || oppgittInntekt.getInntekt() == null) {
-            throw new IllegalStateException("Næringsinntekt for FRISINN er ikke oppgitt for et helt år");
-        }
-        return oppgittInntekt.getInntekt();
-    }
 }

@@ -227,6 +227,7 @@ public class BeregningsgrunnlagScenario {
             Periodeinntekt.builder()
                 .medInntekt(inntekt)
                 .medInntektskildeOgPeriodeType(Inntektskilde.SØKNAD)
+                .medAktivitetStatus(AktivitetStatus.SN)
                 .medMåned(LocalDate.of(2019,1,1))
                 .build()
         );
