@@ -47,7 +47,7 @@ class OmfordelFraAktiviteterUtenArbeidsforhold extends LeafSpecification<Beregni
                 adderBeløpTilBgForArbeidsforhold(restbeløpSomSkalFlyttesTilArbeidsforhold);
                 restbeløpSomSkalFlyttesTilArbeidsforhold = BigDecimal.ZERO;
             }
-            resultater.put("fordeltPrÅr", bgPrStatus.getFordeltPrÅr());
+            resultater.put("fordeltPrÅr", bgPrStatus.getGradertFordeltPrÅr());
             resultater.put("aktivitetstatus", bgPrStatus.getAktivitetStatus());
             bgPrStatusMedBeløpSomKanFlyttes = finnStatusMedDisponibeltBeløpOgHøyestAvkortingPrioritet(beregningsgrunnlagPeriode);
         }
@@ -65,7 +65,7 @@ class OmfordelFraAktiviteterUtenArbeidsforhold extends LeafSpecification<Beregni
     }
 
     private void reduserFordeltForStatus(BigDecimal restbeløpSomSkalOmfordelesTilAktivitet, BeregningsgrunnlagPrStatus bgPrStatus) {
-        BigDecimal fordelt = bgPrStatus.getBruttoPrÅr().subtract(restbeløpSomSkalOmfordelesTilAktivitet);
+        BigDecimal fordelt = bgPrStatus.getGradertBruttoPrÅr().subtract(restbeløpSomSkalOmfordelesTilAktivitet);
         if (fordelt.compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalStateException("Kan ikke fordele et negativt beløp til " + bgPrStatus.getAktivitetStatus());
         }
@@ -74,8 +74,8 @@ class OmfordelFraAktiviteterUtenArbeidsforhold extends LeafSpecification<Beregni
     }
 
     private BigDecimal finnRestbeløpSomMåOmfordeles() {
-        BigDecimal refusjonskravPrÅr = arbeidsforhold.getRefusjonskravPrÅr().orElse(BigDecimal.ZERO);
-        BigDecimal bruttoBgForArbeidsforhold = arbeidsforhold.getBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO);
+        BigDecimal refusjonskravPrÅr = arbeidsforhold.getGradertRefusjonskravPrÅr().orElse(BigDecimal.ZERO);
+        BigDecimal bruttoBgForArbeidsforhold = arbeidsforhold.getGradertBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO);
         if (refusjonskravPrÅr.compareTo(bruttoBgForArbeidsforhold) <= 0) {
             throw new IllegalStateException("Skal ikke flytte beregningsgrunnlag til arbeidsforhold der refusjon ikke overstiger beregningsgrunnlag som allerede er satt.");
         }
@@ -91,7 +91,7 @@ class OmfordelFraAktiviteterUtenArbeidsforhold extends LeafSpecification<Beregni
     }
 
     private BigDecimal finnFlyttbartGrunnlagForStatus(BeregningsgrunnlagPrStatus bgPrStatus) {
-        return bgPrStatus.getBruttoPrÅr();
+        return bgPrStatus.getGradertBruttoPrÅr();
     }
 
     private boolean skalFlytteHeleGrunnlagetFraStatus(BigDecimal restBeløpSomMåFlyttes, BigDecimal flyttbartBeløp) {
@@ -104,10 +104,10 @@ class OmfordelFraAktiviteterUtenArbeidsforhold extends LeafSpecification<Beregni
 
     private void adderBeløpTilBgForArbeidsforhold(BigDecimal beløpSomSkalOmfordelesTilArbeidsforhold) {
         BeregningsgrunnlagPrArbeidsforhold.builder(arbeidsforhold)
-            .medFordeltPrÅr(arbeidsforhold.getBruttoPrÅr().add(beløpSomSkalOmfordelesTilArbeidsforhold));
+            .medFordeltPrÅr(arbeidsforhold.getGradertBruttoPrÅr().add(beløpSomSkalOmfordelesTilArbeidsforhold));
     }
 
     private boolean harBgSomKanFlyttes(BeregningsgrunnlagPrStatus beregningsgrunnlagPrStatus) {
-        return beregningsgrunnlagPrStatus.getBruttoPrÅr().compareTo(BigDecimal.ZERO) > 0;
+        return beregningsgrunnlagPrStatus.getGradertBruttoPrÅr().compareTo(BigDecimal.ZERO) > 0;
     }
 }

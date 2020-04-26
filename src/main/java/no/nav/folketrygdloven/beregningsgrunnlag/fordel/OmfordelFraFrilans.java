@@ -41,7 +41,7 @@ class OmfordelFraFrilans extends LeafSpecification<BeregningsgrunnlagPeriode> {
     }
 
     private boolean harBgSomKanFlyttes(BeregningsgrunnlagPrArbeidsforhold beregningsgrunnlagPrArbeidsforhold) {
-        return beregningsgrunnlagPrArbeidsforhold.getBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO).compareTo(BigDecimal.ZERO) > 0
+        return beregningsgrunnlagPrArbeidsforhold.getGradertBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO).compareTo(BigDecimal.ZERO) > 0
             && (beregningsgrunnlagPrArbeidsforhold.getFordeltPrÅr() == null || beregningsgrunnlagPrArbeidsforhold.getFordeltPrÅr().compareTo(BigDecimal.ZERO) > 0);
     }
 

@@ -25,7 +25,7 @@ public class SkalSetteAksjonspunkt extends LeafSpecification<BeregningsgrunnlagP
         }
         BigDecimal maksimalRefusjon = grunnlag.getGrenseverdi().min(grunnlag.finnMaksRefusjonForPeriode());
         BigDecimal totaltBeregningsgrunnlag = grunnlag.getBeregningsgrunnlagPrStatus().stream()
-            .map(BeregningsgrunnlagPrStatus::getBruttoPrÅr)
+            .map(BeregningsgrunnlagPrStatus::getGradertBruttoPrÅr)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
         BigDecimal avkortetTotaltGrunnlag = grunnlag.getGrenseverdi().min(totaltBeregningsgrunnlag);
 

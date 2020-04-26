@@ -21,8 +21,8 @@ class SjekkOmRefusjonOverstigerBeregningsgrunnlag extends LeafSpecification<Bere
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        BigDecimal refusjonskravPrÅr = arbeidsforhold.getRefusjonskravPrÅr().orElse(BigDecimal.ZERO);
-        BigDecimal bruttoInkludertNaturalytelsePrÅr = arbeidsforhold.getBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO);
+        BigDecimal refusjonskravPrÅr = arbeidsforhold.getGradertRefusjonskravPrÅr().orElse(BigDecimal.ZERO);
+        BigDecimal bruttoInkludertNaturalytelsePrÅr = arbeidsforhold.getGradertBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO);
         BigDecimal refusjonBruttoBgDiff = refusjonskravPrÅr.subtract(bruttoInkludertNaturalytelsePrÅr);
         SingleEvaluation resultat = refusjonBruttoBgDiff.compareTo(BigDecimal.ZERO) > 0 ? ja() : nei();
         resultat.setEvaluationProperty("refusjonskravPrÅr." + arbeidsforhold.getArbeidsgiverId(), refusjonskravPrÅr);

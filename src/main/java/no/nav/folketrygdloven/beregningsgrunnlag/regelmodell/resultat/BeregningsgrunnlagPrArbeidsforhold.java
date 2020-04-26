@@ -101,6 +101,10 @@ public class BeregningsgrunnlagPrArbeidsforhold {
         return fordeltPrÅr;
     }
 
+    public BigDecimal getGradertFordeltPrÅr() {
+        return finnGradert(fordeltPrÅr);
+    }
+
     public Optional<BigDecimal> getBruttoInkludertNaturalytelsePrÅr() {
         if (bruttoPrÅr == null) {
             return Optional.empty();
