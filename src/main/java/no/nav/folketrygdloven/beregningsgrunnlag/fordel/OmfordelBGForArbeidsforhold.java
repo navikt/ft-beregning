@@ -17,20 +17,20 @@ class OmfordelBGForArbeidsforhold {
     }
 
     Map<String, Object> omfordelBGForArbeidsforhold(BeregningsgrunnlagPrArbeidsforhold aktivitet, FinnArbeidsforholdMedOmfordelbartBeregningsgrunnlag finnArbeidsforhold) {
-        BigDecimal beløpSomSkalOmfordelesTilAktivitet = aktivitet.getRefusjonskravPrÅr().orElse(BigDecimal.ZERO).subtract(aktivitet.getBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO));
+        BigDecimal beløpSomSkalOmfordelesTilAktivitet = aktivitet.getGradertRefusjonskravPrÅr().orElse(BigDecimal.ZERO).subtract(aktivitet.getGradertBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO));
         Map<String, Object> resultater = new HashMap<>();
         Optional<BeregningsgrunnlagPrArbeidsforhold> arbeidsforholdMedOmfordelbartBGOpt = finnArbeidsforhold.finn(beregningsgrunnlagPeriode);
         while (harMerÅOmfordele(beløpSomSkalOmfordelesTilAktivitet) && arbeidsforholdMedOmfordelbartBGOpt.isPresent()) {
             BeregningsgrunnlagPrArbeidsforhold arbeidMedOmfordelbartBg = arbeidsforholdMedOmfordelbartBGOpt.get();
-            BigDecimal bgForArbeid = arbeidMedOmfordelbartBg.getBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO);
-            BigDecimal refusjonskrav = arbeidMedOmfordelbartBg.getRefusjonskravPrÅr().orElse(BigDecimal.ZERO);
+            BigDecimal bgForArbeid = arbeidMedOmfordelbartBg.getGradertBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO);
+            BigDecimal refusjonskrav = arbeidMedOmfordelbartBg.getGradertRefusjonskravPrÅr().orElse(BigDecimal.ZERO);
             BigDecimal omfordelbartBeløp = bgForArbeid.subtract(refusjonskrav);
             if (skalOmfordeleHeleGrunnlaget(beløpSomSkalOmfordelesTilAktivitet, omfordelbartBeløp)) {
                 beløpSomSkalOmfordelesTilAktivitet = omfordelHeleGrunnlagetFraArbeidsforhold(aktivitet, beløpSomSkalOmfordelesTilAktivitet, arbeidMedOmfordelbartBg, refusjonskrav, omfordelbartBeløp);
             } else {
                 beløpSomSkalOmfordelesTilAktivitet = omfordelDelerAvGrunnlagetFraArbeidsforhold(aktivitet, beløpSomSkalOmfordelesTilAktivitet, arbeidMedOmfordelbartBg, bgForArbeid);
             }
-            resultater.put("fordeltPrÅr", arbeidMedOmfordelbartBg.getFordeltPrÅr());
+            resultater.put("fordeltPrÅr", arbeidMedOmfordelbartBg.getGradertFordeltPrÅr());
             resultater.put("arbeidsforhold", arbeidMedOmfordelbartBg.getBeskrivelse());
             arbeidsforholdMedOmfordelbartBGOpt = finnArbeidsforhold.finn(beregningsgrunnlagPeriode);
         }
@@ -60,7 +60,7 @@ class OmfordelBGForArbeidsforhold {
 
     private static void omfordelBGTilAktivitet(BeregningsgrunnlagPrArbeidsforhold aktivitet, BigDecimal beløpSomMåOmfordeles) {
         BeregningsgrunnlagPrArbeidsforhold.builder(aktivitet)
-            .medFordeltPrÅr(aktivitet.getBruttoPrÅr().add(beløpSomMåOmfordeles));
+            .medFordeltPrÅr(aktivitet.getGradertBruttoPrÅr().add(beløpSomMåOmfordeles));
     }
 
     private static boolean skalOmfordeleHeleGrunnlaget(BigDecimal restSomMåOmfordeles, BigDecimal omfordelbartBeløp) {

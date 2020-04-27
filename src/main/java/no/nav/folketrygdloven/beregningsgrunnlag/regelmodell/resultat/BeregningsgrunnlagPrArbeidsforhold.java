@@ -37,7 +37,7 @@ public class BeregningsgrunnlagPrArbeidsforhold {
     private Long andelNr;
     private Inntektskategori inntektskategori;
     private List<Periode> arbeidsgiverperioder = new ArrayList<>(); //Brukes i beregning for sykepenger
-    private boolean erSøktYtelseFor = true; //Default true, brukes i SVP
+    private Boolean erSøktYtelseFor;
     private BigDecimal utbetalingsprosentSVP = BigDecimal.valueOf(100);
     private BigDecimal andelsmessigFørGraderingPrAar;
 
@@ -99,6 +99,10 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 
     public BigDecimal getFordeltPrÅr() {
         return fordeltPrÅr;
+    }
+
+    public BigDecimal getGradertFordeltPrÅr() {
+        return finnGradert(fordeltPrÅr);
     }
 
     public Optional<BigDecimal> getBruttoInkludertNaturalytelsePrÅr() {
@@ -202,7 +206,7 @@ public class BeregningsgrunnlagPrArbeidsforhold {
     }
 
     public boolean getErSøktYtelseFor() {
-        return erSøktYtelseFor;
+        return erSøktYtelseFor != null ? erSøktYtelseFor : utbetalingsprosentSVP.compareTo(BigDecimal.ZERO) > 0;
     }
 
     public void setErSøktYtelseFor(boolean erSøktYtelseFor) {

@@ -23,12 +23,12 @@ public class SkalSetteAksjonspunkt extends LeafSpecification<BeregningsgrunnlagP
         if(!grunnlag.skalSjekkeRefusjonFørAvviksvurdering()){
             return ja();
         }
-        BigDecimal maksimalRefusjon = grunnlag.getGrenseverdi().min(grunnlag.finnMaksRefusjonForPeriode());
+        BigDecimal minsteRefusjon = grunnlag.getGrenseverdi().min(grunnlag.finnMinsteTotalRefusjonForPeriode());
         BigDecimal totaltBeregningsgrunnlag = grunnlag.getBeregningsgrunnlagPrStatus().stream()
-            .map(BeregningsgrunnlagPrStatus::getBruttoPrÅr)
+            .map(BeregningsgrunnlagPrStatus::getGradertBruttoPrÅr)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
         BigDecimal avkortetTotaltGrunnlag = grunnlag.getGrenseverdi().min(totaltBeregningsgrunnlag);
 
-        return maksimalRefusjon.compareTo(avkortetTotaltGrunnlag) < 0 ? ja() : nei();
+        return minsteRefusjon.compareTo(avkortetTotaltGrunnlag) < 0 ? ja() : nei();
     }
 }

@@ -30,18 +30,18 @@ class SjekkHarRefusjonSomOverstigerBeregningsgrunnlag extends LeafSpecification<
         BeregningsgrunnlagPrStatus atfl = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
         List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforholdSomHarRefusjonStørreEnnBG = atfl == null ? emptyList() : atfl
             .getArbeidsforholdIkkeFrilans().stream()
-            .filter(af -> af.getBruttoInkludertNaturalytelsePrÅr().isPresent())
+            .filter(af -> af.getGradertBruttoInkludertNaturalytelsePrÅr().isPresent())
             .filter(this::harRefusjonskravStørreEnnBg).collect(Collectors.toList());
         SingleEvaluation resultat = arbeidsforholdSomHarRefusjonStørreEnnBG.isEmpty() ? nei() : ja();
         for (BeregningsgrunnlagPrArbeidsforhold arbeidsforhold : arbeidsforholdSomHarRefusjonStørreEnnBG) {
-            resultat.setEvaluationProperty("refusjonPrÅr." + arbeidsforhold.getArbeidsgiverId(), arbeidsforhold.getRefusjonskravPrÅr().orElse(BigDecimal.ZERO));
-            resultat.setEvaluationProperty("bruttoPrÅr." + arbeidsforhold.getArbeidsgiverId(), arbeidsforhold.getBruttoInkludertNaturalytelsePrÅr());
+            resultat.setEvaluationProperty("refusjonPrÅr." + arbeidsforhold.getArbeidsgiverId(), arbeidsforhold.getGradertRefusjonskravPrÅr().orElse(BigDecimal.ZERO));
+            resultat.setEvaluationProperty("bruttoPrÅr." + arbeidsforhold.getArbeidsgiverId(), arbeidsforhold.getGradertBruttoInkludertNaturalytelsePrÅr());
         }
         return resultat;
     }
 
     private boolean harRefusjonskravStørreEnnBg(BeregningsgrunnlagPrArbeidsforhold andel) {
-        BigDecimal refusjonskrav = andel.getRefusjonskravPrÅr().orElse(BigDecimal.ZERO);
-        return refusjonskrav.compareTo(andel.getBruttoPrÅr()) > 0;
+        BigDecimal refusjonskrav = andel.getGradertRefusjonskravPrÅr().orElse(BigDecimal.ZERO);
+        return refusjonskrav.compareTo(andel.getGradertBruttoPrÅr()) > 0;
     }
 }

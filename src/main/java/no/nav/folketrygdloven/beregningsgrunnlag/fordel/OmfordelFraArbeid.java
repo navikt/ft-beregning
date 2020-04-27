@@ -42,12 +42,13 @@ class OmfordelFraArbeid extends LeafSpecification<BeregningsgrunnlagPeriode> {
     }
 
     private boolean refusjonskravOverstigerEllerErLikBg(BeregningsgrunnlagPrArbeidsforhold arbeidsforhold) {
-        BigDecimal refusjonskrav = arbeidsforhold.getRefusjonskravPrÅr().orElse(BigDecimal.ZERO);
-        return refusjonskrav.compareTo(arbeidsforhold.getBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO)) >= 0;
+        BigDecimal refusjonskrav = arbeidsforhold.getGradertRefusjonskravPrÅr().orElse(BigDecimal.ZERO);
+        return refusjonskrav.compareTo(arbeidsforhold.getGradertBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO)) >= 0;
     }
 
     private boolean harBgSomKanFlyttes(BeregningsgrunnlagPrArbeidsforhold beregningsgrunnlagPrArbeidsforhold) {
-        return beregningsgrunnlagPrArbeidsforhold.getBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO).compareTo(BigDecimal.ZERO) > 0 && (beregningsgrunnlagPrArbeidsforhold.getFordeltPrÅr() == null || beregningsgrunnlagPrArbeidsforhold.getFordeltPrÅr().compareTo(BigDecimal.ZERO) > 0);
+        return beregningsgrunnlagPrArbeidsforhold.getGradertBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO).compareTo(BigDecimal.ZERO) > 0
+            && (beregningsgrunnlagPrArbeidsforhold.getGradertFordeltPrÅr() == null || beregningsgrunnlagPrArbeidsforhold.getGradertFordeltPrÅr().compareTo(BigDecimal.ZERO) > 0);
     }
 
 

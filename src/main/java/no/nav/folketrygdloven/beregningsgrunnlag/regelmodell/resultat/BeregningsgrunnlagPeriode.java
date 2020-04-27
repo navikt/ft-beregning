@@ -22,7 +22,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.PeriodeÅrsak;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.YtelsesSpesifiktGrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.omp.OmsorgspengerGrunnlag;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.omp.OmsorgspengerGrunnlagPeriode;
 import no.nav.fpsak.nare.doc.RuleDocumentationGrunnlag;
 
 @RuleDocumentationGrunnlag
@@ -175,11 +174,11 @@ public class BeregningsgrunnlagPeriode {
         return beregningsgrunnlag.getAntallGMinstekravVilkår();
     }
 
-    public BigDecimal finnMaksRefusjonForPeriode() {
+    public BigDecimal finnMinsteTotalRefusjonForPeriode() {
         YtelsesSpesifiktGrunnlag ytelsesSpesifiktGrunnlag = beregningsgrunnlag.getYtelsesSpesifiktGrunnlag();
         if (ytelsesSpesifiktGrunnlag instanceof OmsorgspengerGrunnlag) {
             OmsorgspengerGrunnlag ompGrunnlag = (OmsorgspengerGrunnlag) ytelsesSpesifiktGrunnlag;
-            return ompGrunnlag.finnMaksRefusjonForPeriode(getBeregningsgrunnlagPeriode());
+            return ompGrunnlag.finnLavstetTotalRefusjonForPeriode(getBeregningsgrunnlagPeriode());
         }
         return BigDecimal.ZERO;
     }

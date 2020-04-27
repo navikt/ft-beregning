@@ -19,11 +19,11 @@ public class OmsorgspengerGrunnlag extends YtelsesSpesifiktGrunnlag {
         return perioder;
     }
 
-    public BigDecimal finnMaksRefusjonForPeriode(Periode periode) {
+    public BigDecimal finnLavstetTotalRefusjonForPeriode(Periode periode) {
         return getPerioder().stream()
             .filter(p -> p.getPeriode().overlapper(periode))
             .findFirst()
-            .map(OmsorgspengerGrunnlagPeriode::getMaksRefusjonForPeriode)
+            .map(OmsorgspengerGrunnlagPeriode::getMinsteRefusjonForPeriode)
             .orElse(BigDecimal.ZERO);
 
     }
