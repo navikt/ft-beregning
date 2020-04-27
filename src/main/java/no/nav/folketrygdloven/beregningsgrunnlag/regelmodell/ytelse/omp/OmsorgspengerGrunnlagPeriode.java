@@ -7,20 +7,20 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 public class OmsorgspengerGrunnlagPeriode {
 
     private Periode periode;
-    private BigDecimal maksRefusjonForPeriode;
+    private BigDecimal minsteRefusjonForPeriode;
 
     public OmsorgspengerGrunnlagPeriode(Periode periode,
-                                        BigDecimal maksRefusjonForPeriode) {
+                                        BigDecimal minRefusjonForPeriode) {
         this.periode = periode;
-        this.maksRefusjonForPeriode = maksRefusjonForPeriode;
+        this.minsteRefusjonForPeriode = minRefusjonForPeriode;
     }
 
     public Periode getPeriode() {
         return periode;
     }
 
-    public BigDecimal getMaksRefusjonForPeriode() {
-        return maksRefusjonForPeriode;
+    public BigDecimal getMinsteRefusjonForPeriode() {
+        return minsteRefusjonForPeriode;
     }
 
 }

@@ -40,7 +40,7 @@ public class BeregningsgrunnlagPrStatus {
     private boolean fastsattAvSaksbehandler = false;
     private boolean lagtTilAvSaksbehandler = false;
     private Long orginalDagsatsFraTilstøtendeYtelse;
-    private boolean erSøktYtelseFor = true;
+    private Boolean erSøktYtelseFor;
     // Alltid full utbetaling for foreldrepenger
     private BigDecimal utbetalingsprosent = BigDecimal.valueOf(100);
     private BigDecimal andelsmessigFørGraderingPrAar;
@@ -254,7 +254,9 @@ public class BeregningsgrunnlagPrStatus {
     }
 
     public boolean erSøktYtelseFor() {
-        return erSøktYtelseFor || aktivitetStatus.equals(AktivitetStatus.ATFL);
+        return  (erSøktYtelseFor != null && erSøktYtelseFor)
+            || (erSøktYtelseFor == null && utbetalingsprosent.compareTo(BigDecimal.ZERO) > 0)
+            || aktivitetStatus.equals(AktivitetStatus.ATFL);
     }
 
     public void setErSøktYtelseFor(boolean erSøktYtelseFor) {
