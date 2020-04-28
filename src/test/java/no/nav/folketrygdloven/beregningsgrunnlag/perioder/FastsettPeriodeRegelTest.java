@@ -37,8 +37,9 @@ class FastsettPeriodeRegelTest {
                 .medEndringISøktYtelse(lagGraderingFraSkjæringstidspunkt(arbeidsforhold2))
                 .build();
         List<SplittetPeriode> perioder = FastsettPeriodeRegel.fastsett(inputMedGraderingFraStartForNyttArbeid);
-        assertThat(perioder.size()).isEqualTo(1);
+        assertThat(perioder.size()).isEqualTo(2);
         assertThat(perioder.get(0).getNyeAndeler().size()).isEqualTo(1);
+        assertThat(perioder.get(1).getNyeAndeler().size()).isEqualTo(0);
     }
 
     private List<AndelGradering> lagGraderingFraSkjæringstidspunkt(Arbeidsforhold arbeidsforhold2) {

@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -23,27 +24,37 @@ public class IdentifiserPerioderForEndringISøktYtelseTest {
     public void fårSplittForFørstePeriode() {
         // Arrange
         LocalDate fom = LocalDate.now();
+        LocalDate tom = fom.plusMonths(1);
         var andelGradering = AndelGraderingImpl.builder()
             .medAktivitetStatus(AktivitetStatusV2.AT)
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("123"))
-            .medGraderinger(List.of(new Gradering(Periode.of(fom, fom.plusMonths(1)), BigDecimal.valueOf(50))))
+            .medGraderinger(List.of(new Gradering(Periode.of(fom, tom), BigDecimal.valueOf(50))))
             .build();
 
         // Act
         Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForEndringISøktYtelseSvangerskapspenger.identifiser(andelGradering);
 
         // Assert
-        assertThat(periodesplitter).hasSize(1);
-        assertThat(periodesplitter.iterator().next().getFom()).isEqualTo(fom);
-        assertThat(periodesplitter.iterator().next().getPeriodeÅrsak()).isEqualTo(PeriodeÅrsak.ENDRING_I_AKTIVITETER_SØKT_FOR);
+        assertThat(periodesplitter).hasSize(2);
+        Iterator<PeriodeSplittData> iterator = periodesplitter.iterator();
+        PeriodeSplittData første = iterator.next();
+        assertThat(første.getFom()).isEqualTo(fom);
+        assertThat(første.getPeriodeÅrsak()).isEqualTo(PeriodeÅrsak.ENDRING_I_AKTIVITETER_SØKT_FOR);
+
+        PeriodeSplittData andre = iterator.next();
+        assertThat(andre.getFom()).isEqualTo(tom.plusDays(1));
+        assertThat(andre.getPeriodeÅrsak()).isEqualTo(PeriodeÅrsak.ENDRING_I_AKTIVITETER_SØKT_FOR);
     }
 
     @Test
     public void fårSplittForPerioderMedForskjelligUtbetaling() {
         // Arrange
         LocalDate fom = LocalDate.now();
-        Periode p1 = Periode.of(fom, fom.plusMonths(1));
-        Periode p2 = Periode.of(fom.plusMonths(1).plusDays(1), fom.plusMonths(2));
+        LocalDate tom1 = fom.plusMonths(1);
+        Periode p1 = Periode.of(fom, tom1);
+        LocalDate fom2 = tom1.plusDays(1);
+        LocalDate tom2 = fom.plusMonths(2);
+        Periode p2 = Periode.of(fom2, tom2);
         var andelGradering = AndelGraderingImpl.builder()
             .medAktivitetStatus(AktivitetStatusV2.AT)
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("123"))
@@ -57,13 +68,17 @@ public class IdentifiserPerioderForEndringISøktYtelseTest {
         Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForEndringISøktYtelseSvangerskapspenger.identifiser(andelGradering);
 
         // Assert
-        assertThat(periodesplitter).hasSize(2);
+        assertThat(periodesplitter).hasSize(3);
         assertThat(periodesplitter).anySatisfy(splitt -> {
             assertThat(splitt.getFom()).isEqualTo(p1.getFom());
             assertThat(splitt.getPeriodeÅrsak()).isEqualTo(PeriodeÅrsak.ENDRING_I_AKTIVITETER_SØKT_FOR);
         });
         assertThat(periodesplitter).anySatisfy(splitt -> {
             assertThat(splitt.getFom()).isEqualTo(p2.getFom());
+            assertThat(splitt.getPeriodeÅrsak()).isEqualTo(PeriodeÅrsak.ENDRING_I_AKTIVITETER_SØKT_FOR);
+        });
+        assertThat(periodesplitter).anySatisfy(splitt -> {
+            assertThat(splitt.getFom()).isEqualTo(p2.getTom().plusDays(1));
             assertThat(splitt.getPeriodeÅrsak()).isEqualTo(PeriodeÅrsak.ENDRING_I_AKTIVITETER_SØKT_FOR);
         });
     }
@@ -89,9 +104,13 @@ public class IdentifiserPerioderForEndringISøktYtelseTest {
         Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForEndringISøktYtelseSvangerskapspenger.identifiser(andelGradering);
 
         // Assert
-        assertThat(periodesplitter).hasSize(1);
+        assertThat(periodesplitter).hasSize(2);
         assertThat(periodesplitter).anySatisfy(splitt -> {
             assertThat(splitt.getFom()).isEqualTo(p1.getFom());
+            assertThat(splitt.getPeriodeÅrsak()).isEqualTo(PeriodeÅrsak.ENDRING_I_AKTIVITETER_SØKT_FOR);
+        });
+        assertThat(periodesplitter).anySatisfy(splitt -> {
+            assertThat(splitt.getFom()).isEqualTo(p2.getTom().plusDays(1));
             assertThat(splitt.getPeriodeÅrsak()).isEqualTo(PeriodeÅrsak.ENDRING_I_AKTIVITETER_SØKT_FOR);
         });
     }
@@ -124,7 +143,7 @@ public class IdentifiserPerioderForEndringISøktYtelseTest {
         Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForEndringISøktYtelseSvangerskapspenger.identifiser(andelGradering);
 
         // Assert
-        assertThat(periodesplitter).hasSize(4);
+        assertThat(periodesplitter).hasSize(5);
         assertThat(periodesplitter).anySatisfy(splitt -> {
             assertThat(splitt.getFom()).isEqualTo(p1.getFom());
             assertThat(splitt.getPeriodeÅrsak()).isEqualTo(PeriodeÅrsak.ENDRING_I_AKTIVITETER_SØKT_FOR);
@@ -139,6 +158,10 @@ public class IdentifiserPerioderForEndringISøktYtelseTest {
         });
         assertThat(periodesplitter).anySatisfy(splitt -> {
             assertThat(splitt.getFom()).isEqualTo(p5.getFom());
+            assertThat(splitt.getPeriodeÅrsak()).isEqualTo(PeriodeÅrsak.ENDRING_I_AKTIVITETER_SØKT_FOR);
+        });
+        assertThat(periodesplitter).anySatisfy(splitt -> {
+            assertThat(splitt.getFom()).isEqualTo(p6.getTom().plusDays(1));
             assertThat(splitt.getPeriodeÅrsak()).isEqualTo(PeriodeÅrsak.ENDRING_I_AKTIVITETER_SØKT_FOR);
         });
     }

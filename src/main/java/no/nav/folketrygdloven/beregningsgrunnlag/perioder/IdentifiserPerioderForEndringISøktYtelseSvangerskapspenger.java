@@ -2,12 +2,17 @@ package no.nav.folketrygdloven.beregningsgrunnlag.perioder;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AndelGradering;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Gradering;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.PeriodeModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.PeriodeÅrsak;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.PeriodeSplittData;
 
@@ -33,8 +38,18 @@ public class IdentifiserPerioderForEndringISøktYtelseSvangerskapspenger {
                     set.add(periodeSplitt);
                 }
             }
+            if (i < graderinger.size() - 1) {
+                Gradering next = graderinger.get(i + 1);
+                if (next.getPeriode().getFom().isAfter(curr.getTom().plusDays(1)) && curr.getUtbetalingsprosent().compareTo(BigDecimal.ZERO) != 0) {
+                    PeriodeSplittData periodeSplitt = lagPeriodeSplitt(curr.getTom().plusDays(1));
+                    set.add(periodeSplitt);
+                }
+            } else if (curr.getUtbetalingsprosent().compareTo(BigDecimal.ZERO) != 0) {
+                    PeriodeSplittData periodeSplitt = lagPeriodeSplitt(curr.getTom().plusDays(1));
+                    set.add(periodeSplitt);
+            }
         }
-        return set;
+        return set.stream().sorted(Comparator.comparing(PeriodeSplittData::getFom)).collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     private static PeriodeSplittData lagPeriodeSplitt(LocalDate fom) {
