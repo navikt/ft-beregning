@@ -23,7 +23,7 @@ public class SkalSetteAksjonspunkt extends LeafSpecification<BeregningsgrunnlagP
         if(!grunnlag.skalSjekkeRefusjonFørAvviksvurdering()){
             return ja();
         }
-        return grunnlag.getBeregningsgrunnlag().getBeregningsgrunnlagPerioder().stream().anyMatch(this::girDirekteUtbetalingTilBruker) ? ja() : nei();
+        return girDirekteUtbetalingTilBruker(grunnlag) ? ja() : nei();
     }
 
     private boolean girDirekteUtbetalingTilBruker(BeregningsgrunnlagPeriode grunnlag){
