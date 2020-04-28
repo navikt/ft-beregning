@@ -24,23 +24,34 @@ public class IdentifiserPerioderForEndringISøktYtelseSvangerskapspenger {
             if (i > 0) {
                 Gradering prev = graderinger.get(i - 1);
                 if (curr.getUtbetalingsprosent().compareTo(prev.getUtbetalingsprosent()) != 0) {
-                    PeriodeSplittData periodeSplitt = lagPeriodeSplitt(curr.getFom());
-                    set.add(periodeSplitt);
+                    PeriodeSplittData periodeSplittStart = lagPeriodeSplittFraFom(curr.getFom());
+                    set.add(periodeSplittStart);
+                    PeriodeSplittData periodeSplittSlutt = lagPeriodeSplittFraTom(curr.getTom());
+                    set.add(periodeSplittSlutt);
                 }
             } else {
                 if (curr.getUtbetalingsprosent().compareTo(BigDecimal.ZERO) != 0) {
-                    PeriodeSplittData periodeSplitt = lagPeriodeSplitt(curr.getFom());
-                    set.add(periodeSplitt);
+                    PeriodeSplittData periodeSplittStart = lagPeriodeSplittFraFom(curr.getFom());
+                    set.add(periodeSplittStart);
+                    PeriodeSplittData periodeSplittSlutt = lagPeriodeSplittFraTom(curr.getTom());
+                    set.add(periodeSplittSlutt);
                 }
             }
         }
         return set;
     }
 
-    private static PeriodeSplittData lagPeriodeSplitt(LocalDate fom) {
+    private static PeriodeSplittData lagPeriodeSplittFraFom(LocalDate fom) {
         return PeriodeSplittData.builder()
             .medPeriodeÅrsak(PeriodeÅrsak.ENDRING_I_AKTIVITETER_SØKT_FOR)
             .medFom(fom)
+            .build();
+    }
+
+    private static PeriodeSplittData lagPeriodeSplittFraTom(LocalDate tom) {
+        return PeriodeSplittData.builder()
+            .medPeriodeÅrsak(PeriodeÅrsak.ENDRING_I_AKTIVITETER_SØKT_FOR)
+            .medFom(tom.plusDays(1))
             .build();
     }
 }
