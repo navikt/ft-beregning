@@ -2,6 +2,7 @@ package no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker;
 
 import java.math.BigDecimal;
 
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
@@ -20,10 +21,14 @@ public class SkalSetteAksjonspunkt extends LeafSpecification<BeregningsgrunnlagP
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        if(!grunnlag.skalSjekkeRefusjonFørAvviksvurdering()){
-            return ja();
+        if(grunnlag.skalSjekkeRefusjonFørAvviksvurdering()){
+            return direkteUtbetalingTilBrukerOgAvvik(grunnlag) ? ja() : nei();
         }
-        return girDirekteUtbetalingTilBruker(grunnlag) ? ja() : nei();
+        return erAvvikStørreEnn25Prosent(grunnlag) ? ja() : nei();
+    }
+
+    private boolean direkteUtbetalingTilBrukerOgAvvik(BeregningsgrunnlagPeriode grunnlag){
+        return girDirekteUtbetalingTilBruker(grunnlag) && erAvvikStørreEnn25Prosent(grunnlag);
     }
 
     private boolean girDirekteUtbetalingTilBruker(BeregningsgrunnlagPeriode grunnlag){
@@ -33,5 +38,12 @@ public class SkalSetteAksjonspunkt extends LeafSpecification<BeregningsgrunnlagP
             .reduce(BigDecimal.ZERO, BigDecimal::add);
         BigDecimal avkortetTotaltGrunnlag = grunnlag.getGrenseverdi().min(totaltBeregningsgrunnlag);
         return minsteRefusjon.compareTo(avkortetTotaltGrunnlag) < 0;
+    }
+
+    private boolean erAvvikStørreEnn25Prosent(BeregningsgrunnlagPeriode grunnlag){
+        if(grunnlag.isSplitteATFLToggleErPå()){
+            return grunnlag.getBeregningsgrunnlag().getSammenligningsGrunnlagPrAktivitetstatus(AktivitetStatus.AT).getAvvikProsent().compareTo(grunnlag.getAvviksgrenseProsent()) > 0;
+        }
+        return grunnlag.getBeregningsgrunnlag().getSammenligningsGrunnlag().getAvvikProsent().compareTo(grunnlag.getAvviksgrenseProsent()) > 0;
     }
 }

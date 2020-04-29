@@ -22,6 +22,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SammenligningsGrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.omp.OmsorgspengerGrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.omp.OmsorgspengerGrunnlagPeriode;
 import no.nav.fpsak.nare.evaluation.Evaluation;
@@ -32,12 +33,13 @@ public class SkalSetteAksjonspunktTest {
     private long gVerdi = 99858L;
 
     @Test
-    public void skalVurdere25ProsentAvvikNårDetUtbetalesPengerDirekteTilBrukerOgRefusjonSkalSjekkesFørAvviksvurdering() {
+    public void skalSetteAksjonspunktNårOmsorgspengerOgDetUtbetalesPengerDirekteTilBrukerOgAvvik() {
         //Arrange
         BigDecimal maksRefusjonForPeriode = BigDecimal.valueOf(400_000);
         BigDecimal beregnetPrÅr = BigDecimal.valueOf(450_000);
+        BigDecimal avvikProsent = BigDecimal.valueOf(26);
 
-        Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlag(beregnetPrÅr, maksRefusjonForPeriode, true);
+        Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlag(beregnetPrÅr, maksRefusjonForPeriode, true, avvikProsent);
         BeregningsgrunnlagPeriode periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         //Act
@@ -47,12 +49,13 @@ public class SkalSetteAksjonspunktTest {
     }
 
     @Test
-    public void skalIkkeVurdere25ProsentAvvikNårRefusjonTilsvarer6GOgRefusjonSkalSjekkesFørAvviksvurdering() {
+    public void skalIkkeSetteAksjonspunktNårOmsorgspengerOgRefusjonTilsvarer6GOgAvvik() {
         //Arrange
         BigDecimal maksRefusjonForPeriode = BigDecimal.valueOf(gVerdi*6);
         BigDecimal beregnetPrÅr = BigDecimal.valueOf(650_000);
+        BigDecimal avvikProsent = BigDecimal.valueOf(26);
 
-        Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlag(beregnetPrÅr, maksRefusjonForPeriode, true);
+        Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlag(beregnetPrÅr, maksRefusjonForPeriode, true, avvikProsent);
         BeregningsgrunnlagPeriode periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         //Act
@@ -62,12 +65,13 @@ public class SkalSetteAksjonspunktTest {
     }
 
     @Test
-    public void skalIkkeVurdere25ProsentAvvikNårRefusjonTilsvarerBeregnetOgRefusjonSkalSjekkesFørAvviksvurdering() {
+    public void skalIkkeSetteAksjonspunktNårOmsorgspengerOgRefusjonTilsvarerBeregnetOgAvvik() {
         //Arrange
         BigDecimal maksRefusjonForPeriode = BigDecimal.valueOf(350_000);
         BigDecimal beregnetPrÅr = maksRefusjonForPeriode;
+        BigDecimal avvikProsent = BigDecimal.valueOf(26);
 
-        Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlag(beregnetPrÅr, maksRefusjonForPeriode, true);
+        Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlag(beregnetPrÅr, maksRefusjonForPeriode, true, avvikProsent);
         BeregningsgrunnlagPeriode periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         //Act
@@ -77,12 +81,29 @@ public class SkalSetteAksjonspunktTest {
     }
 
     @Test
-    public void skalVurdere25ProsentAvvikNårRefusjonIkkeSkalSjekkesFørAvviksvurdering() {
+    public void skalIkkeSetteAksjonspunktNårOmsorgspengerOgUtbetalesDirekteTilBrukerOgIkkeAvvik() {
+        //Arrange
+        BigDecimal maksRefusjonForPeriode = BigDecimal.valueOf(400_000);
+        BigDecimal beregnetPrÅr = BigDecimal.valueOf(450_000);
+        BigDecimal avvikProsent = BigDecimal.valueOf(24);
+
+        Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlag(beregnetPrÅr, maksRefusjonForPeriode, true, avvikProsent);
+        BeregningsgrunnlagPeriode periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+
+        //Act
+        Evaluation resultat = new SkalSetteAksjonspunkt().evaluate(periode);
+        //Assert
+        assertThat(resultat.result()).isEqualTo(Resultat.NEI);
+    }
+
+    @Test
+    public void skalSetteAksjonspunktNårIkkeOmsorgspengerOgAvvik() {
         //Arrange
         BigDecimal maksRefusjonForPeriode = BigDecimal.valueOf(350_000);
         BigDecimal beregnetPrÅr = maksRefusjonForPeriode;
+        BigDecimal avvikProsent = BigDecimal.valueOf(26);
 
-        Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlag(beregnetPrÅr, maksRefusjonForPeriode, false);
+        Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlag(beregnetPrÅr, maksRefusjonForPeriode, false, avvikProsent);
         BeregningsgrunnlagPeriode periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         //Act
@@ -91,7 +112,23 @@ public class SkalSetteAksjonspunktTest {
         assertThat(resultat.result()).isEqualTo(Resultat.JA);
     }
 
-    private Beregningsgrunnlag opprettBeregningsgrunnlag(BigDecimal beregnetPrÅr, BigDecimal maksRefusjonForPeriode, boolean avviksVurdere ){
+    @Test
+    public void skalIkkeSetteAksjonspunktNårIkkeOmsorgspengerOgIkkeAvvik() {
+        //Arrange
+        BigDecimal maksRefusjonForPeriode = BigDecimal.valueOf(350_000);
+        BigDecimal beregnetPrÅr = maksRefusjonForPeriode;
+        BigDecimal avvikProsent = BigDecimal.valueOf(20);
+
+        Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlag(beregnetPrÅr, maksRefusjonForPeriode, false, avvikProsent);
+        BeregningsgrunnlagPeriode periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+
+        //Act
+        Evaluation resultat = new SkalSetteAksjonspunkt().evaluate(periode);
+        //Assert
+        assertThat(resultat.result()).isEqualTo(Resultat.NEI);
+    }
+
+    private Beregningsgrunnlag opprettBeregningsgrunnlag(BigDecimal beregnetPrÅr, BigDecimal maksRefusjonForPeriode, boolean avviksVurdere, BigDecimal sgAvvikprosent){
         BeregningsgrunnlagPrStatus beregningsgrunnlagPrStatus = BeregningsgrunnlagPrStatus.builder()
             .medAktivitetStatus(AktivitetStatus.ATFL)
             .medArbeidsforhold(BeregningsgrunnlagPrArbeidsforhold.builder()
@@ -113,6 +150,7 @@ public class SkalSetteAksjonspunktTest {
             .medAktivitetStatuser(List.of(new AktivitetStatusMedHjemmel(AktivitetStatus.ATFL, BeregningsgrunnlagHjemmel.HJEMMEL_BARE_ARBEIDSTAKER)))
             .medBeregningsgrunnlagPeriode(periode)
             .medYtelsesSpesifiktGrunnlag(avviksVurdere ? new OmsorgspengerGrunnlag(List.of(ompPeriode)) : null)
+            .medSammenligningsgrunnlag(SammenligningsGrunnlag.builder().medAvvikProsent(sgAvvikprosent).build())
             .medGrunnbeløpSatser(List.of(
                 new Grunnbeløp(LocalDate.of(2019, 5, 1), LocalDate.MAX, gVerdi, GSNITT_2019)))
             .build();
