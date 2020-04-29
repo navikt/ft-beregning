@@ -11,52 +11,43 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SammenligningsGrunnlag;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
-import no.nav.fpsak.nare.evaluation.node.SingleEvaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
-@RuleDocumentation(SjekkÅrsinntektMotSammenligningsgrunnlagAT.ID)
-class SjekkÅrsinntektMotSammenligningsgrunnlagAT extends LeafSpecification<BeregningsgrunnlagPeriode> {
+@RuleDocumentation(SettAvvikÅrsinntektMotSammenligningsgrunnlag.ID)
+class SettAvvikÅrsinntektMotSammenligningsgrunnlag extends LeafSpecification<BeregningsgrunnlagPeriode> {
 
-    static final String ID = "FP_BR 28.7";
-    static final String BESKRIVELSE = "Har beregnet årsinntekt for FL avvik mot sammenligningsgrunnlag mer enn 25% ?";
+    static final String ID = "FP_BR 27.1";
+    static final String BESKRIVELSE = "Sett beregnet årsinntekt avvik mot sammenligningsgrunnlag";
 
 
-    SjekkÅrsinntektMotSammenligningsgrunnlagAT() {
+    SettAvvikÅrsinntektMotSammenligningsgrunnlag() {
         super(ID, BESKRIVELSE);
     }
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        SammenligningsGrunnlag sg = grunnlag.getBeregningsgrunnlag().getSammenligningsGrunnlagPrAktivitetstatus().get(AktivitetStatus.AT);
+        Map<String, Object> resultater = new HashMap<>();
+        SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlag();
         if (sg == null || sg.getRapportertPrÅr() == null) {
-            throw new IllegalStateException("Utviklerfeil: Skal alltid ha sammenligningsgrunnlag her.");
+           throw new IllegalStateException("Utviklerfeil: Skal alltid ha sammenligningsgrunnlag her.");
         }
 
         if (sg.getRapportertPrÅr().compareTo(BigDecimal.ZERO) <= 0) {
             sg.setAvvikProsent(BigDecimal.valueOf(100)); //Setter avviksprosenten til 100 når ingen inntekt (for ikke å dele på 0), saksbehandler avgjør deretter
-            SingleEvaluation resultat = ja();
-            regelsporing(grunnlag, sg, resultat);
-            return resultat;
+            resultater.put("avvikProsent", sg.getAvvikProsent());
+            return beregnet(resultater);
         }
 
         BeregningsgrunnlagPrStatus bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
         BigDecimal naturalytelseBortfaltPrÅr = bgps.samletNaturalytelseBortfaltMinusTilkommetPrÅr();
-        BigDecimal rapporertInntekt = bgps.getBeregnetPrÅrForAT().add(naturalytelseBortfaltPrÅr);
+        BigDecimal rapporertInntekt = bgps.getBeregnetPrÅr().add(naturalytelseBortfaltPrÅr);
 
         BigDecimal diff = rapporertInntekt.subtract(sg.getRapportertPrÅr()).abs();
         BigDecimal avvikProsent = diff.divide(sg.getRapportertPrÅr(), 10, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100));
         sg.setAvvikProsent(avvikProsent);
 
-        SingleEvaluation resultat = avvikProsent.compareTo(grunnlag.getAvviksgrenseProsent()) > 0 ? ja() : nei();
-        regelsporing(grunnlag, sg, resultat);
-        return resultat;
-    }
-
-    private void regelsporing(BeregningsgrunnlagPeriode grunnlag, SammenligningsGrunnlag sg, SingleEvaluation resultat) {
-        Map<String, Object> resultater = new HashMap<>();
-        resultater.put("opptjentPrÅr", grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getBeregnetPrÅr());
-        resultater.put("sammenligningsgrunnlag", sg.getRapportertPrÅr());
-        resultater.put("avvikProsent", sg.getAvvikProsent());
-        resultat.setEvaluationProperties(resultater);
+        SammenligningsGrunnlag sammenligningsGrunnlag = grunnlag.getBeregningsgrunnlag().getSammenligningsGrunnlag();
+        resultater.put("avvikProsent", sammenligningsGrunnlag.getAvvikProsent());
+        return beregnet(resultater);
     }
 }

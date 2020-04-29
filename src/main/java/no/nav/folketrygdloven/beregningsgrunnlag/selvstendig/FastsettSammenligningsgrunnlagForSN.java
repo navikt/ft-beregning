@@ -34,7 +34,7 @@ public class FastsettSammenligningsgrunnlagForSN extends LeafSpecification<Bereg
         SammenligningsGrunnlag sammenligningsGrunnlag = opprettSammenligningsgrunnlag(grunnlag, oppgittInntekt);
         beregnOgFastsettAvvik(grunnlag, sammenligningsGrunnlag);
 
-        if(grunnlag.isSplitteATFLToggleErPå()){
+        if(grunnlag.skalSplitteSammenligningsgrunnlagToggle()){
             Beregningsgrunnlag.builder(grunnlag.getBeregningsgrunnlag()).medSammenligningsgrunnlagPrStatus(AktivitetStatus.SN, sammenligningsGrunnlag).build();
         } else {
             Beregningsgrunnlag.builder(grunnlag.getBeregningsgrunnlag()).medSammenligningsgrunnlag(sammenligningsGrunnlag).build();
