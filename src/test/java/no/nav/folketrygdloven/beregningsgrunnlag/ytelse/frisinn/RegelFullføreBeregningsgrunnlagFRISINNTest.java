@@ -21,7 +21,6 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.GRUNNBELØPLISTE;
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.GRUNNBELØP_2019;

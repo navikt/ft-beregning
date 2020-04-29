@@ -71,7 +71,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
         BigDecimal refusjonskrav = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
         Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektskomponenten(skjæringstidspunkt, månedsinntekt, refusjonskrav, true);
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         // Act
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
         // Assert
@@ -89,7 +89,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
         BigDecimal refusjonskrav = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
         Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektskomponenten(skjæringstidspunkt, månedsinntekt, refusjonskrav, false);
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         // Act
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
         // Assert
@@ -112,7 +112,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
 
         BeregningsgrunnlagPeriode grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL_SN),
             List.of(arbeidsforhold), Collections.singletonList(refusjonskrav.multiply(BigDecimal.valueOf(12)))).getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         // Act
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
         // Assert
@@ -140,7 +140,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
 
         BeregningsgrunnlagPeriode grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL_SN),
             List.of(arbeidsforhold), Collections.singletonList(refusjonskrav.multiply(BigDecimal.valueOf(12)))).getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         // Act
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
         // Assert
@@ -166,7 +166,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
 
         BeregningsgrunnlagPeriode grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL_SN),
             List.of(arbeidsforhold), Collections.singletonList(refusjonskrav.multiply(BigDecimal.valueOf(12)))).getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         // Act
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
         // Assert
@@ -191,7 +191,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
         Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektsmelding(skjæringstidspunkt, månedsinntekt, refusjonskrav, naturalytelse, naturalytelseOpphørFom);
         opprettSammenligningsgrunnlagPrAktivitet(beregningsgrunnlag.getInntektsgrunnlag(), skjæringstidspunkt, BigDecimal.valueOf(30000), AktivitetStatus.AT);
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         // Act
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
         // Assert
@@ -220,7 +220,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
             .build());
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.DP));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         // Act
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
         // Assert
@@ -247,7 +247,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag,
             List.of(AktivitetStatus.SN, AktivitetStatus.DP));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         // Act
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
         // Assert
@@ -282,7 +282,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
             List.of(AktivitetStatus.ATFL_SN, AktivitetStatus.AAP), Collections.singletonList(arbeidsforhold),
             Collections.singletonList(månedsinntektATFL.multiply(BigDecimal.valueOf(12))));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         // Act
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
         // Assert
@@ -307,7 +307,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag,
             Collections.singletonList(AktivitetStatus.ATFL), Collections.singletonList(Arbeidsforhold.frilansArbeidsforhold()));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         BeregningsgrunnlagPrArbeidsforhold.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0))
             .medFastsattAvSaksbehandler(true)
             .medBeregnetPrÅr(BigDecimal.valueOf(300000))
@@ -333,7 +333,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
             Collections.singletonList(AktivitetStatus.ATFL), Collections.singletonList(arbeidsforhold));
         opprettSammenligningsgrunnlagPrAktivitet(inntektsgrunnlag, skjæringstidspunkt, BigDecimal.valueOf(18000), AktivitetStatus.AT);
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         BeregningsgrunnlagPrArbeidsforhold.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0))
             .medFastsattAvSaksbehandler(true)
             .medBeregnetPrÅr(BigDecimal.valueOf(200000))
@@ -358,7 +358,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, new Inntektsgrunnlag(),
             Collections.singletonList(AktivitetStatus.KUN_YTELSE));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         BeregningsgrunnlagPrStatus prStatus = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.BA);
         BeregningsgrunnlagPrStatus.builder(prStatus).medBeregnetPrÅr(BigDecimal.valueOf(100000));
         // Act
@@ -379,7 +379,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
         Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektskomponenten(skjæringstidspunkt, månedsinntekt, refusjonskrav, true, true);
         leggtilStatus(beregningsgrunnlag, AktivitetStatus.UDEFINERT);
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         // Act
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
         // Assert
@@ -401,7 +401,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
             refusjonskrav, true, true);
         leggtilStatus(beregningsgrunnlag, AktivitetStatus.KUN_YTELSE);
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         // Act
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
         // Assert
@@ -423,7 +423,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
             månedsinntekt, refusjonskrav, true, true);
         leggtilStatus(beregningsgrunnlag, AktivitetStatus.KUN_YTELSE);
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         // Act
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
         // Assert
@@ -445,7 +445,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
             månedsinntekt, refusjonskrav, true, true);
         leggtilStatus(beregningsgrunnlag, AktivitetStatus.KUN_YTELSE);
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         // Act
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
         // Assert
@@ -472,7 +472,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
             List.of(arbeidsforhold), Collections.singletonList(refusjonskrav.multiply(BigDecimal.valueOf(12))));
 
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
 
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
 
@@ -500,7 +500,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
         leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, Collections.singletonList(månedsinntektInntektsmelding), Inntektskilde.INNTEKTSMELDING, arbeidsforhold, AktivitetStatus.AT);
         BeregningsgrunnlagPeriode grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL),
             List.of(arbeidsforhold), Collections.singletonList(refusjonskrav.multiply(BigDecimal.valueOf(12)))).getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         // Act
         @SuppressWarnings("unused")
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
@@ -523,7 +523,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
         leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, Collections.singletonList(månedsinntekt), Inntektskilde.INNTEKTSMELDING, arbeidsforhold, AktivitetStatus.AT);
         BeregningsgrunnlagPeriode grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL, AktivitetStatus.MS),
             List.of(arbeidsforhold), Collections.singletonList(refusjonskrav.multiply(BigDecimal.valueOf(12)))).getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         // Act
         @SuppressWarnings("unused")
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
@@ -544,7 +544,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
         leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, månedsinntekter, Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, arbeidsforhold, AktivitetStatus.FL);
         BeregningsgrunnlagPeriode grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL),
             List.of(arbeidsforhold), Collections.emptyList()).getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
 
         // Act
         @SuppressWarnings("unused")
@@ -571,7 +571,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
 
         BeregningsgrunnlagPeriode grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL),
             List.of(arbeidsforhold, arbeidsforholdFrilans), Collections.emptyList()).getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
 
         // Act
         @SuppressWarnings("unused")
@@ -597,7 +597,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
         leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, Collections.singletonList(månedsinntekt), Inntektskilde.INNTEKTSMELDING, arbeidsforhold, AktivitetStatus.FL);
         BeregningsgrunnlagPeriode grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL, AktivitetStatus.MS),
             List.of(arbeidsforhold), Collections.emptyList()).getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
 
         // Act
         @SuppressWarnings("unused")
@@ -617,7 +617,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
         leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, månedsinntekter, Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold, AktivitetStatus.AT);
         BeregningsgrunnlagPeriode grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL),
             List.of(arbeidsforhold), List.of(refusjonskrav)).getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
 
         // Act
         @SuppressWarnings("unused")
@@ -642,7 +642,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
         leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, Collections.nCopies(3, månedsinntektInntektsmelding), Inntektskilde.INNTEKTSMELDING, arbeidsforhold, AktivitetStatus.AT);
         BeregningsgrunnlagPeriode grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL),
             List.of(arbeidsforhold), List.of(refusjonskrav)).getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
 
         // Act
         @SuppressWarnings("unused")
@@ -671,7 +671,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
         BeregningsgrunnlagPeriode grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL),
             List.of(arbeidsforhold, arbeidsforholdFrilans), Collections.emptyList()).getBeregningsgrunnlagPerioder().get(0);
         BeregningsgrunnlagPrStatus.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL)).medFlOgAtISammeOrganisasjon(true).build();
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
 
         // Act
         @SuppressWarnings("unused")
@@ -698,7 +698,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
         leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, Collections.nCopies(12,månedsinntektFL), Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold, AktivitetStatus.FL);
         BeregningsgrunnlagPeriode grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL_SN),
             List.of(arbeidsforhold), Collections.emptyList()).getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
 
         // Act
         @SuppressWarnings("unused")
@@ -729,7 +729,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
         leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, Collections.singletonList(månedsinntektAT), Inntektskilde.INNTEKTSMELDING, arbeidsforhold, AktivitetStatus.AT);
         BeregningsgrunnlagPeriode grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL_SN),
             List.of(arbeidsforhold), Collections.singletonList(refusjonskrav.multiply(BigDecimal.valueOf(12)))).getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
 
         // Act
         @SuppressWarnings("unused")
@@ -760,7 +760,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
         leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, månedsinntekterSammenligning, Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, arbeidsforholdFrilans, AktivitetStatus.FL);
         BeregningsgrunnlagPeriode grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL),
             List.of(arbeidsforhold, arbeidsforholdFrilans), Collections.emptyList()).getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
 
         // Act
         @SuppressWarnings("unused")
@@ -791,7 +791,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
         leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, Collections.singletonList(månedsinntektInntektsmelding), Inntektskilde.INNTEKTSMELDING, arbeidsforhold, AktivitetStatus.AT);
         BeregningsgrunnlagPeriode grunnlag = settOppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, AktivitetStatus.ATFL,
             List.of(arbeidsforhold), Collections.singletonList(refusjonskravPrÅr), true, refusjonskravPrÅr).getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
 
         // Act
         @SuppressWarnings("unused")
@@ -819,4 +819,9 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
             .build();
         Beregningsgrunnlag.builder(beregningsgrunnlag).medAktivitetStatuser(List.of(new AktivitetStatusMedHjemmel(aktivitetStatus, null))).build();
     }
+
+    private void togglePå(BeregningsgrunnlagPeriode periode) {
+        Beregningsgrunnlag.builder(periode.getBeregningsgrunnlag()).medSplitteATFLToggleVerdi(true).build();
+    }
+
 }

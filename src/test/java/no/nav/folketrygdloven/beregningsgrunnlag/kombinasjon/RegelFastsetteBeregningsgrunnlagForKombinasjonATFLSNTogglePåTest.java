@@ -73,7 +73,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTogglePåTest {
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.ATFL_SN),
             Collections.singletonList(arbeidsforhold), Collections.singletonList(BigDecimal.valueOf(4).multiply(BigDecimal.valueOf(GSNITT_2017*12))));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
 
 
         // Act
@@ -118,7 +118,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTogglePåTest {
             Collections.singletonList(arbeidsforhold),
             Collections.singletonList(BigDecimal.valueOf(4).multiply(BigDecimal.valueOf(GSNITT_2017*12))));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
 
         // Act
         Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).evaluer(grunnlag);
@@ -161,7 +161,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTogglePåTest {
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.ATFL_SN),
             Collections.singletonList(arbeidsforhold), Collections.singletonList(BigDecimal.ZERO));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
 
         // Act
         Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).evaluer(grunnlag);
@@ -218,7 +218,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTogglePåTest {
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.ATFL_SN),
             Collections.singletonList(arbeidsforhold), Collections.singletonList(BigDecimal.ZERO));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
 
         // Act
         Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).evaluer(grunnlag);
@@ -278,7 +278,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTogglePåTest {
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.ATFL_SN),
             Collections.singletonList(arbeidsforhold), Collections.singletonList(BigDecimal.ZERO));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
 
         BeregningsgrunnlagPeriode andrePeriode = BeregningsgrunnlagPeriode.builder()
             .medPeriode(Periode.of(naturalytelseOpphørFom, null))
@@ -334,7 +334,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTogglePåTest {
             Collections.singletonList(arbeidsforhold),
             Collections.singletonList(BigDecimal.valueOf(4).multiply(BigDecimal.valueOf(GSNITT_2017*12))));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         BigDecimal bruttoDP = BigDecimal.valueOf(100000);
         BeregningsgrunnlagPrStatus.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP)).medBeregnetPrÅr(bruttoDP).build();
 
@@ -377,7 +377,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTogglePåTest {
             Collections.singletonList(arbeidsforhold),
             Collections.singletonList(BigDecimal.valueOf(4).multiply(BigDecimal.valueOf(GSNITT_2017).multiply(BigDecimal.valueOf(12)))));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         BeregningsgrunnlagPrStatus.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.AAP)).medBeregnetPrÅr(bruttoAAP).build();
 
         // Act
@@ -419,7 +419,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTogglePåTest {
             Collections.singletonList(arbeidsforhold),
             Collections.singletonList(BigDecimal.valueOf(4).multiply(BigDecimal.valueOf(GSNITT_2017).multiply(BigDecimal.valueOf(12)))));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         BeregningsgrunnlagPrStatus.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP)).medBeregnetPrÅr(bruttoDP).build();
 
         // Act
@@ -452,7 +452,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTogglePåTest {
             Collections.singletonList(AktivitetStatus.ATFL_SN), Collections.singletonList(arbeidsforhold),
             Collections.singletonList(BigDecimal.valueOf(4).multiply(BigDecimal.valueOf(GSNITT_2017).multiply(BigDecimal.valueOf(12)))));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         BeregningsgrunnlagPrStatus.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN)).medErNyIArbeidslivet(true);
 
         // Act
@@ -479,7 +479,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTogglePåTest {
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         BeregningsgrunnlagPrArbeidsforhold statusAT = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
         BeregningsgrunnlagPrStatus statusSN = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         BeregningsgrunnlagPrArbeidsforhold.builder(statusAT).medFastsattAvSaksbehandler(true).medBeregnetPrÅr(BigDecimal.valueOf(232323));
         BeregningsgrunnlagPrStatus.builder(statusSN).medFastsattAvSaksbehandler(true).medBeregnetPrÅr(BigDecimal.valueOf(323232));
 
@@ -536,4 +536,9 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTogglePåTest {
             }
         }
     }
+
+    private void togglePå(BeregningsgrunnlagPeriode periode) {
+        Beregningsgrunnlag.builder(periode.getBeregningsgrunnlag()).medSplitteATFLToggleVerdi(true).build();
+    }
+
 }

@@ -33,7 +33,6 @@ public class BeregningsgrunnlagPeriode {
     @JsonBackReference
     private Beregningsgrunnlag beregningsgrunnlag;
     private BigDecimal grenseverdi;
-    private boolean splitteATFLToggleErPå = false;
 
     private BeregningsgrunnlagPeriode() { }
 
@@ -197,13 +196,7 @@ public class BeregningsgrunnlagPeriode {
     }
 
     public boolean isSplitteATFLToggleErPå() {
-        return splitteATFLToggleErPå;
-    }
-
-    // Denne skal kun brukes i test og fjernes etter toggle er live
-    @Deprecated
-    public void setSplitteATFLToggleErPå(boolean splitteATFLToggleErPå) {
-        this.splitteATFLToggleErPå = splitteATFLToggleErPå;
+        return beregningsgrunnlag.isSplitteATFLToggleErPå();
     }
 
     public static Builder builder() {
@@ -232,11 +225,6 @@ public class BeregningsgrunnlagPeriode {
 
         public Builder medPeriode(Periode beregningsgrunnlagPeriode) {
             beregningsgrunnlagPeriodeMal.bgPeriode = beregningsgrunnlagPeriode;
-            return this;
-        }
-
-        public Builder medskalSplitteATFL(boolean skalSplitteATFL) {
-            beregningsgrunnlagPeriodeMal.splitteATFLToggleErPå = skalSplitteATFL;
             return this;
         }
 

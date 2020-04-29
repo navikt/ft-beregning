@@ -44,7 +44,7 @@ public class ForeslåBeregningsgrunnlagSykepengerMedTogglePåTest {
         Beregningsgrunnlag.builder(beregningsgrunnlag).medBeregningForSykepenger(true);
         opprettSammenligningsgrunnlagPrAktivitet(beregningsgrunnlag.getInntektsgrunnlag(), skjæringstidspunkt, BigDecimal.valueOf(42000), AktivitetStatus.AT);
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         BeregningsgrunnlagPrArbeidsforhold bgArbeidsforhold = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
         BeregningsgrunnlagPrArbeidsforhold.builder(bgArbeidsforhold).medArbeidsgiverperioder(arbeidsgiversPeriode).build();
         // Act
@@ -73,7 +73,7 @@ public class ForeslåBeregningsgrunnlagSykepengerMedTogglePåTest {
         Beregningsgrunnlag.builder(beregningsgrunnlag).medBeregningForSykepenger(true);
         opprettSammenligningsgrunnlagPrAktivitet(beregningsgrunnlag.getInntektsgrunnlag(), skjæringstidspunkt, BigDecimal.valueOf(40000), AktivitetStatus.AT);
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         BeregningsgrunnlagPrArbeidsforhold bgArbeidsforhold = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
         BeregningsgrunnlagPrArbeidsforhold.builder(bgArbeidsforhold).medArbeidsgiverperioder(arbeidsgiversPeriode).build();
         // Act
@@ -100,7 +100,7 @@ public class ForeslåBeregningsgrunnlagSykepengerMedTogglePåTest {
             refusjonskrav, naturalytelse, naturalytelseOpphørFom);
         opprettSammenligningsgrunnlagPrAktivitet(beregningsgrunnlag.getInntektsgrunnlag(), skjæringstidspunkt, BigDecimal.valueOf(40000), AktivitetStatus.AT);
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         BeregningsgrunnlagPrArbeidsforhold bgArbeidsforhold = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
         BeregningsgrunnlagPrArbeidsforhold.builder(bgArbeidsforhold).medArbeidsgiverperioder(arbeidsgiversPeriode).build();
         // Act
@@ -116,5 +116,10 @@ public class ForeslåBeregningsgrunnlagSykepengerMedTogglePåTest {
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.HJEMMEL_BARE_ARBEIDSTAKER, AktivitetStatus.ATFL, 12 * månedsinntekt.doubleValue());
         verifiserBeregningsgrunnlagBeregnet(grunnlag, 12 * månedsinntekt.doubleValue());
     }
+
+    private void togglePå(BeregningsgrunnlagPeriode periode) {
+        Beregningsgrunnlag.builder(periode.getBeregningsgrunnlag()).medSplitteATFLToggleVerdi(true).build();
+    }
+
 }
 
