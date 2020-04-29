@@ -24,7 +24,7 @@ public class SjekkOmDifferanseStørreEnn25Prosent extends LeafSpecification<Bere
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
         final SammenligningsGrunnlag sg;
-        if(grunnlag.isSplitteATFLToggleErPå()){
+        if(grunnlag.skalSplitteSammenligningsgrunnlagToggle()){
             sg = grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.SN);
         } else {
             sg = grunnlag.getSammenligningsGrunnlag();

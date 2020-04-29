@@ -28,7 +28,7 @@ public class SjekkAvvikSammenligningsgrunnlagMotAvviksgrense extends LeafSpecifi
     }
 
     private boolean erAvvikStørreEnn25Prosent(BeregningsgrunnlagPeriode grunnlag){
-        if(grunnlag.isSplitteATFLToggleErPå()){
+        if(grunnlag.skalSplitteSammenligningsgrunnlagToggle()){
             return grunnlag.getBeregningsgrunnlag().getSammenligningsGrunnlagPrAktivitetstatus(AktivitetStatus.AT).getAvvikProsent().compareTo(grunnlag.getAvviksgrenseProsent()) > 0;
         }
         return grunnlag.getBeregningsgrunnlag().getSammenligningsGrunnlag().getAvvikProsent().compareTo(grunnlag.getAvviksgrenseProsent()) > 0;

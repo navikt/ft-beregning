@@ -195,7 +195,7 @@ public class BeregningsgrunnlagPeriode {
         return getBeregningsgrunnlag().erBesteberegnet();
     }
 
-    public boolean isSplitteATFLToggleErPå() {
+    public boolean skalSplitteSammenligningsgrunnlagToggle() {
         return beregningsgrunnlag.isSplitteATFLToggleErPå();
     }
 
