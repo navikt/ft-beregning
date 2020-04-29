@@ -57,7 +57,7 @@ public class RegelBeregningsgrunnlagSNTogglePåTestTest {
             årsinntekterFor3SisteÅr(5.0d, 3.0d, 4.0d), Inntektskilde.SIGRUN);
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.SN));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         // Act
         Evaluation evaluation = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
         // Assert
@@ -80,7 +80,7 @@ public class RegelBeregningsgrunnlagSNTogglePåTestTest {
             årsinntekterFor3SisteÅr(14.0d, 15.0d, 16.0d), Inntektskilde.SIGRUN);
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.SN));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         // Act
         Evaluation evaluation = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
         // Assert
@@ -102,7 +102,7 @@ public class RegelBeregningsgrunnlagSNTogglePåTestTest {
             årsinntekterFor3SisteÅr(8.0d, 9.0d, 10.0d), Inntektskilde.SIGRUN);
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.SN));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         // Act
         Evaluation evaluation = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
         // Assert
@@ -125,7 +125,7 @@ public class RegelBeregningsgrunnlagSNTogglePåTestTest {
         Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(skjæringstidspunkt, årsinntekter, Inntektskilde.SIGRUN);
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.SN));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         // Act
         Evaluation evaluation = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
         // Assert
@@ -148,7 +148,7 @@ public class RegelBeregningsgrunnlagSNTogglePåTestTest {
         leggTilMånedsinntekter(inntektsgrunnlag, skjæringstidspunkt, Collections.singletonList(BigDecimal.valueOf(GRUNNBELØP_2017 * 1.245 * 12)), Inntektskilde.SØKNAD, null);
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.SN));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         // Act
         Evaluation evaluation = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
         // Assert
@@ -174,7 +174,7 @@ public class RegelBeregningsgrunnlagSNTogglePåTestTest {
         leggTilMånedsinntekter(inntektsgrunnlag, skjæringstidspunkt, Collections.singletonList(BigDecimal.valueOf(GRUNNBELØP_2017*12)), Inntektskilde.SØKNAD, null);
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.SN));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         // Act
         Evaluation evaluation = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
         // Assert
@@ -203,7 +203,7 @@ public class RegelBeregningsgrunnlagSNTogglePåTestTest {
             ), Inntektskilde.SIGRUN);
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.SN));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         // Act
         Evaluation evaluation = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
         // Assert
@@ -229,7 +229,7 @@ public class RegelBeregningsgrunnlagSNTogglePåTestTest {
             Inntektskilde.SIGRUN);
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.SN, AktivitetStatus.DP));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         BeregningsgrunnlagPrStatus.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP)).medBeregnetPrÅr(bruttoDP).build();
         // Act
         Evaluation evaluation = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
@@ -255,7 +255,7 @@ public class RegelBeregningsgrunnlagSNTogglePåTestTest {
         leggTilMånedsinntekter(inntektsgrunnlag, skjæringstidspunkt, Collections.singletonList(BigDecimal.valueOf(30000*12)), Inntektskilde.SØKNAD, null);
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.SN, AktivitetStatus.AAP));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         BeregningsgrunnlagPrStatus.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.AAP)).medBeregnetPrÅr(bruttoAAP).build();
         // Act
         Evaluation evaluation = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
@@ -287,7 +287,7 @@ public class RegelBeregningsgrunnlagSNTogglePåTestTest {
         leggTilMånedsinntekter(inntektsgrunnlag, skjæringstidspunkt, Collections.singletonList(oppgittÅrsInntektSN), Inntektskilde.SØKNAD, null);
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.SN, AktivitetStatus.DP));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         BeregningsgrunnlagPrStatus.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP)).medBeregnetPrÅr(bruttoDP).build();
         // Act
         Evaluation evaluation = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
@@ -314,7 +314,7 @@ public class RegelBeregningsgrunnlagSNTogglePåTestTest {
         leggTilMånedsinntekter(inntektsgrunnlag, skjæringstidspunkt, Collections.singletonList(BigDecimal.valueOf(120000)), Inntektskilde.SØKNAD, null);
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.SN));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         // Act
         Evaluation evaluation = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
         // Assert
@@ -338,7 +338,7 @@ public class RegelBeregningsgrunnlagSNTogglePåTestTest {
             årsinntekterFor3SisteÅr(6d, 3d, 0.0d), Inntektskilde.SIGRUN);
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.SN));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         BeregningsgrunnlagPrStatus.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN)).medErNyIArbeidslivet(true);
 
         // Act
@@ -361,7 +361,7 @@ public class RegelBeregningsgrunnlagSNTogglePåTestTest {
             årsinntektForOppgittÅrene(8d, 2017, 2015), Inntektskilde.SIGRUN, 2017, 2015);
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.SN));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         // Act
         Evaluation evaluation = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
         // Assert
@@ -386,7 +386,7 @@ public class RegelBeregningsgrunnlagSNTogglePåTestTest {
             årsinntektForOppgittÅrene(4d, 2016), Inntektskilde.SIGRUN, 2016);
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.SN));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         // Act
         Evaluation evaluation = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
         // Assert
@@ -409,7 +409,7 @@ public class RegelBeregningsgrunnlagSNTogglePåTestTest {
         Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.SN));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         // Act
         Evaluation evaluation = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
         // Assert
@@ -436,7 +436,7 @@ public class RegelBeregningsgrunnlagSNTogglePåTestTest {
             .medInntekt(BigDecimal.valueOf(250000))
             .build());
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         // Act
         Evaluation evaluation = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
         // Assert
@@ -457,7 +457,7 @@ public class RegelBeregningsgrunnlagSNTogglePåTestTest {
             årsinntekterFor3SisteÅr(5.0d, 3.0d, 4.0d), Inntektskilde.SIGRUN);
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.SN));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
+        togglePå(grunnlag);
         BeregningsgrunnlagPrStatus status = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
         BeregningsgrunnlagPrStatus.builder(status).medFastsattAvSaksbehandler(true).medBeregnetPrÅr(BigDecimal.valueOf(33333));
         // Act
@@ -471,5 +471,9 @@ public class RegelBeregningsgrunnlagSNTogglePåTestTest {
         assertThat(bgpsa.getGjennomsnittligPGI()).isEqualByComparingTo(BigDecimal.valueOf(4.0d * GRUNNBELØP_2017));
         assertThat(beregningsgrunnlag.getSammenligningsGrunnlagPrAktivitetstatus(AktivitetStatus.SN)).isNull();
         assertThat(bgpsa.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(33333));
+    }
+
+    private void togglePå(BeregningsgrunnlagPeriode periode) {
+        Beregningsgrunnlag.builder(periode.getBeregningsgrunnlag()).medSplitteATFLToggleVerdi(true).build();
     }
 }

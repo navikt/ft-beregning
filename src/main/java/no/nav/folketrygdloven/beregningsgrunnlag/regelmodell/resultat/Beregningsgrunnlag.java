@@ -40,6 +40,7 @@ public class Beregningsgrunnlag {
     private BigDecimal antallGMinstekravVilkår;
     private BigDecimal ytelsedagerIPrÅr;
     private BigDecimal avviksgrenseProsent;
+    private boolean splitteATFLToggleErPå = false;
 
     private Beregningsgrunnlag() { }
 
@@ -160,6 +161,10 @@ public class Beregningsgrunnlag {
         return sammenligningsGrunnlagPrStatus.get(aktivitetStatus);
     }
 
+    public boolean isSplitteATFLToggleErPå() {
+        return splitteATFLToggleErPå;
+    }
+
     public static Builder builder() {
         return new Builder();
     }
@@ -273,6 +278,12 @@ public class Beregningsgrunnlag {
 
         public Builder medYtelsesSpesifiktGrunnlag(YtelsesSpesifiktGrunnlag ytelsesSpesifiktGrunnlag) {
             beregningsgrunnlagMal.ytelsesSpesifiktGrunnlag = ytelsesSpesifiktGrunnlag;
+            return this;
+        }
+
+
+        public Builder medSplitteATFLToggleVerdi(boolean splitteATFLToggleErPå) {
+            beregningsgrunnlagMal.splitteATFLToggleErPå = splitteATFLToggleErPå;
             return this;
         }
 

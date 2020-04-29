@@ -56,8 +56,7 @@ public class BeregningsgrunnlagFlerePerioderMedTogglePåTest {
             .medPeriode(Periode.of(naturalytelseOpphørFom, null))
             .build();
 
-        førstePeriode.setSplitteATFLToggleErPå(true);
-        andrePeriode.setSplitteATFLToggleErPå(true);
+        togglePå(førstePeriode);
 
         kopierBeregningsgrunnlagPeriode(førstePeriode, andrePeriode);
 
@@ -109,18 +108,15 @@ public class BeregningsgrunnlagFlerePerioderMedTogglePåTest {
 
         BeregningsgrunnlagPeriode.builder(periode1)
             .medPeriode(Periode.of(skjæringstidspunkt, naturalytelseOpphørFom1.minusDays(1)))
-            .medskalSplitteATFL(true)
             .build();
         BeregningsgrunnlagPeriode periode2 = BeregningsgrunnlagPeriode.builder()
             .medPeriode(Periode.of(naturalytelseOpphørFom1, naturalytelseOpphørFom2.minusDays(1)))
-            .medskalSplitteATFL(true)
             .build();
 
         kopierBeregningsgrunnlagPeriode(periode1, periode2);
 
         BeregningsgrunnlagPeriode periode3 = BeregningsgrunnlagPeriode.builder()
             .medPeriode(Periode.of(naturalytelseOpphørFom2, null))
-            .medskalSplitteATFL(true)
             .build();
 
         kopierBeregningsgrunnlagPeriode(periode1, periode3);
@@ -128,6 +124,7 @@ public class BeregningsgrunnlagFlerePerioderMedTogglePåTest {
         Beregningsgrunnlag.builder(beregningsgrunnlag)
             .medBeregningsgrunnlagPeriode(periode2)
             .medBeregningsgrunnlagPeriode(periode3)
+            .medSplitteATFLToggleVerdi(true)
             .build();
 
         // Act
@@ -180,5 +177,9 @@ public class BeregningsgrunnlagFlerePerioderMedTogglePåTest {
                 }
             }
         }
+    }
+
+    private void togglePå(BeregningsgrunnlagPeriode periode) {
+        Beregningsgrunnlag.builder(periode.getBeregningsgrunnlag()).medSplitteATFLToggleVerdi(true).build();
     }
 }

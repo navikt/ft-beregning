@@ -45,11 +45,11 @@ public class BeregningsgrunnlagTidsbegrensetArbeidsforholdMedTogglePåTest {
         // Arrange
         BigDecimal månedsinntekt = BigDecimal.valueOf(25000);
         LocalDate skjæringstidspunkt2 = LocalDate.of(2018, Month.APRIL, 26);
-        Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektskomponenten(skjæringstidspunkt2, månedsinntekt, null, true, 1, List.of(PeriodeÅrsak.ARBEIDSFORHOLD_AVSLUTTET));
+        Beregningsgrunnlag beregningsgrunnlag = togglePå(opprettBeregningsgrunnlagFraInntektskomponenten(skjæringstidspunkt2, månedsinntekt,
+            null, true, 1, List.of(PeriodeÅrsak.ARBEIDSFORHOLD_AVSLUTTET)));
 
         Inntektsgrunnlag inntektsgrunnlag = beregningsgrunnlag.getInntektsgrunnlag();
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
         Arbeidsforhold arbeidsforhold = Arbeidsforhold.frilansArbeidsforhold();
         leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt2.minusMonths(2), List.of(månedsinntekt), Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold, AktivitetStatus.FL);
         opprettSammenligningsgrunnlagPrAktivitet(grunnlag.getInntektsgrunnlag(), skjæringstidspunkt2, månedsinntekt, AktivitetStatus.FL);
@@ -73,11 +73,12 @@ public class BeregningsgrunnlagTidsbegrensetArbeidsforholdMedTogglePåTest {
         // Arrange
         BigDecimal månedsinntekt = BigDecimal.valueOf(25000);
         LocalDate skjæringstidspunkt2 = LocalDate.of(2018, Month.APRIL, 26);
-        Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektskomponentenPrAktivitet(skjæringstidspunkt2.minusMonths(2), månedsinntekt, null, true, 1, List.of(PeriodeÅrsak.ARBEIDSFORHOLD_AVSLUTTET, PeriodeÅrsak.NATURALYTELSE_BORTFALT), AktivitetStatus.FL);
+        Beregningsgrunnlag beregningsgrunnlag = togglePå(opprettBeregningsgrunnlagFraInntektskomponentenPrAktivitet(skjæringstidspunkt2.minusMonths(2),
+            månedsinntekt, null, true, 1, List.of(PeriodeÅrsak.ARBEIDSFORHOLD_AVSLUTTET,
+                PeriodeÅrsak.NATURALYTELSE_BORTFALT), AktivitetStatus.FL));
 
         Inntektsgrunnlag inntektsgrunnlag = beregningsgrunnlag.getInntektsgrunnlag();
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
         Arbeidsforhold arbeidsforhold = Arbeidsforhold.frilansArbeidsforhold();
         leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt2.minusMonths(2), List.of(månedsinntekt), Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold, AktivitetStatus.FL);
         opprettSammenligningsgrunnlagPrAktivitet(grunnlag.getInntektsgrunnlag(), skjæringstidspunkt2, månedsinntekt, AktivitetStatus.FL);
@@ -102,9 +103,9 @@ public class BeregningsgrunnlagTidsbegrensetArbeidsforholdMedTogglePåTest {
         BigDecimal månedsinntekt = BigDecimal.ZERO;
         BigDecimal refusjonskrav = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
         BigDecimal månedsinntektSammenligning = BigDecimal.valueOf(5000);
-        Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektskomponenten(skjæringstidspunkt, månedsinntekt, refusjonskrav, true, Collections.singletonList(PeriodeÅrsak.ARBEIDSFORHOLD_AVSLUTTET));
+        Beregningsgrunnlag beregningsgrunnlag = togglePå(opprettBeregningsgrunnlagFraInntektskomponenten(skjæringstidspunkt, månedsinntekt,
+            refusjonskrav, true, Collections.singletonList(PeriodeÅrsak.ARBEIDSFORHOLD_AVSLUTTET)));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
         opprettSammenligningsgrunnlag(grunnlag.getInntektsgrunnlag(), skjæringstidspunkt, månedsinntektSammenligning);
         // Act
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
@@ -125,9 +126,10 @@ public class BeregningsgrunnlagTidsbegrensetArbeidsforholdMedTogglePåTest {
         BigDecimal månedsinntekt = BigDecimal.ZERO;
         BigDecimal refusjonskrav = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
         BigDecimal månedsinntektSammenligning = BigDecimal.valueOf(5000);
-        Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektskomponentenPrAktivitet(skjæringstidspunkt.minusMonths(1), månedsinntekt, refusjonskrav, true, 12, List.of(PeriodeÅrsak.NATURALYTELSE_BORTFALT, PeriodeÅrsak.ARBEIDSFORHOLD_AVSLUTTET), AktivitetStatus.FL);
+        Beregningsgrunnlag beregningsgrunnlag = togglePå(opprettBeregningsgrunnlagFraInntektskomponentenPrAktivitet(skjæringstidspunkt.minusMonths(1),
+            månedsinntekt, refusjonskrav, true, 12, List.of(PeriodeÅrsak.NATURALYTELSE_BORTFALT, PeriodeÅrsak.ARBEIDSFORHOLD_AVSLUTTET),
+            AktivitetStatus.FL));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
         opprettSammenligningsgrunnlagPrAktivitet(grunnlag.getInntektsgrunnlag(), skjæringstidspunkt.minusMonths(1), månedsinntektSammenligning, AktivitetStatus.FL);
         leggTilArbeidsforholdUtenInntektsmelding(grunnlag, skjæringstidspunkt, månedsinntekt, null, Arbeidsforhold.anonymtArbeidsforhold(Aktivitet.ARBEIDSTAKERINNTEKT));
         // Act
@@ -148,9 +150,9 @@ public class BeregningsgrunnlagTidsbegrensetArbeidsforholdMedTogglePåTest {
         // Arrange
         BigDecimal månedsinntekt = BigDecimal.valueOf(25000);
         BigDecimal refusjonskrav = månedsinntekt;
-        Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektskomponenten(skjæringstidspunkt, månedsinntekt, refusjonskrav, false, Collections.singletonList(PeriodeÅrsak.ARBEIDSFORHOLD_AVSLUTTET));
+        Beregningsgrunnlag beregningsgrunnlag = togglePå(opprettBeregningsgrunnlagFraInntektskomponenten(skjæringstidspunkt, månedsinntekt,
+            refusjonskrav, false, Collections.singletonList(PeriodeÅrsak.ARBEIDSFORHOLD_AVSLUTTET)));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
 
         BigDecimal månedsinntektFraSaksbehandler = BigDecimal.valueOf(35000);  // 40% avvik, dvs > 25% avvik
         opprettSammenligningsgrunnlag(grunnlag.getInntektsgrunnlag(), skjæringstidspunkt, månedsinntekt);
@@ -178,9 +180,9 @@ public class BeregningsgrunnlagTidsbegrensetArbeidsforholdMedTogglePåTest {
         // Arrange
         BigDecimal månedsinntekt = BigDecimal.valueOf(25000);
         BigDecimal refusjonskrav = månedsinntekt;
-        Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektskomponenten(skjæringstidspunkt, månedsinntekt, refusjonskrav, false, List.of(PeriodeÅrsak.ARBEIDSFORHOLD_AVSLUTTET, PeriodeÅrsak.NATURALYTELSE_BORTFALT));
+        Beregningsgrunnlag beregningsgrunnlag = togglePå(opprettBeregningsgrunnlagFraInntektskomponenten(skjæringstidspunkt, månedsinntekt,
+            refusjonskrav, false, List.of(PeriodeÅrsak.ARBEIDSFORHOLD_AVSLUTTET, PeriodeÅrsak.NATURALYTELSE_BORTFALT)));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        grunnlag.setSplitteATFLToggleErPå(true);
 
         BigDecimal månedsinntektFraSaksbehandler = BigDecimal.valueOf(35000);  // 40% avvik, dvs > 25% avvik
         opprettSammenligningsgrunnlag(grunnlag.getInntektsgrunnlag(), skjæringstidspunkt, månedsinntekt);
@@ -201,5 +203,9 @@ public class BeregningsgrunnlagTidsbegrensetArbeidsforholdMedTogglePåTest {
         Periode beregningsperiode = Periode.månederFør(beregningsgrunnlag.getSkjæringstidspunkt(), 3);
         BeregningsgrunnlagPrArbeidsforhold af = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
         verifiserBeregningsperiode(af, beregningsperiode);
+    }
+
+    private Beregningsgrunnlag togglePå(Beregningsgrunnlag bg) {
+        return Beregningsgrunnlag.builder(bg).medSplitteATFLToggleVerdi(true).build();
     }
 }
