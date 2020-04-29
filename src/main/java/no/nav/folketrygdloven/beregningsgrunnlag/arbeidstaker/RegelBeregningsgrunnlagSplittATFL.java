@@ -54,17 +54,21 @@ public class RegelBeregningsgrunnlagSplittATFL implements RuleService<Beregnings
         Specification<BeregningsgrunnlagPeriode> skalArbeidstakerOgFrilanserAvvikvurderes =
             rs.beregningHvisRegel(new SjekkOmFrilansOgArbeidstakerISammeOrganisasjon(), new Beregnet(), skalSammenligningsgrunnlagOpprettesForFrilanser);
 
+        // FP_BR 27.2 Skal vi sammeligne inntekt mot sammenligningsgrunnlaget?
+
+        Specification<BeregningsgrunnlagPeriode> skalÅrsinntektVurderesMotSammenligningsgrunnlagetFørstePeriode =
+            rs.beregningHvisRegel(new SkalSjekkeÅrsinntektMotSammenligningsgrunnlag(), skalArbeidstakerOgFrilanserAvvikvurderes, new Beregnet());
 
         // FP_BR 27.2 Skal vi sammeligne inntekt mot sammenligningsgrunnlaget?
 
         Specification<BeregningsgrunnlagPeriode> skalÅrsinntektVurderesMotSammenligningsgrunnlaget =
-            rs.beregningHvisRegel(new SkalSjekkeÅrsinntektMotSammenligningsgrunnlag(), skalArbeidstakerOgFrilanserAvvikvurderes, new Beregnet());
+            rs.beregningHvisRegel(new SkalSjekkeÅrsinntektMotSammenligningsgrunnlag(), skalSammenligningsgrunnlagOpprettesForArbeidstaker, new Beregnet());
 
 
         // Første beregningsgrunnlagsperiode? Sjekk om vi skal fastsette sammenligninggrunnlag og sjekke det rapportert inntekt
 
         Specification<BeregningsgrunnlagPeriode> sjekkOmFørstePeriode =
-            rs.beregningHvisRegel(new SjekkOmFørsteBeregningsgrunnlagsperiode(), skalÅrsinntektVurderesMotSammenligningsgrunnlaget, new Beregnet());
+            rs.beregningHvisRegel(new SjekkOmFørsteBeregningsgrunnlagsperiode(), skalÅrsinntektVurderesMotSammenligningsgrunnlagetFørstePeriode, skalÅrsinntektVurderesMotSammenligningsgrunnlaget);
 
 
         // Har bruker kombinasjonsstatus?
