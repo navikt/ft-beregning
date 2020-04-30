@@ -1,0 +1,92 @@
+package no.nav.folketrygdloven.skjæringstidspunkt.status.frisinn;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
+import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivPeriode;
+import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModellFRISINN;
+import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.BeregningsgrunnlagPrStatus;
+
+class FastsettStatusOgAndelPrPeriodeFRISINNTest {
+
+
+    public static final LocalDate STP = LocalDate.now();
+
+    @Test
+    void skal_ikke_ta_med_frilans_om_man_ikke_har_inntekt_siste_12_mnd() {
+        // Arrange
+        AktivitetStatusModellFRISINN regelmodell = new AktivitetStatusModellFRISINN();
+        regelmodell.setSkjæringstidspunktForOpptjening(STP);
+        regelmodell.setSkjæringstidspunktForBeregning(STP);
+        Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
+        inntektsgrunnlag.leggTilPeriodeinntekt(lagSNInntekt());
+        regelmodell.setInntektsgrunnlag(inntektsgrunnlag);
+        regelmodell.leggTilEllerOppdaterAktivPeriode(AktivPeriode.forFrilanser(Periode.of(STP.minusMonths(36), STP.plusMonths(12))));
+        regelmodell.leggTilEllerOppdaterAktivPeriode(AktivPeriode.forAndre(Aktivitet.NÆRINGSINNTEKT, Periode.of(STP.minusMonths(36), STP.plusMonths(12))));
+
+        // Act
+        List<BeregningsgrunnlagPrStatus> statusListe = kjørRegel(regelmodell);
+
+        // Assert
+        assertThat(statusListe.size()).isEqualTo(1);
+        assertThat(statusListe.get(0).getAktivitetStatus().equals(AktivitetStatus.SN));
+
+    }
+
+    @Test
+    void skal_ta_med_frilans_om_man_har_inntekt_siste_12_mnd() {
+        // Arrange
+        AktivitetStatusModellFRISINN regelmodell = new AktivitetStatusModellFRISINN();
+        regelmodell.setSkjæringstidspunktForOpptjening(STP);
+        regelmodell.setSkjæringstidspunktForBeregning(STP);
+        Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
+        inntektsgrunnlag.leggTilPeriodeinntekt(lagSNInntekt());
+        inntektsgrunnlag.leggTilPeriodeinntekt(lagInntektForFL(Periode.of(STP.minusMonths(12), STP.minusMonths(11))));
+        regelmodell.setInntektsgrunnlag(inntektsgrunnlag);
+        regelmodell.leggTilEllerOppdaterAktivPeriode(AktivPeriode.forFrilanser(Periode.of(STP.minusMonths(36), STP.plusMonths(12))));
+        regelmodell.leggTilEllerOppdaterAktivPeriode(AktivPeriode.forAndre(Aktivitet.NÆRINGSINNTEKT, Periode.of(STP.minusMonths(36), STP.plusMonths(12))));
+
+        // Act
+        List<BeregningsgrunnlagPrStatus> statusListe = kjørRegel(regelmodell);
+
+        // Assert
+        assertThat(statusListe.size()).isEqualTo(2);
+        assertThat(statusListe.get(0).getAktivitetStatus().equals(AktivitetStatus.ATFL));
+        assertThat(statusListe.get(1).getAktivitetStatus().equals(AktivitetStatus.SN));
+
+    }
+
+    private Periodeinntekt lagInntektForFL(Periode periode) {
+        return Periodeinntekt.builder()
+            .medPeriode(periode)
+            .medInntekt(BigDecimal.TEN)
+            .medArbeidsgiver(Arbeidsforhold.frilansArbeidsforhold())
+            .medInntektskildeOgPeriodeType(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING).build();
+    }
+
+    private Periodeinntekt lagSNInntekt() {
+        return Periodeinntekt.builder()
+            .medAktivitetStatus(AktivitetStatus.SN)
+            .medPeriode(Periode.of(STP.minusMonths(24), STP.minusMonths(12)))
+            .medInntekt(BigDecimal.TEN)
+            .medInntektskildeOgPeriodeType(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING).build();
+    }
+
+    private List<BeregningsgrunnlagPrStatus> kjørRegel(AktivitetStatusModellFRISINN regelmodell) {
+        FastsettStatusOgAndelPrPeriodeFRISINN regel = new FastsettStatusOgAndelPrPeriodeFRISINN();
+        regel.evaluate(regelmodell);
+        return regelmodell.getBeregningsgrunnlagPrStatusListe();
+    }
+}
