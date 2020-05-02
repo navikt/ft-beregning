@@ -10,8 +10,6 @@ import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivPeriode;
@@ -47,7 +45,7 @@ public class FastsettStatusOgAndelPrPeriodeFRISINN extends LeafSpecification<Akt
     private void opprettAktivitetStatuser(AktivitetStatusModell regelmodell) {
         LocalDate skjæringtidspktForBeregning = regelmodell.getSkjæringstidspunktForBeregning();
         List<AktivPeriode> aktivePerioder = regelmodell.getAktivePerioder();
-        List<AktivPeriode> aktivePerioderVedStp = hentAktivePerioderVedSkjæringtidspunkt(skjæringtidspktForBeregning, aktivePerioder);
+        List<AktivPeriode> aktivePerioderVedStp = hentAktivePerioderPåSkjæringtidspunkt(skjæringtidspktForBeregning, aktivePerioder);
         boolean harFrilansinntektSisteÅret = false;
         if (regelmodell instanceof AktivitetStatusModellFRISINN) {
             AktivitetStatusModellFRISINN regelModellFrisinn = (AktivitetStatusModellFRISINN) regelmodell;
@@ -66,8 +64,8 @@ public class FastsettStatusOgAndelPrPeriodeFRISINN extends LeafSpecification<Akt
         }
     }
 
-    private List<AktivPeriode> hentAktivePerioderVedSkjæringtidspunkt(LocalDate dato, List<AktivPeriode> aktivePerioder) {
-        return aktivePerioder.stream().filter(ap -> ap.inneholder(dato.minusDays(1))).collect(Collectors.toList());
+    private List<AktivPeriode> hentAktivePerioderPåSkjæringtidspunkt(LocalDate dato, List<AktivPeriode> aktivePerioder) {
+        return aktivePerioder.stream().filter(ap -> ap.inneholder(dato)).collect(Collectors.toList());
     }
 
     private AktivitetStatus mapAktivitetTilStatus(Aktivitet aktivitet) {
