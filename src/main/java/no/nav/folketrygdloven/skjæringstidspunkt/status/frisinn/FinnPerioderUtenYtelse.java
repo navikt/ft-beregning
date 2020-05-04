@@ -57,9 +57,9 @@ public class FinnPerioderUtenYtelse {
             .stream().sorted(Comparator.comparing(Periode::getFom)).collect(Collectors.toList());
     }
 
-    private static List<Periode> finnPerioderUtenYtelse12MndFørStp(LocalDate skjæringstidspunktForBeregning, List<Periode> beregningsperioder) {
+    private static List<Periode> finnPerioderUtenYtelse12MndFørStp(LocalDate skjæringstidspunktForOpptjening, List<Periode> beregningsperioder) {
         return beregningsperioder.stream()
-            .filter(p -> p.getFom().isAfter(skjæringstidspunktForBeregning.minusMonths(12)))
+            .filter(p -> !p.getFom().isBefore(skjæringstidspunktForOpptjening.minusMonths(12).withDayOfMonth(1)))
             .collect(Collectors.toList());
     }
 

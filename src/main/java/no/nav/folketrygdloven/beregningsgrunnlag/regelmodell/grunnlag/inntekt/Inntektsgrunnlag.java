@@ -168,11 +168,17 @@ public class Inntektsgrunnlag {
 
     private List<BigDecimal> getAlleFrilansinntekter(Inntektskilde inntektskilde, LocalDate førDato, int måneder) {
         Periode periode = Periode.of(førDato.minusMonths(måneder), førDato);
+        return finnAlleFrilansInntektPerioder(inntektskilde, periode)
+            .stream()
+            .map(Periodeinntekt::getInntekt)
+            .collect(Collectors.toList());
+    }
+
+    public List<Periodeinntekt> finnAlleFrilansInntektPerioder(Inntektskilde inntektskilde, Periode periode) {
         return getPeriodeinntektMedKilde(inntektskilde)
             .filter(pi -> pi.getArbeidsgiver().isPresent())
             .filter(pi -> pi.getArbeidsgiver().get().erFrilanser()) //NOSONAR
             .filter(pi -> pi.erInnenforPeriode(periode))
-            .map(Periodeinntekt::getInntekt)
             .collect(Collectors.toList());
     }
 
