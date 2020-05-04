@@ -21,7 +21,7 @@ class FinnPerioderUtenYtelseTest {
         // Arrange
         Map<String, Object> res = new HashMap<>();
         Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
-        LocalDate stp = LocalDate.of(2020, 3, 1);
+        LocalDate stp = LocalDate.of(2020, 3, 15);
 
         // Act
         List<Periode> perioder = FinnPerioderUtenYtelse.finnPerioder(inntektsgrunnlag, stp, res);
@@ -36,11 +36,36 @@ class FinnPerioderUtenYtelseTest {
     }
 
     @Test
+    void skal_finne_de_første_7_mnd_av_de_siste_12_før_stp() {
+        // Arrange
+        Map<String, Object> res = new HashMap<>();
+        Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
+        LocalDate stp = LocalDate.of(2020, 3, 15);
+        inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
+            .medInntektskildeOgPeriodeType(Inntektskilde.YTELSER)
+            .medInntekt(BigDecimal.TEN)
+            .medPeriode(Periode.of(LocalDate.of(2019, 10, 1), LocalDate.of(2020, 2, 29)))
+            .build());
+
+        // Act
+        List<Periode> perioder = FinnPerioderUtenYtelse.finnPerioder(inntektsgrunnlag, stp, res);
+
+        // Assert
+        assertThat(perioder.size()).isEqualTo(7);
+        for (int i = 12; i >= 6; i--) {
+            LocalDate måned = stp.minusMonths(i);
+            assertThat(perioder.get(12 - i).getFom()).isEqualTo(måned.withDayOfMonth(1));
+            assertThat(perioder.get(12 - i).getTom()).isEqualTo(måned.withDayOfMonth(måned.lengthOfMonth()));
+        }
+    }
+
+
+    @Test
     void skal_finne_de_første_6_mnd_av_de_siste_12_før_stp() {
         // Arrange
         Map<String, Object> res = new HashMap<>();
         Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
-        LocalDate stp = LocalDate.of(2020, 3, 1);
+        LocalDate stp = LocalDate.of(2020, 3, 15);
         inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
             .medInntektskildeOgPeriodeType(Inntektskilde.YTELSER)
             .medInntekt(BigDecimal.TEN)

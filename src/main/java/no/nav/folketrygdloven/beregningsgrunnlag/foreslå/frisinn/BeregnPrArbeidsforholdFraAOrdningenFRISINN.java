@@ -3,13 +3,17 @@ package no.nav.folketrygdloven.beregningsgrunnlag.foreslå.frisinn;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.time.temporal.TemporalAdjusters;
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+<<<<<<< Updated upstream
 import java.util.Optional;
+=======
+import java.util.stream.Collectors;
+>>>>>>> Stashed changes
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
@@ -51,7 +55,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
         if (arbeidsforhold.erFrilanser()) {
             YtelsesSpesifiktGrunnlag ytelsesSpesifiktGrunnlag = grunnlag.getBeregningsgrunnlag().getYtelsesSpesifiktGrunnlag();
             if (ytelsesSpesifiktGrunnlag instanceof FrisinnGrunnlag && ((FrisinnGrunnlag) ytelsesSpesifiktGrunnlag).isErNyoppstartetFrilans()) {
-                perioderSomSkalBrukesForInntekter = lag6MånederFørStpOpptjening();
+                perioderSomSkalBrukesForInntekter = lagMånederUtenYtelseEtterFørsteInntektsdag(grunnlag, perioderSomSkalBrukesForInntekter);
             }
             årsinntekt = beregnÅrsinntektFrilans(perioderSomSkalBrukesForInntekter, inntektsgrunnlag, grunnlag, resultater);
         } else {
@@ -66,13 +70,28 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
         return beregnet(resultater);
     }
 
-    private List<Periode> lag6MånederFørStpOpptjening() {
-        LocalDate stpOpptjening = LocalDate.of(2020, 3, 1);
-        List<Periode> perioder = new ArrayList<>();
-        for (int i = 6; i >= 1; i--) {
-            perioder.add(Periode.of(stpOpptjening.minusMonths(i).withDayOfMonth(1), stpOpptjening.minusMonths(i).with(TemporalAdjusters.lastDayOfMonth())));
+    private List<Periode> lagMånederUtenYtelseEtterFørsteInntektsdag(BeregningsgrunnlagPeriode grunnlag, List<Periode> perioderUtenYtelse) {
+        LocalDate nyoppstartetGrense = LocalDate.of(2019, 3, 1);
+        List<Periode> perioderEtterGrenseUtenYtelse = perioderUtenYtelse.stream()
+            .filter(p -> !p.getFom().isBefore(nyoppstartetGrense))
+            .collect(Collectors.toList());
+        if (perioderEtterGrenseUtenYtelse.isEmpty()) {
+            return Collections.emptyList();
         }
-        return perioder;
+        LocalDate førsteDatoMedInntekt = finnFørsteDatoMedFrilansInntektEtterDato(grunnlag, nyoppstartetGrense);
+        return perioderEtterGrenseUtenYtelse.stream()
+            .filter(p -> !p.getFom().isBefore(førsteDatoMedInntekt))
+            .collect(Collectors.toList());
+    }
+
+    private LocalDate finnFørsteDatoMedFrilansInntektEtterDato(BeregningsgrunnlagPeriode grunnlag, LocalDate nyoppstartetGrense) {
+        Periode periode = Periode.of(nyoppstartetGrense, grunnlag.getSkjæringstidspunkt());
+        List<Periodeinntekt> frilansInntekter = grunnlag.getBeregningsgrunnlag().getInntektsgrunnlag()
+            .finnAlleFrilansInntektPerioder(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, periode);
+        return frilansInntekter.stream()
+            .map(Periodeinntekt::getFom)
+            .min(Comparator.naturalOrder())
+            .orElse(grunnlag.getSkjæringstidspunkt());
     }
 
     private BigDecimal beregnÅrsinntektFrilans(List<Periode> inntektsperioder, Inntektsgrunnlag inntektsgrunnlag, BeregningsgrunnlagPeriode grunnlag, Map<String, Object> resultater) {
@@ -81,7 +100,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
             samletInntekt = samletInntekt.add(finnInntektForPeriode(periode, inntektsgrunnlag, resultater).orElse(BigDecimal.ZERO));
         }
         BigDecimal antallPerioder = BigDecimal.valueOf(inntektsperioder.size());
-        BigDecimal snittMånedslønnFraRegister = samletInntekt.divide(antallPerioder, 10, RoundingMode.HALF_EVEN);
+        BigDecimal snittMånedslønnFraRegister = inntektsperioder.size() == 0 ? BigDecimal.ZERO : samletInntekt.divide(antallPerioder, 10, RoundingMode.HALF_EVEN);
         BigDecimal årslønnFraRegister = snittMånedslønnFraRegister.multiply(ANTALL_MÅNEDER_I_ÅR);
         BigDecimal årsinntektFraSøknad = finnOppgittÅrsinntektFL(inntektsgrunnlag, grunnlag);
         resultater.put("årsinntektFraRegister", snittMånedslønnFraRegister);
