@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
@@ -77,7 +78,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
     private BigDecimal beregnÅrsinntektFrilans(List<Periode> inntektsperioder, Inntektsgrunnlag inntektsgrunnlag, BeregningsgrunnlagPeriode grunnlag, Map<String, Object> resultater) {
         BigDecimal samletInntekt = BigDecimal.ZERO;
         for (Periode periode : inntektsperioder) {
-            samletInntekt = samletInntekt.add(finnInntektForPeriode(periode, inntektsgrunnlag, resultater));
+            samletInntekt = samletInntekt.add(finnInntektForPeriode(periode, inntektsgrunnlag, resultater).orElse(BigDecimal.ZERO));
         }
         BigDecimal antallPerioder = BigDecimal.valueOf(inntektsperioder.size());
         BigDecimal snittMånedslønnFraRegister = samletInntekt.divide(antallPerioder, 10, RoundingMode.HALF_EVEN);
@@ -92,10 +93,10 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
         BigDecimal samletInntekt = BigDecimal.ZERO;
         int antallPerioderMedInntekt = 0;
         for (Periode periode : inntektsperioder) {
-            BigDecimal inntektForPeriode = finnInntektForPeriode(periode, inntektsgrunnlag, resultater);
-            if (inntektForPeriode.compareTo(BigDecimal.ZERO) > 0) {
+            Optional<BigDecimal> inntektForPeriode = finnInntektForPeriode(periode, inntektsgrunnlag, resultater);
+            if (inntektForPeriode.isPresent()) {
                 antallPerioderMedInntekt++;
-                samletInntekt = samletInntekt.add(inntektForPeriode);
+                samletInntekt = samletInntekt.add(inntektForPeriode.get());
             }
         }
         resultater.put("perioderMedInntekter ", antallPerioderMedInntekt);
@@ -107,11 +108,14 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
         return snittMånedslønn.multiply(ANTALL_MÅNEDER_I_ÅR);
     }
 
-    private BigDecimal finnInntektForPeriode(Periode periode, Inntektsgrunnlag inntektsgrunnlag, Map<String, Object> resultater) {
+    private Optional<BigDecimal> finnInntektForPeriode(Periode periode, Inntektsgrunnlag inntektsgrunnlag, Map<String, Object> resultater) {
         List<Periodeinntekt> inntekterHosAgForPeriode = inntektsgrunnlag.getInntektForArbeidsforholdIPeriode(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold, periode);
+        if (inntekterHosAgForPeriode.isEmpty()) {
+            return Optional.empty();
+        }
         BigDecimal sumForPeriode = inntekterHosAgForPeriode.stream().map(Periodeinntekt::getInntekt).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
         resultater.put("sumForPeriode" + periode.toString(), sumForPeriode);
-        return sumForPeriode;
+        return Optional.of(sumForPeriode);
 
     }
 
