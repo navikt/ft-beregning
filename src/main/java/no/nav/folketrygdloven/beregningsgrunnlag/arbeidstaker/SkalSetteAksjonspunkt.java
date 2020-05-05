@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.YtelsesSpesifiktGrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.omp.OmsorgspengerGrunnlag;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
@@ -25,18 +24,14 @@ class SkalSetteAksjonspunkt extends LeafSpecification<BeregningsgrunnlagPeriode>
         if(skalAlltidSetteAksjonspunkt(grunnlag)){
             return ja();
         }
+        OmsorgspengerGrunnlag ompGrunnlag = (OmsorgspengerGrunnlag) grunnlag.getBeregningsgrunnlag().getYtelsesSpesifiktGrunnlag();
+        BigDecimal minsteRefusjon = grunnlag.getGrenseverdi().min(ompGrunnlag.getGradertRefusjonVedSkjæringstidspunkt());
+        BigDecimal totaltBeregningsgrunnlag = grunnlag.getBeregningsgrunnlagPrStatus().stream()
+            .map(BeregningsgrunnlagPrStatus::getGradertBruttoPrÅr)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal avkortetTotaltGrunnlag = grunnlag.getGrenseverdi().min(totaltBeregningsgrunnlag);
 
-        YtelsesSpesifiktGrunnlag ytelsesSpesifiktGrunnlag = grunnlag.getBeregningsgrunnlag().getYtelsesSpesifiktGrunnlag();
-        if (ytelsesSpesifiktGrunnlag instanceof OmsorgspengerGrunnlag) {
-            BigDecimal gradertRefusjonVedSkjæringstidspunkt = ((OmsorgspengerGrunnlag) ytelsesSpesifiktGrunnlag).getGradertRefusjonVedSkjæringstidspunkt();
-            BigDecimal minsteRefusjon = grunnlag.getGrenseverdi().min(gradertRefusjonVedSkjæringstidspunkt);
-            BigDecimal totaltBeregningsgrunnlag = grunnlag.getBeregningsgrunnlagPrStatus().stream()
-                .map(BeregningsgrunnlagPrStatus::getGradertBruttoPrÅr)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-            BigDecimal avkortetTotaltGrunnlag = grunnlag.getGrenseverdi().min(totaltBeregningsgrunnlag);
-            return minsteRefusjon.compareTo(avkortetTotaltGrunnlag) < 0 ? ja() : nei();
-        }
-        return ja();
+        return minsteRefusjon.compareTo(avkortetTotaltGrunnlag) < 0 ? ja() : nei();
     }
 
     private boolean skalAlltidSetteAksjonspunkt(BeregningsgrunnlagPeriode grunnlag){
