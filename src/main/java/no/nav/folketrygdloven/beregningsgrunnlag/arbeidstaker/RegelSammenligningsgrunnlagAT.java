@@ -30,17 +30,15 @@ public class RegelSammenligningsgrunnlagAT implements RuleService<Beregningsgrun
         Specification<BeregningsgrunnlagPeriode> sjekkOmPeriodenErEtterTidsbegrensetArbeidsforhold =
             rs.beregningHvisRegel(new SjekkPeriodeÅrsakErTidsbegrensetArbeidsforhold(), fastsettesVedSkjønnEtterTidsbegrensetArbeidsforhold, fastsettesVedSkjønnUtenTidsbegrensetArbeidsforhold);
 
-        // FP_BR 26.1 Har rapportert inntekt avvik mot sammenligningsgrunnlag > 25%?
+        // FP_BR 26.1 Skal vi sette aksjonspunkt?
 
-        Specification<BeregningsgrunnlagPeriode> sjekkAvvikSammenligningsgrunnlagMotAvviksgrense =
-            rs.beregningHvisRegel(new SjekkAvvikSammenligningsgrunnlagMotAvviksgrense(), sjekkOmPeriodenErEtterTidsbegrensetArbeidsforhold, new Beregnet());
+        Specification<BeregningsgrunnlagPeriode> skalSetteAksjonspunkt =
+            rs.beregningHvisRegel(new SkalSetteAksjonspunkt(), sjekkOmPeriodenErEtterTidsbegrensetArbeidsforhold, new Beregnet());
 
-        // FP_BR 28.7 Sett avvik inntekter mot beregnet
+        // FP_BR 28.7 Har rapportert inntekt inkludert bortfaltnaturalytelse for 1. periode avvik mot sammenligningsgrunnlag > 25%?
 
         Specification<BeregningsgrunnlagPeriode> sjekkÅrsinntektMotSammenligningsgrunnlag =
-            rs.beregningsRegel("FP_BR 28.6", "Sett beregnet årsinntekt avvik mot sammenligningsgrunnlag",
-                new SettAvvikÅrsinntektMotSammenligningsgrunnlagAt(), sjekkAvvikSammenligningsgrunnlagMotAvviksgrense);
-
+            rs.beregningHvisRegel(new SjekkÅrsinntektMotSammenligningsgrunnlagAT(), skalSetteAksjonspunkt, new Beregnet());
 
         // FP_BR 28.6 Sammenligningsgrunnlag pr år = sum av 12 siste måneder
 
@@ -48,10 +46,6 @@ public class RegelSammenligningsgrunnlagAT implements RuleService<Beregningsgrun
             rs.beregningsRegel("FP_BR 28.6", "Fastsett sammenligningsgrunnlag for AT",
                 new FastsettSammenligningsgrunnlagAT(), sjekkÅrsinntektMotSammenligningsgrunnlag);
 
-        // Første beregningsgrunnlagperiode?
-        Specification<BeregningsgrunnlagPeriode> sjekkOmFørstePeriode =
-            rs.beregningHvisRegel(new SjekkOmFørsteBeregningsgrunnlagsperiode(), fastsettSammenligningsgrunnlag, sjekkAvvikSammenligningsgrunnlagMotAvviksgrense);
-
-        return sjekkOmFørstePeriode;
+        return fastsettSammenligningsgrunnlag;
     }
 }
