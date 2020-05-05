@@ -173,15 +173,6 @@ public class BeregningsgrunnlagPeriode {
         return beregningsgrunnlag.getAntallGMinstekravVilkår();
     }
 
-    public BigDecimal finnMinsteTotalRefusjonForPeriode() {
-        YtelsesSpesifiktGrunnlag ytelsesSpesifiktGrunnlag = beregningsgrunnlag.getYtelsesSpesifiktGrunnlag();
-        if (ytelsesSpesifiktGrunnlag instanceof OmsorgspengerGrunnlag) {
-            OmsorgspengerGrunnlag ompGrunnlag = (OmsorgspengerGrunnlag) ytelsesSpesifiktGrunnlag;
-            return ompGrunnlag.finnLavstetTotalRefusjonForPeriode(getBeregningsgrunnlagPeriode());
-        }
-        return BigDecimal.ZERO;
-    }
-
     public boolean skalSjekkeRefusjonFørAvviksvurdering() {
         YtelsesSpesifiktGrunnlag ytelsesSpesifiktGrunnlag = beregningsgrunnlag.getYtelsesSpesifiktGrunnlag();
         return ytelsesSpesifiktGrunnlag instanceof OmsorgspengerGrunnlag;

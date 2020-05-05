@@ -174,8 +174,6 @@ public class SjekkAvvikSammenligningsgrunnlagMotAvviksgrenseTest {
             .medBeregningsgrunnlagPrStatus(beregningsgrunnlagPrStatus)
             .build();
 
-        var ompPeriode = new OmsorgspengerGrunnlagPeriode(Periode.of(now(), null), maksRefusjonForPeriode);
-
         return Beregningsgrunnlag.builder()
             .medInntektsgrunnlag(new Inntektsgrunnlag())
             .medSkjæringstidspunkt(now())
@@ -183,7 +181,7 @@ public class SjekkAvvikSammenligningsgrunnlagMotAvviksgrenseTest {
             .medAktivitetStatuser(List.of(new AktivitetStatusMedHjemmel(AktivitetStatus.ATFL, BeregningsgrunnlagHjemmel.HJEMMEL_BARE_ARBEIDSTAKER)))
             .medBeregningsgrunnlagPeriode(periode)
             .medSammenligningsgrunnlag(SammenligningsGrunnlag.builder().medAvvikProsent(sgAvvik).build())
-            .medYtelsesSpesifiktGrunnlag(avviksVurdere ? new OmsorgspengerGrunnlag(List.of(ompPeriode)) : null)
+            .medYtelsesSpesifiktGrunnlag(avviksVurdere ? new OmsorgspengerGrunnlag(maksRefusjonForPeriode) : null)
             .medGrunnbeløpSatser(List.of(
                 new Grunnbeløp(LocalDate.of(2019, 5, 1), LocalDate.MAX, gVerdi, GSNITT_2019)))
             .build();

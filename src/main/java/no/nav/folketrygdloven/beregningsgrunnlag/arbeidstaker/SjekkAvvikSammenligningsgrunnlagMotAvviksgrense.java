@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.YtelsesSpesifiktGrunnlag;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.omp.OmsorgspengerGrunnlag;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
@@ -43,11 +45,16 @@ public class SjekkAvvikSammenligningsgrunnlagMotAvviksgrense extends LeafSpecifi
     }
 
     private boolean girDirekteUtbetalingTilBruker(BeregningsgrunnlagPeriode grunnlag){
-        BigDecimal minsteRefusjon = grunnlag.getGrenseverdi().min(grunnlag.finnMinsteTotalRefusjonForPeriode());
-        BigDecimal totaltBeregningsgrunnlag = grunnlag.getBeregningsgrunnlagPrStatus().stream()
-            .map(BeregningsgrunnlagPrStatus::getGradertBruttoPrÅr)
-            .reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal avkortetTotaltGrunnlag = grunnlag.getGrenseverdi().min(totaltBeregningsgrunnlag);
-        return minsteRefusjon.compareTo(avkortetTotaltGrunnlag) < 0;
+        YtelsesSpesifiktGrunnlag ytelsesSpesifiktGrunnlag = grunnlag.getBeregningsgrunnlag().getYtelsesSpesifiktGrunnlag();
+        if (ytelsesSpesifiktGrunnlag instanceof OmsorgspengerGrunnlag) {
+            OmsorgspengerGrunnlag ompGrunnlag = (OmsorgspengerGrunnlag) grunnlag.getBeregningsgrunnlag().getYtelsesSpesifiktGrunnlag();
+            BigDecimal minsteRefusjon = grunnlag.getGrenseverdi().min(ompGrunnlag.getGradertRefusjonVedSkjæringstidspunkt());
+            BigDecimal totaltBeregningsgrunnlag = grunnlag.getBeregningsgrunnlagPrStatus().stream()
+                .map(BeregningsgrunnlagPrStatus::getGradertBruttoPrÅr)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+            BigDecimal avkortetTotaltGrunnlag = grunnlag.getGrenseverdi().min(totaltBeregningsgrunnlag);
+            return minsteRefusjon.compareTo(avkortetTotaltGrunnlag) < 0;
+        }
+        return false;
     }
 }
