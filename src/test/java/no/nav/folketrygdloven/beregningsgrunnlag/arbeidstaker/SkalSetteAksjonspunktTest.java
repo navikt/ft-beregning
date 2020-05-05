@@ -23,7 +23,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.omp.OmsorgspengerGrunnlag;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.omp.OmsorgspengerGrunnlagPeriode;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.Resultat;
 
@@ -113,15 +112,13 @@ public class SkalSetteAksjonspunktTest {
             .medBeregningsgrunnlagPrStatus(beregningsgrunnlagPrStatus)
             .build();
 
-        var ompPeriode = new OmsorgspengerGrunnlagPeriode(Periode.of(now(), null), maksRefusjonForPeriode);
-
         Beregningsgrunnlag beregningsgrunnlag =  Beregningsgrunnlag.builder()
             .medInntektsgrunnlag(new Inntektsgrunnlag())
             .medSkjæringstidspunkt(now())
             .medGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2017))
             .medAktivitetStatuser(List.of(new AktivitetStatusMedHjemmel(AktivitetStatus.ATFL, BeregningsgrunnlagHjemmel.HJEMMEL_BARE_ARBEIDSTAKER)))
             .medBeregningsgrunnlagPeriode(bgPeriode)
-            .medYtelsesSpesifiktGrunnlag(new OmsorgspengerGrunnlag(List.of(ompPeriode)))
+            .medYtelsesSpesifiktGrunnlag(new OmsorgspengerGrunnlag(maksRefusjonForPeriode))
             .medGrunnbeløpSatser(List.of(
                 new Grunnbeløp(LocalDate.of(2019, 5, 1), LocalDate.MAX, gVerdi, GSNITT_2019)))
             .build();
@@ -147,15 +144,13 @@ public class SkalSetteAksjonspunktTest {
             .medBeregningsgrunnlagPrStatus(beregningsgrunnlagPrStatus)
             .build();
 
-        var ompPeriode = new OmsorgspengerGrunnlagPeriode(Periode.of(now(), null), maksRefusjonForPeriode);
-
         return Beregningsgrunnlag.builder()
             .medInntektsgrunnlag(new Inntektsgrunnlag())
             .medSkjæringstidspunkt(now())
             .medGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2017))
             .medAktivitetStatuser(List.of(new AktivitetStatusMedHjemmel(AktivitetStatus.ATFL, BeregningsgrunnlagHjemmel.HJEMMEL_BARE_ARBEIDSTAKER)))
             .medBeregningsgrunnlagPeriode(periode)
-            .medYtelsesSpesifiktGrunnlag(avviksVurdere ? new OmsorgspengerGrunnlag(List.of(ompPeriode)) : null)
+            .medYtelsesSpesifiktGrunnlag(avviksVurdere ? new OmsorgspengerGrunnlag(maksRefusjonForPeriode) : null)
             .medGrunnbeløpSatser(List.of(
                 new Grunnbeløp(LocalDate.of(2019, 5, 1), LocalDate.MAX, gVerdi, GSNITT_2019)))
             .build();

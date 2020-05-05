@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.YtelsesSpesifiktGrunnlag;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.omp.OmsorgspengerGrunnlag;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
@@ -24,13 +26,17 @@ class SkalSetteAksjonspunkt extends LeafSpecification<BeregningsgrunnlagPeriode>
             return ja();
         }
 
-        BigDecimal minsteRefusjon = grunnlag.getGrenseverdi().min(grunnlag.finnMinsteTotalRefusjonForPeriode());
-        BigDecimal totaltBeregningsgrunnlag = grunnlag.getBeregningsgrunnlagPrStatus().stream()
-            .map(BeregningsgrunnlagPrStatus::getGradertBruttoPrÅr)
-            .reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal avkortetTotaltGrunnlag = grunnlag.getGrenseverdi().min(totaltBeregningsgrunnlag);
-
-        return minsteRefusjon.compareTo(avkortetTotaltGrunnlag) < 0 ? ja() : nei();
+        YtelsesSpesifiktGrunnlag ytelsesSpesifiktGrunnlag = grunnlag.getBeregningsgrunnlag().getYtelsesSpesifiktGrunnlag();
+        if (ytelsesSpesifiktGrunnlag instanceof OmsorgspengerGrunnlag) {
+            BigDecimal gradertRefusjonVedSkjæringstidspunkt = ((OmsorgspengerGrunnlag) ytelsesSpesifiktGrunnlag).getGradertRefusjonVedSkjæringstidspunkt();
+            BigDecimal minsteRefusjon = grunnlag.getGrenseverdi().min(gradertRefusjonVedSkjæringstidspunkt);
+            BigDecimal totaltBeregningsgrunnlag = grunnlag.getBeregningsgrunnlagPrStatus().stream()
+                .map(BeregningsgrunnlagPrStatus::getGradertBruttoPrÅr)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+            BigDecimal avkortetTotaltGrunnlag = grunnlag.getGrenseverdi().min(totaltBeregningsgrunnlag);
+            return minsteRefusjon.compareTo(avkortetTotaltGrunnlag) < 0 ? ja() : nei();
+        }
+        return ja();
     }
 
     private boolean skalAlltidSetteAksjonspunkt(BeregningsgrunnlagPeriode grunnlag){
