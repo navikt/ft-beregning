@@ -8,24 +8,14 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.YtelsesSpesi
 
 public class OmsorgspengerGrunnlag extends YtelsesSpesifiktGrunnlag {
 
-    private List<OmsorgspengerGrunnlagPeriode> perioder;
+    private BigDecimal gradertRefusjonVedSkjæringstidspunkt;
 
-    public OmsorgspengerGrunnlag(List<OmsorgspengerGrunnlagPeriode> perioder) {
+    public OmsorgspengerGrunnlag(BigDecimal gradertRefusjonVedSkjæringstidspunkt) {
         super("OMP");
-        this.perioder = perioder;
+        this.gradertRefusjonVedSkjæringstidspunkt = gradertRefusjonVedSkjæringstidspunkt;
     }
 
-    public List<OmsorgspengerGrunnlagPeriode> getPerioder() {
-        return perioder;
+    public BigDecimal getGradertRefusjonVedSkjæringstidspunkt() {
+        return gradertRefusjonVedSkjæringstidspunkt;
     }
-
-    public BigDecimal finnLavstetTotalRefusjonForPeriode(Periode periode) {
-        return getPerioder().stream()
-            .filter(p -> p.getPeriode().overlapper(periode))
-            .findFirst()
-            .map(OmsorgspengerGrunnlagPeriode::getMinsteRefusjonForPeriode)
-            .orElse(BigDecimal.ZERO);
-
-    }
-
 }

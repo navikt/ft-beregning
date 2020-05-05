@@ -23,7 +23,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.omp.OmsorgspengerGrunnlag;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.omp.OmsorgspengerGrunnlagPeriode;
 
 public class BeregningsgrunnlagScenario {
 
@@ -114,13 +113,11 @@ public class BeregningsgrunnlagScenario {
             .medBeregningsgrunnlagPrStatus(bgps)
             .medPeriode(Periode.of(skjæringstidspunkt, null));
 
-        var ompPeriode = new OmsorgspengerGrunnlagPeriode(Periode.of(skjæringstidspunkt, null), maksRefusjon);
-
         return Beregningsgrunnlag.builder()
             .medInntektsgrunnlag(inntektsgrunnlag)
             .medSkjæringstidspunkt(skjæringstidspunkt)
             .medGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2017))
-            .medYtelsesSpesifiktGrunnlag(skalSjekkeRefusjonFørSetteAksjonspunkt ? new OmsorgspengerGrunnlag(List.of(ompPeriode)) : null)
+            .medYtelsesSpesifiktGrunnlag(skalSjekkeRefusjonFørSetteAksjonspunkt ? new OmsorgspengerGrunnlag(maksRefusjon) : null)
             .medAktivitetStatuser(List.of(new AktivitetStatusMedHjemmel(aktivitetStatus, null)))
             .medBeregningsgrunnlagPeriode(periodeBuilder.build())
             .medGrunnbeløpSatser(GRUNNBELØPLISTE)
