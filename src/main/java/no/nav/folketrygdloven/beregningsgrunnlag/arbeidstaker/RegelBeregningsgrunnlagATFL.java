@@ -36,38 +36,31 @@ public class RegelBeregningsgrunnlagATFL implements RuleService<Beregningsgrunnl
         Specification<BeregningsgrunnlagPeriode> sjekkOmPeriodenErEtterTidsbegrensetArbeidsforhold =
             rs.beregningHvisRegel(new SjekkPeriodeÅrsakErTidsbegrensetArbeidsforhold(), fastsettesVedSkjønnEtterTidsbegrensetArbeidsforhold, fastsettesVedSkjønnUtenTidsbegrensetArbeidsforhold);
 
-        // FP_BR 26.1 Har rapportert inntekt avvik mot sammenligningsgrunnlag > 25%?
+        // FP_BR 26.1 Skal vi sette aksjonspunkt?
 
-        Specification<BeregningsgrunnlagPeriode> sjekkAvvikSammenligningsgrunnlagMotAvviksgrense =
-            rs.beregningHvisRegel(new SjekkAvvikSammenligningsgrunnlagMotAvviksgrense(), sjekkOmPeriodenErEtterTidsbegrensetArbeidsforhold, new Beregnet());
+        Specification<BeregningsgrunnlagPeriode> skalSetteAksjonspunkt =
+            rs.beregningHvisRegel(new SkalSetteAksjonspunkt(), sjekkOmPeriodenErEtterTidsbegrensetArbeidsforhold, new Beregnet());
 
-        // FP_BR 27.1 Sett avvik for beregnet årsinntekt mot sammenligningsgrunnlag ?//
+        // FP_BR 27.1 Har rapportert inntekt inkludert bortfaltnaturalytelse for 1. periode avvik mot sammenligningsgrunnlag > 25%?
 
-        Specification<BeregningsgrunnlagPeriode> settAvvikÅrsinntektMotSammenligningsgrunnlag =
-                rs.beregningsRegel("FP_BR 27.1", "Sett avvik for beregnet årsinntekt mot sammenligningsgrunnlag",
-                    new SettAvvikÅrsinntektMotSammenligningsgrunnlag(), sjekkAvvikSammenligningsgrunnlagMotAvviksgrense);
+        Specification<BeregningsgrunnlagPeriode> sjekkÅrsinntektMotSammenligningsgrunnlag =
+                rs.beregningHvisRegel(new SjekkÅrsinntektMotSammenligningsgrunnlag(), skalSetteAksjonspunkt, new Beregnet());
 
 
         // FP_BR 17.1 17.2 27.1 Sammenligningsgrunnlag pr år = sum av 12 siste måneder
 
         Specification<BeregningsgrunnlagPeriode> fastsettSammenligningsgrunnlag =
                 rs.beregningsRegel("FP_BR 17.1", "Fastsett sammenligningsgrunnlag for ATFL",
-                        new FastsettSammenligningsgrunnlag(), settAvvikÅrsinntektMotSammenligningsgrunnlag);
-
-        // FP_BR 27.2 Skal vi sammeligne inntekt mot sammenligningsgrunnlaget?
-        Specification<BeregningsgrunnlagPeriode> skalÅrsinntektVurderesMotSammenligningsgrunnlagetForFørstePeriode =
-            rs.beregningHvisRegel(new SkalSjekkeÅrsinntektMotSammenligningsgrunnlag(), fastsettSammenligningsgrunnlag, new Beregnet());
+                        new FastsettSammenligningsgrunnlag(), sjekkÅrsinntektMotSammenligningsgrunnlag);
 
         // FP_BR 27.2 Skal vi sammeligne inntekt mot sammenligningsgrunnlaget?
         Specification<BeregningsgrunnlagPeriode> skalÅrsinntektVurderesMotSammenligningsgrunnlaget =
-            rs.beregningHvisRegel(new SkalSjekkeÅrsinntektMotSammenligningsgrunnlag(), sjekkAvvikSammenligningsgrunnlagMotAvviksgrense, new Beregnet());
+            rs.beregningHvisRegel(new SkalSjekkeÅrsinntektMotSammenligningsgrunnlag(), fastsettSammenligningsgrunnlag, new Beregnet());
 
         // Første beregningsgrunnlagsperiode? Sjekk om vi skal fastsette sammenligninggrunnlag og sjekke det rapportert inntekt
 
         Specification<BeregningsgrunnlagPeriode> sjekkOmFørstePeriode =
-            rs.beregningHvisRegel(new SjekkOmFørsteBeregningsgrunnlagsperiode(),
-                skalÅrsinntektVurderesMotSammenligningsgrunnlagetForFørstePeriode,
-                skalÅrsinntektVurderesMotSammenligningsgrunnlaget);
+            rs.beregningHvisRegel(new SjekkOmFørsteBeregningsgrunnlagsperiode(), skalÅrsinntektVurderesMotSammenligningsgrunnlaget, new Beregnet());
 
 
         // Har bruker kombinasjonsstatus?
