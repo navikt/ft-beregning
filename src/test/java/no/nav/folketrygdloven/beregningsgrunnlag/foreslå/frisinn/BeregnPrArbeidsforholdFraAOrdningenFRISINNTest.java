@@ -240,6 +240,39 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
         assertThat(andel.getBeregnetPrÅr().intValue()).isEqualTo(24);
     }
 
+    @Test
+    public void skal_teste_at_nyoppstartet_fl_ikke_bruker_helt_år_som_snitt() {
+        // Arrange
+        BeregningsgrunnlagPrArbeidsforhold andel = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_FL).medAndelNr(1L).build();
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,2,1), LocalDate.of(2020,2,29)), ARBFOR_FL, 6));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,1,1), LocalDate.of(2020,1,31)), ARBFOR_FL, 6));
+
+        Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(inntektsgrunnlag, true);
+
+        // Act
+        kjørRegel(beregningsgrunnlag, andel);
+
+        // Assert
+        assertThat(andel.getBeregnetPrÅr().intValue()).isEqualTo(72);
+    }
+
+    @Test
+    public void skal_teste_at_nyoppstartet_fl_beregnes_vanlig_når_det_finne_eldre_frilansinntekter() {
+        // Arrange
+        BeregningsgrunnlagPrArbeidsforhold andel = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_FL).medAndelNr(1L).build();
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,2,1), LocalDate.of(2020,2,29)), ARBFOR_FL, 6));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,1,1), LocalDate.of(2020,1,31)), ARBFOR_FL, 6));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,1,1), LocalDate.of(2019,1,31)), ARBFOR_FL, 6));
+
+        Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(inntektsgrunnlag, true);
+
+        // Act
+        kjørRegel(beregningsgrunnlag, andel);
+
+        // Assert
+        assertThat(andel.getBeregnetPrÅr().intValue()).isEqualTo(12);
+    }
+
     private Periodeinntekt byggYtelse(Periode periode) {
         return Periodeinntekt.builder()
             .medPeriode(periode)
@@ -263,9 +296,17 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
     }
 
     private Beregningsgrunnlag lagBeregningsgrunnlag(Inntektsgrunnlag ig) {
+        return lagBeregningsgrunnlag(ig, false);
+    }
+
+    private Beregningsgrunnlag lagBeregningsgrunnlag(Inntektsgrunnlag ig, boolean erNyoppstartetFL) {
         BeregningsgrunnlagPeriode.Builder periodeBuilder = BeregningsgrunnlagPeriode.builder()
             .medPeriode(new Periode(STP, null));
         BeregningsgrunnlagPeriode periode = periodeBuilder.build();
+        FrisinnGrunnlag frisinnGrunnlag = null;
+        if (erNyoppstartetFL) {
+            frisinnGrunnlag = new FrisinnGrunnlag(true);
+        }
         return Beregningsgrunnlag.builder()
             .medInntektsgrunnlag(ig)
             .medGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2019))
@@ -274,6 +315,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
             .medGrunnbeløpSatser(GRUNNBELØPLISTE)
             .medAktivitetStatuser(List.of(new AktivitetStatusMedHjemmel(AktivitetStatus.ATFL_SN, null)))
             .medBeregningsgrunnlagPeriode(periode)
+            .medYtelsesSpesifiktGrunnlag(frisinnGrunnlag)
             .build();
     }
 }
