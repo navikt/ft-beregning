@@ -13,6 +13,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivPeriode;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModell;
+import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModellFP;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 
@@ -29,7 +30,28 @@ public class RegelFastsettSkjæringstidspunktTest {
     }
 
     @Test
-    public void skalBeregneSkjæringstidspunktLikLørdagNårEnAktivitetSlutterFredagOgSkjæringstidspunktOpptjeningErPåSøndag() {
+    public void skalBeregneSkjæringstidspunktLikLørdagNårEnAktivitetSlutterFredagOgSkjæringstidspunktOpptjeningErPåSøndagForForeldrepenger() {
+        // Arrange
+        LocalDate søndag = LocalDate.of(2019, 10, 6);
+        LocalDate lørdag = LocalDate.of(2019, 10, 5);
+        LocalDate fredag = LocalDate.of(2019, 10, 4);
+        AktivPeriode aktivPeriode = AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(søndag.minusMonths(5), søndag.plusMonths(2)), ARBEIDSFORHOLD, null);
+        AktivPeriode aktivPeriode2 = AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(søndag.minusMonths(5), fredag), ARBEIDSFORHOLD2, null);
+        regelmodell = new AktivitetStatusModellFP();
+        regelmodell.setSkjæringstidspunktForOpptjening(søndag);
+        regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode);
+        regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode2);
+        // Act
+        Evaluation evaluation = new RegelFastsettSkjæringstidspunkt().evaluer(regelmodell);
+        // Assert
+        @SuppressWarnings("unused")
+        String sporing = EvaluationSerializer.asJson(evaluation);
+
+        assertThat(regelmodell.getSkjæringstidspunktForBeregning()).isEqualTo(lørdag);
+    }
+
+    @Test
+    public void skalBeregneSkjæringstidspunktLikSøndagNårEnAktivitetSlutterFredagOgSkjæringstidspunktOpptjeningErPåSøndagIkkeForeldrepenger() {
         // Arrange
         LocalDate søndag = LocalDate.of(2019, 10, 6);
         LocalDate lørdag = LocalDate.of(2019, 10, 5);
@@ -46,11 +68,32 @@ public class RegelFastsettSkjæringstidspunktTest {
         @SuppressWarnings("unused")
         String sporing = EvaluationSerializer.asJson(evaluation);
 
-        assertThat(regelmodell.getSkjæringstidspunktForBeregning()).isEqualTo(lørdag);
+        assertThat(regelmodell.getSkjæringstidspunktForBeregning()).isEqualTo(søndag);
     }
 
     @Test
-    public void skalBeregneSkjæringstidspunktLikSøndagNårEnAktivitetSlutterLørdagOgSkjæringstidspunktOpptjeningErPåMandag() {
+    public void skalBeregneSkjæringstidspunktLikSøndagNårEnAktivitetSlutterLørdagOgSkjæringstidspunktOpptjeningErPåMandagForForeldrepenger() {
+        // Arrange
+        LocalDate mandag = LocalDate.of(2019, 10, 7);
+        LocalDate lørdag = LocalDate.of(2019, 10, 5);
+        LocalDate søndag = LocalDate.of(2019, 10, 6);
+        AktivPeriode aktivPeriode = AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(mandag.minusMonths(5), mandag.plusMonths(2)), ARBEIDSFORHOLD, null);
+        AktivPeriode aktivPeriode2 = AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(mandag.minusMonths(5), lørdag), ARBEIDSFORHOLD2, null);
+        regelmodell = new AktivitetStatusModellFP();
+        regelmodell.setSkjæringstidspunktForOpptjening(mandag);
+        regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode);
+        regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode2);
+        // Act
+        Evaluation evaluation = new RegelFastsettSkjæringstidspunkt().evaluer(regelmodell);
+        // Assert
+        @SuppressWarnings("unused")
+        String sporing = EvaluationSerializer.asJson(evaluation);
+
+        assertThat(regelmodell.getSkjæringstidspunktForBeregning()).isEqualTo(søndag);
+    }
+
+    @Test
+    public void skalBeregneSkjæringstidspunktLikMandagNårEnAktivitetSlutterLørdagOgSkjæringstidspunktOpptjeningErPåMandagIkkeForeldrepenger() {
         // Arrange
         LocalDate mandag = LocalDate.of(2019, 10, 7);
         LocalDate lørdag = LocalDate.of(2019, 10, 5);
@@ -67,11 +110,32 @@ public class RegelFastsettSkjæringstidspunktTest {
         @SuppressWarnings("unused")
         String sporing = EvaluationSerializer.asJson(evaluation);
 
-        assertThat(regelmodell.getSkjæringstidspunktForBeregning()).isEqualTo(søndag);
+        assertThat(regelmodell.getSkjæringstidspunktForBeregning()).isEqualTo(mandag);
     }
 
     @Test
-    public void skalBeregneSkjæringstidspunktLikLørdagNårEnAktivitetSlutterFredagOgSkjæringstidspunktOpptjeningErPåMandag() {
+    public void skalBeregneSkjæringstidspunktLikLørdagNårEnAktivitetSlutterFredagOgSkjæringstidspunktOpptjeningErPåMandagForeldrepenger() {
+        // Arrange
+        LocalDate mandag = LocalDate.of(2019, 10, 7);
+        LocalDate lørdag = LocalDate.of(2019, 10, 5);
+        LocalDate fredag = LocalDate.of(2019, 10, 4);
+        AktivPeriode aktivPeriode = AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(mandag.minusMonths(5), mandag.plusMonths(2)), ARBEIDSFORHOLD, null);
+        AktivPeriode aktivPeriode2 = AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(mandag.minusMonths(5), fredag), ARBEIDSFORHOLD2, null);
+        regelmodell = new AktivitetStatusModellFP();
+        regelmodell.setSkjæringstidspunktForOpptjening(mandag);
+        regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode);
+        regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode2);
+        // Act
+        Evaluation evaluation = new RegelFastsettSkjæringstidspunkt().evaluer(regelmodell);
+        // Assert
+        @SuppressWarnings("unused")
+        String sporing = EvaluationSerializer.asJson(evaluation);
+
+        assertThat(regelmodell.getSkjæringstidspunktForBeregning()).isEqualTo(lørdag);
+    }
+
+    @Test
+    public void skalBeregneSkjæringstidspunktLikMandagNårEnAktivitetSlutterFredagOgSkjæringstidspunktOpptjeningErPåMandagIkkeForeldrepenger() {
         // Arrange
         LocalDate mandag = LocalDate.of(2019, 10, 7);
         LocalDate lørdag = LocalDate.of(2019, 10, 5);
@@ -88,11 +152,32 @@ public class RegelFastsettSkjæringstidspunktTest {
         @SuppressWarnings("unused")
         String sporing = EvaluationSerializer.asJson(evaluation);
 
+        assertThat(regelmodell.getSkjæringstidspunktForBeregning()).isEqualTo(mandag);
+    }
+
+    @Test
+    public void skalBeregneSkjæringstidspunktLikLørdagNårEnAktivitetSlutterFredagOgEnAnnenBegynnerPåLørdagOgSkjæringstidspunktOpptjeningErPåMandagForeldrepenger() {
+        // Arrange
+        LocalDate mandag = LocalDate.of(2019, 10, 7);
+        LocalDate lørdag = LocalDate.of(2019, 10, 5);
+        LocalDate fredag = LocalDate.of(2019, 10, 4);
+        AktivPeriode aktivPeriode = AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(lørdag, lørdag.plusMonths(2)), ARBEIDSFORHOLD, null);
+        AktivPeriode aktivPeriode2 = AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(fredag.minusMonths(5), fredag), ARBEIDSFORHOLD2, null);
+        regelmodell = new AktivitetStatusModellFP();
+        regelmodell.setSkjæringstidspunktForOpptjening(mandag);
+        regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode);
+        regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode2);
+        // Act
+        Evaluation evaluation = new RegelFastsettSkjæringstidspunkt().evaluer(regelmodell);
+        // Assert
+        @SuppressWarnings("unused")
+        String sporing = EvaluationSerializer.asJson(evaluation);
+
         assertThat(regelmodell.getSkjæringstidspunktForBeregning()).isEqualTo(lørdag);
     }
 
     @Test
-    public void skalBeregneSkjæringstidspunktLikLørdagNårEnAktivitetSlutterFredagOgEnAnnenBegynnerPåLørdagOgSkjæringstidspunktOpptjeningErPåMandag() {
+    public void skalBeregneSkjæringstidspunktLikMandagNårEnAktivitetSlutterFredagOgEnAnnenBegynnerPåLørdagOgSkjæringstidspunktOpptjeningErPåMandagIkkeForeldrepenger() {
         // Arrange
         LocalDate mandag = LocalDate.of(2019, 10, 7);
         LocalDate lørdag = LocalDate.of(2019, 10, 5);
@@ -109,8 +194,9 @@ public class RegelFastsettSkjæringstidspunktTest {
         @SuppressWarnings("unused")
         String sporing = EvaluationSerializer.asJson(evaluation);
 
-        assertThat(regelmodell.getSkjæringstidspunktForBeregning()).isEqualTo(lørdag);
+        assertThat(regelmodell.getSkjæringstidspunktForBeregning()).isEqualTo(mandag);
     }
+
 
     @Test
     public void skalFastsetteSisteAktivitetsdag() {

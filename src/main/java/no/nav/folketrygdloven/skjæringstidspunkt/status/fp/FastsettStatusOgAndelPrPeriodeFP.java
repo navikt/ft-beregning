@@ -1,4 +1,4 @@
-package no.nav.folketrygdloven.skjæringstidspunkt.status;
+package no.nav.folketrygdloven.skjæringstidspunkt.status.fp;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -12,17 +12,18 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivPeriode;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModell;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.BeregningsgrunnlagPrStatus;
+import no.nav.folketrygdloven.skjæringstidspunkt.status.FastsettKombinasjoner;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
-@RuleDocumentation(FastsettKombinasjoner.ID)
-public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetStatusModell> {
+@RuleDocumentation(FastsettStatusOgAndelPrPeriodeFP.ID)
+public class FastsettStatusOgAndelPrPeriodeFP extends LeafSpecification<AktivitetStatusModell> {
 
-    static final String ID = "FP_BR_19_2";
-    static final String BESKRIVELSE = "Fastsett status per andel og periode";
+    public static final String ID = "FP_BR_19_2";
+    public static final String BESKRIVELSE = "Fastsett status per andel og periode";
 
-    FastsettStatusOgAndelPrPeriode() {
+    public FastsettStatusOgAndelPrPeriodeFP() {
         super(ID, BESKRIVELSE);
     }
 
@@ -63,7 +64,7 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
     }
 
     private boolean harKunYtelsePåSkjæringstidspunkt(List<AktivPeriode> aktivPerioderVedSkjæringtidspunkt) {
-        return !aktivPerioderVedSkjæringtidspunkt.isEmpty() && aktivPerioderVedSkjæringtidspunkt.stream()
+        return aktivPerioderVedSkjæringtidspunkt.stream()
             .allMatch(ap -> mapAktivitetTilStatus(ap.getAktivitet()).equals(AktivitetStatus.KUN_YTELSE));
     }
 
@@ -95,7 +96,6 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
     }
 
     private List<AktivPeriode> hentAktivePerioderVedSkjæringtidspunkt(LocalDate dato, List<AktivPeriode> aktivePerioder) {
-        return aktivePerioder.stream().filter(ap -> ap.inneholder(dato)).collect(Collectors.toList());
+        return aktivePerioder.stream().filter(ap -> ap.inneholder(dato.minusDays(1))).collect(Collectors.toList());
     }
-
 }

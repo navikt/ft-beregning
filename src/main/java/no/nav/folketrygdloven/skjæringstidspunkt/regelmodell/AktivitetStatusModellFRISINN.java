@@ -22,12 +22,6 @@ public class AktivitetStatusModellFRISINN extends AktivitetStatusModell {
         this.inntektsgrunnlag = inntektsgrunnlag;
     }
 
-
-    @Override
-    public LocalDate sisteAktivitetsdato() {
-        return finnSisteAktivitetsdatoFraSistePeriode();
-    }
-
     public Inntektsgrunnlag getInntektsgrunnlag() {
         return inntektsgrunnlag;
     }
