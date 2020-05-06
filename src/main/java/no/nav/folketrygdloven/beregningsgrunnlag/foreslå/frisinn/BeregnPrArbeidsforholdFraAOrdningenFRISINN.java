@@ -30,6 +30,7 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<BeregningsgrunnlagPeriode> {
     public static final int VIRKEDAGER_I_ET_ÅR = 260;
     private static final BigDecimal ANTALL_MÅNEDER_I_ÅR = BigDecimal.valueOf(12);
+    private static final LocalDate NYOPPSTARTET_FL_GRENSE = LocalDate.of(2019, 3, 1);
     static final String ID = "FRISINN 2.3";
     static final String BESKRIVELSE = "Rapportert inntekt = snitt av mnd-inntekter i beregningsperioden * 12";
     private BeregningsgrunnlagPrArbeidsforhold arbeidsforhold;
@@ -52,7 +53,9 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
         if (arbeidsforhold.erFrilanser()) {
             YtelsesSpesifiktGrunnlag ytelsesSpesifiktGrunnlag = grunnlag.getBeregningsgrunnlag().getYtelsesSpesifiktGrunnlag();
             if (ytelsesSpesifiktGrunnlag instanceof FrisinnGrunnlag && ((FrisinnGrunnlag) ytelsesSpesifiktGrunnlag).isErNyoppstartetFrilans()) {
-                perioderSomSkalBrukesForInntekter = lagMånederUtenYtelseEtterFørsteInntektsdag(grunnlag, perioderSomSkalBrukesForInntekter);
+                if (finnesIkkeInntektForFLFørFrist(grunnlag)) {
+                    perioderSomSkalBrukesForInntekter = lagMånederUtenYtelseEtterFørsteInntektsdag(grunnlag, perioderSomSkalBrukesForInntekter);
+                }
             }
             årsinntekt = beregnÅrsinntektFrilans(perioderSomSkalBrukesForInntekter, inntektsgrunnlag, grunnlag, resultater);
         } else {
@@ -67,15 +70,21 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
         return beregnet(resultater);
     }
 
+    private boolean finnesIkkeInntektForFLFørFrist(BeregningsgrunnlagPeriode grunnlag) {
+        LocalDate startAvPeriodeSomDefinererAktiveFrilansere = LocalDate.of(2018,1,1);
+        Periode periodeFørFrist = Periode.of(startAvPeriodeSomDefinererAktiveFrilansere, NYOPPSTARTET_FL_GRENSE.minusDays(1));
+        List<Periodeinntekt> frilansinntekterFørNyoppstartetGrense = grunnlag.getInntektsgrunnlag().finnAlleFrilansInntektPerioder(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, periodeFørFrist);
+        return frilansinntekterFørNyoppstartetGrense.isEmpty();
+    }
+
     private List<Periode> lagMånederUtenYtelseEtterFørsteInntektsdag(BeregningsgrunnlagPeriode grunnlag, List<Periode> perioderUtenYtelse) {
-        LocalDate nyoppstartetGrense = LocalDate.of(2019, 3, 1);
         List<Periode> perioderEtterGrenseUtenYtelse = perioderUtenYtelse.stream()
-            .filter(p -> !p.getFom().isBefore(nyoppstartetGrense))
+            .filter(p -> !p.getFom().isBefore(NYOPPSTARTET_FL_GRENSE))
             .collect(Collectors.toList());
         if (perioderEtterGrenseUtenYtelse.isEmpty()) {
             return Collections.emptyList();
         }
-        LocalDate førsteDatoMedInntekt = finnFørsteDatoMedFrilansInntektEtterDato(grunnlag, nyoppstartetGrense);
+        LocalDate førsteDatoMedInntekt = finnFørsteDatoMedFrilansInntektEtterDato(grunnlag, NYOPPSTARTET_FL_GRENSE);
         return perioderEtterGrenseUtenYtelse.stream()
             .filter(p -> !p.getFom().isBefore(førsteDatoMedInntekt))
             .collect(Collectors.toList());
