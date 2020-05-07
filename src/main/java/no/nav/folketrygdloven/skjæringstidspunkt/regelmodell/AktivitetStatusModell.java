@@ -19,8 +19,8 @@ import no.nav.fpsak.nare.doc.RuleDocumentationGrunnlag;
 public class AktivitetStatusModell {
 
     private LocalDate skjæringstidspunktForBeregning;
-    private LocalDate skjæringstidspunktForOpptjening;
-    private List<AktivPeriode> aktivePerioder = new ArrayList<>();
+    protected LocalDate skjæringstidspunktForOpptjening;
+    protected List<AktivPeriode> aktivePerioder = new ArrayList<>();
     private List<AktivitetStatus> aktivitetStatuser = new ArrayList<>();
     private List<BeregningsgrunnlagPrStatus> beregningsgrunnlagPrStatusListe = new ArrayList<>();
 
@@ -80,36 +80,7 @@ public class AktivitetStatusModell {
     }
 
     public LocalDate sisteAktivitetsdato() {
-        if (liggerDagenFørSkjæringstidspunktForOpptjeningIHelga()) {
-            LocalDate fredagFørStpOpptjening = finnFredagFørStpOpptjening();
-            LocalDate lørdagFørStpOpptjening = finnFredagFørStpOpptjening().plusDays(1);
-            if (harAktivitetSomSlutterPåDato(fredagFørStpOpptjening)) {
-                return fredagFørStpOpptjening;
-            } else if (harAktivitetSomSlutterPåDato(lørdagFørStpOpptjening)) {
-                return lørdagFørStpOpptjening;
-            } else {
-                return finnSisteAktivitetsdatoFraSistePeriode();
-            }
-        } else {
-            return finnSisteAktivitetsdatoFraSistePeriode();
-        }
-    }
-
-    private LocalDate finnFredagFørStpOpptjening() {
-        if (!liggerDagenFørSkjæringstidspunktForOpptjeningIHelga()) {
-            throw new IllegalStateException("Dagen før skjæringstidspunkt ligger ikke i helga.");
-        }
-        int daysBetween = skjæringstidspunktForOpptjening.minusDays(1).getDayOfWeek().getValue() - DayOfWeek.FRIDAY.getValue();
-        return skjæringstidspunktForOpptjening.minusDays(daysBetween+1L);
-    }
-
-    private boolean harAktivitetSomSlutterPåDato(LocalDate fredagFørStpOpptjening) {
-        return aktivePerioder.stream().anyMatch(a -> a.getPeriode().getTom().isEqual(fredagFørStpOpptjening));
-    }
-
-    private boolean liggerDagenFørSkjæringstidspunktForOpptjeningIHelga() {
-        LocalDate dagenFørStpOpptjening = skjæringstidspunktForOpptjening.minusDays(1);
-        return dagenFørStpOpptjening.getDayOfWeek().equals(SUNDAY) || dagenFørStpOpptjening.getDayOfWeek().equals(SATURDAY);
+        return finnSisteAktivitetsdatoFraSistePeriode();
     }
 
     protected LocalDate finnSisteAktivitetsdatoFraSistePeriode() {

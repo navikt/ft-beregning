@@ -19,10 +19,10 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 @RuleDocumentation(FastsettKombinasjoner.ID)
 public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetStatusModell> {
 
-    static final String ID = "FP_BR_19_2";
-    static final String BESKRIVELSE = "Fastsett status per andel og periode";
+    public static final String ID = "FP_BR_19_2";
+    public static final String BESKRIVELSE = "Fastsett status per andel og periode";
 
-    FastsettStatusOgAndelPrPeriode() {
+    protected FastsettStatusOgAndelPrPeriode() {
         super(ID, BESKRIVELSE);
     }
 
@@ -41,7 +41,7 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
     private void opprettAktivitetStatuser(AktivitetStatusModell regelmodell) {
         LocalDate skjæringtidspktForBeregning = regelmodell.getSkjæringstidspunktForBeregning();
         List<AktivPeriode> aktivePerioder = regelmodell.getAktivePerioder();
-        List<AktivPeriode> aktivePerioderVedStp = hentAktivePerioderVedSkjæringtidspunkt(skjæringtidspktForBeregning, aktivePerioder);
+        List<AktivPeriode> aktivePerioderVedStp = hentAktivePerioderForBeregning(skjæringtidspktForBeregning, aktivePerioder);
         if (harKunYtelsePåSkjæringstidspunkt(aktivePerioderVedStp)) {
             regelmodell.leggTilAktivitetStatus(AktivitetStatus.KUN_YTELSE);
             BeregningsgrunnlagPrStatus bgPrStatus = new BeregningsgrunnlagPrStatus(AktivitetStatus.BA);
@@ -63,7 +63,7 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
     }
 
     private boolean harKunYtelsePåSkjæringstidspunkt(List<AktivPeriode> aktivPerioderVedSkjæringtidspunkt) {
-        return aktivPerioderVedSkjæringtidspunkt.stream()
+        return !aktivPerioderVedSkjæringtidspunkt.isEmpty() && aktivPerioderVedSkjæringtidspunkt.stream()
             .allMatch(ap -> mapAktivitetTilStatus(ap.getAktivitet()).equals(AktivitetStatus.KUN_YTELSE));
     }
 
@@ -94,7 +94,12 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
         return aktivitetStatus;
     }
 
-    private List<AktivPeriode> hentAktivePerioderVedSkjæringtidspunkt(LocalDate dato, List<AktivPeriode> aktivePerioder) {
-        return aktivePerioder.stream().filter(ap -> ap.inneholder(dato.minusDays(1))).collect(Collectors.toList());
+    private List<AktivPeriode> hentAktivePerioderForBeregning(LocalDate skjæringstidspunkt, List<AktivPeriode> aktivePerioder) {
+        return aktivePerioder.stream().filter(ap -> ap.inneholder(finnDatogrenseForInkluderteAktiviteter(skjæringstidspunkt))).collect(Collectors.toList());
     }
+
+    protected LocalDate finnDatogrenseForInkluderteAktiviteter(LocalDate dato) {
+        return dato;
+    }
+
 }
