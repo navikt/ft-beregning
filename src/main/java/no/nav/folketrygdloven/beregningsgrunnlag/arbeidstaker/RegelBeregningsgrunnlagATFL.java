@@ -39,7 +39,7 @@ public class RegelBeregningsgrunnlagATFL implements RuleService<Beregningsgrunnl
         // FP_BR 26.1 Skal vi sette aksjonspunkt?
 
         Specification<BeregningsgrunnlagPeriode> skalSetteAksjonspunkt =
-            rs.beregningHvisRegel(new SkalSetteAksjonspunkt(), sjekkOmPeriodenErEtterTidsbegrensetArbeidsforhold, new Beregnet());
+            rs.beregningHvisRegel(new SkalGjøreAvviksvurdering(), sjekkOmPeriodenErEtterTidsbegrensetArbeidsforhold, new Beregnet());
 
         // FP_BR 27.1 Har rapportert inntekt inkludert bortfaltnaturalytelse for 1. periode avvik mot sammenligningsgrunnlag > 25%?
 
