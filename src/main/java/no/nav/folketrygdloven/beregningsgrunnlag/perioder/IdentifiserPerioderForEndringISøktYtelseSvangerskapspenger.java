@@ -28,7 +28,7 @@ public class IdentifiserPerioderForEndringISøktYtelseSvangerskapspenger {
             Gradering curr = graderinger.get(i);
             if (i > 0) {
                 Gradering prev = graderinger.get(i - 1);
-                if (curr.getUtbetalingsprosent().compareTo(prev.getUtbetalingsprosent()) != 0) {
+                if (curr.getUtbetalingsprosent().compareTo(prev.getUtbetalingsprosent()) != 0 || !curr.getPeriode().getFom().minusDays(1).equals(prev.getTom())) {
                     PeriodeSplittData periodeSplitt = lagPeriodeSplitt(curr.getFom());
                     set.add(periodeSplitt);
                 }
