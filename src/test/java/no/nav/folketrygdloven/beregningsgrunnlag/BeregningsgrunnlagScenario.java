@@ -22,6 +22,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Pe
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.frisinn.FrisinnGrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.omp.OmsorgspengerGrunnlag;
 
 public class BeregningsgrunnlagScenario {
@@ -101,6 +102,7 @@ public class BeregningsgrunnlagScenario {
             .medAktivitetStatuser(aktivitetStatuser.stream().map(as -> new AktivitetStatusMedHjemmel(as, null)).collect(Collectors.toList()))
             .medBeregningsgrunnlagPeriode(periodeBuilder.build())
             .medGrunnbeløpSatser(GRUNNBELØPLISTE)
+            .medYtelsesSpesifiktGrunnlag(new FrisinnGrunnlag(false, true))
             .build();
     }
 
