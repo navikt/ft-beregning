@@ -10,12 +10,12 @@ import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
-@RuleDocumentation(SkalSetteAksjonspunkt.ID)
-class SkalSetteAksjonspunkt extends LeafSpecification<BeregningsgrunnlagPeriode> {
+@RuleDocumentation(SkalGjøreAvviksvurdering.ID)
+class SkalGjøreAvviksvurdering extends LeafSpecification<BeregningsgrunnlagPeriode> {
     static final String ID = "FP_BR 26.1";
-    static final String BESKRIVELSE = "Skal vi sette aksjonspunkt?";
+    static final String BESKRIVELSE = "Skal det gjøres avviksvurdering etter § 8-30?";
 
-    public SkalSetteAksjonspunkt() {
+    public SkalGjøreAvviksvurdering() {
         super(ID, BESKRIVELSE);
     }
 
