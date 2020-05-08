@@ -1,10 +1,13 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag;
 
 public abstract class YtelsesSpesifiktGrunnlag {
 
     protected String ytelseType;
+    @JsonBackReference
     protected Beregningsgrunnlag beregningsgrunnlag;
 
     public YtelsesSpesifiktGrunnlag(String ytelseType) {
