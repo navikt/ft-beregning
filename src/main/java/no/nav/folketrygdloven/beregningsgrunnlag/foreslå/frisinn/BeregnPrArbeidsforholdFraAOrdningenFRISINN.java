@@ -52,12 +52,19 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
         BigDecimal årsinntekt;
         if (arbeidsforhold.erFrilanser()) {
             YtelsesSpesifiktGrunnlag ytelsesSpesifiktGrunnlag = grunnlag.getBeregningsgrunnlag().getYtelsesSpesifiktGrunnlag();
-            if (ytelsesSpesifiktGrunnlag instanceof FrisinnGrunnlag && ((FrisinnGrunnlag) ytelsesSpesifiktGrunnlag).isErNyoppstartetFrilans()) {
+            if (!(ytelsesSpesifiktGrunnlag instanceof FrisinnGrunnlag)) {
+                throw new IllegalStateException("Har ikke frisinngrunnlag for fastsetting av frilans, ugyldig tilstand");
+            }
+            FrisinnGrunnlag frisinnGrunnlag = (FrisinnGrunnlag) ytelsesSpesifiktGrunnlag;
+            if (frisinnGrunnlag.isErNyoppstartetFrilans()) {
                 if (finnesIkkeInntektForFLFørFrist(grunnlag)) {
                     perioderSomSkalBrukesForInntekter = lagMånederUtenYtelseEtterFørsteInntektsdag(grunnlag, perioderSomSkalBrukesForInntekter);
                 }
             }
-            årsinntekt = beregnÅrsinntektFrilans(perioderSomSkalBrukesForInntekter, inntektsgrunnlag, grunnlag, resultater);
+            // Hvis det ikke søkes ytelse for frilans skal kun oppgitt inntekt legges til grunn
+            årsinntekt = frisinnGrunnlag.isErSøktYtelseForFrilans()
+                ? beregnÅrsinntektFrilans(perioderSomSkalBrukesForInntekter, inntektsgrunnlag, grunnlag, resultater)
+                : finnOppgittÅrsinntektFL(inntektsgrunnlag, grunnlag);
         } else {
             årsinntekt = beregnÅrsinntektArbeidstaker(perioderSomSkalBrukesForInntekter, inntektsgrunnlag, resultater);
         }
