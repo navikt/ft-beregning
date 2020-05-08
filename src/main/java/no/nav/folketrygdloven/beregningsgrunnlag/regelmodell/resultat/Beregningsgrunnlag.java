@@ -277,6 +277,9 @@ public class Beregningsgrunnlag {
         }
 
         public Builder medYtelsesSpesifiktGrunnlag(YtelsesSpesifiktGrunnlag ytelsesSpesifiktGrunnlag) {
+            if (ytelsesSpesifiktGrunnlag != null) {
+                ytelsesSpesifiktGrunnlag.setBeregningsgrunnlag(beregningsgrunnlagMal);
+            }
             beregningsgrunnlagMal.ytelsesSpesifiktGrunnlag = ytelsesSpesifiktGrunnlag;
             return this;
         }

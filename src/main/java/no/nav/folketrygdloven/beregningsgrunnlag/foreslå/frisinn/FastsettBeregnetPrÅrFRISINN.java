@@ -44,15 +44,15 @@ class FastsettBeregnetPrÅrFRISINN extends LeafSpecification<BeregningsgrunnlagP
         BeregningsgrunnlagHjemmel hjemmel;
         if (arbeidstaker) {
             if (kombinasjon) {
-                hjemmel = (frilans ? BeregningsgrunnlagHjemmel.HJEMMEL_ARBEIDSTAKER_OG_FRILANSER_OG_SELVSTENDIG : BeregningsgrunnlagHjemmel.HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG);
+                hjemmel = (frilans ? BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_FRILANSER_OG_SELVSTENDIG : BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG);
             } else {
-                hjemmel = (frilans ? BeregningsgrunnlagHjemmel.HJEMMEL_ARBEIDSTAKER_OG_FRILANSER : BeregningsgrunnlagHjemmel.HJEMMEL_BARE_ARBEIDSTAKER);
+                hjemmel = (frilans ? BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_FRILANSER : BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_ARBEIDSTAKER);
             }
         } else if (frilans) {
             if (kombinasjon) {
-                hjemmel = (BeregningsgrunnlagHjemmel.HJEMMEL_FRILANSER_OG_SELVSTENDIG);
+                hjemmel = (BeregningsgrunnlagHjemmel.K14_HJEMMEL_FRILANSER_OG_SELVSTENDIG);
             } else {
-                hjemmel = (BeregningsgrunnlagHjemmel.HJEMMEL_BARE_FRILANSER);
+                hjemmel = (BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_FRILANSER);
             }
         } else {
             throw new IllegalStateException("ATFL-andel mangler både arbeidsforhold og frilansaktivitet");
