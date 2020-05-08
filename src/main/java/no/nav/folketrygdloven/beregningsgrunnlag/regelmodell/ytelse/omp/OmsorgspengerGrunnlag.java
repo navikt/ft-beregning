@@ -1,9 +1,10 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.omp;
 
 import java.math.BigDecimal;
-import java.util.List;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.YtelsesSpesifiktGrunnlag;
 
 public class OmsorgspengerGrunnlag extends YtelsesSpesifiktGrunnlag {
@@ -18,4 +19,16 @@ public class OmsorgspengerGrunnlag extends YtelsesSpesifiktGrunnlag {
     public BigDecimal getGradertRefusjonVedSkjæringstidspunkt() {
         return gradertRefusjonVedSkjæringstidspunkt;
     }
+
+    public boolean erDirekteUtbetaling() {
+        BeregningsgrunnlagPeriode førstePeriode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        BigDecimal minsteRefusjon = førstePeriode.getGrenseverdi().min(this.getGradertRefusjonVedSkjæringstidspunkt());
+        BigDecimal totaltBeregningsgrunnlag = førstePeriode.getBeregningsgrunnlagPrStatus().stream()
+            .map(BeregningsgrunnlagPrStatus::getGradertBruttoPrÅr)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal avkortetTotaltGrunnlag = førstePeriode.getGrenseverdi().min(totaltBeregningsgrunnlag);
+        return minsteRefusjon.compareTo(avkortetTotaltGrunnlag) < 0;
+    }
+
+
 }
