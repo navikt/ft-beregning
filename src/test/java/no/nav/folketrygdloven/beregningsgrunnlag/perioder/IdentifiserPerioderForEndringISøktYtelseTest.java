@@ -20,6 +20,47 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.PeriodeSpl
 
 public class IdentifiserPerioderForEndringISøktYtelseTest {
 
+
+    @Test
+    public void skal_støtte_hull_i_utbetalingsperioder() {
+        // Arrange
+        LocalDate fom = LocalDate.now();
+        LocalDate tom = fom.plusMonths(1);
+
+        LocalDate fom2 = tom.plusDays(2);
+        LocalDate tom2 = fom2.plusMonths(1);
+        var andelGradering = AndelGraderingImpl.builder()
+            .medAktivitetStatus(AktivitetStatusV2.AT)
+            .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("123"))
+            .medGraderinger(List.of(
+                new Gradering(Periode.of(fom, tom), BigDecimal.valueOf(50)),
+                new Gradering(Periode.of(fom2, tom2), BigDecimal.valueOf(50))))
+            .build();
+
+        // Act
+        Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForEndringISøktYtelseSvangerskapspenger.identifiser(andelGradering);
+
+        // Assert
+        assertThat(periodesplitter).hasSize(4);
+        Iterator<PeriodeSplittData> iterator = periodesplitter.iterator();
+        PeriodeSplittData første = iterator.next();
+        assertThat(første.getFom()).isEqualTo(fom);
+        assertThat(første.getPeriodeÅrsak()).isEqualTo(PeriodeÅrsak.ENDRING_I_AKTIVITETER_SØKT_FOR);
+
+        PeriodeSplittData andre = iterator.next();
+        assertThat(andre.getFom()).isEqualTo(tom.plusDays(1));
+        assertThat(andre.getPeriodeÅrsak()).isEqualTo(PeriodeÅrsak.ENDRING_I_AKTIVITETER_SØKT_FOR);
+
+        PeriodeSplittData tredje = iterator.next();
+        assertThat(tredje.getFom()).isEqualTo(fom2);
+        assertThat(tredje.getPeriodeÅrsak()).isEqualTo(PeriodeÅrsak.ENDRING_I_AKTIVITETER_SØKT_FOR);
+
+        PeriodeSplittData fjerde = iterator.next();
+        assertThat(fjerde.getFom()).isEqualTo(tom2.plusDays(1));
+        assertThat(fjerde.getPeriodeÅrsak()).isEqualTo(PeriodeÅrsak.ENDRING_I_AKTIVITETER_SØKT_FOR);
+    }
+
+
     @Test
     public void fårSplittForFørstePeriode() {
         // Arrange
