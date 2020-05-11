@@ -46,7 +46,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
 
         // Act
         kjørRegel(Beregningsgrunnlag.builder(beregningsgrunnlag)
-            .medYtelsesSpesifiktGrunnlag(new FrisinnGrunnlag(true, true))
+            .medYtelsesSpesifiktGrunnlag(new FrisinnGrunnlag(true))
             .build(), andel);
 
         // Assert
@@ -62,7 +62,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
 
         // Act
         kjørRegel(Beregningsgrunnlag.builder(beregningsgrunnlag)
-            .medYtelsesSpesifiktGrunnlag(new FrisinnGrunnlag(true, true))
+            .medYtelsesSpesifiktGrunnlag(new FrisinnGrunnlag(true))
             .build(), andel);
 
         // Assert
@@ -78,7 +78,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
 
         // Act
         kjørRegel(Beregningsgrunnlag.builder(beregningsgrunnlag)
-            .medYtelsesSpesifiktGrunnlag(new FrisinnGrunnlag(true, true))
+            .medYtelsesSpesifiktGrunnlag(new FrisinnGrunnlag(true))
             .build(), andel);
 
         // Assert
@@ -96,7 +96,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
 
         // Act
         kjørRegel(Beregningsgrunnlag.builder(beregningsgrunnlag)
-            .medYtelsesSpesifiktGrunnlag(new FrisinnGrunnlag(true, true))
+            .medYtelsesSpesifiktGrunnlag(new FrisinnGrunnlag(true))
             .build(), andel);
 
         // Assert
@@ -303,9 +303,9 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
         BeregningsgrunnlagPeriode.Builder periodeBuilder = BeregningsgrunnlagPeriode.builder()
             .medPeriode(new Periode(STP, null));
         BeregningsgrunnlagPeriode periode = periodeBuilder.build();
-        FrisinnGrunnlag frisinnGrunnlag = new FrisinnGrunnlag(false, true);
+        FrisinnGrunnlag frisinnGrunnlag = new FrisinnGrunnlag(true);
         if (erNyoppstartetFL) {
-            frisinnGrunnlag = new FrisinnGrunnlag(true, true);
+            frisinnGrunnlag = new FrisinnGrunnlag(true);
         }
         return Beregningsgrunnlag.builder()
             .medInntektsgrunnlag(ig)
