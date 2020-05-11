@@ -1,7 +1,10 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.ytelse.frisinn;
 
+import static no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil.TIDENES_ENDE;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -21,6 +24,7 @@ public class FinnGrenseverdiForTotalOver6G extends LeafSpecification<Beregningsg
 
     public static final String ID = "FRISINN 6.2";
     public static final String BESKRIVELSE = "Finn grenseverdi for total bg over 6G";
+    public static final BigDecimal DAGER_I_1_ÅR = BigDecimal.valueOf(260);
 
     public FinnGrenseverdiForTotalOver6G() {
         super(ID, BESKRIVELSE);
@@ -40,41 +44,12 @@ public class FinnGrenseverdiForTotalOver6G extends LeafSpecification<Beregningsg
             .subtract(totalAAPGrunnlag)
             .subtract(totalATGrunnlag)
             .subtract(totalDPGrunnlag);
-        BigDecimal grenseverdiFratrektFL = grenseverdiFratrektAT
-            .subtract(løpendeFL);
+        BigDecimal grenseverdiFratrektFL = grenseverdiFratrektAT.subtract(løpendeFL);
+        BigDecimal grenseverdi = grenseverdiFratrektFL.subtract(løpendeSN).max(BigDecimal.ZERO);
 
-        BigDecimal skalTrekkesFraGrenseverdiINestePeriode = BigDecimal.ZERO;
-
-        if (grenseverdiFratrektFL.compareTo(BigDecimal.ZERO) < 0) {
-            BeregningsgrunnlagPrStatus atflAndel = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
-            if (atflAndel != null) {
-                Optional<BeregningsgrunnlagPrArbeidsforhold> frilansArbeidsforhold = atflAndel.getFrilansArbeidsforhold();
-                Boolean erSøktForFrilans = frilansArbeidsforhold.map(BeregningsgrunnlagPrArbeidsforhold::getErSøktYtelseFor).orElse(false);
-                if (erSøktForFrilans) {
-                    int virkedager = Virkedager.beregnAntallVirkedager(grunnlag.getBeregningsgrunnlagPeriode());
-                    if (grenseverdiFratrektAT.compareTo(BigDecimal.ZERO) <= 0) {
-                        // overfør hele løpende FL til neste grenseverdi
-                        BigDecimal dagsatsLøpendeFL = finnDagsatsFraÅrsbeløp(løpendeFL);
-                        BigDecimal løpendeIDennePeriode = dagsatsLøpendeFL.multiply(BigDecimal.valueOf(virkedager));
-                        BigDecimal rest = finnEffektivRestForNestePeriode(grunnlag, løpendeIDennePeriode);
-                        skalTrekkesFraGrenseverdiINestePeriode = skalTrekkesFraGrenseverdiINestePeriode.add(rest);
-                    } else {
-                        // Overfør - grenseverdiFratrektFL til neste grenseverdi (tatt hensyn til virkedager i perioder)
-                        BigDecimal rest = finnEffektivRestForNestePeriode(grunnlag, grenseverdiFratrektFL.abs());
-                        skalTrekkesFraGrenseverdiINestePeriode = skalTrekkesFraGrenseverdiINestePeriode.add(rest);
-                    }
-                }
-            }
+        if (!erSistePeriode(grunnlag)) {
+            trekkRestFraNesteGrenseverdi(grunnlag, løpendeFL, løpendeSN, grenseverdiFratrektAT, grenseverdiFratrektFL);
         }
-
-        BigDecimal grenseverdi = grenseverdiFratrektFL
-            .subtract(løpendeSN)
-            .max(BigDecimal.ZERO);
-        
-        // Kan ikke kalles for siste periode!
-        BeregningsgrunnlagPeriode nestePeriode = finnNestePeriode(grunnlag);
-        nestePeriode.setGrenseverdi(nestePeriode.getGrenseverdi().subtract(skalTrekkesFraGrenseverdiINestePeriode));
-
 
         resultater.put("grenseverdi", grenseverdi);
         grunnlag.setGrenseverdi(grenseverdi);
@@ -84,14 +59,83 @@ public class FinnGrenseverdiForTotalOver6G extends LeafSpecification<Beregningsg
 
     }
 
+    private void trekkRestFraNesteGrenseverdi(BeregningsgrunnlagPeriode grunnlag, BigDecimal løpendeFL, BigDecimal løpendeSN, BigDecimal grenseverdiFratrektAT, BigDecimal grenseverdiFratrektFL) {
+        BigDecimal skalTrekkesFraGrenseverdiINestePeriode = finnFratrekkForFrilans(grunnlag, løpendeFL, grenseverdiFratrektAT);
+        BigDecimal fratrekkForNæring = finnFratrekkForNæring(grunnlag, løpendeSN, grenseverdiFratrektFL);
+        skalTrekkesFraGrenseverdiINestePeriode = skalTrekkesFraGrenseverdiINestePeriode.add(fratrekkForNæring);
+        BeregningsgrunnlagPeriode nestePeriode = finnNestePeriode(grunnlag);
+        nestePeriode.setGrenseverdi(nestePeriode.getGrenseverdi().subtract(skalTrekkesFraGrenseverdiINestePeriode));
+    }
+
+    private BigDecimal finnFratrekkForFrilans(BeregningsgrunnlagPeriode grunnlag,
+                                              BigDecimal løpendeFL,
+                                              BigDecimal grenseverdiFratrektAT) {
+        BigDecimal grenseverdiFratrektFL = grenseverdiFratrektAT
+            .subtract(løpendeFL);
+        if (grenseverdiFratrektFL.compareTo(BigDecimal.ZERO) >= 0) {
+            return BigDecimal.ZERO;
+        }
+        BeregningsgrunnlagPrStatus atflAndel = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+        if (atflAndel == null) {
+            return BigDecimal.ZERO;
+        }
+        Optional<BeregningsgrunnlagPrArbeidsforhold> frilansArbeidsforhold = atflAndel.getFrilansArbeidsforhold();
+        Boolean erSøktForFrilans = frilansArbeidsforhold.map(BeregningsgrunnlagPrArbeidsforhold::getErSøktYtelseFor).orElse(false);
+        if (!erSøktForFrilans) {
+            return BigDecimal.ZERO;
+        }
+        return finnRestFratrekkForNestePeriode(grunnlag, løpendeFL, grenseverdiFratrektAT);
+    }
+
+    private BigDecimal finnFratrekkForNæring(BeregningsgrunnlagPeriode grunnlag,
+                                              BigDecimal løpendeSN,
+                                              BigDecimal grenseverdiFratrektATFL) {
+        BigDecimal grenseverdiFratrektSN = grenseverdiFratrektATFL.subtract(løpendeSN);
+        if (grenseverdiFratrektSN.compareTo(BigDecimal.ZERO) >= 0) {
+            return BigDecimal.ZERO;
+        }
+        BeregningsgrunnlagPrStatus sn = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
+        if (sn == null) {
+            return BigDecimal.ZERO;
+        }
+        if (!sn.erSøktYtelseFor()) {
+            return BigDecimal.ZERO;
+        }
+        return finnRestFratrekkForNestePeriode(grunnlag, løpendeSN, grenseverdiFratrektATFL);
+    }
+
+    private BigDecimal finnRestFratrekkForNestePeriode(BeregningsgrunnlagPeriode grunnlag,
+                                                       BigDecimal løpende,
+                                                       BigDecimal grenseverdiFratrektAndreStatuser) {
+        BigDecimal grenseverdiFratrektForStatus = grenseverdiFratrektAndreStatuser.subtract(løpende);
+        if (grenseverdiFratrektAndreStatuser.compareTo(BigDecimal.ZERO) <= 0) {
+            int virkedager = Virkedager.beregnAntallVirkedager(grunnlag.getBeregningsgrunnlagPeriode());
+            BigDecimal dagsatsLøpendeFL = finnDagsatsFraÅrsbeløp(løpende);
+            BigDecimal løpendeIDennePeriode = dagsatsLøpendeFL.multiply(BigDecimal.valueOf(virkedager));
+            return finnEffektivRestForNestePeriode(grunnlag, løpendeIDennePeriode);
+        } else if (grenseverdiFratrektForStatus.compareTo(BigDecimal.ZERO) < 0) {
+            return finnEffektivRestForNestePeriode(grunnlag, grenseverdiFratrektForStatus.abs());
+        }
+        return BigDecimal.ZERO;
+    }
+
+
     private BigDecimal finnEffektivRestForNestePeriode(BeregningsgrunnlagPeriode grunnlag, BigDecimal løpendeIDennePeriode) {
         BeregningsgrunnlagPeriode nestePeriode = finnNestePeriode(grunnlag);
-        // Her kan neste periode vere ueeeeendelig
+        if (erSistePeriode(nestePeriode)) {
+            return BigDecimal.ZERO;
+        }
         int virkedagerNestePeriode = Virkedager.beregnAntallVirkedager(nestePeriode.getBeregningsgrunnlagPeriode());
+        if (virkedagerNestePeriode == 0) {
+            return BigDecimal.ZERO;
+        }
         BigDecimal dagsatsNestePeriode = løpendeIDennePeriode.divide(BigDecimal.valueOf(virkedagerNestePeriode), 10, RoundingMode.HALF_EVEN);
-        // Lag årsbeløp
-        // Trekk fra grenseverdi
-        return BigDecimal.ZERO;
+        return finnÅrsbeløpFraDagsats(dagsatsNestePeriode);
+    }
+
+    private boolean erSistePeriode(BeregningsgrunnlagPeriode nestePeriode) {
+        LocalDate tom = nestePeriode.getBeregningsgrunnlagPeriode().getTom();
+        return tom == null || tom.equals(TIDENES_ENDE);
     }
 
     private BeregningsgrunnlagPeriode finnNestePeriode(BeregningsgrunnlagPeriode grunnlag) {
@@ -101,8 +145,12 @@ public class FinnGrenseverdiForTotalOver6G extends LeafSpecification<Beregningsg
             .orElseThrow(() -> new IllegalStateException("Kan ikke finne neste periode."));
     }
 
-    private BigDecimal finnDagsatsFraÅrsbeløp(BigDecimal løpendeFL) {
-        return løpendeFL.divide(BigDecimal.valueOf(260), 10, RoundingMode.HALF_EVEN);
+    private BigDecimal finnDagsatsFraÅrsbeløp(BigDecimal årsbeløp) {
+        return årsbeløp.divide(DAGER_I_1_ÅR, 10, RoundingMode.HALF_EVEN);
+    }
+
+    private BigDecimal finnÅrsbeløpFraDagsats(BigDecimal dagsats) {
+        return dagsats.multiply(DAGER_I_1_ÅR);
     }
 
     private BigDecimal finnInntektForStatus(BeregningsgrunnlagPeriode grunnlag, AktivitetStatus status) {
