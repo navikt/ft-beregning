@@ -56,10 +56,9 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
                 throw new IllegalStateException("Har ikke frisinngrunnlag for fastsetting av frilans, ugyldig tilstand");
             }
             FrisinnGrunnlag frisinnGrunnlag = (FrisinnGrunnlag) ytelsesSpesifiktGrunnlag;
-            if (frisinnGrunnlag.isErNyoppstartetFrilans()) {
-                if (finnesIkkeInntektForFLFørFrist(grunnlag)) {
-                    perioderSomSkalBrukesForInntekter = lagMånederUtenYtelseEtterFørsteInntektsdag(grunnlag, perioderSomSkalBrukesForInntekter);
-                }
+            if (frisinnGrunnlag.isErSøktYtelseForFrilans() && finnesIkkeInntektForFLFørFrist(grunnlag)) {
+                // Beregnes som nyoppstartet fl
+                perioderSomSkalBrukesForInntekter = lagMånederUtenYtelseEtterFørsteInntektsdag(grunnlag, perioderSomSkalBrukesForInntekter);
             }
             // Hvis det ikke søkes ytelse for frilans skal kun oppgitt inntekt legges til grunn
             årsinntekt = frisinnGrunnlag.isErSøktYtelseForFrilans()

@@ -102,7 +102,7 @@ public class BeregningsgrunnlagScenario {
             .medAktivitetStatuser(aktivitetStatuser.stream().map(as -> new AktivitetStatusMedHjemmel(as, null)).collect(Collectors.toList()))
             .medBeregningsgrunnlagPeriode(periodeBuilder.build())
             .medGrunnbeløpSatser(GRUNNBELØPLISTE)
-            .medYtelsesSpesifiktGrunnlag(new FrisinnGrunnlag(false, true))
+            .medYtelsesSpesifiktGrunnlag(new FrisinnGrunnlag(true))
             .build();
     }
 
