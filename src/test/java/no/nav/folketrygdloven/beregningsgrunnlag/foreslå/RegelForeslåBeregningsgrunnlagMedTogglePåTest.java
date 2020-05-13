@@ -506,7 +506,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
         // Assert
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_ARBEIDSTAKER, AktivitetStatus.ATFL, 12 * månedsinntektInntektsmelding.doubleValue());
-        verifiserBeregningsgrunnlagHjemmel(grunnlag, AktivitetStatus.ATFL, BeregningsgrunnlagHjemmel.F_14_7_8_28_8_30);
+        verifiserBeregningsgrunnlagHjemmel(grunnlag, AktivitetStatus.ATFL, BeregningsgrunnlagHjemmel.F_14_7_8_30);
         verifiserBeregningsgrunnlagBeregnet(grunnlag, 12 * månedsinntektInntektsmelding.doubleValue());
         assertThat(grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.AT).getAvvikProsent().doubleValue()).isCloseTo(33.33, within(0.05));
         assertThat(grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.AT).getRapportertPrÅr()).isEqualTo(månedsinntekt.multiply(BigDecimal.valueOf(12)));
@@ -624,7 +624,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
         // Assert
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_ARBEIDSTAKER, AktivitetStatus.ATFL, 12 *månedsinntekt.doubleValue());
-        verifiserBeregningsgrunnlagHjemmel(grunnlag, AktivitetStatus.ATFL, BeregningsgrunnlagHjemmel.F_14_7_8_28_8_30);
+        verifiserBeregningsgrunnlagHjemmel(grunnlag, AktivitetStatus.ATFL, BeregningsgrunnlagHjemmel.F_14_7_8_30);
         verifiserBeregningsgrunnlagBeregnet(grunnlag, 12 * månedsinntekt.doubleValue());
         assertThat(grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.AT).getAvvikProsent().doubleValue()).isCloseTo(0, within(0.0001));
         assertThat(grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.AT).getRapportertPrÅr()).isEqualTo(månedsinntekt.multiply(BigDecimal.valueOf(12)));
@@ -651,7 +651,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
         assertThat(regelResultat.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5038");
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_ARBEIDSTAKER, AktivitetStatus.ATFL, 12 * månedsinntektInntektsmelding.doubleValue());
-        verifiserBeregningsgrunnlagHjemmel(grunnlag, AktivitetStatus.ATFL, BeregningsgrunnlagHjemmel.F_14_7_8_28_8_30);
+        verifiserBeregningsgrunnlagHjemmel(grunnlag, AktivitetStatus.ATFL, BeregningsgrunnlagHjemmel.F_14_7_8_30);
         verifiserBeregningsgrunnlagBeregnet(grunnlag, 12 * månedsinntektInntektsmelding.doubleValue());
         assertThat(grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.AT).getAvvikProsent().doubleValue()).isCloseTo(50, within(0.0001));
         assertThat(grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.AT).getRapportertPrÅr()).isEqualTo((månedsinntekt.multiply(BigDecimal.valueOf(12))));
