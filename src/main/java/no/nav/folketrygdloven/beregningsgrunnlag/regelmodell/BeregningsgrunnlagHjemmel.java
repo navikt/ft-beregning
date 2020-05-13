@@ -31,7 +31,7 @@ public enum BeregningsgrunnlagHjemmel {
     public static final BeregningsgrunnlagHjemmel K9_HJEMMEL_FRILANSER_OG_SELVSTENDIG = F_9_9_8_42;
     public static final BeregningsgrunnlagHjemmel K9_HJEMMEL_ARBEIDSTAKER_OG_FRILANSER_OG_SELVSTENDIG = F_9_9_8_43;
 
-    public static final BeregningsgrunnlagHjemmel K14_HJEMMEL_BARE_ARBEIDSTAKER = F_14_7_8_28_8_30;
+    public static final BeregningsgrunnlagHjemmel K14_HJEMMEL_BARE_ARBEIDSTAKER = F_14_7_8_30;
     public static final BeregningsgrunnlagHjemmel K14_HJEMMEL_BARE_SELVSTENDIG = F_14_7_8_35;
     public static final BeregningsgrunnlagHjemmel K14_HJEMMEL_BARE_FRILANSER = F_14_7_8_38;
     public static final BeregningsgrunnlagHjemmel K14_HJEMMEL_ARBEIDSTAKER_OG_FRILANSER = F_14_7_8_40;

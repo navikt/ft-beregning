@@ -25,7 +25,7 @@ public class RegelmodellForDokumentasjon {
     protected static final BeregningsgrunnlagPeriode regelmodellMedEttArbeidsforhold =
             Beregningsgrunnlag.builder()
                 .medSkjæringstidspunkt(LocalDate.now())
-                .medAktivitetStatuser(Arrays.asList(new AktivitetStatusMedHjemmel(AktivitetStatus.ATFL, BeregningsgrunnlagHjemmel.F_14_7_8_28_8_30)))
+                .medAktivitetStatuser(Arrays.asList(new AktivitetStatusMedHjemmel(AktivitetStatus.ATFL, BeregningsgrunnlagHjemmel.F_14_7_8_30)))
                 .medInntektsgrunnlag(new Inntektsgrunnlag())
                 .medGrunnbeløpSatser(Arrays.asList(new Grunnbeløp(LocalDate.of(2000, Month.JANUARY, 1), LocalDate.of(2099,  Month.DECEMBER,  31), 90000L, 90000L)))
                 .medBeregningsgrunnlagPeriode(BeregningsgrunnlagPeriode.builder()
