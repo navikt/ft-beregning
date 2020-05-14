@@ -45,17 +45,17 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
         Map<String, Object> resultater = new HashMap<>();
         Inntektsgrunnlag inntektsgrunnlag = grunnlag.getInntektsgrunnlag();
-        LocalDate skjæringstidspunkt = grunnlag.getSkjæringstidspunkt();
-        List<Periode> perioderSomSkalBrukesForInntekter = FinnPerioderUtenYtelse.finnPerioder(inntektsgrunnlag, skjæringstidspunkt, resultater);
+        YtelsesSpesifiktGrunnlag ytelsesSpesifiktGrunnlag = grunnlag.getBeregningsgrunnlag().getYtelsesSpesifiktGrunnlag();
+        if (!(ytelsesSpesifiktGrunnlag instanceof FrisinnGrunnlag)) {
+            throw new IllegalStateException("Har ikke frisinngrunnlag for fastsetting av frilans, ugyldig tilstand");
+        }
+        FrisinnGrunnlag frisinnGrunnlag = (FrisinnGrunnlag) ytelsesSpesifiktGrunnlag;
+        LocalDate skjæringstidspunktOpptjening = frisinnGrunnlag.getSkjæringstidspunktOpptjening();
+        List<Periode> perioderSomSkalBrukesForInntekter = FinnPerioderUtenYtelse.finnPerioder(inntektsgrunnlag, skjæringstidspunktOpptjening, resultater);
 
         resultater.put("arbeidsforhold", arbeidsforhold.getBeskrivelse());
         BigDecimal årsinntekt;
         if (arbeidsforhold.erFrilanser()) {
-            YtelsesSpesifiktGrunnlag ytelsesSpesifiktGrunnlag = grunnlag.getBeregningsgrunnlag().getYtelsesSpesifiktGrunnlag();
-            if (!(ytelsesSpesifiktGrunnlag instanceof FrisinnGrunnlag)) {
-                throw new IllegalStateException("Har ikke frisinngrunnlag for fastsetting av frilans, ugyldig tilstand");
-            }
-            FrisinnGrunnlag frisinnGrunnlag = (FrisinnGrunnlag) ytelsesSpesifiktGrunnlag;
             if (frisinnGrunnlag.isErSøktYtelseForFrilans() && finnesIkkeInntektForFLFørFrist(grunnlag)) {
                 // Beregnes som nyoppstartet fl
                 perioderSomSkalBrukesForInntekter = lagMånederUtenYtelseEtterFørsteInntektsdag(grunnlag, perioderSomSkalBrukesForInntekter);
