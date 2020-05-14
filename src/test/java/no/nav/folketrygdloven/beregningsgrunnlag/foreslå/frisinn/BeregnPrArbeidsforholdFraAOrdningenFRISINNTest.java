@@ -12,6 +12,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.frisinn.FrisinnGrunnlag;
 
+import org.assertj.core.data.Percentage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -118,7 +119,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
         kjørRegel(beregningsgrunnlag, andel);
 
         // Assert
-        assertThat(andel.getBeregnetPrÅr().intValue()).isEqualTo(12);
+        assertThat(andel.getBeregnetPrÅr()).isCloseTo(BigDecimal.valueOf(4), Percentage.withPercentage(0.001));
     }
 
     @Test
@@ -135,7 +136,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
         kjørRegel(beregningsgrunnlag, andel);
 
         // Assert
-        assertThat(andel.getBeregnetPrÅr().intValue()).isEqualTo(12);
+        assertThat(andel.getBeregnetPrÅr()).isCloseTo(BigDecimal.valueOf(1), Percentage.withPercentage(0.001));
     }
 
 
@@ -154,7 +155,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
         kjørRegel(beregningsgrunnlag, andel);
 
         // Assert
-        assertThat(andel.getBeregnetPrÅr().intValue()).isEqualTo(12);
+        assertThat(andel.getBeregnetPrÅr()).isCloseTo(BigDecimal.valueOf(4), Percentage.withPercentage(0.001));
     }
 
     @Test
@@ -171,7 +172,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
         kjørRegel(beregningsgrunnlag, andel);
 
         // Assert
-        assertThat(andel.getBeregnetPrÅr().intValue()).isEqualTo(12);
+        assertThat(andel.getBeregnetPrÅr()).isCloseTo(BigDecimal.valueOf(2), Percentage.withPercentage(0.001));
     }
 
     @Test
@@ -191,7 +192,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
         kjørRegel(beregningsgrunnlag, andel);
 
         // Assert
-        assertThat(andel.getBeregnetPrÅr().intValue()).isEqualTo(12);
+        assertThat(andel.getBeregnetPrÅr()).isCloseTo(BigDecimal.valueOf(4.363636), Percentage.withPercentage(0.001));
     }
 
     @Test

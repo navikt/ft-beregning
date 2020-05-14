@@ -121,15 +121,13 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
     }
 
     private BigDecimal beregnÅrsinntektArbeidstaker(List<Periode> inntektsperioder, Inntektsgrunnlag inntektsgrunnlag, Map<String, Object> resultater) {
-        BigDecimal samletInntekt = BigDecimal.ZERO;
-        int antallPerioderMedInntekt = 0;
-        for (Periode periode : inntektsperioder) {
-            Optional<BigDecimal> inntektForPeriode = finnInntektForPeriode(periode, inntektsgrunnlag, resultater);
-            if (inntektForPeriode.isPresent()) {
-                antallPerioderMedInntekt++;
-                samletInntekt = samletInntekt.add(inntektForPeriode.get());
-            }
-        }
+        int antallPerioderMedInntekt = inntektsperioder.size();
+        BigDecimal samletInntekt = inntektsperioder.stream()
+            .map(p -> finnInntektForPeriode(p, inntektsgrunnlag, resultater))
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .reduce(BigDecimal::add)
+            .orElse(BigDecimal.ZERO);
         resultater.put("perioderMedInntekter ", antallPerioderMedInntekt);
         if (antallPerioderMedInntekt == 0) {
             return BigDecimal.ZERO;
