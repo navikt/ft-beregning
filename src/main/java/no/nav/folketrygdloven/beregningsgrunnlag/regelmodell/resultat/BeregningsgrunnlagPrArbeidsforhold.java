@@ -186,7 +186,7 @@ public class BeregningsgrunnlagPrArbeidsforhold {
     }
 
     public Boolean getFastsattAvSaksbehandler() {
-        return fastsattAvSaksbehandler;
+        return fastsattAvSaksbehandler != null && fastsattAvSaksbehandler;
     }
 
     public Boolean getLagtTilAvSaksbehandler() {
