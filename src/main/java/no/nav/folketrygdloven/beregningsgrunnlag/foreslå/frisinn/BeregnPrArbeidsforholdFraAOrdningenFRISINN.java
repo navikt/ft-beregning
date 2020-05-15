@@ -44,6 +44,10 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
         Map<String, Object> resultater = new HashMap<>();
+        if (arbeidsforhold.getFastsattAvSaksbehandler()) {
+            resultater.put("beregnetPrÅr", arbeidsforhold.getBeregnetPrÅr());
+            return beregnet(resultater);
+        }
         Inntektsgrunnlag inntektsgrunnlag = grunnlag.getInntektsgrunnlag();
         YtelsesSpesifiktGrunnlag ytelsesSpesifiktGrunnlag = grunnlag.getBeregningsgrunnlag().getYtelsesSpesifiktGrunnlag();
         if (!(ytelsesSpesifiktGrunnlag instanceof FrisinnGrunnlag)) {

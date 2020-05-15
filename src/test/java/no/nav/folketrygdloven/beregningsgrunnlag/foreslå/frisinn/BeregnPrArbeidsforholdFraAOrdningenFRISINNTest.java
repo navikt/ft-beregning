@@ -297,6 +297,26 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
         assertThat(andel.getBeregnetPrÅr().intValue()).isEqualTo(120);
     }
 
+
+    @Test
+    public void skal_bruke_oppgitt_inntekt_om_fastsatt_manuelt() {
+        // Arrange
+        BeregningsgrunnlagPrArbeidsforhold andel = BeregningsgrunnlagPrArbeidsforhold.builder().medFastsattAvSaksbehandler(true)
+            .medBeregnetPrÅr(BigDecimal.valueOf(20_000))
+            .medArbeidsforhold(ARBFOR_UTEN_REF).medAndelNr(1L).build();
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,2,1), LocalDate.of(2020,2,29)), ARBFOR_UTEN_REF, 10));
+
+        Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(inntektsgrunnlag, STP);
+
+        // Act
+        kjørRegel(Beregningsgrunnlag.builder(beregningsgrunnlag)
+            .medYtelsesSpesifiktGrunnlag(new FrisinnGrunnlag(true, STP))
+            .build(), andel);
+
+        // Assert
+        assertThat(andel.getBeregnetPrÅr().intValue()).isEqualTo(20_000);
+    }
+
     private Periodeinntekt byggYtelse(Periode periode) {
         return Periodeinntekt.builder()
             .medPeriode(periode)
