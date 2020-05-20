@@ -41,7 +41,7 @@ class FastsettStatusOgAndelPrPeriodeFRISINNTest {
 
         // Assert
         assertThat(statusListe.size()).isEqualTo(1);
-        assertThat(statusListe.get(0).getAktivitetStatus().equals(AktivitetStatus.SN));
+        assertThat(statusListe.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.SN);
 
     }
 
@@ -63,9 +63,52 @@ class FastsettStatusOgAndelPrPeriodeFRISINNTest {
 
         // Assert
         assertThat(statusListe.size()).isEqualTo(2);
-        assertThat(statusListe.get(0).getAktivitetStatus().equals(AktivitetStatus.ATFL));
-        assertThat(statusListe.get(1).getAktivitetStatus().equals(AktivitetStatus.SN));
+        assertThat(statusListe.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.ATFL);
+        assertThat(statusListe.get(1).getAktivitetStatus()).isEqualTo(AktivitetStatus.SN);
 
+    }
+
+    @Test
+    void skal_ikke_ta_med_andeler_som_starter_på_stp() {
+        // Arrange
+        AktivitetStatusModellFRISINN regelmodell = new AktivitetStatusModellFRISINN();
+        regelmodell.setSkjæringstidspunktForOpptjening(STP);
+        regelmodell.setSkjæringstidspunktForBeregning(STP);
+        Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
+        inntektsgrunnlag.leggTilPeriodeinntekt(lagSNInntekt());
+        inntektsgrunnlag.leggTilPeriodeinntekt(lagInntektForFL(Periode.of(STP.minusMonths(12), STP.minusMonths(11))));
+        regelmodell.setInntektsgrunnlag(inntektsgrunnlag);
+        regelmodell.leggTilEllerOppdaterAktivPeriode(AktivPeriode.forAndre(Aktivitet.NÆRINGSINNTEKT, Periode.of(STP.minusMonths(36), STP.plusMonths(12))));
+        regelmodell.leggTilEllerOppdaterAktivPeriode(AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(STP, STP.plusMonths(12)), "999999", null));
+
+        // Act
+        List<BeregningsgrunnlagPrStatus> statusListe = kjørRegel(regelmodell);
+
+        // Assert
+        assertThat(statusListe.size()).isEqualTo(1);
+        assertThat(statusListe.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.SN);
+    }
+
+    @Test
+    void skal_ta_med_andeler_som_slutter_på_stp() {
+        // Arrange
+        AktivitetStatusModellFRISINN regelmodell = new AktivitetStatusModellFRISINN();
+        regelmodell.setSkjæringstidspunktForOpptjening(STP);
+        regelmodell.setSkjæringstidspunktForBeregning(STP);
+        Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
+        inntektsgrunnlag.leggTilPeriodeinntekt(lagSNInntekt());
+        inntektsgrunnlag.leggTilPeriodeinntekt(lagInntektForFL(Periode.of(STP.minusMonths(12), STP.minusMonths(11))));
+        regelmodell.setInntektsgrunnlag(inntektsgrunnlag);
+        regelmodell.leggTilEllerOppdaterAktivPeriode(AktivPeriode.forAndre(Aktivitet.NÆRINGSINNTEKT, Periode.of(STP.minusMonths(36), STP.plusMonths(12))));
+        regelmodell.leggTilEllerOppdaterAktivPeriode(AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(STP.minusMonths(12), STP), "999999", null));
+
+        // Act
+        List<BeregningsgrunnlagPrStatus> statusListe = kjørRegel(regelmodell);
+
+        // Assert
+        assertThat(statusListe.size()).isEqualTo(2);
+        assertThat(statusListe.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.SN);
+        assertThat(statusListe.get(1).getAktivitetStatus()).isEqualTo(AktivitetStatus.ATFL);
     }
 
     private Periodeinntekt lagInntektForFL(Periode periode) {

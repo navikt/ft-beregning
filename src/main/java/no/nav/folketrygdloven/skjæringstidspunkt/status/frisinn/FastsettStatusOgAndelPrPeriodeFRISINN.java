@@ -65,7 +65,9 @@ public class FastsettStatusOgAndelPrPeriodeFRISINN extends LeafSpecification<Akt
     }
 
     private List<AktivPeriode> hentAktivePerioderPåSkjæringtidspunkt(LocalDate dato, List<AktivPeriode> aktivePerioder) {
-        return aktivePerioder.stream().filter(ap -> ap.inneholder(dato)).collect(Collectors.toList());
+        return aktivePerioder.stream()
+            .filter(ap -> ap.getPeriode().getFom().isBefore(dato))
+            .filter(ap -> ap.inneholder(dato)).collect(Collectors.toList());
     }
 
     private AktivitetStatus mapAktivitetTilStatus(Aktivitet aktivitet) {
