@@ -12,6 +12,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
@@ -20,7 +21,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.YtelsesSpesifiktGrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.frisinn.FrisinnGrunnlag;
-import no.nav.folketrygdloven.beregningsgrunnlag.util.Virkedager;
 import no.nav.folketrygdloven.skjæringstidspunkt.status.frisinn.FinnPerioderUtenYtelse;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
@@ -153,31 +153,6 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
     }
 
     private BigDecimal finnOppgittÅrsinntektFL(Inntektsgrunnlag inntektsgrunnlag, BeregningsgrunnlagPeriode grunnlag) {
-        List<Periodeinntekt> oppgittInntektFL = inntektsgrunnlag.getOppgittInntektFLIPeriode(grunnlag.getBeregningsgrunnlagPeriode());
-        if (oppgittInntektFL.isEmpty()) {
-            return BigDecimal.ZERO;
-        }
-        return oppgittInntektFL.stream()
-            .map(BeregnPrArbeidsforholdFraAOrdningenFRISINN::finnEffektivÅrsinntektForLøpenedeInntekt)
-            .reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
-    }
-
-    public static BigDecimal finnEffektivÅrsinntektForLøpenedeInntekt(Periodeinntekt oppgittInntekt) {
-        BigDecimal dagsats = finnEffektivDagsatsIPeriode(oppgittInntekt);
-        return dagsats.multiply(BigDecimal.valueOf(VIRKEDAGER_I_ET_ÅR));
-    }
-
-    /**
-     * Finner opptjent inntekt pr dag i periode
-     *
-     * @param oppgittInntekt Informasjon om oppgitt inntekt
-     * @return dagsats i periode
-     */
-    private static BigDecimal finnEffektivDagsatsIPeriode(Periodeinntekt oppgittInntekt) {
-        long dagerIRapportertPeriode = Virkedager.beregnAntallVirkedager(oppgittInntekt.getFom(), oppgittInntekt.getTom());
-        if (dagerIRapportertPeriode == 0) {
-            return BigDecimal.ZERO;
-        }
-        return oppgittInntekt.getInntekt().divide(BigDecimal.valueOf(dagerIRapportertPeriode), RoundingMode.HALF_UP);
+        return inntektsgrunnlag.getOppgittInntektForStatusIPeriode(AktivitetStatus.FL, grunnlag.getBeregningsgrunnlagPeriode());
     }
 }

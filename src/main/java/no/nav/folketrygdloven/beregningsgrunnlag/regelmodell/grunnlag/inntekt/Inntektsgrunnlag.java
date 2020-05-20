@@ -1,6 +1,7 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -10,10 +11,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
+import no.nav.folketrygdloven.beregningsgrunnlag.util.Virkedager;
 
 public class Inntektsgrunnlag {
+    public static final int VIRKEDAGER_I_ET_ÅR = 260;
     private int inntektRapporteringFristDag;
     private final List<Periodeinntekt> periodeinntekter = new ArrayList<>();
 
@@ -81,11 +85,37 @@ public class Inntektsgrunnlag {
             .max(Comparator.comparing(Periodeinntekt::getFom));
     }
 
-    public List<Periodeinntekt> getOppgittInntektFLIPeriode(Periode periode) {
-        return getPeriodeinntektMedKilde(Inntektskilde.SØKNAD)
-            .filter(Periodeinntekt::erFrilans)
+    public BigDecimal getOppgittInntektForStatusIPeriode(AktivitetStatus status, Periode periode) {
+        List<Periodeinntekt> periodeinntekter = getPeriodeinntektMedKilde(Inntektskilde.SØKNAD)
+            .filter(pi -> Objects.equals(pi.getAktivitetStatus(), status))
             .filter(i -> periode.overlapper(Periode.of(i.getFom(), i.getTom())))
             .collect(Collectors.toList());
+        if (periodeinntekter.isEmpty()) {
+            return BigDecimal.ZERO;
+        }
+        return periodeinntekter.stream()
+            .map(this::finnÅrsinntektForPeriode)
+            .reduce(BigDecimal::add)
+            .orElse(BigDecimal.ZERO);
+    }
+
+    private BigDecimal finnÅrsinntektForPeriode(Periodeinntekt oppgittInntekt) {
+        BigDecimal dagsats = finnEffektivDagsatsIPeriode(oppgittInntekt);
+        return dagsats.multiply(BigDecimal.valueOf(VIRKEDAGER_I_ET_ÅR));
+    }
+
+    /**
+     * Finner opptjent inntekt pr dag i periode
+     *
+     * @param oppgittInntekt Informasjon om oppgitt inntekt
+     * @return dagsats i periode
+     */
+    private BigDecimal finnEffektivDagsatsIPeriode(Periodeinntekt oppgittInntekt) {
+        long dagerIRapportertPeriode = Virkedager.beregnAntallVirkedager(oppgittInntekt.getFom(), oppgittInntekt.getTom());
+        if (dagerIRapportertPeriode == 0) {
+            return BigDecimal.ZERO;
+        }
+        return oppgittInntekt.getInntekt().divide(BigDecimal.valueOf(dagerIRapportertPeriode), RoundingMode.HALF_UP);
     }
 
     public BigDecimal getInntektFraInntektsmelding(BeregningsgrunnlagPrArbeidsforhold arbeidsforhold) {
