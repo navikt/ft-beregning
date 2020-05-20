@@ -115,7 +115,7 @@ public class Inntektsgrunnlag {
         if (dagerIRapportertPeriode == 0) {
             return BigDecimal.ZERO;
         }
-        return oppgittInntekt.getInntekt().divide(BigDecimal.valueOf(dagerIRapportertPeriode), RoundingMode.HALF_UP);
+        return oppgittInntekt.getInntekt().divide(BigDecimal.valueOf(dagerIRapportertPeriode), 10, RoundingMode.HALF_UP);
     }
 
     public BigDecimal getInntektFraInntektsmelding(BeregningsgrunnlagPrArbeidsforhold arbeidsforhold) {
