@@ -94,7 +94,7 @@ public class FinnPerioderUtenYtelse {
     private static List<Periode> finnPerioderMedYtelseFørDato(Inntektsgrunnlag inntektsgrunnlag, LocalDate skjæringstidspunktForBeregning) {
         return inntektsgrunnlag.getPeriodeinntekter()
             .stream()
-            .filter(i -> i.getInntektskilde().equals(Inntektskilde.YTELSER))
+            .filter(i -> i.getInntektskilde().equals(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP))
             .filter(i -> i.getFom().isBefore(skjæringstidspunktForBeregning))
             .map(i -> Periode.of(i.getFom(), i.getTom()))
             .sorted(Comparator.comparing(Periode::getFom))

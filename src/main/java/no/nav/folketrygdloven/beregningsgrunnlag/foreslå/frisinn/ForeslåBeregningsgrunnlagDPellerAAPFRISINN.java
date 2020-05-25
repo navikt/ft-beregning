@@ -1,5 +1,7 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.foreslå.frisinn;
 
+import static no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil.TIDENES_ENDE;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -39,6 +41,11 @@ class ForeslåBeregningsgrunnlagDPellerAAPFRISINN extends LeafSpecification<Bere
             .findFirst()
             .orElseThrow(() -> new IllegalStateException("Ingen aktivitetstatus av type DP eller AAP funnet."));
         Periode beregningsgrunnlagPeriode = grunnlag.getBeregningsgrunnlagPeriode();
+        if (beregningsgrunnlagPeriode.getTom().isEqual(TIDENES_ENDE)) {
+            BigDecimal beregnetPrÅr = BigDecimal.ZERO;
+            Map<String, Object> resultater = settBeregnetOgHjemmel(grunnlag, bgPerStatus, beregnetPrÅr, 0L);
+            return beregnet(resultater);
+        }
         List<Periodeinntekt> overlappendeMeldkortListe = grunnlag.getInntektsgrunnlag().getPeriodeinntekter().stream()
             .filter(pi -> pi.getInntektskilde().equals(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP))
             .filter(pi -> Periode.of(pi.getFom(), pi.getTom()).overlapper(beregningsgrunnlagPeriode))
@@ -64,19 +71,22 @@ class ForeslåBeregningsgrunnlagDPellerAAPFRISINN extends LeafSpecification<Bere
         BigDecimal originalDagsats = virkedagerIPeriode == 0 ? BigDecimal.ZERO :
             totalInntektFraMeldekortIPeriode.divide(BigDecimal.valueOf(virkedagerIPeriode), 10, RoundingMode.HALF_EVEN);
         BigDecimal beregnetPrÅr = originalDagsats.multiply(BigDecimal.valueOf(260));
+        Map<String, Object> resultater = settBeregnetOgHjemmel(grunnlag, bgPerStatus, beregnetPrÅr, originalDagsats.longValue());
+        return beregnet(resultater);
+    }
+
+    private Map<String, Object> settBeregnetOgHjemmel(BeregningsgrunnlagPeriode grunnlag, BeregningsgrunnlagPrStatus bgPerStatus, BigDecimal beregnetPrÅr, long l) {
         BeregningsgrunnlagPrStatus.builder(bgPerStatus)
             .medBeregnetPrÅr(beregnetPrÅr)
             .medÅrsbeløpFraTilstøtendeYtelse(beregnetPrÅr)
-            .medOrginalDagsatsFraTilstøtendeYtelse(originalDagsats.longValue())
+            .medOrginalDagsatsFraTilstøtendeYtelse(l)
             .build();
-
         BeregningsgrunnlagHjemmel hjemmel = BeregningsgrunnlagHjemmel.KORONALOVEN_3;
         grunnlag.getBeregningsgrunnlag().getAktivitetStatus(bgPerStatus.getAktivitetStatus()).setHjemmel(hjemmel);
-
         Map<String, Object> resultater = new HashMap<>();
         resultater.put("beregnetPrÅr." + bgPerStatus.getAktivitetStatus().name(), beregnetPrÅr);
         resultater.put("tilstøtendeYtelserPrÅr." + bgPerStatus.getAktivitetStatus().name(), beregnetPrÅr);
         resultater.put("hjemmel", hjemmel);
-        return beregnet(resultater);
+        return resultater;
     }
 }

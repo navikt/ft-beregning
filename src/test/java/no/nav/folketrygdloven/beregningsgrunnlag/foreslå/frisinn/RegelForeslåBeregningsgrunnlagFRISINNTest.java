@@ -1,6 +1,7 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.foreslå.frisinn;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
@@ -9,6 +10,8 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.In
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.frisinn.FrisinnGrunnlag;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +24,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.GRUNNBELØPLISTE;
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.GRUNNBELØP_2017;
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.GSNITT_2016;
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.GSNITT_2017;
@@ -146,17 +150,17 @@ class RegelForeslåBeregningsgrunnlagFRISINNTest {
         BigDecimal utbetalingsgrad = new BigDecimal("150");
         BigDecimal dagsats = BigDecimal.valueOf(900);
         Inntektsgrunnlag inntektsgrunnlag = lagSnInntekter(5, 5, 5);
-        inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
-            .medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP)
-            .medMåned(skjæringstidspunkt)
-            .medInntekt(dagsats)
-            .medUtbetalingsgrad(utbetalingsgrad)
-            .build());
+        leggTilYtelse36MånederFør(utbetalingsgrad, dagsats, inntektsgrunnlag, LocalDate.of(2020, 4, 1));
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag,
             List.of(AktivitetStatus.SN, AktivitetStatus.DP));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        // Endre på periode slik at den varer en måned og ikkje går til uendelig
+        BeregningsgrunnlagPeriode.builder(grunnlag)
+            .medPeriode(Periode.of(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30)));
+
         // Act
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlagFRISINN(grunnlag).evaluer(grunnlag);
+
         // Assert
         @SuppressWarnings("unused")
         String sporing = EvaluationSerializer.asJson(evaluation);
@@ -164,7 +168,7 @@ class RegelForeslåBeregningsgrunnlagFRISINNTest {
         double expectedbruttoDP = dagsats.doubleValue() * 260 * utbetalingsgrad.intValue()/200;
         double expectedPGIsnitt = 5.0 * GSNITT_2019;
         double expectedBruttoSN = 5.0 * GSNITT_2019;
-        verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.F_14_7_8_49, AktivitetStatus.DP, expectedbruttoDP);
+        verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.KORONALOVEN_3, AktivitetStatus.DP, expectedbruttoDP);
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_SELVSTENDIG, AktivitetStatus.SN, expectedBruttoSN, expectedPGIsnitt);
         verifiserBeregningsgrunnlagBeregnet(grunnlag, expectedbruttoDP + expectedBruttoSN);
     }
@@ -177,19 +181,17 @@ class RegelForeslåBeregningsgrunnlagFRISINNTest {
         BigDecimal dagsatsAAP = BigDecimal.valueOf(700);
         BigDecimal månedsinntektATFL = BigDecimal.valueOf(20000);
         Inntektsgrunnlag inntektsgrunnlag = lagSnInntekter(6, 6, 6);
-
         List<BigDecimal> månedsinntekter = Collections.nCopies(12, månedsinntektATFL);
         leggTilMånedsinntekter(inntektsgrunnlag, skjæringstidspunkt, månedsinntekter, Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold);
-
-        inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
-            .medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP).medUtbetalingsgrad(utbetalingsgrad)
-            .medInntekt(dagsatsAAP).medMåned(skjæringstidspunkt).build());
-
+        leggTilYtelse36MånederFør(utbetalingsgrad, dagsatsAAP, inntektsgrunnlag, LocalDate.of(2020, 4, 1));
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag,
             List.of(AktivitetStatus.ATFL_SN, AktivitetStatus.AAP), Collections.singletonList(arbeidsforhold),
             Collections.emptyList());
-
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        // Endre på periode slik at den varer en måned og ikkje går til uendelig
+        BeregningsgrunnlagPeriode.builder(grunnlag)
+            .medPeriode(Periode.of(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30)));
+
         // Act
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlagFRISINN(grunnlag).evaluer(grunnlag);
         // Assert
@@ -200,7 +202,7 @@ class RegelForeslåBeregningsgrunnlagFRISINNTest {
         double expectedPGIsnitt = 6.0 * GSNITT_2019;
         double expectedBruttoATFL = 12 * månedsinntektATFL.doubleValue();
         double expectedBruttoSN = 6.0 * GSNITT_2019;
-        verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.F_14_7, AktivitetStatus.AAP, expectedbruttoAAP);
+        verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.KORONALOVEN_3, AktivitetStatus.AAP, expectedbruttoAAP);
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, AktivitetStatus.ATFL, expectedBruttoATFL);
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, AktivitetStatus.SN, expectedBruttoSN, expectedPGIsnitt);
         verifiserBeregningsgrunnlagBeregnet(grunnlag, expectedbruttoAAP + expectedBruttoSN + expectedBruttoATFL);
@@ -266,6 +268,17 @@ class RegelForeslåBeregningsgrunnlagFRISINNTest {
             årsinntekterFor2SisteÅr(g2017, g2018), Inntektskilde.SIGRUN);
         leggTilSøknadsinntekt(inntektsgrunnlag, BigDecimal.valueOf(GSNITT_2019).multiply(BigDecimal.valueOf(g2019)));
         return inntektsgrunnlag;
+    }
+
+    private void leggTilYtelse36MånederFør(BigDecimal utbetalingsgrad, BigDecimal dagsats, Inntektsgrunnlag inntektsgrunnlag, LocalDate dato) {
+        for (int i = 0; i < 36; i++) {
+            inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
+                .medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP)
+                .medMåned(dato.minusMonths(i))
+                .medInntekt(dagsats)
+                .medUtbetalingsgrad(utbetalingsgrad)
+                .build());
+        }
     }
 
 }
