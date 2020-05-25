@@ -29,10 +29,17 @@ public class RegelBeregningsgrunnlagATFLFRISINN implements RuleService<Beregning
             rs.beregningsRegel("FRISINN 2.10", "Fastsett beregnet pr år for ATFL",
                 new FastsettBeregnetPrÅrFRISINN(), new Beregnet());
 
+        Specification<BeregningsgrunnlagPeriode> vurderMotOppgittArbeidstakerinntekt =
+            rs.beregningsRegel("FRISINN 2.9", "Vurder brutto fra register oppmot oppgitt arbeidstakerinntekt",
+                new RegelVurderRegisterinntektMotOppgittInntektATFLFRISINN(), fastsettBeregnetPrÅr);
+
+        Specification<BeregningsgrunnlagPeriode> harInntektForATFLBlittManueltFastsatt =
+            rs.beregningHvisRegel(new SjekkManueltFastsattAvSBH(), fastsettBeregnetPrÅr, vurderMotOppgittArbeidstakerinntekt);
+
         List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = regelmodell.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
         Specification<BeregningsgrunnlagPeriode> beregningsgrunnlagATFL =
                 rs.beregningsRegel("FRISINN 2.X", "Fastsett beregningsgrunnlag pr arbeidsforhold",
-                    RegelBeregnBruttoPrArbeidsforholdFRISINN.class, regelmodell, "arbeidsforhold", arbeidsforhold, fastsettBeregnetPrÅr);
+                    RegelBeregnBruttoPrArbeidsforholdFRISINN.class, regelmodell, "arbeidsforhold", arbeidsforhold, harInntektForATFLBlittManueltFastsatt);
 
         return beregningsgrunnlagATFL;
     }
