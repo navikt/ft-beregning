@@ -21,7 +21,6 @@ class FastsettSkjæringstidspunktFørPeriodeMedYtelse extends LeafSpecification<
 
     static final String ID = "FP_BR 21.5";
     static final String BESKRIVELSE = "Skjæringstidspunkt for beregning settes til første dag etter siste aktivitetsdag";
-    static final String VENT = "8000";
 
     FastsettSkjæringstidspunktFørPeriodeMedYtelse() {
         super(ID, BESKRIVELSE);
@@ -31,9 +30,6 @@ class FastsettSkjæringstidspunktFørPeriodeMedYtelse extends LeafSpecification<
     public Evaluation evaluate(AktivitetStatusModellFRISINN regelmodell) {
         Map<String, Object> resultater = new HashMap<>();
         List<Periode> perioder = finnBeregningsperioder(regelmodell, resultater);
-        if (perioder.isEmpty()) {
-            return nei(new RuleReasonRefImpl(VENT, "Ingen perioder uten ytelse 3 siste år"));
-        }
         resultater.put("beregningsperioder", "Perioder: " + perioder.stream().map(Periode::toString).reduce("", (p1, p2) -> p1 + ", " + p2));
         regelmodell.setBeregningsperioder(perioder);
         LocalDate sisteDatoIBeregningsperioden = perioder.stream().map(Periode::getTom)

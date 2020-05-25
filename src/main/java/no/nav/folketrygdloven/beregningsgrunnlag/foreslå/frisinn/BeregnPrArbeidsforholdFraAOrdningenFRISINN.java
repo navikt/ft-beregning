@@ -55,7 +55,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
         }
         FrisinnGrunnlag frisinnGrunnlag = (FrisinnGrunnlag) ytelsesSpesifiktGrunnlag;
         LocalDate skjæringstidspunktOpptjening = frisinnGrunnlag.getSkjæringstidspunktOpptjening();
-        List<Periode> perioderSomSkalBrukesForInntekter = FinnPerioderUtenYtelse.finnPerioder(inntektsgrunnlag, skjæringstidspunktOpptjening, resultater);
+        List<Periode> perioderSomSkalBrukesForInntekter = FinnPerioderUtenYtelse.finnPerioder(inntektsgrunnlag, skjæringstidspunktOpptjening);
 
         resultater.put("arbeidsforhold", arbeidsforhold.getBeskrivelse());
         BigDecimal årsinntekt;
@@ -69,7 +69,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
                 ? beregnÅrsinntektFrilans(perioderSomSkalBrukesForInntekter, inntektsgrunnlag, grunnlag, resultater)
                 : finnOppgittÅrsinntektFL(inntektsgrunnlag, grunnlag);
         } else {
-            årsinntekt = beregnÅrsinntektArbeidstaker(perioderSomSkalBrukesForInntekter, inntektsgrunnlag, resultater);
+            årsinntekt = beregnÅrsinntektArbeidstaker(perioderSomSkalBrukesForInntekter, inntektsgrunnlag, grunnlag, resultater);
         }
 
         BeregningsgrunnlagPrArbeidsforhold.builder(arbeidsforhold)
@@ -124,8 +124,14 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
         return årslønnFraRegister.max(årsinntektFraSøknad);
     }
 
-    private BigDecimal beregnÅrsinntektArbeidstaker(List<Periode> inntektsperioder, Inntektsgrunnlag inntektsgrunnlag, Map<String, Object> resultater) {
+    private BigDecimal beregnÅrsinntektArbeidstaker(List<Periode> inntektsperioder, Inntektsgrunnlag inntektsgrunnlag, BeregningsgrunnlagPeriode grunnlag, Map<String, Object> resultater) {
         int antallPerioderMedInntekt = inntektsperioder.size();
+        if (antallPerioderMedInntekt == 0) {
+            BigDecimal månedslønn = inntektsgrunnlag.getPeriodeinntekter(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold, grunnlag.getBeregningsgrunnlagPeriode().getFom(), 0).stream()
+                .reduce(BigDecimal::add)
+                .orElse(BigDecimal.ZERO);
+            return månedslønn.multiply(ANTALL_MÅNEDER_I_ÅR);
+        }
         BigDecimal samletInntekt = inntektsperioder.stream()
             .map(p -> finnInntektForPeriode(p, inntektsgrunnlag, resultater))
             .filter(Optional::isPresent)
@@ -133,9 +139,6 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
             .reduce(BigDecimal::add)
             .orElse(BigDecimal.ZERO);
         resultater.put("perioderMedInntekter ", antallPerioderMedInntekt);
-        if (antallPerioderMedInntekt == 0) {
-            return BigDecimal.ZERO;
-        }
         BigDecimal antallPerioder = BigDecimal.valueOf(antallPerioderMedInntekt);
         BigDecimal snittMånedslønn =  samletInntekt.divide(antallPerioder, 10, RoundingMode.HALF_EVEN);
         return snittMånedslønn.multiply(ANTALL_MÅNEDER_I_ÅR);
