@@ -56,7 +56,7 @@ class RegelVurderRegisterinntektMotOppgittInntektATFLFRISINN extends LeafSpecifi
             for (BeregningsgrunnlagPrArbeidsforhold arbfor : arbeidsforhold) {
                 BigDecimal andelAvTotalInntekt = finnAndelAvTotaltGrunnlag(arbfor, totalATInntekt);
                 BigDecimal nyArbeidsinntekt = andelAvTotalInntekt.multiply(oppgittArbeidsinntekt);
-                byggNyAndel(arbfor, nyArbeidsinntekt);
+                endreEksisterendeAndel(arbfor, nyArbeidsinntekt);
             }
         }
     }
@@ -65,11 +65,11 @@ class RegelVurderRegisterinntektMotOppgittInntektATFLFRISINN extends LeafSpecifi
         int antallArbfor = arbeidsforhold.size();
         arbeidsforhold.forEach(arbfor -> {
             BigDecimal nyArbeidsinntekt = oppgittArbeidsinntekt.divide(BigDecimal.valueOf(antallArbfor), 10, RoundingMode.HALF_EVEN);
-            byggNyAndel(arbfor, nyArbeidsinntekt);
+            endreEksisterendeAndel(arbfor, nyArbeidsinntekt);
         });
     }
 
-    private void byggNyAndel(BeregningsgrunnlagPrArbeidsforhold arbfor, BigDecimal nyArbeidsinntekt) {
+    private void endreEksisterendeAndel(BeregningsgrunnlagPrArbeidsforhold arbfor, BigDecimal nyArbeidsinntekt) {
         BeregningsgrunnlagPrArbeidsforhold.builder(arbfor)
             .medOverstyrtPrÅr(nyArbeidsinntekt)
             .build();

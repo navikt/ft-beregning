@@ -28,7 +28,6 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(BeregnPrArbeidsforholdFraAOrdningenFRISINN.ID)
 class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<BeregningsgrunnlagPeriode> {
-    public static final int VIRKEDAGER_I_ET_ÅR = 260;
     private static final BigDecimal ANTALL_MÅNEDER_I_ÅR = BigDecimal.valueOf(12);
     private static final LocalDate NYOPPSTARTET_FL_GRENSE = LocalDate.of(2019, 3, 1);
     static final String ID = "FRISINN 2.3";

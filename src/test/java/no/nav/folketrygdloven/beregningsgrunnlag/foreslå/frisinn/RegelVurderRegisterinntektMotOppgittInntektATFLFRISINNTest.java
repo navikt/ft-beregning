@@ -32,16 +32,8 @@ class RegelVurderRegisterinntektMotOppgittInntektATFLFRISINNTest {
     private static final LocalDate STP = LocalDate.of(2020,4,1);
     private static final Arbeidsforhold ARBFOR_MED_REF = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("999999999", "ARBFOR-REF");
     private static final Arbeidsforhold ARBFOR_UTEN_REF = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("999999999");
-    private static final Arbeidsforhold ARBFOR_FL = Arbeidsforhold.frilansArbeidsforhold();
-    public static final Arbeidsforhold FRILANS_ARBEIDSFORHOLD = Arbeidsforhold.frilansArbeidsforhold();
 
-    private static Inntektsgrunnlag inntektsgrunnlag;
-
-    @BeforeEach
-    void setup() {
-        inntektsgrunnlag = new Inntektsgrunnlag();
-    }
-
+    private Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
 
     @Test
     public void skal_bare_returnere_beregnet_om_oppgitt_inntekt_ikke_finnes() {
