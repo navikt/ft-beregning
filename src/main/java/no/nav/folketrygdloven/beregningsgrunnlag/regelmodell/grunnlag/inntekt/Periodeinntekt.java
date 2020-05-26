@@ -61,6 +61,10 @@ public class Periodeinntekt {
         return Inntektskilde.INNTEKTSMELDING.equals(inntektskilde);
     }
 
+    public AktivitetStatus getAktivitetStatus() {
+        return aktivitetStatus;
+    }
+
     public boolean erInnenforPeriode(Periode periode) {
         return !getFom().isBefore(periode.getFom()) && !getTom().isAfter(periode.getTom());
     }
