@@ -16,7 +16,7 @@ import java.util.Map;
 @RuleDocumentation(FastsettBeregningsperiodeSNFRISINN.ID)
 public class FastsettBeregningsperiodeSNFRISINN extends LeafSpecification<BeregningsgrunnlagPeriode> {
 
-    private static final BeregningsgrunnlagHjemmel HJEMMEL = BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_SELVSTENDIG;
+    private static final BeregningsgrunnlagHjemmel HJEMMEL = BeregningsgrunnlagHjemmel.KORONALOVEN_3;
     private static final LocalDate BG_PERIODE_FOM = LocalDate.of(2017,1,1);
     private static final LocalDate BG_PERIODE_TOM = LocalDate.of(2019,12,31);
     static final String ID = "FRISINN 2.4";

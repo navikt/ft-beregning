@@ -46,8 +46,7 @@ public class RegelForeslåBeregningsgrunnlagPrStatusFRISINN extends DynamicRuleS
             RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNFRISINN regelFastsetteBeregningsgrunnlagForKombinasjonATFLSN = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNFRISINN(regelmodell);
             return regelFastsetteBeregningsgrunnlagForKombinasjonATFLSN.getSpecification().medScope(arg);
         } else if (AktivitetStatus.AAP.equals(aktivitetStatus) || AktivitetStatus.DP.equals(aktivitetStatus)) {
-            RegelFastsettBeregningsgrunnlagDPellerAAP regelFastsettBeregningsgrunnlagDPellerAAP = new RegelFastsettBeregningsgrunnlagDPellerAAP();
-            return regelFastsettBeregningsgrunnlagDPellerAAP.getSpecification().medScope(arg);
+            return new ForeslåBeregningsgrunnlagDPellerAAPFRISINN();
         }
 
         return new RegelForeslåBeregningsgrunnlagTilNull().medServiceArgument(arg).getSpecification();

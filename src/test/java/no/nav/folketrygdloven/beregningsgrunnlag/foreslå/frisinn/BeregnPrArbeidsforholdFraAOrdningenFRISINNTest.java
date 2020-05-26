@@ -321,7 +321,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
         return Periodeinntekt.builder()
             .medPeriode(periode)
             .medInntekt(BigDecimal.ONE)
-            .medInntektskildeOgPeriodeType(Inntektskilde.YTELSER)
+            .medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP)
             .build();
     }
 

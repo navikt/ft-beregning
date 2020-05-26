@@ -19,10 +19,18 @@ public class FinnPerioderUtenYtelse {
         // Vedskjul
     }
 
+    public static List<Periode> finnPerioder(Inntektsgrunnlag inntektsgrunnlag, LocalDate skjæringstidspunktForOpptjening) {
+        List<Periode> ytelseperioder = finnPerioderMedYtelseFørDato(inntektsgrunnlag, skjæringstidspunktForOpptjening);
+        return finnPerioderUtenYtelse(skjæringstidspunktForOpptjening, ytelseperioder);
+    }
+
     public static List<Periode> finnPerioder(Inntektsgrunnlag inntektsgrunnlag, LocalDate skjæringstidspunktForOpptjening, Map<String, Object> resultater) {
         List<Periode> ytelseperioder = finnPerioderMedYtelseFørDato(inntektsgrunnlag, skjæringstidspunktForOpptjening);
         ytelseperioder.forEach(p -> resultater.put("Periode: " + p.getFom() + " - " + p.getTom(), "Ytelseperiode"));
+        return finnPerioderUtenYtelse(skjæringstidspunktForOpptjening, ytelseperioder);
+    }
 
+    private static List<Periode> finnPerioderUtenYtelse(LocalDate skjæringstidspunktForOpptjening, List<Periode> ytelseperioder) {
         if (ytelseperioder.isEmpty()) {
             List<Periode> beregningsperioder = new ArrayList<>();
             leggTilMånederMellom(beregningsperioder, skjæringstidspunktForOpptjening.minusMonths(13), skjæringstidspunktForOpptjening);
@@ -35,8 +43,6 @@ public class FinnPerioderUtenYtelse {
         List<Periode> perioderEtter12MndFørStp = finnPerioderUtenYtelse12MndFørStp(skjæringstidspunktForOpptjening, beregningsperioder);
         return finnMinst6MndUtenYtelse(beregningsperioder, perioderEtter12MndFørStp);
     }
-
-
 
     private static List<Periode> finnMinst6MndUtenYtelse(List<Periode> beregningsperioder, List<Periode> perioderEtter12MndFørStp) {
         if (perioderEtter12MndFørStp.size() >= 6) {
@@ -88,7 +94,7 @@ public class FinnPerioderUtenYtelse {
     private static List<Periode> finnPerioderMedYtelseFørDato(Inntektsgrunnlag inntektsgrunnlag, LocalDate skjæringstidspunktForBeregning) {
         return inntektsgrunnlag.getPeriodeinntekter()
             .stream()
-            .filter(i -> i.getInntektskilde().equals(Inntektskilde.YTELSER))
+            .filter(i -> i.getInntektskilde().equals(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP))
             .filter(i -> i.getFom().isBefore(skjæringstidspunktForBeregning))
             .map(i -> Periode.of(i.getFom(), i.getTom()))
             .sorted(Comparator.comparing(Periode::getFom))
