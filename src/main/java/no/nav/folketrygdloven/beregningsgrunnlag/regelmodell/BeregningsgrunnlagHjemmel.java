@@ -22,7 +22,6 @@ public enum BeregningsgrunnlagHjemmel {
     F_14_7_8_47,
     F_14_7_8_49,
 
-
     KORONALOVEN_3;
 
     public static final BeregningsgrunnlagHjemmel K9_HJEMMEL_BARE_ARBEIDSTAKER_REFUSJON = F_9_8_8_28;
