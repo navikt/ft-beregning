@@ -42,7 +42,7 @@ class FinnPerioderUtenYtelseTest {
         Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
         LocalDate stp = LocalDate.of(2020, 3, 15);
         inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
-            .medInntektskildeOgPeriodeType(Inntektskilde.YTELSER)
+            .medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP)
             .medInntekt(BigDecimal.TEN)
             .medPeriode(Periode.of(LocalDate.of(2019, 10, 1), LocalDate.of(2020, 2, 29)))
             .build());
@@ -67,7 +67,7 @@ class FinnPerioderUtenYtelseTest {
         Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
         LocalDate stp = LocalDate.of(2020, 3, 15);
         inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
-            .medInntektskildeOgPeriodeType(Inntektskilde.YTELSER)
+            .medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP)
             .medInntekt(BigDecimal.TEN)
             .medPeriode(Periode.of(LocalDate.of(2019, 9, 1), LocalDate.of(2020, 2, 29)))
             .build());
@@ -91,7 +91,7 @@ class FinnPerioderUtenYtelseTest {
         Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
         LocalDate stp = LocalDate.of(2020, 3, 1);
         inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
-            .medInntektskildeOgPeriodeType(Inntektskilde.YTELSER)
+            .medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP)
             .medInntekt(BigDecimal.TEN)
             .medPeriode(Periode.of(LocalDate.of(2019, 3, 1), LocalDate.of(2019, 8, 31)))
             .build());
@@ -195,7 +195,7 @@ class FinnPerioderUtenYtelseTest {
 
     private Periodeinntekt byggYtelse(Periode periode) {
         return Periodeinntekt.builder()
-            .medInntektskildeOgPeriodeType(Inntektskilde.YTELSER)
+            .medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP)
             .medInntekt(BigDecimal.TEN)
             .medPeriode(periode)
             .build();

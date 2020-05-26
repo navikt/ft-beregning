@@ -20,7 +20,9 @@ public enum BeregningsgrunnlagHjemmel {
     F_14_7_8_42,
     F_14_7_8_43,
     F_14_7_8_47,
-    F_14_7_8_49;
+    F_14_7_8_49,
+
+    KORONALOVEN_3;
 
     public static final BeregningsgrunnlagHjemmel K9_HJEMMEL_BARE_ARBEIDSTAKER_REFUSJON = F_9_8_8_28;
     public static final BeregningsgrunnlagHjemmel K9_HJEMMEL_BARE_ARBEIDSTAKER_DIREKTE_UTBETALING = F_9_9_8_28_8_30;

@@ -38,25 +38,7 @@ class FastsettBeregnetPrÅrFRISINN extends LeafSpecification<BeregningsgrunnlagP
 
     private BeregningsgrunnlagHjemmel settHjemmelForATFL(Beregningsgrunnlag grunnlag, BeregningsgrunnlagPrStatus bgps) {
         AktivitetStatusMedHjemmel status = grunnlag.getAktivitetStatus(AktivitetStatus.ATFL);
-        boolean kombinasjon = status.getAktivitetStatus().equals(AktivitetStatus.ATFL_SN);
-        boolean arbeidstaker = !bgps.getArbeidsforholdIkkeFrilans().isEmpty();
-        boolean frilans = bgps.getFrilansArbeidsforhold().isPresent();
-        BeregningsgrunnlagHjemmel hjemmel;
-        if (arbeidstaker) {
-            if (kombinasjon) {
-                hjemmel = (frilans ? BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_FRILANSER_OG_SELVSTENDIG : BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG);
-            } else {
-                hjemmel = (frilans ? BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_FRILANSER : BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_ARBEIDSTAKER);
-            }
-        } else if (frilans) {
-            if (kombinasjon) {
-                hjemmel = (BeregningsgrunnlagHjemmel.K14_HJEMMEL_FRILANSER_OG_SELVSTENDIG);
-            } else {
-                hjemmel = (BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_FRILANSER);
-            }
-        } else {
-            throw new IllegalStateException("ATFL-andel mangler både arbeidsforhold og frilansaktivitet");
-        }
+        BeregningsgrunnlagHjemmel hjemmel = BeregningsgrunnlagHjemmel.KORONALOVEN_3;
         status.setHjemmel(hjemmel);
         return hjemmel;
     }
