@@ -57,21 +57,21 @@ public class FastsettPeriodeRegel {
                 .filter(ArbeidsforholdOgInntektsmelding::erNyAktivitet)
                 .filter(im -> !im.slutterFørSkjæringstidspunkt(input.getSkjæringstidspunkt()))
                 .filter(im -> harRefusjonIPeriode(im, periodeFom)
-                    || harGraderingIPeriode(im, periodeFom))
+                    || harGraderingFørPeriode(im, periodeFom))
                 .map(im -> mapSplittetAndel(im, periodeFom))
                 .collect(Collectors.toList());
 
             nyeAndeler.addAll(input.getAndelGraderinger().stream()
                 .filter(AndelGradering::erNyAktivitet)
                 .filter(andel -> andel.getAktivitetStatus().equals(AktivitetStatusV2.SN) || andel.getAktivitetStatus().equals(AktivitetStatusV2.FL))
-                .filter(andel -> harGraderingIPeriode(andel, periodeFom))
+                .filter(andel -> harGraderingFørPeriode(andel, periodeFom))
                 .map(FastsettPeriodeRegel::mapSplittetAndelFLSN)
                 .collect(Collectors.toList()));
 
             nyeAndeler.addAll(input.getEndringerISøktYtelse().stream()
                     .filter(AndelGradering::erNyAktivitet)
                     .filter(andel -> harUtbetalingIPeriode(andel, periodeFom))
-                    .map(gradering -> mapSplittetAndel(gradering))
+                    .map(FastsettPeriodeRegel::mapSplittetAndel)
                     .collect(Collectors.toList()));
 
             LocalDate tom = utledPeriodeTom(entries, listIterator);
@@ -103,9 +103,9 @@ public class FastsettPeriodeRegel {
             .anyMatch(refusjonskrav -> refusjonskrav.getMånedsbeløp().compareTo(BigDecimal.ZERO) > 0);
     }
 
-    private static boolean harGraderingIPeriode(AndelGradering im, LocalDate periodeFom) {
+    private static boolean harGraderingFørPeriode(AndelGradering im, LocalDate periodeFom) {
         return im.getGraderinger().stream()
-            .anyMatch(gradering -> gradering.getPeriode().inneholder(periodeFom));
+            .anyMatch(gradering -> !gradering.getPeriode().getFom().isAfter(periodeFom));
     }
 
     private static SplittetAndel mapSplittetAndelFLSN(AndelGradering im) {
