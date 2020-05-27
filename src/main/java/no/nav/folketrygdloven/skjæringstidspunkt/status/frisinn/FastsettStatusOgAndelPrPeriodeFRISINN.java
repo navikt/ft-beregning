@@ -13,6 +13,8 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
+import no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivPeriode;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModell;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModellFRISINN;
@@ -53,8 +55,7 @@ public class FastsettStatusOgAndelPrPeriodeFRISINN extends LeafSpecification<Akt
             AktivitetStatusModellFRISINN regelModellFrisinn = (AktivitetStatusModellFRISINN) regelmodell;
             Inntektsgrunnlag inntektsgrunnlag = regelModellFrisinn.getInntektsgrunnlag();
             harPerioderUtenYtelse = !FinnPerioderUtenYtelse.finnPerioder(inntektsgrunnlag, regelmodell.getSkjæringstidspunktForOpptjening()).isEmpty();
-            List<BigDecimal> inntekterSisteÅret = inntektsgrunnlag.getFrilansPeriodeinntekter(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, regelmodell.getSkjæringstidspunktForOpptjening(), MND_FØR_STP_MED_FL_INNTEKT);
-            harFrilansinntektSisteÅret = !inntekterSisteÅret.isEmpty();
+            harFrilansinntektSisteÅret = harFrilansinntektEllerHarOppgittFL(regelmodell.getSkjæringstidspunktForOpptjening(), regelModellFrisinn);;
         }
         for (AktivPeriode ap : aktivePerioderVedStp) {
             AktivitetStatus aktivitetStatus = mapAktivitetTilStatus(ap.getAktivitet(), harPerioderUtenYtelse);
@@ -65,6 +66,17 @@ public class FastsettStatusOgAndelPrPeriodeFRISINN extends LeafSpecification<Akt
             var arbeidsforhold = AktivitetStatus.ATFL.equals(aktivitetStatus) ? ap.getArbeidsforhold() : null;
             regelmodell.leggTilBeregningsgrunnlagPrStatus(new BeregningsgrunnlagPrStatus(aktivitetStatus, arbeidsforhold));
         }
+    }
+
+    private boolean harFrilansinntektEllerHarOppgittFL(LocalDate stpOpptjening, AktivitetStatusModellFRISINN regelModellFrisinn) {
+        Inntektsgrunnlag inntektsgrunnlag = regelModellFrisinn.getInntektsgrunnlag();
+        List<BigDecimal> flInntekterFraRegister = inntektsgrunnlag.getFrilansPeriodeinntekter(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, stpOpptjening, MND_FØR_STP_MED_FL_INNTEKT);
+        if (!flInntekterFraRegister.isEmpty()) {
+            return true;
+        }
+        Periode periodeEtterSTP = Periode.of(stpOpptjening, DateUtil.TIDENES_ENDE);
+        List<Periodeinntekt> oppgittFLInntektEtterSTP = inntektsgrunnlag.getInntektspostFraSøknadForStatusIPeriode(AktivitetStatus.FL, periodeEtterSTP);
+        return !oppgittFLInntektEtterSTP.isEmpty() && !regelModellFrisinn.getSøkerYtelseFrilans();
     }
 
     private List<AktivPeriode> hentAktivePerioderPåSkjæringtidspunkt(LocalDate dato, List<AktivPeriode> aktivePerioder) {
