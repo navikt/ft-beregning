@@ -13,6 +13,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusV2;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AndelGradering;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AndelGraderingImpl;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ArbeidsforholdOgInntektsmelding;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BruttoBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Gradering;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
@@ -40,6 +41,27 @@ class FastsettPeriodeRegelTest {
         assertThat(perioder.size()).isEqualTo(2);
         assertThat(perioder.get(0).getNyeAndeler().size()).isEqualTo(1);
         assertThat(perioder.get(1).getNyeAndeler().size()).isEqualTo(0);
+    }
+
+    @Test
+    void skalLageNyAndelIPeriodeEtterGraderingperiodeMedNyAndel() {
+        Arbeidsforhold arbeidsforhold2 = Arbeidsforhold.builder().medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT).medOrgnr(ORGNR2)
+            .medAnsettelsesPeriode(Periode.of(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(12))).build();
+        PeriodeModell inputMedGraderingFraStartForNyttArbeid = lagPeriodeInputMedEnAndelFraStart()
+            .medInntektsmeldinger(lagInntektsmeldingMedGraderingFraSkjæringstidspunkt(arbeidsforhold2))
+            .build();
+        List<SplittetPeriode> perioder = FastsettPeriodeRegel.fastsett(inputMedGraderingFraStartForNyttArbeid);
+        assertThat(perioder.size()).isEqualTo(2);
+        assertThat(perioder.get(0).getNyeAndeler().size()).isEqualTo(1);
+        assertThat(perioder.get(1).getNyeAndeler().size()).isEqualTo(1);
+    }
+
+
+    private List<ArbeidsforholdOgInntektsmelding> lagInntektsmeldingMedGraderingFraSkjæringstidspunkt(Arbeidsforhold arbeidsforhold2) {
+        return List.of(ArbeidsforholdOgInntektsmelding.builder()
+            .medArbeidsforhold(arbeidsforhold2)
+            .medAnsettelsesperiode(Periode.of(SKJÆRINGSTIDSPUNKT.minusMonths(12), SKJÆRINGSTIDSPUNKT.plusMonths(12)))
+            .medGraderinger(List.of(new Gradering(Periode.of(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(1)), BigDecimal.valueOf(50)))).build());
     }
 
     private List<AndelGradering> lagGraderingFraSkjæringstidspunkt(Arbeidsforhold arbeidsforhold2) {
