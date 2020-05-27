@@ -86,10 +86,7 @@ public class Inntektsgrunnlag {
     }
 
     public BigDecimal getOppgittInntektForStatusIPeriode(AktivitetStatus status, Periode periode) {
-        List<Periodeinntekt> periodeinntekter = getPeriodeinntektMedKilde(Inntektskilde.SØKNAD)
-            .filter(pi -> Objects.equals(pi.getAktivitetStatus(), status))
-            .filter(i -> periode.overlapper(Periode.of(i.getFom(), i.getTom())))
-            .collect(Collectors.toList());
+        List<Periodeinntekt> periodeinntekter = getInntektspostFraSøknadForStatusIPeriode(status, periode);
         if (periodeinntekter.isEmpty()) {
             return BigDecimal.ZERO;
         }
@@ -97,6 +94,13 @@ public class Inntektsgrunnlag {
             .map(this::finnÅrsinntektForPeriode)
             .reduce(BigDecimal::add)
             .orElse(BigDecimal.ZERO);
+    }
+
+    public List<Periodeinntekt> getInntektspostFraSøknadForStatusIPeriode(AktivitetStatus status, Periode periode) {
+        return getPeriodeinntektMedKilde(Inntektskilde.SØKNAD)
+                .filter(pi -> Objects.equals(pi.getAktivitetStatus(), status))
+                .filter(i -> periode.overlapper(Periode.of(i.getFom(), i.getTom())))
+                .collect(Collectors.toList());
     }
 
     private BigDecimal finnÅrsinntektForPeriode(Periodeinntekt oppgittInntekt) {

@@ -12,14 +12,21 @@ public class AktivitetStatusModellFRISINN extends AktivitetStatusModell {
 
     private Inntektsgrunnlag inntektsgrunnlag;
     private List<Periode> beregningsperioder;
+    private boolean søkerYtelseFrilans;
+    private boolean søkerYtelseNæring;
 
     public AktivitetStatusModellFRISINN() {
         super();
     }
 
-    public AktivitetStatusModellFRISINN(Inntektsgrunnlag inntektsgrunnlag, AktivitetStatusModell aktivitetStatusModell) {
+    public AktivitetStatusModellFRISINN(Inntektsgrunnlag inntektsgrunnlag,
+                                        AktivitetStatusModell aktivitetStatusModell,
+                                        boolean søkerYtelseFrilans,
+                                        boolean søkerYtelseNæring) {
         super(aktivitetStatusModell);
         this.inntektsgrunnlag = inntektsgrunnlag;
+        this.søkerYtelseFrilans = søkerYtelseFrilans;
+        this.søkerYtelseNæring = søkerYtelseNæring;
     }
 
     public Inntektsgrunnlag getInntektsgrunnlag() {
@@ -36,5 +43,13 @@ public class AktivitetStatusModellFRISINN extends AktivitetStatusModell {
 
     public void setBeregningsperioder(List<Periode> beregningsperioder) {
         this.beregningsperioder = beregningsperioder;
+    }
+
+    public boolean getSøkerYtelseFrilans() {
+        return søkerYtelseFrilans;
+    }
+
+    public boolean getSøkerYtelseNæring() {
+        return søkerYtelseNæring;
     }
 }
