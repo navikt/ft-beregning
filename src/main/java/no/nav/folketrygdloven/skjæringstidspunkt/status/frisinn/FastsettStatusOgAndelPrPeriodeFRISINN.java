@@ -59,7 +59,7 @@ public class FastsettStatusOgAndelPrPeriodeFRISINN extends LeafSpecification<Akt
         }
         for (AktivPeriode ap : aktivePerioderVedStp) {
             AktivitetStatus aktivitetStatus = mapAktivitetTilStatus(ap.getAktivitet(), harPerioderUtenYtelse);
-            if (AktivitetStatus.ATFL.equals(aktivitetStatus) && Aktivitet.FRILANSINNTEKT.equals(ap.getArbeidsforhold().getAktivitet()) && !harFrilansinntektSisteÅret) {
+            if (skalIkkeLeggesTil(harFrilansinntektSisteÅret, ap, aktivitetStatus)) {
                 continue;
             }
             regelmodell.leggTilAktivitetStatus(aktivitetStatus);
@@ -77,6 +77,12 @@ public class FastsettStatusOgAndelPrPeriodeFRISINN extends LeafSpecification<Akt
         Periode periodeEtterSTP = Periode.of(stpOpptjening, DateUtil.TIDENES_ENDE);
         List<Periodeinntekt> oppgittFLInntektEtterSTP = inntektsgrunnlag.getInntektspostFraSøknadForStatusIPeriode(AktivitetStatus.FL, periodeEtterSTP);
         return !oppgittFLInntektEtterSTP.isEmpty() && !regelModellFrisinn.getSøkerYtelseFrilans();
+
+    }
+
+    private boolean skalIkkeLeggesTil(boolean harFrilansinntektSisteÅret, AktivPeriode ap, AktivitetStatus aktivitetStatus) {
+        return (AktivitetStatus.ATFL.equals(aktivitetStatus) && Aktivitet.FRILANSINNTEKT.equals(ap.getArbeidsforhold().getAktivitet()) && !harFrilansinntektSisteÅret)
+            || AktivitetStatus.UDEFINERT.equals(aktivitetStatus);
     }
 
     private List<AktivPeriode> hentAktivePerioderPåSkjæringtidspunkt(LocalDate dato, List<AktivPeriode> aktivePerioder) {
