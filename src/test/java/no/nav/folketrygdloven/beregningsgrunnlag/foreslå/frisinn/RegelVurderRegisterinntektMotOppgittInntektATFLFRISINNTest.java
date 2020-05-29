@@ -12,6 +12,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.frisinn.FrisinnGrunnlag;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.frisinn.FrisinnPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.GRUNNBELØPLISTE;
@@ -194,7 +196,8 @@ class RegelVurderRegisterinntektMotOppgittInntektATFLFRISINNTest {
         List<BeregningsgrunnlagPrStatus> andelsliste = Arrays.asList(andeler);
         andelsliste.forEach(periodeBuilder::medBeregningsgrunnlagPrStatus);
         BeregningsgrunnlagPeriode periode = periodeBuilder.build();
-        FrisinnGrunnlag frisinnGrunnlag = new FrisinnGrunnlag(true, STP);
+        List<FrisinnPeriode> frisinnPerioder = Collections.singletonList(new FrisinnPeriode(periode.getBeregningsgrunnlagPeriode(), true, false));
+        FrisinnGrunnlag frisinnGrunnlag = new FrisinnGrunnlag(frisinnPerioder, STP);
         return Beregningsgrunnlag.builder()
             .medInntektsgrunnlag(ig)
             .medGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2019))

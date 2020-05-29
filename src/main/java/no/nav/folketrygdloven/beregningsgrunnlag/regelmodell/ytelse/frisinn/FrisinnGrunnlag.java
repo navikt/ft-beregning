@@ -1,25 +1,38 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.frisinn;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Objects;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.YtelsesSpesifiktGrunnlag;
 
 public class FrisinnGrunnlag extends YtelsesSpesifiktGrunnlag {
 
-    private boolean erSøktYtelseForFrilans;
+    private List<FrisinnPeriode> frisinnPerioder;
     private LocalDate skjæringstidspunktOpptjening;
 
-    public FrisinnGrunnlag(boolean erSøktYtelseForFrilans, LocalDate skjæringstidspunktOpptjening) {
+    public FrisinnGrunnlag(List<FrisinnPeriode> frisinnPerioder, LocalDate skjæringstidspunktOpptjening) {
         super("FRISINN");
-        this.erSøktYtelseForFrilans = erSøktYtelseForFrilans;
+        Objects.requireNonNull(frisinnPerioder, "frisinnPerioder");
+        Objects.requireNonNull(skjæringstidspunktOpptjening, "skjæringstidspunktOpptjening");
+        this.frisinnPerioder = frisinnPerioder;
         this.skjæringstidspunktOpptjening = skjæringstidspunktOpptjening;
-    }
-
-    public boolean isErSøktYtelseForFrilans() {
-        return erSøktYtelseForFrilans;
     }
 
     public LocalDate getSkjæringstidspunktOpptjening() {
         return skjæringstidspunktOpptjening;
     }
+
+    public List<FrisinnPeriode> getFrisinnPerioder() {
+        return frisinnPerioder;
+    }
+
+    public boolean søkerYtelseFrilans(LocalDate dato) {
+        return frisinnPerioder.stream().anyMatch(p -> p.inneholderDato(dato) && p.getSøkerYtelseFrilans());
+    }
+
+    public boolean søkerYtelseNæring(LocalDate dato) {
+        return frisinnPerioder.stream().anyMatch(p -> p.inneholderDato(dato) && p.getSøkerYtelseNæring());
+    }
+
 }
