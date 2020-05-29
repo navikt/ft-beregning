@@ -33,6 +33,8 @@ public class BeregningsgrunnlagPeriode {
     @JsonBackReference
     private Beregningsgrunnlag beregningsgrunnlag;
     private BigDecimal grenseverdi;
+    private boolean erVilkårOppfylt = true;
+
 
     private BeregningsgrunnlagPeriode() { }
 
@@ -186,6 +188,10 @@ public class BeregningsgrunnlagPeriode {
         return getBeregningsgrunnlag().erBesteberegnet();
     }
 
+    public boolean getErVilkårOppfylt() {
+        return erVilkårOppfylt;
+    }
+
     public boolean skalSplitteSammenligningsgrunnlagToggle() {
         return beregningsgrunnlag.isSplitteATFLToggleErPå();
     }
@@ -233,6 +239,13 @@ public class BeregningsgrunnlagPeriode {
             beregningsgrunnlagPeriodeMal.periodeÅrsaker = periodeÅrsaker;
             return this;
         }
+
+
+        public Builder medErVilkårOppfylt(boolean erVilkårOppfylt) {
+            beregningsgrunnlagPeriodeMal.erVilkårOppfylt = erVilkårOppfylt;
+            return this;
+        }
+
 
         public Builder leggTilPeriodeÅrsaker(List<PeriodeÅrsak> periodeÅrsaker) {
             periodeÅrsaker.forEach(this::leggTilPeriodeÅrsak);

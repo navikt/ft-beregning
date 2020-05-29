@@ -32,6 +32,15 @@ public class RegelFinnGrenseverdiFRISINN extends DynamicRuleService<Beregningsgr
             fastsettAvkortetGrenseverdi,
             fastsettUavkortetGrenseverdi);
 
-        return beregnEventuellAvkorting;
+        Specification<BeregningsgrunnlagPeriode> settGrenseverdiTilNull = new SettGrenseverdiTilNull();
+
+        // FRISINN 6.10: Er vilkår oppfylt?
+        Specification<BeregningsgrunnlagPeriode> erVilkårOppfylt = rs.beregningHvisRegel(
+            new ErVilkårOppfylt(),
+            beregnEventuellAvkorting,
+            settGrenseverdiTilNull);
+
+
+        return erVilkårOppfylt;
     }
 }
