@@ -61,14 +61,14 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
         resultater.put("arbeidsforhold", arbeidsforhold.getBeskrivelse());
         BigDecimal årsinntekt;
         if (arbeidsforhold.erFrilanser()) {
-            if (frisinnGrunnlag.isErSøktYtelseForFrilans() && finnesIkkeInntektForFLFørFrist(grunnlag)) {
+            if (frisinnGrunnlag.søkerYtelseFrilans(grunnlag.getPeriodeFom()) && finnesIkkeInntektForFLFørFrist(grunnlag)) {
                 // Beregnes som nyoppstartet fl
                 perioderSomSkalBrukesForInntekter = lagMånederUtenYtelseEtterFørsteInntektsdag(grunnlag, perioderSomSkalBrukesForInntekter, skjæringstidspunktOpptjening);
             } else if (perioderSomSkalBrukesForInntekter.isEmpty()) {
                 perioderSomSkalBrukesForInntekter = lag12MånederFørOgInkludertDato(skjæringstidspunktOpptjening.minusMonths(36), skjæringstidspunktOpptjening.minusMonths(1));
             }
             // Hvis det ikke søkes ytelse for frilans skal kun oppgitt inntekt legges til grunn
-            årsinntekt = frisinnGrunnlag.isErSøktYtelseForFrilans()
+            årsinntekt = frisinnGrunnlag.søkerYtelseFrilans(grunnlag.getPeriodeFom())
                 ? beregnÅrsinntektFrilans(perioderSomSkalBrukesForInntekter, inntektsgrunnlag, grunnlag, resultater)
                 : finnOppgittÅrsinntektFL(inntektsgrunnlag, grunnlag);
         } else {

@@ -23,6 +23,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.frisinn.FrisinnGrunnlag;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.frisinn.FrisinnPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.omp.OmsorgspengerGrunnlag;
 
 public class BeregningsgrunnlagScenario {
@@ -95,15 +96,20 @@ public class BeregningsgrunnlagScenario {
                 periodeBuilder.medBeregningsgrunnlagPrStatus(bgps.build());
             }
         }
+        BeregningsgrunnlagPeriode bgPeriode = periodeBuilder.build();
         return Beregningsgrunnlag.builder()
             .medInntektsgrunnlag(inntektsgrunnlag)
             .medSkjæringstidspunkt(skjæringstidspunkt)
             .medGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2017))
             .medAktivitetStatuser(aktivitetStatuser.stream().map(as -> new AktivitetStatusMedHjemmel(as, null)).collect(Collectors.toList()))
-            .medBeregningsgrunnlagPeriode(periodeBuilder.build())
+            .medBeregningsgrunnlagPeriode(bgPeriode)
             .medGrunnbeløpSatser(GRUNNBELØPLISTE)
-            .medYtelsesSpesifiktGrunnlag(new FrisinnGrunnlag(true, skjæringstidspunkt))
+            .medYtelsesSpesifiktGrunnlag(new FrisinnGrunnlag(lagFrisinnperioder(true, bgPeriode.getBeregningsgrunnlagPeriode()), skjæringstidspunkt))
             .build();
+    }
+
+    private static List<FrisinnPeriode> lagFrisinnperioder(boolean søkerFL, Periode periode) {
+        return Collections.singletonList(new FrisinnPeriode(periode, søkerFL, false));
     }
 
     public static Beregningsgrunnlag settOppGrunnlagMedEnPeriode(LocalDate skjæringstidspunkt, Inntektsgrunnlag inntektsgrunnlag, AktivitetStatus aktivitetStatus, List<Arbeidsforhold> arbeidsforhold, List<BigDecimal> refusjonskravPrår, boolean skalSjekkeRefusjonFørSetteAksjonspunkt, BigDecimal maksRefusjon) {
