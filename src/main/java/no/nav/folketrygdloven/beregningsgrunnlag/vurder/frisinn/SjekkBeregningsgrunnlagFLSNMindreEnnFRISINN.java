@@ -36,7 +36,8 @@ class SjekkBeregningsgrunnlagFLSNMindreEnnFRISINN extends LeafSpecification<Bere
             bruttoForSøkteAndeler = bruttoForSøkteAndeler.add(snStatus.getBruttoInkludertNaturalytelsePrÅr());
         }
 
-        SingleEvaluation resultat = bruttoForSøkteAndeler.compareTo(minstekrav) < 0 ? ja() : nei();
+        boolean erSøktIPeriode = (snStatus != null && snStatus.erSøktYtelseFor()) || (frilansandel != null && frilansandel.getErSøktYtelseFor());
+        SingleEvaluation resultat = erSøktIPeriode && bruttoForSøkteAndeler.compareTo(minstekrav) < 0 ? ja() : nei();
         resultat.setEvaluationProperty("grunnbeløp", grunnlag.getGrunnbeløp());
         resultat.setEvaluationProperty("treKvartGrunnbeløp", minstekrav);
         resultat.setEvaluationProperty("bruttoPrÅrSNFL", bruttoForSøkteAndeler);
