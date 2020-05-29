@@ -116,6 +116,14 @@ public class BeregningsgrunnlagPeriode {
         return bgPeriode;
     }
 
+    public LocalDate getPeriodeFom() {
+        return bgPeriode.getFom();
+    }
+
+    public LocalDate getPeriodeTom() {
+        return bgPeriode.getTom();
+    }
+
     public Collection<BeregningsgrunnlagPrStatus> getBeregningsgrunnlagPrStatus() {
         return Collections.unmodifiableCollection(beregningsgrunnlagPrStatus);
     }
