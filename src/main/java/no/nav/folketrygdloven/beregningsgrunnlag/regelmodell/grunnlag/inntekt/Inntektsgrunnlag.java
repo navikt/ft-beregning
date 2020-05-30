@@ -85,15 +85,14 @@ public class Inntektsgrunnlag {
             .max(Comparator.comparing(Periodeinntekt::getFom));
     }
 
-    public BigDecimal getOppgittInntektForStatusIPeriode(AktivitetStatus status, Periode periode) {
+    public Optional<BigDecimal> getOppgittInntektForStatusIPeriode(AktivitetStatus status, Periode periode) {
         List<Periodeinntekt> periodeinntekter = getInntektspostFraSøknadForStatusIPeriode(status, periode);
         if (periodeinntekter.isEmpty()) {
-            return BigDecimal.ZERO;
+            return Optional.empty();
         }
         return periodeinntekter.stream()
             .map(this::finnÅrsinntektForPeriode)
-            .reduce(BigDecimal::add)
-            .orElse(BigDecimal.ZERO);
+            .reduce(BigDecimal::add);
     }
 
     public List<Periodeinntekt> getInntektspostFraSøknadForStatusIPeriode(AktivitetStatus status, Periode periode) {

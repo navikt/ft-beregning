@@ -87,7 +87,7 @@ class RegelVurderRegisterinntektMotOppgittInntektATFLFRISINN extends LeafSpecifi
     }
 
     private BigDecimal finnOppgittArbeidsinntekt(BeregningsgrunnlagPeriode grunnlag) {
-        return grunnlag.getInntektsgrunnlag().getOppgittInntektForStatusIPeriode(AktivitetStatus.AT, grunnlag.getBeregningsgrunnlagPeriode());
+        return grunnlag.getInntektsgrunnlag().getOppgittInntektForStatusIPeriode(AktivitetStatus.AT, grunnlag.getBeregningsgrunnlagPeriode()).orElse(BigDecimal.ZERO);
     }
 
 }
