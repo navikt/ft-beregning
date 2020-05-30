@@ -5,7 +5,6 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -68,7 +67,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
                 perioderSomSkalBrukesForInntekter = lag12MånederFørOgInkludertDato(skjæringstidspunktOpptjening.minusMonths(36), skjæringstidspunktOpptjening.minusMonths(1));
             }
             // Hvis det ikke søkes ytelse for frilans skal kun oppgitt inntekt legges til grunn
-            årsinntekt = frisinnGrunnlag.søkerYtelseFrilans(grunnlag.getPeriodeFom())
+            årsinntekt = frisinnGrunnlag.søkerYtelseFrilans(grunnlag.getPeriodeFom()) || erFørstePeriodeOgSøktFrilansIMinstEnPeriode(grunnlag, frisinnGrunnlag)
                 ? beregnÅrsinntektFrilans(perioderSomSkalBrukesForInntekter, inntektsgrunnlag, grunnlag, resultater)
                 : finnOppgittÅrsinntektFL(inntektsgrunnlag, grunnlag);
         } else {
@@ -81,6 +80,10 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
         resultater.put("antallPerioder", perioderSomSkalBrukesForInntekter.size());
         resultater.put("beregnetPrÅr", årsinntekt);
         return beregnet(resultater);
+    }
+
+    private boolean erFørstePeriodeOgSøktFrilansIMinstEnPeriode(BeregningsgrunnlagPeriode grunnlag, FrisinnGrunnlag frisinnGrunnlag) {
+        return grunnlag.getPeriodeFom().isEqual(grunnlag.getSkjæringstidspunkt()) && frisinnGrunnlag.søkerYtelseFrilans();
     }
 
     private boolean finnesIkkeInntektForFLFørFrist(BeregningsgrunnlagPeriode grunnlag) {
