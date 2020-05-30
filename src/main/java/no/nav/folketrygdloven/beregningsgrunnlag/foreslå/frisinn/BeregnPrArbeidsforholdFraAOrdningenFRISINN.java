@@ -60,16 +60,17 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
         resultater.put("arbeidsforhold", arbeidsforhold.getBeskrivelse());
         BigDecimal årsinntekt;
         if (arbeidsforhold.erFrilanser()) {
-            if (frisinnGrunnlag.søkerYtelseFrilans(grunnlag.getPeriodeFom()) && finnesIkkeInntektForFLFørFrist(grunnlag)) {
+            if (frisinnGrunnlag.søkerYtelseFrilans() && finnesIkkeInntektForFLFørFrist(grunnlag)) {
                 // Beregnes som nyoppstartet fl
                 perioderSomSkalBrukesForInntekter = lagMånederUtenYtelseEtterFørsteInntektsdag(grunnlag, perioderSomSkalBrukesForInntekter, skjæringstidspunktOpptjening);
             } else if (perioderSomSkalBrukesForInntekter.isEmpty()) {
                 perioderSomSkalBrukesForInntekter = lag12MånederFørOgInkludertDato(skjæringstidspunktOpptjening.minusMonths(36), skjæringstidspunktOpptjening.minusMonths(1));
             }
             // Hvis det ikke søkes ytelse for frilans skal kun oppgitt inntekt legges til grunn
-            årsinntekt = frisinnGrunnlag.søkerYtelseFrilans(grunnlag.getPeriodeFom()) || erFørstePeriodeOgSøktFrilansIMinstEnPeriode(grunnlag, frisinnGrunnlag)
+            årsinntekt = frisinnGrunnlag.søkerYtelseFrilans(grunnlag.getPeriodeFom())
                 ? beregnÅrsinntektFrilans(perioderSomSkalBrukesForInntekter, inntektsgrunnlag, grunnlag, resultater)
-                : finnOppgittÅrsinntektFL(inntektsgrunnlag, grunnlag);
+                : finnOppgittÅrsinntektFL(inntektsgrunnlag, grunnlag)
+                .orElse(beregnÅrsinntektFrilans(perioderSomSkalBrukesForInntekter, inntektsgrunnlag, grunnlag, resultater));
         } else {
             årsinntekt = beregnÅrsinntektArbeidstaker(perioderSomSkalBrukesForInntekter, inntektsgrunnlag, grunnlag, resultater);
         }
@@ -80,10 +81,6 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
         resultater.put("antallPerioder", perioderSomSkalBrukesForInntekter.size());
         resultater.put("beregnetPrÅr", årsinntekt);
         return beregnet(resultater);
-    }
-
-    private boolean erFørstePeriodeOgSøktFrilansIMinstEnPeriode(BeregningsgrunnlagPeriode grunnlag, FrisinnGrunnlag frisinnGrunnlag) {
-        return grunnlag.getPeriodeFom().isEqual(grunnlag.getSkjæringstidspunkt()) && frisinnGrunnlag.søkerYtelseFrilans();
     }
 
     private boolean finnesIkkeInntektForFLFørFrist(BeregningsgrunnlagPeriode grunnlag) {
@@ -137,7 +134,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
         BigDecimal antallPerioder = BigDecimal.valueOf(inntektsperioder.size());
         BigDecimal snittMånedslønnFraRegister = inntektsperioder.size() == 0 ? BigDecimal.ZERO : samletInntekt.divide(antallPerioder, 10, RoundingMode.HALF_EVEN);
         BigDecimal årslønnFraRegister = snittMånedslønnFraRegister.multiply(ANTALL_MÅNEDER_I_ÅR);
-        BigDecimal årsinntektFraSøknad = finnOppgittÅrsinntektFL(inntektsgrunnlag, grunnlag);
+        BigDecimal årsinntektFraSøknad = finnOppgittÅrsinntektFL(inntektsgrunnlag, grunnlag).orElse(BigDecimal.ZERO);
         resultater.put("årsinntektFraRegister", snittMånedslønnFraRegister);
         resultater.put("årsinntektFraSøknad", årsinntektFraSøknad);
         return årslønnFraRegister.max(årsinntektFraSøknad);
@@ -174,7 +171,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
 
     }
 
-    private BigDecimal finnOppgittÅrsinntektFL(Inntektsgrunnlag inntektsgrunnlag, BeregningsgrunnlagPeriode grunnlag) {
+    private Optional<BigDecimal> finnOppgittÅrsinntektFL(Inntektsgrunnlag inntektsgrunnlag, BeregningsgrunnlagPeriode grunnlag) {
         return inntektsgrunnlag.getOppgittInntektForStatusIPeriode(AktivitetStatus.FL, grunnlag.getBeregningsgrunnlagPeriode());
     }
 }
