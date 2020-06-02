@@ -157,7 +157,7 @@ class FinnGrenseverdiForTotalOver6GTest {
             200_000d,
             40.9d,
             0d,
-            new Periode(skjæringstidspunkt, LocalDate.of(2020, 3, 31)));
+            new Periode(skjæringstidspunkt, LocalDate.of(2020, 4, 30)));
         int antallVirkerdagerTestPeriode = 10;
         var test_periode = lagTestPeriode(p1, antallVirkerdagerTestPeriode, AktivitetStatus.SN);
         lagBeregningsgrunnlag(List.of(p1, test_periode));

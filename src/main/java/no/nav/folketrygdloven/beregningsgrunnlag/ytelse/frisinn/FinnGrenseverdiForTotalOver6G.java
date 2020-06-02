@@ -62,7 +62,7 @@ public class FinnGrenseverdiForTotalOver6G extends LeafSpecification<Beregningsg
     }
 
     private boolean gårTilSluttenAvMåned(BeregningsgrunnlagPeriode grunnlag) {
-        return grunnlag.getPeriodeTom().isEqual(grunnlag.getPeriodeTom().with(TemporalAdjusters.lastDayOfMonth()));
+        return !grunnlag.getPeriodeTom().isEqual(LocalDate.of(2020, 3, 31)) && grunnlag.getPeriodeTom().isEqual(grunnlag.getPeriodeTom().with(TemporalAdjusters.lastDayOfMonth()));
     }
 
     private void trekkRestFraNesteGrenseverdi(BeregningsgrunnlagPeriode grunnlag, BigDecimal løpendeFL, BigDecimal løpendeSN, BigDecimal grenseverdiFratrektAT, BigDecimal grenseverdiFratrektFL) {
