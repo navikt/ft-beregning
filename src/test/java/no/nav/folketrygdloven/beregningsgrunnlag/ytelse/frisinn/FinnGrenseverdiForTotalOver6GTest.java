@@ -148,6 +148,28 @@ class FinnGrenseverdiForTotalOver6GTest {
         assertThat(test_periode.getGrenseverdi()).isEqualByComparingTo(SEKS_G.subtract(BigDecimal.valueOf(21509.0909090980)));
     }
 
+    @Test
+    void tester_at_fl_sn_uttak_på_sn_rest_ikke_overføres_til_neste_periode_ved_månedslutt() {
+        // Arrange
+        var p1 = lagBeregningsgrunnlagPeriode(
+            200_000d,
+            300_000d,
+            200_000d,
+            40.9d,
+            0d,
+            new Periode(skjæringstidspunkt, LocalDate.of(2020, 3, 31)));
+        int antallVirkerdagerTestPeriode = 10;
+        var test_periode = lagTestPeriode(p1, antallVirkerdagerTestPeriode, AktivitetStatus.SN);
+        lagBeregningsgrunnlag(List.of(p1, test_periode));
+
+        // Act
+        kjørRegel(p1);
+
+        // Assert
+        assertThat(test_periode.getGrenseverdi()).isEqualByComparingTo(SEKS_G);
+    }
+
+
     private void kjørRegel(BeregningsgrunnlagPeriode grunnlag) {
         FinnGrenseverdiForTotalOver6G grenseregel = new FinnGrenseverdiForTotalOver6G();
         grenseregel.evaluate(grunnlag);

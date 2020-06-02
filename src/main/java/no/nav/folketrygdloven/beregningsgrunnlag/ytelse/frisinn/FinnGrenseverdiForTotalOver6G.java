@@ -5,6 +5,7 @@ import static no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil.TIDENES_EN
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -13,6 +14,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.frisinn.FrisinnGrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.util.Virkedager;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
@@ -47,7 +49,7 @@ public class FinnGrenseverdiForTotalOver6G extends LeafSpecification<Beregningsg
         BigDecimal grenseverdiFratrektFL = grenseverdiFratrektAT.subtract(løpendeFL);
         BigDecimal grenseverdi = grenseverdiFratrektFL.subtract(løpendeSN).max(BigDecimal.ZERO);
 
-        if (!erSistePeriode(grunnlag)) {
+        if (!erSistePeriode(grunnlag) && !gårTilSluttenAvMåned(grunnlag)) {
             trekkRestFraNesteGrenseverdi(grunnlag, løpendeFL, løpendeSN, grenseverdiFratrektAT, grenseverdiFratrektFL);
         }
 
@@ -57,6 +59,10 @@ public class FinnGrenseverdiForTotalOver6G extends LeafSpecification<Beregningsg
         resultat.setEvaluationProperties(resultater);
         return resultat;
 
+    }
+
+    private boolean gårTilSluttenAvMåned(BeregningsgrunnlagPeriode grunnlag) {
+        return grunnlag.getPeriodeTom().isEqual(grunnlag.getPeriodeTom().with(TemporalAdjusters.lastDayOfMonth()));
     }
 
     private void trekkRestFraNesteGrenseverdi(BeregningsgrunnlagPeriode grunnlag, BigDecimal løpendeFL, BigDecimal løpendeSN, BigDecimal grenseverdiFratrektAT, BigDecimal grenseverdiFratrektFL) {
