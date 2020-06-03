@@ -22,10 +22,10 @@ class SjekkBeregningsgrunnlagMindreEnn extends LeafSpecification<Beregningsgrunn
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
         BigDecimal minstekrav = grunnlag.getGrunnbeløp().multiply(grunnlag.getAntallGMinstekravVilkår());
 
-        SingleEvaluation resultat = (grunnlag.getBruttoPrÅrInkludertNaturalytelser().compareTo(minstekrav) < 0) ? ja() : nei();
+        SingleEvaluation resultat = (grunnlag.getBruttoPrÅr().compareTo(minstekrav) < 0) ? ja() : nei();
         resultat.setEvaluationProperty("grunnbeløp", grunnlag.getGrunnbeløp());
         resultat.setEvaluationProperty("halvtGrunnbeløp", minstekrav);
-        resultat.setEvaluationProperty("bruttoPrÅr", grunnlag.getBruttoPrÅrInkludertNaturalytelser());
+        resultat.setEvaluationProperty("bruttoPrÅr", grunnlag.getBruttoPrÅr());
         return resultat;
     }
 }
