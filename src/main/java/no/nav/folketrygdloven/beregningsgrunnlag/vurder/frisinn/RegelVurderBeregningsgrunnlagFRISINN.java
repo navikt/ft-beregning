@@ -18,6 +18,8 @@ public class RegelVurderBeregningsgrunnlagFRISINN extends DynamicRuleService<Ber
     @Override
     public Specification<BeregningsgrunnlagPeriode> getSpecification() {
         Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
-        return rs.beregningHvisRegel(new SjekkBeregningsgrunnlagFLSNMindreEnnFRISINN(), new AvslagUnderTreKvartG(), new Beregnet());
+        Specification<BeregningsgrunnlagPeriode> sjekkMindreEnnTreKvartG = rs.beregningHvisRegel(new SjekkBeregningsgrunnlagFLSNMindreEnnFRISINN(), new AvslagUnderTreKvartG(), new Beregnet());
+        Specification<BeregningsgrunnlagPeriode> sjekkFrilansUtenInntekt = rs.beregningHvisRegel(new SjekkFrilansUtenInntekt(), new AvslagFrilansUtenInntekt(), sjekkMindreEnnTreKvartG);
+        return sjekkFrilansUtenInntekt;
     }
 }
