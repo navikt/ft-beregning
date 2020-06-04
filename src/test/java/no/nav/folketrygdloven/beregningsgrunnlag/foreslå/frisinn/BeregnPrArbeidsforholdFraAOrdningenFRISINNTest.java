@@ -334,6 +334,48 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
         assertThat(andel.getBeregnetPrÅr().intValue()).isEqualTo(20_000);
     }
 
+    @Test
+    public void skal_håndtere_frilans_uten_inntekt() {
+        // Arrange
+        BeregningsgrunnlagPrArbeidsforhold andel = BeregningsgrunnlagPrArbeidsforhold.builder()
+            .medArbeidsforhold(FRILANS_ARBEIDSFORHOLD).medAndelNr(1L).build();
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,2,1), LocalDate.of(2020,2,29)), ARBFOR_UTEN_REF, 10));
+
+        Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(inntektsgrunnlag, STP);
+        List<FrisinnPeriode> frisinnPerioder = Collections.singletonList(new FrisinnPeriode(beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPeriode(),
+            true, false));
+
+        // Act
+        kjørRegel(Beregningsgrunnlag.builder(beregningsgrunnlag)
+            .medYtelsesSpesifiktGrunnlag(new FrisinnGrunnlag(frisinnPerioder, STP))
+            .build(), andel);
+
+        // Assert
+        assertThat(andel.getBeregnetPrÅr().intValue()).isEqualTo(0);
+    }
+
+    @Test
+    public void skal_håndtere_nyoppstartet_frilans_med_ytelse_siste_24_måneder() {
+        // Arrange
+        BeregningsgrunnlagPrArbeidsforhold andel = BeregningsgrunnlagPrArbeidsforhold.builder()
+            .medArbeidsforhold(FRILANS_ARBEIDSFORHOLD).medAndelNr(1L).build();
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,3,1), LocalDate.of(2019,3,31)), FRILANS_ARBEIDSFORHOLD, 24));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggYtelse(Periode.of(LocalDate.of(2018,3,1), LocalDate.of(2020,3,31))));
+
+
+        Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(inntektsgrunnlag, STP);
+        List<FrisinnPeriode> frisinnPerioder = Collections.singletonList(new FrisinnPeriode(beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPeriode(),
+            true, false));
+
+        // Act
+        kjørRegel(Beregningsgrunnlag.builder(beregningsgrunnlag)
+            .medYtelsesSpesifiktGrunnlag(new FrisinnGrunnlag(frisinnPerioder, STP))
+            .build(), andel);
+
+        // Assert
+        assertThat(andel.getBeregnetPrÅr().intValue()).isEqualTo(24);
+    }
+
     private Periodeinntekt byggYtelse(Periode periode) {
         return Periodeinntekt.builder()
             .medPeriode(periode)

@@ -60,7 +60,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
         resultater.put("arbeidsforhold", arbeidsforhold.getBeskrivelse());
         BigDecimal årsinntekt;
         if (arbeidsforhold.erFrilanser()) {
-            if (frisinnGrunnlag.søkerYtelseFrilans() && finnesIkkeInntektForFLFørFrist(grunnlag)) {
+            if (frisinnGrunnlag.søkerYtelseFrilans() && finnesIkkeInntektForFLFørFristOgFinnesEtterFrist(grunnlag, skjæringstidspunktOpptjening)) {
                 // Beregnes som nyoppstartet fl
                 perioderSomSkalBrukesForInntekter = lagMånederUtenYtelseEtterFørsteInntektsdag(grunnlag, perioderSomSkalBrukesForInntekter, skjæringstidspunktOpptjening);
             } else if (perioderSomSkalBrukesForInntekter.isEmpty()) {
@@ -83,11 +83,13 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
         return beregnet(resultater);
     }
 
-    private boolean finnesIkkeInntektForFLFørFrist(BeregningsgrunnlagPeriode grunnlag) {
+    private boolean finnesIkkeInntektForFLFørFristOgFinnesEtterFrist(BeregningsgrunnlagPeriode grunnlag, LocalDate skjæringstidspunktOpptjening) {
         LocalDate startAvPeriodeSomDefinererAktiveFrilansere = LocalDate.of(2018,1,1);
         Periode periodeFørFrist = Periode.of(startAvPeriodeSomDefinererAktiveFrilansere, NYOPPSTARTET_FL_GRENSE.minusDays(1));
+        Periode periodeEtterFrist = Periode.of(NYOPPSTARTET_FL_GRENSE, skjæringstidspunktOpptjening);
         List<Periodeinntekt> frilansinntekterFørNyoppstartetGrense = grunnlag.getInntektsgrunnlag().finnAlleFrilansInntektPerioder(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, periodeFørFrist);
-        return frilansinntekterFørNyoppstartetGrense.isEmpty();
+        List<Periodeinntekt> frilansinntekterEtterNyoppstartetGrense = grunnlag.getInntektsgrunnlag().finnAlleFrilansInntektPerioder(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, periodeEtterFrist);
+        return frilansinntekterFørNyoppstartetGrense.isEmpty() && !frilansinntekterEtterNyoppstartetGrense.isEmpty();
     }
 
     private List<Periode> lagMånederUtenYtelseEtterFørsteInntektsdag(BeregningsgrunnlagPeriode grunnlag,
@@ -96,7 +98,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
         List<Periode> perioderEtterGrenseUtenYtelse = perioderUtenYtelse.stream()
             .filter(p -> !p.getFom().isBefore(NYOPPSTARTET_FL_GRENSE))
             .collect(Collectors.toList());
-        LocalDate førsteDatoMedInntekt = finnFørsteDatoMedFrilansInntektEtterDato(grunnlag, NYOPPSTARTET_FL_GRENSE);
+        LocalDate førsteDatoMedInntekt = finnFørsteDatoMedFrilansInntektEtterDato(grunnlag, NYOPPSTARTET_FL_GRENSE, skjæringstidspunktOpptjening);
         if (perioderEtterGrenseUtenYtelse.isEmpty()) {
             // Lager 12 måneder før første inntektsdato
             return lag12MånederFørOgInkludertDato(førsteDatoMedInntekt, skjæringstidspunktOpptjening.minusMonths(1));
@@ -116,14 +118,14 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
         return perioder;
     }
 
-    private LocalDate finnFørsteDatoMedFrilansInntektEtterDato(BeregningsgrunnlagPeriode grunnlag, LocalDate nyoppstartetGrense) {
-        Periode periode = Periode.of(nyoppstartetGrense, grunnlag.getSkjæringstidspunkt());
+    private LocalDate finnFørsteDatoMedFrilansInntektEtterDato(BeregningsgrunnlagPeriode grunnlag, LocalDate nyoppstartetGrense, LocalDate skjæringstidspunktOpptjening) {
+        Periode periode = Periode.of(nyoppstartetGrense, skjæringstidspunktOpptjening);
         List<Periodeinntekt> frilansInntekter = grunnlag.getBeregningsgrunnlag().getInntektsgrunnlag()
             .finnAlleFrilansInntektPerioder(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, periode);
         return frilansInntekter.stream()
             .map(Periodeinntekt::getFom)
             .min(Comparator.naturalOrder())
-            .orElse(grunnlag.getSkjæringstidspunkt());
+            .orElseThrow(() -> new IllegalStateException("Skal ha inntekt i periode for nyoppstartet"));
     }
 
     private BigDecimal beregnÅrsinntektFrilans(List<Periode> inntektsperioder, Inntektsgrunnlag inntektsgrunnlag, BeregningsgrunnlagPeriode grunnlag, Map<String, Object> resultater) {
