@@ -114,7 +114,7 @@ public class Inntektsgrunnlag {
      * @return dagsats i periode
      */
     private BigDecimal finnEffektivDagsatsIPeriode(Periodeinntekt oppgittInntekt) {
-        long dagerIRapportertPeriode = Virkedager.beregnAntallVirkedager(oppgittInntekt.getFom(), oppgittInntekt.getTom());
+        long dagerIRapportertPeriode = Virkedager.beregnAntallVirkedagerEllerKunHelg(oppgittInntekt.getFom(), oppgittInntekt.getTom());
         if (dagerIRapportertPeriode == 0) {
             return BigDecimal.ZERO;
         }
