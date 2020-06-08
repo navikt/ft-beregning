@@ -27,7 +27,7 @@ class FinnRapportertÅrsinntektSN {
         LocalDate førsteDatoMedInntekt = inntekter2019.stream().map(Periodeinntekt::getFom).min(Comparator.naturalOrder()).orElse(LocalDate.of(2020, 1, 1));
         Optional<BigDecimal> sumIPeriode = inntekter2019.stream().map(Periodeinntekt::getInntekt).reduce(BigDecimal::add);
         if (førsteDatoMedInntekt.isAfter(LocalDate.of(2019,1, 1))) {
-            int virkedager = Virkedager.beregnAntallVirkedager(førsteDatoMedInntekt, LocalDate.of(2020, 1, 1));
+            int virkedager = Virkedager.beregnAntallVirkedagerEllerKunHelg(førsteDatoMedInntekt, LocalDate.of(2020, 1, 1));
             if (virkedager > 0) {
                 Optional<BigDecimal> dagsats = sumIPeriode.map(b -> b.divide(BigDecimal.valueOf(virkedager), 10, RoundingMode.HALF_EVEN));
                 return dagsats.map(b -> b.multiply(BigDecimal.valueOf(260)));
@@ -41,7 +41,7 @@ class FinnRapportertÅrsinntektSN {
         List<Periodeinntekt> inntekter2020 = grunnlag.getInntektsgrunnlag().getPeriodeinntekterForSNFraSøknad(Periode.of(LocalDate.of(2020, 1, 1), LocalDate.of(2020, 3, 1)));
         førsteDatoMedInntekt = inntekter2020.stream().map(Periodeinntekt::getFom).min(Comparator.naturalOrder()).orElse(LocalDate.of(2020, 1, 1));
         Optional<BigDecimal> sumIPeriode = inntekter2020.stream().map(Periodeinntekt::getInntekt).reduce(BigDecimal::add);
-        int virkedager = Virkedager.beregnAntallVirkedager(førsteDatoMedInntekt, LocalDate.of(2020, 3, 1));
+        int virkedager = Virkedager.beregnAntallVirkedagerEllerKunHelg(førsteDatoMedInntekt, LocalDate.of(2020, 3, 1));
         if (virkedager > 0) {
             Optional<BigDecimal> dagsats = sumIPeriode.map(b -> b.divide(BigDecimal.valueOf(virkedager), 10, RoundingMode.HALF_EVEN));
             return dagsats.map(b -> b.multiply(BigDecimal.valueOf(260)));

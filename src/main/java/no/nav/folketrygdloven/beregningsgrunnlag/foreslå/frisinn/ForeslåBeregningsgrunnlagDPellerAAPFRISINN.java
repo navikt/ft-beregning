@@ -60,7 +60,7 @@ class ForeslåBeregningsgrunnlagDPellerAAPFRISINN extends LeafSpecification<Bere
                 if (!pi.getInntektPeriodeType().equals(InntektPeriodeType.DAGLIG)) {
                     throw new IllegalStateException("Forventer inntekter med dagsats");
                 }
-                return BigDecimal.valueOf(Virkedager.beregnAntallVirkedager(overlappendePeriodeFom, overlappendePeriodeTom))
+                return BigDecimal.valueOf(Virkedager.beregnAntallVirkedagerEllerKunHelg(overlappendePeriodeFom, overlappendePeriodeTom))
                     .multiply(pi.getInntekt())
                     .multiply(utbetalingsFaktor);
             })

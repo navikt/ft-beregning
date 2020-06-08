@@ -26,6 +26,22 @@ public class Virkedager {
         return beregnAntallVirkedager(periode.getFom(), periode.getTom());
     }
 
+    public static int beregnAntallVirkedagerEllerKunHelg(LocalDate fom, LocalDate tom) {
+        Objects.requireNonNull(fom);
+        Objects.requireNonNull(tom);
+        if (fom.isAfter(tom)) {
+            throw new IllegalArgumentException("Utviklerfeil: fom " + fom + " kan ikke være før tom " + tom);
+        }
+
+        int varighetDager = (int) Periode.of(fom, tom).getVarighetDager();
+        if (varighetDager <= 2 && erHelg(fom) && erHelg(tom)) {
+            return varighetDager;
+        }
+
+        return beregnVirkedager(fom, tom);
+    }
+
+
     public static int beregnAntallVirkedager(LocalDate fom, LocalDate tom) {
         Objects.requireNonNull(fom);
         Objects.requireNonNull(tom);
@@ -33,6 +49,10 @@ public class Virkedager {
             throw new IllegalArgumentException("Utviklerfeil: fom " + fom + " kan ikke være før tom " + tom);
         }
 
+        return beregnVirkedager(fom, tom);
+    }
+
+    private static int beregnVirkedager(LocalDate fom, LocalDate tom) {
         try {
             // Utvid til nærmeste mandag tilbake i tid fra og med begynnelse (fom) (0-6 dager)
             int padBefore = fom.getDayOfWeek().getValue() - DayOfWeek.MONDAY.getValue();
