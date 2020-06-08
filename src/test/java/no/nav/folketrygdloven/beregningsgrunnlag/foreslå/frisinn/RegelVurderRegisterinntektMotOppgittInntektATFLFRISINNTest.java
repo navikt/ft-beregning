@@ -165,7 +165,7 @@ class RegelVurderRegisterinntektMotOppgittInntektATFLFRISINNTest {
 
 
     private void assertArbfor(BeregningsgrunnlagPrArbeidsforhold arbfor, BigDecimal brutto, BigDecimal beregnet, BigDecimal overstyrt) {
-        assertThat(arbfor.getBruttoPrÅr().doubleValue()).isCloseTo(brutto.doubleValue(), within(0.01d));
+        assertThat(arbfor.getBruttoPrÅr().get().doubleValue()).isCloseTo(brutto.doubleValue(), within(0.01d));
         assertThat(arbfor.getBeregnetPrÅr().doubleValue()).isCloseTo(beregnet.doubleValue(), within(0.01d));
         if (overstyrt == null) {
             assertThat(arbfor.getOverstyrtPrÅr()).isNull();

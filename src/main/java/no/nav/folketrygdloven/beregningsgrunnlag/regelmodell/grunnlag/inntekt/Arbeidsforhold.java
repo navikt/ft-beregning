@@ -44,6 +44,13 @@ public class Arbeidsforhold {
         return ansettelsesPeriode;
     }
 
+    public String getArbeidsgiverId() {
+        if (getAktørId() != null) {
+            return getAktørId();
+        }
+        return getOrgnr();
+    }
+
     @Override
     public boolean equals(Object annet) {
         if (!(annet instanceof Arbeidsforhold)) {

@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
@@ -48,8 +49,19 @@ public class FastsettNyFordelingTest {
         kjørRegel(periode);
 
         // Assert
-        assertThat(a1.getFordeltPrÅr()).isEqualByComparingTo(refusjonskrav1);
-        assertThat(a2.getFordeltPrÅr()).isEqualByComparingTo(refusjonskrav2);
+        // Assert
+        var flyttetFraNæringArbeid1 = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().stream()
+            .filter(a -> a.getArbeidsforhold().equals(a1.getArbeidsforhold()) && a.getInntektskategori().equals(Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE))
+            .findFirst().get();
+        assertThat(flyttetFraNæringArbeid1.getFordeltPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(100_000));
+        assertThat(a1.getBruttoPrÅr().get()).isEqualByComparingTo(BigDecimal.valueOf(100_000));
+
+        var flyttetFraNæringArbeid2 = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().stream()
+            .filter(a -> a.getArbeidsforhold().equals(a2.getArbeidsforhold()) && a.getInntektskategori().equals(Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE))
+            .findFirst().get();
+        assertThat(flyttetFraNæringArbeid2.getFordeltPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(50_000));
+        assertThat(a2.getBruttoPrÅr().get()).isEqualByComparingTo(BigDecimal.valueOf(100_000));
+
         assertThat(SN.getFordeltPrÅr()).isEqualByComparingTo(BigDecimal.ZERO);
     }
 
@@ -133,6 +145,7 @@ public class FastsettNyFordelingTest {
         return BeregningsgrunnlagPrArbeidsforhold.builder()
             .medAndelNr(andelsnr)
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr, null))
+            .medInntektskategori(Inntektskategori.ARBEIDSTAKER)
             .medRefusjonskravPrÅr(refusjonskravPrÅr)
             .medBeregnetPrÅr(beregnetPrÅr)
             .build();
@@ -142,6 +155,7 @@ public class FastsettNyFordelingTest {
         return BeregningsgrunnlagPrStatus.builder()
             .medAndelNr(2L)
             .medAktivitetStatus(AktivitetStatus.SN)
+            .medInntektskategori(Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE)
             .medBeregnetPrÅr(beregnetPrÅr1).build();
     }
 

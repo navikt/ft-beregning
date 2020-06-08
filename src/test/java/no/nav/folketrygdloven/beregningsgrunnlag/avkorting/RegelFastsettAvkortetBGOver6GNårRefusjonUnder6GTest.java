@@ -544,7 +544,7 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
             .medInntektskildeOgPeriodeType(Inntektskilde.INNTEKTSMELDING)
             .medArbeidsgiver(af.getArbeidsforhold())
             .medMåned(skjæringstidspunkt)
-            .medInntekt(af.getBruttoPrÅr())
+            .medInntekt(af.getBruttoPrÅr().get())
             .build()));
         return Beregningsgrunnlag.builder()
             .medAktivitetStatuser(List.of(new AktivitetStatusMedHjemmel(AktivitetStatus.ATFL, null)))

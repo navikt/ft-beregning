@@ -42,14 +42,14 @@ class FastsettNyFordeling implements RuleService<BeregningsgrunnlagPeriode> {
         return atfl == null ? Collections.emptyList() : atfl
             .getArbeidsforholdIkkeFrilans()
             .stream()
-            .filter(af -> af.getGradertBruttoInkludertNaturalytelsePrÅr().isPresent())
+            .filter(af -> af.getBruttoInkludertNaturalytelsePrÅr().isPresent())
             .filter(this::refusjonskravOverstigerBg)
             .collect(Collectors.toList());
     }
 
     private boolean refusjonskravOverstigerBg(BeregningsgrunnlagPrArbeidsforhold arbeidsforhold) {
-        BigDecimal refusjonskrav = arbeidsforhold.getGradertRefusjonskravPrÅr().orElse(BigDecimal.ZERO);
-        return refusjonskrav.compareTo(arbeidsforhold.getGradertBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO)) > 0;
+        BigDecimal refusjonskrav = arbeidsforhold.getRefusjonskravPrÅr().orElse(BigDecimal.ZERO);
+        return refusjonskrav.compareTo(arbeidsforhold.getBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO)) > 0;
     }
 
 }
