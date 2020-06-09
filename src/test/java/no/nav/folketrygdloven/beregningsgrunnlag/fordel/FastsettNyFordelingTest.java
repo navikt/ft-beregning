@@ -23,6 +23,33 @@ public class FastsettNyFordelingTest {
     private static final String ORGNR2 = "910";
     private static final String ORGNR3 = "973";
 
+
+    @Test
+    public void skal_flytte_beregningsgrunnlag_fra_SN_til_et_nytt_arbeidsforhold_uten_rest() {
+        // Arrange
+        BigDecimal refusjonskrav1 = BigDecimal.valueOf(150_000);
+        BeregningsgrunnlagPrArbeidsforhold a1 = lagNyttArbeidsforhold(refusjonskrav1, 1L, ORGNR1);
+
+        BeregningsgrunnlagPrStatus atfl = lagATFL(List.of(a1));
+
+        BigDecimal beregnetPrÅrSN = BigDecimal.valueOf(150_000);
+        BeregningsgrunnlagPrStatus SN = lagSN(beregnetPrÅrSN);
+
+        BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+            .medBeregningsgrunnlagPrStatus(SN)
+            .medBeregningsgrunnlagPrStatus(atfl)
+            .medPeriode(Periode.of(STP, null))
+            .build();
+
+        // Act
+        kjørRegel(periode);
+
+        // Assert
+        assertThat(a1.getFordeltPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(150_000));
+        assertThat(a1.getInntektskategori()).isEqualTo(Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE);
+        assertThat(SN.getFordeltPrÅr()).isEqualByComparingTo(BigDecimal.ZERO);
+    }
+
     @Test
     public void skal_flytte_beregningsgrunnlag_fra_SN_til_to_arbeidsforhold_uten_rest() {
         // Arrange
@@ -48,7 +75,6 @@ public class FastsettNyFordelingTest {
         // Act
         kjørRegel(periode);
 
-        // Assert
         // Assert
         var flyttetFraNæringArbeid1 = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().stream()
             .filter(a -> a.getArbeidsforhold().equals(a1.getArbeidsforhold()) && a.getInntektskategori().equals(Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE))
@@ -148,6 +174,14 @@ public class FastsettNyFordelingTest {
             .medInntektskategori(Inntektskategori.ARBEIDSTAKER)
             .medRefusjonskravPrÅr(refusjonskravPrÅr)
             .medBeregnetPrÅr(beregnetPrÅr)
+            .build();
+    }
+
+    private BeregningsgrunnlagPrArbeidsforhold lagNyttArbeidsforhold(BigDecimal refusjonskravPrÅr, Long andelsnr, String orgnr) {
+        return BeregningsgrunnlagPrArbeidsforhold.builder()
+            .medAndelNr(andelsnr)
+            .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr, null))
+            .medRefusjonskravPrÅr(refusjonskravPrÅr)
             .build();
     }
 
