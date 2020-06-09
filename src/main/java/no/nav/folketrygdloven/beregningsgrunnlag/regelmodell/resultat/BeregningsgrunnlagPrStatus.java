@@ -87,15 +87,6 @@ public class BeregningsgrunnlagPrStatus {
             .orElse(null);
     }
 
-    public BigDecimal getGradertFordeltPrÅr() {
-        return fordeltPrÅr != null ? finnGradert(fordeltPrÅr) : getArbeidsforhold().stream()
-            .map(BeregningsgrunnlagPrArbeidsforhold::getGradertFordeltPrÅr)
-            .filter(Objects::nonNull)
-            .reduce(BigDecimal::add)
-            .orElse(null);
-    }
-
-
     public boolean erArbeidstakerEllerFrilanser() {
             return AktivitetStatus.erArbeidstaker(aktivitetStatus) || AktivitetStatus.erFrilanser(aktivitetStatus);
     }
@@ -131,7 +122,8 @@ public class BeregningsgrunnlagPrStatus {
     public BigDecimal getBruttoPrÅr() {
         return bruttoPrÅr != null ? bruttoPrÅr : getArbeidsforhold().stream()
             .map(BeregningsgrunnlagPrArbeidsforhold::getBruttoPrÅr)
-            .filter(Objects::nonNull)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 

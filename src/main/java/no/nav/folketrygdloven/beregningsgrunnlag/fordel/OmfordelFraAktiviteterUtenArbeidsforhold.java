@@ -3,9 +3,14 @@ package no.nav.folketrygdloven.beregningsgrunnlag.fordel;
 import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
@@ -18,11 +23,11 @@ class OmfordelFraAktiviteterUtenArbeidsforhold extends LeafSpecification<Beregni
     private static final String BESKRIVELSE = "Flytt beregningsgrunnlag fra aktivitet uten arbeidsforhold";
     private final Comparator<BeregningsgrunnlagPrStatus> AVKORTING_COMPARATOR = Comparator.comparingInt(a -> a.getAktivitetStatus().getAvkortingPrioritet());
 
-    private BeregningsgrunnlagPrArbeidsforhold arbeidsforhold;
+    private Arbeidsforhold arbeidsforhold;
 
     OmfordelFraAktiviteterUtenArbeidsforhold(BeregningsgrunnlagPrArbeidsforhold arbeidsforhold) {
         super(ID, BESKRIVELSE);
-        this.arbeidsforhold = arbeidsforhold;
+        this.arbeidsforhold = arbeidsforhold.getArbeidsforhold();
     }
 
     @Override
@@ -31,27 +36,80 @@ class OmfordelFraAktiviteterUtenArbeidsforhold extends LeafSpecification<Beregni
         return beregnet(resultater);
     }
 
-    private Map<String, Object> omfordelFraBgPrStatusUtenArbeidsforholdIPrioritertRekkefølge(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
-        BigDecimal restbeløpSomSkalFlyttesTilArbeidsforhold = finnRestbeløpSomMåOmfordeles();
+    private Map<String, Object> omfordelFraBgPrStatusUtenArbeidsforholdIPrioritertRekkefølge(BeregningsgrunnlagPeriode bgPeriode) {
+        BigDecimal restÅFlytte = finnRestSomMåOmfordeles(bgPeriode);
         Map<String, Object> resultater = new HashMap<>();
-        Optional<BeregningsgrunnlagPrStatus> bgPrStatusMedBeløpSomKanFlyttes = finnStatusMedDisponibeltBeløpOgHøyestAvkortingPrioritet(beregningsgrunnlagPeriode);
-        while (harMerÅFlytte(restbeløpSomSkalFlyttesTilArbeidsforhold) && bgPrStatusMedBeløpSomKanFlyttes.isPresent()) {
+        Optional<BeregningsgrunnlagPrStatus> bgPrStatusMedBeløpSomKanFlyttes = finnStatusMedDisponibeltBeløpOgHøyestAvkortingPrioritet(bgPeriode);
+        while (harMerÅFlytte(restÅFlytte) && bgPrStatusMedBeløpSomKanFlyttes.isPresent()) {
             BeregningsgrunnlagPrStatus bgPrStatus = bgPrStatusMedBeløpSomKanFlyttes.get();
-            BigDecimal maksimaltBeløpForOmfordelingPrStatus = finnFlyttbartGrunnlagForStatus(bgPrStatus);
-            if (skalFlytteHeleGrunnlagetFraStatus(restbeløpSomSkalFlyttesTilArbeidsforhold, maksimaltBeløpForOmfordelingPrStatus)) {
-                settFordeltForStatusTilNull(bgPrStatus);
-                adderBeløpTilBgForArbeidsforhold(maksimaltBeløpForOmfordelingPrStatus);
-                restbeløpSomSkalFlyttesTilArbeidsforhold = reduserRestbeløpSomSkalOmfordeles(restbeløpSomSkalFlyttesTilArbeidsforhold, maksimaltBeløpForOmfordelingPrStatus);
+            BeregningsgrunnlagPrArbeidsforhold arbforholdForStatus = finnArbeidsforholdAndelMedRiktigInntektskategori(bgPeriode, bgPrStatus);
+            BigDecimal maksFlyttbartGrunnlag = finnFlyttbartGrunnlagForStatus(bgPrStatus);
+            if (skalFlytteHeleGrunnlagetFraStatus(restÅFlytte, maksFlyttbartGrunnlag)) {
+                restÅFlytte = flyttHeleGrunnlagetForStatus(bgPeriode, restÅFlytte, bgPrStatus, arbforholdForStatus, maksFlyttbartGrunnlag);
             } else {
-                reduserFordeltForStatus(restbeløpSomSkalFlyttesTilArbeidsforhold, bgPrStatus);
-                adderBeløpTilBgForArbeidsforhold(restbeløpSomSkalFlyttesTilArbeidsforhold);
-                restbeløpSomSkalFlyttesTilArbeidsforhold = BigDecimal.ZERO;
+                restÅFlytte = flyttDelerAvGrunnagetForStatus(bgPeriode, restÅFlytte, bgPrStatus, arbforholdForStatus);
             }
-            resultater.put("fordeltPrÅr", bgPrStatus.getGradertFordeltPrÅr());
+            resultater.put("fordeltPrÅr", bgPrStatus.getFordeltPrÅr());
             resultater.put("aktivitetstatus", bgPrStatus.getAktivitetStatus());
-            bgPrStatusMedBeløpSomKanFlyttes = finnStatusMedDisponibeltBeløpOgHøyestAvkortingPrioritet(beregningsgrunnlagPeriode);
+            bgPrStatusMedBeløpSomKanFlyttes = finnStatusMedDisponibeltBeløpOgHøyestAvkortingPrioritet(bgPeriode);
         }
         return resultater;
+    }
+
+    private BeregningsgrunnlagPrArbeidsforhold finnArbeidsforholdAndelMedRiktigInntektskategori(BeregningsgrunnlagPeriode bgPeriode, BeregningsgrunnlagPrStatus bgPrStatus) {
+        Optional<BeregningsgrunnlagPrArbeidsforhold> arbforholdForStatusOpt = finnAndelForArbforholdMedSammeInntektskategori(bgPeriode, bgPrStatus);
+        BeregningsgrunnlagPrArbeidsforhold arbforholdForStatus;
+        if (arbforholdForStatusOpt.isEmpty()) {
+            arbforholdForStatus = opprettNyAndel(bgPeriode);
+        } else {
+            arbforholdForStatus = arbforholdForStatusOpt.get();
+        }
+        BeregningsgrunnlagPrArbeidsforhold.builder(arbforholdForStatus).medInntektskategori(bgPrStatus.getInntektskategori());
+        return arbforholdForStatus;
+    }
+
+    private BigDecimal flyttHeleGrunnlagetForStatus(BeregningsgrunnlagPeriode bgPeriode,
+                                                    BigDecimal restSomSkalFlyttesTilArbforhold,
+                                                    BeregningsgrunnlagPrStatus bgPrStatus,
+                                                    BeregningsgrunnlagPrArbeidsforhold arbforholdForStatus,
+                                                    BigDecimal maksimaltBeløpForOmfordelingPrStatus) {
+        settFordeltForStatusTilNull(bgPrStatus);
+        adderBeløpTilBgForArbeidsforhold(arbforholdForStatus, maksimaltBeløpForOmfordelingPrStatus);
+        adderBeløpTilRefusjonForArbeidsforhold(finnEksisterende(bgPeriode), arbforholdForStatus, maksimaltBeløpForOmfordelingPrStatus);
+        restSomSkalFlyttesTilArbforhold = reduserRestbeløpSomSkalOmfordeles(restSomSkalFlyttesTilArbforhold, maksimaltBeløpForOmfordelingPrStatus);
+        return restSomSkalFlyttesTilArbforhold;
+    }
+
+    private BigDecimal flyttDelerAvGrunnagetForStatus(BeregningsgrunnlagPeriode bgPeriode, BigDecimal restSomSkalFlyttesTilArbforhold, BeregningsgrunnlagPrStatus bgPrStatus, BeregningsgrunnlagPrArbeidsforhold arbforholdForStatus) {
+        reduserFordeltForStatus(restSomSkalFlyttesTilArbforhold, bgPrStatus);
+        adderBeløpTilBgForArbeidsforhold(arbforholdForStatus, restSomSkalFlyttesTilArbforhold);
+        adderBeløpTilRefusjonForArbeidsforhold(finnEksisterende(bgPeriode), arbforholdForStatus, restSomSkalFlyttesTilArbforhold);
+        restSomSkalFlyttesTilArbforhold = BigDecimal.ZERO;
+        return restSomSkalFlyttesTilArbforhold;
+    }
+
+    private Optional<BeregningsgrunnlagPrArbeidsforhold> finnAndelForArbforholdMedSammeInntektskategori(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode, BeregningsgrunnlagPrStatus bgPrStatus) {
+        return getGrunnlagForArbeidsforhold(beregningsgrunnlagPeriode)
+            .stream().filter(a -> a.getInntektskategori() == null || a.getInntektskategori().equals(Inntektskategori.UDEFINERT) || a.getInntektskategori().equals(bgPrStatus.getInntektskategori())).findFirst();
+    }
+
+    private BeregningsgrunnlagPrArbeidsforhold opprettNyAndel(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
+        BeregningsgrunnlagPrArbeidsforhold arbeidsforholdForStatus;
+        arbeidsforholdForStatus = BeregningsgrunnlagPrArbeidsforhold.builder()
+            .medArbeidsforhold(arbeidsforhold)
+            .erNytt(true)
+            .build();
+        BeregningsgrunnlagPrStatus atfl = beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+        BeregningsgrunnlagPrStatus.builder(atfl).medArbeidsforhold(arbeidsforholdForStatus);
+        return arbeidsforholdForStatus;
+    }
+
+    private BeregningsgrunnlagPrArbeidsforhold finnEksisterende(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
+        return beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL)
+            .getArbeidsforhold().stream()
+            .filter(a -> a.getArbeidsforhold().equals(arbeidsforhold) && a.getAndelNr() != null)
+            .findFirst()
+            .orElseThrow(() -> new IllegalStateException("Fant ikke eksisterende BeregningsgrunnlagPrArbeidsforhold for " + arbeidsforhold));
     }
 
     private BigDecimal reduserRestbeløpSomSkalOmfordeles(BigDecimal restbeløpSomSkalOmfordelesTilAktivitet, BigDecimal maksimaltBeløpForOmfordelingPrStatus) {
@@ -65,7 +123,7 @@ class OmfordelFraAktiviteterUtenArbeidsforhold extends LeafSpecification<Beregni
     }
 
     private void reduserFordeltForStatus(BigDecimal restbeløpSomSkalOmfordelesTilAktivitet, BeregningsgrunnlagPrStatus bgPrStatus) {
-        BigDecimal fordelt = bgPrStatus.getGradertBruttoPrÅr().subtract(restbeløpSomSkalOmfordelesTilAktivitet);
+        BigDecimal fordelt = bgPrStatus.getBruttoPrÅr().subtract(restbeløpSomSkalOmfordelesTilAktivitet);
         if (fordelt.compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalStateException("Kan ikke fordele et negativt beløp til " + bgPrStatus.getAktivitetStatus());
         }
@@ -73,13 +131,28 @@ class OmfordelFraAktiviteterUtenArbeidsforhold extends LeafSpecification<Beregni
             .medFordeltPrÅr(fordelt);
     }
 
-    private BigDecimal finnRestbeløpSomMåOmfordeles() {
-        BigDecimal refusjonskravPrÅr = arbeidsforhold.getGradertRefusjonskravPrÅr().orElse(BigDecimal.ZERO);
-        BigDecimal bruttoBgForArbeidsforhold = arbeidsforhold.getGradertBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO);
+    private BigDecimal finnRestSomMåOmfordeles(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
+        List<BeregningsgrunnlagPrArbeidsforhold> grunnlagForArbeidsforhold = getGrunnlagForArbeidsforhold(beregningsgrunnlagPeriode);
+        BigDecimal refusjonskravPrÅr = grunnlagForArbeidsforhold.stream()
+            .map(BeregningsgrunnlagPrArbeidsforhold::getRefusjonskravPrÅr)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+        BigDecimal bruttoBgForArbeidsforhold = grunnlagForArbeidsforhold.stream().map(BeregningsgrunnlagPrArbeidsforhold::getBruttoInkludertNaturalytelsePrÅr)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
         if (refusjonskravPrÅr.compareTo(bruttoBgForArbeidsforhold) <= 0) {
             throw new IllegalStateException("Skal ikke flytte beregningsgrunnlag til arbeidsforhold der refusjon ikke overstiger beregningsgrunnlag som allerede er satt.");
         }
         return refusjonskravPrÅr.subtract(bruttoBgForArbeidsforhold);
+    }
+
+    private List<BeregningsgrunnlagPrArbeidsforhold> getGrunnlagForArbeidsforhold(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
+        return beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold()
+            .stream()
+            .filter(a -> a.getArbeidsforhold().equals(arbeidsforhold))
+            .collect(Collectors.toList());
     }
 
     private Optional<BeregningsgrunnlagPrStatus> finnStatusMedDisponibeltBeløpOgHøyestAvkortingPrioritet(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
@@ -91,7 +164,7 @@ class OmfordelFraAktiviteterUtenArbeidsforhold extends LeafSpecification<Beregni
     }
 
     private BigDecimal finnFlyttbartGrunnlagForStatus(BeregningsgrunnlagPrStatus bgPrStatus) {
-        return bgPrStatus.getGradertBruttoPrÅr();
+        return bgPrStatus.getBruttoPrÅr();
     }
 
     private boolean skalFlytteHeleGrunnlagetFraStatus(BigDecimal restBeløpSomMåFlyttes, BigDecimal flyttbartBeløp) {
@@ -102,12 +175,31 @@ class OmfordelFraAktiviteterUtenArbeidsforhold extends LeafSpecification<Beregni
         return skalFlyttesTilAktivitet.compareTo(BigDecimal.ZERO) > 0;
     }
 
-    private void adderBeløpTilBgForArbeidsforhold(BigDecimal beløpSomSkalOmfordelesTilArbeidsforhold) {
-        BeregningsgrunnlagPrArbeidsforhold.builder(arbeidsforhold)
-            .medFordeltPrÅr(arbeidsforhold.getGradertBruttoPrÅr().add(beløpSomSkalOmfordelesTilArbeidsforhold));
+    private void adderBeløpTilBgForArbeidsforhold(BeregningsgrunnlagPrArbeidsforhold arbeidsforholdForStatus, BigDecimal beløpSomSkalOmfordelesTilArbeidsforhold) {
+        BeregningsgrunnlagPrArbeidsforhold.builder(arbeidsforholdForStatus)
+            .medFordeltPrÅr(arbeidsforholdForStatus.getBruttoPrÅr().isPresent() ? arbeidsforholdForStatus.getBruttoPrÅr().get().add(beløpSomSkalOmfordelesTilArbeidsforhold) : beløpSomSkalOmfordelesTilArbeidsforhold);
     }
 
+    private void adderBeløpTilRefusjonForArbeidsforhold(BeregningsgrunnlagPrArbeidsforhold eksisterende,
+                                                        BeregningsgrunnlagPrArbeidsforhold aktivitet,
+                                                        BigDecimal beløpSomSkalOmfordelesTilArbeidsforhold) {
+        if (aktivitet.getAndelNr() != null) {
+            return;
+        }
+        if (eksisterende.getRefusjonskravPrÅr().isEmpty()) {
+            throw new IllegalStateException("Eksisterende andel har ikke refusjonskrav.");
+        }
+        if (eksisterende.getRefusjonskravPrÅr().get().compareTo(beløpSomSkalOmfordelesTilArbeidsforhold) < 0) {
+            throw new IllegalStateException("Skal ikke flytte mer av refusjonskravet.");
+        }
+        BeregningsgrunnlagPrArbeidsforhold.builder(eksisterende)
+            .medRefusjonskravPrÅr(eksisterende.getRefusjonskravPrÅr().get().subtract(beløpSomSkalOmfordelesTilArbeidsforhold));
+        BeregningsgrunnlagPrArbeidsforhold.builder(aktivitet)
+            .medRefusjonskravPrÅr(aktivitet.getRefusjonskravPrÅr().isPresent() ? aktivitet.getRefusjonskravPrÅr().get().add(beløpSomSkalOmfordelesTilArbeidsforhold) : beløpSomSkalOmfordelesTilArbeidsforhold);
+    }
+
+
     private boolean harBgSomKanFlyttes(BeregningsgrunnlagPrStatus beregningsgrunnlagPrStatus) {
-        return beregningsgrunnlagPrStatus.getGradertBruttoPrÅr().compareTo(BigDecimal.ZERO) > 0;
+        return beregningsgrunnlagPrStatus.getBruttoPrÅr().compareTo(BigDecimal.ZERO) > 0;
     }
 }

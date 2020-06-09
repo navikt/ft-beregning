@@ -45,12 +45,7 @@ public class BeregningsgrunnlagPrArbeidsforhold {
     }
 
     public String getArbeidsgiverId() {
-        if (arbeidsforhold.getAktørId() != null) {
-            return arbeidsforhold.getAktørId();
-        } else if (arbeidsforhold.getOrgnr() != null) {
-            return arbeidsforhold.getOrgnr();
-        }
-        return null;
+        return arbeidsforhold.getArbeidsgiverId();
     }
 
     public Inntektskategori getInntektskategori() {
@@ -89,8 +84,8 @@ public class BeregningsgrunnlagPrArbeidsforhold {
         return overstyrtPrÅr;
     }
 
-    public BigDecimal getBruttoPrÅr() {
-        return bruttoPrÅr;
+    public Optional<BigDecimal> getBruttoPrÅr() {
+        return Optional.ofNullable(bruttoPrÅr);
     }
 
     public BigDecimal getGradertBruttoPrÅr() {
@@ -236,6 +231,7 @@ public class BeregningsgrunnlagPrArbeidsforhold {
     public static class Builder {
 
         private BeregningsgrunnlagPrArbeidsforhold mal;
+        private boolean erNytt;
 
         public Builder() {
             mal = new BeregningsgrunnlagPrArbeidsforhold();
@@ -249,6 +245,13 @@ public class BeregningsgrunnlagPrArbeidsforhold {
             mal.arbeidsforhold = arbeidsforhold;
             return this;
         }
+
+
+        public Builder erNytt(boolean erNytt) {
+            this.erNytt = erNytt;
+            return this;
+        }
+
 
 
         public Builder medAndelsmessigFørGraderingPrAar(BigDecimal andelsmessigFørGraderingPrAar) {
@@ -380,7 +383,9 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 
         private void verifyStateForBuild() {
             Objects.requireNonNull(mal.arbeidsforhold, "arbeidsforhold");
-            Objects.requireNonNull(mal.andelNr, "andelNr");
+            if (!erNytt) {
+                Objects.requireNonNull(mal.andelNr, "andelNr");
+            }
         }
     }
 }

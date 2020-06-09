@@ -13,6 +13,7 @@ import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RuleDocumentation(RegelVurderRegisterinntektMotOppgittInntektATFLFRISINN.ID)
 class RegelVurderRegisterinntektMotOppgittInntektATFLFRISINN extends LeafSpecification<BeregningsgrunnlagPeriode> {
@@ -76,12 +77,14 @@ class RegelVurderRegisterinntektMotOppgittInntektATFLFRISINN extends LeafSpecifi
     }
 
     private BigDecimal finnAndelAvTotaltGrunnlag(BeregningsgrunnlagPrArbeidsforhold arbfor, BigDecimal totalATInntekt) {
-        return arbfor.getBruttoPrÅr().divide(totalATInntekt, 10, RoundingMode.HALF_EVEN);
+        return arbfor.getBruttoPrÅr().orElse(BigDecimal.ZERO).divide(totalATInntekt, 10, RoundingMode.HALF_EVEN);
     }
 
     private BigDecimal finnSamletATInntekt(BeregningsgrunnlagPrStatus atflAndel) {
         return atflAndel.getArbeidsforholdIkkeFrilans().stream()
             .map(BeregningsgrunnlagPrArbeidsforhold::getBruttoPrÅr)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
             .reduce(BigDecimal::add)
             .orElse(BigDecimal.ZERO);
     }

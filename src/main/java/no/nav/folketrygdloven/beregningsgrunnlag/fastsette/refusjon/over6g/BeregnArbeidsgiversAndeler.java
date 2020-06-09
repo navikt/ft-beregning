@@ -58,10 +58,14 @@ class BeregnArbeidsgiversAndeler extends LeafSpecification<BeregningsgrunnlagPer
                     .orElse(BigDecimal.ZERO));
 
         // Forsøk å tildele avkortede andeler til alle
-        BigDecimal bruttoSum = ikkeFastsatt.stream().map(BeregningsgrunnlagPrArbeidsforhold::getBruttoPrÅr).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+        BigDecimal bruttoSum = ikkeFastsatt.stream().map(BeregningsgrunnlagPrArbeidsforhold::getBruttoPrÅr)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
         resultater.put(REFUSJON_TIL_FORDELING, refusjonTilFordeling);
         ikkeFastsatt.forEach(af -> {
-            BigDecimal andel = refusjonTilFordeling.multiply(af.getBruttoPrÅr()).divide(bruttoSum, 10, RoundingMode.HALF_EVEN);
+            BigDecimal andel = refusjonTilFordeling.multiply(af.getBruttoPrÅr().orElse(BigDecimal.ZERO))
+                .divide(bruttoSum, 10, RoundingMode.HALF_EVEN);
             BeregningsgrunnlagPrArbeidsforhold.builder(af)
                 .medAvkortetRefusjonPrÅr(andel)
                 .build();

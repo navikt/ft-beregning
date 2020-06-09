@@ -525,7 +525,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
                                                              double avkortetPrÅr, double redusertPrÅr,
                                                              double avkortetRefusjonPrÅr, double redusertRefusjonPrÅr, double avkortetBrukersAndelPrÅr, double redusertBrukersAndelPrÅr) {
         assertThat(arbeidsforhold.getMaksimalRefusjonPrÅr().doubleValue()).isEqualTo(maxRefusjon, offset);
-        assertThat(arbeidsforhold.getBruttoPrÅr().doubleValue()).isEqualTo(bruttoPrÅr, offset);
+        assertThat(arbeidsforhold.getBruttoPrÅr().get().doubleValue()).isEqualTo(bruttoPrÅr, offset);
         assertThat(arbeidsforhold.getAvkortetPrÅr().doubleValue()).isEqualTo(avkortetPrÅr, offset);
         assertThat(arbeidsforhold.getRedusertPrÅr().doubleValue()).isEqualTo(redusertPrÅr, offset);
         assertThat(arbeidsforhold.getAvkortetRefusjonPrÅr().doubleValue()).isEqualTo(avkortetRefusjonPrÅr, offset);
@@ -580,7 +580,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
             .medInntektskildeOgPeriodeType(Inntektskilde.INNTEKTSMELDING)
             .medArbeidsgiver(af.getArbeidsforhold())
             .medMåned(skjæringstidspunkt)
-            .medInntekt(af.getBruttoPrÅr())
+            .medInntekt(af.getBruttoPrÅr().get())
             .build()));
         grunnlagsBuilder.medBeregningsgrunnlagPeriode(periode)
             .medGrunnbeløpSatser(List.of(new Grunnbeløp(LocalDate.of(2000, Month.JANUARY, 1), LocalDate.of(2099, Month.DECEMBER, 31), GRUNNBELØP_2017, GRUNNBELØP_2017)))

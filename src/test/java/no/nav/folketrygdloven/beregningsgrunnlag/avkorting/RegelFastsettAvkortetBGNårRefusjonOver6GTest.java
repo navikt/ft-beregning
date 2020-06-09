@@ -371,7 +371,7 @@ public class RegelFastsettAvkortetBGNårRefusjonOver6GTest {
                 .medInntektskildeOgPeriodeType(Inntektskilde.INNTEKTSMELDING)
                 .medArbeidsgiver(af.getArbeidsforhold())
                 .medMåned(skjæringstidspunkt)
-                .medInntekt(af.getBruttoPrÅr())
+                .medInntekt(af.getBruttoPrÅr().get())
                 .build();
             inntektsgrunnlag.leggTilPeriodeinntekt(månedsinntekt);
         });
