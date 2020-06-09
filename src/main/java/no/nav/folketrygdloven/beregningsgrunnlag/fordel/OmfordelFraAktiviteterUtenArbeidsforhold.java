@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
@@ -41,8 +42,7 @@ class OmfordelFraAktiviteterUtenArbeidsforhold extends LeafSpecification<Beregni
         Optional<BeregningsgrunnlagPrStatus> bgPrStatusMedBeløpSomKanFlyttes = finnStatusMedDisponibeltBeløpOgHøyestAvkortingPrioritet(bgPeriode);
         while (harMerÅFlytte(restÅFlytte) && bgPrStatusMedBeløpSomKanFlyttes.isPresent()) {
             BeregningsgrunnlagPrStatus bgPrStatus = bgPrStatusMedBeløpSomKanFlyttes.get();
-            Optional<BeregningsgrunnlagPrArbeidsforhold> arbforholdForStatusOpt = finnAndelForArbforholdMedSammeInntektskategori(bgPeriode, bgPrStatus);
-            BeregningsgrunnlagPrArbeidsforhold arbforholdForStatus = finnArbeidsforholdAndelMedRiktigInntektskategori(bgPeriode, bgPrStatus, arbforholdForStatusOpt);
+            BeregningsgrunnlagPrArbeidsforhold arbforholdForStatus = finnArbeidsforholdAndelMedRiktigInntektskategori(bgPeriode, bgPrStatus);
             BigDecimal maksFlyttbartGrunnlag = finnFlyttbartGrunnlagForStatus(bgPrStatus);
             if (skalFlytteHeleGrunnlagetFraStatus(restÅFlytte, maksFlyttbartGrunnlag)) {
                 restÅFlytte = flyttHeleGrunnlagetForStatus(bgPeriode, restÅFlytte, bgPrStatus, arbforholdForStatus, maksFlyttbartGrunnlag);
@@ -56,7 +56,8 @@ class OmfordelFraAktiviteterUtenArbeidsforhold extends LeafSpecification<Beregni
         return resultater;
     }
 
-    private BeregningsgrunnlagPrArbeidsforhold finnArbeidsforholdAndelMedRiktigInntektskategori(BeregningsgrunnlagPeriode bgPeriode, BeregningsgrunnlagPrStatus bgPrStatus, Optional<BeregningsgrunnlagPrArbeidsforhold> arbforholdForStatusOpt) {
+    private BeregningsgrunnlagPrArbeidsforhold finnArbeidsforholdAndelMedRiktigInntektskategori(BeregningsgrunnlagPeriode bgPeriode, BeregningsgrunnlagPrStatus bgPrStatus) {
+        Optional<BeregningsgrunnlagPrArbeidsforhold> arbforholdForStatusOpt = finnAndelForArbforholdMedSammeInntektskategori(bgPeriode, bgPrStatus);
         BeregningsgrunnlagPrArbeidsforhold arbforholdForStatus;
         if (arbforholdForStatusOpt.isEmpty()) {
             arbforholdForStatus = opprettNyAndel(bgPeriode);
@@ -89,7 +90,7 @@ class OmfordelFraAktiviteterUtenArbeidsforhold extends LeafSpecification<Beregni
 
     private Optional<BeregningsgrunnlagPrArbeidsforhold> finnAndelForArbforholdMedSammeInntektskategori(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode, BeregningsgrunnlagPrStatus bgPrStatus) {
         return getGrunnlagForArbeidsforhold(beregningsgrunnlagPeriode)
-            .stream().filter(a -> a.getInntektskategori() == null || a.getInntektskategori().equals(bgPrStatus.getInntektskategori())).findFirst();
+            .stream().filter(a -> a.getInntektskategori() == null || a.getInntektskategori().equals(Inntektskategori.UDEFINERT) || a.getInntektskategori().equals(bgPrStatus.getInntektskategori())).findFirst();
     }
 
     private BeregningsgrunnlagPrArbeidsforhold opprettNyAndel(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {

@@ -41,7 +41,7 @@ class OmfordelFraFrilans extends LeafSpecification<BeregningsgrunnlagPeriode> {
             .getArbeidsforhold()
             .stream()
             .filter(a -> a.getArbeidsforhold().equals(arbeidsforhold)
-                && (a.getInntektskategori() == null || a.getInntektskategori().equals(Inntektskategori.FRILANSER)))
+                && (a.getInntektskategori() == null || a.getInntektskategori().equals(Inntektskategori.UDEFINERT) || a.getInntektskategori().equals(Inntektskategori.FRILANSER)))
             .findFirst();
         BeregningsgrunnlagPrArbeidsforhold aktivitet;
         if (frilansAndelForArbeidsforholdOpt.isEmpty()) {
