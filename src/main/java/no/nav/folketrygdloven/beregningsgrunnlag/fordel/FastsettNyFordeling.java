@@ -42,7 +42,6 @@ class FastsettNyFordeling implements RuleService<BeregningsgrunnlagPeriode> {
         return atfl == null ? Collections.emptyList() : atfl
             .getArbeidsforholdIkkeFrilans()
             .stream()
-            .filter(af -> af.getBruttoInkludertNaturalytelsePrÅr().isPresent())
             .filter(this::refusjonskravOverstigerBg)
             .collect(Collectors.toList());
     }
