@@ -5,34 +5,30 @@ import java.util.Map;
 import java.util.Optional;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
-class OmfordelFraArbeid extends LeafSpecification<BeregningsgrunnlagPeriode> {
+class OmfordelFraArbeid extends OmfordelFraATFL {
 
     public static final String ID = "FP_BR 22.3.8";
     public static final String BESKRIVELSE = "Flytt beregnignsgrunnlag fra andre arbeidsforhold.";
 
-    private BeregningsgrunnlagPrArbeidsforhold arbeidsforhold;
-
     OmfordelFraArbeid(BeregningsgrunnlagPrArbeidsforhold arbeidsforhold) {
-        super(ID, BESKRIVELSE);
-        this.arbeidsforhold = arbeidsforhold;
+        super(arbeidsforhold, ID, BESKRIVELSE);
     }
 
     @Override
-    public Evaluation evaluate(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
-        Map<String, Object> resultater = flyttFraArbeidsforholdOmMulig(beregningsgrunnlagPeriode);
-        return beregnet(resultater);
+    protected Inntektskategori finnInntektskategori() {
+        return Inntektskategori.ARBEIDSTAKER;
     }
 
-    private Map<String, Object> flyttFraArbeidsforholdOmMulig(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
-        return new OmfordelBGForArbeidsforhold(beregningsgrunnlagPeriode).omfordelBGForArbeidsforhold(arbeidsforhold, this::finnArbeidMedOmfordelbartBg);
-    }
-
-    private Optional<BeregningsgrunnlagPrArbeidsforhold> finnArbeidMedOmfordelbartBg(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
+    @Override
+    protected Optional<BeregningsgrunnlagPrArbeidsforhold> finnAktivitetMedOmfordelbartBg(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
         return beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL)
             .getArbeidsforholdIkkeFrilans()
             .stream()
@@ -51,7 +47,5 @@ class OmfordelFraArbeid extends LeafSpecification<BeregningsgrunnlagPeriode> {
             .subtract(beregningsgrunnlagPrArbeidsforhold.getNaturalytelseTilkommetPrÅr().orElse(BigDecimal.ZERO)).compareTo(BigDecimal.ZERO) > 0
             && (beregningsgrunnlagPrArbeidsforhold.getFordeltPrÅr() == null || beregningsgrunnlagPrArbeidsforhold.getFordeltPrÅr().compareTo(BigDecimal.ZERO) > 0);
     }
-
-
 
 }

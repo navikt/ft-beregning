@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
@@ -48,7 +49,13 @@ public class OmfordelBeregningsgrunnlagTilArbeidsforholdTest {
         kjørRegel(a1, periode);
 
         // Assert
-        assertThat(a1.getFordeltPrÅr()).isEqualByComparingTo(refusjonskrav1);
+        List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
+        assertThat(arbeidsforhold.size()).isEqualTo(3);
+        assertThat(a1.getFordeltPrÅr()).isNull();
+        assertThat(a1.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(100_000));
+        var andelFraSN = arbeidsforhold.stream().filter(a -> a.getArbeidsforhold().getOrgnr().equals(ORGNR1) &&
+            a.getInntektskategori().equals(Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE)).findFirst().get();
+        assertThat(andelFraSN.getFordeltPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(100_000));
         assertThat(a2.getFordeltPrÅr()).isNull();
         assertThat(SN.getFordeltPrÅr()).isEqualByComparingTo(BigDecimal.ZERO);
     }
@@ -79,7 +86,12 @@ public class OmfordelBeregningsgrunnlagTilArbeidsforholdTest {
         kjørRegel(a1, periode);
 
         // Assert
-        assertThat(a1.getFordeltPrÅr()).isEqualByComparingTo(refusjonskrav1);
+        List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
+        assertThat(arbeidsforhold.size()).isEqualTo(3);
+        assertThat(a1.getFordeltPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(150_000));
+        var andelFraSN = arbeidsforhold.stream().filter(a -> a.getArbeidsforhold().getOrgnr().equals(ORGNR1) &&
+            a.getInntektskategori().equals(Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE)).findFirst().get();
+        assertThat(andelFraSN.getFordeltPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(50_000));
         assertThat(a2.getFordeltPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(50_000));
         assertThat(SN.getFordeltPrÅr()).isEqualByComparingTo(BigDecimal.ZERO);
     }
@@ -113,7 +125,17 @@ public class OmfordelBeregningsgrunnlagTilArbeidsforholdTest {
         kjørRegel(a1, periode);
 
         // Assert
-        assertThat(a1.getFordeltPrÅr()).isEqualByComparingTo(refusjonskrav1);
+        List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
+        assertThat(arbeidsforhold.size()).isEqualTo(5);
+        assertThat(a1.getFordeltPrÅr()).isNull();
+        var andelFraSN = arbeidsforhold.stream().filter(a -> ORGNR1.equals(a.getArbeidsforhold().getArbeidsgiverId()) &&
+            a.getInntektskategori().equals(Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE)).findFirst().get();
+        assertThat(andelFraSN.getFordeltPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(50_000));
+
+        var andelFraFL = arbeidsforhold.stream().filter(a -> ORGNR1.equals(a.getArbeidsforhold().getArbeidsgiverId()) &&
+            a.getInntektskategori().equals(Inntektskategori.FRILANSER)).findFirst().get();
+        assertThat(andelFraFL.getFordeltPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(50_000));
+
         assertThat(a2.getFordeltPrÅr()).isNull();
         assertThat(frilans.getFordeltPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(50_000));
         assertThat(SN.getFordeltPrÅr()).isEqualByComparingTo(BigDecimal.ZERO);
@@ -148,7 +170,17 @@ public class OmfordelBeregningsgrunnlagTilArbeidsforholdTest {
         kjørRegel(a1, periode);
 
         // Assert
-        assertThat(a1.getFordeltPrÅr()).isEqualByComparingTo(refusjonskrav1);
+        List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
+        assertThat(arbeidsforhold.size()).isEqualTo(5);
+        assertThat(a1.getFordeltPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(125_000));
+        var andelFraSN = arbeidsforhold.stream().filter(a -> ORGNR1.equals(a.getArbeidsforhold().getArbeidsgiverId()) &&
+            a.getInntektskategori().equals(Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE)).findFirst().get();
+        assertThat(andelFraSN.getFordeltPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(50_000));
+
+        var andelFraFL = arbeidsforhold.stream().filter(a -> ORGNR1.equals(a.getArbeidsforhold().getArbeidsgiverId()) &&
+            a.getInntektskategori().equals(Inntektskategori.FRILANSER)).findFirst().get();
+        assertThat(andelFraFL.getFordeltPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(25_000));
+
         assertThat(a2.getFordeltPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(75_000));
         assertThat(frilans.getFordeltPrÅr()).isEqualByComparingTo(BigDecimal.ZERO);
         assertThat(SN.getFordeltPrÅr()).isEqualByComparingTo(BigDecimal.ZERO);
@@ -171,6 +203,7 @@ public class OmfordelBeregningsgrunnlagTilArbeidsforholdTest {
         return BeregningsgrunnlagPrArbeidsforhold.builder()
             .medAndelNr(andelsnr)
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr, null))
+            .medInntektskategori(Inntektskategori.ARBEIDSTAKER)
             .medRefusjonskravPrÅr(refusjonskravPrÅr)
             .medBeregnetPrÅr(beregnetPrÅr)
             .build();
@@ -180,6 +213,7 @@ public class OmfordelBeregningsgrunnlagTilArbeidsforholdTest {
         return BeregningsgrunnlagPrArbeidsforhold.builder()
             .medAndelNr(3L)
             .medArbeidsforhold(Arbeidsforhold.frilansArbeidsforhold())
+            .medInntektskategori(Inntektskategori.FRILANSER)
             .medBeregnetPrÅr(beregnetPrÅr)
             .build();
     }
@@ -187,6 +221,7 @@ public class OmfordelBeregningsgrunnlagTilArbeidsforholdTest {
     private BeregningsgrunnlagPrStatus lagSN(BigDecimal beregnetPrÅr1) {
         return BeregningsgrunnlagPrStatus.builder()
             .medAndelNr(2L)
+            .medInntektskategori(Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE)
             .medAktivitetStatus(AktivitetStatus.SN)
             .medBeregnetPrÅr(beregnetPrÅr1).build();
     }
