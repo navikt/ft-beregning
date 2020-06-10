@@ -101,7 +101,7 @@ public class Periode {
     }
 
     public long getVarighetDager() {
-        return tom.toEpochDay() - fom.toEpochDay();
+        return tom.toEpochDay() - fom.toEpochDay() + 1;
     }
 
 }
