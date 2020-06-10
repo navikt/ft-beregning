@@ -47,13 +47,17 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
             BeregningsgrunnlagPrStatus bgPrStatus = new BeregningsgrunnlagPrStatus(AktivitetStatus.BA);
             regelmodell.leggTilBeregningsgrunnlagPrStatus(bgPrStatus);
         } else {
-            for (AktivPeriode ap : aktivePerioderVedStp) {
-                AktivitetStatus aktivitetStatus = mapAktivitetTilStatus(ap.getAktivitet());
-                if (!AktivitetStatus.KUN_YTELSE.equals(aktivitetStatus) && ikkeMilitærMedAndreAktiviteterPåStp(aktivePerioderVedStp, aktivitetStatus)) {
-                    regelmodell.leggTilAktivitetStatus(aktivitetStatus);
-                    var arbeidsforhold = AktivitetStatus.ATFL.equals(aktivitetStatus) ? ap.getArbeidsforhold() : null;
-                    regelmodell.leggTilBeregningsgrunnlagPrStatus(new BeregningsgrunnlagPrStatus(aktivitetStatus, arbeidsforhold));
-                }
+            opprettStatusForAktiviteter(regelmodell, aktivePerioderVedStp);
+        }
+    }
+
+    private void opprettStatusForAktiviteter(AktivitetStatusModell regelmodell, List<AktivPeriode> aktivePerioderVedStp) {
+        for (AktivPeriode ap : aktivePerioderVedStp) {
+            AktivitetStatus aktivitetStatus = mapAktivitetTilStatus(ap.getAktivitet());
+            if (!AktivitetStatus.KUN_YTELSE.equals(aktivitetStatus) && ikkeMilitærMedAndreAktiviteterPåStp(aktivePerioderVedStp, aktivitetStatus)) {
+                regelmodell.leggTilAktivitetStatus(aktivitetStatus);
+                var arbeidsforhold = AktivitetStatus.ATFL.equals(aktivitetStatus) ? ap.getArbeidsforhold() : null;
+                regelmodell.leggTilBeregningsgrunnlagPrStatus(new BeregningsgrunnlagPrStatus(aktivitetStatus, arbeidsforhold));
             }
         }
     }
@@ -99,7 +103,7 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
     }
 
     protected LocalDate finnDatogrenseForInkluderteAktiviteter(LocalDate dato) {
-        return dato;
+        return dato.minusDays(1);
     }
 
 }

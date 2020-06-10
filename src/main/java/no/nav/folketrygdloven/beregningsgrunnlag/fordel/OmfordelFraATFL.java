@@ -28,8 +28,8 @@ abstract class OmfordelFraATFL extends LeafSpecification<BeregningsgrunnlagPerio
     }
 
     private Map<String, Object> omfordelFraAktivitetOmMulig(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
-        boolean harFrilansMedOmfordelbartGrunnlag = finnAktivitetMedOmfordelbartBg(beregningsgrunnlagPeriode).isPresent();
-        if (!harFrilansMedOmfordelbartGrunnlag) {
+        boolean harAktivitetMedOmfordelbartGrunnlag = finnAktivitetMedOmfordelbartBg(beregningsgrunnlagPeriode).isPresent();
+        if (!harAktivitetMedOmfordelbartGrunnlag) {
             return Map.of();
         }
         var aktivitet = finnArbeidsforholdMedRiktigInntektskategori(beregningsgrunnlagPeriode);
