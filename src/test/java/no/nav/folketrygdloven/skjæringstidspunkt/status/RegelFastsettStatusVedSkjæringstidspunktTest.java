@@ -18,7 +18,7 @@ class RegelFastsettStatusVedSkjæringstidspunktTest {
     public static final LocalDate STP_BEREGNING = LocalDate.now();
 
     @Test
-    void skal_ikke_inkludere_aktivitet_som_slutter_dagen_før_stp() {
+    void skal_inkludere_aktivitet_som_slutter_dagen_før_stp() {
         //
         AktivitetStatusModell regelModell = new AktivitetStatusModell();
         regelModell.setSkjæringstidspunktForBeregning(STP_BEREGNING);
@@ -27,7 +27,7 @@ class RegelFastsettStatusVedSkjæringstidspunktTest {
             "12356794", null));
         kjørRegel(regelModell);
 
-        assertThat(regelModell.getBeregningsgrunnlagPrStatusListe().isEmpty()).isTrue();
+        assertThat(regelModell.getBeregningsgrunnlagPrStatusListe().size()).isEqualTo(1);
     }
 
     @Test
