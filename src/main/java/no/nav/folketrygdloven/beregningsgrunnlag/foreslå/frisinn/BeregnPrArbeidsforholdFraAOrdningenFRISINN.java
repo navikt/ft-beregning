@@ -66,11 +66,11 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
             } else if (perioderSomSkalBrukesForInntekter.isEmpty()) {
                 perioderSomSkalBrukesForInntekter = lag12MånederFørOgInkludertDato(skjæringstidspunktOpptjening.minusMonths(36), skjæringstidspunktOpptjening.minusMonths(1));
             }
-            // Hvis det ikke søkes ytelse for frilans skal kun oppgitt inntekt legges til grunn
-            årsinntekt = frisinnGrunnlag.søkerYtelseFrilans(grunnlag.getPeriodeFom())
+            // Hvis det ikke søkes ytelse for frilans skal kun oppgitt inntekt legges til grunn. Setter registerinntekt på første periode for vilkårssjekk FRILANS_UTEN_INNTEKT
+            årsinntekt = frisinnGrunnlag.søkerYtelseFrilans(grunnlag.getPeriodeFom()) || erFørstePeriodeOgSøktFrilansIMinstEnPeriode(grunnlag, frisinnGrunnlag)
                 ? beregnÅrsinntektFrilans(perioderSomSkalBrukesForInntekter, inntektsgrunnlag, grunnlag, resultater)
                 : finnOppgittÅrsinntektFL(inntektsgrunnlag, grunnlag)
-                .orElse(beregnÅrsinntektFrilans(perioderSomSkalBrukesForInntekter, inntektsgrunnlag, grunnlag, resultater));
+                .orElse(BigDecimal.ZERO);
         } else {
             årsinntekt = beregnÅrsinntektArbeidstaker(perioderSomSkalBrukesForInntekter, inntektsgrunnlag, grunnlag, resultater);
         }
@@ -81,6 +81,10 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
         resultater.put("antallPerioder", perioderSomSkalBrukesForInntekter.size());
         resultater.put("beregnetPrÅr", årsinntekt);
         return beregnet(resultater);
+    }
+
+    private boolean erFørstePeriodeOgSøktFrilansIMinstEnPeriode(BeregningsgrunnlagPeriode grunnlag, FrisinnGrunnlag frisinnGrunnlag) {
+        return grunnlag.getPeriodeFom().isEqual(grunnlag.getSkjæringstidspunkt()) && frisinnGrunnlag.søkerYtelseFrilans();
     }
 
     private boolean finnesIkkeInntektForFLFørFristOgFinnesEtterFrist(BeregningsgrunnlagPeriode grunnlag, LocalDate skjæringstidspunktOpptjening) {
