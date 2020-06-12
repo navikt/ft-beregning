@@ -5,6 +5,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.frisinn.FrisinnGrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.util.Virkedager;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
@@ -28,9 +29,14 @@ public class BeregnBruttoBeregningsgrunnlagSNFRISINN extends LeafSpecification<B
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
         BeregningsgrunnlagPrStatus bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
+        FrisinnGrunnlag frisinngrunnlag = (FrisinnGrunnlag) grunnlag.getBeregningsgrunnlag().getYtelsesSpesifiktGrunnlag();
         var rapportertÅrsinntekt = FinnRapportertÅrsinntektSN.finnRapportertÅrsinntekt(grunnlag);
-        BigDecimal årsinntektPeriode = finnÅrsinntektPeriode(grunnlag);
-        BigDecimal bruttoSN = rapportertÅrsinntekt.max(årsinntektPeriode);
+        BigDecimal oppgittÅrsinntektForPeriode = finnÅrsinntektPeriode(grunnlag);
+
+        BigDecimal bruttoSN = frisinngrunnlag.søkerYtelseNæring(grunnlag.getPeriodeFom()) || erFørstePeriodeOgSøktNæringIMinstEnPeriode(grunnlag, frisinngrunnlag)
+            ? rapportertÅrsinntekt.max(oppgittÅrsinntektForPeriode)
+            : oppgittÅrsinntektForPeriode;
+
         BeregningsgrunnlagPrStatus.builder(bgps).medBeregnetPrÅr(bruttoSN).build();
         Map<String, Object> resultater = new HashMap<>();
         resultater.put("oppgittInntekt", bruttoSN);
@@ -48,6 +54,10 @@ public class BeregnBruttoBeregningsgrunnlagSNFRISINN extends LeafSpecification<B
             .map(BeregnBruttoBeregningsgrunnlagSNFRISINN::mapTilEffektivDagsatsIPeriode)
             .reduce(BigDecimal::add)
             .orElse(BigDecimal.ZERO);
+    }
+
+    private boolean erFørstePeriodeOgSøktNæringIMinstEnPeriode(BeregningsgrunnlagPeriode grunnlag, FrisinnGrunnlag frisinnGrunnlag) {
+        return grunnlag.getPeriodeFom().isEqual(grunnlag.getSkjæringstidspunkt()) && frisinnGrunnlag.søkerYtelseNæring();
     }
 
     private static BigDecimal mapTilEffektivDagsatsIPeriode(Periodeinntekt i) {

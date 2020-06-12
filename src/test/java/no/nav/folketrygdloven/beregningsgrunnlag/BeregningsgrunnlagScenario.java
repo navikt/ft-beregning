@@ -104,13 +104,13 @@ public class BeregningsgrunnlagScenario {
             .medAktivitetStatuser(aktivitetStatuser.stream().map(as -> new AktivitetStatusMedHjemmel(as, null)).collect(Collectors.toList()))
             .medBeregningsgrunnlagPeriode(bgPeriode)
             .medGrunnbeløpSatser(GRUNNBELØPLISTE)
-            .medYtelsesSpesifiktGrunnlag(new FrisinnGrunnlag(lagFrisinnperioder(true, bgPeriode.getBeregningsgrunnlagPeriode()),
+            .medYtelsesSpesifiktGrunnlag(new FrisinnGrunnlag(lagFrisinnperioder(bgPeriode.getBeregningsgrunnlagPeriode()),
                 skjæringstidspunkt))
             .build();
     }
 
-    private static List<FrisinnPeriode> lagFrisinnperioder(boolean søkerFL, Periode periode) {
-        return Collections.singletonList(new FrisinnPeriode(periode, søkerFL, false));
+    private static List<FrisinnPeriode> lagFrisinnperioder(Periode periode) {
+        return Collections.singletonList(new FrisinnPeriode(periode, true, true));
     }
 
     public static Beregningsgrunnlag settOppGrunnlagMedEnPeriode(LocalDate skjæringstidspunkt, Inntektsgrunnlag inntektsgrunnlag, AktivitetStatus aktivitetStatus, List<Arbeidsforhold> arbeidsforhold, List<BigDecimal> refusjonskravPrår, boolean skalSjekkeRefusjonFørSetteAksjonspunkt, BigDecimal maksRefusjon) {

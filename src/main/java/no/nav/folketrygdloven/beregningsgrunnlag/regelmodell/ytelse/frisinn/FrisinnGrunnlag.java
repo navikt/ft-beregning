@@ -39,4 +39,8 @@ public class FrisinnGrunnlag extends YtelsesSpesifiktGrunnlag {
         return frisinnPerioder.stream().anyMatch(p -> p.inneholderDato(dato) && p.getSøkerYtelseNæring());
     }
 
+    public boolean søkerYtelseNæring() {
+        return frisinnPerioder.stream().anyMatch(FrisinnPeriode::getSøkerYtelseNæring);
+    }
+
 }
