@@ -5,6 +5,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
@@ -21,6 +22,73 @@ public class OmfordelFraArbeidTest {
     private static final LocalDate STP = LocalDate.now();
     private static final String ORGNR1 = "995";
     private static final String ORGNR2 = "910";    private static final String ORGNR3 = "973";
+
+
+    @Test
+    void skal_omfordele_inntekt_før_naturalytelse() {
+        // Arrange
+        BeregningsgrunnlagPrArbeidsforhold aktivitet = BeregningsgrunnlagPrArbeidsforhold.builder()
+            .medRefusjonskravPrÅr(BigDecimal.valueOf(100_000))
+            .medAndelNr(1L)
+            .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR1, null))
+            .medFordeltPrÅr(BigDecimal.valueOf(50_000))
+            .build();
+        BeregningsgrunnlagPrArbeidsforhold arbeidMedBortfaltNatYtelsePrÅr = BeregningsgrunnlagPrArbeidsforhold.builder()
+            .medNaturalytelseBortfaltPrÅr(BigDecimal.valueOf(50_000))
+            .medAndelNr(2L)
+            .medBeregnetPrÅr(BigDecimal.valueOf(50_000))
+            .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR2, null))
+            .build();
+        BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+            .medPeriode(Periode.of(LocalDate.now(), LocalDate.now().plusMonths(1)))
+            .medBeregningsgrunnlagPrStatus(BeregningsgrunnlagPrStatus.builder()
+                .medAktivitetStatus(AktivitetStatus.ATFL)
+                .medArbeidsforhold(arbeidMedBortfaltNatYtelsePrÅr)
+                .medArbeidsforhold(aktivitet)
+                .build())
+            .build();
+
+        // Act
+        kjørRegel(aktivitet, periode);
+
+        // Assert
+        assertThat(arbeidMedBortfaltNatYtelsePrÅr.getNaturalytelseBortfaltPrÅr().get()).isEqualTo(BigDecimal.valueOf(50_000));
+        assertThat(arbeidMedBortfaltNatYtelsePrÅr.getFordeltPrÅr()).isEqualTo(BigDecimal.ZERO);
+        assertThat(aktivitet.getFordeltPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(100_000));
+    }
+
+    @Test
+    void skal_omfordele_både_inntekt_og_naturalytelse() {
+        // Arrange
+        BeregningsgrunnlagPrArbeidsforhold aktivitet = BeregningsgrunnlagPrArbeidsforhold.builder()
+            .medRefusjonskravPrÅr(BigDecimal.valueOf(150_000))
+            .medAndelNr(1L)
+            .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR1, null))
+            .medFordeltPrÅr(BigDecimal.valueOf(50_000))
+            .build();
+        BeregningsgrunnlagPrArbeidsforhold arbeidMedBortfaltNatYtelsePrÅr = BeregningsgrunnlagPrArbeidsforhold.builder()
+            .medNaturalytelseBortfaltPrÅr(BigDecimal.valueOf(50_000))
+            .medAndelNr(2L)
+            .medBeregnetPrÅr(BigDecimal.valueOf(50_000))
+            .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR2, null))
+            .build();
+        BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+            .medPeriode(Periode.of(LocalDate.now(), LocalDate.now().plusMonths(1)))
+            .medBeregningsgrunnlagPrStatus(BeregningsgrunnlagPrStatus.builder()
+                .medAktivitetStatus(AktivitetStatus.ATFL)
+                .medArbeidsforhold(arbeidMedBortfaltNatYtelsePrÅr)
+                .medArbeidsforhold(aktivitet)
+                .build())
+            .build();
+
+        // Act
+        kjørRegel(aktivitet, periode);
+
+        // Assert
+        assertThat(arbeidMedBortfaltNatYtelsePrÅr.getNaturalytelseBortfaltPrÅr().get()).isEqualTo(BigDecimal.ZERO);
+        assertThat(arbeidMedBortfaltNatYtelsePrÅr.getFordeltPrÅr()).isEqualTo(BigDecimal.ZERO);
+        assertThat(aktivitet.getFordeltPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(150_000));
+    }
 
 
     @Test

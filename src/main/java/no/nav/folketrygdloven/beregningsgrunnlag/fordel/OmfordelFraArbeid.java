@@ -1,6 +1,7 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.fordel;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -21,6 +22,33 @@ class OmfordelFraArbeid extends OmfordelFraATFL {
     OmfordelFraArbeid(BeregningsgrunnlagPrArbeidsforhold arbeidsforhold) {
         super(arbeidsforhold, ID, BESKRIVELSE);
     }
+
+    @Override
+    public Evaluation evaluate(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
+        Map<String, Object> resultater = omfordelFraAktivitetOmMulig(beregningsgrunnlagPeriode);
+        Map<String, Object> resultater2 = omfordelNaturalytelseFraAktivitetOmMulig(beregningsgrunnlagPeriode);
+        resultater.putAll(resultater2);
+        return beregnet(resultater);
+    }
+
+    protected Map<String, Object> omfordelNaturalytelseFraAktivitetOmMulig(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
+        boolean harAktivitetMedOmfordelbartGrunnlag = finnAktivitetMedOmfordelbarNaturalYtelse(beregningsgrunnlagPeriode).isPresent();
+        if (!harAktivitetMedOmfordelbartGrunnlag) {
+            return new HashMap<>();
+        }
+        var aktivitet = finnArbeidsforholdMedRiktigInntektskategori(beregningsgrunnlagPeriode);
+        return new OmfordelNaturalytelseForArbeidsforhold(beregningsgrunnlagPeriode).omfordelForArbeidsforhold(aktivitet, this::finnAktivitetMedOmfordelbarNaturalYtelse);
+    }
+
+    protected Optional<BeregningsgrunnlagPrArbeidsforhold> finnAktivitetMedOmfordelbarNaturalYtelse(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
+        return beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL)
+            .getArbeidsforholdIkkeFrilans()
+            .stream()
+            .filter(a -> a.getNaturalytelseBortfaltPrÅr().orElse(BigDecimal.ZERO).compareTo(BigDecimal.ZERO) > 0)
+            .filter(beregningsgrunnlagPrArbeidsforhold -> !refusjonskravOverstigerEllerErLikBg(beregningsgrunnlagPrArbeidsforhold))
+            .findFirst();
+    }
+
 
     @Override
     protected Inntektskategori finnInntektskategori() {
