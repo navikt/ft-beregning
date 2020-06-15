@@ -13,11 +13,11 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import no.nav.folketrygdloven.beregningsgrunnlag.Grunnbeløp;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Dekningsgrad;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
-import no.nav.folketrygdloven.beregningsgrunnlag.Grunnbeløp;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.YtelsesSpesifiktGrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.fp.ForeldrepengerGrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.sp.SykepengerGrunnlag;
@@ -40,7 +40,6 @@ public class Beregningsgrunnlag {
     private BigDecimal antallGMinstekravVilkår;
     private BigDecimal ytelsedagerIPrÅr;
     private BigDecimal avviksgrenseProsent;
-    private boolean splitteATFLToggleErPå = false;
 
     private Beregningsgrunnlag() { }
 
@@ -161,10 +160,6 @@ public class Beregningsgrunnlag {
         return sammenligningsGrunnlagPrStatus.get(aktivitetStatus);
     }
 
-    public boolean isSplitteATFLToggleErPå() {
-        return splitteATFLToggleErPå;
-    }
-
     public static Builder builder() {
         return new Builder();
     }
@@ -283,13 +278,6 @@ public class Beregningsgrunnlag {
             beregningsgrunnlagMal.ytelsesSpesifiktGrunnlag = ytelsesSpesifiktGrunnlag;
             return this;
         }
-
-
-        public Builder medSplitteATFLToggleVerdi(boolean splitteATFLToggleErPå) {
-            beregningsgrunnlagMal.splitteATFLToggleErPå = splitteATFLToggleErPå;
-            return this;
-        }
-
 
         public Beregningsgrunnlag build() {
             verifyStateForBuild();

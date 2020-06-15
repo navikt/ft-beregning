@@ -200,10 +200,6 @@ public class BeregningsgrunnlagPeriode {
         return erVilkårOppfylt;
     }
 
-    public boolean skalSplitteSammenligningsgrunnlagToggle() {
-        return beregningsgrunnlag.isSplitteATFLToggleErPå();
-    }
-
     public static Builder builder() {
         return new Builder();
     }

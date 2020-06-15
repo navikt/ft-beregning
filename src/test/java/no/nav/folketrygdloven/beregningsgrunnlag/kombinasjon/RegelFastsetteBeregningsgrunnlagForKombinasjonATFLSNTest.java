@@ -73,12 +73,9 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.ATFL_SN),
             Collections.singletonList(arbeidsforhold), Collections.singletonList(BigDecimal.valueOf(4).multiply(BigDecimal.valueOf(GSNITT_2017*12))));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-
         // Act
         Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).evaluer(grunnlag);
-
         // Assert
-
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
         assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
@@ -99,7 +96,6 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
         //Avvik = 24.98%
         BigDecimal avvik = sammenligningsgrunnlag.subtract(sigrun).divide(sigrun, 20, RoundingMode.HALF_UP).multiply(new BigDecimal("100")).abs();
 
-
         Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(
             skjæringstidspunkt,
             årsinntekterFor3SisteÅr(5, 5, 5),
@@ -116,10 +112,8 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
             Collections.singletonList(arbeidsforhold),
             Collections.singletonList(BigDecimal.valueOf(4).multiply(BigDecimal.valueOf(GSNITT_2017*12))));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-
         // Act
         Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).evaluer(grunnlag);
-
         // Assert
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
         assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
@@ -142,7 +136,6 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
         //Avvik = 25.01%
         BigDecimal avvik = sammenligningsgrunnlag.subtract(sigrun).divide(sigrun, 20, RoundingMode.HALF_UP).multiply(new BigDecimal("100")).abs();
 
-
         Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(
             skjæringstidspunkt,
             årsinntekterFor3SisteÅr(5, 5, 5),
@@ -158,16 +151,12 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.ATFL_SN),
             Collections.singletonList(arbeidsforhold), Collections.singletonList(BigDecimal.ZERO));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-
         // Act
         Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).evaluer(grunnlag);
-
         // Assert
-
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
         assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
         assertThat(regelResultat.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5039");
-
 
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, grunnlag, beregningsperiode);
@@ -214,16 +203,12 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.ATFL_SN),
             Collections.singletonList(arbeidsforhold), Collections.singletonList(BigDecimal.ZERO));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-
         // Act
         Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).evaluer(grunnlag);
-
         // Assert
-
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
         assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
         assertThat(regelResultat.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5039");
-
 
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, grunnlag, beregningsperiode);
@@ -283,18 +268,14 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
         Beregningsgrunnlag.builder(beregningsgrunnlag)
             .medBeregningsgrunnlagPeriode(andrePeriode)
             .build();
-
         // Act
         Evaluation evaluation1 = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).evaluer(grunnlag);
         Evaluation evaluation2 = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(andrePeriode).evaluer(andrePeriode);
-
         // Assert
-
         RegelResultat regelResultat1 = getRegelResultat(evaluation1, "input");
         RegelResultat regelResultat2 = getRegelResultat(evaluation2, "input");
         assertThat(regelResultat1.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
         assertThat(regelResultat1.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5039");
-
 
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, grunnlag, beregningsperiode);
@@ -330,10 +311,8 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         BigDecimal bruttoDP = BigDecimal.valueOf(100000);
         BeregningsgrunnlagPrStatus.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP)).medBeregnetPrÅr(bruttoDP).build();
-
         // Act
         Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).evaluer(grunnlag);
-
         // Assert
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
         assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
@@ -371,10 +350,8 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
             Collections.singletonList(BigDecimal.valueOf(4).multiply(BigDecimal.valueOf(GSNITT_2017).multiply(BigDecimal.valueOf(12)))));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         BeregningsgrunnlagPrStatus.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.AAP)).medBeregnetPrÅr(bruttoAAP).build();
-
         // Act
         Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).evaluer(grunnlag);
-
         // Assert
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
         assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
@@ -412,10 +389,8 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
             Collections.singletonList(BigDecimal.valueOf(4).multiply(BigDecimal.valueOf(GSNITT_2017).multiply(BigDecimal.valueOf(12)))));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         BeregningsgrunnlagPrStatus.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP)).medBeregnetPrÅr(bruttoDP).build();
-
         // Act
         Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).evaluer(grunnlag);
-
         // Assert
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
         assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
@@ -444,10 +419,8 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
             Collections.singletonList(BigDecimal.valueOf(4).multiply(BigDecimal.valueOf(GSNITT_2017).multiply(BigDecimal.valueOf(12)))));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         BeregningsgrunnlagPrStatus.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN)).medErNyIArbeidslivet(true);
-
         // Act
         Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).evaluer(grunnlag);
-
         // Assert
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
         assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
@@ -471,10 +444,8 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
         BeregningsgrunnlagPrStatus statusSN = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
         BeregningsgrunnlagPrArbeidsforhold.builder(statusAT).medFastsattAvSaksbehandler(true).medBeregnetPrÅr(BigDecimal.valueOf(232323));
         BeregningsgrunnlagPrStatus.builder(statusSN).medFastsattAvSaksbehandler(true).medBeregnetPrÅr(BigDecimal.valueOf(323232));
-
         // Act
         Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).evaluer(grunnlag);
-
         // Assert
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
         assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
@@ -494,7 +465,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
     }
 
     private void verifiserSammenligningsgrunnlag(BeregningsgrunnlagPeriode grunnlag, BigDecimal beløp, BigDecimal prosent) {
-        SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlag();
+        SammenligningsGrunnlag sg = grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.SN);
         assertThat(sg).isNotNull();
         assertThat(sg.getRapportertPrÅr()).isCloseTo(beløp, within(BigDecimal.valueOf(0.01)));
         assertThat(sg.getAvvikProsent()).isCloseTo(prosent, within(BigDecimal.valueOf(0.01)));
@@ -525,4 +496,5 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
             }
         }
     }
+
 }

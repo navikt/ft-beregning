@@ -1,7 +1,7 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.foreslå;
 
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.leggTilArbeidsforholdMedInntektsmelding;
-import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.leggTilMånedsinntekter;
+import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.leggTilMånedsinntekterPrStatus;
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.opprettBeregningsgrunnlagFraInntektsmelding;
 import static no.nav.folketrygdloven.beregningsgrunnlag.VerifiserBeregningsgrunnlag.verifiserBeregningsgrunnlagBruttoPrPeriodeType;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -12,7 +12,6 @@ import java.time.Month;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.RegelmodellOversetter;
@@ -34,12 +33,7 @@ import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 public class BeregningsgrunnlagFlerePerioderTest {
 
     private static final String ORGNR2 = "456";
-    private LocalDate skjæringstidspunkt;
-
-    @BeforeEach
-    public void setup() {
-        skjæringstidspunkt = LocalDate.of(2018, Month.JANUARY, 15);
-    }
+    private LocalDate skjæringstidspunkt = LocalDate.of(2018, Month.JANUARY, 15);
 
     @Test
     public void skalBeregneGrunnlagMedToPerioder() {
@@ -50,10 +44,11 @@ public class BeregningsgrunnlagFlerePerioderTest {
         LocalDate naturalytelseOpphørFom = skjæringstidspunkt.plusMonths(3);
 
         Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektsmelding(skjæringstidspunkt, månedsinntekt, refusjonskrav, naturalytelse, naturalytelseOpphørFom);
-        leggTilMånedsinntekter(beregningsgrunnlag.getInntektsgrunnlag(), skjæringstidspunkt,
-            Collections.singletonList(månedsinntekt), Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, null);
+        leggTilMånedsinntekterPrStatus(beregningsgrunnlag.getInntektsgrunnlag(), skjæringstidspunkt.minusMonths(2),
+            Collections.singletonList(månedsinntekt), Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, null, AktivitetStatus.AT);
 
         BeregningsgrunnlagPeriode førstePeriode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+
         BeregningsgrunnlagPeriode.builder(førstePeriode)
             .medPeriode(Periode.of(skjæringstidspunkt, naturalytelseOpphørFom.minusDays(1)))
             .build();
@@ -106,8 +101,8 @@ public class BeregningsgrunnlagFlerePerioderTest {
         BeregningsgrunnlagPeriode periode1 = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         leggTilArbeidsforholdMedInntektsmelding(periode1, skjæringstidspunkt, månedsinntekt2, refusjonskrav2, arbeidsforhold2, naturalytelse2, naturalytelseOpphørFom2);
-        leggTilMånedsinntekter(beregningsgrunnlag.getInntektsgrunnlag(), skjæringstidspunkt,
-            Collections.singletonList(månedsinntekt), Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, null);
+        leggTilMånedsinntekterPrStatus(beregningsgrunnlag.getInntektsgrunnlag(), skjæringstidspunkt.minusMonths(2),
+            Collections.singletonList(månedsinntekt), Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, null, AktivitetStatus.AT);
 
         BeregningsgrunnlagPeriode.builder(periode1)
             .medPeriode(Periode.of(skjæringstidspunkt, naturalytelseOpphørFom1.minusDays(1)))
@@ -159,7 +154,7 @@ public class BeregningsgrunnlagFlerePerioderTest {
         RegelResultat resultat = RegelmodellOversetter.getRegelResultat(evaluation1, "input");
         assertThat(resultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
         assertThat(resultat.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5038");
-        assertThat(beregningsgrunnlag.getSammenligningsGrunnlag().getAvvikPromille()).isEqualTo(11000L);
+        assertThat(beregningsgrunnlag.getSammenligningsGrunnlagPrAktivitetstatus().get(AktivitetStatus.AT).getAvvikPromille()).isEqualTo(11000L);
     }
 
     private void kopierBeregningsgrunnlagPeriode(BeregningsgrunnlagPeriode grunnlag, BeregningsgrunnlagPeriode kopi) {
