@@ -1,5 +1,6 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.fordel;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -27,16 +28,16 @@ abstract class OmfordelFraATFL extends LeafSpecification<BeregningsgrunnlagPerio
         return beregnet(resultater);
     }
 
-    private Map<String, Object> omfordelFraAktivitetOmMulig(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
+    protected Map<String, Object> omfordelFraAktivitetOmMulig(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
         boolean harAktivitetMedOmfordelbartGrunnlag = finnAktivitetMedOmfordelbartBg(beregningsgrunnlagPeriode).isPresent();
         if (!harAktivitetMedOmfordelbartGrunnlag) {
-            return Map.of();
+            return new HashMap<>();
         }
         var aktivitet = finnArbeidsforholdMedRiktigInntektskategori(beregningsgrunnlagPeriode);
-        return new OmfordelBGForArbeidsforhold(beregningsgrunnlagPeriode).omfordelBGForArbeidsforhold(aktivitet, this::finnAktivitetMedOmfordelbartBg);
+        return new OmfordelBGForArbeidsforhold(beregningsgrunnlagPeriode).omfordelForArbeidsforhold(aktivitet, this::finnAktivitetMedOmfordelbartBg);
     }
 
-    private BeregningsgrunnlagPrArbeidsforhold finnArbeidsforholdMedRiktigInntektskategori(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
+    protected BeregningsgrunnlagPrArbeidsforhold finnArbeidsforholdMedRiktigInntektskategori(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
         Optional<BeregningsgrunnlagPrArbeidsforhold> andelForArbeidsforholdOpt = beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL)
             .getArbeidsforhold()
             .stream()
