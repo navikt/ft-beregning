@@ -30,7 +30,6 @@ class SjekkHarRefusjonSomOverstigerBeregningsgrunnlag extends LeafSpecification<
         BeregningsgrunnlagPrStatus atfl = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
         List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforholdSomHarRefusjonStørreEnnBG = atfl == null ? emptyList() : atfl
             .getArbeidsforholdIkkeFrilans().stream()
-            .filter(af -> af.getBruttoInkludertNaturalytelsePrÅr().isPresent())
             .filter(this::harRefusjonskravStørreEnnBg).collect(Collectors.toList());
         SingleEvaluation resultat = arbeidsforholdSomHarRefusjonStørreEnnBG.isEmpty() ? nei() : ja();
         for (BeregningsgrunnlagPrArbeidsforhold arbeidsforhold : arbeidsforholdSomHarRefusjonStørreEnnBG) {
