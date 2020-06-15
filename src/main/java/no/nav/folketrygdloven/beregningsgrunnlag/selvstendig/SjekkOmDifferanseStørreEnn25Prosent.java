@@ -24,11 +24,7 @@ public class SjekkOmDifferanseStørreEnn25Prosent extends LeafSpecification<Bere
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
         final SammenligningsGrunnlag sg;
-        if(grunnlag.skalSplitteSammenligningsgrunnlagToggle()){
-            sg = grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.SN);
-        } else {
-            sg = grunnlag.getSammenligningsGrunnlag();
-        }
+        sg = grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.SN);
 
         if (sg == null) {
             throw new IllegalStateException("Sammenligningsgrunnlag mangler");
