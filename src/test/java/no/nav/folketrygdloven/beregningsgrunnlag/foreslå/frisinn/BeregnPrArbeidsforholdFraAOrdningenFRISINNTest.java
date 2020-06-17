@@ -52,7 +52,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
 
         // Act
         kjørRegel(Beregningsgrunnlag.builder(beregningsgrunnlag)
-            .medYtelsesSpesifiktGrunnlag(new FrisinnGrunnlag(frisinnPerioder, STP))
+            .medYtelsesSpesifiktGrunnlag(new FrisinnGrunnlag(frisinnPerioder, List.of(beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPeriode()), STP))
             .build(), andel);
 
         // Assert
@@ -71,7 +71,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
 
         // Act
         kjørRegel(Beregningsgrunnlag.builder(beregningsgrunnlag)
-            .medYtelsesSpesifiktGrunnlag(new FrisinnGrunnlag(frisinnPerioder, STP))
+            .medYtelsesSpesifiktGrunnlag(new FrisinnGrunnlag(frisinnPerioder, List.of(beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPeriode()), STP))
             .build(), andel);
 
         // Assert
@@ -90,7 +90,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
 
         // Act
         kjørRegel(Beregningsgrunnlag.builder(beregningsgrunnlag)
-            .medYtelsesSpesifiktGrunnlag(new FrisinnGrunnlag(frisinnPerioder, STP))
+            .medYtelsesSpesifiktGrunnlag(new FrisinnGrunnlag(frisinnPerioder, List.of(beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPeriode()), STP))
             .build(), andel);
 
         // Assert
@@ -110,7 +110,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
 
         // Act
         kjørRegel(Beregningsgrunnlag.builder(beregningsgrunnlag)
-            .medYtelsesSpesifiktGrunnlag(new FrisinnGrunnlag(frisinnPerioder, STP))
+            .medYtelsesSpesifiktGrunnlag(new FrisinnGrunnlag(frisinnPerioder, List.of(beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPeriode()), STP))
             .build(), andel);
 
         // Assert
@@ -305,7 +305,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
 
         // Act
         kjørRegel(Beregningsgrunnlag.builder(beregningsgrunnlag)
-            .medYtelsesSpesifiktGrunnlag(new FrisinnGrunnlag(frisinnPerioder, STP))
+            .medYtelsesSpesifiktGrunnlag(new FrisinnGrunnlag(frisinnPerioder, List.of(beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPeriode()), STP))
             .build(), andel);
 
         // Assert
@@ -327,7 +327,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
 
         // Act
         kjørRegel(Beregningsgrunnlag.builder(beregningsgrunnlag)
-            .medYtelsesSpesifiktGrunnlag(new FrisinnGrunnlag(frisinnPerioder, STP))
+            .medYtelsesSpesifiktGrunnlag(new FrisinnGrunnlag(frisinnPerioder, List.of(beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPeriode()), STP))
             .build(), andel);
 
         // Assert
@@ -347,7 +347,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
 
         // Act
         kjørRegel(Beregningsgrunnlag.builder(beregningsgrunnlag)
-            .medYtelsesSpesifiktGrunnlag(new FrisinnGrunnlag(frisinnPerioder, STP))
+            .medYtelsesSpesifiktGrunnlag(new FrisinnGrunnlag(frisinnPerioder, List.of(beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPeriode()), STP))
             .build(), andel);
 
         // Assert
@@ -369,7 +369,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
 
         // Act
         kjørRegel(Beregningsgrunnlag.builder(beregningsgrunnlag)
-            .medYtelsesSpesifiktGrunnlag(new FrisinnGrunnlag(frisinnPerioder, STP))
+            .medYtelsesSpesifiktGrunnlag(new FrisinnGrunnlag(frisinnPerioder, List.of(beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPeriode()), STP))
             .build(), andel);
 
         // Assert
@@ -408,7 +408,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
             .medPeriode(interval);
         BeregningsgrunnlagPeriode periode = periodeBuilder.build();
         FrisinnPeriode frisinnPeriode = new FrisinnPeriode(interval, erNyoppstartetFL, false);
-        FrisinnGrunnlag frisinnGrunnlag = new FrisinnGrunnlag(Collections.singletonList(frisinnPeriode), STP);
+        FrisinnGrunnlag frisinnGrunnlag = new FrisinnGrunnlag(Collections.singletonList(frisinnPeriode), List.of(interval), STP);
         return Beregningsgrunnlag.builder()
             .medInntektsgrunnlag(ig)
             .medGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2019))

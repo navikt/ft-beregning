@@ -105,7 +105,7 @@ public class BeregningsgrunnlagScenario {
             .medBeregningsgrunnlagPeriode(bgPeriode)
             .medGrunnbeløpSatser(GRUNNBELØPLISTE)
             .medYtelsesSpesifiktGrunnlag(new FrisinnGrunnlag(lagFrisinnperioder(bgPeriode.getBeregningsgrunnlagPeriode()),
-                skjæringstidspunkt))
+                    List.of(bgPeriode.getBeregningsgrunnlagPeriode()), skjæringstidspunkt))
             .build();
     }
 
