@@ -140,10 +140,13 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
         BigDecimal antallPerioder = BigDecimal.valueOf(inntektsperioder.size());
         BigDecimal snittMånedslønnFraRegister = inntektsperioder.size() == 0 ? BigDecimal.ZERO : samletInntekt.divide(antallPerioder, 10, RoundingMode.HALF_EVEN);
         BigDecimal årslønnFraRegister = snittMånedslønnFraRegister.multiply(ANTALL_MÅNEDER_I_ÅR);
-        BigDecimal årsinntektFraSøknad = finnOppgittÅrsinntektFL(inntektsgrunnlag, grunnlag).orElse(BigDecimal.ZERO);
         resultater.put("årsinntektFraRegister", snittMånedslønnFraRegister);
-        resultater.put("årsinntektFraSøknad", årsinntektFraSøknad);
-        return årslønnFraRegister.max(årsinntektFraSøknad);
+        if (årslønnFraRegister.compareTo(BigDecimal.ZERO) > 0){
+            BigDecimal årsinntektFraSøknad = finnOppgittÅrsinntektFL(inntektsgrunnlag, grunnlag).orElse(BigDecimal.ZERO);
+            resultater.put("årsinntektFraSøknad", årsinntektFraSøknad);
+            return årslønnFraRegister.max(årsinntektFraSøknad);
+        }
+        return årslønnFraRegister;
     }
 
     private BigDecimal beregnÅrsinntektArbeidstaker(List<Periode> inntektsperioder, Inntektsgrunnlag inntektsgrunnlag, BeregningsgrunnlagPeriode grunnlag, Map<String, Object> resultater) {
