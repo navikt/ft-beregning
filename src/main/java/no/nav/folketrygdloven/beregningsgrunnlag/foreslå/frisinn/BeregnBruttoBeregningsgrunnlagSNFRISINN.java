@@ -33,7 +33,7 @@ public class BeregnBruttoBeregningsgrunnlagSNFRISINN extends LeafSpecification<B
         var rapportertÅrsinntekt = FinnRapportertÅrsinntektSN.finnRapportertÅrsinntekt(grunnlag);
         BigDecimal oppgittÅrsinntektForPeriode = finnÅrsinntektPeriode(grunnlag);
 
-        BigDecimal bruttoSN = frisinngrunnlag.søkerYtelseNæring(grunnlag.getPeriodeFom()) || erFørstePeriodeOgSøktNæringIMinstEnPeriode(grunnlag, frisinngrunnlag)
+        BigDecimal bruttoSN = frisinngrunnlag.søkerNæringISøkandsperiode(grunnlag.getPeriodeFom()) || erFørstePeriodeOgSøktNæringIMinstEnPeriode(grunnlag, frisinngrunnlag)
             ? rapportertÅrsinntekt.max(oppgittÅrsinntektForPeriode)
             : oppgittÅrsinntektForPeriode;
 
