@@ -1,6 +1,15 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.ytelse.frisinn;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
+import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.GRUNNBELØPLISTE;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Dekningsgrad;
@@ -11,16 +20,9 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.frisinn.FrisinnGrunnlag;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.frisinn.FrisinnPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.util.Virkedager;
-import org.junit.jupiter.api.Test;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.Month;
-import java.util.List;
-
-import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.GRUNNBELØPLISTE;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class FinnGrenseverdiForTotalOver6GTest {
 
@@ -47,7 +49,7 @@ class FinnGrenseverdiForTotalOver6GTest {
             0d,
             50d,
             new Periode(skjæringstidspunkt.plusMonths(1).plusDays(1), null));
-        lagBeregningsgrunnlag(List.of(p1, p2));
+        lagBeregningsgrunnlag(List.of(p1, p2), true, true);
 
         // Act
         kjørRegel(p1);
@@ -73,7 +75,7 @@ class FinnGrenseverdiForTotalOver6GTest {
             0d,
             0d,
             new Periode(skjæringstidspunkt.plusMonths(1).plusDays(1), null));
-        lagBeregningsgrunnlag(List.of(p1, p2));
+        lagBeregningsgrunnlag(List.of(p1, p2), true, true);
 
         // Act
         kjørRegel(p1);
@@ -95,13 +97,35 @@ class FinnGrenseverdiForTotalOver6GTest {
             new Periode(skjæringstidspunkt, Virkedager.plusVirkedager(skjæringstidspunkt, virkedagerFørstePeriode)));
         int antallVirkerdagerTestPeriode = 9;
         var test_periode = lagTestPeriode(p1, antallVirkerdagerTestPeriode, AktivitetStatus.ATFL);
-        lagBeregningsgrunnlag(List.of(p1, test_periode));
+        lagBeregningsgrunnlag(List.of(p1, test_periode), true, true);
 
         // Act
         kjørRegel(p1);
 
         // Assert
         assertThat(test_periode.getGrenseverdi()).isEqualByComparingTo(SEKS_G.subtract(BigDecimal.valueOf(260_000)));
+    }
+
+    @Test
+    void frilans_med_rest_fra_avkorting_ikke_søkt_fl_ingen_endring_i_grenseverdi_for_neste_periode() {
+        // Arrange
+        int virkedagerFørstePeriode = 19;
+        var p1 = lagBeregningsgrunnlagPeriode(
+            0d,
+            260_000d,
+            SEKS_G.doubleValue(),
+            0d,
+            50d,
+            new Periode(skjæringstidspunkt, Virkedager.plusVirkedager(skjæringstidspunkt, virkedagerFørstePeriode)));
+        int antallVirkerdagerTestPeriode = 9;
+        var test_periode = lagTestPeriode(p1, antallVirkerdagerTestPeriode, AktivitetStatus.ATFL);
+        lagBeregningsgrunnlag(List.of(p1, test_periode), false, true);
+
+        // Act
+        kjørRegel(p1);
+
+        // Assert
+        assertThat(test_periode.getGrenseverdi()).isEqualByComparingTo(SEKS_G);
     }
 
     @Test
@@ -117,13 +141,35 @@ class FinnGrenseverdiForTotalOver6GTest {
             new Periode(skjæringstidspunkt, Virkedager.plusVirkedager(skjæringstidspunkt, virkedagerFørstePeriode)));
         int antallVirkerdagerTestPeriode = 9;
         var test_periode = lagTestPeriode(p1, antallVirkerdagerTestPeriode, AktivitetStatus.SN);
-        lagBeregningsgrunnlag(List.of(p1, test_periode));
+        lagBeregningsgrunnlag(List.of(p1, test_periode), true, true);
 
         // Act
         kjørRegel(p1);
 
         // Assert
         assertThat(test_periode.getGrenseverdi()).isEqualByComparingTo(SEKS_G.subtract(BigDecimal.valueOf(260_000)));
+    }
+
+    @Test
+    void næring_med_rest_fra_avkorting_ikke_søkt_næring_ingen_endring_i_grenseverdi_for_neste_periode() {
+        // Arrange
+        int virkedagerFørstePeriode = 19;
+        var p1 = lagBeregningsgrunnlagPeriode(
+            260_000d,
+            0d,
+            SEKS_G.doubleValue(),
+            50d,
+            0d,
+            new Periode(skjæringstidspunkt, Virkedager.plusVirkedager(skjæringstidspunkt, virkedagerFørstePeriode)));
+        int antallVirkerdagerTestPeriode = 9;
+        var test_periode = lagTestPeriode(p1, antallVirkerdagerTestPeriode, AktivitetStatus.SN);
+        lagBeregningsgrunnlag(List.of(p1, test_periode), true, false);
+
+        // Act
+        kjørRegel(p1);
+
+        // Assert
+        assertThat(test_periode.getGrenseverdi()).isEqualByComparingTo(SEKS_G);
     }
 
     @Test
@@ -139,7 +185,7 @@ class FinnGrenseverdiForTotalOver6GTest {
             new Periode(skjæringstidspunkt, Virkedager.plusVirkedager(skjæringstidspunkt, virkedagerFørstePeriode)));
         int antallVirkerdagerTestPeriode = 10;
         var test_periode = lagTestPeriode(p1, antallVirkerdagerTestPeriode, AktivitetStatus.SN);
-        lagBeregningsgrunnlag(List.of(p1, test_periode));
+        lagBeregningsgrunnlag(List.of(p1, test_periode), true, true);
 
         // Act
         kjørRegel(p1);
@@ -160,7 +206,7 @@ class FinnGrenseverdiForTotalOver6GTest {
             new Periode(skjæringstidspunkt, LocalDate.of(2020, 4, 30)));
         int antallVirkerdagerTestPeriode = 10;
         var test_periode = lagTestPeriode(p1, antallVirkerdagerTestPeriode, AktivitetStatus.SN);
-        lagBeregningsgrunnlag(List.of(p1, test_periode));
+        lagBeregningsgrunnlag(List.of(p1, test_periode), true, true);
 
         // Act
         kjørRegel(p1);
@@ -202,7 +248,8 @@ class FinnGrenseverdiForTotalOver6GTest {
         return periodeBuilder.build();
     }
 
-    private Beregningsgrunnlag lagBeregningsgrunnlag(List<BeregningsgrunnlagPeriode> perioder) {
+
+    private Beregningsgrunnlag lagBeregningsgrunnlag(List<BeregningsgrunnlagPeriode> perioder, boolean søkerYtelseFrilans, boolean søkerYtelseNæring) {
         return Beregningsgrunnlag.builder()
             .medInntektsgrunnlag(new Inntektsgrunnlag())
             .medGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP))
@@ -212,6 +259,7 @@ class FinnGrenseverdiForTotalOver6GTest {
             .medAktivitetStatuser(List.of(new AktivitetStatusMedHjemmel(AktivitetStatus.ATFL_SN, null)))
             .medBeregningsgrunnlagPerioder(perioder)
             .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
+            .medYtelsesSpesifiktGrunnlag(new FrisinnGrunnlag(List.of(new FrisinnPeriode(perioder.get(0).getBeregningsgrunnlagPeriode(), søkerYtelseFrilans, søkerYtelseNæring)), List.of(), skjæringstidspunkt))
             .build();
     }
 

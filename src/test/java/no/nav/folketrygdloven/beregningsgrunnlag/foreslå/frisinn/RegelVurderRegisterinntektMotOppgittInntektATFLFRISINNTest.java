@@ -195,7 +195,7 @@ class RegelVurderRegisterinntektMotOppgittInntektATFLFRISINNTest {
         andelsliste.forEach(periodeBuilder::medBeregningsgrunnlagPrStatus);
         BeregningsgrunnlagPeriode periode = periodeBuilder.build();
         List<FrisinnPeriode> frisinnPerioder = Collections.singletonList(new FrisinnPeriode(periode.getBeregningsgrunnlagPeriode(), true, false));
-        FrisinnGrunnlag frisinnGrunnlag = new FrisinnGrunnlag(frisinnPerioder, STP);
+        FrisinnGrunnlag frisinnGrunnlag = new FrisinnGrunnlag(frisinnPerioder, List.of(periode.getBeregningsgrunnlagPeriode()), STP);
         return Beregningsgrunnlag.builder()
             .medInntektsgrunnlag(ig)
             .medGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2019))

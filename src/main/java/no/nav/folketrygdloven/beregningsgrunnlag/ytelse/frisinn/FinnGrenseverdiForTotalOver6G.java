@@ -14,6 +14,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.YtelsesSpesifiktGrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.frisinn.FrisinnGrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.util.Virkedager;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
@@ -65,9 +66,13 @@ public class FinnGrenseverdiForTotalOver6G extends LeafSpecification<Beregningsg
         return !grunnlag.getPeriodeTom().isEqual(LocalDate.of(2020, 3, 31)) && grunnlag.getPeriodeTom().isEqual(grunnlag.getPeriodeTom().with(TemporalAdjusters.lastDayOfMonth()));
     }
 
-    private void trekkRestFraNesteGrenseverdi(BeregningsgrunnlagPeriode grunnlag, BigDecimal løpendeFL, BigDecimal løpendeSN, BigDecimal grenseverdiFratrektAT, BigDecimal grenseverdiFratrektFL) {
-        BigDecimal skalTrekkesFraGrenseverdiINestePeriode = finnFratrekkForFrilans(grunnlag, løpendeFL, grenseverdiFratrektAT);
-        BigDecimal fratrekkForNæring = finnFratrekkForNæring(grunnlag, løpendeSN, grenseverdiFratrektFL);
+    private void trekkRestFraNesteGrenseverdi(BeregningsgrunnlagPeriode grunnlag, BigDecimal løpendeFL,
+                                              BigDecimal løpendeSN,
+                                              BigDecimal grenseverdiFratrektAT,
+                                              BigDecimal grenseverdiFratrektFL) {
+        FrisinnGrunnlag frisinnGrunnlag = (FrisinnGrunnlag) grunnlag.getBeregningsgrunnlag().getYtelsesSpesifiktGrunnlag();
+        BigDecimal skalTrekkesFraGrenseverdiINestePeriode = frisinnGrunnlag.søkerYtelseFrilans(grunnlag.getPeriodeFom()) ? finnFratrekkForFrilans(grunnlag, løpendeFL, grenseverdiFratrektAT) : BigDecimal.ZERO;
+        BigDecimal fratrekkForNæring = frisinnGrunnlag.søkerYtelseNæring(grunnlag.getPeriodeFom()) ? finnFratrekkForNæring(grunnlag, løpendeSN, grenseverdiFratrektFL) : BigDecimal.ZERO;
         skalTrekkesFraGrenseverdiINestePeriode = skalTrekkesFraGrenseverdiINestePeriode.add(fratrekkForNæring);
         BeregningsgrunnlagPeriode nestePeriode = finnNestePeriode(grunnlag);
         nestePeriode.setGrenseverdi(nestePeriode.getGrenseverdi().subtract(skalTrekkesFraGrenseverdiINestePeriode));
