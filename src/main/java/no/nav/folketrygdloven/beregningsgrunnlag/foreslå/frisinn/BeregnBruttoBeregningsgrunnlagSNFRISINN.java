@@ -33,9 +33,15 @@ public class BeregnBruttoBeregningsgrunnlagSNFRISINN extends LeafSpecification<B
         var rapportertÅrsinntekt = FinnRapportertÅrsinntektSN.finnRapportertÅrsinntekt(grunnlag);
         BigDecimal oppgittÅrsinntektForPeriode = finnÅrsinntektPeriode(grunnlag);
 
-        BigDecimal bruttoSN = frisinngrunnlag.søkerNæringISøknadsperiode(grunnlag.getPeriodeFom()) || erFørstePeriodeOgSøktNæringIMinstEnPeriode(grunnlag, frisinngrunnlag)
-            ? rapportertÅrsinntekt.max(oppgittÅrsinntektForPeriode)
-            : oppgittÅrsinntektForPeriode;
+        boolean erSøktIDenneSøkandsperiode = frisinngrunnlag.søkerNæringISøknadsperiode(grunnlag.getPeriodeFom());
+        BigDecimal bruttoSN;
+        if (erSøktIDenneSøkandsperiode) {
+            bruttoSN = frisinngrunnlag.søkerYtelseNæring(grunnlag.getPeriodeFom()) || erFørstePeriodeOgSøktNæringIMinstEnPeriode(grunnlag, frisinngrunnlag)
+                ? rapportertÅrsinntekt.max(oppgittÅrsinntektForPeriode)
+                : oppgittÅrsinntektForPeriode;
+        } else {
+            bruttoSN = oppgittÅrsinntektForPeriode;
+        }
 
         BeregningsgrunnlagPrStatus.builder(bgps).medBeregnetPrÅr(bruttoSN).build();
         Map<String, Object> resultater = new HashMap<>();

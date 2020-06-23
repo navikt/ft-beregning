@@ -67,14 +67,17 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
                 perioderSomSkalBrukesForInntekter = lag12MånederFørOgInkludertDato(skjæringstidspunktOpptjening.minusMonths(36), skjæringstidspunktOpptjening.minusMonths(1));
             }
             // Hvis det ikke søkes ytelse for frilans skal kun oppgitt inntekt legges til grunn. Setter registerinntekt på første periode for vilkårssjekk FRILANS_UTEN_INNTEKT
-            årsinntekt = frisinnGrunnlag.søkerFrilansISøknadsperiode(grunnlag.getPeriodeFom()) || erFørstePeriodeOgSøktFrilansIMinstEnPeriode(grunnlag, frisinnGrunnlag)
-                ? beregnÅrsinntektFrilans(perioderSomSkalBrukesForInntekter, inntektsgrunnlag, grunnlag, resultater)
-                : finnOppgittÅrsinntektFL(inntektsgrunnlag, grunnlag)
-                .orElse(BigDecimal.ZERO);
+            boolean erSøktIDenneSøkandsperiode = frisinnGrunnlag.søkerFrilansISøknadsperiode(grunnlag.getPeriodeFom());
+            if (erSøktIDenneSøkandsperiode) {
+                årsinntekt = frisinnGrunnlag.søkerYtelseNæring(grunnlag.getPeriodeFom()) || erFørstePeriodeOgSøktFrilansIMinstEnPeriode(grunnlag, frisinnGrunnlag)
+                    ? beregnÅrsinntektFrilans(perioderSomSkalBrukesForInntekter, inntektsgrunnlag, grunnlag, resultater)
+                    : finnOppgittÅrsinntektFL(inntektsgrunnlag, grunnlag).orElse(BigDecimal.ZERO);
+            } else {
+                årsinntekt = finnOppgittÅrsinntektFL(inntektsgrunnlag, grunnlag).orElse(BigDecimal.ZERO);;
+            }
         } else {
             årsinntekt = beregnÅrsinntektArbeidstaker(perioderSomSkalBrukesForInntekter, inntektsgrunnlag, grunnlag, resultater);
         }
-
         BeregningsgrunnlagPrArbeidsforhold.builder(arbeidsforhold)
             .medBeregnetPrÅr(årsinntekt)
             .build();
