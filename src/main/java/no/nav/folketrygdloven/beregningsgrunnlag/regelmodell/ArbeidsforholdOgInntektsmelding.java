@@ -21,6 +21,7 @@ public class ArbeidsforholdOgInntektsmelding implements AndelGradering {
     private Long andelsnr;
     private LocalDate innsendingsdatoFørsteInntektsmeldingMedRefusjon;
     private LocalDate overstyrtRefusjonsFrist;
+    protected int antallMånederRefusjonskravFrist = 3;
 
     @Override
     public Arbeidsforhold getArbeidsforhold() {
@@ -72,6 +73,10 @@ public class ArbeidsforholdOgInntektsmelding implements AndelGradering {
 
     public Optional<LocalDate> getOverstyrtRefusjonsFrist() {
         return Optional.ofNullable(overstyrtRefusjonsFrist);
+    }
+
+    public int getAntallMånederRefusjonskravFrist() {
+        return antallMånederRefusjonskravFrist;
     }
 
     @Override
@@ -152,6 +157,11 @@ public class ArbeidsforholdOgInntektsmelding implements AndelGradering {
 
         public Builder medOverstyrtRefusjonsFrist(LocalDate overstyrtRefusjonsFrist) {
             kladd.overstyrtRefusjonsFrist = overstyrtRefusjonsFrist;
+            return this;
+        }
+
+        public Builder medAntallMånederRefusjonskravFrist(int antallMåneder) {
+            kladd.antallMånederRefusjonskravFrist = antallMåneder;
             return this;
         }
 
