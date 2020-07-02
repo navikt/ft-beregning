@@ -24,7 +24,7 @@ class IdentifiserPerioderForRefusjon {
         }
         Optional<LocalDate> utvidetRefusjonsdato = inntektsmelding.getOverstyrtRefusjonsFrist();
         LocalDate førsteLovligDato = utvidetRefusjonsdato.orElse(inntektsmelding
-            .getInnsendingsdatoFørsteInntektsmeldingMedRefusjon().withDayOfMonth(1).minusMonths(3));
+            .getInnsendingsdatoFørsteInntektsmeldingMedRefusjon().withDayOfMonth(1).minusMonths(inntektsmelding.getAntallMånederRefusjonskravFrist()));
 
         ListIterator<Refusjonskrav> li = inntektsmelding.getRefusjoner().listIterator();
 
