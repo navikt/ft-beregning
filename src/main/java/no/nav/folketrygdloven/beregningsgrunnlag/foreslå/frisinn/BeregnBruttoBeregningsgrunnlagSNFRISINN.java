@@ -65,7 +65,7 @@ public class BeregnBruttoBeregningsgrunnlagSNFRISINN extends LeafSpecification<B
         if (virkedagerIOverlappendePeriode == 0) {
             return BigDecimal.ZERO;
         }
-        return i.getInntekt().divide(BigDecimal.valueOf(virkedagerIOverlappendePeriode), RoundingMode.HALF_EVEN);
+        return i.getInntekt().divide(BigDecimal.valueOf(virkedagerIOverlappendePeriode), 10, RoundingMode.HALF_EVEN);
     }
 
 }
