@@ -10,6 +10,7 @@ import no.nav.fpsak.nare.evaluation.node.SingleEvaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 @RuleDocumentation(SjekkBeregningsgrunnlagFLSNMindreEnnFRISINN.ID)
 class SjekkBeregningsgrunnlagFLSNMindreEnnFRISINN extends LeafSpecification<BeregningsgrunnlagPeriode> {
@@ -26,21 +27,38 @@ class SjekkBeregningsgrunnlagFLSNMindreEnnFRISINN extends LeafSpecification<Bere
         BigDecimal minstekrav = grunnlag.getGrunnbeløp().multiply(grunnlag.getAntallGMinstekravVilkår());
         BigDecimal bruttoForSøkteAndeler = BigDecimal.ZERO;
 
-        BeregningsgrunnlagPrStatus atflStatus = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
-        BeregningsgrunnlagPrArbeidsforhold frilansandel = atflStatus == null ? null : atflStatus.getFrilansArbeidsforhold().orElse(null);
-        if (frilansandel != null && frilansandel.getErSøktYtelseFor()) {
-            bruttoForSøkteAndeler = bruttoForSøkteAndeler.add(frilansandel.getBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO));
+        var frilansandel = finnFrilansAndel(grunnlag);
+        BeregningsgrunnlagPeriode førstePeriode = finnFørstePeriode(grunnlag);
+        if (frilansandel.isPresent() && frilansandel.get().getErSøktYtelseFor()) {
+            var frilansAndelFørstePeriode = finnFrilansAndel(førstePeriode);
+            bruttoForSøkteAndeler = bruttoForSøkteAndeler.add(frilansAndelFørstePeriode.flatMap(BeregningsgrunnlagPrArbeidsforhold::getBruttoInkludertNaturalytelsePrÅr).orElse(BigDecimal.ZERO));
         }
-        BeregningsgrunnlagPrStatus snStatus = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
-        if (snStatus != null && snStatus.erSøktYtelseFor()) {
-            bruttoForSøkteAndeler = bruttoForSøkteAndeler.add(snStatus.getBruttoInkludertNaturalytelsePrÅr());
+        var snStatus = finnSNStatus(grunnlag);
+        if (snStatus.isPresent() && snStatus.get().erSøktYtelseFor()) {
+            var snFørstePeriode = finnSNStatus(førstePeriode);
+            bruttoForSøkteAndeler = bruttoForSøkteAndeler.add(snFørstePeriode.map(BeregningsgrunnlagPrStatus::getBruttoInkludertNaturalytelsePrÅr).orElse(BigDecimal.ZERO));
         }
 
-        boolean erSøktIPeriode = (snStatus != null && snStatus.erSøktYtelseFor()) || (frilansandel != null && frilansandel.getErSøktYtelseFor());
+        boolean erSøktIPeriode = (snStatus.isPresent() && snStatus.get().erSøktYtelseFor()) || (frilansandel.isPresent() && frilansandel.get().getErSøktYtelseFor());
         SingleEvaluation resultat = erSøktIPeriode && bruttoForSøkteAndeler.compareTo(minstekrav) < 0 ? ja() : nei();
         resultat.setEvaluationProperty("grunnbeløp", grunnlag.getGrunnbeløp());
         resultat.setEvaluationProperty("treKvartGrunnbeløp", minstekrav);
         resultat.setEvaluationProperty("bruttoPrÅrSNFL", bruttoForSøkteAndeler);
         return resultat;
+    }
+
+    private Optional<BeregningsgrunnlagPrStatus> finnSNStatus(BeregningsgrunnlagPeriode grunnlag) {
+        return Optional.ofNullable(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN));
+    }
+
+    private Optional<BeregningsgrunnlagPrArbeidsforhold> finnFrilansAndel(BeregningsgrunnlagPeriode grunnlag) {
+        BeregningsgrunnlagPrStatus atflStatus = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+        return atflStatus == null ? Optional.empty() : atflStatus.getFrilansArbeidsforhold();
+    }
+
+    private BeregningsgrunnlagPeriode finnFørstePeriode(BeregningsgrunnlagPeriode grunnlag) {
+        return grunnlag.getBeregningsgrunnlag().getBeregningsgrunnlagPerioder().stream()
+            .filter(p -> p.getSkjæringstidspunkt().equals(p.getPeriodeFom())).findFirst()
+            .orElseThrow(() -> new IllegalStateException("Fant ikke første periode"));
     }
 }
