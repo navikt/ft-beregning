@@ -1,4 +1,4 @@
-package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell;
+package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering;
 
 /**
  * Intern representasjon av aktivitetstatusene som brukes i beregningskomponenten.

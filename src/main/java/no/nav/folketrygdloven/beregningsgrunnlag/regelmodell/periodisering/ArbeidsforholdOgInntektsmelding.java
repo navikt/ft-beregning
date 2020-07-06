@@ -1,4 +1,4 @@
-package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell;
+package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Gradering;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.NaturalYtelse;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Refusjonskrav;
@@ -21,7 +23,7 @@ public class ArbeidsforholdOgInntektsmelding implements AndelGradering {
     private Long andelsnr;
     private LocalDate innsendingsdatoFørsteInntektsmeldingMedRefusjon;
     private LocalDate overstyrtRefusjonsFrist;
-    protected int antallMånederRefusjonskravFrist = 3;
+    private RefusjonskravFrist refusjonskravFrist;
 
     @Override
     public Arbeidsforhold getArbeidsforhold() {
@@ -75,8 +77,8 @@ public class ArbeidsforholdOgInntektsmelding implements AndelGradering {
         return Optional.ofNullable(overstyrtRefusjonsFrist);
     }
 
-    public int getAntallMånederRefusjonskravFrist() {
-        return antallMånederRefusjonskravFrist;
+    public RefusjonskravFrist getRefusjonskravFrist() {
+        return refusjonskravFrist;
     }
 
     @Override
@@ -103,11 +105,19 @@ public class ArbeidsforholdOgInntektsmelding implements AndelGradering {
         return new Builder();
     }
 
+    public static Builder builder(ArbeidsforholdOgInntektsmelding arbeidsforholdOgInntektsmelding) {
+        return new Builder(arbeidsforholdOgInntektsmelding);
+    }
+
     public static class Builder {
         private final ArbeidsforholdOgInntektsmelding kladd;
 
         private Builder() {
             kladd = new ArbeidsforholdOgInntektsmelding();
+        }
+
+        private Builder(ArbeidsforholdOgInntektsmelding arbeidsforholdOgInntektsmelding) {
+            kladd = arbeidsforholdOgInntektsmelding;
         }
 
         public Builder medArbeidsforhold(Arbeidsforhold arbeidsforhold) {
@@ -127,6 +137,11 @@ public class ArbeidsforholdOgInntektsmelding implements AndelGradering {
 
         public Builder medGraderinger(List<Gradering> graderinger) {
             kladd.graderinger = graderinger;
+            return this;
+        }
+
+        public Builder medRefusjonskravFrist(RefusjonskravFrist refusjonskravFrist) {
+            kladd.refusjonskravFrist = refusjonskravFrist;
             return this;
         }
 
@@ -157,11 +172,6 @@ public class ArbeidsforholdOgInntektsmelding implements AndelGradering {
 
         public Builder medOverstyrtRefusjonsFrist(LocalDate overstyrtRefusjonsFrist) {
             kladd.overstyrtRefusjonsFrist = overstyrtRefusjonsFrist;
-            return this;
-        }
-
-        public Builder medAntallMånederRefusjonskravFrist(int antallMåneder) {
-            kladd.antallMånederRefusjonskravFrist = antallMåneder;
             return this;
         }
 

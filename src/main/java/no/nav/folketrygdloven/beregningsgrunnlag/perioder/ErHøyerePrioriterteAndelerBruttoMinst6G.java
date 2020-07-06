@@ -2,9 +2,9 @@ package no.nav.folketrygdloven.beregningsgrunnlag.perioder;
 
 import java.math.BigDecimal;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AndelGradering;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BruttoBeregningsgrunnlag;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.PeriodisertBruttoBeregningsgrunnlag;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AndelGradering;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.BruttoBeregningsgrunnlag;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.PeriodisertBruttoBeregningsgrunnlag;
 
 class ErHøyerePrioriterteAndelerBruttoMinst6G {
 

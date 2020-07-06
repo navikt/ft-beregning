@@ -252,8 +252,6 @@ public class BeregningsgrunnlagPrArbeidsforhold {
             return this;
         }
 
-
-
         public Builder medAndelsmessigFørGraderingPrAar(BigDecimal andelsmessigFørGraderingPrAar) {
             mal.andelsmessigFørGraderingPrAar = andelsmessigFørGraderingPrAar;
             return this;

@@ -22,6 +22,9 @@ public enum BeregningsgrunnlagHjemmel {
     F_14_7_8_47,
     F_14_7_8_49,
 
+    F_22_13_6,
+    COV_1_5,
+
     KORONALOVEN_3;
 
     public static final BeregningsgrunnlagHjemmel K9_HJEMMEL_BARE_ARBEIDSTAKER_REFUSJON = F_9_8_8_28;
@@ -40,5 +43,8 @@ public enum BeregningsgrunnlagHjemmel {
     public static final BeregningsgrunnlagHjemmel K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG = F_14_7_8_41;
     public static final BeregningsgrunnlagHjemmel K14_HJEMMEL_FRILANSER_OG_SELVSTENDIG = F_14_7_8_42;
     public static final BeregningsgrunnlagHjemmel K14_HJEMMEL_ARBEIDSTAKER_OG_FRILANSER_OG_SELVSTENDIG = F_14_7_8_43;
+
+    public static final BeregningsgrunnlagHjemmel REFUSJONSKRAV_FRIST = F_22_13_6;
+    public static final BeregningsgrunnlagHjemmel REFUSJONSKRAV_FRIST_OMP_KORONA = COV_1_5;
 
 }

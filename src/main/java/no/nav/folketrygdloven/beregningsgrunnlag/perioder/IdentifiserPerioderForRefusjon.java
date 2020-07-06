@@ -8,7 +8,8 @@ import java.util.ListIterator;
 import java.util.Optional;
 import java.util.Set;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ArbeidsforholdOgInntektsmelding;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.ArbeidsforholdOgInntektsmelding;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.PeriodeÅrsak;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Refusjonskrav;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.PeriodeSplittData;
@@ -22,9 +23,12 @@ class IdentifiserPerioderForRefusjon {
         if (inntektsmelding.getInnsendingsdatoFørsteInntektsmeldingMedRefusjon() == null) {
             return Collections.emptySet();
         }
+
+        int fristAntallMåneder = inntektsmelding.getRefusjonskravFrist() != null ?
+            inntektsmelding.getRefusjonskravFrist().getAntallMånederRefusjonskravFrist() : 3;
         Optional<LocalDate> utvidetRefusjonsdato = inntektsmelding.getOverstyrtRefusjonsFrist();
         LocalDate førsteLovligDato = utvidetRefusjonsdato.orElse(inntektsmelding
-            .getInnsendingsdatoFørsteInntektsmeldingMedRefusjon().withDayOfMonth(1).minusMonths(inntektsmelding.getAntallMånederRefusjonskravFrist()));
+            .getInnsendingsdatoFørsteInntektsmeldingMedRefusjon().withDayOfMonth(1).minusMonths(fristAntallMåneder));
 
         ListIterator<Refusjonskrav> li = inntektsmelding.getRefusjoner().listIterator();
 
