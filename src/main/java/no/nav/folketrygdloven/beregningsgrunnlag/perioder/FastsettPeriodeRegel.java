@@ -10,14 +10,14 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusV2;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AndelGradering;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ArbeidsforholdOgInntektsmelding;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AktivitetStatusV2;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AndelGradering;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.ArbeidsforholdOgInntektsmelding;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.PeriodeModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.PeriodeModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.PeriodeÅrsak;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.NaturalYtelse;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.EksisterendeAndel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.IdentifisertePeriodeÅrsaker;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.PeriodeSplittData;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SplittetAndel;
@@ -48,7 +48,7 @@ public class FastsettPeriodeRegel {
             LocalDate periodeFom = entry.getKey();
             Set<PeriodeSplittData> periodeSplittData = entry.getValue();
 
-            List<BeregningsgrunnlagPrArbeidsforhold> førstePeriodeAndeler = input.getArbeidsforholdOgInntektsmeldinger().stream()
+            List<EksisterendeAndel> førstePeriodeAndeler = input.getArbeidsforholdOgInntektsmeldinger().stream()
                 .filter(im -> !im.erNyAktivitet())
                 .map(im -> mapToArbeidsforhold(im, periodeFom))
                 .collect(Collectors.toList());
@@ -69,10 +69,10 @@ public class FastsettPeriodeRegel {
                 .collect(Collectors.toList()));
 
             nyeAndeler.addAll(input.getEndringerISøktYtelse().stream()
-                    .filter(AndelGradering::erNyAktivitet)
-                    .filter(andel -> harUtbetalingIPeriode(andel, periodeFom))
-                    .map(FastsettPeriodeRegel::mapSplittetAndel)
-                    .collect(Collectors.toList()));
+                .filter(AndelGradering::erNyAktivitet)
+                .filter(andel -> harUtbetalingIPeriode(andel, periodeFom))
+                .map(FastsettPeriodeRegel::mapSplittetAndel)
+                .collect(Collectors.toList()));
 
             LocalDate tom = utledPeriodeTom(entries, listIterator);
             Periode periode = new Periode(periodeFom, tom);
@@ -123,9 +123,10 @@ public class FastsettPeriodeRegel {
         Periode ansettelsesPeriode = im.getAnsettelsesperiode();
 
         SplittetAndel.Builder builder = SplittetAndel.builder()
-                .medAktivitetstatus(im.getAktivitetStatus())
-                .medArbeidsforhold(im.getArbeidsforhold())
-                .medRefusjonskravPrÅr(refusjonPrÅr);
+            .medAktivitetstatus(im.getAktivitetStatus())
+            .medArbeidsforhold(im.getArbeidsforhold())
+            .medRefusjonskravPrÅr(refusjonPrÅr)
+            .medHarVurdertRefusjonskravfrist(im.getHarVurdertRefusjonskravfrist());
         settAnsettelsesPeriodeHvisFinnes(ansettelsesPeriode, builder);
         return builder.build();
     }
@@ -134,8 +135,8 @@ public class FastsettPeriodeRegel {
         Periode ansettelsesPeriode = gradering.getArbeidsforhold() == null ? null : gradering.getArbeidsforhold().getAnsettelsesPeriode();
 
         SplittetAndel.Builder builder = SplittetAndel.builder()
-                .medAktivitetstatus(gradering.getAktivitetStatus())
-                .medArbeidsforhold(gradering.getArbeidsforhold());
+            .medAktivitetstatus(gradering.getAktivitetStatus())
+            .medArbeidsforhold(gradering.getArbeidsforhold());
         settAnsettelsesPeriodeHvisFinnes(ansettelsesPeriode, builder);
         return builder.build();
     }
@@ -143,13 +144,13 @@ public class FastsettPeriodeRegel {
     private static void settAnsettelsesPeriodeHvisFinnes(Periode ansettelsesPeriode, SplittetAndel.Builder builder) {
         if (ansettelsesPeriode != null) {
             builder
-                    .medArbeidsperiodeFom(ansettelsesPeriode.getFom())
-                    .medArbeidsperiodeTom(ansettelsesPeriode.getTom());
+                .medArbeidsperiodeFom(ansettelsesPeriode.getFom())
+                .medArbeidsperiodeTom(ansettelsesPeriode.getTom());
         }
     }
 
 
-    private static BeregningsgrunnlagPrArbeidsforhold mapToArbeidsforhold(ArbeidsforholdOgInntektsmelding im, LocalDate fom) {
+    private static EksisterendeAndel mapToArbeidsforhold(ArbeidsforholdOgInntektsmelding im, LocalDate fom) {
         Optional<BigDecimal> refusjonskravPrÅr = im.getGyldigeRefusjonskrav().stream()
             .filter(refusjon -> refusjon.getPeriode().inneholder(fom))
             .findFirst()
@@ -164,12 +165,13 @@ public class FastsettPeriodeRegel {
             .filter(naturalYtelse -> naturalYtelse.getFom().isBefore(fom))
             .map(NaturalYtelse::getBeløp)
             .reduce(BigDecimal::add);
-        return BeregningsgrunnlagPrArbeidsforhold.builder()
+        return EksisterendeAndel.builder()
             .medAndelNr(im.getAndelsnr())
             .medRefusjonskravPrÅr(refusjonskravPrÅr.orElse(null))
             .medNaturalytelseTilkommetPrÅr(naturalytelseTilkommer.orElse(null))
             .medNaturalytelseBortfaltPrÅr(naturalytelseBortfaltPrÅr.orElse(null))
             .medArbeidsforhold(im.getArbeidsforhold())
+            .medHarVurdertRefusjonskravfrist(im.getHarVurdertRefusjonskravfrist())
             .build();
     }
 

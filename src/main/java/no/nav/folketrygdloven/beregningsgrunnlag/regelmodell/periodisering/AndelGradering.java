@@ -1,7 +1,8 @@
-package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell;
+package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering;
 
 import java.util.List;
 
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Gradering;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Refusjonskrav;
 

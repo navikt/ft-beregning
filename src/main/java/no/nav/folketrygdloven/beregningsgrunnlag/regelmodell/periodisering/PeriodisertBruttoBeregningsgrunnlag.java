@@ -1,8 +1,10 @@
-package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell;
+package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 
 public class PeriodisertBruttoBeregningsgrunnlag {
     private Periode periode;

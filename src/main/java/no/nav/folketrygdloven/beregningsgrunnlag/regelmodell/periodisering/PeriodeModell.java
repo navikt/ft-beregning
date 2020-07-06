@@ -1,4 +1,4 @@
-package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell;
+package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

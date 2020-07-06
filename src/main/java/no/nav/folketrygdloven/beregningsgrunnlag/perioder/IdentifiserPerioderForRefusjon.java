@@ -8,7 +8,8 @@ import java.util.ListIterator;
 import java.util.Optional;
 import java.util.Set;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ArbeidsforholdOgInntektsmelding;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.ArbeidsforholdOgInntektsmelding;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.PeriodeÅrsak;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Refusjonskrav;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.PeriodeSplittData;
@@ -22,6 +23,10 @@ class IdentifiserPerioderForRefusjon {
         if (inntektsmelding.getInnsendingsdatoFørsteInntektsmeldingMedRefusjon() == null) {
             return Collections.emptySet();
         }
+
+        // Setter hjemmel for vurdering av frist for refusjonskrav (folketrygdloven §§ 22-13 sjette ledd)
+        ArbeidsforholdOgInntektsmelding.builder(inntektsmelding).medHarVurdertRefusjonskravfrist(true);
+
         Optional<LocalDate> utvidetRefusjonsdato = inntektsmelding.getOverstyrtRefusjonsFrist();
         LocalDate førsteLovligDato = utvidetRefusjonsdato.orElse(inntektsmelding
             .getInnsendingsdatoFørsteInntektsmeldingMedRefusjon().withDayOfMonth(1).minusMonths(inntektsmelding.getAntallMånederRefusjonskravFrist()));

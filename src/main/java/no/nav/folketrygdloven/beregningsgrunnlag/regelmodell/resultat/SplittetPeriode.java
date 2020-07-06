@@ -6,11 +6,12 @@ import java.util.Objects;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.PeriodeÅrsak;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.EksisterendeAndel;
 
 public class SplittetPeriode {
     private Periode periode;
     private List<PeriodeÅrsak> periodeÅrsaker;
-    private List<BeregningsgrunnlagPrArbeidsforhold> eksisterendePeriodeAndeler;
+    private List<EksisterendeAndel> eksisterendePeriodeAndeler;
     private List<SplittetAndel> nyeAndeler = new ArrayList<>();
 
     public Periode getPeriode() {
@@ -21,7 +22,7 @@ public class SplittetPeriode {
         return periodeÅrsaker;
     }
 
-    public List<BeregningsgrunnlagPrArbeidsforhold> getEksisterendePeriodeAndeler() {
+    public List<EksisterendeAndel> getEksisterendePeriodeAndeler() {
         return eksisterendePeriodeAndeler;
     }
 
@@ -63,7 +64,7 @@ public class SplittetPeriode {
             return this;
         }
 
-        public Builder medFørstePeriodeAndeler(List<BeregningsgrunnlagPrArbeidsforhold> førstePeriodeAndeler) {
+        public Builder medFørstePeriodeAndeler(List<EksisterendeAndel> førstePeriodeAndeler) {
             kladd.eksisterendePeriodeAndeler = førstePeriodeAndeler;
             return this;
         }
