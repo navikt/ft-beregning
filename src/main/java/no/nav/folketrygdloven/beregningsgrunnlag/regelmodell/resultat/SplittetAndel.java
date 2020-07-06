@@ -3,6 +3,7 @@ package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AktivitetStatusV2;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 
@@ -12,7 +13,7 @@ public class SplittetAndel {
     private BigDecimal refusjonskravPrÅr;
     private LocalDate arbeidsperiodeFom;
     private LocalDate arbeidsperiodeTom;
-    private boolean harVurdertRefusjonskravfrist;
+    private BeregningsgrunnlagHjemmel anvendtRefusjonskravfristHjemmel;
 
     public Arbeidsforhold getArbeidsforhold() {
         return arbeidsforhold;
@@ -34,8 +35,8 @@ public class SplittetAndel {
         return aktivitetStatus;
     }
 
-    public boolean getHarVurdertRefusjonskravfrist() {
-        return harVurdertRefusjonskravfrist;
+    public BeregningsgrunnlagHjemmel getAnvendtRefusjonskravfristHjemmel() {
+        return anvendtRefusjonskravfristHjemmel;
     }
 
     public static Builder builder() {
@@ -54,8 +55,8 @@ public class SplittetAndel {
             return this;
         }
 
-        public Builder medHarVurdertRefusjonskravfrist(boolean harVurdertRefusjonskravfrist) {
-            kladd.harVurdertRefusjonskravfrist = harVurdertRefusjonskravfrist;
+        public Builder medAnvendtRefusjonskravfristHjemmel(BeregningsgrunnlagHjemmel anvendtRefusjonskravfristHjemmel) {
+            kladd.anvendtRefusjonskravfristHjemmel = anvendtRefusjonskravfristHjemmel;
             return this;
         }
 

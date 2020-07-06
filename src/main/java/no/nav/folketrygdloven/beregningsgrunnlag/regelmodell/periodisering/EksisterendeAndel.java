@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.Optional;
 
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 
 public class EksisterendeAndel {
@@ -12,7 +13,7 @@ public class EksisterendeAndel {
     private Arbeidsforhold arbeidsforhold;
     private BigDecimal refusjonskravPrÅr;
     private Long andelNr;
-    private boolean harVurdertRefusjonskravfrist;
+    private BeregningsgrunnlagHjemmel anvendtRefusjonskravfristHjemmel;
 
     public EksisterendeAndel() {
     }
@@ -47,7 +48,9 @@ public class EksisterendeAndel {
         return andelNr;
     }
 
-
+    public BeregningsgrunnlagHjemmel getAnvendtRefusjonskravfristHjemmel() {
+        return anvendtRefusjonskravfristHjemmel;
+    }
 
     public static Builder builder() {
         return new Builder();
@@ -101,8 +104,8 @@ public class EksisterendeAndel {
             return this;
         }
 
-        public Builder medHarVurdertRefusjonskravfrist(boolean harVurdertRefusjonskravfrist) {
-            mal.harVurdertRefusjonskravfrist = harVurdertRefusjonskravfrist;
+        public Builder medAnvendtRefusjonskravfristHjemmel(BeregningsgrunnlagHjemmel anvendtRefusjonskravfristHjemmel) {
+            mal.anvendtRefusjonskravfristHjemmel = anvendtRefusjonskravfristHjemmel;
             return this;
         }
 

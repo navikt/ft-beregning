@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AktivitetStatusV2;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AndelGradering;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.ArbeidsforholdOgInntektsmelding;
@@ -126,7 +127,7 @@ public class FastsettPeriodeRegel {
             .medAktivitetstatus(im.getAktivitetStatus())
             .medArbeidsforhold(im.getArbeidsforhold())
             .medRefusjonskravPrÅr(refusjonPrÅr)
-            .medHarVurdertRefusjonskravfrist(im.getHarVurdertRefusjonskravfrist());
+            .medAnvendtRefusjonskravfristHjemmel(im.getRefusjonskravFrist() != null ? im.getRefusjonskravFrist().getAnvendtHjemmel() : null);
         settAnsettelsesPeriodeHvisFinnes(ansettelsesPeriode, builder);
         return builder.build();
     }
@@ -171,7 +172,7 @@ public class FastsettPeriodeRegel {
             .medNaturalytelseTilkommetPrÅr(naturalytelseTilkommer.orElse(null))
             .medNaturalytelseBortfaltPrÅr(naturalytelseBortfaltPrÅr.orElse(null))
             .medArbeidsforhold(im.getArbeidsforhold())
-            .medHarVurdertRefusjonskravfrist(im.getHarVurdertRefusjonskravfrist())
+            .medAnvendtRefusjonskravfristHjemmel(im.getRefusjonskravFrist() != null ? im.getRefusjonskravFrist().getAnvendtHjemmel() : null)
             .build();
     }
 

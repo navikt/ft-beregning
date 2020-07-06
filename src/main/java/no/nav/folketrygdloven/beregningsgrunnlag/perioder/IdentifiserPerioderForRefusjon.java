@@ -24,12 +24,11 @@ class IdentifiserPerioderForRefusjon {
             return Collections.emptySet();
         }
 
-        // Setter hjemmel for vurdering av frist for refusjonskrav (folketrygdloven §§ 22-13 sjette ledd)
-        ArbeidsforholdOgInntektsmelding.builder(inntektsmelding).medHarVurdertRefusjonskravfrist(true);
-
+        int fristAntallMåneder = inntektsmelding.getRefusjonskravFrist() != null ?
+            inntektsmelding.getRefusjonskravFrist().getAntallMånederRefusjonskravFrist() : 3;
         Optional<LocalDate> utvidetRefusjonsdato = inntektsmelding.getOverstyrtRefusjonsFrist();
         LocalDate førsteLovligDato = utvidetRefusjonsdato.orElse(inntektsmelding
-            .getInnsendingsdatoFørsteInntektsmeldingMedRefusjon().withDayOfMonth(1).minusMonths(inntektsmelding.getAntallMånederRefusjonskravFrist()));
+            .getInnsendingsdatoFørsteInntektsmeldingMedRefusjon().withDayOfMonth(1).minusMonths(fristAntallMåneder));
 
         ListIterator<Refusjonskrav> li = inntektsmelding.getRefusjoner().listIterator();
 

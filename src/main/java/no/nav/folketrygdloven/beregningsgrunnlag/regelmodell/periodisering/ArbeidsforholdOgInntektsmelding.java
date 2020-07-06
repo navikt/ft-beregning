@@ -23,8 +23,7 @@ public class ArbeidsforholdOgInntektsmelding implements AndelGradering {
     private Long andelsnr;
     private LocalDate innsendingsdatoFørsteInntektsmeldingMedRefusjon;
     private LocalDate overstyrtRefusjonsFrist;
-    protected int antallMånederRefusjonskravFrist = 3;
-    private boolean harVurdertRefusjonskravfrist;
+    private RefusjonskravFrist refusjonskravFrist;
 
     @Override
     public Arbeidsforhold getArbeidsforhold() {
@@ -78,12 +77,8 @@ public class ArbeidsforholdOgInntektsmelding implements AndelGradering {
         return Optional.ofNullable(overstyrtRefusjonsFrist);
     }
 
-    public int getAntallMånederRefusjonskravFrist() {
-        return antallMånederRefusjonskravFrist;
-    }
-
-    public boolean getHarVurdertRefusjonskravfrist() {
-        return harVurdertRefusjonskravfrist;
+    public RefusjonskravFrist getRefusjonskravFrist() {
+        return refusjonskravFrist;
     }
 
     @Override
@@ -145,8 +140,8 @@ public class ArbeidsforholdOgInntektsmelding implements AndelGradering {
             return this;
         }
 
-        public Builder medHarVurdertRefusjonskravfrist(boolean harVurdertRefusjonskravfrist) {
-            kladd.harVurdertRefusjonskravfrist = harVurdertRefusjonskravfrist;
+        public Builder medRefusjonskravFrist(RefusjonskravFrist refusjonskravFrist) {
+            kladd.refusjonskravFrist = refusjonskravFrist;
             return this;
         }
 
@@ -177,11 +172,6 @@ public class ArbeidsforholdOgInntektsmelding implements AndelGradering {
 
         public Builder medOverstyrtRefusjonsFrist(LocalDate overstyrtRefusjonsFrist) {
             kladd.overstyrtRefusjonsFrist = overstyrtRefusjonsFrist;
-            return this;
-        }
-
-        public Builder medAntallMånederRefusjonskravFrist(int antallMåneder) {
-            kladd.antallMånederRefusjonskravFrist = antallMåneder;
             return this;
         }
 
