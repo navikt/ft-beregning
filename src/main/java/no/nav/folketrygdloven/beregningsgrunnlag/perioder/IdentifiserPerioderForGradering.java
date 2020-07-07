@@ -17,7 +17,7 @@ class IdentifiserPerioderForGradering {
         Set<PeriodeSplittData> set = new HashSet<>();
         andelGradering.getGraderinger().forEach(gradering -> {
             List<PeriodeSplittData> splits = VurderPeriodeForGradering.vurder(input, andelGradering, gradering.getPeriode());
-            splits.forEach(set::add);
+            set.addAll(splits);
         });
         return set;
     }

@@ -5,23 +5,23 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Gradering;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AktivitetStatusV2;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AndelGradering;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AndelGraderingImpl;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.ArbeidsforholdOgInntektsmelding;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.BruttoBeregningsgrunnlag;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Gradering;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.EksisterendeAndel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.PeriodeModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.PeriodisertBruttoBeregningsgrunnlag;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SplittetPeriode;
 
 class FastsettPeriodeRegelTest {
@@ -38,10 +38,15 @@ class FastsettPeriodeRegelTest {
         PeriodeModell inputMedGraderingFraStartForNyttArbeid = lagPeriodeInputMedEnAndelFraStart()
                 .medEndringISøktYtelse(lagGraderingFraSkjæringstidspunkt(arbeidsforhold2))
                 .build();
-        List<SplittetPeriode> perioder = FastsettPeriodeRegel.fastsett(inputMedGraderingFraStartForNyttArbeid);
+        List<SplittetPeriode> perioder = new ArrayList<>();
+        kjørRegel(inputMedGraderingFraStartForNyttArbeid, perioder);
         assertThat(perioder.size()).isEqualTo(2);
         assertThat(perioder.get(0).getNyeAndeler().size()).isEqualTo(1);
         assertThat(perioder.get(1).getNyeAndeler().size()).isEqualTo(0);
+    }
+
+    private void kjørRegel(PeriodeModell inputMedGraderingFraStartForNyttArbeid, List<SplittetPeriode> perioder) {
+        new FastsettPeriodeRegel().evaluer(inputMedGraderingFraStartForNyttArbeid, perioder);
     }
 
     @Test
@@ -51,7 +56,8 @@ class FastsettPeriodeRegelTest {
         PeriodeModell inputMedGraderingFraStartForNyttArbeid = lagPeriodeInputMedEnAndelFraStart()
             .medInntektsmeldinger(lagInntektsmeldingMedGraderingFraSkjæringstidspunkt(arbeidsforhold2))
             .build();
-        List<SplittetPeriode> perioder = FastsettPeriodeRegel.fastsett(inputMedGraderingFraStartForNyttArbeid);
+        List<SplittetPeriode> perioder = new ArrayList<>();
+        kjørRegel(inputMedGraderingFraStartForNyttArbeid, perioder);
         assertThat(perioder.size()).isEqualTo(2);
         assertThat(perioder.get(0).getNyeAndeler().size()).isEqualTo(1);
         assertThat(perioder.get(1).getNyeAndeler().size()).isEqualTo(1);

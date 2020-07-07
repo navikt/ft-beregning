@@ -3,6 +3,7 @@ package no.nav.folketrygdloven.beregningsgrunnlag.perioder;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.ArbeidsforholdOgInntektsmelding;
@@ -15,12 +16,15 @@ class IdentifiserPerioderForNaturalytelse {
         // skjul public constructor
     }
 
-    static Set<PeriodeSplittData> identifiserPerioderForNaturalytelse(ArbeidsforholdOgInntektsmelding inntektsmelding, LocalDate skjæringstidspunkt) {
+    static Set<PeriodeSplittData> identifiserPerioderForNaturalytelse(ArbeidsforholdOgInntektsmelding inntektsmelding,
+                                                                      LocalDate skjæringstidspunkt) {
         Set<PeriodeSplittData> set = new HashSet<>();
+
         inntektsmelding.getNaturalYtelser().forEach(naturalYtelse -> {
             LocalDate naturalYtelseFom = naturalYtelse.getFom();
             PeriodeSplittData.Builder builder = PeriodeSplittData.builder().medInntektsmelding(inntektsmelding);
-            if (naturalYtelseFom.isAfter(skjæringstidspunkt)) {
+            boolean starterEtterSkjæringstidspunkt = naturalYtelseFom.isAfter(skjæringstidspunkt);
+            if (starterEtterSkjæringstidspunkt) {
                 PeriodeSplittData splittData = builder.medPeriodeÅrsak(PeriodeÅrsak.NATURALYTELSE_TILKOMMER)
                     .medFom(naturalYtelseFom)
                     .build();
@@ -28,7 +32,8 @@ class IdentifiserPerioderForNaturalytelse {
             }
             LocalDate naturalYtelseTom = naturalYtelse.getTom();
             LocalDate opphørsdato = naturalYtelseTom.plusDays(1);
-            if (!naturalYtelseTom.equals(DateUtil.TIDENES_ENDE) && opphørsdato.isAfter(skjæringstidspunkt)) {
+            boolean oppHørerEtterSkjæringstidspunkt = opphørsdato.isAfter(skjæringstidspunkt);
+            if (!naturalYtelseTom.equals(DateUtil.TIDENES_ENDE) && oppHørerEtterSkjæringstidspunkt) {
                 PeriodeSplittData splittData = builder.medPeriodeÅrsak(PeriodeÅrsak.NATURALYTELSE_BORTFALT)
                     .medFom(opphørsdato)
                     .build();
