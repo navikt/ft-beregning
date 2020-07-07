@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -30,7 +31,7 @@ public class IdentifiserPerioderForRefusjonTest {
             .build();
 
         // Act
-        Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im);
+        Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im, new HashMap<>());
 
         // Assert
         assertThat(periodesplitter).isEmpty();
@@ -46,7 +47,7 @@ public class IdentifiserPerioderForRefusjonTest {
             .build();
 
         // Act
-        Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im);
+        Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im, new HashMap<>());
 
         // Assert
         assertThat(periodesplitter).hasSize(1);
@@ -71,7 +72,7 @@ public class IdentifiserPerioderForRefusjonTest {
             .build();
 
         // Act
-        Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im);
+        Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im, new HashMap<>());
 
         // Assert
         assertThat(periodesplitter).hasSize(1);
@@ -104,7 +105,7 @@ public class IdentifiserPerioderForRefusjonTest {
             .build();
 
         // Act
-        Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im);
+        Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im, new HashMap<>());
 
         // Assert
         assertThat(periodesplitter).hasSize(2);
@@ -130,7 +131,7 @@ public class IdentifiserPerioderForRefusjonTest {
             .build();
 
         // Act
-        Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im);
+        Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im, new HashMap<>());
 
         // Assert
         assertThat(periodesplitter).hasSize(2);
@@ -158,7 +159,7 @@ public class IdentifiserPerioderForRefusjonTest {
             .build();
 
         // Act
-        Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im);
+        Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im, new HashMap<>());
 
         // Assert
         assertThat(periodesplitter).hasSize(3);
@@ -183,7 +184,7 @@ public class IdentifiserPerioderForRefusjonTest {
             .build();
 
         // Act
-        Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im);
+        Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im, new HashMap<>());
 
         // Assert
         assertThat(periodesplitter).hasSize(1);
@@ -206,7 +207,7 @@ public class IdentifiserPerioderForRefusjonTest {
             .build();
 
         // Act
-        Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im);
+        Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im, new HashMap<>());
 
         // Assert
         assertThat(periodesplitter).isEmpty();
@@ -229,7 +230,7 @@ public class IdentifiserPerioderForRefusjonTest {
             .build();
 
         // Act
-        Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im);
+        Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im, new HashMap<>());
 
         // Assert
         assertThat(periodesplitter).hasSize(2);
@@ -255,7 +256,7 @@ public class IdentifiserPerioderForRefusjonTest {
             .build();
 
         // Act
-        Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im);
+        Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im, new HashMap<>());
 
         // Assert
         assertThat(periodesplitter).hasSize(1);
@@ -278,7 +279,7 @@ public class IdentifiserPerioderForRefusjonTest {
             .build();
 
         // Act
-        Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im);
+        Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im, new HashMap<>());
 
         // Assert
         assertThat(periodesplitter).hasSize(2);
@@ -306,7 +307,7 @@ public class IdentifiserPerioderForRefusjonTest {
             .build();
 
         // Act
-        Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im);
+        Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im, new HashMap<>());
 
         // Assert
         assertThat(periodesplitter).hasSize(2);
@@ -334,7 +335,7 @@ public class IdentifiserPerioderForRefusjonTest {
             .build();
 
         // Act
-        Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im);
+        Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im, new HashMap<>());
 
         // Assert
         assertThat(periodesplitter).hasSize(3);
