@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -15,22 +16,24 @@ import java.util.stream.Collectors;
 
 public class FinnPerioderUtenYtelse {
 
+    public static final Periode ÅRET_2017 = Periode.of(LocalDate.of(2017, 1, 1), LocalDate.of(2017, 12, 31));
+
     private FinnPerioderUtenYtelse() {
         // Vedskjul
     }
 
     public static List<Periode> finnPerioder(Inntektsgrunnlag inntektsgrunnlag, LocalDate skjæringstidspunktForOpptjening) {
-        List<Periode> ytelseperioder = finnPerioderMedYtelseFørDato(inntektsgrunnlag, skjæringstidspunktForOpptjening);
+        List<YtelsePeriode> ytelseperioder = finnPerioderMedYtelseFørDato(inntektsgrunnlag, skjæringstidspunktForOpptjening);
         return finnPerioderUtenYtelse(skjæringstidspunktForOpptjening, ytelseperioder);
     }
 
     public static List<Periode> finnPerioder(Inntektsgrunnlag inntektsgrunnlag, LocalDate skjæringstidspunktForOpptjening, Map<String, Object> resultater) {
-        List<Periode> ytelseperioder = finnPerioderMedYtelseFørDato(inntektsgrunnlag, skjæringstidspunktForOpptjening);
+        List<YtelsePeriode> ytelseperioder = finnPerioderMedYtelseFørDato(inntektsgrunnlag, skjæringstidspunktForOpptjening);
         ytelseperioder.forEach(p -> resultater.put("Periode: " + p.getFom() + " - " + p.getTom(), "Ytelseperiode"));
         return finnPerioderUtenYtelse(skjæringstidspunktForOpptjening, ytelseperioder);
     }
 
-    private static List<Periode> finnPerioderUtenYtelse(LocalDate skjæringstidspunktForOpptjening, List<Periode> ytelseperioder) {
+    private static List<Periode> finnPerioderUtenYtelse(LocalDate skjæringstidspunktForOpptjening, List<YtelsePeriode> ytelseperioder) {
         if (ytelseperioder.isEmpty()) {
             List<Periode> beregningsperioder = new ArrayList<>();
             leggTilMånederMellom(beregningsperioder, skjæringstidspunktForOpptjening.minusMonths(13), skjæringstidspunktForOpptjening);
@@ -40,8 +43,19 @@ public class FinnPerioderUtenYtelse {
 
         List<Periode> beregningsperioder = finnPerioderUtenYtelseFra36MndFørStp(skjæringstidspunktForOpptjening, ytelseperioder);
         verifiserPerioder(beregningsperioder);
+        if (harKunInntektFra2017OgDPEllerAAPPåStp(skjæringstidspunktForOpptjening, ytelseperioder, beregningsperioder)) {
+            return Collections.emptyList();
+        }
         List<Periode> perioderEtter12MndFørStp = finnPerioderUtenYtelse12MndFørStp(skjæringstidspunktForOpptjening, beregningsperioder);
         return finnMinst6MndUtenYtelse(beregningsperioder, perioderEtter12MndFørStp);
+    }
+
+    private static boolean harKunInntektFra2017OgDPEllerAAPPåStp(LocalDate skjæringstidspunktForOpptjening, List<YtelsePeriode> ytelseperioder, List<Periode> beregningsperioder) {
+        boolean harKunInntektFra2017 = beregningsperioder.stream().allMatch(p -> p.overlapper(ÅRET_2017));
+        boolean harAAPEllerDPVedSTPOpptjening = ytelseperioder.stream()
+            .filter(p -> p.getPeriode().overlapper(Periode.of(skjæringstidspunktForOpptjening.minusMonths(1), skjæringstidspunktForOpptjening.minusDays(1))))
+            .anyMatch(p -> p.getInntektskilde().equals(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP));
+        return harKunInntektFra2017 && harAAPEllerDPVedSTPOpptjening;
     }
 
     private static List<Periode> finnMinst6MndUtenYtelse(List<Periode> beregningsperioder, List<Periode> perioderEtter12MndFørStp) {
@@ -69,13 +83,13 @@ public class FinnPerioderUtenYtelse {
             .collect(Collectors.toList());
     }
 
-    private static List<Periode> finnPerioderUtenYtelseFra36MndFørStp(LocalDate skjæringstidspunktForBeregning, List<Periode> ytelseperioder) {
+    private static List<Periode> finnPerioderUtenYtelseFra36MndFørStp(LocalDate skjæringstidspunktForBeregning, List<YtelsePeriode> ytelseperioder) {
         List<Periode> beregningsperioder = new ArrayList<>();
         // Må starte på måneden før opplysningsperioden startet for 3 år siden
         LocalDate gjeldendeTom = skjæringstidspunktForBeregning.minusMonths(37);
         int i = 0;
         while (gjeldendeTom.isBefore(skjæringstidspunktForBeregning)) {
-            Periode periode = ytelseperioder.get(i);
+            Periode periode = ytelseperioder.get(i).getPeriode();
             if (erMinstEnMånedMellom(gjeldendeTom, periode.getFom())) {
                 leggTilMånederMellom(beregningsperioder, gjeldendeTom, periode.getFom());
             }
@@ -91,13 +105,13 @@ public class FinnPerioderUtenYtelse {
         return beregningsperioder;
     }
 
-    private static List<Periode> finnPerioderMedYtelseFørDato(Inntektsgrunnlag inntektsgrunnlag, LocalDate skjæringstidspunktForBeregning) {
+    private static List<YtelsePeriode> finnPerioderMedYtelseFørDato(Inntektsgrunnlag inntektsgrunnlag, LocalDate skjæringstidspunktForBeregning) {
         return inntektsgrunnlag.getPeriodeinntekter()
             .stream()
-            .filter(i -> i.getInntektskilde().equals(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP))
+            .filter(i -> i.getInntektskilde().equals(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP) || i.getInntektskilde().equals(Inntektskilde.ANNEN_YTELSE))
             .filter(i -> i.getFom().isBefore(skjæringstidspunktForBeregning))
-            .map(i -> Periode.of(i.getFom(), i.getTom()))
-            .sorted(Comparator.comparing(Periode::getFom))
+            .map(i -> new YtelsePeriode(i.getInntektskilde(), Periode.of(i.getFom(), i.getTom())))
+            .sorted(Comparator.comparing(YtelsePeriode::getFom))
             .collect(Collectors.toList());
     }
 
@@ -141,6 +155,35 @@ public class FinnPerioderUtenYtelse {
                 throw new IllegalStateException("Periode slutter ikke på siste dag i måneden. Periode var: " + periode.toString());
             }
         });
+    }
+
+    private static class YtelsePeriode {
+
+        private Inntektskilde inntektskilde;
+        private Periode periode;
+
+        public YtelsePeriode(Inntektskilde inntektskilde, Periode periode) {
+            this.inntektskilde = inntektskilde;
+            this.periode = periode;
+        }
+
+        public Inntektskilde getInntektskilde() {
+            return inntektskilde;
+        }
+
+        public Periode getPeriode() {
+            return periode;
+        }
+
+        public LocalDate getFom() {
+            return periode.getFom();
+        }
+
+        public LocalDate getTom() {
+            return periode.getTom();
+        }
+
+
     }
 
 }

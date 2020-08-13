@@ -250,4 +250,5 @@ public class Inntektsgrunnlag {
             .filter(i -> i.getArbeidsgiver().isPresent())
             .filter(i -> arbeidsforhold.equals(i.getArbeidsgiver().get())); //NOSONAR
     }
+
 }
