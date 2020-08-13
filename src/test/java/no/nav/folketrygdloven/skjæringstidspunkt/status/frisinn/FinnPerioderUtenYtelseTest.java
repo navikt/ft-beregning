@@ -114,12 +114,12 @@ class FinnPerioderUtenYtelseTest {
         Map<String, Object> res = new HashMap<>();
         Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
         LocalDate stp = LocalDate.of(2020, 3, 1);
-        inntektsgrunnlag.leggTilPeriodeinntekt(byggYtelse(Periode.of(LocalDate.of(2020, 2, 1), LocalDate.of(2020, 2, 29))));
-        inntektsgrunnlag.leggTilPeriodeinntekt(byggYtelse(Periode.of(LocalDate.of(2019, 12, 1), LocalDate.of(2019, 12, 31))));
-        inntektsgrunnlag.leggTilPeriodeinntekt(byggYtelse(Periode.of(LocalDate.of(2019, 10, 1), LocalDate.of(2019, 10, 31))));
-        inntektsgrunnlag.leggTilPeriodeinntekt(byggYtelse(Periode.of(LocalDate.of(2019, 8, 1), LocalDate.of(2019, 8, 31))));
-        inntektsgrunnlag.leggTilPeriodeinntekt(byggYtelse(Periode.of(LocalDate.of(2019, 6, 1), LocalDate.of(2019, 6, 30))));
-        inntektsgrunnlag.leggTilPeriodeinntekt(byggYtelse(Periode.of(LocalDate.of(2019, 4, 1), LocalDate.of(2019, 4, 30))));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggDPEllerAAPYtelse(Periode.of(LocalDate.of(2020, 2, 1), LocalDate.of(2020, 2, 29))));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggDPEllerAAPYtelse(Periode.of(LocalDate.of(2019, 12, 1), LocalDate.of(2019, 12, 31))));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggDPEllerAAPYtelse(Periode.of(LocalDate.of(2019, 10, 1), LocalDate.of(2019, 10, 31))));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggDPEllerAAPYtelse(Periode.of(LocalDate.of(2019, 8, 1), LocalDate.of(2019, 8, 31))));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggDPEllerAAPYtelse(Periode.of(LocalDate.of(2019, 6, 1), LocalDate.of(2019, 6, 30))));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggDPEllerAAPYtelse(Periode.of(LocalDate.of(2019, 4, 1), LocalDate.of(2019, 4, 30))));
 
         // Act
         List<Periode> perioder = FinnPerioderUtenYtelse.finnPerioder(inntektsgrunnlag, stp, res);
@@ -139,7 +139,7 @@ class FinnPerioderUtenYtelseTest {
         Map<String, Object> res = new HashMap<>();
         Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
         LocalDate stp = LocalDate.of(2020, 3, 1);
-        inntektsgrunnlag.leggTilPeriodeinntekt(byggYtelse(Periode.of(LocalDate.of(2019, 5, 20), LocalDate.of(2020, 2, 12))));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggDPEllerAAPYtelse(Periode.of(LocalDate.of(2019, 5, 20), LocalDate.of(2020, 2, 12))));
 
         // Act
         List<Periode> perioder = FinnPerioderUtenYtelse.finnPerioder(inntektsgrunnlag, stp, res);
@@ -159,7 +159,7 @@ class FinnPerioderUtenYtelseTest {
         Map<String, Object> res = new HashMap<>();
         Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
         LocalDate stp = LocalDate.of(2020, 3, 1);
-        inntektsgrunnlag.leggTilPeriodeinntekt(byggYtelse(Periode.of(LocalDate.of(2019, 1, 15), LocalDate.of(2020, 2, 12))));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggDPEllerAAPYtelse(Periode.of(LocalDate.of(2019, 1, 15), LocalDate.of(2020, 2, 12))));
 
         // Act
         List<Periode> perioder = FinnPerioderUtenYtelse.finnPerioder(inntektsgrunnlag, stp, res);
@@ -179,7 +179,7 @@ class FinnPerioderUtenYtelseTest {
         Map<String, Object> res = new HashMap<>();
         Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
         LocalDate stp = LocalDate.of(2020, 3, 1);
-        inntektsgrunnlag.leggTilPeriodeinntekt(byggYtelse(Periode.of(LocalDate.of(2017, 9, 30), LocalDate.of(2020, 2, 12))));
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggAnnenYtelse(Periode.of(LocalDate.of(2017, 9, 30), LocalDate.of(2020, 2, 12))));
 
         // Act
         List<Periode> perioder = FinnPerioderUtenYtelse.finnPerioder(inntektsgrunnlag, stp, res);
@@ -193,9 +193,63 @@ class FinnPerioderUtenYtelseTest {
         }
     }
 
-    private Periodeinntekt byggYtelse(Periode periode) {
+    @Test
+    void skal_finne_ingen_måneder_når_det_er_DP_eller_AAP_til_2017() {
+        // Arrange
+        Map<String, Object> res = new HashMap<>();
+        Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
+        LocalDate stp = LocalDate.of(2020, 3, 1);
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggDPEllerAAPYtelse(Periode.of(LocalDate.of(2018, 1, 1), LocalDate.of(2020, 2, 12))));
+
+        // Act
+        List<Periode> perioder = FinnPerioderUtenYtelse.finnPerioder(inntektsgrunnlag, stp, res);
+
+        // Assert
+        assertThat(perioder.size()).isEqualTo(0);
+    }
+
+    @Test
+    void skal_finne_6_måneder_når_det_er_DP_eller_AAP_til_februar_2018() {
+        // Arrange
+        Map<String, Object> res = new HashMap<>();
+        Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
+        LocalDate stp = LocalDate.of(2020, 3, 1);
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggDPEllerAAPYtelse(Periode.of(LocalDate.of(2018, 2, 1), LocalDate.of(2020, 2, 12))));
+
+        // Act
+        List<Periode> perioder = FinnPerioderUtenYtelse.finnPerioder(inntektsgrunnlag, stp, res);
+
+        // Assert
+        assertThat(perioder.size()).isEqualTo(6);
+    }
+
+    @Test
+    void skal_finne_6_måneder_når_det_er_ytelse_til_2017_men_ikke_AAP_eller_DP() {
+        // Arrange
+        Map<String, Object> res = new HashMap<>();
+        Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
+        LocalDate stp = LocalDate.of(2020, 3, 1);
+        inntektsgrunnlag.leggTilPeriodeinntekt(byggAnnenYtelse(Periode.of(LocalDate.of(2018, 1, 1), LocalDate.of(2020, 2, 12))));
+
+        // Act
+        List<Periode> perioder = FinnPerioderUtenYtelse.finnPerioder(inntektsgrunnlag, stp, res);
+
+        // Assert
+        assertThat(perioder.size()).isEqualTo(6);
+    }
+
+    private Periodeinntekt byggDPEllerAAPYtelse(Periode periode) {
         return Periodeinntekt.builder()
             .medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP)
+            .medInntekt(BigDecimal.TEN)
+            .medPeriode(periode)
+            .build();
+    }
+
+
+    private Periodeinntekt byggAnnenYtelse(Periode periode) {
+        return Periodeinntekt.builder()
+            .medInntektskildeOgPeriodeType(Inntektskilde.ANNEN_YTELSE)
             .medInntekt(BigDecimal.TEN)
             .medPeriode(periode)
             .build();

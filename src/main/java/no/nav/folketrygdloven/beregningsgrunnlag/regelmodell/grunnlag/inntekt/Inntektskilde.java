@@ -6,7 +6,9 @@ public enum Inntektskilde {
     INNTEKTSMELDING(InntektPeriodeType.MÅNEDLIG),
     SIGRUN(InntektPeriodeType.ÅRLIG),
     SØKNAD(InntektPeriodeType.ÅRLIG),
-    TILSTØTENDE_YTELSE_DP_AAP(InntektPeriodeType.DAGLIG);
+    TILSTØTENDE_YTELSE_DP_AAP(InntektPeriodeType.DAGLIG),
+    ANNEN_YTELSE(InntektPeriodeType.DAGLIG);
+
 
     private InntektPeriodeType inntektPeriodeType;
 
