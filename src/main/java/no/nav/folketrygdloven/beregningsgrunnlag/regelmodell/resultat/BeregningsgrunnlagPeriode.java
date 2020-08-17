@@ -144,6 +144,11 @@ public class BeregningsgrunnlagPeriode {
         return beregningsgrunnlag.getGrunnbeløp();
     }
 
+    public BigDecimal getGrunnbeløpForVilkårsvurdering() {
+        return beregningsgrunnlag.getGrunnbeløpForVilkårsvurdering();
+    }
+
+
     public SammenligningsGrunnlag getSammenligningsGrunnlag() {
         return beregningsgrunnlag.getSammenligningsGrunnlag();
     }

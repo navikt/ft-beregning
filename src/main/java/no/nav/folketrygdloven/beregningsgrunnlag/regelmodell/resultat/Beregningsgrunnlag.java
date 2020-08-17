@@ -33,14 +33,12 @@ public class Beregningsgrunnlag {
     private EnumMap<AktivitetStatus, SammenligningsGrunnlag> sammenligningsGrunnlagPrStatus = new EnumMap<>(AktivitetStatus.class);
     private Dekningsgrad dekningsgrad = Dekningsgrad.DEKNINGSGRAD_100;
     private BigDecimal grunnbeløp;
-    private List<Grunnbeløp> grunnbeløpSatser = new ArrayList<>();
+    /**
+     * Ved G-regulering skal gammel G-verdi brukes til å vurdere vilkåret (https://jira.adeo.no/browse/TFP-3599 / https://confluence.adeo.no/display/TVF/G-regulering)
+     */
+    private BigDecimal grunnbeløpForVilkårsvurdering;
     private boolean hattMilitærIOpptjeningsperioden = false;
-    private int antallGMilitærHarKravPå = 3;
-    private BigDecimal antallGØvreGrenseverdi;
-    private BigDecimal antallGMinstekravVilkår;
-    private BigDecimal ytelsedagerIPrÅr;
-    private BigDecimal avviksgrenseProsent;
-    private boolean splitteATFLToggleErPå = false;
+    private Konstanter konstanter = new Konstanter();
 
     private Beregningsgrunnlag() { }
 
@@ -85,8 +83,12 @@ public class Beregningsgrunnlag {
         return grunnbeløp;
     }
 
+    public BigDecimal getGrunnbeløpForVilkårsvurdering() {
+        return grunnbeløpForVilkårsvurdering;
+    }
+
     public BigDecimal getMinsteinntektMilitærHarKravPå() {
-        return grunnbeløp.multiply(BigDecimal.valueOf(antallGMilitærHarKravPå));
+        return grunnbeløp.multiply(BigDecimal.valueOf(getAntallGMilitærHarKravPå()));
     }
 
     public AktivitetStatusMedHjemmel getAktivitetStatus(AktivitetStatus aktivitetStatus) {
@@ -95,7 +97,7 @@ public class Beregningsgrunnlag {
     }
 
     public long verdiAvG(LocalDate dato) {
-        Optional<Grunnbeløp> optional = grunnbeløpSatser.stream()
+        Optional<Grunnbeløp> optional = konstanter.getGrunnbeløpSatser().stream()
             .filter(g -> !dato.isBefore(g.getFom()) && !dato.isAfter(g.getTom()))
             .findFirst();
 
@@ -107,33 +109,23 @@ public class Beregningsgrunnlag {
     }
 
     public BigDecimal getAntallGØvreGrenseverdi() {
-        return antallGØvreGrenseverdi;
+        return konstanter.getAntallGØvreGrenseverdi();
     }
 
     public BigDecimal getYtelsedagerPrÅr() {
-        if (ytelsedagerIPrÅr == null) {
-            return BigDecimal.valueOf(260);
-        }
-        return ytelsedagerIPrÅr;
+        return konstanter.getYtelsedagerIPrÅr();
     }
 
     public BigDecimal getAvviksgrenseProsent() {
-        if (avviksgrenseProsent == null) {
-            return BigDecimal.valueOf(25);
-        }
-        return avviksgrenseProsent;
+        return konstanter.getAvviksgrenseProsent();
     }
 
     public BigDecimal getAntallGMinstekravVilkår() {
-        if (antallGMinstekravVilkår == null) {
-            return BigDecimal.valueOf(0.5);
-        }
-        return antallGMinstekravVilkår;
+        return konstanter.getAntallGMinstekravVilkår();
     }
 
-
     public long snittverdiAvG(int år) {
-        Optional<Grunnbeløp> optional = grunnbeløpSatser.stream().filter(g -> g.getFom().getYear() == år).findFirst();
+        Optional<Grunnbeløp> optional = konstanter.getGrunnbeløpSatser().stream().filter(g -> g.getFom().getYear() == år).findFirst();
         if (optional.isPresent()) {
             return optional.get().getGSnitt();
         } else {
@@ -150,7 +142,7 @@ public class Beregningsgrunnlag {
     }
 
     public int getAntallGMilitærHarKravPå() {
-        return antallGMilitærHarKravPå;
+        return konstanter.getAntallGMilitærHarKravPå();
     }
 
     public EnumMap<AktivitetStatus, SammenligningsGrunnlag> getSammenligningsGrunnlagPrAktivitetstatus() {
@@ -162,7 +154,7 @@ public class Beregningsgrunnlag {
     }
 
     public boolean isSplitteATFLToggleErPå() {
-        return splitteATFLToggleErPå;
+        return konstanter.isSplitteATFLToggleErPå();
     }
 
     public static Builder builder() {
@@ -227,9 +219,13 @@ public class Beregningsgrunnlag {
             return this;
         }
 
+        public Builder medGrunnbeløpForVilkårsvurdering(BigDecimal grunnbeløpForVilkårvurdering) {
+            beregningsgrunnlagMal.grunnbeløpForVilkårsvurdering = grunnbeløpForVilkårvurdering;
+            return this;
+        }
+
         public Builder medGrunnbeløpSatser(List<Grunnbeløp> grunnbeløpSatser) {
-            beregningsgrunnlagMal.grunnbeløpSatser.clear();
-            beregningsgrunnlagMal.grunnbeløpSatser.addAll(grunnbeløpSatser);
+            beregningsgrunnlagMal.konstanter.setGrunnbeløpSatser(grunnbeløpSatser);
             return this;
         }
 
@@ -247,27 +243,27 @@ public class Beregningsgrunnlag {
         }
 
         public Builder medAntallGMilitærHarKravPå(int antallGMilitærHarKravPå) {
-            beregningsgrunnlagMal.antallGMilitærHarKravPå = antallGMilitærHarKravPå;
+            beregningsgrunnlagMal.konstanter.setAntallGMilitærHarKravPå(antallGMilitærHarKravPå);
             return this;
         }
 
         public Builder medAntallGØvreGrenseverdi(BigDecimal grenseverdi) {
-            beregningsgrunnlagMal.antallGØvreGrenseverdi = grenseverdi;
+            beregningsgrunnlagMal.konstanter.setAntallGØvreGrenseverdi(grenseverdi);
             return this;
         }
 
         public Builder medYtelsesdagerIEtÅr(BigDecimal ytelsesdagerIEtÅr) {
-            beregningsgrunnlagMal.ytelsedagerIPrÅr = ytelsesdagerIEtÅr;
+            beregningsgrunnlagMal.konstanter.setYtelsedagerIPrÅr(ytelsesdagerIEtÅr);
             return this;
         }
 
         public Builder medAvviksgrenseProsent(BigDecimal avviksgrenseProsent) {
-            beregningsgrunnlagMal.avviksgrenseProsent = avviksgrenseProsent;
+            beregningsgrunnlagMal.konstanter.setAvviksgrenseProsent(avviksgrenseProsent);
             return this;
         }
 
         public Builder medAntallGMinstekravVilkår(BigDecimal antallGMinstekravVilkår) {
-            beregningsgrunnlagMal.antallGMinstekravVilkår = antallGMinstekravVilkår;
+            beregningsgrunnlagMal.konstanter.setAntallGMinstekravVilkår(antallGMinstekravVilkår);
             return this;
         }
 
@@ -286,7 +282,7 @@ public class Beregningsgrunnlag {
 
 
         public Builder medSplitteATFLToggleVerdi(boolean splitteATFLToggleErPå) {
-            beregningsgrunnlagMal.splitteATFLToggleErPå = splitteATFLToggleErPå;
+            beregningsgrunnlagMal.konstanter.setSplitteATFLToggleErPå(splitteATFLToggleErPå);
             return this;
         }
 
@@ -306,7 +302,7 @@ public class Beregningsgrunnlag {
             if (beregningsgrunnlagMal.aktivitetStatuser.isEmpty()) {
                 throw new IllegalStateException("Beregningsgrunnlaget må inneholde minst 1 status");
             }
-            if (beregningsgrunnlagMal.grunnbeløpSatser.isEmpty()) {
+            if (beregningsgrunnlagMal.konstanter.getGrunnbeløpSatser().isEmpty()) {
                 throw new IllegalStateException("Beregningsgrunnlaget må inneholde grunnbeløpsatser");
             }
         }
