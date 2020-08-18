@@ -254,6 +254,7 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
         return Beregningsgrunnlag.builder()
             .medInntektsgrunnlag(new Inntektsgrunnlag())
             .medGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2019))
+            .medGrunnbeløpForVilkårsvurdering(BigDecimal.valueOf(GRUNNBELØP_2019))
             .medSkjæringstidspunkt(skjæringstidspunkt)
             .medAntallGMinstekravVilkår(BigDecimal.valueOf(0.75))
             .medGrunnbeløpSatser(GRUNNBELØPLISTE)

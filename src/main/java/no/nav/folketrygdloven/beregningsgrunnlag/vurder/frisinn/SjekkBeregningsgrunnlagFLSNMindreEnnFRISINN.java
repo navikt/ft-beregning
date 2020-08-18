@@ -24,7 +24,7 @@ class SjekkBeregningsgrunnlagFLSNMindreEnnFRISINN extends LeafSpecification<Bere
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        BigDecimal minstekrav = grunnlag.getGrunnbeløp().multiply(grunnlag.getAntallGMinstekravVilkår());
+        BigDecimal minstekrav = grunnlag.getGrunnbeløpForVilkårsvurdering().multiply(grunnlag.getAntallGMinstekravVilkår());
         BigDecimal bruttoForSøkteAndeler = BigDecimal.ZERO;
 
         var frilansandel = finnFrilansAndel(grunnlag);
@@ -41,8 +41,9 @@ class SjekkBeregningsgrunnlagFLSNMindreEnnFRISINN extends LeafSpecification<Bere
 
         boolean erSøktIPeriode = (snStatus.isPresent() && snStatus.get().erSøktYtelseFor()) || (frilansandel.isPresent() && frilansandel.get().getErSøktYtelseFor());
         SingleEvaluation resultat = erSøktIPeriode && bruttoForSøkteAndeler.compareTo(minstekrav) < 0 ? ja() : nei();
-        resultat.setEvaluationProperty("grunnbeløp", grunnlag.getGrunnbeløp());
+        resultat.setEvaluationProperty("grunnbeløp", grunnlag.getGrunnbeløpForVilkårsvurdering());
         resultat.setEvaluationProperty("treKvartGrunnbeløp", minstekrav);
+        resultat.setEvaluationProperty("faktiskGrunnbeløp", grunnlag.getGrunnbeløp());
         resultat.setEvaluationProperty("bruttoPrÅrSNFL", bruttoForSøkteAndeler);
         return resultat;
     }
