@@ -4,6 +4,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.vurder.FinnGrunnbeløpForVilkårsvurdering;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.node.SingleEvaluation;
@@ -24,7 +25,8 @@ class SjekkBeregningsgrunnlagFLSNMindreEnnFRISINN extends LeafSpecification<Bere
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        BigDecimal minstekrav = grunnlag.getGrunnbeløpForVilkårsvurdering().multiply(grunnlag.getAntallGMinstekravVilkår());
+        BigDecimal grunnbeløpForVilkårsvurdering = FinnGrunnbeløpForVilkårsvurdering.finnGrunnbeløpForVilkårsvurdering(grunnlag);
+        BigDecimal minstekrav = grunnbeløpForVilkårsvurdering.multiply(grunnlag.getAntallGMinstekravVilkår());
         BigDecimal bruttoForSøkteAndeler = BigDecimal.ZERO;
 
         var frilansandel = finnFrilansAndel(grunnlag);
@@ -41,7 +43,7 @@ class SjekkBeregningsgrunnlagFLSNMindreEnnFRISINN extends LeafSpecification<Bere
 
         boolean erSøktIPeriode = (snStatus.isPresent() && snStatus.get().erSøktYtelseFor()) || (frilansandel.isPresent() && frilansandel.get().getErSøktYtelseFor());
         SingleEvaluation resultat = erSøktIPeriode && bruttoForSøkteAndeler.compareTo(minstekrav) < 0 ? ja() : nei();
-        resultat.setEvaluationProperty("grunnbeløp", grunnlag.getGrunnbeløpForVilkårsvurdering());
+        resultat.setEvaluationProperty("grunnbeløpForVilkårsvurdering", grunnbeløpForVilkårsvurdering);
         resultat.setEvaluationProperty("treKvartGrunnbeløp", minstekrav);
         resultat.setEvaluationProperty("faktiskGrunnbeløp", grunnlag.getGrunnbeløp());
         resultat.setEvaluationProperty("bruttoPrÅrSNFL", bruttoForSøkteAndeler);

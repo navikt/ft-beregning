@@ -1,5 +1,7 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.vurder;
 
+import static no.nav.folketrygdloven.beregningsgrunnlag.vurder.FinnGrunnbeløpForVilkårsvurdering.finnGrunnbeløpForVilkårsvurdering;
+
 import java.math.BigDecimal;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
@@ -20,13 +22,18 @@ class SjekkBeregningsgrunnlagMindreEnn extends LeafSpecification<Beregningsgrunn
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        BigDecimal minstekrav = grunnlag.getGrunnbeløpForVilkårsvurdering().multiply(grunnlag.getAntallGMinstekravVilkår());
+
+        BigDecimal grunnbeløpForVilkårsvurdering = finnGrunnbeløpForVilkårsvurdering(grunnlag);
+
+        BigDecimal minstekrav = grunnbeløpForVilkårsvurdering.multiply(grunnlag.getAntallGMinstekravVilkår());
 
         SingleEvaluation resultat = (grunnlag.getBruttoPrÅr().compareTo(minstekrav) < 0) ? ja() : nei();
-        resultat.setEvaluationProperty("grunnbeløpForVilkårsvurdering", grunnlag.getGrunnbeløpForVilkårsvurdering());
+        resultat.setEvaluationProperty("grunnbeløpForVilkårsvurdering", grunnbeløpForVilkårsvurdering);
         resultat.setEvaluationProperty("halvtGrunnbeløp", minstekrav);
         resultat.setEvaluationProperty("faktiskGrunnbeløp", grunnlag.getGrunnbeløp());
         resultat.setEvaluationProperty("bruttoPrÅr", grunnlag.getBruttoPrÅr());
         return resultat;
     }
+
+
 }
