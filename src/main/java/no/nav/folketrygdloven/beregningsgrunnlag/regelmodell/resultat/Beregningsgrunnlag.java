@@ -36,7 +36,7 @@ public class Beregningsgrunnlag {
     /**
      * Ved G-regulering skal gammel G-verdi brukes til å vurdere vilkåret (https://jira.adeo.no/browse/TFP-3599 / https://confluence.adeo.no/display/TVF/G-regulering)
      */
-    private BigDecimal grunnbeløpForVilkårsvurdering;
+    private BigDecimal uregulertGrunnbeløp;
     private boolean hattMilitærIOpptjeningsperioden = false;
     private Konstanter konstanter = new Konstanter();
 
@@ -83,8 +83,8 @@ public class Beregningsgrunnlag {
         return grunnbeløp;
     }
 
-    public BigDecimal getGrunnbeløpForVilkårsvurdering() {
-        return grunnbeløpForVilkårsvurdering;
+    public BigDecimal getUregulertGrunnbeløp() {
+        return uregulertGrunnbeløp;
     }
 
     public BigDecimal getMinsteinntektMilitærHarKravPå() {
@@ -219,8 +219,8 @@ public class Beregningsgrunnlag {
             return this;
         }
 
-        public Builder medGrunnbeløpForVilkårsvurdering(BigDecimal grunnbeløpForVilkårvurdering) {
-            beregningsgrunnlagMal.grunnbeløpForVilkårsvurdering = grunnbeløpForVilkårvurdering;
+        public Builder medUregulertGrunnbeløp(BigDecimal uregulertGrunnbeløp) {
+            beregningsgrunnlagMal.uregulertGrunnbeløp = uregulertGrunnbeløp;
             return this;
         }
 
