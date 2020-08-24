@@ -32,7 +32,7 @@ public class RegelBeregningsgrunnlagSNFRISINN implements RuleService<Beregningsg
 
         Specification<BeregningsgrunnlagPeriode> foreslåBeregningsgrunnlagForSelvstendigNæringsdrivende =
             rs.beregningsRegel("FRISINN 2", "Foreslå beregningsgrunnlag for selvstendig næringsdrivende",
-                Arrays.asList(new FastsettBeregningsperiodeSNFRISINN(), new BeregnOppjustertInntektFRISINN(), new BeregnGjennomsnittligPGIFRISINN()), beregnBruttoSN);
+                new FastsettBeregningsperiodeSNFRISINN(), beregnBruttoSN);
 
         return foreslåBeregningsgrunnlagForSelvstendigNæringsdrivende;
     }

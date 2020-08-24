@@ -24,15 +24,13 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNFRISINN extends
         Specification<BeregningsgrunnlagPeriode> beregnBruttoSN =
             rs.beregningsRegel("FP_BR 2.2 - 2.10", "Beregn SN-andel", new BeregnBruttoBeregningsgrunnlagSNFRISINN(), new Beregnet());
 
-        Specification<BeregningsgrunnlagPeriode> beregnPGI =
-            rs.beregningsRegel("FP_BR 2", "Fastsett beregningsperiode og beregn oppjusterte inntekter og pgi-snitt.",
-                Arrays.asList(new FastsettBeregningsperiodeSNFRISINN(), new BeregnOppjustertInntektFRISINN(), new BeregnGjennomsnittligPGIFRISINN()), beregnBruttoSN);
+        Specification<BeregningsgrunnlagPeriode> fastsettBeregningsperiode =
+            rs.beregningsRegel("FP_BR 2", "Fastsett beregningsperiode.",
+                new FastsettBeregningsperiodeSNFRISINN(), beregnBruttoSN);
 
-        Specification<BeregningsgrunnlagPeriode> beregningsgrunnlagKombinasjon;
-
-        beregningsgrunnlagKombinasjon =
+        Specification<BeregningsgrunnlagPeriode> beregningsgrunnlagKombinasjon =
             rs.beregningsRegel("FP_BR_14-15-27-28", "Beregn beregningsgrunnlag for arbeidstaker/frilanser)",
-                new RegelBeregningsgrunnlagATFLFRISINN(regelmodell).getSpecification(), beregnPGI);
+                new RegelBeregningsgrunnlagATFLFRISINN(regelmodell).getSpecification(), fastsettBeregningsperiode);
 
         return beregningsgrunnlagKombinasjon;
     }
