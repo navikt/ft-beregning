@@ -8,7 +8,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.assertj.core.internal.cglib.core.Local;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel;
@@ -21,7 +24,9 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Na
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.YtelsesSpesifiktGrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.frisinn.FrisinnGrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.frisinn.FrisinnPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.omp.OmsorgspengerGrunnlag;
@@ -54,15 +59,58 @@ public class BeregningsgrunnlagScenario {
         return settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, aktivitetStatuser, Collections.emptyList(), Collections.emptyList());
     }
 
-    public static Beregningsgrunnlag settoppGrunnlagMedEnPeriode(LocalDate skjæringstidspunkt, Inntektsgrunnlag inntektsgrunnlag, List<AktivitetStatus> aktivitetStatuser, List<Arbeidsforhold> arbeidsforhold) {
+    public static Beregningsgrunnlag settoppGrunnlagMedEnPeriode(LocalDate skjæringstidspunkt, Inntektsgrunnlag inntektsgrunnlag, List<AktivitetStatus> aktivitetStatuser, Optional<YtelsesSpesifiktGrunnlag> ytelsesSpesifiktGrunnlag) {
+        return settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, aktivitetStatuser, Collections.emptyList(), Collections.emptyList(), ytelsesSpesifiktGrunnlag);
+    }
+
+    public static Beregningsgrunnlag settoppGrunnlagMedEnPeriode(LocalDate skjæringstidspunkt,
+                                                                 Inntektsgrunnlag inntektsgrunnlag,
+                                                                 List<AktivitetStatus> aktivitetStatuser,
+                                                                 List<Arbeidsforhold> arbeidsforhold) {
         return settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, aktivitetStatuser, arbeidsforhold, Collections.emptyList());
     }
 
-    public static Beregningsgrunnlag settoppGrunnlagMedEnPeriode(LocalDate skjæringstidspunkt, Inntektsgrunnlag inntektsgrunnlag, List<AktivitetStatus> aktivitetStatuser, List<Arbeidsforhold> arbeidsforhold, List<BigDecimal> refusjonskravPrÅr) {
+    public static Beregningsgrunnlag settoppGrunnlagMedEnPeriode(LocalDate skjæringstidspunkt,
+                                                                 Inntektsgrunnlag inntektsgrunnlag,
+                                                                 List<AktivitetStatus> aktivitetStatuser,
+                                                                 List<Arbeidsforhold> arbeidsforhold,
+                                                                 Optional<YtelsesSpesifiktGrunnlag> ytelsesSpesifiktGrunnlag) {
+        return settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, aktivitetStatuser, arbeidsforhold, Collections.emptyList(), ytelsesSpesifiktGrunnlag);
+    }
+
+    public static Beregningsgrunnlag settoppGrunnlagMedEnPeriode(LocalDate skjæringstidspunkt,
+                                                                 Inntektsgrunnlag inntektsgrunnlag,
+                                                                 List<AktivitetStatus> aktivitetStatuser,
+                                                                 List<Arbeidsforhold> arbeidsforhold,
+                                                                 List<BigDecimal> refusjonskravPrÅr) {
         return settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, aktivitetStatuser, arbeidsforhold, Collections.emptyList(), refusjonskravPrÅr);
     }
 
-    public static Beregningsgrunnlag settoppGrunnlagMedEnPeriode(LocalDate skjæringstidspunkt, Inntektsgrunnlag inntektsgrunnlag, List<AktivitetStatus> aktivitetStatuser, List<Arbeidsforhold> arbeidsforhold, List<PeriodeÅrsak> periodeÅrsaker, List<BigDecimal> refusjonskravPrår) {
+    public static Beregningsgrunnlag settoppGrunnlagMedEnPeriode(LocalDate skjæringstidspunkt,
+                                                                 Inntektsgrunnlag inntektsgrunnlag,
+                                                                 List<AktivitetStatus> aktivitetStatuser,
+                                                                 List<Arbeidsforhold> arbeidsforhold,
+                                                                 List<BigDecimal> refusjonskravPrÅr,
+                                                                 Optional<YtelsesSpesifiktGrunnlag> ytelsesSpesifiktGrunnlag) {
+        return settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, aktivitetStatuser, arbeidsforhold, Collections.emptyList(), refusjonskravPrÅr, ytelsesSpesifiktGrunnlag);
+    }
+
+    public static Beregningsgrunnlag settoppGrunnlagMedEnPeriode(LocalDate skjæringstidspunkt,
+                                                                 Inntektsgrunnlag inntektsgrunnlag,
+                                                                 List<AktivitetStatus> aktivitetStatuser,
+                                                                 List<Arbeidsforhold> arbeidsforhold,
+                                                                 List<PeriodeÅrsak> periodeÅrsaker,
+                                                                 List<BigDecimal> refusjonskravPrår) {
+        return settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, aktivitetStatuser, arbeidsforhold, periodeÅrsaker, refusjonskravPrår, Optional.empty());
+    }
+
+    public static Beregningsgrunnlag settoppGrunnlagMedEnPeriode(LocalDate skjæringstidspunkt,
+                                                                 Inntektsgrunnlag inntektsgrunnlag,
+                                                                 List<AktivitetStatus> aktivitetStatuser,
+                                                                 List<Arbeidsforhold> arbeidsforhold,
+                                                                 List<PeriodeÅrsak> periodeÅrsaker,
+                                                                 List<BigDecimal> refusjonskravPrår,
+                                                                 Optional<YtelsesSpesifiktGrunnlag> ytelsesSpesifiktGrunnlag) {
 
         BeregningsgrunnlagPeriode.Builder periodeBuilder = BeregningsgrunnlagPeriode.builder()
             .medPeriode(Periode.of(skjæringstidspunkt, null))
@@ -105,13 +153,8 @@ public class BeregningsgrunnlagScenario {
             .medAktivitetStatuser(aktivitetStatuser.stream().map(as -> new AktivitetStatusMedHjemmel(as, null)).collect(Collectors.toList()))
             .medBeregningsgrunnlagPeriode(bgPeriode)
             .medGrunnbeløpSatser(GRUNNBELØPLISTE)
-            .medYtelsesSpesifiktGrunnlag(new FrisinnGrunnlag(lagFrisinnperioder(bgPeriode.getBeregningsgrunnlagPeriode()),
-                    List.of(bgPeriode.getBeregningsgrunnlagPeriode()), skjæringstidspunkt))
+            .medYtelsesSpesifiktGrunnlag(ytelsesSpesifiktGrunnlag.orElse(null))
             .build();
-    }
-
-    private static List<FrisinnPeriode> lagFrisinnperioder(Periode periode) {
-        return Collections.singletonList(new FrisinnPeriode(periode, true, true));
     }
 
     public static Beregningsgrunnlag settOppGrunnlagMedEnPeriode(LocalDate skjæringstidspunkt, Inntektsgrunnlag inntektsgrunnlag, AktivitetStatus aktivitetStatus, List<Arbeidsforhold> arbeidsforhold, List<BigDecimal> refusjonskravPrår, boolean skalSjekkeRefusjonFørSetteAksjonspunkt, BigDecimal maksRefusjon) {
@@ -432,4 +475,6 @@ public class BeregningsgrunnlagScenario {
         }
         return pgiListe;
     }
+
+
 }

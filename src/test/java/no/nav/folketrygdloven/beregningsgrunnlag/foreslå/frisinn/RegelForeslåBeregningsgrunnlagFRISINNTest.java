@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,9 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.In
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.YtelsesSpesifiktGrunnlag;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.frisinn.FrisinnGrunnlag;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.frisinn.FrisinnPeriode;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 
@@ -38,12 +42,14 @@ class RegelForeslåBeregningsgrunnlagFRISINNTest {
     private LocalDate skjæringstidspunkt;
     private String orgnr;
     private Arbeidsforhold arbeidsforhold;
+    private FrisinnGrunnlag frisinnGrunnlag;
 
     @BeforeEach
     public void setup() {
         skjæringstidspunkt = LocalDate.of(2020, Month.MARCH, 15);
         orgnr = "987";
         arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr);
+        frisinnGrunnlag = lagFrisinnGrunnlag();
     }
 
     @Test
@@ -52,6 +58,7 @@ class RegelForeslåBeregningsgrunnlagFRISINNTest {
         BigDecimal månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
         BigDecimal refusjonskrav = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
         Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektskomponenten(skjæringstidspunkt, månedsinntekt, refusjonskrav, true);
+        beregningsgrunnlag = Beregningsgrunnlag.builder(beregningsgrunnlag).medYtelsesSpesifiktGrunnlag(frisinnGrunnlag).build();
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         // Act
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlagFRISINN(grunnlag).evaluer(grunnlag);
@@ -69,6 +76,7 @@ class RegelForeslåBeregningsgrunnlagFRISINNTest {
         BigDecimal månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
         BigDecimal refusjonskrav = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
         Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektskomponenten(skjæringstidspunkt, månedsinntekt, refusjonskrav, false);
+        beregningsgrunnlag = Beregningsgrunnlag.builder(beregningsgrunnlag).medYtelsesSpesifiktGrunnlag(frisinnGrunnlag).build();
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         // Act
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlagFRISINN(grunnlag).evaluer(grunnlag);
@@ -89,8 +97,15 @@ class RegelForeslåBeregningsgrunnlagFRISINNTest {
         List<BigDecimal> månedsinntekter = Collections.nCopies(12, månedsinntekt);
         leggTilMånedsinntekter(inntektsgrunnlag, skjæringstidspunkt, månedsinntekter, Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold);
         leggTilSøknadsinntekt(inntektsgrunnlag, BigDecimal.valueOf(GSNITT_2019));
-        BeregningsgrunnlagPeriode grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL_SN),
-            List.of(arbeidsforhold), Collections.emptyList()).getBeregningsgrunnlagPerioder().get(0);
+        BeregningsgrunnlagPeriode grunnlag = settoppGrunnlagMedEnPeriode(
+            skjæringstidspunkt,
+            inntektsgrunnlag,
+            List.of(AktivitetStatus.ATFL_SN),
+            List.of(arbeidsforhold),
+            Collections.emptyList(),
+            Optional.of(frisinnGrunnlag)
+        ).getBeregningsgrunnlagPerioder().get(0);
+
         // Act
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlagFRISINN(grunnlag).evaluer(grunnlag);
         // Assert
@@ -120,7 +135,7 @@ class RegelForeslåBeregningsgrunnlagFRISINNTest {
         leggTilMånedsinntekter(inntektsgrunnlag, skjæringstidspunkt, månedsinntekter, Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold);
 
         BeregningsgrunnlagPeriode grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL_SN),
-            List.of(arbeidsforhold), Collections.emptyList()).getBeregningsgrunnlagPerioder().get(0);
+            List.of(arbeidsforhold), Collections.emptyList(), Optional.of(frisinnGrunnlag)).getBeregningsgrunnlagPerioder().get(0);
         // Act
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlagFRISINN(grunnlag).evaluer(grunnlag);
         // Assert
@@ -140,7 +155,7 @@ class RegelForeslåBeregningsgrunnlagFRISINNTest {
         Inntektsgrunnlag inntektsgrunnlag = lagSnInntekter(5);
         leggTilYtelseMånederFør(utbetalingsgrad, dagsats, inntektsgrunnlag, LocalDate.of(2020, 4, 1), 38);
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag,
-            List.of(AktivitetStatus.SN, AktivitetStatus.DP));
+            List.of(AktivitetStatus.SN, AktivitetStatus.DP), Optional.of(frisinnGrunnlag));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         // Endre på periode slik at den varer en måned og ikkje går til uendelig
         BeregningsgrunnlagPeriode.builder(grunnlag)
@@ -153,7 +168,7 @@ class RegelForeslåBeregningsgrunnlagFRISINNTest {
         @SuppressWarnings("unused")
         String sporing = EvaluationSerializer.asJson(evaluation);
 
-        double expectedbruttoDP = dagsats.doubleValue() * 260 * utbetalingsgrad.intValue()/200;
+        double expectedbruttoDP = dagsats.doubleValue() * 260 * utbetalingsgrad.intValue() / 200;
         double expectedBruttoSN = 5.0 * GSNITT_2019;
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.KORONALOVEN_3, AktivitetStatus.DP, expectedbruttoDP);
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.KORONALOVEN_3, AktivitetStatus.SN, expectedBruttoSN);
@@ -173,7 +188,7 @@ class RegelForeslåBeregningsgrunnlagFRISINNTest {
         leggTilYtelseMånederFør(utbetalingsgrad, dagsatsAAP, inntektsgrunnlag, LocalDate.of(2020, 4, 1), 38);
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag,
             List.of(AktivitetStatus.ATFL_SN, AktivitetStatus.AAP), Collections.singletonList(arbeidsforhold),
-            Collections.emptyList());
+            Collections.emptyList(), Optional.of(frisinnGrunnlag));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         // Endre på periode slik at den varer en måned og ikkje går til uendelig
         BeregningsgrunnlagPeriode.builder(grunnlag)
@@ -185,7 +200,7 @@ class RegelForeslåBeregningsgrunnlagFRISINNTest {
         @SuppressWarnings("unused")
         String sporing = EvaluationSerializer.asJson(evaluation);
 
-        double expectedbruttoAAP = dagsatsAAP.doubleValue() * 260 * utbetalingsgrad.intValue()/200;
+        double expectedbruttoAAP = dagsatsAAP.doubleValue() * 260 * utbetalingsgrad.intValue() / 200;
         double expectedBruttoATFL = 12 * månedsinntektATFL.doubleValue();
         double expectedBruttoSN = 6.0 * GSNITT_2019;
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.KORONALOVEN_3, AktivitetStatus.AAP, expectedbruttoAAP);
@@ -195,7 +210,7 @@ class RegelForeslåBeregningsgrunnlagFRISINNTest {
     }
 
     @Test
-    public void skalFastsetteBeregningsperiondenUtenInntektDeTreSisteMånederAT(){
+    public void skalFastsetteBeregningsperiondenUtenInntektDeTreSisteMånederAT() {
         // arbeidstaker uten inntektsmelding OG det finnes ikke inntekt i de tre siste månedene
         // før skjæringstidspunktet (beregningsperioden)
         BigDecimal månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
@@ -206,9 +221,9 @@ class RegelForeslåBeregningsgrunnlagFRISINNTest {
         Inntektsgrunnlag inntektsgrunnlag = settoppMånedsinntekter(skjæringstidspunkt.minusMonths(12), månedsinntekter18,
             Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold);
         leggTilMånedsinntekter(inntektsgrunnlag, skjæringstidspunkt, månedsinntekter19,
-            Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING,arbeidsforhold);
-        Beregningsgrunnlag beregningsgrunnlag =  settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL),
-            List.of(arbeidsforhold), Collections.emptyList());
+            Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold);
+        Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL),
+            List.of(arbeidsforhold), Collections.emptyList(), Optional.of(frisinnGrunnlag));
 
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
@@ -227,7 +242,7 @@ class RegelForeslåBeregningsgrunnlagFRISINNTest {
 
         leggTilSøknadsinntekt(inntektsgrunnlag, BigDecimal.valueOf(GSNITT_2019));
         BeregningsgrunnlagPeriode grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.SN),
-            Collections.emptyList(), Collections.emptyList()).getBeregningsgrunnlagPerioder().get(0);
+            Collections.emptyList(), Collections.emptyList(), Optional.of(frisinnGrunnlag)).getBeregningsgrunnlagPerioder().get(0);
         // Act
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlagFRISINN(grunnlag).evaluer(grunnlag);
         // Assert
@@ -259,4 +274,11 @@ class RegelForeslåBeregningsgrunnlagFRISINNTest {
         }
     }
 
+    private static List<FrisinnPeriode> lagFrisinnperioder(Periode periode) {
+        return Collections.singletonList(new FrisinnPeriode(periode, true, true));
+    }
+
+    private FrisinnGrunnlag lagFrisinnGrunnlag() {
+        return new FrisinnGrunnlag(lagFrisinnperioder(Periode.of(skjæringstidspunkt, null)), List.of(Periode.of(skjæringstidspunkt, null)), skjæringstidspunkt);
+    }
 }
