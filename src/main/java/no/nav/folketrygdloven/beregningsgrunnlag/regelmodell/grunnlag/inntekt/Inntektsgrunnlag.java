@@ -175,12 +175,22 @@ public class Inntektsgrunnlag {
             final int siden = måned;
             Optional<Periodeinntekt> beløp = getPeriodeinntektMedKilde(inntektskilde)
                 .filter(pi -> pi.getArbeidsgiver().isPresent())
-                .filter(pi -> arbeidsforhold.getArbeidsforhold().equals(pi.getArbeidsgiver().get()))//NOSONAR
+                .filter(pi -> matchAktivitet(arbeidsforhold, pi))//NOSONAR
                 .filter(pi -> pi.inneholder(førDato.minusMonths(siden)))
                 .findFirst();
             beløp.ifPresent(månedsinntekt -> inntekter.add(månedsinntekt.getInntekt()));
         }
         return inntekter;
+    }
+
+    private boolean matchAktivitet(BeregningsgrunnlagPrArbeidsforhold arbeidsforhold, Periodeinntekt pi) {
+        if (!arbeidsforhold.getArbeidsforhold().getAktivitet().equals(pi.getArbeidsgiver().get().getAktivitet())) {
+            return false;
+        }
+        if (arbeidsforhold.getArbeidsforhold().getArbeidsgiverId() != null && pi.getArbeidsgiver().get().getArbeidsgiverId() != null) {
+            return arbeidsforhold.getArbeidsforhold().getArbeidsgiverId().equals(pi.getArbeidsgiver().get().getArbeidsgiverId());
+        }
+        return arbeidsforhold.getArbeidsforhold().getArbeidsgiverId() == null && pi.getArbeidsgiver().get().getArbeidsgiverId() == null;
     }
 
     public List<BigDecimal> getFrilansPeriodeinntekter(Inntektskilde inntektskilde, LocalDate førDato, int måneder) {
