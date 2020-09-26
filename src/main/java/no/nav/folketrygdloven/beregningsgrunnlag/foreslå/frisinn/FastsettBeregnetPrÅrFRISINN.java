@@ -1,5 +1,8 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.foreslå.frisinn;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
@@ -9,9 +12,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @RuleDocumentation(FastsettBeregnetPrÅrFRISINN.ID)
 class FastsettBeregnetPrÅrFRISINN extends LeafSpecification<BeregningsgrunnlagPeriode> {

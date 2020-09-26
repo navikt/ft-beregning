@@ -1,5 +1,8 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.vurder.frisinn;
 
+import java.math.BigDecimal;
+import java.util.Optional;
+
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
@@ -9,9 +12,6 @@ import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.node.SingleEvaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
-
-import java.math.BigDecimal;
-import java.util.Optional;
 
 @RuleDocumentation(SjekkBeregningsgrunnlagFLSNMindreEnnFRISINN.ID)
 class SjekkBeregningsgrunnlagFLSNMindreEnnFRISINN extends LeafSpecification<BeregningsgrunnlagPeriode> {

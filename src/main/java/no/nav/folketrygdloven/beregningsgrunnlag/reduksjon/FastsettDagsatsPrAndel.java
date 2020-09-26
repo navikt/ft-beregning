@@ -1,6 +1,5 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.reduksjon;
 
-import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
