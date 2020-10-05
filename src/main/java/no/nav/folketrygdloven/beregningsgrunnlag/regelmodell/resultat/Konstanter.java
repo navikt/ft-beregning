@@ -77,6 +77,9 @@ public class Konstanter {
     }
 
     public List<Grunnbeløp> getGrunnbeløpSatser() {
+        if (grunnbeløpSatser.isEmpty()) {
+            throw new IllegalStateException("Prøver å hente ut grunnbeløpsatser uten at dette er mappet til regelmodell.");
+        }
         return grunnbeløpSatser;
     }
 

@@ -302,9 +302,6 @@ public class Beregningsgrunnlag {
             if (beregningsgrunnlagMal.aktivitetStatuser.isEmpty()) {
                 throw new IllegalStateException("Beregningsgrunnlaget må inneholde minst 1 status");
             }
-            if (beregningsgrunnlagMal.konstanter.getGrunnbeløpSatser().isEmpty()) {
-                throw new IllegalStateException("Beregningsgrunnlaget må inneholde grunnbeløpsatser");
-            }
         }
     }
 }
