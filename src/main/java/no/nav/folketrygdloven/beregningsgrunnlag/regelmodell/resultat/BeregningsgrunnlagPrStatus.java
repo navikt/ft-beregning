@@ -404,6 +404,7 @@ public class BeregningsgrunnlagPrStatus {
             return this;
         }
 
+        // Kun brukt i test
         public Builder medArbeidsforhold(List<Arbeidsforhold> arbeidsforhold, List<BigDecimal> refusjonskravPrÅr, LocalDate skjæringstidspunkt) {
             if (arbeidsforhold != null) {
                 if (!refusjonskravPrÅr.isEmpty() && arbeidsforhold.size() != refusjonskravPrÅr.size()) {

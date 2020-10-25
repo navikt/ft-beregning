@@ -24,6 +24,8 @@ public class BeregningsgrunnlagPrArbeidsforhold {
     private Periode beregningsperiode;
     private Arbeidsforhold arbeidsforhold;
     private BigDecimal refusjonskravPrÅr;
+	private BigDecimal saksbehandletRefusjonPrÅr;
+	private BigDecimal fordeltRefusjonPrÅr;
     private BigDecimal maksimalRefusjonPrÅr;
     private BigDecimal avkortetRefusjonPrÅr;
     private BigDecimal redusertRefusjonPrÅr;
@@ -100,7 +102,15 @@ public class BeregningsgrunnlagPrArbeidsforhold {
         return finnGradert(fordeltPrÅr);
     }
 
-    public Optional<BigDecimal> getBruttoInkludertNaturalytelsePrÅr() {
+	public BigDecimal getSaksbehandletRefusjonPrÅr() {
+		return saksbehandletRefusjonPrÅr;
+	}
+
+	public BigDecimal getFordeltRefusjonPrÅr() {
+		return fordeltRefusjonPrÅr;
+	}
+
+	public Optional<BigDecimal> getBruttoInkludertNaturalytelsePrÅr() {
         if (bruttoPrÅr == null) {
             return Optional.empty();
         }
@@ -125,12 +135,23 @@ public class BeregningsgrunnlagPrArbeidsforhold {
         return arbeidsforhold;
     }
 
+
     public Optional<BigDecimal> getRefusjonskravPrÅr() {
         return Optional.ofNullable(refusjonskravPrÅr);
     }
 
+	public Optional<BigDecimal> getGjeldendeRefusjonPrÅr() {
+		if (fordeltRefusjonPrÅr != null) {
+			return Optional.of(fordeltRefusjonPrÅr);
+		}
+		else if (saksbehandletRefusjonPrÅr != null) {
+			return Optional.of(saksbehandletRefusjonPrÅr);
+		}
+		return Optional.ofNullable(refusjonskravPrÅr);
+	}
+
     public Optional<BigDecimal> getGradertRefusjonskravPrÅr() {
-        return Optional.ofNullable(finnGradert(refusjonskravPrÅr));
+        return Optional.ofNullable(finnGradert(getGjeldendeRefusjonPrÅr().orElse(null)));
     }
 
     public Optional<BigDecimal> getGradertBruttoInkludertNaturalytelsePrÅr() {
@@ -311,7 +332,17 @@ public class BeregningsgrunnlagPrArbeidsforhold {
             return this;
         }
 
-        public Builder medMaksimalRefusjonPrÅr(BigDecimal maksimalRefusjonPrÅr) {
+	    public Builder medSaksbehandletRefusjonPrÅr(BigDecimal saksbehandletRefusjonPrÅr) {
+		    mal.saksbehandletRefusjonPrÅr = saksbehandletRefusjonPrÅr;
+		    return this;
+	    }
+
+	    public Builder medFordeltRefusjonPrÅr(BigDecimal fordeltRefusjonPrÅr) {
+		    mal.fordeltRefusjonPrÅr = fordeltRefusjonPrÅr;
+		    return this;
+	    }
+
+	    public Builder medMaksimalRefusjonPrÅr(BigDecimal maksimalRefusjonPrÅr) {
             mal.maksimalRefusjonPrÅr = maksimalRefusjonPrÅr;
             return this;
         }

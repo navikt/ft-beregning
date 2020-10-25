@@ -134,7 +134,7 @@ class OmfordelFraAktiviteterUtenArbeidsforhold extends LeafSpecification<Beregni
     private BigDecimal finnRestSomMåOmfordeles(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
         List<BeregningsgrunnlagPrArbeidsforhold> grunnlagForArbeidsforhold = getGrunnlagForArbeidsforhold(beregningsgrunnlagPeriode);
         BigDecimal refusjonskravPrÅr = grunnlagForArbeidsforhold.stream()
-            .map(BeregningsgrunnlagPrArbeidsforhold::getRefusjonskravPrÅr)
+            .map(BeregningsgrunnlagPrArbeidsforhold::getGjeldendeRefusjonPrÅr)
             .filter(Optional::isPresent)
             .map(Optional::get)
             .reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
@@ -186,16 +186,16 @@ class OmfordelFraAktiviteterUtenArbeidsforhold extends LeafSpecification<Beregni
         if (aktivitet.getAndelNr() != null) {
             return;
         }
-        if (eksisterende.getRefusjonskravPrÅr().isEmpty()) {
+        if (eksisterende.getGjeldendeRefusjonPrÅr().isEmpty()) {
             throw new IllegalStateException("Eksisterende andel har ikke refusjonskrav.");
         }
-        if (eksisterende.getRefusjonskravPrÅr().get().compareTo(beløpSomSkalOmfordelesTilArbeidsforhold) < 0) {
+        if (eksisterende.getGjeldendeRefusjonPrÅr().get().compareTo(beløpSomSkalOmfordelesTilArbeidsforhold) < 0) {
             throw new IllegalStateException("Skal ikke flytte mer av refusjonskravet.");
         }
         BeregningsgrunnlagPrArbeidsforhold.builder(eksisterende)
-            .medRefusjonskravPrÅr(eksisterende.getRefusjonskravPrÅr().get().subtract(beløpSomSkalOmfordelesTilArbeidsforhold));
+            .medFordeltRefusjonPrÅr(eksisterende.getGjeldendeRefusjonPrÅr().get().subtract(beløpSomSkalOmfordelesTilArbeidsforhold));
         BeregningsgrunnlagPrArbeidsforhold.builder(aktivitet)
-            .medRefusjonskravPrÅr(aktivitet.getRefusjonskravPrÅr().isPresent() ? aktivitet.getRefusjonskravPrÅr().get().add(beløpSomSkalOmfordelesTilArbeidsforhold) : beløpSomSkalOmfordelesTilArbeidsforhold);
+            .medFordeltRefusjonPrÅr(aktivitet.getGjeldendeRefusjonPrÅr().isPresent() ? aktivitet.getGjeldendeRefusjonPrÅr().get().add(beløpSomSkalOmfordelesTilArbeidsforhold) : beløpSomSkalOmfordelesTilArbeidsforhold);
     }
 
 

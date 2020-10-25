@@ -66,11 +66,11 @@ public class OmfordelFraFrilansTest {
             a.getArbeidsforhold().equals(arbeidsforhold.getArbeidsforhold())
             && a.getInntektskategori().equals(Inntektskategori.FRILANSER)).findFirst().orElseThrow();
         assertThat(flyttetFraFL.getFordeltPrÅr()).isEqualByComparingTo(beregnetPrÅrFL);
-        assertThat(flyttetFraFL.getRefusjonskravPrÅr().get()).isEqualByComparingTo(beregnetPrÅrFL);
+        assertThat(flyttetFraFL.getGjeldendeRefusjonPrÅr().get()).isEqualByComparingTo(beregnetPrÅrFL);
 
         assertThat(arbeidsforhold.getBruttoPrÅr().get()).isEqualByComparingTo(beregnetPrÅr);
-        assertThat(arbeidsforhold.getRefusjonskravPrÅr().get()).isEqualByComparingTo(refusjonskravPrÅr.subtract(beregnetPrÅrFL));
-        assertThat(frilans.getRefusjonskravPrÅr()).isEmpty();
+        assertThat(arbeidsforhold.getGjeldendeRefusjonPrÅr().get()).isEqualByComparingTo(refusjonskravPrÅr.subtract(beregnetPrÅrFL));
+        assertThat(frilans.getGjeldendeRefusjonPrÅr()).isEmpty();
         assertThat(frilans.getFordeltPrÅr()).isEqualByComparingTo(BigDecimal.ZERO);
     }
 
@@ -98,11 +98,11 @@ public class OmfordelFraFrilansTest {
         var flyttetFraFL = atfl.getArbeidsforhold().stream()
             .filter(a -> a.getArbeidsforhold().equals(arbeidsforhold.getArbeidsforhold()) && a.getInntektskategori().equals(Inntektskategori.FRILANSER)).findFirst().orElseThrow();
         assertThat(flyttetFraFL.getFordeltPrÅr()).isEqualByComparingTo(beregnetPrÅrFL);
-        assertThat(flyttetFraFL.getRefusjonskravPrÅr().get()).isEqualByComparingTo(beregnetPrÅrFL);
+        assertThat(flyttetFraFL.getGjeldendeRefusjonPrÅr().get()).isEqualByComparingTo(beregnetPrÅrFL);
 
         assertThat(arbeidsforhold.getBruttoPrÅr().get()).isEqualByComparingTo(beregnetPrÅr);
-        assertThat(arbeidsforhold.getRefusjonskravPrÅr().get()).isEqualByComparingTo(BigDecimal.valueOf(150_000));
-        assertThat(frilans.getRefusjonskravPrÅr()).isEmpty();
+        assertThat(arbeidsforhold.getGjeldendeRefusjonPrÅr().get()).isEqualByComparingTo(BigDecimal.valueOf(150_000));
+        assertThat(frilans.getGjeldendeRefusjonPrÅr()).isEmpty();
         assertThat(frilans.getFordeltPrÅr()).isEqualByComparingTo(BigDecimal.ZERO);
     }
 
@@ -131,11 +131,11 @@ public class OmfordelFraFrilansTest {
         var flyttetFraFL = atfl.getArbeidsforhold().stream()
             .filter(a -> a.getArbeidsforhold().equals(arbeidsforhold.getArbeidsforhold()) && a.getInntektskategori().equals(Inntektskategori.FRILANSER)).findFirst().orElseThrow();
         assertThat(flyttetFraFL.getFordeltPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(100_000));
-        assertThat(flyttetFraFL.getRefusjonskravPrÅr().get()).isEqualByComparingTo(BigDecimal.valueOf(100_000));
+        assertThat(flyttetFraFL.getGjeldendeRefusjonPrÅr().get()).isEqualByComparingTo(BigDecimal.valueOf(100_000));
 
         assertThat(arbeidsforhold.getBruttoPrÅr().get()).isEqualByComparingTo(beregnetPrÅr);
-        assertThat(arbeidsforhold.getRefusjonskravPrÅr().get()).isEqualByComparingTo(BigDecimal.valueOf(100_000));
-        assertThat(frilans.getRefusjonskravPrÅr()).isEmpty();
+        assertThat(arbeidsforhold.getGjeldendeRefusjonPrÅr().get()).isEqualByComparingTo(BigDecimal.valueOf(100_000));
+        assertThat(frilans.getGjeldendeRefusjonPrÅr()).isEmpty();
         assertThat(frilans.getFordeltPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(50_000));
     }
 
