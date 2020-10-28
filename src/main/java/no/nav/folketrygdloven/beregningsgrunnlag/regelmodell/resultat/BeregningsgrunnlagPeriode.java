@@ -33,6 +33,7 @@ public class BeregningsgrunnlagPeriode {
     @JsonBackReference
     private Beregningsgrunnlag beregningsgrunnlag;
     private BigDecimal grenseverdi;
+    private Dekningsgrad dekningsgrad;
     private boolean erVilkårOppfylt = true;
 
 
@@ -155,6 +156,9 @@ public class BeregningsgrunnlagPeriode {
     public SammenligningsGrunnlag getSammenligningsgrunnlagPrStatus(AktivitetStatus aktivitetStatus){return beregningsgrunnlag.getSammenligningsGrunnlagPrAktivitetstatus().get(aktivitetStatus);}
 
     public Dekningsgrad getDekningsgrad() {
+    	if (dekningsgrad != null) {
+    		return dekningsgrad;
+	    }
         return beregningsgrunnlag.getDekningsgrad();
     }
 
@@ -258,6 +262,10 @@ public class BeregningsgrunnlagPeriode {
             return this;
         }
 
+	    public Builder medDekningsgrad(Dekningsgrad dekningsgrad) {
+		    beregningsgrunnlagPeriodeMal.dekningsgrad = dekningsgrad;
+		    return this;
+	    }
 
         public Builder leggTilPeriodeÅrsaker(List<PeriodeÅrsak> periodeÅrsaker) {
             periodeÅrsaker.forEach(this::leggTilPeriodeÅrsak);
