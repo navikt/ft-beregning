@@ -144,7 +144,7 @@ public class OmfordelFraFrilansTest {
             .medAndelNr(1L)
             .medInntektskategori(Inntektskategori.ARBEIDSTAKER)
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR, null))
-            .medRefusjonskravPrÅr(refusjonskravPrÅr)
+            .medGjeldendeRefusjonPrÅr(refusjonskravPrÅr)
             .medBeregnetPrÅr(beregnetPrÅr)
             .build();
     }

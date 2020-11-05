@@ -1,7 +1,6 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.fordel;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -27,7 +26,7 @@ class OmfordelNaturalytelseForArbeidsforholdTest {
     void skal_omfordele_naturalytelse() {
         // Arrange
         BeregningsgrunnlagPrArbeidsforhold aktivitet = BeregningsgrunnlagPrArbeidsforhold.builder()
-            .medRefusjonskravPrÅr(BigDecimal.valueOf(100_000))
+            .medGjeldendeRefusjonPrÅr(BigDecimal.valueOf(100_000))
             .medAndelNr(1L)
             .medArbeidsforhold(ARBEID1)
             .medFordeltPrÅr(BigDecimal.valueOf(50_000))

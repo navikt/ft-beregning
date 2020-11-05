@@ -192,10 +192,15 @@ class OmfordelFraAktiviteterUtenArbeidsforhold extends LeafSpecification<Beregni
         if (eksisterende.getGjeldendeRefusjonPrÅr().get().compareTo(beløpSomSkalOmfordelesTilArbeidsforhold) < 0) {
             throw new IllegalStateException("Skal ikke flytte mer av refusjonskravet.");
         }
-        BeregningsgrunnlagPrArbeidsforhold.builder(eksisterende)
-            .medFordeltRefusjonPrÅr(eksisterende.getGjeldendeRefusjonPrÅr().get().subtract(beløpSomSkalOmfordelesTilArbeidsforhold));
-        BeregningsgrunnlagPrArbeidsforhold.builder(aktivitet)
-            .medFordeltRefusjonPrÅr(aktivitet.getGjeldendeRefusjonPrÅr().isPresent() ? aktivitet.getGjeldendeRefusjonPrÅr().get().add(beløpSomSkalOmfordelesTilArbeidsforhold) : beløpSomSkalOmfordelesTilArbeidsforhold);
+	    BigDecimal nyRefusjon = eksisterende.getGjeldendeRefusjonPrÅr().get().subtract(beløpSomSkalOmfordelesTilArbeidsforhold);
+	    BeregningsgrunnlagPrArbeidsforhold.builder(eksisterende)
+		    .medGjeldendeRefusjonPrÅr(nyRefusjon)
+            .medFordeltRefusjonPrÅr(nyRefusjon);
+
+	    BigDecimal fordeltRefusjon = aktivitet.getGjeldendeRefusjonPrÅr().isPresent() ? aktivitet.getGjeldendeRefusjonPrÅr().get().add(beløpSomSkalOmfordelesTilArbeidsforhold) : beløpSomSkalOmfordelesTilArbeidsforhold;
+	    BeregningsgrunnlagPrArbeidsforhold.builder(aktivitet)
+		    .medGjeldendeRefusjonPrÅr(fordeltRefusjon)
+            .medFordeltRefusjonPrÅr(fordeltRefusjon);
     }
 
 

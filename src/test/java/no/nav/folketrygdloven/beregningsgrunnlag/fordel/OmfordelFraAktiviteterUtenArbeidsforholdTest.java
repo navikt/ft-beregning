@@ -4,7 +4,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
@@ -232,7 +231,7 @@ public class OmfordelFraAktiviteterUtenArbeidsforholdTest {
         return BeregningsgrunnlagPrArbeidsforhold.builder()
             .medAndelNr(1L)
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR, null))
-            .medRefusjonskravPrÅr(refusjonskravPrÅr)
+            .medGjeldendeRefusjonPrÅr(refusjonskravPrÅr)
             .medBeregnetPrÅr(beregnetPrÅr)
             .build();
     }

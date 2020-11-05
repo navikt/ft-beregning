@@ -305,13 +305,13 @@ public class RegelFastsettAvkortetBGNårRefusjonOver6GTest {
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR1))
             .medAndelNr(1)
             .medBeregnetPrÅr(BigDecimal.valueOf(bruttoBG.get(0)))
-            .medRefusjonskravPrÅr(BigDecimal.valueOf(refusjonsKrav.get(0)))
+            .medGjeldendeRefusjonPrÅr(BigDecimal.valueOf(refusjonsKrav.get(0)))
             .build();
         BeregningsgrunnlagPrArbeidsforhold afBuilder2 = BeregningsgrunnlagPrArbeidsforhold.builder()
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR2))
             .medAndelNr(2)
             .medBeregnetPrÅr(BigDecimal.valueOf(bruttoBG.get(1)))
-            .medRefusjonskravPrÅr(BigDecimal.valueOf(refusjonsKrav.get(1)))
+            .medGjeldendeRefusjonPrÅr(BigDecimal.valueOf(refusjonsKrav.get(1)))
             .build();
 
         if (antallArbeidsforhold == 2) {
@@ -330,7 +330,7 @@ public class RegelFastsettAvkortetBGNårRefusjonOver6GTest {
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR3))
             .medAndelNr(3)
             .medBeregnetPrÅr(BigDecimal.valueOf(bruttoBG.get(2)))
-            .medRefusjonskravPrÅr(BigDecimal.valueOf(refusjonsKrav.get(2)))
+            .medGjeldendeRefusjonPrÅr(BigDecimal.valueOf(refusjonsKrav.get(2)))
             .build();
         if (antallArbeidsforhold == 3) {
             BeregningsgrunnlagPrStatus bgpsATFL = BeregningsgrunnlagPrStatus.builder()
@@ -348,7 +348,7 @@ public class RegelFastsettAvkortetBGNårRefusjonOver6GTest {
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR4))
             .medAndelNr(4)
             .medBeregnetPrÅr(BigDecimal.valueOf(bruttoBG.get(3)))
-            .medRefusjonskravPrÅr(BigDecimal.valueOf(refusjonsKrav.get(3)))
+            .medGjeldendeRefusjonPrÅr(BigDecimal.valueOf(refusjonsKrav.get(3)))
             .build();
         BeregningsgrunnlagPrStatus bgpsATFL = BeregningsgrunnlagPrStatus.builder()
             .medAktivitetStatus(AktivitetStatus.ATFL)

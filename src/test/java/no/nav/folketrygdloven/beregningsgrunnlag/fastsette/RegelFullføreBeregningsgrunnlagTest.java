@@ -603,7 +603,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
                 .medAndelNr(i + 1)
                 .medBeregnetPrÅr(BigDecimal.valueOf(bruttoBG.get(i)))
                 .medNaturalytelseBortfaltPrÅr(BigDecimal.valueOf(bortfalteYtelserPerArbeidsforhold.get(i)))
-                .medRefusjonskravPrÅr(BigDecimal.valueOf(refusjonsKrav.get(i) * 12))
+                .medGjeldendeRefusjonPrÅr(BigDecimal.valueOf(refusjonsKrav.get(i) * 12))
                 .build();
             prStatusBuilder.medArbeidsforhold(afBuilder);
         }
@@ -621,7 +621,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
         BeregningsgrunnlagPrArbeidsforhold afBuilder1 = BeregningsgrunnlagPrArbeidsforhold.builder()
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgNr))
             .medBeregnetPrÅr(BigDecimal.valueOf(brutto))
-            .medRefusjonskravPrÅr(BigDecimal.valueOf(refusjonsKrav))
+            .medGjeldendeRefusjonPrÅr(BigDecimal.valueOf(refusjonsKrav))
             .medAndelNr(andelNr)
             .build();
         return BeregningsgrunnlagPrStatus.builder()

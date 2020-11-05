@@ -416,7 +416,7 @@ public class BeregningsgrunnlagPrStatus {
                     beregningsgrunnlagPrStatusMal.arbeidsforhold.add(BeregningsgrunnlagPrArbeidsforhold.builder()
                         .medArbeidsforhold(arbeidsforhold.get(i))
                         .medAndelNr(andelNr++)
-                        .medRefusjonskravPrÅr(refusjonskravPrÅr.isEmpty() ? null : refusjonskravPrÅr.get(i))
+                        .medGjeldendeRefusjonPrÅr(refusjonskravPrÅr.isEmpty() ? null : refusjonskravPrÅr.get(i))
                         .medBeregningsperiode(beregningsperiode)
                         .build());
                 }

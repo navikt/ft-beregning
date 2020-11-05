@@ -23,9 +23,14 @@ public class BeregningsgrunnlagPrArbeidsforhold {
     private BigDecimal redusertPrÅr;
     private Periode beregningsperiode;
     private Arbeidsforhold arbeidsforhold;
-    private BigDecimal refusjonskravPrÅr;
-	private BigDecimal saksbehandletRefusjonPrÅr;
+
+    // Refusjonskravet som skal gjelde for arbeidsforholdet
+    private BigDecimal gjeldendeRefusjonPrÅr;
+
+    // Refusjonskravet etter omfordeling, må ha eget felt for å kunne mappes ut.
+    // TODO TFP-3865 skill fordeling fra resten av beregningsregelmodellen
 	private BigDecimal fordeltRefusjonPrÅr;
+
     private BigDecimal maksimalRefusjonPrÅr;
     private BigDecimal avkortetRefusjonPrÅr;
     private BigDecimal redusertRefusjonPrÅr;
@@ -102,10 +107,6 @@ public class BeregningsgrunnlagPrArbeidsforhold {
         return finnGradert(fordeltPrÅr);
     }
 
-	public BigDecimal getSaksbehandletRefusjonPrÅr() {
-		return saksbehandletRefusjonPrÅr;
-	}
-
 	public BigDecimal getFordeltRefusjonPrÅr() {
 		return fordeltRefusjonPrÅr;
 	}
@@ -135,19 +136,8 @@ public class BeregningsgrunnlagPrArbeidsforhold {
         return arbeidsforhold;
     }
 
-
-    public Optional<BigDecimal> getRefusjonskravPrÅr() {
-        return Optional.ofNullable(refusjonskravPrÅr);
-    }
-
 	public Optional<BigDecimal> getGjeldendeRefusjonPrÅr() {
-		if (fordeltRefusjonPrÅr != null) {
-			return Optional.of(fordeltRefusjonPrÅr);
-		}
-		else if (saksbehandletRefusjonPrÅr != null) {
-			return Optional.of(saksbehandletRefusjonPrÅr);
-		}
-		return Optional.ofNullable(refusjonskravPrÅr);
+		return Optional.ofNullable(gjeldendeRefusjonPrÅr);
 	}
 
     public Optional<BigDecimal> getGradertRefusjonskravPrÅr() {
@@ -327,15 +317,10 @@ public class BeregningsgrunnlagPrArbeidsforhold {
             return this;
         }
 
-        public Builder medRefusjonskravPrÅr(BigDecimal refusjonskravPrÅr) {
-            mal.refusjonskravPrÅr = refusjonskravPrÅr;
+        public Builder medGjeldendeRefusjonPrÅr(BigDecimal gjeldendeRefusjonPrÅr) {
+            mal.gjeldendeRefusjonPrÅr = gjeldendeRefusjonPrÅr;
             return this;
         }
-
-	    public Builder medSaksbehandletRefusjonPrÅr(BigDecimal saksbehandletRefusjonPrÅr) {
-		    mal.saksbehandletRefusjonPrÅr = saksbehandletRefusjonPrÅr;
-		    return this;
-	    }
 
 	    public Builder medFordeltRefusjonPrÅr(BigDecimal fordeltRefusjonPrÅr) {
 		    mal.fordeltRefusjonPrÅr = fordeltRefusjonPrÅr;
