@@ -141,7 +141,7 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 	}
 
     public Optional<BigDecimal> getGradertRefusjonskravPrÅr() {
-        return Optional.ofNullable(finnGradert(getGjeldendeRefusjonPrÅr().orElse(null)));
+        return Optional.ofNullable(finnGradert(gjeldendeRefusjonPrÅr));
     }
 
     public Optional<BigDecimal> getGradertBruttoInkludertNaturalytelsePrÅr() {
