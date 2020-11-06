@@ -1,7 +1,8 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.selvstendig;
 
+import static no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.FinnGjennomsnittligPGI.finnGjennomsnittligPGI;
+
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,38 +28,15 @@ public class BeregnGjennomsnittligPGI extends LeafSpecification<Beregningsgrunnl
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
         BeregningsgrunnlagPrStatus bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
-        BigDecimal bidragTilBGSum = BigDecimal.ZERO;
-        Map<String, Object> resultater = new HashMap<>();
-        for (int årSiden = 0; årSiden <= 2; årSiden++) {
-            int årstall = bgps.getBeregningsperiode().getTom().getYear() - årSiden;
-            BigDecimal gSnitt = BigDecimal.valueOf(grunnlag.getBeregningsgrunnlag().snittverdiAvG(årstall));
-            BigDecimal treGsnitt = gSnitt.multiply(BigDecimal.valueOf(3));
-            BigDecimal seksGsnitt = gSnitt.multiply(BigDecimal.valueOf(6));
-            BigDecimal tolvGsnitt = gSnitt.multiply(BigDecimal.valueOf(12));
-            BigDecimal pgiÅr = grunnlag.getInntektsgrunnlag().getÅrsinntektSigrun(årstall);
-            if (pgiÅr.compareTo(seksGsnitt) < 1) {
-                BigDecimal bidragTilBG = pgiÅr.compareTo(BigDecimal.ZERO) != 0 ? pgiÅr.divide(gSnitt, 10, RoundingMode.HALF_EVEN) : BigDecimal.ZERO;
-                resultater.put(BIDRAG_TIL_BG + årstall, bidragTilBG);
-                bidragTilBGSum = bidragTilBGSum.add(bidragTilBG);
-            } else if (pgiÅr.compareTo(seksGsnitt) > 0 && pgiÅr.compareTo(tolvGsnitt) < 0) {
-                BigDecimal bidragTilBG = pgiÅr.subtract(seksGsnitt).abs().divide(treGsnitt, 10, RoundingMode.HALF_EVEN).add(BigDecimal.valueOf(6));
-                resultater.put(BIDRAG_TIL_BG + årstall, bidragTilBG);
-                bidragTilBGSum = bidragTilBGSum.add(bidragTilBG);
-            } else {
-                BigDecimal bidragTilBG = BigDecimal.valueOf(8);
-                resultater.put(BIDRAG_TIL_BG + årstall, bidragTilBG);
-                bidragTilBGSum = bidragTilBGSum.add(bidragTilBG);
-            }
-        }
-        BigDecimal gjeldendeG = grunnlag.getGrunnbeløp();
-        BigDecimal gjennomsnittligPGI = bidragTilBGSum.compareTo(BigDecimal.ZERO) != 0 ? bidragTilBGSum.divide(BigDecimal.valueOf(3), 10, RoundingMode.HALF_EVEN).multiply(gjeldendeG)
-            : BigDecimal.ZERO;
-        resultater.put("GjennomsnittligPGI", gjennomsnittligPGI);
+	    Map<String, Object> resultater = new HashMap<>();
+	    BigDecimal gjennomsnittligPGI = finnGjennomsnittligPGI(bgps.getBeregningsperiode().getTom(), grunnlag.getBeregningsgrunnlag().getGrunnbeløpsatser(), grunnlag.getInntektsgrunnlag(), grunnlag.getGrunnbeløp(), resultater);
+	    resultater.put("GjennomsnittligPGI", gjennomsnittligPGI);
         BeregningsgrunnlagPrStatus.builder(bgps)
             .medGjennomsnittligPGI(gjennomsnittligPGI)
             .build();
 
         return beregnet(resultater);
     }
+
 
 }
