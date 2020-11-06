@@ -4,7 +4,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
@@ -113,7 +112,7 @@ public class OmfordelFraAktiviteterUtenArbeidsforholdTest {
         kjørRegel(arbeidsforhold, periode);
 
         assertThat(arbeidsforhold.getFordeltPrÅr()).isEqualByComparingTo(refusjonskravPrÅr);
-        assertThat(arbeidsforhold.getRefusjonskravPrÅr().get()).isEqualByComparingTo(refusjonskravPrÅr);
+        assertThat(arbeidsforhold.getGjeldendeRefusjonPrÅr().get()).isEqualByComparingTo(refusjonskravPrÅr);
         assertThat(arbeidsforhold.getInntektskategori()).isEqualTo(Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE);
         assertThat(SN.getFordeltPrÅr()).isEqualByComparingTo(BigDecimal.ZERO);
         assertThat(DP.getFordeltPrÅr()).isNull();
@@ -147,10 +146,10 @@ public class OmfordelFraAktiviteterUtenArbeidsforholdTest {
         assertThat(atfl.getBruttoPrÅr()).isEqualByComparingTo(refusjonskravPrÅr);
         var flyttetFraSN = atfl.getArbeidsforhold().stream().filter(a -> a.getInntektskategori().equals(Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE)).findFirst().orElseThrow();
         assertThat(flyttetFraSN.getFordeltPrÅr()).isEqualByComparingTo(beregnetPrÅrSN.add(beregnetPrÅr));
-        assertThat(flyttetFraSN.getRefusjonskravPrÅr().get()).isEqualByComparingTo(beregnetPrÅrSN.add(beregnetPrÅr));
+        assertThat(flyttetFraSN.getGjeldendeRefusjonPrÅr().get()).isEqualByComparingTo(beregnetPrÅrSN.add(beregnetPrÅr));
         var flyttetFraDP = atfl.getArbeidsforhold().stream().filter(a -> a.getInntektskategori().equals(Inntektskategori.DAGPENGER)).findFirst().orElseThrow();
         assertThat(flyttetFraDP.getFordeltPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(25_000));
-        assertThat(flyttetFraDP.getRefusjonskravPrÅr().get()).isEqualByComparingTo(BigDecimal.valueOf(25_000));
+        assertThat(flyttetFraDP.getGjeldendeRefusjonPrÅr().get()).isEqualByComparingTo(BigDecimal.valueOf(25_000));
         assertThat(SN.getFordeltPrÅr()).isEqualByComparingTo(BigDecimal.ZERO);
         assertThat(DP.getFordeltPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(25_000));
     }
@@ -186,10 +185,10 @@ public class OmfordelFraAktiviteterUtenArbeidsforholdTest {
         assertThat(atfl.getBruttoPrÅr()).isEqualByComparingTo(refusjonskravPrÅr);
         var flyttetFraSN = atfl.getArbeidsforhold().stream().filter(a -> a.getInntektskategori().equals(Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE)).findFirst().orElseThrow();
         assertThat(flyttetFraSN.getFordeltPrÅr()).isEqualByComparingTo(beregnetPrÅrSN.add(beregnetPrÅr));
-        assertThat(flyttetFraSN.getRefusjonskravPrÅr().get()).isEqualByComparingTo(beregnetPrÅrSN.add(beregnetPrÅr));
+        assertThat(flyttetFraSN.getGjeldendeRefusjonPrÅr().get()).isEqualByComparingTo(beregnetPrÅrSN.add(beregnetPrÅr));
         var flyttetFraAAP = atfl.getArbeidsforhold().stream().filter(a -> a.getInntektskategori().equals(Inntektskategori.ARBEIDSAVKLARINGSPENGER)).findFirst().orElseThrow();
         assertThat(flyttetFraAAP.getFordeltPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(25_000));
-        assertThat(flyttetFraAAP.getRefusjonskravPrÅr().get()).isEqualByComparingTo(BigDecimal.valueOf(25_000));
+        assertThat(flyttetFraAAP.getGjeldendeRefusjonPrÅr().get()).isEqualByComparingTo(BigDecimal.valueOf(25_000));
 
         assertThat(SN.getFordeltPrÅr()).isEqualByComparingTo(BigDecimal.ZERO);
         assertThat(AAP.getFordeltPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(25_000));
@@ -232,7 +231,7 @@ public class OmfordelFraAktiviteterUtenArbeidsforholdTest {
         return BeregningsgrunnlagPrArbeidsforhold.builder()
             .medAndelNr(1L)
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR, null))
-            .medRefusjonskravPrÅr(refusjonskravPrÅr)
+            .medGjeldendeRefusjonPrÅr(refusjonskravPrÅr)
             .medBeregnetPrÅr(beregnetPrÅr)
             .build();
     }

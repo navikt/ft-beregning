@@ -172,7 +172,7 @@ public class FastsettNyFordelingTest {
             .medAndelNr(andelsnr)
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr, null))
             .medInntektskategori(Inntektskategori.ARBEIDSTAKER)
-            .medRefusjonskravPrÅr(refusjonskravPrÅr)
+            .medGjeldendeRefusjonPrÅr(refusjonskravPrÅr)
             .medBeregnetPrÅr(beregnetPrÅr)
             .build();
     }
@@ -181,7 +181,7 @@ public class FastsettNyFordelingTest {
         return BeregningsgrunnlagPrArbeidsforhold.builder()
             .medAndelNr(andelsnr)
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr, null))
-            .medRefusjonskravPrÅr(refusjonskravPrÅr)
+            .medGjeldendeRefusjonPrÅr(refusjonskravPrÅr)
             .build();
     }
 

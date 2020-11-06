@@ -21,7 +21,7 @@ abstract class OmfordelForArbeidsforhold {
 
     Map<String, Object> omfordelForArbeidsforhold(BeregningsgrunnlagPrArbeidsforhold aktivitet, FinnArbeidsforholdMedOmfordelbartGrunnlag finnArbeidsforhold) {
         Map<String, Object> resultater = new HashMap<>();
-        var refusjonskravFraArbeidsforhold = finnSamletBeløpFraArbeidsforhold(aktivitet.getArbeidsforhold(), BeregningsgrunnlagPrArbeidsforhold::getRefusjonskravPrÅr);
+        var refusjonskravFraArbeidsforhold = finnSamletBeløpFraArbeidsforhold(aktivitet.getArbeidsforhold(), BeregningsgrunnlagPrArbeidsforhold::getGjeldendeRefusjonPrÅr);
         var bruttoBgFraArbeidsforhold = finnSamletBeløpFraArbeidsforhold(aktivitet.getArbeidsforhold(), BeregningsgrunnlagPrArbeidsforhold::getBruttoInkludertNaturalytelsePrÅr);
         var resterendeBeløpÅFlytte = refusjonskravFraArbeidsforhold.subtract(bruttoBgFraArbeidsforhold);
         var arbforholdMedFlyttbartBeløpOpt = finnArbeidsforhold.finn(beregningsgrunnlagPeriode);
@@ -54,16 +54,22 @@ abstract class OmfordelForArbeidsforhold {
         if (erEksisterende(aktivitet)) {
             return;
         }
-        if (eksisterende.getRefusjonskravPrÅr().isEmpty()) {
+        if (eksisterende.getGjeldendeRefusjonPrÅr().isEmpty()) {
             throw new IllegalStateException("Eksisterende andel har ikke refusjonskrav.");
         }
-        if (eksisterende.getRefusjonskravPrÅr().get().compareTo(beløpSomSkalOmfordelesTilArbeidsforhold) < 0) {
+        if (eksisterende.getGjeldendeRefusjonPrÅr().get().compareTo(beløpSomSkalOmfordelesTilArbeidsforhold) < 0) {
             throw new IllegalStateException("Skal ikke flytte mer av refusjonskravet.");
         }
-        BeregningsgrunnlagPrArbeidsforhold.builder(eksisterende)
-            .medRefusjonskravPrÅr(eksisterende.getRefusjonskravPrÅr().get().subtract(beløpSomSkalOmfordelesTilArbeidsforhold));
-        BeregningsgrunnlagPrArbeidsforhold.builder(aktivitet)
-            .medRefusjonskravPrÅr(aktivitet.getRefusjonskravPrÅr().isPresent() ? aktivitet.getRefusjonskravPrÅr().get().add(beløpSomSkalOmfordelesTilArbeidsforhold) : beløpSomSkalOmfordelesTilArbeidsforhold);
+
+	    BigDecimal nyRefusjon = eksisterende.getGjeldendeRefusjonPrÅr().get().subtract(beløpSomSkalOmfordelesTilArbeidsforhold);
+	    BeregningsgrunnlagPrArbeidsforhold.builder(eksisterende)
+			    .medFordeltRefusjonPrÅr(nyRefusjon)
+			    .medGjeldendeRefusjonPrÅr(nyRefusjon);
+
+	    BigDecimal fordeltRefusjon = aktivitet.getGjeldendeRefusjonPrÅr().isPresent() ? aktivitet.getGjeldendeRefusjonPrÅr().get().add(beløpSomSkalOmfordelesTilArbeidsforhold) : beløpSomSkalOmfordelesTilArbeidsforhold;
+	    BeregningsgrunnlagPrArbeidsforhold.builder(aktivitet)
+            .medFordeltRefusjonPrÅr(fordeltRefusjon)
+		    .medGjeldendeRefusjonPrÅr(fordeltRefusjon);
     }
 
     private BeregningsgrunnlagPrArbeidsforhold finnEksisterende(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode, Arbeidsforhold arbeidsforhold) {

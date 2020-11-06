@@ -404,6 +404,7 @@ public class BeregningsgrunnlagPrStatus {
             return this;
         }
 
+        // Kun brukt i test
         public Builder medArbeidsforhold(List<Arbeidsforhold> arbeidsforhold, List<BigDecimal> refusjonskravPrÅr, LocalDate skjæringstidspunkt) {
             if (arbeidsforhold != null) {
                 if (!refusjonskravPrÅr.isEmpty() && arbeidsforhold.size() != refusjonskravPrÅr.size()) {
@@ -415,7 +416,7 @@ public class BeregningsgrunnlagPrStatus {
                     beregningsgrunnlagPrStatusMal.arbeidsforhold.add(BeregningsgrunnlagPrArbeidsforhold.builder()
                         .medArbeidsforhold(arbeidsforhold.get(i))
                         .medAndelNr(andelNr++)
-                        .medRefusjonskravPrÅr(refusjonskravPrÅr.isEmpty() ? null : refusjonskravPrÅr.get(i))
+                        .medGjeldendeRefusjonPrÅr(refusjonskravPrÅr.isEmpty() ? null : refusjonskravPrÅr.get(i))
                         .medBeregningsperiode(beregningsperiode)
                         .build());
                 }
