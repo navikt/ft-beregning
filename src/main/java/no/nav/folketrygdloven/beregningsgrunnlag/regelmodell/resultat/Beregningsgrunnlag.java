@@ -124,6 +124,10 @@ public class Beregningsgrunnlag {
         return konstanter.getAntallGMinstekravVilkår();
     }
 
+	public List<Grunnbeløp> getGrunnbeløpsatser() {
+		return konstanter.getGrunnbeløpSatser();
+	}
+
     public long snittverdiAvG(int år) {
         Optional<Grunnbeløp> optional = konstanter.getGrunnbeløpSatser().stream().filter(g -> g.getFom().getYear() == år).findFirst();
         if (optional.isPresent()) {
