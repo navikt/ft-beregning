@@ -35,7 +35,7 @@ public class BeregningsgrunnlagScenario {
 
     private static final String ORGNR = "987";
     public static final long GRUNNBELØP_2019 = 99858;
-    private static final long GRUNNBELØP_2018 = 94562;
+    public static final long GRUNNBELØP_2018 = 94562;
     public static final long GRUNNBELØP_2017 = 93634;
     public static final long GSNITT_2019 = 98866;
     public static final long GSNITT_2018 = 94725;
