@@ -27,7 +27,7 @@ public class BeregnetMånedsgrunnlag implements Comparable<BeregnetMånedsgrunnl
 	}
 
 	public BigDecimal finnSum() {
-		return inntekter.stream().map(Inntekt::getInntektPrÅr).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+		return inntekter.stream().map(Inntekt::getInntektPrMåned).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
 	}
 
 	@Override

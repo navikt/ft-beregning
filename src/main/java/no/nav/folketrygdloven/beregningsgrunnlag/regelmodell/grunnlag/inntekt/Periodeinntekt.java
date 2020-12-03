@@ -41,7 +41,11 @@ public class Periodeinntekt {
         return Optional.ofNullable(arbeidsgiver);
     }
 
-    public LocalDate getFom() {
+	public Periode getPeriode() {
+		return periode;
+	}
+
+	public LocalDate getFom() {
         return periode.getFom();
     }
 

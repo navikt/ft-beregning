@@ -5,7 +5,6 @@ import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenar
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.GSNITT_2016;
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.GSNITT_2017;
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.GSNITT_2018;
-import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.GSNITT_2019;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import java.math.BigDecimal;
@@ -144,7 +143,7 @@ class FinnBesteMånederTest {
 		// Arrange
 		List<Periodeinntekt> periodeinntekter = new ArrayList<>();
 		for (int i = 0; i < 12; i++) {
-			periodeinntekter.add(lagPeriodeInntektDagpenger(i, BigDecimal.valueOf(10000), 200));
+			periodeinntekter.add(lagPeriodeInntektDagpenger(i, BigDecimal.valueOf(10000)));
 		}
 		BesteberegningRegelmodell regelmodell = lagRegelmodell(List.of(), periodeinntekter);
 
@@ -167,7 +166,7 @@ class FinnBesteMånederTest {
 		// Arrange
 		List<Periodeinntekt> periodeinntekter = new ArrayList<>();
 		for (int i = 0; i < 12; i++) {
-			periodeinntekter.add(lagPeriodeInntektDagpenger(i, BigDecimal.valueOf(100), 100));
+			periodeinntekter.add(lagPeriodeInntektDagpenger(i, BigDecimal.valueOf(13000)));
 		}
 		BesteberegningRegelmodell regelmodell = lagRegelmodell(List.of(), periodeinntekter);
 
@@ -178,17 +177,17 @@ class FinnBesteMånederTest {
 		List<BeregnetMånedsgrunnlag> besteMåneder = regelmodell.getOutput().getBesteMåneder();
 		assertThat(besteMåneder.size()).isEqualTo(6);
 		assertThat(besteMåneder.get(0).getMåned()).isEqualTo(YearMonth.of(2019, 10));
-		assertThat(besteMåneder.get(0).getInntekter().get(0).getInntektPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(13000));
+		assertThat(besteMåneder.get(0).getInntekter().get(0).getInntektPrMåned()).isEqualByComparingTo(BigDecimal.valueOf(13000));
 		assertThat(besteMåneder.get(1).getMåned()).isEqualTo(YearMonth.of(2019, 9));
-		assertThat(besteMåneder.get(1).getInntekter().get(0).getInntektPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(13000));
+		assertThat(besteMåneder.get(1).getInntekter().get(0).getInntektPrMåned()).isEqualByComparingTo(BigDecimal.valueOf(13000));
 		assertThat(besteMåneder.get(2).getMåned()).isEqualTo(YearMonth.of(2019, 8));
-		assertThat(besteMåneder.get(2).getInntekter().get(0).getInntektPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(13000));
+		assertThat(besteMåneder.get(2).getInntekter().get(0).getInntektPrMåned()).isEqualByComparingTo(BigDecimal.valueOf(13000));
 		assertThat(besteMåneder.get(3).getMåned()).isEqualTo(YearMonth.of(2019, 7));
-		assertThat(besteMåneder.get(3).getInntekter().get(0).getInntektPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(13000));
+		assertThat(besteMåneder.get(3).getInntekter().get(0).getInntektPrMåned()).isEqualByComparingTo(BigDecimal.valueOf(13000));
 		assertThat(besteMåneder.get(4).getMåned()).isEqualTo(YearMonth.of(2019, 6));
-		assertThat(besteMåneder.get(4).getInntekter().get(0).getInntektPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(13000));
+		assertThat(besteMåneder.get(4).getInntekter().get(0).getInntektPrMåned()).isEqualByComparingTo(BigDecimal.valueOf(13000));
 		assertThat(besteMåneder.get(5).getMåned()).isEqualTo(YearMonth.of(2019, 5));
-		assertThat(besteMåneder.get(5).getInntekter().get(0).getInntektPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(13000));
+		assertThat(besteMåneder.get(5).getInntekter().get(0).getInntektPrMåned()).isEqualByComparingTo(BigDecimal.valueOf(13000));
 	}
 
 	@Test
@@ -211,17 +210,17 @@ class FinnBesteMånederTest {
 		List<BeregnetMånedsgrunnlag> besteMåneder = regelmodell.getOutput().getBesteMåneder();
 		assertThat(besteMåneder.size()).isEqualTo(6);
 		assertThat(besteMåneder.get(0).getMåned()).isEqualTo(YearMonth.of(2019, 10));
-		assertThat(besteMåneder.get(0).finnSum()).isEqualByComparingTo(BigDecimal.valueOf(2*GRUNNBELØP_2019));
+		assertThat(besteMåneder.get(0).finnSum()).isEqualByComparingTo(BigDecimal.valueOf(2*GRUNNBELØP_2019/12));
 		assertThat(besteMåneder.get(1).getMåned()).isEqualTo(YearMonth.of(2019, 9));
-		assertThat(besteMåneder.get(1).finnSum()).isEqualByComparingTo(BigDecimal.valueOf(2*GRUNNBELØP_2019));
+		assertThat(besteMåneder.get(1).finnSum()).isEqualByComparingTo(BigDecimal.valueOf(2*GRUNNBELØP_2019/12));
 		assertThat(besteMåneder.get(2).getMåned()).isEqualTo(YearMonth.of(2019, 8));
-		assertThat(besteMåneder.get(2).finnSum()).isEqualByComparingTo(BigDecimal.valueOf(2*GRUNNBELØP_2019));
+		assertThat(besteMåneder.get(2).finnSum()).isEqualByComparingTo(BigDecimal.valueOf(2*GRUNNBELØP_2019/12));
 		assertThat(besteMåneder.get(3).getMåned()).isEqualTo(YearMonth.of(2019, 7));
-		assertThat(besteMåneder.get(3).finnSum()).isEqualByComparingTo(BigDecimal.valueOf(2*GRUNNBELØP_2019));
+		assertThat(besteMåneder.get(3).finnSum()).isEqualByComparingTo(BigDecimal.valueOf(2*GRUNNBELØP_2019/12));
 		assertThat(besteMåneder.get(4).getMåned()).isEqualTo(YearMonth.of(2019, 6));
-		assertThat(besteMåneder.get(4).finnSum()).isEqualByComparingTo(BigDecimal.valueOf(2*GRUNNBELØP_2019));
+		assertThat(besteMåneder.get(4).finnSum()).isEqualByComparingTo(BigDecimal.valueOf(2*GRUNNBELØP_2019/12));
 		assertThat(besteMåneder.get(5).getMåned()).isEqualTo(YearMonth.of(2019, 5));
-		assertThat(besteMåneder.get(5).finnSum()).isEqualByComparingTo(BigDecimal.valueOf(2*GRUNNBELØP_2019));
+		assertThat(besteMåneder.get(5).finnSum()).isEqualByComparingTo(BigDecimal.valueOf(2*GRUNNBELØP_2019/12));
 
 	}
 
@@ -260,14 +259,13 @@ class FinnBesteMånederTest {
 				.build();
 	}
 
-	private Periodeinntekt lagPeriodeInntektDagpenger(int månaderFørStpFom, BigDecimal inntekt, int utbetalingsgrad) {
+	private Periodeinntekt lagPeriodeInntektDagpenger(int månaderFørStpFom, BigDecimal inntekt) {
 		return Periodeinntekt.builder()
 				.medPeriode(Periode.of(
 						SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(månaderFørStpFom).withDayOfMonth(1),
 						SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(månaderFørStpFom).with(TemporalAdjusters.lastDayOfMonth())))
 				.medAktivitetStatus(AktivitetStatus.DP)
 				.medInntekt(inntekt)
-				.medUtbetalingsgrad(BigDecimal.valueOf(utbetalingsgrad))
 				.medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP)
 				.build();
 	}

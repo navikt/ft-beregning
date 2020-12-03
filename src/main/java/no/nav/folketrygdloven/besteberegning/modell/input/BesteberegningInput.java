@@ -10,11 +10,11 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.In
 
 public class BesteberegningInput {
 
-	private Inntektsgrunnlag inntektsgrunnlag;
-	private List<Grunnbeløp> grunnbeløpSatser;
-	private BigDecimal gjeldendeGverdi;
-	private LocalDate skjæringstidspunktOpptjening;
-	private List<Periode> perioderMedNæringsvirksomhet;
+	private final Inntektsgrunnlag inntektsgrunnlag;
+	private final List<Grunnbeløp> grunnbeløpSatser;
+	private final BigDecimal gjeldendeGverdi;
+	private final LocalDate skjæringstidspunktOpptjening;
+	private final List<Periode> perioderMedNæringsvirksomhet;
 
 	public BesteberegningInput(Inntektsgrunnlag inntektsgrunnlag, List<Grunnbeløp> grunnbeløpSatser, BigDecimal gjeldendeGverdi, LocalDate skjæringstidspunktOpptjening, List<Periode> perioderMedNæringsvirksomhet) {
 		this.inntektsgrunnlag = inntektsgrunnlag;
