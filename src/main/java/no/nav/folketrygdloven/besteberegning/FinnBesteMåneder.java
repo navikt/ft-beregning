@@ -14,14 +14,10 @@ import java.util.Optional;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.InntektPeriodeType;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
 import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.FinnGjennomsnittligPGI;
 import no.nav.folketrygdloven.besteberegning.modell.BesteberegningRegelmodell;
-import no.nav.folketrygdloven.besteberegning.modell.input.BesteberegningInput;
 import no.nav.folketrygdloven.besteberegning.modell.output.AktivitetNøkkel;
 import no.nav.folketrygdloven.besteberegning.modell.output.BeregnetMånedsgrunnlag;
 import no.nav.folketrygdloven.besteberegning.modell.output.Inntekt;
@@ -36,6 +32,7 @@ class FinnBesteMåneder extends LeafSpecification<BesteberegningRegelmodell> {
 	static final String ID = "14-7-3.1";
 	static final String BESKRIVELSE = "Finn 6 måneder med høyest inntekt av de 10 siste";
 	private static final int ANTALL_MÅNEDER_I_BESTEBERGNING = 6;
+	public static final int MÅNEDER_I_ÅRET = 12;
 
 	FinnBesteMåneder() {
 		super(ID, BESKRIVELSE);
@@ -55,42 +52,45 @@ class FinnBesteMåneder extends LeafSpecification<BesteberegningRegelmodell> {
 	}
 
 	private List<BeregnetMånedsgrunnlag> lagInntekterPrMåned(BesteberegningRegelmodell regelmodell, Map<String, Object> resultater) {
-		BesteberegningInput besteberegningInput = regelmodell.getInput();
-		Inntektsgrunnlag inntektsgrunnlag = besteberegningInput.getInntektsgrunnlag();
-		List<Periodeinntekt> inntekter = inntektsgrunnlag.getPeriodeinntekter();
-		List<Periode> perioderMedNæringsvirksomhet = regelmodell.getInput().getPerioderMedNæringsvirksomhet();
-		LocalDate skjæringstidspunktOpptjening = besteberegningInput.getSkjæringstidspunktOpptjening();
+		var besteberegningInput = regelmodell.getInput();
+		var inntektsgrunnlag = besteberegningInput.getInntektsgrunnlag();
+		var inntekter = inntektsgrunnlag.getPeriodeinntekter();
+		var perioderMedNæringsvirksomhet = regelmodell.getInput().getPerioderMedNæringsvirksomhet();
+		var skjæringstidspunktOpptjening = besteberegningInput.getSkjæringstidspunktOpptjening();
 
-		BigDecimal gjenommsnittligPGI = FinnGjennomsnittligPGI.finnGjennomsnittligPGI(
+		var gjenommsnittligPGI = FinnGjennomsnittligPGI.finnGjennomsnittligPGI(
 				inntektsgrunnlag.sistePeriodeMedInntektFørDato(Inntektskilde.SIGRUN, skjæringstidspunktOpptjening).orElse(skjæringstidspunktOpptjening),
 				besteberegningInput.getGrunnbeløpSatser(),
 				inntektsgrunnlag, besteberegningInput.getGjeldendeGverdi(),
 				resultater);
+		var snittPGIPrMåned = gjenommsnittligPGI.divide(BigDecimal.valueOf(MÅNEDER_I_ÅRET), 10, RoundingMode.HALF_EVEN);
 
 		List<BeregnetMånedsgrunnlag> månedsgrunnlagListe = new ArrayList<>();
 
-		LocalDate førsteFom = skjæringstidspunktOpptjening.minusMonths(10).withDayOfMonth(1);
-		LocalDate sisteFom = skjæringstidspunktOpptjening.minusMonths(1).withDayOfMonth(1);
-		LocalDate fom = førsteFom;
+		var førsteFom = skjæringstidspunktOpptjening.minusMonths(10).withDayOfMonth(1);
+		var sisteFom = skjæringstidspunktOpptjening.minusMonths(1).withDayOfMonth(1);
+		var fom = førsteFom;
 		while (!fom.isAfter(sisteFom)) {
-			BeregnetMånedsgrunnlag beregnetMånedsgrunnlag = lagGrunnlagForMåned(inntekter, perioderMedNæringsvirksomhet, gjenommsnittligPGI, fom);
+			var beregnetMånedsgrunnlag = lagGrunnlagForMåned(inntekter, perioderMedNæringsvirksomhet, snittPGIPrMåned, fom);
 			månedsgrunnlagListe.add(beregnetMånedsgrunnlag);
 			fom = fom.plusMonths(1);
 		}
 		return månedsgrunnlagListe;
 	}
 
-	private BeregnetMånedsgrunnlag lagGrunnlagForMåned(List<Periodeinntekt> inntekter, List<Periode> perioderMedNæringsvirksomhet, BigDecimal gjenommsnittligPGI, LocalDate fom) {
-		Periode periode = Periode.of(fom, fom.with(TemporalAdjusters.lastDayOfMonth()));
-		BeregnetMånedsgrunnlag beregnetMånedsgrunnlag = new BeregnetMånedsgrunnlag(YearMonth.from(fom));
+	private BeregnetMånedsgrunnlag lagGrunnlagForMåned(List<Periodeinntekt> inntekter,
+	                                                   List<Periode> perioderMedNæringsvirksomhet,
+	                                                   BigDecimal gjenommsnittligPGI, LocalDate fom) {
+		var periode = Periode.of(fom, fom.with(TemporalAdjusters.lastDayOfMonth()));
+		var beregnetMånedsgrunnlag = new BeregnetMånedsgrunnlag(YearMonth.from(fom));
 		inntekter.stream()
 				.filter(p -> p.getInntektskilde().equals(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING))
 				.filter(p -> p.erInnenforPeriode(periode))
 				.map(this::mapTilInntekt).forEach(beregnetMånedsgrunnlag::leggTilInntekt);
 		inntekter.stream()
 				.filter(p -> p.getInntektskilde().equals(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP))
-				.filter(p -> p.erInnenforPeriode(periode))
-				.map(this::mapTilInntekt).forEach(beregnetMånedsgrunnlag::leggTilInntekt);
+				.filter(p -> periode.inneholder(p.getFom()))
+				.map(this::mapTilYtelseTilInntekt).forEach(beregnetMånedsgrunnlag::leggTilInntekt);
 		finnInntektForNæring(perioderMedNæringsvirksomhet, gjenommsnittligPGI, periode, beregnetMånedsgrunnlag.finnSum())
 				.ifPresent(beregnetMånedsgrunnlag::leggTilInntekt);
 		return beregnetMånedsgrunnlag;
@@ -113,13 +113,18 @@ class FinnBesteMåneder extends LeafSpecification<BesteberegningRegelmodell> {
 		} else {
 			var aktivitet = mapAktivitetstatusTilInntektType(periodeinntekt.getAktivitetStatus());
 			var aktivitetNøkkel = AktivitetNøkkel.forType(aktivitet);
-			var inntektPeriodeType = periodeinntekt.getInntektPeriodeType();
-			BigDecimal inntekt = periodeinntekt.getInntekt()
-					.multiply(inntektPeriodeType.getAntallPrÅr())
-					.multiply(periodeinntekt.getUtbetalingsgrad().orElse(BigDecimal.valueOf(200))
-							.divide(BigDecimal.valueOf(200), 10, RoundingMode.HALF_EVEN));
+			var inntekt = periodeinntekt.getInntekt()
+					.multiply(periodeinntekt.getInntektPeriodeType().getAntallPrÅr())
+					.divide(BigDecimal.valueOf(MÅNEDER_I_ÅRET), 10, RoundingMode.HALF_EVEN);
 			return new Inntekt(aktivitetNøkkel, inntekt);
 		}
+	}
+
+	private Inntekt mapTilYtelseTilInntekt(Periodeinntekt periodeinntekt) {
+		var aktivitet = mapAktivitetstatusTilInntektType(periodeinntekt.getAktivitetStatus());
+		var aktivitetNøkkel = AktivitetNøkkel.forType(aktivitet);
+		var inntekt = periodeinntekt.getInntekt();
+		return new Inntekt(aktivitetNøkkel, inntekt);
 	}
 
 	private Aktivitet mapAktivitetstatusTilInntektType(AktivitetStatus aktivitetStatus) {
@@ -133,7 +138,7 @@ class FinnBesteMåneder extends LeafSpecification<BesteberegningRegelmodell> {
 	}
 
 	private Inntekt mapPeriodeinntektForArbeidstakerEllerFrilans(Periodeinntekt periodeinntekt) {
-		Arbeidsforhold arbeidsforhold = periodeinntekt.getArbeidsgiver().get();
+		var arbeidsforhold = periodeinntekt.getArbeidsgiver().get();
 		AktivitetNøkkel aktivitetNøkkel;
 		if (arbeidsforhold.getOrgnr() != null) {
 			aktivitetNøkkel = AktivitetNøkkel.forOrganisasjon(arbeidsforhold.getOrgnr(), arbeidsforhold.getArbeidsforholdId());
@@ -142,9 +147,11 @@ class FinnBesteMåneder extends LeafSpecification<BesteberegningRegelmodell> {
 		} else {
 			aktivitetNøkkel = AktivitetNøkkel.forType(arbeidsforhold.getAktivitet());
 		}
-		InntektPeriodeType inntektPeriodeType = periodeinntekt.getInntektPeriodeType();
-		BigDecimal antallPrÅr = inntektPeriodeType.getAntallPrÅr();
-		return new Inntekt(aktivitetNøkkel, periodeinntekt.getInntekt().multiply(antallPrÅr));
+		var inntektPeriodeType = periodeinntekt.getInntektPeriodeType();
+		var antallPrÅr = inntektPeriodeType.getAntallPrÅr();
+		var inntekt = periodeinntekt.getInntekt().multiply(antallPrÅr)
+				.divide(BigDecimal.valueOf(MÅNEDER_I_ÅRET), 10, RoundingMode.HALF_EVEN);
+		return new Inntekt(aktivitetNøkkel, inntekt);
 	}
 
 }

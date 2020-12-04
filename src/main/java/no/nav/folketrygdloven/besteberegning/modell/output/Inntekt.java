@@ -5,26 +5,26 @@ import java.math.BigDecimal;
 public class Inntekt {
 
 	private AktivitetNøkkel aktivitetNøkkel;
-	private BigDecimal inntektPrÅr;
+	private BigDecimal inntektPrMåned;
 
-	public Inntekt(AktivitetNøkkel aktivitetNøkkel, BigDecimal inntektPrÅr) {
+	public Inntekt(AktivitetNøkkel aktivitetNøkkel, BigDecimal inntektPrMåned) {
 		this.aktivitetNøkkel = aktivitetNøkkel;
-		this.inntektPrÅr = inntektPrÅr;
+		this.inntektPrMåned = inntektPrMåned;
 	}
 
 	public AktivitetNøkkel getAktivitetNøkkel() {
 		return aktivitetNøkkel;
 	}
 
-	public BigDecimal getInntektPrÅr() {
-		return inntektPrÅr;
+	public BigDecimal getInntektPrMåned() {
+		return inntektPrMåned;
 	}
 
 	@Override
 	public String toString() {
 		return "Inntekt{" +
 				"aktivitetNøkkel=" + aktivitetNøkkel +
-				", inntektPrÅr=" + inntektPrÅr +
+				", inntektPrÅr=" + inntektPrMåned +
 				'}';
 	}
 }
