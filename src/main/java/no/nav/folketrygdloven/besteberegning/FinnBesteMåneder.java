@@ -138,7 +138,7 @@ class FinnBesteMåneder extends LeafSpecification<BesteberegningRegelmodell> {
 	}
 
 	private Inntekt mapPeriodeinntektForArbeidstakerEllerFrilans(Periodeinntekt periodeinntekt) {
-		var arbeidsforhold = periodeinntekt.getArbeidsgiver().get();
+		var arbeidsforhold = periodeinntekt.getArbeidsgiver().orElseThrow(); // Sjekkes utenfor
 		AktivitetNøkkel aktivitetNøkkel;
 		if (arbeidsforhold.getOrgnr() != null) {
 			aktivitetNøkkel = AktivitetNøkkel.forOrganisasjon(arbeidsforhold.getOrgnr(), arbeidsforhold.getArbeidsforholdId());

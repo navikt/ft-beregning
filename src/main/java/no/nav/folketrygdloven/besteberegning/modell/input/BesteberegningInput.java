@@ -15,13 +15,23 @@ public class BesteberegningInput {
 	private final BigDecimal gjeldendeGverdi;
 	private final LocalDate skjæringstidspunktOpptjening;
 	private final List<Periode> perioderMedNæringsvirksomhet;
+	/**
+	 * Totalt brutto grunnlag beregnet etter kap 8 i folketrygdloven
+	 */
+	private final BigDecimal beregnetGrunnlag;
 
-	public BesteberegningInput(Inntektsgrunnlag inntektsgrunnlag, List<Grunnbeløp> grunnbeløpSatser, BigDecimal gjeldendeGverdi, LocalDate skjæringstidspunktOpptjening, List<Periode> perioderMedNæringsvirksomhet) {
+	public BesteberegningInput(Inntektsgrunnlag inntektsgrunnlag,
+	                           List<Grunnbeløp> grunnbeløpSatser,
+	                           BigDecimal gjeldendeGverdi,
+	                           LocalDate skjæringstidspunktOpptjening,
+	                           List<Periode> perioderMedNæringsvirksomhet,
+	                           BigDecimal beregnetGrunnlag) {
 		this.inntektsgrunnlag = inntektsgrunnlag;
 		this.grunnbeløpSatser = grunnbeløpSatser;
 		this.gjeldendeGverdi = gjeldendeGverdi;
 		this.skjæringstidspunktOpptjening = skjæringstidspunktOpptjening;
 		this.perioderMedNæringsvirksomhet = perioderMedNæringsvirksomhet;
+		this.beregnetGrunnlag = beregnetGrunnlag;
 	}
 
 	public Inntektsgrunnlag getInntektsgrunnlag() {
@@ -42,5 +52,9 @@ public class BesteberegningInput {
 
 	public List<Periode> getPerioderMedNæringsvirksomhet() {
 		return perioderMedNæringsvirksomhet;
+	}
+
+	public BigDecimal getBeregnetGrunnlag() {
+		return beregnetGrunnlag;
 	}
 }
