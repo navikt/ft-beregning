@@ -57,16 +57,16 @@ abstract class OmfordelForArbeidsforhold {
         if (eksisterende.getGjeldendeRefusjonPrÅr().isEmpty()) {
             throw new IllegalStateException("Eksisterende andel har ikke refusjonskrav.");
         }
-        if (eksisterende.getGjeldendeRefusjonPrÅr().get().compareTo(beløpSomSkalOmfordelesTilArbeidsforhold) < 0) {
+        if (eksisterende.getGjeldendeRefusjonPrÅr().orElseThrow().compareTo(beløpSomSkalOmfordelesTilArbeidsforhold) < 0) {
             throw new IllegalStateException("Skal ikke flytte mer av refusjonskravet.");
         }
 
-	    BigDecimal nyRefusjon = eksisterende.getGjeldendeRefusjonPrÅr().get().subtract(beløpSomSkalOmfordelesTilArbeidsforhold);
+	    BigDecimal nyRefusjon = eksisterende.getGjeldendeRefusjonPrÅr().orElseThrow().subtract(beløpSomSkalOmfordelesTilArbeidsforhold);
 	    BeregningsgrunnlagPrArbeidsforhold.builder(eksisterende)
 			    .medFordeltRefusjonPrÅr(nyRefusjon)
 			    .medGjeldendeRefusjonPrÅr(nyRefusjon);
 
-	    BigDecimal fordeltRefusjon = aktivitet.getGjeldendeRefusjonPrÅr().isPresent() ? aktivitet.getGjeldendeRefusjonPrÅr().get().add(beløpSomSkalOmfordelesTilArbeidsforhold) : beløpSomSkalOmfordelesTilArbeidsforhold;
+	    BigDecimal fordeltRefusjon = aktivitet.getGjeldendeRefusjonPrÅr().isPresent() ? aktivitet.getGjeldendeRefusjonPrÅr().orElseThrow().add(beløpSomSkalOmfordelesTilArbeidsforhold) : beløpSomSkalOmfordelesTilArbeidsforhold;
 	    BeregningsgrunnlagPrArbeidsforhold.builder(aktivitet)
             .medFordeltRefusjonPrÅr(fordeltRefusjon)
 		    .medGjeldendeRefusjonPrÅr(fordeltRefusjon);
