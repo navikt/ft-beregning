@@ -17,6 +17,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
 import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.FinnGjennomsnittligPGI;
+import no.nav.folketrygdloven.beregningsgrunnlag.util.Virkedager;
 import no.nav.folketrygdloven.besteberegning.modell.BesteberegningRegelmodell;
 import no.nav.folketrygdloven.besteberegning.modell.output.AktivitetNøkkel;
 import no.nav.folketrygdloven.besteberegning.modell.output.BeregnetMånedsgrunnlag;
@@ -89,8 +90,8 @@ class FinnBesteMåneder extends LeafSpecification<BesteberegningRegelmodell> {
 				.map(this::mapTilInntekt).forEach(beregnetMånedsgrunnlag::leggTilInntekt);
 		inntekter.stream()
 				.filter(p -> p.getInntektskilde().equals(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP))
-				.filter(p -> periode.inneholder(p.getFom()))
-				.map(this::mapTilYtelseTilInntekt).forEach(beregnetMånedsgrunnlag::leggTilInntekt);
+				.filter(p -> periode.overlapper(p.getPeriode()))
+				.map(periodeinntekt -> mapTilYtelseTilInntekt(periodeinntekt, periode)).forEach(beregnetMånedsgrunnlag::leggTilInntekt);
 		finnInntektForNæring(perioderMedNæringsvirksomhet, gjenommsnittligPGI, periode, beregnetMånedsgrunnlag.finnSum())
 				.ifPresent(beregnetMånedsgrunnlag::leggTilInntekt);
 		return beregnetMånedsgrunnlag;
@@ -120,11 +121,26 @@ class FinnBesteMåneder extends LeafSpecification<BesteberegningRegelmodell> {
 		}
 	}
 
-	private Inntekt mapTilYtelseTilInntekt(Periodeinntekt periodeinntekt) {
+	private Inntekt mapTilYtelseTilInntekt(Periodeinntekt periodeinntekt, Periode periode) {
 		var aktivitet = mapAktivitetstatusTilInntektType(periodeinntekt.getAktivitetStatus());
 		var aktivitetNøkkel = AktivitetNøkkel.forType(aktivitet);
 		var inntekt = periodeinntekt.getInntekt();
-		return new Inntekt(aktivitetNøkkel, inntekt);
+		var overlappendePeriode = finnOverlappMellomPerioder(periodeinntekt.getPeriode(), periode)
+				.orElseThrow(() -> new IllegalStateException("Forventer overlapp"));
+		int antallVirkedager = Virkedager.beregnAntallVirkedager(overlappendePeriode);
+		int totaltAntallVirkedagerForMeldekort = Virkedager.beregnAntallVirkedager(periodeinntekt.getPeriode());
+		BigDecimal andelAvVirkedager = totaltAntallVirkedagerForMeldekort == 0 ? BigDecimal.ZERO : BigDecimal.valueOf(antallVirkedager)
+				.divide(BigDecimal.valueOf(totaltAntallVirkedagerForMeldekort), 10, RoundingMode.HALF_EVEN);
+		return new Inntekt(aktivitetNøkkel, inntekt.multiply(andelAvVirkedager));
+	}
+
+	private Optional<Periode> finnOverlappMellomPerioder(Periode periode1, Periode periode2) {
+		if (!periode1.overlapper(periode2)) {
+			return Optional.empty();
+		}
+		LocalDate fom = periode1.getFom().isBefore(periode2.getFom()) ? periode2.getFom() : periode1.getFom();
+		LocalDate tom = periode1.getTom().isBefore(periode2.getTom()) ? periode1.getTom() : periode2.getTom();
+		return Optional.of(Periode.of(fom, tom));
 	}
 
 	private Aktivitet mapAktivitetstatusTilInntektType(AktivitetStatus aktivitetStatus) {
