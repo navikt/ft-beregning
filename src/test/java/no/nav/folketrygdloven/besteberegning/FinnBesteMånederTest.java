@@ -281,8 +281,8 @@ class FinnBesteMånederTest {
 				GRUNNBELØP_SATSER,
 				BigDecimal.valueOf(GRUNNBELØP_2019),
 				SKJÆRINGSTIDSPUNKT_OPPTJENING,
-				perioderMedNæring
-		));
+				perioderMedNæring,
+                BigDecimal.ZERO));
 	}
 
 	private Inntektsgrunnlag lagInntektsgrunnlag(List<Periodeinntekt> inntekter) {

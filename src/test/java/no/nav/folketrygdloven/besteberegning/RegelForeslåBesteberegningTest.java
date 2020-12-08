@@ -2,11 +2,9 @@ package no.nav.folketrygdloven.besteberegning;
 
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.GRUNNBELØPLISTE;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.YearMonth;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -23,7 +21,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.In
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
 import no.nav.folketrygdloven.besteberegning.modell.BesteberegningRegelmodell;
 import no.nav.folketrygdloven.besteberegning.modell.input.BesteberegningInput;
-import no.nav.folketrygdloven.besteberegning.modell.output.BeregnetMånedsgrunnlag;
 import no.nav.folketrygdloven.besteberegning.modell.output.BesteberegnetAndel;
 import no.nav.folketrygdloven.besteberegning.modell.output.BesteberegnetGrunnlag;
 import no.nav.fpsak.nare.evaluation.Evaluation;
@@ -101,8 +98,8 @@ class RegelForeslåBesteberegningTest {
 				GRUNNBELØP_SATSER,
 				G_VERDI,
 				SKJÆRINGSTIDSPUNKT_OPPTJENING,
-				perioderMedNæring
-		));
+				perioderMedNæring,
+                BigDecimal.ZERO));
 	}
 
 	private Inntektsgrunnlag lagInntektsgrunnlag(List<Periodeinntekt> inntekter) {
