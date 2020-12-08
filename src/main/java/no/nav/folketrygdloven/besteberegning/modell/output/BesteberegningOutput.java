@@ -4,12 +4,11 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ForeslåttBesteberegning {
+public class BesteberegningOutput {
 
 	private List<BeregnetMånedsgrunnlag> besteMåneder = new ArrayList<>();
-	private BigDecimal gjennomsnittligPGI;
-
 	private BesteberegnetGrunnlag besteberegnetGrunnlag;
+	private Boolean skalBeregnesEtterSeksBesteMåneder;
 
 	public List<BeregnetMånedsgrunnlag> getBesteMåneder() {
 		return besteMåneder;
@@ -27,11 +26,11 @@ public class ForeslåttBesteberegning {
 		this.besteberegnetGrunnlag = besteberegnetGrunnlag;
 	}
 
-	public BigDecimal getGjennomsnittligPGI() {
-		return gjennomsnittligPGI;
+	public Boolean getSkalBeregnesEtterSeksBesteMåneder() {
+		return skalBeregnesEtterSeksBesteMåneder;
 	}
 
-	public void setGjennomsnittligPGI(BigDecimal gjennomsnittligPGI) {
-		this.gjennomsnittligPGI = gjennomsnittligPGI;
+	public void setSkalBeregnesEtterSeksBesteMåneder(Boolean skalBeregnesEtterSeksBesteMåneder) {
+		this.skalBeregnesEtterSeksBesteMåneder = skalBeregnesEtterSeksBesteMåneder;
 	}
 }

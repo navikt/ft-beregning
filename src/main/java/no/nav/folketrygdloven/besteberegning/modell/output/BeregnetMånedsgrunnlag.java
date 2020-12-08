@@ -7,8 +7,8 @@ import java.util.List;
 
 public class BeregnetMånedsgrunnlag implements Comparable<BeregnetMånedsgrunnlag> {
 
-	private List<Inntekt> inntekter = new ArrayList<>();
-	private YearMonth måned;
+	private final List<Inntekt> inntekter = new ArrayList<>();
+	private final YearMonth måned;
 
 	public BeregnetMånedsgrunnlag(YearMonth måned) {
 		this.måned = måned;
