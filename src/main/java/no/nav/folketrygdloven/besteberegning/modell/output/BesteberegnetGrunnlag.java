@@ -1,10 +1,11 @@
 package no.nav.folketrygdloven.besteberegning.modell.output;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class BesteberegnetGrunnlag {
 
-	private List<BesteberegnetAndel> besteberegnetAndelList;
+	private final List<BesteberegnetAndel> besteberegnetAndelList;
 
 	public BesteberegnetGrunnlag(List<BesteberegnetAndel> besteberegnetAndelList) {
 		this.besteberegnetAndelList = besteberegnetAndelList;

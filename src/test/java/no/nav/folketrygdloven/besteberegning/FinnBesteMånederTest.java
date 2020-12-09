@@ -162,11 +162,11 @@ class FinnBesteMånederTest {
 	}
 
 	@Test
-	void skal_finne_6_siste_måneder_med_kun_dagpenger_med_femti_prosent_utbetaling() {
+	void skal_finne_6_beste_måneder_med_kun_dagpenger_med_meldekort_over_flere_måneder() {
 		// Arrange
 		List<Periodeinntekt> periodeinntekter = new ArrayList<>();
 		for (int i = 0; i < 12; i++) {
-			periodeinntekter.add(lagPeriodeInntektDagpenger(i, BigDecimal.valueOf(13000)));
+			periodeinntekter.add(lagPeriodeInntektDagpengerStartMidtIMåned(i, BigDecimal.valueOf(13000)));
 		}
 		BesteberegningRegelmodell regelmodell = lagRegelmodell(List.of(), periodeinntekter);
 
@@ -177,17 +177,11 @@ class FinnBesteMånederTest {
 		List<BeregnetMånedsgrunnlag> besteMåneder = regelmodell.getOutput().getBesteMåneder();
 		assertThat(besteMåneder.size()).isEqualTo(6);
 		assertThat(besteMåneder.get(0).getMåned()).isEqualTo(YearMonth.of(2019, 10));
-		assertThat(besteMåneder.get(0).getInntekter().get(0).getInntektPrMåned()).isEqualByComparingTo(BigDecimal.valueOf(13000));
 		assertThat(besteMåneder.get(1).getMåned()).isEqualTo(YearMonth.of(2019, 9));
-		assertThat(besteMåneder.get(1).getInntekter().get(0).getInntektPrMåned()).isEqualByComparingTo(BigDecimal.valueOf(13000));
 		assertThat(besteMåneder.get(2).getMåned()).isEqualTo(YearMonth.of(2019, 8));
-		assertThat(besteMåneder.get(2).getInntekter().get(0).getInntektPrMåned()).isEqualByComparingTo(BigDecimal.valueOf(13000));
 		assertThat(besteMåneder.get(3).getMåned()).isEqualTo(YearMonth.of(2019, 7));
-		assertThat(besteMåneder.get(3).getInntekter().get(0).getInntektPrMåned()).isEqualByComparingTo(BigDecimal.valueOf(13000));
 		assertThat(besteMåneder.get(4).getMåned()).isEqualTo(YearMonth.of(2019, 6));
-		assertThat(besteMåneder.get(4).getInntekter().get(0).getInntektPrMåned()).isEqualByComparingTo(BigDecimal.valueOf(13000));
 		assertThat(besteMåneder.get(5).getMåned()).isEqualTo(YearMonth.of(2019, 5));
-		assertThat(besteMåneder.get(5).getInntekter().get(0).getInntektPrMåned()).isEqualByComparingTo(BigDecimal.valueOf(13000));
 	}
 
 	@Test
@@ -270,14 +264,25 @@ class FinnBesteMånederTest {
 				.build();
 	}
 
+	private Periodeinntekt lagPeriodeInntektDagpengerStartMidtIMåned(int månaderFørStpFom, BigDecimal inntekt) {
+		return Periodeinntekt.builder()
+				.medPeriode(Periode.of(
+						SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(månaderFørStpFom).with(TemporalAdjusters.lastDayOfMonth()).minusDays(13),
+						SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(månaderFørStpFom-1).withDayOfMonth(14)))
+				.medAktivitetStatus(AktivitetStatus.DP)
+				.medInntekt(inntekt)
+				.medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP)
+				.build();
+	}
+
 	private BesteberegningRegelmodell lagRegelmodell(List<Periode> perioderMedNæring, List<Periodeinntekt> periodeinntekter) {
 		return new BesteberegningRegelmodell(new BesteberegningInput(
 				lagInntektsgrunnlag(periodeinntekter),
 				GRUNNBELØP_SATSER,
 				BigDecimal.valueOf(GRUNNBELØP_2019),
 				SKJÆRINGSTIDSPUNKT_OPPTJENING,
-				perioderMedNæring
-		));
+				perioderMedNæring,
+                BigDecimal.ZERO));
 	}
 
 	private Inntektsgrunnlag lagInntektsgrunnlag(List<Periodeinntekt> inntekter) {

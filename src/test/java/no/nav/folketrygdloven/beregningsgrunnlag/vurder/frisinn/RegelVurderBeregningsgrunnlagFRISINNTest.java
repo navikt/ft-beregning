@@ -268,7 +268,7 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
             periodeBuilder.medBeregningsgrunnlagPrStatus(BeregningsgrunnlagPrStatus.builder()
                 .medAktivitetStatus(AktivitetStatus.SN)
                 .medAndelNr(1L)
-                .medBruttoPrÅr(BigDecimal.valueOf(snInntektPrÅr))
+                .medBeregnetPrÅr(BigDecimal.valueOf(snInntektPrÅr))
                 .build());
         }
     }

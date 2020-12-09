@@ -21,15 +21,21 @@ public class RegelForeslåBesteberegning implements RuleService<BesteberegningRe
 	public Specification<BesteberegningRegelmodell> getSpecification() {
 		Ruleset<BesteberegningRegelmodell> rs = new Ruleset<>();
 
+		Specification<BesteberegningRegelmodell> fastsettBesteberegning = rs.beregningsRegel(
+				FastsettBesteberegningGrunnlag.ID,
+				FastsettBesteberegningGrunnlag.BESKRIVELSE,
+				new FastsettBesteberegningGrunnlag(),
+				new ErSeksBesteMånederBedre());
+
+
 		Specification<BesteberegningRegelmodell> foreslåBesteberegning = rs.beregningsRegel(
 				FinnBesteMåneder.ID,
 				FinnBesteMåneder.BESKRIVELSE,
 				new FinnBesteMåneder(),
-				new FastsettBesteberegningGrunnlag());
+				fastsettBesteberegning);
 
 		return foreslåBesteberegning;
 	}
-
 
 
 }

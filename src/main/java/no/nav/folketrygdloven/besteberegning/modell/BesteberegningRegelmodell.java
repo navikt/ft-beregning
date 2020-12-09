@@ -1,13 +1,13 @@
 package no.nav.folketrygdloven.besteberegning.modell;
 
 import no.nav.folketrygdloven.besteberegning.modell.input.BesteberegningInput;
-import no.nav.folketrygdloven.besteberegning.modell.output.ForeslåttBesteberegning;
+import no.nav.folketrygdloven.besteberegning.modell.output.BesteberegningOutput;
 
 public class BesteberegningRegelmodell {
 
 	private BesteberegningInput input;
 
-	private ForeslåttBesteberegning output = new ForeslåttBesteberegning();
+	private BesteberegningOutput output = new BesteberegningOutput();
 
 	public BesteberegningRegelmodell(BesteberegningInput input) {
 		this.input = input;
@@ -17,11 +17,11 @@ public class BesteberegningRegelmodell {
 		return input;
 	}
 
-	public ForeslåttBesteberegning getOutput() {
+	public BesteberegningOutput getOutput() {
 		return output;
 	}
 
-	public void setOutput(ForeslåttBesteberegning output) {
+	public void setOutput(BesteberegningOutput output) {
 		this.output = output;
 	}
 }
