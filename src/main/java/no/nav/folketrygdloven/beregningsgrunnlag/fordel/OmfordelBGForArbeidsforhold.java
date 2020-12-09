@@ -20,7 +20,7 @@ class OmfordelBGForArbeidsforhold extends OmfordelForArbeidsforhold {
     @Override
     protected BigDecimal finnFlyttbartBeløp(BeregningsgrunnlagPrArbeidsforhold arbeidMedOmfordelbartBg) {
         BigDecimal bgForArbeidFratrektNaturalytelse = finnBgFratrektTilkommetNaturalytelse(arbeidMedOmfordelbartBg);
-        BigDecimal refusjonskrav = arbeidMedOmfordelbartBg.getRefusjonskravPrÅr().orElse(BigDecimal.ZERO);
+        BigDecimal refusjonskrav = arbeidMedOmfordelbartBg.getGjeldendeRefusjonPrÅr().orElse(BigDecimal.ZERO);
         return bgForArbeidFratrektNaturalytelse.subtract(refusjonskrav);
     }
 

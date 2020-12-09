@@ -428,7 +428,7 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
         BeregningsgrunnlagPrArbeidsforhold afBuilder1 = BeregningsgrunnlagPrArbeidsforhold.builder()
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgNr))
             .medBeregnetPrÅr(BigDecimal.valueOf(brutto))
-            .medRefusjonskravPrÅr(refusjonskrav == null ? null : BigDecimal.valueOf(refusjonskrav))
+            .medGjeldendeRefusjonPrÅr(refusjonskrav == null ? null : BigDecimal.valueOf(refusjonskrav))
             .medAndelNr(andelNr)
             .build();
         return BeregningsgrunnlagPrStatus.builder()
@@ -442,7 +442,7 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
         BeregningsgrunnlagPrArbeidsforhold afBuilderAT = BeregningsgrunnlagPrArbeidsforhold.builder()
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgNr))
             .medBeregnetPrÅr(BigDecimal.valueOf(bruttoAT))
-            .medRefusjonskravPrÅr(refusjonPrÅr == null ? null : BigDecimal.valueOf(refusjonPrÅr))
+            .medGjeldendeRefusjonPrÅr(refusjonPrÅr == null ? null : BigDecimal.valueOf(refusjonPrÅr))
             .medAndelNr(andelNr)
             .build();
         BeregningsgrunnlagPrArbeidsforhold afBuilderFL = BeregningsgrunnlagPrArbeidsforhold.builder()
@@ -466,7 +466,7 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
         BeregningsgrunnlagPrArbeidsforhold afBuilder1 = BeregningsgrunnlagPrArbeidsforhold.builder()
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR1))
             .medBeregnetPrÅr(BigDecimal.valueOf(bruttoBG.get(0)))
-            .medRefusjonskravPrÅr(BigDecimal.valueOf(refusjonsKrav.get(0)))
+            .medGjeldendeRefusjonPrÅr(BigDecimal.valueOf(refusjonsKrav.get(0)))
             .medAndelNr(andelNr++)
             .build();
         if (antallArbeidsforhold == 1) {
@@ -483,7 +483,7 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
         BeregningsgrunnlagPrArbeidsforhold afBuilder2 = BeregningsgrunnlagPrArbeidsforhold.builder()
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR2))
             .medBeregnetPrÅr(BigDecimal.valueOf(bruttoBG.get(1)))
-            .medRefusjonskravPrÅr(BigDecimal.valueOf(refusjonsKrav.get(1)))
+            .medGjeldendeRefusjonPrÅr(BigDecimal.valueOf(refusjonsKrav.get(1)))
             .medAndelNr(andelNr++)
             .build();
 
@@ -502,7 +502,7 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
         BeregningsgrunnlagPrArbeidsforhold afBuilder3 = BeregningsgrunnlagPrArbeidsforhold.builder()
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR3))
             .medBeregnetPrÅr(BigDecimal.valueOf(bruttoBG.get(2)))
-            .medRefusjonskravPrÅr(BigDecimal.valueOf(refusjonsKrav.get(2)))
+            .medGjeldendeRefusjonPrÅr(BigDecimal.valueOf(refusjonsKrav.get(2)))
             .medAndelNr(andelNr++)
             .build();
         if (antallArbeidsforhold == 3) {
@@ -520,7 +520,7 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
         BeregningsgrunnlagPrArbeidsforhold afBuilder4 = BeregningsgrunnlagPrArbeidsforhold.builder()
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR4))
             .medBeregnetPrÅr(BigDecimal.valueOf(bruttoBG.get(3)))
-            .medRefusjonskravPrÅr(BigDecimal.valueOf(refusjonsKrav.get(3)))
+            .medGjeldendeRefusjonPrÅr(BigDecimal.valueOf(refusjonsKrav.get(3)))
             .medAndelNr(andelNr++)
             .build();
         BeregningsgrunnlagPrStatus bgpsATFL = BeregningsgrunnlagPrStatus.builder()

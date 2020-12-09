@@ -204,7 +204,7 @@ public class OmfordelBeregningsgrunnlagTilArbeidsforholdTest {
             .medAndelNr(andelsnr)
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr, null))
             .medInntektskategori(Inntektskategori.ARBEIDSTAKER)
-            .medRefusjonskravPrÅr(refusjonskravPrÅr)
+            .medGjeldendeRefusjonPrÅr(refusjonskravPrÅr)
             .medBeregnetPrÅr(beregnetPrÅr)
             .build();
     }

@@ -47,7 +47,7 @@ class FastsettNyFordeling implements RuleService<BeregningsgrunnlagPeriode> {
     }
 
     private boolean refusjonskravOverstigerBg(BeregningsgrunnlagPrArbeidsforhold arbeidsforhold) {
-        BigDecimal refusjonskrav = arbeidsforhold.getRefusjonskravPrÅr().orElse(BigDecimal.ZERO);
+        BigDecimal refusjonskrav = arbeidsforhold.getGjeldendeRefusjonPrÅr().orElse(BigDecimal.ZERO);
         return refusjonskrav.compareTo(arbeidsforhold.getBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO)) > 0;
     }
 

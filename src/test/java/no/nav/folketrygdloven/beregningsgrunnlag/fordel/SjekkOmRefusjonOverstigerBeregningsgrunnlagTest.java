@@ -67,7 +67,7 @@ public class SjekkOmRefusjonOverstigerBeregningsgrunnlagTest {
             .medAndelNr(1L)
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR, null))
             .medInntektskategori(Inntektskategori.ARBEIDSTAKER)
-            .medRefusjonskravPrÅr(refusjonskravPrÅr)
+            .medGjeldendeRefusjonPrÅr(refusjonskravPrÅr)
             .medBeregnetPrÅr(beregnetPrÅr)
             .build();
     }

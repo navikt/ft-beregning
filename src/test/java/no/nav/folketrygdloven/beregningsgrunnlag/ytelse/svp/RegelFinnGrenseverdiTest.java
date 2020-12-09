@@ -1248,7 +1248,7 @@ public class RegelFinnGrenseverdiTest {
             .medAndelNr(andelsnr)
             .medArbeidsforhold(arbeidsforhold)
             .medBeregnetPrÅr(BigDecimal.valueOf(beregnetPrÅr))
-            .medRefusjonskravPrÅr(BigDecimal.valueOf(refusjonskrav))
+            .medGjeldendeRefusjonPrÅr(BigDecimal.valueOf(refusjonskrav))
             .medUtbetalingsprosentSVP(BigDecimal.valueOf(utbetalingsgrad))
             .build();
         arb.setErSøktYtelseFor(utbetalingsgrad > 0);

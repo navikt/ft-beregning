@@ -27,7 +27,7 @@ public class OmfordelFraArbeidTest {
     void skal_omfordele_inntekt_før_naturalytelse() {
         // Arrange
         BeregningsgrunnlagPrArbeidsforhold aktivitet = BeregningsgrunnlagPrArbeidsforhold.builder()
-            .medRefusjonskravPrÅr(BigDecimal.valueOf(100_000))
+            .medGjeldendeRefusjonPrÅr(BigDecimal.valueOf(100_000))
             .medAndelNr(1L)
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR1, null))
             .medFordeltPrÅr(BigDecimal.valueOf(50_000))
@@ -60,7 +60,7 @@ public class OmfordelFraArbeidTest {
     void skal_omfordele_både_inntekt_og_naturalytelse() {
         // Arrange
         BeregningsgrunnlagPrArbeidsforhold aktivitet = BeregningsgrunnlagPrArbeidsforhold.builder()
-            .medRefusjonskravPrÅr(BigDecimal.valueOf(150_000))
+            .medGjeldendeRefusjonPrÅr(BigDecimal.valueOf(150_000))
             .medAndelNr(1L)
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR1, null))
             .medFordeltPrÅr(BigDecimal.valueOf(50_000))
@@ -211,7 +211,7 @@ public class OmfordelFraArbeidTest {
             .medAndelNr(andelsnr)
             .medInntektskategori(Inntektskategori.ARBEIDSTAKER)
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr, null))
-            .medRefusjonskravPrÅr(refusjonskravPrÅr)
+            .medGjeldendeRefusjonPrÅr(refusjonskravPrÅr)
             .medBeregnetPrÅr(beregnetPrÅr)
             .build();
     }

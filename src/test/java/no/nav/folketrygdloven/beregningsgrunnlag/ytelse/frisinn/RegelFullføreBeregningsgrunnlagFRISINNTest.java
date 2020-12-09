@@ -330,7 +330,7 @@ class RegelFullføreBeregningsgrunnlagFRISINNTest {
                 .medAktivitetStatus(AktivitetStatus.SN)
                 .medAndelNr(1L)
                 .medUtbetalingsprosentSVP(BigDecimal.valueOf(utbetalingsgrad))
-                .medBruttoPrÅr(BigDecimal.valueOf(snInntektPrÅr))
+                .medBeregnetPrÅr(BigDecimal.valueOf(snInntektPrÅr))
                 .build());
         }
     }
