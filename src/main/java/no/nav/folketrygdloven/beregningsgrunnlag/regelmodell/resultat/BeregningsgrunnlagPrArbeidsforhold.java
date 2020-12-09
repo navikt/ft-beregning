@@ -17,8 +17,8 @@ public class BeregningsgrunnlagPrArbeidsforhold {
     private BigDecimal naturalytelseTilkommetPrÅr;
     private BigDecimal beregnetPrÅr;
     private BigDecimal overstyrtPrÅr;
-    private BigDecimal fordeltPrÅr;
-    private BigDecimal bruttoPrÅr;
+	private BigDecimal besteberegningPrÅr;
+	private BigDecimal fordeltPrÅr;
     private BigDecimal avkortetPrÅr;
     private BigDecimal redusertPrÅr;
     private Periode beregningsperiode;
@@ -91,12 +91,31 @@ public class BeregningsgrunnlagPrArbeidsforhold {
         return overstyrtPrÅr;
     }
 
+	/** Finner brutto pr år for arbeidsforhold
+	 *
+	 * Prioriteringsrekkefølge for felter framgår av rekkefølgen de settes i ft-kalkulus.
+	 *
+	 * @return BruttoPrÅr
+	 */
+	// TODO (TFP-3955) Fjern avhengighet til prosess i kalkulus. Krever egen regelmodell for kvar regelsteg (FORESLÅ, FASTSETT)
     public Optional<BigDecimal> getBruttoPrÅr() {
-        return Optional.ofNullable(bruttoPrÅr);
+    	if (fordeltPrÅr != null) {
+    		return Optional.of(fordeltPrÅr);
+	    }
+    	if (besteberegningPrÅr != null) {
+    		return Optional.of(besteberegningPrÅr);
+	    }
+    	if (overstyrtPrÅr != null) {
+    		return Optional.of(overstyrtPrÅr);
+	    }
+    	if (beregnetPrÅr != null) {
+    		return Optional.of(beregnetPrÅr);
+	    }
+        return Optional.empty();
     }
 
     public BigDecimal getGradertBruttoPrÅr() {
-        return finnGradert(bruttoPrÅr);
+        return finnGradert(getBruttoPrÅr().orElse(null));
     }
 
     public BigDecimal getFordeltPrÅr() {
@@ -112,12 +131,12 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 	}
 
 	public Optional<BigDecimal> getBruttoInkludertNaturalytelsePrÅr() {
-        if (bruttoPrÅr == null) {
+        if (getBruttoPrÅr().isEmpty()) {
             return Optional.empty();
         }
         BigDecimal bortfaltNaturalytelse = naturalytelseBortfaltPrÅr != null ? naturalytelseBortfaltPrÅr : BigDecimal.ZERO;
         BigDecimal tilkommetNaturalytelse = naturalytelseTilkommetPrÅr != null ? naturalytelseTilkommetPrÅr : BigDecimal.ZERO;
-        return Optional.of(bruttoPrÅr.add(bortfaltNaturalytelse).subtract(tilkommetNaturalytelse));
+        return Optional.of(getBruttoPrÅr().get().add(bortfaltNaturalytelse).subtract(tilkommetNaturalytelse));
     }
 
     public BigDecimal getAvkortetPrÅr() {
@@ -270,25 +289,16 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 
         public Builder medBeregnetPrÅr(BigDecimal beregnetPrÅr) {
             mal.beregnetPrÅr = beregnetPrÅr;
-            if (mal.overstyrtPrÅr == null && mal.fordeltPrÅr == null) {
-                mal.bruttoPrÅr = beregnetPrÅr;
-            }
             return this;
         }
 
         public Builder medOverstyrtPrÅr(BigDecimal overstyrtPrÅr) {
             mal.overstyrtPrÅr = overstyrtPrÅr;
-            if (overstyrtPrÅr != null && mal.fordeltPrÅr == null) {
-                mal.bruttoPrÅr = overstyrtPrÅr;
-            }
             return this;
         }
 
         public Builder medFordeltPrÅr(BigDecimal fordeltPrÅr) {
             mal.fordeltPrÅr = fordeltPrÅr;
-            if (fordeltPrÅr != null) {
-                mal.bruttoPrÅr = fordeltPrÅr;
-            }
             return this;
         }
 
@@ -337,7 +347,12 @@ public class BeregningsgrunnlagPrArbeidsforhold {
             return this;
         }
 
-        public Builder medRedusertRefusjonPrÅr(BigDecimal redusertRefusjonPrÅr, BigDecimal ytelsesdagerPrÅr) {
+	    public Builder medBesteberegningPrÅr(BigDecimal besteberegningPrÅr) {
+		    mal.besteberegningPrÅr = besteberegningPrÅr;
+		    return this;
+	    }
+
+	    public Builder medRedusertRefusjonPrÅr(BigDecimal redusertRefusjonPrÅr, BigDecimal ytelsesdagerPrÅr) {
             mal.redusertRefusjonPrÅr = redusertRefusjonPrÅr;
             mal.dagsatsArbeidsgiver = redusertRefusjonPrÅr == null || ytelsesdagerPrÅr == null ? null : redusertRefusjonPrÅr.divide(ytelsesdagerPrÅr, 0, RoundingMode.HALF_UP).longValue();
             return this;

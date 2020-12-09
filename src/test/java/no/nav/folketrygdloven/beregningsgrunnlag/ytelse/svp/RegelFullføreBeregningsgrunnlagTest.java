@@ -703,7 +703,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
         var andel = BeregningsgrunnlagPrStatus
             .builder()
             .medAktivitetStatus(AktivitetStatus.SN)
-            .medBruttoPrÅr(BigDecimal.valueOf(brutto))
+            .medBeregnetPrÅr(BigDecimal.valueOf(brutto))
             .medUtbetalingsprosentSVP(BigDecimal.valueOf(utbetaingsgrad))
             .medAndelNr(andelsnr)
             .build();
