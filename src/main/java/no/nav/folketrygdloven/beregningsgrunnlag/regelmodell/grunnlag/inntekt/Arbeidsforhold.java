@@ -1,9 +1,9 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt;
 
+import java.util.Objects;
+
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
-
-import java.util.Objects;
 
 public class Arbeidsforhold {
     private Aktivitet aktivitet;

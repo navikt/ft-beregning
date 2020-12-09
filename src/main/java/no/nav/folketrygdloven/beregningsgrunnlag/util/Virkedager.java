@@ -1,13 +1,13 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.util;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
+import static java.lang.Math.toIntExact;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
-import static java.lang.Math.toIntExact;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 
 
 public class Virkedager {

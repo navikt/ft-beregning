@@ -1,9 +1,5 @@
 package no.nav.folketrygdloven.skjæringstidspunkt.regelmodell;
 
-import static java.time.DayOfWeek.SATURDAY;
-import static java.time.DayOfWeek.SUNDAY;
-
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;

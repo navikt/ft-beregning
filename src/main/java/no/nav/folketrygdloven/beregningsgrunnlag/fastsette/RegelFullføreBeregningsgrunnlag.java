@@ -1,11 +1,11 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.fastsette;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker.RegelFastsettUtenAvkortingATFL;
-import no.nav.folketrygdloven.beregningsgrunnlag.reduksjon.ReduserBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.avkorting.RegelFastsettAvkortetBGOver6GNårRefusjonUnder6G;
 import no.nav.folketrygdloven.beregningsgrunnlag.fastsette.refusjon.FastsettMaksimalRefusjon;
 import no.nav.folketrygdloven.beregningsgrunnlag.fastsette.refusjon.over6g.RegelFastsettAvkortetVedRefusjonOver6G;
 import no.nav.folketrygdloven.beregningsgrunnlag.reduksjon.FastsettDagsatsPrAndel;
+import no.nav.folketrygdloven.beregningsgrunnlag.reduksjon.ReduserBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.fpsak.nare.DynamicRuleService;
 import no.nav.fpsak.nare.Ruleset;
