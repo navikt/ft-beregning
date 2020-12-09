@@ -27,7 +27,6 @@ public class BeregningsgrunnlagPrStatus {
     private BigDecimal overstyrtPrÅr;
     private BigDecimal fordeltPrÅr;
     private BigDecimal beregnetPrÅr;
-    private BigDecimal bruttoPrÅr;
     private BigDecimal avkortetPrÅr;
     private BigDecimal redusertPrÅr;
     private BigDecimal gjennomsnittligPGI;
@@ -119,16 +118,39 @@ public class BeregningsgrunnlagPrStatus {
         return sumBortfaltNaturalYtelse.subtract(sumTilkommetNaturalYtelse);
     }
 
+	/**
+	 * Finner brutto pr år for status. Om dette er en arbeidstaker eller frilanserstatus hentes brutto fra arbeidsforhold.
+	 *
+	 * Prioritering av felter framgår av prosessen i kalkulus.
+	 *
+	 * @return Brutto pr år
+	 */
+	// TODO (TFP-3955) Denne må vere uavhengig av prosessen i kalkulus.
     public BigDecimal getBruttoPrÅr() {
-        return bruttoPrÅr != null ? bruttoPrÅr : getArbeidsforhold().stream()
+	    BigDecimal bruttoPrÅr = getBruttoFraStatus();
+	    return bruttoPrÅr != null ? bruttoPrÅr : getArbeidsforhold().stream()
             .map(BeregningsgrunnlagPrArbeidsforhold::getBruttoPrÅr)
             .filter(Optional::isPresent)
             .map(Optional::get)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public BigDecimal getGradertBruttoPrÅr() {
-        return bruttoPrÅr != null ? finnGradert(bruttoPrÅr) : getArbeidsforhold().stream()
+	private BigDecimal getBruttoFraStatus() {
+		BigDecimal bruttoPrÅr = null;
+		if (fordeltPrÅr != null) {
+			bruttoPrÅr = fordeltPrÅr;
+		} else if (besteberegningPrÅr != null) {
+			bruttoPrÅr = besteberegningPrÅr;
+		} else if (overstyrtPrÅr != null) {
+			bruttoPrÅr = overstyrtPrÅr;
+		} else if (beregnetPrÅr != null) {
+			bruttoPrÅr = beregnetPrÅr;
+		}
+		return bruttoPrÅr;
+	}
+
+	public BigDecimal getGradertBruttoPrÅr() {
+        return getBruttoFraStatus() != null ? finnGradert(getBruttoFraStatus()) : getArbeidsforhold().stream()
                 .map(BeregningsgrunnlagPrArbeidsforhold::getGradertBruttoPrÅr)
                 .filter(Objects::nonNull)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -304,40 +326,24 @@ public class BeregningsgrunnlagPrStatus {
         public Builder medBeregnetPrÅr(BigDecimal beregnetPrÅr) {
             sjekkIkkeArbeidstaker();
             beregningsgrunnlagPrStatusMal.beregnetPrÅr = beregnetPrÅr;
-            if (beregningsgrunnlagPrStatusMal.fordeltPrÅr == null && beregningsgrunnlagPrStatusMal.overstyrtPrÅr == null) {
-                return medBruttoPrÅr(beregnetPrÅr);
-
-            }
             return this;
         }
 
         public Builder medOverstyrtPrÅr(BigDecimal overstyrtPrÅr) {
             sjekkIkkeArbeidstaker();
             beregningsgrunnlagPrStatusMal.overstyrtPrÅr = overstyrtPrÅr;
-            if (overstyrtPrÅr != null && beregningsgrunnlagPrStatusMal.fordeltPrÅr == null) {
-                beregningsgrunnlagPrStatusMal.bruttoPrÅr = overstyrtPrÅr;
-            }
             return this;
         }
 
         public Builder medFordeltPrÅr(BigDecimal fordeltPrÅr) {
             sjekkIkkeArbeidstaker();
             beregningsgrunnlagPrStatusMal.fordeltPrÅr = fordeltPrÅr;
-            if (fordeltPrÅr != null) {
-                beregningsgrunnlagPrStatusMal.bruttoPrÅr = fordeltPrÅr;
-            }
             return this;
         }
 
         public Builder medAndelsmessigFørGraderingPrAar(BigDecimal andelsmessigFørGraderingPrAar) {
             sjekkIkkeArbeidstaker();
             beregningsgrunnlagPrStatusMal.andelsmessigFørGraderingPrAar = andelsmessigFørGraderingPrAar;
-            return this;
-        }
-
-        public Builder medBruttoPrÅr(BigDecimal bruttoPrÅr) {
-            sjekkIkkeArbeidstaker();
-            beregningsgrunnlagPrStatusMal.bruttoPrÅr = bruttoPrÅr;
             return this;
         }
 
