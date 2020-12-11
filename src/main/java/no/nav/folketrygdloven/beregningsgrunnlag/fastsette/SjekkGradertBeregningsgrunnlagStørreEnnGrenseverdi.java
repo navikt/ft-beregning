@@ -1,12 +1,12 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.fastsette;
 
+import java.math.BigDecimal;
+
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.node.SingleEvaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
-
-import java.math.BigDecimal;
 
 @RuleDocumentation(SjekkGradertBeregningsgrunnlagStørreEnnGrenseverdi.ID)
 public class SjekkGradertBeregningsgrunnlagStørreEnnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode> {

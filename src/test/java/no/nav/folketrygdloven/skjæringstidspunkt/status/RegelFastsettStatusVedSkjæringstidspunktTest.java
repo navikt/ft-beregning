@@ -1,7 +1,6 @@
 package no.nav.folketrygdloven.skjæringstidspunkt.status;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
 

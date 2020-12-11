@@ -8,8 +8,6 @@ import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.Specification;
 
-import java.util.Arrays;
-
 @RuleDocumentation(value = RegelBeregningsgrunnlagSNFRISINN.ID, specificationReference = "https://confluence.adeo.no/display/SIF/30.+Beregningsgrunnlag")
 public class RegelBeregningsgrunnlagSNFRISINN implements RuleService<BeregningsgrunnlagPeriode> {
 

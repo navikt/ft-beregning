@@ -1,9 +1,9 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.frisinn;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
-
 import java.time.LocalDate;
 import java.util.Objects;
+
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 
 public class FrisinnPeriode {
     private Periode periode;

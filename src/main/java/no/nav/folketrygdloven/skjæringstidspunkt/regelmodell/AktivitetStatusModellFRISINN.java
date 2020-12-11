@@ -1,11 +1,11 @@
 package no.nav.folketrygdloven.skjæringstidspunkt.regelmodell;
 
+import java.util.List;
+
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.frisinn.FrisinnPeriode;
 import no.nav.fpsak.nare.doc.RuleDocumentationGrunnlag;
-
-import java.util.List;
 
 @RuleDocumentationGrunnlag
 public class AktivitetStatusModellFRISINN extends AktivitetStatusModell {
