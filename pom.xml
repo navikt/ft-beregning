@@ -45,7 +45,14 @@
         <argLine>-Dfile.encoding=UTF-8</argLine>
     </properties>
 
-
+    <repositories>
+        <repository>
+            <id>github</id>
+            <name>GitHub Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/navikt/folketrygdloven-beregningsgrunnlag-regelmodell/</url>
+        </repository>
+    </repositories>
+    
     <dependencyManagement>
         <dependencies>
             <dependency>
