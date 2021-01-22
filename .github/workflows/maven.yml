@@ -37,3 +37,4 @@ jobs:
           echo "Deployed artifacts"
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}:  
