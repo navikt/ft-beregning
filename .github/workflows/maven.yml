@@ -32,7 +32,7 @@ jobs:
         shell: bash
         run: |
           echo "Building $(echo $GITHUB_SHA | cut -c1-7)"
-          mvn jacoco:prepare-agent deploy -e --batch-mode --settings ./.m2/settings.xml -Dmaven.wagon.http.pool=false --file pom.xml -Dchangelist= -Dsha1=-$(git log -1 --pretty='%ad' --date=format:'%Y%m%d%H%M%S')-$(echo $GITHUB_SHA | cut -c1-7) -DdeployAtEnd=true  -Djacoco.destFile=$(pwd)/target/jacoco.exec
+          mvn jacoco:prepare-agent install -e --batch-mode --settings ./.m2/settings.xml --file pom.xml -Djacoco.destFile=$(pwd)/target/jacoco.exec
           mvn jacoco:report sonar:sonar -e --batch-mode --settings ./.m2/settings.xml --file pom.xml -Djacoco.dataFile=$(pwd)/target/jacoco.exec -Dsonar.projectKey="navikt_folketrygdloven-beregningsgrunnlag-regelmodell" -Dsonar.host.url='https://sonarcloud.io' -Dsonar.organization=navit -Dsonar.login=${SONAR_TOKEN}
           echo "MVN_VERSION=$(mvn help:evaluate --batch-mode --settings ./.m2/settings.xml --file .flattened -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
           echo "Deployed artifacts"
