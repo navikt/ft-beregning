@@ -26,11 +26,9 @@ jobs:
             ${{ runner.os }}-maven-
       - name: Publish artifact
         env:
-          GITHUB_USERNAME: x-access-token
-          GITHUB_PASSWORD: ${{ secrets.GH_ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+          NEW_VERSION: ${{ github.event.release.tag_name }}
         # The GITHUB_REF tag comes in the format 'refs/tags/xxx'.
         # So if we split on '/' and take the 3rd value, we can get the release name.
         run: |
-          NEW_VERSION=$(echo "${GITHUB_REF}" | cut -d "/" -f3)
-          echo "-- Build, test and deploy release to GPR --"
           mvn -B --settings ./.m2/settings.xml clean deploy -Drevision=${NEW_VERSION} -Dchangelist=
