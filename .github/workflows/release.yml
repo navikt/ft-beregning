@@ -33,4 +33,4 @@ jobs:
         run: |
           NEW_VERSION=$(echo "${GITHUB_REF}" | cut -d "/" -f3)
           echo "-- Build, test and deploy release to GPR --"
-          mvn -B --settings .github/.m2/settings.xml clean deploy -Drevision=${NEW_VERSION} -Dchangelist=
+          mvn -B --settings ./.m2/settings.xml clean deploy -Drevision=${NEW_VERSION} -Dchangelist=
