@@ -19,7 +19,7 @@ public class AktivitetStatusModell {
     protected List<AktivPeriode> aktivePerioder = new ArrayList<>();
     private List<AktivitetStatus> aktivitetStatuser = new ArrayList<>();
     private List<BeregningsgrunnlagPrStatus> beregningsgrunnlagPrStatusListe = new ArrayList<>();
-    private FinnBeregningstidspunkt finnBeregningstidspunkt = (stp) -> stp.minusDays(1);
+    private FinnBeregningstidspunkt finnBeregningstidspunkt = stp -> stp.minusDays(1);
 
     public AktivitetStatusModell() {
     }

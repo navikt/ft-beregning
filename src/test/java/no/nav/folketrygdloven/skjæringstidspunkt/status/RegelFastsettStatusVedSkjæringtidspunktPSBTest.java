@@ -29,7 +29,7 @@ public class RegelFastsettStatusVedSkjæringtidspunktPSBTest {
     public void setup() {
         skjæringstidspunktForBeregning = LocalDate.of(2018, Month.JANUARY, 15);
         regelmodell = new AktivitetStatusModell();
-	    regelmodell.setFinnBeregningstidspunkt((stp) -> stp);
+	    regelmodell.setFinnBeregningstidspunkt(stp -> stp);
 	    regelmodell.setSkjæringstidspunktForBeregning(skjæringstidspunktForBeregning);
     }
 
