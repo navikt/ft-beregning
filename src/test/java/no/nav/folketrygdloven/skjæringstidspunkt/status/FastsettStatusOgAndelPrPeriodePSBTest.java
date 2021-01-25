@@ -93,7 +93,7 @@ class FastsettStatusOgAndelPrPeriodePSBTest {
 	private AktivitetStatusModell lagAktivitetStatusModell() {
 		var regelmodell = new AktivitetStatusModell();
 		regelmodell = new AktivitetStatusModellFP();
-		regelmodell.setFinnBeregningstidspunkt((stp) -> stp);
+		regelmodell.setFinnBeregningstidspunkt(stp -> stp);
 		regelmodell.setSkjæringstidspunktForBeregning(SKJÆRINGSTIDSPUNKT);
 
 		return regelmodell;
