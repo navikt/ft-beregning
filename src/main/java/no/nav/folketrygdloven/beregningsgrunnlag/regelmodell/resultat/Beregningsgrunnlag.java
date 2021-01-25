@@ -42,9 +42,13 @@ public class Beregningsgrunnlag {
 
     private Beregningsgrunnlag() { }
 
-    public YtelsesSpesifiktGrunnlag getYtelsesSpesifiktGrunnlag() {
-        return ytelsesSpesifiktGrunnlag;
+    public Optional<YtelsesSpesifiktGrunnlag> getYtelsesSpesifiktGrunnlagHvisFinnes() {
+        return Optional.ofNullable(ytelsesSpesifiktGrunnlag);
     }
+
+	public YtelsesSpesifiktGrunnlag getYtelsesSpesifiktGrunnlag() {
+		return ytelsesSpesifiktGrunnlag;
+	}
 
     public LocalDate getSkjæringstidspunkt() {
         return skjæringstidspunkt;

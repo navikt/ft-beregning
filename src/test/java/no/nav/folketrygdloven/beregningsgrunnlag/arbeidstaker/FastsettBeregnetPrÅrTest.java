@@ -148,7 +148,7 @@ class FastsettBeregnetPrÅrTest {
         kjørRegel(regelBg.getBeregningsgrunnlagPerioder().get(0));
 
         // Assert
-        assertThat(regelBg.getAktivitetStatus(AktivitetStatus.ATFL).getHjemmel()).isEqualTo(BeregningsgrunnlagHjemmel.K9_HJEMMEL_BARE_ARBEIDSTAKER_DIREKTE_UTBETALING);
+        assertThat(regelBg.getAktivitetStatus(AktivitetStatus.ATFL).getHjemmel()).isEqualTo(BeregningsgrunnlagHjemmel.K9_HJEMMEL_BARE_ARBEIDSTAKER_MED_AVVIKSVURDERING);
     }
 
     @Test
