@@ -39,9 +39,8 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
     }
 
     private void opprettAktivitetStatuser(AktivitetStatusModell regelmodell) {
-        LocalDate skjæringtidspktForBeregning = regelmodell.getSkjæringstidspunktForBeregning();
         List<AktivPeriode> aktivePerioder = regelmodell.getAktivePerioder();
-        List<AktivPeriode> aktivePerioderVedStp = hentAktivePerioderForBeregning(skjæringtidspktForBeregning, aktivePerioder);
+        List<AktivPeriode> aktivePerioderVedStp = hentAktivePerioderForBeregning(regelmodell.getBeregningstidspunkt(), aktivePerioder);
         if (harKunYtelsePåSkjæringstidspunkt(aktivePerioderVedStp)) {
             regelmodell.leggTilAktivitetStatus(AktivitetStatus.KUN_YTELSE);
             BeregningsgrunnlagPrStatus bgPrStatus = new BeregningsgrunnlagPrStatus(AktivitetStatus.BA);
@@ -98,12 +97,9 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
         return aktivitetStatus;
     }
 
-    private List<AktivPeriode> hentAktivePerioderForBeregning(LocalDate skjæringstidspunkt, List<AktivPeriode> aktivePerioder) {
-        return aktivePerioder.stream().filter(ap -> ap.inneholder(finnDatogrenseForInkluderteAktiviteter(skjæringstidspunkt))).collect(Collectors.toList());
-    }
-
-    protected LocalDate finnDatogrenseForInkluderteAktiviteter(LocalDate dato) {
-        return dato.minusDays(1);
+    private List<AktivPeriode> hentAktivePerioderForBeregning(LocalDate bergningstidspunkt, List<AktivPeriode> aktivePerioder) {
+        return aktivePerioder.stream()
+		        .filter(ap -> ap.inneholder(bergningstidspunkt)).collect(Collectors.toList());
     }
 
 }
