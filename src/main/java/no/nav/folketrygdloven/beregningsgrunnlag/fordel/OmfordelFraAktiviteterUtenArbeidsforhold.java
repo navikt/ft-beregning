@@ -177,7 +177,7 @@ class OmfordelFraAktiviteterUtenArbeidsforhold extends LeafSpecification<Beregni
 
     private void adderBeløpTilBgForArbeidsforhold(BeregningsgrunnlagPrArbeidsforhold arbeidsforholdForStatus, BigDecimal beløpSomSkalOmfordelesTilArbeidsforhold) {
         BeregningsgrunnlagPrArbeidsforhold.builder(arbeidsforholdForStatus)
-            .medFordeltPrÅr(arbeidsforholdForStatus.getBruttoPrÅr().isPresent() ? arbeidsforholdForStatus.getBruttoPrÅr().get().add(beløpSomSkalOmfordelesTilArbeidsforhold) : beløpSomSkalOmfordelesTilArbeidsforhold);
+            .medFordeltPrÅr(arbeidsforholdForStatus.getBruttoPrÅr().isPresent() ? arbeidsforholdForStatus.getBruttoPrÅr().get().add(beløpSomSkalOmfordelesTilArbeidsforhold) : beløpSomSkalOmfordelesTilArbeidsforhold); // NOSONAR
     }
 
     private void adderBeløpTilRefusjonForArbeidsforhold(BeregningsgrunnlagPrArbeidsforhold eksisterende,
@@ -189,15 +189,15 @@ class OmfordelFraAktiviteterUtenArbeidsforhold extends LeafSpecification<Beregni
         if (eksisterende.getGjeldendeRefusjonPrÅr().isEmpty()) {
             throw new IllegalStateException("Eksisterende andel har ikke refusjonskrav.");
         }
-        if (eksisterende.getGjeldendeRefusjonPrÅr().get().compareTo(beløpSomSkalOmfordelesTilArbeidsforhold) < 0) {
+        if (eksisterende.getGjeldendeRefusjonPrÅr().get().compareTo(beløpSomSkalOmfordelesTilArbeidsforhold) < 0) { // NOSONAR
             throw new IllegalStateException("Skal ikke flytte mer av refusjonskravet.");
         }
-	    BigDecimal nyRefusjon = eksisterende.getGjeldendeRefusjonPrÅr().get().subtract(beløpSomSkalOmfordelesTilArbeidsforhold);
+	    BigDecimal nyRefusjon = eksisterende.getGjeldendeRefusjonPrÅr().get().subtract(beløpSomSkalOmfordelesTilArbeidsforhold); // NOSONAR
 	    BeregningsgrunnlagPrArbeidsforhold.builder(eksisterende)
 		    .medGjeldendeRefusjonPrÅr(nyRefusjon)
             .medFordeltRefusjonPrÅr(nyRefusjon);
 
-	    BigDecimal fordeltRefusjon = aktivitet.getGjeldendeRefusjonPrÅr().isPresent() ? aktivitet.getGjeldendeRefusjonPrÅr().get().add(beløpSomSkalOmfordelesTilArbeidsforhold) : beløpSomSkalOmfordelesTilArbeidsforhold;
+	    BigDecimal fordeltRefusjon = aktivitet.getGjeldendeRefusjonPrÅr().isPresent() ? aktivitet.getGjeldendeRefusjonPrÅr().get().add(beløpSomSkalOmfordelesTilArbeidsforhold) : beløpSomSkalOmfordelesTilArbeidsforhold; // NOSONAR
 	    BeregningsgrunnlagPrArbeidsforhold.builder(aktivitet)
 		    .medGjeldendeRefusjonPrÅr(fordeltRefusjon)
             .medFordeltRefusjonPrÅr(fordeltRefusjon);

@@ -33,11 +33,11 @@ public class ErHøyerePrioriterteAndelerBruttoMinst6GTest {
             .medPeriode(Periode.of(SKJÆRINGSTIDSPUNKT, DateUtil.TIDENES_ENDE))
             .leggTilBruttoBeregningsgrunnlag(BruttoBeregningsgrunnlag.builder()
                 .medAktivitetStatus(AktivitetStatusV2.SN)
-                .medBruttoBeregningsgrunnlag(MÅNEDSBELØP_UNDER_6G.multiply(BigDecimal.valueOf(12)))
+                .medBruttoPrÅr(MÅNEDSBELØP_UNDER_6G.multiply(BigDecimal.valueOf(12)))
                 .build())
             .leggTilBruttoBeregningsgrunnlag(BruttoBeregningsgrunnlag.builder()
                 .medAktivitetStatus(AktivitetStatusV2.FL)
-                .medBruttoBeregningsgrunnlag(MÅNEDSBELØP_OVER_6G.multiply(BigDecimal.valueOf(12)))
+                .medBruttoPrÅr(MÅNEDSBELØP_OVER_6G.multiply(BigDecimal.valueOf(12)))
                 .build())
             .build();
 
@@ -61,11 +61,11 @@ public class ErHøyerePrioriterteAndelerBruttoMinst6GTest {
             .medPeriode(Periode.of(SKJÆRINGSTIDSPUNKT, DateUtil.TIDENES_ENDE))
             .leggTilBruttoBeregningsgrunnlag(BruttoBeregningsgrunnlag.builder()
                 .medAktivitetStatus(AktivitetStatusV2.SN)
-                .medBruttoBeregningsgrunnlag(MÅNEDSBELØP_UNDER_6G.multiply(BigDecimal.valueOf(12)))
+                .medBruttoPrÅr(MÅNEDSBELØP_UNDER_6G.multiply(BigDecimal.valueOf(12)))
                 .build())
             .leggTilBruttoBeregningsgrunnlag(BruttoBeregningsgrunnlag.builder()
                 .medAktivitetStatus(AktivitetStatusV2.FL)
-                .medBruttoBeregningsgrunnlag(MÅNEDSBELØP_PÅ_6G.multiply(BigDecimal.valueOf(12)))
+                .medBruttoPrÅr(MÅNEDSBELØP_PÅ_6G.multiply(BigDecimal.valueOf(12)))
                 .build())
             .build();
 
@@ -90,11 +90,11 @@ public class ErHøyerePrioriterteAndelerBruttoMinst6GTest {
             .leggTilBruttoBeregningsgrunnlag(BruttoBeregningsgrunnlag.builder()
                 .medAktivitetStatus(AktivitetStatusV2.AT)
                 .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("orgnr"))
-                .medBruttoBeregningsgrunnlag(MÅNEDSBELØP_PÅ_6G.multiply(BigDecimal.valueOf(12)))
+                .medBruttoPrÅr(MÅNEDSBELØP_PÅ_6G.multiply(BigDecimal.valueOf(12)))
                 .build())
             .leggTilBruttoBeregningsgrunnlag(BruttoBeregningsgrunnlag.builder()
                 .medAktivitetStatus(AktivitetStatusV2.FL)
-                .medBruttoBeregningsgrunnlag(MÅNEDSBELØP_UNDER_6G.multiply(BigDecimal.valueOf(12)))
+                .medBruttoPrÅr(MÅNEDSBELØP_UNDER_6G.multiply(BigDecimal.valueOf(12)))
                 .build())
             .build();
 
@@ -119,11 +119,11 @@ public class ErHøyerePrioriterteAndelerBruttoMinst6GTest {
             .leggTilBruttoBeregningsgrunnlag(BruttoBeregningsgrunnlag.builder()
                 .medAktivitetStatus(AktivitetStatusV2.AT)
                 .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("orgnr"))
-                .medBruttoBeregningsgrunnlag(MÅNEDSBELØP_UNDER_6G.multiply(BigDecimal.valueOf(12)))
+                .medBruttoPrÅr(MÅNEDSBELØP_UNDER_6G.multiply(BigDecimal.valueOf(12)))
                 .build())
             .leggTilBruttoBeregningsgrunnlag(BruttoBeregningsgrunnlag.builder()
                 .medAktivitetStatus(AktivitetStatusV2.FL)
-                .medBruttoBeregningsgrunnlag(MÅNEDSBELØP_UNDER_6G.multiply(BigDecimal.valueOf(12)))
+                .medBruttoPrÅr(MÅNEDSBELØP_UNDER_6G.multiply(BigDecimal.valueOf(12)))
                 .build())
             .build();
 

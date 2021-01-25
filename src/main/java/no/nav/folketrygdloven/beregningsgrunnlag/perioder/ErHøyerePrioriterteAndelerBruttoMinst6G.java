@@ -20,7 +20,7 @@ class ErHøyerePrioriterteAndelerBruttoMinst6G {
         int avkortingPrioritet = andelGradering.getAktivitetStatus().getAvkortingPrioritet();
         BigDecimal prioritertBg = periodisertBruttoBeregningsgrunnlag.getBruttoBeregningsgrunnlag().stream()
             .filter(a -> a.getAktivitetStatus().getAvkortingPrioritet() < avkortingPrioritet)
-            .map(BruttoBeregningsgrunnlag::getBruttoBeregningsgrunnlag)
+            .map(BruttoBeregningsgrunnlag::getBruttoPrÅr)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
         BigDecimal seksG = grunnbeløp.multiply(BigDecimal.valueOf(ANTALL_G));
         return prioritertBg.compareTo(seksG) >= 0;

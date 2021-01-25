@@ -86,11 +86,11 @@ public class Inntektsgrunnlag {
     }
 
     public Optional<BigDecimal> getOppgittInntektForStatusIPeriode(AktivitetStatus status, Periode periode) {
-        List<Periodeinntekt> periodeinntekter = getInntektspostFraSøknadForStatusIPeriode(status, periode);
-        if (periodeinntekter.isEmpty()) {
+        List<Periodeinntekt> inntekter = getInntektspostFraSøknadForStatusIPeriode(status, periode);
+        if (inntekter.isEmpty()) {
             return Optional.empty();
         }
-        return periodeinntekter.stream()
+        return inntekter.stream()
             .map(this::finnÅrsinntektForPeriode)
             .reduce(BigDecimal::add);
     }
@@ -184,13 +184,17 @@ public class Inntektsgrunnlag {
     }
 
     private boolean matchAktivitet(BeregningsgrunnlagPrArbeidsforhold arbeidsforhold, Periodeinntekt pi) {
-        if (!arbeidsforhold.getArbeidsforhold().getAktivitet().equals(pi.getArbeidsgiver().get().getAktivitet())) {
+    	if (pi.getArbeidsgiver().isEmpty()) {
+    		throw new IllegalStateException("Forventer å ha arbeidsforhold");
+	    }
+	    Arbeidsforhold arbeidsgiver = pi.getArbeidsgiver().get(); // NOSONAR
+	    if (!arbeidsforhold.getArbeidsforhold().getAktivitet().equals(arbeidsgiver.getAktivitet())) {
             return false;
         }
-        if (arbeidsforhold.getArbeidsforhold().getArbeidsgiverId() != null && pi.getArbeidsgiver().get().getArbeidsgiverId() != null) {
-            return arbeidsforhold.getArbeidsforhold().getArbeidsgiverId().equals(pi.getArbeidsgiver().get().getArbeidsgiverId());
+        if (arbeidsforhold.getArbeidsforhold().getArbeidsgiverId() != null && arbeidsgiver.getArbeidsgiverId() != null) {
+            return arbeidsforhold.getArbeidsforhold().getArbeidsgiverId().equals(arbeidsgiver.getArbeidsgiverId());
         }
-        return arbeidsforhold.getArbeidsforhold().getArbeidsgiverId() == null && pi.getArbeidsgiver().get().getArbeidsgiverId() == null;
+        return arbeidsforhold.getArbeidsforhold().getArbeidsgiverId() == null && arbeidsgiver.getArbeidsgiverId() == null;
     }
 
     public List<BigDecimal> getFrilansPeriodeinntekter(Inntektskilde inntektskilde, LocalDate førDato, int måneder) {

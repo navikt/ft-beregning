@@ -24,12 +24,12 @@ public class RegelBeregningsgrunnlagSNFRISINN implements RuleService<Beregningsg
         Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
 
         Specification<BeregningsgrunnlagPeriode> beregnBruttoSN =
-            rs.beregningsRegel("FRISINN 2.7", "Beregn brutto beregningsgrunnlag selvstendig næringsdrivende",
+            rs.beregningsRegel(BeregnBruttoBeregningsgrunnlagSNFRISINN.ID, "Beregn brutto beregningsgrunnlag selvstendig næringsdrivende",
                 new BeregnBruttoBeregningsgrunnlagSNFRISINN(), new FastsettBeregnetPrÅr());
 
 
         Specification<BeregningsgrunnlagPeriode> foreslåBeregningsgrunnlagForSelvstendigNæringsdrivende =
-            rs.beregningsRegel("FRISINN 2", "Foreslå beregningsgrunnlag for selvstendig næringsdrivende",
+            rs.beregningsRegel(FastsettBeregningsperiodeSNFRISINN.ID, "Foreslå beregningsgrunnlag for selvstendig næringsdrivende",
                 new FastsettBeregningsperiodeSNFRISINN(), beregnBruttoSN);
 
         return foreslåBeregningsgrunnlagForSelvstendigNæringsdrivende;

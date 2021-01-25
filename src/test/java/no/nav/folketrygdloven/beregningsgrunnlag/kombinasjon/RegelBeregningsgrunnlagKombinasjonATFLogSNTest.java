@@ -39,7 +39,7 @@ public class RegelBeregningsgrunnlagKombinasjonATFLogSNTest {
     }
 
     @Test
-    public void skalBeregneAndelGrunnlagSNHvorSNStørreEnnATFL() throws Exception {
+    public void skalBeregneAndelGrunnlagSNHvorSNStørreEnnATFL() { // NOSONAR
         // Arrange
         BigDecimal månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
         Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr);
@@ -65,7 +65,7 @@ public class RegelBeregningsgrunnlagKombinasjonATFLogSNTest {
     }
 
     @Test
-    public void skalBeregneAndelGrunnlagSNHvorSNMindreEnnATFL() throws Exception {
+    public void skalBeregneAndelGrunnlagSNHvorSNMindreEnnATFL() { // NOSONAR
         // Arrange
         BigDecimal månedsinntekt = BigDecimal.valueOf(5.0 * GRUNNBELØP_2017 / 12);
         Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr);

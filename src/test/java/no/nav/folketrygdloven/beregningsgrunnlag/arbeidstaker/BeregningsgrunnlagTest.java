@@ -263,7 +263,7 @@ public class BeregningsgrunnlagTest {
     }
 
     @Test
-    public void skalGiRegelmerknadVedAvvikVedLønnsøkning() {
+    public void skalGiRegelmerknadVedAvvikVedLønnsøkning() { // NOSONAR
         // Arrange
         BigDecimal månedsinntekt = BigDecimal.valueOf(25000);
         BigDecimal refusjonskrav = månedsinntekt;
