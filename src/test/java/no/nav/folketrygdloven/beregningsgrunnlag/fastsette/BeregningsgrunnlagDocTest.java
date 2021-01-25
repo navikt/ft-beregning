@@ -24,7 +24,7 @@ import no.nav.fpsak.nare.specification.Specification;
 public class BeregningsgrunnlagDocTest {
 
     @Test
-    public void test_documentation() throws Exception {
+    public void test_documentation() { // NOSONAR
         String orgnr = "4353";
         LocalDate skjæringstidspunkt = LocalDate.of(2018, Month.JANUARY, 15);
         BigDecimal månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
@@ -41,6 +41,5 @@ public class BeregningsgrunnlagDocTest {
         @SuppressWarnings("unused")
         String json = digraph.toJson();
 
-//        System.out.println(json);
     }
 }

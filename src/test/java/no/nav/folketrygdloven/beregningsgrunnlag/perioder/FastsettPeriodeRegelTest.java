@@ -78,7 +78,7 @@ class FastsettPeriodeRegelTest {
     private PeriodeModell.Builder lagPeriodeInputMedEnAndelFraStart() {
         Arbeidsforhold arbeidsforhold = Arbeidsforhold.builder().medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT)
                 .medAnsettelsesPeriode(Periode.of(SKJÆRINGSTIDSPUNKT.minusMonths(12), SKJÆRINGSTIDSPUNKT.plusMonths(12))).medOrgnr(ORGNR).build();
-        BruttoBeregningsgrunnlag bruttoBeregningsgrunnlag = BruttoBeregningsgrunnlag.builder().medAktivitetStatus(AktivitetStatusV2.AT).medBruttoBeregningsgrunnlag(BigDecimal.valueOf(500_000)).medArbeidsforhold(arbeidsforhold).build();
+        BruttoBeregningsgrunnlag bruttoBeregningsgrunnlag = BruttoBeregningsgrunnlag.builder().medAktivitetStatus(AktivitetStatusV2.AT).medBruttoPrÅr(BigDecimal.valueOf(500_000)).medArbeidsforhold(arbeidsforhold).build();
         PeriodisertBruttoBeregningsgrunnlag periodisertBruttoBeregningsgrunnlag = PeriodisertBruttoBeregningsgrunnlag.builder()
                 .medPeriode(Periode.of(SKJÆRINGSTIDSPUNKT, null))
                 .leggTilBruttoBeregningsgrunnlag(bruttoBeregningsgrunnlag)

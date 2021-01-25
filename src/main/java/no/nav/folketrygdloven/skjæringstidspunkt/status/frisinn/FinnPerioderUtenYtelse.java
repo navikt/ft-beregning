@@ -137,7 +137,7 @@ public class FinnPerioderUtenYtelse {
         }
 
         // Antall måneder i perioden ikke medregnet start og slutt
-        return (årMellom * 12) + (månederMellom -1);
+        return (årMellom * 12L) + (månederMellom - 1L);
     }
 
     private static void verifiserPerioder(List<Periode> perioder) {

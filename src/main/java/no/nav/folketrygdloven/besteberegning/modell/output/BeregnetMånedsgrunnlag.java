@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class BeregnetMånedsgrunnlag implements Comparable<BeregnetMånedsgrunnlag> {
 
@@ -36,6 +37,19 @@ public class BeregnetMånedsgrunnlag implements Comparable<BeregnetMånedsgrunnl
 				"inntekter=" + inntekter +
 				", yearMonth=" + måned +
 				'}';
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		BeregnetMånedsgrunnlag that = (BeregnetMånedsgrunnlag) o;
+		return Objects.equals(this.finnSum(), that.finnSum()) && Objects.equals(måned, that.måned);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.finnSum(), måned);
 	}
 
 	@Override

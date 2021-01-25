@@ -25,7 +25,7 @@ public class SammenligningsGrunnlag {
     /**
      * @deprecated erstattes av #getAvvikPromilleUtenAvrunding
      */
-    @Deprecated
+    @Deprecated(forRemoval = true)
     public Long getAvvikPromille() {
         return avvikProsent.scaleByPowerOfTen(1).setScale(0, RoundingMode.HALF_UP).longValue();
     }

@@ -65,7 +65,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
     }
 
     @Test
-    public void skalBeregneGrunnlagAGVedSammeFrilansInntektSisteTreMåneder() {
+    public void skalBeregneGrunnlagAGVedSammeFrilansInntektSisteTreMåneder() { // NOSONAR
         // Arrange
         BigDecimal månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
         BigDecimal refusjonskrav = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
@@ -83,7 +83,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
     }
 
     @Test
-    public void skalBeregneGrunnlagAGVedSammeInntektSisteTreMåneder() {
+    public void skalBeregneGrunnlagAGVedSammeInntektSisteTreMåneder() { // NOSONAR
         // Arrange
         BigDecimal månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
         BigDecimal refusjonskrav = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
@@ -101,7 +101,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
     }
 
     @Test
-    public void skalBeregneGrunnlagAGVedKombinasjonATFLogSN() {
+    public void skalBeregneGrunnlagAGVedKombinasjonATFLogSN() { // NOSONAR
         // Arrange
         BigDecimal månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
         BigDecimal refusjonskrav = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
@@ -128,7 +128,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
     }
 
     @Test
-    public void skalBeregneGrunnlagAGVedKombinasjonATFLogSNHvorATFLStørreEnnSNMedAvkorting() {
+    public void skalBeregneGrunnlagAGVedKombinasjonATFLogSNHvorATFLStørreEnnSNMedAvkorting() { // NOSONAR
         // ATFL > 6G, SN < ATFL: ATFL blir avkortet til 6G og SN blir satt til 0.
         // Arrange
         BigDecimal månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 1.5);
@@ -154,7 +154,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
     }
 
     @Test
-    public void BeregningsgrunnlagKombinasjonATFLStørreEnnSNMedAvkorting() {
+    public void BeregningsgrunnlagKombinasjonATFLStørreEnnSNMedAvkorting() { // NOSONAR
         // SN > 6G, SN > ATFL: Både ATFL og SN blir avkortet.
         // Arrange
         BigDecimal månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 3);
@@ -208,7 +208,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
     }
 
     @Test
-    public void skalBeregneGrunnlagForTilstøtendeYtelseDagpenger() {
+    public void skalBeregneGrunnlagForTilstøtendeYtelseDagpenger() { // NOSONAR
         // Arrange
         BigDecimal dagsats = BigDecimal.valueOf(716);
         Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
@@ -232,7 +232,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
     }
 
     @Test
-    public void skalBeregneGrunnlagForKombinasjonSNOgDagpenger() {
+    public void skalBeregneGrunnlagForKombinasjonSNOgDagpenger() { // NOSONAR
         // Arrange
         BigDecimal utbetalingsgrad = new BigDecimal("150");
         BigDecimal dagsats = BigDecimal.valueOf(900);
@@ -264,7 +264,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
 
 
     @Test
-    public void skalBeregneGrunnlagForKombinasjonATFL_SNOgAAP() {
+    public void skalBeregneGrunnlagForKombinasjonATFL_SNOgAAP() { // NOSONAR
         // Arrange
         BigDecimal utbetalingsgrad = new BigDecimal("100");
         BigDecimal dagsatsAAP = BigDecimal.valueOf(700);

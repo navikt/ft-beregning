@@ -146,7 +146,7 @@ public class BeregningsgrunnlagTidsbegrensetArbeidsforholdMedTogglePåTest {
     }
 
     @Test
-    public void skalGiRegelmerknadVedAvvikVedLønnsøkningOgTidsbegrensetArbeidsforhold() {
+    public void skalGiRegelmerknadVedAvvikVedLønnsøkningOgTidsbegrensetArbeidsforhold() { // NOSONAR
         // Arrange
         BigDecimal månedsinntekt = BigDecimal.valueOf(25000);
         BigDecimal refusjonskrav = månedsinntekt;
@@ -176,7 +176,7 @@ public class BeregningsgrunnlagTidsbegrensetArbeidsforholdMedTogglePåTest {
     }
 
     @Test
-    public void skalGiRegelmerknadVedAvvikVedLønnsøkningOgTidsbegrensetArbeidsforholdSammenfallerMedBortfaltNaturalytelse() {
+    public void skalGiRegelmerknadVedAvvikVedLønnsøkningOgTidsbegrensetArbeidsforholdSammenfallerMedBortfaltNaturalytelse() { // NOSONAR
         // Arrange
         BigDecimal månedsinntekt = BigDecimal.valueOf(25000);
         BigDecimal refusjonskrav = månedsinntekt;

@@ -254,7 +254,7 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
     // Scenario 11: Flere arbeidsforhold og totalt brutto BG > 6G , total refusjonskrav < 6G,
     // totalt BG for beregningsgrunnlagsandeler fra arbeidsforhold < 6G
     // arbeidsforhold arbeidstaker og dagpenger
-    public void skalBeregneAvkortningAvUlikeBeregningsgrunnlagsandelerMedEnAndelUtenArbeidsforhold(){
+    public void skalBeregneAvkortningAvUlikeBeregningsgrunnlagsandelerMedEnAndelUtenArbeidsforhold(){ // NOSONAR
         double bruttoBG1 = 300000d;
         double refusjonsKrav1 = 20000d;
         double bruttoBG2 = 263000d;
@@ -284,7 +284,7 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
     // arbeidsforhold arbeidstaker
     // dagpenger
     // arbeidsavklaringspenger
-    public void skalBeregneAvkortningAvUlikeBeregningsgrunnlagsandelerMedToAndelUtenArbeidsforhold(){
+    public void skalBeregneAvkortningAvUlikeBeregningsgrunnlagsandelerMedToAndelUtenArbeidsforhold() { // NOSONAR
         double bruttoBG1 = 300000d;
         double bruttoBG2 = 130000d;
         double bruttoBG3 = 120000d;
@@ -319,7 +319,7 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
     // dagpenger
     // arbeidsavklaringspenger
     // selvstendig næringsdrivende
-    public void skalBeregneAvkortningAvUlikeBeregningsgrunnlagsandelerMedFlereAndelUtenArbeidsforhold(){
+    public void skalBeregneAvkortningAvUlikeBeregningsgrunnlagsandelerMedFlereAndelUtenArbeidsforhold() { // NOSONAR
         double bruttoBG1 = 300000d;
         double bruttoBG2 = 130000d;
         double bruttoBG3 = 110000d;
@@ -357,7 +357,7 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
     // totalt brutto BG > 6G , total refusjonskrav < 6G,
     // totalt BG for beregningsgrunnlagsandeler fra arbeidsforhold < 6G
     // Brutto beregningsgrunnlag for andelen fra frilanser >= beregningsgrunnlag uten arbeidsforhold til fordeling
-    public void skalBeregneAvkortningAvFrilanserMedBruttoBGForAndelenStørreEnnBGUtenArbeidsforhold(){
+    public void skalBeregneAvkortningAvFrilanserMedBruttoBGForAndelenStørreEnnBGUtenArbeidsforhold() { // NOSONAR
         double bruttoAT = 300000d;
         double refusjonsKrav = 20000d;
         double bruttoFL = 260000d;
@@ -389,7 +389,7 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
     // totalt brutto BG > 6G , total refusjonskrav < 6G,
     // totalt BG for beregningsgrunnlagsandeler fra arbeidsforhold < 6G
     // Brutto beregningsgrunnlag for andelen fra frilanser <= beregningsgrunnlag uten arbeidsforhold til fordeling
-    public void skalBeregneAvkortningAvFrilanserMedBruttoBGForAndelenMindreEnnBGUtenArbeidsforhold(){
+    public void skalBeregneAvkortningAvFrilanserMedBruttoBGForAndelenMindreEnnBGUtenArbeidsforhold() { // NOSONAR
         double bruttoAT = 300000d;
         double refusjonsKrav = 20000d;
         double bruttoFL = 200000d;
@@ -424,7 +424,7 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
 
 
     private BeregningsgrunnlagPrStatus lagBeregningsgrunnlagPrStatus(String orgNr, double brutto, int andelNr,
-                                                                     AktivitetStatus aktivitetStatus, Double refusjonskrav){
+                                                                     AktivitetStatus aktivitetStatus, Double refusjonskrav) {
         BeregningsgrunnlagPrArbeidsforhold afBuilder1 = BeregningsgrunnlagPrArbeidsforhold.builder()
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgNr))
             .medBeregnetPrÅr(BigDecimal.valueOf(brutto))
@@ -438,7 +438,7 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
             .build();
     }
 
-    private BeregningsgrunnlagPrStatus lagBGPrStatusATFL(String orgNr, double bruttoAT, double bruttoFL, int andelNr, Double refusjonPrÅr){
+    private BeregningsgrunnlagPrStatus lagBGPrStatusATFL(String orgNr, double bruttoAT, double bruttoFL, int andelNr, Double refusjonPrÅr) {
         BeregningsgrunnlagPrArbeidsforhold afBuilderAT = BeregningsgrunnlagPrArbeidsforhold.builder()
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgNr))
             .medBeregnetPrÅr(BigDecimal.valueOf(bruttoAT))

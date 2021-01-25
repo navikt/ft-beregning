@@ -9,14 +9,14 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Ar
 public class BruttoBeregningsgrunnlag {
     private AktivitetStatusV2 aktivitetStatus;
     private Arbeidsforhold arbeidsforhold;
-    private BigDecimal bruttoBeregningsgrunnlag;
+    private BigDecimal bruttoPrÅr;
 
     private BruttoBeregningsgrunnlag() {
         // skjul default
     }
 
-    public BigDecimal getBruttoBeregningsgrunnlag() {
-        return bruttoBeregningsgrunnlag;
+    public BigDecimal getBruttoPrÅr() {
+        return bruttoPrÅr;
     }
 
     public AktivitetStatusV2 getAktivitetStatus() {
@@ -48,14 +48,14 @@ public class BruttoBeregningsgrunnlag {
             return this;
         }
 
-        public Builder medBruttoBeregningsgrunnlag(BigDecimal bruttoBg) {
-            kladd.bruttoBeregningsgrunnlag = bruttoBg;
+        public Builder medBruttoPrÅr(BigDecimal bruttoBg) {
+            kladd.bruttoPrÅr = bruttoBg;
             return this;
         }
 
         public BruttoBeregningsgrunnlag build() {
             Objects.requireNonNull(kladd.getAktivitetStatus(), "aktivitetStatus");
-            Objects.requireNonNull(kladd.bruttoBeregningsgrunnlag);
+            Objects.requireNonNull(kladd.bruttoPrÅr);
             return kladd;
         }
     }

@@ -102,7 +102,7 @@ public class PeriodiserBeregningsgrunnlag extends LeafSpecification<PeriodeSplit
     }
 
     private static boolean harUtbetalingIPeriode(AndelGradering andel, LocalDate periodeFom) {
-        return andel.getGraderinger().stream().anyMatch(g -> g.getPeriode().inneholder(periodeFom) & g.getUtbetalingsprosent().compareTo(BigDecimal.ZERO) > 0);
+        return andel.getGraderinger().stream().anyMatch(g -> g.getPeriode().inneholder(periodeFom) && g.getUtbetalingsprosent().compareTo(BigDecimal.ZERO) > 0);
     }
 
     private static LocalDate utledPeriodeTom(List<Map.Entry<LocalDate, Set<PeriodeSplittData>>> entries, ListIterator<Map.Entry<LocalDate, Set<PeriodeSplittData>>> listIterator) {

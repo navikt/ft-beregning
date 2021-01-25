@@ -20,7 +20,7 @@ class OmfordelFraFrilans extends OmfordelFraATFL {
     @Override
     protected Inntektskategori finnInntektskategori() {
         return Inntektskategori.FRILANSER;
-    };
+    }
 
     @Override
     protected Optional<BeregningsgrunnlagPrArbeidsforhold> finnAktivitetMedOmfordelbartBg(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
@@ -29,7 +29,7 @@ class OmfordelFraFrilans extends OmfordelFraATFL {
             .stream()
             .filter(this::harBgSomKanFlyttes)
             .findFirst();
-    };
+    }
 
     private boolean harBgSomKanFlyttes(BeregningsgrunnlagPrArbeidsforhold beregningsgrunnlagPrArbeidsforhold) {
         return beregningsgrunnlagPrArbeidsforhold.getBruttoPrÅr().orElse(BigDecimal.ZERO).compareTo(BigDecimal.ZERO) > 0

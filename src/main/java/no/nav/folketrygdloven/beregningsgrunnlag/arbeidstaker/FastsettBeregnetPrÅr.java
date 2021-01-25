@@ -74,7 +74,7 @@ class FastsettBeregnetPrÅr extends LeafSpecification<BeregningsgrunnlagPeriode>
     private BeregningsgrunnlagHjemmel finnHjemmelForArbeidstaker(Optional<YtelsesSpesifiktGrunnlag> ytelsesSpesifiktGrunnlag,
                                                                  boolean kombinasjon,
                                                                  boolean frilans) {
-        if (ytelsesSpesifiktGrunnlag.map(YtelsesSpesifiktGrunnlag::erKap9Ytelse).orElse(false)) {
+        if (ytelsesSpesifiktGrunnlag.isPresent() && ytelsesSpesifiktGrunnlag.get().erKap9Ytelse()) {
             return finnHjemmelForArbeidstakerK9(ytelsesSpesifiktGrunnlag.get(), kombinasjon, frilans);
         }
         return finnHjemmelForArbeidstakerK14(kombinasjon, frilans);

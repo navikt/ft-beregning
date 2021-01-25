@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -73,7 +74,7 @@ public class Beregningsgrunnlag {
     }
 
     public boolean erBesteberegnet() {
-        if (ytelsesSpesifiktGrunnlag != null && ytelsesSpesifiktGrunnlag instanceof ForeldrepengerGrunnlag) {
+        if (ytelsesSpesifiktGrunnlag instanceof ForeldrepengerGrunnlag) {
             return ((ForeldrepengerGrunnlag) ytelsesSpesifiktGrunnlag).erBesteberegnet();
         }
         return false;
@@ -142,7 +143,7 @@ public class Beregningsgrunnlag {
     }
 
     public boolean isBeregningForSykepenger() {
-        return ytelsesSpesifiktGrunnlag != null && ytelsesSpesifiktGrunnlag instanceof SykepengerGrunnlag;
+        return ytelsesSpesifiktGrunnlag instanceof SykepengerGrunnlag;
     }
 
     public boolean harHattMilitærIOpptjeningsperioden() {
@@ -153,7 +154,7 @@ public class Beregningsgrunnlag {
         return konstanter.getAntallGMilitærHarKravPå();
     }
 
-    public EnumMap<AktivitetStatus, SammenligningsGrunnlag> getSammenligningsGrunnlagPrAktivitetstatus() {
+    public Map<AktivitetStatus, SammenligningsGrunnlag> getSammenligningsGrunnlagPrAktivitetstatus() {
         return sammenligningsGrunnlagPrStatus;
     }
 

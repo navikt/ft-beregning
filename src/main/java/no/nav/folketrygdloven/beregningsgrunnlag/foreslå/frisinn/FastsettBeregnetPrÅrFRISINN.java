@@ -27,7 +27,7 @@ class FastsettBeregnetPrÅrFRISINN extends LeafSpecification<BeregningsgrunnlagP
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
         BeregningsgrunnlagPrStatus bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
 
-        BeregningsgrunnlagHjemmel hjemmel = settHjemmelForATFL(grunnlag.getBeregningsgrunnlag(), bgps);
+        BeregningsgrunnlagHjemmel hjemmel = settHjemmelForATFL(grunnlag.getBeregningsgrunnlag());
 
         Map<String, Object> resultater = new HashMap<>();
         resultater.put("beregnetPrÅr", bgps.getBeregnetPrÅr());
@@ -36,7 +36,7 @@ class FastsettBeregnetPrÅrFRISINN extends LeafSpecification<BeregningsgrunnlagP
         return beregnet(resultater);
     }
 
-    private BeregningsgrunnlagHjemmel settHjemmelForATFL(Beregningsgrunnlag grunnlag, BeregningsgrunnlagPrStatus bgps) {
+    private BeregningsgrunnlagHjemmel settHjemmelForATFL(Beregningsgrunnlag grunnlag) {
         AktivitetStatusMedHjemmel status = grunnlag.getAktivitetStatus(AktivitetStatus.ATFL);
         BeregningsgrunnlagHjemmel hjemmel = BeregningsgrunnlagHjemmel.KORONALOVEN_3;
         status.setHjemmel(hjemmel);

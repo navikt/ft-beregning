@@ -23,7 +23,7 @@ class ErbruttoinntektForGradertAndelLikNull {
             if(periodisertGrunnlag.getPeriode().inneholder(dato)){
                 Optional<BruttoBeregningsgrunnlag> grunnlag = finnBruttoBeregningsgrunnlagForGradering(periodisertGrunnlag.getBruttoBeregningsgrunnlag(), andelGradering, input);
                 if(grunnlag.isPresent()){
-                    return grunnlag.get().getBruttoBeregningsgrunnlag().equals(BigDecimal.ZERO);
+                    return grunnlag.get().getBruttoPrÅr().equals(BigDecimal.ZERO);
                 } else{
                     throw new IllegalStateException("Finner ikke matchende bruttoberegningsgrunnlag for andel som skal graderes " + andelGradering);
                 }
@@ -40,7 +40,7 @@ class ErbruttoinntektForGradertAndelLikNull {
         }
 
         Optional<ArbeidsforholdOgInntektsmelding> arbeidsforhold = input.getArbeidsforholdOgInntektsmeldinger().stream()
-            .filter(a -> a.getGraderinger().size() > 0)
+            .filter(a -> !a.getGraderinger().isEmpty())
             .filter(a -> matcherArbeidsforholdMedGradering(a, andelGradering))
             .findFirst();
 

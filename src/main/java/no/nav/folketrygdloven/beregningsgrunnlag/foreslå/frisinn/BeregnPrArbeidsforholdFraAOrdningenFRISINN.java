@@ -138,7 +138,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
             samletInntekt = samletInntekt.add(finnInntektForPeriode(periode, inntektsgrunnlag, resultater).orElse(BigDecimal.ZERO));
         }
         BigDecimal antallPerioder = BigDecimal.valueOf(inntektsperioder.size());
-        BigDecimal snittMånedslønnFraRegister = inntektsperioder.size() == 0 ? BigDecimal.ZERO : samletInntekt.divide(antallPerioder, 10, RoundingMode.HALF_EVEN);
+        BigDecimal snittMånedslønnFraRegister = inntektsperioder.isEmpty() ? BigDecimal.ZERO : samletInntekt.divide(antallPerioder, 10, RoundingMode.HALF_EVEN);
         BigDecimal årslønnFraRegister = snittMånedslønnFraRegister.multiply(ANTALL_MÅNEDER_I_ÅR);
         resultater.put("årsinntektFraRegister", snittMånedslønnFraRegister);
         if (årslønnFraRegister.compareTo(BigDecimal.ZERO) > 0){

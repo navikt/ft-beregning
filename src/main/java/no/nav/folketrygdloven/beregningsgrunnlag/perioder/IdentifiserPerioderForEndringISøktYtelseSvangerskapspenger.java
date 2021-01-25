@@ -19,6 +19,7 @@ public class IdentifiserPerioderForEndringISøktYtelseSvangerskapspenger {
         // skjul public constructor
     }
 
+	// TODO: Reduser kompleksitet
     public static Set<PeriodeSplittData> identifiser(AndelGradering endringISøktYtelse) {
         Set<PeriodeSplittData> set = new HashSet<>();
         List<Gradering> graderinger = endringISøktYtelse.getGraderinger();

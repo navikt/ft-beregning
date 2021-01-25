@@ -545,7 +545,7 @@ public class VurderPeriodeForGraderingTest {
         return BruttoBeregningsgrunnlag.builder()
             .medAktivitetStatus(aktivitetStatus)
             .medArbeidsforhold(arbeidsforhold)
-            .medBruttoBeregningsgrunnlag(bruttoBeregningsgrunnlag)
+            .medBruttoPrÅr(bruttoBeregningsgrunnlag)
             .build();
     }
 }

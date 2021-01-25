@@ -42,13 +42,12 @@ public class BeregningsgrunnlagDocTest {
     }
 
     @Test
-    public void test_documentation_beregningsgrunnlagSN() throws Exception {
+    public void test_documentation_beregningsgrunnlagSN() { // NOSONAR
         Specification<BeregningsgrunnlagPeriode> beregning = new RegelBeregningsgrunnlagSN().getSpecification();
         RuleDescriptionDigraph digraph = new RuleDescriptionDigraph(beregning.ruleDescription());
 
         @SuppressWarnings("unused")
         String json = digraph.toJson();
 
-//        System.out.println(json);
     }
 }
