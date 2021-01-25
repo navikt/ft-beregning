@@ -2,6 +2,7 @@ package no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel;
@@ -45,9 +46,9 @@ class FastsettBeregnetPrÅr extends LeafSpecification<BeregningsgrunnlagPeriode>
         boolean frilans = bgps.getFrilansArbeidsforhold().isPresent();
         BeregningsgrunnlagHjemmel hjemmel;
         if (arbeidstaker) {
-            hjemmel = finnHjemmelForArbeidstaker(grunnlag.getYtelsesSpesifiktGrunnlag(), kombinasjon, frilans);
+            hjemmel = finnHjemmelForArbeidstaker(grunnlag.getYtelsesSpesifiktGrunnlagHvisFinnes(), kombinasjon, frilans);
         } else if (frilans) {
-            hjemmel = settHjemmelForFrilansIkkeArbeid(grunnlag.getYtelsesSpesifiktGrunnlag(), kombinasjon);
+            hjemmel = settHjemmelForFrilansIkkeArbeid(grunnlag.getYtelsesSpesifiktGrunnlagHvisFinnes(), kombinasjon);
         } else {
             throw new IllegalStateException("ATFL-andel mangler både arbeidsforhold og frilansaktivitet");
         }
@@ -55,9 +56,9 @@ class FastsettBeregnetPrÅr extends LeafSpecification<BeregningsgrunnlagPeriode>
         return hjemmel;
     }
 
-    private BeregningsgrunnlagHjemmel settHjemmelForFrilansIkkeArbeid(YtelsesSpesifiktGrunnlag ytelsesSpesifiktGrunnlag,
+    private BeregningsgrunnlagHjemmel settHjemmelForFrilansIkkeArbeid(Optional<YtelsesSpesifiktGrunnlag> ytelsesSpesifiktGrunnlag,
                                                                       boolean kombinasjon) {
-        if (ytelsesSpesifiktGrunnlag instanceof OmsorgspengerGrunnlag) {
+        if (ytelsesSpesifiktGrunnlag.map(YtelsesSpesifiktGrunnlag::erKap9Ytelse).orElse(false)) {
             return finnHjemmelForFrilansK9(kombinasjon);
         }
         return finnHjemmelForFrilansK14(kombinasjon);
@@ -70,11 +71,11 @@ class FastsettBeregnetPrÅr extends LeafSpecification<BeregningsgrunnlagPeriode>
         return BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_FRILANSER;
     }
 
-    private BeregningsgrunnlagHjemmel finnHjemmelForArbeidstaker(YtelsesSpesifiktGrunnlag ytelsesSpesifiktGrunnlag,
+    private BeregningsgrunnlagHjemmel finnHjemmelForArbeidstaker(Optional<YtelsesSpesifiktGrunnlag> ytelsesSpesifiktGrunnlag,
                                                                  boolean kombinasjon,
                                                                  boolean frilans) {
-        if (ytelsesSpesifiktGrunnlag instanceof OmsorgspengerGrunnlag) {
-            return finnHjemmelForArbeidstakerK9((OmsorgspengerGrunnlag) ytelsesSpesifiktGrunnlag, kombinasjon, frilans);
+        if (ytelsesSpesifiktGrunnlag.map(YtelsesSpesifiktGrunnlag::erKap9Ytelse).orElse(false)) {
+            return finnHjemmelForArbeidstakerK9(ytelsesSpesifiktGrunnlag.get(), kombinasjon, frilans);
         }
         return finnHjemmelForArbeidstakerK14(kombinasjon, frilans);
     }
@@ -86,7 +87,7 @@ class FastsettBeregnetPrÅr extends LeafSpecification<BeregningsgrunnlagPeriode>
         return frilans ? BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_FRILANSER : BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_ARBEIDSTAKER;
     }
 
-    private BeregningsgrunnlagHjemmel finnHjemmelForArbeidstakerK9(OmsorgspengerGrunnlag ompGrunnlag,
+    private BeregningsgrunnlagHjemmel finnHjemmelForArbeidstakerK9(YtelsesSpesifiktGrunnlag ompGrunnlag,
                                                                    boolean kombinasjon,
                                                                    boolean frilans) {
         if (kombinasjon) {
@@ -95,10 +96,10 @@ class FastsettBeregnetPrÅr extends LeafSpecification<BeregningsgrunnlagPeriode>
         if (frilans) {
             return BeregningsgrunnlagHjemmel.K9_HJEMMEL_ARBEIDSTAKER_OG_FRILANSER;
         }
-        if (!ompGrunnlag.erDirekteUtbetaling()) {
+        if (ompGrunnlag instanceof  OmsorgspengerGrunnlag && !((OmsorgspengerGrunnlag) ompGrunnlag).erDirekteUtbetalingPåSkjæringstidspunktet()) {
             return BeregningsgrunnlagHjemmel.K9_HJEMMEL_BARE_ARBEIDSTAKER_REFUSJON;
         }
-        return BeregningsgrunnlagHjemmel.K9_HJEMMEL_BARE_ARBEIDSTAKER_DIREKTE_UTBETALING;
+        return BeregningsgrunnlagHjemmel.K9_HJEMMEL_BARE_ARBEIDSTAKER_MED_AVVIKSVURDERING;
     }
 
     private BeregningsgrunnlagHjemmel finnHjemmelForFrilansK9(boolean kombinasjon) {

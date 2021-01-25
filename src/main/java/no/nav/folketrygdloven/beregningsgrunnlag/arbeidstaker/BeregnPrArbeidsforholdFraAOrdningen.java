@@ -55,7 +55,7 @@ class BeregnPrArbeidsforholdFraAOrdningen extends LeafSpecification<Beregningsgr
     }
 
     /**
-     * I tilfelle der det er omsorgspenger og det er kun mottatt inntektsmelding for enkelt arbeidsforhold ho en arbeidsgiver
+     * I tilfelle der det er omsorgspenger/pleiepenger og det er kun mottatt inntektsmelding for enkelt arbeidsforhold ho en arbeidsgiver
      * skal resterende arbeidsforhold fordele restbeløpet fra a-ordningen mellom seg (https://jira.adeo.no/browse/TSF-1153).
      *
      * I alle andre caser gis det fulle snittbeløpet til dette arbeidsforholdet.
@@ -66,8 +66,8 @@ class BeregnPrArbeidsforholdFraAOrdningen extends LeafSpecification<Beregningsgr
      * @return Andel av snitt fra a-ordningen
      */
     private BigDecimal finnAndelAvBeregnet(BigDecimal beregnetPrÅr, BeregningsgrunnlagPrArbeidsforhold arbeidsforhold, BeregningsgrunnlagPeriode periode) {
-        YtelsesSpesifiktGrunnlag ytelsesSpesifiktGrunnlag = periode.getBeregningsgrunnlag().getYtelsesSpesifiktGrunnlag();
-        if (!arbeidsforhold.erFrilanser() && arbeidsforhold.getArbeidsgiverId() != null && ytelsesSpesifiktGrunnlag instanceof OmsorgspengerGrunnlag) {
+        var ytelsesSpesifiktGrunnlag = periode.getBeregningsgrunnlag().getYtelsesSpesifiktGrunnlagHvisFinnes();
+        if (!arbeidsforhold.erFrilanser() && arbeidsforhold.getArbeidsgiverId() != null && ytelsesSpesifiktGrunnlag.map(YtelsesSpesifiktGrunnlag::erKap9Ytelse).orElse(false)) {
             return fordelRestinntektFraAOrdningen(beregnetPrÅr, arbeidsforhold, periode);
         }
         return beregnetPrÅr;

@@ -19,7 +19,7 @@ public class OmsorgspengerGrunnlag extends YtelsesSpesifiktGrunnlag {
         return gradertRefusjonVedSkjæringstidspunkt;
     }
 
-    public boolean erDirekteUtbetaling() {
+    public boolean erDirekteUtbetalingPåSkjæringstidspunktet() {
         BeregningsgrunnlagPeriode førstePeriode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         BigDecimal minsteRefusjon = førstePeriode.getGrenseverdi().min(this.getGradertRefusjonVedSkjæringstidspunkt());
         BigDecimal totaltBeregningsgrunnlag = førstePeriode.getBeregningsgrunnlagPrStatus().stream()

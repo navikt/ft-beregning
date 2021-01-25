@@ -28,7 +28,7 @@ public enum BeregningsgrunnlagHjemmel {
     KORONALOVEN_3;
 
     public static final BeregningsgrunnlagHjemmel K9_HJEMMEL_BARE_ARBEIDSTAKER_REFUSJON = F_9_8_8_28;
-    public static final BeregningsgrunnlagHjemmel K9_HJEMMEL_BARE_ARBEIDSTAKER_DIREKTE_UTBETALING = F_9_9_8_28_8_30;
+	public static final BeregningsgrunnlagHjemmel K9_HJEMMEL_BARE_ARBEIDSTAKER_MED_AVVIKSVURDERING = F_9_9_8_28_8_30;
     public static final BeregningsgrunnlagHjemmel K9_HJEMMEL_BARE_SELVSTENDIG = F_9_9_8_35;
     public static final BeregningsgrunnlagHjemmel K9_HJEMMEL_BARE_FRILANSER = F_9_9_8_38;
     public static final BeregningsgrunnlagHjemmel K9_HJEMMEL_ARBEIDSTAKER_OG_FRILANSER = F_9_9_8_40;
