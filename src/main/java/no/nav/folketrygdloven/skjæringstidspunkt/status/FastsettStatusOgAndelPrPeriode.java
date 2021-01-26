@@ -40,7 +40,7 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
 
     private void opprettAktivitetStatuser(AktivitetStatusModell regelmodell) {
         List<AktivPeriode> aktivePerioder = regelmodell.getAktivePerioder();
-        List<AktivPeriode> aktivePerioderVedStp = hentAktivePerioderForBeregning(regelmodell.getBeregningstidspunkt(), aktivePerioder);
+        List<AktivPeriode> aktivePerioderVedStp = hentAktivePerioderForBeregning(regelmodell.getSkjæringstidspunktForBeregning(), aktivePerioder);
         if (harKunYtelsePåSkjæringstidspunkt(aktivePerioderVedStp)) {
             regelmodell.leggTilAktivitetStatus(AktivitetStatus.KUN_YTELSE);
             BeregningsgrunnlagPrStatus bgPrStatus = new BeregningsgrunnlagPrStatus(AktivitetStatus.BA);
@@ -97,9 +97,9 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
         return aktivitetStatus;
     }
 
-    private List<AktivPeriode> hentAktivePerioderForBeregning(LocalDate bergningstidspunkt, List<AktivPeriode> aktivePerioder) {
+    private List<AktivPeriode> hentAktivePerioderForBeregning(LocalDate skjæringstidspunkt, List<AktivPeriode> aktivePerioder) {
         return aktivePerioder.stream()
-		        .filter(ap -> ap.inneholder(bergningstidspunkt)).collect(Collectors.toList());
+		        .filter(ap -> ap.inneholder(skjæringstidspunkt)).collect(Collectors.toList());
     }
 
 }

@@ -30,15 +30,15 @@ public class RegelFastsettSkjæringstidspunkt implements RuleService<AktivitetSt
 
 //      FP_BR 21.5 Skjæringstidspunkt for beregning = første dag etter siste aktivitetsdag før skjæringstidspunkt for opptjening
 
-        Specification<AktivitetStatusModell> førsteDagEtterAktivitet = new FastsettSkjæringstidspunktEtterAktivitet();
+        Specification<AktivitetStatusModell> førsteDagEtterAktivitet = new FastsettSkjæringstidspunktLikSisteAktivitetsdag();
 
 //      FP_BR 21.6 Skjæringstidspunkt for beregning = skjæringstidspunkt for opptjening
 
-        Specification<AktivitetStatusModell> likSkjæringstidspunktForOpptjening = new FastsettSkjæringstidspunktLikOpptjening();
+        Specification<AktivitetStatusModell> likSkjæringstidspunktForOpptjening = new FastsettSkjæringstidspunktLikDagenFørOpptjening();
 
 //      FP_BR 21.8 Skjæringstidspunkt for beregning = Første dag etter den siste dagen med aktivitet som ikke er militær eller obligatorisk sivilforsvarstjeneste
 
-        Specification<AktivitetStatusModell> førsteDagEtterAktivitetSomIkkeErMilitær = new FastsettSkjæringstidspunktEtterAktivitetSomIkkeErMilitær();
+        Specification<AktivitetStatusModell> førsteDagEtterAktivitetSomIkkeErMilitær = new FastsettSkjæringstidspunktLikSisteAktivitetsdagSomIkkeErMilitær();
 
 //      FP_BR 21.1 Er tom-dato for siste aktivitet dagen før skjæringstidspunkt for opptjening?
 

@@ -11,13 +11,13 @@ import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
-@RuleDocumentation(FastsettSkjæringstidspunktEtterAktivitetSomIkkeErMilitær.ID)
-class FastsettSkjæringstidspunktEtterAktivitetSomIkkeErMilitær extends LeafSpecification<AktivitetStatusModell> {
+@RuleDocumentation(FastsettSkjæringstidspunktLikSisteAktivitetsdagSomIkkeErMilitær.ID)
+class FastsettSkjæringstidspunktLikSisteAktivitetsdagSomIkkeErMilitær extends LeafSpecification<AktivitetStatusModell> {
 
     static final String ID = "FP_BR 21.5";
-    static final String BESKRIVELSE = "Skjæringstidspunkt for beregning settes til første dag etter siste aktivitetsdag";
+    static final String BESKRIVELSE = "Skjæringstidspunkt for beregning settes til siste aktivitetsdag";
 
-    FastsettSkjæringstidspunktEtterAktivitetSomIkkeErMilitær() {
+    FastsettSkjæringstidspunktLikSisteAktivitetsdagSomIkkeErMilitær() {
         super(ID, BESKRIVELSE);
     }
 
@@ -30,8 +30,8 @@ class FastsettSkjæringstidspunktEtterAktivitetSomIkkeErMilitær extends LeafSpe
             .orElseThrow(() -> new IllegalStateException("Utviklerfeil: Skal ikke være mulig å havne her uten en aktivitet som ikke er militær"));
 
         LocalDate skjæringstidspunkt = sisteAktivitetDato.isBefore(regelmodell.getSkjæringstidspunktForOpptjening())
-            ? sisteAktivitetDato.plusDays(1)
-            : regelmodell.getSkjæringstidspunktForOpptjening();
+            ? sisteAktivitetDato
+            : regelmodell.getSkjæringstidspunktForOpptjening().minusDays(1);
 
         regelmodell.setSkjæringstidspunktForBeregning(skjæringstidspunkt);
         Map<String, Object> resultater = new HashMap<>();

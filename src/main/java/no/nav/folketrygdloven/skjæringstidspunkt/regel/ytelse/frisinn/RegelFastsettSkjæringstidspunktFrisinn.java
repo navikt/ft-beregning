@@ -1,4 +1,4 @@
-package no.nav.folketrygdloven.skjæringstidspunkt.regel.ytelse;
+package no.nav.folketrygdloven.skjæringstidspunkt.regel.ytelse.frisinn;
 
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModellFRISINN;
 import no.nav.fpsak.nare.RuleService;

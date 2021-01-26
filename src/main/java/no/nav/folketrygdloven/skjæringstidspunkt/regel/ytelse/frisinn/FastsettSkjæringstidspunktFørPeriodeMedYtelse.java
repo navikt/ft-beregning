@@ -1,4 +1,4 @@
-package no.nav.folketrygdloven.skjæringstidspunkt.regel.ytelse;
+package no.nav.folketrygdloven.skjæringstidspunkt.regel.ytelse.frisinn;
 
 import java.time.LocalDate;
 import java.util.Comparator;

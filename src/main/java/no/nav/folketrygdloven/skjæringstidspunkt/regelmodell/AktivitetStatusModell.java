@@ -19,7 +19,6 @@ public class AktivitetStatusModell {
     protected List<AktivPeriode> aktivePerioder = new ArrayList<>();
     private List<AktivitetStatus> aktivitetStatuser = new ArrayList<>();
     private List<BeregningsgrunnlagPrStatus> beregningsgrunnlagPrStatusListe = new ArrayList<>();
-    private FinnBeregningstidspunkt finnBeregningstidspunkt = stp -> stp.minusDays(1);
 
     public AktivitetStatusModell() {
     }
@@ -30,11 +29,6 @@ public class AktivitetStatusModell {
         this.aktivePerioder = kopi.aktivePerioder;
         this.aktivitetStatuser = kopi.aktivitetStatuser;
         this.beregningsgrunnlagPrStatusListe = kopi.beregningsgrunnlagPrStatusListe;
-        this.finnBeregningstidspunkt = kopi.finnBeregningstidspunkt;
-    }
-
-    public LocalDate getBeregningstidspunkt() {
-    	return finnBeregningstidspunkt.finn(getSkjæringstidspunktForBeregning());
     }
 
     public LocalDate getSkjæringstidspunktForBeregning() {
@@ -84,10 +78,6 @@ public class AktivitetStatusModell {
     public LocalDate sisteAktivitetsdato() {
         return finnSisteAktivitetsdatoFraSistePeriode();
     }
-
-	public void setFinnBeregningstidspunkt(FinnBeregningstidspunkt finnBeregningstidspunkt) {
-		this.finnBeregningstidspunkt = finnBeregningstidspunkt;
-	}
 
 	protected LocalDate finnSisteAktivitetsdatoFraSistePeriode() {
         AktivPeriode sistePeriode = aktivePerioder.stream().min(this::slutterEtter)
@@ -161,10 +151,5 @@ public class AktivitetStatusModell {
     private interface FinnAktivPeriode {
         Optional<AktivPeriode> finn(AktivPeriode ap);
     }
-
-	@FunctionalInterface
-	public interface FinnBeregningstidspunkt {
-    	LocalDate finn(LocalDate skjæringstidspunkt);
-	}
 
 }
