@@ -49,7 +49,7 @@ import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 
 public class RegelForeslåBeregningsgrunnlagTest {
 
-    private LocalDate skjæringstidspunkt;
+	private LocalDate skjæringstidspunkt;
     private String orgnr;
     private Arbeidsforhold arbeidsforhold;
     private static final String TOGGLE_SPLITTE_SAMMENLIGNING = "fpsak.splitteSammenligningATFL";
@@ -468,7 +468,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skalIkkeSetteAksjonspunktForATMedVarierendeInntekterNårRefusjonLikBeregnetOgOmsorgspenger() {
+    public void skalIkkeSetteAksjonspunktForATIkkeUtbetalingTilBruker() {
         // Arrange
         BigDecimal månedsinntektGammel = BigDecimal.valueOf(GRUNNBELØP_2017 / 12);
         BigDecimal månedsinntektNy = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
@@ -479,10 +479,9 @@ public class RegelForeslåBeregningsgrunnlagTest {
             månedsinntektNy, månedsinntektNy, månedsinntektNy, månedsinntektNy, månedsinntektNy, månedsinntektNy);
         leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, månedsinntekter, Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, arbeidsforhold, AktivitetStatus.AT);
         leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, Collections.singletonList(månedsinntektInntektsmelding), Inntektskilde.INNTEKTSMELDING, arbeidsforhold, AktivitetStatus.AT);
-        BeregningsgrunnlagPeriode grunnlag = settOppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, AktivitetStatus.ATFL,
-            List.of(arbeidsforhold), Collections.singletonList(refusjonskravPrÅr), true, refusjonskravPrÅr).getBeregningsgrunnlagPerioder().get(0);
+	    BeregningsgrunnlagPeriode grunnlag = lagGrunnlagUtenUtbetalingTilBruker(refusjonskravPrÅr, inntektsgrunnlag, true);
 
-        // Act
+	    // Act
         @SuppressWarnings("unused")
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
         // Assert
@@ -493,8 +492,14 @@ public class RegelForeslåBeregningsgrunnlagTest {
         verifiserBeregningsgrunnlagBeregnet(grunnlag, 12 * månedsinntektInntektsmelding.doubleValue());
     }
 
-    @Test
-    public void skalSetteAksjonspunktForATMedVarierendeInntekterNårRefusjonMindreEnnBeregnetOgOmsorgspenger() {
+	private BeregningsgrunnlagPeriode lagGrunnlagMedUtbetalingTilBruker(BigDecimal refusjonskravPrÅr, Inntektsgrunnlag inntektsgrunnlag) {
+		boolean erDirekteUtbetalingTilBruker = true;
+		return settOppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, AktivitetStatus.ATFL,
+				List.of(arbeidsforhold), Collections.singletonList(refusjonskravPrÅr), true, erDirekteUtbetalingTilBruker).getBeregningsgrunnlagPerioder().get(0);
+	}
+
+	@Test
+    public void skalSetteAksjonspunktForATMedUtbetalingTilBrukerOmsorgspenger() {
         // Arrange
         BigDecimal månedsinntektGammel = BigDecimal.valueOf(GRUNNBELØP_2017 / 12);
         BigDecimal månedsinntektNy = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
@@ -505,10 +510,9 @@ public class RegelForeslåBeregningsgrunnlagTest {
             månedsinntektNy, månedsinntektNy, månedsinntektNy, månedsinntektNy, månedsinntektNy, månedsinntektNy);
         leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, månedsinntekter, Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, arbeidsforhold, AktivitetStatus.AT);
         leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, Collections.singletonList(månedsinntektInntektsmelding), Inntektskilde.INNTEKTSMELDING, arbeidsforhold, AktivitetStatus.AT);
-        BeregningsgrunnlagPeriode grunnlag = settOppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, AktivitetStatus.ATFL,
-            List.of(arbeidsforhold), Collections.singletonList(refusjonskravPrÅr), true, refusjonskravPrÅr).getBeregningsgrunnlagPerioder().get(0);
+		BeregningsgrunnlagPeriode grunnlag = lagGrunnlagMedUtbetalingTilBruker(refusjonskravPrÅr, inntektsgrunnlag);
 
-        // Act
+		// Act
         @SuppressWarnings("unused")
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
         // Assert
@@ -519,8 +523,13 @@ public class RegelForeslåBeregningsgrunnlagTest {
         verifiserBeregningsgrunnlagBeregnet(grunnlag, 12 * månedsinntektInntektsmelding.doubleValue());
     }
 
-    @Test
-    public void skalSetteAksjonspunktForATMedVarierendeInntekterNårRefusjonLikBeregnetOgIkkeOmsorgspenger() {
+	private BeregningsgrunnlagPeriode lagGrunnlagUtenUtbetalingTilBruker(BigDecimal refusjonskravPrÅr, Inntektsgrunnlag inntektsgrunnlag, boolean erOMP) {
+		return settOppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, AktivitetStatus.ATFL,
+				List.of(arbeidsforhold), Collections.singletonList(refusjonskravPrÅr), erOMP, false).getBeregningsgrunnlagPerioder().get(0);
+	}
+
+	@Test
+    public void skalSetteAksjonspunktForATUtenUtbetakingTilBrukerIkkeOmsorgspenger() {
         // Arrange
         BigDecimal månedsinntektGammel = BigDecimal.valueOf(GRUNNBELØP_2017 / 12);
         BigDecimal månedsinntektNy = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
@@ -531,10 +540,9 @@ public class RegelForeslåBeregningsgrunnlagTest {
             månedsinntektNy, månedsinntektNy, månedsinntektNy, månedsinntektNy, månedsinntektNy, månedsinntektNy);
         leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, månedsinntekter, Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, arbeidsforhold, AktivitetStatus.AT);
         leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, Collections.singletonList(månedsinntektInntektsmelding), Inntektskilde.INNTEKTSMELDING, arbeidsforhold, AktivitetStatus.AT);
-        BeregningsgrunnlagPeriode grunnlag = settOppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, AktivitetStatus.ATFL,
-            List.of(arbeidsforhold), Collections.singletonList(refusjonskravPrÅr), false, refusjonskravPrÅr).getBeregningsgrunnlagPerioder().get(0);
+		BeregningsgrunnlagPeriode grunnlag = lagGrunnlagUtenUtbetalingTilBruker(refusjonskravPrÅr, inntektsgrunnlag, false);
 
-        // Act
+		// Act
         @SuppressWarnings("unused")
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
         // Assert

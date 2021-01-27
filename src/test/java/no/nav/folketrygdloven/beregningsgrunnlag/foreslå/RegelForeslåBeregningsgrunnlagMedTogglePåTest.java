@@ -52,7 +52,8 @@ import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 
 public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
 
-    private LocalDate skjæringstidspunkt;
+	public static final boolean ER_DIREKTE_UTBETALING_TIL_BRUKER = false;
+	private LocalDate skjæringstidspunkt;
     private String orgnr;
     private Arbeidsforhold arbeidsforhold;
     private static final String TOGGLE_SPLITTE_SAMMENLIGNING = "fpsak.splitteSammenligningATFL";
@@ -789,8 +790,9 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
             månedsinntektNy, månedsinntektNy, månedsinntektNy, månedsinntektNy, månedsinntektNy, månedsinntektNy);
         leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, månedsinntekter, Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, arbeidsforhold, AktivitetStatus.AT);
         leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, Collections.singletonList(månedsinntektInntektsmelding), Inntektskilde.INNTEKTSMELDING, arbeidsforhold, AktivitetStatus.AT);
-        BeregningsgrunnlagPeriode grunnlag = settOppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, AktivitetStatus.ATFL,
-            List.of(arbeidsforhold), Collections.singletonList(refusjonskravPrÅr), true, refusjonskravPrÅr).getBeregningsgrunnlagPerioder().get(0);
+	    boolean erDirekteUtbetalingTilBruker = false;
+	    BeregningsgrunnlagPeriode grunnlag = settOppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, AktivitetStatus.ATFL,
+            List.of(arbeidsforhold), Collections.singletonList(refusjonskravPrÅr), true, erDirekteUtbetalingTilBruker).getBeregningsgrunnlagPerioder().get(0);
         togglePå(grunnlag);
 
         // Act
