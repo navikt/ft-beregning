@@ -27,16 +27,46 @@ import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.Resultat;
 
 public class SkalGjøreAvviksvurderingTest {
-	private Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("12345");
+    private Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("12345");
     private long gVerdi = 99858L;
 
+	@Test
+	public void skalSetteAksjonspunktNårDetErSøktFLEllerSN() {
+		//Arrange
+		BigDecimal maksRefusjonForPeriode = BigDecimal.valueOf(450_000);
+		BigDecimal beregnetPrÅr = BigDecimal.valueOf(450_000);
+
+		Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlag(beregnetPrÅr, maksRefusjonForPeriode, true, true);
+		BeregningsgrunnlagPeriode periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+
+		//Act
+		Evaluation resultat = new SkalGjøreAvviksvurdering().evaluate(periode);
+		//Assert
+		assertThat(resultat.result()).isEqualTo(Resultat.JA);
+	}
+
+	@Test
+	public void skalIkkeSetteAksjonspunktNårDetIkkeErSøktFLEllerSN() {
+		//Arrange
+		BigDecimal maksRefusjonForPeriode = BigDecimal.valueOf(450_000);
+		BigDecimal beregnetPrÅr = BigDecimal.valueOf(450_000);
+
+		Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlag(beregnetPrÅr, maksRefusjonForPeriode, true, false);
+		BeregningsgrunnlagPeriode periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+
+		//Act
+		Evaluation resultat = new SkalGjøreAvviksvurdering().evaluate(periode);
+		//Assert
+		assertThat(resultat.result()).isEqualTo(Resultat.NEI);
+	}
+
     @Test
-    public void skalSetteAksjonspunktNårDetUtbetalesPengerDirekteTilBruker() {
+    public void skalSetteAksjonspunktNårDetUtbetalesPengerDirekteTilBrukerOgRefusjonSkalSjekkesFørAvviksvurdering() {
         //Arrange
         BigDecimal maksRefusjonForPeriode = BigDecimal.valueOf(400_000);
         BigDecimal beregnetPrÅr = BigDecimal.valueOf(450_000);
 
-        Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlag(beregnetPrÅr, true, true);
+        Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlag(beregnetPrÅr, maksRefusjonForPeriode, true, false);
         BeregningsgrunnlagPeriode periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         //Act
@@ -46,12 +76,12 @@ public class SkalGjøreAvviksvurderingTest {
     }
 
     @Test
-    public void skalIkkeSetteAksjonspunktNårIkkeUtbetalingTilBruker() {
+    public void skalIkkeSetteAksjonspunktNårRefusjonTilsvarer6GOgRefusjonSkalSjekkesFørAvviksvurdering() {
         //Arrange
-        BigDecimal maksRefusjonForPeriode = BigDecimal.valueOf(350_000);
-        BigDecimal beregnetPrÅr = maksRefusjonForPeriode;
+        BigDecimal maksRefusjonForPeriode = BigDecimal.valueOf(gVerdi*6);
+        BigDecimal beregnetPrÅr = BigDecimal.valueOf(650_000);
 
-        Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlag(beregnetPrÅr, true, false);
+        Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlag(beregnetPrÅr, maksRefusjonForPeriode, true, false);
         BeregningsgrunnlagPeriode periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         //Act
@@ -61,12 +91,27 @@ public class SkalGjøreAvviksvurderingTest {
     }
 
     @Test
-    public void skalSetteAksjonspunktNårIkkeOmsorgspenger() {
+    public void skalIkkeSetteAksjonspunktNårRefusjonTilsvarerBeregnetOgRefusjonSkalSjekkesFørAvviksvurdering() {
         //Arrange
         BigDecimal maksRefusjonForPeriode = BigDecimal.valueOf(350_000);
         BigDecimal beregnetPrÅr = maksRefusjonForPeriode;
 
-        Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlag(beregnetPrÅr, false, false);
+        Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlag(beregnetPrÅr, maksRefusjonForPeriode, true, false);
+        BeregningsgrunnlagPeriode periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+
+        //Act
+        Evaluation resultat = new SkalGjøreAvviksvurdering().evaluate(periode);
+        //Assert
+        assertThat(resultat.result()).isEqualTo(Resultat.NEI);
+    }
+
+    @Test
+    public void skalSetteAksjonspunktNårRefusjonIkkeSkalSjekkesFørAvviksvurdering() {
+        //Arrange
+        BigDecimal maksRefusjonForPeriode = BigDecimal.valueOf(350_000);
+        BigDecimal beregnetPrÅr = maksRefusjonForPeriode;
+
+        Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlag(beregnetPrÅr, maksRefusjonForPeriode, false, false);
         BeregningsgrunnlagPeriode periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         //Act
@@ -75,7 +120,48 @@ public class SkalGjøreAvviksvurderingTest {
         assertThat(resultat.result()).isEqualTo(Resultat.JA);
     }
 
-    private Beregningsgrunnlag opprettBeregningsgrunnlag(BigDecimal beregnetPrÅr, boolean avviksVurdere, boolean erDirekteUtbetalingTilBruker){
+    @Test
+    public void skalSetteAksjonspunktNårBrukerErFrilanser() {
+        //Arrange
+        BigDecimal maksRefusjonForPeriode = BigDecimal.valueOf(350_000);
+        BigDecimal beregnetPrÅr = maksRefusjonForPeriode;
+
+        BeregningsgrunnlagPrStatus beregningsgrunnlagPrStatus = BeregningsgrunnlagPrStatus.builder()
+            .medAktivitetStatus(AktivitetStatus.ATFL)
+            .medArbeidsforhold(BeregningsgrunnlagPrArbeidsforhold.builder()
+                .medBeregnetPrÅr(beregnetPrÅr)
+                .medArbeidsforhold(arbeidsforhold)
+                .medAndelNr(1L).build())
+            .medArbeidsforhold(BeregningsgrunnlagPrArbeidsforhold.builder()
+                .medBeregnetPrÅr(beregnetPrÅr)
+                .medArbeidsforhold(Arbeidsforhold.frilansArbeidsforhold())
+                .medAndelNr(2L).build())
+            .build();
+        BeregningsgrunnlagPeriode bgPeriode = BeregningsgrunnlagPeriode.builder()
+            .medPeriode(Periode.of(now(), null))
+            .medBeregningsgrunnlagPrStatus(beregningsgrunnlagPrStatus)
+            .build();
+
+        Beregningsgrunnlag beregningsgrunnlag =  Beregningsgrunnlag.builder()
+            .medInntektsgrunnlag(new Inntektsgrunnlag())
+            .medSkjæringstidspunkt(now())
+            .medGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2017))
+            .medAktivitetStatuser(List.of(new AktivitetStatusMedHjemmel(AktivitetStatus.ATFL, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_ARBEIDSTAKER)))
+            .medBeregningsgrunnlagPeriode(bgPeriode)
+            .medYtelsesSpesifiktGrunnlag(new OmsorgspengerGrunnlag(maksRefusjonForPeriode, false))
+            .medGrunnbeløpSatser(List.of(
+                new Grunnbeløp(LocalDate.of(2019, 5, 1), LocalDate.MAX, gVerdi, GSNITT_2019)))
+            .build();
+
+        BeregningsgrunnlagPeriode periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+
+        //Act
+        Evaluation resultat = new SkalGjøreAvviksvurdering().evaluate(periode);
+        //Assert
+        assertThat(resultat.result()).isEqualTo(Resultat.JA);
+    }
+
+    private Beregningsgrunnlag opprettBeregningsgrunnlag(BigDecimal beregnetPrÅr, BigDecimal maksRefusjonForPeriode, boolean avviksVurdere, boolean erSøktForFLEllerSN){
         BeregningsgrunnlagPrStatus beregningsgrunnlagPrStatus = BeregningsgrunnlagPrStatus.builder()
             .medAktivitetStatus(AktivitetStatus.ATFL)
             .medArbeidsforhold(BeregningsgrunnlagPrArbeidsforhold.builder()
@@ -94,7 +180,7 @@ public class SkalGjøreAvviksvurderingTest {
             .medGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2017))
             .medAktivitetStatuser(List.of(new AktivitetStatusMedHjemmel(AktivitetStatus.ATFL, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_ARBEIDSTAKER)))
             .medBeregningsgrunnlagPeriode(periode)
-            .medYtelsesSpesifiktGrunnlag(avviksVurdere ? new OmsorgspengerGrunnlag(erDirekteUtbetalingTilBruker) : null)
+            .medYtelsesSpesifiktGrunnlag(avviksVurdere ? new OmsorgspengerGrunnlag(maksRefusjonForPeriode, erSøktForFLEllerSN) : null)
             .medGrunnbeløpSatser(List.of(
                 new Grunnbeløp(LocalDate.of(2019, 5, 1), LocalDate.MAX, gVerdi, GSNITT_2019)))
             .build();
