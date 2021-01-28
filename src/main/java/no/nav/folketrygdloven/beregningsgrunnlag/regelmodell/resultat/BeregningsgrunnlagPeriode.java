@@ -191,7 +191,7 @@ public class BeregningsgrunnlagPeriode {
         return beregningsgrunnlag.getAntallGMinstekravVilkår();
     }
 
-    public boolean skalSjekkeRefusjonFørAvviksvurdering() {
+    public boolean skalSjekkeUtbetalingTilBrukerFørAvviksvurdering() {
         YtelsesSpesifiktGrunnlag ytelsesSpesifiktGrunnlag = beregningsgrunnlag.getYtelsesSpesifiktGrunnlag();
         return ytelsesSpesifiktGrunnlag instanceof OmsorgspengerGrunnlag;
     }

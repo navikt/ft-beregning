@@ -96,7 +96,7 @@ class FastsettBeregnetPrÅr extends LeafSpecification<BeregningsgrunnlagPeriode>
         if (frilans) {
             return BeregningsgrunnlagHjemmel.K9_HJEMMEL_ARBEIDSTAKER_OG_FRILANSER;
         }
-        if (ompGrunnlag instanceof  OmsorgspengerGrunnlag && !((OmsorgspengerGrunnlag) ompGrunnlag).erDirekteUtbetalingTilBrukerIBeregningsgrunnlag()) {
+        if (ompGrunnlag instanceof  OmsorgspengerGrunnlag && !((OmsorgspengerGrunnlag) ompGrunnlag).erDirekteUtbetaling()) {
             return BeregningsgrunnlagHjemmel.K9_HJEMMEL_BARE_ARBEIDSTAKER_REFUSJON;
         }
         return BeregningsgrunnlagHjemmel.K9_HJEMMEL_BARE_ARBEIDSTAKER_MED_AVVIKSVURDERING;
