@@ -3,6 +3,7 @@ package no.nav.folketrygdloven.skjæringstidspunkt.regelmodell;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
@@ -15,12 +16,16 @@ public class BeregningsgrunnlagPrStatus {
     public BeregningsgrunnlagPrStatus(AktivitetStatus aktivitetStatus, Arbeidsforhold... arbeidsforhold) {
         this.aktivitetStatus = aktivitetStatus;
         this.arbeidsforholdList = (arbeidsforhold != null)
-            ? Arrays.asList(arbeidsforhold).stream().filter(a -> a != null).collect(Collectors.toList())
+            ? Arrays.stream(arbeidsforhold).filter(Objects::nonNull).collect(Collectors.toList())
             : Collections.emptyList();
     }
 
     public AktivitetStatus getAktivitetStatus() {
         return aktivitetStatus;
+    }
+
+    void leggTilArbeidsforhold(List<Arbeidsforhold> arbeidsforhold) {
+	    arbeidsforholdList.addAll(arbeidsforhold);
     }
 
     public List<Arbeidsforhold> getArbeidsforholdList() {

@@ -1,5 +1,7 @@
 package no.nav.folketrygdloven.skjæringstidspunkt.regelmodell;
 
+import static no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus.ATFL;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,7 +21,6 @@ public class AktivitetStatusModell {
     protected List<AktivPeriode> aktivePerioder = new ArrayList<>();
     private List<AktivitetStatus> aktivitetStatuser = new ArrayList<>();
     private List<BeregningsgrunnlagPrStatus> beregningsgrunnlagPrStatusListe = new ArrayList<>();
-    private FinnBeregningstidspunkt finnBeregningstidspunkt = stp -> stp.minusDays(1);
 
     public AktivitetStatusModell() {
     }
@@ -30,11 +31,10 @@ public class AktivitetStatusModell {
         this.aktivePerioder = kopi.aktivePerioder;
         this.aktivitetStatuser = kopi.aktivitetStatuser;
         this.beregningsgrunnlagPrStatusListe = kopi.beregningsgrunnlagPrStatusListe;
-        this.finnBeregningstidspunkt = kopi.finnBeregningstidspunkt;
     }
 
     public LocalDate getBeregningstidspunkt() {
-    	return finnBeregningstidspunkt.finn(getSkjæringstidspunktForBeregning());
+    	return getSkjæringstidspunktForBeregning().minusDays(1);
     }
 
     public LocalDate getSkjæringstidspunktForBeregning() {
@@ -78,16 +78,19 @@ public class AktivitetStatusModell {
     }
 
     public void leggTilBeregningsgrunnlagPrStatus(BeregningsgrunnlagPrStatus bgPrStatus) {
-        beregningsgrunnlagPrStatusListe.add(bgPrStatus);
+    	if (bgPrStatus.getAktivitetStatus().equals(ATFL)) {
+		    beregningsgrunnlagPrStatusListe.stream().filter(a -> a.getAktivitetStatus().equals(ATFL)).findFirst()
+				    .ifPresentOrElse(atflStatus -> atflStatus.leggTilArbeidsforhold(bgPrStatus.getArbeidsforholdList()),
+						    () -> beregningsgrunnlagPrStatusListe.add(bgPrStatus));
+	    } else {
+		    beregningsgrunnlagPrStatusListe.add(bgPrStatus);
+	    }
     }
 
     public LocalDate sisteAktivitetsdato() {
         return finnSisteAktivitetsdatoFraSistePeriode();
     }
 
-	public void setFinnBeregningstidspunkt(FinnBeregningstidspunkt finnBeregningstidspunkt) {
-		this.finnBeregningstidspunkt = finnBeregningstidspunkt;
-	}
 
 	protected LocalDate finnSisteAktivitetsdatoFraSistePeriode() {
         AktivPeriode sistePeriode = aktivePerioder.stream().min(this::slutterEtter)
@@ -161,10 +164,5 @@ public class AktivitetStatusModell {
     private interface FinnAktivPeriode {
         Optional<AktivPeriode> finn(AktivPeriode ap);
     }
-
-	@FunctionalInterface
-	public interface FinnBeregningstidspunkt {
-    	LocalDate finn(LocalDate skjæringstidspunkt);
-	}
 
 }
