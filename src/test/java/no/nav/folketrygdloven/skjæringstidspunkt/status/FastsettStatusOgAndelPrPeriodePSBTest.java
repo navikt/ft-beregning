@@ -1,18 +1,16 @@
 package no.nav.folketrygdloven.skjæringstidspunkt.status;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
-import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivPeriode;
-import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModell;
-import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModellFP;
-
-import no.nav.fpsak.nare.evaluation.Evaluation;
-
-import org.junit.jupiter.api.Test;
+import static no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil.TIDENES_ENDE;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 
-import static no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil.TIDENES_ENDE;
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
+
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
+import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivPeriode;
+import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModell;
+import no.nav.fpsak.nare.evaluation.Evaluation;
 
 class FastsettStatusOgAndelPrPeriodePSBTest {
 	private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.now();
@@ -92,10 +90,8 @@ class FastsettStatusOgAndelPrPeriodePSBTest {
 
 	private AktivitetStatusModell lagAktivitetStatusModell() {
 		var regelmodell = new AktivitetStatusModell();
-		regelmodell = new AktivitetStatusModellFP();
 		regelmodell.setFinnBeregningstidspunkt(stp -> stp);
 		regelmodell.setSkjæringstidspunktForBeregning(SKJÆRINGSTIDSPUNKT);
-
 		return regelmodell;
 	}
 
