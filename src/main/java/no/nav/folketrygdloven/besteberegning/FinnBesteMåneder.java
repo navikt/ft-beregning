@@ -6,11 +6,13 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import no.nav.folketrygdloven.beregningsgrunnlag.Grunnbeløp;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
@@ -58,9 +60,18 @@ class FinnBesteMåneder extends LeafSpecification<BesteberegningRegelmodell> {
 		var inntekter = inntektsgrunnlag.getPeriodeinntekter();
 		var perioderMedNæringsvirksomhet = regelmodell.getInput().getPerioderMedNæringsvirksomhet();
 		var skjæringstidspunktOpptjening = besteberegningInput.getSkjæringstidspunktOpptjening();
-
+		LocalDate sisteTilgjengeligeGSnittÅr = besteberegningInput.getGrunnbeløpSatser().stream()
+				.map(Grunnbeløp::getFom)
+				.max(Comparator.naturalOrder())
+				.orElseThrow();
+		LocalDate sisteGSnittÅrSomKanBrukes;
+		if (sisteTilgjengeligeGSnittÅr.isAfter(skjæringstidspunktOpptjening)) {
+			sisteGSnittÅrSomKanBrukes = skjæringstidspunktOpptjening;
+		} else {
+			sisteGSnittÅrSomKanBrukes = sisteTilgjengeligeGSnittÅr;
+		}
 		var gjenommsnittligPGI = FinnGjennomsnittligPGI.finnGjennomsnittligPGI(
-				inntektsgrunnlag.sistePeriodeMedInntektFørDato(Inntektskilde.SIGRUN, skjæringstidspunktOpptjening).orElse(skjæringstidspunktOpptjening),
+				inntektsgrunnlag.sistePeriodeMedInntektFørDato(Inntektskilde.SIGRUN, skjæringstidspunktOpptjening).orElse(sisteGSnittÅrSomKanBrukes),
 				besteberegningInput.getGrunnbeløpSatser(),
 				inntektsgrunnlag, besteberegningInput.getGjeldendeGverdi(),
 				resultater);
