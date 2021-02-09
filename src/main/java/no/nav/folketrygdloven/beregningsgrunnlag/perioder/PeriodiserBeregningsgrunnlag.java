@@ -19,6 +19,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.Arbei
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.EksisterendeAndel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.PeriodeModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.PeriodeSplittProsesstruktur;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.RefusjonskravFrist;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.IdentifisertePeriodeÅrsaker;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.PeriodeSplittData;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SplittetAndel;
@@ -140,7 +141,7 @@ public class PeriodiserBeregningsgrunnlag extends LeafSpecification<PeriodeSplit
             .medAktivitetstatus(im.getAktivitetStatus())
             .medArbeidsforhold(im.getArbeidsforhold())
             .medRefusjonskravPrÅr(refusjonPrÅr)
-            .medAnvendtRefusjonskravfristHjemmel(im.getRefusjonskravFrist() != null ? im.getRefusjonskravFrist().getAnvendtHjemmel() : null);
+            .medAnvendtRefusjonskravfristHjemmel(im.getRefusjonskravFrist().map(RefusjonskravFrist::getAnvendtHjemmel).orElse(null));
         settAnsettelsesPeriodeHvisFinnes(ansettelsesPeriode, builder);
         return builder.build();
     }
@@ -185,7 +186,7 @@ public class PeriodiserBeregningsgrunnlag extends LeafSpecification<PeriodeSplit
             .medNaturalytelseTilkommetPrÅr(naturalytelseTilkommer.orElse(null))
             .medNaturalytelseBortfaltPrÅr(naturalytelseBortfaltPrÅr.orElse(null))
             .medArbeidsforhold(im.getArbeidsforhold())
-            .medAnvendtRefusjonskravfristHjemmel(im.getRefusjonskravFrist() != null ? im.getRefusjonskravFrist().getAnvendtHjemmel() : null)
+            .medAnvendtRefusjonskravfristHjemmel(im.getRefusjonskravFrist().map(RefusjonskravFrist::getAnvendtHjemmel).orElse(null))
             .build();
     }
 

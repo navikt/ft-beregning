@@ -1,5 +1,6 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.perioder;
 
+import static no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil.TIDENES_BEGYNNELSE;
 import static no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil.TIDENES_ENDE;
 
 import java.math.BigDecimal;
@@ -21,21 +22,13 @@ class IdentifiserPerioderForRefusjon {
         // skjul public constructor
     }
 
-    static Set<PeriodeSplittData> identifiserPerioderForRefusjon(ArbeidsforholdOgInntektsmelding inntektsmelding, Map<String, Object> resultater) {
+    static Set<PeriodeSplittData> identifiserPerioderForRefusjon(ArbeidsforholdOgInntektsmelding inntektsmelding,
+                                                                 Map<String, Object> resultater) {
         if (inntektsmelding.getInnsendingsdatoFørsteInntektsmeldingMedRefusjon() == null) {
             return Collections.emptySet();
         }
 
-        int fristAntallMåneder = inntektsmelding.getRefusjonskravFrist() != null ?
-            inntektsmelding.getRefusjonskravFrist().getAntallMånederRefusjonskravFrist() : 3;
-        resultater.put("antallMånederRefusjonfrist", fristAntallMåneder);
-        Optional<LocalDate> utvidetRefusjonsdato = inntektsmelding.getOverstyrtRefusjonsFrist();
-        resultater.put("overstyrtFristutvidelse", utvidetRefusjonsdato);
-        LocalDate førsteLovligDato = utvidetRefusjonsdato.orElse(inntektsmelding
-            .getInnsendingsdatoFørsteInntektsmeldingMedRefusjon().withDayOfMonth(1).minusMonths(fristAntallMåneder));
-
-        resultater.put("førsteLovligeRefusjonsdato", førsteLovligDato);
-
+	    LocalDate førsteLovligDato = finnFørsteLovligeRefusjonsdato(inntektsmelding, resultater);
 
         ListIterator<Refusjonskrav> li = inntektsmelding.getRefusjoner().listIterator();
 
@@ -70,7 +63,22 @@ class IdentifiserPerioderForRefusjon {
         return set;
     }
 
-    private static Optional<PeriodeÅrsak> utledPeriodeÅrsak(ArbeidsforholdOgInntektsmelding inntektsmelding,
+	private static LocalDate finnFørsteLovligeRefusjonsdato(ArbeidsforholdOgInntektsmelding inntektsmelding,
+	                                                        Map<String, Object> resultater) {
+		if (inntektsmelding.getRefusjonskravFrist().isEmpty()) {
+			return TIDENES_BEGYNNELSE; // Her skal vi ikkje vurdere frist og vi returnerer TIDENES_BEGYNNELSE
+		}
+    	int fristAntallMåneder = inntektsmelding.getRefusjonskravFrist().get().getAntallMånederRefusjonskravFrist();
+		resultater.put("antallMånederRefusjonfrist", fristAntallMåneder);
+		Optional<LocalDate> utvidetRefusjonsdato = inntektsmelding.getOverstyrtRefusjonsFrist();
+		resultater.put("overstyrtFristutvidelse", utvidetRefusjonsdato);
+		LocalDate førsteLovligDato = utvidetRefusjonsdato.orElse(inntektsmelding
+		    .getInnsendingsdatoFørsteInntektsmeldingMedRefusjon().withDayOfMonth(1).minusMonths(fristAntallMåneder));
+		resultater.put("førsteLovligeRefusjonsdato", førsteLovligDato);
+		return førsteLovligDato;
+	}
+
+	private static Optional<PeriodeÅrsak> utledPeriodeÅrsak(ArbeidsforholdOgInntektsmelding inntektsmelding,
                                                             Refusjonskrav refusjonskrav, LocalDate fom) {
         BigDecimal årsbeløp = refusjonskrav.getMånedsbeløp();
         if (årsbeløp.compareTo(BigDecimal.ZERO) == 0) {
