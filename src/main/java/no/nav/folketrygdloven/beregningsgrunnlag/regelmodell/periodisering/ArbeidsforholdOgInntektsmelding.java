@@ -77,8 +77,8 @@ public class ArbeidsforholdOgInntektsmelding implements AndelGradering {
         return Optional.ofNullable(overstyrtRefusjonsFrist);
     }
 
-    public RefusjonskravFrist getRefusjonskravFrist() {
-        return refusjonskravFrist;
+    public Optional<RefusjonskravFrist> getRefusjonskravFrist() {
+        return Optional.ofNullable(refusjonskravFrist);
     }
 
     @Override
