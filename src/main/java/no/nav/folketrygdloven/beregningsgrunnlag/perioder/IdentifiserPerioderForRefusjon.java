@@ -24,7 +24,7 @@ class IdentifiserPerioderForRefusjon {
 
     static Set<PeriodeSplittData> identifiserPerioderForRefusjon(ArbeidsforholdOgInntektsmelding inntektsmelding,
                                                                  Map<String, Object> resultater) {
-        if (inntektsmelding.getInnsendingsdatoFørsteInntektsmeldingMedRefusjon() == null) {
+        if (inntektsmelding.getRefusjoner() == null || inntektsmelding.getRefusjoner().isEmpty()) {
             return Collections.emptySet();
         }
 
