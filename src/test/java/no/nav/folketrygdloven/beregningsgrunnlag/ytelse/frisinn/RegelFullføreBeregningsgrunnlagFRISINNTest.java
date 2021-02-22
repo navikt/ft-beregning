@@ -308,6 +308,7 @@ class RegelFullføreBeregningsgrunnlagFRISINNTest {
 
     private Beregningsgrunnlag lagBeregningsgrunnlag(Double snInntektPrÅr, Double frilansInntektPrÅr, Double arbeidsinntektPrÅr, Double snUtbetalingsgrad, Double flUtbetalingsgrad) {
         BeregningsgrunnlagPeriode.Builder periodeBuilder = BeregningsgrunnlagPeriode.builder()
+		        .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
             .medPeriode(new Periode(skjæringstidspunkt, null));
         byggSN(snInntektPrÅr, periodeBuilder, snUtbetalingsgrad);
         byggATFL(frilansInntektPrÅr, arbeidsinntektPrÅr, periodeBuilder, flUtbetalingsgrad);
@@ -320,7 +321,6 @@ class RegelFullføreBeregningsgrunnlagFRISINNTest {
             .medGrunnbeløpSatser(GRUNNBELØPLISTE)
             .medAktivitetStatuser(List.of(new AktivitetStatusMedHjemmel(AktivitetStatus.ATFL_SN, null)))
             .medBeregningsgrunnlagPeriode(periode)
-            .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
             .build();
     }
 

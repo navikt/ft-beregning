@@ -2,13 +2,16 @@ package no.nav.folketrygdloven.skjæringstidspunkt.status;
 
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivPeriode;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModell;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.BeregningsgrunnlagPrStatus;
@@ -21,8 +24,9 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
 
     public static final String ID = "FP_BR_19_2";
     public static final String BESKRIVELSE = "Fastsett status per andel og periode";
+	private static final int MIDLERTIDIG_INAKTIV_MAX_VARIGHET_DAGER = 28;
 
-    protected FastsettStatusOgAndelPrPeriode() {
+	protected FastsettStatusOgAndelPrPeriode() {
         super(ID, BESKRIVELSE);
     }
 
@@ -43,17 +47,59 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
         List<AktivPeriode> aktivePerioderVedStp = hentAktivePerioderForBeregning(regelmodell.getBeregningstidspunkt(), aktivePerioder);
         if (harKunYtelsePåSkjæringstidspunkt(aktivePerioderVedStp)) {
             regelmodell.leggTilAktivitetStatus(AktivitetStatus.KUN_YTELSE);
-            BeregningsgrunnlagPrStatus bgPrStatus = new BeregningsgrunnlagPrStatus(AktivitetStatus.BA);
-            regelmodell.leggTilBeregningsgrunnlagPrStatus(bgPrStatus);
+	        leggTilBrukersAndel(regelmodell);
+        } else if (aktivePerioderVedStp.isEmpty() && gjelderMidlertidigInaktiv(aktivePerioder, regelmodell.getSkjæringstidspunktForBeregning())) {
+	        regelmodell.leggTilAktivitetStatus(AktivitetStatus.MIDL_INAKTIV);
+	        List<AktivPeriode> aktivePerioderPåStp = finnAktivtArbeidSomStarterPåStp(aktivePerioder, regelmodell.getSkjæringstidspunktForBeregning());
+	        if (!aktivePerioderPåStp.isEmpty()) {
+		        opprettAndelerForAktiviteter(regelmodell, aktivePerioderPåStp);
+	        } else {
+		        leggTilBrukersAndel(regelmodell);
+	        }
         } else {
             opprettStatusForAktiviteter(regelmodell, aktivePerioderVedStp);
         }
     }
 
-    private void opprettStatusForAktiviteter(AktivitetStatusModell regelmodell, List<AktivPeriode> aktivePerioderVedStp) {
+	private void leggTilBrukersAndel(AktivitetStatusModell regelmodell) {
+		BeregningsgrunnlagPrStatus bgPrStatus = new BeregningsgrunnlagPrStatus(AktivitetStatus.BA);
+		regelmodell.leggTilBeregningsgrunnlagPrStatus(bgPrStatus);
+	}
+
+	private List<AktivPeriode> finnAktivtArbeidSomStarterPåStp(List<AktivPeriode> aktivePerioder, LocalDate skjæringstidspunktForBeregning) {
+		List<AktivPeriode> aktiviteterSomStarterPåStp = aktivePerioder.stream()
+				.filter(p -> p.getPeriode().getFom().isEqual(skjæringstidspunktForBeregning))
+				.filter(p -> Aktivitet.ARBEIDSTAKERINNTEKT.equals(p.getAktivitet()))
+				.collect(Collectors.toList());
+		return aktiviteterSomStarterPåStp;
+	}
+
+	private boolean gjelderMidlertidigInaktiv(List<AktivPeriode> aktivePerioder, LocalDate skjæringstidspunktForBeregning) {
+		Optional<AktivPeriode> sisteAktivitetFørStp = aktivePerioder.stream()
+				.filter(p -> p.getPeriode().getFom().isBefore(skjæringstidspunktForBeregning))
+				.max(Comparator.comparing(p -> p.getPeriode().getTom()));
+		Boolean aktivitetSlutterIkkeFørSkjæringstidspunkt = sisteAktivitetFørStp.map(a -> a.getPeriode().getTom().plusDays(1).isAfter(skjæringstidspunktForBeregning)).orElse(false);
+		if (aktivitetSlutterIkkeFørSkjæringstidspunkt) {
+			return false;
+		}
+		Optional<Periode> periodeFraSisteAktivitetsdatoTilStp = sisteAktivitetFørStp.map(a -> Periode.of(a.getPeriode().getTom().plusDays(1), skjæringstidspunktForBeregning.minusDays(1)));
+		Boolean harMindreEnn28DagersInaktivitet = periodeFraSisteAktivitetsdatoTilStp.map(p -> p.getVarighetDager() < MIDLERTIDIG_INAKTIV_MAX_VARIGHET_DAGER).orElse(false);
+		return harMindreEnn28DagersInaktivitet;
+	}
+
+	private void opprettAndelerForAktiviteter(AktivitetStatusModell regelmodell, List<AktivPeriode> aktivePerioderVedStp) {
+		for (AktivPeriode ap : aktivePerioderVedStp) {
+			AktivitetStatus aktivitetStatus = mapAktivitetTilStatus(ap.getAktivitet());
+			var arbeidsforhold = AktivitetStatus.ATFL.equals(aktivitetStatus) ? ap.getArbeidsforhold() : null;
+			regelmodell.leggTilBeregningsgrunnlagPrStatus(new BeregningsgrunnlagPrStatus(aktivitetStatus, arbeidsforhold));
+		}
+	}
+
+	private void opprettStatusForAktiviteter(AktivitetStatusModell regelmodell, List<AktivPeriode> aktivePerioderVedStp) {
         for (AktivPeriode ap : aktivePerioderVedStp) {
             AktivitetStatus aktivitetStatus = mapAktivitetTilStatus(ap.getAktivitet());
-            if (!AktivitetStatus.KUN_YTELSE.equals(aktivitetStatus) && ikkeMilitærMedAndreAktiviteterPåStp(aktivePerioderVedStp, aktivitetStatus)) {
+            if (!AktivitetStatus.KUN_YTELSE.equals(aktivitetStatus)
+		            && ikkeMilitærMedAndreAktiviteterPåStp(aktivePerioderVedStp, aktivitetStatus)) {
                 regelmodell.leggTilAktivitetStatus(aktivitetStatus);
                 var arbeidsforhold = AktivitetStatus.ATFL.equals(aktivitetStatus) ? ap.getArbeidsforhold() : null;
                 regelmodell.leggTilBeregningsgrunnlagPrStatus(new BeregningsgrunnlagPrStatus(aktivitetStatus, arbeidsforhold));

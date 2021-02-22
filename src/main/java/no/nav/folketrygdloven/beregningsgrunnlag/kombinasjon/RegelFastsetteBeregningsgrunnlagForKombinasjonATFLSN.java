@@ -5,17 +5,18 @@ import java.util.Arrays;
 import no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker.RegelBeregningsgrunnlagATFL;
 import no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker.RegelBeregningsgrunnlagSplittATFL;
 import no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker.SjekkOmFørsteBeregningsgrunnlagsperiode;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Beregnet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.IkkeBeregnet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
-import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.BeregnGjennomsnittligPGI;
-import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.BeregnOppjustertInntekt;
-import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.FastsettBeregningsperiode;
+import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.BeregnGjennomsnittligPGIForAktivitetstatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.BeregnOppjustertInntektForAktivitetstatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.FastsettBeregningsperiodeForAktivitetstatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.FastsettSammenligningsgrunnlagForSN;
 import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.SjekkOmBeregninsgrunnlagErBesteberegnet;
 import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.SjekkOmBrukerErNyIArbeidslivet;
 import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.SjekkOmDifferanseStørreEnn25Prosent;
-import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.SjekkOmManueltFastsattBeregningsgrunnlagSN;
+import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.SjekkOmManueltFastsattBeregningsgrunnlagForAktivitetstatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.SjekkOmVarigEndringIVirksomhetEllerNyoppstartetNæring;
 import no.nav.fpsak.nare.DynamicRuleService;
 import no.nav.fpsak.nare.Ruleset;
@@ -61,7 +62,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN extends Dynami
 
     //      FP_BR 2.19 Har saksbehandler fastsatt beregningsgrunnlaget manuelt?
     Specification<BeregningsgrunnlagPeriode> sjekkOmManueltFastsattInntekt =
-        rs.beregningHvisRegel(new SjekkOmManueltFastsattBeregningsgrunnlagSN(), sjekkOmVarigEndringIVirksomhet,
+        rs.beregningHvisRegel(new SjekkOmManueltFastsattBeregningsgrunnlagForAktivitetstatus(AktivitetStatus.SN), sjekkOmVarigEndringIVirksomhet,
             beregnBruttoSN);
 
         // FP_BR 2.18 Er bruker SN som er ny i arbeidslivet?
@@ -78,7 +79,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN extends Dynami
         // FP_BR 2.1 Fastsett beregningsperiode
         Specification<BeregningsgrunnlagPeriode> beregnPGI =
             rs.beregningsRegel("FP_BR 2", "Fastsett beregningsperiode og beregn oppjusterte inntekter og pgi-snitt.",
-                Arrays.asList(new FastsettBeregningsperiode(), new BeregnOppjustertInntekt(), new BeregnGjennomsnittligPGI()), sjekkOmBesteberegnet);
+                Arrays.asList(new FastsettBeregningsperiodeForAktivitetstatus(AktivitetStatus.SN), new BeregnOppjustertInntektForAktivitetstatus(AktivitetStatus.SN), new BeregnGjennomsnittligPGIForAktivitetstatus(AktivitetStatus.SN)), sjekkOmBesteberegnet);
 
         Specification<BeregningsgrunnlagPeriode> beregningsgrunnlagKombinasjon;
         if(regelmodell.skalSplitteSammenligningsgrunnlagToggle()){

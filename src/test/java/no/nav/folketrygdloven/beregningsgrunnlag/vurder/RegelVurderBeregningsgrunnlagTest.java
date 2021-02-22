@@ -76,7 +76,7 @@ public class RegelVurderBeregningsgrunnlagTest {
     private Beregningsgrunnlag opprettBeregningsgrunnlag(LocalDate skjæringstidspunkt, double beregnetPrÅr, double refusjonskravPrÅr, Dekningsgrad dekningsgrad) {
         Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektsmelding(skjæringstidspunkt, BigDecimal.valueOf(beregnetPrÅr / 12), BigDecimal.valueOf(refusjonskravPrÅr / 12));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        Beregningsgrunnlag.builder(beregningsgrunnlag).medDekningsgrad(dekningsgrad);
+	    BeregningsgrunnlagPeriode.builder(grunnlag).medDekningsgrad(dekningsgrad);
 
         BeregningsgrunnlagPrArbeidsforhold.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0))
             .medBeregnetPrÅr(BigDecimal.valueOf(beregnetPrÅr)).build();

@@ -15,19 +15,25 @@ import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
-@RuleDocumentation(BeregnOppjustertInntekt.ID)
-public class BeregnOppjustertInntekt extends LeafSpecification<BeregningsgrunnlagPeriode> {
+@RuleDocumentation(BeregnOppjustertInntektForAktivitetstatus.ID)
+public class BeregnOppjustertInntektForAktivitetstatus extends LeafSpecification<BeregningsgrunnlagPeriode> {
 
     static final String ID = "FP_BR 2.9 BP";
     private static final String BESKRIVELSE = "Beregn oppjustert inntekt for årene i beregningsperioden";
+	private final AktivitetStatus aktivitetStatus;
 
-    public BeregnOppjustertInntekt() {
+	public BeregnOppjustertInntektForAktivitetstatus(AktivitetStatus aktivitetStatus) {
         super(ID, BESKRIVELSE);
-    }
+		if (!AktivitetStatus.SN.equals(aktivitetStatus) && !AktivitetStatus.BA.equals(aktivitetStatus)) {
+			throw new IllegalArgumentException("Kan ikke beregne oppjustert inntekt for aktivitetstatus " + aktivitetStatus);
+		}
+		this.aktivitetStatus = aktivitetStatus;
+
+	}
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        BeregningsgrunnlagPrStatus bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
+	    BeregningsgrunnlagPrStatus bgps = grunnlag.getBeregningsgrunnlagPrStatus(aktivitetStatus);
         LocalDate beregningsperiodeTom = bgps.getBeregningsperiode().getTom();
         BigDecimal gjeldendeG = grunnlag.getGrunnbeløp();
         Map<String, Object> resultater = new HashMap<>();

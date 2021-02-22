@@ -13,19 +13,25 @@ import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
-@RuleDocumentation(BeregnGjennomsnittligPGI.ID)
-public class BeregnGjennomsnittligPGI extends LeafSpecification<BeregningsgrunnlagPeriode> {
+@RuleDocumentation(BeregnGjennomsnittligPGIForAktivitetstatus.ID)
+public class BeregnGjennomsnittligPGIForAktivitetstatus extends LeafSpecification<BeregningsgrunnlagPeriode> {
 
     static final String ID = "FP_BR 2.2";
     static final String BESKRIVELSE = "Beregn gjennomsnittlig PGI oppjustert til G";
+	private final AktivitetStatus aktivitetStatus;
 
-    public BeregnGjennomsnittligPGI() {
+	public BeregnGjennomsnittligPGIForAktivitetstatus(AktivitetStatus aktivitetStatus) {
         super(ID, BESKRIVELSE);
-    }
+		if (!AktivitetStatus.SN.equals(aktivitetStatus) && !AktivitetStatus.BA.equals(aktivitetStatus)) {
+			throw new IllegalArgumentException("Kan ikke beregning gjennomsnittlig PGI for aktivitetstatus " + aktivitetStatus);
+		}
+		this.aktivitetStatus = aktivitetStatus;
+
+	}
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        BeregningsgrunnlagPrStatus bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
+	    BeregningsgrunnlagPrStatus bgps = grunnlag.getBeregningsgrunnlagPrStatus(aktivitetStatus);
 	    Map<String, Object> resultater = new HashMap<>();
 	    BigDecimal gjennomsnittligPGI = finnGjennomsnittligPGI(bgps.getBeregningsperiode().getTom(), grunnlag.getBeregningsgrunnlag().getGrunnbeløpsatser(), grunnlag.getInntektsgrunnlag(), grunnlag.getGrunnbeløp(), resultater);
 	    resultater.put("GjennomsnittligPGI", gjennomsnittligPGI);

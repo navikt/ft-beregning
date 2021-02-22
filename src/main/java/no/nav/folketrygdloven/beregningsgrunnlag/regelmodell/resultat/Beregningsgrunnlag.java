@@ -32,7 +32,6 @@ public class Beregningsgrunnlag {
     private final List<BeregningsgrunnlagPeriode> beregningsgrunnlagPerioder = new ArrayList<>();
     private SammenligningsGrunnlag sammenligningsGrunnlag;
     private EnumMap<AktivitetStatus, SammenligningsGrunnlag> sammenligningsGrunnlagPrStatus = new EnumMap<>(AktivitetStatus.class);
-    private Dekningsgrad dekningsgrad = Dekningsgrad.DEKNINGSGRAD_100;
     private BigDecimal grunnbeløp;
     /**
      * Ved G-regulering skal gammel G-verdi brukes til å vurdere vilkåret (https://jira.adeo.no/browse/TFP-3599 / https://confluence.adeo.no/display/TVF/G-regulering)
@@ -80,9 +79,6 @@ public class Beregningsgrunnlag {
         return false;
     }
 
-    public Dekningsgrad getDekningsgrad() {
-        return dekningsgrad;
-    }
 
     public BigDecimal getGrunnbeløp() {
         return grunnbeløp;
@@ -215,11 +211,6 @@ public class Beregningsgrunnlag {
         public Builder medBeregningsgrunnlagPerioder(List<BeregningsgrunnlagPeriode> beregningsgrunnlagPerioder) {
             beregningsgrunnlagMal.beregningsgrunnlagPerioder.addAll(beregningsgrunnlagPerioder);
             beregningsgrunnlagPerioder.forEach(bgPeriode -> bgPeriode.setBeregningsgrunnlag(beregningsgrunnlagMal));
-            return this;
-        }
-
-        public Builder medDekningsgrad(Dekningsgrad dekningsgrad) {
-            beregningsgrunnlagMal.dekningsgrad = dekningsgrad;
             return this;
         }
 

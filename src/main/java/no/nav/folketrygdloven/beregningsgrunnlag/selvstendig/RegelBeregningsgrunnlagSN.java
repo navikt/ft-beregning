@@ -2,6 +2,7 @@ package no.nav.folketrygdloven.beregningsgrunnlag.selvstendig;
 
 import java.util.Arrays;
 
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Beregnet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.IkkeBeregnet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
@@ -59,7 +60,7 @@ public class RegelBeregningsgrunnlagSN implements RuleService<Beregningsgrunnlag
 
 //      FP_BR 2.19 Har saksbehandler fastsatt beregningsgrunnlaget manuelt?
         Specification<BeregningsgrunnlagPeriode> sjekkOmManueltFastsattInntekt =
-            rs.beregningHvisRegel(new SjekkOmManueltFastsattBeregningsgrunnlagSN(), sjekkOmVarigEndringIVirksomhet,
+            rs.beregningHvisRegel(new SjekkOmManueltFastsattBeregningsgrunnlagForAktivitetstatus(AktivitetStatus.SN), sjekkOmVarigEndringIVirksomhet,
                 beregnBruttoSN);
 
 //      FP_BR 2.18 Er bruker SN som er ny i arbeidslivet?
@@ -79,7 +80,7 @@ public class RegelBeregningsgrunnlagSN implements RuleService<Beregningsgrunnlag
 //      FP_BR 2.1 Fastsett beregningsperiode
         Specification<BeregningsgrunnlagPeriode> foreslåBeregningsgrunnlagForSelvstendigNæringsdrivende =
             rs.beregningsRegel("FP_BR 2", "Foreslå beregningsgrunnlag for selvstendig næringsdrivende",
-                Arrays.asList(new FastsettBeregningsperiode(), new BeregnOppjustertInntekt(), new BeregnGjennomsnittligPGI()), erBeregningsgrunnlagetBesteberegnet);
+                Arrays.asList(new FastsettBeregningsperiodeForAktivitetstatus(AktivitetStatus.SN), new SettHjemmelSN(), new BeregnOppjustertInntektForAktivitetstatus(AktivitetStatus.SN), new BeregnGjennomsnittligPGIForAktivitetstatus(AktivitetStatus.SN)), erBeregningsgrunnlagetBesteberegnet);
 
         return foreslåBeregningsgrunnlagForSelvstendigNæringsdrivende;
     }

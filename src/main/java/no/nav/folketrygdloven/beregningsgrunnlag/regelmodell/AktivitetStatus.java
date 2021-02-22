@@ -10,17 +10,19 @@ import java.util.List;
  * med høyere prioritet-verdi blir beregnet etter statuser med lavere prioritet-verdi.
  */
 public enum AktivitetStatus {
+
     ATFL("Arbeidstaker/Frilanser", 1, 1),
-    AT("Arbeidstaker", 1, 1),
-    FL("Frilans", 1, 1),
-    KUN_YTELSE("Mottaker av tilstøtende ytelse"),
-    DP("Dagpenger", 1, 2),
-    AAP("Mottaker av arbeidsavklaringspenger", 1, 3),
-    BA("Brukers andel"),
-    MS("Militær/Sivil"),
-    UDEFINERT("Udefinert"),
-    SN("Selvstendig næringsdrivende", 2, 4), //Skal ligge sist av AktivitetStatusene
-    ATFL_SN("Kombinasjon av arbeidstaker/frilanser og selvstendig næringsdrivende", 2, 9); //Skal ligge sist av AktivitetStatusene
+	AT("Arbeidstaker", 1, 1),
+	FL("Frilans", 1, 1),
+	KUN_YTELSE("Mottaker av tilstøtende ytelse"),
+	DP("Dagpenger", 1, 2),
+	AAP("Mottaker av arbeidsavklaringspenger", 1, 3),
+	BA("Brukers andel"),
+	MS("Militær/Sivil"),
+	UDEFINERT("Udefinert"),
+	SN("Selvstendig næringsdrivende", 2, 4),
+	ATFL_SN("Kombinasjon av arbeidstaker/frilanser og selvstendig næringsdrivende", 2, 9),
+	MIDL_INAKTIV("Midlertidig inaktiv");// 8-47 Midlertidig inaktiv
 
     private final String beskrivelse;
     //Lavere verdi -> høyere prioritet.

@@ -24,6 +24,11 @@ public class RegelFordelBeregningsgrunnlag extends DynamicRuleService<Beregnings
         Specification<BeregningsgrunnlagPeriode> sjekkRefusjonMotBeregningsgrunnlag = rs.beregningHvisRegel(new SjekkHarRefusjonSomOverstigerBeregningsgrunnlag(),
             fastsettFordelingAvBeregningsgrunnlag, new Beregnet());
 
-        return sjekkRefusjonMotBeregningsgrunnlag;
+	    Specification<BeregningsgrunnlagPeriode> omfordelFraBrukersAndel = rs.beregningsRegel(OmfordelFraBrukersAndel.ID,
+			    OmfordelFraBrukersAndel.BESKRIVELSE, new OmfordelFraBrukersAndel(), sjekkRefusjonMotBeregningsgrunnlag);
+
+	    Specification<BeregningsgrunnlagPeriode> sjekkOmSkalFordeleFraBrukersAndel = rs.beregningHvisRegel(new SkalOmfordeleFraBrukersAndelTilFLEllerSN(), omfordelFraBrukersAndel, sjekkRefusjonMotBeregningsgrunnlag);
+
+	    return sjekkOmSkalFordeleFraBrukersAndel;
     }
 }

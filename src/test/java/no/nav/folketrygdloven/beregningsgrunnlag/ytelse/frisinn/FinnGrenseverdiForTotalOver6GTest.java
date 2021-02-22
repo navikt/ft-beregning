@@ -250,7 +250,8 @@ class FinnGrenseverdiForTotalOver6GTest {
 
 
     private Beregningsgrunnlag lagBeregningsgrunnlag(List<BeregningsgrunnlagPeriode> perioder, boolean søkerYtelseFrilans, boolean søkerYtelseNæring) {
-        return Beregningsgrunnlag.builder()
+	    perioder.forEach(periode -> BeregningsgrunnlagPeriode.builder(periode).medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80));
+    	return Beregningsgrunnlag.builder()
             .medInntektsgrunnlag(new Inntektsgrunnlag())
             .medGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP))
             .medSkjæringstidspunkt(skjæringstidspunkt)
@@ -258,7 +259,6 @@ class FinnGrenseverdiForTotalOver6GTest {
             .medGrunnbeløpSatser(GRUNNBELØPLISTE)
             .medAktivitetStatuser(List.of(new AktivitetStatusMedHjemmel(AktivitetStatus.ATFL_SN, null)))
             .medBeregningsgrunnlagPerioder(perioder)
-            .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
             .medYtelsesSpesifiktGrunnlag(new FrisinnGrunnlag(List.of(new FrisinnPeriode(perioder.get(0).getBeregningsgrunnlagPeriode(), søkerYtelseFrilans, søkerYtelseNæring)), List.of(), skjæringstidspunkt))
             .build();
     }
