@@ -547,7 +547,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
     private Beregningsgrunnlag opprettBeregningsgrunnlag(LocalDate skjæringstidspunkt, double beregnetPrÅr, double refusjonskravPrÅr, Dekningsgrad dekningsgrad) {
         Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektsmelding(skjæringstidspunkt, BigDecimal.valueOf(beregnetPrÅr / 12), BigDecimal.valueOf(refusjonskravPrÅr / 12));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        Beregningsgrunnlag.builder(beregningsgrunnlag).medDekningsgrad(dekningsgrad);
+	    BeregningsgrunnlagPeriode.builder(grunnlag).medDekningsgrad(dekningsgrad);
 
         BeregningsgrunnlagPrArbeidsforhold.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0))
             .medBeregnetPrÅr(BigDecimal.valueOf(beregnetPrÅr)).build();
@@ -572,8 +572,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
         Beregningsgrunnlag.Builder grunnlagsBuilder = Beregningsgrunnlag.builder()
             .medAktivitetStatuser(List.of(new AktivitetStatusMedHjemmel(AktivitetStatus.ATFL, null)))
             .medSkjæringstidspunkt(skjæringstidspunkt)
-            .medGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2017))
-            .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100);
+            .medGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2017));
         List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
         Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
         arbeidsforhold.forEach(af -> inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
@@ -582,7 +581,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
             .medMåned(skjæringstidspunkt)
             .medInntekt(af.getBruttoPrÅr().get())
             .build()));
-        grunnlagsBuilder.medBeregningsgrunnlagPeriode(periode)
+        grunnlagsBuilder.medBeregningsgrunnlagPeriode(BeregningsgrunnlagPeriode.builder(periode).medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100).build())
             .medGrunnbeløpSatser(List.of(new Grunnbeløp(LocalDate.of(2000, Month.JANUARY, 1), LocalDate.of(2099, Month.DECEMBER, 31), GRUNNBELØP_2017, GRUNNBELØP_2017)))
             .medInntektsgrunnlag(inntektsgrunnlag);
         return grunnlagsBuilder.build();

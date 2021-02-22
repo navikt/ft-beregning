@@ -548,8 +548,7 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
             .build()));
         return Beregningsgrunnlag.builder()
             .medAktivitetStatuser(List.of(new AktivitetStatusMedHjemmel(AktivitetStatus.ATFL, null)))
-            .medBeregningsgrunnlagPeriode(periode)
-            .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
+            .medBeregningsgrunnlagPeriode(BeregningsgrunnlagPeriode.builder(periode).medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100).build())
             .medInntektsgrunnlag(inntektsgrunnlag)
             .medSkjæringstidspunkt(skjæringstidspunkt)
             .medGrunnbeløp(GRUNNBELØP)
