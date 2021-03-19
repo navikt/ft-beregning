@@ -35,7 +35,8 @@ class FinnBesteMåneder extends LeafSpecification<BesteberegningRegelmodell> {
 	static final String ID = "14-7-3.1";
 	static final String BESKRIVELSE = "Finn 6 måneder med høyest inntekt av de 10 siste";
 	private static final int ANTALL_MÅNEDER_I_BESTEBERGNING = 6;
-	public static final int MÅNEDER_I_ÅRET = 12;
+	private static final int MÅNEDER_I_ÅRET = 12;
+	private static final BigDecimal MAKS_UTBETALINGSGRAD_DP = BigDecimal.valueOf(200);
 
 	FinnBesteMåneder() {
 		super(ID, BESKRIVELSE);
@@ -140,9 +141,11 @@ class FinnBesteMåneder extends LeafSpecification<BesteberegningRegelmodell> {
 				.orElseThrow(() -> new IllegalStateException("Forventer overlapp"));
 		int antallVirkedager = Virkedager.beregnAntallVirkedager(overlappendePeriode);
 		int totaltAntallVirkedagerForMeldekort = Virkedager.beregnAntallVirkedager(periodeinntekt.getPeriode());
+		BigDecimal utbetalingsfaktor = periodeinntekt.getUtbetalingsgrad().orElseThrow().divide(MAKS_UTBETALINGSGRAD_DP, 10, RoundingMode.HALF_UP);
+		BigDecimal inntektJustertForUtbGrad = inntekt.multiply(utbetalingsfaktor);
 		BigDecimal andelAvVirkedager = totaltAntallVirkedagerForMeldekort == 0 ? BigDecimal.ZERO : BigDecimal.valueOf(antallVirkedager)
 				.divide(BigDecimal.valueOf(totaltAntallVirkedagerForMeldekort), 10, RoundingMode.HALF_EVEN);
-		return new Inntekt(aktivitetNøkkel, inntekt.multiply(andelAvVirkedager));
+		return new Inntekt(aktivitetNøkkel, inntektJustertForUtbGrad.multiply(andelAvVirkedager));
 	}
 
 	private Optional<Periode> finnOverlappMellomPerioder(Periode periode1, Periode periode2) {
