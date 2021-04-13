@@ -60,8 +60,9 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
 			    opprettAndelerForAktiviteter(regelmodell, aktivePerioderPåStp);
 		    } else if (MidlertidigInaktivType.A.equals(midlertidigInaktivType)) {
 			    leggTilBrukersAndel(regelmodell);
+		    } else {
+			    throw new IllegalStateException("Det må være satt type A eller B for 8-47");
 		    }
-		    throw new IllegalStateException("Det må være satt type A eller B for 8-47");
 	    } else {
 		    opprettStatusForAktiviteter(regelmodell, aktivePerioderVedStp);
 	    }
