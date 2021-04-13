@@ -11,9 +11,11 @@ import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.MidlertidigInaktivType;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivPeriode;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModell;
+import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModellK9;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.BeregningsgrunnlagPrStatus;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
@@ -45,21 +47,32 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
     private void opprettAktivitetStatuser(AktivitetStatusModell regelmodell) {
         List<AktivPeriode> aktivePerioder = regelmodell.getAktivePerioder();
         List<AktivPeriode> aktivePerioderVedStp = hentAktivePerioderForBeregning(regelmodell.getBeregningstidspunkt(), aktivePerioder);
-        if (harKunYtelsePåSkjæringstidspunkt(aktivePerioderVedStp)) {
+
+	    MidlertidigInaktivType midlertidigInaktivType = finnMidlertidigInaktivType(regelmodell);
+
+	    if (harKunYtelsePåSkjæringstidspunkt(aktivePerioderVedStp)) {
             regelmodell.leggTilAktivitetStatus(AktivitetStatus.KUN_YTELSE);
 	        leggTilBrukersAndel(regelmodell);
-        } else if (aktivePerioderVedStp.isEmpty() && gjelderMidlertidigInaktiv(aktivePerioder, regelmodell.getSkjæringstidspunktForBeregning())) {
-	        regelmodell.leggTilAktivitetStatus(AktivitetStatus.MIDL_INAKTIV);
-	        List<AktivPeriode> aktivePerioderPåStp = finnAktivtArbeidSomStarterPåStp(aktivePerioder, regelmodell.getSkjæringstidspunktForBeregning());
-	        if (!aktivePerioderPåStp.isEmpty()) {
-		        opprettAndelerForAktiviteter(regelmodell, aktivePerioderPåStp);
-	        } else {
-		        leggTilBrukersAndel(regelmodell);
-	        }
-        } else {
-            opprettStatusForAktiviteter(regelmodell, aktivePerioderVedStp);
-        }
+        } else if (aktivePerioderVedStp.isEmpty() && midlertidigInaktivType != null) {
+		    regelmodell.leggTilAktivitetStatus(AktivitetStatus.MIDL_INAKTIV);
+		    List<AktivPeriode> aktivePerioderPåStp = finnAktivtArbeidSomStarterPåStp(aktivePerioder, regelmodell.getSkjæringstidspunktForBeregning());
+		    if (!aktivePerioderPåStp.isEmpty() && MidlertidigInaktivType.B.equals(midlertidigInaktivType)) {
+			    opprettAndelerForAktiviteter(regelmodell, aktivePerioderPåStp);
+		    } else if (MidlertidigInaktivType.A.equals(midlertidigInaktivType)) {
+			    leggTilBrukersAndel(regelmodell);
+		    }
+		    throw new IllegalStateException("Det må være satt type A eller B for 8-47");
+	    } else {
+		    opprettStatusForAktiviteter(regelmodell, aktivePerioderVedStp);
+	    }
     }
+
+	private MidlertidigInaktivType finnMidlertidigInaktivType(AktivitetStatusModell regelmodell) {
+		if (regelmodell instanceof AktivitetStatusModellK9) {
+			return ((AktivitetStatusModellK9) regelmodell).getMidlertidigInaktivType();
+		}
+		return null;
+	}
 
 	private void leggTilBrukersAndel(AktivitetStatusModell regelmodell) {
 		BeregningsgrunnlagPrStatus bgPrStatus = new BeregningsgrunnlagPrStatus(AktivitetStatus.BA);
