@@ -53,17 +53,21 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
 	    if (harKunYtelsePåSkjæringstidspunkt(aktivePerioderVedStp)) {
             regelmodell.leggTilAktivitetStatus(AktivitetStatus.KUN_YTELSE);
 	        leggTilBrukersAndel(regelmodell);
-        } else if (aktivePerioderVedStp.isEmpty() && midlertidigInaktivType != null) {
-		    regelmodell.leggTilAktivitetStatus(AktivitetStatus.MIDL_INAKTIV);
-		    List<AktivPeriode> aktivePerioderPåStp = finnAktivtArbeidSomStarterPåStp(aktivePerioder, regelmodell.getSkjæringstidspunktForBeregning());
-		    if (!aktivePerioderPåStp.isEmpty() && MidlertidigInaktivType.B.equals(midlertidigInaktivType)) {
-			    opprettAndelerForAktiviteter(regelmodell, aktivePerioderPåStp);
-		    } else if (MidlertidigInaktivType.A.equals(midlertidigInaktivType)) {
-			    leggTilBrukersAndel(regelmodell);
-		    } else {
-			    throw new IllegalStateException("Det må være satt type A eller B for 8-47");
+        }
+	    // TODO: Vi tror dette kun gjelder 8-47A som kun gjelder pleiepenger
+//	    else if (aktivePerioderVedStp.isEmpty() && gjelderMidlertidigInaktiv(aktivePerioder, regelmodell.getSkjæringstidspunktForBeregning())) {
+//		    regelmodell.leggTilAktivitetStatus(AktivitetStatus.MIDL_INAKTIV);
+//		    List<AktivPeriode> aktivePerioderPåStp = finnAktivtArbeidSomStarterPåStp(aktivePerioder, regelmodell.getSkjæringstidspunktForBeregning());
+//		    if (!aktivePerioderPåStp.isEmpty()) {
+//			    opprettAndelerForAktiviteter(regelmodell, aktivePerioderPåStp);
+//		    } else {
+//			    leggTilBrukersAndel(regelmodell);
+//		    }
+//	    }
+	    else {
+	    	if (midlertidigInaktivType != null && midlertidigInaktivType.equals(MidlertidigInaktivType.B)) {
+			    regelmodell.leggTilAktivitetStatus(AktivitetStatus.MIDL_INAKTIV);
 		    }
-	    } else {
 		    opprettStatusForAktiviteter(regelmodell, aktivePerioderVedStp);
 	    }
     }
