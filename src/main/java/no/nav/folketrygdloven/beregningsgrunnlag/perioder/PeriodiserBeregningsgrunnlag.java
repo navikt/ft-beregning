@@ -3,6 +3,7 @@ package no.nav.folketrygdloven.beregningsgrunnlag.perioder;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -10,6 +11,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Gradering;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.PeriodeÅrsak;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.NaturalYtelse;
@@ -72,7 +74,8 @@ public class PeriodiserBeregningsgrunnlag extends LeafSpecification<PeriodeSplit
                 .filter(ArbeidsforholdOgInntektsmelding::erNyAktivitet)
                 .filter(im -> !im.slutterFørSkjæringstidspunkt(input.getSkjæringstidspunkt()))
                 .filter(im -> harRefusjonIPeriode(im, periodeFom)
-                    || harGraderingFørPeriode(im, periodeFom))
+                    || harGraderingFørPeriode(im, periodeFom)
+                || harHattRefusjonTidligereOgFortsetterYtelse(im, periodeFom))
                 .map(im -> mapSplittetAndel(im, periodeFom))
                 .collect(Collectors.toList());
 
@@ -102,7 +105,18 @@ public class PeriodiserBeregningsgrunnlag extends LeafSpecification<PeriodeSplit
         return list;
     }
 
-    private static boolean harUtbetalingIPeriode(AndelGradering andel, LocalDate periodeFom) {
+	private static boolean harHattRefusjonTidligereOgFortsetterYtelse(ArbeidsforholdOgInntektsmelding im, LocalDate periodeFom) {
+		// For tilfeller der SVP har et tilkommet arbeidsforhold i SVP men det ikke søkes refusjon for dette arbeidsforholdet for alle utbetalingsperioder
+    	boolean harSøktYtelseIPeriode = im.getUtbetalingsgrader() != null && im.getUtbetalingsgrader().stream()
+				.filter(uttak -> uttak.getPeriode().inneholder(periodeFom))
+				.anyMatch(uttak -> uttak.getUtbetalingsprosent().compareTo(BigDecimal.ZERO) > 0);
+		boolean harHattRefusjonIEnTidligerePeriode = im.getGyldigeRefusjonskrav().stream()
+				.filter(refusjonskrav -> periodeFom.isAfter(refusjonskrav.getPeriode().getTom()))
+				.anyMatch(refusjonskrav -> refusjonskrav.getMånedsbeløp().compareTo(BigDecimal.ZERO) > 0);
+		return harSøktYtelseIPeriode && harHattRefusjonIEnTidligerePeriode;
+	}
+
+	private static boolean harUtbetalingIPeriode(AndelGradering andel, LocalDate periodeFom) {
         return andel.getGraderinger().stream().anyMatch(g -> g.getPeriode().inneholder(periodeFom) && g.getUtbetalingsprosent().compareTo(BigDecimal.ZERO) > 0);
     }
 
