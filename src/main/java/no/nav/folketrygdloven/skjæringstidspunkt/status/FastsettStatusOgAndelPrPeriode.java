@@ -48,23 +48,12 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
         List<AktivPeriode> aktivePerioder = regelmodell.getAktivePerioder();
         List<AktivPeriode> aktivePerioderVedStp = hentAktivePerioderForBeregning(regelmodell.getBeregningstidspunkt(), aktivePerioder);
 
-	    MidlertidigInaktivType midlertidigInaktivType = finnMidlertidigInaktivType(regelmodell);
-
 	    if (harKunYtelsePåSkjæringstidspunkt(aktivePerioderVedStp)) {
             regelmodell.leggTilAktivitetStatus(AktivitetStatus.KUN_YTELSE);
 	        leggTilBrukersAndel(regelmodell);
         }
-	    // TODO: Vi tror dette kun gjelder 8-47A som kun gjelder pleiepenger
-//	    else if (aktivePerioderVedStp.isEmpty() && gjelderMidlertidigInaktiv(aktivePerioder, regelmodell.getSkjæringstidspunktForBeregning())) {
-//		    regelmodell.leggTilAktivitetStatus(AktivitetStatus.MIDL_INAKTIV);
-//		    List<AktivPeriode> aktivePerioderPåStp = finnAktivtArbeidSomStarterPåStp(aktivePerioder, regelmodell.getSkjæringstidspunktForBeregning());
-//		    if (!aktivePerioderPåStp.isEmpty()) {
-//			    opprettAndelerForAktiviteter(regelmodell, aktivePerioderPåStp);
-//		    } else {
-//			    leggTilBrukersAndel(regelmodell);
-//		    }
-//	    }
 	    else {
+		    MidlertidigInaktivType midlertidigInaktivType = finnMidlertidigInaktivType(regelmodell);
 	    	if (midlertidigInaktivType != null && midlertidigInaktivType.equals(MidlertidigInaktivType.B)) {
 			    regelmodell.leggTilAktivitetStatus(AktivitetStatus.MIDL_INAKTIV);
 		    }
