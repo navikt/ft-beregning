@@ -17,7 +17,8 @@ public class ArbeidsforholdOgInntektsmelding implements AndelGradering {
     private List<Refusjonskrav> refusjoner = Collections.emptyList();
     private List<Refusjonskrav> gyldigeRefusjonskrav = Collections.emptyList();
     private List<Gradering> graderinger = Collections.emptyList();
-    private List<NaturalYtelse> naturalYtelser = Collections.emptyList();
+	private List<Gradering> utbetalingsgrader = Collections.emptyList();
+	private List<NaturalYtelse> naturalYtelser = Collections.emptyList();
     private Periode ansettelsesperiode;
     private LocalDate startdatoPermisjon;
     private Long andelsnr;
@@ -81,7 +82,11 @@ public class ArbeidsforholdOgInntektsmelding implements AndelGradering {
         return Optional.ofNullable(refusjonskravFrist);
     }
 
-    @Override
+	public List<Gradering> getUtbetalingsgrader() {
+		return utbetalingsgrader;
+	}
+
+	@Override
     public boolean erNyAktivitet() { return andelsnr == null; }
 
     public boolean slutterFørSkjæringstidspunkt(LocalDate skjæringstidspunkt) {
@@ -135,7 +140,12 @@ public class ArbeidsforholdOgInntektsmelding implements AndelGradering {
             return this;
         }
 
-        public Builder medGraderinger(List<Gradering> graderinger) {
+	    public Builder medUtbetalingsgrader(List<Gradering> utbetalingsgrader) {
+		    kladd.utbetalingsgrader = utbetalingsgrader;
+		    return this;
+	    }
+
+	    public Builder medGraderinger(List<Gradering> graderinger) {
             kladd.graderinger = graderinger;
             return this;
         }
