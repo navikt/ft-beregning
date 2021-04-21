@@ -12,7 +12,13 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.RelatertYtelseType;
 
 import org.junit.jupiter.api.Test;
 
@@ -215,7 +221,43 @@ class FinnBesteMånederTest {
 		assertThat(besteMåneder.get(4).finnSum()).isEqualByComparingTo(BigDecimal.valueOf(2*GRUNNBELØP_2019/12));
 		assertThat(besteMåneder.get(5).getMåned()).isEqualTo(YearMonth.of(2019, 5));
 		assertThat(besteMåneder.get(5).finnSum()).isEqualByComparingTo(BigDecimal.valueOf(2*GRUNNBELØP_2019/12));
+	}
 
+	@Test
+	void skal_finne_6_korrekte_måneder_med_et_arbeidsforhold_og_sykepenger_i_sammenligningsgrunnlaget() {
+		// Arrange
+		List<Periodeinntekt> periodeinntekter = new ArrayList<>();
+		for (int i = 0; i < 12; i++) {
+			if (i % 2 != 0) {
+				periodeinntekter.add(lagPeriodeInntektYtelse(i, BigDecimal.valueOf(5000), RelatertYtelseType.SYKEPENGER));
+			}
+			periodeinntekter.add(lagPeriodeInntektArbeidstaker(i, BigDecimal.valueOf(10000), ORGNR));
+		}
+		BesteberegningRegelmodell regelmodell = lagRegelmodell(Collections.emptyList(), periodeinntekter);
+
+		// Act
+		evaluer(regelmodell);
+
+		// Assert
+		List<BeregnetMånedsgrunnlag> besteMåneder = regelmodell.getOutput().getBesteMåneder().stream()
+				.sorted(Comparator.comparing(p -> p.getMåned().getMonth()))
+				.collect(Collectors.toList());
+		assertThat(besteMåneder.size()).isEqualTo(6);
+		assertThat(besteMåneder.get(0).getMåned()).isEqualTo(YearMonth.of(2019, 2));
+		assertThat(besteMåneder.get(0).finnSum()).isEqualByComparingTo(BigDecimal.valueOf(15000));
+		assertThat(besteMåneder.get(1).getMåned()).isEqualTo(YearMonth.of(2019, 4));
+		assertThat(besteMåneder.get(1).finnSum()).isEqualByComparingTo(BigDecimal.valueOf(15000));
+		assertThat(besteMåneder.get(2).getMåned()).isEqualTo(YearMonth.of(2019, 6));
+		assertThat(besteMåneder.get(2).finnSum()).isEqualByComparingTo(BigDecimal.valueOf(15000));
+		assertThat(besteMåneder.get(3).getMåned()).isEqualTo(YearMonth.of(2019, 8));
+		assertThat(besteMåneder.get(3).finnSum()).isEqualByComparingTo(BigDecimal.valueOf(15000));
+
+		// Siste kronologiske måned siste 10 måneder uten sykepenger, og derfor med lavere inntekt
+		assertThat(besteMåneder.get(4).getMåned()).isEqualTo(YearMonth.of(2019, 9));
+		assertThat(besteMåneder.get(4).finnSum()).isEqualByComparingTo(BigDecimal.valueOf(10000));
+
+		assertThat(besteMåneder.get(5).getMåned()).isEqualTo(YearMonth.of(2019, 10));
+		assertThat(besteMåneder.get(5).finnSum()).isEqualByComparingTo(BigDecimal.valueOf(15000));
 	}
 
 	private Periodeinntekt lagSigrunInntekt2018() {
@@ -263,6 +305,19 @@ class FinnBesteMånederTest {
 				.medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP)
 				.build();
 	}
+
+	private Periodeinntekt lagPeriodeInntektYtelse(int månaderFørStpFom, BigDecimal inntekt, RelatertYtelseType ytelse) {
+		return Periodeinntekt.builder()
+				.medPeriode(Periode.of(
+						SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(månaderFørStpFom).withDayOfMonth(1),
+						SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(månaderFørStpFom).with(TemporalAdjusters.lastDayOfMonth())))
+				.medAktivitetStatus(AktivitetStatus.KUN_YTELSE)
+				.medInntekt(inntekt)
+				.medYtelse(ytelse)
+				.medInntektskildeOgPeriodeType(Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING)
+				.build();
+	}
+
 
 	private Periodeinntekt lagPeriodeInntektDagpengerStartMidtIMåned(int månaderFørStpFom, BigDecimal inntekt) {
 		return Periodeinntekt.builder()
