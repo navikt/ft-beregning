@@ -18,6 +18,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.RelatertYtelseType;
 import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.FinnGjennomsnittligPGI;
 import no.nav.folketrygdloven.beregningsgrunnlag.util.Virkedager;
 import no.nav.folketrygdloven.besteberegning.modell.BesteberegningRegelmodell;
@@ -96,6 +97,11 @@ class FinnBesteMåneder extends LeafSpecification<BesteberegningRegelmodell> {
 		var periode = Periode.of(fom, fom.with(TemporalAdjusters.lastDayOfMonth()));
 		var beregnetMånedsgrunnlag = new BeregnetMånedsgrunnlag(YearMonth.from(fom));
 		inntekter.stream()
+				.filter(p -> p.getInntektskilde().equals(Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING))
+				.filter(p -> AktivitetStatus.KUN_YTELSE.equals(p.getAktivitetStatus()) && p.getYtelse() != null)
+				.filter(p -> p.erInnenforPeriode(periode))
+				.map(this::mapTilInntekt).forEach(beregnetMånedsgrunnlag::leggTilInntekt);
+		inntekter.stream()
 				.filter(p -> p.getInntektskilde().equals(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING))
 				.filter(p -> p.erInnenforPeriode(periode))
 				.map(this::mapTilInntekt).forEach(beregnetMånedsgrunnlag::leggTilInntekt);
@@ -123,7 +129,7 @@ class FinnBesteMåneder extends LeafSpecification<BesteberegningRegelmodell> {
 		if (periodeinntekt.getArbeidsgiver().isPresent()) {
 			return mapPeriodeinntektForArbeidstakerEllerFrilans(periodeinntekt);
 		} else {
-			var aktivitet = mapAktivitetstatusTilInntektType(periodeinntekt.getAktivitetStatus());
+			var aktivitet = mapAktivitetstatusTilInntektType(periodeinntekt);
 			var aktivitetNøkkel = AktivitetNøkkel.forType(aktivitet);
 			var inntekt = periodeinntekt.getInntekt()
 					.multiply(periodeinntekt.getInntektPeriodeType().getAntallPrÅr())
@@ -133,7 +139,7 @@ class FinnBesteMåneder extends LeafSpecification<BesteberegningRegelmodell> {
 	}
 
 	private Inntekt mapTilYtelseTilInntekt(Periodeinntekt periodeinntekt, Periode periode) {
-		var aktivitet = mapAktivitetstatusTilInntektType(periodeinntekt.getAktivitetStatus());
+		var aktivitet = mapAktivitetstatusTilInntektType(periodeinntekt);
 		var aktivitetNøkkel = AktivitetNøkkel.forType(aktivitet);
 		var inntekt = periodeinntekt.getInntekt();
 		var overlappendePeriode = finnOverlappMellomPerioder(periodeinntekt.getPeriode(), periode)
@@ -154,14 +160,28 @@ class FinnBesteMåneder extends LeafSpecification<BesteberegningRegelmodell> {
 		return Optional.of(Periode.of(fom, tom));
 	}
 
-	private Aktivitet mapAktivitetstatusTilInntektType(AktivitetStatus aktivitetStatus) {
-		if (AktivitetStatus.FL.equals(aktivitetStatus)) {
+	private Aktivitet mapAktivitetstatusTilInntektType(Periodeinntekt periodeinntekt) {
+		if (AktivitetStatus.FL.equals(periodeinntekt.getAktivitetStatus())) {
 			return Aktivitet.FRILANSINNTEKT;
-		}
-		if (AktivitetStatus.SN.equals(aktivitetStatus)) {
+		} else if (AktivitetStatus.SN.equals(periodeinntekt.getAktivitetStatus())) {
 			return Aktivitet.NÆRINGSINNTEKT;
+		} else if (AktivitetStatus.KUN_YTELSE.equals(periodeinntekt.getAktivitetStatus())) {
+			return mapYtelsetype(periodeinntekt.getYtelse());
 		}
 		return Aktivitet.DAGPENGEMOTTAKER;
+	}
+
+	private Aktivitet mapYtelsetype(RelatertYtelseType ytelse) {
+		switch (ytelse) {
+			case FORELDREPENGER:
+				return Aktivitet.FORELDREPENGER_MOTTAKER;
+			case SVANGERSKAPSPENGER:
+				return Aktivitet.SVANGERSKAPSPENGER_MOTTAKER;
+			case SYKEPENGER:
+				return Aktivitet.SYKEPENGER_MOTTAKER;
+			default:
+				throw new IllegalStateException("Støtte på ukjent ytelse under besteberegning: " + ytelse.name());
+		}
 	}
 
 	private Inntekt mapPeriodeinntektForArbeidstakerEllerFrilans(Periodeinntekt periodeinntekt) {

@@ -20,6 +20,7 @@ public class Periodeinntekt {
     private InntektPeriodeType inntektPeriodeType;
     private List<NaturalYtelse> naturalYtelser = new ArrayList<>();
     private AktivitetStatus aktivitetStatus;
+	private RelatertYtelseType ytelse;
 
     public BigDecimal getInntekt() {
         return inntekt;
@@ -57,7 +58,11 @@ public class Periodeinntekt {
         return Optional.ofNullable(utbetalingsgrad);
     }
 
-    public List<NaturalYtelse> getNaturalYtelser() {
+	public RelatertYtelseType getYtelse() {
+		return ytelse;
+	}
+
+	public List<NaturalYtelse> getNaturalYtelser() {
         return Collections.unmodifiableList(naturalYtelser);
     }
 
@@ -115,7 +120,12 @@ public class Periodeinntekt {
             return this;
         }
 
-        public Builder medMåned(LocalDate dato) {
+	    public Builder medYtelse(RelatertYtelseType ytelse) {
+		    kladd.ytelse = ytelse;
+		    return this;
+	    }
+
+	    public Builder medMåned(LocalDate dato) {
             kladd.periode = Periode.of(dato.withDayOfMonth(1), dato.withDayOfMonth(1).plusMonths(1).minusDays(1));
             return this;
         }
