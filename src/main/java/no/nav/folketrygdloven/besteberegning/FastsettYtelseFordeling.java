@@ -17,9 +17,8 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -61,7 +60,7 @@ public class FastsettYtelseFordeling {
 
 	private static List<Inntekt> utledFordelingK14Ytelser(List<YtelsegrunnlagPeriode> ytelseperioder, Periodeinntekt periodeinntekt, Periode periodeInntektErTjentI) {
 		validerK14Ytelser(ytelseperioder);
-		Map<YtelseAktivitetType, BigDecimal> aktivitetInntektMap = new HashMap<>();
+		EnumMap<YtelseAktivitetType, BigDecimal> aktivitetInntektMap = new EnumMap<>(YtelseAktivitetType.class);
 		ytelseperioder.forEach(ytelseperiode -> {
 			Optional<Periode> overlapp = finnOverlappMellomPerioder(ytelseperiode.getPeriode(), periodeInntektErTjentI);
 			overlapp.ifPresent(op -> ytelseperiode.getAndeler().forEach(ytelseAndel -> {
@@ -108,7 +107,7 @@ public class FastsettYtelseFordeling {
 	                                                      Periodeinntekt periodeinntekt, Periode periodeInntektErTjentI) {
 		validerSykepengeytele(perioderSomOverlapperInntektsperiode);
 
-		Map<YtelseAktivitetType, List<Periode>> sykepengeperioderPrAktivitetMap = new HashMap<>();
+		EnumMap<YtelseAktivitetType, List<Periode>> sykepengeperioderPrAktivitetMap = new EnumMap<>(YtelseAktivitetType.class);
 		BigDecimal totaltOverlappendeDager = BigDecimal.valueOf(finnTotalVarighetOverlapp(perioderSomOverlapperInntektsperiode, periodeInntektErTjentI));
 
 		for (YtelsegrunnlagPeriode ytelseperiode : perioderSomOverlapperInntektsperiode) {
