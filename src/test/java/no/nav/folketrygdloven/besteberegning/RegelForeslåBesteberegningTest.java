@@ -1,6 +1,7 @@
 package no.nav.folketrygdloven.besteberegning;
 
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.GRUNNBELØPLISTE;
+import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.GRUNNBELØP_2019;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import java.math.BigDecimal;
@@ -93,13 +94,15 @@ class RegelForeslåBesteberegningTest {
 	}
 
 	private BesteberegningRegelmodell lagRegelmodell(List<Periode> perioderMedNæring, List<Periodeinntekt> periodeinntekter) {
-		return new BesteberegningRegelmodell(new BesteberegningInput(
-				lagInntektsgrunnlag(periodeinntekter),
-				GRUNNBELØP_SATSER,
-				G_VERDI,
-				SKJÆRINGSTIDSPUNKT_OPPTJENING,
-				perioderMedNæring,
-                BigDecimal.ZERO));
+		BesteberegningInput bbInput = BesteberegningInput.builder()
+				.medInntektsgrunnlag(lagInntektsgrunnlag(periodeinntekter))
+				.medGrunnbeløpSatser(GRUNNBELØP_SATSER)
+				.medGjeldendeGVerdi(G_VERDI)
+				.medPerioderMedNæringsvirksomhet(perioderMedNæring)
+				.medBeregnetGrunnlag(BigDecimal.ZERO)
+				.medSkjæringstidspunktOpptjening(SKJÆRINGSTIDSPUNKT_OPPTJENING)
+				.build();
+		return new BesteberegningRegelmodell(bbInput);
 	}
 
 	private Inntektsgrunnlag lagInntektsgrunnlag(List<Periodeinntekt> inntekter) {
