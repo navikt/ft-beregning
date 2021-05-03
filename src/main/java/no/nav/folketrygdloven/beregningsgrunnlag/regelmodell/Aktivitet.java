@@ -26,7 +26,15 @@ public enum Aktivitet {
 
     private static final Set<Aktivitet> AKTIVITETER_MED_ORGNR = new HashSet<>(Arrays.asList(ARBEIDSTAKERINNTEKT, FRILANSINNTEKT));
 
+	private static final Set<Aktivitet> YTELSER_I_SAMMENLIGNINGSGRUNNLAGET = new HashSet<>(Arrays.asList(FORELDREPENGER_MOTTAKER,
+			OMSORGSPENGER, OPPLÆRINGSPENGER, PLEIEPENGER_MOTTAKER, SVANGERSKAPSPENGER_MOTTAKER, SYKEPENGER_MOTTAKER));
+
     public boolean harOrgnr() {
         return AKTIVITETER_MED_ORGNR.contains(this);
     }
+
+	public boolean erYtelseFraSammenligningsfilter() {
+		return YTELSER_I_SAMMENLIGNINGSGRUNNLAGET.contains(this);
+	}
+
 }

@@ -3,6 +3,7 @@ package no.nav.folketrygdloven.besteberegning;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -82,11 +83,10 @@ class ErSeksBesteMånederBedreTest {
 	}
 
 	private BesteberegningInput lagInput(int beregnet) {
-		return new BesteberegningInput(null,
-				Collections.emptyList(),
-				null, null,
-				Collections.emptyList(),
-				BigDecimal.valueOf(beregnet));
+		return BesteberegningInput.builder()
+				.medSkjæringstidspunktOpptjening(LocalDate.now())
+				.medBeregnetGrunnlag(BigDecimal.valueOf(beregnet))
+				.build();
 	}
 
 	private BesteberegnetAndel lagAndel(int inntekt, String orgnr) {

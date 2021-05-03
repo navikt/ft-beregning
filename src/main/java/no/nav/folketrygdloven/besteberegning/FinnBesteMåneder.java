@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +23,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Re
 import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.FinnGjennomsnittligPGI;
 import no.nav.folketrygdloven.beregningsgrunnlag.util.Virkedager;
 import no.nav.folketrygdloven.besteberegning.modell.BesteberegningRegelmodell;
+import no.nav.folketrygdloven.besteberegning.modell.input.Ytelsegrunnlag;
 import no.nav.folketrygdloven.besteberegning.modell.output.AktivitetNøkkel;
 import no.nav.folketrygdloven.besteberegning.modell.output.BeregnetMånedsgrunnlag;
 import no.nav.folketrygdloven.besteberegning.modell.output.Inntekt;
@@ -84,7 +86,7 @@ class FinnBesteMåneder extends LeafSpecification<BesteberegningRegelmodell> {
 		var sisteFom = skjæringstidspunktOpptjening.minusMonths(1).withDayOfMonth(1);
 		var fom = førsteFom;
 		while (!fom.isAfter(sisteFom)) {
-			var beregnetMånedsgrunnlag = lagGrunnlagForMåned(inntekter, perioderMedNæringsvirksomhet, snittPGIPrMåned, fom);
+			var beregnetMånedsgrunnlag = lagGrunnlagForMåned(inntekter, perioderMedNæringsvirksomhet, snittPGIPrMåned, fom, regelmodell.getInput().getYtelsegrunnlag());
 			månedsgrunnlagListe.add(beregnetMånedsgrunnlag);
 			fom = fom.plusMonths(1);
 		}
@@ -93,22 +95,26 @@ class FinnBesteMåneder extends LeafSpecification<BesteberegningRegelmodell> {
 
 	private BeregnetMånedsgrunnlag lagGrunnlagForMåned(List<Periodeinntekt> inntekter,
 	                                                   List<Periode> perioderMedNæringsvirksomhet,
-	                                                   BigDecimal gjenommsnittligPGI, LocalDate fom) {
+	                                                   BigDecimal gjenommsnittligPGI, LocalDate fom,
+	                                                   List<Ytelsegrunnlag> ytelsegrunnlag) {
 		var periode = Periode.of(fom, fom.with(TemporalAdjusters.lastDayOfMonth()));
 		var beregnetMånedsgrunnlag = new BeregnetMånedsgrunnlag(YearMonth.from(fom));
 		inntekter.stream()
 				.filter(p -> p.getInntektskilde().equals(Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING))
 				.filter(p -> AktivitetStatus.KUN_YTELSE.equals(p.getAktivitetStatus()) && p.getYtelse() != null)
 				.filter(p -> p.erInnenforPeriode(periode))
-				.map(this::mapTilInntekt).forEach(beregnetMånedsgrunnlag::leggTilInntekt);
+				.map(intp -> mapYtelseTilInntekt(intp, ytelsegrunnlag))
+				.forEach(fordelteInntekter -> fordelteInntekter.forEach(beregnetMånedsgrunnlag::leggTilInntekt));
 		inntekter.stream()
 				.filter(p -> p.getInntektskilde().equals(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING))
 				.filter(p -> p.erInnenforPeriode(periode))
-				.map(this::mapTilInntekt).forEach(beregnetMånedsgrunnlag::leggTilInntekt);
+				.map(this::mapTilInntekt)
+				.forEach(beregnetMånedsgrunnlag::leggTilInntekt);
 		inntekter.stream()
 				.filter(p -> p.getInntektskilde().equals(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP))
 				.filter(p -> periode.overlapper(p.getPeriode()))
-				.map(periodeinntekt -> mapTilYtelseTilInntekt(periodeinntekt, periode)).forEach(beregnetMånedsgrunnlag::leggTilInntekt);
+				.map(periodeinntekt -> mapAAPEllerDPTilInntekt(periodeinntekt, periode))
+				.forEach(beregnetMånedsgrunnlag::leggTilInntekt);
 		finnInntektForNæring(perioderMedNæringsvirksomhet, gjenommsnittligPGI, periode, beregnetMånedsgrunnlag.finnSum())
 				.ifPresent(beregnetMånedsgrunnlag::leggTilInntekt);
 		return beregnetMånedsgrunnlag;
@@ -138,7 +144,14 @@ class FinnBesteMåneder extends LeafSpecification<BesteberegningRegelmodell> {
 		}
 	}
 
-	private Inntekt mapTilYtelseTilInntekt(Periodeinntekt periodeinntekt, Periode periode) {
+	private List<Inntekt> mapYtelseTilInntekt(Periodeinntekt periodeinntekt, List<Ytelsegrunnlag> ytelsegrunnlag) {
+		if (ytelsegrunnlag.isEmpty()) {
+			throw new IllegalStateException("Har funnet ytelseinntekt uten å ha et ytelsegrunnlag under besteberegning");
+		}
+		return FastsettYtelseFordeling.fordelYtelse(ytelsegrunnlag, periodeinntekt);
+	}
+
+	private Inntekt mapAAPEllerDPTilInntekt(Periodeinntekt periodeinntekt, Periode periode) {
 		var aktivitet = mapAktivitetstatusTilInntektType(periodeinntekt);
 		var aktivitetNøkkel = AktivitetNøkkel.forType(aktivitet);
 		var inntekt = periodeinntekt.getInntekt();
