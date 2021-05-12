@@ -22,16 +22,12 @@ public class RegelmodellOversetter {
         for (Evaluation ev : leafEvaluations) {
             if (ev.getOutcome() != null) {
                 Resultat res = ev.result();
-                switch (res) {
-                    case JA:
-                        return opprettResultat(ResultatBeregningType.BEREGNET, regelInput, sporing);
-                    case NEI:
-                        return opprettResultat(ResultatBeregningType.IKKE_BEREGNET, ev, regelInput, sporing);
-                    case IKKE_VURDERT:
-                        return opprettResultat(ResultatBeregningType.IKKE_VURDERT, regelInput, sporing);
-                    default:
-                        throw new IllegalArgumentException("Ukjent Resultat:" + res + " ved evaluering av:" + ev);
-                }
+	            return switch (res) {
+		            case JA -> opprettResultat(ResultatBeregningType.BEREGNET, regelInput, sporing);
+		            case NEI -> opprettResultat(ResultatBeregningType.IKKE_BEREGNET, ev, regelInput, sporing);
+		            case IKKE_VURDERT -> opprettResultat(ResultatBeregningType.IKKE_VURDERT, regelInput, sporing);
+		            default -> throw new IllegalArgumentException("Ukjent Resultat:" + res + " ved evaluering av:" + ev);
+	            };
             }
         }
         return opprettResultat(ResultatBeregningType.BEREGNET, regelInput, sporing);
