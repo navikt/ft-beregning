@@ -309,6 +309,45 @@ class FinnBesteMånederTest {
 		assertThat(besteMåneder.get(5).finnSum()).isEqualByComparingTo(BigDecimal.valueOf(15000));
 	}
 
+	/**
+	 * Det kan være ytelseutbetalinger for mai i sammenligningsgrunnlaget
+	 * uten at det finnes en tilsvarende vedtaksperiode i ytelsegrunnlaget fordi det kanvære utbetalt som feriepenger.
+	 * Slike utbetalinger skal filtreres ut og ikke lede til exception.
+	 */
+	@Test
+	void skal_ikke_ta_med_mai_dersom_det_ikke_finnes_ytelsegrunnlag_for_denne_måneden() {
+		// Arrange
+		List<Periodeinntekt> periodeinntekter = new ArrayList<>();
+
+		// Ekstremt høy inntekt som ikke skal bli med i grunnlaget
+		periodeinntekter.add(lagPeriodeInntektYtelse(6, BigDecimal.valueOf(900000), RelatertYtelseType.SYKEPENGER));
+		for (int i = 0; i < 12; i++) {
+			periodeinntekter.add(lagPeriodeInntektArbeidstaker(i, BigDecimal.valueOf(10000), ORGNR));
+		}
+
+		BesteberegningRegelmodell regelmodell = lagRegelmodell(Collections.emptyList(), periodeinntekter);
+
+		// Act
+		evaluer(regelmodell);
+
+		// Assert
+		List<BeregnetMånedsgrunnlag> besteMåneder = regelmodell.getOutput().getBesteMåneder().stream()
+				.sorted(Comparator.comparing(p -> p.getMåned().getMonth()))
+				.collect(Collectors.toList());
+		assertThat(besteMåneder.size()).isEqualTo(6);
+		assertThat(besteMåneder.get(0).getMåned()).isEqualTo(YearMonth.of(2019, 5));
+		assertThat(besteMåneder.get(0).finnSum()).isEqualByComparingTo(BigDecimal.valueOf(10000));
+		assertThat(besteMåneder.get(1).getMåned()).isEqualTo(YearMonth.of(2019, 6));
+		assertThat(besteMåneder.get(1).finnSum()).isEqualByComparingTo(BigDecimal.valueOf(10000));
+		assertThat(besteMåneder.get(2).getMåned()).isEqualTo(YearMonth.of(2019, 7));
+		assertThat(besteMåneder.get(2).finnSum()).isEqualByComparingTo(BigDecimal.valueOf(10000));
+		assertThat(besteMåneder.get(3).getMåned()).isEqualTo(YearMonth.of(2019, 8));
+		assertThat(besteMåneder.get(3).finnSum()).isEqualByComparingTo(BigDecimal.valueOf(10000));
+		assertThat(besteMåneder.get(4).getMåned()).isEqualTo(YearMonth.of(2019, 9));
+		assertThat(besteMåneder.get(4).finnSum()).isEqualByComparingTo(BigDecimal.valueOf(10000));
+		assertThat(besteMåneder.get(5).getMåned()).isEqualTo(YearMonth.of(2019, 10));
+		assertThat(besteMåneder.get(5).finnSum()).isEqualByComparingTo(BigDecimal.valueOf(10000));
+	}
 
 	private void lagSykepengeperiode(int månaderFørStpFom, YtelseAktivitetType ytelsegrunnlag) {
 		Optional<Ytelsegrunnlag> eksisterendeYG = alleYtelsegrunnlag.stream().filter(yg -> yg.getYtelse().equals(RelatertYtelseType.SYKEPENGER)).findFirst();

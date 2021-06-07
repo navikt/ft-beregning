@@ -3,9 +3,11 @@ package no.nav.folketrygdloven.besteberegning;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.YearMonth;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +25,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.FinnGjennomsnittlig
 import no.nav.folketrygdloven.beregningsgrunnlag.util.Virkedager;
 import no.nav.folketrygdloven.besteberegning.modell.BesteberegningRegelmodell;
 import no.nav.folketrygdloven.besteberegning.modell.input.Ytelsegrunnlag;
+import no.nav.folketrygdloven.besteberegning.modell.input.YtelsegrunnlagPeriode;
 import no.nav.folketrygdloven.besteberegning.modell.output.AktivitetNøkkel;
 import no.nav.folketrygdloven.besteberegning.modell.output.BeregnetMånedsgrunnlag;
 import no.nav.folketrygdloven.besteberegning.modell.output.Inntekt;
@@ -144,10 +147,32 @@ class FinnBesteMåneder extends LeafSpecification<BesteberegningRegelmodell> {
 	}
 
 	private List<Inntekt> mapYtelseTilInntekt(Periodeinntekt periodeinntekt, List<Ytelsegrunnlag> ytelsegrunnlag) {
+		if (erFeriepengemånedOgUtenVedtak(periodeinntekt, ytelsegrunnlag)) {
+			return Collections.emptyList();
+		}
 		if (ytelsegrunnlag.isEmpty()) {
-			throw new IllegalStateException("Har funnet ytelseinntekt uten å ha et ytelsegrunnlag under besteberegning");
+			throw new IllegalStateException("Har funnet ytelseinntekt uten å ha et ytelsegrunnlag under besteberegning for periode "
+					+ periodeinntekt.getPeriode() + " og ytelse " + periodeinntekt.getYtelse());
 		}
 		return FastsettYtelseFordeling.fordelYtelse(ytelsegrunnlag, periodeinntekt);
+	}
+
+	private boolean erFeriepengemånedOgUtenVedtak(Periodeinntekt periodeinntekt, List<Ytelsegrunnlag> alleYtelsegrunnlag) {
+		if (!erFeriepengeMåned(periodeinntekt)) {
+			return false;
+		}
+		List<YtelsegrunnlagPeriode> alleYtelseperioderForYtelse = alleYtelsegrunnlag.stream()
+				.filter(yg -> yg.getYtelse().equals(periodeinntekt.getYtelse()))
+				.findFirst()
+				.map(Ytelsegrunnlag::getPerioder)
+				.orElse(Collections.emptyList());
+
+		return alleYtelseperioderForYtelse.stream()
+				.noneMatch(ygp -> ygp.getPeriode().overlapper(periodeinntekt.getPeriode()));
+	}
+
+	private boolean erFeriepengeMåned(Periodeinntekt periodeinntekt) {
+		return Month.MAY.equals(periodeinntekt.getPeriode().getFom().getMonth());
 	}
 
 	private Inntekt mapAAPEllerDPTilInntekt(Periodeinntekt periodeinntekt, Periode periode) {
