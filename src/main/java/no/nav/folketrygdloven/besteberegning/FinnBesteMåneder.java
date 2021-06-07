@@ -209,16 +209,12 @@ class FinnBesteMåneder extends LeafSpecification<BesteberegningRegelmodell> {
 	}
 
 	private Aktivitet mapYtelsetype(RelatertYtelseType ytelse) {
-		switch (ytelse) {
-			case FORELDREPENGER:
-				return Aktivitet.FORELDREPENGER_MOTTAKER;
-			case SVANGERSKAPSPENGER:
-				return Aktivitet.SVANGERSKAPSPENGER_MOTTAKER;
-			case SYKEPENGER:
-				return Aktivitet.SYKEPENGER_MOTTAKER;
-			default:
-				throw new IllegalStateException("Støtte på ukjent ytelse under besteberegning: " + ytelse.name());
-		}
+		return switch (ytelse) {
+			case FORELDREPENGER -> Aktivitet.FORELDREPENGER_MOTTAKER;
+			case SVANGERSKAPSPENGER -> Aktivitet.SVANGERSKAPSPENGER_MOTTAKER;
+			case SYKEPENGER -> Aktivitet.SYKEPENGER_MOTTAKER;
+			default -> throw new IllegalStateException("Støtte på ukjent ytelse under besteberegning: " + ytelse.name());
+		};
 	}
 
 	private Inntekt mapPeriodeinntektForArbeidstakerEllerFrilans(Periodeinntekt periodeinntekt) {

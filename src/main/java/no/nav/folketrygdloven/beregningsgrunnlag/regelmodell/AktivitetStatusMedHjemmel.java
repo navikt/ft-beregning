@@ -33,14 +33,11 @@ public class AktivitetStatusMedHjemmel implements Comparable<AktivitetStatusMedH
         if (aktivitetStatus.equals(andelStatus)) {
             return true;
         }
-        switch (aktivitetStatus) {
-            case ATFL_SN:
-                return AktivitetStatus.SN.equals(andelStatus) || AktivitetStatus.ATFL.equals(andelStatus);
-            case KUN_YTELSE:
-                return true;
-            default:
-                return false;
-        }
+	    return switch (aktivitetStatus) {
+		    case ATFL_SN -> AktivitetStatus.SN.equals(andelStatus) || AktivitetStatus.ATFL.equals(andelStatus);
+		    case KUN_YTELSE -> true;
+		    default -> false;
+	    };
     }
 
     @Override
