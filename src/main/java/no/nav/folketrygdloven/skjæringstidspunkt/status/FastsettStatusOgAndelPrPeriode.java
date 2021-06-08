@@ -54,12 +54,39 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
         }
 	    else {
 		    MidlertidigInaktivType midlertidigInaktivType = finnMidlertidigInaktivType(regelmodell);
-	    	if (midlertidigInaktivType != null && midlertidigInaktivType.equals(MidlertidigInaktivType.B)) {
+
+		    if (midlertidigInaktivType != null && midlertidigInaktivType.equals(MidlertidigInaktivType.A)) {
 			    regelmodell.leggTilAktivitetStatus(AktivitetStatus.MIDL_INAKTIV);
+			    leggTilBrukersAndel(regelmodell);
 		    }
-		    opprettStatusForAktiviteter(regelmodell, aktivePerioderVedStp);
+
+		    if (midlertidigInaktivType != null && midlertidigInaktivType.equals(MidlertidigInaktivType.B)) {
+			    regelmodell.leggTilAktivitetStatus(AktivitetStatus.MIDL_INAKTIV);
+			    opprettStatusForAktiviteter(regelmodell, aktivePerioderVedStp);
+		    }
 	    }
     }
+
+	private void opprettAktivitetStatuserOld(AktivitetStatusModell regelmodell) {
+
+		List<AktivPeriode> aktivePerioder = regelmodell.getAktivePerioder();
+		List<AktivPeriode> aktivePerioderVedStp = hentAktivePerioderForBeregning(regelmodell.getBeregningstidspunkt(), aktivePerioder);
+		if (harKunYtelsePåSkjæringstidspunkt(aktivePerioderVedStp)) {
+			regelmodell.leggTilAktivitetStatus(AktivitetStatus.KUN_YTELSE);
+			leggTilBrukersAndel(regelmodell);
+		} else if (aktivePerioderVedStp.isEmpty() && gjelderMidlertidigInaktiv(aktivePerioder, regelmodell.getSkjæringstidspunktForBeregning())) {
+			regelmodell.leggTilAktivitetStatus(AktivitetStatus.MIDL_INAKTIV);
+
+			List<AktivPeriode> aktivePerioderPåStp = finnAktivtArbeidSomStarterPåStp(aktivePerioder, regelmodell.getSkjæringstidspunktForBeregning());
+			if (!aktivePerioderPåStp.isEmpty()) {
+				opprettAndelerForAktiviteter(regelmodell, aktivePerioderPåStp);
+			} else {
+				leggTilBrukersAndel(regelmodell);
+			}
+		} else {
+			opprettStatusForAktiviteter(regelmodell, aktivePerioderVedStp);
+		}
+	}
 
 	private MidlertidigInaktivType finnMidlertidigInaktivType(AktivitetStatusModell regelmodell) {
 		if (regelmodell instanceof AktivitetStatusModellK9) {
