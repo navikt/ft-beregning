@@ -26,5 +26,5 @@ Interne henvendelser kan sendes via Slack i kanalen **#teamduplo**.
 
 # Referanser
 https://lovdata.no/dokument/NL/lov/1997-02-28-19
-
+https://github.com/navikt/ft-kalkulus#folketrygdloven
 
