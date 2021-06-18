@@ -10,17 +10,23 @@ public class OmsorgspengerGrunnlag extends YtelsesSpesifiktGrunnlag {
 
     private final BigDecimal gradertRefusjonVedSkjæringstidspunkt;
     private final boolean erSøktForFLEllerSN;
+    private final boolean finnesArbeidsandelIkkeSøktOm;
 
     public OmsorgspengerGrunnlag(BigDecimal gradertRefusjonVedSkjæringstidspunkt,
-                                 boolean erSøktForFLEllerSN) {
+                                 boolean erSøktForFLEllerSN,
+                                 boolean finnesArbeidsandelIkkeSøktOm) {
         super("OMP");
         this.erSøktForFLEllerSN = erSøktForFLEllerSN;
         this.gradertRefusjonVedSkjæringstidspunkt = gradertRefusjonVedSkjæringstidspunkt;
+	    this.finnesArbeidsandelIkkeSøktOm = finnesArbeidsandelIkkeSøktOm;
     }
 
 
     public boolean erDirekteUtbetaling() {
     	if (erSøktForFLEllerSN) {
+    		return true;
+	    }
+    	if (finnesArbeidsandelIkkeSøktOm) {
     		return true;
 	    }
         BeregningsgrunnlagPeriode førstePeriode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
