@@ -348,7 +348,7 @@ class FastsettBeregnetPrÅrTest {
             .medSkjæringstidspunkt(LocalDate.now())
             .medInntektsgrunnlag(new Inntektsgrunnlag())
             .medBeregningsgrunnlagPeriode(periode)
-            .medYtelsesSpesifiktGrunnlag(new OmsorgspengerGrunnlag(zero, false))
+            .medYtelsesSpesifiktGrunnlag(new OmsorgspengerGrunnlag(zero, false, false))
             .build();
     }
 
