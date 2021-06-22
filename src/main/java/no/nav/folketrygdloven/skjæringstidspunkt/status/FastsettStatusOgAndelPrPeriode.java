@@ -1,6 +1,8 @@
 package no.nav.folketrygdloven.skjæringstidspunkt.status;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -156,9 +158,17 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
         return aktivitetStatus;
     }
 
-    private List<AktivPeriode> hentAktivePerioderForBeregning(LocalDate bergningstidspunkt, List<AktivPeriode> aktivePerioder) {
-        return aktivePerioder.stream()
-		        .filter(ap -> ap.inneholder(bergningstidspunkt)).collect(Collectors.toList());
+    private List<AktivPeriode> hentAktivePerioderForBeregning(LocalDate beregningstidspunkt, List<AktivPeriode> aktivePerioder) {
+		if (beregningstidspunkt.getDayOfWeek() == DayOfWeek.SATURDAY || beregningstidspunkt.getDayOfWeek() == DayOfWeek.SUNDAY) {
+			LocalDate justertBeregningstidspunkt = beregningstidspunkt.with(TemporalAdjusters.previous(DayOfWeek.FRIDAY));
+			return hentAktivePerioder(justertBeregningstidspunkt, aktivePerioder);
+		}
+	    return hentAktivePerioder(beregningstidspunkt, aktivePerioder);
     }
+
+	private List<AktivPeriode> hentAktivePerioder(LocalDate beregningstidspunkt, List<AktivPeriode> aktivePerioder) {
+		return aktivePerioder.stream()
+				.filter(ap -> ap.inneholder(beregningstidspunkt)).collect(Collectors.toList());
+	}
 
 }

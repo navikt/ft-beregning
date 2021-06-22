@@ -27,7 +27,7 @@ public class RegelFastsettStatusVedSkjæringtidspunktTest {
 
     @BeforeEach
     public void setup() {
-        skjæringstidspunktForBeregning = LocalDate.of(2018, Month.JANUARY, 15);
+        skjæringstidspunktForBeregning = LocalDate.of(2018, Month.JANUARY, 16);
         regelmodell = new AktivitetStatusModell();
         regelmodell.setSkjæringstidspunktForBeregning(skjæringstidspunktForBeregning);
     }
