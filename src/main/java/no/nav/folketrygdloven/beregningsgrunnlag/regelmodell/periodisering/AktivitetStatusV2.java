@@ -13,6 +13,7 @@ public enum AktivitetStatusV2 {
     DP("Dagpenger", 1, 3),
     AAP("Mottaker av arbeidsavklaringspenger", 1, 4),
     MS("Militær/Sivil"),
+	BA("Brukers andel"),
 	IN("INAKTIV"),
     SN("Selvstendig næringsdrivende", 2, 5); //Skal ligge sist av AktivitetStatusene
 
