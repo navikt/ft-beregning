@@ -1,9 +1,10 @@
-package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt;
+package no.nav.folketrygdloven.skjæringstidspunkt.regelmodell;
 
 import java.util.Objects;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.ReferanseType;
 
 public class Arbeidsforhold {
 	private Aktivitet aktivitet;
@@ -131,6 +132,11 @@ public class Arbeidsforhold {
 			return this;
 		}
 
+		public Builder medHarInntektsmelding(boolean harInntektsmelding) {
+			arbeidsforhold.harInntektsmelding = harInntektsmelding;
+			return this;
+		}
+
 		public Arbeidsforhold build() {
 			verifyForBuild();
 			return arbeidsforhold;
@@ -166,6 +172,14 @@ public class Arbeidsforhold {
 				.build();
 	}
 
+	public static Arbeidsforhold nyttArbeidsforholdHosVirksomhet(String orgnr, boolean harInntektsmelding) {
+		return Arbeidsforhold.builder()
+				.medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT)
+				.medOrgnr(orgnr)
+				.medHarInntektsmelding(harInntektsmelding)
+				.build();
+	}
+
 	public static Arbeidsforhold nyttArbeidsforholdHosVirksomhet(String orgnr) {
 		return Arbeidsforhold.builder()
 				.medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT)
@@ -173,12 +187,29 @@ public class Arbeidsforhold {
 				.build();
 	}
 
+	public static Arbeidsforhold nyttArbeidsforholdHosVirksomhet(String orgnr, String arbeidsforholdId, boolean harInntektsmelding) {
+		return Arbeidsforhold.builder()
+				.medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT)
+				.medOrgnr(orgnr)
+				.medArbeidsforholdId(arbeidsforholdId)
+				.medHarInntektsmelding(harInntektsmelding)
+				.build();
+	}
 
 	public static Arbeidsforhold nyttArbeidsforholdHosVirksomhet(String orgnr, String arbeidsforholdId) {
 		return Arbeidsforhold.builder()
 				.medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT)
 				.medOrgnr(orgnr)
 				.medArbeidsforholdId(arbeidsforholdId)
+				.build();
+	}
+
+
+	public static Arbeidsforhold nyttArbeidsforholdHosPrivatperson(String aktørId, boolean harInntektsmelding) {
+		return Arbeidsforhold.builder()
+				.medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT)
+				.medAktørId(aktørId)
+				.medHarInntektsmelding(harInntektsmelding)
 				.build();
 	}
 
@@ -189,12 +220,5 @@ public class Arbeidsforhold {
 				.build();
 	}
 
-	public static Arbeidsforhold nyttArbeidsforholdHosPrivatperson(String aktørId, String arbeidsforholdId) {
-		return Arbeidsforhold.builder()
-				.medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT)
-				.medAktørId(aktørId)
-				.medArbeidsforholdId(arbeidsforholdId)
-				.build();
-	}
 
 }

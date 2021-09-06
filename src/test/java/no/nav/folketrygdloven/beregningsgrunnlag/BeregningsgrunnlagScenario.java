@@ -457,10 +457,6 @@ public class BeregningsgrunnlagScenario {
         return Arrays.asList(BigDecimal.valueOf(pgi3 * GSNITT_2015), BigDecimal.valueOf(pgi2 * GSNITT_2016), BigDecimal.valueOf(pgi1 * GSNITT_2017));
     }
 
-    public static List<BigDecimal> årsinntekterFor2SisteÅr(double pgi2, double pgi1) {
-        return Arrays.asList(BigDecimal.valueOf(pgi2 * GSNITT_2017), BigDecimal.valueOf(pgi1 * GSNITT_2018));
-    }
-
     public static List<BigDecimal> årsinntektForOppgittÅrene(double pgiMultiplicand, int... åreneArray) {
         List<BigDecimal> pgiListe = new ArrayList<>();
         for (int året : åreneArray) {
