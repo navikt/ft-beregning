@@ -124,6 +124,20 @@ class FastsettYtelseFordelingTest {
 	}
 
 	@Test
+	public void skal_ikke_bruke_ytelsen_om_ingen_overlappende_vedtak_finnes() {
+		// Arrange
+		Periodeinntekt inntekt = lagPeriodeinntekt(YearMonth.of(2021, 4), RelatertYtelseType.FORELDREPENGER, BigDecimal.valueOf(15000));
+		lagForeldrepengeperiode(LocalDate.of(2021,1,1), LocalDate.of(2021,1,31), lagYtelseAndel(YtelseAktivitetType.YTELSE_FOR_DAGPENGER, 400));
+		lagForeldrepengeperiode(LocalDate.of(2021,2,1), LocalDate.of(2021,2,28), lagYtelseAndel(YtelseAktivitetType.YTELSE_FOR_ARBEID, 400));
+
+		// Act
+		List<Inntekt> fordeltInntekt = fordelInntekt(inntekt);
+
+		// Assert
+		assertThat(fordeltInntekt).hasSize(0);
+	}
+
+	@Test
 	public void skal_fordele_foreldrepenger_et_grunnlag_en_andel() {
 		// Arrange
 		Periodeinntekt inntekt = lagPeriodeinntekt(YearMonth.of(2021, 3), RelatertYtelseType.FORELDREPENGER, BigDecimal.valueOf(15000));

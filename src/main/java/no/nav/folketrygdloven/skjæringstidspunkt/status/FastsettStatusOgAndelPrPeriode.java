@@ -4,17 +4,14 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.MidlertidigInaktivType;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivPeriode;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModell;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModellK9;
@@ -62,12 +59,20 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
 			    leggTilBrukersAndel(regelmodell);
 		    } else if (midlertidigInaktivType != null && midlertidigInaktivType.equals(MidlertidigInaktivType.B)) {
 			    regelmodell.leggTilAktivitetStatus(AktivitetStatus.MIDL_INAKTIV);
-			    opprettStatusForAktiviteter(regelmodell, aktivePerioderVedStp);
+			    if (harAlleInntektsmelding(aktivePerioderVedStp)) {
+				    opprettStatusForAktiviteter(regelmodell, aktivePerioderVedStp);
+			    } else {
+				    leggTilBrukersAndel(regelmodell);
+			    }
 		    } else {
 			    opprettStatusForAktiviteter(regelmodell, aktivePerioderVedStp);
 		    }
 	    }
     }
+
+	private boolean harAlleInntektsmelding(List<AktivPeriode> aktivePerioderVedStp) {
+		return aktivePerioderVedStp.stream().allMatch(a -> a.getArbeidsforhold() != null && a.getArbeidsforhold().harInntektsmelding());
+	}
 
 	private MidlertidigInaktivType finnMidlertidigInaktivType(AktivitetStatusModell regelmodell) {
 		if (regelmodell instanceof AktivitetStatusModellK9) {
@@ -81,34 +86,6 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
 		regelmodell.leggTilBeregningsgrunnlagPrStatus(bgPrStatus);
 	}
 
-	private List<AktivPeriode> finnAktivtArbeidSomStarterPåStp(List<AktivPeriode> aktivePerioder, LocalDate skjæringstidspunktForBeregning) {
-		List<AktivPeriode> aktiviteterSomStarterPåStp = aktivePerioder.stream()
-				.filter(p -> p.getPeriode().getFom().isEqual(skjæringstidspunktForBeregning))
-				.filter(p -> Aktivitet.ARBEIDSTAKERINNTEKT.equals(p.getAktivitet()))
-				.collect(Collectors.toList());
-		return aktiviteterSomStarterPåStp;
-	}
-
-	private boolean gjelderMidlertidigInaktiv(List<AktivPeriode> aktivePerioder, LocalDate skjæringstidspunktForBeregning) {
-		Optional<AktivPeriode> sisteAktivitetFørStp = aktivePerioder.stream()
-				.filter(p -> p.getPeriode().getFom().isBefore(skjæringstidspunktForBeregning))
-				.max(Comparator.comparing(p -> p.getPeriode().getTom()));
-		Boolean aktivitetSlutterIkkeFørSkjæringstidspunkt = sisteAktivitetFørStp.map(a -> a.getPeriode().getTom().plusDays(1).isAfter(skjæringstidspunktForBeregning)).orElse(false);
-		if (aktivitetSlutterIkkeFørSkjæringstidspunkt) {
-			return false;
-		}
-		Optional<Periode> periodeFraSisteAktivitetsdatoTilStp = sisteAktivitetFørStp.map(a -> Periode.of(a.getPeriode().getTom().plusDays(1), skjæringstidspunktForBeregning.minusDays(1)));
-		Boolean harMindreEnn28DagersInaktivitet = periodeFraSisteAktivitetsdatoTilStp.map(p -> p.getVarighetDager() < MIDLERTIDIG_INAKTIV_MAX_VARIGHET_DAGER).orElse(false);
-		return harMindreEnn28DagersInaktivitet;
-	}
-
-	private void opprettAndelerForAktiviteter(AktivitetStatusModell regelmodell, List<AktivPeriode> aktivePerioderVedStp) {
-		for (AktivPeriode ap : aktivePerioderVedStp) {
-			AktivitetStatus aktivitetStatus = mapAktivitetTilStatus(ap.getAktivitet());
-			var arbeidsforhold = AktivitetStatus.ATFL.equals(aktivitetStatus) ? ap.getArbeidsforhold() : null;
-			regelmodell.leggTilBeregningsgrunnlagPrStatus(new BeregningsgrunnlagPrStatus(aktivitetStatus, arbeidsforhold));
-		}
-	}
 
 	private void opprettStatusForAktiviteter(AktivitetStatusModell regelmodell, List<AktivPeriode> aktivePerioderVedStp) {
         for (AktivPeriode ap : aktivePerioderVedStp) {

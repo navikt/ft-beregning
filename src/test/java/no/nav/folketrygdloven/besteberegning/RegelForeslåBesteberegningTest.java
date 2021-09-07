@@ -1,7 +1,6 @@
 package no.nav.folketrygdloven.besteberegning;
 
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.GRUNNBELØPLISTE;
-import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.GRUNNBELØP_2019;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import java.math.BigDecimal;
