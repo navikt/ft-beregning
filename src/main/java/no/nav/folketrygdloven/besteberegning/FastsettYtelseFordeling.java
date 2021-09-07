@@ -17,6 +17,7 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Optional;
@@ -33,13 +34,17 @@ public class FastsettYtelseFordeling {
 		List<YtelsegrunnlagPeriode> ytelseperioder = søkEtterYtelseMedOverlappIPeriode(alleYtelsegrunnlag, periodeinntekt.getYtelse(), periodeinntekt.getPeriode());
 		if (!ytelseperioder.isEmpty()) {
 			return fordelInntekt(ytelseperioder, periodeinntekt);
-		} else {
-			// Av og til utbetales en ytelse i måneden etter vedtaket er gjeldende, f.eks ved forsinket saksbehandling.
-			// Sjekker derfor måneden før også om vi ikke finner noe ytelse i måneden inntekten gjelder for
-			Periode utvidetPeriode = Periode.of(periodeinntekt.getFom().minusMonths(1), periodeinntekt.getTom());
-			List<YtelsegrunnlagPeriode> ytelseperioderUtvidet = søkEtterYtelseMedOverlappIPeriode(alleYtelsegrunnlag, periodeinntekt.getYtelse(), utvidetPeriode);
+		}
+		// Av og til utbetales en ytelse i måneden etter vedtaket er gjeldende, f.eks ved forsinket saksbehandling.
+		// Sjekker derfor måneden før også om vi ikke finner noe ytelse i måneden inntekten gjelder for
+		Periode utvidetPeriode = Periode.of(periodeinntekt.getFom().minusMonths(1), periodeinntekt.getTom());
+		List<YtelsegrunnlagPeriode> ytelseperioderUtvidet = søkEtterYtelseMedOverlappIPeriode(alleYtelsegrunnlag, periodeinntekt.getYtelse(), utvidetPeriode);
+		if (!ytelseperioderUtvidet.isEmpty()) {
 			return fordelInntekt(ytelseperioderUtvidet, periodeinntekt, utvidetPeriode);
 		}
+
+		// Finner ingen overlappende ytelsesperiode, ignorerer inntekten
+		return Collections.emptyList();
 	}
 
 	private static List<Inntekt> fordelInntekt(List<YtelsegrunnlagPeriode> ytelseperioder, Periodeinntekt periodeinntekt) {
