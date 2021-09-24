@@ -1,8 +1,6 @@
 package no.nav.folketrygdloven.skjæringstidspunkt.status;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.temporal.TemporalAdjusters;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -45,7 +43,7 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
 
     private void opprettAktivitetStatuser(AktivitetStatusModell regelmodell) {
         List<AktivPeriode> aktivePerioder = regelmodell.getAktivePerioder();
-        List<AktivPeriode> aktivePerioderVedStp = hentAktivePerioderForBeregning(regelmodell, aktivePerioder);
+        List<AktivPeriode> aktivePerioderVedStp = hentAktivePerioder(regelmodell.getBeregningstidspunkt(), aktivePerioder);
 
 	    if (harKunYtelsePåSkjæringstidspunkt(aktivePerioderVedStp)) {
             regelmodell.leggTilAktivitetStatus(AktivitetStatus.KUN_YTELSE);
@@ -135,23 +133,9 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
         return aktivitetStatus;
     }
 
-	private List<AktivPeriode> hentAktivePerioderForBeregning(AktivitetStatusModell regelmodell, List<AktivPeriode> aktivePerioder) {
-		if (regelmodell instanceof AktivitetStatusModellK9) {
-			return hentAktivePerioder(justerBeregningstidspunktForK9(regelmodell.getBeregningstidspunkt()), aktivePerioder);
-		}
-		return hentAktivePerioder(regelmodell.getBeregningstidspunkt(), aktivePerioder);
-	}
-
 	private List<AktivPeriode> hentAktivePerioder(LocalDate beregningstidspunkt, List<AktivPeriode> aktivePerioder) {
 		return aktivePerioder.stream()
 				.filter(ap -> ap.inneholder(beregningstidspunkt)).collect(Collectors.toList());
-	}
-
-	private LocalDate justerBeregningstidspunktForK9(LocalDate beregningstidspunkt) {
-		if (beregningstidspunkt.getDayOfWeek() == DayOfWeek.SATURDAY || beregningstidspunkt.getDayOfWeek() == DayOfWeek.SUNDAY) {
-			return beregningstidspunkt.with(TemporalAdjusters.previous(DayOfWeek.FRIDAY));
-		}
-		return beregningstidspunkt;
 	}
 
 }
