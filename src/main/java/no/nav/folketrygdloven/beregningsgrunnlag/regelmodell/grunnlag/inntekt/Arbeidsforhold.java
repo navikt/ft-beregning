@@ -12,7 +12,6 @@ public class Arbeidsforhold {
 	private String aktørId;
 	private ReferanseType referanseType;
 	private Periode ansettelsesPeriode;
-	private boolean harInntektsmelding;
 
 	private Arbeidsforhold() {
 	}
@@ -52,9 +51,18 @@ public class Arbeidsforhold {
 		return getOrgnr();
 	}
 
-	public boolean harInntektsmelding() {
-		return harInntektsmelding;
+	public boolean matcherArbeidsforhold(Arbeidsforhold annetAF) {
+
+		return Objects.equals(aktivitet, annetAF.aktivitet)
+				&& Objects.equals(orgnr, annetAF.orgnr)
+				&& Objects.equals(aktørId, annetAF.aktørId)
+				&& Objects.equals(referanseType, annetAF.referanseType)
+				&& (arbeidsforholdId == null
+				|| annetAF.arbeidsforholdId == null
+				|| Objects.equals(arbeidsforholdId, annetAF.arbeidsforholdId));
+
 	}
+
 
 	@Override
 	public boolean equals(Object annet) {

@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import no.nav.folketrygdloven.beregningsgrunnlag.perioder.gradering.VurderPeriodeForGradering;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Gradering;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.PeriodeÅrsak;

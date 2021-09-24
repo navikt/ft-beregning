@@ -1,10 +1,10 @@
-package no.nav.folketrygdloven.beregningsgrunnlag.perioder;
+package no.nav.folketrygdloven.beregningsgrunnlag.perioder.gradering;
 
 import java.math.BigDecimal;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AndelGradering;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.BruttoBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.PeriodisertBruttoBeregningsgrunnlag;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.gradering.GraderingPrAktivitet;
 
 class ErHøyerePrioriterteAndelerBruttoMinst6G {
 
@@ -16,8 +16,8 @@ class ErHøyerePrioriterteAndelerBruttoMinst6G {
 
     static boolean vurder(BigDecimal grunnbeløp,
                           PeriodisertBruttoBeregningsgrunnlag periodisertBruttoBeregningsgrunnlag,
-                          AndelGradering andelGradering) {
-        int avkortingPrioritet = andelGradering.getAktivitetStatus().getAvkortingPrioritet();
+                          GraderingPrAktivitet gradering) {
+        int avkortingPrioritet = gradering.getAktivitetStatus().getAvkortingPrioritet();
         BigDecimal prioritertBg = periodisertBruttoBeregningsgrunnlag.getBruttoBeregningsgrunnlag().stream()
             .filter(a -> a.getAktivitetStatus().getAvkortingPrioritet() < avkortingPrioritet)
             .map(BruttoBeregningsgrunnlag::getBruttoPrÅr)

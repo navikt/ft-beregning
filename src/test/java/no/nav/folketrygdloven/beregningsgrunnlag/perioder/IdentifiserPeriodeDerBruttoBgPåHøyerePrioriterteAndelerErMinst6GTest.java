@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
+import no.nav.folketrygdloven.beregningsgrunnlag.perioder.gradering.IdentifiserPeriodeDerBruttoBgPåHøyerePrioriterteAndelerErMinst6G;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Gradering;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
@@ -55,7 +56,7 @@ public class IdentifiserPeriodeDerBruttoBgPåHøyerePrioriterteAndelerErMinst6GT
             .build();
 
         // Act
-        Optional<LocalDate> resultatOpt = IdentifiserPeriodeDerBruttoBgPåHøyerePrioriterteAndelerErMinst6G.vurder(input, andelGradering, gradering.getPeriode());
+        Optional<LocalDate> resultatOpt = IdentifiserPeriodeDerBruttoBgPåHøyerePrioriterteAndelerErMinst6G.vurder(input, andelGradering);
 
         // Assert
         assertThat(resultatOpt).hasValueSatisfying(resultat ->
@@ -105,7 +106,7 @@ public class IdentifiserPeriodeDerBruttoBgPåHøyerePrioriterteAndelerErMinst6GT
             .build();
 
         // Act
-        Optional<LocalDate> resultatOpt = IdentifiserPeriodeDerBruttoBgPåHøyerePrioriterteAndelerErMinst6G.vurder(input, andelGradering, gradering.getPeriode());
+        Optional<LocalDate> resultatOpt = IdentifiserPeriodeDerBruttoBgPåHøyerePrioriterteAndelerErMinst6G.vurder(input, andelGradering);
 
         // Assert
         assertThat(resultatOpt).hasValueSatisfying(resultat ->
@@ -155,7 +156,7 @@ public class IdentifiserPeriodeDerBruttoBgPåHøyerePrioriterteAndelerErMinst6GT
             .build();
 
         // Act
-        Optional<LocalDate> resultatOpt = IdentifiserPeriodeDerBruttoBgPåHøyerePrioriterteAndelerErMinst6G.vurder(input, andelGradering, gradering.getPeriode());
+        Optional<LocalDate> resultatOpt = IdentifiserPeriodeDerBruttoBgPåHøyerePrioriterteAndelerErMinst6G.vurder(input, andelGradering);
 
         // Assert
         assertThat(resultatOpt).isEmpty();

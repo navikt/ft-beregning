@@ -1,12 +1,12 @@
-package no.nav.folketrygdloven.beregningsgrunnlag.perioder;
+package no.nav.folketrygdloven.beregningsgrunnlag.perioder.gradering;
 
 import java.time.LocalDate;
 import java.util.Optional;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AndelGradering;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.PeriodeModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.PeriodisertBruttoBeregningsgrunnlag;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.gradering.GraderingPrAktivitet;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.gradering.PeriodeModellGradering;
 
 class IdentifiserPeriodeDerBruttoBgPåHøyerePrioriterteAndelerErMinst6G {
     private IdentifiserPeriodeDerBruttoBgPåHøyerePrioriterteAndelerErMinst6G() {
@@ -14,11 +14,10 @@ class IdentifiserPeriodeDerBruttoBgPåHøyerePrioriterteAndelerErMinst6G {
     }
 
     static Optional<LocalDate> vurder(
-        PeriodeModell input,
-        AndelGradering andelGradering,
-        Periode gradering) {
+		    PeriodeModellGradering input,
+		    GraderingPrAktivitet andelGradering) {
         Optional<LocalDate> høyerePrioritertAndeler6GFomOpt = input.getPeriodisertBruttoBeregningsgrunnlagList().stream()
-            .filter(periodisertBg -> periodisertBg.getPeriode().overlapper(gradering))
+            .filter(periodisertBg -> periodisertBg.getPeriode().overlapper(andelGradering.getPerioder()))
             .filter(periodisertBg -> ErHøyerePrioriterteAndelerBruttoMinst6G.vurder(input.getGrunnbeløp(), periodisertBg, andelGradering))
             .map(PeriodisertBruttoBeregningsgrunnlag::getPeriode)
             .map(Periode::getFom)
@@ -26,7 +25,7 @@ class IdentifiserPeriodeDerBruttoBgPåHøyerePrioriterteAndelerErMinst6G {
             .findFirst();
         return høyerePrioritertAndeler6GFomOpt.map(høyerePrioritertFom ->
         {
-            LocalDate graderingFom = gradering.getFom();
+            LocalDate graderingFom = andelGradering.getPerioder().getFom();
             return høyerePrioritertFom.isBefore(graderingFom) ? graderingFom : høyerePrioritertFom;
         });
     }

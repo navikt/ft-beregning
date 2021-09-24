@@ -1,21 +1,22 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering;
 
 import java.util.List;
+import java.util.Objects;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.IdentifisertePeriodeÅrsaker;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SplittetPeriode;
 
 public class PeriodeSplittProsesstruktur {
 
-    private PeriodeModell input;
+    private Object input;
     private IdentifisertePeriodeÅrsaker identifisertePeriodeÅrsaker;
     private List<SplittetPeriode> splittetPerioder;
 
-    public PeriodeSplittProsesstruktur(PeriodeModell input) {
+    public PeriodeSplittProsesstruktur(Object input) {
         this.input = input;
     }
 
-    public PeriodeModell getInput() {
+    public Object getInput() {
         return input;
     }
 
