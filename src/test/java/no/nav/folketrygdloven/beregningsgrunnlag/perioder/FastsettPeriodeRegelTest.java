@@ -45,7 +45,30 @@ class FastsettPeriodeRegelTest {
         assertThat(perioder.get(1).getNyeAndeler().size()).isEqualTo(0);
     }
 
-    private void kjørRegel(PeriodeModell inputMedGraderingFraStartForNyttArbeid, List<SplittetPeriode> perioder) {
+	@Test
+	void skalHaNyAndelIMellomToPerioderMedUtbetaling() {
+
+		Arbeidsforhold arbeidsforhold2 = Arbeidsforhold.builder().medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT).medOrgnr(ORGNR2)
+				.medAnsettelsesPeriode(Periode.of(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(12))).build();
+		List<AndelGradering> utbetalingsgrader = List.of(AndelGraderingImpl.builder().medAktivitetStatus(AktivitetStatusV2.AT)
+				.medArbeidsforhold(arbeidsforhold2)
+				.medGraderinger(List.of(new Gradering(Periode.of(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(1)), BigDecimal.valueOf(50)),
+						new Gradering(Periode.of(SKJÆRINGSTIDSPUNKT.plusMonths(2), SKJÆRINGSTIDSPUNKT.plusMonths(3)), BigDecimal.valueOf(50)))).build());
+
+		PeriodeModell inputMedGraderingFraStartForNyttArbeid = lagPeriodeInputMedEnAndelFraStart()
+				.medEndringISøktYtelse(utbetalingsgrader)
+				.build();
+		List<SplittetPeriode> perioder = new ArrayList<>();
+		kjørRegel(inputMedGraderingFraStartForNyttArbeid, perioder);
+		assertThat(perioder.size()).isEqualTo(4);
+		assertThat(perioder.get(0).getNyeAndeler().size()).isEqualTo(1);
+		assertThat(perioder.get(1).getNyeAndeler().size()).isEqualTo(1);
+		assertThat(perioder.get(2).getNyeAndeler().size()).isEqualTo(1);
+		assertThat(perioder.get(3).getNyeAndeler().size()).isEqualTo(0);
+	}
+
+
+	private void kjørRegel(PeriodeModell inputMedGraderingFraStartForNyttArbeid, List<SplittetPeriode> perioder) {
         new FastsettPeriodeRegel().evaluer(inputMedGraderingFraStartForNyttArbeid, perioder);
     }
 
