@@ -1,6 +1,7 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.perioder;
 
 
+import static no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil.TIDENES_ENDE;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import java.math.BigDecimal;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Gradering;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.PeriodeÅrsak;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AktivitetStatusV2;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AndelGradering;
@@ -66,6 +68,54 @@ class FastsettPeriodeRegelTest {
 		assertThat(perioder.get(2).getNyeAndeler().size()).isEqualTo(1);
 		assertThat(perioder.get(3).getNyeAndeler().size()).isEqualTo(0);
 	}
+
+	@Test
+	void skalHaNyAndelIPeriodeMedUtbetalingMedEksisterendePeriode() {
+
+		Arbeidsforhold arbeidsforhold2 = Arbeidsforhold.builder().medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT).medOrgnr(ORGNR2)
+				.medAnsettelsesPeriode(Periode.of(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(12))).build();
+		List<AndelGradering> utbetalingsgrader = List.of(AndelGraderingImpl.builder().medAktivitetStatus(AktivitetStatusV2.AT)
+				.medArbeidsforhold(arbeidsforhold2)
+				.medGraderinger(List.of(new Gradering(Periode.of(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(3)), BigDecimal.valueOf(50)))).build());
+
+		PeriodeModell inputMedGraderingFraStartForNyttArbeid = lagPeriodeInputMedEnAndelFraStart()
+				.medEksisterendePerioder(List.of(
+						SplittetPeriode.builder().medPeriode(Periode.of(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(2).minusDays(1))).medPeriodeÅrsaker(List.of(PeriodeÅrsak.ARBEIDSFORHOLD_AVSLUTTET)).build(),
+						SplittetPeriode.builder().medPeriode(Periode.of(SKJÆRINGSTIDSPUNKT.plusMonths(2), TIDENES_ENDE)).medPeriodeÅrsaker(List.of(PeriodeÅrsak.ARBEIDSFORHOLD_AVSLUTTET)).build()))
+				.medEndringISøktYtelse(utbetalingsgrader)
+				.build();
+		List<SplittetPeriode> perioder = new ArrayList<>();
+		kjørRegel(inputMedGraderingFraStartForNyttArbeid, perioder);
+		assertThat(perioder.size()).isEqualTo(3);
+		assertThat(perioder.get(0).getNyeAndeler().size()).isEqualTo(1);
+		assertThat(perioder.get(1).getNyeAndeler().size()).isEqualTo(1);
+		assertThat(perioder.get(2).getNyeAndeler().size()).isEqualTo(0);
+	}
+
+	@Test
+	void skalHaNyAndelIPeriodeMedUtbetalingEnDag() {
+
+		Arbeidsforhold arbeidsforhold2 = Arbeidsforhold.builder().medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT).medOrgnr(ORGNR2)
+				.medAnsettelsesPeriode(Periode.of(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(12))).build();
+		List<AndelGradering> utbetalingsgrader = List.of(AndelGraderingImpl.builder().medAktivitetStatus(AktivitetStatusV2.AT)
+				.medArbeidsforhold(arbeidsforhold2)
+				.medGraderinger(List.of(new Gradering(Periode.of(SKJÆRINGSTIDSPUNKT.plusMonths(3), SKJÆRINGSTIDSPUNKT.plusMonths(3)), BigDecimal.valueOf(50)))).build());
+
+		PeriodeModell inputMedGraderingFraStartForNyttArbeid = lagPeriodeInputMedEnAndelFraStart()
+				.medEksisterendePerioder(List.of(
+						SplittetPeriode.builder().medPeriode(Periode.of(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(2).minusDays(1))).medPeriodeÅrsaker(List.of(PeriodeÅrsak.ARBEIDSFORHOLD_AVSLUTTET)).build(),
+						SplittetPeriode.builder().medPeriode(Periode.of(SKJÆRINGSTIDSPUNKT.plusMonths(2), TIDENES_ENDE)).medPeriodeÅrsaker(List.of(PeriodeÅrsak.ARBEIDSFORHOLD_AVSLUTTET)).build()))
+				.medEndringISøktYtelse(utbetalingsgrader)
+				.build();
+		List<SplittetPeriode> perioder = new ArrayList<>();
+		kjørRegel(inputMedGraderingFraStartForNyttArbeid, perioder);
+		assertThat(perioder.size()).isEqualTo(4);
+		assertThat(perioder.get(0).getNyeAndeler().size()).isEqualTo(0);
+		assertThat(perioder.get(1).getNyeAndeler().size()).isEqualTo(0);
+		assertThat(perioder.get(2).getNyeAndeler().size()).isEqualTo(1);
+		assertThat(perioder.get(3).getNyeAndeler().size()).isEqualTo(0);
+	}
+
 
 
 	private void kjørRegel(PeriodeModell inputMedGraderingFraStartForNyttArbeid, List<SplittetPeriode> perioder) {
