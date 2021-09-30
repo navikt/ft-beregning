@@ -1,5 +1,6 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Gradering;
@@ -12,9 +13,9 @@ public interface AndelGradering {
 
     List<Gradering> getGraderinger();
 
-    boolean erNyAktivitet();
+	boolean erNyAktivitetPåDato(LocalDate dato);
 
-    List<Refusjonskrav> getGyldigeRefusjonskrav();
+	List<Refusjonskrav> getGyldigeRefusjonskrav();
 
     Arbeidsforhold getArbeidsforhold();
 }

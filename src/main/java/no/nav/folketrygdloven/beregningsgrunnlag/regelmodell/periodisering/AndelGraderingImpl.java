@@ -1,5 +1,8 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering;
 
+import static no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil.TIDENES_ENDE;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -7,12 +10,15 @@ import java.util.List;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Gradering;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Refusjonskrav;
+import no.nav.fpsak.tidsserie.LocalDateInterval;
+import no.nav.fpsak.tidsserie.LocalDateSegment;
+import no.nav.fpsak.tidsserie.LocalDateTimeline;
 
 public class AndelGraderingImpl implements AndelGradering {
     private AktivitetStatusV2 aktivitetStatus;
     private List<Gradering> graderinger = new ArrayList<>();
     private Arbeidsforhold arbeidsforhold;
-    private Long andelsnr;
+    private LocalDateTimeline<Boolean> nyAktivitetTidslinje;
 
     private AndelGraderingImpl() {
     }
@@ -27,12 +33,13 @@ public class AndelGraderingImpl implements AndelGradering {
         return graderinger;
     }
 
-    @Override
-    public boolean erNyAktivitet() {
-        return andelsnr == null;
-    }
+	@Override
+	public boolean erNyAktivitetPåDato(LocalDate dato) {
+		LocalDateSegment<Boolean> segment = nyAktivitetTidslinje.getSegment(new LocalDateInterval(dato, dato));
+		return segment != null && segment.getValue();
+	}
 
-    @Override
+	@Override
     public List<Refusjonskrav> getGyldigeRefusjonskrav() {
         return Collections.emptyList();
     }
@@ -53,6 +60,21 @@ public class AndelGraderingImpl implements AndelGradering {
             kladd = new AndelGraderingImpl();
         }
 
+	    public Builder medEksisterendeAktivitetFraDato(LocalDate fom) {
+		    kladd.nyAktivitetTidslinje = new LocalDateTimeline<Boolean>(fom, TIDENES_ENDE, false);
+		    return this;
+	    }
+
+	    public Builder medNyAktivitetFraDato(LocalDate fom) {
+		    kladd.nyAktivitetTidslinje = new LocalDateTimeline<Boolean>(fom, TIDENES_ENDE, true);
+		    return this;
+	    }
+
+	    public Builder medNyAktivitetTidslinje(LocalDateTimeline<Boolean> nyAktivitetTidslinje) {
+		    kladd.nyAktivitetTidslinje = nyAktivitetTidslinje;
+		    return this;
+	    }
+
         public Builder medAktivitetStatus(AktivitetStatusV2 aktivitetStatus) {
             kladd.aktivitetStatus = aktivitetStatus;
             return this;
@@ -60,11 +82,6 @@ public class AndelGraderingImpl implements AndelGradering {
 
         public Builder medGraderinger(List<Gradering> graderinger) {
             kladd.graderinger = graderinger;
-            return this;
-        }
-
-        public Builder medAndelsnr(Long andelsnr) {
-            kladd.andelsnr = andelsnr;
             return this;
         }
 
@@ -84,7 +101,6 @@ public class AndelGraderingImpl implements AndelGradering {
             "aktivitetStatus=" + aktivitetStatus +
             ", graderinger=" + graderinger +
             ", arbeidsforhold=" + arbeidsforhold +
-            ", andelsnr=" + andelsnr +
             '}';
     }
 }

@@ -23,11 +23,11 @@ class VurderPeriodeForGradering {
 
         boolean totaltRefusjonskravStørreEnn6G = ErTotaltRefusjonskravStørreEnnEllerLikSeksG.vurder(input, graderingFom);
 
-        if ((totaltRefusjonskravStørreEnn6G || andelGradering.erNyAktivitet())
+        if ((totaltRefusjonskravStørreEnn6G || andelGradering.erNyAktivitetPåDato(graderingFom))
             && !harRefusjonPåDato(andelGradering, graderingFom)) {
             return splittPeriodeGrunnetRefusjonOver6GEllerNyAktivitet(input, andelGradering, graderingFom, graderingTom);
         }
-        if (!andelGradering.erNyAktivitet() && ErbruttoinntektForGradertAndelLikNull.vurder(input, andelGradering, graderingFom)){
+        if (!andelGradering.erNyAktivitetPåDato(graderingFom) && ErbruttoinntektForGradertAndelLikNull.vurder(input, andelGradering, graderingFom)){
             return splittPeriodeGrunnetBruttoinntektForAndelErNull(input, andelGradering, graderingFom, graderingTom);
         }
 
@@ -42,7 +42,7 @@ class VurderPeriodeForGradering {
         boolean totaltRefusjonskravStørreEnn6GVedOgEtterOpphørtGradering = ErTotaltRefusjonskravStørreEnnEllerLikSeksG.vurder(input, graderingTom)
             && (DateUtil.TIDENES_ENDE.isEqual(graderingTom) || ErTotaltRefusjonskravStørreEnnEllerLikSeksG.vurder(input, graderingTom.plusDays(1)));
         boolean harRefusjonskravVedOpphørtGradering = harRefusjonPåDato(andelGradering, graderingTom);
-        if ((totaltRefusjonskravStørreEnn6GVedOgEtterOpphørtGradering || andelGradering.erNyAktivitet()) && !harRefusjonskravVedOpphørtGradering && !DateUtil.TIDENES_ENDE.isEqual(graderingTom)) {
+        if ((totaltRefusjonskravStørreEnn6GVedOgEtterOpphørtGradering || andelGradering.erNyAktivitetPåDato(graderingFom)) && !harRefusjonskravVedOpphørtGradering && !DateUtil.TIDENES_ENDE.isEqual(graderingTom)) {
             PeriodeSplittData opphørGraderingSplitt = lagSplittForOpphørAvGradering(graderingTom);
             return List.of(periodeSplitt, opphørGraderingSplitt);
         }

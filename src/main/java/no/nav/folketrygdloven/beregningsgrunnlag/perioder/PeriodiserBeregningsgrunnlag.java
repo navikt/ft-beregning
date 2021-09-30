@@ -64,12 +64,12 @@ public class PeriodiserBeregningsgrunnlag extends LeafSpecification<PeriodeSplit
             Set<PeriodeSplittData> periodeSplittData = entry.getValue();
 
             List<EksisterendeAndel> førstePeriodeAndeler = input.getArbeidsforholdOgInntektsmeldinger().stream()
-                .filter(im -> !im.erNyAktivitet())
+                .filter(im -> !im.erNyAktivitetPåDato(periodeFom))
                 .map(im -> mapToArbeidsforhold(im, periodeFom))
                 .collect(Collectors.toList());
 
             List<SplittetAndel> nyeAndeler = input.getArbeidsforholdOgInntektsmeldinger().stream()
-                .filter(ArbeidsforholdOgInntektsmelding::erNyAktivitet)
+                .filter(im -> im.erNyAktivitetPåDato(periodeFom))
                 .filter(im -> !im.slutterFørSkjæringstidspunkt(input.getSkjæringstidspunkt()))
                 .filter(im -> harRefusjonIPeriode(im, periodeFom)
                     || harGraderingFørPeriode(im, periodeFom)
@@ -78,14 +78,14 @@ public class PeriodiserBeregningsgrunnlag extends LeafSpecification<PeriodeSplit
                 .collect(Collectors.toList());
 
             nyeAndeler.addAll(input.getAndelGraderinger().stream()
-                .filter(AndelGradering::erNyAktivitet)
+	            .filter(utbGrad -> utbGrad.erNyAktivitetPåDato(periodeFom))
                 .filter(andel -> andel.getAktivitetStatus().equals(AktivitetStatusV2.SN) || andel.getAktivitetStatus().equals(AktivitetStatusV2.FL))
                 .filter(andel -> harGraderingFørPeriode(andel, periodeFom))
                 .map(PeriodiserBeregningsgrunnlag::mapSplittetAndelFLSN)
                 .collect(Collectors.toList()));
 
             nyeAndeler.addAll(input.getEndringerISøktYtelse().stream()
-                .filter(AndelGradering::erNyAktivitet)
+                .filter(utbGrad -> utbGrad.erNyAktivitetPåDato(periodeFom))
                 .filter(andel -> harUtbetalingFørOgEtterPeriode(andel, periodeFom))
                 .map(PeriodiserBeregningsgrunnlag::mapSplittetAndel)
                 .collect(Collectors.toList()));
