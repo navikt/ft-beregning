@@ -365,7 +365,7 @@ public class VurderPeriodeForGraderingTest {
         AndelGraderingImpl andelGradering = AndelGraderingImpl.builder()
             .medAktivitetStatus(AktivitetStatusV2.SN)
             .medGraderinger(List.of(gradering))
-            .medAndelsnr(1L)
+            .medEksisterendeAktivitetFraDato(graderingsPeriode.getFom())
             .build();
         BruttoBeregningsgrunnlag bruttoBeregningsgrunnlag = lagBruttoBeregningsgrunnlag(AktivitetStatusV2.SN, null, BigDecimal.ZERO);
 
@@ -395,7 +395,7 @@ public class VurderPeriodeForGraderingTest {
         AndelGraderingImpl andelGradering = AndelGraderingImpl.builder()
             .medAktivitetStatus(AktivitetStatusV2.SN)
             .medGraderinger(List.of(gradering))
-            .medAndelsnr(1L)
+            .medEksisterendeAktivitetFraDato(graderingsPeriode.getFom())
             .build();
 
         BruttoBeregningsgrunnlag bruttoBeregningsgrunnlag = lagBruttoBeregningsgrunnlag(AktivitetStatusV2.SN, null, BigDecimal.valueOf(200_000));
@@ -489,7 +489,7 @@ public class VurderPeriodeForGraderingTest {
         AndelGraderingImpl andelGradering = AndelGraderingImpl.builder()
             .medAktivitetStatus(AktivitetStatusV2.FL)
             .medGraderinger(List.of(gradering))
-            .medAndelsnr(1L)
+            .medEksisterendeAktivitetFraDato(graderingsPeriode.getFom())
             .build();
 
         BruttoBeregningsgrunnlag bruttoBeregningsgrunnlagBruttoErNull = lagBruttoBeregningsgrunnlag(AktivitetStatusV2.FL, null, BigDecimal.ZERO);

@@ -1,5 +1,7 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering;
 
+import static no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil.TIDENES_ENDE;
+
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
@@ -11,6 +13,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.NaturalYtelse;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Refusjonskrav;
+import no.nav.fpsak.tidsserie.LocalDateTimeline;
 
 public class ArbeidsforholdOgInntektsmelding implements AndelGradering {
     private Arbeidsforhold arbeidsforhold;
@@ -87,9 +90,11 @@ public class ArbeidsforholdOgInntektsmelding implements AndelGradering {
 	}
 
 	@Override
-    public boolean erNyAktivitet() { return andelsnr == null; }
+	public boolean erNyAktivitetPåDato(LocalDate dato) {
+		return andelsnr == null;
+    }
 
-    public boolean slutterFørSkjæringstidspunkt(LocalDate skjæringstidspunkt) {
+	public boolean slutterFørSkjæringstidspunkt(LocalDate skjæringstidspunkt) {
         return ansettelsesperiode.getTom().isBefore(skjæringstidspunkt.minusDays(1));
     }
 
@@ -125,7 +130,7 @@ public class ArbeidsforholdOgInntektsmelding implements AndelGradering {
             kladd = arbeidsforholdOgInntektsmelding;
         }
 
-        public Builder medArbeidsforhold(Arbeidsforhold arbeidsforhold) {
+	    public Builder medArbeidsforhold(Arbeidsforhold arbeidsforhold) {
             kladd.arbeidsforhold = arbeidsforhold;
             return this;
         }
