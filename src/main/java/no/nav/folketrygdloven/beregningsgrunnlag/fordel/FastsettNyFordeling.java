@@ -1,52 +1,47 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.fordel;
 
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelAndelModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelPeriodeModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Beregnet;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
 import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.specification.Specification;
 
-class FastsettNyFordeling implements RuleService<BeregningsgrunnlagPeriode> {
+class FastsettNyFordeling implements RuleService<FordelPeriodeModell> {
 
     private static final String ID = "FP_BR 22.3.4";
     private static final String BESKRIVELSE = "Fastsett fordeling for arbeidstakerandeler der refusjon overstiger beregningsgrunnlag?";
 
-    private BeregningsgrunnlagPeriode regelmodell;
+    private FordelPeriodeModell regelmodell;
 
-    public FastsettNyFordeling(BeregningsgrunnlagPeriode regelmodell) {
+    public FastsettNyFordeling(FordelPeriodeModell regelmodell) {
         super();
         this.regelmodell = regelmodell;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public Specification<BeregningsgrunnlagPeriode> getSpecification() {
-        List<BeregningsgrunnlagPrArbeidsforhold> refOverstigerBgAktivitetListe = finnListeMedAktiteterSomKreverFlyttingAvBeregningsgrunnlag(regelmodell);
-        Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
-        Specification<BeregningsgrunnlagPeriode> beregningsgrunnlagATFL = refOverstigerBgAktivitetListe.isEmpty() ? new Beregnet() :
+    public Specification<FordelPeriodeModell> getSpecification() {
+        var refOverstigerBgAktivitetListe = finnListeMedAktiteterSomKreverFlyttingAvBeregningsgrunnlag(regelmodell);
+        Ruleset<FordelPeriodeModell> rs = new Ruleset<>();
+        var beregningsgrunnlagATFL = refOverstigerBgAktivitetListe.isEmpty() ? new Fordelt() :
             rs.beregningsRegel(ID, BESKRIVELSE,
-                OmfordelBeregningsgrunnlagTilArbeidsforhold.class, regelmodell, "arbeidsforhold", refOverstigerBgAktivitetListe, new Beregnet());
+                OmfordelBeregningsgrunnlagTilArbeidsforhold.class, regelmodell, "arbeidsforhold", refOverstigerBgAktivitetListe, new Fordelt());
         return beregningsgrunnlagATFL;
     }
 
-    private List<BeregningsgrunnlagPrArbeidsforhold> finnListeMedAktiteterSomKreverFlyttingAvBeregningsgrunnlag(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
-        BeregningsgrunnlagPrStatus atfl = beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
-        return atfl == null ? Collections.emptyList() : atfl
-            .getArbeidsforholdIkkeFrilans()
-            .stream()
+    private List<FordelAndelModell> finnListeMedAktiteterSomKreverFlyttingAvBeregningsgrunnlag(FordelPeriodeModell beregningsgrunnlagPeriode) {
+        var arbeidsandeler = beregningsgrunnlagPeriode.getAlleAndelerForStatus(AktivitetStatus.AT);
+        return arbeidsandeler.stream()
             .filter(this::refusjonskravOverstigerBg)
             .collect(Collectors.toList());
     }
 
-    private boolean refusjonskravOverstigerBg(BeregningsgrunnlagPrArbeidsforhold arbeidsforhold) {
+    private boolean refusjonskravOverstigerBg(FordelAndelModell arbeidsforhold) {
         BigDecimal refusjonskrav = arbeidsforhold.getGjeldendeRefusjonPrÅr().orElse(BigDecimal.ZERO);
         return refusjonskrav.compareTo(arbeidsforhold.getBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO)) > 0;
     }

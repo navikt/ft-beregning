@@ -2,33 +2,33 @@ package no.nav.folketrygdloven.beregningsgrunnlag.fordel;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelAndelModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelPeriodeModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
-abstract class OmfordelFraATFL extends LeafSpecification<BeregningsgrunnlagPeriode> {
+abstract class OmfordelFraATFL extends LeafSpecification<FordelPeriodeModell> {
 
     private Arbeidsforhold arbeidsforhold;
 
-    OmfordelFraATFL(BeregningsgrunnlagPrArbeidsforhold arbeidsforhold, String id, String beskrivelse) {
+    OmfordelFraATFL(FordelAndelModell andel, String id, String beskrivelse) {
         super(id, beskrivelse);
-        this.arbeidsforhold = arbeidsforhold.getArbeidsforhold();
+	    this.arbeidsforhold = andel.getArbeidsforhold().orElseThrow();
     }
 
     @Override
-    public Evaluation evaluate(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
+    public Evaluation evaluate(FordelPeriodeModell beregningsgrunnlagPeriode) {
         Map<String, Object> resultater = omfordelFraAktivitetOmMulig(beregningsgrunnlagPeriode);
         return beregnet(resultater);
     }
 
-    protected Map<String, Object> omfordelFraAktivitetOmMulig(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
+    protected Map<String, Object> omfordelFraAktivitetOmMulig(FordelPeriodeModell beregningsgrunnlagPeriode) {
         boolean harAktivitetMedOmfordelbartGrunnlag = finnAktivitetMedOmfordelbartBg(beregningsgrunnlagPeriode).isPresent();
         if (!harAktivitetMedOmfordelbartGrunnlag) {
             return new HashMap<>();
@@ -37,37 +37,35 @@ abstract class OmfordelFraATFL extends LeafSpecification<BeregningsgrunnlagPerio
         return new OmfordelBGForArbeidsforhold(beregningsgrunnlagPeriode).omfordelForArbeidsforhold(aktivitet, this::finnAktivitetMedOmfordelbartBg);
     }
 
-    protected BeregningsgrunnlagPrArbeidsforhold finnArbeidsforholdMedRiktigInntektskategori(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
-        Optional<BeregningsgrunnlagPrArbeidsforhold> andelForArbeidsforholdOpt = beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL)
-            .getArbeidsforhold()
+    protected FordelAndelModell finnArbeidsforholdMedRiktigInntektskategori(FordelPeriodeModell beregningsgrunnlagPeriode) {
+        Optional<FordelAndelModell> andelForArbeidsforholdOpt = beregningsgrunnlagPeriode.getAlleAndelerForStatus(AktivitetStatus.AT)
             .stream()
-            .filter(a -> a.getArbeidsforhold().equals(arbeidsforhold)
+            .filter(a -> Objects.equals(a.getArbeidsforhold().orElse(null), arbeidsforhold)
                 && (a.getInntektskategori() == null || a.getInntektskategori().equals(Inntektskategori.UDEFINERT) || a.getInntektskategori().equals(finnInntektskategori())))
             .findFirst();
-        BeregningsgrunnlagPrArbeidsforhold aktivitet;
+        FordelAndelModell aktivitet;
         if (andelForArbeidsforholdOpt.isEmpty()) {
             aktivitet = opprettNyAndel(beregningsgrunnlagPeriode);
         } else {
             aktivitet = andelForArbeidsforholdOpt.get();
         }
-        BeregningsgrunnlagPrArbeidsforhold.builder(aktivitet).medInntektskategori(finnInntektskategori());
-        return aktivitet;
+	    FordelAndelModell.oppdater(aktivitet).medInntektskategori(finnInntektskategori()).build();
+	    return aktivitet;
     }
 
     protected abstract Inntektskategori finnInntektskategori();
 
-    private BeregningsgrunnlagPrArbeidsforhold opprettNyAndel(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
-        BeregningsgrunnlagPrArbeidsforhold aktivitet;
-        aktivitet = BeregningsgrunnlagPrArbeidsforhold.builder()
+    private FordelAndelModell opprettNyAndel(FordelPeriodeModell beregningsgrunnlagPeriode) {
+        FordelAndelModell aktivitet = FordelAndelModell.builder()
             .medArbeidsforhold(arbeidsforhold)
+	        .medAktivitetStatus(AktivitetStatus.AT)
             .erNytt(true)
             .build();
-        BeregningsgrunnlagPrStatus.builder(beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL))
-            .medArbeidsforhold(aktivitet);
+        beregningsgrunnlagPeriode.leggTilAndel(aktivitet);
         return aktivitet;
     }
 
-    protected abstract Optional<BeregningsgrunnlagPrArbeidsforhold> finnAktivitetMedOmfordelbartBg(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode);
+    protected abstract Optional<FordelAndelModell> finnAktivitetMedOmfordelbartBg(FordelPeriodeModell beregningsgrunnlagPeriode);
 
 
 }

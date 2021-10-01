@@ -1,33 +1,32 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.fordel;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Beregnet;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelPeriodeModell;
 import no.nav.fpsak.nare.DynamicRuleService;
 import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.specification.Specification;
 
-public class RegelFordelBeregningsgrunnlag extends DynamicRuleService<BeregningsgrunnlagPeriode> {
+public class RegelFordelBeregningsgrunnlag extends DynamicRuleService<FordelPeriodeModell> {
 
     public static final String ID = "FP_BR 22.3";
 
-    public RegelFordelBeregningsgrunnlag(BeregningsgrunnlagPeriode regelmodell) {
+    public RegelFordelBeregningsgrunnlag(FordelPeriodeModell regelmodell) {
         super(regelmodell);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public Specification<BeregningsgrunnlagPeriode> getSpecification() {
-        Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
+    public Specification<FordelPeriodeModell> getSpecification() {
+        Ruleset<FordelPeriodeModell> rs = new Ruleset<>();
 
-        Specification<BeregningsgrunnlagPeriode> fastsettFordelingAvBeregningsgrunnlag = new FastsettNyFordeling(regelmodell).getSpecification();
+        Specification<FordelPeriodeModell> fastsettFordelingAvBeregningsgrunnlag = new FastsettNyFordeling(regelmodell).getSpecification();
 
-        Specification<BeregningsgrunnlagPeriode> sjekkRefusjonMotBeregningsgrunnlag = rs.beregningHvisRegel(new SjekkHarRefusjonSomOverstigerBeregningsgrunnlag(),
-            fastsettFordelingAvBeregningsgrunnlag, new Beregnet());
+        Specification<FordelPeriodeModell> sjekkRefusjonMotBeregningsgrunnlag = rs.beregningHvisRegel(new SjekkHarRefusjonSomOverstigerBeregningsgrunnlag(),
+            fastsettFordelingAvBeregningsgrunnlag, new Fordelt());
 
-	    Specification<BeregningsgrunnlagPeriode> omfordelFraBrukersAndel = rs.beregningsRegel(OmfordelFraBrukersAndel.ID,
+	    Specification<FordelPeriodeModell> omfordelFraBrukersAndel = rs.beregningsRegel(OmfordelFraBrukersAndel.ID,
 			    OmfordelFraBrukersAndel.BESKRIVELSE, new OmfordelFraBrukersAndel(), sjekkRefusjonMotBeregningsgrunnlag);
 
-	    Specification<BeregningsgrunnlagPeriode> sjekkOmSkalFordeleFraBrukersAndel = rs.beregningHvisRegel(new SkalOmfordeleFraBrukersAndelTilFLEllerSN(), omfordelFraBrukersAndel, sjekkRefusjonMotBeregningsgrunnlag);
+	    Specification<FordelPeriodeModell> sjekkOmSkalFordeleFraBrukersAndel = rs.beregningHvisRegel(new SkalOmfordeleFraBrukersAndelTilFLEllerSN(), omfordelFraBrukersAndel, sjekkRefusjonMotBeregningsgrunnlag);
 
 	    return sjekkOmSkalFordeleFraBrukersAndel;
     }

@@ -2,23 +2,23 @@ package no.nav.folketrygdloven.beregningsgrunnlag.fordel;
 
 import java.math.BigDecimal;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelAndelModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelPeriodeModell;
 
 class OmfordelNaturalytelseForArbeidsforhold extends OmfordelForArbeidsforhold {
 
-    OmfordelNaturalytelseForArbeidsforhold(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
+    OmfordelNaturalytelseForArbeidsforhold(FordelPeriodeModell beregningsgrunnlagPeriode) {
         super(beregningsgrunnlagPeriode);
     }
 
     @Override
-    protected void flyttFraAktivitet(BeregningsgrunnlagPrArbeidsforhold arbeidMedFlyttbartGrunnlag, BigDecimal beløpSomSkalFlyttes) {
+    protected void flyttFraAktivitet(FordelAndelModell arbeidMedFlyttbartGrunnlag, BigDecimal beløpSomSkalFlyttes) {
         BigDecimal bortfaltPrÅr = arbeidMedFlyttbartGrunnlag.getNaturalytelseBortfaltPrÅr().orElse(BigDecimal.ZERO);
-        BeregningsgrunnlagPrArbeidsforhold.builder(arbeidMedFlyttbartGrunnlag).medNaturalytelseBortfaltPrÅr(bortfaltPrÅr.subtract(beløpSomSkalFlyttes));
+        FordelAndelModell.oppdater(arbeidMedFlyttbartGrunnlag).medNaturalytelseBortfaltPrÅr(bortfaltPrÅr.subtract(beløpSomSkalFlyttes));
     }
 
     @Override
-    protected BigDecimal finnFlyttbartBeløp(BeregningsgrunnlagPrArbeidsforhold arbeidMedOmfordelbartBg) {
+    protected BigDecimal finnFlyttbartBeløp(FordelAndelModell arbeidMedOmfordelbartBg) {
         BigDecimal naturalytelseBortfaltPrÅr = arbeidMedOmfordelbartBg.getNaturalytelseBortfaltPrÅr().orElse(BigDecimal.ZERO);
         BigDecimal refusjonskrav = arbeidMedOmfordelbartBg.getGjeldendeRefusjonPrÅr().orElse(BigDecimal.ZERO);
         return naturalytelseBortfaltPrÅr.subtract(refusjonskrav).max(BigDecimal.ZERO);

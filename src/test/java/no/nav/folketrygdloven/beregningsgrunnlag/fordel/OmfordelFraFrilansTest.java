@@ -4,6 +4,15 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.OmfordelFraFrilans;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelAndelModell;
+
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelPeriodeModell;
 
 import org.junit.jupiter.api.Test;
 
@@ -11,9 +20,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
 
 public class OmfordelFraFrilansTest {
 
@@ -23,156 +29,134 @@ public class OmfordelFraFrilansTest {
     @Test
     public void skal_ikkje_flytte_om_det_ikkje_finnes_frilans() {
         // Arrange
-        BigDecimal refusjonskravPrÅr = BigDecimal.valueOf(200_000);
-        BigDecimal beregnetPrÅr = BigDecimal.valueOf(100_000);
-        BeregningsgrunnlagPrArbeidsforhold arbeidsforhold = lagArbeidsforhold(refusjonskravPrÅr, beregnetPrÅr);
-        BeregningsgrunnlagPrStatus atfl = lagATFL(arbeidsforhold);
-
-        BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
-            .medBeregningsgrunnlagPrStatus(atfl)
-            .medPeriode(Periode.of(STP, null))
-            .build();
+        var refusjonskravPrÅr = BigDecimal.valueOf(200_000);
+        var beregnetPrÅr = BigDecimal.valueOf(100_000);
+        var arbeidsforhold = lagArbeidsforhold(refusjonskravPrÅr, beregnetPrÅr);
+	    var periode = new FordelPeriodeModell(Periode.of(STP, null), Collections.singletonList(arbeidsforhold));
 
         // Act
         kjørRegel(arbeidsforhold, periode);
 
         // Assert
-        assertThat(arbeidsforhold.getFordeltPrÅr()).isNull();
-        assertThat(arbeidsforhold.getBruttoInkludertNaturalytelsePrÅr().get()).isEqualByComparingTo(beregnetPrÅr);
+        assertThat(arbeidsforhold.getFordeltPrÅr()).isEmpty();
+        assertThat(arbeidsforhold.getBruttoInkludertNaturalytelsePrÅr().orElseThrow()).isEqualByComparingTo(beregnetPrÅr);
     }
 
     @Test
     public void skal_flytte_fra_frilans_til_arbeid_frilans_avkortet_til_0() {
         // Arrange
-        BigDecimal refusjonskravPrÅr = BigDecimal.valueOf(200_000);
-        BigDecimal beregnetPrÅr = BigDecimal.valueOf(100_000);
-        BeregningsgrunnlagPrArbeidsforhold arbeidsforhold = lagArbeidsforhold(refusjonskravPrÅr, beregnetPrÅr);
-        BigDecimal beregnetPrÅrFL = BigDecimal.valueOf(100_000);
-        BeregningsgrunnlagPrArbeidsforhold frilans = lagFLArbeidsforhold(beregnetPrÅrFL);
-        BeregningsgrunnlagPrStatus atfl = lagATFLMedFrilans(arbeidsforhold, frilans);
-
-        BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
-            .medBeregningsgrunnlagPrStatus(atfl)
-            .medPeriode(Periode.of(STP, null))
-            .build();
+        var refusjonskravPrÅr = BigDecimal.valueOf(200_000);
+        var beregnetPrÅr = BigDecimal.valueOf(100_000);
+        var arbeidsforhold = lagArbeidsforhold(refusjonskravPrÅr, beregnetPrÅr);
+        var beregnetPrÅrFL = BigDecimal.valueOf(100_000);
+        var frilans = lagFLArbeidsforhold(beregnetPrÅrFL);
+	    var periode = new FordelPeriodeModell(Periode.of(STP, null),  new ArrayList<>(Arrays.asList(arbeidsforhold, frilans)));
 
         // Act
         kjørRegel(arbeidsforhold, periode);
 
         // Assert
-        assertThat(atfl.getArbeidsforhold().size()).isEqualTo(3);
-        assertThat(atfl.getBruttoPrÅr()).isEqualByComparingTo(refusjonskravPrÅr);
-        var flyttetFraFL = atfl.getArbeidsforhold().stream().filter(a ->
+	    var alleArbeidsforhold = periode.getAlleAndelerForStatus(AktivitetStatus.AT);
+	    assertThat(alleArbeidsforhold.size()).isEqualTo(2);
+        assertThat(totalBrutto(alleArbeidsforhold)).isEqualByComparingTo(refusjonskravPrÅr);
+        var flyttetFraFL = alleArbeidsforhold.stream().filter(a ->
             a.getArbeidsforhold().equals(arbeidsforhold.getArbeidsforhold())
             && a.getInntektskategori().equals(Inntektskategori.FRILANSER)).findFirst().orElseThrow();
-        assertThat(flyttetFraFL.getFordeltPrÅr()).isEqualByComparingTo(beregnetPrÅrFL);
-        assertThat(flyttetFraFL.getGjeldendeRefusjonPrÅr().get()).isEqualByComparingTo(beregnetPrÅrFL);
+        assertThat(flyttetFraFL.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(beregnetPrÅrFL);
+        assertThat(flyttetFraFL.getGjeldendeRefusjonPrÅr().orElseThrow()).isEqualByComparingTo(beregnetPrÅrFL);
 
-        assertThat(arbeidsforhold.getBruttoPrÅr().get()).isEqualByComparingTo(beregnetPrÅr);
-        assertThat(arbeidsforhold.getGjeldendeRefusjonPrÅr().get()).isEqualByComparingTo(refusjonskravPrÅr.subtract(beregnetPrÅrFL));
+        assertThat(arbeidsforhold.getBruttoPrÅr().orElseThrow()).isEqualByComparingTo(beregnetPrÅr);
+        assertThat(arbeidsforhold.getGjeldendeRefusjonPrÅr().orElseThrow()).isEqualByComparingTo(refusjonskravPrÅr.subtract(beregnetPrÅrFL));
         assertThat(frilans.getGjeldendeRefusjonPrÅr()).isEmpty();
-        assertThat(frilans.getFordeltPrÅr()).isEqualByComparingTo(BigDecimal.ZERO);
+        assertThat(frilans.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.ZERO);
     }
 
     @Test
     public void skal_flytte_fra_frilans_til_arbeid_med_restbeløp_å_flytte() {
         // Arrange
-        BigDecimal refusjonskravPrÅr = BigDecimal.valueOf(200_000);
-        BigDecimal beregnetPrÅr = BigDecimal.valueOf(100_000);
-        BeregningsgrunnlagPrArbeidsforhold arbeidsforhold = lagArbeidsforhold(refusjonskravPrÅr, beregnetPrÅr);
-        BigDecimal beregnetPrÅrFL = BigDecimal.valueOf(50_000);
-        BeregningsgrunnlagPrArbeidsforhold frilans = lagFLArbeidsforhold(beregnetPrÅrFL);
-        BeregningsgrunnlagPrStatus atfl = lagATFLMedFrilans(arbeidsforhold, frilans);
+        var refusjonskravPrÅr = BigDecimal.valueOf(200_000);
+	    var beregnetPrÅr = BigDecimal.valueOf(100_000);
+	    var arbeidsforhold = lagArbeidsforhold(refusjonskravPrÅr, beregnetPrÅr);
+	    var beregnetPrÅrFL = BigDecimal.valueOf(50_000);
+	    var frilans = lagFLArbeidsforhold(beregnetPrÅrFL);
 
-        BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
-            .medBeregningsgrunnlagPrStatus(atfl)
-            .medPeriode(Periode.of(STP, null))
-            .build();
+	    var periode = new FordelPeriodeModell(Periode.of(STP, null),  new ArrayList<>(Arrays.asList(arbeidsforhold, frilans)));
 
         // Act
         kjørRegel(arbeidsforhold, periode);
 
-        // Assert
-        assertThat(atfl.getArbeidsforhold().size()).isEqualTo(3);
-        assertThat(atfl.getBruttoPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(150_000));
-        var flyttetFraFL = atfl.getArbeidsforhold().stream()
-            .filter(a -> a.getArbeidsforhold().equals(arbeidsforhold.getArbeidsforhold()) && a.getInntektskategori().equals(Inntektskategori.FRILANSER)).findFirst().orElseThrow();
-        assertThat(flyttetFraFL.getFordeltPrÅr()).isEqualByComparingTo(beregnetPrÅrFL);
-        assertThat(flyttetFraFL.getGjeldendeRefusjonPrÅr().get()).isEqualByComparingTo(beregnetPrÅrFL);
+	    var alleArbeidsforhold = periode.getAlleAndelerForStatus(AktivitetStatus.AT);
 
-        assertThat(arbeidsforhold.getBruttoPrÅr().get()).isEqualByComparingTo(beregnetPrÅr);
-        assertThat(arbeidsforhold.getGjeldendeRefusjonPrÅr().get()).isEqualByComparingTo(BigDecimal.valueOf(150_000));
+        // Assert
+        assertThat(alleArbeidsforhold.size()).isEqualTo(2);
+        assertThat(totalBrutto(alleArbeidsforhold)).isEqualByComparingTo(BigDecimal.valueOf(150_000));
+        var flyttetFraFL = alleArbeidsforhold.stream()
+            .filter(a -> a.getArbeidsforhold().equals(arbeidsforhold.getArbeidsforhold()) && a.getInntektskategori().equals(Inntektskategori.FRILANSER)).findFirst().orElseThrow();
+        assertThat(flyttetFraFL.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(beregnetPrÅrFL);
+        assertThat(flyttetFraFL.getGjeldendeRefusjonPrÅr().orElseThrow()).isEqualByComparingTo(beregnetPrÅrFL);
+
+        assertThat(arbeidsforhold.getBruttoPrÅr().orElseThrow()).isEqualByComparingTo(beregnetPrÅr);
+        assertThat(arbeidsforhold.getGjeldendeRefusjonPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.valueOf(150_000));
         assertThat(frilans.getGjeldendeRefusjonPrÅr()).isEmpty();
-        assertThat(frilans.getFordeltPrÅr()).isEqualByComparingTo(BigDecimal.ZERO);
+        assertThat(frilans.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.ZERO);
     }
 
 
     @Test
     public void skal_flytte_fra_frilans_til_arbeid_med_restbeløp_på_frilans() {
         // Arrange
-        BigDecimal refusjonskravPrÅr = BigDecimal.valueOf(200_000);
-        BigDecimal beregnetPrÅr = BigDecimal.valueOf(100_000);
-        BeregningsgrunnlagPrArbeidsforhold arbeidsforhold = lagArbeidsforhold(refusjonskravPrÅr, beregnetPrÅr);
-        BigDecimal beregnetPrÅrFL = BigDecimal.valueOf(150_000);
-        BeregningsgrunnlagPrArbeidsforhold frilans = lagFLArbeidsforhold(beregnetPrÅrFL);
-        BeregningsgrunnlagPrStatus atfl = lagATFLMedFrilans(arbeidsforhold, frilans);
+	    var refusjonskravPrÅr = BigDecimal.valueOf(200_000);
+	    var beregnetPrÅr = BigDecimal.valueOf(100_000);
+	    var arbeidsforhold = lagArbeidsforhold(refusjonskravPrÅr, beregnetPrÅr);
+	    var beregnetPrÅrFL = BigDecimal.valueOf(150_000);
+	    var frilans = lagFLArbeidsforhold(beregnetPrÅrFL);
 
-        BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
-            .medBeregningsgrunnlagPrStatus(atfl)
-            .medPeriode(Periode.of(STP, null))
-            .build();
+	    var periode = new FordelPeriodeModell(Periode.of(STP, null), new ArrayList<>(Arrays.asList(arbeidsforhold, frilans)));
 
         // Act
         kjørRegel(arbeidsforhold, periode);
 
         // Assert
-        assertThat(atfl.getArbeidsforhold().size()).isEqualTo(3);
-        assertThat(atfl.getBruttoPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(250_000));
-        var flyttetFraFL = atfl.getArbeidsforhold().stream()
+	    var alleArbeidsforhold = periode.getAlleAndelerForStatus(AktivitetStatus.AT);
+	    assertThat(alleArbeidsforhold.size()).isEqualTo(2);
+        assertThat(totalBrutto(alleArbeidsforhold)).isEqualByComparingTo(BigDecimal.valueOf(200_000));
+        var flyttetFraFL = alleArbeidsforhold.stream()
             .filter(a -> a.getArbeidsforhold().equals(arbeidsforhold.getArbeidsforhold()) && a.getInntektskategori().equals(Inntektskategori.FRILANSER)).findFirst().orElseThrow();
-        assertThat(flyttetFraFL.getFordeltPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(100_000));
-        assertThat(flyttetFraFL.getGjeldendeRefusjonPrÅr().get()).isEqualByComparingTo(BigDecimal.valueOf(100_000));
+        assertThat(flyttetFraFL.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.valueOf(100_000));
+        assertThat(flyttetFraFL.getGjeldendeRefusjonPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.valueOf(100_000));
 
-        assertThat(arbeidsforhold.getBruttoPrÅr().get()).isEqualByComparingTo(beregnetPrÅr);
-        assertThat(arbeidsforhold.getGjeldendeRefusjonPrÅr().get()).isEqualByComparingTo(BigDecimal.valueOf(100_000));
+        assertThat(arbeidsforhold.getBruttoPrÅr().orElseThrow()).isEqualByComparingTo(beregnetPrÅr);
+        assertThat(arbeidsforhold.getGjeldendeRefusjonPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.valueOf(100_000));
         assertThat(frilans.getGjeldendeRefusjonPrÅr()).isEmpty();
-        assertThat(frilans.getFordeltPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(50_000));
+        assertThat(frilans.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.valueOf(50_000));
     }
 
-    private BeregningsgrunnlagPrArbeidsforhold lagArbeidsforhold(BigDecimal refusjonskravPrÅr, BigDecimal beregnetPrÅr) {
-        return BeregningsgrunnlagPrArbeidsforhold.builder()
+    private FordelAndelModell lagArbeidsforhold(BigDecimal refusjonskravPrÅr, BigDecimal beregnetPrÅr) {
+        return FordelAndelModell.builder()
             .medAndelNr(1L)
+	        .medAktivitetStatus(AktivitetStatus.AT)
             .medInntektskategori(Inntektskategori.ARBEIDSTAKER)
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR, null))
             .medGjeldendeRefusjonPrÅr(refusjonskravPrÅr)
-            .medBeregnetPrÅr(beregnetPrÅr)
+            .medForeslåttPrÅr(beregnetPrÅr)
             .build();
     }
 
-    private BeregningsgrunnlagPrArbeidsforhold lagFLArbeidsforhold(BigDecimal beregnetPrÅr) {
-        return BeregningsgrunnlagPrArbeidsforhold.builder()
+	private BigDecimal totalBrutto(List<FordelAndelModell> alleArbeidsforhold) {
+		return alleArbeidsforhold.stream().map(a -> a.getBruttoPrÅr().orElse(BigDecimal.ZERO)).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+	}
+
+    private FordelAndelModell lagFLArbeidsforhold(BigDecimal beregnetPrÅr) {
+        return FordelAndelModell.builder()
             .medAndelNr(2L)
-            .medInntektskategori(Inntektskategori.FRILANSER)
+	        .medAktivitetStatus(AktivitetStatus.FL)
+	        .medInntektskategori(Inntektskategori.FRILANSER)
             .medArbeidsforhold(Arbeidsforhold.frilansArbeidsforhold())
-            .medBeregnetPrÅr(beregnetPrÅr)
+            .medForeslåttPrÅr(beregnetPrÅr)
             .build();
     }
 
-    private BeregningsgrunnlagPrStatus lagATFL(BeregningsgrunnlagPrArbeidsforhold arbeidsforhold) {
-        return BeregningsgrunnlagPrStatus.builder()
-            .medAktivitetStatus(AktivitetStatus.ATFL)
-            .medArbeidsforhold(arbeidsforhold).build();
-    }
-
-    private BeregningsgrunnlagPrStatus lagATFLMedFrilans(BeregningsgrunnlagPrArbeidsforhold arbeidsforhold, BeregningsgrunnlagPrArbeidsforhold frilans) {
-        return BeregningsgrunnlagPrStatus.builder()
-            .medAktivitetStatus(AktivitetStatus.ATFL)
-            .medArbeidsforhold(arbeidsforhold)
-            .medArbeidsforhold(frilans)
-            .build();
-    }
-
-    private void kjørRegel(BeregningsgrunnlagPrArbeidsforhold arbeidsforhold, BeregningsgrunnlagPeriode periode) {
+    private void kjørRegel(FordelAndelModell arbeidsforhold, FordelPeriodeModell periode) {
         OmfordelFraFrilans regel = new OmfordelFraFrilans(arbeidsforhold);
         regel.evaluate(periode);
     }
