@@ -3,6 +3,7 @@ package no.nav.folketrygdloven.beregningsgrunnlag.perioder;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -15,14 +16,13 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.PeriodeÅrsak;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.NaturalYtelse;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Refusjonskrav;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AktivitetStatusV2;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AndelGradering;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.ArbeidsforholdOgInntektsmelding;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.BruttoBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.EksisterendeAndel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.PeriodeModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.PeriodeSplittProsesstruktur;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.PeriodisertBruttoBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.RefusjonskravFrist;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.IdentifisertePeriodeÅrsaker;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.PeriodeSplittData;
@@ -92,7 +92,7 @@ public class PeriodiserBeregningsgrunnlag extends LeafSpecification<PeriodeSplit
             nyeAndeler.addAll(input.getEndringerISøktYtelse().stream()
                 .filter(utbGrad -> utbGrad.erNyAktivitetPåDato(periodeFom))
                 .filter(andel -> harUtbetalingEllerErMellomToPerioderMedManuellFordeling(andel,
-		                periodeFom, periodeTom, input.getPeriodisertBruttoBeregningsgrunnlagList()))
+		                periodeFom, periodeTom, input.getArbeidsforholdOgInntektsmeldinger()))
                 .map(PeriodiserBeregningsgrunnlag::mapSplittetAndel)
                 .collect(Collectors.toList()));
 
@@ -122,10 +122,10 @@ public class PeriodiserBeregningsgrunnlag extends LeafSpecification<PeriodeSplit
 	private static boolean harUtbetalingEllerErMellomToPerioderMedManuellFordeling(AndelGradering andel,
 	                                                                               LocalDate periodeFom,
 	                                                                               LocalDate periodeTom,
-	                                                                               List<PeriodisertBruttoBeregningsgrunnlag> periodisertBruttoBeregningsgrunnlagList) {
-		boolean harSøktOmUtbetaling = harSøkOmUtbetalingIPeriode(andel, periodeFom);
-		boolean skalManueltFordelesRettFør = harSøktUtbetalingPåDatoUtenBeregningsgrunnlag(periodisertBruttoBeregningsgrunnlagList, andel, periodeFom.minusDays(1));
-		boolean skalManueltFordelesEtter = periodeTom != null && harSøktUtbetalingPåDatoUtenBeregningsgrunnlag(periodisertBruttoBeregningsgrunnlagList, andel, periodeTom.plusDays(1));
+	                                                                               List<ArbeidsforholdOgInntektsmelding> arbeidsforholdOgInntektsmeldinger) {
+    	boolean harSøktOmUtbetaling = harSøkOmUtbetalingIPeriode(andel, periodeFom);
+		boolean skalManueltFordelesRettFør = harSøktUtbetalingPåDatoUtenRefusjon(arbeidsforholdOgInntektsmeldinger, andel, periodeFom.minusDays(1));
+		boolean skalManueltFordelesEtter = periodeTom != null && harSøktUtbetalingPåDatoUtenRefusjon(arbeidsforholdOgInntektsmeldinger, andel, periodeTom.plusDays(1));
 		return harSøktOmUtbetaling || (skalManueltFordelesRettFør && skalManueltFordelesEtter);
     }
 
@@ -139,20 +139,20 @@ public class PeriodiserBeregningsgrunnlag extends LeafSpecification<PeriodeSplit
 						g.getUtbetalingsprosent().compareTo(BigDecimal.ZERO) > 0);
 	}
 
-	private static boolean harSøktUtbetalingPåDatoUtenBeregningsgrunnlag(List<PeriodisertBruttoBeregningsgrunnlag> periodisertBruttoBeregningsgrunnlagList,
-	                                                                     AndelGradering andel,
-	                                                                     LocalDate dato) {
-		boolean harBGDagenFør = harBGPåDato(andel, periodisertBruttoBeregningsgrunnlagList, dato);
+	private static boolean harSøktUtbetalingPåDatoUtenRefusjon(List<ArbeidsforholdOgInntektsmelding> inntektsmeldinger,
+	                                                           AndelGradering andel,
+	                                                           LocalDate dato) {
+		boolean harRefusjonDagenFør = harRefusjonPåDato(andel, inntektsmeldinger, dato);
 		boolean harSøktUtbetalingDagenFør = harSøktUtbetalingPåDato(andel, dato);
-		return harSøktUtbetalingDagenFør && !harBGDagenFør;
+		return harSøktUtbetalingDagenFør && !harRefusjonDagenFør;
 	}
 
-	private static boolean harBGPåDato(AndelGradering andel, List<PeriodisertBruttoBeregningsgrunnlag> periodisertBruttoBeregningsgrunnlagList, LocalDate dato) {
-		List<BruttoBeregningsgrunnlag> andelsListe = periodisertBruttoBeregningsgrunnlagList.stream()
-				.filter(bgp -> bgp.getPeriode().inneholder(dato))
-				.flatMap(bgp -> bgp.getBruttoBeregningsgrunnlag().stream()).collect(Collectors.toList());
-		return finnBruttoBeregningsgrunnlagForUtbetalingsgrad(andelsListe, andel).stream()
-				.map(BruttoBeregningsgrunnlag::getBruttoPrÅr)
+	private static boolean harRefusjonPåDato(AndelGradering andel,
+	                                         List<ArbeidsforholdOgInntektsmelding> inntektsmeldinger,
+	                                         LocalDate dato) {
+		return finnRefusjonskravListeForArbeidsforhold(inntektsmeldinger, andel).stream()
+				.filter(ref -> ref.getPeriode().inneholder(dato))
+				.map(Refusjonskrav::getMånedsbeløp)
 				.anyMatch(Objects::nonNull);
 	}
 
@@ -161,21 +161,24 @@ public class PeriodiserBeregningsgrunnlag extends LeafSpecification<PeriodeSplit
 	}
 
 
-	private static Optional<BruttoBeregningsgrunnlag> finnBruttoBeregningsgrunnlagForUtbetalingsgrad(List<BruttoBeregningsgrunnlag> beregningsgrunnlag,
-	                                                                                                 AndelGradering andelGradering){
+	private static List<Refusjonskrav> finnRefusjonskravListeForArbeidsforhold(List<ArbeidsforholdOgInntektsmelding> inntektsmeldinger,
+	                                                                           AndelGradering andelGradering){
 		if(andelErSnEllerFl(andelGradering)){
-			return beregningsgrunnlag.stream()
-					.filter(b -> b.getAktivitetStatus().equals(andelGradering.getAktivitetStatus()))
-					.findAny();
+			return Collections.emptyList();
 		}
 
-		return andelGradering.getArbeidsforhold() == null ? Optional.empty() : finnMatchendeBruttoBeregningsgrunnlagForArbeidsforhold(beregningsgrunnlag, andelGradering.getArbeidsforhold());
+		return andelGradering.getArbeidsforhold() == null ? Collections.emptyList() :
+				finnMatchendeRefusjonskravForArbeidsforhold(inntektsmeldinger, andelGradering.getArbeidsforhold());
 	}
 
-	private static Optional<BruttoBeregningsgrunnlag> finnMatchendeBruttoBeregningsgrunnlagForArbeidsforhold(List<BruttoBeregningsgrunnlag> beregningsgrunnlag, Arbeidsforhold arbeidsforhold){
-		return beregningsgrunnlag.stream()
-				.filter(b -> b.getArbeidsforhold().map(a -> a.equals(arbeidsforhold)).orElse(false))
-				.findFirst();
+
+	private static List<Refusjonskrav> finnMatchendeRefusjonskravForArbeidsforhold(List<ArbeidsforholdOgInntektsmelding> inntektsmeldinger, Arbeidsforhold arbeidsforhold){
+		return inntektsmeldinger.stream()
+				.filter(im -> im.getArbeidsforhold().getArbeidsgiverId().equals(arbeidsforhold.getArbeidsgiverId()) &&
+						(Objects.equals(im.getArbeidsforhold().getArbeidsforholdId(), arbeidsforhold.getArbeidsforholdId()) || arbeidsforhold.getArbeidsforholdId() == null))
+				.findFirst()
+				.map(ArbeidsforholdOgInntektsmelding::getGyldigeRefusjonskrav)
+				.orElse(Collections.emptyList());
 	}
 
     private static LocalDate utledPeriodeTom(List<Map.Entry<LocalDate, Set<PeriodeSplittData>>> entries, ListIterator<Map.Entry<LocalDate, Set<PeriodeSplittData>>> listIterator) {
