@@ -68,7 +68,7 @@ class OmfordelFraArbeid extends OmfordelFraATFL {
     private boolean harBgSomKanFlyttes(FordelAndelModell beregningsgrunnlagPrArbeidsforhold) {
         return beregningsgrunnlagPrArbeidsforhold.getBruttoPrÅr().orElse(BigDecimal.ZERO)
             .subtract(beregningsgrunnlagPrArbeidsforhold.getNaturalytelseTilkommetPrÅr().orElse(BigDecimal.ZERO)).compareTo(BigDecimal.ZERO) > 0
-            && (beregningsgrunnlagPrArbeidsforhold.getFordeltPrÅr().isEmpty() || beregningsgrunnlagPrArbeidsforhold.getFordeltPrÅr().get().compareTo(BigDecimal.ZERO) > 0);
+            && (beregningsgrunnlagPrArbeidsforhold.getFordeltPrÅr().isEmpty() || beregningsgrunnlagPrArbeidsforhold.getFordeltPrÅr().orElseThrow().compareTo(BigDecimal.ZERO) > 0);
     }
 
 }
