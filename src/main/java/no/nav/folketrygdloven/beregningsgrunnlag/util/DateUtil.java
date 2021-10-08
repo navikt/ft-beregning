@@ -44,7 +44,7 @@ public class DateUtil {
     }
 
     /**
-     * Ikke bruk denne metoden direkte, kall på iDag() eller nå()
+     * @deprecated Ikke bruk denne metoden direkte, kall på iDag() eller nå()
      * Metoden vil bli private i en fremtidig versjon
      */
     @Deprecated

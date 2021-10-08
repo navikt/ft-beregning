@@ -1,6 +1,5 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering;
 
-import static no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil.TIDENES_ENDE;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -13,7 +12,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.NaturalYtelse;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Refusjonskrav;
-import no.nav.fpsak.tidsserie.LocalDateTimeline;
 
 public class ArbeidsforholdOgInntektsmelding implements AndelGradering {
     private Arbeidsforhold arbeidsforhold;

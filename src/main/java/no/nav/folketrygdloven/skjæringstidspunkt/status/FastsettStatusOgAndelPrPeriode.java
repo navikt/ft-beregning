@@ -23,7 +23,6 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
 
     public static final String ID = "FP_BR_19_2";
     public static final String BESKRIVELSE = "Fastsett status per andel og periode";
-	private static final int MIDLERTIDIG_INAKTIV_MAX_VARIGHET_DAGER = 28;
 
 	protected FastsettStatusOgAndelPrPeriode() {
         super(ID, BESKRIVELSE);
