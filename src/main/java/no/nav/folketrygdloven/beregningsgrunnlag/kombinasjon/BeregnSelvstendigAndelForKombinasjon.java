@@ -24,8 +24,9 @@ public class BeregnSelvstendigAndelForKombinasjon extends LeafSpecification<Bere
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
         BeregningsgrunnlagPrStatus bgAAP = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.AAP);
-        BeregningsgrunnlagPrStatus bgDP = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP);
-        if ((bgAAP != null && bgAAP.getBeregnetPrÅr() == null) || (bgDP != null && bgDP.getBeregnetPrÅr() == null)) {
+        var bgDP = grunnlag.getBeregningsgrunnlagFraDagpenger();
+	    boolean harBeregnetAAPEllerDP = (bgAAP != null && bgAAP.getBeregnetPrÅr() == null) || (bgDP.isPresent() && bgDP.get().getBeregnetPrÅr() == null);
+	    if (harBeregnetAAPEllerDP) {
             throw new IllegalStateException("Utviklerfeil: Aktivitetstatuser AAP og DP må beregnes før SN");
         }
         BeregningsgrunnlagPrStatus bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
@@ -33,9 +34,10 @@ public class BeregnSelvstendigAndelForKombinasjon extends LeafSpecification<Bere
         BigDecimal bruttoBGArbeidstaker = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getBruttoPrÅr();
 
         BigDecimal bruttoAAP = bgAAP != null ? bgAAP.getBeregnetPrÅr() : BigDecimal.ZERO;
-        BigDecimal bruttoDP = bgDP != null ? bgDP.getBeregnetPrÅr() : BigDecimal.ZERO;
+        BigDecimal bruttoDP = bgDP.map(BeregningsgrunnlagPrStatus::getBeregnetPrÅr).orElse(BigDecimal.ZERO);
 
-        BigDecimal bruttoBGSN = BigDecimal.ZERO.max(gjsnittPGI.subtract(bruttoBGArbeidstaker).subtract(bruttoAAP).subtract(bruttoDP));
+
+	    BigDecimal bruttoBGSN = BigDecimal.ZERO.max(gjsnittPGI.subtract(bruttoBGArbeidstaker).subtract(bruttoAAP).subtract(bruttoDP));
 
         BeregningsgrunnlagPrStatus.builder(bgps).medBeregnetPrÅr(bruttoBGSN).build();
         Map<String, Object> resultater = new LinkedHashMap<>();

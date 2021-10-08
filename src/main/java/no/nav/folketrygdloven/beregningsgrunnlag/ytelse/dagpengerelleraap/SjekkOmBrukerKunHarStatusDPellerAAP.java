@@ -23,7 +23,7 @@ class SjekkOmBrukerKunHarStatusDPellerAAP extends LeafSpecification<Beregningsgr
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
         List<AktivitetStatus> aktivitetStatuser = grunnlag.getAktivitetStatuser().stream().map(AktivitetStatusMedHjemmel::getAktivitetStatus).collect(Collectors.toList());
-        if (!(aktivitetStatuser.contains(AktivitetStatus.DP) || aktivitetStatuser.contains(AktivitetStatus.AAP))) {
+        if (aktivitetStatuser.stream().noneMatch(AktivitetStatus::erAAPellerDP)) {
             throw new IllegalStateException("Utviklerfeil: Skal ikke inntreffe. Ingen aktivitetstatuser funnet med aktivitetstatus DP eller AAP.");
         }
         return aktivitetStatuser.size() == 1 ? ja() : nei();

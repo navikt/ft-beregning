@@ -45,7 +45,7 @@ public class RegelForeslåBeregningsgrunnlagPrStatus extends DynamicRuleService<
         } else if (AktivitetStatus.ATFL_SN.equals(aktivitetStatus)) {
             RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN regelFastsetteBeregningsgrunnlagForKombinasjonATFLSN = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(regelmodell);
             return regelFastsetteBeregningsgrunnlagForKombinasjonATFLSN.getSpecification().medScope(arg);
-        } else if (AktivitetStatus.AAP.equals(aktivitetStatus) || AktivitetStatus.DP.equals(aktivitetStatus)) {
+        } else if (aktivitetStatus.erAAPellerDP()) {
             RegelFastsettBeregningsgrunnlagDPellerAAP regelFastsettBeregningsgrunnlagDPellerAAP = new RegelFastsettBeregningsgrunnlagDPellerAAP();
             return regelFastsettBeregningsgrunnlagDPellerAAP.getSpecification().medScope(arg);
         } else if (AktivitetStatus.KUN_YTELSE.equals(aktivitetStatus)) {

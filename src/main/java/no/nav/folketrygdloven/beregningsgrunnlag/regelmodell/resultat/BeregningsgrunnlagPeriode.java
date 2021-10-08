@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -45,6 +46,20 @@ public class BeregningsgrunnlagPeriode {
 				.filter(af -> aktivitetStatus.equals(af.getAktivitetStatus()))
 				.findFirst()
 				.orElse(null);
+	}
+
+	public Optional<BeregningsgrunnlagPrStatus> getBeregningsgrunnlagFraDagpenger() {
+		return getBeregningsgrunnlagPrStatus().stream()
+				.filter(af -> af.getAktivitetStatus().erDP())
+				.findFirst();
+	}
+
+	public BigDecimal finnBeregnetAvStatus(AktivitetStatus aktivitetStatus) {
+		return getBeregningsgrunnlagPrStatus().stream()
+				.filter(af -> aktivitetStatus.equals(af.getAktivitetStatus()))
+				.findFirst()
+				.map(BeregningsgrunnlagPrStatus::getBeregnetPrÅr)
+				.orElse(BigDecimal.ZERO);
 	}
 
 	@JsonIgnore
