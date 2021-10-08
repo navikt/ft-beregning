@@ -17,7 +17,6 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import no.nav.folketrygdloven.beregningsgrunnlag.Grunnbeløp;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Dekningsgrad;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.YtelsesSpesifiktGrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.fp.ForeldrepengerGrunnlag;
@@ -68,8 +67,7 @@ public class Beregningsgrunnlag {
 
     public List<BeregningsgrunnlagPeriode> getBeregningsgrunnlagPerioder() {
         return beregningsgrunnlagPerioder.stream()
-            .sorted(Comparator.comparing(bg -> bg.getBeregningsgrunnlagPeriode().getFom()))
-            .collect(Collectors.toUnmodifiableList());
+		        .sorted(Comparator.comparing(bg -> bg.getBeregningsgrunnlagPeriode().getFom())).toList();
     }
 
     public boolean erBesteberegnet() {

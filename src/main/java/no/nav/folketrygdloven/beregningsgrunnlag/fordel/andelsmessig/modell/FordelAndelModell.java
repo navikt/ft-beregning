@@ -23,22 +23,7 @@ public class FordelAndelModell {
 	private boolean erNytt;
 
 	private FordelAndelModell() {
-
-	}
-
-	private FordelAndelModell(FordelAndelModell kopi) {
-		this.aktivitetStatus = kopi.getAktivitetStatus();
-		this.inntektskategori = kopi.getInntektskategori();
-		this.erSøktYtelseFor = kopi.erSøktYtelseFor();
-		this.foreslåttPrÅr = kopi.getForeslåttPrÅr().orElse(null);
-		this.fordeltPrÅr = kopi.getFordeltPrÅr().orElse(null);
-		this.naturalytelseBortfaltPrÅr = kopi.getNaturalytelseBortfaltPrÅr().orElse(null);
-		this.naturalytelseTilkommetPrÅr = kopi.getNaturalytelseTilkommetPrÅr().orElse(null);
-		this.gjeldendeRefusjonPrÅr = kopi.getGjeldendeRefusjonPrÅr().orElse(null);
-		this.fordeltRefusjonPrÅr = kopi.getFordeltRefusjonPrÅr().orElse(null);
-		this.arbeidsforhold = kopi.getArbeidsforhold().map(arb -> Arbeidsforhold.builder(arb).build()).orElse(null);
-		this.erNytt = kopi.erNytt();
-		this.andelNr = kopi.getAndelNr();
+		// For bruk i builder
 	}
 
 	public AktivitetStatus getAktivitetStatus() {
@@ -109,9 +94,9 @@ public class FordelAndelModell {
 		if (brutto.isEmpty()) {
 			return Optional.empty();
 		}
-		var naturalytelseBortfaltPrÅr = getNaturalytelseBortfaltPrÅr().orElse(BigDecimal.ZERO);
-		var naturalytelseTilkommetPrÅr = getNaturalytelseTilkommetPrÅr().orElse(BigDecimal.ZERO);
-		return Optional.of(brutto.get().add(naturalytelseBortfaltPrÅr).subtract(naturalytelseTilkommetPrÅr));
+		var bortfalt = getNaturalytelseBortfaltPrÅr().orElse(BigDecimal.ZERO);
+		var tilkommet = getNaturalytelseTilkommetPrÅr().orElse(BigDecimal.ZERO);
+		return Optional.of(brutto.get().add(bortfalt).subtract(tilkommet));
 	}
 
 	public Optional<String> getArbeidsgiverId() {
