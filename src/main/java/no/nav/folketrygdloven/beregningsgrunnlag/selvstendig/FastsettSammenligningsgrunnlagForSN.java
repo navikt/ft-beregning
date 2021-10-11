@@ -59,15 +59,17 @@ public class FastsettSammenligningsgrunnlagForSN extends LeafSpecification<Bereg
     private SammenligningsGrunnlag opprettSammenligningsgrunnlag(BeregningsgrunnlagPeriode grunnlag, Periodeinntekt oppgittInntekt) {
 	    BeregningsgrunnlagPrStatus bgATFL = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
 
-        BigDecimal bruttoAAP = grunnlag.finnBeregnetAvStatus(AktivitetStatus.AAP);
-        BigDecimal bruttoDP = grunnlag.finnBeregnetAvStatus(AktivitetStatus.DP);
-	    BigDecimal bruttoSPDP = grunnlag.finnBeregnetAvStatus(AktivitetStatus.SP_AV_DP);
+	    BeregningsgrunnlagPrStatus aapStatus = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.AAP);
+	    var dpStatus = grunnlag.getBeregningsgrunnlagFraDagpenger();
+
+	    BigDecimal bruttoAAP = aapStatus == null ? BigDecimal.ZERO : aapStatus.getBeregnetPrÅr();
+	    BigDecimal bruttoDP = dpStatus.map(BeregningsgrunnlagPrStatus::getBeregnetPrÅr).orElse(BigDecimal.ZERO);
 
 	    BigDecimal bruttoATFL = bgATFL != null ? bgATFL.getBruttoInkludertNaturalytelsePrÅr() : BigDecimal.ZERO;
         BigDecimal antallPerioderPrÅr = oppgittInntekt.getInntektPeriodeType().getAntallPrÅr();
         BigDecimal oppgittÅrsInntekt = oppgittInntekt.getInntekt().multiply(antallPerioderPrÅr);
 
-        BigDecimal sammenligningInntekt = oppgittÅrsInntekt.add(bruttoATFL).add(bruttoAAP).add(bruttoDP).add(bruttoSPDP);
+        BigDecimal sammenligningInntekt = oppgittÅrsInntekt.add(bruttoATFL).add(bruttoAAP).add(bruttoDP);
         Periode sammenligningsperiode = Periode.of(oppgittInntekt.getFom(), oppgittInntekt.getFom().plusMonths(1).minusDays(1));
 
         return SammenligningsGrunnlag.builder()

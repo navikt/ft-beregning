@@ -32,12 +32,6 @@ class ForeslåBeregningsgrunnlagDPellerAAPKombinasjonMedAnnenStatus extends Leaf
             .findFirst()
             .orElseThrow(() -> new IllegalStateException("Ingen aktivitetstatus av type DP eller AAP funnet."));
 
-        AktivitetStatus aktivitetStatus = grunnlag.getBeregningsgrunnlagPrStatus().stream()
-            .map(BeregningsgrunnlagPrStatus::getAktivitetStatus)
-            .filter(status -> AktivitetStatus.AAP.equals(status) || AktivitetStatus.DP.equals(status))
-            .findFirst()
-            .orElseThrow(() -> new IllegalStateException("Ingen aktivitetstatus av type DP eller AAP funnet."));
-
         Periodeinntekt inntekt = grunnlag.getInntektsgrunnlag().getPeriodeinntekt(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP, grunnlag.getSkjæringstidspunkt())
             .orElseThrow(() -> new IllegalStateException("Ingen inntekter fra tilstøtende ytelser funnet i siste måned med inntekt"));
         BigDecimal utbetalingsgrad = inntekt.getUtbetalingsgrad()
@@ -59,8 +53,8 @@ class ForeslåBeregningsgrunnlagDPellerAAPKombinasjonMedAnnenStatus extends Leaf
         grunnlag.getBeregningsgrunnlag().getAktivitetStatus(bgPerStatus.getAktivitetStatus()).setHjemmel(hjemmel);
 
         Map<String, Object> resultater = new HashMap<>();
-        resultater.put("beregnetPrÅr." + aktivitetStatus.name(), beregnetPrÅr);
-        resultater.put("tilstøtendeYtelserPrÅr." + aktivitetStatus.name(), beregnetPrÅr);
+        resultater.put("beregnetPrÅr." + bgPerStatus.getAktivitetStatus().name(), beregnetPrÅr);
+        resultater.put("tilstøtendeYtelserPrÅr." + bgPerStatus.getAktivitetStatus().name(), beregnetPrÅr);
         resultater.put("hjemmel", hjemmel);
         return beregnet(resultater);
     }
