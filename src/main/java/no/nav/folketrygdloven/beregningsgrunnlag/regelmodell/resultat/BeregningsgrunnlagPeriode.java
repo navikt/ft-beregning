@@ -54,14 +54,6 @@ public class BeregningsgrunnlagPeriode {
 				.findFirst();
 	}
 
-	public BigDecimal finnBeregnetAvStatus(AktivitetStatus aktivitetStatus) {
-		return getBeregningsgrunnlagPrStatus().stream()
-				.filter(af -> aktivitetStatus.equals(af.getAktivitetStatus()))
-				.findFirst()
-				.map(BeregningsgrunnlagPrStatus::getBeregnetPrÅr)
-				.orElse(BigDecimal.ZERO);
-	}
-
 	@JsonIgnore
 	public Beregningsgrunnlag getBeregningsgrunnlag() {
 		return beregningsgrunnlag;
