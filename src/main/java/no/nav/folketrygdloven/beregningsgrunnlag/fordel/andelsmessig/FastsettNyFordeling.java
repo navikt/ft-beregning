@@ -5,32 +5,33 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelAndelModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelPeriodeModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.specification.Specification;
 
-class FastsettNyFordeling implements RuleService<FordelPeriodeModell> {
+class FastsettNyFordeling implements RuleService<FordelModell> {
 
     private static final String ID = "FP_BR 22.3.4";
     private static final String BESKRIVELSE = "Fastsett fordeling for arbeidstakerandeler der refusjon overstiger beregningsgrunnlag?";
 
-    private FordelPeriodeModell regelmodell;
+    private FordelModell modell;
 
-    public FastsettNyFordeling(FordelPeriodeModell regelmodell) {
+    public FastsettNyFordeling(FordelModell modell) {
         super();
-        this.regelmodell = regelmodell;
+        this.modell = modell;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public Specification<FordelPeriodeModell> getSpecification() {
-        var refOverstigerBgAktivitetListe = finnListeMedAktiteterSomKreverFlyttingAvBeregningsgrunnlag(regelmodell);
-        Ruleset<FordelPeriodeModell> rs = new Ruleset<>();
+    public Specification<FordelModell> getSpecification() {
+        var refOverstigerBgAktivitetListe = finnListeMedAktiteterSomKreverFlyttingAvBeregningsgrunnlag(modell.getInput());
+        Ruleset<FordelModell> rs = new Ruleset<>();
         var beregningsgrunnlagATFL = refOverstigerBgAktivitetListe.isEmpty() ? new Fordelt() :
             rs.beregningsRegel(ID, BESKRIVELSE,
-                OmfordelBeregningsgrunnlagTilArbeidsforhold.class, regelmodell, "arbeidsforhold", refOverstigerBgAktivitetListe, new Fordelt());
+                OmfordelBeregningsgrunnlagTilArbeidsforhold.class, modell, "arbeidsforhold", refOverstigerBgAktivitetListe, new Fordelt());
         return beregningsgrunnlagATFL;
     }
 

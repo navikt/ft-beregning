@@ -8,6 +8,7 @@ import java.util.Collections;
 
 
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelAndelModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelPeriodeModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 
@@ -68,7 +69,7 @@ public class SjekkOmRefusjonOverstigerBeregningsgrunnlagTest {
 
     private Evaluation kjørRegel(FordelAndelModell arbeidsforhold, FordelPeriodeModell periode) {
         SjekkOmRefusjonOverstigerBeregningsgrunnlag regel = new SjekkOmRefusjonOverstigerBeregningsgrunnlag(arbeidsforhold);
-        return regel.evaluate(periode);
+        return regel.evaluate(new FordelModell(periode));
     }
 
 }

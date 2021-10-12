@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelAndelModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelPeriodeModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
@@ -16,7 +17,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.In
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
-class OmfordelFraAktiviteterUtenArbeidsforhold extends LeafSpecification<FordelPeriodeModell> {
+class OmfordelFraAktiviteterUtenArbeidsforhold extends LeafSpecification<FordelModell> {
 
     private static final String ID = "FP_BR 22.3.6";
     private static final String BESKRIVELSE = "Flytt beregningsgrunnlag fra aktivitet uten arbeidsforhold";
@@ -30,8 +31,9 @@ class OmfordelFraAktiviteterUtenArbeidsforhold extends LeafSpecification<FordelP
     }
 
     @Override
-    public Evaluation evaluate(FordelPeriodeModell beregningsgrunnlagPeriode) {
-        Map<String, Object> resultater = omfordelFraBgPrStatusUtenArbeidsforholdIPrioritertRekkefølge(beregningsgrunnlagPeriode);
+    public Evaluation evaluate(FordelModell modell) {
+		modell.leggTilFordeltAndel(FordelAndelModell.builder().medAktivitetStatus(AktivitetStatus.ATFL_SN).build());
+        Map<String, Object> resultater = omfordelFraBgPrStatusUtenArbeidsforholdIPrioritertRekkefølge(modell.getInput());
         return beregnet(resultater);
     }
 

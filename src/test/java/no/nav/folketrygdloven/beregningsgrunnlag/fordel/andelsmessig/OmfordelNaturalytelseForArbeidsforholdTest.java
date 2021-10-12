@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelAndelModell;
 
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelPeriodeModell;
 
 import org.junit.jupiter.api.Test;
@@ -45,7 +46,7 @@ class OmfordelNaturalytelseForArbeidsforholdTest {
 	    var periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), LocalDate.now().plusMonths(1)), Arrays.asList(aktivitet, arbeidMedBortfaltNatYtelsePrÅr));
 
         // Act
-        new OmfordelNaturalytelseForArbeidsforhold(periode).omfordelForArbeidsforhold(aktivitet, (periode1) -> Optional.of(arbeidMedBortfaltNatYtelsePrÅr));
+        new OmfordelNaturalytelseForArbeidsforhold(new FordelModell(periode)).omfordelForArbeidsforhold(aktivitet, (periode1) -> Optional.of(arbeidMedBortfaltNatYtelsePrÅr));
 
         // Assert
         assertThat(arbeidMedBortfaltNatYtelsePrÅr.getNaturalytelseBortfaltPrÅr().get()).isEqualTo(BigDecimal.ZERO);

@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelAndelModell;
@@ -117,7 +118,7 @@ public class RegelFordelBeregningsgrunnlagTest {
 
     private void kjørRegel(FordelPeriodeModell periode) {
         RegelFordelBeregningsgrunnlag regel = new RegelFordelBeregningsgrunnlag(periode);
-        regel.getSpecification().evaluate(periode);
+        regel.evaluer(periode, Collections.emptyList());
     }
 
     private FordelAndelModell lagArbeidsforhold(BigDecimal refusjonskravPrÅr, BigDecimal beregnetPrÅr, Long andelsnr, String orgnr) {
