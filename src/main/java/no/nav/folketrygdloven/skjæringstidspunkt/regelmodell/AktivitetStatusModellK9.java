@@ -1,5 +1,7 @@
 package no.nav.folketrygdloven.skjæringstidspunkt.regelmodell;
 
+import java.time.LocalDate;
+
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.MidlertidigInaktivType;
 import no.nav.fpsak.nare.doc.RuleDocumentationGrunnlag;
 
@@ -22,4 +24,11 @@ public class AktivitetStatusModellK9 extends AktivitetStatusModell {
 	public MidlertidigInaktivType getMidlertidigInaktivType() {
 		return midlertidigInaktivType;
 	}
+
+	@Override
+	public LocalDate getBeregningstidspunkt() {
+		LocalDate sisteAktivitetsdato = sisteAktivitetsdato();
+		return sisteAktivitetsdato.isBefore(skjæringstidspunktForOpptjening) ? sisteAktivitetsdato : skjæringstidspunktForOpptjening.minusDays(1);
+	}
+
 }
