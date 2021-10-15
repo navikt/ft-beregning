@@ -3,6 +3,7 @@ package no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker;
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.opprettBeregningsgrunnlagFraInntektskomponenten;
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.settoppGrunnlagMedEnPeriode;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -28,7 +29,7 @@ import no.nav.fpsak.nare.evaluation.Resultat;
 
 public class BeregnPrArbeidsforholdFraAOrdningenTest {
 
-    private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.now();
+    private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.of(2021, 10, 15);
     private Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("12345");
 
     @Test
@@ -66,7 +67,76 @@ public class BeregnPrArbeidsforholdFraAOrdningenTest {
         assertThat(arbeidstakerStatus.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(500004));
     }
 
-    @Test
+	@Test
+	public void skalBeregneSnittAvInntekterMedToHeleMånederOgEnHalv() {
+		//Arrange
+		LocalDate startArbeidsforhold = SKJÆRINGSTIDSPUNKT.minusMonths(3).withDayOfMonth(15);
+		Periode beregningsperiode = Periode.of(startArbeidsforhold, SKJÆRINGSTIDSPUNKT.minusMonths(1).with(TemporalAdjusters.lastDayOfMonth()));
+		Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
+		inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder().medInntekt(BigDecimal.valueOf(31452)).medMåned(beregningsperiode.getFom()).medArbeidsgiver(arbeidsforhold).medInntektskildeOgPeriodeType(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING).build());
+		inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder().medInntekt(BigDecimal.valueOf(48739)).medMåned(beregningsperiode.getFom().plusMonths(1)).medArbeidsgiver(arbeidsforhold).medInntektskildeOgPeriodeType(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING).build());
+		inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder().medInntekt(BigDecimal.valueOf(44810)).medMåned(beregningsperiode.getTom()).medArbeidsgiver(arbeidsforhold).medInntektskildeOgPeriodeType(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING).build());
+		//Inntekt utenfor beregningsperioden - skal ikke tas med
+		inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder().medInntekt(BigDecimal.valueOf(999999)).medMåned(beregningsperiode.getFom().minusMonths(1)).medArbeidsgiver(arbeidsforhold).medInntektskildeOgPeriodeType(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING).build());
+
+		Beregningsgrunnlag grunnlag = settoppGrunnlagMedEnPeriode(LocalDate.now(), inntektsgrunnlag, List.of(AktivitetStatus.ATFL), List.of(arbeidsforhold));
+		BeregningsgrunnlagPeriode periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
+		BeregningsgrunnlagPrArbeidsforhold arbeidstakerStatus = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
+		BeregningsgrunnlagPrArbeidsforhold.builder(arbeidstakerStatus).medBeregningsperiode(beregningsperiode);
+		//Act
+		Evaluation resultat = new BeregnPrArbeidsforholdFraAOrdningen(arbeidstakerStatus).evaluate(periode);
+		//Assert
+		assertThat(resultat.result()).isEqualTo(Resultat.JA);
+		assertThat(arbeidstakerStatus.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(561294));
+	}
+
+	@Test
+	public void skalBeregneSnittAvInntekterMedEnHelMånedOgEnHalv() {
+		//Arrange
+		LocalDate startArbeidsforhold = SKJÆRINGSTIDSPUNKT.minusMonths(2).withDayOfMonth(15);
+		Periode beregningsperiode = Periode.of(startArbeidsforhold, SKJÆRINGSTIDSPUNKT.minusMonths(1).with(TemporalAdjusters.lastDayOfMonth()));
+		Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
+		inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder().medInntekt(BigDecimal.valueOf(48739)).medMåned(beregningsperiode.getFom()).medArbeidsgiver(arbeidsforhold).medInntektskildeOgPeriodeType(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING).build());
+		inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder().medInntekt(BigDecimal.valueOf(44810)).medMåned(beregningsperiode.getTom()).medArbeidsgiver(arbeidsforhold).medInntektskildeOgPeriodeType(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING).build());
+		//Inntekt utenfor beregningsperioden - skal ikke tas med
+		inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder().medInntekt(BigDecimal.valueOf(999999)).medMåned(beregningsperiode.getFom().minusMonths(1)).medArbeidsgiver(arbeidsforhold).medInntektskildeOgPeriodeType(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING).build());
+
+		Beregningsgrunnlag grunnlag = settoppGrunnlagMedEnPeriode(LocalDate.now(), inntektsgrunnlag, List.of(AktivitetStatus.ATFL), List.of(arbeidsforhold));
+		BeregningsgrunnlagPeriode periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
+		BeregningsgrunnlagPrArbeidsforhold arbeidstakerStatus = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
+		BeregningsgrunnlagPrArbeidsforhold.builder(arbeidstakerStatus).medBeregningsperiode(beregningsperiode);
+		//Act
+		Evaluation resultat = new BeregnPrArbeidsforholdFraAOrdningen(arbeidstakerStatus).evaluate(periode);
+		//Assert
+		assertThat(resultat.result()).isEqualTo(Resultat.JA);
+		assertThat(arbeidstakerStatus.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(537720));
+	}
+
+	@Test
+	public void skalBeregneSnittAvInntekterMedEnHalvMåned() {
+		//Arrange
+		// 12 Virkedager gjenstående
+		LocalDate startArbeidsforhold = SKJÆRINGSTIDSPUNKT.minusMonths(1).withDayOfMonth(15);
+		Periode beregningsperiode = Periode.of(startArbeidsforhold, SKJÆRINGSTIDSPUNKT.minusMonths(1).with(TemporalAdjusters.lastDayOfMonth()));
+		Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
+		inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder().medInntekt(BigDecimal.valueOf(20000)).medMåned(beregningsperiode.getTom()).medArbeidsgiver(arbeidsforhold).medInntektskildeOgPeriodeType(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING).build());
+		//Inntekt utenfor beregningsperioden - skal ikke tas med
+		inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder().medInntekt(BigDecimal.valueOf(999999)).medMåned(beregningsperiode.getFom().minusMonths(1)).medArbeidsgiver(arbeidsforhold).medInntektskildeOgPeriodeType(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING).build());
+
+		Beregningsgrunnlag grunnlag = settoppGrunnlagMedEnPeriode(LocalDate.now(), inntektsgrunnlag, List.of(AktivitetStatus.ATFL), List.of(arbeidsforhold));
+		BeregningsgrunnlagPeriode periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
+		BeregningsgrunnlagPrArbeidsforhold arbeidstakerStatus = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
+		BeregningsgrunnlagPrArbeidsforhold.builder(arbeidstakerStatus).medBeregningsperiode(beregningsperiode);
+		//Act
+		Evaluation resultat = new BeregnPrArbeidsforholdFraAOrdningen(arbeidstakerStatus).evaluate(periode);
+		//Assert
+		assertThat(resultat.result()).isEqualTo(Resultat.JA);
+		assertThat(arbeidstakerStatus.getBeregnetPrÅr()).isCloseTo(BigDecimal.valueOf(440000), within(BigDecimal.valueOf(0.01)));
+	}
+
+
+
+	@Test
     public void OMS_Skal_gi_fordele_restinntekt_fra_aordningen_til_arbeidsforhold_uten_inntektsmelding() {
         //Arrange
         var arbeidsforholdMedInntektsmelding = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("12345", "ARB1");
