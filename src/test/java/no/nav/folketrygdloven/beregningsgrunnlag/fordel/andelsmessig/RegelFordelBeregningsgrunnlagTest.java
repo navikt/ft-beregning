@@ -70,6 +70,7 @@ public class RegelFordelBeregningsgrunnlagTest {
 	    var beregnetPrÅr1 = BigDecimal.valueOf(100_000);
 	    var a1 = lagArbeidsforhold(refusjonskrav1, beregnetPrÅr1, 1L, ORGNR1);
 
+
 	    var refusjonskrav2 = BigDecimal.valueOf(150_000);
 	    var beregnetPrÅr2 = BigDecimal.valueOf(100_000);
 	    var a2 = lagArbeidsforhold(refusjonskrav2, beregnetPrÅr2, 2L, ORGNR2);
@@ -78,7 +79,9 @@ public class RegelFordelBeregningsgrunnlagTest {
 	    var beregnetPrÅr3 = BigDecimal.valueOf(150_000);
 	    var a3 = lagArbeidsforhold(refusjonskrav3, beregnetPrÅr3, 3L, ORGNR3);
 
-	    var periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), TIDENES_ENDE), Arrays.asList(a1, a2, a3));
+	    var tilkommet = lagArbeidsforhold(refusjonskrav1, null, 4L, ORGNR1, refusjonskrav1);
+
+	    var periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), TIDENES_ENDE), Arrays.asList(a1, a2, a3, tilkommet));
 
 	    // Act
         kjørRegel(periode);
@@ -118,19 +121,24 @@ public class RegelFordelBeregningsgrunnlagTest {
 
     private void kjørRegel(FordelPeriodeModell periode) {
         RegelFordelBeregningsgrunnlag regel = new RegelFordelBeregningsgrunnlag(periode);
-        regel.evaluer(periode, Collections.emptyList());
+        regel.evaluer(periode, new ArrayList<>());
     }
 
     private FordelAndelModell lagArbeidsforhold(BigDecimal refusjonskravPrÅr, BigDecimal beregnetPrÅr, Long andelsnr, String orgnr) {
-        return FordelAndelModell.builder()
-            .medAndelNr(andelsnr)
-            .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr, null))
-            .medInntektskategori(Inntektskategori.ARBEIDSTAKER)
-	        .medAktivitetStatus(AktivitetStatus.AT)
-            .medGjeldendeRefusjonPrÅr(refusjonskravPrÅr)
-            .medForeslåttPrÅr(beregnetPrÅr)
-            .build();
+		return lagArbeidsforhold(refusjonskravPrÅr, beregnetPrÅr, andelsnr, orgnr, null);
     }
+
+	private FordelAndelModell lagArbeidsforhold(BigDecimal refusjonskravPrÅr, BigDecimal beregnetPrÅr, Long andelsnr, String orgnr, BigDecimal inntektFraIM) {
+		return FordelAndelModell.builder()
+				.medAndelNr(andelsnr)
+				.medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr, null))
+				.medInntektskategori(Inntektskategori.ARBEIDSTAKER)
+				.medAktivitetStatus(AktivitetStatus.AT)
+				.medGjeldendeRefusjonPrÅr(refusjonskravPrÅr)
+				.medForeslåttPrÅr(beregnetPrÅr)
+				.medInntektFraInnektsmelding(inntektFraIM)
+				.build();
+	}
 
     private FordelAndelModell lagSN(BigDecimal beregnetPrÅr1) {
         return FordelAndelModell.builder()

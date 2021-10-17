@@ -30,8 +30,8 @@ class OmfordelFraBrukersAndelTest {
 		var frilans = lagFrilans(2L);
 
 		var periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), TIDENES_ENDE), Arrays.asList(brukers_andel, frilans));
-
-		kjørRegel(periode);
+		FordelModell regelmodell = new FordelModell(periode);
+		kjørRegel(regelmodell);
 
 		// Regelen endrer på input så vi kan asserte på brukers_andel og frilans
 		assertThat(brukers_andel.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.ZERO);
@@ -51,7 +51,8 @@ class OmfordelFraBrukersAndelTest {
 
 		var periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), TIDENES_ENDE), Arrays.asList(brukers_andel, snStatus));
 
-		kjørRegel(periode);
+		FordelModell regelmodell = new FordelModell(periode);
+		kjørRegel(regelmodell);
 
 		// Regelen endrer på input så vi kan asserte på brukers_andel og sn
 		assertThat(brukers_andel.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.ZERO);
@@ -71,7 +72,8 @@ class OmfordelFraBrukersAndelTest {
 		long andelsnrSN = 3L;
 		var snStatus = lagSN(andelsnrSN);
 		var periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), TIDENES_ENDE), Arrays.asList(brukers_andel, snStatus, frilans));
-		kjørRegel(periode);
+		FordelModell regelmodell = new FordelModell(periode);
+		kjørRegel(regelmodell);
 
 		// Regelen endrer på input så vi kan asserte på brukers_andel og frilans/sn
 		assertThat(brukers_andel.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.ZERO);
@@ -107,7 +109,7 @@ class OmfordelFraBrukersAndelTest {
 				.build();
 	}
 
-	private void kjørRegel(FordelPeriodeModell periode) {
-		new OmfordelFraBrukersAndel().evaluate(new FordelModell(periode));
+	private void kjørRegel(FordelModell modell) {
+		new OmfordelFraBrukersAndel().evaluate(modell);
 	}
 }

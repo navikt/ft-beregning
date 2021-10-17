@@ -3,11 +3,13 @@ package no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelAndelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelPeriodeModell;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.Specification;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RegelFordelBeregningsgrunnlag implements RuleService<FordelPeriodeModell> {
 
@@ -23,9 +25,16 @@ public class RegelFordelBeregningsgrunnlag implements RuleService<FordelPeriodeM
 	@Override
 	public Evaluation evaluer(FordelPeriodeModell input, Object output) {
 		this.modell = new FordelModell(input);
-		modell.leggTilFordeltAndel(FordelAndelModell.builder().medAktivitetStatus(AktivitetStatus.ATFL).build());
 		var evaluate = this.getSpecification().evaluate(modell);
+		if (!(output instanceof List)) {
+			throw new IllegalStateException("Ugyldig output container i fordelregel, forventet en ArrayList av FordelAndelModell men mottok " + output);
+		}
+		oppdaterOutput(modell.getInput().getAndeler(), (ArrayList<FordelAndelModell>) output);
 		return evaluate;
+	}
+
+	private void oppdaterOutput(List<FordelAndelModell> andeler, ArrayList<FordelAndelModell> output) {
+		output.addAll(andeler);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -43,6 +52,12 @@ public class RegelFordelBeregningsgrunnlag implements RuleService<FordelPeriodeM
 
 	    Specification<FordelModell> sjekkOmSkalFordeleFraBrukersAndel = rs.beregningHvisRegel(new SkalOmfordeleFraBrukersAndelTilFLEllerSN(), omfordelFraBrukersAndel, sjekkRefusjonMotBeregningsgrunnlag);
 
-	    return sjekkOmSkalFordeleFraBrukersAndel;
+		Specification<FordelModell> fordelBruttoAndelsmessig = rs.beregningsRegel(RegelFordelBeregningsgrunnlagAndelsmessig.ID, RegelFordelBeregningsgrunnlagAndelsmessig.BESKRIVELSE, new RegelFordelBeregningsgrunnlagAndelsmessig(modell).getSpecification(), new Fordelt());
+
+		Specification<FordelModell> sjekkOmBruttoKanDekkeAllRefusjon = rs.beregningHvisRegel(new FinnesMerRefusjonEnnBruttoTilgjengelig(), fordelBruttoAndelsmessig, sjekkOmSkalFordeleFraBrukersAndel);
+
+		Specification<FordelModell> sjekkOmDetFinnesTilkommetRefkrav = rs.beregningHvisRegel(new FinnesTilkommetArbeidsandelMedRefusjonskrav(), sjekkOmBruttoKanDekkeAllRefusjon, sjekkOmSkalFordeleFraBrukersAndel);
+
+	    return sjekkOmDetFinnesTilkommetRefkrav;
     }
 }

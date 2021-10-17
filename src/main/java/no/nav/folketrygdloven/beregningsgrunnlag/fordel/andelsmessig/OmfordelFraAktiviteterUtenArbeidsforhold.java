@@ -32,7 +32,6 @@ class OmfordelFraAktiviteterUtenArbeidsforhold extends LeafSpecification<FordelM
 
     @Override
     public Evaluation evaluate(FordelModell modell) {
-		modell.leggTilFordeltAndel(FordelAndelModell.builder().medAktivitetStatus(AktivitetStatus.ATFL_SN).build());
         Map<String, Object> resultater = omfordelFraBgPrStatusUtenArbeidsforholdIPrioritertRekkefølge(modell.getInput());
         return beregnet(resultater);
     }
