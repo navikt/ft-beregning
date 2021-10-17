@@ -29,12 +29,16 @@ public class RegelFordelBeregningsgrunnlag implements RuleService<FordelPeriodeM
 		if (!(output instanceof List)) {
 			throw new IllegalStateException("Ugyldig output container i fordelregel, forventet en ArrayList av FordelAndelModell men mottok " + output);
 		}
-		oppdaterOutput(modell.getInput().getAndeler(), (ArrayList<FordelAndelModell>) output);
+		oppdaterOutput((ArrayList<FordelAndelModell>) output);
 		return evaluate;
 	}
 
-	private void oppdaterOutput(List<FordelAndelModell> andeler, ArrayList<FordelAndelModell> output) {
-		output.addAll(andeler);
+	private void oppdaterOutput(ArrayList<FordelAndelModell> output) {
+		if (modell.getMellomregninger().isEmpty()) {
+			output.addAll(modell.getInput().getAndeler());
+		} else {
+			modell.getMellomregninger().forEach(mellomregning -> output.addAll(mellomregning.getFordelteAndeler()));
+		}
 	}
 
 	@SuppressWarnings("unchecked")
