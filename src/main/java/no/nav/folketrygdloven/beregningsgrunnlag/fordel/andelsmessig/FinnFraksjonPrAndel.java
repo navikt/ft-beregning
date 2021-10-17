@@ -38,6 +38,7 @@ class FinnFraksjonPrAndel extends LeafSpecification<FordelModell> {
 	    mellomregninger.forEach(mellomregning -> {
 			BigDecimal fraksjon = finnFraksjon(mellomregning, totaltBeløp);
 			mellomregning.setFraksjonAvBrutto(fraksjon);
+			grunnlag.leggTilMellomregningAndel(mellomregning);
 			resultater.put("andel", mellomregning.getInputAndel().getBeskrivelse());
 			resultater.put("fraksjon", mellomregning.getFraksjonAvBrutto());
 		});

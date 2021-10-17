@@ -63,34 +63,31 @@ public class RegelFordelBeregningsgrunnlagTest {
     }
 
 
-    @Test
-    public void skal_flytte_beregningsgrunnlag_fra_ett_arbeidsforhold_til_to_andre_arbeidsforhold_uten_rest() {
-        // Arrange
-        var refusjonskrav1 = BigDecimal.valueOf(200_000);
-	    var beregnetPrÅr1 = BigDecimal.valueOf(100_000);
-	    var a1 = lagArbeidsforhold(refusjonskrav1, beregnetPrÅr1, 1L, ORGNR1);
+	@Test
+	public void skal_flytte_beregningsgrunnlag_fra_ett_arbeidsforhold_til_to_andre_arbeidsforhold_uten_rest() {
+		// Arrange
+		var refusjonskrav1 = BigDecimal.valueOf(200_000);
+		var beregnetPrÅr1 = BigDecimal.valueOf(100_000);
+		var a1 = lagArbeidsforhold(refusjonskrav1, beregnetPrÅr1, 1L, ORGNR1);
 
+		var refusjonskrav2 = BigDecimal.valueOf(150_000);
+		var beregnetPrÅr2 = BigDecimal.valueOf(100_000);
+		var a2 = lagArbeidsforhold(refusjonskrav2, beregnetPrÅr2, 2L, ORGNR2);
 
-	    var refusjonskrav2 = BigDecimal.valueOf(150_000);
-	    var beregnetPrÅr2 = BigDecimal.valueOf(100_000);
-	    var a2 = lagArbeidsforhold(refusjonskrav2, beregnetPrÅr2, 2L, ORGNR2);
+		var refusjonskrav3 = BigDecimal.ZERO;
+		var beregnetPrÅr3 = BigDecimal.valueOf(150_000);
+		var a3 = lagArbeidsforhold(refusjonskrav3, beregnetPrÅr3, 3L, ORGNR3);
 
-	    var refusjonskrav3 = BigDecimal.ZERO;
-	    var beregnetPrÅr3 = BigDecimal.valueOf(150_000);
-	    var a3 = lagArbeidsforhold(refusjonskrav3, beregnetPrÅr3, 3L, ORGNR3);
+		var periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), TIDENES_ENDE), Arrays.asList(a1, a2, a3));
 
-	    var tilkommet = lagArbeidsforhold(refusjonskrav1, null, 4L, ORGNR1, refusjonskrav1);
+		// Act
+		kjørRegel(periode);
 
-	    var periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), TIDENES_ENDE), Arrays.asList(a1, a2, a3, tilkommet));
-
-	    // Act
-        kjørRegel(periode);
-
-        // Assert
-        assertThat(a1.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(refusjonskrav1);
-        assertThat(a2.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(refusjonskrav2);
-        assertThat(a3.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.ZERO);
-    }
+		// Assert
+		assertThat(a1.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(refusjonskrav1);
+		assertThat(a2.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(refusjonskrav2);
+		assertThat(a3.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.ZERO);
+	}
 
     @Test
     public void skal_ikkje_omfordele() {
