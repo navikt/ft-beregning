@@ -141,11 +141,4 @@ class FordelMålbeløpPrAndel extends LeafSpecification<FordelModell> {
 	private boolean harMerPengerEnnMålbeløp(FordelAndelModellMellomregning andel) {
 		return andel.getBruttoTilgjengeligForFordeling().compareTo(andel.getMålbeløp()) > 0;
 	}
-
-	@Override
-	public String toString() {
-		return "FordelMålbeløpPrAndel{" +
-				"AVKORTING_COMPARATOR=" + AVKORTING_COMPARATOR +
-				'}';
-	}
 }
