@@ -1,6 +1,7 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelAndelModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelAndelModellMellomregning;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelPeriodeModell;
 import no.nav.fpsak.nare.RuleService;
@@ -8,7 +9,9 @@ import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.Specification;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class RegelFordelBeregningsgrunnlag implements RuleService<FordelPeriodeModell> {
@@ -34,10 +37,29 @@ public class RegelFordelBeregningsgrunnlag implements RuleService<FordelPeriodeM
 	}
 
 	private void oppdaterOutput(ArrayList<FordelAndelModell> output) {
+		// Bør få løypa som ikke er andelsmessig over på mellomregning også, så man ikke trenger endre input
 		if (modell.getMellomregninger().isEmpty()) {
 			output.addAll(modell.getInput().getAndeler());
 		} else {
+			validerAtBruttoErUendret(modell);
 			modell.getMellomregninger().forEach(mellomregning -> output.addAll(mellomregning.getFordelteAndeler()));
+		}
+	}
+
+	private void validerAtBruttoErUendret(FordelModell modell) {
+		BigDecimal bruttoInn = modell.getInput().getAndeler().stream()
+				.map(a -> a.getForeslåttPrÅr().orElse(BigDecimal.ZERO))
+				.reduce(BigDecimal::add)
+				.orElse(BigDecimal.ZERO);
+		BigDecimal bruttoUt = modell.getMellomregninger().stream()
+				.map(FordelAndelModellMellomregning::getFordelteAndeler)
+				.flatMap(Collection::stream)
+				.map(a -> a.getFordeltPrÅr().orElseThrow())
+				.reduce(BigDecimal::add)
+				.orElse(BigDecimal.ZERO);
+		if (bruttoInn.compareTo(bruttoUt) != 0) {
+			throw new IllegalStateException("Missmatch mellom fordelt beløp før og etter andelsmessig fordeling." +
+					" Inn i regel var brutto " +  bruttoInn + ". Ut av regel var brutto " + bruttoUt);
 		}
 	}
 
@@ -56,7 +78,7 @@ public class RegelFordelBeregningsgrunnlag implements RuleService<FordelPeriodeM
 
 	    Specification<FordelModell> sjekkOmSkalFordeleFraBrukersAndel = rs.beregningHvisRegel(new SkalOmfordeleFraBrukersAndelTilFLEllerSN(), omfordelFraBrukersAndel, sjekkRefusjonMotBeregningsgrunnlag);
 
-		Specification<FordelModell> fordelBruttoAndelsmessig = rs.beregningsRegel(RegelFordelBeregningsgrunnlagAndelsmessig.ID, RegelFordelBeregningsgrunnlagAndelsmessig.BESKRIVELSE, new RegelFordelBeregningsgrunnlagAndelsmessig(modell).getSpecification(), new Fordelt());
+		Specification<FordelModell> fordelBruttoAndelsmessig = rs.beregningsRegel(RegelFordelBeregningsgrunnlagAndelsmessig.ID, RegelFordelBeregningsgrunnlagAndelsmessig.BESKRIVELSE, new RegelFordelBeregningsgrunnlagAndelsmessig().getSpecification(), new Fordelt());
 
 		Specification<FordelModell> sjekkOmBruttoKanDekkeAllRefusjon = rs.beregningHvisRegel(new FinnesMerRefusjonEnnBruttoTilgjengelig(), fordelBruttoAndelsmessig, sjekkOmSkalFordeleFraBrukersAndel);
 

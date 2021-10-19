@@ -8,13 +8,8 @@ import no.nav.fpsak.nare.specification.Specification;
 
 public class RegelFordelBeregningsgrunnlagAndelsmessig implements RuleService<FordelPeriodeModell> {
 
-    public static final String ID = "FP_BR 22.3";
+    public static final String ID = "FORDEL_ANDELSMESSIG";
 	public static final String BESKRIVELSE = "Fordel beregningsgrunnlag andelsmessig etter fraksjon av foreslått inntekt eller inntekt fra inntektsmelding";
-	private FordelModell modell;
-
-	public RegelFordelBeregningsgrunnlagAndelsmessig(FordelModell modell) {
-		this.modell = modell;
-	}
 
 	@SuppressWarnings("unchecked")
     @Override

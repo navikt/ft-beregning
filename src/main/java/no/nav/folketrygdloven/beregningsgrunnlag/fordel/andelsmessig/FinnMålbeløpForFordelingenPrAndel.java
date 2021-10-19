@@ -10,10 +10,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.Ford
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
-/**
- * Sjekker om det finnes et tilkommet arbeidsforhold med refusjonskrav.
- *
- */
 class FinnMålbeløpForFordelingenPrAndel extends LeafSpecification<FordelModell> {
 
     static final String ID = "FINN_BELØP_SOM_SKAL_FORDELES_TIL_ANDEL";

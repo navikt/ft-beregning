@@ -13,10 +13,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.Ford
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
-/**
- * Finn fraksjon av totalt foreslått beløp som skal fordeles til hver andel.
- *
- */
 class FinnFraksjonPrAndel extends LeafSpecification<FordelModell> {
 
     static final String ID = "FINN_FRAKSJON_PR_ANDEL";

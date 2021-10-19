@@ -8,10 +8,6 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 
 import java.math.BigDecimal;
 
-/**
- * Sjekker om det finnes et tilkommet arbeidsforhold med refusjonskrav.
- *
- */
 class FinnesTilkommetArbeidsandelMedRefusjonskrav extends LeafSpecification<FordelModell> {
 
     static final String ID = "FINNES_TILKOMMET_REFUSJONSKRAV ";

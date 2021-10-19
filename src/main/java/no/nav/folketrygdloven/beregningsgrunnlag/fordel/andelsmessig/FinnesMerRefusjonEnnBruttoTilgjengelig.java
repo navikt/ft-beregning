@@ -9,14 +9,10 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 import java.math.BigDecimal;
 import java.util.Optional;
 
-/**
- * Sjekker om det finnes et tilkommet arbeidsforhold med refusjonskrav.
- *
- */
 class FinnesMerRefusjonEnnBruttoTilgjengelig extends LeafSpecification<FordelModell> {
 
-    static final String ID = "NOK_INNTEKT_TIL_Å_DEKKE_BRUTTO ";
-    static final String BESKRIVELSE = "Er beregningsgrunnlaget høyt nok til å dekke all refusjon?";
+    static final String ID = "MER_REFUSJON_ENN_BRUTTO_TILGJENGELIG ";
+    static final String BESKRIVELSE = "Er refusjonskrav høyere enn brutto tilgjengelig?";
 
     FinnesMerRefusjonEnnBruttoTilgjengelig() {
         super(ID, BESKRIVELSE);

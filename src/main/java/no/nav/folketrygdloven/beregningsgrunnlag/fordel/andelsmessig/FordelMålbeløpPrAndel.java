@@ -14,16 +14,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-/**
- * Sjekker om det finnes et tilkommet arbeidsforhold med refusjonskrav.
- *
- */
 class FordelMålbeløpPrAndel extends LeafSpecification<FordelModell> {
 	private final Comparator<FordelAndelModellMellomregning> AVKORTING_COMPARATOR = Comparator.comparingInt(a -> a.getInputAndel().getAktivitetStatus().getAvkortingPrioritet());
 
-	static final String ID = "FINN_BELØP_SOM_SKAL_FORDELES_TIL_ANDEL";
-	static final String BESKRIVELSE = "Finner beløpet som skal fordeles til andel ved å se på forholdet " +
-			"mellom total foreslått brutto og fraksjon av brutto for andelen";
+	static final String ID = "FORDEL_OPP_TIL_MÅLBELØP_PR_ANDEL";
+	static final String BESKRIVELSE = "Fordeler brutto til og fra andeler til hver andel har nådd sitt målbeløp";
 
 	public FordelMålbeløpPrAndel() {
 		super(ID, BESKRIVELSE);
