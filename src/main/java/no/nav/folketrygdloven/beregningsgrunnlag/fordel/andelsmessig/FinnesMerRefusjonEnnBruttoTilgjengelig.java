@@ -19,9 +19,9 @@ class FinnesMerRefusjonEnnBruttoTilgjengelig extends LeafSpecification<FordelMod
     }
 
     @Override
-    public Evaluation evaluate(FordelModell grunnlag) {
-	    var totalBrutto = finnTotalBrutto(grunnlag.getInput());
-	    var totalRefusjon = finnTotalRefusjon(grunnlag.getInput());
+    public Evaluation evaluate(FordelModell modell) {
+	    var totalBrutto = finnTotalBrutto(modell.getInput());
+	    var totalRefusjon = finnTotalRefusjon(modell.getInput());
 		var finnesMerRefusjonEnnBrutto = totalRefusjon.compareTo(totalBrutto) > 0;
 	    return finnesMerRefusjonEnnBrutto ? ja() : nei();
 	}

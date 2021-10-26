@@ -18,8 +18,8 @@ class FinnesTilkommetArbeidsandelMedRefusjonskrav extends LeafSpecification<Ford
     }
 
     @Override
-    public Evaluation evaluate(FordelModell grunnlag) {
-	    var finnesTilkommetAndelMedRefusjonskrav = grunnlag.getInput().getAlleAndelerForStatus(AktivitetStatus.AT).stream()
+    public Evaluation evaluate(FordelModell modell) {
+	    var finnesTilkommetAndelMedRefusjonskrav = modell.getInput().getAlleAndelerForStatus(AktivitetStatus.AT).stream()
 			    .filter(andel -> andel.getForeslåttPrÅr().isEmpty())
 			    .anyMatch(andel -> andel.getGjeldendeRefusjonPrÅr().isPresent() && andel.getGjeldendeRefusjonPrÅr().get().compareTo(BigDecimal.ZERO) > 0);
 	    return finnesTilkommetAndelMedRefusjonskrav ? ja() : nei();

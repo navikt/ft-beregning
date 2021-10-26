@@ -13,7 +13,6 @@ public class FordelAndelModellMellomregning {
 	private final FordelAndelModell inputAndel;
 	private BigDecimal fraksjonsbestemmendeBeløp;
 	private BigDecimal fraksjonAvBrutto;
-	private BigDecimal bruttoTilgjengeligForFordeling;
 	private BigDecimal målbeløp;
 	private List<FordelAndelModell> fordelteAndeler = new ArrayList<>();
 
@@ -22,13 +21,11 @@ public class FordelAndelModellMellomregning {
 		Objects.requireNonNull(fraksjonsbestemmendeBeløp, "fraksjonsbestemmendeBeløp");
 		this.fraksjonsbestemmendeBeløp = fraksjonsbestemmendeBeløp;
 		this.inputAndel = andel;
-		this.bruttoTilgjengeligForFordeling = andel.getForeslåttPrÅr().orElse(BigDecimal.ZERO);
 	}
 
 	public FordelAndelModellMellomregning(FordelAndelModell andel) {
 		Objects.requireNonNull(andel, "andel");
 		this.inputAndel = andel;
-		this.bruttoTilgjengeligForFordeling = andel.getForeslåttPrÅr().orElse(BigDecimal.ZERO);
 	}
 
 	public FordelAndelModell getInputAndel() {
@@ -37,10 +34,6 @@ public class FordelAndelModellMellomregning {
 
 	public BigDecimal getFraksjonAvBrutto() {
 		return fraksjonAvBrutto;
-	}
-
-	public void setBruttoTilgjengeligForFordeling(BigDecimal bruttoTilgjengeligForFordeling) {
-		this.bruttoTilgjengeligForFordeling = bruttoTilgjengeligForFordeling;
 	}
 
 	public List<FordelAndelModell> getFordelteAndeler() {
@@ -56,10 +49,6 @@ public class FordelAndelModellMellomregning {
 
 	public BigDecimal getFraksjonsbestemmendeBeløp() {
 		return fraksjonsbestemmendeBeløp;
-	}
-
-	public BigDecimal getBruttoTilgjengeligForFordeling() {
-		return bruttoTilgjengeligForFordeling;
 	}
 
 	public BigDecimal getMålbeløp() {

@@ -23,18 +23,18 @@ class FinnFraksjonPrAndel extends LeafSpecification<FordelModell> {
     }
 
     @Override
-    public Evaluation evaluate(FordelModell grunnlag) {
+    public Evaluation evaluate(FordelModell modell) {
 	    Map<String, Object> resultater = new HashMap<>();
-	    List<FordelAndelModellMellomregning> mellomregninger = grunnlag.getInput().getAndeler()
+	    List<FordelAndelModellMellomregning> mellomregninger = modell.getInput().getAndeler()
 			    .stream()
 			    .map(andelInput -> finnFraksjonsbestemmendeBeløpOgLagMellomregning(andelInput, resultater))
 			    .collect(Collectors.toList());
 	    BigDecimal totaltBeløp = finnTotaltFraksjonsbestemmendeBeløp(mellomregninger);
-	    resultater.put("totaltFraksjonsbestemmendeBeøp", totaltBeløp);
+	    resultater.put("totaltFraksjonsbestemmendeBeløp", totaltBeløp);
 	    mellomregninger.forEach(mellomregning -> {
 			BigDecimal fraksjon = finnFraksjon(mellomregning, totaltBeløp);
 			mellomregning.setFraksjonAvBrutto(fraksjon);
-			grunnlag.leggTilMellomregningAndel(mellomregning);
+			modell.leggTilMellomregningAndel(mellomregning);
 			resultater.put("andel", mellomregning.getInputAndel().getBeskrivelse());
 			resultater.put("fraksjon", mellomregning.getFraksjonAvBrutto());
 		});
