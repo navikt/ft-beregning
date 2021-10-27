@@ -53,10 +53,10 @@ class RegelFordelBeregningsgrunnlagAndelsmessigTest {
 
 		// Assert
 		assertThat(fordelteAndeler).hasSize(4);
-		assertFordeltAndel(fordelteAndeler, arbeid("999", "abc"), Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE, 60000);
+		assertFordeltAndel(fordelteAndeler, arbeid("999", "abc"), Inntektskategori.ARBEIDSTAKER, 60000);
 		assertFordeltAndel(fordelteAndeler, AktivitetStatus.SN, Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE, 0);
-		assertFordeltAndel(fordelteAndeler, arbeid("888", "abc"), Inntektskategori.ARBEIDSTAKER,100000);
-		assertFordeltAndel(fordelteAndeler, arbeid("888", "abc"), Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE,140000);
+		assertFordeltAndel(fordelteAndeler, arbeid("888", "abc"), Inntektskategori.ARBEIDSTAKER,40000);
+		assertFordeltAndel(fordelteAndeler, arbeid("888", "abc"), Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE,200000);
 	}
 
 	// Inntekt på STP, 200.000. Total ref: 400000.000.

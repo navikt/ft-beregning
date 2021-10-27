@@ -138,7 +138,7 @@ class FordelMålbeløpPrAndelTest {
 		assertThat(regelModell.getMellomregninger()).hasSize(4);
 
 		assertAntallFordelteAndelerResultat(regelModell, arbeid, 1);
-		assertFordeltAndel(regelModell, arbeid, 150_000, Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE);
+		assertFordeltAndel(regelModell, arbeid, 150_000, Inntektskategori.ARBEIDSTAKER);
 
 		assertAntallFordelteAndelerResultat(regelModell, frilans, 1);
 		assertFordeltAndel(regelModell, frilans, 0, Inntektskategori.FRILANSER);
@@ -147,9 +147,9 @@ class FordelMålbeløpPrAndelTest {
 		assertFordeltAndel(regelModell, næring, 0, Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE);
 
 		assertAntallFordelteAndelerResultat(regelModell, tilkommetArbeid, 3);
-		assertFordeltAndel(regelModell, tilkommetArbeid, 200_000, Inntektskategori.ARBEIDSTAKER);
+		assertFordeltAndel(regelModell, tilkommetArbeid, 50_000, Inntektskategori.ARBEIDSTAKER);
 		assertFordeltAndel(regelModell, tilkommetArbeid, 100_000, Inntektskategori.FRILANSER);
-		assertFordeltAndel(regelModell, tilkommetArbeid, 150_000, Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE);
+		assertFordeltAndel(regelModell, tilkommetArbeid, 300_000, Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE);
 	}
 
 

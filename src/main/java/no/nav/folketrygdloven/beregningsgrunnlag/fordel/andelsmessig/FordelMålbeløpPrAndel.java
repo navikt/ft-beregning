@@ -14,10 +14,8 @@ import java.util.Map;
 import java.util.Optional;
 
 class FordelMålbeløpPrAndel extends LeafSpecification<FordelModell> {
-	// Fordeler først fra andeler med høyeste avkortingsprioritet
-	private static final Comparator<Map.Entry<InntektskategoriMedAvkortingprioritet, BigDecimal>> AVKORTING_COMPARATOR = Comparator.comparingInt(entry -> entry.getKey().avkortingsprioritet());
-	// Fordeler først til andeler med laveste målbeløp
-	private static final Comparator<FordelAndelModellMellomregning> MÅLBELØP_COMPARATOR = Comparator.comparingDouble(entry -> entry.getMålbeløp().doubleValue());
+	private static final Comparator<Map.Entry<Inntektskategori, BigDecimal>> TILGJENGELIG_BELØP_COMPARATOR = Comparator.comparingDouble(entry -> entry.getValue().doubleValue());
+	private static final Comparator<FordelAndelModellMellomregning> FORESLÅTTBELØP_COMPARATOR = Comparator.comparingDouble(entry -> entry.getInputAndel().getForeslåttPrÅr().orElse(BigDecimal.ZERO).doubleValue());
 
 	static final String ID = "FORDEL_OPP_TIL_MÅLBELØP_PR_ANDEL";
 	static final String BESKRIVELSE = "Fordeler brutto til og fra andeler til hver andel har nådd sitt målbeløp";
@@ -32,7 +30,7 @@ class FordelMålbeløpPrAndel extends LeafSpecification<FordelModell> {
 		var pottTilFordeling = lagPottTilFordlingFraModell(modell);
 		// Fordeler først til andeler med laveste målbeløp
 		modell.getMellomregninger().stream()
-				.sorted(MÅLBELØP_COMPARATOR)
+				.sorted(FORESLÅTTBELØP_COMPARATOR.reversed())
 				.forEach(a -> fordelAndel(a, pottTilFordeling, resultater));
 		return beregnet(resultater);
 	}
@@ -53,17 +51,43 @@ class FordelMålbeløpPrAndel extends LeafSpecification<FordelModell> {
 	}
 
 	private void fordelTilAndel(FordelAndelModellMellomregning andelÅFordeleTil, PottTilFordeling pottTilFordeling, Map<String, Object> resultater) {
+		// Hvis foreslått er satt har andelen brutto fra før, ikke opprettet pga refusjon
+		if (andelÅFordeleTil.getInputAndel().getForeslåttPrÅr().isPresent()) {
+			fordelTilEksisterendeAndel(andelÅFordeleTil, pottTilFordeling, resultater);
+		} else {
+			fordelTilNyAndel(andelÅFordeleTil, pottTilFordeling, resultater);
+		}
+	}
+
+	private void fordelTilNyAndel(FordelAndelModellMellomregning andelÅFordeleTil, PottTilFordeling pottTilFordeling, Map<String, Object> resultater) {
 		var beløpSomGjennstårÅFordele = finnGjenståendeBeløp(andelÅFordeleTil);
-		var tilgjengeligBeløpMedKategori = pottTilFordeling.finnTilgjengeligBeløpMedInntektskategori();
+		var tilgjengeligBeløpMedKategori = finnBeløpFraBesteKategori(andelÅFordeleTil.getInputAndel().getInntektskategori(), pottTilFordeling);
 		while (beløpSomGjennstårÅFordele.compareTo(BigDecimal.ZERO) > 0 && tilgjengeligBeløpMedKategori.isPresent()) {
-			var beløpSomSkalFordeles = finnBeløpSomSkalFlyttes(tilgjengeligBeløpMedKategori.get(), beløpSomGjennstårÅFordele);
-			var inntektskategoriBeløpetTilhørte = tilgjengeligBeløpMedKategori.get().getKey().kategori();
+			var beløpSomSkalFordeles = finnBeløpSomSkalFlyttes(tilgjengeligBeløpMedKategori.get().getValue(), beløpSomGjennstårÅFordele);
+			var inntektskategoriBeløpetTilhørte = tilgjengeligBeløpMedKategori.get().getKey();
 			pottTilFordeling.trekkFraBeløpPåKategori(tilgjengeligBeløpMedKategori.get().getKey(), beløpSomSkalFordeles);
 			flyttBeløpTilAndel(andelÅFordeleTil, beløpSomSkalFordeles, inntektskategoriBeløpetTilhørte);
 			settRegelSporing(resultater, andelÅFordeleTil, beløpSomSkalFordeles, inntektskategoriBeløpetTilhørte);
 			beløpSomGjennstårÅFordele = beløpSomGjennstårÅFordele.subtract(beløpSomSkalFordeles);
 			tilgjengeligBeløpMedKategori = pottTilFordeling.finnTilgjengeligBeløpMedInntektskategori();
 		}
+	}
+
+	private Optional<Map.Entry<Inntektskategori, BigDecimal>> finnBeløpFraBesteKategori(Inntektskategori inntektskategori, PottTilFordeling pottTilFordeling) {
+		if (pottTilFordeling.finnBeløpForInntektskategori(inntektskategori).isPresent()) {
+			return pottTilFordeling.finnBeløpForInntektskategori(inntektskategori);
+		} else return pottTilFordeling.finnTilgjengeligBeløpMedInntektskategori();
+	}
+
+	private void fordelTilEksisterendeAndel(FordelAndelModellMellomregning andelÅFordeleTil, PottTilFordeling pottTilFordeling, Map<String, Object> resultater) {
+		var inntektskategori = andelÅFordeleTil.getInputAndel().getInntektskategori();
+		var tilgjengeligBeløp = pottTilFordeling.finnBeløpForInntektskategori(inntektskategori)
+				.orElseThrow(() -> new IllegalStateException("Forventer at eksisterende andeler alltid skal ha beløp tilgjengelig"));
+		var gjenståendeBeløp = finnGjenståendeBeløp(andelÅFordeleTil);
+		var beløpSomSkalFordeles = finnBeløpSomSkalFlyttes(tilgjengeligBeløp.getValue(), gjenståendeBeløp);
+		pottTilFordeling.trekkFraBeløpPåKategori(inntektskategori, beløpSomSkalFordeles);
+		flyttBeløpTilAndel(andelÅFordeleTil, beløpSomSkalFordeles, inntektskategori);
+		settRegelSporing(resultater, andelÅFordeleTil, beløpSomSkalFordeles, inntektskategori);
 	}
 
 	private void settRegelSporing(Map<String, Object> resultater, FordelAndelModellMellomregning andelÅFordeleTil, BigDecimal beløpSomSkalFordeles, Inntektskategori inntektskategoriBeløpetTilhørte) {
@@ -101,12 +125,12 @@ class FordelMålbeløpPrAndel extends LeafSpecification<FordelModell> {
 		}
 	}
 
-	private BigDecimal finnBeløpSomSkalFlyttes(Map.Entry<InntektskategoriMedAvkortingprioritet, BigDecimal> beløpMedKategori,
+	private BigDecimal finnBeløpSomSkalFlyttes(BigDecimal beløpFraKategori,
 	                                           BigDecimal beløpSomGjennstårÅFordele) {
-		if (beløpSomGjennstårÅFordele.compareTo(beløpMedKategori.getValue()) <= 0) {
+		if (beløpSomGjennstårÅFordele.compareTo(beløpFraKategori) <= 0) {
 			return beløpSomGjennstårÅFordele;
 		}
-		return beløpMedKategori.getValue();
+		return beløpFraKategori;
 	}
 
 	private FordelAndelModell opprettAndelFraEksisterende(FordelAndelModellMellomregning andelÅFordeleTil, BigDecimal fordeltBeløp) {
@@ -128,12 +152,12 @@ class FordelMålbeløpPrAndel extends LeafSpecification<FordelModell> {
 	}
 
 	private PottTilFordeling lagPottTilFordlingFraModell(FordelModell modell) {
-		Map<InntektskategoriMedAvkortingprioritet, BigDecimal> totalPott = new HashMap<>();
+		Map<Inntektskategori, BigDecimal> totalPott = new HashMap<>();
 		modell.getMellomregninger().stream()
 				.filter(a -> a.getInputAndel().getForeslåttPrÅr().isPresent())
 				.forEach(mellomregning -> {
 					var andel = mellomregning.getInputAndel();
-					var kategori = new InntektskategoriMedAvkortingprioritet(andel.getInntektskategori(), andel.getAktivitetStatus().getAvkortingPrioritet());
+					var kategori = andel.getInntektskategori();
 					BigDecimal eksisterendeBeløp = totalPott.get(kategori);
 					if (eksisterendeBeløp == null) {
 						totalPott.put(kategori, andel.getForeslåttPrÅr().get());
@@ -145,15 +169,23 @@ class FordelMålbeløpPrAndel extends LeafSpecification<FordelModell> {
 		return new PottTilFordeling(totalPott);
 	}
 
-	public record PottTilFordeling(Map<InntektskategoriMedAvkortingprioritet, BigDecimal> kategoriAndelMap) {
+	public record PottTilFordeling(Map<Inntektskategori, BigDecimal> kategoriAndelMap) {
 
-		private Optional<Map.Entry<InntektskategoriMedAvkortingprioritet, BigDecimal>> finnTilgjengeligBeløpMedInntektskategori() {
+		private Optional<Map.Entry<Inntektskategori, BigDecimal>> finnTilgjengeligBeløpMedInntektskategori() {
+			// Fordeler først fra andeler med høyeste tilgjengelige beløp
 			return kategoriAndelMap.entrySet().stream()
 					.filter(entry -> entry.getValue().compareTo(BigDecimal.ZERO) > 0)
-					.max(AVKORTING_COMPARATOR);
+					.max(TILGJENGELIG_BELØP_COMPARATOR);
 		}
 
-		private void trekkFraBeløpPåKategori(InntektskategoriMedAvkortingprioritet kategori, BigDecimal beløpÅTrekkeFra) {
+		private Optional<Map.Entry<Inntektskategori, BigDecimal>> finnBeløpForInntektskategori(Inntektskategori inntektskategori) {
+			return kategoriAndelMap.entrySet().stream()
+					.filter(entry -> entry.getValue().compareTo(BigDecimal.ZERO) > 0)
+					.filter(entry ->entry.getKey().equals(inntektskategori))
+					.findFirst();
+		}
+
+		private void trekkFraBeløpPåKategori(Inntektskategori kategori, BigDecimal beløpÅTrekkeFra) {
 			var andel = kategoriAndelMap.entrySet().stream()
 					.filter(entry -> entry.getKey().equals(kategori))
 					.findFirst()
@@ -167,5 +199,4 @@ class FordelMålbeløpPrAndel extends LeafSpecification<FordelModell> {
 			kategoriAndelMap.put(kategori, nyttBeløp);
 		}
 	}
-	private record InntektskategoriMedAvkortingprioritet(Inntektskategori kategori, int avkortingsprioritet){}
 }
