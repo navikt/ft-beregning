@@ -10,6 +10,7 @@ import java.util.List;
 
 
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelAndelModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelPeriodeModell;
 
 import org.junit.jupiter.api.Test;
@@ -209,6 +210,8 @@ public class OmfordelFraAktiviteterUtenArbeidsforholdTest {
 
     private void kjørRegel(FordelAndelModell arbeidsforhold, FordelPeriodeModell periode) {
         OmfordelFraAktiviteterUtenArbeidsforhold regel = new OmfordelFraAktiviteterUtenArbeidsforhold(arbeidsforhold);
-        regel.evaluate(periode);
+	    var modell = new FordelModell(periode);
+	    regel.evaluate(modell);
+		String s = "";
     }
 }

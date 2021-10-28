@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelAndelModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelPeriodeModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
@@ -11,7 +12,7 @@ import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(SjekkHarRefusjonSomOverstigerBeregningsgrunnlag.ID)
-class SjekkHarRefusjonSomOverstigerBeregningsgrunnlag extends LeafSpecification<FordelPeriodeModell> {
+class SjekkHarRefusjonSomOverstigerBeregningsgrunnlag extends LeafSpecification<FordelModell> {
 
     static final String ID = "FP_BR 22.3.1";
     static final String BESKRIVELSE = "Har arbeidstaker som søker refusjon som overstiger beregningsgrunnlag?";
@@ -21,8 +22,8 @@ class SjekkHarRefusjonSomOverstigerBeregningsgrunnlag extends LeafSpecification<
     }
 
     @Override
-    public Evaluation evaluate(FordelPeriodeModell grunnlag) {
-	    var arbeidsandeler = grunnlag.getAlleAndelerForStatus(AktivitetStatus.AT);
+    public Evaluation evaluate(FordelModell grunnlag) {
+	    var arbeidsandeler = grunnlag.getInput().getAlleAndelerForStatus(AktivitetStatus.AT);
 	    var arbeidsforholdSomHarRefusjonStørreEnnBG = arbeidsandeler.stream()
             .filter(this::harRefusjonskravStørreEnnBg).collect(Collectors.toList());
 	    var resultat = arbeidsforholdSomHarRefusjonStørreEnnBG.isEmpty() ? nei() : ja();

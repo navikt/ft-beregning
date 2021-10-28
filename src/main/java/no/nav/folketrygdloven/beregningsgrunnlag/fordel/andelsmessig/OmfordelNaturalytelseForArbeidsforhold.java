@@ -1,13 +1,14 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelAndelModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelPeriodeModell;
 
 import java.math.BigDecimal;
 
 class OmfordelNaturalytelseForArbeidsforhold extends OmfordelForArbeidsforhold {
 
-    OmfordelNaturalytelseForArbeidsforhold(FordelPeriodeModell beregningsgrunnlagPeriode) {
+    OmfordelNaturalytelseForArbeidsforhold(FordelModell beregningsgrunnlagPeriode) {
         super(beregningsgrunnlagPeriode);
     }
 

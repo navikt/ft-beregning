@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelAndelModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelPeriodeModell;
 
 import org.junit.jupiter.api.Test;
@@ -176,14 +177,7 @@ public class OmfordelBeregningsgrunnlagTilArbeidsforholdTest {
     private void kjørRegel(FordelAndelModell arbeidsforhold, FordelPeriodeModell periode) {
         OmfordelBeregningsgrunnlagTilArbeidsforhold regel = new OmfordelBeregningsgrunnlagTilArbeidsforhold();
         regel.medServiceArgument(new ServiceArgument("arbeidsforhold", arbeidsforhold));
-        regel.getSpecification().evaluate(periode);
-    }
-
-    private BeregningsgrunnlagPrStatus lagATFL(List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforholdList) {
-        BeregningsgrunnlagPrStatus.Builder builder = BeregningsgrunnlagPrStatus.builder()
-            .medAktivitetStatus(AktivitetStatus.ATFL);
-        arbeidsforholdList.forEach(builder::medArbeidsforhold);
-        return builder.build();
+        regel.getSpecification().evaluate(new FordelModell(periode));
     }
 
     private FordelAndelModell lagArbeidsforhold(BigDecimal refusjonskravPrÅr, BigDecimal beregnetPrÅr, Long andelsnr, String orgnr) {

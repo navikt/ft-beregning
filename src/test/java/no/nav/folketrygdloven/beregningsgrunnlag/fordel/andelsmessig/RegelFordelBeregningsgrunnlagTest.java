@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelAndelModell;
@@ -62,31 +63,31 @@ public class RegelFordelBeregningsgrunnlagTest {
     }
 
 
-    @Test
-    public void skal_flytte_beregningsgrunnlag_fra_ett_arbeidsforhold_til_to_andre_arbeidsforhold_uten_rest() {
-        // Arrange
-        var refusjonskrav1 = BigDecimal.valueOf(200_000);
-	    var beregnetPrÅr1 = BigDecimal.valueOf(100_000);
-	    var a1 = lagArbeidsforhold(refusjonskrav1, beregnetPrÅr1, 1L, ORGNR1);
+	@Test
+	public void skal_flytte_beregningsgrunnlag_fra_ett_arbeidsforhold_til_to_andre_arbeidsforhold_uten_rest() {
+		// Arrange
+		var refusjonskrav1 = BigDecimal.valueOf(200_000);
+		var beregnetPrÅr1 = BigDecimal.valueOf(100_000);
+		var a1 = lagArbeidsforhold(refusjonskrav1, beregnetPrÅr1, 1L, ORGNR1);
 
-	    var refusjonskrav2 = BigDecimal.valueOf(150_000);
-	    var beregnetPrÅr2 = BigDecimal.valueOf(100_000);
-	    var a2 = lagArbeidsforhold(refusjonskrav2, beregnetPrÅr2, 2L, ORGNR2);
+		var refusjonskrav2 = BigDecimal.valueOf(150_000);
+		var beregnetPrÅr2 = BigDecimal.valueOf(100_000);
+		var a2 = lagArbeidsforhold(refusjonskrav2, beregnetPrÅr2, 2L, ORGNR2);
 
-	    var refusjonskrav3 = BigDecimal.ZERO;
-	    var beregnetPrÅr3 = BigDecimal.valueOf(150_000);
-	    var a3 = lagArbeidsforhold(refusjonskrav3, beregnetPrÅr3, 3L, ORGNR3);
+		var refusjonskrav3 = BigDecimal.ZERO;
+		var beregnetPrÅr3 = BigDecimal.valueOf(150_000);
+		var a3 = lagArbeidsforhold(refusjonskrav3, beregnetPrÅr3, 3L, ORGNR3);
 
-	    var periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), TIDENES_ENDE), Arrays.asList(a1, a2, a3));
+		var periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), TIDENES_ENDE), Arrays.asList(a1, a2, a3));
 
-	    // Act
-        kjørRegel(periode);
+		// Act
+		kjørRegel(periode);
 
-        // Assert
-        assertThat(a1.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(refusjonskrav1);
-        assertThat(a2.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(refusjonskrav2);
-        assertThat(a3.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.ZERO);
-    }
+		// Assert
+		assertThat(a1.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(refusjonskrav1);
+		assertThat(a2.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(refusjonskrav2);
+		assertThat(a3.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.ZERO);
+	}
 
     @Test
     public void skal_ikkje_omfordele() {
@@ -117,19 +118,24 @@ public class RegelFordelBeregningsgrunnlagTest {
 
     private void kjørRegel(FordelPeriodeModell periode) {
         RegelFordelBeregningsgrunnlag regel = new RegelFordelBeregningsgrunnlag(periode);
-        regel.getSpecification().evaluate(periode);
+        regel.evaluer(periode, new ArrayList<>());
     }
 
     private FordelAndelModell lagArbeidsforhold(BigDecimal refusjonskravPrÅr, BigDecimal beregnetPrÅr, Long andelsnr, String orgnr) {
-        return FordelAndelModell.builder()
-            .medAndelNr(andelsnr)
-            .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr, null))
-            .medInntektskategori(Inntektskategori.ARBEIDSTAKER)
-	        .medAktivitetStatus(AktivitetStatus.AT)
-            .medGjeldendeRefusjonPrÅr(refusjonskravPrÅr)
-            .medForeslåttPrÅr(beregnetPrÅr)
-            .build();
+		return lagArbeidsforhold(refusjonskravPrÅr, beregnetPrÅr, andelsnr, orgnr, null);
     }
+
+	private FordelAndelModell lagArbeidsforhold(BigDecimal refusjonskravPrÅr, BigDecimal beregnetPrÅr, Long andelsnr, String orgnr, BigDecimal inntektFraIM) {
+		return FordelAndelModell.builder()
+				.medAndelNr(andelsnr)
+				.medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr, null))
+				.medInntektskategori(Inntektskategori.ARBEIDSTAKER)
+				.medAktivitetStatus(AktivitetStatus.AT)
+				.medGjeldendeRefusjonPrÅr(refusjonskravPrÅr)
+				.medForeslåttPrÅr(beregnetPrÅr)
+				.medInntektFraInnektsmelding(inntektFraIM)
+				.build();
+	}
 
     private FordelAndelModell lagSN(BigDecimal beregnetPrÅr1) {
         return FordelAndelModell.builder()

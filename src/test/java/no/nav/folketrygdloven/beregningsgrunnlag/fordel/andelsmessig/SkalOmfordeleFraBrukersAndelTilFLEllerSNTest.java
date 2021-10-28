@@ -11,6 +11,7 @@ import java.util.Collections;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelAndelModell;
 
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelPeriodeModell;
 
 import org.junit.jupiter.api.Test;
@@ -36,7 +37,7 @@ class SkalOmfordeleFraBrukersAndelTilFLEllerSNTest {
 		var periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), TIDENES_ENDE), Collections.singletonList(andel));
 
 		// Act
-		Evaluation evaluation = new SkalOmfordeleFraBrukersAndelTilFLEllerSN().evaluate(periode);
+		Evaluation evaluation = new SkalOmfordeleFraBrukersAndelTilFLEllerSN().evaluate(new FordelModell(periode));
 
 		// Assert
 		assertThat(evaluation.result()).isEqualTo(Resultat.NEI);
@@ -54,7 +55,7 @@ class SkalOmfordeleFraBrukersAndelTilFLEllerSNTest {
 		var periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), TIDENES_ENDE), Collections.singletonList(andel));
 
 		// Act
-		Evaluation evaluation = new SkalOmfordeleFraBrukersAndelTilFLEllerSN().evaluate(periode);
+		Evaluation evaluation = new SkalOmfordeleFraBrukersAndelTilFLEllerSN().evaluate(new FordelModell(periode));
 
 		// Assert
 		assertThat(evaluation.result()).isEqualTo(Resultat.NEI);
@@ -78,7 +79,7 @@ class SkalOmfordeleFraBrukersAndelTilFLEllerSNTest {
 		var periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), TIDENES_ENDE), Arrays.asList(andel1, andel2));
 
 		// Act
-		Evaluation evaluation = new SkalOmfordeleFraBrukersAndelTilFLEllerSN().evaluate(periode);
+		Evaluation evaluation = new SkalOmfordeleFraBrukersAndelTilFLEllerSN().evaluate(new FordelModell(periode));
 
 		// Assert
 		assertThat(evaluation.result()).isEqualTo(Resultat.JA);
@@ -101,7 +102,7 @@ class SkalOmfordeleFraBrukersAndelTilFLEllerSNTest {
 		var periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), TIDENES_ENDE), Arrays.asList(andelBA, andelSN));
 
 		// Act
-		Evaluation evaluation = new SkalOmfordeleFraBrukersAndelTilFLEllerSN().evaluate(periode);
+		Evaluation evaluation = new SkalOmfordeleFraBrukersAndelTilFLEllerSN().evaluate(new FordelModell(periode));
 
 		// Assert
 		assertThat(evaluation.result()).isEqualTo(Resultat.JA);
@@ -130,7 +131,7 @@ class SkalOmfordeleFraBrukersAndelTilFLEllerSNTest {
 		var periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), TIDENES_ENDE), Arrays.asList(andelBA, andelSN, andelFL));
 
 		// Act
-		Evaluation evaluation = new SkalOmfordeleFraBrukersAndelTilFLEllerSN().evaluate(periode);
+		Evaluation evaluation = new SkalOmfordeleFraBrukersAndelTilFLEllerSN().evaluate(new FordelModell(periode));
 
 		// Assert
 		assertThat(evaluation.result()).isEqualTo(Resultat.JA);
@@ -158,7 +159,7 @@ class SkalOmfordeleFraBrukersAndelTilFLEllerSNTest {
 		var periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), TIDENES_ENDE), Arrays.asList(andelBA, andelAT));
 
 		// Act
-		Evaluation evaluation = new SkalOmfordeleFraBrukersAndelTilFLEllerSN().evaluate(periode);
+		Evaluation evaluation = new SkalOmfordeleFraBrukersAndelTilFLEllerSN().evaluate(new FordelModell(periode));
 
 		// Assert
 		assertThat(evaluation.result()).isEqualTo(Resultat.NEI);

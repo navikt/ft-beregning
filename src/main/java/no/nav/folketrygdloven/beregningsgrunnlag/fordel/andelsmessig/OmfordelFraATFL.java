@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelAndelModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelPeriodeModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
@@ -13,7 +14,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.In
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
-abstract class OmfordelFraATFL extends LeafSpecification<FordelPeriodeModell> {
+abstract class OmfordelFraATFL extends LeafSpecification<FordelModell> {
 
     private Arbeidsforhold arbeidsforhold;
 
@@ -23,18 +24,18 @@ abstract class OmfordelFraATFL extends LeafSpecification<FordelPeriodeModell> {
     }
 
     @Override
-    public Evaluation evaluate(FordelPeriodeModell beregningsgrunnlagPeriode) {
-        Map<String, Object> resultater = omfordelFraAktivitetOmMulig(beregningsgrunnlagPeriode);
+    public Evaluation evaluate(FordelModell modell) {
+        Map<String, Object> resultater = omfordelFraAktivitetOmMulig(modell);
         return beregnet(resultater);
     }
 
-    protected Map<String, Object> omfordelFraAktivitetOmMulig(FordelPeriodeModell beregningsgrunnlagPeriode) {
-        boolean harAktivitetMedOmfordelbartGrunnlag = finnAktivitetMedOmfordelbartBg(beregningsgrunnlagPeriode).isPresent();
+    protected Map<String, Object> omfordelFraAktivitetOmMulig(FordelModell modell) {
+        boolean harAktivitetMedOmfordelbartGrunnlag = finnAktivitetMedOmfordelbartBg(modell.getInput()).isPresent();
         if (!harAktivitetMedOmfordelbartGrunnlag) {
             return new HashMap<>();
         }
-        var aktivitet = finnArbeidsforholdMedRiktigInntektskategori(beregningsgrunnlagPeriode);
-        return new OmfordelBGForArbeidsforhold(beregningsgrunnlagPeriode).omfordelForArbeidsforhold(aktivitet, this::finnAktivitetMedOmfordelbartBg);
+        var aktivitet = finnArbeidsforholdMedRiktigInntektskategori(modell.getInput());
+        return new OmfordelBGForArbeidsforhold(modell).omfordelForArbeidsforhold(aktivitet, this::finnAktivitetMedOmfordelbartBg);
     }
 
     protected FordelAndelModell finnArbeidsforholdMedRiktigInntektskategori(FordelPeriodeModell beregningsgrunnlagPeriode) {

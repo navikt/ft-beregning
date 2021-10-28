@@ -11,6 +11,7 @@ import java.util.List;
 
 
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelAndelModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelPeriodeModell;
 
 import org.junit.jupiter.api.Test;
@@ -157,7 +158,7 @@ public class OmfordelFraFrilansTest {
 
     private void kjørRegel(FordelAndelModell arbeidsforhold, FordelPeriodeModell periode) {
         OmfordelFraFrilans regel = new OmfordelFraFrilans(arbeidsforhold);
-        regel.evaluate(periode);
+        regel.evaluate(new FordelModell(periode));
     }
 
 }
