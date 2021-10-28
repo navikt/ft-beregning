@@ -61,15 +61,15 @@ class FordelMålbeløpPrAndel extends LeafSpecification<FordelModell> {
 
 	private void fordelTilNyAndel(FordelAndelModellMellomregning andelÅFordeleTil, PottTilFordeling pottTilFordeling, Map<String, Object> resultater) {
 		var beløpSomGjennstårÅFordele = finnGjenståendeBeløp(andelÅFordeleTil);
-		var tilgjengeligBeløpMedKategori = finnBeløpFraBesteKategori(andelÅFordeleTil.getInputAndel().getInntektskategori(), pottTilFordeling);
-		while (beløpSomGjennstårÅFordele.compareTo(BigDecimal.ZERO) > 0 && tilgjengeligBeløpMedKategori.isPresent()) {
-			var beløpSomSkalFordeles = finnBeløpSomSkalFlyttes(tilgjengeligBeløpMedKategori.get().getValue(), beløpSomGjennstårÅFordele);
-			var inntektskategoriBeløpetTilhørte = tilgjengeligBeløpMedKategori.get().getKey();
-			pottTilFordeling.trekkFraBeløpPåKategori(tilgjengeligBeløpMedKategori.get().getKey(), beløpSomSkalFordeles);
+		while (beløpSomGjennstårÅFordele.compareTo(BigDecimal.ZERO) > 0) {
+			var tilgjengeligBeløpMedKategori = finnBeløpFraBesteKategori(andelÅFordeleTil.getInputAndel().getInntektskategori(), pottTilFordeling)
+					.orElseThrow(() -> new IllegalStateException("Har fortsatt mer igjen å fordele, men har ingen andeler med tilgjengelig brutto"));
+			var beløpSomSkalFordeles = finnBeløpSomSkalFlyttes(tilgjengeligBeløpMedKategori.getValue(), beløpSomGjennstårÅFordele);
+			var inntektskategoriBeløpetTilhørte = tilgjengeligBeløpMedKategori.getKey();
+			pottTilFordeling.trekkFraBeløpPåKategori(tilgjengeligBeløpMedKategori.getKey(), beløpSomSkalFordeles);
 			flyttBeløpTilAndel(andelÅFordeleTil, beløpSomSkalFordeles, inntektskategoriBeløpetTilhørte);
 			settRegelSporing(resultater, andelÅFordeleTil, beløpSomSkalFordeles, inntektskategoriBeløpetTilhørte);
 			beløpSomGjennstårÅFordele = beløpSomGjennstårÅFordele.subtract(beløpSomSkalFordeles);
-			tilgjengeligBeløpMedKategori = pottTilFordeling.finnTilgjengeligBeløpMedInntektskategori();
 		}
 	}
 
@@ -81,13 +81,10 @@ class FordelMålbeløpPrAndel extends LeafSpecification<FordelModell> {
 
 	private void fordelTilEksisterendeAndel(FordelAndelModellMellomregning andelÅFordeleTil, PottTilFordeling pottTilFordeling, Map<String, Object> resultater) {
 		var inntektskategori = andelÅFordeleTil.getInputAndel().getInntektskategori();
-		var tilgjengeligBeløp = pottTilFordeling.finnBeløpForInntektskategori(inntektskategori)
-				.orElseThrow(() -> new IllegalStateException("Forventer at eksisterende andeler alltid skal ha beløp tilgjengelig"));
 		var gjenståendeBeløp = finnGjenståendeBeløp(andelÅFordeleTil);
-		var beløpSomSkalFordeles = finnBeløpSomSkalFlyttes(tilgjengeligBeløp.getValue(), gjenståendeBeløp);
-		pottTilFordeling.trekkFraBeløpPåKategori(inntektskategori, beløpSomSkalFordeles);
-		flyttBeløpTilAndel(andelÅFordeleTil, beløpSomSkalFordeles, inntektskategori);
-		settRegelSporing(resultater, andelÅFordeleTil, beløpSomSkalFordeles, inntektskategori);
+		pottTilFordeling.trekkFraBeløpPåKategori(inntektskategori, gjenståendeBeløp);
+		flyttBeløpTilAndel(andelÅFordeleTil, gjenståendeBeløp , inntektskategori);
+		settRegelSporing(resultater, andelÅFordeleTil, gjenståendeBeløp, inntektskategori);
 	}
 
 	private void settRegelSporing(Map<String, Object> resultater, FordelAndelModellMellomregning andelÅFordeleTil, BigDecimal beløpSomSkalFordeles, Inntektskategori inntektskategoriBeløpetTilhørte) {
