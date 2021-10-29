@@ -2,19 +2,17 @@ package no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelPeriodeModell;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 import java.math.BigDecimal;
-import java.util.Optional;
 
-class FinnesMerRefusjonEnnBruttoTilgjengelig extends LeafSpecification<FordelModell> {
+class FinnesMerRefusjonEnnBruttoTilgjengeligOgFlereAndelerKreverRefusjon extends LeafSpecification<FordelModell> {
 
-    static final String ID = "MER_REFUSJON_ENN_BRUTTO_TILGJENGELIG ";
-    static final String BESKRIVELSE = "Er refusjonskrav høyere enn brutto tilgjengelig?";
+    static final String ID = "MER_REFUSJON_ENN_BRUTTO_TILGJENGELIG_PÅ_FLERE_ANDELER";
+    static final String BESKRIVELSE = "Er refusjonskrav høyere enn brutto tilgjengelig og det finnes flere andeler som krever refusjon?";
 
-    FinnesMerRefusjonEnnBruttoTilgjengelig() {
+    FinnesMerRefusjonEnnBruttoTilgjengeligOgFlereAndelerKreverRefusjon() {
         super(ID, BESKRIVELSE);
     }
 
@@ -22,8 +20,17 @@ class FinnesMerRefusjonEnnBruttoTilgjengelig extends LeafSpecification<FordelMod
     public Evaluation evaluate(FordelModell modell) {
 	    var totalBrutto = finnTotalBrutto(modell.getInput());
 	    var totalRefusjon = finnTotalRefusjon(modell.getInput());
-		var finnesMerRefusjonEnnBrutto = totalRefusjon.compareTo(totalBrutto) > 0;
-	    return finnesMerRefusjonEnnBrutto ? ja() : nei();
+	    var finnesFlereAndelerMedRefkrav = antallAndelerMedRefusjonskrav(modell.getInput());
+	    var finnesMerRefusjonEnnBrutto = totalRefusjon.compareTo(totalBrutto) > 0;
+		// Trenger ikke fordele andelsmessig om det kun finnes et refusjonskrav
+	    return finnesMerRefusjonEnnBrutto && finnesFlereAndelerMedRefkrav ? ja() : nei();
+	}
+
+	private boolean antallAndelerMedRefusjonskrav(FordelPeriodeModell input) {
+		var antallAndelerMedRefKrav = input.getAndeler().stream()
+				.filter(a -> a.getGjeldendeRefusjonPrÅr().orElse(BigDecimal.ZERO).compareTo(BigDecimal.ZERO) > 0)
+				.count();
+		return antallAndelerMedRefKrav > 1;
 	}
 
 	private BigDecimal finnTotalBrutto(FordelPeriodeModell grunnlag) {
