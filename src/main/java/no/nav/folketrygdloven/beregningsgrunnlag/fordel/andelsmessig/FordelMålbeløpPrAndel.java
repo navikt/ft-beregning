@@ -55,11 +55,11 @@ class FordelMålbeløpPrAndel extends LeafSpecification<FordelModell> {
 		if (andelÅFordeleTil.getInputAndel().getForeslåttPrÅr().isPresent()) {
 			fordelTilEksisterendeAndel(andelÅFordeleTil, pottTilFordeling, resultater);
 		} else {
-			fordelTilNyAndel(andelÅFordeleTil, pottTilFordeling, resultater);
+			fordelTilAndelUtenBrutto(andelÅFordeleTil, pottTilFordeling, resultater);
 		}
 	}
 
-	private void fordelTilNyAndel(FordelAndelModellMellomregning andelÅFordeleTil, PottTilFordeling pottTilFordeling, Map<String, Object> resultater) {
+	private void fordelTilAndelUtenBrutto(FordelAndelModellMellomregning andelÅFordeleTil, PottTilFordeling pottTilFordeling, Map<String, Object> resultater) {
 		var beløpSomGjennstårÅFordele = finnGjenståendeBeløp(andelÅFordeleTil);
 		while (beløpSomGjennstårÅFordele.compareTo(BigDecimal.ZERO) > 0) {
 			var tilgjengeligBeløpMedKategori = finnBeløpFraBesteKategori(andelÅFordeleTil.getInputAndel().getInntektskategori(), pottTilFordeling)
@@ -118,6 +118,7 @@ class FordelMålbeløpPrAndel extends LeafSpecification<FordelModell> {
 					.medFordeltRefusjonPrÅr(beløpSomSkalFordeles)
 					.medFordeltPrÅr(beløpSomSkalFordeles)
 					.medInntektskategori(beløpetsInntektskategori)
+					.erNytt(true)
 					.build();
 		}
 	}
