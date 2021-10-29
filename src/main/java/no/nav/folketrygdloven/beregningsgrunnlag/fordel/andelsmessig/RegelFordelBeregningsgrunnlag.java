@@ -80,7 +80,7 @@ public class RegelFordelBeregningsgrunnlag implements RuleService<FordelPeriodeM
 
 		Specification<FordelModell> fordelBruttoAndelsmessig = rs.beregningsRegel(RegelFordelBeregningsgrunnlagAndelsmessig.ID, RegelFordelBeregningsgrunnlagAndelsmessig.BESKRIVELSE, new RegelFordelBeregningsgrunnlagAndelsmessig().getSpecification(), new Fordelt());
 
-		Specification<FordelModell> sjekkOmBruttoKanDekkeAllRefusjon = rs.beregningHvisRegel(new FinnesMerRefusjonEnnBruttoTilgjengelig(), fordelBruttoAndelsmessig, sjekkOmSkalFordeleFraBrukersAndel);
+		Specification<FordelModell> sjekkOmBruttoKanDekkeAllRefusjon = rs.beregningHvisRegel(new FinnesMerRefusjonEnnBruttoTilgjengeligOgFlereAndelerKreverRefusjon(), fordelBruttoAndelsmessig, sjekkOmSkalFordeleFraBrukersAndel);
 
 		Specification<FordelModell> sjekkOmDetFinnesTilkommetRefkrav = rs.beregningHvisRegel(new FinnesTilkommetArbeidsandelMedRefusjonskrav(), sjekkOmBruttoKanDekkeAllRefusjon, sjekkOmSkalFordeleFraBrukersAndel);
 
