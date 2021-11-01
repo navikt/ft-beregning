@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelAndelModell;
-import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelAndelModellMellomregning;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelteAndelerModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelModell;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
@@ -25,7 +25,7 @@ class FinnFraksjonPrAndel extends LeafSpecification<FordelModell> {
     @Override
     public Evaluation evaluate(FordelModell modell) {
 	    Map<String, Object> resultater = new HashMap<>();
-	    List<FordelAndelModellMellomregning> mellomregninger = modell.getInput().getAndeler()
+	    List<FordelteAndelerModell> mellomregninger = modell.getInput().getAndeler()
 			    .stream()
 			    .map(andelInput -> finnFraksjonsbestemmendeBeløpOgLagMellomregning(andelInput, resultater))
 			    .collect(Collectors.toList());
@@ -41,18 +41,18 @@ class FinnFraksjonPrAndel extends LeafSpecification<FordelModell> {
 	    return beregnet(resultater);
 	}
 
-	private BigDecimal finnFraksjon(FordelAndelModellMellomregning mellomregning, BigDecimal totaltBeløp) {
+	private BigDecimal finnFraksjon(FordelteAndelerModell mellomregning, BigDecimal totaltBeløp) {
 		return mellomregning.getFraksjonsbestemmendeBeløp().divide(totaltBeløp, 10, RoundingMode.HALF_EVEN);
 	}
 
-	private BigDecimal finnTotaltFraksjonsbestemmendeBeløp(List<FordelAndelModellMellomregning> mellomregninger) {
+	private BigDecimal finnTotaltFraksjonsbestemmendeBeløp(List<FordelteAndelerModell> mellomregninger) {
 		return mellomregninger.stream()
-				.map(FordelAndelModellMellomregning::getFraksjonsbestemmendeBeløp)
+				.map(FordelteAndelerModell::getFraksjonsbestemmendeBeløp)
 				.reduce(BigDecimal::add)
 				.orElseThrow();
 	}
 
-	private FordelAndelModellMellomregning finnFraksjonsbestemmendeBeløpOgLagMellomregning(FordelAndelModell andelInput, Map<String, Object> resultater) {
+	private FordelteAndelerModell finnFraksjonsbestemmendeBeløpOgLagMellomregning(FordelAndelModell andelInput, Map<String, Object> resultater) {
 		BigDecimal fraksjonsbestemmendeBeløp;
 		if (kreverRefusjon(andelInput)) {
 			fraksjonsbestemmendeBeløp = finnFraksjonsbestemmendeBeløp(andelInput);
@@ -61,7 +61,7 @@ class FinnFraksjonPrAndel extends LeafSpecification<FordelModell> {
 		}
 		resultater.put("andel", andelInput.getBeskrivelse());
 		resultater.put("fraksjonsbestemmende beløp", fraksjonsbestemmendeBeløp);
-		return new FordelAndelModellMellomregning(andelInput, fraksjonsbestemmendeBeløp);
+		return new FordelteAndelerModell(andelInput, fraksjonsbestemmendeBeløp);
 	}
 
 	private BigDecimal finnFraksjonsbestemmendeBeløp(FordelAndelModell andelInput) {

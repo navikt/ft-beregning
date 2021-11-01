@@ -1,7 +1,7 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelAndelModell;
-import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelAndelModellMellomregning;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelteAndelerModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelPeriodeModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
@@ -24,8 +24,8 @@ class FinnMålbeløpForFordelingenPrAndelTest {
 	@Test
 	public void skal_sette_målbeløp_for_to_andeler_der_et_er_tilkommet() {
 		// Arrange
-		FordelAndelModellMellomregning foreslåttAndel = new FordelAndelModellMellomregning(lagFordelAndelMedForeslått(AktivitetStatus.AT, arbeid("999", "abc"), 500_000, 300_000));
-		FordelAndelModellMellomregning tilkommetAndel = new FordelAndelModellMellomregning(lagFordelAndelTilkommet(AktivitetStatus.AT, arbeid("888", "abc"), 500_000, 500_000));
+		FordelteAndelerModell foreslåttAndel = new FordelteAndelerModell(lagFordelAndelMedForeslått(AktivitetStatus.AT, arbeid("999", "abc"), 500_000, 300_000));
+		FordelteAndelerModell tilkommetAndel = new FordelteAndelerModell(lagFordelAndelTilkommet(AktivitetStatus.AT, arbeid("888", "abc"), 500_000, 500_000));
 		foreslåttAndel.setFraksjonAvBrutto(BigDecimal.valueOf(0.375));
 		tilkommetAndel.setFraksjonAvBrutto(BigDecimal.valueOf(0.625));
 
@@ -37,9 +37,9 @@ class FinnMålbeløpForFordelingenPrAndelTest {
 		assertThat(tilkommetAndel.getMålbeløp()).isEqualByComparingTo(BigDecimal.valueOf(312_500));
 	}
 
-	private void kjørRegel(FordelAndelModellMellomregning... mellom) {
-		List<FordelAndelModellMellomregning> mellomregninger = Arrays.asList(mellom);
-		List<FordelAndelModell> inputAndeler = mellomregninger.stream().map(FordelAndelModellMellomregning::getInputAndel).collect(Collectors.toList());
+	private void kjørRegel(FordelteAndelerModell... mellom) {
+		List<FordelteAndelerModell> mellomregninger = Arrays.asList(mellom);
+		List<FordelAndelModell> inputAndeler = mellomregninger.stream().map(FordelteAndelerModell::getInputAndel).collect(Collectors.toList());
 		FordelPeriodeModell periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), LocalDateInterval.TIDENES_ENDE), inputAndeler);
 		FordelModell modell = new FordelModell(periode);
 		mellomregninger.forEach(modell::leggTilMellomregningAndel);

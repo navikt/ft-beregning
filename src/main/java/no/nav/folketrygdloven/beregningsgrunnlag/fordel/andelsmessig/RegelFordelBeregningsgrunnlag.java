@@ -1,7 +1,7 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelAndelModell;
-import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelAndelModellMellomregning;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelteAndelerModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelPeriodeModell;
 import no.nav.fpsak.nare.RuleService;
@@ -52,7 +52,7 @@ public class RegelFordelBeregningsgrunnlag implements RuleService<FordelPeriodeM
 				.reduce(BigDecimal::add)
 				.orElse(BigDecimal.ZERO);
 		BigDecimal bruttoUt = modell.getMellomregninger().stream()
-				.map(FordelAndelModellMellomregning::getFordelteAndeler)
+				.map(FordelteAndelerModell::getFordelteAndeler)
 				.flatMap(Collection::stream)
 				.map(a -> a.getFordeltPrÅr().orElseThrow())
 				.reduce(BigDecimal::add)
