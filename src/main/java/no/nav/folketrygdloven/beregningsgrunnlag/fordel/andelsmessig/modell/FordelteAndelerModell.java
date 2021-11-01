@@ -9,21 +9,21 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class FordelAndelModellMellomregning {
+public class FordelteAndelerModell {
 	private final FordelAndelModell inputAndel;
 	private BigDecimal fraksjonsbestemmendeBeløp;
 	private BigDecimal fraksjonAvBrutto;
 	private BigDecimal målbeløp;
 	private List<FordelAndelModell> fordelteAndeler = new ArrayList<>();
 
-	public FordelAndelModellMellomregning(FordelAndelModell andel, BigDecimal fraksjonsbestemmendeBeløp) {
+	public FordelteAndelerModell(FordelAndelModell andel, BigDecimal fraksjonsbestemmendeBeløp) {
 		Objects.requireNonNull(andel, "andel");
 		Objects.requireNonNull(fraksjonsbestemmendeBeløp, "fraksjonsbestemmendeBeløp");
 		this.fraksjonsbestemmendeBeløp = fraksjonsbestemmendeBeløp;
 		this.inputAndel = andel;
 	}
 
-	public FordelAndelModellMellomregning(FordelAndelModell andel) {
+	public FordelteAndelerModell(FordelAndelModell andel) {
 		Objects.requireNonNull(andel, "andel");
 		this.inputAndel = andel;
 	}

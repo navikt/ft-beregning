@@ -1,7 +1,7 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelAndelModell;
-import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelAndelModellMellomregning;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelteAndelerModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelModell;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelPeriodeModell;
@@ -30,8 +30,8 @@ class FordelMålbeløpPrAndelTest {
 	@Test
 	public void skal_teste_fordeling_mellom_arbeidsforhold_med_refusjon_med_samme_inntektskategori() {
 		// Arrange
-		FordelAndelModellMellomregning andel1 = lagArbeidsandel(arbeid("999", "abc"), 200_000, 150_000);
-		FordelAndelModellMellomregning andel2 = lagArbeidsandel(arbeid("888", "abc"), null, 50_000);
+		FordelteAndelerModell andel1 = lagArbeidsandel(arbeid("999", "abc"), 200_000, 150_000);
+		FordelteAndelerModell andel2 = lagArbeidsandel(arbeid("888", "abc"), null, 50_000);
 
 		// Act
 		FordelModell regelModell = kjørRegel(andel1, andel2);
@@ -49,9 +49,9 @@ class FordelMålbeløpPrAndelTest {
 	@Test
 	public void skal_teste_fordeling_fra_en_eksisterende_med_ref_til_to_tilkomne() {
 		// Arrange
-		FordelAndelModellMellomregning andel1 = lagArbeidsandel(arbeid("999", "abc"), 200_000, 150_000);
-		FordelAndelModellMellomregning andel2 = lagArbeidsandel(arbeid("888", "abc"), null, 20_000);
-		FordelAndelModellMellomregning andel3 = lagArbeidsandel(arbeid("777", "abc"), null, 30_000);
+		FordelteAndelerModell andel1 = lagArbeidsandel(arbeid("999", "abc"), 200_000, 150_000);
+		FordelteAndelerModell andel2 = lagArbeidsandel(arbeid("888", "abc"), null, 20_000);
+		FordelteAndelerModell andel3 = lagArbeidsandel(arbeid("777", "abc"), null, 30_000);
 
 		// Act
 		FordelModell regelModell = kjørRegel(andel1, andel2, andel3);
@@ -72,8 +72,8 @@ class FordelMålbeløpPrAndelTest {
 	@Test
 	public void skal_overskrive_andel_med_inntektskategori_udefinert() {
 		// Arrange
-		FordelAndelModellMellomregning andel1 = lagArbeidsandel(arbeid("999", "abc"), 400_000, 150_000);
-		FordelAndelModellMellomregning andel2 = lagArbeidsandelUdefinertIK(arbeid("888", "abc"), null, 250_000);
+		FordelteAndelerModell andel1 = lagArbeidsandel(arbeid("999", "abc"), 400_000, 150_000);
+		FordelteAndelerModell andel2 = lagArbeidsandelUdefinertIK(arbeid("888", "abc"), null, 250_000);
 
 		// Act
 		FordelModell regelModell = kjørRegel(andel1, andel2);
@@ -91,10 +91,10 @@ class FordelMålbeløpPrAndelTest {
 	@Test
 	public void skal_teste_fordeling_fra_næring_og_arbeid_til_to_tilkomne_likt_fordelt() {
 		// Arrange
-		FordelAndelModellMellomregning atAndel = lagArbeidsandel(arbeid("999", "abc"), 60_000, 60_000);
-		FordelAndelModellMellomregning snAndel = lagSNAndel(100_000, 0);
-		FordelAndelModellMellomregning tilkommetAT1 = lagArbeidsandel(arbeid("888", "abc"), null, 45_000);
-		FordelAndelModellMellomregning tilkommetAT2 = lagArbeidsandel(arbeid("777", "abc"), null, 55_000);
+		FordelteAndelerModell atAndel = lagArbeidsandel(arbeid("999", "abc"), 60_000, 60_000);
+		FordelteAndelerModell snAndel = lagSNAndel(100_000, 0);
+		FordelteAndelerModell tilkommetAT1 = lagArbeidsandel(arbeid("888", "abc"), null, 45_000);
+		FordelteAndelerModell tilkommetAT2 = lagArbeidsandel(arbeid("777", "abc"), null, 55_000);
 
 		// Act
 		FordelModell regelModell = kjørRegel(atAndel, snAndel, tilkommetAT1, tilkommetAT2);
@@ -118,10 +118,10 @@ class FordelMålbeløpPrAndelTest {
 	@Test
 	public void skal_fordele_fra_tre_eksisterende_til_et_tilkommet_arbeidsforhold() {
 		// Arrange
-		FordelAndelModellMellomregning andel1 = lagArbeidsandel(arbeid("999", "abc"), 200_000, 50_000);
-		FordelAndelModellMellomregning andel2 = lagArbeidsandel(arbeid("888", "abc"), 100_000, 100_000);
-		FordelAndelModellMellomregning andel3 = lagArbeidsandel(arbeid("777", "abc"), 50_000, 0);
-		FordelAndelModellMellomregning andel4 = lagArbeidsandel(arbeid("666", "abc"), null, 200_000);
+		FordelteAndelerModell andel1 = lagArbeidsandel(arbeid("999", "abc"), 200_000, 50_000);
+		FordelteAndelerModell andel2 = lagArbeidsandel(arbeid("888", "abc"), 100_000, 100_000);
+		FordelteAndelerModell andel3 = lagArbeidsandel(arbeid("777", "abc"), 50_000, 0);
+		FordelteAndelerModell andel4 = lagArbeidsandel(arbeid("666", "abc"), null, 200_000);
 
 		// Act
 		FordelModell regelModell = kjørRegel(andel1, andel2, andel3, andel4);
@@ -145,10 +145,10 @@ class FordelMålbeløpPrAndelTest {
 	@Test
 	public void skal_fordele_fra_frilans_og_næring_og_arbeid_til_tilkommet_arbeid() {
 		// Arrange
-		FordelAndelModellMellomregning arbeid = lagArbeidsandel(arbeid("999", "abc"), 200_000, 150_000);
-		FordelAndelModellMellomregning frilans = lagFLAndel(100_000, 0);
-		FordelAndelModellMellomregning næring = lagSNAndel(300_000, 0);
-		FordelAndelModellMellomregning tilkommetArbeid = lagArbeidsandel(arbeid("888", "abc"), null, 450_000);
+		FordelteAndelerModell arbeid = lagArbeidsandel(arbeid("999", "abc"), 200_000, 150_000);
+		FordelteAndelerModell frilans = lagFLAndel(100_000, 0);
+		FordelteAndelerModell næring = lagSNAndel(300_000, 0);
+		FordelteAndelerModell tilkommetArbeid = lagArbeidsandel(arbeid("888", "abc"), null, 450_000);
 
 		// Act
 		FordelModell regelModell = kjørRegel(arbeid, frilans, næring, tilkommetArbeid);
@@ -172,8 +172,8 @@ class FordelMålbeløpPrAndelTest {
 	}
 
 
-	private void assertFordeltAndel(FordelModell regelModell, FordelAndelModellMellomregning andel, int forventetFordelt, Inntektskategori forventetKategori) {
-		FordelAndelModellMellomregning resultat = getResultat(regelModell.getMellomregninger(), andel);
+	private void assertFordeltAndel(FordelModell regelModell, FordelteAndelerModell andel, int forventetFordelt, Inntektskategori forventetKategori) {
+		FordelteAndelerModell resultat = getResultat(regelModell.getMellomregninger(), andel);
 		Optional<FordelAndelModell> matchendeAndel = resultat.getFordelteAndeler().stream()
 				.filter(res -> res.getInntektskategori().equals(forventetKategori))
 				.findFirst();
@@ -181,8 +181,8 @@ class FordelMålbeløpPrAndelTest {
 		assertThat(matchendeAndel.get().getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.valueOf(forventetFordelt));
 	}
 
-	private void assertFordeltAndel(FordelModell regelModell, FordelAndelModellMellomregning andel, int forventetFordelt, Inntektskategori forventetKategori, boolean erNytt) {
-		FordelAndelModellMellomregning resultat = getResultat(regelModell.getMellomregninger(), andel);
+	private void assertFordeltAndel(FordelModell regelModell, FordelteAndelerModell andel, int forventetFordelt, Inntektskategori forventetKategori, boolean erNytt) {
+		FordelteAndelerModell resultat = getResultat(regelModell.getMellomregninger(), andel);
 		Optional<FordelAndelModell> matchendeAndel = resultat.getFordelteAndeler().stream()
 				.filter(res -> res.getInntektskategori().equals(forventetKategori))
 				.findFirst();
@@ -191,42 +191,42 @@ class FordelMålbeløpPrAndelTest {
 		assertThat(matchendeAndel.get().getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.valueOf(forventetFordelt));
 	}
 
-	private void assertAntallFordelteAndelerResultat(FordelModell regelModell, FordelAndelModellMellomregning andel, int forventetAntallResultatAndeler) {
-		FordelAndelModellMellomregning resultat = getResultat(regelModell.getMellomregninger(), andel);
+	private void assertAntallFordelteAndelerResultat(FordelModell regelModell, FordelteAndelerModell andel, int forventetAntallResultatAndeler) {
+		FordelteAndelerModell resultat = getResultat(regelModell.getMellomregninger(), andel);
 		assertThat(resultat.getFordelteAndeler()).hasSize(forventetAntallResultatAndeler);
 	}
 
 
 
-	private FordelAndelModellMellomregning lagArbeidsandel(Arbeidsforhold ag, Integer brutto, int ønsketBeløpEtterFordeling) {
+	private FordelteAndelerModell lagArbeidsandel(Arbeidsforhold ag, Integer brutto, int ønsketBeløpEtterFordeling) {
 		FordelAndelModell inputandel = lagFordelAndel(AktivitetStatus.AT, Inntektskategori.ARBEIDSTAKER, ag, brutto);
-		FordelAndelModellMellomregning mellomregning = new FordelAndelModellMellomregning(inputandel);
+		FordelteAndelerModell mellomregning = new FordelteAndelerModell(inputandel);
 		mellomregning.setMålbeløp(BigDecimal.valueOf(ønsketBeløpEtterFordeling));
 		return mellomregning;
 	}
 
-	private FordelAndelModellMellomregning lagArbeidsandelUdefinertIK(Arbeidsforhold ag, Integer brutto, int ønsketBeløpEtterFordeling) {
+	private FordelteAndelerModell lagArbeidsandelUdefinertIK(Arbeidsforhold ag, Integer brutto, int ønsketBeløpEtterFordeling) {
 		FordelAndelModell inputandel = lagFordelAndel(AktivitetStatus.AT, Inntektskategori.UDEFINERT, ag, brutto);
-		FordelAndelModellMellomregning mellomregning = new FordelAndelModellMellomregning(inputandel);
+		FordelteAndelerModell mellomregning = new FordelteAndelerModell(inputandel);
 		mellomregning.setMålbeløp(BigDecimal.valueOf(ønsketBeløpEtterFordeling));
 		return mellomregning;
 	}
 
-	private FordelAndelModellMellomregning lagSNAndel(Integer brutto, int ønsketBeløpEtterFordeling) {
+	private FordelteAndelerModell lagSNAndel(Integer brutto, int ønsketBeløpEtterFordeling) {
 		FordelAndelModell inputandel = lagFordelAndelUtenArbeidsforhold(AktivitetStatus.SN, Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE, brutto);
-		FordelAndelModellMellomregning mellomregning = new FordelAndelModellMellomregning(inputandel);
+		FordelteAndelerModell mellomregning = new FordelteAndelerModell(inputandel);
 		mellomregning.setMålbeløp(BigDecimal.valueOf(ønsketBeløpEtterFordeling));
 		return mellomregning;
 	}
 
-	private FordelAndelModellMellomregning lagFLAndel(Integer brutto, int ønsketBeløpEtterFordeling) {
+	private FordelteAndelerModell lagFLAndel(Integer brutto, int ønsketBeløpEtterFordeling) {
 		FordelAndelModell inputandel = lagFordelAndel(AktivitetStatus.FL, Inntektskategori.FRILANSER, frilans(), brutto);
-		FordelAndelModellMellomregning mellomregning = new FordelAndelModellMellomregning(inputandel);
+		FordelteAndelerModell mellomregning = new FordelteAndelerModell(inputandel);
 		mellomregning.setMålbeløp(BigDecimal.valueOf(ønsketBeløpEtterFordeling));
 		return mellomregning;
 	}
 
-	private FordelAndelModellMellomregning getResultat(List<FordelAndelModellMellomregning> mellomregninger, FordelAndelModellMellomregning andel) {
+	private FordelteAndelerModell getResultat(List<FordelteAndelerModell> mellomregninger, FordelteAndelerModell andel) {
 		Arbeidsforhold forventetAG = andel.getInputAndel().getArbeidsforhold().orElse(null);
 		return mellomregninger.stream()
 				.filter(mr -> Objects.equals(mr.getInputAndel().getArbeidsforhold().orElse(null), forventetAG))
@@ -256,9 +256,9 @@ class FordelMålbeløpPrAndelTest {
 		return Arbeidsforhold.frilansArbeidsforhold();
 	}
 
-	private FordelModell kjørRegel(FordelAndelModellMellomregning... regelobjekter) {
-		List<FordelAndelModellMellomregning> mellomregninger = Arrays.asList(regelobjekter);
-		List<FordelAndelModell> input = mellomregninger.stream().map(FordelAndelModellMellomregning::getInputAndel).collect(Collectors.toList());
+	private FordelModell kjørRegel(FordelteAndelerModell... regelobjekter) {
+		List<FordelteAndelerModell> mellomregninger = Arrays.asList(regelobjekter);
+		List<FordelAndelModell> input = mellomregninger.stream().map(FordelteAndelerModell::getInputAndel).collect(Collectors.toList());
 		FordelPeriodeModell periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), LocalDateInterval.TIDENES_ENDE), input);
 		FordelModell modell = new FordelModell(periode);
 		mellomregninger.forEach(modell::leggTilMellomregningAndel);

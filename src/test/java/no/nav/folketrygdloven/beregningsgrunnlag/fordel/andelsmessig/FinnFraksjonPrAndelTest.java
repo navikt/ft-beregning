@@ -1,7 +1,7 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelAndelModell;
-import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelAndelModellMellomregning;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelteAndelerModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelModell;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelPeriodeModell;
@@ -100,7 +100,7 @@ class FinnFraksjonPrAndelTest {
 	}
 
 	private void assertAndel(FordelModell fordelModell, FordelAndelModell andel, double fraksjon) {
-		Optional<FordelAndelModellMellomregning> match = fordelModell.getMellomregninger().stream().filter(a -> a.getInputAndel().equals(andel)).findFirst();
+		Optional<FordelteAndelerModell> match = fordelModell.getMellomregninger().stream().filter(a -> a.getInputAndel().equals(andel)).findFirst();
 		assertThat(match).isPresent();
 		assertThat(match.get().getFraksjonAvBrutto()).isEqualByComparingTo(BigDecimal.valueOf(fraksjon));
 	}

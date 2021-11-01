@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelAndelModellMellomregning;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelteAndelerModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelPeriodeModell;
 import no.nav.fpsak.nare.evaluation.Evaluation;
@@ -33,7 +33,7 @@ class FinnMålbeløpForFordelingenPrAndel extends LeafSpecification<FordelModell
 	    return beregnet(resultater);
 	}
 
-	private BigDecimal finnMålbeløp(BigDecimal totalBruttoSomSkalFordeles, FordelAndelModellMellomregning mellomregning) {
+	private BigDecimal finnMålbeløp(BigDecimal totalBruttoSomSkalFordeles, FordelteAndelerModell mellomregning) {
 		return mellomregning.getFraksjonAvBrutto().multiply(totalBruttoSomSkalFordeles);
 	}
 

@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class FordelModell {
 	private final FordelPeriodeModell input;
-	private List<FordelAndelModellMellomregning> mellomregninger = new ArrayList<>();
+	private List<FordelteAndelerModell> mellomregninger = new ArrayList<>();
 
 	public FordelModell(FordelPeriodeModell input) {
 		Objects.requireNonNull(input, "input");
@@ -17,11 +17,11 @@ public class FordelModell {
 		return input;
 	}
 
-	public void leggTilMellomregningAndel(FordelAndelModellMellomregning mellomregning) {
+	public void leggTilMellomregningAndel(FordelteAndelerModell mellomregning) {
 		this.mellomregninger.add(mellomregning);
 	}
 
-	public List<FordelAndelModellMellomregning> getMellomregninger() {
+	public List<FordelteAndelerModell> getMellomregninger() {
 		return mellomregninger;
 	}
 }

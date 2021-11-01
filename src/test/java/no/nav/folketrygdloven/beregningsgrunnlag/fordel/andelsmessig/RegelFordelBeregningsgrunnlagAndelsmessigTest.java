@@ -1,7 +1,7 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelAndelModell;
-import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelAndelModellMellomregning;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelteAndelerModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelPeriodeModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
@@ -162,7 +162,7 @@ class RegelFordelBeregningsgrunnlagAndelsmessigTest {
 		FordelModell modell = new FordelModell(fordelPeriode);
 		new RegelFordelBeregningsgrunnlagAndelsmessig().getSpecification().evaluate(modell);
 		return modell.getMellomregninger().stream()
-				.map(FordelAndelModellMellomregning::getFordelteAndeler)
+				.map(FordelteAndelerModell::getFordelteAndeler)
 				.flatMap(Collection::stream)
 				.collect(Collectors.toList());
 	}
