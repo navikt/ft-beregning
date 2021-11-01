@@ -47,7 +47,7 @@ class FordelMålbeløpPrAndel extends LeafSpecification<FordelModell> {
 	}
 
 	private FordelAndelModell fordelAndelTil0(FordelAndelModellMellomregning mellomregning) {
-		return opprettAndelFraEksisterende(mellomregning, BigDecimal.ZERO);
+		return opprettAndelFraEksisterende(mellomregning, BigDecimal.ZERO, mellomregning.getInputAndel().getInntektskategori());
 	}
 
 	private void fordelTilAndel(FordelAndelModellMellomregning andelÅFordeleTil, PottTilFordeling pottTilFordeling, Map<String, Object> resultater) {
@@ -109,8 +109,9 @@ class FordelMålbeløpPrAndel extends LeafSpecification<FordelModell> {
 
 	private FordelAndelModell opprettNyFordeltAndel(FordelAndelModellMellomregning andelÅFordeleTil, BigDecimal beløpSomSkalFordeles, Inntektskategori beløpetsInntektskategori) {
 		var erInntektskategoriLikEksisterende = andelÅFordeleTil.getInputAndel().getInntektskategori().equals(beløpetsInntektskategori);
-		if (erInntektskategoriLikEksisterende) {
-			return opprettAndelFraEksisterende(andelÅFordeleTil, beløpSomSkalFordeles);
+		var erNåværendeInntektskategoriUdefinert = andelÅFordeleTil.getInputAndel().getInntektskategori().equals(Inntektskategori.UDEFINERT);
+		if (erInntektskategoriLikEksisterende || erNåværendeInntektskategoriUdefinert) {
+			return opprettAndelFraEksisterende(andelÅFordeleTil, beløpSomSkalFordeles, beløpetsInntektskategori);
 		} else {
 			return FordelAndelModell.builder()
 					.medAktivitetStatus(andelÅFordeleTil.getInputAndel().getAktivitetStatus())
@@ -131,13 +132,13 @@ class FordelMålbeløpPrAndel extends LeafSpecification<FordelModell> {
 		return beløpFraKategori;
 	}
 
-	private FordelAndelModell opprettAndelFraEksisterende(FordelAndelModellMellomregning andelÅFordeleTil, BigDecimal fordeltBeløp) {
+	private FordelAndelModell opprettAndelFraEksisterende(FordelAndelModellMellomregning andelÅFordeleTil, BigDecimal fordeltBeløp, Inntektskategori beløpetsInntektskategori) {
 		return FordelAndelModell.builder()
-				.medInntektskategori(andelÅFordeleTil.getInputAndel().getInntektskategori())
 				.medArbeidsforhold(andelÅFordeleTil.getInputAndel().getArbeidsforhold().orElse(null))
 				.medAktivitetStatus(andelÅFordeleTil.getInputAndel().getAktivitetStatus())
 				.medAndelNr(andelÅFordeleTil.getInputAndel().getAndelNr())
 				.medFordeltPrÅr(fordeltBeløp)
+				.medInntektskategori(beløpetsInntektskategori)
 				.build();
 	}
 

@@ -70,6 +70,25 @@ class FordelMålbeløpPrAndelTest {
 	}
 
 	@Test
+	public void skal_overskrive_andel_med_inntektskategori_udefinert() {
+		// Arrange
+		FordelAndelModellMellomregning andel1 = lagArbeidsandel(arbeid("999", "abc"), 400_000, 150_000);
+		FordelAndelModellMellomregning andel2 = lagArbeidsandelUdefinertIK(arbeid("888", "abc"), null, 250_000);
+
+		// Act
+		FordelModell regelModell = kjørRegel(andel1, andel2);
+
+		// Assert
+		assertThat(regelModell.getMellomregninger()).hasSize(2);
+
+		assertAntallFordelteAndelerResultat(regelModell, andel1, 1);
+		assertFordeltAndel(regelModell, andel1, 150000, Inntektskategori.ARBEIDSTAKER, false);
+
+		assertAntallFordelteAndelerResultat(regelModell, andel2, 1);
+		assertFordeltAndel(regelModell, andel2, 250000, Inntektskategori.ARBEIDSTAKER, false);
+	}
+
+	@Test
 	public void skal_teste_fordeling_fra_næring_og_arbeid_til_to_tilkomne_likt_fordelt() {
 		// Arrange
 		FordelAndelModellMellomregning atAndel = lagArbeidsandel(arbeid("999", "abc"), 60_000, 60_000);
@@ -84,16 +103,16 @@ class FordelMålbeløpPrAndelTest {
 		assertThat(regelModell.getMellomregninger()).hasSize(4);
 
 		assertAntallFordelteAndelerResultat(regelModell, atAndel, 1);
-		assertFordeltAndel(regelModell, atAndel, 60000, Inntektskategori.ARBEIDSTAKER);
+		assertFordeltAndel(regelModell, atAndel, 60000, Inntektskategori.ARBEIDSTAKER, false);
 
 		assertAntallFordelteAndelerResultat(regelModell, tilkommetAT1, 1);
-		assertFordeltAndel(regelModell, tilkommetAT1, 45000, Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE);
+		assertFordeltAndel(regelModell, tilkommetAT1, 45000, Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE, true);
 
 		assertAntallFordelteAndelerResultat(regelModell, tilkommetAT2, 1);
-		assertFordeltAndel(regelModell, tilkommetAT2, 55000, Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE);
+		assertFordeltAndel(regelModell, tilkommetAT2, 55000, Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE, true);
 
 		assertAntallFordelteAndelerResultat(regelModell, snAndel, 1);
-		assertFordeltAndel(regelModell, snAndel, 0, Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE);
+		assertFordeltAndel(regelModell, snAndel, 0, Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE, false);
 	}
 
 	@Test
@@ -162,6 +181,16 @@ class FordelMålbeløpPrAndelTest {
 		assertThat(matchendeAndel.get().getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.valueOf(forventetFordelt));
 	}
 
+	private void assertFordeltAndel(FordelModell regelModell, FordelAndelModellMellomregning andel, int forventetFordelt, Inntektskategori forventetKategori, boolean erNytt) {
+		FordelAndelModellMellomregning resultat = getResultat(regelModell.getMellomregninger(), andel);
+		Optional<FordelAndelModell> matchendeAndel = resultat.getFordelteAndeler().stream()
+				.filter(res -> res.getInntektskategori().equals(forventetKategori))
+				.findFirst();
+		assertThat(matchendeAndel).isPresent();
+		assertThat(matchendeAndel.get().erNytt()).isEqualTo(erNytt);
+		assertThat(matchendeAndel.get().getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.valueOf(forventetFordelt));
+	}
+
 	private void assertAntallFordelteAndelerResultat(FordelModell regelModell, FordelAndelModellMellomregning andel, int forventetAntallResultatAndeler) {
 		FordelAndelModellMellomregning resultat = getResultat(regelModell.getMellomregninger(), andel);
 		assertThat(resultat.getFordelteAndeler()).hasSize(forventetAntallResultatAndeler);
@@ -171,6 +200,13 @@ class FordelMålbeløpPrAndelTest {
 
 	private FordelAndelModellMellomregning lagArbeidsandel(Arbeidsforhold ag, Integer brutto, int ønsketBeløpEtterFordeling) {
 		FordelAndelModell inputandel = lagFordelAndel(AktivitetStatus.AT, Inntektskategori.ARBEIDSTAKER, ag, brutto);
+		FordelAndelModellMellomregning mellomregning = new FordelAndelModellMellomregning(inputandel);
+		mellomregning.setMålbeløp(BigDecimal.valueOf(ønsketBeløpEtterFordeling));
+		return mellomregning;
+	}
+
+	private FordelAndelModellMellomregning lagArbeidsandelUdefinertIK(Arbeidsforhold ag, Integer brutto, int ønsketBeløpEtterFordeling) {
+		FordelAndelModell inputandel = lagFordelAndel(AktivitetStatus.AT, Inntektskategori.UDEFINERT, ag, brutto);
 		FordelAndelModellMellomregning mellomregning = new FordelAndelModellMellomregning(inputandel);
 		mellomregning.setMålbeløp(BigDecimal.valueOf(ønsketBeløpEtterFordeling));
 		return mellomregning;
