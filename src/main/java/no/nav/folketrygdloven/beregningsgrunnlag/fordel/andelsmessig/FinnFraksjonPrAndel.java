@@ -67,7 +67,7 @@ class FinnFraksjonPrAndel extends LeafSpecification<FordelModell> {
 
 	private BigDecimal finnFraksjonsbestemmendeBeløp(FordelAndelModell andelInput) {
 		var foreslåttEllerIMBeløp = andelInput.getForeslåttPrÅr()
-				.orElse(andelInput.getBeløpFraInntektsMeldingPrMnd()
+				.orElseGet(() ->andelInput.getBeløpFraInntektsMeldingPrMnd()
 						.orElseThrow(() -> new IllegalStateException("Mangler både beløp fra inntektsmelding og foreslått brutto, ugyldig tilstand"))
 						.multiply(BigDecimal.valueOf(12)));
 		BigDecimal refusjonskrav = andelInput.getGjeldendeRefusjonPrÅr().orElseThrow();
