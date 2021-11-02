@@ -1,6 +1,7 @@
 package no.nav.folketrygdloven.skjæringstidspunkt.status;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -23,50 +24,48 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
 
     public static final String ID = "FP_BR_19_2";
     public static final String BESKRIVELSE = "Fastsett status per andel og periode";
-	private static final int MIDLERTIDIG_INAKTIV_MAX_VARIGHET_DAGER = 28;
 
 	protected FastsettStatusOgAndelPrPeriode() {
-        super(ID, BESKRIVELSE);
-    }
+		super(ID, BESKRIVELSE);
+	}
 
-    @Override
-    public Evaluation evaluate(AktivitetStatusModell regelmodell) {
-        opprettAktivitetStatuser(regelmodell);
+	@Override
+	public Evaluation evaluate(AktivitetStatusModell regelmodell) {
+		opprettAktivitetStatuser(regelmodell);
 
-        Map<String, Object> resultater = new HashMap<>();
-        regelmodell.getAktivitetStatuser()
-            .forEach(as -> resultater.put("Aktivitetstatus." + as.name(), as.getBeskrivelse()));
-        regelmodell.getBeregningsgrunnlagPrStatusListe()
-            .forEach(bgps -> resultater.put("BeregningsgrunnlagPrStatus." + bgps.getAktivitetStatus().name(), bgps.getAktivitetStatus().getBeskrivelse()));
-        return beregnet(resultater);
-    }
+		Map<String, Object> resultater = new HashMap<>();
+		regelmodell.getAktivitetStatuser()
+				.forEach(as -> resultater.put("Aktivitetstatus." + as.name(), as.getBeskrivelse()));
+		regelmodell.getBeregningsgrunnlagPrStatusListe()
+				.forEach(bgps -> resultater.put("BeregningsgrunnlagPrStatus." + bgps.getAktivitetStatus().name(), bgps.getAktivitetStatus().getBeskrivelse()));
+		return beregnet(resultater);
+	}
 
-    private void opprettAktivitetStatuser(AktivitetStatusModell regelmodell) {
-        List<AktivPeriode> aktivePerioder = regelmodell.getAktivePerioder();
-        List<AktivPeriode> aktivePerioderVedStp = hentAktivePerioder(regelmodell.getBeregningstidspunkt(), aktivePerioder);
+	private void opprettAktivitetStatuser(AktivitetStatusModell regelmodell) {
+		List<AktivPeriode> aktivePerioder = regelmodell.getAktivePerioder();
+		List<AktivPeriode> aktivePerioderVedStp = hentAktivePerioder(regelmodell.getBeregningstidspunkt(), aktivePerioder);
 
-	    if (harKunYtelsePåSkjæringstidspunkt(aktivePerioderVedStp)) {
-            regelmodell.leggTilAktivitetStatus(AktivitetStatus.KUN_YTELSE);
-	        leggTilBrukersAndel(regelmodell);
-        }
-	    else {
-		    MidlertidigInaktivType midlertidigInaktivType = finnMidlertidigInaktivType(regelmodell);
+		if (harKunYtelsePåSkjæringstidspunkt(aktivePerioderVedStp)) {
+			regelmodell.leggTilAktivitetStatus(AktivitetStatus.KUN_YTELSE);
+			leggTilBrukersAndel(regelmodell);
+		} else {
+			MidlertidigInaktivType midlertidigInaktivType = finnMidlertidigInaktivType(regelmodell);
 
-		    if (midlertidigInaktivType != null && midlertidigInaktivType.equals(MidlertidigInaktivType.A)) {
-			    regelmodell.leggTilAktivitetStatus(AktivitetStatus.MIDL_INAKTIV);
-			    leggTilBrukersAndel(regelmodell);
-		    } else if (midlertidigInaktivType != null && midlertidigInaktivType.equals(MidlertidigInaktivType.B)) {
-			    regelmodell.leggTilAktivitetStatus(AktivitetStatus.MIDL_INAKTIV);
-			    if (harAlleInntektsmelding(aktivePerioderVedStp)) {
-				    opprettStatusForAktiviteter(regelmodell, aktivePerioderVedStp);
-			    } else {
-				    leggTilBrukersAndel(regelmodell);
-			    }
-		    } else {
-			    opprettStatusForAktiviteter(regelmodell, aktivePerioderVedStp);
-		    }
-	    }
-    }
+			if (midlertidigInaktivType != null && midlertidigInaktivType.equals(MidlertidigInaktivType.A)) {
+				regelmodell.leggTilAktivitetStatus(AktivitetStatus.MIDL_INAKTIV);
+				leggTilBrukersAndel(regelmodell);
+			} else if (midlertidigInaktivType != null && midlertidigInaktivType.equals(MidlertidigInaktivType.B)) {
+				regelmodell.leggTilAktivitetStatus(AktivitetStatus.MIDL_INAKTIV);
+				if (harAlleInntektsmelding(aktivePerioderVedStp)) {
+					opprettStatusForAktiviteter(regelmodell, aktivePerioderVedStp);
+				} else {
+					leggTilBrukersAndel(regelmodell);
+				}
+			} else {
+				opprettStatusForAktiviteter(regelmodell, aktivePerioderVedStp);
+			}
+		}
+	}
 
 	private boolean harAlleInntektsmelding(List<AktivPeriode> aktivePerioderVedStp) {
 		return aktivePerioderVedStp.stream().allMatch(a -> a.getArbeidsforhold() != null && a.getArbeidsforhold().harInntektsmelding());
@@ -86,52 +85,66 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
 
 
 	private void opprettStatusForAktiviteter(AktivitetStatusModell regelmodell, List<AktivPeriode> aktivePerioderVedStp) {
-        for (AktivPeriode ap : aktivePerioderVedStp) {
-            AktivitetStatus aktivitetStatus = mapAktivitetTilStatus(ap.getAktivitet());
-            if (!AktivitetStatus.KUN_YTELSE.equals(aktivitetStatus)
-		            && ikkeMilitærMedAndreAktiviteterPåStp(aktivePerioderVedStp, aktivitetStatus)) {
-                regelmodell.leggTilAktivitetStatus(aktivitetStatus);
-                var arbeidsforhold = AktivitetStatus.ATFL.equals(aktivitetStatus) ? ap.getArbeidsforhold() : null;
-                regelmodell.leggTilBeregningsgrunnlagPrStatus(new BeregningsgrunnlagPrStatus(aktivitetStatus, arbeidsforhold));
-            }
-        }
-    }
+		List<BeregningsgrunnlagPrStatus> andeler = new ArrayList<>();
+		for (AktivPeriode ap : aktivePerioderVedStp) {
+			AktivitetStatus aktivitetStatus = mapAktivitetTilStatus(ap.getAktivitet());
+			if (!AktivitetStatus.KUN_YTELSE.equals(aktivitetStatus)
+					&& ikkeMilitærMedAndreAktiviteterPåStp(aktivePerioderVedStp, aktivitetStatus)) {
+				regelmodell.leggTilAktivitetStatus(aktivitetStatus);
+				var arbeidsforhold = AktivitetStatus.ATFL.equals(aktivitetStatus) ? ap.getArbeidsforhold() : null;
+				andeler.add(new BeregningsgrunnlagPrStatus(aktivitetStatus, arbeidsforhold));
+			}
+		}
+		andeler = justerListeForFlereDagpengekilder(andeler);
+		andeler.forEach(regelmodell::leggTilBeregningsgrunnlagPrStatus);
+	}
 
-    private boolean ikkeMilitærMedAndreAktiviteterPåStp(List<AktivPeriode> aktivPerioderVedSkjæringtidspunkt, AktivitetStatus aktivitetStatus) {
-        return !(AktivitetStatus.MS.equals(aktivitetStatus) && aktivPerioderVedSkjæringtidspunkt.size() > 1);
-    }
+	private List<BeregningsgrunnlagPrStatus> justerListeForFlereDagpengekilder(List<BeregningsgrunnlagPrStatus> andeler) {
+		if (andeler.stream().filter(a -> a.getAktivitetStatus().erDP()).count() > 1) {
+			andeler = andeler.stream().filter(a -> !a.getAktivitetStatus().erDP())
+					.collect(Collectors.toList());
+			andeler.add(new BeregningsgrunnlagPrStatus(AktivitetStatus.DP));
+		}
+		return andeler;
+	}
 
-    private boolean harKunYtelsePåSkjæringstidspunkt(List<AktivPeriode> aktivPerioderVedSkjæringtidspunkt) {
-        return !aktivPerioderVedSkjæringtidspunkt.isEmpty() && aktivPerioderVedSkjæringtidspunkt.stream()
-            .allMatch(ap -> mapAktivitetTilStatus(ap.getAktivitet()).equals(AktivitetStatus.KUN_YTELSE));
-    }
+	private boolean ikkeMilitærMedAndreAktiviteterPåStp(List<AktivPeriode> aktivPerioderVedSkjæringtidspunkt, AktivitetStatus aktivitetStatus) {
+		return !(AktivitetStatus.MS.equals(aktivitetStatus) && aktivPerioderVedSkjæringtidspunkt.size() > 1);
+	}
 
-    private AktivitetStatus mapAktivitetTilStatus(Aktivitet aktivitet) {
-        List<Aktivitet> arbeistaker = Arrays.asList(Aktivitet.ARBEIDSTAKERINNTEKT, Aktivitet.FRILANSINNTEKT,
-            Aktivitet.VENTELØNN_VARTPENGER, Aktivitet.ETTERLØNN_SLUTTPAKKE, Aktivitet.VIDERE_ETTERUTDANNING,
-            Aktivitet.UTDANNINGSPERMISJON);
-        List<Aktivitet> tilstøtendeYtelse = Arrays.asList(Aktivitet.SYKEPENGER_MOTTAKER, Aktivitet.FORELDREPENGER_MOTTAKER,
-            Aktivitet.PLEIEPENGER_MOTTAKER, Aktivitet.SVANGERSKAPSPENGER_MOTTAKER, Aktivitet.OPPLÆRINGSPENGER, Aktivitet.FRISINN_MOTTAKER,
-            Aktivitet.OMSORGSPENGER);
-        AktivitetStatus aktivitetStatus;
+	private boolean harKunYtelsePåSkjæringstidspunkt(List<AktivPeriode> aktivPerioderVedSkjæringtidspunkt) {
+		return !aktivPerioderVedSkjæringtidspunkt.isEmpty() && aktivPerioderVedSkjæringtidspunkt.stream()
+				.allMatch(ap -> mapAktivitetTilStatus(ap.getAktivitet()).equals(AktivitetStatus.KUN_YTELSE));
+	}
 
-        if (Aktivitet.NÆRINGSINNTEKT.equals(aktivitet)) {
-            aktivitetStatus = AktivitetStatus.SN;
-        } else if (Aktivitet.DAGPENGEMOTTAKER.equals(aktivitet)) {
-            aktivitetStatus = AktivitetStatus.DP;
-        } else if (Aktivitet.AAP_MOTTAKER.equals(aktivitet)) {
-            aktivitetStatus = AktivitetStatus.AAP;
-        } else if (Aktivitet.MILITÆR_ELLER_SIVILTJENESTE.equals(aktivitet)) {
-            aktivitetStatus = AktivitetStatus.MS;
-        } else if (tilstøtendeYtelse.contains(aktivitet)) {
-            aktivitetStatus = AktivitetStatus.KUN_YTELSE;
-        } else if (arbeistaker.contains(aktivitet)) {
-            aktivitetStatus = AktivitetStatus.ATFL;
-        } else {
-            aktivitetStatus = AktivitetStatus.UDEFINERT;
-        }
-        return aktivitetStatus;
-    }
+	private AktivitetStatus mapAktivitetTilStatus(Aktivitet aktivitet) {
+		List<Aktivitet> arbeistaker = Arrays.asList(Aktivitet.ARBEIDSTAKERINNTEKT, Aktivitet.FRILANSINNTEKT,
+				Aktivitet.VENTELØNN_VARTPENGER, Aktivitet.ETTERLØNN_SLUTTPAKKE, Aktivitet.VIDERE_ETTERUTDANNING,
+				Aktivitet.UTDANNINGSPERMISJON);
+		List<Aktivitet> tilstøtendeYtelse = Arrays.asList(Aktivitet.SYKEPENGER_MOTTAKER, Aktivitet.FORELDREPENGER_MOTTAKER,
+				Aktivitet.PLEIEPENGER_MOTTAKER, Aktivitet.SVANGERSKAPSPENGER_MOTTAKER, Aktivitet.OPPLÆRINGSPENGER, Aktivitet.FRISINN_MOTTAKER,
+				Aktivitet.OMSORGSPENGER);
+		AktivitetStatus aktivitetStatus;
+
+		if (Aktivitet.NÆRINGSINNTEKT.equals(aktivitet)) {
+			aktivitetStatus = AktivitetStatus.SN;
+		} else if (Aktivitet.DAGPENGEMOTTAKER.equals(aktivitet)) {
+			aktivitetStatus = AktivitetStatus.DP;
+		} else if (Aktivitet.SYKEPENGER_AV_DAGPENGER_MOTTAKER.equals(aktivitet)) {
+			aktivitetStatus = AktivitetStatus.SP_AV_DP;
+		} else if (Aktivitet.AAP_MOTTAKER.equals(aktivitet)) {
+			aktivitetStatus = AktivitetStatus.AAP;
+		} else if (Aktivitet.MILITÆR_ELLER_SIVILTJENESTE.equals(aktivitet)) {
+			aktivitetStatus = AktivitetStatus.MS;
+		} else if (tilstøtendeYtelse.contains(aktivitet)) {
+			aktivitetStatus = AktivitetStatus.KUN_YTELSE;
+		} else if (arbeistaker.contains(aktivitet)) {
+			aktivitetStatus = AktivitetStatus.ATFL;
+		} else {
+			aktivitetStatus = AktivitetStatus.UDEFINERT;
+		}
+		return aktivitetStatus;
+	}
 
 	private List<AktivPeriode> hentAktivePerioder(LocalDate beregningstidspunkt, List<AktivPeriode> aktivePerioder) {
 		return aktivePerioder.stream()

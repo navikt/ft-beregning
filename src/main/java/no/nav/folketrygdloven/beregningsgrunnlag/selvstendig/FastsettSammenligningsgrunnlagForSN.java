@@ -57,13 +57,15 @@ public class FastsettSammenligningsgrunnlagForSN extends LeafSpecification<Bereg
     }
 
     private SammenligningsGrunnlag opprettSammenligningsgrunnlag(BeregningsgrunnlagPeriode grunnlag, Periodeinntekt oppgittInntekt) {
-        BeregningsgrunnlagPrStatus bgAAP = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.AAP);
-        BeregningsgrunnlagPrStatus bgDP = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP);
-        BeregningsgrunnlagPrStatus bgATFL = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+	    BeregningsgrunnlagPrStatus bgATFL = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
 
-        BigDecimal bruttoAAP = bgAAP != null ? bgAAP.getBeregnetPrÅr() : BigDecimal.ZERO;
-        BigDecimal bruttoDP = bgDP != null ? bgDP.getBeregnetPrÅr() : BigDecimal.ZERO;
-        BigDecimal bruttoATFL = bgATFL != null ? bgATFL.getBruttoInkludertNaturalytelsePrÅr() : BigDecimal.ZERO;
+	    BeregningsgrunnlagPrStatus aapStatus = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.AAP);
+	    var dpStatus = grunnlag.getBeregningsgrunnlagFraDagpenger();
+
+	    BigDecimal bruttoAAP = aapStatus == null ? BigDecimal.ZERO : aapStatus.getBeregnetPrÅr();
+	    BigDecimal bruttoDP = dpStatus.map(BeregningsgrunnlagPrStatus::getBeregnetPrÅr).orElse(BigDecimal.ZERO);
+
+	    BigDecimal bruttoATFL = bgATFL != null ? bgATFL.getBruttoInkludertNaturalytelsePrÅr() : BigDecimal.ZERO;
         BigDecimal antallPerioderPrÅr = oppgittInntekt.getInntektPeriodeType().getAntallPrÅr();
         BigDecimal oppgittÅrsInntekt = oppgittInntekt.getInntekt().multiply(antallPerioderPrÅr);
 
@@ -79,8 +81,8 @@ public class FastsettSammenligningsgrunnlagForSN extends LeafSpecification<Bereg
     private Map<String, Object> gjørRegelsporing(BeregningsgrunnlagPeriode grunnlag, SammenligningsGrunnlag sammenligningsGrunnlag, Periodeinntekt oppgittInntekt) {
         Map<String, Object> resultater = new LinkedHashMap<>();
         BeregningsgrunnlagPrStatus bgAAP = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.AAP);
-        BeregningsgrunnlagPrStatus bgDP = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP);
-        BeregningsgrunnlagPrStatus bgATFL = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+        var bgDP = grunnlag.getBeregningsgrunnlagFraDagpenger();
+	    BeregningsgrunnlagPrStatus bgATFL = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
         BeregningsgrunnlagPrStatus bgSN = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
 
         String bruttoString = "brutto";
@@ -92,9 +94,9 @@ public class FastsettSammenligningsgrunnlagForSN extends LeafSpecification<Bereg
             String status = "AAP";
             resultater.put(bruttoString + status, bgAAP.getBeregnetPrÅr());
         }
-        if (bgDP != null) {
+        if (bgDP.isPresent()) {
             String status = "DP";
-            resultater.put(bruttoString + status, bgDP.getBeregnetPrÅr());
+            resultater.put(bruttoString + status, bgDP.get().getBeregnetPrÅr());
         }
         resultater.put("gjennomsnittligPGI", bgSN.getGjennomsnittligPGI());
         resultater.put("inntektEtterVarigEndringPrÅr", oppgittInntekt.getInntekt());

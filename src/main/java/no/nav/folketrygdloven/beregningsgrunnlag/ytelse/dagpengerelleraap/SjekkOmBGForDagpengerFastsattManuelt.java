@@ -19,8 +19,8 @@ class SjekkOmBGForDagpengerFastsattManuelt extends LeafSpecification<Beregningsg
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        BeregningsgrunnlagPrStatus dagpengerStatus = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP);
-        boolean manueltFastsattDagpenger = dagpengerStatus != null && dagpengerStatus.erFastsattAvSaksbehandler();
-        return manueltFastsattDagpenger ? ja() : nei();
+        var dagpengerStatus = grunnlag.getBeregningsgrunnlagFraDagpenger();
+        boolean manueltFastsattDagpenger = dagpengerStatus.map(BeregningsgrunnlagPrStatus::erFastsattAvSaksbehandler).orElse(false);
+	    return manueltFastsattDagpenger ? ja() : nei();
     }
 }

@@ -24,8 +24,10 @@ public class BeregnBruttoBeregningsgrunnlagSN extends LeafSpecification<Beregnin
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
         BeregningsgrunnlagPrStatus bgAAP = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.AAP);
-        BeregningsgrunnlagPrStatus bgDP = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP);
-        if ((bgAAP != null && bgAAP.getBeregnetPrÅr() == null) || (bgDP != null && bgDP.getBeregnetPrÅr() == null)) {
+        var bgDP = grunnlag.getBeregningsgrunnlagFraDagpenger();
+        boolean harBeregnetAAPEllerDP = (bgAAP != null && bgAAP.getBeregnetPrÅr() == null) ||
+			    (bgDP.isPresent() && bgDP.get().getBeregnetPrÅr() == null);
+	    if (harBeregnetAAPEllerDP) {
             throw new IllegalStateException("Utviklerfeil: Aktivitetstatuser AAP og DP må beregnes før SN");
         }
 
@@ -33,7 +35,7 @@ public class BeregnBruttoBeregningsgrunnlagSN extends LeafSpecification<Beregnin
         BigDecimal gjennomsnittligPGI = bgps.getGjennomsnittligPGI() == null ? BigDecimal.ZERO : bgps.getGjennomsnittligPGI();
 
         BigDecimal bruttoAAP = bgAAP != null ? bgAAP.getBeregnetPrÅr() : BigDecimal.ZERO;
-        BigDecimal bruttoDP = bgDP != null ? bgDP.getBeregnetPrÅr() : BigDecimal.ZERO;
+        BigDecimal bruttoDP = bgDP.map(BeregningsgrunnlagPrStatus::getBeregnetPrÅr).orElse(BigDecimal.ZERO);
 
         BigDecimal bruttoSN = gjennomsnittligPGI.subtract(bruttoAAP).subtract(bruttoDP).max(BigDecimal.ZERO);
 

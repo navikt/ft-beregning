@@ -166,11 +166,11 @@ public class Inntektsgrunnlag {
             .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public List<BigDecimal> getPeriodeinntekter(Inntektskilde inntektskilde, BeregningsgrunnlagPrArbeidsforhold arbeidsforhold, LocalDate førDato, int måneder) {
+    public List<Periodeinntekt> getPeriodeinntekter(Inntektskilde inntektskilde, BeregningsgrunnlagPrArbeidsforhold arbeidsforhold, LocalDate førDato, int måneder) {
         if (arbeidsforhold.erFrilanser()) {
             return getAlleFrilansinntekterForArbeidsforhold(inntektskilde, førDato, måneder, arbeidsforhold.getArbeidsforhold());
         }
-        List<BigDecimal> inntekter = new ArrayList<>();
+        List<Periodeinntekt> inntekter = new ArrayList<>();
         for (int måned = 0; måned < måneder; måned++) {
             final int siden = måned;
             Optional<Periodeinntekt> beløp = getPeriodeinntektMedKilde(inntektskilde)
@@ -178,12 +178,12 @@ public class Inntektsgrunnlag {
                 .filter(pi -> matchAktivitet(arbeidsforhold, pi))//NOSONAR
                 .filter(pi -> pi.inneholder(førDato.minusMonths(siden)))
                 .findFirst();
-            beløp.ifPresent(månedsinntekt -> inntekter.add(månedsinntekt.getInntekt()));
+            beløp.ifPresent(inntekter::add);
         }
         return inntekter;
     }
 
-    private boolean matchAktivitet(BeregningsgrunnlagPrArbeidsforhold arbeidsforhold, Periodeinntekt pi) {
+	private boolean matchAktivitet(BeregningsgrunnlagPrArbeidsforhold arbeidsforhold, Periodeinntekt pi) {
     	if (pi.getArbeidsgiver().isEmpty()) {
     		throw new IllegalStateException("Forventer å ha arbeidsforhold");
 	    }
@@ -202,14 +202,13 @@ public class Inntektsgrunnlag {
 
     }
 
-    private List<BigDecimal> getAlleFrilansinntekterForArbeidsforhold(Inntektskilde inntektskilde, LocalDate førDato, int måneder, Arbeidsforhold arbeidsforhold) {
+    private List<Periodeinntekt> getAlleFrilansinntekterForArbeidsforhold(Inntektskilde inntektskilde, LocalDate førDato, int måneder, Arbeidsforhold arbeidsforhold) {
         Periode periode = Periode.of(førDato.minusMonths(måneder), førDato);
         return getPeriodeinntektMedKilde(inntektskilde)
             .filter(pi -> pi.getArbeidsgiver().isPresent())
             .filter(pi -> pi.getArbeidsgiver().get().erFrilanser()) //NOSONAR
             .filter(pi -> pi.getArbeidsgiver().get().equals(arbeidsforhold)) //NOSONAR
             .filter(pi -> pi.erInnenforPeriode(periode))
-            .map(Periodeinntekt::getInntekt)
             .collect(Collectors.toList());
     }
 

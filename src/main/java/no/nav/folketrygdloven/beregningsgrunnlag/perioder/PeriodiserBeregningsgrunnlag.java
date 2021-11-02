@@ -3,16 +3,20 @@ package no.nav.folketrygdloven.beregningsgrunnlag.perioder;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.PeriodeÅrsak;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.NaturalYtelse;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Refusjonskrav;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AktivitetStatusV2;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AndelGradering;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.ArbeidsforholdOgInntektsmelding;
@@ -61,7 +65,8 @@ public class PeriodiserBeregningsgrunnlag extends LeafSpecification<PeriodeSplit
         while (listIterator.hasNext()) {
             Map.Entry<LocalDate, Set<PeriodeSplittData>> entry = listIterator.next();
             LocalDate periodeFom = entry.getKey();
-            Set<PeriodeSplittData> periodeSplittData = entry.getValue();
+	        LocalDate periodeTom = utledPeriodeTom(entries, listIterator);
+	        Set<PeriodeSplittData> periodeSplittData = entry.getValue();
 
             List<EksisterendeAndel> førstePeriodeAndeler = input.getArbeidsforholdOgInntektsmeldinger().stream()
                 .filter(im -> !im.erNyAktivitetPåDato(periodeFom))
@@ -86,12 +91,12 @@ public class PeriodiserBeregningsgrunnlag extends LeafSpecification<PeriodeSplit
 
             nyeAndeler.addAll(input.getEndringerISøktYtelse().stream()
                 .filter(utbGrad -> utbGrad.erNyAktivitetPåDato(periodeFom))
-                .filter(andel -> harUtbetalingFørOgEtterPeriode(andel, periodeFom))
+                .filter(andel -> harUtbetalingEllerErMellomToPerioderMedManuellFordeling(andel,
+		                periodeFom, periodeTom, input.getArbeidsforholdOgInntektsmeldinger()))
                 .map(PeriodiserBeregningsgrunnlag::mapSplittetAndel)
                 .collect(Collectors.toList()));
 
-            LocalDate tom = utledPeriodeTom(entries, listIterator);
-            Periode periode = new Periode(periodeFom, tom);
+            Periode periode = new Periode(periodeFom, periodeTom);
             SplittetPeriode splittetPeriode = SplittetPeriode.builder()
                 .medPeriode(periode)
                 .medPeriodeÅrsaker(getPeriodeÅrsaker(periodeSplittData, input.getSkjæringstidspunkt(), periodeFom))
@@ -114,12 +119,67 @@ public class PeriodiserBeregningsgrunnlag extends LeafSpecification<PeriodeSplit
 		return harSøktYtelseIPeriode && harHattRefusjonIEnTidligerePeriode;
 	}
 
-	private static boolean harUtbetalingFørOgEtterPeriode(AndelGradering andel, LocalDate periodeFom) {
-        return andel.getGraderinger().stream()
-		        .anyMatch(g -> !g.getPeriode().getFom().isAfter(periodeFom) && g.getUtbetalingsprosent().compareTo(BigDecimal.ZERO) > 0) &&
-		        andel.getGraderinger().stream()
-				        .anyMatch(utbgrad -> !utbgrad.getPeriode().getTom().isBefore(periodeFom) && utbgrad.getUtbetalingsprosent().compareTo(BigDecimal.ZERO) > 0);
+	private static boolean harUtbetalingEllerErMellomToPerioderMedManuellFordeling(AndelGradering andel,
+	                                                                               LocalDate periodeFom,
+	                                                                               LocalDate periodeTom,
+	                                                                               List<ArbeidsforholdOgInntektsmelding> arbeidsforholdOgInntektsmeldinger) {
+    	boolean harSøktOmUtbetaling = harSøkOmUtbetalingIPeriode(andel, periodeFom);
+		boolean skalManueltFordelesRettFør = harSøktUtbetalingPåDatoUtenRefusjon(arbeidsforholdOgInntektsmeldinger, andel, periodeFom.minusDays(1));
+		boolean skalManueltFordelesEtter = periodeTom != null && harSøktUtbetalingPåDatoUtenRefusjon(arbeidsforholdOgInntektsmeldinger, andel, periodeTom.plusDays(1));
+		return harSøktOmUtbetaling || (skalManueltFordelesRettFør && skalManueltFordelesEtter);
     }
+
+	private static boolean harSøkOmUtbetalingIPeriode(AndelGradering andel, LocalDate periodeFom) {
+		return harSøktUtbetalingPåDato(andel, periodeFom);
+	}
+
+	private static boolean harSøktUtbetalingPåDato(AndelGradering andel, LocalDate periodeFom) {
+		return andel.getGraderinger().stream()
+				.anyMatch(g -> g.getPeriode().inneholder(periodeFom) &&
+						g.getUtbetalingsprosent().compareTo(BigDecimal.ZERO) > 0);
+	}
+
+	private static boolean harSøktUtbetalingPåDatoUtenRefusjon(List<ArbeidsforholdOgInntektsmelding> inntektsmeldinger,
+	                                                           AndelGradering andel,
+	                                                           LocalDate dato) {
+		boolean harRefusjonDagenFør = harRefusjonPåDato(andel, inntektsmeldinger, dato);
+		boolean harSøktUtbetalingDagenFør = harSøktUtbetalingPåDato(andel, dato);
+		return harSøktUtbetalingDagenFør && !harRefusjonDagenFør;
+	}
+
+	private static boolean harRefusjonPåDato(AndelGradering andel,
+	                                         List<ArbeidsforholdOgInntektsmelding> inntektsmeldinger,
+	                                         LocalDate dato) {
+		return finnRefusjonskravListeForArbeidsforhold(inntektsmeldinger, andel).stream()
+				.filter(ref -> ref.getPeriode().inneholder(dato))
+				.map(Refusjonskrav::getMånedsbeløp)
+				.anyMatch(Objects::nonNull);
+	}
+
+	private static boolean andelErSnEllerFl(AndelGradering andelGradering) {
+		return AktivitetStatusV2.FL.equals(andelGradering.getAktivitetStatus()) || AktivitetStatusV2.SN.equals(andelGradering.getAktivitetStatus());
+	}
+
+
+	private static List<Refusjonskrav> finnRefusjonskravListeForArbeidsforhold(List<ArbeidsforholdOgInntektsmelding> inntektsmeldinger,
+	                                                                           AndelGradering andelGradering){
+		if(andelErSnEllerFl(andelGradering)){
+			return Collections.emptyList();
+		}
+
+		return andelGradering.getArbeidsforhold() == null ? Collections.emptyList() :
+				finnMatchendeRefusjonskravForArbeidsforhold(inntektsmeldinger, andelGradering.getArbeidsforhold());
+	}
+
+
+	private static List<Refusjonskrav> finnMatchendeRefusjonskravForArbeidsforhold(List<ArbeidsforholdOgInntektsmelding> inntektsmeldinger, Arbeidsforhold arbeidsforhold){
+		return inntektsmeldinger.stream()
+				.filter(im -> im.getArbeidsforhold().getArbeidsgiverId().equals(arbeidsforhold.getArbeidsgiverId()) &&
+						(Objects.equals(im.getArbeidsforhold().getArbeidsforholdId(), arbeidsforhold.getArbeidsforholdId()) || arbeidsforhold.getArbeidsforholdId() == null))
+				.findFirst()
+				.map(ArbeidsforholdOgInntektsmelding::getGyldigeRefusjonskrav)
+				.orElse(Collections.emptyList());
+	}
 
     private static LocalDate utledPeriodeTom(List<Map.Entry<LocalDate, Set<PeriodeSplittData>>> entries, ListIterator<Map.Entry<LocalDate, Set<PeriodeSplittData>>> listIterator) {
         return listIterator.hasNext() ?
