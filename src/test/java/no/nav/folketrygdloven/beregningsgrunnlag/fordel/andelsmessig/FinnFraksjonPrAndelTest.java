@@ -15,6 +15,7 @@ import no.nav.fpsak.tidsserie.LocalDateInterval;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -99,6 +100,24 @@ class FinnFraksjonPrAndelTest {
 		assertAndel(fordelModell, tilkommetAndelMedRef, 0.75);
 	}
 
+	@Test
+	public void skal_teste_tre_andeler_som_ikke_kan_deles_perfekt_på_tre() {
+		// Arrange
+		FordelAndelModell foreslåttAndel1 = lagFordelAndelMedForeslått(AktivitetStatus.AT, arbeid("999", "abc"), 586_104, 586_104);
+		FordelAndelModell foreslåttAndel2 = lagFordelAndelTilkommet(AktivitetStatus.AT, arbeid("888", "abc"), 624_996, 624_996);
+		FordelAndelModell tilkommetAndel = lagFordelAndelTilkommet(AktivitetStatus.AT, arbeid("777", "abc"), 624_996, 500_004);
+
+
+		// Act
+		FordelModell fordelModell = kjørRegel(foreslåttAndel1, foreslåttAndel2, tilkommetAndel);
+
+		// Assert
+		assertThat(fordelModell.getMellomregninger()).hasSize(3);
+		assertAndel(fordelModell, foreslåttAndel1, 0.3425297352);
+		assertAndel(fordelModell, foreslåttAndel2, 0.3652589206);
+		assertAndel(fordelModell, tilkommetAndel, 0.2922113442);
+	}
+
 	private void assertAndel(FordelModell fordelModell, FordelAndelModell andel, double fraksjon) {
 		Optional<FordelteAndelerModell> match = fordelModell.getMellomregninger().stream().filter(a -> a.getInputAndel().equals(andel)).findFirst();
 		assertThat(match).isPresent();
@@ -130,7 +149,7 @@ class FinnFraksjonPrAndelTest {
 				.medAktivitetStatus(status)
 				.medArbeidsforhold(ag);
 		if (inntektFraIM != null) {
-			fordelAndel.medInntektFraInnektsmelding(BigDecimal.valueOf(inntektFraIM));
+			fordelAndel.medInntektFraInnektsmelding(BigDecimal.valueOf(inntektFraIM).divide(BigDecimal.valueOf(12), RoundingMode.HALF_EVEN));
 		} else {
 			fordelAndel.medForeslåttPrÅr(BigDecimal.valueOf(brutto));
 		}
