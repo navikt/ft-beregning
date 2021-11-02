@@ -17,12 +17,10 @@ import java.util.List;
 public class RegelFordelBeregningsgrunnlag implements RuleService<FordelPeriodeModell> {
 
     public static final String ID = "FP_BR 22.3";
-	private FordelPeriodeModell input;
 	private FordelModell modell;
 
-	public RegelFordelBeregningsgrunnlag(FordelPeriodeModell input) {
+	public RegelFordelBeregningsgrunnlag() {
 		super();
-		this.input = input;
 	}
 
 	@Override
