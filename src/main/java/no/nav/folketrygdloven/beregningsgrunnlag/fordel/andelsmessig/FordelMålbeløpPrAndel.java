@@ -9,6 +9,7 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 
 import java.math.BigDecimal;
 import java.util.Comparator;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -151,7 +152,7 @@ class FordelMålbeløpPrAndel extends LeafSpecification<FordelModell> {
 	}
 
 	private PottTilFordeling lagPottTilFordlingFraModell(FordelModell modell) {
-		Map<Inntektskategori, BigDecimal> totalPott = new HashMap<>();
+		EnumMap<Inntektskategori, BigDecimal> totalPott = new EnumMap<>(Inntektskategori.class);
 		modell.getMellomregninger().stream()
 				.filter(a -> a.getInputAndel().getForeslåttPrÅr().isPresent())
 				.forEach(mellomregning -> {

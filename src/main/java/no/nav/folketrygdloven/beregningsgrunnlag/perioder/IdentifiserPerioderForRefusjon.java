@@ -15,6 +15,7 @@ import java.util.Set;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.PeriodeÅrsak;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Refusjonskrav;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.ArbeidsforholdOgInntektsmelding;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.RefusjonskravFrist;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.PeriodeSplittData;
 
 class IdentifiserPerioderForRefusjon {
@@ -65,10 +66,11 @@ class IdentifiserPerioderForRefusjon {
 
 	private static LocalDate finnFørsteLovligeRefusjonsdato(ArbeidsforholdOgInntektsmelding inntektsmelding,
 	                                                        Map<String, Object> resultater) {
-		if (inntektsmelding.getRefusjonskravFrist().isEmpty()) {
+		var refKrafFrist = inntektsmelding.getRefusjonskravFrist();
+		if (refKrafFrist.isEmpty()) {
 			return TIDENES_BEGYNNELSE; // Her skal vi ikkje vurdere frist og vi returnerer TIDENES_BEGYNNELSE
 		}
-    	int fristAntallMåneder = inntektsmelding.getRefusjonskravFrist().get().getAntallMånederRefusjonskravFrist();
+    	int fristAntallMåneder = refKrafFrist.get().getAntallMånederRefusjonskravFrist();
 		resultater.put("antallMånederRefusjonfrist", fristAntallMåneder);
 		Optional<LocalDate> utvidetRefusjonsdato = inntektsmelding.getOverstyrtRefusjonsFrist();
 		resultater.put("overstyrtFristutvidelse", utvidetRefusjonsdato);

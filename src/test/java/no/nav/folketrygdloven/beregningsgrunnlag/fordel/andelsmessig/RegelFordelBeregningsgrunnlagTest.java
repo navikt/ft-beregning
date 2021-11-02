@@ -117,7 +117,7 @@ public class RegelFordelBeregningsgrunnlagTest {
 
 
     private void kjørRegel(FordelPeriodeModell periode) {
-        RegelFordelBeregningsgrunnlag regel = new RegelFordelBeregningsgrunnlag(periode);
+        RegelFordelBeregningsgrunnlag regel = new RegelFordelBeregningsgrunnlag();
         regel.evaluer(periode, new ArrayList<>());
     }
 

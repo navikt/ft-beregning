@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelAndelModell;
@@ -65,13 +66,10 @@ class FinnFraksjonPrAndel extends LeafSpecification<FordelModell> {
 	}
 
 	private BigDecimal finnFraksjonsbestemmendeBeløp(FordelAndelModell andelInput) {
-		BigDecimal foreslåttEllerIMBeløp;
-		if (andelInput.getForeslåttPrÅr().isPresent()) {
-			foreslåttEllerIMBeløp = andelInput.getForeslåttPrÅr().get();
-		} else {
-			BigDecimal beløpFraIM = andelInput.getBeløpFraInntektsMeldingPrMnd().orElseThrow(() -> new IllegalStateException("Mangler både beløp fra inntektsmelding og foreslått brutto, ugyldig tilstand"));
-			foreslåttEllerIMBeløp = beløpFraIM.multiply(BigDecimal.valueOf(12));
-		}
+		var foreslåttEllerIMBeløp = andelInput.getForeslåttPrÅr()
+				.orElse(andelInput.getBeløpFraInntektsMeldingPrMnd()
+						.orElseThrow(() -> new IllegalStateException("Mangler både beløp fra inntektsmelding og foreslått brutto, ugyldig tilstand"))
+						.multiply(BigDecimal.valueOf(12)));
 		BigDecimal refusjonskrav = andelInput.getGjeldendeRefusjonPrÅr().orElseThrow();
 		// Siden vi vet at vi ikke har nok brutto til å dekke refusjon når vi fordeler andelsmessig, får arbeidsforholdet aldri mer enn de ber om i refusjon
 		return refusjonskrav.compareTo(foreslåttEllerIMBeløp) > 0 ? foreslåttEllerIMBeløp : refusjonskrav;
