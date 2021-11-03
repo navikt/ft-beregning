@@ -31,11 +31,11 @@ class FinnFraksjonPrAndel extends LeafSpecification<FordelModell> {
 			    .collect(Collectors.toList());
 	    BigDecimal totaltBeløp = finnTotaltFraksjonsbestemmendeBeløp(mellomregninger);
 	    resultater.put("totaltFraksjonsbestemmendeBeløp", totaltBeløp);
-		BigDecimal totalFraksjonsÅDeleUt = BigDecimal.valueOf(1);
+		BigDecimal gjennståendeFraksjon = BigDecimal.valueOf(1);
 		for (FordelteAndelerModell mellomregning : mellomregninger) {
 			BigDecimal utregnetFraksjon = finnFraksjon(mellomregning, totaltBeløp);
-			BigDecimal bruktFraksjon = utregnetFraksjon.min(totalFraksjonsÅDeleUt);
-			totalFraksjonsÅDeleUt = totalFraksjonsÅDeleUt.subtract(bruktFraksjon);
+			BigDecimal bruktFraksjon = utregnetFraksjon.min(gjennståendeFraksjon);
+			gjennståendeFraksjon = gjennståendeFraksjon.subtract(bruktFraksjon);
 			mellomregning.setFraksjonAvBrutto(bruktFraksjon);
 			modell.leggTilMellomregningAndel(mellomregning);
 			resultater.put("andel", mellomregning.getInputAndel().getBeskrivelse());
