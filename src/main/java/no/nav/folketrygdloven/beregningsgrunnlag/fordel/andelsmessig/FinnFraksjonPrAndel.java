@@ -31,14 +31,28 @@ class FinnFraksjonPrAndel extends LeafSpecification<FordelModell> {
 			    .collect(Collectors.toList());
 	    BigDecimal totaltBeløp = finnTotaltFraksjonsbestemmendeBeløp(mellomregninger);
 	    resultater.put("totaltFraksjonsbestemmendeBeløp", totaltBeløp);
-	    mellomregninger.forEach(mellomregning -> {
-			BigDecimal fraksjon = finnFraksjon(mellomregning, totaltBeløp);
-			mellomregning.setFraksjonAvBrutto(fraksjon);
+		BigDecimal gjennståendeFraksjon = BigDecimal.valueOf(1);
+		for (FordelteAndelerModell mellomregning : mellomregninger) {
+			BigDecimal utregnetFraksjon = finnFraksjon(mellomregning, totaltBeløp);
+			BigDecimal bruktFraksjon = utregnetFraksjon.min(gjennståendeFraksjon);
+			gjennståendeFraksjon = gjennståendeFraksjon.subtract(bruktFraksjon);
+			mellomregning.setFraksjonAvBrutto(bruktFraksjon);
 			modell.leggTilMellomregningAndel(mellomregning);
 			resultater.put("andel", mellomregning.getInputAndel().getBeskrivelse());
 			resultater.put("fraksjon", mellomregning.getFraksjonAvBrutto());
-		});
+		}
+		validerFraksjoner(mellomregninger);
 	    return beregnet(resultater);
+	}
+
+	private void validerFraksjoner(List<FordelteAndelerModell> mellomregninger) {
+		var totalFraksjon = mellomregninger.stream()
+				.map(FordelteAndelerModell::getFraksjonAvBrutto)
+				.reduce(BigDecimal::add)
+				.orElse(BigDecimal.ZERO);
+		if (totalFraksjon.compareTo(BigDecimal.valueOf(1)) != 0) {
+			throw new IllegalStateException("Feil under fordeling, total fraksjons av brutto var " + totalFraksjon);
+		}
 	}
 
 	private BigDecimal finnFraksjon(FordelteAndelerModell mellomregning, BigDecimal totaltBeløp) {
@@ -66,7 +80,7 @@ class FinnFraksjonPrAndel extends LeafSpecification<FordelModell> {
 
 	private BigDecimal finnFraksjonsbestemmendeBeløp(FordelAndelModell andelInput) {
 		var foreslåttEllerIMBeløp = andelInput.getForeslåttPrÅr()
-				.orElseGet(() ->andelInput.getBeløpFraInntektsMeldingPrMnd()
+				.orElseGet(() -> andelInput.getBeløpFraInntektsMeldingPrMnd()
 						.orElseThrow(() -> new IllegalStateException("Mangler både beløp fra inntektsmelding og foreslått brutto, ugyldig tilstand"))
 						.multiply(BigDecimal.valueOf(12)));
 		BigDecimal refusjonskrav = andelInput.getGjeldendeRefusjonPrÅr().orElseThrow();

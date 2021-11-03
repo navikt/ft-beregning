@@ -46,7 +46,7 @@ class RegelFordelBeregningsgrunnlagAndelsmessigTest {
 		// Arrange
 		FordelAndelModell foreslåttAndel = lagForeslåttAndel(AktivitetStatus.AT, Inntektskategori.ARBEIDSTAKER, arbeid("999", "abc"), 100000, 100000);
 		FordelAndelModell foreslåttSN = lagForeslåttAndel(AktivitetStatus.SN, Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE, null, 200000, null);
-		FordelAndelModell tilkommetAndel = lagTilkommetAndel(AktivitetStatus.AT, Inntektskategori.ARBEIDSTAKER, arbeid("888", "abc"), 400000, 400000);
+		FordelAndelModell tilkommetAndel = lagTilkommetAndel(AktivitetStatus.AT, Inntektskategori.ARBEIDSTAKER, arbeid("888", "abc"), 45_000, 400_000);
 
 		// Act
 		List<FordelAndelModell> fordelteAndeler = kjørRegel(foreslåttAndel, tilkommetAndel, foreslåttSN);
@@ -66,8 +66,8 @@ class RegelFordelBeregningsgrunnlagAndelsmessigTest {
 	public void fordel_fra_dp_til_flere_tilkommet() {
 		// Arrange
 		FordelAndelModell foreslåttDP = lagForeslåttAndel(AktivitetStatus.DP, Inntektskategori.DAGPENGER, null, 200000, null);
-		FordelAndelModell tilkommetAndel1 = lagTilkommetAndel(AktivitetStatus.AT, Inntektskategori.ARBEIDSTAKER, arbeid("888", "abc"), 100000, 100000);
-		FordelAndelModell tilkommetAndel2 = lagTilkommetAndel(AktivitetStatus.AT, Inntektskategori.ARBEIDSTAKER, arbeid("777", "abc"), 300000, 300000);
+		FordelAndelModell tilkommetAndel1 = lagTilkommetAndel(AktivitetStatus.AT, Inntektskategori.ARBEIDSTAKER, arbeid("888", "abc"), 10_000, 100000);
+		FordelAndelModell tilkommetAndel2 = lagTilkommetAndel(AktivitetStatus.AT, Inntektskategori.ARBEIDSTAKER, arbeid("777", "abc"), 35_000, 300000);
 
 		// Act
 		List<FordelAndelModell> fordelteAndeler = kjørRegel(foreslåttDP, tilkommetAndel1, tilkommetAndel2);
@@ -100,6 +100,32 @@ class RegelFordelBeregningsgrunnlagAndelsmessigTest {
 		assertFordeltAndel(fordelteAndeler, arbeid("999", "abc"), Inntektskategori.FRILANSER,277000);
 	}
 
+	// Inntekt på STP, 586 104 Total ref: 1 711 104.
+	// Fraksjoner:
+	// foreslåttAndel: 586104 / 1711104 = 0,3425297352.
+	// TilkommetAndel1: 624996 / 1711104 = 0,3652589206.
+	// TilkommerAndel2: 500004 / 1711104 = 0,2922113443 (rundes ned til 0,2922113442 for å ikke overstige 100%)
+	// Fordelt:
+	// foreslåttAndel: 0.3425297352 * 586104 = 200758,0479196608
+	// tilkommetAndel1: 0.3652589206 * 586104 = 214079,7143993424
+	// tilkommetAndel2: 0,2922113442 * 586104 = 171266,2376809968
+	@Test
+	public void fordel_fra_et_foreslått_til_to_tilkomne_alle_med_refusjon_går_ikke_opp() {
+		// Arrange
+		FordelAndelModell foreslåttAndel = lagForeslåttAndel(AktivitetStatus.AT, Inntektskategori.ARBEIDSTAKER, arbeid("999", "abc"), 586_104, 586_104);
+		FordelAndelModell tilkommetAndel1 = lagTilkommetAndel(AktivitetStatus.AT, Inntektskategori.ARBEIDSTAKER, arbeid("888", "abc"), 52_083, 624_996);
+		FordelAndelModell tilkommetAndel2 = lagTilkommetAndel(AktivitetStatus.AT, Inntektskategori.ARBEIDSTAKER, arbeid("777", "abc"), 52_083, 500_004);
+
+		// Act
+		List<FordelAndelModell> fordelteAndeler = kjørRegel(foreslåttAndel, tilkommetAndel1, tilkommetAndel2);
+
+		// Assert
+		assertThat(fordelteAndeler).hasSize(3);
+		assertFordeltAndel(fordelteAndeler, arbeid("999", "abc"), Inntektskategori.ARBEIDSTAKER,200758.0479196608);
+		assertFordeltAndel(fordelteAndeler, arbeid("888", "abc"), Inntektskategori.ARBEIDSTAKER,214079.7143993424);
+		assertFordeltAndel(fordelteAndeler, arbeid("777", "abc"), Inntektskategori.ARBEIDSTAKER,171266.2376809968);
+	}
+
 	private void assertFordeltAndel(List<FordelAndelModell> fordelteAndeler, Arbeidsforhold arbeidsforhold, Inntektskategori forventetInntektskategori, Integer forventetFordeltBeløp) {
 		FordelAndelModell match = fordelteAndeler.stream().filter(a -> a.getInntektskategori().equals(forventetInntektskategori) && Objects.equals(a.getArbeidsforhold().orElse(null), arbeidsforhold)).findFirst().orElse(null);
 		assertThat(match).isNotNull();
@@ -110,6 +136,12 @@ class RegelFordelBeregningsgrunnlagAndelsmessigTest {
 		FordelAndelModell match = fordelteAndeler.stream().filter(a -> a.getAktivitetStatus().equals(status)).findFirst().orElse(null);
 		assertThat(match).isNotNull();
 		assertThat(match.getInntektskategori()).isEqualByComparingTo(forventetInntektskategori);
+		assertThat(match.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.valueOf(forventetFordeltBeløp));
+	}
+
+	private void assertFordeltAndel(List<FordelAndelModell> fordelteAndeler, Arbeidsforhold arbeidsforhold, Inntektskategori forventetInntektskategori, Double forventetFordeltBeløp) {
+		FordelAndelModell match = fordelteAndeler.stream().filter(a -> a.getInntektskategori().equals(forventetInntektskategori) && Objects.equals(a.getArbeidsforhold().orElse(null), arbeidsforhold)).findFirst().orElse(null);
+		assertThat(match).isNotNull();
 		assertThat(match.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.valueOf(forventetFordeltBeløp));
 	}
 
@@ -127,10 +159,10 @@ class RegelFordelBeregningsgrunnlagAndelsmessigTest {
 		return fordelAndel.build();
 	}
 
-	private FordelAndelModell lagTilkommetAndel(AktivitetStatus status, Inntektskategori ik, Arbeidsforhold ag, Integer inntektFraIM, Integer refuson) {
+	private FordelAndelModell lagTilkommetAndel(AktivitetStatus status, Inntektskategori ik, Arbeidsforhold ag, Integer inntektFraIMPrMnd, Integer refuson) {
 		FordelAndelModell.Builder fordelAndel = FordelAndelModell.builder()
 				.medAktivitetStatus(status)
-				.medInntektFraInnektsmelding(BigDecimal.valueOf(inntektFraIM))
+				.medInntektFraInnektsmelding(BigDecimal.valueOf(inntektFraIMPrMnd))
 				.medInntektskategori(ik);
 		if (refuson != null) {
 			fordelAndel.medGjeldendeRefusjonPrÅr(BigDecimal.valueOf(refuson));
