@@ -22,8 +22,8 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 @RuleDocumentation(FastsettKombinasjoner.ID)
 public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetStatusModell> {
 
-    public static final String ID = "FP_BR_19_2";
-    public static final String BESKRIVELSE = "Fastsett status per andel og periode";
+	public static final String ID = "FP_BR_19_2";
+	public static final String BESKRIVELSE = "Fastsett status per andel og periode";
 
 	protected FastsettStatusOgAndelPrPeriode() {
 		super(ID, BESKRIVELSE);
@@ -57,7 +57,12 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
 			} else if (midlertidigInaktivType != null && midlertidigInaktivType.equals(MidlertidigInaktivType.B)) {
 				regelmodell.leggTilAktivitetStatus(AktivitetStatus.MIDL_INAKTIV);
 				if (harAlleInntektsmelding(aktivePerioderVedStp)) {
-					opprettStatusForAktiviteter(regelmodell, aktivePerioderVedStp);
+					// Her veit vi at alle aktiviteter ved STP er arbeidsforhold med IM
+					// Siden inntekt då fastsettes fra IM oppretter vi andeler for alle arbeidsforhold
+					// Status pr andel er AT, men status på toppnivå er inaktiv
+					aktivePerioderVedStp.stream()
+							.map(ap -> new BeregningsgrunnlagPrStatus(AktivitetStatus.ATFL, ap.getArbeidsforhold()))
+							.forEach(regelmodell::leggTilBeregningsgrunnlagPrStatus);
 				} else {
 					leggTilBrukersAndel(regelmodell);
 				}
