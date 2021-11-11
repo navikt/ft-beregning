@@ -6,6 +6,7 @@ import java.util.Objects;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.PeriodeÅrsak;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.ArbeidsforholdOgInntektsmelding;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.refusjon.Utfall;
 
 public class PeriodeSplittData {
 
@@ -13,7 +14,8 @@ public class PeriodeSplittData {
     private LocalDate tom;
     private PeriodeÅrsak periodeÅrsak;
     private BigDecimal refusjonskravPrMåned;
-    private ArbeidsforholdOgInntektsmelding inntektsmelding;
+	private Utfall utfall;
+	private ArbeidsforholdOgInntektsmelding inntektsmelding;
 
     private PeriodeSplittData() {
         //private constructor
@@ -39,7 +41,11 @@ public class PeriodeSplittData {
         return refusjonskravPrMåned;
     }
 
-    public ArbeidsforholdOgInntektsmelding getInntektsmelding() {
+	public Utfall getUtfall() {
+		return utfall;
+	}
+
+	public ArbeidsforholdOgInntektsmelding getInntektsmelding() {
         return inntektsmelding;
     }
 
@@ -94,6 +100,12 @@ public class PeriodeSplittData {
             kladd.refusjonskravPrMåned = refusjonskravPrMåned;
             return this;
         }
+
+
+	    public Builder medRefusjonsfristVilkårUtfall(Utfall utfall) {
+		    kladd.utfall = utfall;
+		    return this;
+	    }
 
         public Builder medInntektsmelding(ArbeidsforholdOgInntektsmelding inntektsmelding) {
             kladd.inntektsmelding = inntektsmelding;

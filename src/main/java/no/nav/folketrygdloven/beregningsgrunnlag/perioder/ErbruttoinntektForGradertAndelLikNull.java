@@ -8,7 +8,6 @@ import java.util.Optional;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AktivitetStatusV2;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AndelGradering;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.ArbeidsforholdOgInntektsmelding;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.BruttoBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.PeriodeModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.PeriodisertBruttoBeregningsgrunnlag;
@@ -39,19 +38,7 @@ class ErbruttoinntektForGradertAndelLikNull {
                 .findAny();
         }
 
-        Optional<ArbeidsforholdOgInntektsmelding> arbeidsforhold = input.getArbeidsforholdOgInntektsmeldinger().stream()
-            .filter(a -> !a.getGraderinger().isEmpty())
-            .filter(a -> matcherArbeidsforholdMedGradering(a, andelGradering))
-            .findFirst();
-
-        return arbeidsforhold.isEmpty() ? Optional.empty() : finnMatchendeBruttoBeregningsgrunnlagForArbeidsforhold(beregningsgrunnlag, arbeidsforhold.get().getArbeidsforhold());
-    }
-
-    private static boolean matcherArbeidsforholdMedGradering(ArbeidsforholdOgInntektsmelding arbeidsforholdOgInntektsmelding, AndelGradering andelGradering){
-        if(andelGradering.getArbeidsforhold().getAktørId() != null) {
-            return arbeidsforholdOgInntektsmelding.getArbeidsforhold().getAktørId().equals(andelGradering.getArbeidsforhold().getAktørId());
-        }
-        return arbeidsforholdOgInntektsmelding.getArbeidsforhold().getOrgnr().equals(andelGradering.getArbeidsforhold().getOrgnr());
+        return andelGradering.getArbeidsforhold() == null ? Optional.empty() : finnMatchendeBruttoBeregningsgrunnlagForArbeidsforhold(beregningsgrunnlag, andelGradering.getArbeidsforhold());
     }
 
     private static Optional<BruttoBeregningsgrunnlag> finnMatchendeBruttoBeregningsgrunnlagForArbeidsforhold(List<BruttoBeregningsgrunnlag> beregningsgrunnlag, Arbeidsforhold arbeidsforhold){

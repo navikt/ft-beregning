@@ -1,4 +1,4 @@
-package no.nav.folketrygdloven.beregningsgrunnlag.perioder;
+package no.nav.folketrygdloven.beregningsgrunnlag.perioder.refusjon;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -16,12 +16,12 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.Arbei
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.PeriodeSplittData;
 import no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil;
 
-class GrupperPeriodeÅrsakerPerArbeidsgiver {
+public class GrupperPeriodeÅrsakerPerArbeidsgiver {
     private GrupperPeriodeÅrsakerPerArbeidsgiver() {
         // skjul public constructor
     }
 
-    static Map<ArbeidsforholdOgInntektsmelding, List<Refusjonskrav>> grupper(Map<LocalDate, Set<PeriodeSplittData>> periodeMap) {
+    public static Map<ArbeidsforholdOgInntektsmelding, List<Refusjonskrav>> grupper(Map<LocalDate, Set<PeriodeSplittData>> periodeMap) {
         Map<ArbeidsforholdOgInntektsmelding, List<PeriodeSplittData>> map = periodeMap.values().stream()
             .flatMap(Collection::stream)
             .filter(splitt -> splitt.getInntektsmelding() != null)
@@ -39,7 +39,7 @@ class GrupperPeriodeÅrsakerPerArbeidsgiver {
                 LocalDate tom = arbeidsgiverListIterator.hasNext() ?
                     periodeSplittList.get(arbeidsgiverListIterator.nextIndex()).getFom().minusDays(1) :
                     DateUtil.TIDENES_ENDE;
-                Refusjonskrav refusjonskrav = new Refusjonskrav(refusjonskravPrÅr, splittData.getFom(), tom);
+                Refusjonskrav refusjonskrav = new Refusjonskrav(refusjonskravPrÅr, splittData.getFom(), tom, splittData.getUtfall());
                 if (resultatMap.containsKey(im)) {
                     resultatMap.get(im).add(refusjonskrav);
                 } else {

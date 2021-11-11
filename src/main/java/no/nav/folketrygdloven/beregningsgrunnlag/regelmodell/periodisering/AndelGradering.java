@@ -15,7 +15,5 @@ public interface AndelGradering {
 
 	boolean erNyAktivitetPåDato(LocalDate dato);
 
-	List<Refusjonskrav> getGyldigeRefusjonskrav();
-
     Arbeidsforhold getArbeidsforhold();
 }

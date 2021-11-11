@@ -6,11 +6,14 @@ import java.time.LocalDate;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AktivitetStatusV2;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.refusjon.Utfall;
 
 public class SplittetAndel {
     private AktivitetStatusV2 aktivitetStatus;
     private Arbeidsforhold arbeidsforhold;
     private BigDecimal refusjonskravPrÅr;
+	private BigDecimal innvilgetRefusjonskravPrÅr;
+	private Utfall refusjonskravFristUtfall;
     private LocalDate arbeidsperiodeFom;
     private LocalDate arbeidsperiodeTom;
     private BeregningsgrunnlagHjemmel anvendtRefusjonskravfristHjemmel;
@@ -23,7 +26,11 @@ public class SplittetAndel {
         return refusjonskravPrÅr;
     }
 
-    public LocalDate getArbeidsperiodeFom() {
+	public BigDecimal getInnvilgetRefusjonskravPrÅr() {
+		return innvilgetRefusjonskravPrÅr;
+	}
+
+	public LocalDate getArbeidsperiodeFom() {
         return arbeidsperiodeFom;
     }
 
@@ -39,7 +46,11 @@ public class SplittetAndel {
         return anvendtRefusjonskravfristHjemmel;
     }
 
-    public static Builder builder() {
+	public Utfall getRefusjonskravFristUtfall() {
+		return refusjonskravFristUtfall;
+	}
+
+	public static Builder builder() {
         return new Builder();
     }
 
@@ -71,7 +82,18 @@ public class SplittetAndel {
             return this;
         }
 
-        public Builder medArbeidsperiodeFom(LocalDate arbeidsperiodeFom) {
+	    public Builder medInnvilgetRefusjonskravPrÅr(BigDecimal refusjonskravPrÅr) {
+		    kladd.innvilgetRefusjonskravPrÅr = refusjonskravPrÅr;
+		    return this;
+	    }
+
+	    public Builder medRefusjonskravFristUtfall(Utfall utfall) {
+		    kladd.refusjonskravFristUtfall = utfall;
+		    return this;
+	    }
+
+
+	    public Builder medArbeidsperiodeFom(LocalDate arbeidsperiodeFom) {
             kladd.arbeidsperiodeFom = arbeidsperiodeFom;
             return this;
         }
