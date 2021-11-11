@@ -37,8 +37,9 @@ class SkalOmfordeleFraBrukersAndelTilFLEllerSN extends LeafSpecification<FordelM
 	}
 
 	private boolean harBrukersAndelMedBeregningsgrunnlag(FordelModell grunnlag) {
-		var brukersAndel = grunnlag.getInput().getEnesteAndelForStatus(AktivitetStatus.BA);
-		return brukersAndel.map(ba -> ba.getBruttoPrÅr().orElse(BigDecimal.ZERO).compareTo(BigDecimal.ZERO) > 0).orElse(false);
+		var brukersAndeler = grunnlag.getInput().getAlleAndelerForStatus(AktivitetStatus.BA);
+		var brukerAndelBrutto =  brukersAndeler.stream().map(ba -> ba.getBruttoPrÅr().orElse(BigDecimal.ZERO)).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+		return brukerAndelBrutto.compareTo(BigDecimal.ZERO) > 0;
 	}
 
 }
