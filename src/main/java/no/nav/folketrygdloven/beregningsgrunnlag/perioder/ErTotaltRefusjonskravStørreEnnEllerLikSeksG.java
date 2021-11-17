@@ -5,8 +5,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AndelGradering;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.ArbeidsforholdOgInntektsmelding;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.BruttoBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.PeriodeModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.PeriodisertBruttoBeregningsgrunnlag;
