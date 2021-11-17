@@ -20,7 +20,7 @@ class ErbruttoinntektForGradertAndelLikNull {
     public static boolean vurder(PeriodeModell input, AndelGradering andelGradering, LocalDate dato){
         for(PeriodisertBruttoBeregningsgrunnlag periodisertGrunnlag : input.getPeriodisertBruttoBeregningsgrunnlagList()){
             if(periodisertGrunnlag.getPeriode().inneholder(dato)){
-                Optional<BruttoBeregningsgrunnlag> grunnlag = finnBruttoBeregningsgrunnlagForGradering(periodisertGrunnlag.getBruttoBeregningsgrunnlag(), andelGradering, input);
+                Optional<BruttoBeregningsgrunnlag> grunnlag = finnBruttoBeregningsgrunnlagForGradering(periodisertGrunnlag.getBruttoBeregningsgrunnlag(), andelGradering);
                 if(grunnlag.isPresent()){
                     return grunnlag.get().getBruttoPrÅr().equals(BigDecimal.ZERO);
                 } else{
@@ -31,7 +31,8 @@ class ErbruttoinntektForGradertAndelLikNull {
         return false;
     }
 
-    private static Optional<BruttoBeregningsgrunnlag> finnBruttoBeregningsgrunnlagForGradering(List<BruttoBeregningsgrunnlag> beregningsgrunnlag, AndelGradering andelGradering, PeriodeModell input){
+    private static Optional<BruttoBeregningsgrunnlag> finnBruttoBeregningsgrunnlagForGradering(List<BruttoBeregningsgrunnlag> beregningsgrunnlag,
+                                                                                               AndelGradering andelGradering){
         if(andelErSnEllerFl(andelGradering)){
             return beregningsgrunnlag.stream()
                 .filter(b -> b.getAktivitetStatus().equals(andelGradering.getAktivitetStatus()))
