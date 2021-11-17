@@ -36,7 +36,7 @@ class RefusjonForGraderingAndel {
 		if (andelGradering.getArbeidsforhold() != null && arbeidsforhold.isPresent()) {
 			return andelGradering.getArbeidsforhold().getArbeidsgiverId().equals(arbeidsforhold.get().getArbeidsgiverId()) &&
 					matcherArbeidsforholdId(andelGradering.getArbeidsforhold().getArbeidsforholdId(), arbeidsforhold.get().getArbeidsforholdId());
-		};
+		}
 		return andelGradering.getArbeidsforhold() == null && arbeidsforhold.isEmpty();
 	}
 
