@@ -15,44 +15,41 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.PeriodeSpl
 import no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil;
 
 class VurderPeriodeForGradering {
-    private VurderPeriodeForGradering() {
-        // skjul public constructor
-    }
+	private VurderPeriodeForGradering() {
+		// skjul public constructor
+	}
 
-    static List<PeriodeSplittData> vurder(PeriodeModell input, AndelGradering andelGradering, Periode gradering) {
-        LocalDate graderingFom = gradering.getFom();
-        LocalDate graderingTom = gradering.getTom();
+	static List<PeriodeSplittData> vurder(PeriodeModell input, AndelGradering andelGradering, Periode gradering) {
+		LocalDate graderingFom = gradering.getFom();
+		LocalDate graderingTom = gradering.getTom();
 
-	    ArrayList<PeriodeSplittData> returnlist = new ArrayList<>();
+		ArrayList<PeriodeSplittData> returnlist = new ArrayList<>();
 
-	    if (skalSplitteVedDato(input, andelGradering, graderingFom)) {
-		    returnlist.add(lagSplittFraDato(graderingFom, PeriodeÅrsak.GRADERING));
-        }
+		if (skalSplitteVedDato(input, andelGradering, graderingFom)) {
+			returnlist.add(lagSplittFraDato(graderingFom, PeriodeÅrsak.GRADERING));
+		}
 
-	    if (skalSplitteVedDato(input, andelGradering, graderingTom)) {
-		    returnlist.add(lagSplittFraDato(graderingTom.plusDays(1), PeriodeÅrsak.GRADERING_OPPHØRER));
-	    }
+		if (skalSplitteVedDato(input, andelGradering, graderingTom)) {
+			returnlist.add(lagSplittFraDato(graderingTom.plusDays(1), PeriodeÅrsak.GRADERING_OPPHØRER));
+		}
 
-	    if (returnlist.isEmpty()) {
-		    returnlist.addAll(splittPeriodeGrunnetHøyerePrioriterteAndeler(input, andelGradering, gradering));
-	    }
+		if (returnlist.isEmpty()) {
+			returnlist.addAll(splittPeriodeGrunnetHøyerePrioriterteAndeler(input, andelGradering, gradering));
+		}
 
-	    return returnlist;
-    }
+		return returnlist;
+	}
 
 	private static boolean skalSplitteVedDato(PeriodeModell input, AndelGradering andelGradering, LocalDate dato) {
-    	if (dato.equals(TIDENES_ENDE)) {
-    		return false;
-	    }
+		if (dato.equals(TIDENES_ENDE)) {
+			return false;
+		}
 		boolean totaltRefusjonskravStørreEnn6G = ErTotaltRefusjonskravStørreEnnEllerLikSeksG.vurder(input, dato);
-		if ((totaltRefusjonskravStørreEnn6G || andelGradering.erNyAktivitetPåDato(dato))
-		    && !RefusjonForGraderingAndel.harRefusjonPåDato(andelGradering, input.getPeriodisertBruttoBeregningsgrunnlagList(), dato)) {
-		    return true;
+		boolean harRefusjonPåDato = RefusjonForGraderingAndel.harRefusjonPåDato(andelGradering, input.getPeriodisertBruttoBeregningsgrunnlagList(), dato);
+		if ((totaltRefusjonskravStørreEnn6G || andelGradering.erNyAktivitetPåDato(dato)) && !harRefusjonPåDato) {
+			return true;
 		}
-		if (!RefusjonForGraderingAndel.harRefusjonPåDato(andelGradering, input.getPeriodisertBruttoBeregningsgrunnlagList(), dato) && ErbruttoinntektForGradertAndelLikNull.vurder(input, andelGradering, dato)){
-		    return true;
-		}
-		return false;
+		return !harRefusjonPåDato && ErbruttoinntektForGradertAndelLikNull.vurder(input, andelGradering, dato);
 	}
 
 	private static PeriodeSplittData lagSplittFraDato(LocalDate fom, PeriodeÅrsak periodeÅrsak) {
@@ -79,7 +76,6 @@ class VurderPeriodeForGradering {
 						}
 				).orElse(List.of());
 	}
-
 
 
 }
