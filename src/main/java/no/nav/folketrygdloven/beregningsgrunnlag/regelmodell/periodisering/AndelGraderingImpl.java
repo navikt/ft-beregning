@@ -4,12 +4,10 @@ import static no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil.TIDENES_EN
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Gradering;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Refusjonskrav;
 import no.nav.fpsak.tidsserie.LocalDateInterval;
 import no.nav.fpsak.tidsserie.LocalDateSegment;
 import no.nav.fpsak.tidsserie.LocalDateTimeline;
@@ -17,7 +15,7 @@ import no.nav.fpsak.tidsserie.LocalDateTimeline;
 public class AndelGraderingImpl implements AndelGradering {
     private AktivitetStatusV2 aktivitetStatus;
     private List<Gradering> graderinger = new ArrayList<>();
-    private Arbeidsforhold arbeidsforhold;
+	private Arbeidsforhold arbeidsforhold;
     private LocalDateTimeline<Boolean> nyAktivitetTidslinje;
 
     private AndelGraderingImpl() {
@@ -38,11 +36,6 @@ public class AndelGraderingImpl implements AndelGradering {
 		LocalDateSegment<Boolean> segment = nyAktivitetTidslinje.getSegment(new LocalDateInterval(dato, dato));
 		return segment != null && segment.getValue();
 	}
-
-	@Override
-    public List<Refusjonskrav> getGyldigeRefusjonskrav() {
-        return Collections.emptyList();
-    }
 
     @Override
     public Arbeidsforhold getArbeidsforhold() {
@@ -85,7 +78,7 @@ public class AndelGraderingImpl implements AndelGradering {
             return this;
         }
 
-        public Builder medArbeidsforhold(Arbeidsforhold arbeidsforhold) {
+	    public Builder medArbeidsforhold(Arbeidsforhold arbeidsforhold) {
             kladd.arbeidsforhold = arbeidsforhold;
             return this;
         }

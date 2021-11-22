@@ -79,7 +79,7 @@ class BeregnPrArbeidsforholdFraAOrdningen extends LeafSpecification<Beregningsgr
 			if (inntekter.size() > 1) {
 				throw new IllegalStateException("Forventet kun en månedsinntekt");
 			}
-			if (inntekter.size() == 0) {
+			if (inntekter.isEmpty()) {
 				return BigDecimal.ZERO;
 			}
 			return beregnÅrsinntektFraGjenværendeDager(bp, inntekter.get(0));

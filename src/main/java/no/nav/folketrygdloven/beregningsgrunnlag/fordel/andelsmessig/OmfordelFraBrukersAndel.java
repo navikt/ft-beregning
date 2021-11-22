@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelAndelModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelPeriodeModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.fpsak.nare.evaluation.Evaluation;
@@ -20,7 +21,7 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
  * <p>
  * Omfordeling gjøres slik at hele grunnlaget fra brukers andel settes på andelen med lavest avkortingprioritet (den som avkortes sist).
  */
-class OmfordelFraBrukersAndel extends LeafSpecification<FordelPeriodeModell> {
+class OmfordelFraBrukersAndel extends LeafSpecification<FordelModell> {
 
 	public static final String ID = "OMFORDEL_FRA_BA";
 	public static final String BESKRIVELSE = "Flytt beregningsgrunnlag fra brukers andel til aktivitetstatus med høyere prioritet";
@@ -31,11 +32,11 @@ class OmfordelFraBrukersAndel extends LeafSpecification<FordelPeriodeModell> {
 	}
 
 	@Override
-	public Evaluation evaluate(FordelPeriodeModell beregningsgrunnlagPeriode) {
+	public Evaluation evaluate(FordelModell modell) {
 		Map<String, Object> resultater = new HashMap<>();
-		var brukersAndel = beregningsgrunnlagPeriode.getEnesteAndelForStatus(AktivitetStatus.BA)
+		var brukersAndel = modell.getInput().getEnesteAndelForStatus(AktivitetStatus.BA)
 				.orElseThrow(() -> new IllegalStateException("Forventer å finne en brukers andel"));
-		var statusSomAvkortesSistUtenArbeid = finnStatusÅFlytteTil(beregningsgrunnlagPeriode);
+		var statusSomAvkortesSistUtenArbeid = finnStatusÅFlytteTil(modell.getInput());
 		resultater.put("aktivitetstatusSomFlyttesTilFraInaktiv", statusSomAvkortesSistUtenArbeid.getAktivitetStatus());
 		resultater.put("aktivitetstatusSomFlyttesFraInaktiv", brukersAndel.getBruttoPrÅr());
 		if (AktivitetStatus.FL.equals(statusSomAvkortesSistUtenArbeid.getAktivitetStatus())) {

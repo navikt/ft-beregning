@@ -6,14 +6,17 @@ import java.util.Optional;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.refusjon.Utfall;
 
 public class EksisterendeAndel {
     private BigDecimal naturalytelseBortfaltPrÅr;
     private BigDecimal naturalytelseTilkommetPrÅr;
     private Arbeidsforhold arbeidsforhold;
     private BigDecimal refusjonskravPrÅr;
-    private Long andelNr;
+	private BigDecimal innvilgetRefusjonPrÅr;
+	private Long andelNr;
     private BeregningsgrunnlagHjemmel anvendtRefusjonskravfristHjemmel;
+    private Utfall refusjonskravFristVurderingUtfall;
 
     public EksisterendeAndel() {
     }
@@ -43,8 +46,15 @@ public class EksisterendeAndel {
         return Optional.ofNullable(refusjonskravPrÅr);
     }
 
+	public Optional<BigDecimal> getInnvilgetRefusjonPrÅr() {
+		return Optional.ofNullable(innvilgetRefusjonPrÅr);
+	}
 
-    public Long getAndelNr() {
+	public Optional<Utfall> getRefusjonskravFristVurderingUtfall() {
+		return Optional.ofNullable(refusjonskravFristVurderingUtfall);
+	}
+
+	public Long getAndelNr() {
         return andelNr;
     }
 
@@ -92,12 +102,15 @@ public class EksisterendeAndel {
             return this;
         }
 
-
-
         public Builder medRefusjonskravPrÅr(BigDecimal refusjonskravPrÅr) {
             mal.refusjonskravPrÅr = refusjonskravPrÅr;
             return this;
         }
+
+	    public Builder medInnvilgetRefusjonPrÅr(BigDecimal innvilgetRefusjon) {
+		    mal.innvilgetRefusjonPrÅr = innvilgetRefusjon;
+		    return this;
+	    }
 
         public Builder medAndelNr(long andelNr) {
             mal.andelNr = andelNr;
@@ -110,7 +123,14 @@ public class EksisterendeAndel {
         }
 
 
-        public EksisterendeAndel build() {
+	    public Builder medRefusjonskravFristVurdering(Utfall utfall) {
+		    mal.refusjonskravFristVurderingUtfall = utfall;
+		    return this;
+	    }
+
+
+
+	    public EksisterendeAndel build() {
             verifyStateForBuild();
             return mal;
         }

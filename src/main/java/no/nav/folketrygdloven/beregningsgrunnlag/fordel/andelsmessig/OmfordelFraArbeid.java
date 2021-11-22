@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelAndelModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelPeriodeModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
@@ -21,20 +22,20 @@ class OmfordelFraArbeid extends OmfordelFraATFL {
     }
 
     @Override
-    public Evaluation evaluate(FordelPeriodeModell beregningsgrunnlagPeriode) {
-        Map<String, Object> resultater = omfordelFraAktivitetOmMulig(beregningsgrunnlagPeriode);
-        Map<String, Object> resultater2 = omfordelNaturalytelseFraAktivitetOmMulig(beregningsgrunnlagPeriode);
+    public Evaluation evaluate(FordelModell modell) {
+        Map<String, Object> resultater = omfordelFraAktivitetOmMulig(modell);
+        Map<String, Object> resultater2 = omfordelNaturalytelseFraAktivitetOmMulig(modell);
         resultater.putAll(resultater2);
         return beregnet(resultater);
     }
 
-    protected Map<String, Object> omfordelNaturalytelseFraAktivitetOmMulig(FordelPeriodeModell beregningsgrunnlagPeriode) {
-        boolean harAktivitetMedOmfordelbartGrunnlag = finnAktivitetMedOmfordelbarNaturalYtelse(beregningsgrunnlagPeriode).isPresent();
+    protected Map<String, Object> omfordelNaturalytelseFraAktivitetOmMulig(FordelModell modell) {
+        boolean harAktivitetMedOmfordelbartGrunnlag = finnAktivitetMedOmfordelbarNaturalYtelse(modell.getInput()).isPresent();
         if (!harAktivitetMedOmfordelbartGrunnlag) {
             return new HashMap<>();
         }
-        var aktivitet = finnArbeidsforholdMedRiktigInntektskategori(beregningsgrunnlagPeriode);
-        return new OmfordelNaturalytelseForArbeidsforhold(beregningsgrunnlagPeriode).omfordelForArbeidsforhold(aktivitet, this::finnAktivitetMedOmfordelbarNaturalYtelse);
+        var aktivitet = finnArbeidsforholdMedRiktigInntektskategori(modell.getInput());
+        return new OmfordelNaturalytelseForArbeidsforhold(modell).omfordelForArbeidsforhold(aktivitet, this::finnAktivitetMedOmfordelbarNaturalYtelse);
     }
 
     protected Optional<FordelAndelModell> finnAktivitetMedOmfordelbarNaturalYtelse(FordelPeriodeModell beregningsgrunnlagPeriode) {

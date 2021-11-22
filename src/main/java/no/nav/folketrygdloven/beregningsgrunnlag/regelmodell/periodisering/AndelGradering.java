@@ -5,7 +5,6 @@ import java.util.List;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Gradering;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Refusjonskrav;
 
 public interface AndelGradering {
 
@@ -14,8 +13,6 @@ public interface AndelGradering {
     List<Gradering> getGraderinger();
 
 	boolean erNyAktivitetPåDato(LocalDate dato);
-
-	List<Refusjonskrav> getGyldigeRefusjonskrav();
 
     Arbeidsforhold getArbeidsforhold();
 }

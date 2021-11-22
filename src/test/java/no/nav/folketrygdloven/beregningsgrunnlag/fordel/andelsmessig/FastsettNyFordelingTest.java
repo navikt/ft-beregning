@@ -9,6 +9,7 @@ import java.util.Arrays;
 
 
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelAndelModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelPeriodeModell;
 
 import org.junit.jupiter.api.Test;
@@ -134,8 +135,8 @@ public class FastsettNyFordelingTest {
 
 
     private void kjørRegel(FordelPeriodeModell periode) {
-        FastsettNyFordeling regel = new FastsettNyFordeling(periode);
-        regel.getSpecification().evaluate(periode);
+        FastsettNyFordeling regel = new FastsettNyFordeling(new FordelModell(periode));
+        regel.getSpecification().evaluate(new FordelModell(periode));
     }
 
     private FordelAndelModell lagArbeidsforhold(BigDecimal refusjonskravPrÅr, BigDecimal beregnetPrÅr, Long andelsnr, String orgnr) {

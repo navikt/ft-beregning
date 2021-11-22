@@ -18,6 +18,7 @@ public class FordelAndelModell {
 	private BigDecimal naturalytelseTilkommetPrÅr;
 	private BigDecimal gjeldendeRefusjonPrÅr;
 	private BigDecimal fordeltRefusjonPrÅr;
+	private BigDecimal beløpFraInntektsMeldingPrMnd;
 	private Arbeidsforhold arbeidsforhold;
 	private Long andelNr;
 	private boolean erNytt;
@@ -69,6 +70,10 @@ public class FordelAndelModell {
 		return erNytt;
 	}
 
+	public Optional<BigDecimal> getBeløpFraInntektsMeldingPrMnd() {
+		return Optional.ofNullable(beløpFraInntektsMeldingPrMnd);
+	}
+
 	public Optional<BigDecimal> getFordeltRefusjonPrÅr() {
 		return Optional.ofNullable(fordeltRefusjonPrÅr);
 	}
@@ -104,7 +109,11 @@ public class FordelAndelModell {
 	}
 
 	public String getBeskrivelse() {
-		return (erFrilanser() ? "FL:" : "AT:") + getArbeidsgiverId();
+		if (arbeidsforhold == null) {
+			return inntektskategori == null ? aktivitetStatus.toString() : aktivitetStatus.toString() + inntektskategori.toString();
+		} else {
+			return (erFrilanser() ? "FL:" : "AT:") + getArbeidsgiverId();
+		}
 	}
 
 	private boolean erFrilanser() {
@@ -209,6 +218,11 @@ public class FordelAndelModell {
 
 		public Builder erSøktYtelseFor(boolean erSøktYtelseFor) {
 			mal.erSøktYtelseFor = erSøktYtelseFor;
+			return this;
+		}
+
+		public Builder medInntektFraInnektsmelding(BigDecimal beløpFraIMPrMnd) {
+			mal.beløpFraInntektsMeldingPrMnd = beløpFraIMPrMnd;
 			return this;
 		}
 
