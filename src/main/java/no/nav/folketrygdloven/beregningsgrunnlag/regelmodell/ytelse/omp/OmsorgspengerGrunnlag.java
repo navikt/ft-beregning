@@ -10,15 +10,17 @@ public class OmsorgspengerGrunnlag extends YtelsesSpesifiktGrunnlag {
 
     private final BigDecimal gradertRefusjonVedSkjæringstidspunkt;
     private final boolean erSøktForFLEllerSN;
-    private final boolean finnesArbeidsandelIkkeSøktOm;
+	private final boolean finnesArbeidsandelIkkeSøktOm;
+	private final boolean harRefusjonskrav;
 
     public OmsorgspengerGrunnlag(BigDecimal gradertRefusjonVedSkjæringstidspunkt,
                                  boolean erSøktForFLEllerSN,
-                                 boolean finnesArbeidsandelIkkeSøktOm) {
+                                 boolean finnesArbeidsandelIkkeSøktOm, boolean harRefusjonskrav) {
         super("OMP");
         this.erSøktForFLEllerSN = erSøktForFLEllerSN;
         this.gradertRefusjonVedSkjæringstidspunkt = gradertRefusjonVedSkjæringstidspunkt;
 	    this.finnesArbeidsandelIkkeSøktOm = finnesArbeidsandelIkkeSøktOm;
+	    this.harRefusjonskrav = harRefusjonskrav;
     }
 
 
@@ -29,7 +31,7 @@ public class OmsorgspengerGrunnlag extends YtelsesSpesifiktGrunnlag {
     	if (finnesArbeidsandelIkkeSøktOm) {
     		return true;
 	    }
-    	if (gradertRefusjonVedSkjæringstidspunkt.compareTo(BigDecimal.ZERO) == 0) {
+    	if (!harRefusjonskrav) {
     		return true;
 	    }
         BeregningsgrunnlagPeriode førstePeriode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);

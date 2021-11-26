@@ -22,40 +22,40 @@ class OmsorgspengerGrunnlagTest {
 
 
 	@Test
-	void skal_gi_direkte_utbetaling_om_refusjon_lik_null() {
-		OmsorgspengerGrunnlag omsorgspengerGrunnlag = new OmsorgspengerGrunnlag(BigDecimal.ZERO, false, false);
+	void skal_gi_direkte_utbetaling_om_det_ikkje_er_søkt_refusjon_fra_start() {
+		OmsorgspengerGrunnlag omsorgspengerGrunnlag = new OmsorgspengerGrunnlag(BigDecimal.ZERO, false, false, false);
 		assertThat(omsorgspengerGrunnlag.erDirekteUtbetaling()).isTrue();
 	}
 
 	@Test
 	void skal_gi_direkte_utbetaling_om_søkt_frilans_eller_sn() {
-		OmsorgspengerGrunnlag omsorgspengerGrunnlag = new OmsorgspengerGrunnlag(BigDecimal.ONE, true, false);
+		OmsorgspengerGrunnlag omsorgspengerGrunnlag = new OmsorgspengerGrunnlag(BigDecimal.ONE, true, false, true);
 		assertThat(omsorgspengerGrunnlag.erDirekteUtbetaling()).isTrue();
 	}
 
 	@Test
 	void skal_gi_direkte_utbetaling_om_arbeidstakerandeler_ikke_søkt_om() {
-		OmsorgspengerGrunnlag omsorgspengerGrunnlag = new OmsorgspengerGrunnlag(BigDecimal.ONE, false, true);
+		OmsorgspengerGrunnlag omsorgspengerGrunnlag = new OmsorgspengerGrunnlag(BigDecimal.ONE, false, true, true);
 		assertThat(omsorgspengerGrunnlag.erDirekteUtbetaling()).isTrue();
 	}
 
 	@Test
 	void skal_gi_direkte_utbetaling_refusjon_er_lavere_enn_brutto() {
-		OmsorgspengerGrunnlag omsorgspengerGrunnlag = new OmsorgspengerGrunnlag(BigDecimal.ONE, false, false);
+		OmsorgspengerGrunnlag omsorgspengerGrunnlag = new OmsorgspengerGrunnlag(BigDecimal.ONE, false, false, true);
 		lagBeregningsgrunnlag(omsorgspengerGrunnlag, BigDecimal.TEN);
 		assertThat(omsorgspengerGrunnlag.erDirekteUtbetaling()).isTrue();
 	}
 
 	@Test
 	void skal_ikke_gi_direkte_utbetaling_refusjon_høyere_enn_brutto() {
-		OmsorgspengerGrunnlag omsorgspengerGrunnlag = new OmsorgspengerGrunnlag(BigDecimal.valueOf(100), false, false);
+		OmsorgspengerGrunnlag omsorgspengerGrunnlag = new OmsorgspengerGrunnlag(BigDecimal.valueOf(100), false, false, true);
 		lagBeregningsgrunnlag(omsorgspengerGrunnlag, BigDecimal.TEN);
 		assertThat(omsorgspengerGrunnlag.erDirekteUtbetaling()).isFalse();
 	}
 
 	@Test
 	void skal_ikke_gi_direkte_utbetaling_refusjon_lik_enn_brutto() {
-		OmsorgspengerGrunnlag omsorgspengerGrunnlag = new OmsorgspengerGrunnlag(BigDecimal.valueOf(10), false, false);
+		OmsorgspengerGrunnlag omsorgspengerGrunnlag = new OmsorgspengerGrunnlag(BigDecimal.valueOf(10), false, false, true);
 		lagBeregningsgrunnlag(omsorgspengerGrunnlag, BigDecimal.TEN);
 		assertThat(omsorgspengerGrunnlag.erDirekteUtbetaling()).isFalse();
 	}
