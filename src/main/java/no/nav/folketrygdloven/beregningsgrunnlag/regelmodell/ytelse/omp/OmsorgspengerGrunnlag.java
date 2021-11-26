@@ -29,6 +29,9 @@ public class OmsorgspengerGrunnlag extends YtelsesSpesifiktGrunnlag {
     	if (finnesArbeidsandelIkkeSøktOm) {
     		return true;
 	    }
+    	if (gradertRefusjonVedSkjæringstidspunkt.compareTo(BigDecimal.ZERO) == 0) {
+    		return true;
+	    }
         BeregningsgrunnlagPeriode førstePeriode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         BigDecimal minsteRefusjon = førstePeriode.getGrenseverdi().min(gradertRefusjonVedSkjæringstidspunkt);
         BigDecimal totaltBeregningsgrunnlag = førstePeriode.getBeregningsgrunnlagPrStatus().stream()
