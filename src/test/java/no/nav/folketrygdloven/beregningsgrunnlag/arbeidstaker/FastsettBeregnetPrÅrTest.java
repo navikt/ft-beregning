@@ -340,7 +340,7 @@ class FastsettBeregnetPrÅrTest {
     }
 
 
-    private Beregningsgrunnlag lagBgOMP(BeregningsgrunnlagPeriode periode, BigDecimal zero, AktivitetStatus aktivitetStatus) {
+    private Beregningsgrunnlag lagBgOMP(BeregningsgrunnlagPeriode periode, BigDecimal refusjonskrav, AktivitetStatus aktivitetStatus) {
         return Beregningsgrunnlag.builder()
             .medAktivitetStatuser(List.of(new AktivitetStatusMedHjemmel(aktivitetStatus, null)))
             .medGrunnbeløp(BigDecimal.valueOf(99000))
@@ -348,7 +348,7 @@ class FastsettBeregnetPrÅrTest {
             .medSkjæringstidspunkt(LocalDate.now())
             .medInntektsgrunnlag(new Inntektsgrunnlag())
             .medBeregningsgrunnlagPeriode(periode)
-            .medYtelsesSpesifiktGrunnlag(new OmsorgspengerGrunnlag(zero, false, false))
+            .medYtelsesSpesifiktGrunnlag(new OmsorgspengerGrunnlag(refusjonskrav, false, false, refusjonskrav.compareTo(BigDecimal.ZERO) > 0))
             .build();
     }
 
