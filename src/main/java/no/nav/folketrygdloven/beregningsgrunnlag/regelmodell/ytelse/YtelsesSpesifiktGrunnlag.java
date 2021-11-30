@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.omp.OmsorgspengerGrunnlag;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.psb.PleiepengerSyktBarnGrunnlag;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.psb.PleiepengerGrunnlag;
 
 public abstract class YtelsesSpesifiktGrunnlag {
 
@@ -26,7 +26,7 @@ public abstract class YtelsesSpesifiktGrunnlag {
 
 	public boolean erKap9Ytelse() {
 		return this instanceof OmsorgspengerGrunnlag ||
-				this instanceof PleiepengerSyktBarnGrunnlag;
+				this instanceof PleiepengerGrunnlag;
 	}
 
 }

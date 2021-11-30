@@ -159,7 +159,7 @@ public class BeregnPrArbeidsforholdFraAOrdningenTest {
             inntektsgrunnlag,
             List.of(AktivitetStatus.ATFL),
             List.of(arbeidsforholdMedInntektsmelding, arbeidsforholdUtenInntektsmelding),
-            Optional.of(new OmsorgspengerGrunnlag(BigDecimal.valueOf(10000), false, false)));
+            Optional.of(new OmsorgspengerGrunnlag(BigDecimal.valueOf(10000), false, false, true)));
 
         BeregningsgrunnlagPeriode periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
         BeregningsgrunnlagPrArbeidsforhold arbeidstakerStatus = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(1);
@@ -193,7 +193,7 @@ public class BeregnPrArbeidsforholdFraAOrdningenTest {
             inntektsgrunnlag,
             List.of(AktivitetStatus.ATFL),
             List.of(arbeidsforholdMedInntektsmelding, arbeidsforholdUtenInntektsmelding, arbeidsforholdUtenInntektsmelding2),
-            Optional.of(new OmsorgspengerGrunnlag(BigDecimal.valueOf(10000), false, false)));
+            Optional.of(new OmsorgspengerGrunnlag(BigDecimal.valueOf(10000), false, false, true)));
 
         BeregningsgrunnlagPeriode periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
         BeregningsgrunnlagPrArbeidsforhold arbeidstakerStatus = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(1);
@@ -229,7 +229,7 @@ public class BeregnPrArbeidsforholdFraAOrdningenTest {
             inntektsgrunnlag,
             List.of(AktivitetStatus.ATFL),
             List.of(arbeidsforholdMedInntektsmelding, arbeidsforholdMedInntektsmelding2, arbeidsforholdUtenInntektsmelding, arbeidsforholdUtenInntektsmelding2),
-            Optional.of(new OmsorgspengerGrunnlag(BigDecimal.valueOf(10000), false, false)));
+            Optional.of(new OmsorgspengerGrunnlag(BigDecimal.valueOf(10000), false, false, true)));
 
         BeregningsgrunnlagPeriode periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
         BeregningsgrunnlagPrArbeidsforhold arbeidstakerStatus = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(1);

@@ -148,7 +148,7 @@ public class SkalGjøreAvviksvurderingTest {
             .medGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2017))
             .medAktivitetStatuser(List.of(new AktivitetStatusMedHjemmel(AktivitetStatus.ATFL, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_ARBEIDSTAKER)))
             .medBeregningsgrunnlagPeriode(bgPeriode)
-            .medYtelsesSpesifiktGrunnlag(new OmsorgspengerGrunnlag(maksRefusjonForPeriode, false, false))
+            .medYtelsesSpesifiktGrunnlag(new OmsorgspengerGrunnlag(maksRefusjonForPeriode, false, false, true))
             .medGrunnbeløpSatser(List.of(
                 new Grunnbeløp(LocalDate.of(2019, 5, 1), LocalDate.MAX, gVerdi, GSNITT_2019)))
             .build();
@@ -180,7 +180,7 @@ public class SkalGjøreAvviksvurderingTest {
             .medGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2017))
             .medAktivitetStatuser(List.of(new AktivitetStatusMedHjemmel(AktivitetStatus.ATFL, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_ARBEIDSTAKER)))
             .medBeregningsgrunnlagPeriode(periode)
-            .medYtelsesSpesifiktGrunnlag(avviksVurdere ? new OmsorgspengerGrunnlag(maksRefusjonForPeriode, erSøktForFLEllerSN, false) : null)
+            .medYtelsesSpesifiktGrunnlag(avviksVurdere ? new OmsorgspengerGrunnlag(maksRefusjonForPeriode, erSøktForFLEllerSN, false, maksRefusjonForPeriode.compareTo(BigDecimal.ZERO) > 0) : null)
             .medGrunnbeløpSatser(List.of(
                 new Grunnbeløp(LocalDate.of(2019, 5, 1), LocalDate.MAX, gVerdi, GSNITT_2019)))
             .build();

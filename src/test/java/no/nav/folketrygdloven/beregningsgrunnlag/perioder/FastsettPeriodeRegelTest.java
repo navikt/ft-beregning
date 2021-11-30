@@ -16,11 +16,9 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Gradering;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.PeriodeÅrsak;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Refusjonskrav;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AktivitetStatusV2;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AndelGradering;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AndelGraderingImpl;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.ArbeidsforholdOgInntektsmelding;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.BruttoBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.EksisterendeAndel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.PeriodeModell;
@@ -29,7 +27,10 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SplittetPe
 
 class FastsettPeriodeRegelTest {
 
-	private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.now();
+	private static final LocalDate MANDAG = LocalDate.of(2021, 11, 8);
+	private static final LocalDate SKJÆRINGSTIDSPUNKT = MANDAG;
+	private static final LocalDate FREDAG = LocalDate.of(2021, 11, 12);
+	private static final LocalDate PÅFØLGENDE_MANDAG = LocalDate.of(2021, 11, 15);
 	private static final String ORGNR = "1234657";
 	private static final String ORGNR2 = "89729572935";
 
@@ -49,15 +50,15 @@ class FastsettPeriodeRegelTest {
 	}
 
 	@Test
-	void skalHaNyAndelIMellomToPerioderMedUtbetalingUtenRefusjon() {
+	void skalHaNyAndelIHelgMellomToPerioderMedUtbetaling() {
 
 		Arbeidsforhold arbeidsforhold2 = Arbeidsforhold.builder().medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT).medOrgnr(ORGNR2)
-				.medAnsettelsesPeriode(Periode.of(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(12))).build();
+				.medAnsettelsesPeriode(Periode.of(MANDAG, MANDAG.plusMonths(12))).build();
 		List<AndelGradering> utbetalingsgrader = List.of(AndelGraderingImpl.builder().medAktivitetStatus(AktivitetStatusV2.AT)
 				.medArbeidsforhold(arbeidsforhold2)
-				.medNyAktivitetFraDato(SKJÆRINGSTIDSPUNKT)
-				.medGraderinger(List.of(new Gradering(Periode.of(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(1)), BigDecimal.valueOf(50)),
-						new Gradering(Periode.of(SKJÆRINGSTIDSPUNKT.plusMonths(2), SKJÆRINGSTIDSPUNKT.plusMonths(3)), BigDecimal.valueOf(50)))).build());
+				.medNyAktivitetFraDato(MANDAG)
+				.medGraderinger(List.of(new Gradering(Periode.of(MANDAG, FREDAG), BigDecimal.valueOf(50)),
+						new Gradering(Periode.of(PÅFØLGENDE_MANDAG, PÅFØLGENDE_MANDAG.plusDays(1)), BigDecimal.valueOf(50)))).build());
 
 		PeriodeModell inputMedGraderingFraStartForNyttArbeid = lagPeriodeInputMedEnAndelFraStart()
 				.medEndringISøktYtelse(utbetalingsgrader)
@@ -71,35 +72,6 @@ class FastsettPeriodeRegelTest {
 		assertThat(perioder.get(3).getNyeAndeler().size()).isEqualTo(0);
 	}
 
-	@Test
-	void skalIkkeHaNyAndelIMellomToPerioderMedUtbetalingMedRefusjon() {
-
-		Arbeidsforhold arbeidsforhold2 = Arbeidsforhold.builder().medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT).medOrgnr(ORGNR2)
-				.medAnsettelsesPeriode(Periode.of(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(12))).build();
-		List<AndelGradering> utbetalingsgrader = List.of(AndelGraderingImpl.builder().medAktivitetStatus(AktivitetStatusV2.AT)
-				.medArbeidsforhold(arbeidsforhold2)
-				.medNyAktivitetFraDato(SKJÆRINGSTIDSPUNKT)
-				.medGraderinger(List.of(new Gradering(Periode.of(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(1)), BigDecimal.valueOf(50)),
-						new Gradering(Periode.of(SKJÆRINGSTIDSPUNKT.plusMonths(2), SKJÆRINGSTIDSPUNKT.plusMonths(3)), BigDecimal.valueOf(50)))).build());
-
-		List<ArbeidsforholdOgInntektsmelding> inntektsmeldingerMedRefusjon = List.of(ArbeidsforholdOgInntektsmelding.builder()
-				.medArbeidsforhold(arbeidsforhold2)
-				.medAndelsnr(1L)
-				.medAnsettelsesperiode(Periode.of(SKJÆRINGSTIDSPUNKT.minusMonths(12), SKJÆRINGSTIDSPUNKT.plusMonths(12)))
-				.medRefusjonskrav(List.of(new Refusjonskrav(BigDecimal.valueOf(10_000), SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(3))))
-				.build());
-		PeriodeModell inputMedGraderingFraStartForNyttArbeid = lagPeriodeInputMedEnAndelFraStart()
-				.medEndringISøktYtelse(utbetalingsgrader)
-				.medInntektsmeldinger(inntektsmeldingerMedRefusjon)
-				.build();
-		List<SplittetPeriode> perioder = new ArrayList<>();
-		kjørRegel(inputMedGraderingFraStartForNyttArbeid, perioder);
-		assertThat(perioder.size()).isEqualTo(4);
-		assertThat(perioder.get(0).getNyeAndeler().size()).isEqualTo(1);
-		assertThat(perioder.get(1).getNyeAndeler().size()).isEqualTo(0);
-		assertThat(perioder.get(2).getNyeAndeler().size()).isEqualTo(1);
-		assertThat(perioder.get(3).getNyeAndeler().size()).isEqualTo(0);
-	}
 
 	@Test
 	void skalHaNyAndelIPeriodeMedUtbetalingUtenRefusjonMedEksisterendePeriode() {
@@ -160,7 +132,7 @@ class FastsettPeriodeRegelTest {
 		Arbeidsforhold arbeidsforhold2 = Arbeidsforhold.builder().medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT).medOrgnr(ORGNR2)
 				.medAnsettelsesPeriode(Periode.of(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(12))).build();
 		PeriodeModell inputMedGraderingFraStartForNyttArbeid = lagPeriodeInputMedEnAndelFraStart()
-				.medInntektsmeldinger(lagInntektsmeldingMedGraderingFraSkjæringstidspunkt(arbeidsforhold2))
+				.medAndelGraderinger(lagGraderingFraSTP(arbeidsforhold2))
 				.build();
 		List<SplittetPeriode> perioder = new ArrayList<>();
 		kjørRegel(inputMedGraderingFraStartForNyttArbeid, perioder);
@@ -170,10 +142,12 @@ class FastsettPeriodeRegelTest {
 	}
 
 
-	private List<ArbeidsforholdOgInntektsmelding> lagInntektsmeldingMedGraderingFraSkjæringstidspunkt(Arbeidsforhold arbeidsforhold2) {
-		return List.of(ArbeidsforholdOgInntektsmelding.builder()
-				.medArbeidsforhold(arbeidsforhold2)
-				.medAnsettelsesperiode(Periode.of(SKJÆRINGSTIDSPUNKT.minusMonths(12), SKJÆRINGSTIDSPUNKT.plusMonths(12)))
+	private List<AndelGradering> lagGraderingFraSTP(Arbeidsforhold arbeidsforhold2) {
+		return List.of(AndelGraderingImpl.builder()
+				.medArbeidsforhold(Arbeidsforhold.builder(arbeidsforhold2)
+						.medAnsettelsesPeriode(Periode.of(SKJÆRINGSTIDSPUNKT.minusMonths(12), SKJÆRINGSTIDSPUNKT.plusMonths(12)))
+						.build())
+						.medNyAktivitetFraDato(SKJÆRINGSTIDSPUNKT)
 				.medGraderinger(List.of(new Gradering(Periode.of(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(1)), BigDecimal.valueOf(50)))).build());
 	}
 

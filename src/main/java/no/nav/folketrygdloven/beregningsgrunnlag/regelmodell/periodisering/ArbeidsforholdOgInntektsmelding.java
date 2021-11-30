@@ -13,21 +13,17 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Ar
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.NaturalYtelse;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Refusjonskrav;
 
-public class ArbeidsforholdOgInntektsmelding implements AndelGradering {
+public class ArbeidsforholdOgInntektsmelding {
     private Arbeidsforhold arbeidsforhold;
     private List<Refusjonskrav> refusjoner = Collections.emptyList();
     private List<Refusjonskrav> gyldigeRefusjonskrav = Collections.emptyList();
     private List<Gradering> graderinger = Collections.emptyList();
-	private List<Gradering> utbetalingsgrader = Collections.emptyList();
 	private List<NaturalYtelse> naturalYtelser = Collections.emptyList();
     private Periode ansettelsesperiode;
     private LocalDate startdatoPermisjon;
     private Long andelsnr;
-    private LocalDate innsendingsdatoFørsteInntektsmeldingMedRefusjon;
-    private LocalDate overstyrtRefusjonsFrist;
     private RefusjonskravFrist refusjonskravFrist;
 
-    @Override
     public Arbeidsforhold getArbeidsforhold() {
         return arbeidsforhold;
     }
@@ -36,7 +32,6 @@ public class ArbeidsforholdOgInntektsmelding implements AndelGradering {
         return refusjoner;
     }
 
-    @Override
     public List<Refusjonskrav> getGyldigeRefusjonskrav() {
         return gyldigeRefusjonskrav;
     }
@@ -45,14 +40,8 @@ public class ArbeidsforholdOgInntektsmelding implements AndelGradering {
         this.gyldigeRefusjonskrav = gyldigeRefusjonskrav;
     }
 
-    @Override
     public AktivitetStatusV2 getAktivitetStatus() {
         return AktivitetStatusV2.AT;
-    }
-
-    @Override
-    public List<Gradering> getGraderinger() {
-        return graderinger;
     }
 
     public List<NaturalYtelse> getNaturalYtelser() {
@@ -71,24 +60,11 @@ public class ArbeidsforholdOgInntektsmelding implements AndelGradering {
         return andelsnr;
     }
 
-    public LocalDate getInnsendingsdatoFørsteInntektsmeldingMedRefusjon() {
-        return innsendingsdatoFørsteInntektsmeldingMedRefusjon;
-    }
-
-    public Optional<LocalDate> getOverstyrtRefusjonsFrist() {
-        return Optional.ofNullable(overstyrtRefusjonsFrist);
-    }
-
     public Optional<RefusjonskravFrist> getRefusjonskravFrist() {
         return Optional.ofNullable(refusjonskravFrist);
     }
 
-	public List<Gradering> getUtbetalingsgrader() {
-		return utbetalingsgrader;
-	}
-
-	@Override
-	public boolean erNyAktivitetPåDato(LocalDate dato) {
+	public boolean erNyAktivitet() {
 		return andelsnr == null;
     }
 
@@ -143,11 +119,6 @@ public class ArbeidsforholdOgInntektsmelding implements AndelGradering {
             return this;
         }
 
-	    public Builder medUtbetalingsgrader(List<Gradering> utbetalingsgrader) {
-		    kladd.utbetalingsgrader = utbetalingsgrader;
-		    return this;
-	    }
-
 	    public Builder medGraderinger(List<Gradering> graderinger) {
             kladd.graderinger = graderinger;
             return this;
@@ -178,16 +149,6 @@ public class ArbeidsforholdOgInntektsmelding implements AndelGradering {
             return this;
         }
 
-        public Builder medInnsendingsdatoFørsteInntektsmeldingMedRefusjon(LocalDate innsendingsdatoFørsteInntektsmeldingMedRefusjon) {
-            kladd.innsendingsdatoFørsteInntektsmeldingMedRefusjon = innsendingsdatoFørsteInntektsmeldingMedRefusjon;
-            return this;
-        }
-
-        public Builder medOverstyrtRefusjonsFrist(LocalDate overstyrtRefusjonsFrist) {
-            kladd.overstyrtRefusjonsFrist = overstyrtRefusjonsFrist;
-            return this;
-        }
-
         public ArbeidsforholdOgInntektsmelding build() {
             return kladd;
         }
@@ -204,8 +165,6 @@ public class ArbeidsforholdOgInntektsmelding implements AndelGradering {
             ", ansettelsesperiode=" + ansettelsesperiode +
             ", startdatoPermisjon=" + startdatoPermisjon +
             ", andelsnr=" + andelsnr +
-            ", innsendingsdatoFørsteInntektsmeldingMedRefusjon=" + innsendingsdatoFørsteInntektsmeldingMedRefusjon +
-            ", overstyrtRefusjonsFrist=" + overstyrtRefusjonsFrist +
             '}';
     }
 }
