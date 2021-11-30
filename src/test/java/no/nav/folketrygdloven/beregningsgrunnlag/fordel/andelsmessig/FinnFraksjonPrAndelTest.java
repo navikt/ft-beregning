@@ -58,16 +58,22 @@ class FinnFraksjonPrAndelTest {
 
 	/**
 	 * Her er brutto ved stp 600.000, men refusjon blir 800.000 med tilkommet arbeidsforhold
-	 * Andeler som krever refusjon har 750.000 i fraksjonsbestemmende beløp
+	 * Andeler som krever refusjon har 800.000 i fraksjonsbestemmende beløp
+	 * For foreslått andel er refusjonskravet fraksjonsbestemmende,
+	 * for tilkommet andel er det laveste av årsinntekt fra inntektsmelding og refusjon pr år
 	 */
 	@Test
 	public void skal_teste_fem_andeler_der_enkelte_ikke_krever_refusjon() {
 		// Arrange
-		FordelAndelModell foreslåttAndel = lagFordelAndelMedForeslått(AktivitetStatus.AT, arbeid("999", "abc"), 300_000, 400_000);
+
+		// Foreslåtte andeler
+		FordelAndelModell foreslåttAndel = lagFordelAndelMedForeslått(AktivitetStatus.AT, arbeid("999", "abc"), 100_000, 400_000);
 		FordelAndelModell foreslåttAndelUtenRef = lagFordelAndelMedForeslått(AktivitetStatus.AT, arbeid("888", "abc"), 200_000, 0);
-		FordelAndelModell tilkommetAndelMedRef = lagFordelAndelTilkommet(AktivitetStatus.AT, arbeid("777", "abc"), 450_000, 450_000);
 		FordelAndelModell næringsandel = lagFordelAndelForStatus(AktivitetStatus.SN, 50_000);
 		FordelAndelModell dagpengeAndel = lagFordelAndelForStatus(AktivitetStatus.DP, 50_000);
+
+		// Tilkommet andel
+		FordelAndelModell tilkommetAndelMedRef = lagFordelAndelTilkommet(AktivitetStatus.AT, arbeid("777", "abc"), 500_000, 400_000);
 
 
 		// Act
@@ -75,9 +81,9 @@ class FinnFraksjonPrAndelTest {
 
 		// Assert
 		assertThat(fordelModell.getMellomregninger()).hasSize(5);
-		assertAndel(fordelModell, foreslåttAndel, 0.4);
+		assertAndel(fordelModell, foreslåttAndel, 0.5);
 		assertAndel(fordelModell, foreslåttAndelUtenRef, 0);
-		assertAndel(fordelModell, tilkommetAndelMedRef, 0.6);
+		assertAndel(fordelModell, tilkommetAndelMedRef, 0.5);
 		assertAndel(fordelModell, næringsandel, 0);
 		assertAndel(fordelModell, dagpengeAndel, 0);
 	}

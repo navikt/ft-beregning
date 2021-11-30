@@ -79,13 +79,16 @@ class FinnFraksjonPrAndel extends LeafSpecification<FordelModell> {
 	}
 
 	private BigDecimal finnFraksjonsbestemmendeBeløp(FordelAndelModell andelInput) {
-		var foreslåttEllerIMBeløp = andelInput.getForeslåttPrÅr()
-				.orElseGet(() -> andelInput.getBeløpFraInntektsMeldingPrMnd()
-						.orElseThrow(() -> new IllegalStateException("Mangler både beløp fra inntektsmelding og foreslått brutto, ugyldig tilstand"))
-						.multiply(BigDecimal.valueOf(12)));
 		BigDecimal refusjonskrav = andelInput.getGjeldendeRefusjonPrÅr().orElseThrow();
-		// Siden vi vet at vi ikke har nok brutto til å dekke refusjon når vi fordeler andelsmessig, får arbeidsforholdet aldri mer enn de ber om i refusjon
-		return refusjonskrav.compareTo(foreslåttEllerIMBeløp) > 0 ? foreslåttEllerIMBeløp : refusjonskrav;
+		if (andelInput.getForeslåttPrÅr().isPresent()) {
+			// For andeler med foreslått beløp skal alltid refusjonskrav bestemme hvor stor andel av brutto de skal få
+			return refusjonskrav;
+		}
+		var årsbeløpFraIM = andelInput.getBeløpFraInntektsMeldingPrMnd()
+						.orElseThrow(() -> new IllegalStateException("Mangler både beløp fra inntektsmelding og foreslått brutto, ugyldig tilstand"))
+						.multiply(BigDecimal.valueOf(12));
+		// Siden vi vet at vi ikke har nok brutto til å dekke refusjon når vi fordeler andelsmessig, får tilkommet arbeidsforhold aldri mer enn de ber om i refusjon
+		return refusjonskrav.compareTo(årsbeløpFraIM) > 0 ? årsbeløpFraIM : refusjonskrav;
 	}
 
 	private boolean kreverRefusjon(FordelAndelModell andelInput) {
