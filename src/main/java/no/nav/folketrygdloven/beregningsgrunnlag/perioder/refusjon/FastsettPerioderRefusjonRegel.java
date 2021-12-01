@@ -15,7 +15,7 @@ import no.nav.fpsak.nare.specification.Specification;
  */
 public class FastsettPerioderRefusjonRegel implements RuleService<PeriodeModellRefusjon> {
 
-	static final String ID = "FT_40";
+	static final String ID = "FT_42";
 
 	@Override
 	public Evaluation evaluer(PeriodeModellRefusjon input, Object perioder) {
