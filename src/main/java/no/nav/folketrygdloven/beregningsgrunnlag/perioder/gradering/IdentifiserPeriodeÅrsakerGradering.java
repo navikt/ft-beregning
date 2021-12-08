@@ -1,12 +1,12 @@
-package no.nav.folketrygdloven.beregningsgrunnlag.perioder;
+package no.nav.folketrygdloven.beregningsgrunnlag.perioder.gradering;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.PeriodeÅrsak;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.PeriodeModell;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.PeriodeSplittProsesstruktur;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.gradering.PeriodeModellGradering;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.gradering.PeriodiseringGraderingProsesstruktur;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.IdentifisertePeriodeÅrsaker;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.PeriodeSplittData;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
@@ -14,18 +14,18 @@ import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.node.SingleEvaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
-@RuleDocumentation(IdentifiserPeriodeÅrsaker.ID)
-public class IdentifiserPeriodeÅrsaker extends LeafSpecification<PeriodeSplittProsesstruktur> {
+@RuleDocumentation(IdentifiserPeriodeÅrsakerGradering.ID)
+public class IdentifiserPeriodeÅrsakerGradering extends LeafSpecification<PeriodiseringGraderingProsesstruktur> {
 
-    static final String ID = FastsettPeriodeRegel.ID + ".1";
+    static final String ID = FastsettPerioderGraderingRegel.ID + ".1";
     static final String BESKRIVELSE = "Identifiserer dato og årsak for splitting";
 
-    public IdentifiserPeriodeÅrsaker() {
+    public IdentifiserPeriodeÅrsakerGradering() {
         super(ID, BESKRIVELSE);
     }
 
     @Override
-    public Evaluation evaluate(PeriodeSplittProsesstruktur prosseseringStruktur) {
+    public Evaluation evaluate(PeriodiseringGraderingProsesstruktur prosseseringStruktur) {
         Map<String, Object> resultater = new HashMap<>();
         IdentifisertePeriodeÅrsaker årsaker = identifiser(prosseseringStruktur.getInput(), resultater);
         prosseseringStruktur.setIdentifisertePeriodeÅrsaker(årsaker);
@@ -34,7 +34,7 @@ public class IdentifiserPeriodeÅrsaker extends LeafSpecification<PeriodeSplittP
         return resultat;
     }
 
-    static IdentifisertePeriodeÅrsaker identifiser(PeriodeModell input, Map<String, Object> resultater) {
+    static IdentifisertePeriodeÅrsaker identifiser(PeriodeModellGradering input, Map<String, Object> resultater) {
         IdentifisertePeriodeÅrsaker map = new IdentifisertePeriodeÅrsaker();
         leggTilPeriodesplitterForEksisterendePerioder(input, map);
         resultater.put("eksisterendePerioder", map.getPeriodeMap());
@@ -47,15 +47,6 @@ public class IdentifiserPeriodeÅrsaker extends LeafSpecification<PeriodeSplittP
             resultater.put("graderingPerioder", graderingPerioder);
         });
 
-        // Utbetalingsgrad
-        input.getEndringerISøktYtelse().forEach(endringISøktYtelse -> {
-            resultater.put("aktivitet", endringISøktYtelse.getArbeidsforhold());
-            Set<PeriodeSplittData> endringerISøktYtelse = IdentifiserPerioderForEndringISøktYtelseSvangerskapspenger.identifiser(endringISøktYtelse);
-            endringerISøktYtelse.forEach(map::leggTilPeriodeÅrsak);
-            resultater.put("endringerISøktYtelse", endringerISøktYtelse);
-        });
-
-
         // må alltid ha en første periode, også når ingen gradering/refusjon/naturalytelse fra start
         if (!map.getPeriodeMap().containsKey(input.getSkjæringstidspunkt())) {
             PeriodeSplittData førstePeriode = PeriodeSplittData.builder()
@@ -67,7 +58,7 @@ public class IdentifiserPeriodeÅrsaker extends LeafSpecification<PeriodeSplittP
         return map;
     }
 
-    private static void leggTilPeriodesplitterForEksisterendePerioder(PeriodeModell input, IdentifisertePeriodeÅrsaker map) {
+    private static void leggTilPeriodesplitterForEksisterendePerioder(PeriodeModellGradering input, IdentifisertePeriodeÅrsaker map) {
         input.getEksisterendePerioder().forEach(eksisterendePeriode -> {
             if (!eksisterendePeriode.getPeriodeÅrsaker().isEmpty()) {
                 eksisterendePeriode.getPeriodeÅrsaker().forEach(periodeÅrsak -> {

@@ -1,11 +1,11 @@
-package no.nav.folketrygdloven.beregningsgrunnlag.perioder;
+package no.nav.folketrygdloven.beregningsgrunnlag.perioder.gradering;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AndelGradering;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.PeriodeModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.gradering.AndelGradering;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.gradering.PeriodeModellGradering;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.PeriodeSplittData;
 
 class IdentifiserPerioderForGradering {
@@ -13,7 +13,7 @@ class IdentifiserPerioderForGradering {
         // skjul public constructor
     }
 
-    static Set<PeriodeSplittData> identifiser(PeriodeModell input, AndelGradering andelGradering) {
+    static Set<PeriodeSplittData> identifiser(PeriodeModellGradering input, AndelGradering andelGradering) {
         Set<PeriodeSplittData> set = new HashSet<>();
         andelGradering.getGraderinger().forEach(gradering -> {
             List<PeriodeSplittData> splits = VurderPeriodeForGradering.vurder(input, andelGradering, gradering.getPeriode());

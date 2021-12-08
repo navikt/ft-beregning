@@ -1,4 +1,4 @@
-package no.nav.folketrygdloven.beregningsgrunnlag.perioder;
+package no.nav.folketrygdloven.beregningsgrunnlag.perioder.gradering;
 
 import static no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil.TIDENES_ENDE;
 
@@ -9,8 +9,8 @@ import java.util.Optional;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.PeriodeÅrsak;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AndelGradering;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.PeriodeModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.gradering.AndelGradering;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.gradering.PeriodeModellGradering;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.PeriodeSplittData;
 import no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil;
 
@@ -19,7 +19,7 @@ class VurderPeriodeForGradering {
 		// skjul public constructor
 	}
 
-	static List<PeriodeSplittData> vurder(PeriodeModell input, AndelGradering andelGradering, Periode gradering) {
+	static List<PeriodeSplittData> vurder(PeriodeModellGradering input, AndelGradering andelGradering, Periode gradering) {
 		LocalDate graderingFom = gradering.getFom();
 		LocalDate graderingTom = gradering.getTom();
 
@@ -40,7 +40,7 @@ class VurderPeriodeForGradering {
 		return returnlist;
 	}
 
-	private static boolean skalSplitteVedDato(PeriodeModell input, AndelGradering andelGradering, LocalDate dato) {
+	private static boolean skalSplitteVedDato(PeriodeModellGradering input, AndelGradering andelGradering, LocalDate dato) {
 		if (dato.equals(TIDENES_ENDE)) {
 			return false;
 		}
@@ -59,7 +59,7 @@ class VurderPeriodeForGradering {
 				.build();
 	}
 
-	private static List<PeriodeSplittData> splittPeriodeGrunnetHøyerePrioriterteAndeler(PeriodeModell input,
+	private static List<PeriodeSplittData> splittPeriodeGrunnetHøyerePrioriterteAndeler(PeriodeModellGradering input,
 	                                                                                    AndelGradering andelGradering,
 	                                                                                    Periode gradering) {
 		Optional<LocalDate> høyerePrioriterteAndeler = IdentifiserPeriodeDerBruttoBgPåHøyerePrioriterteAndelerErMinst6G.vurder(input,

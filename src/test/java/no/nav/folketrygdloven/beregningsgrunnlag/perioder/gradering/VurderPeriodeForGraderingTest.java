@@ -1,4 +1,4 @@
-package no.nav.folketrygdloven.beregningsgrunnlag.perioder;
+package no.nav.folketrygdloven.beregningsgrunnlag.perioder.gradering;
 
 import static no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil.TIDENES_ENDE;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -11,15 +11,15 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Gradering;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.gradering.Gradering;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.PeriodeÅrsak;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AktivitetStatusV2;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AndelGraderingImpl;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.gradering.AndelGradering;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.BruttoBeregningsgrunnlag;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.PeriodeModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.PeriodisertBruttoBeregningsgrunnlag;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.gradering.PeriodeModellGradering;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.PeriodeSplittData;
 import no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil;
 
@@ -37,12 +37,12 @@ public class VurderPeriodeForGraderingTest {
 	public void totalRefusjonOver6GEksisterendeAktivitetIngenRefusjonPåDato() {
 		// Arrange
 		Periode gradering = new Periode(LocalDate.of(2019, Month.MARCH, 1), TIDENES_ENDE);
-		AndelGraderingImpl andelGradering = AndelGraderingImpl.builder()
+		AndelGradering andelGradering = AndelGradering.builder()
 				.medAktivitetStatus(AktivitetStatusV2.AT)
 				.medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR2))
 				.medEksisterendeAktivitetFraDato(gradering.getFom()) // eksisterende aktivitet
 				.build();
-		PeriodeModell input = PeriodeModell.builder()
+		PeriodeModellGradering input = PeriodeModellGradering.builder()
 				.medPeriodisertBruttoBeregningsgrunnlag(lagPeriodisertBg(gradering,
 						Map.of(ORGNR1, ÅRSBBELØP_OVER_6G, ORGNR2, BigDecimal.TEN),
 						Map.of(ORGNR1, ÅRSBBELØP_OVER_6G)))
@@ -74,12 +74,12 @@ public class VurderPeriodeForGraderingTest {
 		// Arrange
 		Periode gradering = new Periode(LocalDate.of(2019, Month.MARCH, 1),
 				LocalDate.of(2019, Month.JULY, 1));
-		AndelGraderingImpl andelGradering = AndelGraderingImpl.builder()
+		AndelGradering andelGradering = AndelGradering.builder()
 				.medAktivitetStatus(AktivitetStatusV2.AT)
 				.medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR2))
 				.medEksisterendeAktivitetFraDato(gradering.getFom()) // eksisterende aktivitet
 				.build();
-		PeriodeModell input = PeriodeModell.builder()
+		PeriodeModellGradering input = PeriodeModellGradering.builder()
 				.medPeriodisertBruttoBeregningsgrunnlag(lagPeriodisertBg(Periode.of(gradering.getFom(), gradering.getTom().plusDays(1)),
 						Map.of(ORGNR1, ÅRSBBELØP_OVER_6G, ORGNR2, BigDecimal.TEN),
 						Map.of(ORGNR1, ÅRSBBELØP_OVER_6G)))
@@ -108,12 +108,12 @@ public class VurderPeriodeForGraderingTest {
 		periode2Builder.leggTilBruttoBeregningsgrunnlag(lagBruttoBg(ORGNR2, ÅRSBBELØP_OVER_6G, null));
 
 		Periode gradering = new Periode(LocalDate.of(2019, Month.MARCH, 1), LocalDate.of(2019, Month.JULY, 1));
-		AndelGraderingImpl andelGradering = AndelGraderingImpl.builder()
+		AndelGradering andelGradering = AndelGradering.builder()
 				.medAktivitetStatus(AktivitetStatusV2.AT)
 				.medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR2))
 				.medEksisterendeAktivitetFraDato(gradering.getFom()) // eksisterende aktivitet
 				.build();
-		PeriodeModell input = PeriodeModell.builder()
+		PeriodeModellGradering input = PeriodeModellGradering.builder()
 				.medAndelGraderinger(List.of(andelGradering))
 				.medPeriodisertBruttoBeregningsgrunnlag(List.of(periode1Builder.build(), periode2Builder.build()))
 				.medGrunnbeløp(BigDecimal.valueOf(90000))
@@ -149,12 +149,12 @@ public class VurderPeriodeForGraderingTest {
 		periode2Builder.leggTilBruttoBeregningsgrunnlag(lagBruttoBg(ORGNR1, ÅRSBBELØP_OVER_6G, ÅRSBBELØP_OVER_6G));
 		periode2Builder.leggTilBruttoBeregningsgrunnlag(lagBruttoBg(ORGNR2, ÅRSBBELØP_OVER_6G, BigDecimal.TEN));
 
-		AndelGraderingImpl andelGradering = AndelGraderingImpl.builder()
+		AndelGradering andelGradering = AndelGradering.builder()
 				.medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR2))
 				.medAktivitetStatus(AktivitetStatusV2.AT)
 				.medEksisterendeAktivitetFraDato(gradering.getFom()) // eksisterende aktivitet
 				.build();
-		PeriodeModell input = PeriodeModell.builder()
+		PeriodeModellGradering input = PeriodeModellGradering.builder()
 				.medAndelGraderinger(List.of(andelGradering))
 				.medPeriodisertBruttoBeregningsgrunnlag(List.of(periode1Builder.build(), periode2Builder.build()))
 				.medGrunnbeløp(BigDecimal.valueOf(90000))
@@ -177,12 +177,12 @@ public class VurderPeriodeForGraderingTest {
 
 
 		Periode gradering = new Periode(LocalDate.of(2019, Month.MARCH, 1), TIDENES_ENDE);
-		AndelGraderingImpl andelGradering = AndelGraderingImpl.builder()
+		AndelGradering andelGradering = AndelGradering.builder()
 				.medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR2))
 				.medAktivitetStatus(AktivitetStatusV2.AT)
 				.medEksisterendeAktivitetFraDato(gradering.getFom()) // eksisterende aktivitet
 				.build();
-		PeriodeModell input = PeriodeModell.builder()
+		PeriodeModellGradering input = PeriodeModellGradering.builder()
 				.medAndelGraderinger(List.of(andelGradering))
 				.medPeriodisertBruttoBeregningsgrunnlag(List.of(periode1Builder.build()))
 				.medGrunnbeløp(BigDecimal.valueOf(90000))
@@ -204,12 +204,12 @@ public class VurderPeriodeForGraderingTest {
 		periode1Builder.leggTilBruttoBeregningsgrunnlag(lagBruttoBg(ORGNR2, ÅRSBBELØP_OVER_3G, ÅRSBBELØP_OVER_3G));
 
 		Periode gradering = new Periode(LocalDate.of(2019, Month.MARCH, 1), TIDENES_ENDE);
-		AndelGraderingImpl andelGradering = AndelGraderingImpl.builder()
+		AndelGradering andelGradering = AndelGradering.builder()
 				.medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR2))
 				.medAktivitetStatus(AktivitetStatusV2.AT)
 				.medEksisterendeAktivitetFraDato(gradering.getFom()) // eksisterende aktivitet
 				.build();
-		PeriodeModell input = PeriodeModell.builder()
+		PeriodeModellGradering input = PeriodeModellGradering.builder()
 				.medAndelGraderinger(List.of(andelGradering))
 				.medPeriodisertBruttoBeregningsgrunnlag(List.of(periode1Builder.build()))
 				.medGrunnbeløp(BigDecimal.valueOf(90000))
@@ -234,12 +234,12 @@ public class VurderPeriodeForGraderingTest {
 
 
 		Periode gradering = new Periode(LocalDate.of(2019, Month.MARCH, 1), TIDENES_ENDE);
-		AndelGraderingImpl andelGradering = AndelGraderingImpl.builder()
+		AndelGradering andelGradering = AndelGradering.builder()
 				.medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR2))
 				.medAktivitetStatus(AktivitetStatusV2.AT)
 				.medEksisterendeAktivitetFraDato(gradering.getFom()) // eksisterende aktivitet
 				.build();
-		PeriodeModell input = PeriodeModell.builder()
+		PeriodeModellGradering input = PeriodeModellGradering.builder()
 				.medAndelGraderinger(List.of(andelGradering))
 				.medPeriodisertBruttoBeregningsgrunnlag(List.of(periode1Builder.build()))
 				.medGrunnbeløp(grunnbeløp)
@@ -262,12 +262,12 @@ public class VurderPeriodeForGraderingTest {
 
 
 		Periode gradering = new Periode(LocalDate.of(2019, Month.MARCH, 1), TIDENES_ENDE);
-		AndelGraderingImpl andelGradering = AndelGraderingImpl.builder()
+		AndelGradering andelGradering = AndelGradering.builder()
 				.medAktivitetStatus(AktivitetStatusV2.AT)
 				.medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR2))
 				.medNyAktivitetFraDato(gradering.getFom()) // ny aktivitet
 				.build();
-		PeriodeModell input = PeriodeModell.builder()
+		PeriodeModellGradering input = PeriodeModellGradering.builder()
 				.medAndelGraderinger(List.of(andelGradering))
 				.medPeriodisertBruttoBeregningsgrunnlag(List.of(periode1Builder.build()))
 				.medGrunnbeløp(grunnbeløp)
@@ -291,12 +291,12 @@ public class VurderPeriodeForGraderingTest {
 
 
 		Periode gradering = new Periode(LocalDate.of(2019, Month.MARCH, 1), TIDENES_ENDE);
-		AndelGraderingImpl andelGradering = AndelGraderingImpl.builder()
+		AndelGradering andelGradering = AndelGradering.builder()
 				.medAktivitetStatus(AktivitetStatusV2.AT)
 				.medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR2))
 				.medNyAktivitetFraDato(gradering.getFom()) // ny aktivitet
 				.build();
-		PeriodeModell input = PeriodeModell.builder()
+		PeriodeModellGradering input = PeriodeModellGradering.builder()
 				.medAndelGraderinger(List.of(andelGradering))
 				.medPeriodisertBruttoBeregningsgrunnlag(List.of(periode1Builder.build()))
 				.medGrunnbeløp(grunnbeløp)
@@ -322,12 +322,12 @@ public class VurderPeriodeForGraderingTest {
 
 
 		Periode gradering = new Periode(LocalDate.of(2019, Month.MARCH, 1), LocalDate.of(2019, Month.MARCH, 8));
-		AndelGraderingImpl andelGradering = AndelGraderingImpl.builder()
+		AndelGradering andelGradering = AndelGradering.builder()
 				.medAktivitetStatus(AktivitetStatusV2.AT)
 				.medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR2))
 				.medNyAktivitetFraDato(gradering.getFom()) // ny aktivitet
 				.build();
-		PeriodeModell input = PeriodeModell.builder()
+		PeriodeModellGradering input = PeriodeModellGradering.builder()
 				.medAndelGraderinger(List.of(andelGradering))
 				.medPeriodisertBruttoBeregningsgrunnlag(List.of(periode1Builder.build()))
 				.medGrunnbeløp(grunnbeløp)
@@ -344,9 +344,9 @@ public class VurderPeriodeForGraderingTest {
 	public void skalLageToPerioderNårBruttoForAndelSnErNullOgMedOpphørAvGraderingISammePeriode() {
 		// Arrange
 		Periode graderingsPeriode = new Periode(LocalDate.of(2019, Month.MARCH, 1), LocalDate.of(2019, Month.MARCH, 8));
-		Gradering gradering = new Gradering(graderingsPeriode, BigDecimal.TEN);
+		Gradering gradering = new Gradering(graderingsPeriode);
 
-		AndelGraderingImpl andelGradering = AndelGraderingImpl.builder()
+		AndelGradering andelGradering = AndelGradering.builder()
 				.medAktivitetStatus(AktivitetStatusV2.SN)
 				.medGraderinger(List.of(gradering))
 				.medEksisterendeAktivitetFraDato(graderingsPeriode.getFom())
@@ -358,7 +358,7 @@ public class VurderPeriodeForGraderingTest {
 				.medPeriode(new Periode(LocalDate.of(2019, Month.JANUARY, 20), null))
 				.build();
 
-		PeriodeModell input = PeriodeModell.builder()
+		PeriodeModellGradering input = PeriodeModellGradering.builder()
 				.medAndelGraderinger(List.of(andelGradering))
 				.medPeriodisertBruttoBeregningsgrunnlag(List.of(periodisertBruttoBeregningsgrunnlag))
 				.medGrunnbeløp(BigDecimal.valueOf(90000))
@@ -375,8 +375,8 @@ public class VurderPeriodeForGraderingTest {
 	public void skalIkkeLagePerioderNårBruttoForAndelSnIkkeErNullOgMedOpphørAvGraderingISammePeriode() {
 		// Arrange
 		Periode graderingsPeriode = new Periode(LocalDate.of(2019, Month.MARCH, 1), LocalDate.of(2019, Month.MARCH, 8));
-		Gradering gradering = new Gradering(graderingsPeriode, BigDecimal.TEN);
-		AndelGraderingImpl andelGradering = AndelGraderingImpl.builder()
+		Gradering gradering = new Gradering(graderingsPeriode);
+		AndelGradering andelGradering = AndelGradering.builder()
 				.medAktivitetStatus(AktivitetStatusV2.SN)
 				.medGraderinger(List.of(gradering))
 				.medEksisterendeAktivitetFraDato(graderingsPeriode.getFom())
@@ -388,7 +388,7 @@ public class VurderPeriodeForGraderingTest {
 				.medPeriode(new Periode(LocalDate.of(2019, Month.JANUARY, 20), null))
 				.build();
 
-		PeriodeModell input = PeriodeModell.builder()
+		PeriodeModellGradering input = PeriodeModellGradering.builder()
 				.medAndelGraderinger(List.of(andelGradering))
 				.medPeriodisertBruttoBeregningsgrunnlag(List.of(periodisertBruttoBeregningsgrunnlag))
 				.medGrunnbeløp(BigDecimal.valueOf(90000))
@@ -405,11 +405,11 @@ public class VurderPeriodeForGraderingTest {
 	public void skalLageToPerioderNårBruttoForAndelAtErNullOgToArbeidsforholdHosPrivatpersonOgMedOpphørAvGraderingISammePeriode() {
 		// Arrange
 		Periode graderingsPeriode = new Periode(LocalDate.of(2019, Month.MARCH, 1), LocalDate.of(2019, Month.MARCH, 8));
-		Gradering gradering = new Gradering(graderingsPeriode, BigDecimal.TEN);
+		Gradering gradering = new Gradering(graderingsPeriode);
 
 		Arbeidsforhold arbeidsforhold1 = Arbeidsforhold.nyttArbeidsforholdHosPrivatperson("5454", "1111");
 		Arbeidsforhold arbeidsforhold2 = Arbeidsforhold.nyttArbeidsforholdHosPrivatperson("5454", "2222");
-		AndelGraderingImpl andelMedGradering = AndelGraderingImpl.builder()
+		AndelGradering andelMedGradering = AndelGradering.builder()
 				.medAktivitetStatus(AktivitetStatusV2.AT)
 				.medGraderinger(List.of(gradering))
 				.medEksisterendeAktivitetFraDato(graderingsPeriode.getFom())
@@ -424,7 +424,7 @@ public class VurderPeriodeForGraderingTest {
 				.medPeriode(new Periode(LocalDate.of(2019, Month.JANUARY, 20), null))
 				.build();
 
-		PeriodeModell input = PeriodeModell.builder()
+		PeriodeModellGradering input = PeriodeModellGradering.builder()
 				.medAndelGraderinger(List.of(andelMedGradering))
 				.medPeriodisertBruttoBeregningsgrunnlag(List.of(periodisertBruttoBeregningsgrunnlag))
 				.medGrunnbeløp(BigDecimal.valueOf(90000))
@@ -441,11 +441,11 @@ public class VurderPeriodeForGraderingTest {
 	public void skalLageToPerioderNårBruttoForAndelAtErNullOgBrukerAnsattIOrganisasjonOgMedOpphørAvGraderingISammePeriode() {
 		// Arrange
 		Periode graderingsPeriode = new Periode(LocalDate.of(2019, Month.MARCH, 1), LocalDate.of(2019, Month.MARCH, 8));
-		Gradering gradering = new Gradering(graderingsPeriode, BigDecimal.TEN);
+		Gradering gradering = new Gradering(graderingsPeriode);
 
 		Arbeidsforhold arbeidsforhold1 = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("5454", "1111");
 		Arbeidsforhold arbeidsforhold2 = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("5454", "2222");
-		AndelGraderingImpl andelMedGradering = AndelGraderingImpl.builder()
+		AndelGradering andelMedGradering = AndelGradering.builder()
 				.medAktivitetStatus(AktivitetStatusV2.AT)
 				.medGraderinger(List.of(gradering))
 				.medEksisterendeAktivitetFraDato(graderingsPeriode.getFom())
@@ -460,7 +460,7 @@ public class VurderPeriodeForGraderingTest {
 				.medPeriode(new Periode(LocalDate.of(2019, Month.JANUARY, 20), null))
 				.build();
 
-		PeriodeModell input = PeriodeModell.builder()
+		PeriodeModellGradering input = PeriodeModellGradering.builder()
 				.medAndelGraderinger(List.of(andelMedGradering))
 				.medPeriodisertBruttoBeregningsgrunnlag(List.of(periodisertBruttoBeregningsgrunnlag))
 				.medGrunnbeløp(BigDecimal.valueOf(90000))
@@ -477,8 +477,8 @@ public class VurderPeriodeForGraderingTest {
 	public void skalLageEnPerioderNårBruttoForAndelFlErNullOgMedOpphørAvGraderingIAnnenPeriode() {
 		// Arrange
 		Periode graderingsPeriode = new Periode(LocalDate.of(2019, Month.MARCH, 1), LocalDate.of(2019, Month.MARCH, 8));
-		Gradering gradering = new Gradering(graderingsPeriode, BigDecimal.TEN);
-		AndelGraderingImpl andelGradering = AndelGraderingImpl.builder()
+		Gradering gradering = new Gradering(graderingsPeriode);
+		AndelGradering andelGradering = AndelGradering.builder()
 				.medAktivitetStatus(AktivitetStatusV2.FL)
 				.medGraderinger(List.of(gradering))
 				.medEksisterendeAktivitetFraDato(graderingsPeriode.getFom())
@@ -497,7 +497,7 @@ public class VurderPeriodeForGraderingTest {
 				.medPeriode(new Periode(graderingsPeriode.getFom().plusDays(3), null))
 				.build();
 
-		PeriodeModell input = PeriodeModell.builder()
+		PeriodeModellGradering input = PeriodeModellGradering.builder()
 				.medAndelGraderinger(List.of(andelGradering))
 				.medPeriodisertBruttoBeregningsgrunnlag(List.of(periodisertBruttoBeregningsgrunnlag1, periodisertBruttoBeregningsgrunnlag2))
 				.medGrunnbeløp(BigDecimal.valueOf(90000))

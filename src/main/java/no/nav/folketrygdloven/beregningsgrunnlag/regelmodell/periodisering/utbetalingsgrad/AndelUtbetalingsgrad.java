@@ -1,4 +1,4 @@
-package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering;
+package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.utbetalingsgrad;
 
 import static no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil.TIDENES_ENDE;
 
@@ -6,38 +6,34 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Gradering;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AktivitetStatusV2;
 import no.nav.fpsak.tidsserie.LocalDateInterval;
 import no.nav.fpsak.tidsserie.LocalDateSegment;
 import no.nav.fpsak.tidsserie.LocalDateTimeline;
 
-public class AndelGraderingImpl implements AndelGradering {
+public class AndelUtbetalingsgrad {
     private AktivitetStatusV2 aktivitetStatus;
-    private List<Gradering> graderinger = new ArrayList<>();
+    private List<Utbetalingsgrad> utbetalingsgrader = new ArrayList<>();
 	private Arbeidsforhold arbeidsforhold;
     private LocalDateTimeline<Boolean> nyAktivitetTidslinje;
 
-    private AndelGraderingImpl() {
+    private AndelUtbetalingsgrad() {
     }
 
-    @Override
     public AktivitetStatusV2 getAktivitetStatus() {
         return aktivitetStatus;
     }
 
-    @Override
-    public List<Gradering> getGraderinger() {
-        return graderinger;
+    public List<Utbetalingsgrad> getUbetalingsgrader() {
+        return utbetalingsgrader;
     }
 
-	@Override
 	public boolean erNyAktivitetPåDato(LocalDate dato) {
 		LocalDateSegment<Boolean> segment = nyAktivitetTidslinje.getSegment(new LocalDateInterval(dato, dato));
 		return segment != null && segment.getValue();
 	}
 
-    @Override
     public Arbeidsforhold getArbeidsforhold() {
         return arbeidsforhold;
     }
@@ -47,10 +43,10 @@ public class AndelGraderingImpl implements AndelGradering {
     }
 
     public static class Builder {
-        private final AndelGraderingImpl kladd;
+        private final AndelUtbetalingsgrad kladd;
 
         private Builder() {
-            kladd = new AndelGraderingImpl();
+            kladd = new AndelUtbetalingsgrad();
         }
 
 	    public Builder medEksisterendeAktivitetFraDato(LocalDate fom) {
@@ -73,8 +69,8 @@ public class AndelGraderingImpl implements AndelGradering {
             return this;
         }
 
-        public Builder medGraderinger(List<Gradering> graderinger) {
-            kladd.graderinger = graderinger;
+        public Builder medUtbetalingsgrader(List<Utbetalingsgrad> utbetalingsgrader) {
+            kladd.utbetalingsgrader = utbetalingsgrader;
             return this;
         }
 
@@ -83,7 +79,7 @@ public class AndelGraderingImpl implements AndelGradering {
             return this;
         }
 
-        public AndelGraderingImpl build() {
+        public AndelUtbetalingsgrad build() {
             return kladd;
         }
     }
@@ -92,7 +88,7 @@ public class AndelGraderingImpl implements AndelGradering {
     public String toString() {
         return "AndelGraderingImpl{" +
             "aktivitetStatus=" + aktivitetStatus +
-            ", graderinger=" + graderinger +
+            ", graderinger=" + utbetalingsgrader +
             ", arbeidsforhold=" + arbeidsforhold +
             '}';
     }

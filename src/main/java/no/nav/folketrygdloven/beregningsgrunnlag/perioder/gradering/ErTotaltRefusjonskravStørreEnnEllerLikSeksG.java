@@ -1,4 +1,4 @@
-package no.nav.folketrygdloven.beregningsgrunnlag.perioder;
+package no.nav.folketrygdloven.beregningsgrunnlag.perioder.gradering;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -6,15 +6,15 @@ import java.util.List;
 import java.util.Objects;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.BruttoBeregningsgrunnlag;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.PeriodeModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.PeriodisertBruttoBeregningsgrunnlag;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.gradering.PeriodeModellGradering;
 
 class ErTotaltRefusjonskravStørreEnnEllerLikSeksG {
     private ErTotaltRefusjonskravStørreEnnEllerLikSeksG() {
         // skjul public constructor
     }
 
-    public static boolean vurder(PeriodeModell input, LocalDate dato) {
+    public static boolean vurder(PeriodeModellGradering input, LocalDate dato) {
         BigDecimal grunnbeløp = input.getGrunnbeløp();
         BigDecimal seksG = grunnbeløp.multiply(BigDecimal.valueOf(6));
         BigDecimal totaltRefusjonskravPrÅr = beregnTotaltRefusjonskravPrÅrPåDato(input.getPeriodisertBruttoBeregningsgrunnlagList(), dato);

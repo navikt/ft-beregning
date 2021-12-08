@@ -1,4 +1,4 @@
-package no.nav.folketrygdloven.beregningsgrunnlag.perioder;
+package no.nav.folketrygdloven.beregningsgrunnlag.perioder.utbetalingsgrad;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -10,12 +10,12 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Gradering;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.PeriodeÅrsak;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AktivitetStatusV2;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AndelGraderingImpl;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.utbetalingsgrad.AndelUtbetalingsgrad;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.utbetalingsgrad.Utbetalingsgrad;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.PeriodeSplittData;
 
 public class IdentifiserPerioderForEndringISøktYtelseTest {
@@ -29,16 +29,16 @@ public class IdentifiserPerioderForEndringISøktYtelseTest {
 
         LocalDate fom2 = tom.plusDays(2);
         LocalDate tom2 = fom2.plusMonths(1);
-        var andelGradering = AndelGraderingImpl.builder()
+        var andelGradering = AndelUtbetalingsgrad.builder()
             .medAktivitetStatus(AktivitetStatusV2.AT)
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("123"))
-            .medGraderinger(List.of(
-                new Gradering(Periode.of(fom, tom), BigDecimal.valueOf(50)),
-                new Gradering(Periode.of(fom2, tom2), BigDecimal.valueOf(50))))
+            .medUtbetalingsgrader(List.of(
+                new Utbetalingsgrad(Periode.of(fom, tom), BigDecimal.valueOf(50)),
+                new Utbetalingsgrad(Periode.of(fom2, tom2), BigDecimal.valueOf(50))))
             .build();
 
         // Act
-        Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForEndringISøktYtelseSvangerskapspenger.identifiser(andelGradering);
+        Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForEndringISøktYtelse.identifiser(andelGradering);
 
         // Assert
         assertThat(periodesplitter).hasSize(4);
@@ -66,14 +66,14 @@ public class IdentifiserPerioderForEndringISøktYtelseTest {
         // Arrange
         LocalDate fom = LocalDate.now();
         LocalDate tom = fom.plusMonths(1);
-        var andelGradering = AndelGraderingImpl.builder()
+        var andelGradering = AndelUtbetalingsgrad.builder()
             .medAktivitetStatus(AktivitetStatusV2.AT)
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("123"))
-            .medGraderinger(List.of(new Gradering(Periode.of(fom, tom), BigDecimal.valueOf(50))))
+            .medUtbetalingsgrader(List.of(new Utbetalingsgrad(Periode.of(fom, tom), BigDecimal.valueOf(50))))
             .build();
 
         // Act
-        Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForEndringISøktYtelseSvangerskapspenger.identifiser(andelGradering);
+        Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForEndringISøktYtelse.identifiser(andelGradering);
 
         // Assert
         assertThat(periodesplitter).hasSize(2);
@@ -96,17 +96,17 @@ public class IdentifiserPerioderForEndringISøktYtelseTest {
         LocalDate fom2 = tom1.plusDays(1);
         LocalDate tom2 = fom.plusMonths(2);
         Periode p2 = Periode.of(fom2, tom2);
-        var andelGradering = AndelGraderingImpl.builder()
+        var andelGradering = AndelUtbetalingsgrad.builder()
             .medAktivitetStatus(AktivitetStatusV2.AT)
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("123"))
-            .medGraderinger(List.of(
-                new Gradering(p1, BigDecimal.valueOf(50)),
-                new Gradering(p2, BigDecimal.valueOf(40))
+            .medUtbetalingsgrader(List.of(
+                new Utbetalingsgrad(p1, BigDecimal.valueOf(50)),
+                new Utbetalingsgrad(p2, BigDecimal.valueOf(40))
             ))
             .build();
 
         // Act
-        Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForEndringISøktYtelseSvangerskapspenger.identifiser(andelGradering);
+        Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForEndringISøktYtelse.identifiser(andelGradering);
 
         // Assert
         assertThat(periodesplitter).hasSize(3);
@@ -131,18 +131,18 @@ public class IdentifiserPerioderForEndringISøktYtelseTest {
         Periode p0 = Periode.of(fom.minusDays(14), fom.minusDays(1));
         Periode p1 = Periode.of(fom, fom.plusMonths(1));
         Periode p2 = Periode.of(fom.plusMonths(1).plusDays(1), fom.plusMonths(2));
-        var andelGradering = AndelGraderingImpl.builder()
+        var andelGradering = AndelUtbetalingsgrad.builder()
             .medAktivitetStatus(AktivitetStatusV2.AT)
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("123"))
-            .medGraderinger(List.of(
-                new Gradering(p0, BigDecimal.valueOf(0)),
-                new Gradering(p1, BigDecimal.valueOf(50)),
-                new Gradering(p2, BigDecimal.valueOf(50))
+            .medUtbetalingsgrader(List.of(
+                new Utbetalingsgrad(p0, BigDecimal.valueOf(0)),
+                new Utbetalingsgrad(p1, BigDecimal.valueOf(50)),
+                new Utbetalingsgrad(p2, BigDecimal.valueOf(50))
             ))
             .build();
 
         // Act
-        Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForEndringISøktYtelseSvangerskapspenger.identifiser(andelGradering);
+        Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForEndringISøktYtelse.identifiser(andelGradering);
 
         // Assert
         assertThat(periodesplitter).hasSize(2);
@@ -167,21 +167,21 @@ public class IdentifiserPerioderForEndringISøktYtelseTest {
         Periode p4 = Periode.of(fom.plusMonths(3).plusDays(1), fom.plusMonths(4));
         Periode p5 = Periode.of(fom.plusMonths(4).plusDays(1), fom.plusMonths(5));
         Periode p6 = Periode.of(fom.plusMonths(4).plusDays(1), fom.plusMonths(5));
-        var andelGradering = AndelGraderingImpl.builder()
+        var andelGradering = AndelUtbetalingsgrad.builder()
             .medAktivitetStatus(AktivitetStatusV2.AT)
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("123"))
-            .medGraderinger(List.of(
-                new Gradering(p1, BigDecimal.valueOf(50)),
-                new Gradering(p2, BigDecimal.valueOf(50)),
-                new Gradering(p3, BigDecimal.valueOf(51)),
-                new Gradering(p4, BigDecimal.valueOf(0)),
-                new Gradering(p5, BigDecimal.valueOf(100)),
-                new Gradering(p6, BigDecimal.valueOf(100))
+            .medUtbetalingsgrader(List.of(
+                new Utbetalingsgrad(p1, BigDecimal.valueOf(50)),
+                new Utbetalingsgrad(p2, BigDecimal.valueOf(50)),
+                new Utbetalingsgrad(p3, BigDecimal.valueOf(51)),
+                new Utbetalingsgrad(p4, BigDecimal.valueOf(0)),
+                new Utbetalingsgrad(p5, BigDecimal.valueOf(100)),
+                new Utbetalingsgrad(p6, BigDecimal.valueOf(100))
             ))
             .build();
 
         // Act
-        Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForEndringISøktYtelseSvangerskapspenger.identifiser(andelGradering);
+        Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForEndringISøktYtelse.identifiser(andelGradering);
 
         // Assert
         assertThat(periodesplitter).hasSize(5);
