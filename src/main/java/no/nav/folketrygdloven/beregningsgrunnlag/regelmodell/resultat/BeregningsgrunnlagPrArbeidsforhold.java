@@ -19,7 +19,7 @@ public class BeregningsgrunnlagPrArbeidsforhold {
     private BigDecimal overstyrtPrÅr;
 	private BigDecimal besteberegningPrÅr;
 	private BigDecimal fordeltPrÅr;
-    private BigDecimal avkortetPrÅr;
+	private BigDecimal avkortetPrÅr;
     private BigDecimal redusertPrÅr;
     private Periode beregningsperiode;
     private Arbeidsforhold arbeidsforhold;
