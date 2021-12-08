@@ -8,8 +8,6 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.PeriodeSplittData;
-
 public class IdentifiserteNaturalytelsePeriodeÅrsaker {
 
     private SortedMap<LocalDate, Set<PeriodeSplittDataNaturalytelse>> periodeMap = new TreeMap<>();
