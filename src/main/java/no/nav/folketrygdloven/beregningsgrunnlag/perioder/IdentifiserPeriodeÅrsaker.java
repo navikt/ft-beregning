@@ -1,6 +1,5 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.perioder;
 
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -36,18 +35,9 @@ public class IdentifiserPeriodeÅrsaker extends LeafSpecification<PeriodeSplittP
     }
 
     static IdentifisertePeriodeÅrsaker identifiser(PeriodeModell input, Map<String, Object> resultater) {
-        LocalDate skjæringstidspunkt = input.getSkjæringstidspunkt();
         IdentifisertePeriodeÅrsaker map = new IdentifisertePeriodeÅrsaker();
         leggTilPeriodesplitterForEksisterendePerioder(input, map);
         resultater.put("eksisterendePerioder", map.getPeriodeMap());
-
-        // Naturalytelse TODO: Flytt til egen regel og egen modell
-        input.getArbeidsforholdOgInntektsmeldinger().forEach(inntektsmelding -> {
-            resultater.put("arbeidsforhold", inntektsmelding.getArbeidsforhold());
-            Set<PeriodeSplittData> naturalYtelsePerioder = IdentifiserPerioderForNaturalytelse.identifiserPerioderForNaturalytelse(inntektsmelding, skjæringstidspunkt);
-            naturalYtelsePerioder.forEach(map::leggTilPeriodeÅrsak);
-            resultater.put("naturalYtelsePerioder", naturalYtelsePerioder);
-        });
 
         // Gradering FP
         input.getAndelGraderinger().forEach(andelGradering -> {

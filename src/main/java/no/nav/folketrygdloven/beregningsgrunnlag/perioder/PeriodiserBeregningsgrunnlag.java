@@ -65,11 +65,6 @@ public class PeriodiserBeregningsgrunnlag extends LeafSpecification<PeriodeSplit
 	        LocalDate periodeTom = utledPeriodeTom(entries, listIterator);
 	        Set<PeriodeSplittData> periodeSplittData = entry.getValue();
 
-            List<EksisterendeAndel> førstePeriodeAndeler = input.getArbeidsforholdOgInntektsmeldinger().stream()
-                .filter(im -> !im.erNyAktivitet())
-                .map(im -> mapToArbeidsforhold(im, periodeFom))
-                .collect(Collectors.toList());
-
             List<SplittetAndel> nyeAndeler = new ArrayList<>();
 
             nyeAndeler.addAll(input.getAndelGraderinger().stream()
@@ -90,7 +85,6 @@ public class PeriodiserBeregningsgrunnlag extends LeafSpecification<PeriodeSplit
             SplittetPeriode splittetPeriode = SplittetPeriode.builder()
                 .medPeriode(periode)
                 .medPeriodeÅrsaker(getPeriodeÅrsaker(periodeSplittData, input.getSkjæringstidspunkt(), periodeFom))
-                .medFørstePeriodeAndeler(førstePeriodeAndeler)
                 .medNyeAndeler(nyeAndeler)
                 .build();
             list.add(splittetPeriode);
