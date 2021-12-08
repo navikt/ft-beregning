@@ -7,17 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.PeriodeÅrsak;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.NaturalYtelse;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AktivitetStatusV2;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AndelGradering;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.ArbeidsforholdOgInntektsmelding;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.EksisterendeAndel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.PeriodeModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.PeriodeSplittProsesstruktur;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.PeriodisertBruttoBeregningsgrunnlag;
@@ -25,7 +21,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Identifise
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.PeriodeSplittData;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SplittetAndel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SplittetPeriode;
-import no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.node.SingleEvaluation;
@@ -169,26 +164,6 @@ public class PeriodiserBeregningsgrunnlag extends LeafSpecification<PeriodeSplit
                 .medArbeidsperiodeFom(ansettelsesPeriode.getFom())
                 .medArbeidsperiodeTom(ansettelsesPeriode.getTom());
         }
-    }
-
-
-    private static EksisterendeAndel mapToArbeidsforhold(ArbeidsforholdOgInntektsmelding im, LocalDate fom) {
-        Optional<BigDecimal> naturalytelseBortfaltPrÅr = im.getNaturalYtelser().stream()
-            .filter(naturalYtelse -> naturalYtelse.getFom().isEqual(DateUtil.TIDENES_BEGYNNELSE))
-            .filter(naturalYtelse -> naturalYtelse.getTom().isBefore(fom))
-            .map(NaturalYtelse::getBeløp)
-            .reduce(BigDecimal::add);
-        Optional<BigDecimal> naturalytelseTilkommer = im.getNaturalYtelser().stream()
-            .filter(naturalYtelse -> naturalYtelse.getTom().isEqual(DateUtil.TIDENES_ENDE))
-            .filter(naturalYtelse -> naturalYtelse.getFom().isBefore(fom))
-            .map(NaturalYtelse::getBeløp)
-            .reduce(BigDecimal::add);
-        return EksisterendeAndel.builder()
-            .medAndelNr(im.getAndelsnr())
-            .medNaturalytelseTilkommetPrÅr(naturalytelseTilkommer.orElse(null))
-            .medNaturalytelseBortfaltPrÅr(naturalytelseBortfaltPrÅr.orElse(null))
-            .medArbeidsforhold(im.getArbeidsforhold())
-            .build();
     }
 
     private static List<PeriodeÅrsak> getPeriodeÅrsaker(Set<PeriodeSplittData> periodeSplittData, LocalDate skjæringstidspunkt, LocalDate periodeFom) {
