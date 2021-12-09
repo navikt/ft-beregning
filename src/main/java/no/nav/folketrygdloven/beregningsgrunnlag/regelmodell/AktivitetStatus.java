@@ -17,6 +17,7 @@ public enum AktivitetStatus {
 	KUN_YTELSE("Mottaker av tilstøtende ytelse"),
 	DP("Dagpenger", 1, 2),
 	SP_AV_DP("Sykepenger av dagpenger", 1, 2),
+	PSB_AV_DP("Pleiepenger av dagpenger", 1, 2),
 	AAP("Mottaker av arbeidsavklaringspenger", 1, 3),
 	BA("Brukers andel"),
 	MS("Militær/Sivil"),
@@ -33,8 +34,8 @@ public enum AktivitetStatus {
     private static final List<AktivitetStatus> ARBEIDSTAKER_STATUSER = Arrays.asList(ATFL, ATFL_SN, AT);    //NOSONAR
     private static final List<AktivitetStatus> FRILANS_STATUSER = Arrays.asList(ATFL, ATFL_SN, FL);    //NOSONAR
     private static final List<AktivitetStatus> SELVSTENDIG_NÆRINGSDRIVENDE_STATUSER = Arrays.asList(SN, ATFL_SN);    //NOSONAR
-    private static final List<AktivitetStatus> AAP_OG_DP_STATUSER = Arrays.asList(AAP, DP, SP_AV_DP);    //NOSONAR
-	private static final List<AktivitetStatus> DP_STATUSER = Arrays.asList(DP, SP_AV_DP);    //NOSONAR
+    private static final List<AktivitetStatus> AAP_OG_DP_STATUSER = Arrays.asList(AAP, DP, SP_AV_DP, PSB_AV_DP);    //NOSONAR
+	private static final List<AktivitetStatus> DP_STATUSER = Arrays.asList(DP, SP_AV_DP, PSB_AV_DP);    //NOSONAR
 
     AktivitetStatus(String beskrivelse) {
         this.beskrivelse = beskrivelse;
