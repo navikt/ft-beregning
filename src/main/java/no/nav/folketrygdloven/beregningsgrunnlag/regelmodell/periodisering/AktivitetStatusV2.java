@@ -12,6 +12,7 @@ public enum AktivitetStatusV2 {
     KUN_YTELSE("Mottaker av tilstøtende ytelse"),
     DP("Dagpenger", 1, 3),
 	SP_AV_DP("Sykepenger av dagpenger", 1, 3),
+	PSB_AV_DP("Pleiepenger av dagpenger", 1, 3),
 	AAP("Mottaker av arbeidsavklaringspenger", 1, 4),
     MS("Militær/Sivil"),
 	BA("Brukers andel"),
