@@ -1,7 +1,10 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.perioder.utbetalingsgrad;
 
+import static no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil.TIDENES_ENDE;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -13,45 +16,44 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.PeriodeÅrsak;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.utbetalingsgrad.AndelUtbetalingsgrad;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.utbetalingsgrad.Utbetalingsgrad;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.PeriodeSplittData;
+import no.nav.fpsak.tidsserie.LocalDateInterval;
+import no.nav.fpsak.tidsserie.LocalDateSegment;
+import no.nav.fpsak.tidsserie.LocalDateTimeline;
+import no.nav.fpsak.tidsserie.StandardCombinators;
 
 public class IdentifiserPerioderForEndringISøktYtelse {
     private IdentifiserPerioderForEndringISøktYtelse() {
         // skjul public constructor
     }
 
-	// TODO: Reduser kompleksitet
     public static Set<PeriodeSplittData> identifiser(AndelUtbetalingsgrad endringISøktYtelse) {
-        Set<PeriodeSplittData> set = new HashSet<>();
         List<Utbetalingsgrad> graderinger = endringISøktYtelse.getUbetalingsgrader();
-        for (int i = 0; i < graderinger.size(); i++) {
-	        Utbetalingsgrad curr = graderinger.get(i);
-            if (i > 0) {
-	            Utbetalingsgrad prev = graderinger.get(i - 1);
-                if (curr.getUtbetalingsprosent().compareTo(prev.getUtbetalingsprosent()) != 0 || !curr.getPeriode().getFom().minusDays(1).equals(prev.getTom())) {
-                    PeriodeSplittData periodeSplitt = lagPeriodeSplitt(curr.getFom());
-                    set.add(periodeSplitt);
-                }
-            } else {
-                if (curr.getUtbetalingsprosent().compareTo(BigDecimal.ZERO) != 0) {
-                    PeriodeSplittData periodeSplitt = lagPeriodeSplitt(curr.getFom());
-                    set.add(periodeSplitt);
-                }
-            }
-            if (i < graderinger.size() - 1) {
-	            Utbetalingsgrad next = graderinger.get(i + 1);
-                if (next.getPeriode().getFom().isAfter(curr.getTom().plusDays(1)) && curr.getUtbetalingsprosent().compareTo(BigDecimal.ZERO) != 0) {
-                    PeriodeSplittData periodeSplitt = lagPeriodeSplitt(curr.getTom().plusDays(1));
-                    set.add(periodeSplitt);
-                }
-            } else if (curr.getUtbetalingsprosent().compareTo(BigDecimal.ZERO) != 0) {
-                    PeriodeSplittData periodeSplitt = lagPeriodeSplitt(curr.getTom().plusDays(1));
-                    set.add(periodeSplitt);
-            }
+        if (graderinger.isEmpty()) {
+        	return Collections.emptySet();
         }
+	    var graderingTidslinje = lagGraderingTidslinje(graderinger);
+	    var tidslinje = fyllMellomromMedNull(graderingTidslinje);
+	    var set = tidslinje.getLocalDateIntervals().stream()
+			    .map(graderingIntervall -> lagPeriodeSplitt(graderingIntervall.getFomDato()))
+			    .collect(Collectors.toCollection(HashSet::new));
         return set.stream().sorted(Comparator.comparing(PeriodeSplittData::getFom)).collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
-    private static PeriodeSplittData lagPeriodeSplitt(LocalDate fom) {
+	private static LocalDateTimeline<BigDecimal> lagGraderingTidslinje(List<Utbetalingsgrad> graderinger) {
+		var graderingSegmenter = graderinger.stream()
+				.filter(g -> g.getUtbetalingsprosent().compareTo(BigDecimal.ZERO) != 0)
+				.map(g -> new LocalDateSegment<>(g.getFom(), g.getTom(), g.getUtbetalingsprosent()))
+				.collect(Collectors.toList());
+		return new LocalDateTimeline<>(graderingSegmenter, StandardCombinators::rightOnly);
+	}
+
+	private static LocalDateTimeline<BigDecimal> fyllMellomromMedNull(LocalDateTimeline<BigDecimal> graderingTidslinje) {
+		var førsteFom = graderingTidslinje.getLocalDateIntervals().stream().map(LocalDateInterval::getFomDato).min(Comparator.naturalOrder()).orElseThrow();
+		var nullTidslinje = new LocalDateTimeline<>(List.of(new LocalDateSegment<>(førsteFom, TIDENES_ENDE, BigDecimal.ZERO)));
+		return graderingTidslinje.crossJoin(nullTidslinje, StandardCombinators::coalesceLeftHandSide).compress();
+	}
+
+	private static PeriodeSplittData lagPeriodeSplitt(LocalDate fom) {
         return PeriodeSplittData.builder()
             .medPeriodeÅrsak(PeriodeÅrsak.ENDRING_I_AKTIVITETER_SØKT_FOR)
             .medFom(fom)
