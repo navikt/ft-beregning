@@ -2,8 +2,6 @@ package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.grad
 
 import java.util.List;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.naturalytelse.IdentifiserteNaturalytelsePeriodeÅrsaker;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.naturalytelse.PeriodeModellNaturalytelse;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.IdentifisertePeriodeÅrsaker;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SplittetPeriode;
 

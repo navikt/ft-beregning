@@ -2,7 +2,6 @@ package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.utbe
 
 import java.util.List;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.utbetalingsgrad.PeriodeModellUtbetalingsgrad;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.IdentifisertePeriodeÅrsaker;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SplittetPeriode;
 
