@@ -1,4 +1,4 @@
-package no.nav.folketrygdloven.beregningsgrunnlag.perioder;
+package no.nav.folketrygdloven.beregningsgrunnlag.perioder.utbetalingsgrad;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -9,24 +9,24 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Gradering;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.PeriodeÅrsak;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AndelGradering;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.utbetalingsgrad.AndelUtbetalingsgrad;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.utbetalingsgrad.Utbetalingsgrad;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.PeriodeSplittData;
 
-public class IdentifiserPerioderForEndringISøktYtelseSvangerskapspenger {
-    private IdentifiserPerioderForEndringISøktYtelseSvangerskapspenger() {
+public class IdentifiserPerioderForEndringISøktYtelse {
+    private IdentifiserPerioderForEndringISøktYtelse() {
         // skjul public constructor
     }
 
 	// TODO: Reduser kompleksitet
-    public static Set<PeriodeSplittData> identifiser(AndelGradering endringISøktYtelse) {
+    public static Set<PeriodeSplittData> identifiser(AndelUtbetalingsgrad endringISøktYtelse) {
         Set<PeriodeSplittData> set = new HashSet<>();
-        List<Gradering> graderinger = endringISøktYtelse.getGraderinger();
+        List<Utbetalingsgrad> graderinger = endringISøktYtelse.getUbetalingsgrader();
         for (int i = 0; i < graderinger.size(); i++) {
-            Gradering curr = graderinger.get(i);
+	        Utbetalingsgrad curr = graderinger.get(i);
             if (i > 0) {
-                Gradering prev = graderinger.get(i - 1);
+	            Utbetalingsgrad prev = graderinger.get(i - 1);
                 if (curr.getUtbetalingsprosent().compareTo(prev.getUtbetalingsprosent()) != 0 || !curr.getPeriode().getFom().minusDays(1).equals(prev.getTom())) {
                     PeriodeSplittData periodeSplitt = lagPeriodeSplitt(curr.getFom());
                     set.add(periodeSplitt);
@@ -38,7 +38,7 @@ public class IdentifiserPerioderForEndringISøktYtelseSvangerskapspenger {
                 }
             }
             if (i < graderinger.size() - 1) {
-                Gradering next = graderinger.get(i + 1);
+	            Utbetalingsgrad next = graderinger.get(i + 1);
                 if (next.getPeriode().getFom().isAfter(curr.getTom().plusDays(1)) && curr.getUtbetalingsprosent().compareTo(BigDecimal.ZERO) != 0) {
                     PeriodeSplittData periodeSplitt = lagPeriodeSplitt(curr.getTom().plusDays(1));
                     set.add(periodeSplitt);

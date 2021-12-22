@@ -1,4 +1,4 @@
-package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering;
+package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.utbetalingsgrad;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -6,20 +6,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.PeriodisertBruttoBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SplittetPeriode;
 
-public class PeriodeModell {
-    private List<ArbeidsforholdOgInntektsmelding> arbeidsforholdOgInntektsmeldinger = Collections.emptyList();
+public class PeriodeModellUtbetalingsgrad {
     private LocalDate skjæringstidspunkt;
     private BigDecimal grunnbeløp;
-    private List<AndelGradering> andelGraderinger = new ArrayList<>();
     private List<SplittetPeriode> eksisterendePerioder = new ArrayList<>();
     private List<PeriodisertBruttoBeregningsgrunnlag> periodisertBruttoBeregningsgrunnlagList = Collections.emptyList();
-    private List<AndelGradering> endringerISøktYtelse = new ArrayList<>();
-
-    public List<ArbeidsforholdOgInntektsmelding> getArbeidsforholdOgInntektsmeldinger() {
-        return arbeidsforholdOgInntektsmeldinger;
-    }
+    private List<AndelUtbetalingsgrad> endringerISøktYtelse = new ArrayList<>();
 
     public LocalDate getSkjæringstidspunkt() {
         return skjæringstidspunkt;
@@ -27,10 +22,6 @@ public class PeriodeModell {
 
     public BigDecimal getGrunnbeløp() {
         return grunnbeløp;
-    }
-
-    public List<AndelGradering> getAndelGraderinger() {
-        return andelGraderinger;
     }
 
     public List<SplittetPeriode> getEksisterendePerioder() {
@@ -41,7 +32,7 @@ public class PeriodeModell {
         return periodisertBruttoBeregningsgrunnlagList;
     }
 
-    public List<AndelGradering> getEndringerISøktYtelse() {
+    public List<AndelUtbetalingsgrad> getEndringerISøktYtelse() {
         return endringerISøktYtelse;
     }
 
@@ -50,10 +41,10 @@ public class PeriodeModell {
     }
 
     public static class Builder {
-        private final PeriodeModell kladd;
+        private final PeriodeModellUtbetalingsgrad kladd;
 
         public Builder() {
-            kladd = new PeriodeModell();
+            kladd = new PeriodeModellUtbetalingsgrad();
         }
 
         public Builder medSkjæringstidspunkt(LocalDate skjæringstidspunkt) {
@@ -66,17 +57,7 @@ public class PeriodeModell {
             return this;
         }
 
-        public Builder medInntektsmeldinger(List<ArbeidsforholdOgInntektsmelding> inntektsmeldinger) {
-            kladd.arbeidsforholdOgInntektsmeldinger = inntektsmeldinger;
-            return this;
-        }
-
-        public Builder medAndelGraderinger(List<AndelGradering> andelGraderinger) {
-            kladd.andelGraderinger = andelGraderinger;
-            return this;
-        }
-
-        public Builder medEndringISøktYtelse(List<AndelGradering> endringISøktYtelse) {
+        public Builder medEndringISøktYtelse(List<AndelUtbetalingsgrad> endringISøktYtelse) {
             kladd.endringerISøktYtelse = endringISøktYtelse;
             return this;
         }
@@ -91,7 +72,7 @@ public class PeriodeModell {
             return this;
         }
 
-        public PeriodeModell build() {
+        public PeriodeModellUtbetalingsgrad build() {
             return kladd;
         }
     }

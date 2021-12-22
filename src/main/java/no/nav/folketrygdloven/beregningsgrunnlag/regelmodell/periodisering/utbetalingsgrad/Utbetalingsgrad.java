@@ -1,14 +1,16 @@
-package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell;
+package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.utbetalingsgrad;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class Gradering {
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
+
+public class Utbetalingsgrad {
 
     private Periode periode;
     private BigDecimal utbetalingsprosent;
 
-    public Gradering(Periode periode, BigDecimal utbetalingsprosent) {
+    public Utbetalingsgrad(Periode periode, BigDecimal utbetalingsprosent) {
         this.periode = periode;
         this.utbetalingsprosent = utbetalingsprosent;
     }

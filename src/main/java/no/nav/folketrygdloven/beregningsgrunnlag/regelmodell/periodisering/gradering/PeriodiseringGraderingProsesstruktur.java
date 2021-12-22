@@ -1,21 +1,23 @@
-package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering;
+package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.gradering;
 
 import java.util.List;
 
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.naturalytelse.IdentifiserteNaturalytelsePeriodeÅrsaker;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.naturalytelse.PeriodeModellNaturalytelse;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.IdentifisertePeriodeÅrsaker;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SplittetPeriode;
 
-public class PeriodeSplittProsesstruktur {
+public class PeriodiseringGraderingProsesstruktur {
 
-    private PeriodeModell input;
+    private PeriodeModellGradering input;
     private IdentifisertePeriodeÅrsaker identifisertePeriodeÅrsaker;
     private List<SplittetPeriode> splittetPerioder;
 
-    public PeriodeSplittProsesstruktur(PeriodeModell input) {
+    public PeriodiseringGraderingProsesstruktur(PeriodeModellGradering input) {
         this.input = input;
     }
 
-    public PeriodeModell getInput() {
+    public PeriodeModellGradering getInput() {
         return input;
     }
 

@@ -1,4 +1,4 @@
-package no.nav.folketrygdloven.beregningsgrunnlag.perioder;
+package no.nav.folketrygdloven.beregningsgrunnlag.perioder.gradering;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -9,11 +9,11 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Gradering;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.gradering.Gradering;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AktivitetStatusV2;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AndelGraderingImpl;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.gradering.AndelGradering;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.BruttoBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.PeriodisertBruttoBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil;
@@ -41,8 +41,8 @@ public class ErHøyerePrioriterteAndelerBruttoMinst6GTest {
                 .build())
             .build();
 
-        var gradering = new Gradering(new Periode(LocalDate.of(2019, Month.MARCH, 1), DateUtil.TIDENES_ENDE), BigDecimal.valueOf(50));
-        AndelGraderingImpl andelGradering = AndelGraderingImpl.builder()
+        var gradering = new Gradering(new Periode(LocalDate.of(2019, Month.MARCH, 1), DateUtil.TIDENES_ENDE));
+        AndelGradering andelGradering = AndelGradering.builder()
             .medAktivitetStatus(AktivitetStatusV2.SN)
             .medGraderinger(List.of(gradering))
             .build();
@@ -69,8 +69,8 @@ public class ErHøyerePrioriterteAndelerBruttoMinst6GTest {
                 .build())
             .build();
 
-        var gradering = new Gradering(new Periode(LocalDate.of(2019, Month.MARCH, 1), DateUtil.TIDENES_ENDE), BigDecimal.valueOf(50));
-        AndelGraderingImpl andelGradering = AndelGraderingImpl.builder()
+        var gradering = new Gradering(new Periode(LocalDate.of(2019, Month.MARCH, 1), DateUtil.TIDENES_ENDE));
+        AndelGradering andelGradering = AndelGradering.builder()
             .medAktivitetStatus(AktivitetStatusV2.FL)
             .medGraderinger(List.of(gradering))
             .build();
@@ -98,8 +98,8 @@ public class ErHøyerePrioriterteAndelerBruttoMinst6GTest {
                 .build())
             .build();
 
-        var gradering = new Gradering(new Periode(LocalDate.of(2019, Month.MARCH, 1), DateUtil.TIDENES_ENDE), BigDecimal.valueOf(50));
-        AndelGraderingImpl andelGradering = AndelGraderingImpl.builder()
+        var gradering = new Gradering(new Periode(LocalDate.of(2019, Month.MARCH, 1), DateUtil.TIDENES_ENDE));
+        AndelGradering andelGradering = AndelGradering.builder()
             .medAktivitetStatus(AktivitetStatusV2.FL)
             .medGraderinger(List.of(gradering))
             .build();
@@ -127,8 +127,8 @@ public class ErHøyerePrioriterteAndelerBruttoMinst6GTest {
                 .build())
             .build();
 
-        var gradering = new Gradering(new Periode(LocalDate.of(2019, Month.MARCH, 1), DateUtil.TIDENES_ENDE), BigDecimal.valueOf(50));
-        AndelGraderingImpl andelGradering = AndelGraderingImpl.builder()
+        var gradering = new Gradering(new Periode(LocalDate.of(2019, Month.MARCH, 1), DateUtil.TIDENES_ENDE));
+        AndelGradering andelGradering = AndelGradering.builder()
             .medAktivitetStatus(AktivitetStatusV2.FL)
             .medGraderinger(List.of(gradering))
             .build();

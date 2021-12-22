@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Gradering;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.NaturalYtelse;
@@ -17,7 +16,6 @@ public class ArbeidsforholdOgInntektsmelding {
     private Arbeidsforhold arbeidsforhold;
     private List<Refusjonskrav> refusjoner = Collections.emptyList();
     private List<Refusjonskrav> gyldigeRefusjonskrav = Collections.emptyList();
-    private List<Gradering> graderinger = Collections.emptyList();
 	private List<NaturalYtelse> naturalYtelser = Collections.emptyList();
     private Periode ansettelsesperiode;
     private LocalDate startdatoPermisjon;
@@ -119,11 +117,6 @@ public class ArbeidsforholdOgInntektsmelding {
             return this;
         }
 
-	    public Builder medGraderinger(List<Gradering> graderinger) {
-            kladd.graderinger = graderinger;
-            return this;
-        }
-
         public Builder medRefusjonskravFrist(RefusjonskravFrist refusjonskravFrist) {
             kladd.refusjonskravFrist = refusjonskravFrist;
             return this;
@@ -160,7 +153,6 @@ public class ArbeidsforholdOgInntektsmelding {
             "arbeidsforhold=" + arbeidsforhold +
             ", refusjoner=" + refusjoner +
             ", gyldigeRefusjonskrav=" + gyldigeRefusjonskrav +
-            ", graderinger=" + graderinger +
             ", naturalYtelser=" + naturalYtelser +
             ", ansettelsesperiode=" + ansettelsesperiode +
             ", startdatoPermisjon=" + startdatoPermisjon +
