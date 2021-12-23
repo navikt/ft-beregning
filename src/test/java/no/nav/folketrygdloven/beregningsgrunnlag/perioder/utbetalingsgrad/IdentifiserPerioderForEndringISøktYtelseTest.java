@@ -207,4 +207,23 @@ public class IdentifiserPerioderForEndringISøktYtelseTest {
         });
     }
 
+
+	@Test
+	public void ingen_splitt_med_kun_null() {
+		// Arrange
+		LocalDate fom = LocalDate.now();
+		LocalDate tom = fom.plusMonths(1);
+		var andelGradering = AndelUtbetalingsgrad.builder()
+				.medAktivitetStatus(AktivitetStatusV2.AT)
+				.medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("123"))
+				.medUtbetalingsgrader(List.of(new Utbetalingsgrad(Periode.of(fom, tom), BigDecimal.valueOf(0))))
+				.build();
+
+		// Act
+		Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForEndringISøktYtelse.identifiser(andelGradering);
+
+		// Assert
+		assertThat(periodesplitter).hasSize(0);
+	}
+
 }
