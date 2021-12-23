@@ -28,10 +28,10 @@ public class IdentifiserPerioderForEndringISøktYtelse {
 
     public static Set<PeriodeSplittData> identifiser(AndelUtbetalingsgrad endringISøktYtelse) {
         List<Utbetalingsgrad> graderinger = endringISøktYtelse.getUbetalingsgrader();
-        if (graderinger.isEmpty()) {
-        	return Collections.emptySet();
-        }
 	    var graderingTidslinje = lagGraderingTidslinje(graderinger);
+	    if (graderingTidslinje.isEmpty()) {
+		    return Collections.emptySet();
+	    }
 	    var tidslinje = fyllMellomromMedNull(graderingTidslinje);
 	    var set = tidslinje.getLocalDateIntervals().stream()
 			    .map(graderingIntervall -> lagPeriodeSplitt(graderingIntervall.getFomDato()))
