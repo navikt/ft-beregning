@@ -82,7 +82,9 @@ public class FastsettYtelseFordeling {
 
 		List<Inntekt> inntekter = new ArrayList<>();
 		aktivitetInntektMap.forEach((key, value) -> {
-			BigDecimal andel = value.divide(sumYtelseIOverlappendePeriode, 10, RoundingMode.HALF_EVEN);
+			BigDecimal andel = sumYtelseIOverlappendePeriode.compareTo(BigDecimal.ZERO) > 0
+					? value.divide(sumYtelseIOverlappendePeriode, 10, RoundingMode.HALF_EVEN)
+					: BigDecimal.ZERO;
 			BigDecimal andelsBeløpAvYtelse = periodeinntekt.getInntekt().multiply(andel);
 			AktivitetNøkkel aktivitetNøkkel = lagK14Aktivitet(periodeinntekt.getYtelse(), key);
 			inntekter.add(new Inntekt(aktivitetNøkkel, andelsBeløpAvYtelse));

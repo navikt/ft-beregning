@@ -138,6 +138,21 @@ class FastsettYtelseFordelingTest {
 	}
 
 	@Test
+	public void skal_håndtere_0_ytelse_foreldrepenger() {
+		// Arrange
+		Periodeinntekt inntekt = lagPeriodeinntekt(YearMonth.of(2021, 3), RelatertYtelseType.FORELDREPENGER, BigDecimal.ZERO);
+		lagForeldrepengeperiode(LocalDate.of(2021,3,1), LocalDate.of(2021,3,31), lagYtelseAndel(YtelseAktivitetType.YTELSE_FOR_ARBEID, 0));
+
+		// Act
+		List<Inntekt> fordeltInntekt = fordelInntekt(inntekt);
+
+		// Assert
+		assertThat(fordeltInntekt).hasSize(1);
+		assertInntekt(fordeltInntekt, AktivitetNøkkel.forYtelseFraSammenligningsfilter(Aktivitet.FORELDREPENGER_MOTTAKER, YtelseAktivitetType.YTELSE_FOR_ARBEID), 0);
+	}
+
+
+	@Test
 	public void skal_fordele_foreldrepenger_et_grunnlag_en_andel() {
 		// Arrange
 		Periodeinntekt inntekt = lagPeriodeinntekt(YearMonth.of(2021, 3), RelatertYtelseType.FORELDREPENGER, BigDecimal.valueOf(15000));
