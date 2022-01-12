@@ -15,6 +15,7 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 
 class FinnFraksjonPrAndel extends LeafSpecification<FordelModell> {
 
+	private static final BigDecimal AKSEPTERT_AVVIK = BigDecimal.valueOf(0.0000001);
     static final String ID = "FINN_FRAKSJON_PR_ANDEL";
     static final String BESKRIVELSE = "Bestemmer fraksjon av totalt foreslått beløp eller beløp fra inntektsmeldingen";
 
@@ -50,7 +51,8 @@ class FinnFraksjonPrAndel extends LeafSpecification<FordelModell> {
 				.map(FordelteAndelerModell::getFraksjonAvBrutto)
 				.reduce(BigDecimal::add)
 				.orElse(BigDecimal.ZERO);
-		if (totalFraksjon.compareTo(BigDecimal.valueOf(1)) != 0) {
+		var avvikIFraksjon = BigDecimal.valueOf(1).subtract(totalFraksjon).abs();
+		if (avvikIFraksjon.compareTo(AKSEPTERT_AVVIK) > 0) {
 			throw new IllegalStateException("Feil under fordeling, total fraksjons av brutto var " + totalFraksjon);
 		}
 	}
