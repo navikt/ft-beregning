@@ -56,6 +56,25 @@ class FinnFraksjonPrAndelTest {
 		assertAndel(fordelModell, tilkommet, 0.625);
 	}
 
+	@Test
+	public void skal_akseptere_lite_avvik_når_beløp_ikke_er_delbart() {
+		// Arrange
+		FordelAndelModell foreslåttAndel = lagFordelAndelMedForeslått(AktivitetStatus.AT, arbeid("999", "abc"), 100_000, 100_000);
+		FordelAndelModell tilkommet1 = lagFordelAndelTilkommet(AktivitetStatus.AT, arbeid("999", "def"), 100_000, 100_000);
+		FordelAndelModell tilkommet2 = lagFordelAndelTilkommet(AktivitetStatus.AT, arbeid("888", "abc"), 100_000, 100_000);
+
+		// Act
+		FordelModell fordelModell = kjørRegel(foreslåttAndel, tilkommet1, tilkommet2);
+
+		// Assert
+		assertThat(fordelModell.getMellomregninger()).hasSize(3);
+		assertAndel(fordelModell, foreslåttAndel, 0.3333333333);
+		assertAndel(fordelModell, tilkommet1, 0.3333333333);
+		assertAndel(fordelModell, tilkommet2, 0.3333333333);
+
+	}
+
+
 	/**
 	 * Her er brutto ved stp 600.000, men refusjon blir 800.000 med tilkommet arbeidsforhold
 	 * Andeler som krever refusjon har 800.000 i fraksjonsbestemmende beløp
