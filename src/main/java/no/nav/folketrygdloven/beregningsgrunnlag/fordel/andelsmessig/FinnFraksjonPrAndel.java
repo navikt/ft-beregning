@@ -2,6 +2,7 @@ package no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,12 +39,33 @@ class FinnFraksjonPrAndel extends LeafSpecification<FordelModell> {
 			BigDecimal bruktFraksjon = utregnetFraksjon.min(gjennståendeFraksjon);
 			gjennståendeFraksjon = gjennståendeFraksjon.subtract(bruktFraksjon);
 			mellomregning.setFraksjonAvBrutto(bruktFraksjon);
+		}
+
+		// Hvis vi ikke har klart å dele hele fraksjonen (100%) på alle andelene, deler vi ut rest her.
+	    // Dette kan skje f.eks ved 3 andeler der alle har krav på like stor fraksjon.
+		if (harGjennståendeFraksjonSomIkkeOvergårAkseptertAvvik(gjennståendeFraksjon)) {
+			var andelMedKravPåStørsteFraksjon = mellomregninger.stream()
+					.max(Comparator.comparing(FordelteAndelerModell::getFraksjonAvBrutto))
+					.orElseThrow();
+			BigDecimal nyFraksjon = andelMedKravPåStørsteFraksjon.getFraksjonAvBrutto().add(gjennståendeFraksjon);
+			andelMedKravPåStørsteFraksjon.setFraksjonAvBrutto(nyFraksjon);
+		}
+
+	    validerFraksjoner(mellomregninger);
+		mellomregninger.forEach(mellomregning -> {
 			modell.leggTilMellomregningAndel(mellomregning);
 			resultater.put("andel", mellomregning.getInputAndel().getBeskrivelse());
 			resultater.put("fraksjon", mellomregning.getFraksjonAvBrutto());
-		}
-		validerFraksjoner(mellomregninger);
+		});
+
 	    return beregnet(resultater);
+	}
+
+	private boolean harGjennståendeFraksjonSomIkkeOvergårAkseptertAvvik(BigDecimal gjennståendeFraksjon) {
+		if (gjennståendeFraksjon.compareTo(AKSEPTERT_AVVIK) > 0) {
+			throw new IllegalStateException("Feil under fordeling, gjennstående fraksjon å fordele var " + gjennståendeFraksjon);
+		}
+		return gjennståendeFraksjon.compareTo(BigDecimal.ZERO) > 0;
 	}
 
 	private void validerFraksjoner(List<FordelteAndelerModell> mellomregninger) {

@@ -61,9 +61,6 @@ public class FordelteAndelerModell {
 	}
 
 	public void setFraksjonAvBrutto(BigDecimal fraksjonAvBrutto) {
-		if (this.fraksjonAvBrutto != null) {
-			throw new IllegalStateException("Prøver å sette faksjon av brutto, men beløpet er allerede satt til " + this.fraksjonAvBrutto);
-		}
 		this.fraksjonAvBrutto = Objects.requireNonNull(fraksjonAvBrutto, "fraksjonAvBrutto");
 	}
 

@@ -68,7 +68,7 @@ class FinnFraksjonPrAndelTest {
 
 		// Assert
 		assertThat(fordelModell.getMellomregninger()).hasSize(3);
-		assertAndel(fordelModell, foreslåttAndel, 0.3333333333);
+		assertAndel(fordelModell, foreslåttAndel, 0.3333333334);
 		assertAndel(fordelModell, tilkommet1, 0.3333333333);
 		assertAndel(fordelModell, tilkommet2, 0.3333333333);
 
