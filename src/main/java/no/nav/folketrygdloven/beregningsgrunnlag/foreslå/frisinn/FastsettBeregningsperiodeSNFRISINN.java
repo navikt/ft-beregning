@@ -17,8 +17,6 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 public class FastsettBeregningsperiodeSNFRISINN extends LeafSpecification<BeregningsgrunnlagPeriode> {
 
     private static final BeregningsgrunnlagHjemmel HJEMMEL = BeregningsgrunnlagHjemmel.KORONALOVEN_3;
-    private static final LocalDate BG_PERIODE_FOM = LocalDate.of(2017,1,1);
-    private static final LocalDate BG_PERIODE_TOM = LocalDate.of(2019,12,31);
     static final String ID = "FRISINN 2.4";
     private static final String BESKRIVELSE = "Fastsett beregningsperiode";
 
@@ -34,7 +32,8 @@ public class FastsettBeregningsperiodeSNFRISINN extends LeafSpecification<Beregn
             grunnlag.getBeregningsgrunnlag().getAktivitetStatus(AktivitetStatus.SN).setHjemmel(HJEMMEL);
             resultater.put("hjemmel", HJEMMEL);
         }
-        BeregningsgrunnlagPrStatus.builder(bgps).medBeregningsperiode(Periode.of(BG_PERIODE_FOM, BG_PERIODE_TOM)).build();
+	    var skjæringstidspunkt = grunnlag.getBeregningsgrunnlag().getSkjæringstidspunkt();
+	    BeregningsgrunnlagPrStatus.builder(bgps).medBeregningsperiode(Periode.of(skjæringstidspunkt.minusYears(3).withDayOfYear(1), skjæringstidspunkt.withDayOfYear(1).minusDays(1))).build();
         return beregnet(resultater);
     }
 }
