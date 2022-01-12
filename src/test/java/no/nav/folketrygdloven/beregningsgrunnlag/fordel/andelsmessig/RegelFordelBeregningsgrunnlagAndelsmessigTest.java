@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,6 +38,26 @@ class RegelFordelBeregningsgrunnlagAndelsmessigTest {
 		assertFordeltAndel(fordelteAndeler, arbeid("999", "abc"), Inntektskategori.ARBEIDSTAKER, 250000);
 		assertFordeltAndel(fordelteAndeler, arbeid("888", "abc"), Inntektskategori.ARBEIDSTAKER,250000);
 	}
+
+	@Test
+	public void et_foreslått_og_to_tilkommne_arbeidsforhold_kan_ikke_deles_likt() {
+		// Arrange
+		FordelAndelModell foreslåttAndel = lagForeslåttAndel(AktivitetStatus.AT, Inntektskategori.ARBEIDSTAKER, arbeid("999", "abc"), 100000, 100000);
+		FordelAndelModell tilkommetAndel1 = lagTilkommetAndel(AktivitetStatus.AT, Inntektskategori.ARBEIDSTAKER, arbeid("888", "abc"), 100000, 100000);
+		FordelAndelModell tilkommetAndel2 = lagTilkommetAndel(AktivitetStatus.AT, Inntektskategori.ARBEIDSTAKER, arbeid("999", "def"), 100000, 100000);
+
+		// Act
+		List<FordelAndelModell> fordelteAndeler = kjørRegel(foreslåttAndel, tilkommetAndel1, tilkommetAndel2);
+
+		// Assert
+		var fordeltSum = fordelteAndeler.stream().map(FordelAndelModell::getFordeltPrÅr).map(Optional::get).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+		assertThat(fordeltSum.intValue()).isEqualTo(100000);
+		assertThat(fordelteAndeler).hasSize(3);
+		assertFordeltAndel(fordelteAndeler, arbeid("999", "abc"), Inntektskategori.ARBEIDSTAKER, 33333.3333400000);
+		assertFordeltAndel(fordelteAndeler, arbeid("999", "def"), Inntektskategori.ARBEIDSTAKER,33333.3333300000);
+		assertFordeltAndel(fordelteAndeler, arbeid("888", "abc"), Inntektskategori.ARBEIDSTAKER,33333.3333300000);
+	}
+
 
 	// Inntekt på STP, 300.000. Total ref: 500.000.
 	// Fraksjoner: foreslåttAndel: 100000 / 500000 = 0.2 tilkommetAndel: 400000 / 500000 = 0.8
