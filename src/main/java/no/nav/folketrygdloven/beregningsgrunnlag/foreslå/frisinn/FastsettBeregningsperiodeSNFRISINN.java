@@ -1,6 +1,5 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.foreslå.frisinn;
 
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
