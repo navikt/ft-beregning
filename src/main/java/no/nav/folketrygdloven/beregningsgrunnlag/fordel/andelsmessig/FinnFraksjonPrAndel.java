@@ -41,6 +41,8 @@ class FinnFraksjonPrAndel extends LeafSpecification<FordelModell> {
 			mellomregning.setFraksjonAvBrutto(bruktFraksjon);
 		}
 
+		// Hvis vi ikke har klart å dele hele fraksjonen (100%) på alle andelene, deler vi ut rest her.
+	    // Dette kan skje f.eks ved 3 andeler der alle har krav på like stor fraksjon.
 		if (harGjennståendeFraksjonSomIkkeOvergårAkseptertAvvik(gjennståendeFraksjon)) {
 			var andelMedKravPåStørsteFraksjon = mellomregninger.stream()
 					.max(Comparator.comparing(FordelteAndelerModell::getFraksjonAvBrutto))
