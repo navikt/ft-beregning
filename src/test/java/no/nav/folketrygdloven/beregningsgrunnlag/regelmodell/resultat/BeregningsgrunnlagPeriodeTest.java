@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 
@@ -18,16 +19,16 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.In
 public class BeregningsgrunnlagPeriodeTest {
 
     /*
-    Rekkefølge for beregning av BeregningsgrunnlagPrStatus er viktig pga avhengigheter. Denne testen tester at status SN
+    Rekkefølge for beregning av BeregningsgrunnlagPrStatus er viktig pga avhengigheter. Denne testen tester at status MS, SN
      og ATFL_SN returneres sist.
      */
 
     private static final LocalDate skjæringstidspunkt = LocalDate.of(2018, Month.JANUARY, 15);
 
     @Test
-    public void skal_teste_at_aktivitetstatuser_SN_og_ATFLSN_returneres_sist() {
+    public void skal_teste_at_aktivitetstatuser_MS_og_SN_og_ATFLSN_returneres_sist() {
         //Arrange
-        List<AktivitetStatusMedHjemmel> alleStatuser = List.of(AktivitetStatus.values()).stream()
+        List<AktivitetStatusMedHjemmel> alleStatuser = Stream.of(AktivitetStatus.values())
                 .map(as -> new AktivitetStatusMedHjemmel(as, null))
                 .collect(Collectors.toList());
         BeregningsgrunnlagPeriode bgPeriode = BeregningsgrunnlagPeriode.builder()
@@ -43,11 +44,11 @@ public class BeregningsgrunnlagPeriodeTest {
         //Act
         List<AktivitetStatusMedHjemmel> aktivitetStatuser = bgPeriode.getAktivitetStatuser();
         //Assert
-        List<AktivitetStatus> toSisteStatuser = aktivitetStatuser.stream()
-            .skip(aktivitetStatuser.size()-2)
-            .map(as -> as.getAktivitetStatus())
+        List<AktivitetStatus> treSisteStatuser = aktivitetStatuser.stream()
+            .skip(aktivitetStatuser.size()-3)
+            .map(AktivitetStatusMedHjemmel::getAktivitetStatus)
             .collect(Collectors.toList());
-        assertThat(toSisteStatuser).containsExactlyInAnyOrder(AktivitetStatus.SN, AktivitetStatus.ATFL_SN);
+        assertThat(treSisteStatuser).containsExactlyInAnyOrder(AktivitetStatus.MS, AktivitetStatus.SN, AktivitetStatus.ATFL_SN);
     }
 
 }

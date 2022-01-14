@@ -20,7 +20,7 @@ public enum AktivitetStatus {
 	PSB_AV_DP("Pleiepenger av dagpenger", 1, 2),
 	AAP("Mottaker av arbeidsavklaringspenger", 1, 3),
 	BA("Brukers andel"),
-	MS("Militær/Sivil"),
+	MS("Militær/Sivil", 9, 9),
 	UDEFINERT("Udefinert"),
 	SN("Selvstendig næringsdrivende", 2, 4),
 	ATFL_SN("Kombinasjon av arbeidstaker/frilanser og selvstendig næringsdrivende", 2, 9),
