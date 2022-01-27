@@ -216,7 +216,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
             .medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP)
             .medMåned(skjæringstidspunkt)
             .medInntekt(dagsats)
-            .medUtbetalingsgrad(BigDecimal.ZERO)
+            .medUtbetalingsfaktor(BigDecimal.ZERO)
             .build());
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.DP));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
@@ -234,7 +234,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
     @Test
     public void skalBeregneGrunnlagForKombinasjonSNOgDagpenger() { // NOSONAR
         // Arrange
-        BigDecimal utbetalingsgrad = new BigDecimal("150");
+        BigDecimal utbetalingsfaktor = BigDecimal.valueOf(0.75);
         BigDecimal dagsats = BigDecimal.valueOf(900);
         Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(skjæringstidspunkt,
                 årsinntekterFor3SisteÅr(5, 5, 5), Inntektskilde.SIGRUN);
@@ -242,7 +242,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
             .medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP)
             .medMåned(skjæringstidspunkt)
             .medInntekt(dagsats)
-            .medUtbetalingsgrad(utbetalingsgrad)
+            .medUtbetalingsfaktor(utbetalingsfaktor)
             .build());
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag,
             List.of(AktivitetStatus.SN, AktivitetStatus.DP));
@@ -254,7 +254,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
         @SuppressWarnings("unused")
         String sporing = EvaluationSerializer.asJson(evaluation);
 
-        double expectedbruttoDP = dagsats.doubleValue() * 260 * utbetalingsgrad.intValue()/200;
+        double expectedbruttoDP = dagsats.doubleValue() * 260 * utbetalingsfaktor.doubleValue();
         double expectedPGIsnitt = 5.0 * GRUNNBELØP_2017;
         double expectedBruttoSN = expectedPGIsnitt - expectedbruttoDP;
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.F_14_7_8_49, AktivitetStatus.DP, expectedbruttoDP);
@@ -266,7 +266,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
     @Test
     public void skalBeregneGrunnlagForKombinasjonATFL_SNOgAAP() { // NOSONAR
         // Arrange
-        BigDecimal utbetalingsgrad = new BigDecimal("100");
+        BigDecimal utbetalingsfaktor = new BigDecimal("1");
         BigDecimal dagsatsAAP = BigDecimal.valueOf(700);
         BigDecimal månedsinntektATFL = BigDecimal.valueOf(20000);
         Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(skjæringstidspunkt,
@@ -276,7 +276,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
             .medInntektskildeOgPeriodeType(Inntektskilde.INNTEKTSMELDING).medArbeidsgiver(arbeidsforhold)
             .medInntekt(månedsinntektATFL).medMåned(skjæringstidspunkt).build());
         inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
-            .medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP).medUtbetalingsgrad(utbetalingsgrad)
+            .medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP).medUtbetalingsfaktor(utbetalingsfaktor)
             .medInntekt(dagsatsAAP).medMåned(skjæringstidspunkt).build());
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag,
             List.of(AktivitetStatus.ATFL_SN, AktivitetStatus.AAP), Collections.singletonList(arbeidsforhold),
@@ -289,7 +289,7 @@ public class RegelForeslåBeregningsgrunnlagMedTogglePåTest {
         @SuppressWarnings("unused")
         String sporing = EvaluationSerializer.asJson(evaluation);
 
-        double expectedbruttoAAP = dagsatsAAP.doubleValue() * 260 * utbetalingsgrad.intValue()/200;
+        double expectedbruttoAAP = dagsatsAAP.doubleValue() * 260 * utbetalingsfaktor.doubleValue();
         double expectedPGIsnitt = 6.0 * GRUNNBELØP_2017;
         double expectedBruttoATFL = 12 * månedsinntektATFL.doubleValue();
         double expectedBruttoSN = expectedPGIsnitt - expectedbruttoAAP - expectedBruttoATFL;
