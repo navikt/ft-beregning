@@ -13,6 +13,7 @@ public enum AktivitetStatusV2 {
     DP("Dagpenger", 1, 3),
 	SP_AV_DP("Sykepenger av dagpenger", 1, 3),
 	PSB_AV_DP("Pleiepenger av dagpenger", 1, 3),
+	FP_AV_DP("Foreldrepenger av dagpenger", 1, 3),
 	AAP("Mottaker av arbeidsavklaringspenger", 1, 4),
     MS("Militær/Sivil"),
 	BA("Brukers andel"),

@@ -134,7 +134,9 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
 		if (Aktivitet.NÆRINGSINNTEKT.equals(aktivitet)) {
 			aktivitetStatus = AktivitetStatus.SN;
 		} else if (Aktivitet.DAGPENGEMOTTAKER.equals(aktivitet)) {
-			aktivitetStatus = AktivitetStatus.DP;
+			aktivitetStatus = AktivitetStatus.DP;		}
+		else if (Aktivitet.FORELDREPENGER_AV_DAGPENGER_MOTTAKER.equals(aktivitet)) {
+			aktivitetStatus = AktivitetStatus.FP_AV_DP;
 		} else if (Aktivitet.SYKEPENGER_AV_DAGPENGER_MOTTAKER.equals(aktivitet)) {
 			aktivitetStatus = AktivitetStatus.SP_AV_DP;
 		} else if (Aktivitet.PLEIEPENGER_AV_DAGPENGER_MOTTAKER.equals(aktivitet)) {
