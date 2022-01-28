@@ -33,7 +33,7 @@ class ForeslåBeregningsgrunnlagDPellerAAPFRISINNTest {
         Periode p = Periode.of(STP, STP.plusMonths(1));
         BeregningsgrunnlagPeriode periode = lagPeriodeMedStatus(aapStatus, p);
         BigDecimal dagsats = BigDecimal.valueOf(100);
-        BigDecimal utbetalingsgrad = BigDecimal.valueOf(200);
+        BigDecimal utbetalingsgrad = BigDecimal.valueOf(1);
         Inntektsgrunnlag inntektsgrunnlag = lagInntektsgrunnlag(p, dagsats, utbetalingsgrad);
         byggBG(periode, inntektsgrunnlag);
 
@@ -51,7 +51,7 @@ class ForeslåBeregningsgrunnlagDPellerAAPFRISINNTest {
         Periode beregnigsgrunnlagPeriode = Periode.of(STP, STP.plusMonths(1).minusDays(1));
         BeregningsgrunnlagPeriode periode = lagPeriodeMedStatus(aapStatus, beregnigsgrunnlagPeriode);
         BigDecimal dagsats = BigDecimal.valueOf(100);
-        BigDecimal utbetalingsgrad = BigDecimal.valueOf(200);
+        BigDecimal utbetalingsgrad = BigDecimal.valueOf(1);
         Periode p = Periode.of(STP, STP.plusDays(14));
         Inntektsgrunnlag inntektsgrunnlag = lagInntektsgrunnlag(p, dagsats, utbetalingsgrad);
         byggBG(periode, inntektsgrunnlag);
@@ -71,7 +71,7 @@ class ForeslåBeregningsgrunnlagDPellerAAPFRISINNTest {
         Periode p = Periode.of(STP, STP.plusMonths(1));
         BeregningsgrunnlagPeriode periode = lagPeriodeMedStatus(aapStatus, p);
         BigDecimal dagsats = BigDecimal.valueOf(100);
-        BigDecimal utbetalingsgrad = BigDecimal.valueOf(200);
+        BigDecimal utbetalingsgrad = BigDecimal.valueOf(1);
         Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
         Periode p1 = Periode.of(STP, STP.plusDays(10));
         Periode p2 = Periode.of(STP.plusDays(11), STP.plusMonths(2));
@@ -95,7 +95,7 @@ class ForeslåBeregningsgrunnlagDPellerAAPFRISINNTest {
         BeregningsgrunnlagPeriode periode = lagPeriodeMedStatus(aapStatus, p);
         BigDecimal dagsats1 = BigDecimal.valueOf(100);
         BigDecimal dagsats2 = BigDecimal.valueOf(300);
-        BigDecimal utbetalingsgrad = BigDecimal.valueOf(200);
+        BigDecimal utbetalingsgrad = BigDecimal.valueOf(1);
         Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
         Periode p1 = Periode.of(STP, STP.plusDays(14));
         Periode p2 = Periode.of(STP.plusDays(15), STP.plusMonths(2));
@@ -119,8 +119,8 @@ class ForeslåBeregningsgrunnlagDPellerAAPFRISINNTest {
         BeregningsgrunnlagPeriode periode = lagPeriodeMedStatus(aapStatus, p);
         BigDecimal dagsats1 = BigDecimal.valueOf(100);
         BigDecimal dagsats2 = BigDecimal.valueOf(300);
-        BigDecimal utbetalingsgrad1 = BigDecimal.valueOf(200);
-        BigDecimal utbetalingsgrad2 = BigDecimal.valueOf(100);
+        BigDecimal utbetalingsgrad1 = BigDecimal.valueOf(1);
+        BigDecimal utbetalingsgrad2 = BigDecimal.valueOf(0.5);
         Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
         Periode p1 = Periode.of(STP, STP.plusDays(14));
         Periode p2 = Periode.of(STP.plusDays(15), STP.plusMonths(2));
@@ -145,8 +145,8 @@ class ForeslåBeregningsgrunnlagDPellerAAPFRISINNTest {
         BeregningsgrunnlagPeriode periode = lagPeriodeMedStatus(aapStatus, p);
         BigDecimal dagsats1 = BigDecimal.valueOf(100);
         BigDecimal dagsats2 = BigDecimal.valueOf(300);
-        BigDecimal utbetalingsgrad1 = BigDecimal.valueOf(100);
-        BigDecimal utbetalingsgrad2 = BigDecimal.valueOf(100);
+        BigDecimal utbetalingsgrad1 = BigDecimal.valueOf(0.5);
+        BigDecimal utbetalingsgrad2 = BigDecimal.valueOf(0.5);
         Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
         Periode p1 = Periode.of(STP, STP.plusDays(14));
         Periode p2 = Periode.of(STP.plusDays(15), STP.plusMonths(2));
@@ -188,7 +188,7 @@ class ForeslåBeregningsgrunnlagDPellerAAPFRISINNTest {
             .medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP)
             .medPeriode(p)
             .medInntekt(dagsats)
-            .medUtbetalingsgrad(utbetalingsgrad)
+            .medUtbetalingsfaktor(utbetalingsgrad)
             .build();
     }
 

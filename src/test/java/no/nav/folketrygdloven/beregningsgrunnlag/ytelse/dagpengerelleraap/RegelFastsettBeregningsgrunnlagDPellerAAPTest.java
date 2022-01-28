@@ -39,7 +39,7 @@ public class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
     public void skalForeslåBeregningsgrunnlagForDagpenger() {
         //Arrange
         BigDecimal dagsats = new BigDecimal("1142");
-        Inntektsgrunnlag inntektsgrunnlag = lagInntektsgrunnlag(dagsats, skjæringstidspunkt, 150);
+        Inntektsgrunnlag inntektsgrunnlag = lagInntektsgrunnlag(dagsats, skjæringstidspunkt, 0.75);
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag,
             Collections.singletonList(AktivitetStatus.DP));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
@@ -67,7 +67,7 @@ public class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
     public void skalForeslåBeregningsgrunnlagForAAP() {
         //Arrange
         BigDecimal dagsats = new BigDecimal("1611");
-        Inntektsgrunnlag inntektsgrunnlag = lagInntektsgrunnlag(dagsats, skjæringstidspunkt, 150);
+        Inntektsgrunnlag inntektsgrunnlag = lagInntektsgrunnlag(dagsats, skjæringstidspunkt, 0.75);
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.AAP));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
@@ -95,7 +95,7 @@ public class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
         //Arrange
         BigDecimal dagsats = new BigDecimal("1611");
         BigDecimal beregnetPrÅr = new BigDecimal(324423);
-        Inntektsgrunnlag inntektsgrunnlag = lagInntektsgrunnlag(dagsats, skjæringstidspunkt, 150);
+        Inntektsgrunnlag inntektsgrunnlag = lagInntektsgrunnlag(dagsats, skjæringstidspunkt, 0.75);
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.AAP));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         BeregningsgrunnlagPrStatus.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.AAP))
@@ -126,7 +126,7 @@ public class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
     public void skalForeslåBeregningsgrunnlagForAAPMedKombinasjonsStatus() {
         //Arrange
         BigDecimal dagsats = new BigDecimal("1400");
-        Inntektsgrunnlag inntektsgrunnlag = lagInntektsgrunnlag(dagsats, skjæringstidspunkt, 150);
+        Inntektsgrunnlag inntektsgrunnlag = lagInntektsgrunnlag(dagsats, skjæringstidspunkt, 0.75);
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.AAP, AktivitetStatus.SN));
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
@@ -156,7 +156,7 @@ public class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
         //Arrange
         BigDecimal beregnetDagsats = BigDecimal.valueOf(600);
         BigDecimal brutto = BigDecimal.valueOf(260000);
-        Inntektsgrunnlag inntektsgrunnlag = lagInntektsgrunnlag(beregnetDagsats, skjæringstidspunkt, 150);
+        Inntektsgrunnlag inntektsgrunnlag = lagInntektsgrunnlag(beregnetDagsats, skjæringstidspunkt, 0.75);
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.DP));
         BeregningsgrunnlagPrStatus bgPrStatus = beregningsgrunnlag.getBeregningsgrunnlagPerioder().stream().map(p -> p.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP)).findFirst().get();//NOSONAR
         BeregningsgrunnlagPrStatus.builder(bgPrStatus).medFastsattAvSaksbehandler(true).medBesteberegningPrÅr(brutto).build();
@@ -180,7 +180,7 @@ public class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
         //Arrange
         BigDecimal beregnetDagsats = BigDecimal.valueOf(720);
         BigDecimal brutto = BigDecimal.valueOf(240000);
-        Inntektsgrunnlag inntektsgrunnlag = lagInntektsgrunnlag(beregnetDagsats, skjæringstidspunkt, 100);
+        Inntektsgrunnlag inntektsgrunnlag = lagInntektsgrunnlag(beregnetDagsats, skjæringstidspunkt, 0.5);
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.DP, AktivitetStatus.SN));
         BeregningsgrunnlagPrStatus bgPrStatus = beregningsgrunnlag.getBeregningsgrunnlagPerioder().stream().map(p -> p.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP)).findFirst().get();//NOSONAR
         BeregningsgrunnlagPrStatus.builder(bgPrStatus).medFastsattAvSaksbehandler(true).medBesteberegningPrÅr(brutto).build();
@@ -205,7 +205,7 @@ public class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
         BigDecimal fastsattPrÅr = BigDecimal.valueOf(120000);
         BigDecimal beregnetDagsats = BigDecimal.valueOf(720);
         BigDecimal besteberegning = BigDecimal.valueOf(240000);
-        Inntektsgrunnlag inntektsgrunnlag = lagInntektsgrunnlag(beregnetDagsats, skjæringstidspunkt, 100);
+        Inntektsgrunnlag inntektsgrunnlag = lagInntektsgrunnlag(beregnetDagsats, skjæringstidspunkt, 0.5);
         Beregningsgrunnlag beregningsgrunnlag = Beregningsgrunnlag.builder(settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag,
             List.of(AktivitetStatus.DP, AktivitetStatus.ATFL), Collections.singletonList(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("12345"))))
             .medYtelsesSpesifiktGrunnlag(new ForeldrepengerGrunnlag(true)).build();
@@ -238,14 +238,14 @@ public class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
     }
 
 
-    private Inntektsgrunnlag lagInntektsgrunnlag(BigDecimal dagsats, LocalDate skjæringstidspunkt, int utbetalingsgrad) {
+    private Inntektsgrunnlag lagInntektsgrunnlag(BigDecimal dagsats, LocalDate skjæringstidspunkt, double utbetalingsgrad) {
 
         Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
         inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
             .medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP)
             .medMåned(skjæringstidspunkt)
             .medInntekt(dagsats)
-            .medUtbetalingsgrad(BigDecimal.valueOf(utbetalingsgrad))
+            .medUtbetalingsfaktor(BigDecimal.valueOf(utbetalingsgrad))
             .build());
         return inntektsgrunnlag;
     }

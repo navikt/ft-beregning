@@ -51,9 +51,8 @@ class ForeslåBeregningsgrunnlagDPellerAAPFRISINN extends LeafSpecification<Bere
             .map(pi -> {
                 var overlappendePeriodeFom = pi.getFom().isBefore(beregningsgrunnlagPeriode.getFom()) ? beregningsgrunnlagPeriode.getFom() : pi.getFom();
                 var overlappendePeriodeTom = pi.getTom().isAfter(beregningsgrunnlagPeriode.getTom()) ? beregningsgrunnlagPeriode.getTom() : pi.getTom();
-                BigDecimal utbetalingsFaktor = pi.getUtbetalingsgrad()
-                    .orElseThrow(() -> new IllegalStateException("Utbetalingsgrad for DP/AAP mangler."))
-                    .divide(BigDecimal.valueOf(200), 10, RoundingMode.HALF_UP);
+                BigDecimal utbetalingsFaktor = pi.getUtbetalingsfaktor()
+                    .orElseThrow(() -> new IllegalStateException("Utbetalingsgrad for DP/AAP mangler."));
                 if (!pi.getInntektPeriodeType().equals(InntektPeriodeType.DAGLIG)) {
                     throw new IllegalStateException("Forventer inntekter med dagsats");
                 }

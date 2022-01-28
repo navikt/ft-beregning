@@ -16,7 +16,7 @@ public class Periodeinntekt {
     private BigDecimal inntekt;
     private Inntektskilde inntektskilde;
     private Arbeidsforhold arbeidsgiver;
-    private BigDecimal utbetalingsgrad;
+    private BigDecimal utbetalingsfaktor;
     private InntektPeriodeType inntektPeriodeType;
     private List<NaturalYtelse> naturalYtelser = new ArrayList<>();
     private AktivitetStatus aktivitetStatus;
@@ -54,8 +54,8 @@ public class Periodeinntekt {
         return periode.getTom();
     }
 
-    public Optional<BigDecimal> getUtbetalingsgrad() {
-        return Optional.ofNullable(utbetalingsgrad);
+    public Optional<BigDecimal> getUtbetalingsfaktor() {
+        return Optional.ofNullable(utbetalingsfaktor);
     }
 
 	public RelatertYtelseType getYtelse() {
@@ -140,8 +140,11 @@ public class Periodeinntekt {
             return this;
         }
 
-        public Builder medUtbetalingsgrad(BigDecimal utbetalingsgrad) {
-            kladd.utbetalingsgrad = utbetalingsgrad;
+        public Builder medUtbetalingsfaktor(BigDecimal utbetalingsgrad) {
+        	if (utbetalingsgrad.compareTo(BigDecimal.valueOf(1)) > 0) {
+        		throw new IllegalArgumentException("Utbetalingsgrad må oppgis som et tall mellom 0 og 1. Oppgitt utbetalingsgrad: " + utbetalingsgrad);
+	        }
+            kladd.utbetalingsfaktor = utbetalingsgrad;
             return this;
         }
 
