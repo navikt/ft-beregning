@@ -3,7 +3,6 @@ package no.nav.folketrygdloven.beregningsgrunnlag.foreslå.frisinn;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.time.temporal.TemporalAdjusters;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -16,22 +15,19 @@ import no.nav.folketrygdloven.beregningsgrunnlag.util.Virkedager;
 class FinnRapportertÅrsinntektSN {
 
     static BigDecimal finnRapportertÅrsinntekt(BeregningsgrunnlagPeriode grunnlag) {
-        Optional<BigDecimal> inntektÅretFørStp = finnInntekterÅretFørStp(grunnlag);
-        return inntektÅretFørStp.orElseGet(() -> finnInntekterISammeÅrSomStp(grunnlag).orElse(BigDecimal.ZERO));
+        Optional<BigDecimal> inntekt2019 = finnInntekter2019(grunnlag);
+        return inntekt2019.orElseGet(() -> finnInntekter2020(grunnlag).orElse(BigDecimal.ZERO));
     }
 
-    private static Optional<BigDecimal> finnInntekterÅretFørStp(BeregningsgrunnlagPeriode grunnlag) {
-	    var skjæringstidspunkt = grunnlag.getBeregningsgrunnlag().getSkjæringstidspunkt();
-	    var åretFørStp = skjæringstidspunkt.minusYears(1);
-	    var førsteDagIÅretFørStp = åretFørStp.withDayOfYear(1);
-	    List<Periodeinntekt> inntekterÅretFørStp = grunnlag.getInntektsgrunnlag().getPeriodeinntekterForSNFraSøknad(Periode.of(førsteDagIÅretFørStp, åretFørStp.with(TemporalAdjusters.lastDayOfYear())));
-        if (inntekterÅretFørStp.isEmpty()) {
+    private static Optional<BigDecimal> finnInntekter2019(BeregningsgrunnlagPeriode grunnlag) {
+        List<Periodeinntekt> inntekter2019 = grunnlag.getInntektsgrunnlag().getPeriodeinntekterForSNFraSøknad(Periode.of(LocalDate.of(2019, 1, 1), LocalDate.of(2019, 12, 31)));
+        if (inntekter2019.isEmpty()) {
             return Optional.empty();
         }
-        LocalDate førsteDatoMedInntekt = inntekterÅretFørStp.stream().map(Periodeinntekt::getFom).min(Comparator.naturalOrder()).orElse(skjæringstidspunkt.withDayOfYear(1));
-        Optional<BigDecimal> sumIPeriode = inntekterÅretFørStp.stream().map(Periodeinntekt::getInntekt).reduce(BigDecimal::add);
-        if (førsteDatoMedInntekt.isAfter(førsteDagIÅretFørStp)) {
-            int virkedager = Virkedager.beregnAntallVirkedagerEllerKunHelg(førsteDatoMedInntekt, skjæringstidspunkt.withDayOfYear(1));
+        LocalDate førsteDatoMedInntekt = inntekter2019.stream().map(Periodeinntekt::getFom).min(Comparator.naturalOrder()).orElse(LocalDate.of(2020, 1, 1));
+        Optional<BigDecimal> sumIPeriode = inntekter2019.stream().map(Periodeinntekt::getInntekt).reduce(BigDecimal::add);
+        if (førsteDatoMedInntekt.isAfter(LocalDate.of(2019,1, 1))) {
+            int virkedager = Virkedager.beregnAntallVirkedagerEllerKunHelg(førsteDatoMedInntekt, LocalDate.of(2020, 1, 1));
             if (virkedager > 0) {
                 Optional<BigDecimal> dagsats = sumIPeriode.map(b -> b.divide(BigDecimal.valueOf(virkedager), 10, RoundingMode.HALF_EVEN));
                 return dagsats.map(b -> b.multiply(BigDecimal.valueOf(260)));
@@ -40,13 +36,12 @@ class FinnRapportertÅrsinntektSN {
         return sumIPeriode;
     }
 
-    private static Optional<BigDecimal> finnInntekterISammeÅrSomStp(BeregningsgrunnlagPeriode grunnlag) {
+    private static Optional<BigDecimal> finnInntekter2020(BeregningsgrunnlagPeriode grunnlag) {
         LocalDate førsteDatoMedInntekt;
-	    var skjæringstidspunkt = grunnlag.getBeregningsgrunnlag().getSkjæringstidspunkt();
-	    List<Periodeinntekt> inntekterSammeÅrSomStp = grunnlag.getInntektsgrunnlag().getPeriodeinntekterForSNFraSøknad(Periode.of(skjæringstidspunkt.withDayOfYear(1), skjæringstidspunkt));
-        førsteDatoMedInntekt = inntekterSammeÅrSomStp.stream().map(Periodeinntekt::getFom).min(Comparator.naturalOrder()).orElse(skjæringstidspunkt.withDayOfYear(1));
-        Optional<BigDecimal> sumIPeriode = inntekterSammeÅrSomStp.stream().map(Periodeinntekt::getInntekt).reduce(BigDecimal::add);
-        int virkedager = Virkedager.beregnAntallVirkedagerEllerKunHelg(førsteDatoMedInntekt, skjæringstidspunkt);
+        List<Periodeinntekt> inntekter2020 = grunnlag.getInntektsgrunnlag().getPeriodeinntekterForSNFraSøknad(Periode.of(LocalDate.of(2020, 1, 1), LocalDate.of(2020, 3, 1)));
+        førsteDatoMedInntekt = inntekter2020.stream().map(Periodeinntekt::getFom).min(Comparator.naturalOrder()).orElse(LocalDate.of(2020, 1, 1));
+        Optional<BigDecimal> sumIPeriode = inntekter2020.stream().map(Periodeinntekt::getInntekt).reduce(BigDecimal::add);
+        int virkedager = Virkedager.beregnAntallVirkedagerEllerKunHelg(førsteDatoMedInntekt, LocalDate.of(2020, 3, 1));
         if (virkedager > 0) {
             Optional<BigDecimal> dagsats = sumIPeriode.map(b -> b.divide(BigDecimal.valueOf(virkedager), 10, RoundingMode.HALF_EVEN));
             return dagsats.map(b -> b.multiply(BigDecimal.valueOf(260)));
