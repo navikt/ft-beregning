@@ -1,7 +1,5 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.kombinasjon;
 
-import java.util.Arrays;
-
 import no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker.RegelBeregningsgrunnlagATFL;
 import no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker.RegelBeregningsgrunnlagSplittATFL;
 import no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker.SjekkOmFørsteBeregningsgrunnlagsperiode;
@@ -70,16 +68,16 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN extends Dynami
             rs.beregningHvisRegel(new SjekkOmBrukerErNyIArbeidslivet(), new IkkeBeregnet(SjekkOmBrukerErNyIArbeidslivet.FASTSETT_BG_FOR_SN_NY_I_ARBEIDSLIVET),
                 sjekkOmManueltFastsattInntekt);
 
-        // FP_BR 2.20 Er beregningsgrunnlaget besteberegnet?
-        Specification<BeregningsgrunnlagPeriode> sjekkOmBesteberegnet =
-            rs.beregningHvisRegel(new SjekkOmBeregninsgrunnlagErBesteberegnet(), new Beregnet(),
-                sjekkOmNyIArbeidslivetSN);
-
         // FP_BR 2.9 Beregn oppjustert inntekt for årene i beregningsperioden
         // FP_BR 2.1 Fastsett beregningsperiode
         Specification<BeregningsgrunnlagPeriode> beregnPGI =
-            rs.beregningsRegel("FP_BR 2", "Fastsett beregningsperiode og beregn oppjusterte inntekter og pgi-snitt.",
-                Arrays.asList(new FastsettBeregningsperiodeForAktivitetstatus(AktivitetStatus.SN), new BeregnOppjustertInntektForAktivitetstatus(AktivitetStatus.SN), new BeregnGjennomsnittligPGIForAktivitetstatus(AktivitetStatus.SN)), sjekkOmBesteberegnet);
+		    rs.sekvensRegel("FP_BR 2", "Fastsett beregningsperiode og beregn oppjusterte inntekter og pgi-snitt.")
+			    .neste(new FastsettBeregningsperiodeForAktivitetstatus(AktivitetStatus.SN))
+			    .neste(new BeregnOppjustertInntektForAktivitetstatus(AktivitetStatus.SN))
+			    .neste(new BeregnGjennomsnittligPGIForAktivitetstatus(AktivitetStatus.SN))
+			    .siste(rs.sekvensHvisRegel()
+				        .hvis(new SjekkOmBeregninsgrunnlagErBesteberegnet(), new Beregnet())
+				        .ellers(sjekkOmNyIArbeidslivetSN));
 
         Specification<BeregningsgrunnlagPeriode> beregningsgrunnlagKombinasjon;
         if(regelmodell.skalSplitteSammenligningsgrunnlagToggle()){

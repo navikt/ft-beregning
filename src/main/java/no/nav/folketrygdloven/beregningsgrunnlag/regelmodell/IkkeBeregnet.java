@@ -7,7 +7,7 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 
 public class IkkeBeregnet extends LeafSpecification<BeregningsgrunnlagPeriode> {
 
-    private RuleReasonRef ruleReasonRef;
+    protected RuleReasonRef ruleReasonRef;
 
     public IkkeBeregnet(RuleReasonRef ruleReasonRef){
         super(ruleReasonRef.getReasonCode());
