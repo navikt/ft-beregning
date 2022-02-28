@@ -1,7 +1,6 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.ytelse.dagpengerelleraap;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,10 +33,9 @@ class ForeslåBeregningsgrunnlagDPellerAAPKombinasjonMedAnnenStatus extends Leaf
 
         Periodeinntekt inntekt = grunnlag.getInntektsgrunnlag().getPeriodeinntekt(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP, grunnlag.getSkjæringstidspunkt())
             .orElseThrow(() -> new IllegalStateException("Ingen inntekter fra tilstøtende ytelser funnet i siste måned med inntekt"));
-        BigDecimal utbetalingsgrad = inntekt.getUtbetalingsgrad()
+        BigDecimal utbetalingsFaktor = inntekt.getUtbetalingsfaktor()
             .orElseThrow(() -> new IllegalStateException("Utbetalingsgrad for DP/AAP mangler."));
 
-        BigDecimal utbetalingsFaktor = utbetalingsgrad.divide(BigDecimal.valueOf(200), 10, RoundingMode.HALF_UP);
         BigDecimal antallPerioderPrÅr = inntekt.getInntektPeriodeType().getAntallPrÅr();
         BigDecimal beregnetPrÅr = inntekt.getInntekt().multiply(antallPerioderPrÅr).multiply(utbetalingsFaktor);
         Long originalDagsats = inntekt.getInntekt().longValue();

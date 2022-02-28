@@ -15,7 +15,9 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.In
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
 
 public class FinnPerioderUtenYtelse {
-	
+
+    public static final Periode ÅRET_2017 = Periode.of(LocalDate.of(2017, 1, 1), LocalDate.of(2017, 12, 31));
+
     private FinnPerioderUtenYtelse() {
         // Vedskjul
     }
@@ -41,20 +43,19 @@ public class FinnPerioderUtenYtelse {
 
         List<Periode> beregningsperioder = finnPerioderUtenYtelseFra36MndFørStp(skjæringstidspunktForOpptjening, ytelseperioder);
         verifiserPerioder(beregningsperioder);
-        if (harKunInntektTreÅrFørOgDPEllerAAPPåStp(skjæringstidspunktForOpptjening, ytelseperioder, beregningsperioder)) {
+        if (harKunInntektFra2017OgDPEllerAAPPåStp(skjæringstidspunktForOpptjening, ytelseperioder, beregningsperioder)) {
             return Collections.emptyList();
         }
         List<Periode> perioderEtter12MndFørStp = finnPerioderUtenYtelse12MndFørStp(skjæringstidspunktForOpptjening, beregningsperioder);
         return finnMinst6MndUtenYtelse(beregningsperioder, perioderEtter12MndFørStp);
     }
 
-    private static boolean harKunInntektTreÅrFørOgDPEllerAAPPåStp(LocalDate skjæringstidspunktForOpptjening, List<YtelsePeriode> ytelseperioder, List<Periode> beregningsperioder) {
-	    var treÅrFør = Periode.of(skjæringstidspunktForOpptjening.minusYears(3).withDayOfYear(1), skjæringstidspunktForOpptjening.minusYears(3).with(TemporalAdjusters.lastDayOfYear()));
-	    boolean harKunInntektFraTreÅrFør = beregningsperioder.stream().allMatch(p -> p.overlapper(treÅrFør));
+    private static boolean harKunInntektFra2017OgDPEllerAAPPåStp(LocalDate skjæringstidspunktForOpptjening, List<YtelsePeriode> ytelseperioder, List<Periode> beregningsperioder) {
+        boolean harKunInntektFra2017 = beregningsperioder.stream().allMatch(p -> p.overlapper(ÅRET_2017));
         boolean harAAPEllerDPVedSTPOpptjening = ytelseperioder.stream()
             .filter(p -> p.periode().overlapper(Periode.of(skjæringstidspunktForOpptjening.minusMonths(1), skjæringstidspunktForOpptjening.minusDays(1))))
             .anyMatch(p -> p.inntektskilde().equals(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP));
-        return harKunInntektFraTreÅrFør && harAAPEllerDPVedSTPOpptjening;
+        return harKunInntektFra2017 && harAAPEllerDPVedSTPOpptjening;
     }
 
     private static List<Periode> finnMinst6MndUtenYtelse(List<Periode> beregningsperioder, List<Periode> perioderEtter12MndFørStp) {
