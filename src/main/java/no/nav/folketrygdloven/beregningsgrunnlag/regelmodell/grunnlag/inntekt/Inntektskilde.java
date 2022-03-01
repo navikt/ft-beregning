@@ -7,10 +7,12 @@ public enum Inntektskilde {
     SIGRUN(InntektPeriodeType.ÅRLIG),
     SØKNAD(InntektPeriodeType.ÅRLIG),
     TILSTØTENDE_YTELSE_DP_AAP(InntektPeriodeType.DAGLIG),
-    ANNEN_YTELSE(InntektPeriodeType.DAGLIG);
+    ANNEN_YTELSE(InntektPeriodeType.DAGLIG),
+	YTELSE_VEDTAK(InntektPeriodeType.DAGLIG);
 
 
-    private InntektPeriodeType inntektPeriodeType;
+
+	private InntektPeriodeType inntektPeriodeType;
 
     Inntektskilde(InntektPeriodeType inntektPeriodeType) {
         this.inntektPeriodeType = inntektPeriodeType;

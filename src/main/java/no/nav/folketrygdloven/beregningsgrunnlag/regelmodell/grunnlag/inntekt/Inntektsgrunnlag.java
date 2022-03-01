@@ -55,6 +55,12 @@ public class Inntektsgrunnlag {
             .findFirst();
     }
 
+	public List<Periodeinntekt> getPeriodeinntekter(Inntektskilde inntektskilde, LocalDate dato) {
+		return getPeriodeinntektMedKilde(inntektskilde)
+				.filter(pi -> pi.inneholder(dato))
+				.toList();
+	}
+
     public List<Periodeinntekt> getInntektForArbeidsforholdIPeriode(Inntektskilde inntektskilde, BeregningsgrunnlagPrArbeidsforhold arbeidsforhold, Periode periode) {
         if (arbeidsforhold.erFrilanser()) {
             return getPeriodeinntektMedKilde(inntektskilde)

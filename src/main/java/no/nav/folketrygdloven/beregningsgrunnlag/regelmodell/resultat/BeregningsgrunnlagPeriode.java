@@ -48,6 +48,12 @@ public class BeregningsgrunnlagPeriode {
 				.orElse(null);
 	}
 
+	public List<BeregningsgrunnlagPrStatus> getBeregningsgrunnlagPrStatuser(AktivitetStatus aktivitetStatus) {
+		return getBeregningsgrunnlagPrStatus().stream()
+				.filter(af -> aktivitetStatus.equals(af.getAktivitetStatus()))
+				.toList();
+	}
+
 	public Optional<BeregningsgrunnlagPrStatus> getBeregningsgrunnlagFraDagpenger() {
 		return getBeregningsgrunnlagPrStatus().stream()
 				.filter(af -> af.getAktivitetStatus().erDP())
