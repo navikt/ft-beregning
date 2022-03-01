@@ -49,7 +49,7 @@ public class RegelForeslåBeregningsgrunnlagPrStatus extends DynamicRuleService<
             RegelFastsettBeregningsgrunnlagDPellerAAP regelFastsettBeregningsgrunnlagDPellerAAP = new RegelFastsettBeregningsgrunnlagDPellerAAP();
             return regelFastsettBeregningsgrunnlagDPellerAAP.getSpecification().medScope(arg);
         } else if (AktivitetStatus.KUN_YTELSE.equals(aktivitetStatus)) {
-            RegelForeslåBeregningsgrunnlagTY regelForeslåBeregningsgrunnlagTY = new RegelForeslåBeregningsgrunnlagTY();
+            RegelForeslåBeregningsgrunnlagTY regelForeslåBeregningsgrunnlagTY = new RegelForeslåBeregningsgrunnlagTY(regelmodell);
             return regelForeslåBeregningsgrunnlagTY.getSpecification().medScope(arg);
         } else if (AktivitetStatus.MS.equals(aktivitetStatus)) {
             RegelForeslåBeregningsgrunnlagMilitær regelForeslåBeregningsgrunnlagMS = new RegelForeslåBeregningsgrunnlagMilitær();
