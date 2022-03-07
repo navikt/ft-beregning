@@ -27,14 +27,15 @@ public class ReduserBeregningsgrunnlag extends LeafSpecification<Beregningsgrunn
         BigDecimal dekningsgrad = grunnlag.getDekningsgrad().getVerdi();
         Map<String, Object> resultater = new HashMap<>();
         resultater.put("dekningsgrad", grunnlag.getDekningsgrad());
-	    grunnlag.getBeregningsgrunnlagPrStatusSomSkalBrukes().forEach(bps -> {
+
+        grunnlag.getBeregningsgrunnlagPrStatusSomSkalBrukes().forEach(bps -> {
             if (bps.erArbeidstakerEllerFrilanser()) {
                 bps.getArbeidsforholdSomSkalBrukes().forEach(af -> {
                     BigDecimal redusertAF = dekningsgrad.multiply(af.getAvkortetPrÅr());
                     BeregningsgrunnlagPrArbeidsforhold.builder(af)
                         .medRedusertPrÅr(dekningsgrad.multiply(af.getAvkortetPrÅr()))
                         .medRedusertRefusjonPrÅr(dekningsgrad.multiply(af.getAvkortetRefusjonPrÅr()), grunnlag.getYtelsedagerPrÅr())
-                        .medRedusertBrukersAndelPrÅr(finnRedusertBrukersAndel(dekningsgrad, af), grunnlag.getYtelsedagerPrÅr())
+                        .medRedusertBrukersAndelPrÅr(dekningsgrad.multiply(af.getAvkortetBrukersAndelPrÅr()), grunnlag.getYtelsedagerPrÅr())
                         .build();
                     resultater.put("redusertPrÅr.ATFL." + af.getArbeidsgiverId(), redusertAF);
                 });
@@ -49,9 +50,4 @@ public class ReduserBeregningsgrunnlag extends LeafSpecification<Beregningsgrunn
         return resultat;
 
     }
-
-	private BigDecimal finnRedusertBrukersAndel(BigDecimal dekningsgrad,
-	                                            BeregningsgrunnlagPrArbeidsforhold af) {
-		return af.harBrukerSøktFor() ? dekningsgrad.multiply(af.getAvkortetBrukersAndelPrÅr()) : BigDecimal.ZERO;
-	}
 }
