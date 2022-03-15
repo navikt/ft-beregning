@@ -1,6 +1,8 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.selvstendig;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningUtfallMerknad;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningUtfallÅrsak;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SammenligningsGrunnlag;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
@@ -13,12 +15,11 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 public class SjekkOmDifferanseStørreEnn25Prosent extends LeafSpecification<BeregningsgrunnlagPeriode> {
 
     static final String ID = "FP_BR 2.5";
-    static final String BESKRIVELSE = "Er avvik større enn 25% ?";
 
-    public static final RuleReasonRef VARIG_ENDRING_OG_AVVIK_STØRRE_ENN_25_PROSENT = new RuleReasonRefImpl("5039", "Beregningsgrunnlag fastsettes skjønnsmessig");
+    public static final RuleReasonRef VARIG_ENDRING_OG_AVVIK_STØRRE_ENN_25_PROSENT = new BeregningUtfallMerknad(BeregningUtfallÅrsak.VARIG_ENDRING_OG_AVVIK_STØRRE_ENN_25_PROSENT);
 
     public SjekkOmDifferanseStørreEnn25Prosent() {
-        super(ID, BESKRIVELSE);
+        super(ID, BeregningUtfallÅrsak.VARIG_ENDRING_OG_AVVIK_STØRRE_ENN_25_PROSENT.getNavn());
     }
 
     @Override
