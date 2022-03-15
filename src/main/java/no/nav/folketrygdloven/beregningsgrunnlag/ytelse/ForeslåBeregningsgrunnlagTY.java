@@ -9,6 +9,7 @@ import java.util.Map;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.YtelsesSpesifiktGrunnlag;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
@@ -26,7 +27,11 @@ class ForeslåBeregningsgrunnlagTY extends LeafSpecification<BeregningsgrunnlagP
 	@Override
 	public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
 		Map<String, Object> resultater = new HashMap<>();
-		var hjemmel = grunnlag.getBeregningsgrunnlag().getYtelsesSpesifiktGrunnlag().erKap9Ytelse() ? F_9_9 : F_14_7;
+		var hjemmel = grunnlag.getBeregningsgrunnlag().getYtelsesSpesifiktGrunnlagHvisFinnes()
+				.map(YtelsesSpesifiktGrunnlag::erKap9Ytelse)
+				.orElse(false)
+				? F_9_9
+				: F_14_7;
 		grunnlag.getBeregningsgrunnlag().getAktivitetStatus(AktivitetStatus.KUN_YTELSE)
 				.setHjemmel(hjemmel);
 		BigDecimal brutto = grunnlag.getBruttoPrÅr();
