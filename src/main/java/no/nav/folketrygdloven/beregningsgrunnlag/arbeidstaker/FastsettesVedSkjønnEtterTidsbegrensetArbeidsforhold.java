@@ -1,30 +1,30 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningUtfallMerknad;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningUtfallÅrsak;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningUtfallÅrsakKoder;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.IkkeBeregnet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SammenligningsGrunnlag;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
-import no.nav.fpsak.nare.evaluation.RuleReasonRef;
-import no.nav.fpsak.nare.evaluation.RuleReasonRefImpl;
 
 @RuleDocumentation(FastsettesVedSkjønnEtterTidsbegrensetArbeidsforhold.ID)
 class FastsettesVedSkjønnEtterTidsbegrensetArbeidsforhold extends IkkeBeregnet {
 
-    static final String ID = "5047";
-    static final String BESKRIVELSE = "Avvik er > 25% og bruker har tidsbegrenset arbeidsforhold i foregående periode, beregningsgrunnlag fastsettes ved skjønn";
-    private static final RuleReasonRef AVVIK_MER_ENN_25_PROSENT_MED_TIDSBEGRENSET_ARBEIDSFORHOLD_I_FOREGÅENDE_PERIODE = new RuleReasonRefImpl(ID, BESKRIVELSE);
+    static final String ID = BeregningUtfallÅrsakKoder.AVVIK_25_TIDBEGRENSET;
 
     FastsettesVedSkjønnEtterTidsbegrensetArbeidsforhold() {
-        super(AVVIK_MER_ENN_25_PROSENT_MED_TIDSBEGRENSET_ARBEIDSFORHOLD_I_FOREGÅENDE_PERIODE);
+        super(new BeregningUtfallMerknad(BeregningUtfallÅrsak.FASTSETT_AVVIK_TIDSBEGRENSET));
     }
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
         SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlag();
         BigDecimal avvikProsent = sg.getAvvikProsent();
-        return nei(new RuleReasonRefImpl(ID, String.valueOf(avvikProsent)));
+        return nei(ruleReasonRef, String.valueOf(avvikProsent.setScale(0, RoundingMode.HALF_EVEN)));
     }
 }
