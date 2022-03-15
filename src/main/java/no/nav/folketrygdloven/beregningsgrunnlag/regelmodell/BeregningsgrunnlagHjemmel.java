@@ -2,6 +2,7 @@ package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell;
 
 public enum BeregningsgrunnlagHjemmel {
     F_14_7,
+	F_9_9,
     F_14_7_8_30,
     F_14_7_8_28_8_30,
     F_9_8_8_28,

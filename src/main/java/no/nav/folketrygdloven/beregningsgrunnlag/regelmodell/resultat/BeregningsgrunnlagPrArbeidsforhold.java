@@ -45,7 +45,6 @@ public class BeregningsgrunnlagPrArbeidsforhold {
     private Inntektskategori inntektskategori;
     private List<Periode> arbeidsgiverperioder = new ArrayList<>(); //Brukes i beregning for sykepenger
     private Boolean erSøktYtelseFor;
-    private Boolean harBrukerSøktFor = true;
     private BigDecimal utbetalingsprosent = BigDecimal.valueOf(100);
     private BigDecimal andelsmessigFørGraderingPrAar;
 
@@ -235,10 +234,6 @@ public class BeregningsgrunnlagPrArbeidsforhold {
         return erSøktYtelseFor != null ? erSøktYtelseFor : utbetalingsprosent.compareTo(BigDecimal.ZERO) > 0;
     }
 
-    public boolean harBrukerSøktFor() {
-    	return harBrukerSøktFor;
-    }
-
     public void setErSøktYtelseFor(boolean erSøktYtelseFor) {
         this.erSøktYtelseFor = erSøktYtelseFor;
     }
@@ -409,11 +404,6 @@ public class BeregningsgrunnlagPrArbeidsforhold {
             mal.utbetalingsprosent = utbetalingsprosentSVP;
             return this;
         }
-
-	    public Builder medHarBrukerSøktFor(boolean harBrukerSøkt) {
-		    mal.harBrukerSøktFor = harBrukerSøkt;
-		    return this;
-	    }
 
         public BeregningsgrunnlagPrArbeidsforhold build() {
             verifyStateForBuild();
