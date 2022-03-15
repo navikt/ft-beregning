@@ -23,9 +23,9 @@ public class FastsettAndelLikBruttoBG extends LeafSpecification<Beregningsgrunnl
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
 
-        for (BeregningsgrunnlagPrStatus beregningsgrunnlagPrStatus : grunnlag.getBeregningsgrunnlagPrStatusSomSkalBrukes()) {
+        for (BeregningsgrunnlagPrStatus beregningsgrunnlagPrStatus : grunnlag.getBeregningsgrunnlagPrStatus()) {
             if (AktivitetStatus.erArbeidstaker(beregningsgrunnlagPrStatus.getAktivitetStatus())) {
-                for (BeregningsgrunnlagPrArbeidsforhold af : beregningsgrunnlagPrStatus.getArbeidsforholdSomSkalBrukes()) {
+                for (BeregningsgrunnlagPrArbeidsforhold af : beregningsgrunnlagPrStatus.getArbeidsforhold()) {
                     BigDecimal bruttoInkludertNaturalytelsePrÅr = af.getBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO);
                     BeregningsgrunnlagPrArbeidsforhold.builder(af)
                         .medAndelsmessigFørGraderingPrAar(bruttoInkludertNaturalytelsePrÅr)

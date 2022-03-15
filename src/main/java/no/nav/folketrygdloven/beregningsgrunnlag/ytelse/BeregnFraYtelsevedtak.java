@@ -34,8 +34,11 @@ class BeregnFraYtelsevedtak extends LeafSpecification<BeregningsgrunnlagPeriode>
 	public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
 
 		var inntektsgrunnlag = grunnlag.getInntektsgrunnlag();
-		var skjæringstidspunkt = grunnlag.getBeregningsgrunnlag().getSkjæringstidspunkt();
-		var inntektFraYtelseVedtak = inntektsgrunnlag.getPeriodeinntekter(Inntektskilde.YTELSE_VEDTAK, skjæringstidspunkt.minusDays(1));
+		var inntektFraYtelseVedtak = inntektsgrunnlag.getSistePeriodeinntekertMedType(Inntektskilde.YTELSE_VEDTAK);
+
+		if (inntektFraYtelseVedtak.isEmpty()) {
+			throw new IllegalStateException("Forventer å finne minst en inntekt fra ytelse");
+		}
 
 		// Antar at inntektene her allerede er skalert mot gradering i ytelse
 		var beregnet = inntektFraYtelseVedtak.stream()
