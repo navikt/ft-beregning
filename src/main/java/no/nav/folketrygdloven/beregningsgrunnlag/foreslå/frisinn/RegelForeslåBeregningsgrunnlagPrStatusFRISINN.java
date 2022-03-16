@@ -3,12 +3,13 @@ package no.nav.folketrygdloven.beregningsgrunnlag.foreslå.frisinn;
 import no.nav.folketrygdloven.beregningsgrunnlag.foreslå.RegelForeslåBeregningsgrunnlagTilNull;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningUtfallMerknad;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningUtfallÅrsak;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.IkkeBeregnet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.fpsak.nare.DynamicRuleService;
 import no.nav.fpsak.nare.ServiceArgument;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
-import no.nav.fpsak.nare.evaluation.RuleReasonRefImpl;
 import no.nav.fpsak.nare.specification.Specification;
 
 
@@ -29,7 +30,7 @@ public class RegelForeslåBeregningsgrunnlagPrStatusFRISINN extends DynamicRuleS
             throw new IllegalStateException("Utviklerfeil: AktivitetStatus må angis som parameter");
         }
         if (regelmodell.getBeregningsgrunnlagPrStatus().isEmpty()) {
-            return new IkkeBeregnet(new RuleReasonRefImpl("x", "y"));
+	        return new IkkeBeregnet(new BeregningUtfallMerknad(BeregningUtfallÅrsak.UDEFINERT));
         }
         AktivitetStatus aktivitetStatus = ((AktivitetStatusMedHjemmel) arg.getVerdi()).getAktivitetStatus();
         if (AktivitetStatus.ATFL.equals(aktivitetStatus)) {
