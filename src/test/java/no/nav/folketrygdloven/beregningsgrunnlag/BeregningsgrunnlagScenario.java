@@ -24,6 +24,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.YtelsesSpesifiktGrunnlag;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.fp.ForeldrepengerGrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.omp.OmsorgspengerGrunnlag;
 
 public class BeregningsgrunnlagScenario {
@@ -148,7 +149,7 @@ public class BeregningsgrunnlagScenario {
             .medAktivitetStatuser(aktivitetStatuser.stream().map(as -> new AktivitetStatusMedHjemmel(as, null)).collect(Collectors.toList()))
             .medBeregningsgrunnlagPeriode(bgPeriode)
             .medGrunnbeløpSatser(GRUNNBELØPLISTE)
-            .medYtelsesSpesifiktGrunnlag(ytelsesSpesifiktGrunnlag.orElse(null))
+            .medYtelsesSpesifiktGrunnlag(ytelsesSpesifiktGrunnlag.orElse(new ForeldrepengerGrunnlag(false)))
             .build();
     }
 
@@ -165,7 +166,9 @@ public class BeregningsgrunnlagScenario {
             .medInntektsgrunnlag(inntektsgrunnlag)
             .medSkjæringstidspunkt(skjæringstidspunkt)
             .medGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2017))
-            .medYtelsesSpesifiktGrunnlag(skalSjekkeRefusjonFørSetteAksjonspunkt ? new OmsorgspengerGrunnlag(maksRefusjon, false, false, true) : null)
+            .medYtelsesSpesifiktGrunnlag(skalSjekkeRefusjonFørSetteAksjonspunkt
+		            ? new OmsorgspengerGrunnlag(maksRefusjon, false, false, true)
+		            : new ForeldrepengerGrunnlag(false))
             .medAktivitetStatuser(List.of(new AktivitetStatusMedHjemmel(aktivitetStatus, null)))
             .medBeregningsgrunnlagPeriode(periodeBuilder.build())
             .medGrunnbeløpSatser(GRUNNBELØPLISTE)

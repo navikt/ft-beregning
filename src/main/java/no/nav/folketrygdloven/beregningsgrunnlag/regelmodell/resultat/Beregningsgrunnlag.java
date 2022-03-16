@@ -40,10 +40,6 @@ public class Beregningsgrunnlag {
 
     private Beregningsgrunnlag() { }
 
-    public Optional<YtelsesSpesifiktGrunnlag> getYtelsesSpesifiktGrunnlagHvisFinnes() {
-        return Optional.ofNullable(ytelsesSpesifiktGrunnlag);
-    }
-
 	public YtelsesSpesifiktGrunnlag getYtelsesSpesifiktGrunnlag() {
 		return ytelsesSpesifiktGrunnlag;
 	}
