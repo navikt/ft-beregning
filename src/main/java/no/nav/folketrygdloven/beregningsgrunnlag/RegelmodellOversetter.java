@@ -50,7 +50,7 @@ public class RegelmodellOversetter {
 		if (ev.getOutcome() != null) {
 			if (ev.getOutcome() instanceof BeregningUtfallMerknad merknad) {
 				return new RegelResultat(ResultatBeregningType.IKKE_BEREGNET, input, sporing)
-						.medRegelMerknad(new RegelMerknad(merknad.getReasonCode(), merknad.regelUtfallMerknad(), ev.reason()));
+						.medRegelMerknad(new RegelMerknad(merknad.regelUtfallMerknad(), ev.reason()));
 			} else {
 				throw new IllegalStateException("Utviklerfeil: Ugyldig utfall" + ev.getOutcome());
 			}

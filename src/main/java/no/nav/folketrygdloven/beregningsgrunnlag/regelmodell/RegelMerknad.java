@@ -2,9 +2,11 @@ package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell;
 
 import java.util.Objects;
 
-public record RegelMerknad(String merknadKode, BeregningUtfallÅrsak utfallÅrsak, String merknadTekst) {
+public record RegelMerknad(String merknadKode,
+                           BeregningUtfallÅrsak utfallÅrsak,
+                           @Deprecated(forRemoval = true) String merknadTekst) {
 
-	// Foretrukket 
+	// Foretrukket
 	public RegelMerknad(BeregningUtfallÅrsak utfallÅrsak, String merknadTekst) {
 		this(utfallÅrsak.getKode(), utfallÅrsak, merknadTekst);
 	}
