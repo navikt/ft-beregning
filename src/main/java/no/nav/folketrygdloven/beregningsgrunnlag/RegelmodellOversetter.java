@@ -2,6 +2,7 @@ package no.nav.folketrygdloven.beregningsgrunnlag;
 
 import java.util.stream.Collectors;
 
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningUtfallMerknad;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.RegelMerknad;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.RegelResultat;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ResultatBeregningType;
@@ -47,7 +48,12 @@ public class RegelmodellOversetter {
 
     private static RegelResultat opprettResultat(ResultatBeregningType beregningsresultat, Evaluation ev, String input, String sporing) {
 		if (ev.getOutcome() != null) {
-			return new RegelResultat(ResultatBeregningType.IKKE_BEREGNET, input, sporing).medRegelMerknad(new RegelMerknad(ev.getOutcome().getReasonCode(), ev.reason()));
+			if (ev.getOutcome() instanceof BeregningUtfallMerknad merknad) {
+				return new RegelResultat(ResultatBeregningType.IKKE_BEREGNET, input, sporing)
+						.medRegelMerknad(new RegelMerknad(merknad.getReasonCode(), merknad.regelUtfallMerknad(), ev.reason()));
+			} else {
+				throw new IllegalStateException("Utviklerfeil: Ugyldig utfall" + ev.getOutcome());
+			}
 		} else {
 			return new RegelResultat(ResultatBeregningType.BEREGNET, input, sporing);
 		}
