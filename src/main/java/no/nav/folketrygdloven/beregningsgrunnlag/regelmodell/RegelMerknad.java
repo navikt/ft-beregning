@@ -7,8 +7,8 @@ public record RegelMerknad(String merknadKode,
                            @Deprecated(forRemoval = true) String merknadTekst) {
 
 	// Foretrukket
-	public RegelMerknad(BeregningUtfallÅrsak utfallÅrsak, String merknadTekst) {
-		this(utfallÅrsak.getKode(), utfallÅrsak, merknadTekst);
+	public RegelMerknad(BeregningUtfallÅrsak utfallÅrsak) {
+		this(utfallÅrsak.getKode(), utfallÅrsak, "");
 	}
 
 	@Deprecated // inntill ryddet i kalkulus
