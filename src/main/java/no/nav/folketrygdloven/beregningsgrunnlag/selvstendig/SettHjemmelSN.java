@@ -28,9 +28,9 @@ public class SettHjemmelSN extends LeafSpecification<BeregningsgrunnlagPeriode> 
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
         Map<String, Object> resultater = new HashMap<>();
 	    if (grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL) == null) {
-		    var ytelsesSpesifiktGrunnlag = grunnlag.getBeregningsgrunnlag().getYtelsesSpesifiktGrunnlagHvisFinnes();
+		    var ytelsesSpesifiktGrunnlag = grunnlag.getBeregningsgrunnlag().getYtelsesSpesifiktGrunnlag();
 		    BeregningsgrunnlagHjemmel hjemmel;
-		    if (ytelsesSpesifiktGrunnlag.map(YtelsesSpesifiktGrunnlag::erKap9Ytelse).orElse(false)) {
+		    if (ytelsesSpesifiktGrunnlag.erKap9Ytelse()) {
 			    hjemmel =  K9_HJEMMEL_BARE_SELVSTENDIG;
 		    } else {
 			    hjemmel = K14_HJEMMEL_BARE_SELVSTENDIG;

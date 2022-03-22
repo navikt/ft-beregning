@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -55,6 +56,12 @@ public class Inntektsgrunnlag {
             .findFirst();
     }
 
+	public List<Periodeinntekt> getPeriodeinntekter(Inntektskilde inntektskilde, LocalDate dato) {
+		return getPeriodeinntektMedKilde(inntektskilde)
+				.filter(pi -> pi.inneholder(dato))
+				.toList();
+	}
+
     public List<Periodeinntekt> getInntektForArbeidsforholdIPeriode(Inntektskilde inntektskilde, BeregningsgrunnlagPrArbeidsforhold arbeidsforhold, Periode periode) {
         if (arbeidsforhold.erFrilanser()) {
             return getPeriodeinntektMedKilde(inntektskilde)
@@ -81,9 +88,21 @@ public class Inntektsgrunnlag {
     }
 
     public Optional<Periodeinntekt> getSistePeriodeinntektMedTypeSøknad() {
-        return getPeriodeinntektMedKilde(Inntektskilde.SØKNAD)
-            .max(Comparator.comparing(Periodeinntekt::getFom));
+        return getSistePeriodeinntektMedType(Inntektskilde.SØKNAD);
     }
+
+	public Optional<Periodeinntekt> getSistePeriodeinntektMedType(Inntektskilde kilde) {
+		return getPeriodeinntektMedKilde(kilde)
+				.max(Comparator.comparing(Periodeinntekt::getFom));
+	}
+
+	public List<Periodeinntekt> getSistePeriodeinntekertMedType(Inntektskilde kilde) {
+		var inntekter= getPeriodeinntektMedKilde(kilde).toList();
+		var sisteTomDato = inntekter.stream()
+				.max(Comparator.comparing(Periodeinntekt::getTom))
+				.map(Periodeinntekt::getTom);
+		return sisteTomDato.isEmpty() ? Collections.emptyList() : inntekter.stream().filter(i -> i.getPeriode().inneholder(sisteTomDato.get())).toList();
+	}
 
     public Optional<BigDecimal> getOppgittInntektForStatusIPeriode(AktivitetStatus status, Periode periode) {
         List<Periodeinntekt> inntekter = getInntektspostFraSøknadForStatusIPeriode(status, periode);

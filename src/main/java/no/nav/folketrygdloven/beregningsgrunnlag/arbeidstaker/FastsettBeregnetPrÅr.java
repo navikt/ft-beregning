@@ -46,9 +46,9 @@ class FastsettBeregnetPrÅr extends LeafSpecification<BeregningsgrunnlagPeriode>
         boolean frilans = bgps.getFrilansArbeidsforhold().isPresent();
         BeregningsgrunnlagHjemmel hjemmel;
         if (arbeidstaker) {
-            hjemmel = finnHjemmelForArbeidstaker(grunnlag.getYtelsesSpesifiktGrunnlagHvisFinnes(), kombinasjon, frilans);
+            hjemmel = finnHjemmelForArbeidstaker(grunnlag.getYtelsesSpesifiktGrunnlag(), kombinasjon, frilans);
         } else if (frilans) {
-            hjemmel = settHjemmelForFrilansIkkeArbeid(grunnlag.getYtelsesSpesifiktGrunnlagHvisFinnes(), kombinasjon);
+            hjemmel = settHjemmelForFrilansIkkeArbeid(grunnlag.getYtelsesSpesifiktGrunnlag(), kombinasjon);
         } else {
             throw new IllegalStateException("ATFL-andel mangler både arbeidsforhold og frilansaktivitet");
         }
@@ -56,9 +56,9 @@ class FastsettBeregnetPrÅr extends LeafSpecification<BeregningsgrunnlagPeriode>
         return hjemmel;
     }
 
-    private BeregningsgrunnlagHjemmel settHjemmelForFrilansIkkeArbeid(Optional<YtelsesSpesifiktGrunnlag> ytelsesSpesifiktGrunnlag,
+    private BeregningsgrunnlagHjemmel settHjemmelForFrilansIkkeArbeid(YtelsesSpesifiktGrunnlag ytelsesSpesifiktGrunnlag,
                                                                       boolean kombinasjon) {
-        if (ytelsesSpesifiktGrunnlag.map(YtelsesSpesifiktGrunnlag::erKap9Ytelse).orElse(false)) {
+        if (ytelsesSpesifiktGrunnlag.erKap9Ytelse()) {
             return finnHjemmelForFrilansK9(kombinasjon);
         }
         return finnHjemmelForFrilansK14(kombinasjon);
@@ -71,11 +71,11 @@ class FastsettBeregnetPrÅr extends LeafSpecification<BeregningsgrunnlagPeriode>
         return BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_FRILANSER;
     }
 
-    private BeregningsgrunnlagHjemmel finnHjemmelForArbeidstaker(Optional<YtelsesSpesifiktGrunnlag> ytelsesSpesifiktGrunnlag,
+    private BeregningsgrunnlagHjemmel finnHjemmelForArbeidstaker(YtelsesSpesifiktGrunnlag ytelsesSpesifiktGrunnlag,
                                                                  boolean kombinasjon,
                                                                  boolean frilans) {
-        if (ytelsesSpesifiktGrunnlag.isPresent() && ytelsesSpesifiktGrunnlag.get().erKap9Ytelse()) {
-            return finnHjemmelForArbeidstakerK9(ytelsesSpesifiktGrunnlag.get(), kombinasjon, frilans);
+        if (ytelsesSpesifiktGrunnlag.erKap9Ytelse()) {
+            return finnHjemmelForArbeidstakerK9(ytelsesSpesifiktGrunnlag, kombinasjon, frilans);
         }
         return finnHjemmelForArbeidstakerK14(kombinasjon, frilans);
     }
