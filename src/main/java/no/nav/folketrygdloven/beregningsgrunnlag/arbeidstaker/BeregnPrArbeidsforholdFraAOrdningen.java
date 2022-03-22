@@ -127,8 +127,8 @@ class BeregnPrArbeidsforholdFraAOrdningen extends LeafSpecification<Beregningsgr
 	 * @return Andel av snitt fra a-ordningen
 	 */
 	private BigDecimal finnAndelAvBeregnet(BigDecimal beregnetPrÅr, BeregningsgrunnlagPrArbeidsforhold arbeidsforhold, BeregningsgrunnlagPeriode periode) {
-		var ytelsesSpesifiktGrunnlag = periode.getBeregningsgrunnlag().getYtelsesSpesifiktGrunnlagHvisFinnes();
-		if (!arbeidsforhold.erFrilanser() && arbeidsforhold.getArbeidsgiverId() != null && ytelsesSpesifiktGrunnlag.map(YtelsesSpesifiktGrunnlag::erKap9Ytelse).orElse(false)) {
+		var ytelsesSpesifiktGrunnlag = periode.getBeregningsgrunnlag().getYtelsesSpesifiktGrunnlag();
+		if (!arbeidsforhold.erFrilanser() && arbeidsforhold.getArbeidsgiverId() != null && ytelsesSpesifiktGrunnlag.erKap9Ytelse()) {
 			return fordelRestinntektFraAOrdningen(beregnetPrÅr, arbeidsforhold, periode);
 		}
 		return beregnetPrÅr;
