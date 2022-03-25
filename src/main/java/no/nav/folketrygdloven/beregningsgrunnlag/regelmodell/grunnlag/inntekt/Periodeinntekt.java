@@ -19,7 +19,10 @@ public class Periodeinntekt {
     private BigDecimal utbetalingsfaktor;
     private InntektPeriodeType inntektPeriodeType;
     private List<NaturalYtelse> naturalYtelser = new ArrayList<>();
+    // Kun i bruk for splitting av sammenligningsgrunnlag og besteberegning. Burde besteberegning ha brukt inntektskategori i staden?
     private AktivitetStatus aktivitetStatus;
+	private Inntektskategori inntektskategori;
+
 	private RelatertYtelseType ytelse;
 
     public BigDecimal getInntekt() {
@@ -74,7 +77,11 @@ public class Periodeinntekt {
         return aktivitetStatus;
     }
 
-    public boolean erInnenforPeriode(Periode periode) {
+	public Inntektskategori getInntektskategori() {
+		return inntektskategori;
+	}
+
+	public boolean erInnenforPeriode(Periode periode) {
         return !getFom().isBefore(periode.getFom()) && !getTom().isAfter(periode.getTom());
     }
 
@@ -159,6 +166,11 @@ public class Periodeinntekt {
             kladd.aktivitetStatus = aktivitetStatus;
             return this;
         }
+
+	    public Builder medInntektskategori(Inntektskategori inntektskategori) {
+		    kladd.inntektskategori = inntektskategori;
+		    return this;
+	    }
 
         public Periodeinntekt build() {
             verifyStateForBuild();

@@ -85,6 +85,29 @@ class RegelForeslåBeregningsgrunnlagTYTest {
 	}
 
 	@Test
+	public void skalBeregneFraYtelseVedtakMedArbeidstakerOgSjømann() {
+		// Arrange
+		var beregningsgrunnlagPeriode = lagPeriodeMedInntektskategorier(List.of(Inntektskategori.SJØMANN,
+				Inntektskategori.ARBEIDSTAKER), Periode.of(STP, null));
+		var inntektsgrunnlag = lagInntektsgrunnlag(Periode.of(STP.minusMonths(1), STP.minusDays(1)), Map.of(
+				Inntektskategori.ARBEIDSTAKER, BigDecimal.valueOf(1000),
+				Inntektskategori.SJØMANN, BigDecimal.valueOf(500)));
+		var bg = byggBG(beregningsgrunnlagPeriode, inntektsgrunnlag);
+
+
+		var evaluation = kjørRegel(beregningsgrunnlagPeriode);
+
+		var statuser = beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatuser(AktivitetStatus.BA);
+		var at = statuser.stream().filter(a -> a.getInntektskategori().equals(Inntektskategori.ARBEIDSTAKER)).findFirst().orElseThrow();
+		assertThat(at.getBeregnetPrÅr()).isEqualTo(BigDecimal.valueOf(260_000));
+
+		var fl = statuser.stream().filter(a -> a.getInntektskategori().equals(Inntektskategori.SJØMANN)).findFirst().orElseThrow();
+		assertThat(fl.getBeregnetPrÅr()).isEqualTo(BigDecimal.valueOf(130_000));
+		assertThat(bg.getAktivitetStatus(AktivitetStatus.KUN_YTELSE).getHjemmel()).isEqualTo(F_14_7);
+	}
+
+
+	@Test
 	public void skalIkkeBeregneFraYtelsevedtakOmManueltFastsatt() {
 		// Arrange
 		var beregningsgrunnlagPeriode = lagPeriodeMedInntektskategorier(List.of(Inntektskategori.ARBEIDSTAKER), Periode.of(STP, null));
@@ -128,7 +151,7 @@ class RegelForeslåBeregningsgrunnlagTYTest {
 				.medInntektskildeOgPeriodeType(Inntektskilde.YTELSE_VEDTAK)
 				.medPeriode(p)
 				.medInntekt(dagsats)
-				.medAktivitetStatus(inntektskategori.getAktivitetStatus())
+				.medInntektskategori(inntektskategori)
 				.build();
 	}
 
