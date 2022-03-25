@@ -42,7 +42,7 @@ class BeregnFraYtelsevedtak extends LeafSpecification<BeregningsgrunnlagPeriode>
 
 		// Antar at inntektene her allerede er skalert mot gradering i ytelse
 		var beregnet = inntektFraYtelseVedtak.stream()
-				.filter(i -> i.getAktivitetStatus().equals(statusandel.getInntektskategori().getAktivitetStatus()))
+				.filter(i -> i.getInntektskategori().equals(statusandel.getInntektskategori()))
 				.map(Periodeinntekt::getInntekt)
 				.map(i -> i.multiply(Inntektskilde.YTELSE_VEDTAK.getInntektPeriodeType().getAntallPrÅr()))
 				.reduce(BigDecimal::add)
