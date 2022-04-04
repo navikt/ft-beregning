@@ -1,5 +1,6 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -17,7 +18,7 @@ public class FordelPeriodeModell {
 		Objects.requireNonNull(bgPeriode, "periode");
 		Objects.requireNonNull(andeler, "andeler");
 		this.bgPeriode = bgPeriode;
-		this.andeler = andeler;
+		this.andeler = new ArrayList<>(andeler);
 	}
 
 	public Periode getBgPeriode() {

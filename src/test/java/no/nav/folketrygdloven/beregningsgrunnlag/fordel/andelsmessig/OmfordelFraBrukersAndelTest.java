@@ -40,6 +40,30 @@ class OmfordelFraBrukersAndelTest {
 	}
 
 	@Test
+	void skal_omfordele_fra_to_brukers_andel_til_frilans() {
+		// Arrange
+		var inntekt = BigDecimal.valueOf(200_000);
+		var inntekt2 = BigDecimal.valueOf(40_000);
+		var brukers_andel = lagBrukersAndel(inntekt, Inntektskategori.ARBEIDSTAKER, 1L);
+		var brukers_andel2 = lagBrukersAndel(inntekt2, Inntektskategori.FRILANSER, 2L);
+		var frilans = lagFrilans(3L);
+
+		var periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), TIDENES_ENDE), Arrays.asList(brukers_andel, brukers_andel2, frilans));
+		FordelModell regelmodell = new FordelModell(periode);
+		kjørRegel(regelmodell);
+
+		// Regelen endrer på input så vi kan asserte på brukers_andel og frilans
+		assertThat(periode.getAndeler().size()).isEqualTo(4);
+		assertThat(brukers_andel.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.ZERO);
+		assertThat(brukers_andel2.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.ZERO);
+		assertThat(frilans.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(inntekt);
+		assertThat(frilans.getInntektskategori()).isEqualTo(Inntektskategori.ARBEIDSTAKER);
+		var nyAndel = periode.getAndeler().get(3);
+		assertThat(nyAndel.getInntektskategori()).isEqualTo(Inntektskategori.FRILANSER);
+		assertThat(nyAndel.getFordeltPrÅr().orElseThrow()).isEqualTo(inntekt2);
+	}
+
+	@Test
 	void skal_omfordele_fra_brukers_andel_til_sn() {
 		// Arrange
 		var inntekt = BigDecimal.valueOf(200_000);
@@ -58,6 +82,34 @@ class OmfordelFraBrukersAndelTest {
 		assertThat(brukers_andel.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.ZERO);
 		assertThat(snStatus.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(inntekt);
 		assertThat(snStatus.getInntektskategori()).isEqualTo(arbeidstakerUtenFeriepenger);
+	}
+
+	@Test
+	void skal_omfordele_fra_to_brukers_andel_til_sn() {
+		// Arrange
+		var inntekt = BigDecimal.valueOf(200_000);
+		var inntekt2 = BigDecimal.valueOf(100_000);
+		var brukers_andel = lagBrukersAndel(inntekt, Inntektskategori.ARBEIDSTAKER, 1L);
+		var brukers_andel2 = lagBrukersAndel(inntekt2, Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE, 2L);
+
+		long andelsnrSN = 3L;
+		var snStatus = lagSN(andelsnrSN);
+
+		var periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), TIDENES_ENDE), Arrays.asList(brukers_andel,brukers_andel2, snStatus));
+
+		FordelModell regelmodell = new FordelModell(periode);
+		kjørRegel(regelmodell);
+
+		// Regelen endrer på input så vi kan asserte på brukers_andel og sn
+		assertThat(periode.getAndeler().size()).isEqualTo(4);
+		assertThat(brukers_andel.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.ZERO);
+		assertThat(brukers_andel2.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.ZERO);
+		assertThat(snStatus.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(inntekt);
+		assertThat(snStatus.getInntektskategori()).isEqualTo(Inntektskategori.ARBEIDSTAKER);
+		var nyAndel = periode.getAndeler().get(3);
+		assertThat(nyAndel.getAktivitetStatus()).isEqualTo(AktivitetStatus.SN);
+		assertThat(nyAndel.getInntektskategori()).isEqualTo(Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE);
+		assertThat(nyAndel.getFordeltPrÅr().orElseThrow()).isEqualTo(inntekt2);
 	}
 
 
