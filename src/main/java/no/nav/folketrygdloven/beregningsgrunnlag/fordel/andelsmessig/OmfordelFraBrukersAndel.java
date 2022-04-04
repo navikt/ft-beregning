@@ -3,6 +3,7 @@ package no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig;
 import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelAndelModell;
@@ -34,38 +35,44 @@ class OmfordelFraBrukersAndel extends LeafSpecification<FordelModell> {
 	@Override
 	public Evaluation evaluate(FordelModell modell) {
 		Map<String, Object> resultater = new HashMap<>();
-		var brukersAndel = modell.getInput().getEnesteAndelForStatus(AktivitetStatus.BA)
-				.orElseThrow(() -> new IllegalStateException("Forventer å finne en brukers andel"));
+		var brukersAndel = modell.getInput().getAlleAndelerForStatus(AktivitetStatus.BA);
 		var statusSomAvkortesSistUtenArbeid = finnStatusÅFlytteTil(modell.getInput());
 		resultater.put("aktivitetstatusSomFlyttesTilFraInaktiv", statusSomAvkortesSistUtenArbeid.getAktivitetStatus());
-		resultater.put("aktivitetstatusSomFlyttesFraInaktiv", brukersAndel.getBruttoPrÅr());
-		if (AktivitetStatus.FL.equals(statusSomAvkortesSistUtenArbeid.getAktivitetStatus())) {
-			flyttTilFrilans(brukersAndel, statusSomAvkortesSistUtenArbeid);
-		} else {
-			flyttTilAnnenStatus(brukersAndel, statusSomAvkortesSistUtenArbeid);
-		}
+		flyttTil(brukersAndel, statusSomAvkortesSistUtenArbeid, modell.getInput());
 		settBrukersAndelTil0(brukersAndel);
 		return beregnet(resultater);
 	}
 
-	private void settBrukersAndelTil0(FordelAndelModell brukersAndel) {
-		FordelAndelModell.oppdater(brukersAndel)
+	private void settBrukersAndelTil0(List<FordelAndelModell> brukersAndel) {
+		brukersAndel.forEach(ba -> FordelAndelModell.oppdater(ba)
 				.medFordeltPrÅr(BigDecimal.ZERO)
-				.build();
+				.build());
 	}
 
-	private void flyttTilAnnenStatus(FordelAndelModell brukersAndel, FordelAndelModell statusSomAvkortesSistUtenArbeid) {
-		FordelAndelModell.oppdater(statusSomAvkortesSistUtenArbeid)
-				.medInntektskategori(brukersAndel.getInntektskategori())
-				.medFordeltPrÅr(statusSomAvkortesSistUtenArbeid.getBruttoPrÅr().orElse(BigDecimal.ZERO).add(brukersAndel.getBruttoPrÅr().orElse(BigDecimal.ZERO)))
+	private void flyttTil(List<FordelAndelModell> brukersAndel, FordelAndelModell flytteTilAndel, FordelPeriodeModell periodeModell) {
+		// Siden vi er her vet vi at det finnes minst ett element i lista, flytter bg herfra til flytteTilAndel
+		var førsteBrukersAndel = brukersAndel.get(0);
+		FordelAndelModell.oppdater(flytteTilAndel)
+				.medInntektskategori(førsteBrukersAndel.getInntektskategori())
+				.medFordeltPrÅr(flytteTilAndel.getBruttoPrÅr().orElse(BigDecimal.ZERO).add(førsteBrukersAndel.getBruttoPrÅr().orElse(BigDecimal.ZERO)))
 				.build();
+		if (brukersAndel.size() > 1) {
+			fordelRestenTilNyeAndeler(brukersAndel, flytteTilAndel, periodeModell);
+		}
 	}
 
-	private void flyttTilFrilans(FordelAndelModell brukersAndel, FordelAndelModell frilansArbeidsforhold) {
-		FordelAndelModell.oppdater(frilansArbeidsforhold)
-				.medInntektskategori(brukersAndel.getInntektskategori())
-				.medFordeltPrÅr(frilansArbeidsforhold.getBruttoPrÅr().orElse(BigDecimal.ZERO).add(brukersAndel.getBruttoPrÅr().orElse(BigDecimal.ZERO)))
-				.build();
+	private void fordelRestenTilNyeAndeler(List<FordelAndelModell> brukersAndel,
+	                                       FordelAndelModell eksisterendeAndel,
+	                                       FordelPeriodeModell periodeModell) {
+		var restenAvLista = brukersAndel.subList(1, brukersAndel.size());
+		for (FordelAndelModell andel : restenAvLista) {
+			var nyAndel = opprettNyAndelBasertPå(eksisterendeAndel);
+			FordelAndelModell.oppdater(nyAndel)
+					.medInntektskategori(andel.getInntektskategori())
+					.medFordeltPrÅr(andel.getBruttoPrÅr().orElse(BigDecimal.ZERO))
+					.build();
+			periodeModell.leggTilAndel(nyAndel);
+		}
 	}
 
 	private FordelAndelModell finnStatusÅFlytteTil(FordelPeriodeModell beregningsgrunnlagPeriode) {
@@ -75,5 +82,14 @@ class OmfordelFraBrukersAndel extends LeafSpecification<FordelModell> {
 				.min(AVKORTING_COMPARATOR)
 				.orElseThrow(() -> new IllegalStateException("Forventet å ha en aktivitet å flytte til som ikke er arbeid"));
 	}
+
+	private FordelAndelModell opprettNyAndelBasertPå(FordelAndelModell basertPå) {
+		return FordelAndelModell.builder()
+				.medArbeidsforhold(basertPå.getArbeidsforhold().orElse(null))
+				.medAktivitetStatus(basertPå.getAktivitetStatus())
+				.erNytt(true)
+				.build();
+	}
+
 
 }
