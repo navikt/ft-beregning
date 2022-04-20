@@ -34,7 +34,7 @@ class BeregnFraYtelsevedtak extends LeafSpecification<BeregningsgrunnlagPeriode>
 	public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
 
 		var inntektsgrunnlag = grunnlag.getInntektsgrunnlag();
-		var inntektFraYtelseVedtak = inntektsgrunnlag.getSistePeriodeinntekertMedType(Inntektskilde.YTELSE_VEDTAK);
+		var inntektFraYtelseVedtak = inntektsgrunnlag.getSistePeriodeinntekterMedType(Inntektskilde.YTELSE_VEDTAK);
 
 		if (inntektFraYtelseVedtak.isEmpty()) {
 			throw new IllegalStateException("Forventer å finne minst en inntekt fra ytelse");

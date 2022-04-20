@@ -36,6 +36,7 @@ public enum AktivitetStatus {
     private static final List<AktivitetStatus> SELVSTENDIG_NÆRINGSDRIVENDE_STATUSER = Arrays.asList(SN, ATFL_SN);    //NOSONAR
     private static final List<AktivitetStatus> AAP_OG_DP_STATUSER = Arrays.asList(AAP, DP, SP_AV_DP, PSB_AV_DP);    //NOSONAR
 	private static final List<AktivitetStatus> DP_STATUSER = Arrays.asList(DP, SP_AV_DP, PSB_AV_DP);    //NOSONAR
+	private static final List<AktivitetStatus> DP_FRA_YTELSE_STATUSER = Arrays.asList(SP_AV_DP, PSB_AV_DP);    //NOSONAR
 
     AktivitetStatus(String beskrivelse) {
         this.beskrivelse = beskrivelse;
@@ -87,6 +88,10 @@ public enum AktivitetStatus {
 
 	public boolean erDP() {
 		return DP_STATUSER.contains(this);
+	}
+
+	public boolean erDPFraYtelse() {
+		return DP_FRA_YTELSE_STATUSER.contains(this);
 	}
 
 }
