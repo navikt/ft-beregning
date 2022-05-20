@@ -33,8 +33,6 @@ jobs:
         run: |
           echo "Building $(echo $GITHUB_SHA | cut -c1-7)"
           mvn jacoco:prepare-agent install -e --batch-mode --file pom.xml -Djacoco.destFile=$(pwd)/target/jacoco.exec
-          mvn jacoco:report sonar:sonar -e --batch-mode --file pom.xml -Djacoco.dataFile=$(pwd)/target/jacoco.exec -Dsonar.projectKey="navikt_folketrygdloven-beregningsgrunnlag-regelmodell" -Dsonar.host.url='https://sonarcloud.io' -Dsonar.organization=navit -Dsonar.login=${SONAR_TOKEN}
           echo "Deployed artifacts"
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
