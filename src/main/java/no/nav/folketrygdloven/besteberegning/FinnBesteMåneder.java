@@ -151,8 +151,9 @@ class FinnBesteMåneder extends LeafSpecification<BesteberegningRegelmodell> {
 			return Collections.emptyList();
 		}
 		if (ytelsegrunnlag.isEmpty()) {
-			throw new IllegalStateException("Har funnet ytelseinntekt uten å ha et ytelsegrunnlag under besteberegning for periode "
-					+ periodeinntekt.getPeriode() + " og ytelse " + periodeinntekt.getYtelse());
+			// Om vi ikke har noen ytelsegrunnlag kan vi heller ikke avklare hvilken periode ytelsen gjeøder for.
+			// Tar den derfor ikke med.
+			return Collections.emptyList();
 		}
 		return FastsettYtelseFordeling.fordelYtelse(ytelsegrunnlag, periodeinntekt);
 	}
