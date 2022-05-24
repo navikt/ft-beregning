@@ -35,7 +35,9 @@ public class IdentifiserPerioderForRefusjon {
 
 		LocalDateTimeline<BigDecimal> kravTidslinje = new LocalDateTimeline<>(kravSegmenter);
 
-		LocalDateTimeline<KravOgVilkårvurdering> kravOgVurderingTidslinje = fristvurdertTidslinje.intersection(kravTidslinje, IdentifiserPerioderForRefusjon::kombiner);
+		LocalDateTimeline<KravOgVilkårvurdering> kravOgVurderingTidslinje = fristvurdertTidslinje.combine(kravTidslinje,
+				IdentifiserPerioderForRefusjon::kombiner,
+				LocalDateTimeline.JoinStyle.CROSS_JOIN);
 
 		LocalDate førsteDato = kravOgVurderingTidslinje.stream()
 				.map(LocalDateSegment::getFom)
@@ -63,8 +65,8 @@ public class IdentifiserPerioderForRefusjon {
 	}
 
 	private static LocalDateSegment<KravOgVilkårvurdering> kombiner(LocalDateInterval interval, LocalDateSegment<Utfall> lhs, LocalDateSegment<BigDecimal> rhs) {
-		if (lhs == null) {
-			return new LocalDateSegment<>(interval, new KravOgVilkårvurdering(rhs.getValue(), Utfall.UNDERKJENT));
+		if (lhs == null || rhs == null) {
+			return new LocalDateSegment<>(interval, new KravOgVilkårvurdering(BigDecimal.ZERO, Utfall.IKKE_VURDERT));
 		} else {
 			return new LocalDateSegment<>(interval, new KravOgVilkårvurdering(rhs.getValue(), lhs.getValue()));
 		}
@@ -74,7 +76,7 @@ public class IdentifiserPerioderForRefusjon {
 		if (kravOgVilkårvurdering.vilkårvurdering() == Utfall.UNDERKJENT) {
 			return PeriodeÅrsak.REFUSJON_AVSLÅTT;
 		}
-		if (kravOgVilkårvurdering.krav().compareTo(BigDecimal.ZERO) == 0) {
+		if (kravOgVilkårvurdering.krav().compareTo(BigDecimal.ZERO) == 0 || Utfall.IKKE_VURDERT.equals(kravOgVilkårvurdering.vilkårvurdering())) {
 			return PeriodeÅrsak.REFUSJON_OPPHØRER;
 		}
 		return PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV;
