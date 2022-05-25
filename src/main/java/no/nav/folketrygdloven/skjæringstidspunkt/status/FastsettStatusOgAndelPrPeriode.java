@@ -73,7 +73,7 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
 	}
 
 	private boolean harAlleInntektsmelding(List<AktivPeriode> aktivePerioderVedStp) {
-		return aktivePerioderVedStp.stream().allMatch(a -> a.getArbeidsforhold() != null && a.getArbeidsforhold().harInntektsmelding());
+		return !aktivePerioderVedStp.isEmpty() && aktivePerioderVedStp.stream().allMatch(a -> a.getArbeidsforhold() != null && a.getArbeidsforhold().harInntektsmelding());
 	}
 
 	private MidlertidigInaktivType finnMidlertidigInaktivType(AktivitetStatusModell regelmodell) {
