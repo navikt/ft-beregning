@@ -1,4 +1,4 @@
-package no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell;
+package no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell;
 
 import java.util.ArrayList;
 import java.util.List;

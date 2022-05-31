@@ -1,9 +1,9 @@
-package no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig;
+package no.nav.folketrygdloven.beregningsgrunnlag.fordel;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelAndelModell;
-import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelteAndelerModell;
-import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelModell;
-import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelPeriodeModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelAndelModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelteAndelerModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelPeriodeModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;

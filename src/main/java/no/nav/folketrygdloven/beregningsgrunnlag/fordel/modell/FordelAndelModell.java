@@ -1,4 +1,4 @@
-package no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell;
+package no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell;
 
 import java.math.BigDecimal;
 import java.util.Objects;

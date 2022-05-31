@@ -1,38 +1,37 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.fordel;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Beregnet;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelAndelModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelModell;
 import no.nav.fpsak.nare.DynamicRuleService;
 import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.ServiceArgument;
 import no.nav.fpsak.nare.specification.Specification;
 
-public class OmfordelBeregningsgrunnlagTilArbeidsforhold extends DynamicRuleService<BeregningsgrunnlagPeriode> {
+public class OmfordelBeregningsgrunnlagTilArbeidsforhold extends DynamicRuleService<FordelModell> {
 
     private static final String ID = "FP_BR 22.3.5";
     private static final String BESKRIVELSE = "Regelen skal omfordele beregningsgrunnlag fra arbeidsforhold som krever mer i refusjon enn det har i beregningsgrunnlag.";
 
     @SuppressWarnings("unchecked")
     @Override
-    public Specification<BeregningsgrunnlagPeriode> getSpecification() {
-        Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
+    public Specification<FordelModell> getSpecification() {
+        Ruleset<FordelModell> rs = new Ruleset<>();
 
         ServiceArgument arg = getServiceArgument();
-        if (arg == null || !(arg.getVerdi() instanceof BeregningsgrunnlagPrArbeidsforhold)) {
+        if (arg == null || !(arg.getVerdi() instanceof FordelAndelModell)) {
             throw new IllegalStateException("Utviklerfeil: Arbeidsforhold må angis som parameter");
         }
-        BeregningsgrunnlagPrArbeidsforhold arbeidsforhold = (BeregningsgrunnlagPrArbeidsforhold) arg.getVerdi();
+	    FordelAndelModell andelMedHøyereRefEnnBG = (FordelAndelModell) arg.getVerdi();
 
-        Specification<BeregningsgrunnlagPeriode> omfordelFraAT = rs.beregningsRegel(OmfordelFraArbeid.ID, OmfordelFraArbeid.BESKRIVELSE, new OmfordelFraArbeid(arbeidsforhold), new Beregnet());
+        Specification<FordelModell> omfordelFraAT = rs.beregningsRegel(OmfordelFraArbeid.ID, OmfordelFraArbeid.BESKRIVELSE, new OmfordelFraArbeid(andelMedHøyereRefEnnBG), new Fordelt());
 
-        Specification<BeregningsgrunnlagPeriode> skalOmfordeleFraAT = rs.beregningHvisRegel(new SjekkOmRefusjonOverstigerBeregningsgrunnlag(arbeidsforhold), omfordelFraAT, new Beregnet());
+        Specification<FordelModell> skalOmfordeleFraAT = rs.beregningHvisRegel(new SjekkOmRefusjonOverstigerBeregningsgrunnlag(andelMedHøyereRefEnnBG), omfordelFraAT, new Fordelt());
 
-        Specification<BeregningsgrunnlagPeriode> omfordelFraFL = rs.beregningsRegel(OmfordelFraFrilans.ID, OmfordelFraFrilans.BESKRIVELSE, new OmfordelFraFrilans(arbeidsforhold), skalOmfordeleFraAT);
+        Specification<FordelModell> omfordelFraFL = rs.beregningsRegel(OmfordelFraFrilans.ID, OmfordelFraFrilans.BESKRIVELSE, new OmfordelFraFrilans(andelMedHøyereRefEnnBG), skalOmfordeleFraAT);
 
-        Specification<BeregningsgrunnlagPeriode> skalOmfordeleFraFL = rs.beregningHvisRegel(new SjekkOmRefusjonOverstigerBeregningsgrunnlag(arbeidsforhold), omfordelFraFL, new Beregnet());
+        Specification<FordelModell> skalOmfordeleFraFL = rs.beregningHvisRegel(new SjekkOmRefusjonOverstigerBeregningsgrunnlag(andelMedHøyereRefEnnBG), omfordelFraFL, new Fordelt());
 
-        Specification<BeregningsgrunnlagPeriode> omfordelBeregningsgrunnlag = rs.beregningsRegel(ID, BESKRIVELSE, new OmfordelFraAktiviteterUtenArbeidsforhold(arbeidsforhold), skalOmfordeleFraFL);
+        Specification<FordelModell> omfordelBeregningsgrunnlag = rs.beregningsRegel(ID, BESKRIVELSE, new OmfordelFraAktiviteterUtenArbeidsforhold(andelMedHøyereRefEnnBG), skalOmfordeleFraFL);
 
         return omfordelBeregningsgrunnlag;
     }
