@@ -1,4 +1,4 @@
-package no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig;
+package no.nav.folketrygdloven.beregningsgrunnlag.fordel;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelAndelModell;
-import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelteAndelerModell;
-import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelAndelModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelteAndelerModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelModell;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 

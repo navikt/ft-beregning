@@ -3,28 +3,30 @@ package no.nav.folketrygdloven.beregningsgrunnlag.fordel;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelAndelModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelPeriodeModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
 
 abstract class OmfordelForArbeidsforhold {
 
-    private final BeregningsgrunnlagPeriode beregningsgrunnlagPeriode;
+    private final FordelModell modell;
 
-    OmfordelForArbeidsforhold(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
-        this.beregningsgrunnlagPeriode = beregningsgrunnlagPeriode;
+    OmfordelForArbeidsforhold(FordelModell modell) {
+        this.modell = modell;
     }
 
-    Map<String, Object> omfordelForArbeidsforhold(BeregningsgrunnlagPrArbeidsforhold aktivitet, FinnArbeidsforholdMedOmfordelbartGrunnlag finnArbeidsforhold) {
+    Map<String, Object> omfordelForArbeidsforhold(FordelAndelModell aktivitet, FinnArbeidsforholdMedOmfordelbartGrunnlag finnArbeidsforhold) {
         Map<String, Object> resultater = new HashMap<>();
-        var refusjonskravFraArbeidsforhold = finnSamletBeløpFraArbeidsforhold(aktivitet.getArbeidsforhold(), BeregningsgrunnlagPrArbeidsforhold::getGjeldendeRefusjonPrÅr);
-        var bruttoBgFraArbeidsforhold = finnSamletBeløpFraArbeidsforhold(aktivitet.getArbeidsforhold(), BeregningsgrunnlagPrArbeidsforhold::getBruttoInkludertNaturalytelsePrÅr);
+        var refusjonskravFraArbeidsforhold = finnSamletBeløpFraArbeidsforhold(aktivitet.getArbeidsforhold(), FordelAndelModell::getGjeldendeRefusjonPrÅr);
+        var bruttoBgFraArbeidsforhold = finnSamletBeløpFraArbeidsforhold(aktivitet.getArbeidsforhold(), FordelAndelModell::getBruttoInkludertNaturalytelsePrÅr);
         var resterendeBeløpÅFlytte = refusjonskravFraArbeidsforhold.subtract(bruttoBgFraArbeidsforhold);
-        var arbforholdMedFlyttbartBeløpOpt = finnArbeidsforhold.finn(beregningsgrunnlagPeriode);
+        var arbforholdMedFlyttbartBeløpOpt = finnArbeidsforhold.finn(modell.getInput());
         while (harMerÅOmfordele(resterendeBeløpÅFlytte) && arbforholdMedFlyttbartBeløpOpt.isPresent()) {
             var arbeidMedFlyttbartBeløp = arbforholdMedFlyttbartBeløpOpt.get();
             var flyttbartBeløp = finnFlyttbartBeløp(arbeidMedFlyttbartBeløp);
@@ -35,22 +37,22 @@ abstract class OmfordelForArbeidsforhold {
             }
             resultater.put("fordeltPrÅr", arbeidMedFlyttbartBeløp.getFordeltPrÅr());
             resultater.put("arbeidsforhold", arbeidMedFlyttbartBeløp.getBeskrivelse());
-            arbforholdMedFlyttbartBeløpOpt = finnArbeidsforhold.finn(beregningsgrunnlagPeriode);
+            arbforholdMedFlyttbartBeløpOpt = finnArbeidsforhold.finn(modell.getInput());
         }
         return resultater;
     }
 
-    protected abstract BigDecimal finnFlyttbartBeløp(BeregningsgrunnlagPrArbeidsforhold arbeidMedOmfordelbartBg);
+    protected abstract BigDecimal finnFlyttbartBeløp(FordelAndelModell arbeidMedOmfordelbartBg);
 
-    private BigDecimal finnSamletBeløpFraArbeidsforhold(Arbeidsforhold arbeidsforhold, Function<BeregningsgrunnlagPrArbeidsforhold, Optional<BigDecimal>> getBeløpOptional) {
-        return beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().stream()
-            .filter(a -> a.getArbeidsforhold().equals(arbeidsforhold))
+    private BigDecimal finnSamletBeløpFraArbeidsforhold(Optional<Arbeidsforhold> arbeidsforhold, Function<FordelAndelModell, Optional<BigDecimal>> getBeløpOptional) {
+        return modell.getInput().getAlleAndelerForStatus(AktivitetStatus.AT).stream()
+            .filter(a -> Objects.equals(a.getArbeidsforhold().orElse(null), arbeidsforhold.orElse(null)))
             .map(getBeløpOptional)
             .filter(Optional::isPresent).map(Optional::get)
             .reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
     }
 
-    private void adderBeløpTilRefusjonForArbeidsforhold(BeregningsgrunnlagPrArbeidsforhold eksisterende, BeregningsgrunnlagPrArbeidsforhold aktivitet, BigDecimal beløpSomSkalOmfordelesTilArbeidsforhold) {
+    private void adderBeløpTilRefusjonForArbeidsforhold(FordelAndelModell eksisterende, FordelAndelModell aktivitet, BigDecimal beløpSomSkalOmfordelesTilArbeidsforhold) {
         if (erEksisterende(aktivitet)) {
             return;
         }
@@ -62,47 +64,47 @@ abstract class OmfordelForArbeidsforhold {
         }
 
 	    BigDecimal nyRefusjon = eksisterende.getGjeldendeRefusjonPrÅr().get().subtract(beløpSomSkalOmfordelesTilArbeidsforhold); // NOSONAR
-	    BeregningsgrunnlagPrArbeidsforhold.builder(eksisterende)
+	    FordelAndelModell.oppdater(eksisterende)
 			    .medFordeltRefusjonPrÅr(nyRefusjon)
 			    .medGjeldendeRefusjonPrÅr(nyRefusjon);
 
 	    BigDecimal fordeltRefusjon = aktivitet.getGjeldendeRefusjonPrÅr().isPresent() ? aktivitet.getGjeldendeRefusjonPrÅr().get().add(beløpSomSkalOmfordelesTilArbeidsforhold) : beløpSomSkalOmfordelesTilArbeidsforhold; // NOSONAR
-	    BeregningsgrunnlagPrArbeidsforhold.builder(aktivitet)
+	    FordelAndelModell.oppdater(aktivitet)
             .medFordeltRefusjonPrÅr(fordeltRefusjon)
 		    .medGjeldendeRefusjonPrÅr(fordeltRefusjon);
     }
 
-    private BeregningsgrunnlagPrArbeidsforhold finnEksisterende(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode, Arbeidsforhold arbeidsforhold) {
-        return beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL)
-            .getArbeidsforhold().stream()
-            .filter(a -> a.getArbeidsforhold().equals(arbeidsforhold) && erEksisterende(a))
+    private FordelAndelModell finnEksisterende(FordelPeriodeModell beregningsgrunnlagPeriode, Optional<Arbeidsforhold> arbeidsforhold) {
+        return beregningsgrunnlagPeriode.getAlleAndelerForStatus(AktivitetStatus.AT)
+            .stream()
+            .filter(a -> Objects.equals(a.getArbeidsforhold().orElse(null), arbeidsforhold.orElse(null)) && erEksisterende(a))
             .findFirst()
             .orElseThrow(() -> new IllegalStateException("Fant ikke eksisterende BeregningsgrunnlagPrArbeidsforhold for " + arbeidsforhold));
     }
 
-    private boolean erEksisterende(BeregningsgrunnlagPrArbeidsforhold a) {
+    private boolean erEksisterende(FordelAndelModell a) {
         return a.getAndelNr() != null;
     }
 
-    private BigDecimal flyttBGFraAktivitetTilArbeid(BeregningsgrunnlagPrArbeidsforhold arbeid,
+    private BigDecimal flyttBGFraAktivitetTilArbeid(FordelAndelModell arbeid,
                                                     BigDecimal restÅFlytte,
-                                                    BeregningsgrunnlagPrArbeidsforhold arbeidMedFlyttbartGrunnlag,
+                                                    FordelAndelModell arbeidMedFlyttbartGrunnlag,
                                                     BigDecimal beløpSomSkalFlyttes) {
         flyttFraAktivitet(arbeidMedFlyttbartGrunnlag, beløpSomSkalFlyttes);
         omfordelBGTilAktivitet(arbeid, beløpSomSkalFlyttes);
-        adderBeløpTilRefusjonForArbeidsforhold(finnEksisterende(beregningsgrunnlagPeriode, arbeid.getArbeidsforhold()), arbeid, beløpSomSkalFlyttes);
+        adderBeløpTilRefusjonForArbeidsforhold(finnEksisterende(modell.getInput(), arbeid.getArbeidsforhold()), arbeid, beløpSomSkalFlyttes);
         restÅFlytte = restÅFlytte.subtract(beløpSomSkalFlyttes);
         return restÅFlytte;
     }
 
-    abstract void flyttFraAktivitet(BeregningsgrunnlagPrArbeidsforhold arbeidMedFlyttbartGrunnlag, BigDecimal beløpSomSkalFlyttes);
+    abstract void flyttFraAktivitet(FordelAndelModell arbeidMedFlyttbartGrunnlag, BigDecimal beløpSomSkalFlyttes);
 
     private static boolean harMerÅOmfordele(BigDecimal beløpSomMåOmfordeles) {
         return beløpSomMåOmfordeles.compareTo(BigDecimal.ZERO) > 0;
     }
 
-    private static void omfordelBGTilAktivitet(BeregningsgrunnlagPrArbeidsforhold aktivitet, BigDecimal beløpSomMåOmfordeles) {
-        BeregningsgrunnlagPrArbeidsforhold.builder(aktivitet).medFordeltPrÅr(aktivitet.getBruttoPrÅr().orElse(BigDecimal.ZERO).add(beløpSomMåOmfordeles));
+    private static void omfordelBGTilAktivitet(FordelAndelModell aktivitet, BigDecimal beløpSomMåOmfordeles) {
+        FordelAndelModell.oppdater(aktivitet).medFordeltPrÅr(aktivitet.getBruttoPrÅr().orElse(BigDecimal.ZERO).add(beløpSomMåOmfordeles));
     }
 
     private static boolean skalOmfordeleHeleGrunnlaget(BigDecimal restSomMåOmfordeles, BigDecimal omfordelbartBeløp) {
@@ -111,6 +113,6 @@ abstract class OmfordelForArbeidsforhold {
 
     @FunctionalInterface
     interface FinnArbeidsforholdMedOmfordelbartGrunnlag {
-        Optional<BeregningsgrunnlagPrArbeidsforhold> finn(BeregningsgrunnlagPeriode periode);
+        Optional<FordelAndelModell> finn(FordelPeriodeModell periode);
     }
 }

@@ -5,10 +5,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelAndelModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelPeriodeModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 
 class OmfordelFraArbeid extends OmfordelFraATFL {
@@ -16,33 +17,32 @@ class OmfordelFraArbeid extends OmfordelFraATFL {
     public static final String ID = "FP_BR 22.3.8";
     public static final String BESKRIVELSE = "Flytt beregnignsgrunnlag fra andre arbeidsforhold.";
 
-    OmfordelFraArbeid(BeregningsgrunnlagPrArbeidsforhold arbeidsforhold) {
+    OmfordelFraArbeid(FordelAndelModell arbeidsforhold) {
         super(arbeidsforhold, ID, BESKRIVELSE);
     }
 
     @Override
-    public Evaluation evaluate(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
-        Map<String, Object> resultater = omfordelFraAktivitetOmMulig(beregningsgrunnlagPeriode);
-        Map<String, Object> resultater2 = omfordelNaturalytelseFraAktivitetOmMulig(beregningsgrunnlagPeriode);
+    public Evaluation evaluate(FordelModell modell) {
+        Map<String, Object> resultater = omfordelFraAktivitetOmMulig(modell);
+        Map<String, Object> resultater2 = omfordelNaturalytelseFraAktivitetOmMulig(modell);
         resultater.putAll(resultater2);
         return beregnet(resultater);
     }
 
-    protected Map<String, Object> omfordelNaturalytelseFraAktivitetOmMulig(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
-        boolean harAktivitetMedOmfordelbartGrunnlag = finnAktivitetMedOmfordelbarNaturalYtelse(beregningsgrunnlagPeriode).isPresent();
+    protected Map<String, Object> omfordelNaturalytelseFraAktivitetOmMulig(FordelModell modell) {
+        boolean harAktivitetMedOmfordelbartGrunnlag = finnAktivitetMedOmfordelbarNaturalYtelse(modell.getInput()).isPresent();
         if (!harAktivitetMedOmfordelbartGrunnlag) {
             return new HashMap<>();
         }
-        var aktivitet = finnArbeidsforholdMedRiktigInntektskategori(beregningsgrunnlagPeriode);
-        return new OmfordelNaturalytelseForArbeidsforhold(beregningsgrunnlagPeriode).omfordelForArbeidsforhold(aktivitet, this::finnAktivitetMedOmfordelbarNaturalYtelse);
+        var aktivitet = finnArbeidsforholdMedRiktigInntektskategori(modell.getInput());
+        return new OmfordelNaturalytelseForArbeidsforhold(modell).omfordelForArbeidsforhold(aktivitet, this::finnAktivitetMedOmfordelbarNaturalYtelse);
     }
 
-    protected Optional<BeregningsgrunnlagPrArbeidsforhold> finnAktivitetMedOmfordelbarNaturalYtelse(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
-        return beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL)
-            .getArbeidsforholdIkkeFrilans()
+    protected Optional<FordelAndelModell> finnAktivitetMedOmfordelbarNaturalYtelse(FordelPeriodeModell beregningsgrunnlagPeriode) {
+        return beregningsgrunnlagPeriode.getAlleAndelerForStatus(AktivitetStatus.AT)
             .stream()
             .filter(a -> a.getNaturalytelseBortfaltPrÅr().orElse(BigDecimal.ZERO).compareTo(BigDecimal.ZERO) > 0)
-            .filter(beregningsgrunnlagPrArbeidsforhold -> !refusjonskravOverstigerEllerErLikBg(beregningsgrunnlagPrArbeidsforhold))
+            .filter(this::harRefusjonskravLavereEnnBg)
             .findFirst();
     }
 
@@ -53,24 +53,23 @@ class OmfordelFraArbeid extends OmfordelFraATFL {
     }
 
     @Override
-    protected Optional<BeregningsgrunnlagPrArbeidsforhold> finnAktivitetMedOmfordelbartBg(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
-        return beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL)
-            .getArbeidsforholdIkkeFrilans()
+    protected Optional<FordelAndelModell> finnAktivitetMedOmfordelbartBg(FordelPeriodeModell beregningsgrunnlagPeriode) {
+        return beregningsgrunnlagPeriode.getAlleAndelerForStatus(AktivitetStatus.AT)
             .stream()
             .filter(this::harBgSomKanFlyttes)
-            .filter(beregningsgrunnlagPrArbeidsforhold -> !refusjonskravOverstigerEllerErLikBg(beregningsgrunnlagPrArbeidsforhold))
+            .filter(this::harRefusjonskravLavereEnnBg)
             .findFirst();
     }
 
-    private boolean refusjonskravOverstigerEllerErLikBg(BeregningsgrunnlagPrArbeidsforhold arbeidsforhold) {
+    private boolean harRefusjonskravLavereEnnBg(FordelAndelModell arbeidsforhold) {
         BigDecimal refusjonskrav = arbeidsforhold.getGjeldendeRefusjonPrÅr().orElse(BigDecimal.ZERO);
-        return refusjonskrav.compareTo(arbeidsforhold.getBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO)) >= 0;
+        return refusjonskrav.compareTo(arbeidsforhold.getBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO)) < 0;
     }
 
-    private boolean harBgSomKanFlyttes(BeregningsgrunnlagPrArbeidsforhold beregningsgrunnlagPrArbeidsforhold) {
+    private boolean harBgSomKanFlyttes(FordelAndelModell beregningsgrunnlagPrArbeidsforhold) {
         return beregningsgrunnlagPrArbeidsforhold.getBruttoPrÅr().orElse(BigDecimal.ZERO)
             .subtract(beregningsgrunnlagPrArbeidsforhold.getNaturalytelseTilkommetPrÅr().orElse(BigDecimal.ZERO)).compareTo(BigDecimal.ZERO) > 0
-            && (beregningsgrunnlagPrArbeidsforhold.getFordeltPrÅr() == null || beregningsgrunnlagPrArbeidsforhold.getFordeltPrÅr().compareTo(BigDecimal.ZERO) > 0);
+            && (beregningsgrunnlagPrArbeidsforhold.getFordeltPrÅr().isEmpty() || beregningsgrunnlagPrArbeidsforhold.getFordeltPrÅr().orElseThrow().compareTo(BigDecimal.ZERO) > 0);
     }
 
 }

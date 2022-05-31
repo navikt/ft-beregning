@@ -1,6 +1,6 @@
-package no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig;
+package no.nav.folketrygdloven.beregningsgrunnlag.fordel;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.fordel.andelsmessig.modell.FordelModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
