@@ -1,14 +1,28 @@
 name: Bygg pull request
 
-on: [pull_request]
+on:
+  pull_request:
+    branches:
+      - master
+    paths-ignore:
+      - '**.md'
+      - '**.MD'
+      - '.gitignore'
+      - '.github/workflows/maven.yml'
+      - '.github/workflows/release.yml'
+      - '.github/release-drafter.yml'
+      - '.github/dependabot.yml'
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
@@ -21,7 +35,13 @@ jobs:
       - name: Build
         shell: bash
         run: |
-          mvn verify -B -s .m2/settings.xml --file pom.xml -DtrimStackTrace=false
+          mvn verify -B -s .m2/settings.xml -DtrimStackTrace=false
         env:
-          GITHUB_USERNAME: x-access-token
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Sonar analyse
+        if: github.actor != 'dependabot[bot]'
+        run: |
+          mvn jacoco:report org.sonarsource.scanner.maven:sonar-maven-plugin:sonar --settings .m2/settings.xml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
