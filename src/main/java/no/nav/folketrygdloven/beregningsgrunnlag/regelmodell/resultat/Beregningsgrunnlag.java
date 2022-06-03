@@ -16,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import no.nav.folketrygdloven.beregningsgrunnlag.Grunnbeløp;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.MidlertidigInaktivType;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.YtelsesSpesifiktGrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.fp.ForeldrepengerGrunnlag;
@@ -38,7 +39,14 @@ public class Beregningsgrunnlag {
     private boolean hattMilitærIOpptjeningsperioden = false;
     private Konstanter konstanter = new Konstanter();
 
-    private Beregningsgrunnlag() { }
+
+	/**
+	 * Type for midlertidig inaktiv dersom bruker er midlertidig inaktiv
+	 */
+	private MidlertidigInaktivType midlertidigInaktivType;
+
+
+	private Beregningsgrunnlag() { }
 
 	public YtelsesSpesifiktGrunnlag getYtelsesSpesifiktGrunnlag() {
 		return ytelsesSpesifiktGrunnlag;
@@ -110,6 +118,10 @@ public class Beregningsgrunnlag {
         return konstanter.getYtelsedagerIPrÅr();
     }
 
+	public BigDecimal getMidlertidigInaktivTypeAReduksjonsfaktor() {
+		return konstanter.getMidlertidigInaktivTypeAReduksjonsfaktor();
+	}
+
     public BigDecimal getAvviksgrenseProsent() {
         return konstanter.getAvviksgrenseProsent();
     }
@@ -155,7 +167,11 @@ public class Beregningsgrunnlag {
         return konstanter.isSplitteATFLToggleErPå();
     }
 
-    public static Builder builder() {
+	public MidlertidigInaktivType getMidlertidigInaktivType() {
+		return midlertidigInaktivType;
+	}
+
+	public static Builder builder() {
         return new Builder();
     }
 
@@ -279,8 +295,15 @@ public class Beregningsgrunnlag {
             return this;
         }
 
+	    public Builder medMidlertidigInaktivType(MidlertidigInaktivType midlertidigInaktivType) {
+		    beregningsgrunnlagMal.midlertidigInaktivType = midlertidigInaktivType;
+		    return this;
+	    }
 
-        public Beregningsgrunnlag build() {
+
+
+
+	    public Beregningsgrunnlag build() {
             verifyStateForBuild();
             return beregningsgrunnlagMal;
         }

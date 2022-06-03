@@ -16,7 +16,8 @@ public class Konstanter {
     private int antallGMilitærHarKravPå = 3;
     private BigDecimal antallGØvreGrenseverdi = BigDecimal.valueOf(6);
     private BigDecimal antallGMinstekravVilkår = BigDecimal.valueOf(0.5);
-    private BigDecimal ytelsedagerIPrÅr = BigDecimal.valueOf(260);
+	private BigDecimal midlertidigInaktivTypeAReduksjonsfaktor = BigDecimal.valueOf(0.65);
+	private BigDecimal ytelsedagerIPrÅr = BigDecimal.valueOf(260);
     private BigDecimal avviksgrenseProsent = BigDecimal.valueOf(25);
     private List<Grunnbeløp> grunnbeløpSatser = new ArrayList<>();
 
@@ -36,7 +37,11 @@ public class Konstanter {
         this.antallGMinstekravVilkår = antallGMinstekravVilkår;
     }
 
-    void setYtelsedagerIPrÅr(BigDecimal ytelsedagerIPrÅr) {
+	public void setMidlertidigInaktivTypeAReduksjonsfaktor(BigDecimal midlertidigInaktivTypeAReduksjonsfaktor) {
+		this.midlertidigInaktivTypeAReduksjonsfaktor = midlertidigInaktivTypeAReduksjonsfaktor;
+	}
+
+	void setYtelsedagerIPrÅr(BigDecimal ytelsedagerIPrÅr) {
         this.ytelsedagerIPrÅr = ytelsedagerIPrÅr;
     }
 
@@ -72,11 +77,15 @@ public class Konstanter {
         return avviksgrenseProsent;
     }
 
+	public BigDecimal getMidlertidigInaktivTypeAReduksjonsfaktor() {
+		return midlertidigInaktivTypeAReduksjonsfaktor;
+	}
+
     public boolean isSplitteATFLToggleErPå() {
         return splitteATFLToggleErPå;
     }
 
-    public List<Grunnbeløp> getGrunnbeløpSatser() {
+	public List<Grunnbeløp> getGrunnbeløpSatser() {
         if (grunnbeløpSatser.isEmpty()) {
             throw new IllegalStateException("Prøver å hente ut grunnbeløpsatser uten at dette er mappet til regelmodell.");
         }

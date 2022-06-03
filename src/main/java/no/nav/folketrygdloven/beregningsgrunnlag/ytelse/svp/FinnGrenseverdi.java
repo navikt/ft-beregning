@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.MidlertidigInaktivType;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
@@ -34,8 +36,13 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
                 sumAvkortetSkalBrukes = sumAvkortetSkalBrukes.add(bps.getAndelsmessigFørGraderingPrAar().multiply(bps.getUtbetalingsprosent().scaleByPowerOfTen(-2)));
             }
         }
-        resultater.put("grenseverdi", sumAvkortetSkalBrukes);
-        grunnlag.setGrenseverdi(sumAvkortetSkalBrukes);
+	    var erInaktivTypeA = MidlertidigInaktivType.A.equals(grunnlag.getBeregningsgrunnlag().getMidlertidigInaktivType());
+	    var grenseverdi = sumAvkortetSkalBrukes;
+	    if (erInaktivTypeA) {
+        	grenseverdi = grenseverdi.multiply(grunnlag.getBeregningsgrunnlag().getMidlertidigInaktivTypeAReduksjonsfaktor());
+        }
+	    resultater.put("grenseverdi", grenseverdi);
+        grunnlag.setGrenseverdi(grenseverdi);
         SingleEvaluation resultat = ja();
         resultat.setEvaluationProperties(resultater);
         return resultat;
