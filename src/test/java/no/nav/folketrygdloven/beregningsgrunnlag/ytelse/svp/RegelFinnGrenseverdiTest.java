@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.RegelmodellOversetter;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.MidlertidigInaktivType;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.RegelResultat;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
@@ -46,7 +47,32 @@ public class RegelFinnGrenseverdiTest {
         assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(beregnetPrÅr));
     }
 
-    @Test
+	@Test
+	public void ett_arbeidsforhold_under_6G_midlertidig_inaktiv_type_A() {
+		//Arrange
+		double beregnetPrÅr = 400_000;
+
+		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
+				.build();
+
+		Beregningsgrunnlag.builder()
+				.medBeregningsgrunnlagPeriode(periode)
+				.medMidlertidigInaktivType(MidlertidigInaktivType.A)
+				.medGrunnbeløp(BigDecimal.valueOf(100_000));
+
+		leggTilArbeidsforhold(periode, 1L, ORGNR, beregnetPrÅr, 100);
+
+		var forventet = 260_000;
+
+		//Act
+		kjørRegel(periode);
+
+		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(forventet));
+	}
+
+
+	@Test
     public void ett_arbeidsforhold_under_6G_ikkje_søkt_ytelse() {
         //Arrange
         double beregnetPrÅr = 400_000;
