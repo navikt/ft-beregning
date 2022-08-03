@@ -1,6 +1,7 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.fordel;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -23,8 +24,8 @@ abstract class OmfordelForArbeidsforhold {
 
     Map<String, Object> omfordelForArbeidsforhold(FordelAndelModell aktivitet, FinnArbeidsforholdMedOmfordelbartGrunnlag finnArbeidsforhold) {
         Map<String, Object> resultater = new HashMap<>();
-        var refusjonskravFraArbeidsforhold = finnSamletBeløpFraArbeidsforhold(aktivitet.getArbeidsforhold(), FordelAndelModell::getGjeldendeRefusjonPrÅr);
-        var bruttoBgFraArbeidsforhold = finnSamletBeløpFraArbeidsforhold(aktivitet.getArbeidsforhold(), FordelAndelModell::getBruttoInkludertNaturalytelsePrÅr);
+        var refusjonskravFraArbeidsforhold = finnSamletBeløpFraArbeidsforhold(aktivitet.getArbeidsforhold(), FordelAndelModell::getGradertRefusjonPrÅr);
+        var bruttoBgFraArbeidsforhold = finnSamletBeløpFraArbeidsforhold(aktivitet.getArbeidsforhold(), FordelAndelModell::getGradertBruttoInkludertNaturalytelsePrÅr);
         var resterendeBeløpÅFlytte = refusjonskravFraArbeidsforhold.subtract(bruttoBgFraArbeidsforhold);
         var arbforholdMedFlyttbartBeløpOpt = finnArbeidsforhold.finn(modell.getInput());
         while (harMerÅOmfordele(resterendeBeløpÅFlytte) && arbforholdMedFlyttbartBeløpOpt.isPresent()) {
@@ -56,22 +57,22 @@ abstract class OmfordelForArbeidsforhold {
         if (erEksisterende(aktivitet)) {
             return;
         }
-        if (eksisterende.getGjeldendeRefusjonPrÅr().isEmpty()) {
+        if (eksisterende.getGradertRefusjonPrÅr().isEmpty()) {
             throw new IllegalStateException("Eksisterende andel har ikke refusjonskrav.");
         }
-        if (eksisterende.getGjeldendeRefusjonPrÅr().get().compareTo(beløpSomSkalOmfordelesTilArbeidsforhold) < 0) { // NOSONAR
+        if (eksisterende.getGradertRefusjonPrÅr().get().compareTo(beløpSomSkalOmfordelesTilArbeidsforhold) < 0) { // NOSONAR
             throw new IllegalStateException("Skal ikke flytte mer av refusjonskravet.");
         }
 
-	    BigDecimal nyRefusjon = eksisterende.getGjeldendeRefusjonPrÅr().get().subtract(beløpSomSkalOmfordelesTilArbeidsforhold); // NOSONAR
+	    BigDecimal nyRefusjon = eksisterende.getGradertRefusjonPrÅr().get().subtract(beløpSomSkalOmfordelesTilArbeidsforhold); // NOSONAR
 	    FordelAndelModell.oppdater(eksisterende)
-			    .medFordeltRefusjonPrÅr(nyRefusjon)
-			    .medGjeldendeRefusjonPrÅr(nyRefusjon);
+			    .medFordeltRefusjonPrÅr(skalerOpp(nyRefusjon, eksisterende.getUtbetalingsgrad()))
+			    .medGjeldendeRefusjonPrÅr(skalerOpp(nyRefusjon, eksisterende.getUtbetalingsgrad()));
 
-	    BigDecimal fordeltRefusjon = aktivitet.getGjeldendeRefusjonPrÅr().isPresent() ? aktivitet.getGjeldendeRefusjonPrÅr().get().add(beløpSomSkalOmfordelesTilArbeidsforhold) : beløpSomSkalOmfordelesTilArbeidsforhold; // NOSONAR
+	    BigDecimal fordeltRefusjon = aktivitet.getGradertRefusjonPrÅr().isPresent() ? aktivitet.getGradertRefusjonPrÅr().get().add(beløpSomSkalOmfordelesTilArbeidsforhold) : beløpSomSkalOmfordelesTilArbeidsforhold; // NOSONAR
 	    FordelAndelModell.oppdater(aktivitet)
-            .medFordeltRefusjonPrÅr(fordeltRefusjon)
-		    .medGjeldendeRefusjonPrÅr(fordeltRefusjon);
+            .medFordeltRefusjonPrÅr(skalerOpp(fordeltRefusjon, aktivitet.getUtbetalingsgrad()))
+		    .medGjeldendeRefusjonPrÅr(skalerOpp(fordeltRefusjon, aktivitet.getUtbetalingsgrad()));
     }
 
     private FordelAndelModell finnEksisterende(FordelPeriodeModell beregningsgrunnlagPeriode, Optional<Arbeidsforhold> arbeidsforhold) {
@@ -104,8 +105,12 @@ abstract class OmfordelForArbeidsforhold {
     }
 
     private static void omfordelBGTilAktivitet(FordelAndelModell aktivitet, BigDecimal beløpSomMåOmfordeles) {
-        FordelAndelModell.oppdater(aktivitet).medFordeltPrÅr(aktivitet.getBruttoPrÅr().orElse(BigDecimal.ZERO).add(beløpSomMåOmfordeles));
+        FordelAndelModell.oppdater(aktivitet).medFordeltPrÅr(skalerOpp(aktivitet.getGradertBruttoPrÅr().orElse(BigDecimal.ZERO).add(beløpSomMåOmfordeles), aktivitet.getUtbetalingsgrad()));
     }
+
+	private static BigDecimal skalerOpp(BigDecimal nyttFordeltBeløp, BigDecimal utbetalingsgrad) {
+		return nyttFordeltBeløp.multiply(BigDecimal.valueOf(100).divide(utbetalingsgrad, 10, RoundingMode.HALF_UP));
+	}
 
     private static boolean skalOmfordeleHeleGrunnlaget(BigDecimal restSomMåOmfordeles, BigDecimal omfordelbartBeløp) {
         return restSomMåOmfordeles.compareTo(omfordelbartBeløp) >= 0;

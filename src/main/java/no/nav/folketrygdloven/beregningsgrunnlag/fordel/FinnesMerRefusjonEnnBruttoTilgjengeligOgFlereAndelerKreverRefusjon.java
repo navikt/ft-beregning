@@ -36,7 +36,7 @@ class FinnesMerRefusjonEnnBruttoTilgjengeligOgFlereAndelerKreverRefusjon extends
 	private BigDecimal finnTotalBrutto(FordelPeriodeModell grunnlag) {
 		return grunnlag.getAndeler()
 				.stream()
-				.map(andel -> andel.getBruttoPrÅr().orElse(BigDecimal.ZERO))
+				.map(andel -> andel.getGradertBruttoPrÅr().orElse(BigDecimal.ZERO))
 				.reduce(BigDecimal::add)
 				.orElse(BigDecimal.ZERO);
 	}
@@ -44,7 +44,7 @@ class FinnesMerRefusjonEnnBruttoTilgjengeligOgFlereAndelerKreverRefusjon extends
 	private BigDecimal finnTotalRefusjon(FordelPeriodeModell grunnlag) {
 		return grunnlag.getAndeler()
 				.stream()
-				.map(andel -> andel.getGjeldendeRefusjonPrÅr().orElse(BigDecimal.ZERO))
+				.map(andel -> andel.getGradertRefusjonPrÅr().orElse(BigDecimal.ZERO))
 				.reduce(BigDecimal::add)
 				.orElse(BigDecimal.ZERO);
 	}
