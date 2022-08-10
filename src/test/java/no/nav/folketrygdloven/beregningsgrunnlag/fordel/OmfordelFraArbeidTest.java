@@ -77,7 +77,7 @@ public class OmfordelFraArbeidTest {
 		kjørRegel(aktivitet, periode);
 
 		// Assert
-		assertThat(arbeidMedBortfaltNatYtelsePrÅr.getNaturalytelseBortfaltPrÅr().orElseThrow()).isEqualTo(BigDecimal.ZERO);
+		assertThat(arbeidMedBortfaltNatYtelsePrÅr.getNaturalytelseBortfaltPrÅr().orElseThrow().compareTo(BigDecimal.ZERO) == 0 ).isTrue();
 		assertThat(arbeidMedBortfaltNatYtelsePrÅr.getFordeltPrÅr().orElseThrow().compareTo(BigDecimal.ZERO) == 0).isTrue();
 		assertThat(aktivitet.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.valueOf(150_000));
 	}
