@@ -93,7 +93,7 @@ class FinnFraksjonPrAndel extends LeafSpecification<FordelModell> {
 	private FordelteAndelerModell finnFraksjonsbestemmendeBeløpOgLagMellomregning(FordelAndelModell andelInput, Map<String, Object> resultater) {
 		BigDecimal fraksjonsbestemmendeBeløp;
 		if (kreverRefusjon(andelInput)) {
-			fraksjonsbestemmendeBeløp = andelInput.getGjeldendeRefusjonPrÅr().orElseThrow();
+			fraksjonsbestemmendeBeløp = andelInput.getGradertRefusjonPrÅr().orElseThrow();
 		} else {
 			fraksjonsbestemmendeBeløp = BigDecimal.ZERO;
 		}
@@ -103,6 +103,6 @@ class FinnFraksjonPrAndel extends LeafSpecification<FordelModell> {
 	}
 
 	private boolean kreverRefusjon(FordelAndelModell andelInput) {
-		return andelInput.getGjeldendeRefusjonPrÅr().orElse(BigDecimal.ZERO).compareTo(BigDecimal.ZERO) > 0;
+		return andelInput.getGradertRefusjonPrÅr().orElse(BigDecimal.ZERO).compareTo(BigDecimal.ZERO) > 0;
 	}
 }

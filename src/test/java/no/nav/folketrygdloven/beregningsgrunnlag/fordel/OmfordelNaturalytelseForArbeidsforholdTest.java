@@ -49,7 +49,7 @@ class OmfordelNaturalytelseForArbeidsforholdTest {
         new OmfordelNaturalytelseForArbeidsforhold(new FordelModell(periode)).omfordelForArbeidsforhold(aktivitet, (periode1) -> Optional.of(arbeidMedBortfaltNatYtelsePrÅr));
 
         // Assert
-        assertThat(arbeidMedBortfaltNatYtelsePrÅr.getNaturalytelseBortfaltPrÅr().get()).isEqualTo(BigDecimal.ZERO);
+        assertThat(arbeidMedBortfaltNatYtelsePrÅr.getNaturalytelseBortfaltPrÅr().get().compareTo(BigDecimal.ZERO) == 0).isTrue();
         assertThat(aktivitet.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.valueOf(100_000));
     }
 
