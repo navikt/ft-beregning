@@ -1,6 +1,5 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.selvstendig;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningUtfallMerknad;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningUtfallÅrsak;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
@@ -23,13 +22,7 @@ public class SjekkOmDifferanseStørreEnn25Prosent extends LeafSpecification<Bere
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        final SammenligningsGrunnlag sg;
-        if(grunnlag.skalSplitteSammenligningsgrunnlagToggle()){
-            sg = grunnlag.getSammenligningsgrunnlagPrStatus(AktivitetStatus.SN);
-        } else {
-            sg = grunnlag.getSammenligningsGrunnlag();
-        }
-
+        final SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlag();
         if (sg == null) {
             throw new IllegalStateException("Sammenligningsgrunnlag mangler");
         }
