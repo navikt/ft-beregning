@@ -78,8 +78,8 @@ public enum AktivitetStatus {
         return erArbeidstaker(aktivitetStatus) || erFrilanser(aktivitetStatus);
     }
 
-    public static boolean erSelvstendigNæringsdrivende(AktivitetStatus aktivitetStatus) {
-        return SELVSTENDIG_NÆRINGSDRIVENDE_STATUSER.contains(aktivitetStatus);
+    public boolean erSelvstendigNæringsdrivende() {
+        return SELVSTENDIG_NÆRINGSDRIVENDE_STATUSER.contains(this);
     }
 
     public boolean erAAPellerDP() {

@@ -51,6 +51,9 @@ public class BeregnBruttoBeregningsgrunnlagSN extends LeafSpecification<Beregnin
         if (bruttoDP.compareTo(BigDecimal.ZERO) > 0) {
             resultater.put("bruttoBeregningsgrunnlagDP", bruttoDP);
         }
+	    if (bruttoBGArbeidstaker.compareTo(BigDecimal.ZERO) > 0) {
+		    resultater.put("bruttoBGArbeidstaker", bruttoBGArbeidstaker);
+	    }
         resultater.put("bruttoBeregningsgrunnlagSN", bruttoSN);
 
         return beregnet(resultater);

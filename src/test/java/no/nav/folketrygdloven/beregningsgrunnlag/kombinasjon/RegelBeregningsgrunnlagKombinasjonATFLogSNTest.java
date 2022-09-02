@@ -19,6 +19,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.foreslå.RegelForeslåBeregningsgrunnlag;
+import no.nav.folketrygdloven.beregningsgrunnlag.fortsettForeslå.RegelFortsettForeslåBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
@@ -54,7 +55,9 @@ public class RegelBeregningsgrunnlagKombinasjonATFLogSNTest {
 
         // Act
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
-        // Assert
+	    Evaluation evaluation2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+
+	    // Assert
         @SuppressWarnings("unused")
         String sporing = EvaluationSerializer.asJson(evaluation);
 
@@ -80,7 +83,9 @@ public class RegelBeregningsgrunnlagKombinasjonATFLogSNTest {
 
         // Act
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
-        // Assert
+	    Evaluation evaluation2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+
+	    // Assert
         @SuppressWarnings("unused")
         String sporing = EvaluationSerializer.asJson(evaluation);
 

@@ -38,7 +38,6 @@ public class RegelFortsettForeslåBeregningsgrunnlagPrStatus extends DynamicRule
 	    if (AktivitetStatus.SN.equals(aktivitetStatus)) {
 		    return new RegelBeregningsgrunnlagSN().getSpecification().medScope(arg);
 	    } else if (AktivitetStatus.ATFL_SN.equals(aktivitetStatus)) {
-		    RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSN regelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSN = new RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSN(regelmodell);
 		    return new RegelBeregningsgrunnlagSN().getSpecification().medScope(arg);
 	    }
 		return new RegelForeslåBeregningsgrunnlagTilNull().medServiceArgument(arg).getSpecification();

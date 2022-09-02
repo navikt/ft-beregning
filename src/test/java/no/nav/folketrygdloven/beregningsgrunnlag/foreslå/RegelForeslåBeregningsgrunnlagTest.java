@@ -494,6 +494,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
 		verifiserBeregningsgrunnlagBeregnet(grunnlag, 12 * månedsinntektInntektsmelding.doubleValue());
 	}
 
+	// FIXME Hva skal skje når søker er både næringsdrivende og militær?
 	@Test
 	public void skalBeregneMilitærKombinertMedNæringOgArbeid() { // NOSONAR
 		// Arrange

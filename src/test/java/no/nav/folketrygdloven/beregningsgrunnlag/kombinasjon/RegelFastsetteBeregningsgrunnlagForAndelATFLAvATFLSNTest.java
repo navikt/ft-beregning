@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import no.nav.folketrygdloven.beregningsgrunnlag.fortsettForeslå.RegelFortsettForeslåBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
@@ -75,12 +76,14 @@ public class RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSNTest {
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         // Act
-        Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSN(grunnlag).evaluer(grunnlag);
+	    Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSN(grunnlag).evaluer(grunnlag);
+	    Evaluation evaluation2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
 
-        // Assert
-
-        RegelResultat regelResultat = getRegelResultat(evaluation, "input");
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+	    // Assert
+	    RegelResultat regelResultat = getRegelResultat(evaluation, "input");
+	    RegelResultat regelResultat2 = getRegelResultat(evaluation2, "input");
+	    assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+	    assertThat(regelResultat2.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, grunnlag, beregningsperiode);
 
@@ -118,11 +121,14 @@ public class RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSNTest {
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         // Act
-        Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSN(grunnlag).evaluer(grunnlag);
+	    Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSN(grunnlag).evaluer(grunnlag);
+	    Evaluation evaluation2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
 
-        // Assert
-        RegelResultat regelResultat = getRegelResultat(evaluation, "input");
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+	    // Assert
+	    RegelResultat regelResultat = getRegelResultat(evaluation, "input");
+	    RegelResultat regelResultat2 = getRegelResultat(evaluation2, "input");
+	    assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+	    assertThat(regelResultat2.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, grunnlag, beregningsperiode);
 
@@ -160,13 +166,15 @@ public class RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSNTest {
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         // Act
-        Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSN(grunnlag).evaluer(grunnlag);
+	    Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSN(grunnlag).evaluer(grunnlag);
+	    Evaluation evaluation2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
 
-        // Assert
-
-        RegelResultat regelResultat = getRegelResultat(evaluation, "input");
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
-        assertThat(regelResultat.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5039");
+	    // Assert
+	    RegelResultat regelResultat = getRegelResultat(evaluation, "input");
+	    RegelResultat regelResultat2 = getRegelResultat(evaluation2, "input");
+	    assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+	    assertThat(regelResultat2.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
+        assertThat(regelResultat2.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5039");
 
 
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
@@ -216,13 +224,15 @@ public class RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSNTest {
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         // Act
-        Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSN(grunnlag).evaluer(grunnlag);
+	    Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSN(grunnlag).evaluer(grunnlag);
+	    Evaluation evaluation2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
 
-        // Assert
-
-        RegelResultat regelResultat = getRegelResultat(evaluation, "input");
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
-        assertThat(regelResultat.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5039");
+	    // Assert
+	    RegelResultat regelResultat = getRegelResultat(evaluation, "input");
+	    RegelResultat regelResultat2 = getRegelResultat(evaluation2, "input");
+	    assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+	    assertThat(regelResultat2.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
+        assertThat(regelResultat2.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5039");
 
 
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
@@ -284,17 +294,26 @@ public class RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSNTest {
             .medBeregningsgrunnlagPeriode(andrePeriode)
             .build();
 
-        // Act
-        Evaluation evaluation1 = new RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSN(grunnlag).evaluer(grunnlag);
-        Evaluation evaluation2 = new RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSN(andrePeriode).evaluer(andrePeriode);
+        // Act første periode
+	    Evaluation evaluation1P1 = new RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSN(grunnlag).evaluer(grunnlag);
+	    Evaluation evaluation2P1 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
 
-        // Assert
+	    // Act andre periode
+	    Evaluation evaluation1P2 = new RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSN(andrePeriode).evaluer(andrePeriode);
+	    Evaluation evaluation2P2 = new RegelFortsettForeslåBeregningsgrunnlag(andrePeriode).evaluer(andrePeriode);
 
-        RegelResultat regelResultat1 = getRegelResultat(evaluation1, "input");
-        RegelResultat regelResultat2 = getRegelResultat(evaluation2, "input");
-        assertThat(regelResultat1.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
-        assertThat(regelResultat1.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5039");
 
+	    // Assert
+	    RegelResultat regelResultat1P1 = getRegelResultat(evaluation1P1, "input");
+	    RegelResultat regelResultat2P1 = getRegelResultat(evaluation2P1, "input");
+	    assertThat(regelResultat1P1.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+	    assertThat(regelResultat2P1.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
+	    assertThat(regelResultat2P1.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5039");
+
+	    RegelResultat regelResultat1P2 = getRegelResultat(evaluation1P2, "input");
+	    RegelResultat regelResultat2P2 = getRegelResultat(evaluation2P2, "input");
+	    assertThat(regelResultat1P2.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+	    assertThat(regelResultat2P2.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
 
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, grunnlag, beregningsperiode);
@@ -309,7 +328,6 @@ public class RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSNTest {
         //Verifiser andre periode
         assertThat(andrePeriode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).samletNaturalytelseBortfaltMinusTilkommetPrÅr()).isCloseTo(naturalytelseBeløp.multiply(TOLV).multiply(BigDecimal.valueOf(2)), within(BigDecimal.valueOf(0.001)));
         verifiserSammenligningsgrunnlag(andrePeriode, sammenligningsgrunnlag, avvik);
-        assertThat(regelResultat2.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
     }
 
     @Test
@@ -333,11 +351,14 @@ public class RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSNTest {
 
         // Act
         Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSN(grunnlag).evaluer(grunnlag);
+	    Evaluation evaluation2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
 
         // Assert
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
-        Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
+	    RegelResultat regelResultat2 = getRegelResultat(evaluation2, "input");
+	    assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+	    assertThat(regelResultat2.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+	    Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, grunnlag, beregningsperiode);
 
         BigDecimal gjennomsnittligPGI = Gverdi.multiply(new BigDecimal("4"));
@@ -373,11 +394,14 @@ public class RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSNTest {
         BeregningsgrunnlagPrStatus.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.AAP)).medBeregnetPrÅr(bruttoAAP).build();
 
         // Act
-        Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSN(grunnlag).evaluer(grunnlag);
+	    Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSN(grunnlag).evaluer(grunnlag);
+	    Evaluation evaluation2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
 
-        // Assert
-        RegelResultat regelResultat = getRegelResultat(evaluation, "input");
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
+	    // Assert
+	    RegelResultat regelResultat = getRegelResultat(evaluation, "input");
+	    RegelResultat regelResultat2 = getRegelResultat(evaluation2, "input");
+	    assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+	    assertThat(regelResultat2.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, grunnlag, beregningsperiode);
 
@@ -414,11 +438,14 @@ public class RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSNTest {
         BeregningsgrunnlagPrStatus.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP)).medBeregnetPrÅr(bruttoDP).build();
 
         // Act
-        Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSN(grunnlag).evaluer(grunnlag);
+	    Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSN(grunnlag).evaluer(grunnlag);
+	    Evaluation evaluation2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
 
-        // Assert
-        RegelResultat regelResultat = getRegelResultat(evaluation, "input");
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+	    // Assert
+	    RegelResultat regelResultat = getRegelResultat(evaluation, "input");
+	    RegelResultat regelResultat2 = getRegelResultat(evaluation2, "input");
+	    assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+	    assertThat(regelResultat2.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, grunnlag, beregningsperiode);
 
@@ -446,12 +473,15 @@ public class RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSNTest {
         BeregningsgrunnlagPrStatus.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN)).medErNyIArbeidslivet(true);
 
         // Act
-        Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSN(grunnlag).evaluer(grunnlag);
+	    Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSN(grunnlag).evaluer(grunnlag);
+	    Evaluation evaluation2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
 
-        // Assert
-        RegelResultat regelResultat = getRegelResultat(evaluation, "input");
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
-        assertThat(regelResultat.getMerknader().get(0).getMerknadKode()).isEqualTo("5049");
+	    // Assert
+	    RegelResultat regelResultat = getRegelResultat(evaluation, "input");
+	    RegelResultat regelResultat2 = getRegelResultat(evaluation2, "input");
+	    assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+	    assertThat(regelResultat2.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
+        assertThat(regelResultat2.getMerknader().get(0).getMerknadKode()).isEqualTo("5049");
         assertThat(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getBeregnetPrÅr()).isCloseTo(inntektATFL.multiply(TOLV), within(BigDecimal.valueOf(0.01)));
         assertThat(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN).getGjennomsnittligPGI()).isNotNull();
         assertThat(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN).getPgiListe()).hasSize(3);
@@ -473,11 +503,14 @@ public class RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSNTest {
         BeregningsgrunnlagPrStatus.builder(statusSN).medFastsattAvSaksbehandler(true).medBeregnetPrÅr(BigDecimal.valueOf(323232));
 
         // Act
-        Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSN(grunnlag).evaluer(grunnlag);
+	    Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSN(grunnlag).evaluer(grunnlag);
+	    Evaluation evaluation2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
 
-        // Assert
-        RegelResultat regelResultat = getRegelResultat(evaluation, "input");
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+	    // Assert
+	    RegelResultat regelResultat = getRegelResultat(evaluation, "input");
+	    RegelResultat regelResultat2 = getRegelResultat(evaluation2, "input");
+	    assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+	    assertThat(regelResultat2.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, grunnlag, beregningsperiode);
         verifiserBeregningsgrunnlagBruttoATFL_SN(grunnlag, BigDecimal.valueOf(232323), BigDecimal.valueOf(323232));

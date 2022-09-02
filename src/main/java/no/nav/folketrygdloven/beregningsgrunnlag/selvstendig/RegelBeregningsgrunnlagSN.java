@@ -2,6 +2,7 @@ package no.nav.folketrygdloven.beregningsgrunnlag.selvstendig;
 
 import java.util.Arrays;
 
+import no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker.SjekkOmFørsteBeregningsgrunnlagsperiode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Beregnet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.IkkeBeregnet;
@@ -49,9 +50,13 @@ public class RegelBeregningsgrunnlagSN implements RuleService<Beregningsgrunnlag
             rs.beregningsRegel("FP_BR 2.4", "Fastsett sammenligningsgrunnlag og beregn avvik",
                 new FastsettSammenligningsgrunnlagForSN(), sjekkOmDifferanseStørreEnn25Prosent);
 
+	    // Første beregningsgrunnlagsperiode? Sammenligninggrunnlag skal fastsettes og sjekkes mot bare om det er første periode
+	    Specification<BeregningsgrunnlagPeriode> sjekkOmFørstePeriode =
+			    rs.beregningHvisRegel(new SjekkOmFørsteBeregningsgrunnlagsperiode(), beregnAvvik, fastsettBeregnetPrÅr);
+
 //      FP_BR 2.3/2.3.3 Har bruker oppgitt varig endring eller nyoppstartet virksomhet?
         Specification<BeregningsgrunnlagPeriode> sjekkOmVarigEndringIVirksomhet =
-            rs.beregningHvisRegel(new SjekkOmVarigEndringIVirksomhetEllerNyoppstartetNæring(), beregnAvvik, fastsettBeregnetPrÅr);
+            rs.beregningHvisRegel(new SjekkOmVarigEndringIVirksomhetEllerNyoppstartetNæring(), sjekkOmFørstePeriode, fastsettBeregnetPrÅr);
 
 //      FP_BR 2.8 Beregn beregningsgrunnlag SN
         Specification<BeregningsgrunnlagPeriode> beregnBruttoSN =
