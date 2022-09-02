@@ -22,15 +22,10 @@ public class RegelForeslåBeregningsgrunnlag extends DynamicRuleService<Beregnin
 
         // Fastsett alle BG per status
         Specification<BeregningsgrunnlagPeriode> foreslåBeregningsgrunnlag;
-        if(regelmodell.skalSplitteSammenligningsgrunnlagToggle()){
-            foreslåBeregningsgrunnlag =
-                rs.beregningsRegel("FP_BR pr status", "Fastsett beregningsgrunnlag pr status", RegelForeslåBeregningsgrunnlagPrStatusATFLSplitt.class, regelmodell, "aktivitetStatus", regelmodell.getAktivitetStatuser(), new Beregnet());
+        foreslåBeregningsgrunnlag =
+            rs.beregningsRegel("FP_BR pr status", "Fastsett beregningsgrunnlag pr status", RegelForeslåBeregningsgrunnlagPrStatus.class, regelmodell, "aktivitetStatus", regelmodell.getAktivitetStatuser(), new Beregnet());
 
-        } else{
-            foreslåBeregningsgrunnlag =
-                rs.beregningsRegel("FP_BR pr status", "Fastsett beregningsgrunnlag pr status", RegelForeslåBeregningsgrunnlagPrStatus.class, regelmodell, "aktivitetStatus", regelmodell.getAktivitetStatuser(), new Beregnet());
 
-        }
 
         return foreslåBeregningsgrunnlag;
     }

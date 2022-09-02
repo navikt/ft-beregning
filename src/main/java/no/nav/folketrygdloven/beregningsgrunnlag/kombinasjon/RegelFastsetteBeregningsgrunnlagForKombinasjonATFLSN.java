@@ -1,7 +1,6 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.kombinasjon;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker.RegelBeregningsgrunnlagATFL;
-import no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker.RegelBeregningsgrunnlagSplittATFL;
 import no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker.SjekkOmFørsteBeregningsgrunnlagsperiode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Beregnet;
@@ -80,17 +79,12 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN extends Dynami
 				        .ellers(sjekkOmNyIArbeidslivetSN));
 
         Specification<BeregningsgrunnlagPeriode> beregningsgrunnlagKombinasjon;
-        if(regelmodell.skalSplitteSammenligningsgrunnlagToggle()){
-            // FP_BR 21 Fastsett beregningsgrunnlag for arbeidstakerandelen
-            beregningsgrunnlagKombinasjon =
-                rs.beregningsRegel("FP_BR_14-15-27-28", "Beregn beregningsgrunnlag for arbeidstaker/frilanser)",
-                    new RegelBeregningsgrunnlagSplittATFL(regelmodell).getSpecification(), beregnPGI);
-        } else {
-            // FP_BR 21 Fastsett beregningsgrunnlag for arbeidstakerandelen
-            beregningsgrunnlagKombinasjon =
-                rs.beregningsRegel("FP_BR_14-15-27-28", "Beregn beregningsgrunnlag for arbeidstaker/frilanser)",
-                    new RegelBeregningsgrunnlagATFL(regelmodell).getSpecification(), beregnPGI);
-        }
+
+        // FP_BR 21 Fastsett beregningsgrunnlag for arbeidstakerandelen
+        beregningsgrunnlagKombinasjon =
+            rs.beregningsRegel("FP_BR_14-15-27-28", "Beregn beregningsgrunnlag for arbeidstaker/frilanser)",
+                new RegelBeregningsgrunnlagATFL(regelmodell).getSpecification(), beregnPGI);
+
 
         return beregningsgrunnlagKombinasjon;
     }
