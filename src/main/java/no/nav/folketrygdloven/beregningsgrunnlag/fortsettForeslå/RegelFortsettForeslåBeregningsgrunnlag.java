@@ -1,5 +1,6 @@
-package no.nav.folketrygdloven.beregningsgrunnlag.foreslå;
+package no.nav.folketrygdloven.beregningsgrunnlag.fortsettForeslå;
 
+import no.nav.folketrygdloven.beregningsgrunnlag.foreslå.RegelForeslåBeregningsgrunnlagPrStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Beregnet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.fpsak.nare.DynamicRuleService;
@@ -7,11 +8,11 @@ import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.specification.Specification;
 
 
-public class RegelForeslåBeregningsgrunnlag extends DynamicRuleService<BeregningsgrunnlagPeriode> {
+public class RegelFortsettForeslåBeregningsgrunnlag extends DynamicRuleService<BeregningsgrunnlagPeriode> {
 
     public static final String ID = "BG-FORESLÅ";
 
-    public RegelForeslåBeregningsgrunnlag(BeregningsgrunnlagPeriode regelmodell) {
+    public RegelFortsettForeslåBeregningsgrunnlag(BeregningsgrunnlagPeriode regelmodell) {
         super(regelmodell);
     }
 
@@ -23,7 +24,7 @@ public class RegelForeslåBeregningsgrunnlag extends DynamicRuleService<Beregnin
         // Fastsett alle BG per status
         Specification<BeregningsgrunnlagPeriode> foreslåBeregningsgrunnlag;
         foreslåBeregningsgrunnlag =
-            rs.beregningsRegel("FP_BR pr status", "Fastsett beregningsgrunnlag pr status", RegelForeslåBeregningsgrunnlagPrStatus.class, regelmodell, "aktivitetStatus", regelmodell.getAktivitetStatuser(), new Beregnet());
+            rs.beregningsRegel("FP_BR pr status", "Fastsett beregningsgrunnlag pr status", RegelFortsettForeslåBeregningsgrunnlagPrStatus.class, regelmodell, "aktivitetStatus", regelmodell.getAktivitetStatuser(), new Beregnet());
         return foreslåBeregningsgrunnlag;
     }
 }

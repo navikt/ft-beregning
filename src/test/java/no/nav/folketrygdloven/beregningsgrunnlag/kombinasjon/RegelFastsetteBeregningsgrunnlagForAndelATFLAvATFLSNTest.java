@@ -41,7 +41,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SammenligningsGrunnlag;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 
-public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
+public class RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSNTest {
 
     private LocalDate skjæringstidspunkt;
     private Arbeidsforhold arbeidsforhold;
@@ -75,7 +75,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         // Act
-        Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).evaluer(grunnlag);
+        Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSN(grunnlag).evaluer(grunnlag);
 
         // Assert
 
@@ -118,7 +118,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         // Act
-        Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).evaluer(grunnlag);
+        Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSN(grunnlag).evaluer(grunnlag);
 
         // Assert
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
@@ -160,7 +160,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         // Act
-        Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).evaluer(grunnlag);
+        Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSN(grunnlag).evaluer(grunnlag);
 
         // Assert
 
@@ -216,7 +216,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         // Act
-        Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).evaluer(grunnlag);
+        Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSN(grunnlag).evaluer(grunnlag);
 
         // Assert
 
@@ -285,8 +285,8 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
             .build();
 
         // Act
-        Evaluation evaluation1 = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).evaluer(grunnlag);
-        Evaluation evaluation2 = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(andrePeriode).evaluer(andrePeriode);
+        Evaluation evaluation1 = new RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSN(grunnlag).evaluer(grunnlag);
+        Evaluation evaluation2 = new RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSN(andrePeriode).evaluer(andrePeriode);
 
         // Assert
 
@@ -332,7 +332,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
         BeregningsgrunnlagPrStatus.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP)).medBeregnetPrÅr(bruttoDP).build();
 
         // Act
-        Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).evaluer(grunnlag);
+        Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSN(grunnlag).evaluer(grunnlag);
 
         // Assert
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
@@ -373,7 +373,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
         BeregningsgrunnlagPrStatus.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.AAP)).medBeregnetPrÅr(bruttoAAP).build();
 
         // Act
-        Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).evaluer(grunnlag);
+        Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSN(grunnlag).evaluer(grunnlag);
 
         // Assert
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
@@ -414,7 +414,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
         BeregningsgrunnlagPrStatus.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP)).medBeregnetPrÅr(bruttoDP).build();
 
         // Act
-        Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).evaluer(grunnlag);
+        Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSN(grunnlag).evaluer(grunnlag);
 
         // Assert
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
@@ -446,7 +446,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
         BeregningsgrunnlagPrStatus.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN)).medErNyIArbeidslivet(true);
 
         // Act
-        Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).evaluer(grunnlag);
+        Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSN(grunnlag).evaluer(grunnlag);
 
         // Assert
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
@@ -473,7 +473,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
         BeregningsgrunnlagPrStatus.builder(statusSN).medFastsattAvSaksbehandler(true).medBeregnetPrÅr(BigDecimal.valueOf(323232));
 
         // Act
-        Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).evaluer(grunnlag);
+        Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSN(grunnlag).evaluer(grunnlag);
 
         // Assert
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");

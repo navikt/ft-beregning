@@ -29,6 +29,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import no.nav.folketrygdloven.beregningsgrunnlag.fortsettForeslå.RegelFortsettForeslåBeregningsgrunnlag;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -113,6 +115,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
 				List.of(arbeidsforhold), Collections.singletonList(refusjonskrav.multiply(BigDecimal.valueOf(12)))).getBeregningsgrunnlagPerioder().get(0);
 		// Act
 		Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+		Evaluation evaluation2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
 		// Assert
 		@SuppressWarnings("unused")
 		String sporing = EvaluationSerializer.asJson(evaluation);
@@ -140,6 +143,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
 				List.of(arbeidsforhold), Collections.singletonList(refusjonskrav.multiply(BigDecimal.valueOf(12)))).getBeregningsgrunnlagPerioder().get(0);
 		// Act
 		Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+		Evaluation evaluation2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
 		// Assert
 		@SuppressWarnings("unused")
 		String sporing = EvaluationSerializer.asJson(evaluation);
@@ -165,6 +169,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
 				List.of(arbeidsforhold), Collections.singletonList(refusjonskrav.multiply(BigDecimal.valueOf(12)))).getBeregningsgrunnlagPerioder().get(0);
 		// Act
 		Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+		Evaluation evaluation2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
 		// Assert
 		@SuppressWarnings("unused")
 		String sporing = EvaluationSerializer.asJson(evaluation);
@@ -243,6 +248,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
 		BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 		// Act
 		Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+		Evaluation evaluation2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
 		// Assert
 		@SuppressWarnings("unused")
 		String sporing = EvaluationSerializer.asJson(evaluation);
@@ -277,6 +283,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
 		BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 		// Act
 		Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+		Evaluation evaluation2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
 		// Assert
 		@SuppressWarnings("unused")
 		String sporing = EvaluationSerializer.asJson(evaluation);
@@ -503,6 +510,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
 
 		// Act
 		Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+		Evaluation evaluation2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
 		// Assert
 		@SuppressWarnings("unused")
 		String sporing = EvaluationSerializer.asJson(evaluation);

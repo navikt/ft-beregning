@@ -80,7 +80,10 @@ public class RegelBeregningsgrunnlagSN implements RuleService<Beregningsgrunnlag
 //      FP_BR 2.1 Fastsett beregningsperiode
         Specification<BeregningsgrunnlagPeriode> foreslåBeregningsgrunnlagForSelvstendigNæringsdrivende =
             rs.beregningsRegel("FP_BR 2", "Foreslå beregningsgrunnlag for selvstendig næringsdrivende",
-                Arrays.asList(new FastsettBeregningsperiodeForAktivitetstatus(AktivitetStatus.SN), new SettHjemmelSN(), new BeregnOppjustertInntektForAktivitetstatus(AktivitetStatus.SN), new BeregnGjennomsnittligPGIForAktivitetstatus(AktivitetStatus.SN)), erBeregningsgrunnlagetBesteberegnet);
+                Arrays.asList(new FastsettBeregningsperiodeForAktivitetstatus(AktivitetStatus.SN),
+		                new SettHjemmelSN(), new BeregnOppjustertInntektForAktivitetstatus(AktivitetStatus.SN),
+		                new BeregnGjennomsnittligPGIForAktivitetstatus(AktivitetStatus.SN)),
+		            erBeregningsgrunnlagetBesteberegnet);
 
         return foreslåBeregningsgrunnlagForSelvstendigNæringsdrivende;
     }

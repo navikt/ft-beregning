@@ -2,7 +2,7 @@ package no.nav.folketrygdloven.beregningsgrunnlag.foreslå;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker.RegelBeregningsgrunnlagATFL;
 import no.nav.folketrygdloven.beregningsgrunnlag.inaktiv.RegelBeregningsgrunnlagInaktiv;
-import no.nav.folketrygdloven.beregningsgrunnlag.kombinasjon.RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN;
+import no.nav.folketrygdloven.beregningsgrunnlag.kombinasjon.RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSN;
 import no.nav.folketrygdloven.beregningsgrunnlag.militær.RegelForeslåBeregningsgrunnlagMilitær;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel;
@@ -10,7 +10,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningUtfallMerk
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningUtfallÅrsak;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.IkkeBeregnet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
-import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.RegelBeregningsgrunnlagSN;
 import no.nav.folketrygdloven.beregningsgrunnlag.ytelse.RegelForeslåBeregningsgrunnlagTY;
 import no.nav.folketrygdloven.beregningsgrunnlag.ytelse.dagpengerelleraap.RegelFastsettBeregningsgrunnlagDPellerAAP;
 import no.nav.fpsak.nare.DynamicRuleService;
@@ -41,11 +40,9 @@ public class RegelForeslåBeregningsgrunnlagPrStatus extends DynamicRuleService<
         AktivitetStatus aktivitetStatus = ((AktivitetStatusMedHjemmel) arg.getVerdi()).getAktivitetStatus();
         if (AktivitetStatus.ATFL.equals(aktivitetStatus)) {
             return new RegelBeregningsgrunnlagATFL(regelmodell).getSpecification().medScope(arg);
-        } else if (AktivitetStatus.SN.equals(aktivitetStatus)) {
-            return new RegelBeregningsgrunnlagSN().getSpecification().medScope(arg);
         } else if (AktivitetStatus.ATFL_SN.equals(aktivitetStatus)) {
-            RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN regelFastsetteBeregningsgrunnlagForKombinasjonATFLSN = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(regelmodell);
-            return regelFastsetteBeregningsgrunnlagForKombinasjonATFLSN.getSpecification().medScope(arg);
+            RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSN regelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSN = new RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSN(regelmodell);
+            return regelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSN.getSpecification().medScope(arg);
         } else if (aktivitetStatus.erAAPellerDP()) {
             RegelFastsettBeregningsgrunnlagDPellerAAP regelFastsettBeregningsgrunnlagDPellerAAP = new RegelFastsettBeregningsgrunnlagDPellerAAP();
             return regelFastsettBeregningsgrunnlagDPellerAAP.getSpecification().medScope(arg);
