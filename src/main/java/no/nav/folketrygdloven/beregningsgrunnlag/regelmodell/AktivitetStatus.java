@@ -38,6 +38,8 @@ public enum AktivitetStatus {
 	private static final List<AktivitetStatus> DP_STATUSER = Arrays.asList(DP, SP_AV_DP, PSB_AV_DP);    //NOSONAR
 	private static final List<AktivitetStatus> DP_FRA_YTELSE_STATUSER = Arrays.asList(SP_AV_DP, PSB_AV_DP);    //NOSONAR
 
+	private static final List<AktivitetStatus> FORTSETT_FORESLÅ_BGRUNNL_STATUSER = Arrays.asList(SN, MS);    //NOSONAR
+
     AktivitetStatus(String beskrivelse) {
         this.beskrivelse = beskrivelse;
         beregningPrioritet = 1;
@@ -94,4 +96,5 @@ public enum AktivitetStatus {
 		return DP_FRA_YTELSE_STATUSER.contains(this);
 	}
 
+	public boolean erMilitær() { return MS.equals(this); }
 }

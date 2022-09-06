@@ -2,6 +2,7 @@ package no.nav.folketrygdloven.beregningsgrunnlag.fortsettForeslå;
 
 import java.util.stream.Collectors;
 
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Beregnet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.fpsak.nare.DynamicRuleService;
@@ -26,12 +27,9 @@ public class RegelFortsettForeslåBeregningsgrunnlag extends DynamicRuleService<
         Specification<BeregningsgrunnlagPeriode> foreslåBeregningsgrunnlag;
         foreslåBeregningsgrunnlag =
             rs.beregningsRegel("FP_BR pr status", "Fastsett beregningsgrunnlag pr status", RegelFortsettForeslåBeregningsgrunnlagPrStatus.class, regelmodell, "aktivitetStatus",
-		            regelmodell.getAktivitetStatuser().stream().filter(s -> s.getAktivitetStatus().erSelvstendigNæringsdrivende()).collect(Collectors.toList()), new Beregnet());
+		            regelmodell.getAktivitetStatuser().stream().filter(s -> s.getAktivitetStatus().erSelvstendigNæringsdrivende() || s.getAktivitetStatus().erMilitær()).collect(Collectors.toList()), new Beregnet());
 
-	    Specification<BeregningsgrunnlagPeriode> skalKjøreFortsettForeslå =
-			    rs.beregningHvisRegel(new SkalKjøreFortsettForeslå(), foreslåBeregningsgrunnlag, new Beregnet());
-
-		return skalKjøreFortsettForeslå;
+		return rs.beregningHvisRegel(new SkalKjøreFortsettForeslå(), foreslåBeregningsgrunnlag, new Beregnet());
 
     }
 }

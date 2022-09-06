@@ -13,11 +13,10 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 public class SkalKjøreFortsettForeslå extends LeafSpecification<BeregningsgrunnlagPeriode> {
 
     /**
-     * https://jira.adeo.no/browse/TFP-2806
-     * Når beregningsgrunnlaget er fastsatt etter besteberegning skal det ikke avviksvurderes
+     * Dersom MS eller sn skal RegelFortsettForeslåBeregningsgrunnlag kjøres.
      */
     static final String ID = "FP_BR 2.20";
-    static final String BESKRIVELSE = "Er beregningsgrunnlaget besteberegnet?";
+    static final String BESKRIVELSE = "Skal Fortsett Foreslå kjøres for gjeldende statuser?";
 
     public SkalKjøreFortsettForeslå() {
         super(ID, BESKRIVELSE);
@@ -27,7 +26,7 @@ public class SkalKjøreFortsettForeslå extends LeafSpecification<Beregningsgrun
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
 	    var harStatusSomMåBeregnesEtterForeslå = grunnlag.getBeregningsgrunnlag().getAktivitetStatuser().stream()
 			    .map(AktivitetStatusMedHjemmel::getAktivitetStatus)
-			    .anyMatch(AktivitetStatus::erSelvstendigNæringsdrivende);
+			    .anyMatch(s -> s.erSelvstendigNæringsdrivende() || s.erMilitær());
 	    return harStatusSomMåBeregnesEtterForeslå
             ? ja()
             : nei();

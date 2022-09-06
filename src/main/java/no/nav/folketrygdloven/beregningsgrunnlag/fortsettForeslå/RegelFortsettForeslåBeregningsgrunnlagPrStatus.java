@@ -2,6 +2,7 @@ package no.nav.folketrygdloven.beregningsgrunnlag.fortsettForeslå;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.foreslå.RegelForeslåBeregningsgrunnlagTilNull;
 import no.nav.folketrygdloven.beregningsgrunnlag.kombinasjon.RegelFastsetteBeregningsgrunnlagForAndelATFLAvATFLSN;
+import no.nav.folketrygdloven.beregningsgrunnlag.militær.RegelForeslåBeregningsgrunnlagMilitær;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningUtfallMerknad;
@@ -39,6 +40,9 @@ public class RegelFortsettForeslåBeregningsgrunnlagPrStatus extends DynamicRule
 		    return new RegelBeregningsgrunnlagSN().getSpecification().medScope(arg);
 	    } else if (AktivitetStatus.ATFL_SN.equals(aktivitetStatus)) {
 		    return new RegelBeregningsgrunnlagSN().getSpecification().medScope(arg);
+	    } else if (AktivitetStatus.MS.equals(aktivitetStatus)) {
+		    RegelForeslåBeregningsgrunnlagMilitær regelForeslåBeregningsgrunnlagMS = new RegelForeslåBeregningsgrunnlagMilitær();
+		    return regelForeslåBeregningsgrunnlagMS.getSpecification().medScope(arg);
 	    }
 		return new RegelForeslåBeregningsgrunnlagTilNull().medServiceArgument(arg).getSpecification();
     }

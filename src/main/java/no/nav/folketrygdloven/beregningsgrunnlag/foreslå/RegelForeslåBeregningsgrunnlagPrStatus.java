@@ -49,9 +49,6 @@ public class RegelForeslåBeregningsgrunnlagPrStatus extends DynamicRuleService<
         } else if (AktivitetStatus.KUN_YTELSE.equals(aktivitetStatus)) {
             RegelForeslåBeregningsgrunnlagTY regelForeslåBeregningsgrunnlagTY = new RegelForeslåBeregningsgrunnlagTY(regelmodell);
             return regelForeslåBeregningsgrunnlagTY.getSpecification().medScope(arg);
-        } else if (AktivitetStatus.MS.equals(aktivitetStatus)) {
-            RegelForeslåBeregningsgrunnlagMilitær regelForeslåBeregningsgrunnlagMS = new RegelForeslåBeregningsgrunnlagMilitær();
-            return regelForeslåBeregningsgrunnlagMS.getSpecification().medScope(arg);
         } else if (AktivitetStatus.MIDL_INAKTIV.equals(aktivitetStatus)) {
 	        return new RegelBeregningsgrunnlagInaktiv(regelmodell).getSpecification().medScope(arg);
         }
