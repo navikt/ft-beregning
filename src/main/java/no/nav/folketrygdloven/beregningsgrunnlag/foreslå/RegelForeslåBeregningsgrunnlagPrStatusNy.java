@@ -6,6 +6,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.kombinasjon.RegelFastsetteBereg
 import no.nav.folketrygdloven.beregningsgrunnlag.militær.RegelForeslåBeregningsgrunnlagMilitær;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Beregnet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningUtfallMerknad;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningUtfallÅrsak;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.IkkeBeregnet;
@@ -38,7 +39,12 @@ public class RegelForeslåBeregningsgrunnlagPrStatusNy extends DynamicRuleServic
             return new IkkeBeregnet(new BeregningUtfallMerknad(BeregningUtfallÅrsak.UDEFINERT));
         }
         AktivitetStatus aktivitetStatus = ((AktivitetStatusMedHjemmel) arg.getVerdi()).getAktivitetStatus();
-        if (AktivitetStatus.ATFL.equals(aktivitetStatus)) {
+
+		// Disse beregnes i fortsettForeslå steget
+        if (aktivitetStatus.equals(AktivitetStatus.MS) || aktivitetStatus.equals(AktivitetStatus.SN)) {
+			return new Beregnet();
+        }
+		if (AktivitetStatus.ATFL.equals(aktivitetStatus)) {
             return new RegelBeregningsgrunnlagATFL(regelmodell).getSpecification().medScope(arg);
         } else if (AktivitetStatus.ATFL_SN.equals(aktivitetStatus)) {
             RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNNy regelFastsetteBeregningsgrunnlagForKombinasjonATFLSNNy = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNNy(regelmodell);
@@ -49,9 +55,6 @@ public class RegelForeslåBeregningsgrunnlagPrStatusNy extends DynamicRuleServic
         } else if (AktivitetStatus.KUN_YTELSE.equals(aktivitetStatus)) {
             RegelForeslåBeregningsgrunnlagTY regelForeslåBeregningsgrunnlagTY = new RegelForeslåBeregningsgrunnlagTY(regelmodell);
             return regelForeslåBeregningsgrunnlagTY.getSpecification().medScope(arg);
-        } else if (AktivitetStatus.MS.equals(aktivitetStatus)) {
-            RegelForeslåBeregningsgrunnlagMilitær regelForeslåBeregningsgrunnlagMS = new RegelForeslåBeregningsgrunnlagMilitær();
-            return regelForeslåBeregningsgrunnlagMS.getSpecification().medScope(arg);
         } else if (AktivitetStatus.MIDL_INAKTIV.equals(aktivitetStatus)) {
 	        return new RegelBeregningsgrunnlagInaktiv(regelmodell).getSpecification().medScope(arg);
         }

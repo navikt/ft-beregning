@@ -42,13 +42,16 @@ public class RegelFortsettForeslåBeregningsgrunnlagPrStatus extends DynamicRule
 		    return new IkkeBeregnet(new BeregningUtfallMerknad(BeregningUtfallÅrsak.UDEFINERT));
 	    }
 	    AktivitetStatus aktivitetStatus = ((AktivitetStatusMedHjemmel) arg.getVerdi()).getAktivitetStatus();
-	    if (!aktivitetStatus.erSelvstendigNæringsdrivende() && !aktivitetStatus.equals(AktivitetStatus.MS)) {
+	    if (!aktivitetStatus.erSelvstendigNæringsdrivende() && !aktivitetStatus.erMilitær()) {
 		    return new Beregnet();
 	    }
 	    if (AktivitetStatus.SN.equals(aktivitetStatus)) {
 		    return new RegelBeregningsgrunnlagSN().getSpecification().medScope(arg);
 	    } else if (AktivitetStatus.ATFL_SN.equals(aktivitetStatus)) {
 		    return new RegelBeregningsgrunnlagSN().getSpecification().medScope(arg);
+	    } else if (AktivitetStatus.MS.equals(aktivitetStatus)) {
+		    RegelForeslåBeregningsgrunnlagMilitær regelForeslåBeregningsgrunnlagMS = new RegelForeslåBeregningsgrunnlagMilitær();
+		    return regelForeslåBeregningsgrunnlagMS.getSpecification().medScope(arg);
 	    }
 	    return new RegelForeslåBeregningsgrunnlagTilNull().medServiceArgument(arg).getSpecification();
     }

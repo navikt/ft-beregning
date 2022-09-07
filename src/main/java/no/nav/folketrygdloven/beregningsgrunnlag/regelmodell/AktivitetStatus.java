@@ -82,7 +82,9 @@ public enum AktivitetStatus {
         return SELVSTENDIG_NÆRINGSDRIVENDE_STATUSER.contains(this);
     }
 
-    public boolean erAAPellerDP() {
+	public boolean erMilitær() { return MS.equals(this); }
+
+	public boolean erAAPellerDP() {
         return AAP_OG_DP_STATUSER.contains(this);
     }
 
