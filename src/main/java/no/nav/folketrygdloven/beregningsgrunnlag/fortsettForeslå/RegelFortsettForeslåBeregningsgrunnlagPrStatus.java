@@ -8,6 +8,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.kombinasjon.RegelFastsetteBereg
 import no.nav.folketrygdloven.beregningsgrunnlag.militær.RegelForeslåBeregningsgrunnlagMilitær;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Beregnet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningUtfallMerknad;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningUtfallÅrsak;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.IkkeBeregnet;
@@ -41,6 +42,9 @@ public class RegelFortsettForeslåBeregningsgrunnlagPrStatus extends DynamicRule
 		    return new IkkeBeregnet(new BeregningUtfallMerknad(BeregningUtfallÅrsak.UDEFINERT));
 	    }
 	    AktivitetStatus aktivitetStatus = ((AktivitetStatusMedHjemmel) arg.getVerdi()).getAktivitetStatus();
+	    if (!aktivitetStatus.erSelvstendigNæringsdrivende() && !aktivitetStatus.equals(AktivitetStatus.MS)) {
+		    return new Beregnet();
+	    }
 	    if (AktivitetStatus.SN.equals(aktivitetStatus)) {
 		    return new RegelBeregningsgrunnlagSN().getSpecification().medScope(arg);
 	    } else if (AktivitetStatus.ATFL_SN.equals(aktivitetStatus)) {
