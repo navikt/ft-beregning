@@ -29,7 +29,7 @@ import no.nav.fpsak.nare.specification.Specification;
 @RuleDocumentation(value = RegelFortsettForeslåBeregningsgrunnlagPrStatus.ID, specificationReference = "https://confluence.adeo.no/pages/viewpage.action?pageId=180066764")
 public class RegelFortsettForeslåBeregningsgrunnlagPrStatus extends DynamicRuleService<BeregningsgrunnlagPeriode> {
 
-    static final String ID = "BG-PR-STATUS";
+    static final String ID = "BG-FORTSETT-PR-STATUS";
 
     @SuppressWarnings("unchecked")
     @Override

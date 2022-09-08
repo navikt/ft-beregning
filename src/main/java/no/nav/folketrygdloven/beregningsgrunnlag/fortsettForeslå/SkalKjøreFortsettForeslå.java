@@ -11,11 +11,9 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 public class SkalKjøreFortsettForeslå extends LeafSpecification<BeregningsgrunnlagPeriode> {
 
 	/**
-	 * https://jira.adeo.no/browse/TFP-2806
-	 * Når beregningsgrunnlaget er fastsatt etter besteberegning skal det ikke avviksvurderes
 	 */
-	static final String ID = "FP_BR 2.20";
-	static final String BESKRIVELSE = "Er beregningsgrunnlaget besteberegnet?";
+	static final String ID = "FP_BR 2.21";
+	static final String BESKRIVELSE = "Skal fortsett beregningsgrunnlag kjøres?";
 
 	public SkalKjøreFortsettForeslå() {
 		super(ID, BESKRIVELSE);

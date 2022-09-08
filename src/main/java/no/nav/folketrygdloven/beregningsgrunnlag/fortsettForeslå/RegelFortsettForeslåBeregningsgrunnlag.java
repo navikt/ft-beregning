@@ -9,7 +9,7 @@ import no.nav.fpsak.nare.specification.Specification;
 
 public class RegelFortsettForeslåBeregningsgrunnlag extends DynamicRuleService<BeregningsgrunnlagPeriode> {
 
-    public static final String ID = "BG-FORESLÅ";
+    public static final String ID = "BG-FORTSETT-FORESLÅ";
 
     public RegelFortsettForeslåBeregningsgrunnlag(BeregningsgrunnlagPeriode regelmodell) {
         super(regelmodell);
@@ -23,7 +23,7 @@ public class RegelFortsettForeslåBeregningsgrunnlag extends DynamicRuleService<
 	    // Fastsett alle BG per status
 	    Specification<BeregningsgrunnlagPeriode> foreslåBeregningsgrunnlag;
 	    foreslåBeregningsgrunnlag =
-			    rs.beregningsRegel("FP_BR pr status", "Fastsett beregningsgrunnlag pr status", RegelFortsettForeslåBeregningsgrunnlagPrStatus.class, regelmodell, "aktivitetStatus",
+			    rs.beregningsRegel("FP_BR pr status", "Fortsett fastsett beregningsgrunnlag pr status", RegelFortsettForeslåBeregningsgrunnlagPrStatus.class, regelmodell, "aktivitetStatus",
 					    regelmodell.getAktivitetStatuser(), new Beregnet());
 
 	    return rs.beregningHvisRegel(new SkalKjøreFortsettForeslå(), foreslåBeregningsgrunnlag, new Beregnet());
