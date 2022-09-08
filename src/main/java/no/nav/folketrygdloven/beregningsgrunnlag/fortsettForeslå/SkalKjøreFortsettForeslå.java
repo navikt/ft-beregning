@@ -1,7 +1,5 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.fortsettForeslå;
 
-import java.util.Set;
-
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
@@ -25,10 +23,13 @@ public class SkalKjøreFortsettForeslå extends LeafSpecification<Beregningsgrun
 
 	@Override
 	public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-		var harStatusSomMåBeregnesEtterForeslå = grunnlag.getBeregningsgrunnlag().getAktivitetStatuser().stream()
+		var beregnesSomMilitær = grunnlag.getBeregningsgrunnlag().getAktivitetStatuser().stream()
+				.map(AktivitetStatusMedHjemmel::getAktivitetStatus)
+				.anyMatch(AktivitetStatus::erMilitær);
+		var beregnesSomNæringsdrivende = grunnlag.getBeregningsgrunnlag().getAktivitetStatuser().stream()
 				.map(AktivitetStatusMedHjemmel::getAktivitetStatus)
 				.anyMatch(AktivitetStatus::erSelvstendigNæringsdrivende);
-		return harStatusSomMåBeregnesEtterForeslå
+		return beregnesSomNæringsdrivende || beregnesSomMilitær
 				? ja()
 				: nei();
 	}
