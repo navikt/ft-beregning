@@ -36,8 +36,10 @@ public class BeregnBruttoBeregningsgrunnlagSN extends LeafSpecification<Beregnin
 
         BigDecimal bruttoAAP = bgAAP != null ? bgAAP.getBeregnetPrÅr() : BigDecimal.ZERO;
         BigDecimal bruttoDP = bgDP.map(BeregningsgrunnlagPrStatus::getBeregnetPrÅr).orElse(BigDecimal.ZERO);
+	    BeregningsgrunnlagPrStatus atflAndel = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+	    BigDecimal bruttoBGArbeidstaker = atflAndel == null ? BigDecimal.ZERO : atflAndel.getBruttoPrÅr();
 
-        BigDecimal bruttoSN = gjennomsnittligPGI.subtract(bruttoAAP).subtract(bruttoDP).max(BigDecimal.ZERO);
+	    BigDecimal bruttoSN = gjennomsnittligPGI.subtract(bruttoAAP).subtract(bruttoDP).subtract(bruttoBGArbeidstaker).max(BigDecimal.ZERO);
 
         BeregningsgrunnlagPrStatus.builder(bgps).medBeregnetPrÅr(bruttoSN).build();
 
@@ -49,7 +51,10 @@ public class BeregnBruttoBeregningsgrunnlagSN extends LeafSpecification<Beregnin
         if (bruttoDP.compareTo(BigDecimal.ZERO) > 0) {
             resultater.put("bruttoBeregningsgrunnlagDP", bruttoDP);
         }
-        resultater.put("bruttoBeregningsgrunnlagSN", bruttoSN);
+	    if (bruttoBGArbeidstaker.compareTo(BigDecimal.ZERO) > 0) {
+		    resultater.put("bruttoBGArbeidstaker", bruttoBGArbeidstaker);
+	    }
+	    resultater.put("bruttoBeregningsgrunnlagSN", bruttoSN);
 
         return beregnet(resultater);
     }
