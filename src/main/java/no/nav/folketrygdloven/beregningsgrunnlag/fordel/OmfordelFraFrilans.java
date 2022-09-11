@@ -23,8 +23,8 @@ class OmfordelFraFrilans extends OmfordelFraATFL {
     }
 
     private boolean harBgSomKanFlyttes(FordelAndelModell beregningsgrunnlagPrArbeidsforhold) {
-        return beregningsgrunnlagPrArbeidsforhold.getBruttoPrÅr().orElse(BigDecimal.ZERO).compareTo(BigDecimal.ZERO) > 0
-            && (beregningsgrunnlagPrArbeidsforhold.getFordeltPrÅr()
+        return beregningsgrunnlagPrArbeidsforhold.getGradertBruttoPrÅr().orElse(BigDecimal.ZERO).compareTo(BigDecimal.ZERO) > 0
+            && (beregningsgrunnlagPrArbeidsforhold.getGradertFordeltPrÅr()
 		        .map(fordelt -> fordelt.compareTo(BigDecimal.ZERO) > 0)
 		        .orElse(true));
     }

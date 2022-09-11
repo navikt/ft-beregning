@@ -21,10 +21,6 @@ public class Konstanter {
     private BigDecimal avviksgrenseProsent = BigDecimal.valueOf(25);
     private List<Grunnbeløp> grunnbeløpSatser = new ArrayList<>();
 
-    // Toggler
-
-    private boolean splitteATFLToggleErPå = false;
-
     void setAntallGMilitærHarKravPå(int antallGMilitærHarKravPå) {
         this.antallGMilitærHarKravPå = antallGMilitærHarKravPå;
     }
@@ -47,10 +43,6 @@ public class Konstanter {
 
     void setAvviksgrenseProsent(BigDecimal avviksgrenseProsent) {
         this.avviksgrenseProsent = avviksgrenseProsent;
-    }
-
-    void setSplitteATFLToggleErPå(boolean splitteATFLToggleErPå) {
-        this.splitteATFLToggleErPå = splitteATFLToggleErPå;
     }
 
     void setGrunnbeløpSatser(List<Grunnbeløp> grunnbeløpSatser) {
@@ -80,10 +72,6 @@ public class Konstanter {
 	public BigDecimal getMidlertidigInaktivTypeAReduksjonsfaktor() {
 		return midlertidigInaktivTypeAReduksjonsfaktor;
 	}
-
-    public boolean isSplitteATFLToggleErPå() {
-        return splitteATFLToggleErPå;
-    }
 
 	public List<Grunnbeløp> getGrunnbeløpSatser() {
         if (grunnbeløpSatser.isEmpty()) {
