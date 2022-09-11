@@ -6,17 +6,16 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collections;
 
+import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelAndelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelPeriodeModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
-
-import org.junit.jupiter.api.Test;
-
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
+import no.nav.fpsak.nare.ServiceArgument;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.Resultat;
 
@@ -68,8 +67,8 @@ public class SjekkOmRefusjonOverstigerBeregningsgrunnlagTest {
     }
 
     private Evaluation kjørRegel(FordelAndelModell arbeidsforhold, FordelPeriodeModell periode) {
-        SjekkOmRefusjonOverstigerBeregningsgrunnlag regel = new SjekkOmRefusjonOverstigerBeregningsgrunnlag(arbeidsforhold);
-        return regel.evaluate(new FordelModell(periode));
+        SjekkOmRefusjonOverstigerBeregningsgrunnlag regel = new SjekkOmRefusjonOverstigerBeregningsgrunnlag();
+        return regel.evaluate(new FordelModell(periode), new ServiceArgument("arbeidsforhold", arbeidsforhold));
     }
 
 }

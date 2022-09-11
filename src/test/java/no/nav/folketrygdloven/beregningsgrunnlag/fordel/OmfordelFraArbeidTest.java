@@ -15,6 +15,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
+import no.nav.fpsak.nare.ServiceArgument;
 
 public class OmfordelFraArbeidTest {
 
@@ -220,7 +221,7 @@ public class OmfordelFraArbeidTest {
 	}
 
 	private void kjørRegel(FordelAndelModell arbeidsforhold, FordelPeriodeModell periode) {
-		OmfordelFraArbeid regel = new OmfordelFraArbeid(arbeidsforhold);
-		regel.evaluate(new FordelModell(periode));
+		OmfordelFraArbeid regel = new OmfordelFraArbeid();
+		regel.evaluate(new FordelModell(periode), new ServiceArgument("arbeidsforhold", arbeidsforhold));
 	}
 }

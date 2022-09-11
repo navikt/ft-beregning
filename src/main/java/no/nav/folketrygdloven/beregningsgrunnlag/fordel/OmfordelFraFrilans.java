@@ -13,8 +13,8 @@ class OmfordelFraFrilans extends OmfordelFraATFL {
     static final String ID = "FP_BR 22.3.8";
     static final String BESKRIVELSE = "Flytt beregningsgrunnlag fra frilans.";
 
-    OmfordelFraFrilans(FordelAndelModell arbeidsforhold) {
-        super(arbeidsforhold, ID, BESKRIVELSE);
+    OmfordelFraFrilans() {
+        super(ID, BESKRIVELSE);
     }
 
     @Override

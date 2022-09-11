@@ -12,6 +12,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelPeriodeModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
+import no.nav.fpsak.nare.ServiceArgument;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.node.SingleEvaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
@@ -20,30 +21,34 @@ class SjekkOmRefusjonOverstigerBeregningsgrunnlag extends LeafSpecification<Ford
 
     private static final String ID = "FP_BR 22.3.7";
     private static final String BESKRIVELSE = "Sjekk om refusjon overstiger beregningsgrunnlag for arbeidsforhold.";
-    private Arbeidsforhold arbeidsforhold;
 
-    SjekkOmRefusjonOverstigerBeregningsgrunnlag(FordelAndelModell andelMedHøyereRefEnnBG) {
+    SjekkOmRefusjonOverstigerBeregningsgrunnlag() {
         super(ID, BESKRIVELSE);
-	    this.arbeidsforhold = andelMedHøyereRefEnnBG.getArbeidsforhold().orElseThrow();
     }
 
     @Override
     public Evaluation evaluate(FordelModell modell) {
-        BigDecimal refusjonskravPrÅr = finnSamletBeløpFraArbeidsforhold(modell.getInput(), FordelAndelModell::getGradertRefusjonPrÅr);
-        BigDecimal bruttoInkludertNaturalytelsePrÅr = finnSamletBeløpFraArbeidsforhold(modell.getInput(), FordelAndelModell::getGradertBruttoInkludertNaturalytelsePrÅr);
-        BigDecimal refusjonBruttoBgDiff = refusjonskravPrÅr.subtract(bruttoInkludertNaturalytelsePrÅr);
-        SingleEvaluation resultat = refusjonBruttoBgDiff.compareTo(BigDecimal.ZERO) > 0 ? ja() : nei();
-        resultat.setEvaluationProperty("refusjonskravPrÅr." + arbeidsforhold.getArbeidsgiverId(), refusjonskravPrÅr);
-        resultat.setEvaluationProperty("bruttoInklNaturalytelsePrÅr." + arbeidsforhold.getArbeidsgiverId(), bruttoInkludertNaturalytelsePrÅr);
-        return resultat;
+	    throw new IllegalStateException("Utviklerquiz: Hvorfor slår denne til?");
     }
 
-    private BigDecimal finnSamletBeløpFraArbeidsforhold(FordelPeriodeModell grunnlag, Function<FordelAndelModell, Optional<BigDecimal>> getBeløpOptional) {
-        return finnGrunnlagFraArbeidsforhold(grunnlag).stream().map(getBeløpOptional)
+	@Override
+	public Evaluation evaluate(FordelModell modell, ServiceArgument argument) {
+		var arbeidsforhold = ((FordelAndelModell) argument.verdi()).getArbeidsforhold().orElseThrow();
+		BigDecimal refusjonskravPrÅr = finnSamletBeløpFraArbeidsforhold(modell.getInput(), FordelAndelModell::getGradertRefusjonPrÅr, arbeidsforhold);
+		BigDecimal bruttoInkludertNaturalytelsePrÅr = finnSamletBeløpFraArbeidsforhold(modell.getInput(), FordelAndelModell::getGradertBruttoInkludertNaturalytelsePrÅr, arbeidsforhold);
+		BigDecimal refusjonBruttoBgDiff = refusjonskravPrÅr.subtract(bruttoInkludertNaturalytelsePrÅr);
+		SingleEvaluation resultat = refusjonBruttoBgDiff.compareTo(BigDecimal.ZERO) > 0 ? ja() : nei();
+		resultat.setEvaluationProperty("refusjonskravPrÅr." + arbeidsforhold.getArbeidsgiverId(), refusjonskravPrÅr);
+		resultat.setEvaluationProperty("bruttoInklNaturalytelsePrÅr." + arbeidsforhold.getArbeidsgiverId(), bruttoInkludertNaturalytelsePrÅr);
+		return resultat;
+	}
+
+    private BigDecimal finnSamletBeløpFraArbeidsforhold(FordelPeriodeModell grunnlag, Function<FordelAndelModell, Optional<BigDecimal>> getBeløpOptional, Arbeidsforhold arbeidsforhold) {
+        return finnGrunnlagFraArbeidsforhold(grunnlag, arbeidsforhold).stream().map(getBeløpOptional)
             .filter(Optional::isPresent).map(Optional::get).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
     }
 
-    private List<FordelAndelModell> finnGrunnlagFraArbeidsforhold(FordelPeriodeModell grunnlag) {
+    private List<FordelAndelModell> finnGrunnlagFraArbeidsforhold(FordelPeriodeModell grunnlag, Arbeidsforhold arbeidsforhold) {
         return grunnlag.getAlleAndelerForStatus(AktivitetStatus.AT).stream()
         .filter(a -> Objects.requireNonNull(a.getArbeidsforhold().orElse(null)).equals(arbeidsforhold))
             .collect(Collectors.toList());

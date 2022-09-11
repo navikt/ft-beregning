@@ -9,17 +9,16 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelAndelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelPeriodeModell;
-
-import org.junit.jupiter.api.Test;
-
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
+import no.nav.fpsak.nare.ServiceArgument;
 
 public class OmfordelFraFrilansTest {
 
@@ -157,8 +156,8 @@ public class OmfordelFraFrilansTest {
     }
 
     private void kjørRegel(FordelAndelModell arbeidsforhold, FordelPeriodeModell periode) {
-        OmfordelFraFrilans regel = new OmfordelFraFrilans(arbeidsforhold);
-        regel.evaluate(new FordelModell(periode));
+        OmfordelFraFrilans regel = new OmfordelFraFrilans();
+        regel.evaluate(new FordelModell(periode), new ServiceArgument("arbeidsforhold", arbeidsforhold));
     }
 
 }

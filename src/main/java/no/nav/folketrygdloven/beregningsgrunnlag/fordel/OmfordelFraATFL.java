@@ -11,34 +11,38 @@ import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelPeriodeMode
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
+import no.nav.fpsak.nare.ServiceArgument;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 abstract class OmfordelFraATFL extends LeafSpecification<FordelModell> {
 
-    private Arbeidsforhold arbeidsforhold;
-
-    OmfordelFraATFL(FordelAndelModell andel, String id, String beskrivelse) {
+    OmfordelFraATFL(String id, String beskrivelse) {
         super(id, beskrivelse);
-	    this.arbeidsforhold = andel.getArbeidsforhold().orElseThrow();
     }
 
     @Override
     public Evaluation evaluate(FordelModell modell) {
-        Map<String, Object> resultater = omfordelFraAktivitetOmMulig(modell);
-        return beregnet(resultater);
+        throw new IllegalStateException("Utviklerquiz: Hvorfor slår denne til?");
     }
 
-    protected Map<String, Object> omfordelFraAktivitetOmMulig(FordelModell modell) {
+	@Override
+	public Evaluation evaluate(FordelModell modell, ServiceArgument argument) {
+		var arbeidsforhold = ((FordelAndelModell) argument.verdi()).getArbeidsforhold().orElseThrow();
+		Map<String, Object> resultater = omfordelFraAktivitetOmMulig(modell, arbeidsforhold);
+		return beregnet(resultater);
+	}
+
+    protected Map<String, Object> omfordelFraAktivitetOmMulig(FordelModell modell, Arbeidsforhold arbeidsforhold) {
         boolean harAktivitetMedOmfordelbartGrunnlag = finnAktivitetMedOmfordelbartBg(modell.getInput()).isPresent();
         if (!harAktivitetMedOmfordelbartGrunnlag) {
             return new HashMap<>();
         }
-        var aktivitet = finnArbeidsforholdMedRiktigInntektskategori(modell.getInput());
+        var aktivitet = finnArbeidsforholdMedRiktigInntektskategori(modell.getInput(), arbeidsforhold);
         return new OmfordelBGForArbeidsforhold(modell).omfordelForArbeidsforhold(aktivitet, this::finnAktivitetMedOmfordelbartBg);
     }
 
-    protected FordelAndelModell finnArbeidsforholdMedRiktigInntektskategori(FordelPeriodeModell beregningsgrunnlagPeriode) {
+    protected FordelAndelModell finnArbeidsforholdMedRiktigInntektskategori(FordelPeriodeModell beregningsgrunnlagPeriode, Arbeidsforhold arbeidsforhold) {
         Optional<FordelAndelModell> andelForArbeidsforholdOpt = beregningsgrunnlagPeriode.getAlleAndelerForStatus(AktivitetStatus.AT)
             .stream()
             .filter(a -> Objects.equals(a.getArbeidsforhold().orElse(null), arbeidsforhold)
@@ -46,7 +50,7 @@ abstract class OmfordelFraATFL extends LeafSpecification<FordelModell> {
             .findFirst();
         FordelAndelModell aktivitet;
         if (andelForArbeidsforholdOpt.isEmpty()) {
-            aktivitet = opprettNyAndel(beregningsgrunnlagPeriode);
+            aktivitet = opprettNyAndel(beregningsgrunnlagPeriode, arbeidsforhold);
         } else {
             aktivitet = andelForArbeidsforholdOpt.get();
         }
@@ -56,7 +60,7 @@ abstract class OmfordelFraATFL extends LeafSpecification<FordelModell> {
 
     protected abstract Inntektskategori finnInntektskategori();
 
-    private FordelAndelModell opprettNyAndel(FordelPeriodeModell beregningsgrunnlagPeriode) {
+    private FordelAndelModell opprettNyAndel(FordelPeriodeModell beregningsgrunnlagPeriode, Arbeidsforhold arbeidsforhold) {
         FordelAndelModell aktivitet = FordelAndelModell.builder()
             .medArbeidsforhold(arbeidsforhold)
 	        .medAktivitetStatus(AktivitetStatus.AT)

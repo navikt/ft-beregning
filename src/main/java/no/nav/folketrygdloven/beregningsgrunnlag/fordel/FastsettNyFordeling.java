@@ -30,8 +30,8 @@ class FastsettNyFordeling implements RuleService<FordelModell> {
         var refOverstigerBgAktivitetListe = finnListeMedAktiteterSomKreverFlyttingAvBeregningsgrunnlag(modell.getInput());
         Ruleset<FordelModell> rs = new Ruleset<>();
         var beregningsgrunnlagATFL = refOverstigerBgAktivitetListe.isEmpty() ? new Fordelt() :
-            rs.beregningsRegel(ID, BESKRIVELSE,
-                OmfordelBeregningsgrunnlagTilArbeidsforhold.class, modell, "arbeidsforhold", refOverstigerBgAktivitetListe, new Fordelt());
+            rs.beregningsForeachThenRegel(ID, BESKRIVELSE,
+                new OmfordelBeregningsgrunnlagTilArbeidsforhold().getSpecification(), "arbeidsforhold", refOverstigerBgAktivitetListe, new Fordelt());
         return beregningsgrunnlagATFL;
     }
 

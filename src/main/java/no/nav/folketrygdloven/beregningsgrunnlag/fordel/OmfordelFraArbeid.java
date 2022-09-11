@@ -9,7 +9,9 @@ import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelAndelModell
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelPeriodeModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
+import no.nav.fpsak.nare.ServiceArgument;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 
 class OmfordelFraArbeid extends OmfordelFraATFL {
@@ -17,24 +19,30 @@ class OmfordelFraArbeid extends OmfordelFraATFL {
     public static final String ID = "FP_BR 22.3.8";
     public static final String BESKRIVELSE = "Flytt beregnignsgrunnlag fra andre arbeidsforhold.";
 
-    OmfordelFraArbeid(FordelAndelModell arbeidsforhold) {
-        super(arbeidsforhold, ID, BESKRIVELSE);
+    OmfordelFraArbeid() {
+        super(ID, BESKRIVELSE);
     }
 
     @Override
     public Evaluation evaluate(FordelModell modell) {
-        Map<String, Object> resultater = omfordelFraAktivitetOmMulig(modell);
-        Map<String, Object> resultater2 = omfordelNaturalytelseFraAktivitetOmMulig(modell);
-        resultater.putAll(resultater2);
-        return beregnet(resultater);
+	    throw new IllegalStateException("Utviklerquiz: Hvorfor slår denne til?");
     }
 
-    protected Map<String, Object> omfordelNaturalytelseFraAktivitetOmMulig(FordelModell modell) {
+	@Override
+	public Evaluation evaluate(FordelModell modell, ServiceArgument argument) {
+		var arbeidsforhold = ((FordelAndelModell) argument.verdi()).getArbeidsforhold().orElseThrow();
+		Map<String, Object> resultater = omfordelFraAktivitetOmMulig(modell, arbeidsforhold);
+		Map<String, Object> resultater2 = omfordelNaturalytelseFraAktivitetOmMulig(modell, arbeidsforhold);
+		resultater.putAll(resultater2);
+		return beregnet(resultater);
+	}
+
+    protected Map<String, Object> omfordelNaturalytelseFraAktivitetOmMulig(FordelModell modell, Arbeidsforhold arbeidsforhold) {
         boolean harAktivitetMedOmfordelbartGrunnlag = finnAktivitetMedOmfordelbarNaturalYtelse(modell.getInput()).isPresent();
         if (!harAktivitetMedOmfordelbartGrunnlag) {
             return new HashMap<>();
         }
-        var aktivitet = finnArbeidsforholdMedRiktigInntektskategori(modell.getInput());
+        var aktivitet = finnArbeidsforholdMedRiktigInntektskategori(modell.getInput(), arbeidsforhold);
         return new OmfordelNaturalytelseForArbeidsforhold(modell).omfordelForArbeidsforhold(aktivitet, this::finnAktivitetMedOmfordelbarNaturalYtelse);
     }
 

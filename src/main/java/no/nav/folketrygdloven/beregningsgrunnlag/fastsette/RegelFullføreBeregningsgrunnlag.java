@@ -7,17 +7,26 @@ import no.nav.folketrygdloven.beregningsgrunnlag.fastsette.refusjon.over6g.Regel
 import no.nav.folketrygdloven.beregningsgrunnlag.reduksjon.FastsettDagsatsPrAndel;
 import no.nav.folketrygdloven.beregningsgrunnlag.reduksjon.ReduserBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
-import no.nav.fpsak.nare.DynamicRuleService;
+import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
+import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.Specification;
 
-public class RegelFullføreBeregningsgrunnlag extends DynamicRuleService<BeregningsgrunnlagPeriode> {
+public class RegelFullføreBeregningsgrunnlag implements RuleService<BeregningsgrunnlagPeriode> {
 
     public static final String ID = "FP_BR_29";
 
-    public RegelFullføreBeregningsgrunnlag(BeregningsgrunnlagPeriode regelmodell) {
-        super(regelmodell);
-    }
+    BeregningsgrunnlagPeriode regelmodell;
+
+	public RegelFullføreBeregningsgrunnlag(BeregningsgrunnlagPeriode regelmodell) {
+		super();
+		this.regelmodell = regelmodell;
+	}
+
+	@Override
+	public Evaluation evaluer(BeregningsgrunnlagPeriode regelmodell) {
+		return getSpecification().evaluate(regelmodell);
+	}
 
     @SuppressWarnings("unchecked")
     @Override
