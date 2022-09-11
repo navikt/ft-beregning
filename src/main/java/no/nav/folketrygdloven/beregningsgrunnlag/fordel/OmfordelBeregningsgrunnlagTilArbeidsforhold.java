@@ -15,12 +15,7 @@ public class OmfordelBeregningsgrunnlagTilArbeidsforhold implements RuleService<
 		super();
 	}
 
-	@Override
-	public Evaluation evaluer(FordelModell fordelModell) {
-		return getSpecification().evaluate(fordelModell);
-	}
-
-    @SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
     @Override
     public Specification<FordelModell> getSpecification() {
         Ruleset<FordelModell> rs = new Ruleset<>();
