@@ -163,10 +163,6 @@ public class Beregningsgrunnlag {
         return sammenligningsGrunnlagPrStatus.get(aktivitetStatus);
     }
 
-    public boolean isSplitteATFLToggleErPå() {
-        return konstanter.isSplitteATFLToggleErPå();
-    }
-
 	public MidlertidigInaktivType getMidlertidigInaktivType() {
 		return midlertidigInaktivType;
 	}
@@ -290,18 +286,10 @@ public class Beregningsgrunnlag {
         }
 
 
-        public Builder medSplitteATFLToggleVerdi(boolean splitteATFLToggleErPå) {
-            beregningsgrunnlagMal.konstanter.setSplitteATFLToggleErPå(splitteATFLToggleErPå);
-            return this;
-        }
-
 	    public Builder medMidlertidigInaktivType(MidlertidigInaktivType midlertidigInaktivType) {
 		    beregningsgrunnlagMal.midlertidigInaktivType = midlertidigInaktivType;
 		    return this;
 	    }
-
-
-
 
 	    public Beregningsgrunnlag build() {
             verifyStateForBuild();

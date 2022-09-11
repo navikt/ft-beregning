@@ -24,7 +24,7 @@ public class VerifiserBeregningsgrunnlag {
     public static void verifiserBeregningsgrunnlagBruttoPrPeriodeType(BeregningsgrunnlagPeriode grunnlag, BeregningsgrunnlagHjemmel hjemmel, AktivitetStatus aktivitetStatus, double beløp, double gjennomsnittligPGI) {
         BeregningsgrunnlagPrStatus bgpsa = verifiserGrunnlag(aktivitetStatus, hjemmel, grunnlag);
         assertThat(bgpsa.getBeregnetPrÅr().doubleValue()).isCloseTo(beløp, within(0.01));
-        if (AktivitetStatus.erSelvstendigNæringsdrivende(aktivitetStatus)) {
+        if (aktivitetStatus.erSelvstendigNæringsdrivende()) {
             assertThat(bgpsa.getGjennomsnittligPGI().doubleValue()).isCloseTo(gjennomsnittligPGI, within(0.01));
             assertThat(bgpsa.getPgiListe()).isNotNull();
             assertThat(bgpsa.getPgiListe()).hasSize(3);
