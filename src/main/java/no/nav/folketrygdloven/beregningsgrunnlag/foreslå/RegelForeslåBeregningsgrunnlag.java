@@ -41,14 +41,11 @@ public class RegelForeslåBeregningsgrunnlag implements RuleService<Beregningsgr
     @SuppressWarnings("unchecked")
     @Override
     public Specification<BeregningsgrunnlagPeriode> getSpecification() {
-	    if (regelmodell.getBeregningsgrunnlagPrStatus().isEmpty()) {
-		    return new IkkeBeregnet(new BeregningUtfallMerknad(BeregningUtfallÅrsak.UDEFINERT));
-	    }
 
 	    Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
 	    var speclist = regelmodell.getAktivitetStatuser().stream()
 			    .map(AktivitetStatusMedHjemmel::getAktivitetStatus)
-			    .map(as -> RegelForeslåBeregningsgrunnlag.velgSpecification(regelmodell, as))
+			    .map(this::velgSpecification)
 			    .collect(Collectors.toList());
 	    Specification<BeregningsgrunnlagPeriode> foreslåBeregningsgrunnlag =
 			    rs.beregningsRegel("FP_BR pr status", "Fastsett beregningsgrunnlag pr status", speclist, new Beregnet());
@@ -57,7 +54,11 @@ public class RegelForeslåBeregningsgrunnlag implements RuleService<Beregningsgr
         return foreslåBeregningsgrunnlag;
     }
 
-	private static Specification<BeregningsgrunnlagPeriode> velgSpecification(BeregningsgrunnlagPeriode regelmodell, AktivitetStatus aktivitetStatus) {
+	private Specification<BeregningsgrunnlagPeriode> velgSpecification(AktivitetStatus aktivitetStatus) {
+		if (regelmodell.getBeregningsgrunnlagPrStatus().isEmpty()) {
+			return new IkkeBeregnet(new BeregningUtfallMerknad(BeregningUtfallÅrsak.UDEFINERT));
+		}
+
 		if (aktivitetStatus.erAAPellerDP()) {
 			return new RegelFastsettBeregningsgrunnlagDPellerAAP().getSpecification();
 		}

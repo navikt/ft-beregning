@@ -37,14 +37,11 @@ public class RegelFortsettForeslåBeregningsgrunnlag implements RuleService<Bere
     @SuppressWarnings("unchecked")
     @Override
     public Specification<BeregningsgrunnlagPeriode> getSpecification() {
-	    if (regelmodell.getBeregningsgrunnlagPrStatus().isEmpty()) {
-		    return new IkkeBeregnet(new BeregningUtfallMerknad(BeregningUtfallÅrsak.UDEFINERT));
-	    }
 
 	    Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
 	    var speclist = regelmodell.getAktivitetStatuser().stream()
 			    .map(AktivitetStatusMedHjemmel::getAktivitetStatus)
-			    .map(RegelFortsettForeslåBeregningsgrunnlag::velgSpecification)
+			    .map(this::velgSpecification)
 			    .collect(Collectors.toList());
 	    Specification<BeregningsgrunnlagPeriode> foreslåBeregningsgrunnlag =
 			    rs.beregningsRegel("FP_BR fortsett pr status", "Fastsett beregningsgrunnlag fortsett pr status", speclist, new Beregnet());
@@ -52,7 +49,10 @@ public class RegelFortsettForeslåBeregningsgrunnlag implements RuleService<Bere
 	    return rs.beregningHvisRegel(new SkalKjøreFortsettForeslå(), foreslåBeregningsgrunnlag, new Beregnet());
     }
 
-	private  static Specification<BeregningsgrunnlagPeriode> velgSpecification(AktivitetStatus aktivitetStatus) {
+	private Specification<BeregningsgrunnlagPeriode> velgSpecification(AktivitetStatus aktivitetStatus) {
+		if (regelmodell.getBeregningsgrunnlagPrStatus().isEmpty()) {
+			return new IkkeBeregnet(new BeregningUtfallMerknad(BeregningUtfallÅrsak.UDEFINERT));
+		}
 		if (!aktivitetStatus.erSelvstendigNæringsdrivende() && !aktivitetStatus.erMilitær()) {
 			return new Beregnet();
 		}

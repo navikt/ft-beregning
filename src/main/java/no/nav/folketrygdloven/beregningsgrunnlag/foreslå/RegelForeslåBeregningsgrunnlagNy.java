@@ -42,12 +42,9 @@ public class RegelForeslåBeregningsgrunnlagNy implements RuleService<Beregnings
         Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
 
         // Fastsett alle BG per status
-	    if (regelmodell.getBeregningsgrunnlagPrStatus().isEmpty()) {
-		    return new IkkeBeregnet(new BeregningUtfallMerknad(BeregningUtfallÅrsak.UDEFINERT));
-	    }
 		var speclist = regelmodell.getAktivitetStatuser().stream()
 				.map(AktivitetStatusMedHjemmel::getAktivitetStatus)
-				.map(as -> RegelForeslåBeregningsgrunnlagNy.velgSpecification(regelmodell, as))
+				.map(this::velgSpecification)
 				.collect(Collectors.toList());
         Specification<BeregningsgrunnlagPeriode> foreslåBeregningsgrunnlag =
             rs.beregningsRegel("FP_BR pr status", "Fastsett beregningsgrunnlag pr status", speclist, new Beregnet());
@@ -55,7 +52,11 @@ public class RegelForeslåBeregningsgrunnlagNy implements RuleService<Beregnings
         return foreslåBeregningsgrunnlag;
     }
 
-	private static Specification<BeregningsgrunnlagPeriode> velgSpecification(BeregningsgrunnlagPeriode regelmodell, AktivitetStatus aktivitetStatus) {
+	private Specification<BeregningsgrunnlagPeriode> velgSpecification(AktivitetStatus aktivitetStatus) {
+		if (regelmodell.getBeregningsgrunnlagPrStatus().isEmpty()) {
+			return new IkkeBeregnet(new BeregningUtfallMerknad(BeregningUtfallÅrsak.UDEFINERT));
+		}
+
 		if (aktivitetStatus.erAAPellerDP()) {
 			return new RegelFastsettBeregningsgrunnlagDPellerAAP().getSpecification();
 		}
