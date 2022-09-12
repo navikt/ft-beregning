@@ -299,8 +299,8 @@ class RegelFullføreBeregningsgrunnlagFRISINNTest {
     }
 
     private RegelResultat kjørRegel(BeregningsgrunnlagPeriode grunnlag) {
-        RegelFinnGrenseverdiFRISINN grenseregel = new RegelFinnGrenseverdiFRISINN(grunnlag);
-        RegelFullføreBeregningsgrunnlagFRISINN fastsettregel = new RegelFullføreBeregningsgrunnlagFRISINN(grunnlag);
+        RegelFinnGrenseverdiFRISINN grenseregel = new RegelFinnGrenseverdiFRISINN();
+        RegelFullføreBeregningsgrunnlagFRISINN fastsettregel = new RegelFullføreBeregningsgrunnlagFRISINN();
         grenseregel.evaluer(grunnlag);
         Evaluation evaluation = fastsettregel.evaluer(grunnlag);
         return RegelmodellOversetter.getRegelResultat(evaluation, "input");

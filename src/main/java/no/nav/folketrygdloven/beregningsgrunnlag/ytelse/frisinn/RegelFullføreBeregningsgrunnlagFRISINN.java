@@ -3,19 +3,21 @@ package no.nav.folketrygdloven.beregningsgrunnlag.ytelse.frisinn;
 import no.nav.folketrygdloven.beregningsgrunnlag.fastsette.FastsettIkkeSøktForTil0;
 import no.nav.folketrygdloven.beregningsgrunnlag.reduksjon.ReduserBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
-import no.nav.fpsak.nare.DynamicRuleService;
+import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
+import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.Specification;
 
-public class RegelFullføreBeregningsgrunnlagFRISINN extends DynamicRuleService<BeregningsgrunnlagPeriode> {
+public class RegelFullføreBeregningsgrunnlagFRISINN implements RuleService<BeregningsgrunnlagPeriode> {
 
     public static final String ID = "FP_BR_29";
 
-    public RegelFullføreBeregningsgrunnlagFRISINN(BeregningsgrunnlagPeriode regelmodell) {
-        super(regelmodell);
-    }
+	@Override
+	public Evaluation evaluer(BeregningsgrunnlagPeriode regelmodell) {
+		return getSpecification().evaluate(regelmodell);
+	}
 
-    @SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
     @Override
     public Specification<BeregningsgrunnlagPeriode> getSpecification() {
         Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();

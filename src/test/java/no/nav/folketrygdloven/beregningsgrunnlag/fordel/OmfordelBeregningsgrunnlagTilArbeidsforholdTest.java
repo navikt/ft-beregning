@@ -8,12 +8,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.jupiter.api.Test;
+
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelAndelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelPeriodeModell;
-
-import org.junit.jupiter.api.Test;
-
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
@@ -173,9 +172,9 @@ public class OmfordelBeregningsgrunnlagTilArbeidsforholdTest {
     }
 
     private void kjørRegel(FordelAndelModell arbeidsforhold, FordelPeriodeModell periode) {
-        OmfordelBeregningsgrunnlagTilArbeidsforhold regel = new OmfordelBeregningsgrunnlagTilArbeidsforhold();
-        regel.medServiceArgument(new ServiceArgument("arbeidsforhold", arbeidsforhold));
-        regel.getSpecification().evaluate(new FordelModell(periode));
+        OmfordelBeregningsgrunnlagTilArbeidsforhold regel = new OmfordelBeregningsgrunnlagTilArbeidsforhold(arbeidsforhold);
+        var args = new ServiceArgument("arbeidsforhold", arbeidsforhold);
+        regel.getSpecification().medScope(args).evaluate(new FordelModell(periode));
     }
 
     private FordelAndelModell lagArbeidsforhold(BigDecimal refusjonskravPrÅr, BigDecimal beregnetPrÅr, Long andelsnr, String orgnr) {

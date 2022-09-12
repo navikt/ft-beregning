@@ -10,6 +10,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelPeriodeMode
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
+import no.nav.fpsak.nare.ServiceArgument;
 import no.nav.fpsak.nare.specification.Specification;
 
 class FastsettNyFordeling implements RuleService<FordelModell> {
@@ -28,10 +29,12 @@ class FastsettNyFordeling implements RuleService<FordelModell> {
     @Override
     public Specification<FordelModell> getSpecification() {
         var refOverstigerBgAktivitetListe = finnListeMedAktiteterSomKreverFlyttingAvBeregningsgrunnlag(modell.getInput());
-        Ruleset<FordelModell> rs = new Ruleset<>();
+		Ruleset<FordelModell> rs = new Ruleset<>();
+	    var speclist = refOverstigerBgAktivitetListe.stream()
+			    .map(fam -> new OmfordelBeregningsgrunnlagTilArbeidsforhold(fam).getSpecification().medScope(new ServiceArgument("arbeidsforhold", fam)))
+			    .toList();
         var beregningsgrunnlagATFL = refOverstigerBgAktivitetListe.isEmpty() ? new Fordelt() :
-            rs.beregningsRegel(ID, BESKRIVELSE,
-                OmfordelBeregningsgrunnlagTilArbeidsforhold.class, modell, "arbeidsforhold", refOverstigerBgAktivitetListe, new Fordelt());
+				        rs.beregningsRegel(ID, BESKRIVELSE, speclist, new Fordelt());
         return beregningsgrunnlagATFL;
     }
 

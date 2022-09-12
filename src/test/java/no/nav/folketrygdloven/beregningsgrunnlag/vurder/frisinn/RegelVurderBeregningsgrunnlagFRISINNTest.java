@@ -240,7 +240,7 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
     }
 
     private RegelResultat kjørRegel(BeregningsgrunnlagPeriode grunnlag) {
-        RegelVurderBeregningsgrunnlagFRISINN regel = new RegelVurderBeregningsgrunnlagFRISINN(grunnlag);
+        RegelVurderBeregningsgrunnlagFRISINN regel = new RegelVurderBeregningsgrunnlagFRISINN();
         Evaluation evaluation = regel.evaluer(grunnlag);
         return RegelmodellOversetter.getRegelResultat(evaluation, "input");
     }

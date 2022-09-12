@@ -6,24 +6,24 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.ytelse.sykepenger.BeregnPrArbeidsforholdNaturalytelseBortfaltForSykepenger;
 import no.nav.folketrygdloven.beregningsgrunnlag.ytelse.sykepenger.SjekkOmBeregningenGjelderSykepenger;
 import no.nav.folketrygdloven.beregningsgrunnlag.ytelse.sykepenger.SjekkOmBortfallAvNaturalYtelseIArbeidsgiverperiodenSykepenger;
-import no.nav.fpsak.nare.DynamicRuleService;
+import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.ServiceArgument;
 import no.nav.fpsak.nare.specification.Specification;
 
-public class RegelBeregnBruttoPrArbeidsforhold extends DynamicRuleService<BeregningsgrunnlagPeriode> {
+public class RegelBeregnBruttoPrArbeidsforhold implements RuleService<BeregningsgrunnlagPeriode> {
 
     public static final String ID = "FP_BR 14.1";
 
-    @SuppressWarnings("unchecked")
+	private BeregningsgrunnlagPrArbeidsforhold arbeidsforhold;
+
+	public RegelBeregnBruttoPrArbeidsforhold(BeregningsgrunnlagPrArbeidsforhold arbeidsforhold) {
+		this.arbeidsforhold = arbeidsforhold;
+	}
+
+	@SuppressWarnings("unchecked")
     @Override
     public Specification<BeregningsgrunnlagPeriode> getSpecification() {
-
-        ServiceArgument arg = getServiceArgument();
-        if (arg == null || !(arg.getVerdi() instanceof BeregningsgrunnlagPrArbeidsforhold)) {
-            throw new IllegalStateException("Utviklerfeil: Arbeidsforhold må angis som parameter");
-        }
-        BeregningsgrunnlagPrArbeidsforhold arbeidsforhold = (BeregningsgrunnlagPrArbeidsforhold) arg.getVerdi();
 
         Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
 
@@ -50,7 +50,7 @@ public class RegelBeregnBruttoPrArbeidsforhold extends DynamicRuleService<Beregn
         // FP_BR 15.8 Er det bortfall av naturalytelse i arbeidsgiverperioden (gjelder sykepenger spesifikt)?
         Specification<BeregningsgrunnlagPeriode> sjekkOmBortfallNaturalytelseIArbeidsgiverperioden =
             rs.beregningHvisRegel(new SjekkOmBortfallAvNaturalYtelseIArbeidsgiverperiodenSykepenger(arbeidsforhold),
-                beregnBortfallAvNaturalYtelseIArbeidsgiverperiodenSykepenger, new Beregnet()).medScope(arg);
+                beregnBortfallAvNaturalYtelseIArbeidsgiverperiodenSykepenger, new Beregnet()).medScope(new ServiceArgument("arbeidsforhold", arbeidsforhold));
 
         //FP_BR 15.7 Gjelder beregningen ytelsen foreldrepenger eller sykepenger?
         Specification<BeregningsgrunnlagPeriode> gjelderBeregningenYtelsenSykepenger =
@@ -74,7 +74,7 @@ public class RegelBeregnBruttoPrArbeidsforhold extends DynamicRuleService<Beregn
         // FP_BR 15.1 Foreligger inntektsmelding?
         Specification<BeregningsgrunnlagPeriode> sjekkOmInntektsmeldingForeligger =
             rs.beregningHvisRegel(new SjekkOmInntektsmeldingForeligger(arbeidsforhold),
-                beregnPrArbeidsforholdFraInntektsmelding, beregnPrArbeidsforholdFraAOrdningen).medScope(arg);
+                beregnPrArbeidsforholdFraInntektsmelding, beregnPrArbeidsforholdFraAOrdningen).medScope(new ServiceArgument("arbeidsforhold", arbeidsforhold));
 
         // FP_BR 15.5 Har saksbehandler fastsatt månedsinntekt manuelt?
         Specification<BeregningsgrunnlagPeriode> manueltFastsattInntekt = rs.beregningHvisRegel(

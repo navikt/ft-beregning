@@ -12,7 +12,6 @@ import no.nav.fpsak.nare.doc.RuleDocumentation;
 public class DokumentasjonRegelBeregnBruttoPrArbeidsforhold extends RegelBeregnBruttoPrArbeidsforhold implements BeregningsregelDokumentasjon {
 
     public DokumentasjonRegelBeregnBruttoPrArbeidsforhold() {
-        super();
-        RegelmodellForDokumentasjon.forArbeidsforhold(this);
+        super(RegelmodellForDokumentasjon.forArbeidsforhold());
     }
 }

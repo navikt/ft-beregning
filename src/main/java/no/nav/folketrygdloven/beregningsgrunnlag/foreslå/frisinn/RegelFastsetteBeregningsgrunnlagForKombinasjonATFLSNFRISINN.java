@@ -2,19 +2,21 @@ package no.nav.folketrygdloven.beregningsgrunnlag.foreslå.frisinn;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Beregnet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
-import no.nav.fpsak.nare.DynamicRuleService;
+import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.specification.Specification;
 
-public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNFRISINN extends DynamicRuleService<BeregningsgrunnlagPeriode> {
+public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNFRISINN implements RuleService<BeregningsgrunnlagPeriode> {
 
     public static final String ID = "FRISINN 2.8";
 
-    public RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNFRISINN(BeregningsgrunnlagPeriode regelmodell) {
-        super(regelmodell);
-    }
+	private BeregningsgrunnlagPeriode regelmodell;
 
-    @SuppressWarnings("unchecked")
+	public RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNFRISINN(BeregningsgrunnlagPeriode regelmodell) {
+		this.regelmodell = regelmodell;
+	}
+
+	@SuppressWarnings("unchecked")
     @Override
     public Specification<BeregningsgrunnlagPeriode> getSpecification() {
         Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();

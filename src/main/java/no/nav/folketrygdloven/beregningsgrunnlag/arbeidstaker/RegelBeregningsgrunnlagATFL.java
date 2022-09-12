@@ -9,6 +9,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
+import no.nav.fpsak.nare.ServiceArgument;
 import no.nav.fpsak.nare.specification.Specification;
 
 public class RegelBeregningsgrunnlagATFL implements RuleService<BeregningsgrunnlagPeriode> {
@@ -80,9 +81,11 @@ public class RegelBeregningsgrunnlagATFL implements RuleService<Beregningsgrunnl
         // FP_BR 15.1 Foreligger inntektsmelding?
 
         List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = regelmodell.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
-        Specification<BeregningsgrunnlagPeriode> beregningsgrunnlagATFL =
-                rs.beregningsRegel("FP_BR 14.X", "Fastsett beregningsgrunnlag pr arbeidsforhold",
-                    RegelBeregnBruttoPrArbeidsforhold.class, regelmodell, "arbeidsforhold", arbeidsforhold, fastsettBeregnetPrÅr);
+	    var speclist = arbeidsforhold.stream()
+			    .map(a -> new RegelBeregnBruttoPrArbeidsforhold(a).getSpecification().medScope(new ServiceArgument("arbeidsforhold", a)))
+			    .toList();
+	    Specification<BeregningsgrunnlagPeriode> beregningsgrunnlagATFL =
+                rs.beregningsRegel("FP_BR 14.X", "Fastsett beregningsgrunnlag pr arbeidsforhold", speclist, fastsettBeregnetPrÅr);
 
         // FP_BR X.X Ingen regelberegning hvis besteberegning gjelder
 
