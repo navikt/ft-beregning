@@ -45,7 +45,8 @@ public class RegelForeslåBeregningsgrunnlagTY implements RuleService<Beregnings
 
 	    List<BeregningsgrunnlagPrStatus> brukersAndeler = regelmodell.getBeregningsgrunnlagPrStatuser(AktivitetStatus.BA);
 		var speclist = brukersAndeler.stream()
-				.map(ba -> new RegelBeregnBruttoYtelseAndel(ba).getSpecification().medScope(new ServiceArgument("statusAndel", ba)))
+				.map(ba -> new RegelBeregnBruttoYtelseAndel(ba).getSpecification()
+						.medScope(new ServiceArgument("statusAndel", ba.getAktivitetStatus()))) // TODO (PE) - bruke inntektskategori eller noe annet?
 				.toList();
 
 

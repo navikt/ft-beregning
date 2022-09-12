@@ -82,7 +82,8 @@ public class RegelBeregningsgrunnlagATFL implements RuleService<Beregningsgrunnl
 
         List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = regelmodell.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
 	    var speclist = arbeidsforhold.stream()
-			    .map(a -> new RegelBeregnBruttoPrArbeidsforhold(a).getSpecification().medScope(new ServiceArgument("arbeidsforhold", a)))
+			    .map(a -> new RegelBeregnBruttoPrArbeidsforhold(a).getSpecification()
+					    .medScope(new ServiceArgument("arbeidsforhold", a.getArbeidsforhold())))
 			    .toList();
 	    Specification<BeregningsgrunnlagPeriode> beregningsgrunnlagATFL =
                 rs.beregningsRegel("FP_BR 14.X", "Fastsett beregningsgrunnlag pr arbeidsforhold", speclist, fastsettBeregnetPrÅr);

@@ -50,7 +50,8 @@ public class RegelBeregnBruttoPrArbeidsforhold implements RuleService<Beregnings
         // FP_BR 15.8 Er det bortfall av naturalytelse i arbeidsgiverperioden (gjelder sykepenger spesifikt)?
         Specification<BeregningsgrunnlagPeriode> sjekkOmBortfallNaturalytelseIArbeidsgiverperioden =
             rs.beregningHvisRegel(new SjekkOmBortfallAvNaturalYtelseIArbeidsgiverperiodenSykepenger(arbeidsforhold),
-                beregnBortfallAvNaturalYtelseIArbeidsgiverperiodenSykepenger, new Beregnet()).medScope(new ServiceArgument("arbeidsforhold", arbeidsforhold));
+                beregnBortfallAvNaturalYtelseIArbeidsgiverperiodenSykepenger, new Beregnet())
+		            .medScope(new ServiceArgument("arbeidsforhold", arbeidsforhold.getArbeidsforhold()));
 
         //FP_BR 15.7 Gjelder beregningen ytelsen foreldrepenger eller sykepenger?
         Specification<BeregningsgrunnlagPeriode> gjelderBeregningenYtelsenSykepenger =
@@ -74,7 +75,8 @@ public class RegelBeregnBruttoPrArbeidsforhold implements RuleService<Beregnings
         // FP_BR 15.1 Foreligger inntektsmelding?
         Specification<BeregningsgrunnlagPeriode> sjekkOmInntektsmeldingForeligger =
             rs.beregningHvisRegel(new SjekkOmInntektsmeldingForeligger(arbeidsforhold),
-                beregnPrArbeidsforholdFraInntektsmelding, beregnPrArbeidsforholdFraAOrdningen).medScope(new ServiceArgument("arbeidsforhold", arbeidsforhold));
+                beregnPrArbeidsforholdFraInntektsmelding, beregnPrArbeidsforholdFraAOrdningen)
+		            .medScope(new ServiceArgument("arbeidsforhold", arbeidsforhold.getArbeidsforhold()));
 
         // FP_BR 15.5 Har saksbehandler fastsatt månedsinntekt manuelt?
         Specification<BeregningsgrunnlagPeriode> manueltFastsattInntekt = rs.beregningHvisRegel(
