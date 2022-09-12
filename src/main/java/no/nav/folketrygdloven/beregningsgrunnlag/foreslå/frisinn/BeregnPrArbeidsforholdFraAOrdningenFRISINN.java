@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -22,7 +23,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.YtelsesSpesifiktGrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.frisinn.FrisinnGrunnlag;
 import no.nav.folketrygdloven.skjæringstidspunkt.status.frisinn.FinnPerioderUtenYtelse;
-import no.nav.fpsak.nare.ServiceArgument;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
@@ -33,19 +33,16 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
 	private static final LocalDate NYOPPSTARTET_FL_GRENSE = LocalDate.of(2019, 3, 1);
 	static final String ID = "FRISINN 2.3";
 	static final String BESKRIVELSE = "Rapportert inntekt = snitt av mnd-inntekter i beregningsperioden * 12";
+	private BeregningsgrunnlagPrArbeidsforhold arbeidsforhold;
 
-	BeregnPrArbeidsforholdFraAOrdningenFRISINN() {
+	BeregnPrArbeidsforholdFraAOrdningenFRISINN(BeregningsgrunnlagPrArbeidsforhold arbeidsforhold) {
 		super(ID, BESKRIVELSE);
+		Objects.requireNonNull(arbeidsforhold, "arbeidsforhold");
+		this.arbeidsforhold = arbeidsforhold;
 	}
 
 	@Override
 	public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-		throw new IllegalStateException("Utviklerquiz: Hvorfor slår denne til?");
-	}
-
-	@Override
-	public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag, ServiceArgument arg) {
-		var arbeidsforhold = (BeregningsgrunnlagPrArbeidsforhold) arg.getVerdi();
 		Map<String, Object> resultater = new HashMap<>();
 		if (arbeidsforhold.getFastsattAvSaksbehandler()) {
 			resultater.put("beregnetPrÅr", arbeidsforhold.getBeregnetPrÅr());
@@ -71,11 +68,11 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
 			}
 			// Hvis det ikke søkes ytelse for frilans skal kun oppgitt inntekt legges til grunn. Setter registerinntekt på første periode for vilkårssjekk FRILANS_UTEN_INNTEKT
 			årsinntekt = frisinnGrunnlag.søkerFrilansISøknadsperiode(grunnlag.getPeriodeFom()) || erFørstePeriodeOgSøktFrilansIMinstEnPeriode(grunnlag, frisinnGrunnlag)
-					? beregnÅrsinntektFrilans(perioderSomSkalBrukesForInntekter, inntektsgrunnlag, grunnlag, resultater, arbeidsforhold)
+					? beregnÅrsinntektFrilans(perioderSomSkalBrukesForInntekter, inntektsgrunnlag, grunnlag, resultater)
 					: finnOppgittÅrsinntektFL(inntektsgrunnlag, grunnlag)
 					.orElse(BigDecimal.ZERO);
 		} else {
-			årsinntekt = beregnÅrsinntektArbeidstaker(perioderSomSkalBrukesForInntekter, inntektsgrunnlag, grunnlag, resultater, arbeidsforhold);
+			årsinntekt = beregnÅrsinntektArbeidstaker(perioderSomSkalBrukesForInntekter, inntektsgrunnlag, grunnlag, resultater);
 		}
 
 		BeregningsgrunnlagPrArbeidsforhold.builder(arbeidsforhold)
@@ -135,10 +132,10 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
 				.orElseThrow(() -> new IllegalStateException("Skal ha inntekt i periode for nyoppstartet"));
 	}
 
-	private BigDecimal beregnÅrsinntektFrilans(List<Periode> inntektsperioder, Inntektsgrunnlag inntektsgrunnlag, BeregningsgrunnlagPeriode grunnlag, Map<String, Object> resultater, BeregningsgrunnlagPrArbeidsforhold arbeidsforhold) {
+	private BigDecimal beregnÅrsinntektFrilans(List<Periode> inntektsperioder, Inntektsgrunnlag inntektsgrunnlag, BeregningsgrunnlagPeriode grunnlag, Map<String, Object> resultater) {
 		BigDecimal samletInntekt = BigDecimal.ZERO;
 		for (Periode periode : inntektsperioder) {
-			samletInntekt = samletInntekt.add(finnInntektForPeriode(periode, inntektsgrunnlag, resultater, arbeidsforhold).orElse(BigDecimal.ZERO));
+			samletInntekt = samletInntekt.add(finnInntektForPeriode(periode, inntektsgrunnlag, resultater).orElse(BigDecimal.ZERO));
 		}
 		BigDecimal antallPerioder = BigDecimal.valueOf(inntektsperioder.size());
 		BigDecimal snittMånedslønnFraRegister = inntektsperioder.isEmpty() ? BigDecimal.ZERO : samletInntekt.divide(antallPerioder, 10, RoundingMode.HALF_EVEN);
@@ -152,7 +149,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
 		return årslønnFraRegister;
 	}
 
-	private BigDecimal beregnÅrsinntektArbeidstaker(List<Periode> inntektsperioder, Inntektsgrunnlag inntektsgrunnlag, BeregningsgrunnlagPeriode grunnlag, Map<String, Object> resultater, BeregningsgrunnlagPrArbeidsforhold arbeidsforhold) {
+	private BigDecimal beregnÅrsinntektArbeidstaker(List<Periode> inntektsperioder, Inntektsgrunnlag inntektsgrunnlag, BeregningsgrunnlagPeriode grunnlag, Map<String, Object> resultater) {
 		int antallPerioderMedInntekt = inntektsperioder.size();
 		if (antallPerioderMedInntekt == 0) {
 			BigDecimal månedslønn = inntektsgrunnlag.getPeriodeinntekter(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold, grunnlag.getBeregningsgrunnlagPeriode().getFom(), 1).stream()
@@ -162,7 +159,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
 			return månedslønn.multiply(ANTALL_MÅNEDER_I_ÅR);
 		}
 		BigDecimal samletInntekt = inntektsperioder.stream()
-				.map(p -> finnInntektForPeriode(p, inntektsgrunnlag, resultater, arbeidsforhold))
+				.map(p -> finnInntektForPeriode(p, inntektsgrunnlag, resultater))
 				.filter(Optional::isPresent)
 				.map(Optional::get)
 				.reduce(BigDecimal::add)
@@ -173,7 +170,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
 		return snittMånedslønn.multiply(ANTALL_MÅNEDER_I_ÅR);
 	}
 
-	private Optional<BigDecimal> finnInntektForPeriode(Periode periode, Inntektsgrunnlag inntektsgrunnlag, Map<String, Object> resultater, BeregningsgrunnlagPrArbeidsforhold arbeidsforhold) {
+	private Optional<BigDecimal> finnInntektForPeriode(Periode periode, Inntektsgrunnlag inntektsgrunnlag, Map<String, Object> resultater) {
 		List<Periodeinntekt> inntekterHosAgForPeriode = inntektsgrunnlag.getInntektForArbeidsforholdIPeriode(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold, periode);
 		if (inntekterHosAgForPeriode.isEmpty()) {
 			return Optional.empty();
