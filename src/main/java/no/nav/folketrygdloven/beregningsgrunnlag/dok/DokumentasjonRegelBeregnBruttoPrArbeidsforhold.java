@@ -13,6 +13,5 @@ public class DokumentasjonRegelBeregnBruttoPrArbeidsforhold extends RegelBeregnB
 
     public DokumentasjonRegelBeregnBruttoPrArbeidsforhold() {
         super();
-        RegelmodellForDokumentasjon.forArbeidsforhold(this);
     }
 }

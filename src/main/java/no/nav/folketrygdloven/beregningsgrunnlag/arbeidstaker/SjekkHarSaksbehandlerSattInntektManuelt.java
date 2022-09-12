@@ -2,6 +2,7 @@ package no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
+import no.nav.fpsak.nare.ServiceArgument;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
@@ -11,15 +12,19 @@ class SjekkHarSaksbehandlerSattInntektManuelt extends LeafSpecification<Beregnin
 
     static final String ID = "FP_BR 15.5";
     static final String BESKRIVELSE = "Har saksbehandler fastsatt månedsinntekt manuelt?";
-    private BeregningsgrunnlagPrArbeidsforhold arbeidsforhold;
 
-    SjekkHarSaksbehandlerSattInntektManuelt(BeregningsgrunnlagPrArbeidsforhold arbeidsforhold) {
+    SjekkHarSaksbehandlerSattInntektManuelt() {
         super(ID, BESKRIVELSE);
-        this.arbeidsforhold = arbeidsforhold;
     }
 
-    @Override
-    public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
+	@Override
+	public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
+		throw new IllegalStateException("Utviklerquiz: Hvorfor slår denne til?");
+	}
+
+	@Override
+	public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag, ServiceArgument arg) {
+		var arbeidsforhold = (BeregningsgrunnlagPrArbeidsforhold) arg.getVerdi();
         return Boolean.TRUE.equals(arbeidsforhold.getFastsattAvSaksbehandler()) ? ja() : nei();
     }
 }

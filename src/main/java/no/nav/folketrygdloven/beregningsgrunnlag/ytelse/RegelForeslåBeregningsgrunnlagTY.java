@@ -6,9 +6,10 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Beregnet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
-import no.nav.fpsak.nare.DynamicRuleService;
+import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
+import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.Specification;
 
 /**
@@ -16,13 +17,20 @@ import no.nav.fpsak.nare.specification.Specification;
  */
 
 @RuleDocumentation(value = RegelForeslåBeregningsgrunnlagTY.ID, specificationReference = "https://confluence.adeo.no/pages/viewpage.action?pageId=216009135")
-public class RegelForeslåBeregningsgrunnlagTY extends DynamicRuleService<BeregningsgrunnlagPeriode> {
+public class RegelForeslåBeregningsgrunnlagTY implements RuleService<BeregningsgrunnlagPeriode> {
 
     static final String ID = "FP_BR 30";
 
+	private BeregningsgrunnlagPeriode regelmodell;
 
 	public RegelForeslåBeregningsgrunnlagTY(BeregningsgrunnlagPeriode regelmodell) {
-		super(regelmodell);
+		super();
+		this.regelmodell = regelmodell;
+	}
+
+	@Override
+	public Evaluation evaluer(BeregningsgrunnlagPeriode regelmodell) {
+		return getSpecification().evaluate(regelmodell);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -36,8 +44,8 @@ public class RegelForeslåBeregningsgrunnlagTY extends DynamicRuleService<Beregn
 
 	    List<BeregningsgrunnlagPrStatus> brukersAndeler = regelmodell.getBeregningsgrunnlagPrStatuser(AktivitetStatus.BA);
 
-	    return rs.beregningsRegel("FP_BR 14.X", "Fastsett beregningsgrunnlag pr inntektskategori",
-			    RegelBeregnBruttoYtelseAndel.class, regelmodell, "statusAndel",
+	    return rs.beregningsForeachThenRegel("FP_BR 14.X", "Fastsett beregningsgrunnlag pr inntektskategori",
+			    new RegelBeregnBruttoYtelseAndel(regelmodell).getSpecification(), "statusAndel",
 			    brukersAndeler, foreslåBeregningsgrunnlagTY);
     }
 }

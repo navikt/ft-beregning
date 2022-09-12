@@ -18,6 +18,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Pe
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
+import no.nav.fpsak.nare.ServiceArgument;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.Resultat;
 
@@ -42,7 +43,7 @@ public class SjekkOmBortfallAvNaturalytelseTest {
         BeregningsgrunnlagPeriode periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
         BeregningsgrunnlagPrArbeidsforhold andel = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
         //Act
-        Evaluation resultat = new SjekkOmBortfallAvNaturalytelse(andel).evaluate(periode);
+        Evaluation resultat = new SjekkOmBortfallAvNaturalytelse().evaluate(periode, new ServiceArgument("arbeidsforhold", andel));
         //Assert
         assertThat(resultat.result()).isEqualTo(Resultat.NEI);
     }
@@ -63,7 +64,7 @@ public class SjekkOmBortfallAvNaturalytelseTest {
         BeregningsgrunnlagPeriode periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
         BeregningsgrunnlagPrArbeidsforhold andel = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
         //Act
-        Evaluation resultat = new SjekkOmBortfallAvNaturalytelse(andel).evaluate(periode);
+        Evaluation resultat = new SjekkOmBortfallAvNaturalytelse().evaluate(periode, new ServiceArgument("arbeidsforhold", andel));
         //Assert
         assertThat(resultat.result()).isEqualTo(Resultat.JA);
     }

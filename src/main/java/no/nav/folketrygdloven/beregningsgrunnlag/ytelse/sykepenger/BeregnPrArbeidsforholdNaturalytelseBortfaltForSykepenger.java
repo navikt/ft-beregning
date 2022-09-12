@@ -8,6 +8,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
+import no.nav.fpsak.nare.ServiceArgument;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
@@ -17,19 +18,23 @@ public class BeregnPrArbeidsforholdNaturalytelseBortfaltForSykepenger extends Le
 
     static final String ID = "FP_BR 15.9";
     static final String BESKRIVELSE = "Beregn bortfalt naturalytelse i arbeidsgiverperioden for sykepenger -> naturalytelseverdi * 12";
-    private BeregningsgrunnlagPrArbeidsforhold arbeidsforhold;
 
-    public BeregnPrArbeidsforholdNaturalytelseBortfaltForSykepenger(BeregningsgrunnlagPrArbeidsforhold arbeidsforhold) {
+    public BeregnPrArbeidsforholdNaturalytelseBortfaltForSykepenger() {
         super(ID, BESKRIVELSE);
-        this.arbeidsforhold = arbeidsforhold;
     }
 
-    @Override
-    public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        Inntektsgrunnlag inntektsgrunnlag = grunnlag.getInntektsgrunnlag();
+	@Override
+	public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
+		throw new IllegalStateException("Utviklerquiz: Hvorfor slår denne til?");
+	}
+
+	@Override
+	public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag, ServiceArgument arg) {
+		var arbeidsforhold = (BeregningsgrunnlagPrArbeidsforhold) arg.getVerdi();
+		Inntektsgrunnlag inntektsgrunnlag = grunnlag.getInntektsgrunnlag();
         BigDecimal naturalytelseBortfaltPrÅr = arbeidsforhold.getArbeidsgiverperioder()
             .stream()
-            .map(periode -> finnBortfaltNaturalytelsePrPeriode(inntektsgrunnlag, periode))
+            .map(periode -> finnBortfaltNaturalytelsePrPeriode(inntektsgrunnlag, periode, arbeidsforhold))
             .map(naturalYtelseBortfaltPrMnd -> naturalYtelseBortfaltPrMnd.multiply(BigDecimal.valueOf(12)))
             .reduce(BigDecimal.ZERO, BigDecimal::add);
 
@@ -43,7 +48,7 @@ public class BeregnPrArbeidsforholdNaturalytelseBortfaltForSykepenger extends Le
         return beregnet(resultater);
     }
 
-    private BigDecimal finnBortfaltNaturalytelsePrPeriode(Inntektsgrunnlag inntektsgrunnlag, Periode periode) {
+    private BigDecimal finnBortfaltNaturalytelsePrPeriode(Inntektsgrunnlag inntektsgrunnlag, Periode periode, BeregningsgrunnlagPrArbeidsforhold arbeidsforhold) {
         return inntektsgrunnlag.finnTotaltNaturalytelseBeløpMedOpphørsdatoIPeriodeForArbeidsforhold(arbeidsforhold.getArbeidsforhold(), periode.getFom(), periode.getTom())
             .orElse(BigDecimal.ZERO);
     }

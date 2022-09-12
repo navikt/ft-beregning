@@ -17,8 +17,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
-import no.nav.fpsak.nare.DynamicRuleService;
-import no.nav.fpsak.nare.ServiceArgument;
 
 public class RegelmodellForDokumentasjon {
 
@@ -44,11 +42,6 @@ public class RegelmodellForDokumentasjon {
 
     private RegelmodellForDokumentasjon() {
         super();
-    }
-
-    public static <T> void forArbeidsforhold(DynamicRuleService<T> regeltjeneste) {
-        Arbeidsforhold arbeidsforhold = opprettArbeidsforhold();
-        regeltjeneste.medServiceArgument(new ServiceArgument("dokumentasjon", BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(arbeidsforhold).medAndelNr(1).build()));
     }
 
     private static Arbeidsforhold opprettArbeidsforhold() {

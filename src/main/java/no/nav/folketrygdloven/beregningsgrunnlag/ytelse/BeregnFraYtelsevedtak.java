@@ -3,12 +3,12 @@ package no.nav.folketrygdloven.beregningsgrunnlag.ytelse;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
+import no.nav.fpsak.nare.ServiceArgument;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
@@ -21,17 +21,19 @@ class BeregnFraYtelsevedtak extends LeafSpecification<BeregningsgrunnlagPeriode>
 
 	static final String ID = "FB_BR 30.1.2";
 	static final String BESKRIVELSE = "Fastsetter beregningsgrunnlag fra ytelsevedtak";
-	private final BeregningsgrunnlagPrStatus statusandel;
 
-	BeregnFraYtelsevedtak(BeregningsgrunnlagPrStatus statusandel) {
+	BeregnFraYtelsevedtak() {
 		super(ID, BESKRIVELSE);
-		Objects.requireNonNull(statusandel, "statusandel");
-		this.statusandel = statusandel;
-
 	}
 
 	@Override
 	public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
+		throw new IllegalStateException("Utviklerquiz: Hvorfor slår denne til?");
+	}
+
+	@Override
+	public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag, ServiceArgument argument) {
+		var statusandel = (BeregningsgrunnlagPrStatus) argument.verdi();
 
 		var inntektsgrunnlag = grunnlag.getInntektsgrunnlag();
 		var inntektFraYtelseVedtak = inntektsgrunnlag.getSistePeriodeinntekterMedType(Inntektskilde.YTELSE_VEDTAK);

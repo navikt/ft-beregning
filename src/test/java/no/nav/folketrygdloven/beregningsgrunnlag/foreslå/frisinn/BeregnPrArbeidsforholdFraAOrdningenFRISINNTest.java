@@ -25,6 +25,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.frisinn.FrisinnGrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.frisinn.FrisinnPeriode;
+import no.nav.fpsak.nare.ServiceArgument;
 
 class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
     private static final LocalDate STP = LocalDate.of(2020,3,1);
@@ -395,7 +396,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
 
     private void kjørRegel(Beregningsgrunnlag beregningsgrunnlag, BeregningsgrunnlagPrArbeidsforhold andel) {
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        new BeregnPrArbeidsforholdFraAOrdningenFRISINN(andel).evaluate(grunnlag);
+        new BeregnPrArbeidsforholdFraAOrdningenFRISINN().evaluate(grunnlag, new ServiceArgument("arbeidsforhold", andel));
     }
 
     private Beregningsgrunnlag lagBeregningsgrunnlag(Inntektsgrunnlag ig, LocalDate skjæringstidspunkt) {

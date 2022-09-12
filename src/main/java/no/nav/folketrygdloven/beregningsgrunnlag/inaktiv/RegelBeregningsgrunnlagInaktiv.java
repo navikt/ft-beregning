@@ -43,8 +43,8 @@ public class RegelBeregningsgrunnlagInaktiv implements RuleService<Beregningsgru
 
         List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = getArbeidsforhold();
         Specification<BeregningsgrunnlagPeriode> beregningsgrunnlagATFL = arbeidsforhold.isEmpty() ? new Beregnet() :
-                rs.beregningsRegel("FP_BR 14.X", "Fastsett beregningsgrunnlag pr arbeidsforhold",
-                    RegelBeregnBruttoPrArbeidsforhold.class, regelmodell, "arbeidsforhold", arbeidsforhold, new Beregnet());
+                rs.beregningsForeachThenRegel("FP_BR 14.X", "Fastsett beregningsgrunnlag pr arbeidsforhold",
+                    new RegelBeregnBruttoPrArbeidsforhold().getSpecification(), "arbeidsforhold", arbeidsforhold, new Beregnet());
 
         Specification<BeregningsgrunnlagPeriode> sjekkOmMottattInntektsmelding =
                 rs.beregningHvisRegel(new SjekkHarArbeidsforholdMedIM(),

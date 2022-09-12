@@ -12,7 +12,7 @@ public class RegelVurderBeregningsgrunnlag implements RuleService<Beregningsgrun
 
     public static final String ID = "FP_BR_29";
 
-	BeregningsgrunnlagPeriode regelmodell;
+	private BeregningsgrunnlagPeriode regelmodell;
 
 	public RegelVurderBeregningsgrunnlag(BeregningsgrunnlagPeriode regelmodell) {
 		super();

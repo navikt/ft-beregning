@@ -6,6 +6,7 @@ import java.util.Map;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
+import no.nav.fpsak.nare.ServiceArgument;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
@@ -15,15 +16,19 @@ class BeregnPrArbeidsforholdFraInntektsmelding extends LeafSpecification<Beregni
 
     static final String ID = "FP_BR 15.2";
     static final String BESKRIVELSE = "Rapportert inntekt = inntektsmelding sats * 12";
-    private BeregningsgrunnlagPrArbeidsforhold arbeidsforhold;
 
-    BeregnPrArbeidsforholdFraInntektsmelding(BeregningsgrunnlagPrArbeidsforhold arbeidsforhold) {
+    BeregnPrArbeidsforholdFraInntektsmelding() {
         super(ID, BESKRIVELSE);
-        this.arbeidsforhold = arbeidsforhold;
     }
 
-    @Override
-    public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
+	@Override
+	public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
+		throw new IllegalStateException("Utviklerquiz: Hvorfor slår denne til?");
+	}
+
+	@Override
+	public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag, ServiceArgument arg) {
+		var arbeidsforhold = (BeregningsgrunnlagPrArbeidsforhold) arg.getVerdi();
         BigDecimal beløp = grunnlag.getInntektsgrunnlag().getInntektFraInntektsmelding(arbeidsforhold);
         BeregningsgrunnlagPrArbeidsforhold.builder(arbeidsforhold)
             .medBeregnetPrÅr(beløp.multiply(BigDecimal.valueOf(12)))

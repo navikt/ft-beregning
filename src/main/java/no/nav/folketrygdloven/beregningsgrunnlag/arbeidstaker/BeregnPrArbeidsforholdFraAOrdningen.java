@@ -7,7 +7,6 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
@@ -17,8 +16,8 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.In
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.YtelsesSpesifiktGrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.util.Virkedager;
+import no.nav.fpsak.nare.ServiceArgument;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
@@ -28,21 +27,24 @@ class BeregnPrArbeidsforholdFraAOrdningen extends LeafSpecification<Beregningsgr
 
 	static final String ID = "FB_BR 14.3";
 	static final String BESKRIVELSE = "Rapportert inntekt = snitt av mnd-inntekter i beregningsperioden * 12";
-	private BeregningsgrunnlagPrArbeidsforhold arbeidsforhold;
 
-	BeregnPrArbeidsforholdFraAOrdningen(BeregningsgrunnlagPrArbeidsforhold arbeidsforhold) {
+	BeregnPrArbeidsforholdFraAOrdningen() {
 		super(ID, BESKRIVELSE);
-		Objects.requireNonNull(arbeidsforhold, "arbeidsforhold");
-		this.arbeidsforhold = arbeidsforhold;
 	}
 
 	@Override
 	public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
+		throw new IllegalStateException("Utviklerquiz: Hvorfor slår denne til?");
+	}
+
+	@Override
+	public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag, ServiceArgument arg) {
+		var arbeidsforhold = (BeregningsgrunnlagPrArbeidsforhold) arg.getVerdi();
 		Periode bp = arbeidsforhold.getBeregningsperiode();
 		if (bp == null) {
 			throw new IllegalStateException("Beregningsperiode mangler, kan ikke fastsette beregningsgrunnlag for arbeidsforhold");
 		}
-		var snittFraBeregningsperiodenPrÅr = finnSnittinntektFraBeregningsperiodenPrÅr(bp, grunnlag.getInntektsgrunnlag());
+		var snittFraBeregningsperiodenPrÅr = finnSnittinntektFraBeregningsperiodenPrÅr(bp, grunnlag.getInntektsgrunnlag(), arbeidsforhold);
 
 		BigDecimal andelFraAOrdningenPrÅr = finnAndelAvBeregnet(snittFraBeregningsperiodenPrÅr, arbeidsforhold, grunnlag);
 		BeregningsgrunnlagPrArbeidsforhold.builder(arbeidsforhold)
@@ -66,7 +68,7 @@ class BeregnPrArbeidsforholdFraAOrdningen extends LeafSpecification<Beregningsgr
 	 * @param inntektsgrunnlag Inntektsgrunnlag
 	 * @return Snittinntekt fra beregningsperioden
 	 */
-	private BigDecimal finnSnittinntektFraBeregningsperiodenPrÅr(Periode bp, Inntektsgrunnlag inntektsgrunnlag) {
+	private BigDecimal finnSnittinntektFraBeregningsperiodenPrÅr(Periode bp, Inntektsgrunnlag inntektsgrunnlag, BeregningsgrunnlagPrArbeidsforhold arbeidsforhold) {
 		int varighetMåneder = finnHeleMåneder(bp);
 		if (varighetMåneder > 0) {
 			List<Periodeinntekt> inntekter = inntektsgrunnlag.getPeriodeinntekter(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold, bp.getTom(), varighetMåneder);

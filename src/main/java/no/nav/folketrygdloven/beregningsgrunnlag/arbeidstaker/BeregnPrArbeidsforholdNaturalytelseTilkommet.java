@@ -8,6 +8,7 @@ import java.util.Map;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
+import no.nav.fpsak.nare.ServiceArgument;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
@@ -17,15 +18,19 @@ class BeregnPrArbeidsforholdNaturalytelseTilkommet extends LeafSpecification<Ber
 
     static final String ID = "FP_BR 15.6";
     static final String BESKRIVELSE = "Beregn naturalytelse -> naturalytelseverdi * 12";
-    private BeregningsgrunnlagPrArbeidsforhold arbeidsforhold;
 
-    BeregnPrArbeidsforholdNaturalytelseTilkommet(BeregningsgrunnlagPrArbeidsforhold arbeidsforhold) {
+    BeregnPrArbeidsforholdNaturalytelseTilkommet() {
         super(ID, BESKRIVELSE);
-        this.arbeidsforhold = arbeidsforhold;
     }
 
-    @Override
-    public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
+	@Override
+	public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
+		throw new IllegalStateException("Utviklerquiz: Hvorfor slår denne til?");
+	}
+
+	@Override
+	public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag, ServiceArgument arg) {
+		var arbeidsforhold = (BeregningsgrunnlagPrArbeidsforhold) arg.getVerdi();
 
         LocalDate fom = grunnlag.getSkjæringstidspunkt();
         LocalDate tom = grunnlag.getBeregningsgrunnlagPeriode().getFom();

@@ -24,6 +24,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.omp.OmsorgspengerGrunnlag;
+import no.nav.fpsak.nare.ServiceArgument;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.Resultat;
 
@@ -41,7 +42,7 @@ public class BeregnPrArbeidsforholdFraAOrdningenTest {
         BeregningsgrunnlagPrArbeidsforhold arbeidstakerStatus = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
         //Act
         Assertions.assertThrows(IllegalStateException.class, () -> {
-            new BeregnPrArbeidsforholdFraAOrdningen(arbeidstakerStatus).evaluate(periode);
+            new BeregnPrArbeidsforholdFraAOrdningen().evaluate(periode);
         });
     }
 
@@ -61,7 +62,7 @@ public class BeregnPrArbeidsforholdFraAOrdningenTest {
         BeregningsgrunnlagPrArbeidsforhold arbeidstakerStatus = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
         BeregningsgrunnlagPrArbeidsforhold.builder(arbeidstakerStatus).medBeregningsperiode(beregningsperiode);
         //Act
-        Evaluation resultat = new BeregnPrArbeidsforholdFraAOrdningen(arbeidstakerStatus).evaluate(periode);
+        Evaluation resultat = new BeregnPrArbeidsforholdFraAOrdningen().evaluate(periode, new ServiceArgument("arbeidsforhold", arbeidstakerStatus));
         //Assert
         assertThat(resultat.result()).isEqualTo(Resultat.JA);
         assertThat(arbeidstakerStatus.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(500004));
@@ -84,7 +85,7 @@ public class BeregnPrArbeidsforholdFraAOrdningenTest {
 		BeregningsgrunnlagPrArbeidsforhold arbeidstakerStatus = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
 		BeregningsgrunnlagPrArbeidsforhold.builder(arbeidstakerStatus).medBeregningsperiode(beregningsperiode);
 		//Act
-		Evaluation resultat = new BeregnPrArbeidsforholdFraAOrdningen(arbeidstakerStatus).evaluate(periode);
+		Evaluation resultat = new BeregnPrArbeidsforholdFraAOrdningen().evaluate(periode, new ServiceArgument("arbeidsforhold", arbeidstakerStatus));
 		//Assert
 		assertThat(resultat.result()).isEqualTo(Resultat.JA);
 		assertThat(arbeidstakerStatus.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(561294));
@@ -106,7 +107,7 @@ public class BeregnPrArbeidsforholdFraAOrdningenTest {
 		BeregningsgrunnlagPrArbeidsforhold arbeidstakerStatus = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
 		BeregningsgrunnlagPrArbeidsforhold.builder(arbeidstakerStatus).medBeregningsperiode(beregningsperiode);
 		//Act
-		Evaluation resultat = new BeregnPrArbeidsforholdFraAOrdningen(arbeidstakerStatus).evaluate(periode);
+		Evaluation resultat = new BeregnPrArbeidsforholdFraAOrdningen().evaluate(periode, new ServiceArgument("arbeidsforhold", arbeidstakerStatus));
 		//Assert
 		assertThat(resultat.result()).isEqualTo(Resultat.JA);
 		assertThat(arbeidstakerStatus.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(537720));
@@ -128,7 +129,7 @@ public class BeregnPrArbeidsforholdFraAOrdningenTest {
 		BeregningsgrunnlagPrArbeidsforhold arbeidstakerStatus = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
 		BeregningsgrunnlagPrArbeidsforhold.builder(arbeidstakerStatus).medBeregningsperiode(beregningsperiode);
 		//Act
-		Evaluation resultat = new BeregnPrArbeidsforholdFraAOrdningen(arbeidstakerStatus).evaluate(periode);
+		Evaluation resultat = new BeregnPrArbeidsforholdFraAOrdningen().evaluate(periode, new ServiceArgument("arbeidsforhold", arbeidstakerStatus));
 		//Assert
 		assertThat(resultat.result()).isEqualTo(Resultat.JA);
 		assertThat(arbeidstakerStatus.getBeregnetPrÅr()).isCloseTo(BigDecimal.valueOf(440000), within(BigDecimal.valueOf(0.01)));
@@ -165,7 +166,7 @@ public class BeregnPrArbeidsforholdFraAOrdningenTest {
         BeregningsgrunnlagPrArbeidsforhold arbeidstakerStatus = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(1);
         BeregningsgrunnlagPrArbeidsforhold.builder(arbeidstakerStatus).medBeregningsperiode(beregningsperiode);
         //Act
-        Evaluation resultat = new BeregnPrArbeidsforholdFraAOrdningen(arbeidstakerStatus).evaluate(periode);
+        Evaluation resultat = new BeregnPrArbeidsforholdFraAOrdningen().evaluate(periode, new ServiceArgument("arbeidsforhold", arbeidstakerStatus));
         //Assert
         assertThat(resultat.result()).isEqualTo(Resultat.JA);
         assertThat(arbeidstakerStatus.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(380004));
@@ -199,7 +200,7 @@ public class BeregnPrArbeidsforholdFraAOrdningenTest {
         BeregningsgrunnlagPrArbeidsforhold arbeidstakerStatus = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(1);
         BeregningsgrunnlagPrArbeidsforhold.builder(arbeidstakerStatus).medBeregningsperiode(beregningsperiode);
         //Act
-        Evaluation resultat = new BeregnPrArbeidsforholdFraAOrdningen(arbeidstakerStatus).evaluate(periode);
+        Evaluation resultat = new BeregnPrArbeidsforholdFraAOrdningen().evaluate(periode, new ServiceArgument("arbeidsforhold", arbeidstakerStatus));
         //Assert
         assertThat(resultat.result()).isEqualTo(Resultat.JA);
         assertThat(arbeidstakerStatus.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(190002));
@@ -235,7 +236,7 @@ public class BeregnPrArbeidsforholdFraAOrdningenTest {
         BeregningsgrunnlagPrArbeidsforhold arbeidstakerStatus = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(1);
         BeregningsgrunnlagPrArbeidsforhold.builder(arbeidstakerStatus).medBeregningsperiode(beregningsperiode);
         //Act
-        Evaluation resultat = new BeregnPrArbeidsforholdFraAOrdningen(arbeidstakerStatus).evaluate(periode);
+        Evaluation resultat = new BeregnPrArbeidsforholdFraAOrdningen().evaluate(periode, new ServiceArgument("arbeidsforhold", arbeidstakerStatus));
         //Assert
         assertThat(resultat.result()).isEqualTo(Resultat.JA);
         assertThat(arbeidstakerStatus.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(190002));

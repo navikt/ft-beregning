@@ -12,7 +12,7 @@ public class RegelFinnGrenseverdi implements RuleService<BeregningsgrunnlagPerio
 
     public static final String ID = "FP_BR_29";
 
-	BeregningsgrunnlagPeriode regelmodell;
+	private BeregningsgrunnlagPeriode regelmodell;
 
     public RegelFinnGrenseverdi(BeregningsgrunnlagPeriode regelmodell) {
 	    super();

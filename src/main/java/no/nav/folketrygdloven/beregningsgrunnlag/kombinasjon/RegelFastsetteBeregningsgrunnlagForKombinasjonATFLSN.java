@@ -15,17 +15,26 @@ import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.SjekkOmBrukerErNyIA
 import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.SjekkOmDifferanseStørreEnn25Prosent;
 import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.SjekkOmManueltFastsattBeregningsgrunnlagForAktivitetstatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.SjekkOmVarigEndringIVirksomhetEllerNyoppstartetNæring;
-import no.nav.fpsak.nare.DynamicRuleService;
+import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
+import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.Specification;
 
-public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN extends DynamicRuleService<BeregningsgrunnlagPeriode> {
+public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN implements RuleService<BeregningsgrunnlagPeriode> {
 
     public static final String ID = "FP_BR_2";
 
-    public RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(BeregningsgrunnlagPeriode regelmodell) {
-        super(regelmodell);
-    }
+	private BeregningsgrunnlagPeriode regelmodell;
+
+	public RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(BeregningsgrunnlagPeriode regelmodell) {
+		super();
+		this.regelmodell = regelmodell;
+	}
+
+	@Override
+	public Evaluation evaluer(BeregningsgrunnlagPeriode regelmodell) {
+		return getSpecification().evaluate(regelmodell);
+	}
 
     @SuppressWarnings("unchecked")
     @Override

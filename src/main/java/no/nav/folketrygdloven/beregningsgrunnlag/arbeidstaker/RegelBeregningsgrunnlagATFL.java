@@ -81,8 +81,8 @@ public class RegelBeregningsgrunnlagATFL implements RuleService<Beregningsgrunnl
 
         List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = regelmodell.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
         Specification<BeregningsgrunnlagPeriode> beregningsgrunnlagATFL =
-                rs.beregningsRegel("FP_BR 14.X", "Fastsett beregningsgrunnlag pr arbeidsforhold",
-                    RegelBeregnBruttoPrArbeidsforhold.class, regelmodell, "arbeidsforhold", arbeidsforhold, fastsettBeregnetPrÅr);
+                rs.beregningsForeachThenRegel("FP_BR 14.X", "Fastsett beregningsgrunnlag pr arbeidsforhold",
+                    new RegelBeregnBruttoPrArbeidsforhold().getSpecification(), "arbeidsforhold", arbeidsforhold, fastsettBeregnetPrÅr);
 
         // FP_BR X.X Ingen regelberegning hvis besteberegning gjelder
 

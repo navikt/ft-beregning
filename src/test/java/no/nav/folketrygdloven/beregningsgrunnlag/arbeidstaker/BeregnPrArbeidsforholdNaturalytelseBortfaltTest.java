@@ -18,6 +18,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Pe
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
+import no.nav.fpsak.nare.ServiceArgument;
 
 public class BeregnPrArbeidsforholdNaturalytelseBortfaltTest {
 
@@ -45,7 +46,7 @@ public class BeregnPrArbeidsforholdNaturalytelseBortfaltTest {
         BeregningsgrunnlagPeriode periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
         BeregningsgrunnlagPrArbeidsforhold andel = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
         //Act
-        new BeregnPrArbeidsforholdNaturalytelseBortfalt(andel).evaluate(periode);
+        new BeregnPrArbeidsforholdNaturalytelseBortfalt().evaluate(periode, new ServiceArgument("arbeidsforhold", andel));
         //Assert
         assertThat(andel.getNaturalytelseBortfaltPrÅr()).isPresent();
         assertThat(andel.getNaturalytelseBortfaltPrÅr().get()).isEqualByComparingTo(BigDecimal.valueOf(126_660));//NOSONAR
