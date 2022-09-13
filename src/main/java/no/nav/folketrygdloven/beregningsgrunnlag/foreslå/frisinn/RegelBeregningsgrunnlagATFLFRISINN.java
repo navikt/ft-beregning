@@ -8,6 +8,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
+import no.nav.fpsak.nare.ServiceArgument;
 import no.nav.fpsak.nare.specification.Specification;
 
 public class RegelBeregningsgrunnlagATFLFRISINN implements RuleService<BeregningsgrunnlagPeriode> {
@@ -37,9 +38,13 @@ public class RegelBeregningsgrunnlagATFLFRISINN implements RuleService<Beregning
             rs.beregningHvisRegel(new SjekkManueltFastsattAvSBH(), fastsettBeregnetPrÅr, vurderMotOppgittArbeidstakerinntekt);
 
         List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = regelmodell.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
-        Specification<BeregningsgrunnlagPeriode> beregningsgrunnlagATFL =
-                rs.beregningsRegel("FRISINN 2.X", "Fastsett beregningsgrunnlag pr arbeidsforhold",
-                    RegelBeregnBruttoPrArbeidsforholdFRISINN.class, regelmodell, "arbeidsforhold", arbeidsforhold, harInntektForATFLBlittManueltFastsatt);
+	    var speclist = arbeidsforhold.stream()
+			    .map(a -> new RegelBeregnBruttoPrArbeidsforholdFRISINN(a).getSpecification().medEvaluationProperty(new ServiceArgument("arbeidsforhold", a.getArbeidsforhold())))
+			    .toList();
+	    Specification<BeregningsgrunnlagPeriode> beregningsgrunnlagATFL =
+			    rs.beregningsRegel("FRISINN 2.X", "Fastsett beregningsgrunnlag pr arbeidsforhold",
+					    speclist, harInntektForATFLBlittManueltFastsatt);
+
 
         return beregningsgrunnlagATFL;
     }

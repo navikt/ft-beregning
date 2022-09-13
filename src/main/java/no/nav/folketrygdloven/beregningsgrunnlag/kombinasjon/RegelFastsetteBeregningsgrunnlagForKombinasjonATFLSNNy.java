@@ -3,16 +3,18 @@ package no.nav.folketrygdloven.beregningsgrunnlag.kombinasjon;
 import no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker.RegelBeregningsgrunnlagATFL;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Beregnet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
-import no.nav.fpsak.nare.DynamicRuleService;
+import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.specification.Specification;
 
-public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNNy extends DynamicRuleService<BeregningsgrunnlagPeriode> {
+public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNNy implements RuleService<BeregningsgrunnlagPeriode> {
 
     public static final String ID = "FP_BR_2";
 
+	private BeregningsgrunnlagPeriode regelmodell;
+
     public RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNNy(BeregningsgrunnlagPeriode regelmodell) {
-        super(regelmodell);
+        this.regelmodell = regelmodell;
     }
 
     @SuppressWarnings("unchecked")

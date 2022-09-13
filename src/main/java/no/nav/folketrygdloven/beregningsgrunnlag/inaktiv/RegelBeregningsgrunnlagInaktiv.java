@@ -11,6 +11,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
 import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
+import no.nav.fpsak.nare.ServiceArgument;
 import no.nav.fpsak.nare.specification.Specification;
 
 /**
@@ -42,9 +43,12 @@ public class RegelBeregningsgrunnlagInaktiv implements RuleService<Beregningsgru
         Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
 
         List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = getArbeidsforhold();
+		var speclist = arbeidsforhold.stream()
+			    .map(a -> new RegelBeregnBruttoPrArbeidsforhold(a).getSpecification()
+					    .medEvaluationProperty(new ServiceArgument("arbeidsforhold", a.getArbeidsforhold())))
+			    .toList();
         Specification<BeregningsgrunnlagPeriode> beregningsgrunnlagATFL = arbeidsforhold.isEmpty() ? new Beregnet() :
-                rs.beregningsRegel("FP_BR 14.X", "Fastsett beregningsgrunnlag pr arbeidsforhold",
-                    RegelBeregnBruttoPrArbeidsforhold.class, regelmodell, "arbeidsforhold", arbeidsforhold, new Beregnet());
+		        rs.beregningsRegel("FP_BR 14.X", "Fastsett beregningsgrunnlag pr arbeidsforhold", speclist, new Beregnet());
 
         Specification<BeregningsgrunnlagPeriode> sjekkOmMottattInntektsmelding =
                 rs.beregningHvisRegel(new SjekkHarArbeidsforholdMedIM(),

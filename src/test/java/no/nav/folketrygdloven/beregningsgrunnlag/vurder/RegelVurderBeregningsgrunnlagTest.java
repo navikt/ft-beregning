@@ -64,7 +64,7 @@ public class RegelVurderBeregningsgrunnlagTest {
     }
 
     private RegelResultat kjørRegel(BeregningsgrunnlagPeriode grunnlag) {
-        RegelVurderBeregningsgrunnlag regel = new RegelVurderBeregningsgrunnlag(grunnlag);
+        RegelVurderBeregningsgrunnlag regel = new RegelVurderBeregningsgrunnlag();
         Evaluation evaluation = regel.evaluer(grunnlag);
         return RegelmodellOversetter.getRegelResultat(evaluation, "input");
     }
