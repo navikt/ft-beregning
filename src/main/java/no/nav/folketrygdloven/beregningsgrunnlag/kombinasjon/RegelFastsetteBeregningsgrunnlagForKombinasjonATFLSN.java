@@ -82,9 +82,9 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN implements Rul
 			    .neste(new FastsettBeregningsperiodeForAktivitetstatus(AktivitetStatus.SN))
 			    .neste(new BeregnOppjustertInntektForAktivitetstatus(AktivitetStatus.SN))
 			    .neste(new BeregnGjennomsnittligPGIForAktivitetstatus(AktivitetStatus.SN))
-			    .siste(rs.sekvensHvisRegel()
-				        .hvis(new SjekkOmBeregninsgrunnlagErBesteberegnet(), new Beregnet())
-				        .ellers(sjekkOmNyIArbeidslivetSN));
+				.siste(rs.dersomRegel(new SjekkOmBeregninsgrunnlagErBesteberegnet())
+						.hvisja(new Beregnet())
+						.ellers(sjekkOmNyIArbeidslivetSN));
 
         Specification<BeregningsgrunnlagPeriode> beregningsgrunnlagKombinasjon;
 

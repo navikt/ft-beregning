@@ -55,19 +55,19 @@ public class RegelForeslåBeregningsgrunnlag implements RuleService<Beregningsgr
 		if (regelmodell.getBeregningsgrunnlagPrStatus().isEmpty()) {
 			return new IkkeBeregnet(new BeregningUtfallMerknad(BeregningUtfallÅrsak.UDEFINERT));
 		}
-		var scope = new ServiceArgument("aktivitetStatus", aktivitetStatus);
+		var sporingsproperty = new ServiceArgument("aktivitetStatus", aktivitetStatus);
 		if (aktivitetStatus.erAAPellerDP()) {
-			return new RegelFastsettBeregningsgrunnlagDPellerAAP().getSpecification().medScope(scope);
+			return new RegelFastsettBeregningsgrunnlagDPellerAAP().getSpecification().medEvaluationProperty(sporingsproperty);
 		}
 
 		return switch (aktivitetStatus) {
-			case SN -> new RegelBeregningsgrunnlagSN().getSpecification().medScope(scope);
-			case ATFL -> new RegelBeregningsgrunnlagATFL(regelmodell).getSpecification().medScope(scope);
-			case ATFL_SN -> new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(regelmodell).getSpecification().medScope(scope);
-			case KUN_YTELSE -> new RegelForeslåBeregningsgrunnlagTY(regelmodell).getSpecification().medScope(scope);
-			case MS -> new RegelForeslåBeregningsgrunnlagMilitær().getSpecification().medScope(scope);
-			case MIDL_INAKTIV -> new RegelBeregningsgrunnlagInaktiv(regelmodell).getSpecification().medScope(scope);
-			default -> new RegelForeslåBeregningsgrunnlagTilNull(aktivitetStatus).getSpecification().medScope(scope);
+			case SN -> new RegelBeregningsgrunnlagSN().getSpecification().medEvaluationProperty(sporingsproperty);
+			case ATFL -> new RegelBeregningsgrunnlagATFL(regelmodell).getSpecification().medEvaluationProperty(sporingsproperty);
+			case ATFL_SN -> new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(regelmodell).getSpecification().medEvaluationProperty(sporingsproperty);
+			case KUN_YTELSE -> new RegelForeslåBeregningsgrunnlagTY(regelmodell).getSpecification().medEvaluationProperty(sporingsproperty);
+			case MS -> new RegelForeslåBeregningsgrunnlagMilitær().getSpecification().medEvaluationProperty(sporingsproperty);
+			case MIDL_INAKTIV -> new RegelBeregningsgrunnlagInaktiv(regelmodell).getSpecification().medEvaluationProperty(sporingsproperty);
+			default -> new RegelForeslåBeregningsgrunnlagTilNull(aktivitetStatus).getSpecification().medEvaluationProperty(sporingsproperty);
 		};
 	}
 }

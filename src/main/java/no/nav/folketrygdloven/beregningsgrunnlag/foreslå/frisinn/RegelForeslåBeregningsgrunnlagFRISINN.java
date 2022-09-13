@@ -48,13 +48,13 @@ public class RegelForeslåBeregningsgrunnlagFRISINN implements RuleService<Bereg
 		if (regelmodell.getBeregningsgrunnlagPrStatus().isEmpty()) {
 			return new IkkeBeregnet(new BeregningUtfallMerknad(BeregningUtfallÅrsak.UDEFINERT));
 		}
-		var scope = new ServiceArgument("aktivitetStatus", aktivitetStatus);
+		var sporingsproperty = new ServiceArgument("aktivitetStatus", aktivitetStatus);
 		return switch (aktivitetStatus) {
-			case ATFL -> new RegelBeregningsgrunnlagATFLFRISINN(regelmodell).getSpecification().medScope(scope);
-			case SN -> new RegelBeregningsgrunnlagSNFRISINN().getSpecification().medScope(scope);
-			case ATFL_SN -> new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNFRISINN(regelmodell).getSpecification().medScope(scope);
-			case AAP, DP -> new ForeslåBeregningsgrunnlagDPellerAAPFRISINN().medScope(scope);
-			default -> new RegelForeslåBeregningsgrunnlagTilNull(aktivitetStatus).getSpecification().medScope(scope);
+			case ATFL -> new RegelBeregningsgrunnlagATFLFRISINN(regelmodell).getSpecification().medEvaluationProperty(sporingsproperty);
+			case SN -> new RegelBeregningsgrunnlagSNFRISINN().getSpecification().medEvaluationProperty(sporingsproperty);
+			case ATFL_SN -> new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNFRISINN(regelmodell).getSpecification().medEvaluationProperty(sporingsproperty);
+			case AAP, DP -> new ForeslåBeregningsgrunnlagDPellerAAPFRISINN().medEvaluationProperty(sporingsproperty);
+			default -> new RegelForeslåBeregningsgrunnlagTilNull(aktivitetStatus).getSpecification().medEvaluationProperty(sporingsproperty);
 		};
 	}
 }

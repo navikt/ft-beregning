@@ -33,7 +33,7 @@ class FastsettNyFordeling implements RuleService<FordelModell> {
 		Ruleset<FordelModell> rs = new Ruleset<>();
 	    var speclist = refOverstigerBgAktivitetListe.stream()
 			    .map(fam -> new OmfordelBeregningsgrunnlagTilArbeidsforhold(fam).getSpecification()
-					    .medScope(new ServiceArgument("arbeidsforhold", fam.getArbeidsforhold().map(Arbeidsforhold::toString).orElse("ukjent")))) // TODO (PE) hva er nyttig her?
+					    .medEvaluationProperty(new ServiceArgument("arbeidsforhold", fam.getArbeidsforhold().map(Arbeidsforhold::toString).orElse("ukjent")))) // TODO (PE) hva er nyttig her?
 			    .toList();
         var beregningsgrunnlagATFL = refOverstigerBgAktivitetListe.isEmpty() ? new Fordelt() :
 				        rs.beregningsRegel(ID, BESKRIVELSE, speclist, new Fordelt());

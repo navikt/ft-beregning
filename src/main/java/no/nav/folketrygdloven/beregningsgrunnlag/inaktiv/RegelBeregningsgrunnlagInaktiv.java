@@ -45,7 +45,7 @@ public class RegelBeregningsgrunnlagInaktiv implements RuleService<Beregningsgru
         List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = getArbeidsforhold();
 		var speclist = arbeidsforhold.stream()
 			    .map(a -> new RegelBeregnBruttoPrArbeidsforhold(a).getSpecification()
-					    .medScope(new ServiceArgument("arbeidsforhold", a.getArbeidsforhold())))
+					    .medEvaluationProperty(new ServiceArgument("arbeidsforhold", a.getArbeidsforhold())))
 			    .toList();
         Specification<BeregningsgrunnlagPeriode> beregningsgrunnlagATFL = arbeidsforhold.isEmpty() ? new Beregnet() :
 		        rs.beregningsRegel("FP_BR 14.X", "Fastsett beregningsgrunnlag pr arbeidsforhold", speclist, new Beregnet());

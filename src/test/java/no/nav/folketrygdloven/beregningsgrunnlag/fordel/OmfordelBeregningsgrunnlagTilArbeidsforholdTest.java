@@ -174,7 +174,7 @@ public class OmfordelBeregningsgrunnlagTilArbeidsforholdTest {
     private void kjørRegel(FordelAndelModell arbeidsforhold, FordelPeriodeModell periode) {
         OmfordelBeregningsgrunnlagTilArbeidsforhold regel = new OmfordelBeregningsgrunnlagTilArbeidsforhold(arbeidsforhold);
         var args = new ServiceArgument("arbeidsforhold", arbeidsforhold);
-        regel.getSpecification().medScope(args).evaluate(new FordelModell(periode));
+        regel.getSpecification().medEvaluationProperty(args).evaluate(new FordelModell(periode));
     }
 
     private FordelAndelModell lagArbeidsforhold(BigDecimal refusjonskravPrÅr, BigDecimal beregnetPrÅr, Long andelsnr, String orgnr) {

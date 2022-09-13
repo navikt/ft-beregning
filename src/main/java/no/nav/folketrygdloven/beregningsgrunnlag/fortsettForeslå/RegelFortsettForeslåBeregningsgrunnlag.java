@@ -52,14 +52,14 @@ public class RegelFortsettForeslåBeregningsgrunnlag implements RuleService<Bere
 		if (regelmodell.getBeregningsgrunnlagPrStatus().isEmpty()) {
 			return new IkkeBeregnet(new BeregningUtfallMerknad(BeregningUtfallÅrsak.UDEFINERT));
 		}
-		var scope = new ServiceArgument("aktivitetStatus", aktivitetStatus);
+		var sporingsproperty = new ServiceArgument("aktivitetStatus", aktivitetStatus);
 		if (!aktivitetStatus.erSelvstendigNæringsdrivende() && !aktivitetStatus.erMilitær()) {
 			return new Beregnet();
 		}
 		return switch (aktivitetStatus) {
-			case SN, ATFL_SN -> new RegelBeregningsgrunnlagSN().getSpecification().medScope(scope);
-			case MS -> new RegelForeslåBeregningsgrunnlagMilitær().getSpecification().medScope(scope);
-			default -> new RegelForeslåBeregningsgrunnlagTilNull(aktivitetStatus).getSpecification().medScope(scope);
+			case SN, ATFL_SN -> new RegelBeregningsgrunnlagSN().getSpecification().medEvaluationProperty(sporingsproperty);
+			case MS -> new RegelForeslåBeregningsgrunnlagMilitær().getSpecification().medEvaluationProperty(sporingsproperty);
+			default -> new RegelForeslåBeregningsgrunnlagTilNull(aktivitetStatus).getSpecification().medEvaluationProperty(sporingsproperty);
 		};
 
 	}
