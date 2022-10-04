@@ -7,6 +7,7 @@ import java.util.Map;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.SammenligningGrunnlagType;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
@@ -31,12 +32,23 @@ public class FastsettSammenligningsgrunnlagForSN extends LeafSpecification<Bereg
         Periodeinntekt oppgittInntekt = grunnlag.getInntektsgrunnlag().getSistePeriodeinntektMedTypeSøknad()
             .orElseThrow(() -> new IllegalStateException("Fant ikke oppgitt månedsinntekt ved varig endret inntekt"));
 
+	    // Setter et enkelt sammenligningsgrunnlag
         SammenligningsGrunnlag sammenligningsGrunnlag = opprettSammenligningsgrunnlag(grunnlag, oppgittInntekt);
-        beregnOgFastsettAvvik(grunnlag, sammenligningsGrunnlag);
+	    beregnOgFastsettAvvik(grunnlag, sammenligningsGrunnlag);
+	    Beregningsgrunnlag.builder(grunnlag.getBeregningsgrunnlag()).medSammenligningsgrunnlag(sammenligningsGrunnlag).build();
 
-        Beregningsgrunnlag.builder(grunnlag.getBeregningsgrunnlag()).medSammenligningsgrunnlag(sammenligningsGrunnlag).build();
+	    // Setter sammenligningsgrunnlag pr status
+	    var sgPrStatus = SammenligningsGrunnlag.builder()
+			    .medSammenligningstype(SammenligningGrunnlagType.SN)
+			    .medSammenligningsperiode(sammenligningsGrunnlag.getSammenligningsperiode())
+			    .medRapportertPrÅr(sammenligningsGrunnlag.getRapportertPrÅr())
+			    .medAvvikProsent(sammenligningsGrunnlag.getAvvikProsent())
+			    .medAvvikProsent(sammenligningsGrunnlag.getAvvikProsent())
+			    .build();
+	    Beregningsgrunnlag.builder(grunnlag.getBeregningsgrunnlag()).leggTilSammenligningsgrunnlagPrStatus(sgPrStatus).build();
 
-        Map<String, Object> resultater = gjørRegelsporing(grunnlag, sammenligningsGrunnlag, oppgittInntekt);
+
+	    Map<String, Object> resultater = gjørRegelsporing(grunnlag, sammenligningsGrunnlag, oppgittInntekt);
         return beregnet(resultater);
     }
 

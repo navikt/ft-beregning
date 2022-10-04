@@ -167,10 +167,6 @@ public class BeregningsgrunnlagPeriode {
 		return beregningsgrunnlag.getSammenligningsGrunnlag();
 	}
 
-	public SammenligningsGrunnlag getSammenligningsgrunnlagPrStatus(AktivitetStatus aktivitetStatus) {
-		return beregningsgrunnlag.getSammenligningsGrunnlagPrAktivitetstatus().get(aktivitetStatus);
-	}
-
 	public Dekningsgrad getDekningsgrad() {
 		return dekningsgrad;
 	}

@@ -8,6 +8,7 @@ import java.util.Map;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.BevegeligeHelligdagerUtil;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.SammenligningGrunnlagType;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
@@ -32,11 +33,21 @@ class FastsettSammenligningsgrunnlag extends LeafSpecification<Beregningsgrunnla
         if (grunnlag.getBeregningsgrunnlag().getSammenligningsGrunnlag() == null) {
             Periode sammenligningsPeriode = lagSammenligningsPeriode(grunnlag.getInntektsgrunnlag(), grunnlag.getSkjæringstidspunkt());
             BigDecimal sammenligningsgrunnlagInntekt = grunnlag.getInntektsgrunnlag().getSamletInntektISammenligningsperiode(sammenligningsPeriode);
-            SammenligningsGrunnlag sg = SammenligningsGrunnlag.builder()
+
+			// Setter et enkelt sammenligningsgrunnlag
+			SammenligningsGrunnlag sg = SammenligningsGrunnlag.builder()
                 .medSammenligningsperiode(sammenligningsPeriode)
                 .medRapportertPrÅr(sammenligningsgrunnlagInntekt)
                 .build();
             Beregningsgrunnlag.builder(grunnlag.getBeregningsgrunnlag()).medSammenligningsgrunnlag(sg).build();
+
+			// Setter sammenligningsgrunnlag pr status
+	        SammenligningsGrunnlag sgPrStatus = SammenligningsGrunnlag.builder()
+			        .medSammenligningsperiode(sammenligningsPeriode)
+			        .medRapportertPrÅr(sammenligningsgrunnlagInntekt)
+			        .medSammenligningstype(SammenligningGrunnlagType.AT_FL)
+			        .build();
+	        Beregningsgrunnlag.builder(grunnlag.getBeregningsgrunnlag()).leggTilSammenligningsgrunnlagPrStatus(sgPrStatus).build();
         }
 
         Map<String, Object> resultater = new HashMap<>();
