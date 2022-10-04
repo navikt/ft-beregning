@@ -3,6 +3,7 @@ package no.nav.folketrygdloven.beregningsgrunnlag.fortsettForeslå;
 import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.foreslå.RegelForeslåBeregningsgrunnlagTilNull;
+import no.nav.folketrygdloven.beregningsgrunnlag.inaktiv.RegelBeregningsgrunnlagInaktiv;
 import no.nav.folketrygdloven.beregningsgrunnlag.militær.RegelForeslåBeregningsgrunnlagMilitær;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel;
@@ -59,6 +60,7 @@ public class RegelFortsettForeslåBeregningsgrunnlag implements RuleService<Bere
 		return switch (aktivitetStatus) {
 			case SN, ATFL_SN -> new RegelBeregningsgrunnlagSN().getSpecification().medEvaluationProperty(sporingsproperty);
 			case MS -> new RegelForeslåBeregningsgrunnlagMilitær().getSpecification().medEvaluationProperty(sporingsproperty);
+			case MIDL_INAKTIV -> new RegelBeregningsgrunnlagInaktiv().getSpecification().medEvaluationProperty(sporingsproperty);
 			default -> new RegelForeslåBeregningsgrunnlagTilNull(aktivitetStatus).getSpecification().medEvaluationProperty(sporingsproperty);
 		};
 

@@ -5,6 +5,8 @@ import java.util.Arrays;
 import no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker.SjekkOmFørsteBeregningsgrunnlagsperiode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Beregnet;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningUtfallMerknad;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningUtfallÅrsak;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.IkkeBeregnet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.fpsak.nare.RuleService;
@@ -23,7 +25,7 @@ public class RegelBeregningsgrunnlagSN implements RuleService<Beregningsgrunnlag
 
     static final String ID = "FP_BR_2";
 
-    @Override
+	@Override
     public Evaluation evaluer(BeregningsgrunnlagPeriode regelmodell) {
         return getSpecification().evaluate(regelmodell);
     }
@@ -34,12 +36,12 @@ public class RegelBeregningsgrunnlagSN implements RuleService<Beregningsgrunnlag
         Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
 
 //      FP_BR 2.7 Fastsette beregnet pr år
-        Specification<BeregningsgrunnlagPeriode> fastsettBeregnetPrÅr = new FastsettBeregnetPrÅr();
+        Specification<BeregningsgrunnlagPeriode> fastsettBeregnetPrÅr = new FastsettBeregnetPrÅr(AktivitetStatus.SN);
 
 //      FP_BR 2.6 Opprette regelmerknad for å fastsette brutto_pr_aar manuelt
         Specification<BeregningsgrunnlagPeriode> opprettRegelmerknad =
             rs.beregningsRegel("FP_BR 2.6", "Opprett regelmerknad", fastsettBeregnetPrÅr,
-                new IkkeBeregnet(SjekkOmDifferanseStørreEnn25Prosent.VARIG_ENDRING_OG_AVVIK_STØRRE_ENN_25_PROSENT));
+                new IkkeBeregnet(new BeregningUtfallMerknad(BeregningUtfallÅrsak.VARIG_ENDRING_OG_AVVIK_STØRRE_ENN_25_PROSENT)));
 
 //      FP_BR 2.5 Er avvik > 25 %
         Specification<BeregningsgrunnlagPeriode> sjekkOmDifferanseStørreEnn25Prosent =
@@ -48,7 +50,7 @@ public class RegelBeregningsgrunnlagSN implements RuleService<Beregningsgrunnlag
 //      FP_BR 2.4 Fastsett sammenligningsgrunnlag og beregn avvik
         Specification<BeregningsgrunnlagPeriode> beregnAvvik =
             rs.beregningsRegel("FP_BR 2.4", "Fastsett sammenligningsgrunnlag og beregn avvik",
-                new FastsettSammenligningsgrunnlagForSN(), sjekkOmDifferanseStørreEnn25Prosent);
+                new FastsettSammenligningsgrunnlagForAktivitetstatus(AktivitetStatus.SN), sjekkOmDifferanseStørreEnn25Prosent);
 
 	    // Første beregningsgrunnlagsperiode? Sammenligninggrunnlag skal fastsettes og sjekkes mot bare om det er første periode
 	    Specification<BeregningsgrunnlagPeriode> sjekkOmFørstePeriode =
@@ -61,7 +63,7 @@ public class RegelBeregningsgrunnlagSN implements RuleService<Beregningsgrunnlag
 //      FP_BR 2.8 Beregn beregningsgrunnlag SN
         Specification<BeregningsgrunnlagPeriode> beregnBruttoSN =
             rs.beregningsRegel("FP_BR 2.8", "Beregn brutto beregningsgrunnlag selvstendig næringsdrivende",
-                new BeregnBruttoBeregningsgrunnlagSN(), sjekkOmVarigEndringIVirksomhet);
+                new BeregnBruttoBeregningsgrunnlagFraPGI(AktivitetStatus.SN), sjekkOmVarigEndringIVirksomhet);
 
 //      FP_BR 2.19 Har saksbehandler fastsatt beregningsgrunnlaget manuelt?
         Specification<BeregningsgrunnlagPeriode> sjekkOmManueltFastsattInntekt =

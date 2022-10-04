@@ -6,7 +6,7 @@ public enum Inntektskilde {
     INNTEKTSMELDING(InntektPeriodeType.MÅNEDLIG),
     SIGRUN(InntektPeriodeType.ÅRLIG),
     SØKNAD(InntektPeriodeType.ÅRLIG),
-    TILSTØTENDE_YTELSE_DP_AAP(InntektPeriodeType.DAGLIG), // Meldekort
+	TILSTØTENDE_YTELSE_DP_AAP(InntektPeriodeType.DAGLIG), // Meldekort
     ANNEN_YTELSE(InntektPeriodeType.DAGLIG),
 	YTELSE_VEDTAK(InntektPeriodeType.DAGLIG); // Ytelsevedtak i infotrygd, fp-sak, k9-sak
 

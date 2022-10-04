@@ -17,20 +17,26 @@ import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
-@RuleDocumentation(FastsettSammenligningsgrunnlagForSN.ID)
-public class FastsettSammenligningsgrunnlagForSN extends LeafSpecification<BeregningsgrunnlagPeriode> {
+@RuleDocumentation(FastsettSammenligningsgrunnlagForAktivitetstatus.ID)
+public class FastsettSammenligningsgrunnlagForAktivitetstatus extends LeafSpecification<BeregningsgrunnlagPeriode> {
 
     static final String ID = "FP_BR 2.4";
-    static final String BESKRIVELSE = "Fastsett sammenligningsgrunnlag og beregn avvik for selvstendig næringsdrivende";
+    static final String BESKRIVELSE = "Fastsett sammenligningsgrunnlag og beregn avvik i henhold til § 8-35 tredje ledd";
 
-    public FastsettSammenligningsgrunnlagForSN() {
+	private final AktivitetStatus aktivitetStatus;
+
+    public FastsettSammenligningsgrunnlagForAktivitetstatus(AktivitetStatus aktivitetStatus) {
         super(ID, BESKRIVELSE);
+	    if (!AktivitetStatus.SN.equals(aktivitetStatus) && !AktivitetStatus.BA.equals(aktivitetStatus)) {
+		    throw new IllegalArgumentException("Kan ikke beregne avvik for aktivitetstatus " + aktivitetStatus);
+	    }
+		this.aktivitetStatus = aktivitetStatus;
     }
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        Periodeinntekt oppgittInntekt = grunnlag.getInntektsgrunnlag().getSistePeriodeinntektMedTypeSøknad()
-            .orElseThrow(() -> new IllegalStateException("Fant ikke oppgitt månedsinntekt ved varig endret inntekt"));
+        Periodeinntekt oppgittInntekt = FinnRapporterteInntekter.finnImplementasjonForStatus(aktivitetStatus).finnRapportertInntekt(grunnlag)
+		        .orElseThrow(() -> new IllegalStateException("Fant ikke oppgitt månedsinntekt ved varig endret inntekt"));
 
 	    // Setter et enkelt sammenligningsgrunnlag
         SammenligningsGrunnlag sammenligningsGrunnlag = opprettSammenligningsgrunnlag(grunnlag, oppgittInntekt);
@@ -39,7 +45,7 @@ public class FastsettSammenligningsgrunnlagForSN extends LeafSpecification<Bereg
 
 	    // Setter sammenligningsgrunnlag pr status
 	    var sgPrStatus = SammenligningsGrunnlag.builder()
-			    .medSammenligningstype(SammenligningGrunnlagType.SN)
+			    .medSammenligningstype(aktivitetStatus.erSelvstendigNæringsdrivende() ? SammenligningGrunnlagType.SN : SammenligningGrunnlagType.MIDLERTIDIG_INAKTIV)
 			    .medSammenligningsperiode(sammenligningsGrunnlag.getSammenligningsperiode())
 			    .medRapportertPrÅr(sammenligningsGrunnlag.getRapportertPrÅr())
 			    .medAvvikProsent(sammenligningsGrunnlag.getAvvikProsent())
@@ -52,7 +58,7 @@ public class FastsettSammenligningsgrunnlagForSN extends LeafSpecification<Bereg
     }
 
     private void beregnOgFastsettAvvik(BeregningsgrunnlagPeriode grunnlag, SammenligningsGrunnlag sammenligningsGrunnlag) {
-        BigDecimal pgiSnitt = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN).getGjennomsnittligPGI();
+        BigDecimal pgiSnitt = grunnlag.getBeregningsgrunnlagPrStatus(aktivitetStatus).getGjennomsnittligPGI();
         BigDecimal sammenligning = sammenligningsGrunnlag.getRapportertPrÅr();
         BigDecimal diff = pgiSnitt.subtract(sammenligning).abs();
 
@@ -90,7 +96,7 @@ public class FastsettSammenligningsgrunnlagForSN extends LeafSpecification<Bereg
         BeregningsgrunnlagPrStatus bgAAP = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.AAP);
         var bgDP = grunnlag.getBeregningsgrunnlagFraDagpenger();
 	    BeregningsgrunnlagPrStatus bgATFL = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
-        BeregningsgrunnlagPrStatus bgSN = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
+        BeregningsgrunnlagPrStatus bgForStatus = grunnlag.getBeregningsgrunnlagPrStatus(aktivitetStatus);
 
         String bruttoString = "brutto";
         if (bgATFL != null) {
@@ -105,7 +111,7 @@ public class FastsettSammenligningsgrunnlagForSN extends LeafSpecification<Bereg
             String status = "DP";
             resultater.put(bruttoString + status, bgDP.get().getBeregnetPrÅr());
         }
-        resultater.put("gjennomsnittligPGI", bgSN.getGjennomsnittligPGI());
+        resultater.put("gjennomsnittligPGI", bgForStatus.getGjennomsnittligPGI());
         resultater.put("inntektEtterVarigEndringPrÅr", oppgittInntekt.getInntekt());
         resultater.put("sammenligningsperiode", sammenligningsGrunnlag.getSammenligningsperiode());
         resultater.put("sammenligningsgrunnlagRapportertPrÅr", sammenligningsGrunnlag.getRapportertPrÅr());

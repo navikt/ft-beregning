@@ -13,7 +13,6 @@ public class Arbeidsforhold {
 	private String aktørId;
 	private ReferanseType referanseType;
 	private Periode ansettelsesPeriode;
-	private boolean harInntektsmelding;
 
 	private Arbeidsforhold() {
 	}
@@ -51,10 +50,6 @@ public class Arbeidsforhold {
 			return getAktørId();
 		}
 		return getOrgnr();
-	}
-
-	public boolean harInntektsmelding() {
-		return harInntektsmelding;
 	}
 
 	@Override
@@ -132,11 +127,6 @@ public class Arbeidsforhold {
 			return this;
 		}
 
-		public Builder medHarInntektsmelding(boolean harInntektsmelding) {
-			arbeidsforhold.harInntektsmelding = harInntektsmelding;
-			return this;
-		}
-
 		public Arbeidsforhold build() {
 			verifyForBuild();
 			return arbeidsforhold;
@@ -172,27 +162,10 @@ public class Arbeidsforhold {
 				.build();
 	}
 
-	public static Arbeidsforhold nyttArbeidsforholdHosVirksomhet(String orgnr, boolean harInntektsmelding) {
-		return Arbeidsforhold.builder()
-				.medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT)
-				.medOrgnr(orgnr)
-				.medHarInntektsmelding(harInntektsmelding)
-				.build();
-	}
-
 	public static Arbeidsforhold nyttArbeidsforholdHosVirksomhet(String orgnr) {
 		return Arbeidsforhold.builder()
 				.medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT)
 				.medOrgnr(orgnr)
-				.build();
-	}
-
-	public static Arbeidsforhold nyttArbeidsforholdHosVirksomhet(String orgnr, String arbeidsforholdId, boolean harInntektsmelding) {
-		return Arbeidsforhold.builder()
-				.medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT)
-				.medOrgnr(orgnr)
-				.medArbeidsforholdId(arbeidsforholdId)
-				.medHarInntektsmelding(harInntektsmelding)
 				.build();
 	}
 
@@ -201,15 +174,6 @@ public class Arbeidsforhold {
 				.medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT)
 				.medOrgnr(orgnr)
 				.medArbeidsforholdId(arbeidsforholdId)
-				.build();
-	}
-
-
-	public static Arbeidsforhold nyttArbeidsforholdHosPrivatperson(String aktørId, boolean harInntektsmelding) {
-		return Arbeidsforhold.builder()
-				.medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT)
-				.medAktørId(aktørId)
-				.medHarInntektsmelding(harInntektsmelding)
 				.build();
 	}
 

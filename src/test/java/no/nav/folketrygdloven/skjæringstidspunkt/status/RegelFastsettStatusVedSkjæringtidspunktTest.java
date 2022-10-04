@@ -21,7 +21,7 @@ import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 
 public class RegelFastsettStatusVedSkjæringtidspunktTest {
     private static final String ORGNR = "7654";
-    private static final Arbeidsforhold ARBEIDSFORHOLD =  Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR, false);
+    private static final Arbeidsforhold ARBEIDSFORHOLD =  Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR);
     private LocalDate skjæringstidspunktForBeregning;
     private AktivitetStatusModell regelmodell;
 

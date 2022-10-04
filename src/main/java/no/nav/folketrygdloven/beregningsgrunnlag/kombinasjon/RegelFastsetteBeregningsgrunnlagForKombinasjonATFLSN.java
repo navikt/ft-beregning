@@ -4,12 +4,14 @@ import no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker.RegelBeregningsgru
 import no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker.SjekkOmFørsteBeregningsgrunnlagsperiode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Beregnet;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningUtfallMerknad;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningUtfallÅrsak;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.IkkeBeregnet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.BeregnGjennomsnittligPGIForAktivitetstatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.BeregnOppjustertInntektForAktivitetstatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.FastsettBeregningsperiodeForAktivitetstatus;
-import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.FastsettSammenligningsgrunnlagForSN;
+import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.FastsettSammenligningsgrunnlagForAktivitetstatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.SjekkOmBeregninsgrunnlagErBesteberegnet;
 import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.SjekkOmBrukerErNyIArbeidslivet;
 import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.SjekkOmDifferanseStørreEnn25Prosent;
@@ -41,7 +43,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN implements Rul
         Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
 
         // FP_BR 2.15 Opprett regelmerknad dersom avvik > 25 %
-        Specification<BeregningsgrunnlagPeriode> opprettRegelmerknad = new IkkeBeregnet(SjekkOmDifferanseStørreEnn25Prosent.VARIG_ENDRING_OG_AVVIK_STØRRE_ENN_25_PROSENT);
+        Specification<BeregningsgrunnlagPeriode> opprettRegelmerknad = new IkkeBeregnet(new BeregningUtfallMerknad(BeregningUtfallÅrsak.VARIG_ENDRING_OG_AVVIK_STØRRE_ENN_25_PROSENT));
 
         // FP_BR 2.14 Avvik > 25 %?
         Specification<BeregningsgrunnlagPeriode> sjekkOmAvvikStørrenEnn25Prosent = rs.beregningHvisRegel(new SjekkOmDifferanseStørreEnn25Prosent(),
@@ -50,7 +52,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN implements Rul
         // FP_BR 2.4 Fastsett sammenligninsggrunnlag og beregn avvik
         Specification<BeregningsgrunnlagPeriode> fastsettSammenligningsgrunnlag = rs.beregningsRegel("FP_BR 2.4",
             "Fastsett sammenlignignsgrunnlag, beregn avvik og sjekk om avvik > 25%",
-           new FastsettSammenligningsgrunnlagForSN(), sjekkOmAvvikStørrenEnn25Prosent);
+           new FastsettSammenligningsgrunnlagForAktivitetstatus(AktivitetStatus.SN), sjekkOmAvvikStørrenEnn25Prosent);
 
         // Første beregningsgrunnlagsperiode? Sammenligninggrunnlag skal fastsettes og sjekkes mot bare om det er første periode
         Specification<BeregningsgrunnlagPeriode> sjekkOmFørstePeriode =
