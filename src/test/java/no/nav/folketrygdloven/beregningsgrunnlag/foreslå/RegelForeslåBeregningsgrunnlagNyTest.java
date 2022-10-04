@@ -353,6 +353,7 @@ public class RegelForeslåBeregningsgrunnlagNyTest {
 		assertThat(af.getBeregningsperiode()).isEqualTo(Periode.of(fom, tom));
 		assertThat(af.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(200000));
 		assertThat(beregningsgrunnlag.getSammenligningsGrunnlag()).isNotNull();
+		assertThat(beregningsgrunnlag.getSammenligningsgrunnlagPrStatus()).isNotEmpty();
 	}
 
 	@Test

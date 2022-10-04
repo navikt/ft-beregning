@@ -163,22 +163,6 @@ public class Inntektsgrunnlag {
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
 	}
 
-	public BigDecimal getSamletInntektISammenligningsperiodeFL(Periode periode) {
-		return getPeriodeinntektMedKilde(Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING)
-				.filter(Periodeinntekt::erFrilans)
-				.filter(pi -> periode.inneholder(pi.getFom()))
-				.map(Periodeinntekt::getInntekt)
-				.reduce(BigDecimal.ZERO, BigDecimal::add);
-	}
-
-	public BigDecimal getSamletInntektISammenligningsperiodeAT(Periode periode) {
-		return getPeriodeinntektMedKilde(Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING)
-				.filter(Periodeinntekt::erArbeidstaker)
-				.filter(pi -> periode.inneholder(pi.getFom()))
-				.map(Periodeinntekt::getInntekt)
-				.reduce(BigDecimal.ZERO, BigDecimal::add);
-	}
-
 	public List<Periodeinntekt> getPeriodeinntekter(Inntektskilde inntektskilde, BeregningsgrunnlagPrArbeidsforhold arbeidsforhold, LocalDate førDato, int måneder) {
 		if (arbeidsforhold.erFrilanser()) {
 			return getAlleFrilansinntekterForArbeidsforhold(inntektskilde, førDato, måneder, arbeidsforhold.getArbeidsforhold());
