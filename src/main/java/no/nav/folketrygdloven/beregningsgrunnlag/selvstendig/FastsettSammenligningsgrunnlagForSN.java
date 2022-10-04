@@ -43,7 +43,6 @@ public class FastsettSammenligningsgrunnlagForSN extends LeafSpecification<Bereg
 			    .medSammenligningsperiode(sammenligningsGrunnlag.getSammenligningsperiode())
 			    .medRapportertPrÅr(sammenligningsGrunnlag.getRapportertPrÅr())
 			    .medAvvikProsent(sammenligningsGrunnlag.getAvvikProsent())
-			    .medAvvikProsent(sammenligningsGrunnlag.getAvvikProsent())
 			    .build();
 	    Beregningsgrunnlag.builder(grunnlag.getBeregningsgrunnlag()).leggTilSammenligningsgrunnlagPrStatus(sgPrStatus).build();
 

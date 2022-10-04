@@ -20,6 +20,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedH
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Dekningsgrad;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.PeriodeÅrsak;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.SammenligningGrunnlagType;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.YtelsesSpesifiktGrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.omp.OmsorgspengerGrunnlag;
@@ -165,6 +166,10 @@ public class BeregningsgrunnlagPeriode {
 
 	public SammenligningsGrunnlag getSammenligningsGrunnlag() {
 		return beregningsgrunnlag.getSammenligningsGrunnlag();
+	}
+
+	public Optional<SammenligningsGrunnlag> getSammenligningsGrunnlagForType(SammenligningGrunnlagType type) {
+		return beregningsgrunnlag.getSammenligningsgrunnlagForStatus(type);
 	}
 
 	public Dekningsgrad getDekningsgrad() {

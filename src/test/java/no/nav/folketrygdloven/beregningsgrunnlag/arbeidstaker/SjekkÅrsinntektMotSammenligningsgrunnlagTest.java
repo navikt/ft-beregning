@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.SammenligningGrunnlagType;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag;
@@ -31,13 +32,21 @@ public class SjekkÅrsinntektMotSammenligningsgrunnlagTest {
         SammenligningsGrunnlag sg = SammenligningsGrunnlag.builder()
             .medSammenligningsperiode(null)
             .medRapportertPrÅr(BigDecimal.ZERO).build();
-        Beregningsgrunnlag.builder(grunnlag).medSammenligningsgrunnlag(sg);
+	    SammenligningsGrunnlag sgPrStatus = SammenligningsGrunnlag.builder()
+			    .medSammenligningsperiode(null)
+			    .medSammenligningstype(SammenligningGrunnlagType.AT_FL)
+			    .medRapportertPrÅr(BigDecimal.ZERO).build();
+	    Beregningsgrunnlag.builder(grunnlag).medSammenligningsgrunnlag(sg).leggTilSammenligningsgrunnlagPrStatus(sgPrStatus);
         BeregningsgrunnlagPeriode periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
         //Act
         Evaluation resultat = new SjekkÅrsinntektMotSammenligningsgrunnlag().evaluate(periode);
         //Assert
         assertThat(resultat.result()).isEqualTo(Resultat.JA);
         assertThat(grunnlag.getSammenligningsGrunnlag().getAvvikPromille()).isEqualTo(1000L);
+
+	    var sgPrStatusResultat = grunnlag.getSammenligningsgrunnlagForStatus(SammenligningGrunnlagType.AT_FL).orElseThrow();
+	    assertThat(sgPrStatusResultat.getAvvikPromille()).isEqualTo(1000L);
+
     }
 
     @Test
@@ -62,7 +71,11 @@ public class SjekkÅrsinntektMotSammenligningsgrunnlagTest {
         SammenligningsGrunnlag sg = SammenligningsGrunnlag.builder()
             .medSammenligningsperiode(null)
             .medRapportertPrÅr(BigDecimal.valueOf(100000)).build();
-        Beregningsgrunnlag.builder(grunnlag).medSammenligningsgrunnlag(sg);
+	    SammenligningsGrunnlag sgPrStatus = SammenligningsGrunnlag.builder()
+			    .medSammenligningsperiode(null)
+			    .medSammenligningstype(SammenligningGrunnlagType.AT_FL)
+			    .medRapportertPrÅr(BigDecimal.valueOf(100000)).build();
+	    Beregningsgrunnlag.builder(grunnlag).medSammenligningsgrunnlag(sg).leggTilSammenligningsgrunnlagPrStatus(sgPrStatus);
         BeregningsgrunnlagPrArbeidsforhold bgAT = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
         BeregningsgrunnlagPrArbeidsforhold.builder(bgAT).medBeregnetPrÅr(BigDecimal.valueOf(125000));
 
@@ -72,6 +85,11 @@ public class SjekkÅrsinntektMotSammenligningsgrunnlagTest {
         assertThat(resultat.result()).isEqualTo(Resultat.NEI);
         assertThat(grunnlag.getSammenligningsGrunnlag().getAvvikPromille()).isEqualTo(250);
         assertThat(grunnlag.getSammenligningsGrunnlag().getAvvikProsent()).isEqualByComparingTo(BigDecimal.valueOf(25));
+
+	    var sgPrStatusResultat = grunnlag.getSammenligningsgrunnlagForStatus(SammenligningGrunnlagType.AT_FL).orElseThrow();
+	    assertThat(sgPrStatusResultat.getAvvikPromille()).isEqualTo(250);
+	    assertThat(sgPrStatusResultat.getAvvikProsent()).isEqualByComparingTo(BigDecimal.valueOf(25));
+
     }
 
     @Test
@@ -83,7 +101,11 @@ public class SjekkÅrsinntektMotSammenligningsgrunnlagTest {
         SammenligningsGrunnlag sg = SammenligningsGrunnlag.builder()
             .medSammenligningsperiode(null)
             .medRapportertPrÅr(BigDecimal.valueOf(100000)).build();
-        Beregningsgrunnlag.builder(grunnlag).medSammenligningsgrunnlag(sg);
+	    SammenligningsGrunnlag sgPrStatus = SammenligningsGrunnlag.builder()
+			    .medSammenligningstype(SammenligningGrunnlagType.AT_FL)
+			    .medSammenligningsperiode(null)
+			    .medRapportertPrÅr(BigDecimal.valueOf(100000)).build();
+	    Beregningsgrunnlag.builder(grunnlag).medSammenligningsgrunnlag(sg).leggTilSammenligningsgrunnlagPrStatus(sgPrStatus);
         BeregningsgrunnlagPrArbeidsforhold bgAT = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
         BeregningsgrunnlagPrArbeidsforhold.builder(bgAT).medBeregnetPrÅr(BigDecimal.valueOf(125001));
 
@@ -93,6 +115,10 @@ public class SjekkÅrsinntektMotSammenligningsgrunnlagTest {
         assertThat(resultat.result()).isEqualTo(Resultat.JA);
         assertThat(grunnlag.getSammenligningsGrunnlag().getAvvikPromille()).isEqualTo(250);
         assertThat(grunnlag.getSammenligningsGrunnlag().getAvvikProsent()).isEqualByComparingTo(BigDecimal.valueOf(25.001));
+
+	    var sgPrStatusResultat = grunnlag.getSammenligningsgrunnlagForStatus(SammenligningGrunnlagType.AT_FL).orElseThrow();
+	    assertThat(sgPrStatusResultat.getAvvikPromille()).isEqualTo(250);
+	    assertThat(sgPrStatusResultat.getAvvikProsent()).isEqualByComparingTo(BigDecimal.valueOf(25.001));
     }
 
     @Test
@@ -104,7 +130,11 @@ public class SjekkÅrsinntektMotSammenligningsgrunnlagTest {
         SammenligningsGrunnlag sg = SammenligningsGrunnlag.builder()
             .medSammenligningsperiode(null)
             .medRapportertPrÅr(BigDecimal.valueOf(100000)).build();
-        Beregningsgrunnlag.builder(grunnlag).medSammenligningsgrunnlag(sg);
+	    SammenligningsGrunnlag sgPrStatus = SammenligningsGrunnlag.builder()
+			    .medSammenligningstype(SammenligningGrunnlagType.AT_FL)
+			    .medSammenligningsperiode(null)
+			    .medRapportertPrÅr(BigDecimal.valueOf(100000)).build();
+	    Beregningsgrunnlag.builder(grunnlag).medSammenligningsgrunnlag(sg).leggTilSammenligningsgrunnlagPrStatus(sgPrStatus);
         BeregningsgrunnlagPrArbeidsforhold bgAT = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
         BeregningsgrunnlagPrArbeidsforhold.builder(bgAT).medBeregnetPrÅr(BigDecimal.valueOf(125001));
 
@@ -113,6 +143,9 @@ public class SjekkÅrsinntektMotSammenligningsgrunnlagTest {
         //Assert
         assertThat(resultat.result()).isEqualTo(Resultat.JA);
         assertThat(grunnlag.getSammenligningsGrunnlag().getAvvikPromilleUtenAvrunding()).isEqualByComparingTo(BigDecimal.valueOf(250.010000000));
+
+	    var sgPrStatusResultat = grunnlag.getSammenligningsgrunnlagForStatus(SammenligningGrunnlagType.AT_FL).orElseThrow();
+	    assertThat(sgPrStatusResultat.getAvvikPromilleUtenAvrunding()).isEqualByComparingTo(BigDecimal.valueOf(250.010000000));
     }
 
 }
