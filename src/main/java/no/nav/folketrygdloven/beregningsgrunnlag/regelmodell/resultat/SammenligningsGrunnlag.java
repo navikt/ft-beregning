@@ -4,11 +4,13 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.SammenligningGrunnlagType;
 
 public class SammenligningsGrunnlag {
     private Periode sammenligningsperiode;
     private BigDecimal rapportertPrÅr;
     private BigDecimal avvikProsent = BigDecimal.ZERO;
+	private SammenligningGrunnlagType sammenligningstype;
 
     private SammenligningsGrunnlag() {
         //Tom konstruktør
@@ -38,7 +40,11 @@ public class SammenligningsGrunnlag {
         return avvikProsent;
     }
 
-    public void setAvvikProsent(BigDecimal avvikProsent) {
+	public SammenligningGrunnlagType getSammenligningstype() {
+		return sammenligningstype;
+	}
+
+	public void setAvvikProsent(BigDecimal avvikProsent) {
         this.avvikProsent = avvikProsent;
     }
 
@@ -72,6 +78,11 @@ public class SammenligningsGrunnlag {
             mal.avvikProsent = avvikPromilleNy.scaleByPowerOfTen(-1);
             return this;
         }
+
+	    public Builder medSammenligningstype(SammenligningGrunnlagType type) {
+		    mal.sammenligningstype = type;
+		    return this;
+	    }
 
         public Builder medAvvikProsent(BigDecimal avvikProsent) {
             mal.avvikProsent = avvikProsent;

@@ -5,9 +5,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.EnumMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -17,6 +15,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.Grunnbeløp;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.MidlertidigInaktivType;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.SammenligningGrunnlagType;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.YtelsesSpesifiktGrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.fp.ForeldrepengerGrunnlag;
@@ -30,7 +29,7 @@ public class Beregningsgrunnlag {
     @JsonManagedReference
     private final List<BeregningsgrunnlagPeriode> beregningsgrunnlagPerioder = new ArrayList<>();
     private SammenligningsGrunnlag sammenligningsGrunnlag;
-    private EnumMap<AktivitetStatus, SammenligningsGrunnlag> sammenligningsGrunnlagPrStatus = new EnumMap<>(AktivitetStatus.class);
+	private List<SammenligningsGrunnlag> sammenligningsgrunnlagPrStatus = new ArrayList<>();
     private BigDecimal grunnbeløp;
     /**
      * Ved G-regulering skal gammel G-verdi brukes til å vurdere vilkåret (https://jira.adeo.no/browse/TFP-3599 / https://confluence.adeo.no/display/TVF/G-regulering)
@@ -68,7 +67,17 @@ public class Beregningsgrunnlag {
         return sammenligningsGrunnlag;
     }
 
-    public List<BeregningsgrunnlagPeriode> getBeregningsgrunnlagPerioder() {
+	public List<SammenligningsGrunnlag> getSammenligningsgrunnlagPrStatus() {
+		return sammenligningsgrunnlagPrStatus;
+	}
+
+	public Optional<SammenligningsGrunnlag> getSammenligningsgrunnlagForStatus(SammenligningGrunnlagType type) {
+		return sammenligningsgrunnlagPrStatus.stream()
+				.filter(sg -> sg.getSammenligningstype() != null && sg.getSammenligningstype().equals(type))
+				.findFirst();
+	}
+
+	public List<BeregningsgrunnlagPeriode> getBeregningsgrunnlagPerioder() {
         return beregningsgrunnlagPerioder.stream()
 		        .sorted(Comparator.comparing(bg -> bg.getBeregningsgrunnlagPeriode().getFom())).toList();
     }
@@ -155,14 +164,6 @@ public class Beregningsgrunnlag {
         return konstanter.getAntallGMilitærHarKravPå();
     }
 
-    public Map<AktivitetStatus, SammenligningsGrunnlag> getSammenligningsGrunnlagPrAktivitetstatus() {
-        return sammenligningsGrunnlagPrStatus;
-    }
-
-    public SammenligningsGrunnlag getSammenligningsGrunnlagPrAktivitetstatus(AktivitetStatus aktivitetStatus) {
-        return sammenligningsGrunnlagPrStatus.get(aktivitetStatus);
-    }
-
 	public MidlertidigInaktivType getMidlertidigInaktivType() {
 		return midlertidigInaktivType;
 	}
@@ -207,7 +208,26 @@ public class Beregningsgrunnlag {
             return this;
         }
 
-        public Builder medBeregningsgrunnlagPeriode(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
+	    public Builder leggTilSammenligningsgrunnlagPrStatus(SammenligningsGrunnlag sammenligningsGrunnlag) {
+		    validerSammenligningstype(sammenligningsGrunnlag);
+		    beregningsgrunnlagMal.sammenligningsgrunnlagPrStatus.add(sammenligningsGrunnlag);
+		    return this;
+	    }
+
+	    private void validerSammenligningstype(SammenligningsGrunnlag sammenligningsGrunnlag) {
+			if (sammenligningsGrunnlag.getSammenligningstype() == null) {
+				throw new IllegalStateException("FEIL: Prøver å legge til sammenligningsgrunnlag pr type uten å ha definert type");
+			}
+		    var finnesFraFør = beregningsgrunnlagMal
+				    .getSammenligningsgrunnlagForStatus(sammenligningsGrunnlag.getSammenligningstype())
+				    .isPresent();
+			if (finnesFraFør) {
+				throw new IllegalStateException("FEIL: Prøver å legge sammenligningsgrunnlag for type "
+						+ sammenligningsGrunnlag.getSammenligningstype() + " men et grunnlag med denne typen finnes allerede!");
+			}
+	    }
+
+	    public Builder medBeregningsgrunnlagPeriode(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
             beregningsgrunnlagMal.beregningsgrunnlagPerioder.add(beregningsgrunnlagPeriode);
             beregningsgrunnlagPeriode.setBeregningsgrunnlag(beregningsgrunnlagMal);
             return this;
@@ -269,11 +289,6 @@ public class Beregningsgrunnlag {
 
         public Builder medAntallGMinstekravVilkår(BigDecimal antallGMinstekravVilkår) {
             beregningsgrunnlagMal.konstanter.setAntallGMinstekravVilkår(antallGMinstekravVilkår);
-            return this;
-        }
-
-        public Builder medSammenligningsgrunnlagPrStatus(AktivitetStatus aktivitetStatus, SammenligningsGrunnlag sammenligningsGrunnlag) {
-            beregningsgrunnlagMal.sammenligningsGrunnlagPrStatus.put(aktivitetStatus, sammenligningsGrunnlag);
             return this;
         }
 

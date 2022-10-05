@@ -4,8 +4,10 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.SammenligningGrunnlagType;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SammenligningsGrunnlag;
@@ -28,12 +30,14 @@ class SjekkÅrsinntektMotSammenligningsgrunnlag extends LeafSpecification<Beregn
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
         SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlag();
-        if (sg == null || sg.getRapportertPrÅr() == null) {
+	    var sgPrStatus = grunnlag.getSammenligningsGrunnlagForType(SammenligningGrunnlagType.AT_FL);
+	    if (sg == null || sg.getRapportertPrÅr() == null) {
            throw new IllegalStateException("Utviklerfeil: Skal alltid ha sammenligningsgrunnlag her.");
         }
 
         if (sg.getRapportertPrÅr().compareTo(BigDecimal.ZERO) <= 0) {
             sg.setAvvikProsent(BigDecimal.valueOf(100)); //Setter avviksprosenten til 100 når ingen inntekt (for ikke å dele på 0), saksbehandler avgjør deretter
+	        sgPrStatus.ifPresent(sgPr -> sgPr.setAvvikProsent(BigDecimal.valueOf(100)));
             SingleEvaluation resultat = ja();
             regelsporing(grunnlag, sg, resultat);
             return resultat;
@@ -46,8 +50,9 @@ class SjekkÅrsinntektMotSammenligningsgrunnlag extends LeafSpecification<Beregn
         BigDecimal diff = rapporertInntekt.subtract(sg.getRapportertPrÅr()).abs();
         BigDecimal avvikProsent = diff.divide(sg.getRapportertPrÅr(), 10, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100));
         sg.setAvvikProsent(avvikProsent);
+	    sgPrStatus.ifPresent(sgPr -> sgPr.setAvvikProsent(avvikProsent));
 
-        SingleEvaluation resultat = avvikProsent.compareTo(grunnlag.getAvviksgrenseProsent()) > 0 ? ja() : nei();
+	    SingleEvaluation resultat = avvikProsent.compareTo(grunnlag.getAvviksgrenseProsent()) > 0 ? ja() : nei();
         regelsporing(grunnlag, sg, resultat);
         return resultat;
     }
