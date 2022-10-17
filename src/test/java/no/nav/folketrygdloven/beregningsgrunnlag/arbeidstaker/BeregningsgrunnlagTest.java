@@ -263,7 +263,7 @@ public class BeregningsgrunnlagTest {
     }
 
     @Test
-    public void skalGiRegelmerknadVedAvvikVedLønnsøkning() { // NOSONAR
+    public void skalGiRegelmerknadVedAvvikVedLønnsøkning() {
         // Arrange
         BigDecimal månedsinntekt = BigDecimal.valueOf(25000);
         BigDecimal refusjonskrav = månedsinntekt;
@@ -357,7 +357,6 @@ public class BeregningsgrunnlagTest {
         Arbeidsforhold arbeidsforhold2 = Arbeidsforhold.frilansArbeidsforhold();
         kopierOgLeggTilMånedsinntekter(beregningsgrunnlag.getInntektsgrunnlag(), skjæringstidspunkt, månedsinntekt2, Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold2, 12);
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-//        leggTilArbeidsforholdUtenInntektsmelding(grunnlag, skjæringstidspunkt, månedsinntekt2, refusjonskrav, arbeidsforhold2);
 
         // Act
         Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
