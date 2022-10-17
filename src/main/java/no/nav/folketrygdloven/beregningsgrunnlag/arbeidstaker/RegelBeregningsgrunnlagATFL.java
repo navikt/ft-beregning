@@ -65,9 +65,8 @@ public class RegelBeregningsgrunnlagATFL implements RuleService<Beregningsgrunnl
 
 
         // Har bruker kombinasjonsstatus?
-
         Specification<BeregningsgrunnlagPeriode> sjekkHarBrukerKombinasjonsstatus =
-                rs.beregningHvisRegel(new SjekkHarBrukerKombinasjonsstatus(), new Beregnet(), sjekkOmFørstePeriode);
+                rs.beregningHvisRegel(new SkalBrukerKunAvviksvurderesSomNæringsdrivende(), new Beregnet(), sjekkOmFørstePeriode);
 
         // FP_BR 14.3 14.5 14.6 28.4 Beregnet pr år = sum alle inntekter
 

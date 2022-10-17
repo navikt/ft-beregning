@@ -102,6 +102,10 @@ public class Beregningsgrunnlag {
         return grunnbeløp.multiply(BigDecimal.valueOf(getAntallGMilitærHarKravPå()));
     }
 
+	public Optional<LocalDate> getFomDatoForIndividuellSammenligningATFL_SN() {
+		return konstanter.getFomDatoForIndividuellSammenligningATFL_SN();
+	}
+
     public AktivitetStatusMedHjemmel getAktivitetStatus(AktivitetStatus aktivitetStatus) {
         return aktivitetStatuser.stream().filter(as -> as.inneholder(aktivitetStatus)).findAny()
                 .orElseThrow(() -> new IllegalStateException("Beregningsgrunnlaget mangler regel for status " + aktivitetStatus.getBeskrivelse()));
@@ -281,6 +285,11 @@ public class Beregningsgrunnlag {
             beregningsgrunnlagMal.konstanter.setYtelsedagerIPrÅr(ytelsesdagerIEtÅr);
             return this;
         }
+
+	    public Builder medFomDatoForIndividuellSammenligningATFL_SN(LocalDate fomDatoForIndividuellSammenligningATFL_SN) {
+		    beregningsgrunnlagMal.konstanter.setFomDatoForIndividuellSammenligningATFL_SN(fomDatoForIndividuellSammenligningATFL_SN);
+		    return this;
+	    }
 
         public Builder medAvviksgrenseProsent(BigDecimal avviksgrenseProsent) {
             beregningsgrunnlagMal.konstanter.setAvviksgrenseProsent(avviksgrenseProsent);

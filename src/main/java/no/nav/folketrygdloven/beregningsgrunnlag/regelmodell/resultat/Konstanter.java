@@ -1,8 +1,10 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.Grunnbeløp;
 
@@ -20,6 +22,12 @@ public class Konstanter {
 	private BigDecimal ytelsedagerIPrÅr = BigDecimal.valueOf(260);
     private BigDecimal avviksgrenseProsent = BigDecimal.valueOf(25);
     private List<Grunnbeløp> grunnbeløpSatser = new ArrayList<>();
+
+	/**
+	 * https://jira.adeo.no/browse/TFP-5171
+	 * Bør gjøres obligatorisk når tatt i bruk i kalkulus
+	 */
+	private LocalDate fomDatoForIndividuellSammenligningATFL_SN;
 
     void setAntallGMilitærHarKravPå(int antallGMilitærHarKravPå) {
         this.antallGMilitærHarKravPå = antallGMilitærHarKravPå;
@@ -41,7 +49,15 @@ public class Konstanter {
         this.ytelsedagerIPrÅr = ytelsedagerIPrÅr;
     }
 
-    void setAvviksgrenseProsent(BigDecimal avviksgrenseProsent) {
+	public Optional<LocalDate> getFomDatoForIndividuellSammenligningATFL_SN() {
+		return Optional.ofNullable(fomDatoForIndividuellSammenligningATFL_SN);
+	}
+
+	void setFomDatoForIndividuellSammenligningATFL_SN(LocalDate fomDatoForIndividuellSammenligningATFL_SN) {
+		this.fomDatoForIndividuellSammenligningATFL_SN = fomDatoForIndividuellSammenligningATFL_SN;
+	}
+
+	void setAvviksgrenseProsent(BigDecimal avviksgrenseProsent) {
         this.avviksgrenseProsent = avviksgrenseProsent;
     }
 
