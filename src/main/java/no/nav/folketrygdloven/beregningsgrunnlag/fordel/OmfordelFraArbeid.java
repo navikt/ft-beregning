@@ -41,7 +41,7 @@ class OmfordelFraArbeid extends OmfordelFraATFL {
     protected Optional<FordelAndelModell> finnAktivitetMedOmfordelbarNaturalYtelse(FordelPeriodeModell beregningsgrunnlagPeriode) {
         return beregningsgrunnlagPeriode.getAlleAndelerForStatus(AktivitetStatus.AT)
             .stream()
-            .filter(a -> a.getGradertNaturalytelseBortfaltPrÅr().orElse(BigDecimal.ZERO).compareTo(BigDecimal.ZERO) > 0)
+            .filter(a -> a.getNaturalytelseBortfaltPrÅr().orElse(BigDecimal.ZERO).compareTo(BigDecimal.ZERO) > 0)
             .filter(this::harRefusjonskravLavereEnnBg)
             .findFirst();
     }
@@ -62,14 +62,14 @@ class OmfordelFraArbeid extends OmfordelFraATFL {
     }
 
     private boolean harRefusjonskravLavereEnnBg(FordelAndelModell arbeidsforhold) {
-        BigDecimal refusjonskrav = arbeidsforhold.getGradertRefusjonPrÅr().orElse(BigDecimal.ZERO);
-        return refusjonskrav.compareTo(arbeidsforhold.getGradertBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO)) < 0;
+        BigDecimal refusjonskrav = arbeidsforhold.getGjeldendeRefusjonPrÅr().orElse(BigDecimal.ZERO);
+        return refusjonskrav.compareTo(arbeidsforhold.getBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO)) < 0;
     }
 
     private boolean harBgSomKanFlyttes(FordelAndelModell beregningsgrunnlagPrArbeidsforhold) {
-        return beregningsgrunnlagPrArbeidsforhold.getGradertBruttoPrÅr().orElse(BigDecimal.ZERO)
-            .subtract(beregningsgrunnlagPrArbeidsforhold.getGradertNaturalytelseTilkommetPrÅr().orElse(BigDecimal.ZERO)).compareTo(BigDecimal.ZERO) > 0
-            && (beregningsgrunnlagPrArbeidsforhold.getGradertFordeltPrÅr().isEmpty() || beregningsgrunnlagPrArbeidsforhold.getGradertFordeltPrÅr().orElseThrow().compareTo(BigDecimal.ZERO) > 0);
+        return beregningsgrunnlagPrArbeidsforhold.getBruttoPrÅr().orElse(BigDecimal.ZERO)
+            .subtract(beregningsgrunnlagPrArbeidsforhold.getNaturalytelseTilkommetPrÅr().orElse(BigDecimal.ZERO)).compareTo(BigDecimal.ZERO) > 0
+            && (beregningsgrunnlagPrArbeidsforhold.getFordeltPrÅr().isEmpty() || beregningsgrunnlagPrArbeidsforhold.getFordeltPrÅr().orElseThrow().compareTo(BigDecimal.ZERO) > 0);
     }
 
 }

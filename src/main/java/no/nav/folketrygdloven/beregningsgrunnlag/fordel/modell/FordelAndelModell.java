@@ -1,7 +1,6 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -12,7 +11,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Ar
 public class FordelAndelModell {
 	private AktivitetStatus aktivitetStatus;
 	private Boolean erSøktYtelseFor = Boolean.TRUE;
-	private BigDecimal utbetalingsgrad = BigDecimal.valueOf(100);
 	private BigDecimal foreslåttPrÅr;
 	private BigDecimal fordeltPrÅr;
 	private Inntektskategori inntektskategori;
@@ -37,10 +35,6 @@ public class FordelAndelModell {
 		return erSøktYtelseFor;
 	}
 
-	public BigDecimal getUtbetalingsgrad() {
-		return utbetalingsgrad;
-	}
-
 	public Optional<BigDecimal> getBruttoPrÅr() {
 		if (getFordeltPrÅr().isPresent()) {
 			return getFordeltPrÅr();
@@ -48,17 +42,8 @@ public class FordelAndelModell {
 		return getForeslåttPrÅr();
 	}
 
-	public Optional<BigDecimal> getGradertBruttoPrÅr() {
-		return getBruttoPrÅr().map(b -> b.multiply(utbetalingsgrad).divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP));
-	}
-
-
 	public Optional<BigDecimal> getFordeltPrÅr() {
 		return Optional.ofNullable(fordeltPrÅr);
-	}
-
-	public Optional<BigDecimal> getGradertFordeltPrÅr() {
-		return getFordeltPrÅr().map(b -> b.multiply(utbetalingsgrad).divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP));
 	}
 
 	public Inntektskategori getInntektskategori() {
@@ -69,28 +54,13 @@ public class FordelAndelModell {
 		return Optional.ofNullable(naturalytelseBortfaltPrÅr);
 	}
 
-	public Optional<BigDecimal> getGradertNaturalytelseBortfaltPrÅr() {
-		return getNaturalytelseBortfaltPrÅr().map(b -> b.multiply(utbetalingsgrad).divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP));
-	}
-
 	public Optional<BigDecimal> getNaturalytelseTilkommetPrÅr() {
 		return Optional.ofNullable(naturalytelseTilkommetPrÅr);
 	}
 
-	public Optional<BigDecimal> getGradertNaturalytelseTilkommetPrÅr() {
-		return getNaturalytelseTilkommetPrÅr().map(b -> b.multiply(utbetalingsgrad).divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP));
-	}
-
-
 	public Optional<BigDecimal> getGjeldendeRefusjonPrÅr() {
 		return Optional.ofNullable(gjeldendeRefusjonPrÅr);
 	}
-
-	public Optional<BigDecimal> getGradertRefusjonPrÅr() {
-		return getGjeldendeRefusjonPrÅr().map(b -> b.multiply(utbetalingsgrad).divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP));
-	}
-
-
 
 	public Long getAndelNr() {
 		return andelNr;
@@ -116,10 +86,6 @@ public class FordelAndelModell {
 		return Optional.ofNullable(foreslåttPrÅr);
 	}
 
-	public Optional<BigDecimal> getGradertForeslåttPrÅr() {
-		return getForeslåttPrÅr().map(b -> b.multiply(utbetalingsgrad).divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP));
-	}
-
 	public static Builder builder() {
 		return new Builder();
 	}
@@ -136,10 +102,6 @@ public class FordelAndelModell {
 		var bortfalt = getNaturalytelseBortfaltPrÅr().orElse(BigDecimal.ZERO);
 		var tilkommet = getNaturalytelseTilkommetPrÅr().orElse(BigDecimal.ZERO);
 		return Optional.of(brutto.get().add(bortfalt).subtract(tilkommet));
-	}
-
-	public Optional<BigDecimal> getGradertBruttoInkludertNaturalytelsePrÅr() {
-		return getBruttoInkludertNaturalytelsePrÅr().map(b -> b.multiply(utbetalingsgrad).divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP));
 	}
 
 	public Optional<String> getArbeidsgiverId() {
@@ -256,10 +218,6 @@ public class FordelAndelModell {
 
 		public Builder erSøktYtelseFor(boolean erSøktYtelseFor) {
 			mal.erSøktYtelseFor = erSøktYtelseFor;
-			return this;
-		}
-		public Builder medUtbetalingsgrad(BigDecimal utbetalingsgrad) {
-			mal.utbetalingsgrad = utbetalingsgrad;
 			return this;
 		}
 

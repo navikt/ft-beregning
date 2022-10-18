@@ -48,8 +48,8 @@ class FastsettNyFordeling implements RuleService<FordelModell> {
     }
 
     private boolean refusjonskravOverstigerBg(FordelAndelModell arbeidsforhold) {
-        BigDecimal refusjonskrav = arbeidsforhold.getGradertRefusjonPrÅr().orElse(BigDecimal.ZERO);
-        return refusjonskrav.compareTo(arbeidsforhold.getGradertBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO)) > 0;
+        BigDecimal refusjonskrav = arbeidsforhold.getGjeldendeRefusjonPrÅr().orElse(BigDecimal.ZERO);
+        return refusjonskrav.compareTo(arbeidsforhold.getBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO)) > 0;
     }
 
 }

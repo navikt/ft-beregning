@@ -40,7 +40,7 @@ class FinnMålbeløpForFordelingenPrAndel extends LeafSpecification<FordelModell
 	private BigDecimal finnTotalBrutto(FordelPeriodeModell input) {
 		// Hvis foreslått ikke er satt betyr det tilkommet arbeidsforhold, de bidrar ikke til brutto og setter derfor 0 for disse
 		return input.getAndeler().stream()
-				.map(andel -> andel.getGradertForeslåttPrÅr().orElse(BigDecimal.ZERO))
+				.map(andel -> andel.getForeslåttPrÅr().orElse(BigDecimal.ZERO))
 				.reduce(BigDecimal::add)
 				.orElseThrow();
 	}

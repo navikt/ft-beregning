@@ -4,7 +4,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelAndelModell
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelModell;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 class OmfordelBGForArbeidsforhold extends OmfordelForArbeidsforhold {
 
@@ -14,25 +13,20 @@ class OmfordelBGForArbeidsforhold extends OmfordelForArbeidsforhold {
 
     @Override
     protected void flyttFraAktivitet(FordelAndelModell arbeidMedFlyttbartGrunnlag, BigDecimal beløpSomSkalFlyttes) {
-        BigDecimal brutto = arbeidMedFlyttbartGrunnlag.getGradertBruttoPrÅr().orElse(BigDecimal.ZERO);
-	    FordelAndelModell.oppdater(arbeidMedFlyttbartGrunnlag).medFordeltPrÅr(skalerOpp(brutto.subtract(beløpSomSkalFlyttes), arbeidMedFlyttbartGrunnlag.getUtbetalingsgrad()));
+        BigDecimal brutto = arbeidMedFlyttbartGrunnlag.getBruttoPrÅr().orElse(BigDecimal.ZERO);
+	    FordelAndelModell.oppdater(arbeidMedFlyttbartGrunnlag).medFordeltPrÅr(brutto.subtract(beløpSomSkalFlyttes));
     }
 
-	private static BigDecimal skalerOpp(BigDecimal nyttFordeltBeløp, BigDecimal utbetalingsgrad) {
-		return nyttFordeltBeløp.multiply(BigDecimal.valueOf(100).divide(utbetalingsgrad, 10, RoundingMode.HALF_UP));
-	}
-
-
-	@Override
+    @Override
     protected BigDecimal finnFlyttbartBeløp(FordelAndelModell arbeidMedOmfordelbartBg) {
         BigDecimal bgForArbeidFratrektNaturalytelse = finnBgFratrektTilkommetNaturalytelse(arbeidMedOmfordelbartBg);
-        BigDecimal refusjonskrav = arbeidMedOmfordelbartBg.getGradertRefusjonPrÅr().orElse(BigDecimal.ZERO);
+        BigDecimal refusjonskrav = arbeidMedOmfordelbartBg.getGjeldendeRefusjonPrÅr().orElse(BigDecimal.ZERO);
         return bgForArbeidFratrektNaturalytelse.subtract(refusjonskrav);
     }
 
     private BigDecimal finnBgFratrektTilkommetNaturalytelse(FordelAndelModell arbeidMedOmfordelbartBg) {
-        return arbeidMedOmfordelbartBg.getGradertBruttoPrÅr().orElse(BigDecimal.ZERO)
-            .subtract(arbeidMedOmfordelbartBg.getGradertNaturalytelseTilkommetPrÅr().orElse(BigDecimal.ZERO));
+        return arbeidMedOmfordelbartBg.getBruttoPrÅr().orElse(BigDecimal.ZERO)
+            .subtract(arbeidMedOmfordelbartBg.getNaturalytelseTilkommetPrÅr().orElse(BigDecimal.ZERO));
     }
 
 }
