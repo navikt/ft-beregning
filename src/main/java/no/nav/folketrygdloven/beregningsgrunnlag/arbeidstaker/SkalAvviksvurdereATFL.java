@@ -6,13 +6,13 @@ import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
-@RuleDocumentation(SkalBrukerKunAvviksvurderesSomNæringsdrivende.ID)
-class SkalBrukerKunAvviksvurderesSomNæringsdrivende extends LeafSpecification<BeregningsgrunnlagPeriode> {
+@RuleDocumentation(SkalAvviksvurdereATFL.ID)
+class SkalAvviksvurdereATFL extends LeafSpecification<BeregningsgrunnlagPeriode> {
 
     static final String ID = "FP_BR 14.6";
-    static final String BESKRIVELSE = "Har bruker kombinasjonsstatus med SN?";
+    static final String BESKRIVELSE = "Skal ATFL avviksvurderes?";
 
-    SkalBrukerKunAvviksvurderesSomNæringsdrivende() {
+    SkalAvviksvurdereATFL() {
         super(ID, BESKRIVELSE);
     }
 
@@ -22,8 +22,8 @@ class SkalBrukerKunAvviksvurderesSomNæringsdrivende extends LeafSpecification<B
 	    var harStatusSN = grunnlag.getBeregningsgrunnlagPrStatus().stream()
 			    .anyMatch(bgps -> AktivitetStatus.SN.equals(bgps.getAktivitetStatus()));
 	    if (fomdatoIndividuellSammenligning.isEmpty()) {
-			return harStatusSN ? ja() : nei();
+			return harStatusSN ? nei() : ja();
 		}
-		return grunnlag.getSkjæringstidspunkt().isBefore(fomdatoIndividuellSammenligning.get()) && harStatusSN ? ja() : nei();
+		return grunnlag.getSkjæringstidspunkt().isBefore(fomdatoIndividuellSammenligning.get()) && harStatusSN ? nei() : ja();
     }
 }
