@@ -26,7 +26,7 @@ public class SkalKjøreFortsettForeslå extends LeafSpecification<Beregningsgrun
 				.anyMatch(AktivitetStatus::erMilitær);
 		var beregnesSomNæringsdrivende = grunnlag.getBeregningsgrunnlag().getAktivitetStatuser().stream()
 				.map(AktivitetStatusMedHjemmel::getAktivitetStatus)
-				.anyMatch(AktivitetStatus::erSelvstendigNæringsdrivende);
+				.anyMatch(a -> a.erSelvstendigNæringsdrivende() || a.equals(AktivitetStatus.MIDL_INAKTIV));
 		return beregnesSomNæringsdrivende || beregnesSomMilitær
 				? ja()
 				: nei();

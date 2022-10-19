@@ -1,94 +1,68 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.inaktiv;
 
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker.SjekkOmFørsteBeregningsgrunnlagsperiode;
+import no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker.RegelBeregnBruttoPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningUtfallMerknad;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningUtfallÅrsak;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.IkkeBeregnet;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Beregnet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
-import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.BeregnBruttoBeregningsgrunnlagFraPGI;
-import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.BeregnGjennomsnittligPGIForAktivitetstatus;
-import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.BeregnOppjustertInntektForAktivitetstatus;
-import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.FastsettBeregnetPrÅr;
-import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.FastsettBeregningsperiodeForAktivitetstatus;
-import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.FastsettSammenligningsgrunnlagForAktivitetstatus;
-import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.SjekkOmDifferanseStørreEnn25Prosent;
-import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.SjekkOmManueltFastsattBeregningsgrunnlagForAktivitetstatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
 import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
-import no.nav.fpsak.nare.doc.RuleDocumentation;
-import no.nav.fpsak.nare.evaluation.Evaluation;
+import no.nav.fpsak.nare.ServiceArgument;
 import no.nav.fpsak.nare.specification.Specification;
-
 
 /**
  * Beregner bruker som er midlertidig utenfor inntektsgivende arbeid etter §8-47
- * <p>
- * Normal beregning er snittinntekt fra de tre siste ferdiglignede år.
- * Dersom det er mottatt inntektsmelding eller registert inntekt i a-ordningen på skjæringstidspunktet regnes det avvik mot denne inntekten i henhold til § 8-35 tredje ledd.
+ *
+ * Normal beregning er snittinntekt fra de tre siste ferdiglignede år med mindre annen informasjon er tilgjengelig.
+ *
+ * Om det er mottatt inntektsmelding og bruker har et registrert arbeidsforhold på skjæringstidspunktet (8-47 b),
+ * skal inntekt fra inntektsmeldingen brukes i fastsettelse av beregningsgrunnlaget.
+ *
+ * Beregning ved kombinasjon av inntekt fra tre siste ferdiglignede år og informasjon fra inntektsmelding er ikke støttet enda.
+ *
+ * Bruker skal også kunne oppgi inntekt/varige endringer selv i søknad, men dette er enda ikke støttet.
+ *
  */
-@RuleDocumentation(value = RegelBeregningsgrunnlagInaktiv.ID)
 public class RegelBeregningsgrunnlagInaktiv implements RuleService<BeregningsgrunnlagPeriode> {
 
-	static final String ID = "BR_8_47";
+    public static final String ID = "FP_BR_14-15-27-28";
+    private final BeregningsgrunnlagPeriode regelmodell;
 
-	@Override
-	public Evaluation evaluer(BeregningsgrunnlagPeriode regelmodell) {
-		return getSpecification().evaluate(regelmodell);
-	}
+    public RegelBeregningsgrunnlagInaktiv(BeregningsgrunnlagPeriode regelmodell) {
+        super();
+        this.regelmodell = regelmodell;
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public Specification<BeregningsgrunnlagPeriode> getSpecification() {
-		Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
+    @SuppressWarnings("unchecked")
+    @Override
+    public Specification<BeregningsgrunnlagPeriode> getSpecification() {
+        Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
 
-//      FP_BR 2.7 Fastsette beregnet pr år
-		Specification<BeregningsgrunnlagPeriode> fastsettBeregnetPrÅr = new FastsettBeregnetPrÅr(AktivitetStatus.BA);
+        List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = getArbeidsforhold();
+		var speclist = arbeidsforhold.stream()
+			    .map(a -> new RegelBeregnBruttoPrArbeidsforhold(a).getSpecification()
+					    .medEvaluationProperty(new ServiceArgument("arbeidsforhold", a.getArbeidsforhold())))
+			    .toList();
+        Specification<BeregningsgrunnlagPeriode> beregningsgrunnlagATFL = arbeidsforhold.isEmpty() ? new Beregnet() :
+		        rs.beregningsRegel("FP_BR 14.X", "Fastsett beregningsgrunnlag pr arbeidsforhold", speclist, new Beregnet());
 
-//      FP_BR 2.6 Opprette regelmerknad for å fastsette brutto_pr_aar manuelt
-		Specification<BeregningsgrunnlagPeriode> opprettRegelmerknad =
-				rs.beregningsRegel("BR_8_47_4", "Opprett regelmerknad", fastsettBeregnetPrÅr,
-						new IkkeBeregnet(new BeregningUtfallMerknad(BeregningUtfallÅrsak.VARIG_ENDRING_OG_AVVIK_STØRRE_ENN_25_PROSENT_MIDLERTIDIG_INAKTIV)));
+        Specification<BeregningsgrunnlagPeriode> sjekkOmMottattInntektsmelding =
+                rs.beregningHvisRegel(new SjekkHarArbeidsforholdMedIM(),
+		                beregningsgrunnlagATFL,
+		                new RegelBeregningsgrunnlagInaktivUtenIM().getSpecification());
 
-//      FP_BR 2.5 Er avvik > 25 %
-		Specification<BeregningsgrunnlagPeriode> sjekkOmDifferanseStørreEnn25Prosent =
-				rs.beregningHvisRegel(new SjekkOmDifferanseStørreEnn25Prosent(), opprettRegelmerknad, fastsettBeregnetPrÅr);
+	    Specification<BeregningsgrunnlagPeriode> settHjemmel =
+			    rs.beregningsRegel(SettHjemmelInaktiv.ID, SettHjemmelInaktiv.BESKRIVELSE, new SettHjemmelInaktiv(), sjekkOmMottattInntektsmelding);
 
-//      FP_BR 2.4 Fastsett sammenligningsgrunnlag og beregn avvik
-		Specification<BeregningsgrunnlagPeriode> beregnAvvik =
-				rs.beregningsRegel("BR_8_47_3", "Fastsett sammenligningsgrunnlag og beregn avvik",
-						new FastsettSammenligningsgrunnlagForAktivitetstatus(AktivitetStatus.BA), sjekkOmDifferanseStørreEnn25Prosent);
+        return settHjemmel;
+    }
 
-		// Første beregningsgrunnlagsperiode? Sammenligninggrunnlag skal fastsettes og sjekkes mot bare om det er første periode
-		Specification<BeregningsgrunnlagPeriode> sjekkOmFørstePeriode =
-				rs.beregningHvisRegel(new SjekkOmFørsteBeregningsgrunnlagsperiode(), beregnAvvik, fastsettBeregnetPrÅr);
-
-//      FP_BR 2.3/2.3.3 Har bruker oppgitt varig endring eller nyoppstartet virksomhet?
-		Specification<BeregningsgrunnlagPeriode> sjekkOmInnrapportertInntektVedSkjæringstidspunkt =
-				rs.beregningHvisRegel(new SjekkOmBrukerHarRapporterteInntekterVedSkjæringstidspunkt(), sjekkOmFørstePeriode, fastsettBeregnetPrÅr);
-
-		//      Beregn beregningsgrunnlag
-		Specification<BeregningsgrunnlagPeriode> beregnBrutto =
-				rs.beregningsRegel("BR_8_47_2", "Beregn brutto beregningsgrunnlag brukers andel",
-						new BeregnBruttoBeregningsgrunnlagFraPGI(AktivitetStatus.BA), sjekkOmInnrapportertInntektVedSkjæringstidspunkt);
-
-//      Har saksbehandler fastsatt beregningsgrunnlaget manuelt?
-		Specification<BeregningsgrunnlagPeriode> sjekkOmManueltFastsattInntekt =
-				rs.beregningHvisRegel(new SjekkOmManueltFastsattBeregningsgrunnlagForAktivitetstatus(AktivitetStatus.BA), sjekkOmInnrapportertInntektVedSkjæringstidspunkt,
-						beregnBrutto);
-
-//      Beregn gjennomsnittlig PGI
-//      Beregn oppjustert inntekt for årene i beregningsperioden
-//      Fastsett beregningsperiode
-		Specification<BeregningsgrunnlagPeriode> foreslåBeregningsgrunnlagForBrukersAndel =
-				rs.beregningsRegel("BR_8_47_1", "Foreslå beregningsgrunnlag for brukers andel",
-						Arrays.asList(new FastsettBeregningsperiodeForAktivitetstatus(AktivitetStatus.BA),
-								new SettHjemmelInaktiv(),
-								new BeregnOppjustertInntektForAktivitetstatus(AktivitetStatus.BA),
-								new BeregnGjennomsnittligPGIForAktivitetstatus(AktivitetStatus.BA)), sjekkOmManueltFastsattInntekt);
-
-		return foreslåBeregningsgrunnlagForBrukersAndel;
+	private List<BeregningsgrunnlagPrArbeidsforhold> getArbeidsforhold() {
+		BeregningsgrunnlagPrStatus atflStatus = regelmodell.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+		return atflStatus == null ? Collections.emptyList() : atflStatus.getArbeidsforhold();
 	}
 }

@@ -3,7 +3,7 @@ package no.nav.folketrygdloven.beregningsgrunnlag.fortsettForeslå;
 import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.foreslå.RegelForeslåBeregningsgrunnlagTilNull;
-import no.nav.folketrygdloven.beregningsgrunnlag.inaktiv.RegelBeregningsgrunnlagInaktiv;
+import no.nav.folketrygdloven.beregningsgrunnlag.inaktiv.RegelBeregningsgrunnlagInaktivMedAvviksvurdering;
 import no.nav.folketrygdloven.beregningsgrunnlag.militær.RegelForeslåBeregningsgrunnlagMilitær;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel;
@@ -54,13 +54,14 @@ public class RegelFortsettForeslåBeregningsgrunnlag implements RuleService<Bere
 			return new IkkeBeregnet(new BeregningUtfallMerknad(BeregningUtfallÅrsak.UDEFINERT));
 		}
 		var sporingsproperty = new ServiceArgument("aktivitetStatus", aktivitetStatus);
-		if (!aktivitetStatus.erSelvstendigNæringsdrivende() && !aktivitetStatus.erMilitær()) {
+		var midlertidigInaktivAvviksvurderingEnabled = regelmodell.getBeregningsgrunnlag().getToggles().isEnabled("AVVIKSVURDER_MIDL_INAKTIV");
+		if (!aktivitetStatus.erSelvstendigNæringsdrivende() && !aktivitetStatus.erMilitær() && (!aktivitetStatus.equals(AktivitetStatus.MIDL_INAKTIV) || !midlertidigInaktivAvviksvurderingEnabled)) {
 			return new Beregnet();
 		}
 		return switch (aktivitetStatus) {
 			case SN, ATFL_SN -> new RegelBeregningsgrunnlagSN().getSpecification().medEvaluationProperty(sporingsproperty);
 			case MS -> new RegelForeslåBeregningsgrunnlagMilitær().getSpecification().medEvaluationProperty(sporingsproperty);
-			case MIDL_INAKTIV -> new RegelBeregningsgrunnlagInaktiv().getSpecification().medEvaluationProperty(sporingsproperty);
+			case MIDL_INAKTIV -> new RegelBeregningsgrunnlagInaktivMedAvviksvurdering().getSpecification().medEvaluationProperty(sporingsproperty);
 			default -> new RegelForeslåBeregningsgrunnlagTilNull(aktivitetStatus).getSpecification().medEvaluationProperty(sporingsproperty);
 		};
 

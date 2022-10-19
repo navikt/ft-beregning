@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
@@ -26,7 +28,12 @@ public class FinnRapporterteInntekterForInaktiv implements FinnRapporterteInntek
 		}
 
 		BigDecimal årsinntektFraInntektsmelding = finnÅrsinntektFraInntektsmeldinger(inntektsmeldinger);
-		BigDecimal årsinntektFraAOrdningen = finnÅrsinntektFraAOrdningen(grunnlag, innrapporterteInntekter);
+		var arbeidsgivereMedInntektsmelding = inntektsmeldinger.stream()
+				.map(Periodeinntekt::getArbeidsgiver)
+				.filter(Optional::isPresent)
+				.map(Optional::get)
+				.collect(Collectors.toSet());
+		BigDecimal årsinntektFraAOrdningen = finnÅrsinntektFraAOrdningen(grunnlag, innrapporterteInntekter, arbeidsgivereMedInntektsmelding);
 
 		return Optional.of(Periodeinntekt.builder()
 				.medPeriode(Periode.of(grunnlag.getSkjæringstidspunkt(), grunnlag.getSkjæringstidspunkt()))
@@ -44,30 +51,31 @@ public class FinnRapporterteInntekterForInaktiv implements FinnRapporterteInntek
 	}
 
 	private List<Periodeinntekt> finnInntektsmeldinger(BeregningsgrunnlagPeriode grunnlag) {
-		var inntektsmeldinger = grunnlag.getInntektsgrunnlag().getPeriodeinntekter()
+		return grunnlag.getInntektsgrunnlag().getPeriodeinntekter()
 				.stream().filter(p -> p.getInntektskilde().equals(Inntektskilde.INNTEKTSMELDING))
 				.filter(im -> im.getArbeidsgiver().isPresent() && im.getArbeidsgiver().get().getAnsettelsesPeriode().inneholder(grunnlag.getSkjæringstidspunkt().minusDays(1)))
 				.toList();
-		return inntektsmeldinger;
 	}
 
 	private BigDecimal finnÅrsinntektFraInntektsmeldinger(List<Periodeinntekt> inntektsmeldinger) {
-		var årsinntektFraInntektsmelding = inntektsmeldinger.stream()
+		return inntektsmeldinger.stream()
 				.map(im -> im.getInntekt().multiply(im.getInntektPeriodeType().getAntallPrÅr()))
 				.reduce(BigDecimal::add)
 				.orElse(BigDecimal.ZERO);
-		return årsinntektFraInntektsmelding;
 	}
 
-	private BigDecimal finnÅrsinntektFraAOrdningen(BeregningsgrunnlagPeriode grunnlag, List<Periodeinntekt> innrapporterteInntekter) {
-		return innrapporterteInntekter.stream().map(i -> {
+	private BigDecimal finnÅrsinntektFraAOrdningen(BeregningsgrunnlagPeriode grunnlag,
+	                                               List<Periodeinntekt> innrapporterteInntekter,
+	                                               Set<Arbeidsforhold> arbeidsgivereMedInntektsmelding) {
+		return innrapporterteInntekter.stream()
+				.filter(i -> i.getArbeidsgiver().isPresent())
+				.filter(i -> arbeidsgivereMedInntektsmelding.stream().noneMatch(a -> a.getArbeidsgiverId().equals(i.getArbeidsgiver().get().getArbeidsgiverId())))
+				.map(i -> {
 					var inntekt = i.getInntekt();
-					var arbeidsgiver = i.getArbeidsgiver();
-					if (arbeidsgiver.isPresent()) {
-						int virkedagerIPeriode = finnVirkedagerMedArbeidForInntektsperiode(i.getPeriode(), arbeidsgiver.get());
-						if (virkedagerIPeriode > 0) {
-							return inntekt.divide(BigDecimal.valueOf(virkedagerIPeriode), 10, RoundingMode.HALF_UP).multiply(grunnlag.getBeregningsgrunnlag().getYtelsedagerPrÅr());
-						}
+					var arbeidsgiver = i.getArbeidsgiver().orElseThrow();
+					int virkedagerIPeriode = finnVirkedagerMedArbeidForInntektsperiode(i.getPeriode(), arbeidsgiver);
+					if (virkedagerIPeriode > 0) {
+						return inntekt.divide(BigDecimal.valueOf(virkedagerIPeriode), 10, RoundingMode.HALF_UP).multiply(grunnlag.getBeregningsgrunnlag().getYtelsedagerPrÅr());
 					}
 					return BigDecimal.ZERO;
 				}).reduce(BigDecimal::add)

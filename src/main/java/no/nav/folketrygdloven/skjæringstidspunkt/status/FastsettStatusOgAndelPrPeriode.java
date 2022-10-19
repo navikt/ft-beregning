@@ -49,13 +49,31 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
 			regelmodell.leggTilAktivitetStatus(AktivitetStatus.KUN_YTELSE);
 			leggTilBrukersAndel(regelmodell);
 		} else {
-			if (finnMidlertidigInaktivType(regelmodell) != null) {
+			var midlertidigInaktivType = finnMidlertidigInaktivType(regelmodell);
+			var skalAvviksvurdereMidlertidigInaktiv = regelmodell.getToggles().isEnabled("AVVIKSVURDER_MIDL_INAKTIV");
+			if (midlertidigInaktivType != null && (skalAvviksvurdereMidlertidigInaktiv || midlertidigInaktivType.equals(MidlertidigInaktivType.A))) {
 				regelmodell.leggTilAktivitetStatus(AktivitetStatus.MIDL_INAKTIV);
 				leggTilBrukersAndel(regelmodell);
+			} else if (midlertidigInaktivType != null && midlertidigInaktivType.equals(MidlertidigInaktivType.B)) {
+				regelmodell.leggTilAktivitetStatus(AktivitetStatus.MIDL_INAKTIV);
+				if (harAlleInntektsmelding(aktivePerioderVedStp)) {
+					// Her veit vi at alle aktiviteter ved STP er arbeidsforhold med IM
+					// Siden inntekt då fastsettes fra IM oppretter vi andeler for alle arbeidsforhold
+					// Status pr andel er AT, men status på toppnivå er inaktiv
+					aktivePerioderVedStp.stream()
+							.map(ap -> new BeregningsgrunnlagPrStatus(AktivitetStatus.ATFL, ap.getArbeidsforhold()))
+							.forEach(regelmodell::leggTilBeregningsgrunnlagPrStatus);
+				} else {
+					leggTilBrukersAndel(regelmodell);
+				}
 			} else {
 				opprettStatusForAktiviteter(regelmodell, aktivePerioderVedStp);
 			}
 		}
+	}
+
+	private boolean harAlleInntektsmelding(List<AktivPeriode> aktivePerioderVedStp) {
+		return !aktivePerioderVedStp.isEmpty() && aktivePerioderVedStp.stream().allMatch(a -> a.getArbeidsforhold() != null && a.getArbeidsforhold().harInntektsmelding());
 	}
 
 	private MidlertidigInaktivType finnMidlertidigInaktivType(AktivitetStatusModell regelmodell) {

@@ -62,6 +62,7 @@ class RegelBeregningsgrunnlagInaktivTest {
 				.medGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2017))
 				.medUregulertGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2017))
 				.medGrunnbeløpSatser(GRUNNBELØPLISTE)
+				.leggTilToggle("AVVIKSVURDER_MIDL_INAKTIV", true)
 				.build();
 
 		// Act
@@ -110,6 +111,7 @@ class RegelBeregningsgrunnlagInaktivTest {
 				.medGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2017))
 				.medUregulertGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2017))
 				.medGrunnbeløpSatser(GRUNNBELØPLISTE)
+				.leggTilToggle("AVVIKSVURDER_MIDL_INAKTIV", true)
 				.build();
 
 		// Act
@@ -162,6 +164,7 @@ class RegelBeregningsgrunnlagInaktivTest {
 				.medGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2017))
 				.medUregulertGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2017))
 				.medGrunnbeløpSatser(GRUNNBELØPLISTE)
+				.leggTilToggle("AVVIKSVURDER_MIDL_INAKTIV", true)
 				.build();
 
 		// Act
@@ -213,6 +216,7 @@ class RegelBeregningsgrunnlagInaktivTest {
 				.medGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2017))
 				.medUregulertGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2017))
 				.medGrunnbeløpSatser(GRUNNBELØPLISTE)
+				.leggTilToggle("AVVIKSVURDER_MIDL_INAKTIV", true)
 				.build();
 
 		// Act
@@ -266,6 +270,7 @@ class RegelBeregningsgrunnlagInaktivTest {
 				.medGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2017))
 				.medUregulertGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2017))
 				.medGrunnbeløpSatser(GRUNNBELØPLISTE)
+				.leggTilToggle("AVVIKSVURDER_MIDL_INAKTIV", true)
 				.build();
 
 		// Act
@@ -320,6 +325,7 @@ class RegelBeregningsgrunnlagInaktivTest {
 				.medGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2017))
 				.medUregulertGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2017))
 				.medGrunnbeløpSatser(GRUNNBELØPLISTE)
+				.leggTilToggle("AVVIKSVURDER_MIDL_INAKTIV", true)
 				.build();
 
 		// Act
@@ -339,7 +345,7 @@ class RegelBeregningsgrunnlagInaktivTest {
 	}
 
 	private Evaluation kjørRegel(BeregningsgrunnlagPeriode periode) {
-		return new RegelBeregningsgrunnlagInaktiv().getSpecification().evaluate(periode);
+		return new RegelBeregningsgrunnlagInaktivMedAvviksvurdering().getSpecification().evaluate(periode);
 	}
 
 }

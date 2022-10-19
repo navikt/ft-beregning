@@ -81,10 +81,20 @@ public class AktivPeriode {
         periode = Periode.of(fom, tom);
     }
 
+    public static AktivPeriode forArbeidstakerHosVirksomhet(Periode periode, String orgnr, String arbeidsforholdId, boolean harInntektsmelding) {
+        Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr, arbeidsforholdId, harInntektsmelding);
+        return new AktivPeriode(Aktivitet.ARBEIDSTAKERINNTEKT, periode, arbeidsforhold);
+    }
+
 	public static AktivPeriode forArbeidstakerHosVirksomhet(Periode periode, String orgnr, String arbeidsforholdId) {
 		Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr, arbeidsforholdId);
 		return new AktivPeriode(Aktivitet.ARBEIDSTAKERINNTEKT, periode, arbeidsforhold);
 	}
+
+	public static AktivPeriode forArbeidstakerHosPrivatperson(Periode periode, String aktørId, boolean harInntektsmelding) {
+        Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosPrivatperson(aktørId, harInntektsmelding);
+        return new AktivPeriode(Aktivitet.ARBEIDSTAKERINNTEKT, periode, arbeidsforhold);
+    }
 
 	public static AktivPeriode forArbeidstakerHosPrivatperson(Periode periode, String aktørId) {
 		Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosPrivatperson(aktørId);

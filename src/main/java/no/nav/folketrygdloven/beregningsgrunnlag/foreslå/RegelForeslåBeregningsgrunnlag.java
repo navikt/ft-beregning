@@ -1,6 +1,7 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.foreslå;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker.RegelBeregningsgrunnlagATFL;
+import no.nav.folketrygdloven.beregningsgrunnlag.inaktiv.RegelBeregningsgrunnlagInaktiv;
 import no.nav.folketrygdloven.beregningsgrunnlag.kombinasjon.RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN;
 import no.nav.folketrygdloven.beregningsgrunnlag.militær.RegelForeslåBeregningsgrunnlagMilitær;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
@@ -22,7 +23,7 @@ import no.nav.fpsak.nare.specification.Specification;
 
 public class RegelForeslåBeregningsgrunnlag implements RuleService<BeregningsgrunnlagPeriode> {
 
-	public static final String ID = "BG-FORESLÅ";
+    public static final String ID = "BG-FORESLÅ";
 
 	private BeregningsgrunnlagPeriode regelmodell;
 
@@ -36,8 +37,8 @@ public class RegelForeslåBeregningsgrunnlag implements RuleService<Beregningsgr
 	}
 
 	@SuppressWarnings("unchecked")
-	@Override
-	public Specification<BeregningsgrunnlagPeriode> getSpecification() {
+    @Override
+    public Specification<BeregningsgrunnlagPeriode> getSpecification() {
 		Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
 		var speclist = regelmodell.getAktivitetStatuser().stream()
 				.map(AktivitetStatusMedHjemmel::getAktivitetStatus)
@@ -48,7 +49,7 @@ public class RegelForeslåBeregningsgrunnlag implements RuleService<Beregningsgr
 
 		// Fastsett alle BG per status
 		return foreslåBeregningsgrunnlag;
-	}
+    }
 
 	private Specification<BeregningsgrunnlagPeriode> velgSpecification(AktivitetStatus aktivitetStatus) {
 		if (regelmodell.getBeregningsgrunnlagPrStatus().isEmpty()) {
@@ -65,6 +66,7 @@ public class RegelForeslåBeregningsgrunnlag implements RuleService<Beregningsgr
 			case ATFL_SN -> new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(regelmodell).getSpecification().medEvaluationProperty(sporingsproperty);
 			case KUN_YTELSE -> new RegelForeslåBeregningsgrunnlagTY(regelmodell).getSpecification().medEvaluationProperty(sporingsproperty);
 			case MS -> new RegelForeslåBeregningsgrunnlagMilitær().getSpecification().medEvaluationProperty(sporingsproperty);
+			case MIDL_INAKTIV -> new RegelBeregningsgrunnlagInaktiv(regelmodell).getSpecification().medEvaluationProperty(sporingsproperty);
 			default -> new RegelForeslåBeregningsgrunnlagTilNull(aktivitetStatus).getSpecification().medEvaluationProperty(sporingsproperty);
 		};
 	}
