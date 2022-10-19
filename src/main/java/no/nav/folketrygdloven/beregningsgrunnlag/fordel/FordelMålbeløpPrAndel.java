@@ -110,6 +110,9 @@ class FordelMålbeløpPrAndel extends LeafSpecification<FordelModell> {
 	}
 
 	private BigDecimal skalerOpp(BigDecimal nyttFordeltBeløp, BigDecimal utbetalingsgrad) {
+		if (nyttFordeltBeløp.compareTo(BigDecimal.ZERO) == 0) {
+			return BigDecimal.ZERO;
+		}
 		return nyttFordeltBeløp.multiply(BigDecimal.valueOf(100).divide(utbetalingsgrad, 10, RoundingMode.HALF_UP));
 	}
 

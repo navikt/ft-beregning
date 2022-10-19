@@ -69,8 +69,8 @@ public class BeregningsgrunnlagFlerePerioderTest {
             .build();
 
         // Act
-        RegelForeslåBeregningsgrunnlag regel1 = new RegelForeslåBeregningsgrunnlag(førstePeriode);
-        RegelForeslåBeregningsgrunnlag regel2 = new RegelForeslåBeregningsgrunnlag(andrePeriode);
+	    RegelForeslåBeregningsgrunnlag regel1 = new RegelForeslåBeregningsgrunnlag(førstePeriode);
+	    RegelForeslåBeregningsgrunnlag regel2 = new RegelForeslåBeregningsgrunnlag(andrePeriode);
         Evaluation evaluation1 = regel1.evaluer(førstePeriode);
         Evaluation evaluation2 = regel2.evaluer(andrePeriode);
         // Assert
@@ -131,9 +131,9 @@ public class BeregningsgrunnlagFlerePerioderTest {
             .build();
 
         // Act
-        RegelForeslåBeregningsgrunnlag regel1 = new RegelForeslåBeregningsgrunnlag(periode1);
-        RegelForeslåBeregningsgrunnlag regel2 = new RegelForeslåBeregningsgrunnlag(periode2);
-        RegelForeslåBeregningsgrunnlag regel3 = new RegelForeslåBeregningsgrunnlag(periode3);
+	    RegelForeslåBeregningsgrunnlag regel1 = new RegelForeslåBeregningsgrunnlag(periode1);
+	    RegelForeslåBeregningsgrunnlag regel2 = new RegelForeslåBeregningsgrunnlag(periode2);
+	    RegelForeslåBeregningsgrunnlag regel3 = new RegelForeslåBeregningsgrunnlag(periode3);
         Evaluation evaluation1 = regel1.evaluer(periode1);
         Evaluation evaluation2 = regel2.evaluer(periode2);
         Evaluation evaluation3 = regel3.evaluer(periode3);
