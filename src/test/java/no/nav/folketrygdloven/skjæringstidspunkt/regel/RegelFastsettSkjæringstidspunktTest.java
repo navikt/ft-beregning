@@ -31,11 +31,11 @@ public class RegelFastsettSkjæringstidspunktTest {
     public void skalFastsetteSisteAktivitetsdag() {
         // Arrange
         LocalDate sisteAktivitetsdag = skjæringstidspunktForOpptjening.minusWeeks(1);
-        AktivPeriode aktivPeriode = AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(skjæringstidspunktForOpptjening.minusMonths(5), sisteAktivitetsdag), ARBEIDSFORHOLD, null, false);
+        AktivPeriode aktivPeriode = AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(skjæringstidspunktForOpptjening.minusMonths(5), sisteAktivitetsdag), ARBEIDSFORHOLD, null);
         regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode);
-        aktivPeriode = AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(skjæringstidspunktForOpptjening.minusMonths(6), sisteAktivitetsdag.plusDays(10)), ARBEIDSFORHOLD, null, false);
+        aktivPeriode = AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(skjæringstidspunktForOpptjening.minusMonths(6), sisteAktivitetsdag.plusDays(10)), ARBEIDSFORHOLD, null);
         regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode);
-        aktivPeriode = AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(skjæringstidspunktForOpptjening.minusMonths(7), sisteAktivitetsdag.minusDays(10)), ARBEIDSFORHOLD, null, false);
+        aktivPeriode = AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(skjæringstidspunktForOpptjening.minusMonths(7), sisteAktivitetsdag.minusDays(10)), ARBEIDSFORHOLD, null);
         regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode);
         // Act
         LocalDate sisteDag = regelmodell.sisteAktivitetsdato();
@@ -48,7 +48,7 @@ public class RegelFastsettSkjæringstidspunktTest {
     public void skalBeregneSkjæringstidspunktLikOpptjening() {
         // Arrange
         LocalDate sisteAktivitetsdag = skjæringstidspunktForOpptjening.minusDays(1);
-        AktivPeriode aktivPeriode = AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(skjæringstidspunktForOpptjening.minusMonths(5), sisteAktivitetsdag), ARBEIDSFORHOLD, null, false);
+        AktivPeriode aktivPeriode = AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(skjæringstidspunktForOpptjening.minusMonths(5), sisteAktivitetsdag), ARBEIDSFORHOLD, null);
         regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode);
 
         // Act
@@ -63,7 +63,7 @@ public class RegelFastsettSkjæringstidspunktTest {
     @Test
     public void skalBeregneSkjæringstidspunktLikOpptjeningForVedvarendeAktivitet() {
         // Arrange
-        AktivPeriode aktivPeriode = AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(skjæringstidspunktForOpptjening.minusMonths(5), null), ARBEIDSFORHOLD, null, false);
+        AktivPeriode aktivPeriode = AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(skjæringstidspunktForOpptjening.minusMonths(5), null), ARBEIDSFORHOLD, null);
         regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode);
 
         // Act
@@ -79,7 +79,7 @@ public class RegelFastsettSkjæringstidspunktTest {
     public void skalBeregneSkjæringstidspunktLikDagenEtterAktivitet() {
         // Arrange
         LocalDate sisteAktivitetsdag = LocalDate.of(2017, Month.OCTOBER, 14);
-        AktivPeriode aktivPeriode = AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(skjæringstidspunktForOpptjening.minusMonths(5), sisteAktivitetsdag), ARBEIDSFORHOLD, null, false);
+        AktivPeriode aktivPeriode = AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(skjæringstidspunktForOpptjening.minusMonths(5), sisteAktivitetsdag), ARBEIDSFORHOLD, null);
         regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode);
 
         // Act
@@ -95,7 +95,7 @@ public class RegelFastsettSkjæringstidspunktTest {
     public void skalFlytteSkjæringstidspunktTilDagenEtterAktivitetFørMilitær() {
         // Arrange
         LocalDate sisteAktivitetsdag = skjæringstidspunktForOpptjening.minusMonths(1);
-        AktivPeriode aktivPeriode = AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(skjæringstidspunktForOpptjening.minusMonths(5), sisteAktivitetsdag), ARBEIDSFORHOLD, null, false);
+        AktivPeriode aktivPeriode = AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(skjæringstidspunktForOpptjening.minusMonths(5), sisteAktivitetsdag), ARBEIDSFORHOLD, null);
         regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode);
         aktivPeriode = AktivPeriode.forAndre(Aktivitet.MILITÆR_ELLER_SIVILTJENESTE, Periode.of(skjæringstidspunktForOpptjening.minusMonths(1), skjæringstidspunktForOpptjening));
         regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode);
@@ -119,7 +119,7 @@ public class RegelFastsettSkjæringstidspunktTest {
     public void skalIkkeFlytteSkjæringstidspunktNårMilitærMedAnnenAktivitetPåStpForOpptjening() {
         // Arrange
         LocalDate sisteArbeidsdag = skjæringstidspunktForOpptjening.minusWeeks(1);
-        AktivPeriode aktivPeriode = AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(skjæringstidspunktForOpptjening.minusMonths(5), sisteArbeidsdag), ARBEIDSFORHOLD, null, false);
+        AktivPeriode aktivPeriode = AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(skjæringstidspunktForOpptjening.minusMonths(5), sisteArbeidsdag), ARBEIDSFORHOLD, null);
         regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode);
         aktivPeriode = AktivPeriode.forAndre(Aktivitet.MILITÆR_ELLER_SIVILTJENESTE, Periode.of(skjæringstidspunktForOpptjening.minusWeeks(8), sisteArbeidsdag));
         regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode);

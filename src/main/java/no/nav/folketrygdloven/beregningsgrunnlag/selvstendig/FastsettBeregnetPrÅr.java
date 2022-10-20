@@ -16,13 +16,16 @@ public class FastsettBeregnetPrÅr extends LeafSpecification<BeregningsgrunnlagP
     static final String ID = "FP_BR 2.7";
     private static final String BESKRIVELSE = "Fastsett beregnet pr år";
 
-    public FastsettBeregnetPrÅr() {
+	private AktivitetStatus aktivitetStatus;
+
+    public FastsettBeregnetPrÅr(AktivitetStatus aktivitetStatus) {
         super(ID, BESKRIVELSE);
+		this.aktivitetStatus = aktivitetStatus;
     }
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        BeregningsgrunnlagPrStatus bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
+        BeregningsgrunnlagPrStatus bgps = grunnlag.getBeregningsgrunnlagPrStatus(aktivitetStatus);
         Map<String, Object> resultater = new HashMap<>();
         resultater.put("skjæringstidspunkt", grunnlag.getSkjæringstidspunkt());
         resultater.put("grunnbeløp", grunnlag.getBeregningsgrunnlag().verdiAvG(grunnlag.getSkjæringstidspunkt()));

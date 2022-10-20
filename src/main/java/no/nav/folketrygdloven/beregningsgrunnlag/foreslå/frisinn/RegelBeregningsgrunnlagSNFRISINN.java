@@ -1,5 +1,6 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.foreslå.frisinn;
 
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.FastsettBeregnetPrÅr;
 import no.nav.fpsak.nare.RuleService;
@@ -25,7 +26,7 @@ public class RegelBeregningsgrunnlagSNFRISINN implements RuleService<Beregningsg
 
         Specification<BeregningsgrunnlagPeriode> beregnBruttoSN =
             rs.beregningsRegel(BeregnBruttoBeregningsgrunnlagSNFRISINN.ID, "Beregn brutto beregningsgrunnlag selvstendig næringsdrivende",
-                new BeregnBruttoBeregningsgrunnlagSNFRISINN(), new FastsettBeregnetPrÅr());
+                new BeregnBruttoBeregningsgrunnlagSNFRISINN(), new FastsettBeregnetPrÅr(AktivitetStatus.SN));
 
 
         Specification<BeregningsgrunnlagPeriode> foreslåBeregningsgrunnlagForSelvstendigNæringsdrivende =
