@@ -1,11 +1,20 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class FeatureToggles {
 
-	private final List<Toggle> toggles = new ArrayList<>();
+	private Set<Toggle> toggles = new HashSet<>();
+
+	public FeatureToggles() {
+	}
+
+	public FeatureToggles(FeatureToggles kopi) {
+		this.toggles = kopi.toggles.stream().map(Toggle::new).collect(Collectors.toSet());
+	}
 
 	public void leggTilToggle(Toggle toggle) {
 		toggles.add(toggle);

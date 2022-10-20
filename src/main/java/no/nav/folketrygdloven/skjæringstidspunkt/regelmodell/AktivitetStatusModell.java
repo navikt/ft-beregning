@@ -34,6 +34,7 @@ public class AktivitetStatusModell {
 		this.aktivePerioder = kopi.aktivePerioder;
 		this.aktivitetStatuser = kopi.aktivitetStatuser;
 		this.beregningsgrunnlagPrStatusListe = kopi.beregningsgrunnlagPrStatusListe;
+		this.toggles = new FeatureToggles(kopi.toggles);
 	}
 
 	public LocalDate getBeregningstidspunkt() {
