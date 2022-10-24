@@ -49,9 +49,9 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
 			regelmodell.leggTilAktivitetStatus(AktivitetStatus.KUN_YTELSE);
 			leggTilBrukersAndel(regelmodell);
 		} else {
-			MidlertidigInaktivType midlertidigInaktivType = finnMidlertidigInaktivType(regelmodell);
-
-			if (midlertidigInaktivType != null && midlertidigInaktivType.equals(MidlertidigInaktivType.A)) {
+			var midlertidigInaktivType = finnMidlertidigInaktivType(regelmodell);
+			var skalAvviksvurdereMidlertidigInaktiv = regelmodell.getToggles().isEnabled("AVVIKSVURDER_MIDL_INAKTIV");
+			if (midlertidigInaktivType != null && (skalAvviksvurdereMidlertidigInaktiv || midlertidigInaktivType.equals(MidlertidigInaktivType.A))) {
 				regelmodell.leggTilAktivitetStatus(AktivitetStatus.MIDL_INAKTIV);
 				leggTilBrukersAndel(regelmodell);
 			} else if (midlertidigInaktivType != null && midlertidigInaktivType.equals(MidlertidigInaktivType.B)) {

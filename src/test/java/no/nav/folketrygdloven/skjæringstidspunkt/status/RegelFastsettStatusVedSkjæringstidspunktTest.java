@@ -23,7 +23,7 @@ class RegelFastsettStatusVedSkjæringstidspunktTest {
         regelModell.setSkjæringstidspunktForBeregning(STP_BEREGNING);
         regelModell.leggTilEllerOppdaterAktivPeriode(AktivPeriode.forArbeidstakerHosVirksomhet(
             Periode.of(STP_BEREGNING.minusMonths(12), STP_BEREGNING.minusDays(1)),
-            "12356794", null, false));
+            "12356794", null));
         kjørRegel(regelModell);
 
         assertThat(regelModell.getBeregningsgrunnlagPrStatusListe().size()).isEqualTo(1);
@@ -36,7 +36,7 @@ class RegelFastsettStatusVedSkjæringstidspunktTest {
         regelModell.setSkjæringstidspunktForBeregning(STP_BEREGNING);
         regelModell.leggTilEllerOppdaterAktivPeriode(AktivPeriode.forArbeidstakerHosVirksomhet(
             Periode.of(STP_BEREGNING.minusMonths(12), STP_BEREGNING),
-            "12356794", null, false));
+            "12356794", null));
         kjørRegel(regelModell);
 
         assertThat(regelModell.getBeregningsgrunnlagPrStatusListe().size()).isEqualTo(1);

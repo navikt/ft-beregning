@@ -106,7 +106,7 @@ class FastsettStatusOgAndelPrPeriodeFRISINNTest {
         inntektsgrunnlag.leggTilPeriodeinntekt(lagInntektForFL(Periode.of(STP.minusMonths(12), STP.minusMonths(11))));
         regelmodell.setInntektsgrunnlag(inntektsgrunnlag);
         regelmodell.leggTilEllerOppdaterAktivPeriode(AktivPeriode.forAndre(Aktivitet.NÆRINGSINNTEKT, Periode.of(STP.minusMonths(36), STP.plusMonths(12))));
-        regelmodell.leggTilEllerOppdaterAktivPeriode(AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(STP, STP.plusMonths(12)), "999999", null, false));
+        regelmodell.leggTilEllerOppdaterAktivPeriode(AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(STP, STP.plusMonths(12)), "999999", null));
 
         // Act
         List<BeregningsgrunnlagPrStatus> statusListe = kjørRegel(regelmodell);
@@ -128,7 +128,7 @@ class FastsettStatusOgAndelPrPeriodeFRISINNTest {
         inntektsgrunnlag.leggTilPeriodeinntekt(lagInntektForFL(Periode.of(STP.minusMonths(12), STP.minusMonths(11))));
         regelmodell.setInntektsgrunnlag(inntektsgrunnlag);
         regelmodell.leggTilEllerOppdaterAktivPeriode(AktivPeriode.forAndre(Aktivitet.NÆRINGSINNTEKT, Periode.of(STP.minusMonths(36), STP.plusMonths(12))));
-        regelmodell.leggTilEllerOppdaterAktivPeriode(AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(STP.minusMonths(12), STP), "999999", null, false));
+        regelmodell.leggTilEllerOppdaterAktivPeriode(AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(STP.minusMonths(12), STP), "999999", null));
 
         // Act
         List<BeregningsgrunnlagPrStatus> statusListe = kjørRegel(regelmodell);

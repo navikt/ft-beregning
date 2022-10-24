@@ -14,8 +14,10 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import no.nav.folketrygdloven.beregningsgrunnlag.Grunnbeløp;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.FeatureToggles;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.MidlertidigInaktivType;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.SammenligningGrunnlagType;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Toggle;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.YtelsesSpesifiktGrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.fp.ForeldrepengerGrunnlag;
@@ -37,6 +39,8 @@ public class Beregningsgrunnlag {
     private BigDecimal uregulertGrunnbeløp;
     private boolean hattMilitærIOpptjeningsperioden = false;
     private Konstanter konstanter = new Konstanter();
+
+	private FeatureToggles toggles = new FeatureToggles();
 
 
 	/**
@@ -170,6 +174,10 @@ public class Beregningsgrunnlag {
 
 	public MidlertidigInaktivType getMidlertidigInaktivType() {
 		return midlertidigInaktivType;
+	}
+
+	public FeatureToggles getToggles() {
+		return toggles;
 	}
 
 	public static Builder builder() {
@@ -314,6 +322,11 @@ public class Beregningsgrunnlag {
 		    beregningsgrunnlagMal.midlertidigInaktivType = midlertidigInaktivType;
 		    return this;
 	    }
+
+		public Builder leggTilToggle(String feature, boolean value) {
+			beregningsgrunnlagMal.toggles.leggTilToggle(new Toggle(feature, value));
+			return this;
+		}
 
 	    public Beregningsgrunnlag build() {
             verifyStateForBuild();
