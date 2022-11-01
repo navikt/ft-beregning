@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.SammenligningGrunnlagType;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SammenligningsGrunnlag;
@@ -51,7 +52,7 @@ public class FastsettSammenligningsgrunnlagTest {
         //Act
         new FastsettSammenligningsgrunnlag().evaluate(grunnlag);
         //Assert
-        SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlag();
+        SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.AT_FL);
         assertThat(sg.getRapportertPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(300000));
         assertThat(sg.getSammenligningsperiode().getFom()).isEqualTo(LocalDate.of(2018, 3, 1));
         assertThat(sg.getSammenligningsperiode().getTom()).isEqualTo(LocalDate.of(2019, 2, 28));
@@ -70,7 +71,7 @@ public class FastsettSammenligningsgrunnlagTest {
         //Act
         new FastsettSammenligningsgrunnlag().evaluate(grunnlag);
         //Assert
-        SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlag();
+	    SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.AT_FL);
         assertThat(sg.getRapportertPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(300000));
         assertThat(sg.getSammenligningsperiode().getFom()).isEqualTo(LocalDate.of(2018, 3, 1));
         assertThat(sg.getSammenligningsperiode().getTom()).isEqualTo(LocalDate.of(2019, 2, 28));
@@ -89,7 +90,7 @@ public class FastsettSammenligningsgrunnlagTest {
         //Act
         new FastsettSammenligningsgrunnlag().evaluate(grunnlag);
         //Assert
-        SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlag();
+	    SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.AT_FL);
         assertThat(sg.getRapportertPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(300000));
         assertThat(sg.getSammenligningsperiode().getFom()).isEqualTo(LocalDate.of(2017, 12, 1));
         assertThat(sg.getSammenligningsperiode().getTom()).isEqualTo(LocalDate.of(2018, 11, 30));
@@ -107,7 +108,7 @@ public class FastsettSammenligningsgrunnlagTest {
         //Act
         new FastsettSammenligningsgrunnlag().evaluate(grunnlag);
         //Assert
-        SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlag();
+	    SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.AT_FL);
         assertThat(sg.getSammenligningsperiode().getFom()).isEqualTo(LocalDate.of(2018, 10, 1));
         assertThat(sg.getSammenligningsperiode().getTom()).isEqualTo(LocalDate.of(2019, 9, 30));
         assertThat(sg.getRapportertPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(275000));
@@ -125,7 +126,7 @@ public class FastsettSammenligningsgrunnlagTest {
         //Act
         new FastsettSammenligningsgrunnlag().evaluate(grunnlag);
         //Assert
-        SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlag();
+	    SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.AT_FL);
         assertThat(sg.getSammenligningsperiode().getFom()).isEqualTo(LocalDate.of(2018, 10, 1));
         assertThat(sg.getSammenligningsperiode().getTom()).isEqualTo(LocalDate.of(2019, 9, 30));
         assertThat(sg.getRapportertPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(300000));
@@ -144,7 +145,7 @@ public class FastsettSammenligningsgrunnlagTest {
         //Act
         new FastsettSammenligningsgrunnlag().evaluate(grunnlag);
         //Assert
-        SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlag();
+	    SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.AT_FL);
         assertThat(sg.getRapportertPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(200000));
         assertThat(sg.getSammenligningsperiode().getFom()).isEqualTo(LocalDate.of(2018, 5, 1));
         assertThat(sg.getSammenligningsperiode().getTom()).isEqualTo(LocalDate.of(2019, 4, 30));
@@ -164,7 +165,7 @@ public class FastsettSammenligningsgrunnlagTest {
         //Act
         new FastsettSammenligningsgrunnlag().evaluate(grunnlag);
         //Assert
-        SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlag();
+	    SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.AT_FL);
         assertThat(sg.getRapportertPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(300000));
         assertThat(sg.getSammenligningsperiode().getFom()).isEqualTo(LocalDate.of(2018, 5, 1));
         assertThat(sg.getSammenligningsperiode().getTom()).isEqualTo(LocalDate.of(2019, 4, 30));
@@ -178,13 +179,14 @@ public class FastsettSammenligningsgrunnlagTest {
         Periode periode = Periode.of(LocalDate.of(2018, 1, 1), LocalDate.of(2018, 12, 31));
         SammenligningsGrunnlag sg = SammenligningsGrunnlag.builder()
             .medSammenligningsperiode(periode)
+	        .medSammenligningstype(SammenligningGrunnlagType.AT_FL)
             .medRapportertPrÅr(BigDecimal.valueOf(55)).build();
-        Beregningsgrunnlag.builder(beregningsgrunnlag).medSammenligningsgrunnlag(sg);
+        Beregningsgrunnlag.builder(beregningsgrunnlag).leggTilSammenligningsgrunnlagPrStatus(sg);
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         //Act
         new FastsettSammenligningsgrunnlag().evaluate(grunnlag);
         //Assert
-        SammenligningsGrunnlag hentetSg = grunnlag.getSammenligningsGrunnlag();
+	    SammenligningsGrunnlag hentetSg = grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.AT_FL);
         assertThat(hentetSg.getRapportertPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(55));
         assertThat(hentetSg.getSammenligningsperiode().getFom()).isEqualTo(periode.getFom());
         assertThat(hentetSg.getSammenligningsperiode().getTom()).isEqualTo(periode.getTom());

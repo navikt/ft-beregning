@@ -38,20 +38,9 @@ public class FastsettSammenligningsgrunnlagForAktivitetstatus extends LeafSpecif
         Periodeinntekt oppgittInntekt = FinnRapporterteInntekter.finnImplementasjonForStatus(aktivitetStatus).finnRapportertInntekt(grunnlag)
 		        .orElseThrow(() -> new IllegalStateException("Fant ikke oppgitt månedsinntekt ved varig endret inntekt"));
 
-	    // Setter et enkelt sammenligningsgrunnlag
         SammenligningsGrunnlag sammenligningsGrunnlag = opprettSammenligningsgrunnlag(grunnlag, oppgittInntekt);
 	    beregnOgFastsettAvvik(grunnlag, sammenligningsGrunnlag);
-	    Beregningsgrunnlag.builder(grunnlag.getBeregningsgrunnlag()).medSammenligningsgrunnlag(sammenligningsGrunnlag).build();
-
-	    // Setter sammenligningsgrunnlag pr status
-	    var sgPrStatus = SammenligningsGrunnlag.builder()
-			    .medSammenligningstype(aktivitetStatus.erSelvstendigNæringsdrivende() ? SammenligningGrunnlagType.SN : SammenligningGrunnlagType.MIDLERTIDIG_INAKTIV)
-			    .medSammenligningsperiode(sammenligningsGrunnlag.getSammenligningsperiode())
-			    .medRapportertPrÅr(sammenligningsGrunnlag.getRapportertPrÅr())
-			    .medAvvikProsent(sammenligningsGrunnlag.getAvvikProsent())
-			    .build();
-	    Beregningsgrunnlag.builder(grunnlag.getBeregningsgrunnlag()).leggTilSammenligningsgrunnlagPrStatus(sgPrStatus).build();
-
+	    Beregningsgrunnlag.builder(grunnlag.getBeregningsgrunnlag()).leggTilSammenligningsgrunnlagPrStatus(sammenligningsGrunnlag).build();
 
 	    Map<String, Object> resultater = gjørRegelsporing(grunnlag, sammenligningsGrunnlag, oppgittInntekt);
         return beregnet(resultater);
@@ -88,6 +77,7 @@ public class FastsettSammenligningsgrunnlagForAktivitetstatus extends LeafSpecif
         return SammenligningsGrunnlag.builder()
             .medSammenligningsperiode(sammenligningsperiode)
             .medRapportertPrÅr(sammenligningInntekt)
+	        .medSammenligningstype(aktivitetStatus.erSelvstendigNæringsdrivende() ? SammenligningGrunnlagType.SN : SammenligningGrunnlagType.MIDLERTIDIG_INAKTIV)
             .build();
     }
 

@@ -45,7 +45,7 @@ public class RegelBeregningsgrunnlagSN implements RuleService<Beregningsgrunnlag
 
 //      FP_BR 2.5 Er avvik > 25 %
         Specification<BeregningsgrunnlagPeriode> sjekkOmDifferanseStørreEnn25Prosent =
-            rs.beregningHvisRegel(new SjekkOmDifferanseStørreEnn25Prosent(), opprettRegelmerknad, fastsettBeregnetPrÅr);
+            rs.beregningHvisRegel(new SjekkOmDifferanseStørreEnn25Prosent(AktivitetStatus.SN), opprettRegelmerknad, fastsettBeregnetPrÅr);
 
 //      FP_BR 2.4 Fastsett sammenligningsgrunnlag og beregn avvik
         Specification<BeregningsgrunnlagPeriode> beregnAvvik =

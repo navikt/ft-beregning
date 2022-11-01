@@ -29,6 +29,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.RegelMerknad;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.RegelResultat;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ResultatBeregningType;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.SammenligningGrunnlagType;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
@@ -39,6 +40,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SammenligningsGrunnlag;
+import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.RegelBeregningsgrunnlagSN;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 
 public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
@@ -75,11 +77,12 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         // Act
-        Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).evaluer(grunnlag);
+	    Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).getSpecification().evaluate(grunnlag);
+	    Evaluation evaluation2 = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
 
         // Assert
 
-        RegelResultat regelResultat = getRegelResultat(evaluation, "input");
+        RegelResultat regelResultat = getRegelResultat(evaluation2, "input");
         assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, grunnlag, beregningsperiode);
@@ -118,10 +121,11 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         // Act
-        Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).evaluer(grunnlag);
+	    Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).getSpecification().evaluate(grunnlag);
+	    Evaluation evaluation2 = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
 
         // Assert
-        RegelResultat regelResultat = getRegelResultat(evaluation, "input");
+        RegelResultat regelResultat = getRegelResultat(evaluation2, "input");
         assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, grunnlag, beregningsperiode);
@@ -160,11 +164,12 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         // Act
-        Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).evaluer(grunnlag);
+	    Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).getSpecification().evaluate(grunnlag);
+	    Evaluation evaluation2 = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
 
         // Assert
 
-        RegelResultat regelResultat = getRegelResultat(evaluation, "input");
+        RegelResultat regelResultat = getRegelResultat(evaluation2, "input");
         assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
         assertThat(regelResultat.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5039");
 
@@ -216,11 +221,12 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         // Act
-        Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).evaluer(grunnlag);
+	    Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).getSpecification().evaluate(grunnlag);
+	    Evaluation evaluation2 = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
 
         // Assert
 
-        RegelResultat regelResultat = getRegelResultat(evaluation, "input");
+        RegelResultat regelResultat = getRegelResultat(evaluation2, "input");
         assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
         assertThat(regelResultat.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5039");
 
@@ -285,13 +291,17 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
             .build();
 
         // Act
-        Evaluation evaluation1 = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).evaluer(grunnlag);
-        Evaluation evaluation2 = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(andrePeriode).evaluer(andrePeriode);
+	    Evaluation evaluationp1 = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).getSpecification().evaluate(grunnlag);
+	    Evaluation evaluation2p1 = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
+
+	    Evaluation evaluation1p2 = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(andrePeriode).getSpecification().evaluate(andrePeriode);
+	    Evaluation evaluation2p2 = new RegelBeregningsgrunnlagSN().evaluer(andrePeriode);
+
 
         // Assert
 
-        RegelResultat regelResultat1 = getRegelResultat(evaluation1, "input");
-        RegelResultat regelResultat2 = getRegelResultat(evaluation2, "input");
+        RegelResultat regelResultat1 = getRegelResultat(evaluation2p1, "input");
+        RegelResultat regelResultat2 = getRegelResultat(evaluation2p2, "input");
         assertThat(regelResultat1.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
         assertThat(regelResultat1.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5039");
 
@@ -332,7 +342,8 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
         BeregningsgrunnlagPrStatus.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP)).medBeregnetPrÅr(bruttoDP).build();
 
         // Act
-        Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).evaluer(grunnlag);
+	    Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).getSpecification().evaluate(grunnlag);
+	    Evaluation evaluation2 = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
 
         // Assert
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
@@ -373,10 +384,11 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
         BeregningsgrunnlagPrStatus.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.AAP)).medBeregnetPrÅr(bruttoAAP).build();
 
         // Act
-        Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).evaluer(grunnlag);
+	    Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).getSpecification().evaluate(grunnlag);
+	    Evaluation evaluation2 = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
 
         // Assert
-        RegelResultat regelResultat = getRegelResultat(evaluation, "input");
+        RegelResultat regelResultat = getRegelResultat(evaluation2, "input");
         assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, grunnlag, beregningsperiode);
@@ -414,10 +426,11 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
         BeregningsgrunnlagPrStatus.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP)).medBeregnetPrÅr(bruttoDP).build();
 
         // Act
-        Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).evaluer(grunnlag);
+	    Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).getSpecification().evaluate(grunnlag);
+	    Evaluation evaluation2 = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
 
         // Assert
-        RegelResultat regelResultat = getRegelResultat(evaluation, "input");
+        RegelResultat regelResultat = getRegelResultat(evaluation2, "input");
         assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, grunnlag, beregningsperiode);
@@ -446,10 +459,11 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
         BeregningsgrunnlagPrStatus.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN)).medErNyIArbeidslivet(true);
 
         // Act
-        Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).evaluer(grunnlag);
+	    Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).getSpecification().evaluate(grunnlag);
+	    Evaluation evaluation2 = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
 
         // Assert
-        RegelResultat regelResultat = getRegelResultat(evaluation, "input");
+        RegelResultat regelResultat = getRegelResultat(evaluation2, "input");
         assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
         assertThat(regelResultat.getMerknader().get(0).getMerknadKode()).isEqualTo("5049");
         assertThat(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getBeregnetPrÅr()).isCloseTo(inntektATFL.multiply(TOLV), within(BigDecimal.valueOf(0.01)));
@@ -473,7 +487,8 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
         BeregningsgrunnlagPrStatus.builder(statusSN).medFastsattAvSaksbehandler(true).medBeregnetPrÅr(BigDecimal.valueOf(323232));
 
         // Act
-        Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).evaluer(grunnlag);
+        Evaluation evaluation = new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN(grunnlag).getSpecification().evaluate(grunnlag);
+	    Evaluation evaluation2 = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
 
         // Assert
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
@@ -494,7 +509,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
     }
 
     private void verifiserSammenligningsgrunnlag(BeregningsgrunnlagPeriode grunnlag, BigDecimal beløp, BigDecimal prosent) {
-        SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlag();
+        SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.SN);
         assertThat(sg).isNotNull();
         assertThat(sg.getRapportertPrÅr()).isCloseTo(beløp, within(BigDecimal.valueOf(0.01)));
         assertThat(sg.getAvvikProsent()).isCloseTo(prosent, within(BigDecimal.valueOf(0.01)));

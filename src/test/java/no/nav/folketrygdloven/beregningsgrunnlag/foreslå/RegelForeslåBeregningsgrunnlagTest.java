@@ -206,7 +206,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
 
 		assertThat(resultat.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5038");
 		assertThat(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).samletNaturalytelseBortfaltMinusTilkommetPrÅr()).isEqualTo(BigDecimal.valueOf(24000));
-		assertThat(grunnlag.getSammenligningsGrunnlag().getAvvikPromille()).isEqualTo(400);
+		assertThat(grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.AT_FL).getAvvikPromille()).isEqualTo(400);
 		verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_ARBEIDSTAKER, AktivitetStatus.ATFL, 12 * månedsinntekt.doubleValue());
 		verifiserBeregningsgrunnlagBeregnet(grunnlag, 12 * månedsinntekt.doubleValue());
 	}
@@ -354,7 +354,6 @@ public class RegelForeslåBeregningsgrunnlagTest {
 		LocalDate tom = skjæringstidspunkt.minusMonths(1).with(TemporalAdjusters.lastDayOfMonth());
 		assertThat(af.getBeregningsperiode()).isEqualTo(Periode.of(fom, tom));
 		assertThat(af.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(200000));
-		assertThat(beregningsgrunnlag.getSammenligningsGrunnlag()).isNotNull();
 		assertThat(beregningsgrunnlag.getSammenligningsgrunnlagPrStatus()).isNotEmpty();
 	}
 

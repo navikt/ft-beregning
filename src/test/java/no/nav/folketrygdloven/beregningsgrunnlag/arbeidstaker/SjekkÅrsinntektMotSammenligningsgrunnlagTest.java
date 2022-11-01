@@ -29,21 +29,16 @@ public class SjekkÅrsinntektMotSammenligningsgrunnlagTest {
         //Arrange
         Beregningsgrunnlag grunnlag = settoppGrunnlagMedEnPeriode(LocalDate.now(), new Inntektsgrunnlag(),
             Collections.singletonList(AktivitetStatus.ATFL), Collections.singletonList(arbeidsforhold));
-        SammenligningsGrunnlag sg = SammenligningsGrunnlag.builder()
-            .medSammenligningsperiode(null)
-            .medRapportertPrÅr(BigDecimal.ZERO).build();
 	    SammenligningsGrunnlag sgPrStatus = SammenligningsGrunnlag.builder()
 			    .medSammenligningsperiode(null)
 			    .medSammenligningstype(SammenligningGrunnlagType.AT_FL)
 			    .medRapportertPrÅr(BigDecimal.ZERO).build();
-	    Beregningsgrunnlag.builder(grunnlag).medSammenligningsgrunnlag(sg).leggTilSammenligningsgrunnlagPrStatus(sgPrStatus);
+	    Beregningsgrunnlag.builder(grunnlag).leggTilSammenligningsgrunnlagPrStatus(sgPrStatus);
         BeregningsgrunnlagPeriode periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
         //Act
         Evaluation resultat = new SjekkÅrsinntektMotSammenligningsgrunnlag().evaluate(periode);
         //Assert
         assertThat(resultat.result()).isEqualTo(Resultat.JA);
-        assertThat(grunnlag.getSammenligningsGrunnlag().getAvvikPromille()).isEqualTo(1000L);
-
 	    var sgPrStatusResultat = grunnlag.getSammenligningsgrunnlagForStatus(SammenligningGrunnlagType.AT_FL).orElseThrow();
 	    assertThat(sgPrStatusResultat.getAvvikPromille()).isEqualTo(1000L);
 
@@ -68,14 +63,11 @@ public class SjekkÅrsinntektMotSammenligningsgrunnlagTest {
         Beregningsgrunnlag grunnlag = settoppGrunnlagMedEnPeriode(LocalDate.now(), new Inntektsgrunnlag(),
             Collections.singletonList(AktivitetStatus.ATFL), Collections.singletonList(arbeidsforhold));
         BeregningsgrunnlagPeriode periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
-        SammenligningsGrunnlag sg = SammenligningsGrunnlag.builder()
-            .medSammenligningsperiode(null)
-            .medRapportertPrÅr(BigDecimal.valueOf(100000)).build();
 	    SammenligningsGrunnlag sgPrStatus = SammenligningsGrunnlag.builder()
 			    .medSammenligningsperiode(null)
 			    .medSammenligningstype(SammenligningGrunnlagType.AT_FL)
 			    .medRapportertPrÅr(BigDecimal.valueOf(100000)).build();
-	    Beregningsgrunnlag.builder(grunnlag).medSammenligningsgrunnlag(sg).leggTilSammenligningsgrunnlagPrStatus(sgPrStatus);
+	    Beregningsgrunnlag.builder(grunnlag).leggTilSammenligningsgrunnlagPrStatus(sgPrStatus);
         BeregningsgrunnlagPrArbeidsforhold bgAT = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
         BeregningsgrunnlagPrArbeidsforhold.builder(bgAT).medBeregnetPrÅr(BigDecimal.valueOf(125000));
 
@@ -83,8 +75,6 @@ public class SjekkÅrsinntektMotSammenligningsgrunnlagTest {
         Evaluation resultat = new SjekkÅrsinntektMotSammenligningsgrunnlag().evaluate(periode);
         //Assert
         assertThat(resultat.result()).isEqualTo(Resultat.NEI);
-        assertThat(grunnlag.getSammenligningsGrunnlag().getAvvikPromille()).isEqualTo(250);
-        assertThat(grunnlag.getSammenligningsGrunnlag().getAvvikProsent()).isEqualByComparingTo(BigDecimal.valueOf(25));
 
 	    var sgPrStatusResultat = grunnlag.getSammenligningsgrunnlagForStatus(SammenligningGrunnlagType.AT_FL).orElseThrow();
 	    assertThat(sgPrStatusResultat.getAvvikPromille()).isEqualTo(250);
@@ -98,14 +88,11 @@ public class SjekkÅrsinntektMotSammenligningsgrunnlagTest {
         Beregningsgrunnlag grunnlag = settoppGrunnlagMedEnPeriode(LocalDate.now(), new Inntektsgrunnlag(),
             Collections.singletonList(AktivitetStatus.ATFL), Collections.singletonList(arbeidsforhold));
         BeregningsgrunnlagPeriode periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
-        SammenligningsGrunnlag sg = SammenligningsGrunnlag.builder()
-            .medSammenligningsperiode(null)
-            .medRapportertPrÅr(BigDecimal.valueOf(100000)).build();
 	    SammenligningsGrunnlag sgPrStatus = SammenligningsGrunnlag.builder()
 			    .medSammenligningstype(SammenligningGrunnlagType.AT_FL)
 			    .medSammenligningsperiode(null)
 			    .medRapportertPrÅr(BigDecimal.valueOf(100000)).build();
-	    Beregningsgrunnlag.builder(grunnlag).medSammenligningsgrunnlag(sg).leggTilSammenligningsgrunnlagPrStatus(sgPrStatus);
+	    Beregningsgrunnlag.builder(grunnlag).leggTilSammenligningsgrunnlagPrStatus(sgPrStatus);
         BeregningsgrunnlagPrArbeidsforhold bgAT = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
         BeregningsgrunnlagPrArbeidsforhold.builder(bgAT).medBeregnetPrÅr(BigDecimal.valueOf(125001));
 
@@ -113,8 +100,6 @@ public class SjekkÅrsinntektMotSammenligningsgrunnlagTest {
         Evaluation resultat = new SjekkÅrsinntektMotSammenligningsgrunnlag().evaluate(periode);
         //Assert
         assertThat(resultat.result()).isEqualTo(Resultat.JA);
-        assertThat(grunnlag.getSammenligningsGrunnlag().getAvvikPromille()).isEqualTo(250);
-        assertThat(grunnlag.getSammenligningsGrunnlag().getAvvikProsent()).isEqualByComparingTo(BigDecimal.valueOf(25.001));
 
 	    var sgPrStatusResultat = grunnlag.getSammenligningsgrunnlagForStatus(SammenligningGrunnlagType.AT_FL).orElseThrow();
 	    assertThat(sgPrStatusResultat.getAvvikPromille()).isEqualTo(250);
@@ -127,14 +112,11 @@ public class SjekkÅrsinntektMotSammenligningsgrunnlagTest {
         Beregningsgrunnlag grunnlag = settoppGrunnlagMedEnPeriode(LocalDate.now(), new Inntektsgrunnlag(),
             Collections.singletonList(AktivitetStatus.ATFL), Collections.singletonList(arbeidsforhold));
         BeregningsgrunnlagPeriode periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
-        SammenligningsGrunnlag sg = SammenligningsGrunnlag.builder()
-            .medSammenligningsperiode(null)
-            .medRapportertPrÅr(BigDecimal.valueOf(100000)).build();
 	    SammenligningsGrunnlag sgPrStatus = SammenligningsGrunnlag.builder()
 			    .medSammenligningstype(SammenligningGrunnlagType.AT_FL)
 			    .medSammenligningsperiode(null)
 			    .medRapportertPrÅr(BigDecimal.valueOf(100000)).build();
-	    Beregningsgrunnlag.builder(grunnlag).medSammenligningsgrunnlag(sg).leggTilSammenligningsgrunnlagPrStatus(sgPrStatus);
+	    Beregningsgrunnlag.builder(grunnlag).leggTilSammenligningsgrunnlagPrStatus(sgPrStatus);
         BeregningsgrunnlagPrArbeidsforhold bgAT = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
         BeregningsgrunnlagPrArbeidsforhold.builder(bgAT).medBeregnetPrÅr(BigDecimal.valueOf(125001));
 
@@ -142,7 +124,6 @@ public class SjekkÅrsinntektMotSammenligningsgrunnlagTest {
         Evaluation resultat = new SjekkÅrsinntektMotSammenligningsgrunnlag().evaluate(periode);
         //Assert
         assertThat(resultat.result()).isEqualTo(Resultat.JA);
-        assertThat(grunnlag.getSammenligningsGrunnlag().getAvvikPromilleUtenAvrunding()).isEqualByComparingTo(BigDecimal.valueOf(250.010000000));
 
 	    var sgPrStatusResultat = grunnlag.getSammenligningsgrunnlagForStatus(SammenligningGrunnlagType.AT_FL).orElseThrow();
 	    assertThat(sgPrStatusResultat.getAvvikPromilleUtenAvrunding()).isEqualByComparingTo(BigDecimal.valueOf(250.010000000));

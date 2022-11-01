@@ -30,7 +30,6 @@ public class Beregningsgrunnlag {
     private Inntektsgrunnlag inntektsgrunnlag;
     @JsonManagedReference
     private final List<BeregningsgrunnlagPeriode> beregningsgrunnlagPerioder = new ArrayList<>();
-    private SammenligningsGrunnlag sammenligningsGrunnlag;
 	private List<SammenligningsGrunnlag> sammenligningsgrunnlagPrStatus = new ArrayList<>();
     private BigDecimal grunnbeløp;
     /**
@@ -65,10 +64,6 @@ public class Beregningsgrunnlag {
 
     public List<AktivitetStatusMedHjemmel> getAktivitetStatuser() {
         return Collections.unmodifiableList(aktivitetStatuser);
-    }
-
-    public SammenligningsGrunnlag getSammenligningsGrunnlag() {
-        return sammenligningsGrunnlag;
     }
 
 	public List<SammenligningsGrunnlag> getSammenligningsgrunnlagPrStatus() {
@@ -212,11 +207,6 @@ public class Beregningsgrunnlag {
 
         public Builder medAktivitetStatuser(List<AktivitetStatusMedHjemmel> aktivitetStatusList) {
             beregningsgrunnlagMal.aktivitetStatuser.addAll(aktivitetStatusList);
-            return this;
-        }
-
-        public Builder medSammenligningsgrunnlag(SammenligningsGrunnlag sammenligningsGrunnlag) {
-            beregningsgrunnlagMal.sammenligningsGrunnlag = sammenligningsGrunnlag;
             return this;
         }
 

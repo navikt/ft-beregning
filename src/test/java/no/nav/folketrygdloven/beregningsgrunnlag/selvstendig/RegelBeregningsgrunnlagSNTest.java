@@ -157,7 +157,7 @@ public class RegelBeregningsgrunnlagSNTest {
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_SELVSTENDIG, grunnlag, beregningsperiode);
         //Gjennomsnittlig PGI = SUM(Bidrag til beregningsgrunnlaget)/3 * G = 8 * G
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_SELVSTENDIG, AktivitetStatus.SN, 8 * GRUNNBELØP_2017);
-        SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlag();
+        SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.SN);
 	    var sgPrStatus = grunnlag.getSammenligningsGrunnlagForType(SammenligningGrunnlagType.SN).orElseThrow();
 	    assertThat(sg).isNotNull();
         assertThat(sg.getAvvikPromille()).isEqualTo(868L);
@@ -187,11 +187,9 @@ public class RegelBeregningsgrunnlagSNTest {
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_SELVSTENDIG, grunnlag, beregningsperiode);
         //Gjennomsnittlig PGI = SUM(Bidrag til beregningsgrunnlaget)/3 * G
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_SELVSTENDIG, AktivitetStatus.SN, 624226.6667);
-        SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlag();
-	    var sgPrStatus = grunnlag.getSammenligningsGrunnlagForType(SammenligningGrunnlagType.SN).orElseThrow();
+	    SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.SN);
 	    assertThat(sg).isNotNull();
         assertThat(sg.getAvvikPromille()).isEqualTo(800L);
-	    assertThat(sgPrStatus.getAvvikPromille()).isEqualTo(800L);
     }
 
     @Test
@@ -264,14 +262,11 @@ public class RegelBeregningsgrunnlagSNTest {
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
 
         double actualBruttoSN = 4.0d * GRUNNBELØP_2017 - bruttoAAP.doubleValue() ;
-	    var sgPrStatus = grunnlag.getSammenligningsGrunnlagForType(SammenligningGrunnlagType.SN).orElseThrow();
+	    SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.SN);
 	    assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
-        assertThat(grunnlag.getSammenligningsGrunnlag()).isNotNull();
         int oppgittSN = 30000 * 12;
-        assertThat(grunnlag.getSammenligningsGrunnlag().getRapportertPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(oppgittSN+bruttoAAP.doubleValue() ));
-        assertThat(grunnlag.getSammenligningsGrunnlag().getAvvikPromille()).isEqualTo(384L);
-	    assertThat(sgPrStatus.getRapportertPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(oppgittSN+bruttoAAP.doubleValue() ));
-	    assertThat(sgPrStatus.getAvvikPromille()).isEqualTo(384L);
+	    assertThat(sg.getRapportertPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(oppgittSN+bruttoAAP.doubleValue() ));
+	    assertThat(sg.getAvvikPromille()).isEqualTo(384L);
 
 	    verifiserRegelmerknad(regelResultat, "5039");
         //Gjennomsnittlig PGI = SUM(Bidrag til beregningsgrunnlaget)/3 * G
@@ -298,15 +293,12 @@ public class RegelBeregningsgrunnlagSNTest {
         String sporing = EvaluationSerializer.asJson(evaluation);
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
 
-	    var sgPrStatus = grunnlag.getSammenligningsGrunnlagForType(SammenligningGrunnlagType.SN).orElseThrow();
+	    SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.SN);
 	    double actualBruttoSN = 4.0d * GRUNNBELØP_2017 - bruttoDP.doubleValue();
         assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
-        assertThat(grunnlag.getSammenligningsGrunnlag()).isNotNull();
         int oppgittSN = 20000 * 12;
-        assertThat(grunnlag.getSammenligningsGrunnlag().getRapportertPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(oppgittSN+bruttoDP.doubleValue()));
-        assertThat(grunnlag.getSammenligningsGrunnlag().getAvvikPromille()).isEqualTo(43);
-	    assertThat(sgPrStatus.getRapportertPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(oppgittSN+bruttoDP.doubleValue()));
-	    assertThat(sgPrStatus.getAvvikPromille()).isEqualTo(43);
+	    assertThat(sg.getRapportertPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(oppgittSN+bruttoDP.doubleValue()));
+	    assertThat(sg.getAvvikPromille()).isEqualTo(43);
 	    //Gjennomsnittlig PGI = SUM(Bidrag til beregningsgrunnlaget)/3 * G
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_SELVSTENDIG, AktivitetStatus.SN, actualBruttoSN, 4.0d * GRUNNBELØP_2017);
     }
@@ -327,13 +319,10 @@ public class RegelBeregningsgrunnlagSNTest {
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
 
 
-	    var sgPrStatus = grunnlag.getSammenligningsGrunnlagForType(SammenligningGrunnlagType.SN).orElseThrow();
+	    SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.SN);
 	    assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
-        assertThat(grunnlag.getSammenligningsGrunnlag()).isNotNull();
-        assertThat(grunnlag.getSammenligningsGrunnlag().getRapportertPrÅr().doubleValue()).isEqualTo(10000 * 12);
-        assertThat(grunnlag.getSammenligningsGrunnlag().getAvvikPromille()).isEqualTo(1000);
-	    assertThat(sgPrStatus.getRapportertPrÅr().doubleValue()).isEqualTo(10000 * 12);
-	    assertThat(sgPrStatus.getAvvikPromille()).isEqualTo(1000);
+	    assertThat(sg.getRapportertPrÅr().doubleValue()).isEqualTo(10000 * 12);
+	    assertThat(sg.getAvvikPromille()).isEqualTo(1000);
 	    verifiserRegelmerknad(regelResultat, "5039");
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_SELVSTENDIG, AktivitetStatus.SN, 0, 0);
     }
@@ -449,8 +438,8 @@ public class RegelBeregningsgrunnlagSNTest {
         assertThat(bgpsa.getPgiListe()).anySatisfy(pgi -> assertThat(pgi).isEqualTo(BigDecimal.ZERO));
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_SELVSTENDIG, grunnlag, beregningsperiode);
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_SELVSTENDIG, AktivitetStatus.SN, 0d);
-        assertThat(grunnlag.getSammenligningsGrunnlag().getAvvikPromille()).isEqualTo(1000);
-	    assertThat(grunnlag.getSammenligningsGrunnlagForType(SammenligningGrunnlagType.SN).get().getAvvikPromille()).isEqualTo(1000);
+	    SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.SN);
+	    assertThat(sg.getAvvikPromille()).isEqualTo(1000);
 
     }
 
@@ -472,7 +461,6 @@ public class RegelBeregningsgrunnlagSNTest {
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_SELVSTENDIG, grunnlag, beregningsperiode);
         BeregningsgrunnlagPrStatus bgpsa = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
         assertThat(bgpsa.getGjennomsnittligPGI()).isEqualByComparingTo(BigDecimal.valueOf(4.0d * GRUNNBELØP_2017));
-        assertThat(beregningsgrunnlag.getSammenligningsGrunnlag()).isNull();
 	    assertThat(beregningsgrunnlag.getSammenligningsgrunnlagPrStatus()).isEmpty();
         assertThat(bgpsa.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(33333));
     }
@@ -498,7 +486,6 @@ public class RegelBeregningsgrunnlagSNTest {
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_SELVSTENDIG, grunnlag, beregningsperiode);
         BeregningsgrunnlagPrStatus bgpsa = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
         assertThat(bgpsa.getGjennomsnittligPGI()).isEqualByComparingTo(BigDecimal.valueOf(4.0d * GRUNNBELØP_2017));
-        assertThat(besteberegnetGrunnlag.getSammenligningsGrunnlag()).isNull();
 	    assertThat(beregningsgrunnlag.getSammenligningsgrunnlagPrStatus()).isEmpty();
 	    assertThat(bgpsa.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(33333));
     }
@@ -525,7 +512,6 @@ public class RegelBeregningsgrunnlagSNTest {
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_SELVSTENDIG, grunnlag, beregningsperiode);
         BeregningsgrunnlagPrStatus bgpsa = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
         assertThat(bgpsa.getGjennomsnittligPGI()).isEqualByComparingTo(BigDecimal.valueOf(4.0d * GRUNNBELØP_2017));
-        assertThat(besteberegnetGrunnlag.getSammenligningsGrunnlag()).isNotNull();
 	    assertThat(besteberegnetGrunnlag.getSammenligningsgrunnlagPrStatus()).isNotEmpty();
 	    assertThat(bgpsa.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(33333));
     }

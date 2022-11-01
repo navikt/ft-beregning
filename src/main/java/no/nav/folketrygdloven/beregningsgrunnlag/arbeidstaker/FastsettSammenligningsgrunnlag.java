@@ -30,16 +30,9 @@ class FastsettSammenligningsgrunnlag extends LeafSpecification<Beregningsgrunnla
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        if (grunnlag.getBeregningsgrunnlag().getSammenligningsGrunnlag() == null) {
+        if (grunnlag.getBeregningsgrunnlag().getSammenligningsgrunnlagForStatus(SammenligningGrunnlagType.AT_FL).isEmpty()) {
             Periode sammenligningsPeriode = lagSammenligningsPeriode(grunnlag.getInntektsgrunnlag(), grunnlag.getSkjæringstidspunkt());
             BigDecimal sammenligningsgrunnlagInntekt = grunnlag.getInntektsgrunnlag().getSamletInntektISammenligningsperiode(sammenligningsPeriode);
-
-			// Setter et enkelt sammenligningsgrunnlag
-			SammenligningsGrunnlag sg = SammenligningsGrunnlag.builder()
-                .medSammenligningsperiode(sammenligningsPeriode)
-                .medRapportertPrÅr(sammenligningsgrunnlagInntekt)
-                .build();
-            Beregningsgrunnlag.builder(grunnlag.getBeregningsgrunnlag()).medSammenligningsgrunnlag(sg).build();
 
 			// Setter sammenligningsgrunnlag pr status
 	        SammenligningsGrunnlag sgPrStatus = SammenligningsGrunnlag.builder()
@@ -51,7 +44,7 @@ class FastsettSammenligningsgrunnlag extends LeafSpecification<Beregningsgrunnla
         }
 
         Map<String, Object> resultater = new HashMap<>();
-        SammenligningsGrunnlag sammenligningsGrunnlag = grunnlag.getBeregningsgrunnlag().getSammenligningsGrunnlag();
+        SammenligningsGrunnlag sammenligningsGrunnlag = grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.AT_FL);
         resultater.put("sammenligningsperiode", sammenligningsGrunnlag.getSammenligningsperiode());
         resultater.put("sammenligningsgrunnlagPrÅr", sammenligningsGrunnlag.getRapportertPrÅr());
         return beregnet(resultater);
