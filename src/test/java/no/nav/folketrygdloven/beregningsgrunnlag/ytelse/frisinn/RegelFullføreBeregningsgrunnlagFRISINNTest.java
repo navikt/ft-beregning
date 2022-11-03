@@ -1,6 +1,5 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.ytelse.frisinn;
 
-import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.GRUNNBELØPLISTE;
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.GRUNNBELØP_2019;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -19,12 +18,11 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedH
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Dekningsgrad;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.RegelResultat;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.Beregningsgrunnlag;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrArbeidsforhold;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 
 class RegelFullføreBeregningsgrunnlagFRISINNTest {
@@ -314,11 +312,7 @@ class RegelFullføreBeregningsgrunnlagFRISINNTest {
         byggATFL(frilansInntektPrÅr, arbeidsinntektPrÅr, periodeBuilder, flUtbetalingsgrad);
         BeregningsgrunnlagPeriode periode = periodeBuilder.build();
         return Beregningsgrunnlag.builder()
-            .medInntektsgrunnlag(new Inntektsgrunnlag())
             .medGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2019))
-            .medSkjæringstidspunkt(skjæringstidspunkt)
-            .medAntallGMinstekravVilkår(BigDecimal.valueOf(0.75))
-            .medGrunnbeløpSatser(GRUNNBELØPLISTE)
             .medAktivitetStatuser(List.of(new AktivitetStatusMedHjemmel(AktivitetStatus.ATFL_SN, null)))
             .medBeregningsgrunnlagPeriode(periode)
             .build();
@@ -329,8 +323,8 @@ class RegelFullføreBeregningsgrunnlagFRISINNTest {
             periodeBuilder.medBeregningsgrunnlagPrStatus(BeregningsgrunnlagPrStatus.builder()
                 .medAktivitetStatus(AktivitetStatus.SN)
                 .medAndelNr(1L)
-                .medUtbetalingsprosentSVP(BigDecimal.valueOf(utbetalingsgrad))
-                .medBeregnetPrÅr(BigDecimal.valueOf(snInntektPrÅr))
+                .medUtbetalingsprosent(BigDecimal.valueOf(utbetalingsgrad))
+                .medBruttoPrÅr(BigDecimal.valueOf(snInntektPrÅr))
                 .build());
         }
     }
@@ -342,17 +336,17 @@ class RegelFullføreBeregningsgrunnlagFRISINNTest {
             if (frilansInntektPrÅr != null) {
                 BeregningsgrunnlagPrArbeidsforhold flAndel = BeregningsgrunnlagPrArbeidsforhold.builder()
                     .medArbeidsforhold(Arbeidsforhold.frilansArbeidsforhold())
-                    .medBeregnetPrÅr(BigDecimal.valueOf(frilansInntektPrÅr))
+                    .medBruttoPrÅr(BigDecimal.valueOf(frilansInntektPrÅr))
                     .medAndelNr(2L)
-                    .medUtbetalingsprosentSVP(BigDecimal.valueOf(flUtbetalingsgrad))
+                    .medUtbetalingsprosent(BigDecimal.valueOf(flUtbetalingsgrad))
                     .build();
-                flAndel.setErSøktYtelseFor(flUtbetalingsgrad != null);
+                flAndel.setErSøktYtelseFor(true);
                 atflStatusBuilder.medArbeidsforhold(flAndel);
             }
             if (arbeidsinntektPrÅr != null) {
                 BeregningsgrunnlagPrArbeidsforhold arbfor = BeregningsgrunnlagPrArbeidsforhold.builder()
                     .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR))
-                    .medBeregnetPrÅr(BigDecimal.valueOf(arbeidsinntektPrÅr))
+                    .medBruttoPrÅr(BigDecimal.valueOf(arbeidsinntektPrÅr))
                     .medAndelNr(3L)
                     .build();
                 arbfor.setErSøktYtelseFor(false);

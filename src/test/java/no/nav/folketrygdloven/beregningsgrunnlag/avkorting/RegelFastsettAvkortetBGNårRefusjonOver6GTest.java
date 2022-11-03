@@ -1,8 +1,7 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.avkorting;
 
-import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.GRUNNBELØPLISTE;
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.GRUNNBELØP_2017;
-import static no.nav.folketrygdloven.beregningsgrunnlag.VerifiserBeregningsgrunnlag.verifiserBeregningsgrunnlagAvkortetPrÅr;
+import static no.nav.folketrygdloven.beregningsgrunnlag.VerifiserFastsettBeregningsgrunnlag.verifiserBeregningsgrunnlagAvkortetPrÅr;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 
@@ -19,14 +18,14 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Dekningsgrad;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.Beregningsgrunnlag;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrArbeidsforhold;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 
@@ -304,14 +303,14 @@ public class RegelFastsettAvkortetBGNårRefusjonOver6GTest {
         BeregningsgrunnlagPrArbeidsforhold afBuilder1 = BeregningsgrunnlagPrArbeidsforhold.builder()
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR1))
             .medAndelNr(1)
-            .medBeregnetPrÅr(BigDecimal.valueOf(bruttoBG.get(0)))
-            .medGjeldendeRefusjonPrÅr(BigDecimal.valueOf(refusjonsKrav.get(0)))
+            .medBruttoPrÅr(BigDecimal.valueOf(bruttoBG.get(0)))
+            .medRefusjonPrÅr(BigDecimal.valueOf(refusjonsKrav.get(0)))
             .build();
         BeregningsgrunnlagPrArbeidsforhold afBuilder2 = BeregningsgrunnlagPrArbeidsforhold.builder()
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR2))
             .medAndelNr(2)
-            .medBeregnetPrÅr(BigDecimal.valueOf(bruttoBG.get(1)))
-            .medGjeldendeRefusjonPrÅr(BigDecimal.valueOf(refusjonsKrav.get(1)))
+            .medBruttoPrÅr(BigDecimal.valueOf(bruttoBG.get(1)))
+            .medRefusjonPrÅr(BigDecimal.valueOf(refusjonsKrav.get(1)))
             .build();
 
         if (antallArbeidsforhold == 2) {
@@ -329,8 +328,8 @@ public class RegelFastsettAvkortetBGNårRefusjonOver6GTest {
         BeregningsgrunnlagPrArbeidsforhold afBuilder3 = BeregningsgrunnlagPrArbeidsforhold.builder()
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR3))
             .medAndelNr(3)
-            .medBeregnetPrÅr(BigDecimal.valueOf(bruttoBG.get(2)))
-            .medGjeldendeRefusjonPrÅr(BigDecimal.valueOf(refusjonsKrav.get(2)))
+            .medBruttoPrÅr(BigDecimal.valueOf(bruttoBG.get(2)))
+            .medRefusjonPrÅr(BigDecimal.valueOf(refusjonsKrav.get(2)))
             .build();
         if (antallArbeidsforhold == 3) {
             BeregningsgrunnlagPrStatus bgpsATFL = BeregningsgrunnlagPrStatus.builder()
@@ -347,8 +346,8 @@ public class RegelFastsettAvkortetBGNårRefusjonOver6GTest {
         BeregningsgrunnlagPrArbeidsforhold afBuilder4 = BeregningsgrunnlagPrArbeidsforhold.builder()
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR4))
             .medAndelNr(4)
-            .medBeregnetPrÅr(BigDecimal.valueOf(bruttoBG.get(3)))
-            .medGjeldendeRefusjonPrÅr(BigDecimal.valueOf(refusjonsKrav.get(3)))
+            .medBruttoPrÅr(BigDecimal.valueOf(bruttoBG.get(3)))
+            .medRefusjonPrÅr(BigDecimal.valueOf(refusjonsKrav.get(3)))
             .build();
         BeregningsgrunnlagPrStatus bgpsATFL = BeregningsgrunnlagPrStatus.builder()
             .medAktivitetStatus(AktivitetStatus.ATFL)
@@ -377,11 +376,8 @@ public class RegelFastsettAvkortetBGNårRefusjonOver6GTest {
         });
         return Beregningsgrunnlag.builder()
                 .medAktivitetStatuser(List.of(new AktivitetStatusMedHjemmel(AktivitetStatus.ATFL, null)))
-                .medBeregningsgrunnlagPeriode(BeregningsgrunnlagPeriode.builder(periode).medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100).build())
-                .medInntektsgrunnlag(inntektsgrunnlag)
-                .medSkjæringstidspunkt(skjæringstidspunkt)
+                .medBeregningsgrunnlagPeriode(BeregningsgrunnlagPeriode.oppdater(periode).medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100).build())
                 .medGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2017))
-                .medGrunnbeløpSatser(GRUNNBELØPLISTE)
                 .build();
     }
 

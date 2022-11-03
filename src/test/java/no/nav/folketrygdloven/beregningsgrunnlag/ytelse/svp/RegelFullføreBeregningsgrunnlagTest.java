@@ -21,10 +21,10 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.RegelResultat;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.Beregningsgrunnlag;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrArbeidsforhold;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrStatus;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 
 public class RegelFullføreBeregningsgrunnlagTest {
@@ -650,11 +650,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
     private void assertAndel(BigDecimal bruker, BigDecimal avkortet) {
         var andel = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
         BigDecimal total = bruker.add(BigDecimal.ZERO);
-        if (avkortet == null) {
-            Assertions.assertThat(andel.getAvkortetPrÅr()).isEqualByComparingTo(total);
-        } else {
-            Assertions.assertThat(andel.getAvkortetPrÅr()).isEqualByComparingTo(avkortet);
-        }
+	    Assertions.assertThat(andel.getAvkortetPrÅr()).isEqualByComparingTo(Objects.requireNonNullElse(avkortet, total));
         Assertions.assertThat(andel.getRedusertPrÅr()).isEqualByComparingTo(total);
     }
 
@@ -664,11 +660,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
         Optional<BeregningsgrunnlagPrArbeidsforhold> frilansOpt = andel.getArbeidsforhold().stream().filter(BeregningsgrunnlagPrArbeidsforhold::erFrilanser).findFirst();
         assertThat(frilansOpt).isPresent();
         BeregningsgrunnlagPrArbeidsforhold frilansAndel = frilansOpt.get();
-        if (avkortet == null) {
-            assertThat(frilansAndel.getAvkortetPrÅr()).isEqualByComparingTo(total);
-        } else {
-            assertThat(frilansAndel.getAvkortetPrÅr()).isEqualByComparingTo(avkortet);
-        }
+	    assertThat(frilansAndel.getAvkortetPrÅr()).isEqualByComparingTo(Objects.requireNonNullElse(avkortet, total));
         assertThat(frilansAndel.getRedusertPrÅr()).isEqualByComparingTo(total);
         if (dagsats != null) {
             assertThat(frilansAndel.getDagsats()).isEqualByComparingTo(dagsats);
@@ -683,11 +675,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
         assertThat(arbforOpt).isPresent();
         BeregningsgrunnlagPrArbeidsforhold arbfor = arbforOpt.get();
 
-        if (avkortet == null) {
-            Assertions.assertThat(arbfor.getAvkortetPrÅr()).isEqualByComparingTo(total);
-        } else {
-            Assertions.assertThat(arbfor.getAvkortetPrÅr()).isEqualByComparingTo(avkortet);
-        }
+	    Assertions.assertThat(arbfor.getAvkortetPrÅr()).isEqualByComparingTo(Objects.requireNonNullElse(avkortet, total));
         assertThat(arbfor.getRedusertPrÅr()).isEqualByComparingTo(total);
 
         Long dagsatsRefusjon = calcDagsats.apply(refusjon);
@@ -710,12 +698,12 @@ public class RegelFullføreBeregningsgrunnlagTest {
         var andel = BeregningsgrunnlagPrStatus
             .builder()
             .medAktivitetStatus(AktivitetStatus.SN)
-            .medBeregnetPrÅr(BigDecimal.valueOf(brutto))
-            .medUtbetalingsprosentSVP(BigDecimal.valueOf(utbetaingsgrad))
+            .medBruttoPrÅr(BigDecimal.valueOf(brutto))
+            .medUtbetalingsprosent(BigDecimal.valueOf(utbetaingsgrad))
             .medAndelNr(andelsnr)
             .build();
         andel.setErSøktYtelseFor( utbetaingsgrad != 0);
-        BeregningsgrunnlagPeriode.builder(PERIODE)
+        BeregningsgrunnlagPeriode.oppdater(PERIODE)
             .medBeregningsgrunnlagPrStatus(andel);
     }
 
@@ -733,7 +721,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
         BeregningsgrunnlagPrStatus atfl = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
 
         if (atfl == null) {
-            BeregningsgrunnlagPeriode.builder(PERIODE)
+            BeregningsgrunnlagPeriode.oppdater(PERIODE)
                 .medBeregningsgrunnlagPrStatus(BeregningsgrunnlagPrStatus
                     .builder()
                     .medAktivitetStatus(AktivitetStatus.ATFL)
@@ -756,7 +744,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
         BeregningsgrunnlagPrStatus atfl = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
 
         if (atfl == null) {
-            BeregningsgrunnlagPeriode.builder(periode)
+            BeregningsgrunnlagPeriode.oppdater(periode)
                 .medBeregningsgrunnlagPrStatus(BeregningsgrunnlagPrStatus
                     .builder()
                     .medAktivitetStatus(AktivitetStatus.ATFL)
@@ -777,9 +765,9 @@ public class RegelFullføreBeregningsgrunnlagTest {
         BeregningsgrunnlagPrArbeidsforhold arb = BeregningsgrunnlagPrArbeidsforhold.builder()
             .medAndelNr(andelsnr)
             .medArbeidsforhold(arbeidsforhold)
-            .medBeregnetPrÅr(BigDecimal.valueOf(beregnetPrÅr))
-            .medGjeldendeRefusjonPrÅr(BigDecimal.valueOf(refusjonskrav))
-            .medUtbetalingsprosentSVP(BigDecimal.valueOf(utbetalingsgrad))
+            .medBruttoPrÅr(BigDecimal.valueOf(beregnetPrÅr))
+            .medRefusjonPrÅr(BigDecimal.valueOf(refusjonskrav))
+            .medUtbetalingsprosent(BigDecimal.valueOf(utbetalingsgrad))
             .build();
         arb.setErSøktYtelseFor(utbetalingsgrad > 0);
         return arb;

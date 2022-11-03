@@ -1,8 +1,8 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.ytelse.svp;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.fastsette.SjekkBeregningsgrunnlagStørreEnnGrenseverdi;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Beregnet;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.Fastsatt;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode;
 import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.evaluation.Evaluation;
@@ -30,7 +30,7 @@ public class RegelFinnGrenseverdi implements RuleService<BeregningsgrunnlagPerio
 
         // Fastsett grenseverdi for fastsetting av beregningsgrunnlag
         Specification<BeregningsgrunnlagPeriode> fastsettGrenseverdi = rs.beregningsRegel(FinnGrenseverdi.ID, FinnGrenseverdi.BESKRIVELSE,
-            new FinnGrenseverdi(), new Beregnet());
+            new FinnGrenseverdi(), new Fastsatt());
 
         // Fastsett avkortet BG
         Specification<BeregningsgrunnlagPeriode> fastsettAvkortet = rs.beregningsRegel(

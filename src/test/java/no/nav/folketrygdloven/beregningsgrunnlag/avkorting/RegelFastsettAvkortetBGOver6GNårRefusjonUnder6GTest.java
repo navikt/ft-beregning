@@ -1,8 +1,8 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.avkorting;
 
 
-import static no.nav.folketrygdloven.beregningsgrunnlag.VerifiserBeregningsgrunnlag.verifiserBeregningsgrunnlagAvkortetPrÅr;
-import static no.nav.folketrygdloven.beregningsgrunnlag.VerifiserBeregningsgrunnlag.verifiserBeregningsgrunnlagAvkortetPrÅrFrilanser;
+import static no.nav.folketrygdloven.beregningsgrunnlag.VerifiserFastsettBeregningsgrunnlag.verifiserBeregningsgrunnlagAvkortetPrÅr;
+import static no.nav.folketrygdloven.beregningsgrunnlag.VerifiserFastsettBeregningsgrunnlag.verifiserBeregningsgrunnlagAvkortetPrÅrFrilanser;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 
@@ -15,21 +15,20 @@ import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.Grunnbeløp;
 import no.nav.folketrygdloven.beregningsgrunnlag.fastsette.RegelFullføreBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Dekningsgrad;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.Beregningsgrunnlag;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrArbeidsforhold;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 
@@ -427,8 +426,8 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
                                                                      AktivitetStatus aktivitetStatus, Double refusjonskrav) {
         BeregningsgrunnlagPrArbeidsforhold afBuilder1 = BeregningsgrunnlagPrArbeidsforhold.builder()
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgNr))
-            .medBeregnetPrÅr(BigDecimal.valueOf(brutto))
-            .medGjeldendeRefusjonPrÅr(refusjonskrav == null ? null : BigDecimal.valueOf(refusjonskrav))
+            .medBruttoPrÅr(BigDecimal.valueOf(brutto))
+            .medRefusjonPrÅr(refusjonskrav == null ? null : BigDecimal.valueOf(refusjonskrav))
             .medAndelNr(andelNr)
             .build();
         return BeregningsgrunnlagPrStatus.builder()
@@ -441,13 +440,13 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
     private BeregningsgrunnlagPrStatus lagBGPrStatusATFL(String orgNr, double bruttoAT, double bruttoFL, int andelNr, Double refusjonPrÅr) {
         BeregningsgrunnlagPrArbeidsforhold afBuilderAT = BeregningsgrunnlagPrArbeidsforhold.builder()
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgNr))
-            .medBeregnetPrÅr(BigDecimal.valueOf(bruttoAT))
-            .medGjeldendeRefusjonPrÅr(refusjonPrÅr == null ? null : BigDecimal.valueOf(refusjonPrÅr))
+            .medBruttoPrÅr(BigDecimal.valueOf(bruttoAT))
+            .medRefusjonPrÅr(refusjonPrÅr == null ? null : BigDecimal.valueOf(refusjonPrÅr))
             .medAndelNr(andelNr)
             .build();
         BeregningsgrunnlagPrArbeidsforhold afBuilderFL = BeregningsgrunnlagPrArbeidsforhold.builder()
             .medArbeidsforhold(Arbeidsforhold.builder().medAktivitet(Aktivitet.FRILANSINNTEKT).medOrgnr(orgNr).build())
-            .medBeregnetPrÅr(BigDecimal.valueOf(bruttoFL))
+            .medBruttoPrÅr(BigDecimal.valueOf(bruttoFL))
             .medAndelNr(andelNr)
             .build();
         return BeregningsgrunnlagPrStatus.builder()
@@ -465,8 +464,8 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
         long andelNr = 1;
         BeregningsgrunnlagPrArbeidsforhold afBuilder1 = BeregningsgrunnlagPrArbeidsforhold.builder()
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR1))
-            .medBeregnetPrÅr(BigDecimal.valueOf(bruttoBG.get(0)))
-            .medGjeldendeRefusjonPrÅr(BigDecimal.valueOf(refusjonsKrav.get(0)))
+            .medBruttoPrÅr(BigDecimal.valueOf(bruttoBG.get(0)))
+            .medRefusjonPrÅr(BigDecimal.valueOf(refusjonsKrav.get(0)))
             .medAndelNr(andelNr++)
             .build();
         if (antallArbeidsforhold == 1) {
@@ -482,8 +481,8 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
 
         BeregningsgrunnlagPrArbeidsforhold afBuilder2 = BeregningsgrunnlagPrArbeidsforhold.builder()
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR2))
-            .medBeregnetPrÅr(BigDecimal.valueOf(bruttoBG.get(1)))
-            .medGjeldendeRefusjonPrÅr(BigDecimal.valueOf(refusjonsKrav.get(1)))
+            .medBruttoPrÅr(BigDecimal.valueOf(bruttoBG.get(1)))
+            .medRefusjonPrÅr(BigDecimal.valueOf(refusjonsKrav.get(1)))
             .medAndelNr(andelNr++)
             .build();
 
@@ -501,8 +500,8 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
 
         BeregningsgrunnlagPrArbeidsforhold afBuilder3 = BeregningsgrunnlagPrArbeidsforhold.builder()
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR3))
-            .medBeregnetPrÅr(BigDecimal.valueOf(bruttoBG.get(2)))
-            .medGjeldendeRefusjonPrÅr(BigDecimal.valueOf(refusjonsKrav.get(2)))
+            .medBruttoPrÅr(BigDecimal.valueOf(bruttoBG.get(2)))
+            .medRefusjonPrÅr(BigDecimal.valueOf(refusjonsKrav.get(2)))
             .medAndelNr(andelNr++)
             .build();
         if (antallArbeidsforhold == 3) {
@@ -519,8 +518,8 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
         }
         BeregningsgrunnlagPrArbeidsforhold afBuilder4 = BeregningsgrunnlagPrArbeidsforhold.builder()
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR4))
-            .medBeregnetPrÅr(BigDecimal.valueOf(bruttoBG.get(3)))
-            .medGjeldendeRefusjonPrÅr(BigDecimal.valueOf(refusjonsKrav.get(3)))
+            .medBruttoPrÅr(BigDecimal.valueOf(bruttoBG.get(3)))
+            .medRefusjonPrÅr(BigDecimal.valueOf(refusjonsKrav.get(3)))
             .medAndelNr(andelNr++)
             .build();
         BeregningsgrunnlagPrStatus bgpsATFL = BeregningsgrunnlagPrStatus.builder()
@@ -548,11 +547,8 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
             .build()));
         return Beregningsgrunnlag.builder()
             .medAktivitetStatuser(List.of(new AktivitetStatusMedHjemmel(AktivitetStatus.ATFL, null)))
-            .medBeregningsgrunnlagPeriode(BeregningsgrunnlagPeriode.builder(periode).medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100).build())
-            .medInntektsgrunnlag(inntektsgrunnlag)
-            .medSkjæringstidspunkt(skjæringstidspunkt)
+            .medBeregningsgrunnlagPeriode(BeregningsgrunnlagPeriode.oppdater(periode).medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100).build())
             .medGrunnbeløp(GRUNNBELØP)
-            .medGrunnbeløpSatser(List.of(new Grunnbeløp(LocalDate.of(2000, Month.JANUARY, 1), LocalDate.of(2099,  Month.DECEMBER,  31), GRUNNBELØP.longValue(), GRUNNBELØP.longValue())))
             .build();
     }
 

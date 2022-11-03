@@ -1,9 +1,9 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.ytelse.svp;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Beregnet;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.Fastsatt;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrStatus;
 import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.specification.Specification;
@@ -33,14 +33,14 @@ public class RegelFastsettAndelBGOver6G implements RuleService<Beregningsgrunnla
             new AvkortBGAndelerSomIkkeGjelderArbeidsforholdAndelsmessig(),
             new FastsettAndelForBGAndelerSomGjelderArbeidsforhold());
 
-        Specification<BeregningsgrunnlagPeriode> avkortAndelerSomIkkegjelderAFtil0 = new Beregnet();
+        Specification<BeregningsgrunnlagPeriode> avkortAndelerSomIkkegjelderAFtil0 = new Fastsatt();
 
         if (bgpsa != null) {
             Specification<BeregningsgrunnlagPeriode> fastsettAndelerForArbeidsforhold = rs.beregningsRegel(
                 FastsettAndelForArbeidsforhold.ID,
                 FastsettAndelForArbeidsforhold.BESKRIVELSE,
                 new FastsettAndelForArbeidsforhold(),
-                new Beregnet());
+                new Fastsatt());
 
             //FP_BR_29.8.3 Avkort alle beregningsgrunnlagsandeler som ikke gjelder arbeidsforhold til 0
             avkortAndelerSomIkkegjelderAFtil0 = rs.beregningsRegel(
