@@ -28,10 +28,10 @@ import no.nav.fpsak.nare.specification.Specification;
  * AAP beregnes etter §14-7 2.ledd
  * DP beregnes etter §8-49
  * MIDL_INAKTIV beregnes etter §8-47
- * */
+ */
 public class RegelForeslåBeregningsgrunnlag implements RuleService<BeregningsgrunnlagPeriode> {
 
-    public static final String ID = "BG-FORESLÅ";
+	public static final String ID = "BG-FORESLÅ";
 
 	private BeregningsgrunnlagPeriode regelmodell;
 
@@ -45,8 +45,8 @@ public class RegelForeslåBeregningsgrunnlag implements RuleService<Beregningsgr
 	}
 
 	@SuppressWarnings("unchecked")
-    @Override
-    public Specification<BeregningsgrunnlagPeriode> getSpecification() {
+	@Override
+	public Specification<BeregningsgrunnlagPeriode> getSpecification() {
 		Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
 
 		// Fastsett alle BG per status
@@ -58,14 +58,16 @@ public class RegelForeslåBeregningsgrunnlag implements RuleService<Beregningsgr
 				rs.beregningsRegel("FP_BR pr status", "Fastsett beregningsgrunnlag pr status", speclist, new Beregnet());
 
 		return foreslåBeregningsgrunnlag;
-    }
+	}
 
 	private Specification<BeregningsgrunnlagPeriode> velgSpecification(AktivitetStatus aktivitetStatus) {
 		if (regelmodell.getBeregningsgrunnlagPrStatus().isEmpty()) {
 			return new IkkeBeregnet(new BeregningUtfallMerknad(BeregningUtfallÅrsak.UDEFINERT));
 		}
 		var sporingsproperty = new ServiceArgument("aktivitetStatus", aktivitetStatus);
-		if (aktivitetStatus.erAAPellerDP()) {
+		var midlertidigInaktivAvviksvurderingEnabled = regelmodell.getBeregningsgrunnlag().getToggles().isEnabled("AVVIKSVURDER_MIDL_INAKTIV");
+
+		if (aktivitetStatus.erAAPellerDP() || (aktivitetStatus.equals(AktivitetStatus.MIDL_INAKTIV) && midlertidigInaktivAvviksvurderingEnabled)) {
 			return new RegelFastsettBeregningsgrunnlagDPellerAAP().getSpecification().medEvaluationProperty(sporingsproperty);
 		}
 		return switch (aktivitetStatus) {
