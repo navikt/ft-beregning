@@ -18,6 +18,17 @@ import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.Specification;
 
 
+/**
+ * Foreslå beregningsgrunnlag
+ * Beregner foreslått beregningsgrunnlag for statuser som skal beregnes i steg {@link no.nav.folketrygdloven.beregningsgrunnlag.fortsettForeslå.RegelFortsettForeslåBeregningsgrunnlag}
+ * Dette vil si statusene arbeidstaker, frilanser, dagpenger, arbeidsavklaringspenger og ytelser.
+ * Hvis en kombinasjonsstatus består av to statuser beregnes i ulike steg, beregnes de delvis i neste steg og delvis i dette.
+ * ATFL beregnes etter §8-28 og §8-30
+ * ATFL_SN beregnes §8-41, som i denne regelen beregner AT/FL etter §8-28 og §8-30
+ * AAP beregnes etter §14-7 2.ledd
+ * DP beregnes etter §8-49
+ * MIDL_INAKTIV beregnes etter §8-47
+ * */
 public class RegelForeslåBeregningsgrunnlag implements RuleService<BeregningsgrunnlagPeriode> {
 
     public static final String ID = "BG-FORESLÅ";
