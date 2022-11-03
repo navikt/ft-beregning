@@ -7,6 +7,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningUtfallMerk
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningUtfallÅrsak;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningUtfallÅrsakKoder;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.IkkeBeregnet;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.SammenligningGrunnlagType;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SammenligningsGrunnlag;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
@@ -23,7 +24,7 @@ class FastsettesVedSkjønnUtenTidsbegrensetArbeidsforhold extends IkkeBeregnet {
 
 	@Override
 	public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-		SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlag();
+		SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.AT_FL);
 		BigDecimal avvikProsent = sg.getAvvikProsent();
 		return nei(ruleReasonRef, String.valueOf(avvikProsent.setScale(0, RoundingMode.HALF_UP)));
 	}

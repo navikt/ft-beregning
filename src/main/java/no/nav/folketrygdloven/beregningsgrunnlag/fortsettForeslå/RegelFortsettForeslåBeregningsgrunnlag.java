@@ -19,7 +19,16 @@ import no.nav.fpsak.nare.ServiceArgument;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.Specification;
 
-
+/**
+ * Fortsett foreslå beregningsgrunnlag
+ * Beregner foreslått beregningsgrunnlag for statuser som ikke er blitt beregnet i steg {@link no.nav.folketrygdloven.beregningsgrunnlag.foreslå.RegelForeslåBeregningsgrunnlag}
+ * Dette vil si statusene selvstendig næringsdrivende, militær eller siviltjeneste, og midlertidig inaktiv.
+ * Hvis en kombinasjonsstatus består av to statuser beregnes i ulike steg, beregnes de delvis i forrige steg og delvis i dette.
+ * SN beregnes etter §8-35
+ * ATFL_SN beregnes etter §8-41, som i denne regelen beregner SN etter §8-35
+ * MS beregnes etter §14-7 4.ledd
+ * MIDL_INAKTIV beregnes etter §8-47
+ * */
 public class RegelFortsettForeslåBeregningsgrunnlag implements RuleService<BeregningsgrunnlagPeriode> {
 
     public static final String ID = "BG-FORTSETT-FORESLÅ";

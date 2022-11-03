@@ -2,7 +2,6 @@ package no.nav.folketrygdloven.beregningsgrunnlag.foreslå;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker.RegelBeregningsgrunnlagATFL;
 import no.nav.folketrygdloven.beregningsgrunnlag.inaktiv.RegelBeregningsgrunnlagInaktiv;
-import no.nav.folketrygdloven.beregningsgrunnlag.kombinasjon.RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNNy;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Beregnet;
@@ -19,6 +18,17 @@ import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.Specification;
 
 
+/**
+ * Foreslå beregningsgrunnlag
+ * Beregner foreslått beregningsgrunnlag for statuser som skal beregnes i steg {@link no.nav.folketrygdloven.beregningsgrunnlag.fortsettForeslå.RegelFortsettForeslåBeregningsgrunnlag}
+ * Dette vil si statusene arbeidstaker, frilanser, dagpenger, arbeidsavklaringspenger og ytelser.
+ * Hvis en kombinasjonsstatus består av to statuser beregnes i ulike steg, beregnes de delvis i neste steg og delvis i dette.
+ * ATFL beregnes etter §8-28 og §8-30
+ * ATFL_SN beregnes §8-41, som i denne regelen beregner AT/FL etter §8-28 og §8-30
+ * AAP beregnes etter §14-7 2.ledd
+ * DP beregnes etter §8-49
+ * MIDL_INAKTIV beregnes etter §8-47
+ * */
 public class RegelForeslåBeregningsgrunnlag implements RuleService<BeregningsgrunnlagPeriode> {
 
     public static final String ID = "BG-FORESLÅ";
@@ -60,8 +70,7 @@ public class RegelForeslåBeregningsgrunnlag implements RuleService<Beregningsgr
 		}
 		return switch (aktivitetStatus) {
 			case MS, SN -> new Beregnet();
-			case ATFL -> new RegelBeregningsgrunnlagATFL(regelmodell).getSpecification().medEvaluationProperty(sporingsproperty);
-			case ATFL_SN -> new RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNNy(regelmodell).getSpecification().medEvaluationProperty(sporingsproperty);
+			case ATFL, ATFL_SN -> new RegelBeregningsgrunnlagATFL(regelmodell).getSpecification().medEvaluationProperty(sporingsproperty);
 			case KUN_YTELSE -> new RegelForeslåBeregningsgrunnlagTY(regelmodell).getSpecification().medEvaluationProperty(sporingsproperty);
 			case MIDL_INAKTIV -> new RegelBeregningsgrunnlagInaktiv(regelmodell).getSpecification().medEvaluationProperty(sporingsproperty);
 			default -> new RegelForeslåBeregningsgrunnlagTilNull(aktivitetStatus).getSpecification().medEvaluationProperty(sporingsproperty);

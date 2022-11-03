@@ -164,12 +164,13 @@ public class BeregningsgrunnlagPeriode {
 		return beregningsgrunnlag.getUregulertGrunnbeløp();
 	}
 
-	public SammenligningsGrunnlag getSammenligningsGrunnlag() {
-		return beregningsgrunnlag.getSammenligningsGrunnlag();
-	}
-
 	public Optional<SammenligningsGrunnlag> getSammenligningsGrunnlagForType(SammenligningGrunnlagType type) {
 		return beregningsgrunnlag.getSammenligningsgrunnlagForStatus(type);
+	}
+
+	public SammenligningsGrunnlag getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType type) {
+		return beregningsgrunnlag.getSammenligningsgrunnlagForStatus(type)
+				.orElseThrow(() -> new IllegalStateException("FEIL: Forventet å finne sammenligningsgrunnlag for type " + type + " men denne var ikke satt"));
 	}
 
 	public Dekningsgrad getDekningsgrad() {

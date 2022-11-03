@@ -9,7 +9,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.dok.DokumentasjonRegelBeregnBru
 import no.nav.folketrygdloven.beregningsgrunnlag.dok.DokumentasjonRegelBeregningsgrunnlagATFL;
 import no.nav.folketrygdloven.beregningsgrunnlag.dok.DokumentasjonRegelFastsettAvkortetBGOver6GNårRefusjonUnder6G;
 import no.nav.folketrygdloven.beregningsgrunnlag.dok.DokumentasjonRegelFastsettAvkortetVedRefusjonOver6G;
-import no.nav.folketrygdloven.beregningsgrunnlag.dok.DokumentasjonRegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN;
 import no.nav.folketrygdloven.beregningsgrunnlag.dok.DokumentasjonRegelForeslåBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.dok.DokumentasjonRegelFullføreBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.fastsette.refusjon.over6g.RegelBeregnRefusjonPrArbeidsforhold;
@@ -19,17 +18,6 @@ import no.nav.fpsak.nare.doc.RuleDescriptionDigraph;
 import no.nav.fpsak.nare.specification.Specification;
 
 public class BeregningsgrunnlagDocTest {
-
-    @Test
-    public void testKombinasjonATFLSN() {
-        Specification<BeregningsgrunnlagPeriode> beregning = new DokumentasjonRegelFastsetteBeregningsgrunnlagForKombinasjonATFLSN().getSpecification();
-        RuleDescriptionDigraph digraph = new RuleDescriptionDigraph(beregning.ruleDescription());
-
-        @SuppressWarnings("unused")
-        String json = digraph.toJson();
-        assertThat(json).isNotBlank();
-
-    }
 
     @Test
     public void testRegelFastsettBeregningsgrunnlagDPellerAAP() {
