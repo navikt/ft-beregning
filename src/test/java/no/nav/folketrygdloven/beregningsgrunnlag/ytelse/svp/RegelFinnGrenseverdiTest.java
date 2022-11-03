@@ -14,10 +14,10 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.MidlertidigInaktivT
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.RegelResultat;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.Beregningsgrunnlag;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrArbeidsforhold;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrStatus;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 
 public class RegelFinnGrenseverdiTest {
@@ -1217,7 +1217,7 @@ public class RegelFinnGrenseverdiTest {
         BeregningsgrunnlagPrStatus atfl = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
 
         if (atfl == null) {
-            BeregningsgrunnlagPeriode.builder(periode)
+            BeregningsgrunnlagPeriode.oppdater(periode)
                 .medBeregningsgrunnlagPrStatus(BeregningsgrunnlagPrStatus
                     .builder()
                 .medAktivitetStatus(AktivitetStatus.ATFL)
@@ -1237,7 +1237,7 @@ public class RegelFinnGrenseverdiTest {
         BeregningsgrunnlagPrStatus atfl = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
 
         if (atfl == null) {
-            BeregningsgrunnlagPeriode.builder(periode)
+            BeregningsgrunnlagPeriode.oppdater(periode)
                 .medBeregningsgrunnlagPrStatus(BeregningsgrunnlagPrStatus
                     .builder()
                     .medAktivitetStatus(AktivitetStatus.ATFL)
@@ -1257,11 +1257,11 @@ public class RegelFinnGrenseverdiTest {
                 .builder()
                 .medAndelNr(andelsnr)
                 .medAktivitetStatus(AktivitetStatus.SN)
-                .medBeregnetPrÅr(BigDecimal.valueOf(beregnetPrÅr))
-                .medUtbetalingsprosentSVP(BigDecimal.valueOf(utbetalingsgrad))
+                .medBruttoPrÅr(BigDecimal.valueOf(beregnetPrÅr))
+                .medUtbetalingsprosent(BigDecimal.valueOf(utbetalingsgrad))
                 .build();
             status.setErSøktYtelseFor(utbetalingsgrad > 0);
-            BeregningsgrunnlagPeriode.builder(periode)
+            BeregningsgrunnlagPeriode.oppdater(periode)
                 .medBeregningsgrunnlagPrStatus(status);
     }
 
@@ -1273,9 +1273,9 @@ public class RegelFinnGrenseverdiTest {
         BeregningsgrunnlagPrArbeidsforhold arb = BeregningsgrunnlagPrArbeidsforhold.builder()
             .medAndelNr(andelsnr)
             .medArbeidsforhold(arbeidsforhold)
-            .medBeregnetPrÅr(BigDecimal.valueOf(beregnetPrÅr))
-            .medGjeldendeRefusjonPrÅr(BigDecimal.valueOf(refusjonskrav))
-            .medUtbetalingsprosentSVP(BigDecimal.valueOf(utbetalingsgrad))
+            .medBruttoPrÅr(BigDecimal.valueOf(beregnetPrÅr))
+            .medRefusjonPrÅr(BigDecimal.valueOf(refusjonskrav))
+            .medUtbetalingsprosent(BigDecimal.valueOf(utbetalingsgrad))
             .build();
         arb.setErSøktYtelseFor(utbetalingsgrad > 0);
         return arb;

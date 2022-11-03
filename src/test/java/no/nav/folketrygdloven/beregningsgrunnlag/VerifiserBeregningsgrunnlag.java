@@ -16,11 +16,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 
 public class VerifiserBeregningsgrunnlag {
 
-    public static void verifiserAtBeregningsgrunnlagBruttoIkkeErBeregnet(AktivitetStatus aktivitetStatus, BeregningsgrunnlagHjemmel hjemmel, BeregningsgrunnlagPeriode grunnlag) {
-        BeregningsgrunnlagPrStatus bgpsa = verifiserGrunnlag(aktivitetStatus, hjemmel, grunnlag);
-        assertThat(bgpsa.getBeregnetPrÅr()).isEqualTo(0.0d);
-    }
-
     public static void verifiserBeregningsgrunnlagBruttoPrPeriodeType(BeregningsgrunnlagPeriode grunnlag, BeregningsgrunnlagHjemmel hjemmel, AktivitetStatus aktivitetStatus, double beløp, double gjennomsnittligPGI) {
         BeregningsgrunnlagPrStatus bgpsa = verifiserGrunnlag(aktivitetStatus, hjemmel, grunnlag);
         assertThat(bgpsa.getBeregnetPrÅr().doubleValue()).isCloseTo(beløp, within(0.01));
@@ -33,22 +28,6 @@ public class VerifiserBeregningsgrunnlag {
 
     public static void verifiserBeregningsgrunnlagBruttoPrPeriodeType(BeregningsgrunnlagPeriode grunnlag, BeregningsgrunnlagHjemmel hjemmel, AktivitetStatus aktivitetStatus, double beløp) {
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, hjemmel, aktivitetStatus, beløp, beløp);
-    }
-
-    public static void verifiserBeregningsgrunnlagAvkortetPrÅr(BeregningsgrunnlagPeriode grunnlag, BeregningsgrunnlagHjemmel hjemmel, AktivitetStatus aktivitetStatus, double beløp) {
-        BeregningsgrunnlagPrStatus bgpsa = verifiserGrunnlag(aktivitetStatus, hjemmel, grunnlag);
-        assertThat(bgpsa.getAvkortetPrÅr().doubleValue()).isCloseTo(beløp, within(0.01));
-    }
-
-    public static void verifiserBeregningsgrunnlagAvkortetPrÅrFrilanser(BeregningsgrunnlagPeriode grunnlag, BeregningsgrunnlagHjemmel hjemmel, double beløp){
-        BeregningsgrunnlagPrStatus bgpsa = verifiserGrunnlag(AktivitetStatus.ATFL, hjemmel, grunnlag);
-        Optional<BeregningsgrunnlagPrArbeidsforhold> arbeidsforholdOptional = bgpsa.getFrilansArbeidsforhold();
-        arbeidsforholdOptional.ifPresent(af -> assertThat(af.getAvkortetPrÅr().doubleValue()).isCloseTo(beløp, within(0.01)));
-    }
-
-    public static void verifiserBeregningsgrunnlagRedusertPrÅr(BeregningsgrunnlagPeriode grunnlag, BeregningsgrunnlagHjemmel hjemmel, AktivitetStatus aktivitetStatus, double beløp) {
-        BeregningsgrunnlagPrStatus bgpsa = verifiserGrunnlag(aktivitetStatus, hjemmel, grunnlag);
-        assertThat(bgpsa.getRedusertPrÅr().doubleValue()).isCloseTo(beløp, within(0.01));
     }
 
     public static void verifiserBeregningsperiode(AktivitetStatus aktivitetStatus, BeregningsgrunnlagHjemmel hjemmel, BeregningsgrunnlagPeriode grunnlag, Periode periode) {

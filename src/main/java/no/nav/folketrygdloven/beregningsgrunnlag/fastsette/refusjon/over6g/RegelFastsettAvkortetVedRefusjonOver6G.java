@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Beregnet;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.Fastsatt;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrStatus;
 import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.specification.Specification;
@@ -27,7 +27,7 @@ public class RegelFastsettAvkortetVedRefusjonOver6G implements RuleService<Bereg
     public Specification<BeregningsgrunnlagPeriode> getSpecification() {
         BeregningsgrunnlagPrStatus bgpsa = regelmodell.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
         if (bgpsa == null) {
-            return new Beregnet();
+            return new Fastsatt();
         }
 
         Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
@@ -35,7 +35,7 @@ public class RegelFastsettAvkortetVedRefusjonOver6G implements RuleService<Bereg
         Specification<BeregningsgrunnlagPeriode> fastsettBrukersAndelerTilNull = new FastsettBrukersAndelerTilNull();
 
         int antallKjøringer = bgpsa.getArbeidsforholdSomSkalBrukes().size();
-        Specification<BeregningsgrunnlagPeriode> fastsettAvkortetBeregningsgrunnlag = new Beregnet();
+        Specification<BeregningsgrunnlagPeriode> fastsettAvkortetBeregningsgrunnlag = new Fastsatt();
         if (antallKjøringer > 0) {
             List<Specification<BeregningsgrunnlagPeriode>> prArbeidsforhold = new ArrayList<>();
             for (int nr = 1; nr <= antallKjøringer; nr++) {

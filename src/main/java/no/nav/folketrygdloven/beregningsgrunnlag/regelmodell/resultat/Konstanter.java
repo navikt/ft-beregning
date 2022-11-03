@@ -29,15 +29,15 @@ public class Konstanter {
 	 */
 	private LocalDate fomDatoForIndividuellSammenligningATFL_SN;
 
-    void setAntallGMilitærHarKravPå(int antallGMilitærHarKravPå) {
+	public void setAntallGMilitærHarKravPå(int antallGMilitærHarKravPå) {
         this.antallGMilitærHarKravPå = antallGMilitærHarKravPå;
     }
 
-    void setAntallGØvreGrenseverdi(BigDecimal antallGØvreGrenseverdi) {
+	public void setAntallGØvreGrenseverdi(BigDecimal antallGØvreGrenseverdi) {
         this.antallGØvreGrenseverdi = antallGØvreGrenseverdi;
     }
 
-    void setAntallGMinstekravVilkår(BigDecimal antallGMinstekravVilkår) {
+	public void setAntallGMinstekravVilkår(BigDecimal antallGMinstekravVilkår) {
         this.antallGMinstekravVilkår = antallGMinstekravVilkår;
     }
 
@@ -45,7 +45,7 @@ public class Konstanter {
 		this.midlertidigInaktivTypeAReduksjonsfaktor = midlertidigInaktivTypeAReduksjonsfaktor;
 	}
 
-	void setYtelsedagerIPrÅr(BigDecimal ytelsedagerIPrÅr) {
+	public void setYtelsedagerIPrÅr(BigDecimal ytelsedagerIPrÅr) {
         this.ytelsedagerIPrÅr = ytelsedagerIPrÅr;
     }
 
@@ -53,15 +53,15 @@ public class Konstanter {
 		return Optional.ofNullable(fomDatoForIndividuellSammenligningATFL_SN);
 	}
 
-	void setFomDatoForIndividuellSammenligningATFL_SN(LocalDate fomDatoForIndividuellSammenligningATFL_SN) {
+	public void setFomDatoForIndividuellSammenligningATFL_SN(LocalDate fomDatoForIndividuellSammenligningATFL_SN) {
 		this.fomDatoForIndividuellSammenligningATFL_SN = fomDatoForIndividuellSammenligningATFL_SN;
 	}
 
-	void setAvviksgrenseProsent(BigDecimal avviksgrenseProsent) {
+	public void setAvviksgrenseProsent(BigDecimal avviksgrenseProsent) {
         this.avviksgrenseProsent = avviksgrenseProsent;
     }
 
-    void setGrunnbeløpSatser(List<Grunnbeløp> grunnbeløpSatser) {
+    public void setGrunnbeløpSatser(List<Grunnbeløp> grunnbeløpSatser) {
         this.grunnbeløpSatser = grunnbeløpSatser;
     }
 

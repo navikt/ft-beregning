@@ -31,7 +31,7 @@
     </developers>
 
     <properties>
-        <revision>2.1</revision>
+        <revision>2.2</revision>
         <sha1></sha1>
         <changelist>-SNAPSHOT</changelist>
         <java.version>17</java.version>
@@ -55,7 +55,7 @@
             <url>https://maven.pkg.github.com/navikt/folketrygdloven-beregningsgrunnlag-regelmodell/</url>
         </repository>
     </repositories>
-    
+
     <dependencyManagement>
         <dependencies>
             <dependency>
