@@ -67,7 +67,11 @@ public class RegelForeslåBeregningsgrunnlag implements RuleService<Beregningsgr
 		var sporingsproperty = new ServiceArgument("aktivitetStatus", aktivitetStatus);
 		var midlertidigInaktivAvviksvurderingEnabled = regelmodell.getBeregningsgrunnlag().getToggles().isEnabled("AVVIKSVURDER_MIDL_INAKTIV");
 
-		if (aktivitetStatus.erAAPellerDP() || (aktivitetStatus.equals(AktivitetStatus.MIDL_INAKTIV) && midlertidigInaktivAvviksvurderingEnabled)) {
+		if (aktivitetStatus.equals(AktivitetStatus.MIDL_INAKTIV) && midlertidigInaktivAvviksvurderingEnabled) {
+			new Beregnet();
+		}
+
+		if (aktivitetStatus.erAAPellerDP()) {
 			return new RegelFastsettBeregningsgrunnlagDPellerAAP().getSpecification().medEvaluationProperty(sporingsproperty);
 		}
 		return switch (aktivitetStatus) {
