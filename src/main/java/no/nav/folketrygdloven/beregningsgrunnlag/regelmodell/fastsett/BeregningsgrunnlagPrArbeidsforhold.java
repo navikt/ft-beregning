@@ -18,7 +18,14 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 	private BigDecimal bruttoPrÅr;
 	private Arbeidsforhold arbeidsforhold;
 	private BigDecimal refusjonPrÅr;
-
+	private BigDecimal tilkommetPrÅr;
+	/**
+	 * Inntekt som er innrapportert i a-ordningen eller fra inntektsmelding
+	 *
+	 * Representerer den forventede inntekten bruker ville hatt om ikke brukeren hadde mottatt ytelse.
+	 *
+	 */
+	private BigDecimal rapportertInntektPrÅr;
 
 	// Output
 	private BigDecimal avkortetPrÅr;
@@ -60,7 +67,7 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 	public String getBeskrivelse() {
 		return (erFrilanser() ? "FL:" : "AT:") + getArbeidsgiverId();
 	}
-	
+
 	public Optional<BigDecimal> getBruttoPrÅr() {
 		return Optional.ofNullable(bruttoPrÅr);
 	}
@@ -157,6 +164,18 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 		return andelsmessigFørGraderingPrAar;
 	}
 
+	public BigDecimal getTilkommetPrÅr() {
+		return tilkommetPrÅr;
+	}
+
+	public BigDecimal getGradertTilkommetPrÅr() {
+		return finnGradert(getTilkommetPrÅr());
+	}
+
+	public BigDecimal getRapportertInntektPrÅr() {
+		return rapportertInntektPrÅr;
+	}
+
 	@Override
 	public String toString() {
 		return getBeskrivelse();
@@ -192,7 +211,6 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 			return this;
 		}
 
-
 		public Builder erNytt(boolean erNytt) {
 			this.erNytt = erNytt;
 			return this;
@@ -200,6 +218,11 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 
 		public Builder medAndelsmessigFørGraderingPrAar(BigDecimal andelsmessigFørGraderingPrAar) {
 			mal.andelsmessigFørGraderingPrAar = andelsmessigFørGraderingPrAar;
+			return this;
+		}
+
+		public Builder medTilkommetPrÅr(BigDecimal tilkommetPrÅr) {
+			mal.tilkommetPrÅr = tilkommetPrÅr;
 			return this;
 		}
 
