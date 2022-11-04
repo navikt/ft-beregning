@@ -68,7 +68,7 @@ public class RegelForeslåBeregningsgrunnlag implements RuleService<Beregningsgr
 		var midlertidigInaktivAvviksvurderingEnabled = regelmodell.getBeregningsgrunnlag().getToggles().isEnabled("AVVIKSVURDER_MIDL_INAKTIV");
 
 		if (aktivitetStatus.equals(AktivitetStatus.MIDL_INAKTIV) && midlertidigInaktivAvviksvurderingEnabled) {
-			new Beregnet();
+			return new Beregnet();
 		}
 
 		if (aktivitetStatus.erAAPellerDP()) {
