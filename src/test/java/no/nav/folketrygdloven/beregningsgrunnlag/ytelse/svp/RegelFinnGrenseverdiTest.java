@@ -4,6 +4,7 @@ import static no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil.TIDENES_EN
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
@@ -333,7 +334,7 @@ public class RegelFinnGrenseverdiTest {
 		//Act
 		kjørRegel(periode);
 
-		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(90_000));
+		assertThat(periode.getGrenseverdi().setScale(2, RoundingMode.HALF_UP)).isEqualByComparingTo(BigDecimal.valueOf(90_000));
 	}
 
 	@Test
@@ -779,6 +780,82 @@ public class RegelFinnGrenseverdiTest {
 		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(500_000));
 	}
 
+
+	@Test
+	public void et_arbeidsforhold_under_6G_tilkommet_frilansinntekt() {
+		//Arrange
+		double beregnetPrÅr = 300_000;
+		double tilkommetFrilansinntekt = 100_000;
+
+		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
+				.build();
+
+		Beregningsgrunnlag.builder()
+				.leggTilToggle("GRADERING_MOT_INNTEKT", true)
+				.medBeregningsgrunnlagPeriode(periode)
+				.medGrunnbeløp(BigDecimal.valueOf(100_000));
+
+		leggTilFrilans(periode, 1L, null, tilkommetFrilansinntekt, 100);
+		leggTilArbeidsforhold(periode, 2L, ORGNR, beregnetPrÅr, 100);
+
+		//Act
+		kjørRegel(periode);
+
+		assertThat(periode.getGrenseverdi().setScale(2, RoundingMode.HALF_UP)).isEqualByComparingTo(BigDecimal.valueOf(200_000));
+	}
+
+	@Test
+	public void frilans_og_et_arbeidsforhold_under_6G_søkt_ytelse_for_begge_tilkommet_frilansinntekt() {
+		//Arrange
+		double beregnetPrÅr = 300_000;
+		double beregnetPrÅr2 = 200_000;
+		double tilkommetFrilansinntekt = 100_000;
+
+		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
+				.build();
+
+		Beregningsgrunnlag.builder()
+				.leggTilToggle("GRADERING_MOT_INNTEKT", true)
+				.medBeregningsgrunnlagPeriode(periode)
+				.medGrunnbeløp(BigDecimal.valueOf(100_000));
+
+		leggTilFrilans(periode, 1L, beregnetPrÅr, tilkommetFrilansinntekt,100);
+		leggTilArbeidsforhold(periode, 2L, ORGNR, beregnetPrÅr2, 100);
+
+		//Act
+		kjørRegel(periode);
+
+		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(400_000));
+	}
+
+	@Test
+	public void frilans_og_et_arbeidsforhold_over_6G_søkt_ytelse_for_begge_tilkommet_frilansinntekt() {
+		//Arrange
+		double beregnetPrÅr = 800_000;
+		double beregnetPrÅr2 = 200_000;
+		double tilkommetFrilansinntekt = 200_000;
+
+		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
+				.build();
+
+		Beregningsgrunnlag.builder()
+				.leggTilToggle("GRADERING_MOT_INNTEKT", true)
+				.medBeregningsgrunnlagPeriode(periode)
+				.medGrunnbeløp(BigDecimal.valueOf(100_000));
+
+		leggTilFrilans(periode, 1L, beregnetPrÅr, tilkommetFrilansinntekt, 100);
+		leggTilArbeidsforhold(periode, 2L, ORGNR, beregnetPrÅr2, 100);
+
+		//Act
+		kjørRegel(periode);
+
+		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(480_000));
+	}
+
+
 	@Test
 	public void frilans_og_et_arbeidsforhold_over_6G_søkt_ytelse_for_begge() {
 		//Arrange
@@ -801,6 +878,7 @@ public class RegelFinnGrenseverdiTest {
 
 		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(600_000));
 	}
+
 
 	@Test
 	public void frilans_og_et_arbeidsforhold_under_6G_søkt_ytelse_for_kun_frilans() {
@@ -1398,6 +1476,28 @@ public class RegelFinnGrenseverdiTest {
 		} else {
 			BeregningsgrunnlagPrStatus.builder(atfl)
 					.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, 0, null, utbetalingsgrad, arbeidsforhold))
+					.build();
+		}
+	}
+
+	private void leggTilFrilans(BeregningsgrunnlagPeriode periode,
+	                            long andelsnr,
+	                            Double beregnetPrÅr,
+								Double tilkommetPrÅr,
+	                            double utbetalingsgrad) {
+		Arbeidsforhold arbeidsforhold = Arbeidsforhold.frilansArbeidsforhold();
+		BeregningsgrunnlagPrStatus atfl = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+
+		if (atfl == null) {
+			BeregningsgrunnlagPeriode.oppdater(periode)
+					.medBeregningsgrunnlagPrStatus(BeregningsgrunnlagPrStatus
+							.builder()
+							.medAktivitetStatus(AktivitetStatus.ATFL)
+							.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, 0, tilkommetPrÅr, utbetalingsgrad, arbeidsforhold))
+							.build());
+		} else {
+			BeregningsgrunnlagPrStatus.builder(atfl)
+					.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, 0, tilkommetPrÅr, utbetalingsgrad, arbeidsforhold))
 					.build();
 		}
 	}
