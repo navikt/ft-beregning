@@ -176,7 +176,7 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 	}
 
 	public BigDecimal getTilkommetPrÅr() {
-		return tilkommetPrÅr;
+		return tilkommetPrÅr != null ? tilkommetPrÅr : BigDecimal.ZERO;
 	}
 
 	public BigDecimal getGradertTilkommetPrÅr() {
