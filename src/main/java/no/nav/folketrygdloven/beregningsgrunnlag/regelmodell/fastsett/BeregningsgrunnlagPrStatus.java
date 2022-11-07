@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -26,10 +25,10 @@ public class BeregningsgrunnlagPrStatus {
 	private BigDecimal utbetalingsprosent = BigDecimal.valueOf(100);
 	private BigDecimal andelsmessigFørGraderingPrAar;
 	private BigDecimal bruttoPrÅr;
+	private BigDecimal beregnetPrÅr;
 	private BigDecimal tilkommetPrÅr;
 	/**
 	 * Representerer den forventede inntekten bruker ville hatt om ikke brukeren hadde mottatt ytelse.
-	 *
 	 */
 	private BigDecimal rapportertInntektPrÅr;
 
@@ -79,13 +78,22 @@ public class BeregningsgrunnlagPrStatus {
 				.orElse(BigDecimal.ZERO);
 	}
 
-	public BigDecimal getRapportertInntektPrÅr() {
-		return rapportertInntektPrÅr != null ? rapportertInntektPrÅr : arbeidsforhold.stream()
-				.map(BeregningsgrunnlagPrArbeidsforhold::getRapportertInntektPrÅr)
+	public BigDecimal getGradertBeregnetPrÅr() {
+		return beregnetPrÅr != null ? finnGradert(beregnetPrÅr) : arbeidsforhold.stream()
+				.map(BeregningsgrunnlagPrArbeidsforhold::getGradertBeregnetPrÅr)
 				.filter(Objects::nonNull)
 				.reduce(BigDecimal::add)
 				.orElse(BigDecimal.ZERO);
 	}
+
+	public BigDecimal getBeregnetPrÅr() {
+		return beregnetPrÅr != null ? beregnetPrÅr : arbeidsforhold.stream()
+				.map(BeregningsgrunnlagPrArbeidsforhold::getBeregnetPrÅr)
+				.filter(Objects::nonNull)
+				.reduce(BigDecimal::add)
+				.orElse(BigDecimal.ZERO);
+	}
+
 
 
 	public boolean erArbeidstakerEllerFrilanser() {
@@ -244,7 +252,11 @@ public class BeregningsgrunnlagPrStatus {
 			return this;
 		}
 
-
+		public Builder medBeregnetPrÅr(BigDecimal beregnetPrÅr) {
+			sjekkIkkeArbeidstaker();
+			beregningsgrunnlagPrStatusMal.beregnetPrÅr = beregnetPrÅr;
+			return this;
+		}
 
 		public Builder medAndelsmessigFørGraderingPrAar(BigDecimal andelsmessigFørGraderingPrAar) {
 			sjekkIkkeArbeidstaker();

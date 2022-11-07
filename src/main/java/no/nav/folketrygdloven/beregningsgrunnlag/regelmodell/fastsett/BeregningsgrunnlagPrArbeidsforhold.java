@@ -18,14 +18,16 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 	private BigDecimal bruttoPrÅr;
 	private Arbeidsforhold arbeidsforhold;
 	private BigDecimal refusjonPrÅr;
-	private BigDecimal tilkommetPrÅr;
+	private BigDecimal beregnetPrÅr;
 	/**
-	 * Inntekt som er innrapportert i a-ordningen eller fra inntektsmelding
-	 *
-	 * Representerer den forventede inntekten bruker ville hatt om ikke brukeren hadde mottatt ytelse.
-	 *
+	 * Tilkommet inntekt pr år
+	 * <p>
+	 * Dette tilsvarer det faktiske beløpet som bruker har i tilkommet inntekt.
+	 * <p>
+	 * Dersom kilde til beløpet er inntektsmelding må inntekten graderes mot inversen av utbetalingsgrad for å komme fram til tilkommetPRÅr
 	 */
-	private BigDecimal rapportertInntektPrÅr;
+	private BigDecimal tilkommetPrÅr;
+
 
 	// Output
 	private BigDecimal avkortetPrÅr;
@@ -74,6 +76,15 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 
 	public BigDecimal getGradertBruttoPrÅr() {
 		return finnGradert(getBruttoPrÅr().orElse(null));
+	}
+
+
+	public BigDecimal getGradertBeregnetPrÅr() {
+		return beregnetPrÅr != null ? finnGradert(beregnetPrÅr) : BigDecimal.ZERO;
+	}
+
+	public BigDecimal getBeregnetPrÅr() {
+		return beregnetPrÅr != null ? beregnetPrÅr : BigDecimal.ZERO;
 	}
 
 	public Optional<BigDecimal> getBruttoInkludertNaturalytelsePrÅr() {
@@ -172,10 +183,6 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 		return finnGradert(getTilkommetPrÅr());
 	}
 
-	public BigDecimal getRapportertInntektPrÅr() {
-		return rapportertInntektPrÅr;
-	}
-
 	@Override
 	public String toString() {
 		return getBeskrivelse();
@@ -223,6 +230,11 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 
 		public Builder medTilkommetPrÅr(BigDecimal tilkommetPrÅr) {
 			mal.tilkommetPrÅr = tilkommetPrÅr;
+			return this;
+		}
+
+		public Builder medBeregnetPrÅr(BigDecimal beregnetPrÅr) {
+			mal.beregnetPrÅr = beregnetPrÅr;
 			return this;
 		}
 

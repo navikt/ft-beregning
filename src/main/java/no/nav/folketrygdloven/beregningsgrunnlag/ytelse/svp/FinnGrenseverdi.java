@@ -57,7 +57,7 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 	private BigDecimal gradertMotTilkommetInntekt(BeregningsgrunnlagPeriode grunnlag, BigDecimal grenseverdi) {
 		BigDecimal bortfalt = finnBortfaltInntekt(grunnlag);
 		var totaltGradertGrunnlag = grunnlag.getBeregningsgrunnlagPrStatus().stream()
-				.map(BeregningsgrunnlagPrStatus::getGradertBruttoInkludertNaturalytelsePrÅr)
+				.map(BeregningsgrunnlagPrStatus::getGradertBeregnetPrÅr)
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
 		var gradering = bortfalt.divide(totaltGradertGrunnlag, 10, RoundingMode.HALF_UP);
 		grenseverdi = grenseverdi.multiply(gradering);
@@ -80,7 +80,8 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 		var utbetalingsprosent = bps.getUtbetalingsprosent();
 		var utbetalingsgrad = utbetalingsprosent.divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP);
 		var inversUtbetalingsgrad = BigDecimal.ONE.subtract(utbetalingsgrad);
-		var løpendeInntekt = bps.getRapportertInntektPrÅr().multiply(inversUtbetalingsgrad);
+		var løpendeInntekt = bps.getBeregnetPrÅr().multiply(inversUtbetalingsgrad)
+				.add(bps.getTilkommetPrÅr());
 		return bps.getBruttoInkludertNaturalytelsePrÅr().subtract(løpendeInntekt);
 	}
 
@@ -90,7 +91,9 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 					var utbetalingsprosent = arbeidsforhold.getUtbetalingsprosent();
 					var utbetalingsgrad = utbetalingsprosent.divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP);
 					var inversUtbetalingsgrad = BigDecimal.ONE.subtract(utbetalingsgrad);
-					var opprettholdtInntekt = arbeidsforhold.getRapportertInntektPrÅr().multiply(inversUtbetalingsgrad);
+					var opprettholdtInntekt = arbeidsforhold.getBeregnetPrÅr()
+							.multiply(inversUtbetalingsgrad)
+							.add(arbeidsforhold.getTilkommetPrÅr());
 					return arbeidsforhold.getBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO)
 							.subtract(opprettholdtInntekt);
 				})
