@@ -154,9 +154,11 @@ public class BeregningsgrunnlagPrStatus {
 	}
 
 	public BigDecimal getGradertBruttoInkludertNaturalytelsePrÅr() {
-		BigDecimal brutto = getBruttoPrÅr();
-		BigDecimal samletNaturalytelse = samletNaturalytelseBortfaltMinusTilkommetPrÅr();
-		return finnGradert(brutto.add(samletNaturalytelse));
+			return bruttoPrÅr != null ? finnGradert(getBruttoInkludertNaturalytelsePrÅr()) : getArbeidsforhold().stream()
+					.map(BeregningsgrunnlagPrArbeidsforhold::getGradertBruttoInkludertNaturalytelsePrÅr)
+					.filter(Optional::isPresent)
+					.map(Optional::get)
+					.reduce(BigDecimal.ZERO, BigDecimal::add);
 	}
 
 
