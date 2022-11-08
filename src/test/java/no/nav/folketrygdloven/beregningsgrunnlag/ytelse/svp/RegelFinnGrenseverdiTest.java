@@ -163,6 +163,35 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
+	public void to_arbeidsforhold_under_6G_fordelt_og_tilkommet_inntekt_i_det_ene() {
+		//Arrange
+		double beregnetPrÅr = 250_000;
+		double fordeltPrÅr = 150_000;
+
+		double tilkommetPrÅr2 = 100_000;
+		double fordeltPrÅr2 = tilkommetPrÅr2;
+
+		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
+				.build();
+
+		Beregningsgrunnlag.builder()
+				.leggTilToggle("GRADERING_MOT_INNTEKT", true)
+				.medBeregningsgrunnlagPeriode(periode)
+				.medGrunnbeløp(BigDecimal.valueOf(100_000));
+
+		leggTilArbeidsforhold(periode, 1L, ORGNR, beregnetPrÅr, fordeltPrÅr, null,100);
+		leggTilArbeidsforhold(periode, 2L, ORGNR_2, null, fordeltPrÅr2, tilkommetPrÅr2, 50);
+
+		//Act
+		kjørRegel(periode);
+
+		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(150_000));
+	}
+
+
+
+	@Test
 	public void to_arbeidsforhold_over_6G() {
 		//Arrange
 		double beregnetPrÅr = 350_000;
@@ -1085,6 +1114,30 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
+	public void næring_under_6G_søkt_delvis_ytelse_tilkommet_inntekt() {
+		//Arrange
+		double beregnetPrÅr = 200_000;
+		double tilkommet = 50_000;
+
+
+		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
+				.build();
+
+		Beregningsgrunnlag.builder()
+				.leggTilToggle("GRADERING_MOT_INNTEKT", true)
+				.medBeregningsgrunnlagPeriode(periode)
+				.medGrunnbeløp(BigDecimal.valueOf(100_000));
+
+		leggTilNæring(periode, 1L, beregnetPrÅr, tilkommet, 50);
+
+		//Act
+		kjørRegel(periode);
+
+		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(50_000));
+	}
+
+	@Test
 	public void næring_under_6G_ikkje_søkt_ytelse() {
 		//Arrange
 		double beregnetPrÅr = 200_000;
@@ -1147,6 +1200,30 @@ public class RegelFinnGrenseverdiTest {
 		kjørRegel(periode);
 
 		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(600_000));
+	}
+
+	@Test
+	public void næring_og_frilans_over_6G_søkt_ytelse_for_begge_tilkommet_næring() {
+		//Arrange
+		double beregnetPrÅr = 500_000;
+		double tilkommet = 100_000;
+
+		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
+				.build();
+
+		Beregningsgrunnlag.builder()
+				.leggTilToggle("GRADERING_MOT_INNTEKT", true)
+				.medBeregningsgrunnlagPeriode(periode)
+				.medGrunnbeløp(BigDecimal.valueOf(100_000));
+
+		leggTilNæring(periode, 1L, beregnetPrÅr, tilkommet, 100);
+		leggTilFrilans(periode, 2L, beregnetPrÅr, 100);
+
+		//Act
+		kjørRegel(periode);
+
+		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(540_000));
 	}
 
 	@Test
@@ -1428,14 +1505,15 @@ public class RegelFinnGrenseverdiTest {
 					.medBeregningsgrunnlagPrStatus(BeregningsgrunnlagPrStatus
 							.builder()
 							.medAktivitetStatus(AktivitetStatus.ATFL)
-							.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, 100_000, null, utbetalingsgrad, arbeidsforhold))
+							.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, null, 100_000, null, utbetalingsgrad, arbeidsforhold))
 							.build());
 		} else {
 			BeregningsgrunnlagPrStatus.builder(atfl)
-					.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, 100_000, null, utbetalingsgrad, arbeidsforhold))
+					.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, null, 100_000, null, utbetalingsgrad, arbeidsforhold))
 					.build();
 		}
 	}
+
 
 	private void leggTilArbeidsforhold(BeregningsgrunnlagPeriode periode,
 	                                   long andelsnr,
@@ -1451,11 +1529,35 @@ public class RegelFinnGrenseverdiTest {
 					.medBeregningsgrunnlagPrStatus(BeregningsgrunnlagPrStatus
 							.builder()
 							.medAktivitetStatus(AktivitetStatus.ATFL)
-							.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, 100_000, tilkommetPrÅr, utbetalingsgrad, arbeidsforhold))
+							.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, null, 100_000, tilkommetPrÅr, utbetalingsgrad, arbeidsforhold))
 							.build());
 		} else {
 			BeregningsgrunnlagPrStatus.builder(atfl)
-					.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, 100_000, tilkommetPrÅr, utbetalingsgrad, arbeidsforhold))
+					.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, null, 100_000, tilkommetPrÅr, utbetalingsgrad, arbeidsforhold))
+					.build();
+		}
+	}
+
+	private void leggTilArbeidsforhold(BeregningsgrunnlagPeriode periode,
+	                                   long andelsnr,
+	                                   String orgnr,
+	                                   Double beregnetPrÅr,
+									   double fordeltPrÅr,
+	                                   Double tilkommetPrÅr,
+	                                   double utbetalingsgrad) {
+		Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr);
+		BeregningsgrunnlagPrStatus atfl = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+
+		if (atfl == null) {
+			BeregningsgrunnlagPeriode.oppdater(periode)
+					.medBeregningsgrunnlagPrStatus(BeregningsgrunnlagPrStatus
+							.builder()
+							.medAktivitetStatus(AktivitetStatus.ATFL)
+							.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, fordeltPrÅr, 100_000, tilkommetPrÅr, utbetalingsgrad, arbeidsforhold))
+							.build());
+		} else {
+			BeregningsgrunnlagPrStatus.builder(atfl)
+					.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, fordeltPrÅr, 100_000, tilkommetPrÅr, utbetalingsgrad, arbeidsforhold))
 					.build();
 		}
 	}
@@ -1471,11 +1573,11 @@ public class RegelFinnGrenseverdiTest {
 					.medBeregningsgrunnlagPrStatus(BeregningsgrunnlagPrStatus
 							.builder()
 							.medAktivitetStatus(AktivitetStatus.ATFL)
-							.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, 0, null, utbetalingsgrad, arbeidsforhold))
+							.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, null, 0, null, utbetalingsgrad, arbeidsforhold))
 							.build());
 		} else {
 			BeregningsgrunnlagPrStatus.builder(atfl)
-					.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, 0, null, utbetalingsgrad, arbeidsforhold))
+					.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, null, 0, null, utbetalingsgrad, arbeidsforhold))
 					.build();
 		}
 	}
@@ -1493,11 +1595,11 @@ public class RegelFinnGrenseverdiTest {
 					.medBeregningsgrunnlagPrStatus(BeregningsgrunnlagPrStatus
 							.builder()
 							.medAktivitetStatus(AktivitetStatus.ATFL)
-							.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, 0, tilkommetPrÅr, utbetalingsgrad, arbeidsforhold))
+							.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, null, 0, tilkommetPrÅr, utbetalingsgrad, arbeidsforhold))
 							.build());
 		} else {
 			BeregningsgrunnlagPrStatus.builder(atfl)
-					.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, 0, tilkommetPrÅr, utbetalingsgrad, arbeidsforhold))
+					.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, null, 0, tilkommetPrÅr, utbetalingsgrad, arbeidsforhold))
 					.build();
 		}
 	}
@@ -1517,23 +1619,52 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPrStatus(status);
 	}
 
+	private void leggTilNæring(BeregningsgrunnlagPeriode periode,
+	                           long andelsnr,
+	                           Double beregnetPrÅr,
+	                           double tilkommet,
+	                           double utbetalingsgrad) {
+		var bruttoPrÅr = beregnetPrÅr != null ? BigDecimal.valueOf(beregnetPrÅr) : null;
+		BeregningsgrunnlagPrStatus status = BeregningsgrunnlagPrStatus
+				.builder()
+				.medAndelNr(andelsnr)
+				.medAktivitetStatus(AktivitetStatus.SN)
+				.medBruttoPrÅr(bruttoPrÅr)
+				.medBeregnetPrÅr(bruttoPrÅr)
+				.medTilkommetPrÅr(BigDecimal.valueOf(tilkommet))
+				.medUtbetalingsprosent(BigDecimal.valueOf(utbetalingsgrad))
+				.build();
+		status.setErSøktYtelseFor(utbetalingsgrad > 0);
+		BeregningsgrunnlagPeriode.oppdater(periode)
+				.medBeregningsgrunnlagPrStatus(status);
+	}
+
 	private BeregningsgrunnlagPrArbeidsforhold lagBeregningsgrunnlagPrArbeidsforhold(long andelsnr,
 	                                                                                 Double beregnetPrÅr,
+	                                                                                 Double fordeltPrÅr,
 	                                                                                 double refusjonskrav,
 	                                                                                 Double tilkommetPrÅr,
 	                                                                                 double utbetalingsgrad,
 	                                                                                 Arbeidsforhold arbeidsforhold) {
+		var bruttoPrÅr = finnBrutto(beregnetPrÅr, fordeltPrÅr);
 		BeregningsgrunnlagPrArbeidsforhold arb = BeregningsgrunnlagPrArbeidsforhold.builder()
 				.medAndelNr(andelsnr)
 				.medArbeidsforhold(arbeidsforhold)
 				.medBeregnetPrÅr(beregnetPrÅr != null ? BigDecimal.valueOf(beregnetPrÅr) : null)
-				.medBruttoPrÅr(beregnetPrÅr != null ? BigDecimal.valueOf(beregnetPrÅr) : BigDecimal.ZERO)
+				.medBruttoPrÅr(bruttoPrÅr)
 				.medTilkommetPrÅr(tilkommetPrÅr != null ? BigDecimal.valueOf(tilkommetPrÅr) : null)
 				.medRefusjonPrÅr(BigDecimal.valueOf(refusjonskrav))
 				.medUtbetalingsprosent(BigDecimal.valueOf(utbetalingsgrad))
 				.build();
 		arb.setErSøktYtelseFor(utbetalingsgrad > 0);
 		return arb;
+	}
+
+	private BigDecimal finnBrutto(Double beregnetPrÅr, Double fordeltPrÅr) {
+		if (fordeltPrÅr != null) {
+			return BigDecimal.valueOf(fordeltPrÅr);
+		}
+		return beregnetPrÅr != null ? BigDecimal.valueOf(beregnetPrÅr) : BigDecimal.ZERO;
 	}
 
 

@@ -26,11 +26,13 @@ public class BeregningsgrunnlagPrStatus {
 	private BigDecimal andelsmessigFørGraderingPrAar;
 	private BigDecimal bruttoPrÅr;
 	private BigDecimal beregnetPrÅr;
-	private BigDecimal tilkommetPrÅr;
 	/**
-	 * Representerer den forventede inntekten bruker ville hatt om ikke brukeren hadde mottatt ytelse.
+	 * Tilkommet inntekt pr år
+	 * <p>
+	 * Dette tilsvarer det faktiske beløpet som bruker har i tilkommet inntekt.
+	 *
 	 */
-	private BigDecimal rapportertInntektPrÅr;
+	private BigDecimal tilkommetPrÅr;
 
 	// Output
 	private BigDecimal avkortetPrÅr;
@@ -62,25 +64,9 @@ public class BeregningsgrunnlagPrStatus {
 				.orElse(null);
 	}
 
-	public BigDecimal getGradertTilkommetPrÅr() {
-		return tilkommetPrÅr != null ? finnGradert(tilkommetPrÅr) : arbeidsforhold.stream()
-				.map(BeregningsgrunnlagPrArbeidsforhold::getGradertTilkommetPrÅr)
-				.filter(Objects::nonNull)
-				.reduce(BigDecimal::add)
-				.orElse(BigDecimal.ZERO);
-	}
-
 	public BigDecimal getTilkommetPrÅr() {
 		return tilkommetPrÅr != null ? tilkommetPrÅr : arbeidsforhold.stream()
 				.map(BeregningsgrunnlagPrArbeidsforhold::getTilkommetPrÅr)
-				.filter(Objects::nonNull)
-				.reduce(BigDecimal::add)
-				.orElse(BigDecimal.ZERO);
-	}
-
-	public BigDecimal getGradertBeregnetPrÅr() {
-		return beregnetPrÅr != null ? finnGradert(beregnetPrÅr) : arbeidsforhold.stream()
-				.map(BeregningsgrunnlagPrArbeidsforhold::getGradertBeregnetPrÅr)
 				.filter(Objects::nonNull)
 				.reduce(BigDecimal::add)
 				.orElse(BigDecimal.ZERO);
