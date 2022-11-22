@@ -2,7 +2,9 @@ package no.nav.folketrygdloven.beregningsgrunnlag.inaktiv;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -46,8 +48,26 @@ public class FinnRapporterteInntekterForInaktiv implements FinnRapporterteInntek
 		return grunnlag.getInntektsgrunnlag().getPeriodeinntekter().stream()
 				.filter(p -> p.getInntektskilde().equals(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING))
 				.filter(p -> p.getArbeidsgiver().isPresent() && p.getArbeidsgiver().get().getAnsettelsesPeriode().inneholder(grunnlag.getSkjæringstidspunkt().minusDays(1)))
-				.filter(p -> p.inneholder(grunnlag.getSkjæringstidspunkt()))
+				.filter(p -> starterFørStp(grunnlag, p) && erIkkeEldreEnn4MånederFørStp(grunnlag, p) && harMinstEnVirkedag(p))
 				.toList();
+	}
+
+	private boolean harMinstEnVirkedag(Periodeinntekt p) {
+		if (p.getArbeidsgiver().isEmpty()) {
+			return false;
+		}
+		if (p.getArbeidsgiver().get().getAnsettelsesPeriode().getFom().isAfter(p.getTom())) {
+			return false;
+		}
+		return Virkedager.beregnAntallVirkedager(p.getArbeidsgiver().get().getAnsettelsesPeriode().getFom(), p.getTom()) > 0;
+	}
+
+	private boolean starterFørStp(BeregningsgrunnlagPeriode grunnlag, Periodeinntekt p) {
+		return p.getPeriode().getFom().isBefore(grunnlag.getSkjæringstidspunkt());
+	}
+
+	private boolean erIkkeEldreEnn4MånederFørStp(BeregningsgrunnlagPeriode grunnlag, Periodeinntekt p) {
+		return p.getPeriode().getFom().plusMonths(4).isAfter(grunnlag.getSkjæringstidspunkt());
 	}
 
 	private List<Periodeinntekt> finnInntektsmeldinger(BeregningsgrunnlagPeriode grunnlag) {
@@ -67,25 +87,63 @@ public class FinnRapporterteInntekterForInaktiv implements FinnRapporterteInntek
 	private BigDecimal finnÅrsinntektFraAOrdningen(BeregningsgrunnlagPeriode grunnlag,
 	                                               List<Periodeinntekt> innrapporterteInntekter,
 	                                               Set<Arbeidsforhold> arbeidsgivereMedInntektsmelding) {
+		var gruppertPrArbeidsgiver = grupperPåArbeidsgiver(innrapporterteInntekter, arbeidsgivereMedInntektsmelding);
+		return gruppertPrArbeidsgiver.entrySet().stream()
+				.map(e -> mapTilÅrsinntekt(grunnlag, e.getKey(), e.getValue()))
+				.reduce(BigDecimal::add)
+				.orElse(BigDecimal.ZERO);
+	}
+
+	private BigDecimal mapTilÅrsinntekt(BeregningsgrunnlagPeriode grunnlag, Arbeidsforhold arbeidsgiver, List<Periodeinntekt> inntekter) {
+		if (harFlereMånederMedInntekt(inntekter) && harInntektISammeMånedSomStp(grunnlag, inntekter)) {
+			// Finner nest nyeste for å finne en inntekt der arbeidstaker var ansatt til slutten av måneden
+			return beregnForInntekt(grunnlag, arbeidsgiver, finnNestNyesteMånedMedInntekt(inntekter));
+		} else {
+			return beregnForInntekt(grunnlag, arbeidsgiver, finnNyesteMånedMedInntekt(inntekter));
+		}
+	}
+
+	private Map<Arbeidsforhold, List<Periodeinntekt>> grupperPåArbeidsgiver(List<Periodeinntekt> innrapporterteInntekter, Set<Arbeidsforhold> arbeidsgivereMedInntektsmelding) {
 		return innrapporterteInntekter.stream()
 				.filter(i -> i.getArbeidsgiver().isPresent())
 				.filter(i -> arbeidsgivereMedInntektsmelding.stream().noneMatch(a -> a.getArbeidsgiverId().equals(i.getArbeidsgiver().get().getArbeidsgiverId())))
-				.map(i -> {
-					var inntekt = i.getInntekt();
-					var arbeidsgiver = i.getArbeidsgiver().orElseThrow();
-					int virkedagerIPeriode = finnVirkedagerMedArbeidForInntektsperiode(i.getPeriode(), arbeidsgiver);
-					if (virkedagerIPeriode > 0) {
-						return inntekt.divide(BigDecimal.valueOf(virkedagerIPeriode), 10, RoundingMode.HALF_UP).multiply(grunnlag.getBeregningsgrunnlag().getYtelsedagerPrÅr());
-					}
-					return BigDecimal.ZERO;
-				}).reduce(BigDecimal::add)
-				.orElse(BigDecimal.ZERO);
+				.collect(Collectors.groupingBy(i -> i.getArbeidsgiver().get()));
+	}
+
+	private Periodeinntekt finnNestNyesteMånedMedInntekt(List<Periodeinntekt> inntekter) {
+		var sorterte = inntekter.stream().sorted(Comparator.comparing(Periodeinntekt::getPeriode).reversed())
+				.toList();
+		return sorterte.get(1);
+	}
+
+	private Periodeinntekt finnNyesteMånedMedInntekt(List<Periodeinntekt> inntekter) {
+		var sorterte = inntekter.stream().sorted(Comparator.comparing(Periodeinntekt::getPeriode).reversed())
+				.toList();
+		return sorterte.get(0);
+	}
+
+	private boolean harFlereMånederMedInntekt(List<Periodeinntekt> inntekter) {
+		return inntekter.size() > 1;
+	}
+
+	private boolean harInntektISammeMånedSomStp(BeregningsgrunnlagPeriode grunnlag, List<Periodeinntekt> inntekter) {
+		return inntekter.stream().anyMatch(i -> i.getPeriode().inneholder(grunnlag.getSkjæringstidspunkt()));
+	}
+
+	private BigDecimal beregnForInntekt(BeregningsgrunnlagPeriode grunnlag, Arbeidsforhold arbeidsgiver, Periodeinntekt nestNyeste) {
+		int virkedagerIPeriode = finnVirkedagerMedArbeidForInntektsperiode(nestNyeste.getPeriode(), arbeidsgiver);
+		if (virkedagerIPeriode > 0) {
+			var inntekt = nestNyeste.getInntekt();
+			return inntekt.divide(BigDecimal.valueOf(virkedagerIPeriode), 10, RoundingMode.HALF_UP).multiply(grunnlag.getBeregningsgrunnlag().getYtelsedagerPrÅr());
+		}
+		return BigDecimal.ZERO;
 	}
 
 	private int finnVirkedagerMedArbeidForInntektsperiode(Periode inntektsperiode, Arbeidsforhold arbeidsgiver) {
 		var ansettelsesPeriode = arbeidsgiver.getAnsettelsesPeriode();
 		var ansettelsesperiodeFom = ansettelsesPeriode.getFom();
-		var ansattPeriodeFørStp = Periode.of(ansettelsesperiodeFom, inntektsperiode.getTom());
-		return Virkedager.beregnAntallVirkedager(ansattPeriodeFørStp);
+		var fom = ansettelsesperiodeFom.isBefore(inntektsperiode.getFom()) ? inntektsperiode.getFom() : ansettelsesperiodeFom;
+		var periodeForInntekt = Periode.of(fom, inntektsperiode.getTom());
+		return Virkedager.beregnAntallVirkedager(periodeForInntekt);
 	}
 }
