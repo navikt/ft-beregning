@@ -116,7 +116,7 @@ public class PeriodiserForUtbetalingsgrad extends LeafSpecification<Periodiserin
 			if (AktivitetStatusV2.FL.equals(gradering.getAktivitetStatus()) || AktivitetStatusV2.SN.equals(gradering.getAktivitetStatus())) {
 				return mapSplittetAndelFLSN(gradering);
 			}
-			Periode ansettelsesPeriode = gradering.getArbeidsforhold() == null ? null : gradering.getArbeidsforhold().getAnsettelsesPeriode();
+			Periode ansettelsesPeriode = gradering.getArbeidsforhold() == null ? null : gradering.getArbeidsforhold().getAnsettelsesPeriode().orElse(null);
 			SplittetAndel.Builder builder = SplittetAndel.builder()
 					.medAktivitetstatus(gradering.getAktivitetStatus())
 					.medArbeidsforhold(gradering.getArbeidsforhold());

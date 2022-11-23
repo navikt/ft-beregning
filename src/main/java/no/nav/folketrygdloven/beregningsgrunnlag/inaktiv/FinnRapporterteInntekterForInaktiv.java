@@ -47,19 +47,19 @@ public class FinnRapporterteInntekterForInaktiv implements FinnRapporterteInntek
 	private List<Periodeinntekt> finnOverlappendePeriodeInntekterFraInntektskomponenten(BeregningsgrunnlagPeriode grunnlag) {
 		return grunnlag.getInntektsgrunnlag().getPeriodeinntekter().stream()
 				.filter(p -> p.getInntektskilde().equals(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING))
-				.filter(p -> p.getArbeidsgiver().isPresent() && p.getArbeidsgiver().get().getAnsettelsesPeriode().inneholder(grunnlag.getSkjæringstidspunkt().minusDays(1)))
+				.filter(p -> p.getArbeidsgiver().isPresent() && p.getArbeidsgiver().get().getAnsettelsesPeriode().map(periode -> periode.inneholder(grunnlag.getSkjæringstidspunkt().minusDays(1))).orElse(false))
 				.filter(p -> starterFørStp(grunnlag, p) && erIkkeEldreEnn4MånederFørStp(grunnlag, p) && harMinstEnVirkedag(p))
 				.toList();
 	}
 
 	private boolean harMinstEnVirkedag(Periodeinntekt p) {
-		if (p.getArbeidsgiver().isEmpty()) {
+		if (p.getArbeidsgiver().isEmpty() || p.getArbeidsgiver().get().getAnsettelsesPeriode().isEmpty()) {
 			return false;
 		}
-		if (p.getArbeidsgiver().get().getAnsettelsesPeriode().getFom().isAfter(p.getTom())) {
+		if (p.getArbeidsgiver().get().getAnsettelsesPeriode().get().getFom().isAfter(p.getTom())) {
 			return false;
 		}
-		return Virkedager.beregnAntallVirkedager(p.getArbeidsgiver().get().getAnsettelsesPeriode().getFom(), p.getTom()) > 0;
+		return Virkedager.beregnAntallVirkedager(p.getArbeidsgiver().get().getAnsettelsesPeriode().get().getFom(), p.getTom()) > 0;
 	}
 
 	private boolean starterFørStp(BeregningsgrunnlagPeriode grunnlag, Periodeinntekt p) {
@@ -73,7 +73,7 @@ public class FinnRapporterteInntekterForInaktiv implements FinnRapporterteInntek
 	private List<Periodeinntekt> finnInntektsmeldinger(BeregningsgrunnlagPeriode grunnlag) {
 		return grunnlag.getInntektsgrunnlag().getPeriodeinntekter()
 				.stream().filter(p -> p.getInntektskilde().equals(Inntektskilde.INNTEKTSMELDING))
-				.filter(im -> im.getArbeidsgiver().isPresent() && im.getArbeidsgiver().get().getAnsettelsesPeriode().inneholder(grunnlag.getSkjæringstidspunkt().minusDays(1)))
+				.filter(im -> im.getArbeidsgiver().isPresent() && im.getArbeidsgiver().get().getAnsettelsesPeriode().map(periode -> periode.inneholder(grunnlag.getSkjæringstidspunkt().minusDays(1))).orElse(false))
 				.toList();
 	}
 
@@ -140,7 +140,7 @@ public class FinnRapporterteInntekterForInaktiv implements FinnRapporterteInntek
 	}
 
 	private int finnVirkedagerMedArbeidForInntektsperiode(Periode inntektsperiode, Arbeidsforhold arbeidsgiver) {
-		var ansettelsesPeriode = arbeidsgiver.getAnsettelsesPeriode();
+		var ansettelsesPeriode = arbeidsgiver.getAnsettelsesPeriode().orElseThrow(() -> new IllegalStateException("Forventer inntektsperiode med ansettelsesperiode"));
 		var ansettelsesperiodeFom = ansettelsesPeriode.getFom();
 		var fom = ansettelsesperiodeFom.isBefore(inntektsperiode.getFom()) ? inntektsperiode.getFom() : ansettelsesperiodeFom;
 		var periodeForInntekt = Periode.of(fom, inntektsperiode.getTom());
