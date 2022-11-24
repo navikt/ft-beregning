@@ -7,6 +7,7 @@ import java.util.Objects;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 
 public class AktivPeriode {
 
@@ -81,18 +82,8 @@ public class AktivPeriode {
         periode = Periode.of(fom, tom);
     }
 
-    public static AktivPeriode forArbeidstakerHosVirksomhet(Periode periode, String orgnr, String arbeidsforholdId, boolean harInntektsmelding) {
-        Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr, arbeidsforholdId, harInntektsmelding);
-        return new AktivPeriode(Aktivitet.ARBEIDSTAKERINNTEKT, periode, arbeidsforhold);
-    }
-
-	public static AktivPeriode forArbeidstakerHosVirksomhet(Periode periode, String orgnr, String arbeidsforholdId) {
-		Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr, arbeidsforholdId);
-		return new AktivPeriode(Aktivitet.ARBEIDSTAKERINNTEKT, periode, arbeidsforhold);
-	}
-
-	public static AktivPeriode forArbeidstakerHosPrivatperson(Periode periode, String aktørId, boolean harInntektsmelding) {
-        Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosPrivatperson(aktørId, harInntektsmelding);
+    public static AktivPeriode forArbeidstakerHosVirksomhet(Periode periode, String orgnr, String arbeidsforholdId) {
+        Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr, arbeidsforholdId);
         return new AktivPeriode(Aktivitet.ARBEIDSTAKERINNTEKT, periode, arbeidsforhold);
     }
 
