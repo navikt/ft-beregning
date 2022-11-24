@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.MidlertidigInaktivType;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivPeriode;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModell;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModellK9;
@@ -48,39 +47,19 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
 		if (harKunYtelsePåSkjæringstidspunkt(aktivePerioderVedStp)) {
 			regelmodell.leggTilAktivitetStatus(AktivitetStatus.KUN_YTELSE);
 			leggTilBrukersAndel(regelmodell);
+		} else if (erMidlertidigInaktiv(regelmodell)) {
+			regelmodell.leggTilAktivitetStatus(AktivitetStatus.MIDL_INAKTIV);
+			leggTilBrukersAndel(regelmodell);
 		} else {
-			var midlertidigInaktivType = finnMidlertidigInaktivType(regelmodell);
-			var skalAvviksvurdereMidlertidigInaktiv = regelmodell.getToggles().isEnabled("AVVIKSVURDER_MIDL_INAKTIV");
-			if (midlertidigInaktivType != null && (skalAvviksvurdereMidlertidigInaktiv || midlertidigInaktivType.equals(MidlertidigInaktivType.A))) {
-				regelmodell.leggTilAktivitetStatus(AktivitetStatus.MIDL_INAKTIV);
-				leggTilBrukersAndel(regelmodell);
-			} else if (midlertidigInaktivType != null && midlertidigInaktivType.equals(MidlertidigInaktivType.B)) {
-				regelmodell.leggTilAktivitetStatus(AktivitetStatus.MIDL_INAKTIV);
-				if (harAlleInntektsmelding(aktivePerioderVedStp)) {
-					// Her veit vi at alle aktiviteter ved STP er arbeidsforhold med IM
-					// Siden inntekt då fastsettes fra IM oppretter vi andeler for alle arbeidsforhold
-					// Status pr andel er AT, men status på toppnivå er inaktiv
-					aktivePerioderVedStp.stream()
-							.map(ap -> new BeregningsgrunnlagPrStatus(AktivitetStatus.ATFL, ap.getArbeidsforhold()))
-							.forEach(regelmodell::leggTilBeregningsgrunnlagPrStatus);
-				} else {
-					leggTilBrukersAndel(regelmodell);
-				}
-			} else {
-				opprettStatusForAktiviteter(regelmodell, aktivePerioderVedStp);
-			}
+			opprettStatusForAktiviteter(regelmodell, aktivePerioderVedStp);
 		}
 	}
 
-	private boolean harAlleInntektsmelding(List<AktivPeriode> aktivePerioderVedStp) {
-		return !aktivePerioderVedStp.isEmpty() && aktivePerioderVedStp.stream().allMatch(a -> a.getArbeidsforhold() != null && a.getArbeidsforhold().harInntektsmelding());
-	}
-
-	private MidlertidigInaktivType finnMidlertidigInaktivType(AktivitetStatusModell regelmodell) {
-		if (regelmodell instanceof AktivitetStatusModellK9) {
-			return ((AktivitetStatusModellK9) regelmodell).getMidlertidigInaktivType();
+	private boolean erMidlertidigInaktiv(AktivitetStatusModell regelmodell) {
+		if (regelmodell instanceof AktivitetStatusModellK9 k9Modell) {
+			return k9Modell.getMidlertidigInaktivType() != null;
 		}
-		return null;
+		return false;
 	}
 
 	private void leggTilBrukersAndel(AktivitetStatusModell regelmodell) {

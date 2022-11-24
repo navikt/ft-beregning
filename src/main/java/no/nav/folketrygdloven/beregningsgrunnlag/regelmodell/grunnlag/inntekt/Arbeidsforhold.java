@@ -13,7 +13,6 @@ public class Arbeidsforhold {
 	private String aktørId;
 	private ReferanseType referanseType;
 	private Periode ansettelsesPeriode;
-	private boolean harInntektsmelding;
 
 	private Arbeidsforhold() {
 	}
@@ -51,10 +50,6 @@ public class Arbeidsforhold {
 			return getAktørId();
 		}
 		return getOrgnr();
-	}
-
-	public boolean harInntektsmelding() {
-		return harInntektsmelding;
 	}
 
 	@Override
