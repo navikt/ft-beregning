@@ -50,8 +50,7 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
 			leggTilBrukersAndel(regelmodell);
 		} else {
 			var midlertidigInaktivType = finnMidlertidigInaktivType(regelmodell);
-			var skalAvviksvurdereMidlertidigInaktiv = regelmodell.getToggles().isEnabled("AVVIKSVURDER_MIDL_INAKTIV");
-			if (midlertidigInaktivType != null && (skalAvviksvurdereMidlertidigInaktiv || midlertidigInaktivType.equals(MidlertidigInaktivType.A))) {
+			if (midlertidigInaktivType != null && midlertidigInaktivType.equals(MidlertidigInaktivType.A)) {
 				regelmodell.leggTilAktivitetStatus(AktivitetStatus.MIDL_INAKTIV);
 				leggTilBrukersAndel(regelmodell);
 			} else if (midlertidigInaktivType != null && midlertidigInaktivType.equals(MidlertidigInaktivType.B)) {

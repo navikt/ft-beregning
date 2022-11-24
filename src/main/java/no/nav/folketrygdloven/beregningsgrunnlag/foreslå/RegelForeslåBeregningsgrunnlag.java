@@ -1,7 +1,6 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.foreslå;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker.RegelBeregningsgrunnlagATFL;
-import no.nav.folketrygdloven.beregningsgrunnlag.inaktiv.RegelBeregningsgrunnlagInaktiv;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Beregnet;
@@ -65,20 +64,14 @@ public class RegelForeslåBeregningsgrunnlag implements RuleService<Beregningsgr
 			return new IkkeBeregnet(new BeregningUtfallMerknad(BeregningUtfallÅrsak.UDEFINERT));
 		}
 		var sporingsproperty = new ServiceArgument("aktivitetStatus", aktivitetStatus);
-		var midlertidigInaktivAvviksvurderingEnabled = regelmodell.getBeregningsgrunnlag().getToggles().isEnabled("AVVIKSVURDER_MIDL_INAKTIV");
-
-		if (aktivitetStatus.equals(AktivitetStatus.MIDL_INAKTIV) && midlertidigInaktivAvviksvurderingEnabled) {
-			return new Beregnet();
-		}
 
 		if (aktivitetStatus.erAAPellerDP()) {
 			return new RegelFastsettBeregningsgrunnlagDPellerAAP().getSpecification().medEvaluationProperty(sporingsproperty);
 		}
 		return switch (aktivitetStatus) {
-			case MS, SN -> new Beregnet();
+			case MS, SN, MIDL_INAKTIV -> new Beregnet();
 			case ATFL, ATFL_SN -> new RegelBeregningsgrunnlagATFL(regelmodell).getSpecification().medEvaluationProperty(sporingsproperty);
 			case KUN_YTELSE -> new RegelForeslåBeregningsgrunnlagTY(regelmodell).getSpecification().medEvaluationProperty(sporingsproperty);
-			case MIDL_INAKTIV -> new RegelBeregningsgrunnlagInaktiv(regelmodell).getSpecification().medEvaluationProperty(sporingsproperty);
 			default -> new RegelForeslåBeregningsgrunnlagTilNull(aktivitetStatus).getSpecification().medEvaluationProperty(sporingsproperty);
 		};
 	}

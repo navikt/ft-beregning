@@ -63,8 +63,7 @@ public class RegelFortsettForeslåBeregningsgrunnlag implements RuleService<Bere
 			return new IkkeBeregnet(new BeregningUtfallMerknad(BeregningUtfallÅrsak.UDEFINERT));
 		}
 		var sporingsproperty = new ServiceArgument("aktivitetStatus", aktivitetStatus);
-		var midlertidigInaktivAvviksvurderingEnabled = regelmodell.getBeregningsgrunnlag().getToggles().isEnabled("AVVIKSVURDER_MIDL_INAKTIV");
-		if (!aktivitetStatus.erSelvstendigNæringsdrivende() && !aktivitetStatus.erMilitær() && (!aktivitetStatus.equals(AktivitetStatus.MIDL_INAKTIV) || !midlertidigInaktivAvviksvurderingEnabled)) {
+		if (!aktivitetStatus.erSelvstendigNæringsdrivende() && !aktivitetStatus.erMilitær() && !aktivitetStatus.equals(AktivitetStatus.MIDL_INAKTIV)) {
 			return new Beregnet();
 		}
 		return switch (aktivitetStatus) {
