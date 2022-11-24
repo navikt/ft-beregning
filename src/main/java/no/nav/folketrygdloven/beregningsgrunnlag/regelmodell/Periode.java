@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.Objects;
 
-public class Periode {
+public class Periode implements Comparable<Periode> {
     private static final LocalDate MIN_DATO = LocalDate.of(2000, Month.JANUARY, 1);
     private static final LocalDate MAX_DATO = LocalDate.of(9999, Month.DECEMBER, 31);
 
@@ -104,4 +104,8 @@ public class Periode {
         return tom.toEpochDay() - fom.toEpochDay() + 1;
     }
 
+	@Override
+	public int compareTo(Periode periode) {
+		return getFom().compareTo(periode.getFom());
+	}
 }

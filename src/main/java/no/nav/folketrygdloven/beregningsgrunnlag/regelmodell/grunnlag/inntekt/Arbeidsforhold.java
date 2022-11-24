@@ -1,6 +1,7 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
@@ -12,7 +13,6 @@ public class Arbeidsforhold {
 	private String aktørId;
 	private ReferanseType referanseType;
 	private Periode ansettelsesPeriode;
-	private boolean harInntektsmelding;
 
 	private Arbeidsforhold() {
 	}
@@ -41,8 +41,8 @@ public class Arbeidsforhold {
 		return referanseType;
 	}
 
-	public Periode getAnsettelsesPeriode() {
-		return ansettelsesPeriode;
+	public Optional<Periode> getAnsettelsesPeriode() {
+		return Optional.ofNullable(ansettelsesPeriode);
 	}
 
 	public String getArbeidsgiverId() {
@@ -50,10 +50,6 @@ public class Arbeidsforhold {
 			return getAktørId();
 		}
 		return getOrgnr();
-	}
-
-	public boolean harInntektsmelding() {
-		return harInntektsmelding;
 	}
 
 	@Override
