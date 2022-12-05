@@ -41,7 +41,6 @@ public class IdentifiserPerioderForEndringISøktYtelse {
 
 	private static LocalDateTimeline<BigDecimal> lagGraderingTidslinje(List<Utbetalingsgrad> graderinger) {
 		var graderingSegmenter = graderinger.stream()
-				.filter(g -> g.getUtbetalingsprosent().compareTo(BigDecimal.ZERO) != 0)
 				.map(g -> new LocalDateSegment<>(g.getFom(), g.getTom(), g.getUtbetalingsprosent()))
 				.collect(Collectors.toList());
 		return new LocalDateTimeline<>(graderingSegmenter, StandardCombinators::rightOnly);
@@ -50,7 +49,7 @@ public class IdentifiserPerioderForEndringISøktYtelse {
 	private static LocalDateTimeline<BigDecimal> fyllMellomromMedNull(LocalDateTimeline<BigDecimal> graderingTidslinje) {
 		var førsteFom = graderingTidslinje.getLocalDateIntervals().stream().map(LocalDateInterval::getFomDato).min(Comparator.naturalOrder()).orElseThrow();
 		var nullTidslinje = new LocalDateTimeline<>(List.of(new LocalDateSegment<>(førsteFom, TIDENES_ENDE, BigDecimal.ZERO)));
-		return graderingTidslinje.crossJoin(nullTidslinje, StandardCombinators::coalesceLeftHandSide).compress();
+		return graderingTidslinje.crossJoin(nullTidslinje, StandardCombinators::coalesceLeftHandSide).compress((v1, v2) -> v1.compareTo(v2) == 0, (i, lhs, rhs) -> new LocalDateSegment<>(i, lhs.getValue()));
 	}
 
 	private static PeriodeSplittData lagPeriodeSplitt(LocalDate fom) {
