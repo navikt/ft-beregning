@@ -6,6 +6,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -18,6 +19,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.TilkommetInntekt;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 
@@ -1505,11 +1507,11 @@ public class RegelFinnGrenseverdiTest {
 					.medBeregningsgrunnlagPrStatus(BeregningsgrunnlagPrStatus
 							.builder()
 							.medAktivitetStatus(AktivitetStatus.ATFL)
-							.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, null, 100_000, null, utbetalingsgrad, arbeidsforhold))
+							.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, null, 100_000, utbetalingsgrad, arbeidsforhold))
 							.build());
 		} else {
 			BeregningsgrunnlagPrStatus.builder(atfl)
-					.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, null, 100_000, null, utbetalingsgrad, arbeidsforhold))
+					.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, null, 100_000, utbetalingsgrad, arbeidsforhold))
 					.build();
 		}
 	}
@@ -1523,18 +1525,25 @@ public class RegelFinnGrenseverdiTest {
 	                                   double utbetalingsgrad) {
 		Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr);
 		BeregningsgrunnlagPrStatus atfl = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
-
+		leggTilTilkommet(periode, tilkommetPrÅr, arbeidsforhold, AktivitetStatus.AT);
 		if (atfl == null) {
 			BeregningsgrunnlagPeriode.oppdater(periode)
 					.medBeregningsgrunnlagPrStatus(BeregningsgrunnlagPrStatus
 							.builder()
 							.medAktivitetStatus(AktivitetStatus.ATFL)
-							.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, null, 100_000, tilkommetPrÅr, utbetalingsgrad, arbeidsforhold))
+							.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, null, 100_000, utbetalingsgrad, arbeidsforhold))
 							.build());
 		} else {
 			BeregningsgrunnlagPrStatus.builder(atfl)
-					.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, null, 100_000, tilkommetPrÅr, utbetalingsgrad, arbeidsforhold))
+					.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, null, 100_000, utbetalingsgrad, arbeidsforhold))
 					.build();
+		}
+	}
+
+	private void leggTilTilkommet(BeregningsgrunnlagPeriode periode, Double tilkommetPrÅr, Arbeidsforhold arbeidsforhold, AktivitetStatus aktivitetStatus) {
+		if (tilkommetPrÅr != null) {
+			var tilkommetInntekt = new TilkommetInntekt(aktivitetStatus, arbeidsforhold, BigDecimal.valueOf(tilkommetPrÅr));
+			BeregningsgrunnlagPeriode.oppdater(periode).leggTilTilkommetInntektsforhold(List.of(tilkommetInntekt));
 		}
 	}
 
@@ -1548,16 +1557,18 @@ public class RegelFinnGrenseverdiTest {
 		Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr);
 		BeregningsgrunnlagPrStatus atfl = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
 
+		var beregningsgrunnlagPrArbeidsforhold = lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, fordeltPrÅr, 100_000, utbetalingsgrad, arbeidsforhold);
+		leggTilTilkommet(periode, tilkommetPrÅr, arbeidsforhold, AktivitetStatus.AT);
 		if (atfl == null) {
 			BeregningsgrunnlagPeriode.oppdater(periode)
 					.medBeregningsgrunnlagPrStatus(BeregningsgrunnlagPrStatus
 							.builder()
 							.medAktivitetStatus(AktivitetStatus.ATFL)
-							.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, fordeltPrÅr, 100_000, tilkommetPrÅr, utbetalingsgrad, arbeidsforhold))
+							.medArbeidsforhold(beregningsgrunnlagPrArbeidsforhold)
 							.build());
 		} else {
 			BeregningsgrunnlagPrStatus.builder(atfl)
-					.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, fordeltPrÅr, 100_000, tilkommetPrÅr, utbetalingsgrad, arbeidsforhold))
+					.medArbeidsforhold(beregningsgrunnlagPrArbeidsforhold)
 					.build();
 		}
 	}
@@ -1573,11 +1584,11 @@ public class RegelFinnGrenseverdiTest {
 					.medBeregningsgrunnlagPrStatus(BeregningsgrunnlagPrStatus
 							.builder()
 							.medAktivitetStatus(AktivitetStatus.ATFL)
-							.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, null, 0, null, utbetalingsgrad, arbeidsforhold))
+							.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, null, 0, utbetalingsgrad, arbeidsforhold))
 							.build());
 		} else {
 			BeregningsgrunnlagPrStatus.builder(atfl)
-					.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, null, 0, null, utbetalingsgrad, arbeidsforhold))
+					.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, null, 0, utbetalingsgrad, arbeidsforhold))
 					.build();
 		}
 	}
@@ -1589,17 +1600,17 @@ public class RegelFinnGrenseverdiTest {
 	                            double utbetalingsgrad) {
 		Arbeidsforhold arbeidsforhold = Arbeidsforhold.frilansArbeidsforhold();
 		BeregningsgrunnlagPrStatus atfl = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
-
+		leggTilTilkommet(periode, tilkommetPrÅr, arbeidsforhold, AktivitetStatus.FL);
 		if (atfl == null) {
 			BeregningsgrunnlagPeriode.oppdater(periode)
 					.medBeregningsgrunnlagPrStatus(BeregningsgrunnlagPrStatus
 							.builder()
 							.medAktivitetStatus(AktivitetStatus.ATFL)
-							.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, null, 0, tilkommetPrÅr, utbetalingsgrad, arbeidsforhold))
+							.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, null, 0, utbetalingsgrad, arbeidsforhold))
 							.build());
 		} else {
 			BeregningsgrunnlagPrStatus.builder(atfl)
-					.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, null, 0, tilkommetPrÅr, utbetalingsgrad, arbeidsforhold))
+					.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, null, 0, utbetalingsgrad, arbeidsforhold))
 					.build();
 		}
 	}
@@ -1631,11 +1642,11 @@ public class RegelFinnGrenseverdiTest {
 				.medAktivitetStatus(AktivitetStatus.SN)
 				.medBruttoPrÅr(bruttoPrÅr)
 				.medBeregnetPrÅr(bruttoPrÅr)
-				.medTilkommetPrÅr(BigDecimal.valueOf(tilkommet))
 				.medUtbetalingsprosent(BigDecimal.valueOf(utbetalingsgrad))
 				.build();
 		status.setErSøktYtelseFor(utbetalingsgrad > 0);
 		BeregningsgrunnlagPeriode.oppdater(periode)
+				.leggTilTilkommetInntektsforhold(List.of(new TilkommetInntekt(AktivitetStatus.SN, null, BigDecimal.valueOf(tilkommet))))
 				.medBeregningsgrunnlagPrStatus(status);
 	}
 
@@ -1643,7 +1654,6 @@ public class RegelFinnGrenseverdiTest {
 	                                                                                 Double beregnetPrÅr,
 	                                                                                 Double fordeltPrÅr,
 	                                                                                 double refusjonskrav,
-	                                                                                 Double tilkommetPrÅr,
 	                                                                                 double utbetalingsgrad,
 	                                                                                 Arbeidsforhold arbeidsforhold) {
 		var bruttoPrÅr = finnBrutto(beregnetPrÅr, fordeltPrÅr);
@@ -1652,7 +1662,6 @@ public class RegelFinnGrenseverdiTest {
 				.medArbeidsforhold(arbeidsforhold)
 				.medBeregnetPrÅr(beregnetPrÅr != null ? BigDecimal.valueOf(beregnetPrÅr) : null)
 				.medBruttoPrÅr(bruttoPrÅr)
-				.medTilkommetPrÅr(tilkommetPrÅr != null ? BigDecimal.valueOf(tilkommetPrÅr) : null)
 				.medRefusjonPrÅr(BigDecimal.valueOf(refusjonskrav))
 				.medUtbetalingsprosent(BigDecimal.valueOf(utbetalingsgrad))
 				.build();

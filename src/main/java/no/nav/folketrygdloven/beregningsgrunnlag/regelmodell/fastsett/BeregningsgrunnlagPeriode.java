@@ -24,6 +24,7 @@ import no.nav.fpsak.nare.doc.RuleDocumentationGrunnlag;
 public class BeregningsgrunnlagPeriode {
 	@JsonManagedReference
 	private final List<BeregningsgrunnlagPrStatus> beregningsgrunnlagPrStatus = new ArrayList<>();
+	private final List<TilkommetInntekt> tilkommetInntektsforholdListe = new ArrayList<>();
 	private Periode bgPeriode;
 	@JsonBackReference
 	private Beregningsgrunnlag beregningsgrunnlag;
@@ -148,6 +149,9 @@ public class BeregningsgrunnlagPeriode {
 				.sorted(Comparator.comparing(as -> as.getAktivitetStatus().getBeregningPrioritet())).toList();
 	}
 
+	public List<TilkommetInntekt> getTilkommetInntektsforholdListe() {
+		return tilkommetInntektsforholdListe;
+	}
 
 	public BigDecimal getGrenseverdi() {
 		if (grenseverdi == null) {
@@ -202,6 +206,12 @@ public class BeregningsgrunnlagPeriode {
 
 		public Builder medDekningsgrad(Dekningsgrad dekningsgrad) {
 			beregningsgrunnlagPeriodeMal.dekningsgrad = dekningsgrad;
+			return this;
+		}
+
+
+		public Builder leggTilTilkommetInntektsforhold(List<TilkommetInntekt> tilkomneInntekter) {
+			beregningsgrunnlagPeriodeMal.tilkommetInntektsforholdListe.addAll(tilkomneInntekter);
 			return this;
 		}
 

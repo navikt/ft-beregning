@@ -26,13 +26,6 @@ public class BeregningsgrunnlagPrStatus {
 	private BigDecimal andelsmessigFørGraderingPrAar;
 	private BigDecimal bruttoPrÅr;
 	private BigDecimal beregnetPrÅr;
-	/**
-	 * Tilkommet inntekt pr år
-	 * <p>
-	 * Dette tilsvarer det faktiske beløpet som bruker har i tilkommet inntekt.
-	 *
-	 */
-	private BigDecimal tilkommetPrÅr;
 
 	// Output
 	private BigDecimal avkortetPrÅr;
@@ -64,13 +57,6 @@ public class BeregningsgrunnlagPrStatus {
 				.orElse(null);
 	}
 
-	public BigDecimal getTilkommetPrÅr() {
-		return tilkommetPrÅr != null ? tilkommetPrÅr : arbeidsforhold.stream()
-				.map(BeregningsgrunnlagPrArbeidsforhold::getTilkommetPrÅr)
-				.filter(Objects::nonNull)
-				.reduce(BigDecimal::add)
-				.orElse(BigDecimal.ZERO);
-	}
 
 	public BigDecimal getBeregnetPrÅr() {
 		return beregnetPrÅr != null ? beregnetPrÅr : arbeidsforhold.stream()
@@ -79,7 +65,6 @@ public class BeregningsgrunnlagPrStatus {
 				.reduce(BigDecimal::add)
 				.orElse(BigDecimal.ZERO);
 	}
-
 
 
 	public boolean erArbeidstakerEllerFrilanser() {
@@ -140,11 +125,11 @@ public class BeregningsgrunnlagPrStatus {
 	}
 
 	public BigDecimal getGradertBruttoInkludertNaturalytelsePrÅr() {
-			return bruttoPrÅr != null ? finnGradert(getBruttoInkludertNaturalytelsePrÅr()) : getArbeidsforhold().stream()
-					.map(BeregningsgrunnlagPrArbeidsforhold::getGradertBruttoInkludertNaturalytelsePrÅr)
-					.filter(Optional::isPresent)
-					.map(Optional::get)
-					.reduce(BigDecimal.ZERO, BigDecimal::add);
+		return bruttoPrÅr != null ? finnGradert(getBruttoInkludertNaturalytelsePrÅr()) : getArbeidsforhold().stream()
+				.map(BeregningsgrunnlagPrArbeidsforhold::getGradertBruttoInkludertNaturalytelsePrÅr)
+				.filter(Optional::isPresent)
+				.map(Optional::get)
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
 	}
 
 
@@ -231,12 +216,6 @@ public class BeregningsgrunnlagPrStatus {
 		public Builder medBruttoPrÅr(BigDecimal bruttoPrÅr) {
 			sjekkIkkeArbeidstaker();
 			beregningsgrunnlagPrStatusMal.bruttoPrÅr = bruttoPrÅr;
-			return this;
-		}
-
-		public Builder medTilkommetPrÅr(BigDecimal tilkommetPrÅr) {
-			sjekkIkkeArbeidstaker();
-			beregningsgrunnlagPrStatusMal.tilkommetPrÅr = tilkommetPrÅr;
 			return this;
 		}
 

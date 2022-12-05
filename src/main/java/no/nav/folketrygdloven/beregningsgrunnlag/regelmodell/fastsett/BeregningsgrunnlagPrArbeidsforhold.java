@@ -19,15 +19,6 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 	private Arbeidsforhold arbeidsforhold;
 	private BigDecimal refusjonPrÅr;
 	private BigDecimal beregnetPrÅr;
-	/**
-	 * Tilkommet inntekt pr år
-	 * <p>
-	 * Dette tilsvarer det faktiske beløpet som bruker har i tilkommet inntekt.
-	 * <p>
-	 * Dersom kilde til beløpet er inntektsmelding må inntekten graderes mot inversen av utbetalingsgrad for å komme fram til tilkommetPRÅr
-	 */
-	private BigDecimal tilkommetPrÅr;
-
 
 	// Output
 	private BigDecimal avkortetPrÅr;
@@ -175,13 +166,6 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 		return andelsmessigFørGraderingPrAar;
 	}
 
-	public BigDecimal getTilkommetPrÅr() {
-		return tilkommetPrÅr != null ? tilkommetPrÅr : BigDecimal.ZERO;
-	}
-
-	public BigDecimal getGradertTilkommetPrÅr() {
-		return finnGradert(getTilkommetPrÅr());
-	}
 
 	@Override
 	public String toString() {
@@ -225,11 +209,6 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 
 		public Builder medAndelsmessigFørGraderingPrAar(BigDecimal andelsmessigFørGraderingPrAar) {
 			mal.andelsmessigFørGraderingPrAar = andelsmessigFørGraderingPrAar;
-			return this;
-		}
-
-		public Builder medTilkommetPrÅr(BigDecimal tilkommetPrÅr) {
-			mal.tilkommetPrÅr = tilkommetPrÅr;
 			return this;
 		}
 

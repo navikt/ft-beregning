@@ -10,6 +10,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.MidlertidigInaktivT
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.TilkommetInntekt;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.node.SingleEvaluation;
@@ -59,6 +60,9 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 		var totaltGradertGrunnlag = grunnlag.getBeregningsgrunnlagPrStatus().stream()
 				.map(BeregningsgrunnlagPrStatus::getGradertBruttoInkludertNaturalytelsePrÅr)
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
+		if (totaltGradertGrunnlag.compareTo(BigDecimal.ZERO) == 0) {
+			return BigDecimal.ZERO;
+		}
 		var gradering = bortfalt.divide(totaltGradertGrunnlag, 10, RoundingMode.HALF_UP);
 		grenseverdi = grenseverdi.multiply(gradering);
 		return grenseverdi;
@@ -73,7 +77,15 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 				bortfalt = bortfalt.add(finnBortfaltForStatus(bps));
 			}
 		}
-		return bortfalt;
+
+		var tilkommetInntekt = grunnlag.getTilkommetInntektsforholdListe().stream()
+				.map(TilkommetInntekt::getTilkommetPrÅr)
+				.reduce(BigDecimal::add)
+				.orElse(BigDecimal.ZERO);
+
+		var nettoBortfaltInntekt = bortfalt.subtract(tilkommetInntekt);
+
+		return nettoBortfaltInntekt;
 	}
 
 	private BigDecimal finnBortfaltForStatus(BeregningsgrunnlagPrStatus bps) {
@@ -81,8 +93,7 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 		var utbetalingsgrad = utbetalingsprosent.divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP);
 		var inversUtbetalingsgrad = BigDecimal.ONE.subtract(utbetalingsgrad);
 		var opprettholdtInntekt = bps.getBeregnetPrÅr()
-				.multiply(inversUtbetalingsgrad)
-				.add(bps.getTilkommetPrÅr());
+				.multiply(inversUtbetalingsgrad);
 		return bps.getBeregnetPrÅr().subtract(opprettholdtInntekt);
 	}
 
@@ -93,8 +104,7 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 					var utbetalingsgrad = utbetalingsprosent.divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP);
 					var inversUtbetalingsgrad = BigDecimal.ONE.subtract(utbetalingsgrad);
 					var opprettholdtInntekt = arbeidsforhold.getBeregnetPrÅr()
-							.multiply(inversUtbetalingsgrad)
-							.add(arbeidsforhold.getTilkommetPrÅr());
+							.multiply(inversUtbetalingsgrad);
 					return arbeidsforhold.getBeregnetPrÅr()
 							.subtract(opprettholdtInntekt);
 				})
