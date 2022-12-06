@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -26,7 +25,7 @@ public class BeregningsgrunnlagPrStatus {
 	private BigDecimal utbetalingsprosent = BigDecimal.valueOf(100);
 	private BigDecimal andelsmessigFørGraderingPrAar;
 	private BigDecimal bruttoPrÅr;
-
+	private BigDecimal beregnetPrÅr;
 
 	// Output
 	private BigDecimal avkortetPrÅr;
@@ -56,6 +55,15 @@ public class BeregningsgrunnlagPrStatus {
 				.filter(Objects::nonNull)
 				.reduce(BigDecimal::add)
 				.orElse(null);
+	}
+
+
+	public BigDecimal getBeregnetPrÅr() {
+		return beregnetPrÅr != null ? beregnetPrÅr : arbeidsforhold.stream()
+				.map(BeregningsgrunnlagPrArbeidsforhold::getBeregnetPrÅr)
+				.filter(Objects::nonNull)
+				.reduce(BigDecimal::add)
+				.orElse(BigDecimal.ZERO);
 	}
 
 
@@ -117,9 +125,11 @@ public class BeregningsgrunnlagPrStatus {
 	}
 
 	public BigDecimal getGradertBruttoInkludertNaturalytelsePrÅr() {
-		BigDecimal brutto = getBruttoPrÅr();
-		BigDecimal samletNaturalytelse = samletNaturalytelseBortfaltMinusTilkommetPrÅr();
-		return finnGradert(brutto.add(samletNaturalytelse));
+		return bruttoPrÅr != null ? finnGradert(getBruttoInkludertNaturalytelsePrÅr()) : getArbeidsforhold().stream()
+				.map(BeregningsgrunnlagPrArbeidsforhold::getGradertBruttoInkludertNaturalytelsePrÅr)
+				.filter(Optional::isPresent)
+				.map(Optional::get)
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
 	}
 
 
@@ -209,6 +219,11 @@ public class BeregningsgrunnlagPrStatus {
 			return this;
 		}
 
+		public Builder medBeregnetPrÅr(BigDecimal beregnetPrÅr) {
+			sjekkIkkeArbeidstaker();
+			beregningsgrunnlagPrStatusMal.beregnetPrÅr = beregnetPrÅr;
+			return this;
+		}
 
 		public Builder medAndelsmessigFørGraderingPrAar(BigDecimal andelsmessigFørGraderingPrAar) {
 			sjekkIkkeArbeidstaker();
