@@ -260,6 +260,9 @@ public class FordelAndelModell {
 		}
 		public Builder medUtbetalingsgrad(BigDecimal utbetalingsgrad) {
 			mal.utbetalingsgrad = utbetalingsgrad;
+			if (utbetalingsgrad != null && utbetalingsgrad.compareTo(BigDecimal.ZERO) == 0) {
+				mal.erSøktYtelseFor = false;
+			}
 			return this;
 		}
 
