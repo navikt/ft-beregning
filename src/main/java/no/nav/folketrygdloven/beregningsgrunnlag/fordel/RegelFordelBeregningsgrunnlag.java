@@ -69,7 +69,7 @@ public class RegelFordelBeregningsgrunnlag implements RuleService<FordelPeriodeM
         Specification<FordelModell> fastsettFordelingAvBeregningsgrunnlag = new FastsettNyFordeling(modell).getSpecification();
 
         Specification<FordelModell> sjekkRefusjonMotBeregningsgrunnlag = rs.beregningHvisRegel(new SjekkHarRefusjonSomOverstigerBeregningsgrunnlag(),
-            fastsettFordelingAvBeregningsgrunnlag, new Fordelt());
+            fastsettFordelingAvBeregningsgrunnlag, new SettAndelerUtenSøktYtelseTilNull());
 
 	    Specification<FordelModell> omfordelFraBrukersAndel = rs.beregningsRegel(OmfordelFraBrukersAndel.ID,
 			    OmfordelFraBrukersAndel.BESKRIVELSE, new OmfordelFraBrukersAndel(), sjekkRefusjonMotBeregningsgrunnlag);
@@ -82,6 +82,6 @@ public class RegelFordelBeregningsgrunnlag implements RuleService<FordelPeriodeM
 
 		Specification<FordelModell> sjekkOmDetFinnesTilkommetRefkrav = rs.beregningHvisRegel(new FinnesTilkommetArbeidsandelMedRefusjonskrav(), sjekkOmBruttoKanDekkeAllRefusjon, sjekkOmSkalFordeleFraBrukersAndel);
 
-	    return sjekkOmDetFinnesTilkommetRefkrav;
+		return sjekkOmDetFinnesTilkommetRefkrav;
     }
 }
