@@ -1,10 +1,8 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.fordel;
 
-import static no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil.TIDENES_ENDE;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -18,7 +16,6 @@ import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
 import no.nav.fpsak.nare.evaluation.Evaluation;
@@ -34,7 +31,7 @@ class SkalOmfordeleFraBrukersAndelTilFLEllerSNTest {
 				.medInntektskategori(Inntektskategori.UDEFINERT)
 				.medAndelNr(1L)
 				.build();
-		var periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), TIDENES_ENDE), Collections.singletonList(andel));
+		var periode = new FordelPeriodeModell(Collections.singletonList(andel));
 
 		// Act
 		Evaluation evaluation = new SkalOmfordeleFraBrukersAndelTilFLEllerSN().evaluate(new FordelModell(periode));
@@ -52,7 +49,7 @@ class SkalOmfordeleFraBrukersAndelTilFLEllerSNTest {
 				.medInntektskategori(Inntektskategori.ARBEIDSTAKER_UTEN_FERIEPENGER)
 				.medAndelNr(1L)
 				.build();
-		var periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), TIDENES_ENDE), Collections.singletonList(andel));
+		var periode = new FordelPeriodeModell(Collections.singletonList(andel));
 
 		// Act
 		Evaluation evaluation = new SkalOmfordeleFraBrukersAndelTilFLEllerSN().evaluate(new FordelModell(periode));
@@ -76,7 +73,7 @@ class SkalOmfordeleFraBrukersAndelTilFLEllerSNTest {
 				.medArbeidsforhold(Arbeidsforhold.frilansArbeidsforhold())
 				.medAndelNr(2L)
 				.build();
-		var periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), TIDENES_ENDE), Arrays.asList(andel1, andel2));
+		var periode = new FordelPeriodeModell(Arrays.asList(andel1, andel2));
 
 		// Act
 		Evaluation evaluation = new SkalOmfordeleFraBrukersAndelTilFLEllerSN().evaluate(new FordelModell(periode));
@@ -99,7 +96,7 @@ class SkalOmfordeleFraBrukersAndelTilFLEllerSNTest {
 				.medInntektskategori(Inntektskategori.UDEFINERT)
 				.medAndelNr(2L)
 				.build();
-		var periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), TIDENES_ENDE), Arrays.asList(andelBA, andelSN));
+		var periode = new FordelPeriodeModell(Arrays.asList(andelBA, andelSN));
 
 		// Act
 		Evaluation evaluation = new SkalOmfordeleFraBrukersAndelTilFLEllerSN().evaluate(new FordelModell(periode));
@@ -128,7 +125,7 @@ class SkalOmfordeleFraBrukersAndelTilFLEllerSNTest {
 				.medInntektskategori(Inntektskategori.UDEFINERT)
 				.medAndelNr(3L)
 				.build();
-		var periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), TIDENES_ENDE), Arrays.asList(andelBA, andelSN, andelFL));
+		var periode = new FordelPeriodeModell(Arrays.asList(andelBA, andelSN, andelFL));
 
 		// Act
 		Evaluation evaluation = new SkalOmfordeleFraBrukersAndelTilFLEllerSN().evaluate(new FordelModell(periode));
@@ -156,7 +153,7 @@ class SkalOmfordeleFraBrukersAndelTilFLEllerSNTest {
 						.build())
 				.medAndelNr(2L)
 				.build();
-		var periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), TIDENES_ENDE), Arrays.asList(andelBA, andelAT));
+		var periode = new FordelPeriodeModell(Arrays.asList(andelBA, andelAT));
 
 		// Act
 		Evaluation evaluation = new SkalOmfordeleFraBrukersAndelTilFLEllerSN().evaluate(new FordelModell(periode));

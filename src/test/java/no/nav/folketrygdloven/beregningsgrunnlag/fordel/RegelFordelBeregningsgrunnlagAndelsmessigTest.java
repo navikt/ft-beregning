@@ -5,14 +5,12 @@ import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelteAndelerMo
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelPeriodeModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
 
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -211,7 +209,7 @@ class RegelFordelBeregningsgrunnlagAndelsmessigTest {
 
 	private List<FordelAndelModell> kjørRegel(FordelAndelModell... inputobjekter) {
 		List<FordelAndelModell> inputAndeler = Arrays.asList(inputobjekter);
-		FordelPeriodeModell fordelPeriode = new FordelPeriodeModell(Periode.of(LocalDate.now(), LocalDate.now().plusDays(1)), inputAndeler);
+		FordelPeriodeModell fordelPeriode = new FordelPeriodeModell(inputAndeler);
 		FordelModell modell = new FordelModell(fordelPeriode);
 		new RegelFordelBeregningsgrunnlagAndelsmessig().getSpecification().evaluate(modell);
 		return modell.getMellomregninger().stream()

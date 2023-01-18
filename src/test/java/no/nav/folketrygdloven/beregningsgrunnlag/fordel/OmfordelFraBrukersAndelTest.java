@@ -1,10 +1,8 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.fordel;
 
-import static no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil.TIDENES_ENDE;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.Arrays;
 
 
@@ -15,7 +13,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelPeriodeMode
 import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
 
@@ -29,7 +26,7 @@ class OmfordelFraBrukersAndelTest {
 		var brukers_andel = lagBrukersAndel(inntekt, arbeidstakerUtenFeriepenger, 1L);
 		var frilans = lagFrilans(2L);
 
-		var periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), TIDENES_ENDE), Arrays.asList(brukers_andel, frilans));
+		var periode = new FordelPeriodeModell(Arrays.asList(brukers_andel, frilans));
 		FordelModell regelmodell = new FordelModell(periode);
 		kjørRegel(regelmodell);
 
@@ -48,7 +45,7 @@ class OmfordelFraBrukersAndelTest {
 		var brukers_andel2 = lagBrukersAndel(inntekt2, Inntektskategori.FRILANSER, 2L);
 		var frilans = lagFrilans(3L);
 
-		var periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), TIDENES_ENDE), Arrays.asList(brukers_andel, brukers_andel2, frilans));
+		var periode = new FordelPeriodeModell(Arrays.asList(brukers_andel, brukers_andel2, frilans));
 		FordelModell regelmodell = new FordelModell(periode);
 		kjørRegel(regelmodell);
 
@@ -73,7 +70,7 @@ class OmfordelFraBrukersAndelTest {
 		long andelsnrSN = 2L;
 		var snStatus = lagSN(andelsnrSN);
 
-		var periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), TIDENES_ENDE), Arrays.asList(brukers_andel, snStatus));
+		var periode = new FordelPeriodeModell(Arrays.asList(brukers_andel, snStatus));
 
 		FordelModell regelmodell = new FordelModell(periode);
 		kjørRegel(regelmodell);
@@ -95,7 +92,7 @@ class OmfordelFraBrukersAndelTest {
 		long andelsnrSN = 3L;
 		var snStatus = lagSN(andelsnrSN);
 
-		var periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), TIDENES_ENDE), Arrays.asList(brukers_andel,brukers_andel2, snStatus));
+		var periode = new FordelPeriodeModell(Arrays.asList(brukers_andel,brukers_andel2, snStatus));
 
 		FordelModell regelmodell = new FordelModell(periode);
 		kjørRegel(regelmodell);
@@ -123,7 +120,7 @@ class OmfordelFraBrukersAndelTest {
 		var frilans = lagFrilans(andelsnrFrilans);
 		long andelsnrSN = 3L;
 		var snStatus = lagSN(andelsnrSN);
-		var periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), TIDENES_ENDE), Arrays.asList(brukers_andel, snStatus, frilans));
+		var periode = new FordelPeriodeModell(Arrays.asList(brukers_andel, snStatus, frilans));
 		FordelModell regelmodell = new FordelModell(periode);
 		kjørRegel(regelmodell);
 

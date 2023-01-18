@@ -45,6 +45,10 @@ public class Beregningsgrunnlag {
 	}
 
 
+	/**
+	 * @deprecated Fastsett-regelen skal ikke vere avhengig av andre perioder (kun FRISINN)
+	 */
+	@Deprecated(forRemoval = true)
 	public List<BeregningsgrunnlagPeriode> getBeregningsgrunnlagPerioder() {
 		return beregningsgrunnlagPerioder.stream()
 				.sorted(Comparator.comparing(bg -> bg.getBeregningsgrunnlagPeriode().getFom())).toList();

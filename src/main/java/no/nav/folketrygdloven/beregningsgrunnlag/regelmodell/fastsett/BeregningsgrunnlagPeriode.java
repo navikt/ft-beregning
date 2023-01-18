@@ -25,6 +25,11 @@ public class BeregningsgrunnlagPeriode {
 	@JsonManagedReference
 	private final List<BeregningsgrunnlagPrStatus> beregningsgrunnlagPrStatus = new ArrayList<>();
 	private final List<TilkommetInntekt> tilkommetInntektsforholdListe = new ArrayList<>();
+
+	/**
+	 * @deprecated Bør ikke sette periode i regelinput. Dette hindrer komprimering av input.
+	 */
+	@Deprecated(forRemoval = true)
 	private Periode bgPeriode;
 	@JsonBackReference
 	private Beregningsgrunnlag beregningsgrunnlag;
@@ -116,14 +121,26 @@ public class BeregningsgrunnlagPeriode {
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
 	}
 
+	/**
+	 * @deprecated Periode blir ikke satt for andre ytelser enn FRISINN
+	 */
+	@Deprecated(forRemoval = true)
 	public Periode getBeregningsgrunnlagPeriode() {
 		return bgPeriode;
 	}
 
+	/**
+	 * @deprecated Periode blir ikke satt for andre ytelser enn FRISINN
+	 */
+	@Deprecated(forRemoval = true)
 	public LocalDate getPeriodeFom() {
 		return bgPeriode.getFom();
 	}
 
+	/**
+	 * @deprecated Periode blir ikke satt for andre ytelser enn FRISINN
+	 */
+	@Deprecated(forRemoval = true)
 	public LocalDate getPeriodeTom() {
 		return bgPeriode.getTom();
 	}
@@ -193,6 +210,10 @@ public class BeregningsgrunnlagPeriode {
 			beregningsgrunnlagPeriodeMal = eksisterendeBeregningsgrunnlagPeriod;
 		}
 
+		/**
+		 * @deprecated Bør ikke sette periode i regelinput. Dette hindrer komprimering av input. Skal kun brukes av FRISINN
+		 */
+		@Deprecated(forRemoval = true)
 		public Builder medPeriode(Periode beregningsgrunnlagPeriode) {
 			beregningsgrunnlagPeriodeMal.bgPeriode = beregningsgrunnlagPeriode;
 			return this;
@@ -233,8 +254,6 @@ public class BeregningsgrunnlagPeriode {
 
 		private void verifyStateForBuild() {
 			Objects.requireNonNull(beregningsgrunnlagPeriodeMal.beregningsgrunnlagPrStatus, "beregningsgrunnlagPrStatus");
-			Objects.requireNonNull(beregningsgrunnlagPeriodeMal.bgPeriode, "bgPeriode");
-			Objects.requireNonNull(beregningsgrunnlagPeriodeMal.bgPeriode.getFom(), "bgPeriode.getFom()");
 		}
 	}
 }

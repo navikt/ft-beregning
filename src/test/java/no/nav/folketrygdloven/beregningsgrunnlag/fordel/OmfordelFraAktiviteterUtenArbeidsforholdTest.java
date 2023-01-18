@@ -16,7 +16,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelPeriodeMode
 import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
 
@@ -34,7 +33,7 @@ public class OmfordelFraAktiviteterUtenArbeidsforholdTest {
         var beregnetPrÅrSN = BigDecimal.valueOf(100_000);
         var sn = lagSN(beregnetPrÅrSN);
 
-	    var periode = new FordelPeriodeModell(Periode.of(STP, null), Arrays.asList(arbeidsforhold, sn));
+	    var periode = new FordelPeriodeModell(Arrays.asList(arbeidsforhold, sn));
 
         kjørRegel(arbeidsforhold, periode);
 
@@ -52,7 +51,7 @@ public class OmfordelFraAktiviteterUtenArbeidsforholdTest {
         var beregnetPrÅrSN = BigDecimal.valueOf(50_000);
         var sn = lagSN(beregnetPrÅrSN);
 
-	    var periode = new FordelPeriodeModell(Periode.of(STP, null), Arrays.asList(arbeidsforhold, sn));
+	    var periode = new FordelPeriodeModell(Arrays.asList(arbeidsforhold, sn));
 
         kjørRegel(arbeidsforhold, periode);
 
@@ -70,7 +69,7 @@ public class OmfordelFraAktiviteterUtenArbeidsforholdTest {
 	    var beregnetPrÅrSN = BigDecimal.valueOf(150_000);
 	    var sn = lagSN(beregnetPrÅrSN);
 
-	    var periode = new FordelPeriodeModell(Periode.of(STP, null), Arrays.asList(arbeidsforhold, sn));
+	    var periode = new FordelPeriodeModell(Arrays.asList(arbeidsforhold, sn));
 
         kjørRegel(arbeidsforhold, periode);
 
@@ -91,7 +90,7 @@ public class OmfordelFraAktiviteterUtenArbeidsforholdTest {
 	    var beregnetPrÅrDP = BigDecimal.valueOf(50_000);
 	    var dp = lagDP(beregnetPrÅrDP);
 
-	    var periode = new FordelPeriodeModell(Periode.of(STP, null), Arrays.asList(arbeidsforhold, sn, dp));
+	    var periode = new FordelPeriodeModell(Arrays.asList(arbeidsforhold, sn, dp));
 
         kjørRegel(arbeidsforhold, periode);
 
@@ -115,7 +114,7 @@ public class OmfordelFraAktiviteterUtenArbeidsforholdTest {
 	    var beregnetPrÅrDP = BigDecimal.valueOf(50_000);
 	    var dp = lagDP(beregnetPrÅrDP);
 
-	    var periode = new FordelPeriodeModell(Periode.of(STP, null), new ArrayList<>(Arrays.asList(arbeidsforhold, sn, dp)));
+	    var periode = new FordelPeriodeModell(new ArrayList<>(Arrays.asList(arbeidsforhold, sn, dp)));
 
         kjørRegel(arbeidsforhold, periode);
 
@@ -152,7 +151,7 @@ public class OmfordelFraAktiviteterUtenArbeidsforholdTest {
 	    var beregnetPrÅrAAP = BigDecimal.valueOf(50_000);
 	    var aap = lagAAP(beregnetPrÅrAAP);
 
-		var periode = new FordelPeriodeModell(Periode.of(STP, null), new ArrayList<>(Arrays.asList(arbeidsforhold, sn, dp, aap)));
+		var periode = new FordelPeriodeModell(new ArrayList<>(Arrays.asList(arbeidsforhold, sn, dp, aap)));
 
         kjørRegel(arbeidsforhold, periode);
 

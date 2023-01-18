@@ -17,7 +17,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelPeriodeMode
 import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
 
@@ -32,7 +31,7 @@ public class OmfordelFraFrilansTest {
         var refusjonskravPrÅr = BigDecimal.valueOf(200_000);
         var beregnetPrÅr = BigDecimal.valueOf(100_000);
         var arbeidsforhold = lagArbeidsforhold(refusjonskravPrÅr, beregnetPrÅr);
-	    var periode = new FordelPeriodeModell(Periode.of(STP, null), Collections.singletonList(arbeidsforhold));
+	    var periode = new FordelPeriodeModell(Collections.singletonList(arbeidsforhold));
 
         // Act
         kjørRegel(arbeidsforhold, periode);
@@ -50,7 +49,7 @@ public class OmfordelFraFrilansTest {
         var arbeidsforhold = lagArbeidsforhold(refusjonskravPrÅr, beregnetPrÅr);
         var beregnetPrÅrFL = BigDecimal.valueOf(100_000);
         var frilans = lagFLArbeidsforhold(beregnetPrÅrFL);
-	    var periode = new FordelPeriodeModell(Periode.of(STP, null),  new ArrayList<>(Arrays.asList(arbeidsforhold, frilans)));
+	    var periode = new FordelPeriodeModell(new ArrayList<>(Arrays.asList(arbeidsforhold, frilans)));
 
         // Act
         kjørRegel(arbeidsforhold, periode);
@@ -80,7 +79,7 @@ public class OmfordelFraFrilansTest {
 	    var beregnetPrÅrFL = BigDecimal.valueOf(50_000);
 	    var frilans = lagFLArbeidsforhold(beregnetPrÅrFL);
 
-	    var periode = new FordelPeriodeModell(Periode.of(STP, null),  new ArrayList<>(Arrays.asList(arbeidsforhold, frilans)));
+	    var periode = new FordelPeriodeModell(new ArrayList<>(Arrays.asList(arbeidsforhold, frilans)));
 
         // Act
         kjørRegel(arbeidsforhold, periode);
@@ -111,7 +110,7 @@ public class OmfordelFraFrilansTest {
 	    var beregnetPrÅrFL = BigDecimal.valueOf(150_000);
 	    var frilans = lagFLArbeidsforhold(beregnetPrÅrFL);
 
-	    var periode = new FordelPeriodeModell(Periode.of(STP, null), new ArrayList<>(Arrays.asList(arbeidsforhold, frilans)));
+	    var periode = new FordelPeriodeModell(new ArrayList<>(Arrays.asList(arbeidsforhold, frilans)));
 
         // Act
         kjørRegel(arbeidsforhold, periode);

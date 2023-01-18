@@ -12,7 +12,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelAndelModell
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelPeriodeModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
 
@@ -42,7 +41,7 @@ public class OmfordelFraArbeidTest {
 				.medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR2, null))
 				.build();
 
-		var periode = new FordelPeriodeModell(Periode.of(STP, null), Arrays.asList(aktivitet, arbeidMedBortfaltNatYtelsePrÅr));
+		var periode = new FordelPeriodeModell(Arrays.asList(aktivitet, arbeidMedBortfaltNatYtelsePrÅr));
 
 		// Act
 		kjørRegel(aktivitet, periode);
@@ -71,7 +70,7 @@ public class OmfordelFraArbeidTest {
 				.medAktivitetStatus(AktivitetStatus.AT)
 				.build();
 
-		var periode = new FordelPeriodeModell(Periode.of(STP, null), Arrays.asList(aktivitet, arbeidMedBortfaltNatYtelsePrÅr));
+		var periode = new FordelPeriodeModell(Arrays.asList(aktivitet, arbeidMedBortfaltNatYtelsePrÅr));
 
 		// Act
 		kjørRegel(aktivitet, periode);
@@ -94,7 +93,7 @@ public class OmfordelFraArbeidTest {
 		var beregnetPrÅr2 = BigDecimal.valueOf(100_000);
 		var a2 = lagArbeidsforhold(refusjonskrav2, beregnetPrÅr2, 2L, ORGNR2, BigDecimal.valueOf(100));
 
-		var periode = new FordelPeriodeModell(Periode.of(STP, null), Arrays.asList(a1, a2));
+		var periode = new FordelPeriodeModell(Arrays.asList(a1, a2));
 
 		// Act
 		kjørRegel(a1, periode);
@@ -121,7 +120,7 @@ public class OmfordelFraArbeidTest {
 		var beregnetPrÅr2 = BigDecimal.valueOf(100_000);
 		var a2 = lagArbeidsforhold(refusjonskrav2, beregnetPrÅr2, 2L, ORGNR2, BigDecimal.valueOf(25));
 
-		var periode = new FordelPeriodeModell(Periode.of(STP, null), Arrays.asList(a1, a2));
+		var periode = new FordelPeriodeModell(Arrays.asList(a1, a2));
 
 		// Act
 		kjørRegel(a1, periode);
@@ -143,7 +142,7 @@ public class OmfordelFraArbeidTest {
 		var beregnetPrÅr2 = BigDecimal.valueOf(150_000);
 		var a2 = lagArbeidsforhold(refusjonskrav2, beregnetPrÅr2, 2L, ORGNR2, BigDecimal.valueOf(100));
 
-		var periode = new FordelPeriodeModell(Periode.of(STP, null), Arrays.asList(a1, a2));
+		var periode = new FordelPeriodeModell(Arrays.asList(a1, a2));
 
 		// Act
 		kjørRegel(a1, periode);
@@ -168,7 +167,7 @@ public class OmfordelFraArbeidTest {
 		var beregnetPrÅr3 = BigDecimal.valueOf(100_000);
 		var a3 = lagArbeidsforhold(refusjonskrav3, beregnetPrÅr3, 3L, ORGNR3, BigDecimal.valueOf(100));
 
-		var periode = new FordelPeriodeModell(Periode.of(STP, null), Arrays.asList(a1, a2, a3));
+		var periode = new FordelPeriodeModell(Arrays.asList(a1, a2, a3));
 
 		// Act
 		kjørRegel(a1, periode);
@@ -194,7 +193,7 @@ public class OmfordelFraArbeidTest {
 		var beregnetPrÅr3 = BigDecimal.valueOf(100_000);
 		var a3 = lagArbeidsforhold(refusjonskrav3, beregnetPrÅr3, 3L, ORGNR3, BigDecimal.valueOf(100));
 
-		var periode = new FordelPeriodeModell(Periode.of(STP, null), Arrays.asList(a1, a2, a3));
+		var periode = new FordelPeriodeModell(Arrays.asList(a1, a2, a3));
 
 		// Act
 		kjørRegel(a1, periode);

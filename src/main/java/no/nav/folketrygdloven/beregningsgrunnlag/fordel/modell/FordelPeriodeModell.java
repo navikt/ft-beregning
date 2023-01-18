@@ -10,19 +10,12 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 
 public class FordelPeriodeModell {
-	private Periode bgPeriode;
+
 	private List<FordelAndelModell> andeler;
 
-	public FordelPeriodeModell(Periode bgPeriode,
-	                           List<FordelAndelModell> andeler) {
-		Objects.requireNonNull(bgPeriode, "periode");
+	public FordelPeriodeModell(List<FordelAndelModell> andeler) {
 		Objects.requireNonNull(andeler, "andeler");
-		this.bgPeriode = bgPeriode;
 		this.andeler = new ArrayList<>(andeler);
-	}
-
-	public Periode getBgPeriode() {
-		return bgPeriode;
 	}
 
 	public List<FordelAndelModell> getAndeler() {
@@ -50,7 +43,7 @@ public class FordelPeriodeModell {
 
 	public void leggTilAndel(FordelAndelModell nyAndel) {
 		if (!nyAndel.erNytt()) {
-			throw new IllegalStateException("Prøver å legge til en andel " + nyAndel + " som ikke er ny på eksisterende periode " + bgPeriode);
+			throw new IllegalStateException("Prøver å legge til en andel " + nyAndel + " som ikke er ny på eksisterende periode ");
 		}
 		this.andeler.add(nyAndel);
 	}

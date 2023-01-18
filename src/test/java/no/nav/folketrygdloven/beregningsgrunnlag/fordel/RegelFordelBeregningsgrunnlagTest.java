@@ -1,6 +1,5 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.fordel;
 
-import static no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil.TIDENES_ENDE;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import java.math.BigDecimal;
@@ -15,7 +14,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelPeriodeMode
 import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
 
@@ -40,7 +38,7 @@ public class RegelFordelBeregningsgrunnlagTest {
         var beregnetPrÅrSN = BigDecimal.valueOf(150_000);
 	    var sn = lagSN(beregnetPrÅrSN);
 
-	    var periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), TIDENES_ENDE), new ArrayList<>(Arrays.asList(a1, a2, sn)));
+	    var periode = new FordelPeriodeModell(new ArrayList<>(Arrays.asList(a1, a2, sn)));
 
         // Act
         kjørRegel(periode);
@@ -77,7 +75,7 @@ public class RegelFordelBeregningsgrunnlagTest {
 		var beregnetPrÅr3 = BigDecimal.valueOf(150_000);
 		var a3 = lagArbeidsforhold(refusjonskrav3, beregnetPrÅr3, 3L, ORGNR3);
 
-		var periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), TIDENES_ENDE), Arrays.asList(a1, a2, a3));
+		var periode = new FordelPeriodeModell(Arrays.asList(a1, a2, a3));
 
 		// Act
 		kjørRegel(periode);
@@ -103,7 +101,7 @@ public class RegelFordelBeregningsgrunnlagTest {
 	    var beregnetPrÅr3 = BigDecimal.valueOf(150_000);
 	    var a3 = lagArbeidsforhold(refusjonskrav3, beregnetPrÅr3, 3L, ORGNR3);
 
-	    var periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), TIDENES_ENDE), Arrays.asList(a1, a2, a3));
+	    var periode = new FordelPeriodeModell(Arrays.asList(a1, a2, a3));
 
         // Act
         kjørRegel(periode);

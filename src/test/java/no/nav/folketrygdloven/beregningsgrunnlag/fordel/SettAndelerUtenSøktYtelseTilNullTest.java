@@ -3,7 +3,6 @@ package no.nav.folketrygdloven.beregningsgrunnlag.fordel;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -12,7 +11,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelAndelModell
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelPeriodeModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
 
@@ -128,7 +126,7 @@ class SettAndelerUtenSøktYtelseTilNullTest {
 	}
 
 	private FordelModell lagModell(List<FordelAndelModell> andeler) {
-		return new FordelModell(new FordelPeriodeModell(new Periode(LocalDate.now(), LocalDate.now()), andeler));
+		return new FordelModell(new FordelPeriodeModell(andeler));
 	}
 
 

@@ -7,16 +7,13 @@ import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelPeriodeModell;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
-import no.nav.fpsak.tidsserie.LocalDateInterval;
 
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -151,7 +148,7 @@ class FinnFraksjonPrAndelTest {
 
 	private FordelModell kjørRegel(FordelAndelModell... andeler) {
 		List<FordelAndelModell> andelerInput = Arrays.asList(andeler);
-		FordelPeriodeModell periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), LocalDateInterval.TIDENES_ENDE), andelerInput);
+		FordelPeriodeModell periode = new FordelPeriodeModell(andelerInput);
 		FordelModell modell = new FordelModell(periode);
 		new FinnFraksjonPrAndel().evaluate(modell);
 		return modell;

@@ -14,7 +14,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 
 import org.junit.jupiter.api.Test;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
 import no.nav.fpsak.nare.evaluation.Evaluation;
@@ -32,7 +31,7 @@ public class SjekkOmRefusjonOverstigerBeregningsgrunnlagTest {
         var beregnetPrÅr = BigDecimal.valueOf(100_000);
         var andel = lagArbeidsforhold(refusjonskravPrÅr, beregnetPrÅr);
 
-	    var periode = new FordelPeriodeModell(Periode.of(STP, null), Collections.singletonList(andel));
+	    var periode = new FordelPeriodeModell(Collections.singletonList(andel));
 
         // Act
         var evaluering = kjørRegel(andel, periode);
@@ -47,8 +46,8 @@ public class SjekkOmRefusjonOverstigerBeregningsgrunnlagTest {
 	    var refusjonskravPrÅr = BigDecimal.valueOf(200_000);
 	    var beregnetPrÅr = BigDecimal.valueOf(250_000);
         var andel = lagArbeidsforhold(refusjonskravPrÅr, beregnetPrÅr);
-	    var periode = new FordelPeriodeModell(Periode.of(STP, null), Collections.singletonList(andel));
-	    
+	    var periode = new FordelPeriodeModell(Collections.singletonList(andel));
+
         // Act
         var evaluering = kjørRegel(andel, periode);
 

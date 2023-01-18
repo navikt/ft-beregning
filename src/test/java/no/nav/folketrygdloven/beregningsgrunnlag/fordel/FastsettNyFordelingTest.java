@@ -13,7 +13,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelAndelModell
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelPeriodeModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
 
@@ -33,7 +32,7 @@ public class FastsettNyFordelingTest {
 
 		var beregnetPrÅrSN = BigDecimal.valueOf(150_000);
 		var sn = lagSN(beregnetPrÅrSN);
-		var periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), null), Arrays.asList(a1, sn));
+		var periode = new FordelPeriodeModell(Arrays.asList(a1, sn));
 
 		// Act
 		kjørRegel(periode);
@@ -57,7 +56,7 @@ public class FastsettNyFordelingTest {
 
 		BigDecimal beregnetPrÅrSN = BigDecimal.valueOf(150_000);
 		var sn = lagSN(beregnetPrÅrSN);
-		var periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), null), new ArrayList<>(Arrays.asList(a1, a2, sn)));
+		var periode = new FordelPeriodeModell(new ArrayList<>(Arrays.asList(a1, a2, sn)));
 
 		// Act
 		kjørRegel(periode);
@@ -94,7 +93,7 @@ public class FastsettNyFordelingTest {
 		var beregnetPrÅr3 = BigDecimal.valueOf(150_000);
 		var a3 = lagArbeidsforhold(refusjonskrav3, beregnetPrÅr3, 3L, ORGNR3, 100);
 
-		var periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), null), Arrays.asList(a1, a2, a3));
+		var periode = new FordelPeriodeModell(Arrays.asList(a1, a2, a3));
 
 		// Act
 		kjørRegel(periode);
@@ -120,7 +119,7 @@ public class FastsettNyFordelingTest {
 		var beregnetPrÅr3 = BigDecimal.valueOf(150_000);
 		var a3 = lagArbeidsforhold(refusjonskrav3, beregnetPrÅr3, 3L, ORGNR3, 100);
 
-		var periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), null), Arrays.asList(a1, a2, a3));
+		var periode = new FordelPeriodeModell(Arrays.asList(a1, a2, a3));
 
 		// Act
 		kjørRegel(periode);
@@ -145,7 +144,7 @@ public class FastsettNyFordelingTest {
 
 		var a3 = lagNyttArbeidsforhold(null, 3L, ORGNR3, 0);
 
-		var periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), null), Arrays.asList(a1, a2, a3));
+		var periode = new FordelPeriodeModell(Arrays.asList(a1, a2, a3));
 
 		// Act
 		kjørRegel(periode);
@@ -170,7 +169,7 @@ public class FastsettNyFordelingTest {
 
 		var a3 = lagNyttArbeidsforhold(null, 3L, ORGNR3, 0);
 
-		var periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), null), Arrays.asList(a1, a2, a3));
+		var periode = new FordelPeriodeModell(Arrays.asList(a1, a2, a3));
 
 		// Act
 		kjørRegel(periode);

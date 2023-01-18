@@ -14,7 +14,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelAndelModell
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelPeriodeModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
 import no.nav.fpsak.nare.ServiceArgument;
@@ -39,7 +38,7 @@ public class OmfordelBeregningsgrunnlagTilArbeidsforholdTest {
         var beregnetPrÅrSN = BigDecimal.valueOf(100_000);
         var sn = lagSN(beregnetPrÅrSN);
 
-	    var periode = new FordelPeriodeModell(Periode.of(STP, null), new ArrayList<>(Arrays.asList(a1, a2, sn)));
+	    var periode = new FordelPeriodeModell(new ArrayList<>(Arrays.asList(a1, a2, sn)));
 
 	    // Act
         kjørRegel(a1, periode);
@@ -70,7 +69,7 @@ public class OmfordelBeregningsgrunnlagTilArbeidsforholdTest {
 
         var beregnetPrÅrSN = BigDecimal.valueOf(50_000);
         var sn = lagSN(beregnetPrÅrSN);
-	    var periode = new FordelPeriodeModell(Periode.of(STP, null), new ArrayList<>(Arrays.asList(a1, a2, sn)));
+	    var periode = new FordelPeriodeModell(new ArrayList<>(Arrays.asList(a1, a2, sn)));
 
         // Act
         kjørRegel(a1, periode);
@@ -104,7 +103,7 @@ public class OmfordelBeregningsgrunnlagTilArbeidsforholdTest {
         var beregnetPrÅrSN = BigDecimal.valueOf(50_000);
         var sn = lagSN(beregnetPrÅrSN);
 
-		var periode = new FordelPeriodeModell(Periode.of(STP, null), new ArrayList<>(Arrays.asList(a1, a2, sn, frilans)));
+		var periode = new FordelPeriodeModell(new ArrayList<>(Arrays.asList(a1, a2, sn, frilans)));
 
         // Act
         kjørRegel(a1, periode);
@@ -147,7 +146,7 @@ public class OmfordelBeregningsgrunnlagTilArbeidsforholdTest {
         var beregnetPrÅrSN = BigDecimal.valueOf(50_000);
         var sn = lagSN(beregnetPrÅrSN);
 
-	    var periode = new FordelPeriodeModell(Periode.of(STP, null), new ArrayList<>(Arrays.asList(a1, a2, sn, frilans)));
+	    var periode = new FordelPeriodeModell(new ArrayList<>(Arrays.asList(a1, a2, sn, frilans)));
 
         // Act
         kjørRegel(a1, periode);

@@ -7,17 +7,13 @@ import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelPeriodeModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
-
-import no.nav.fpsak.tidsserie.LocalDateInterval;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -260,7 +256,7 @@ class FordelMålbeløpPrAndelTest {
 	private FordelModell kjørRegel(FordelteAndelerModell... regelobjekter) {
 		List<FordelteAndelerModell> mellomregninger = Arrays.asList(regelobjekter);
 		List<FordelAndelModell> input = mellomregninger.stream().map(FordelteAndelerModell::getInputAndel).collect(Collectors.toList());
-		FordelPeriodeModell periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), LocalDateInterval.TIDENES_ENDE), input);
+		FordelPeriodeModell periode = new FordelPeriodeModell(input);
 		FordelModell modell = new FordelModell(periode);
 		mellomregninger.forEach(modell::leggTilMellomregningAndel);
 		new FordelMålbeløpPrAndel().evaluate(modell);
