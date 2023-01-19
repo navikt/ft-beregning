@@ -50,7 +50,7 @@ public class IdentifiserPerioderForEndringISøktYtelse {
 	private static LocalDateTimeline<BigDecimal> fyllMellomromMedNull(LocalDateTimeline<BigDecimal> graderingTidslinje) {
 		var førsteFom = graderingTidslinje.getLocalDateIntervals().stream().map(LocalDateInterval::getFomDato).min(Comparator.naturalOrder()).orElseThrow();
 		var nullTidslinje = new LocalDateTimeline<>(List.of(new LocalDateSegment<>(førsteFom, TIDENES_ENDE, BigDecimal.ZERO)));
-		return graderingTidslinje.crossJoin(nullTidslinje, StandardCombinators::coalesceLeftHandSide).compress();
+		return graderingTidslinje.crossJoin(nullTidslinje, StandardCombinators::coalesceLeftHandSide).compress((e1, e2) -> e1.compareTo(e2) == 0,  StandardCombinators::leftOnly);
 	}
 
 	private static PeriodeSplittData lagPeriodeSplitt(LocalDate fom) {
