@@ -46,6 +46,9 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 		}
 		if (grunnlag.getBeregningsgrunnlag().getToggles().isEnabled("GRADERING_MOT_INNTEKT", false)) {
 			grenseverdi = gradertMotTilkommetInntekt(grunnlag, grenseverdi);
+			if (grunnlag.getInntektgraderingsprosent() != null) {
+				resultater.put("inntektgraderingsprosent", grunnlag.getInntektgraderingsprosent());
+			}
 		}
 		resultater.put("grenseverdi", grenseverdi);
 		grunnlag.setGrenseverdi(grenseverdi);
@@ -64,6 +67,7 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 			return BigDecimal.ZERO;
 		}
 		var gradering = bortfalt.divide(totaltGradertGrunnlag, 10, RoundingMode.HALF_UP);
+		grunnlag.setInntektgraderingsprosent(gradering.multiply(BigDecimal.valueOf(100)));
 		grenseverdi = grenseverdi.multiply(gradering);
 		return grenseverdi;
 	}

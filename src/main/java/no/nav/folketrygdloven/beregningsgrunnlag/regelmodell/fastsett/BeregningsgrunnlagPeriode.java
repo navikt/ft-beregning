@@ -29,6 +29,7 @@ public class BeregningsgrunnlagPeriode {
 	@JsonBackReference
 	private Beregningsgrunnlag beregningsgrunnlag;
 	private BigDecimal grenseverdi;
+	private BigDecimal inntektgraderingsprosent;
 	private Dekningsgrad dekningsgrad = Dekningsgrad.DEKNINGSGRAD_100;
 	private boolean erVilkårOppfylt = true;
 
@@ -172,6 +173,14 @@ public class BeregningsgrunnlagPeriode {
 
 	public boolean getErVilkårOppfylt() {
 		return erVilkårOppfylt;
+	}
+
+	public BigDecimal getInntektgraderingsprosent() {
+		return inntektgraderingsprosent;
+	}
+
+	public void setInntektgraderingsprosent(BigDecimal inntektgraderingsprosent) {
+		this.inntektgraderingsprosent = inntektgraderingsprosent;
 	}
 
 	public static Builder builder() {
