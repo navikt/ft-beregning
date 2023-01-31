@@ -16,6 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.RegelmodellOversetter;
+import no.nav.folketrygdloven.beregningsgrunnlag.RegelmodellOversetterUtenVersjon;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
@@ -157,7 +158,7 @@ public class BeregningsgrunnlagFlerePerioderTest {
     }
 
     private void verifiserRegelresultat(Beregningsgrunnlag beregningsgrunnlag, Evaluation evaluation1) {
-        RegelResultat resultat = RegelmodellOversetter.getRegelResultat(evaluation1, "input");
+        RegelResultat resultat = RegelmodellOversetterUtenVersjon.getRegelResultat(evaluation1, "input");
         assertThat(resultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
         assertThat(resultat.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5038");
 	    assertThat(beregningsgrunnlag.getSammenligningsgrunnlagForStatus(SammenligningGrunnlagType.AT_FL).get().getAvvikPromille()).isEqualTo(11000L);

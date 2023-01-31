@@ -16,6 +16,7 @@ import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.RegelmodellOversetter;
+import no.nav.folketrygdloven.beregningsgrunnlag.RegelmodellOversetterUtenVersjon;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Dekningsgrad;
@@ -504,7 +505,8 @@ public class RegelFullføreBeregningsgrunnlagTest {
 	private RegelResultat kjørRegel(BeregningsgrunnlagPeriode grunnlag) {
 		RegelFullføreBeregningsgrunnlag regel = new RegelFullføreBeregningsgrunnlag(grunnlag);
 		Evaluation evaluation = regel.evaluer(grunnlag);
-		return RegelmodellOversetter.getRegelResultat(evaluation, "input");
+
+		return RegelmodellOversetterUtenVersjon.getRegelResultat(evaluation, "input");
 	}
 
 	private void verifiserBeregningsgrunnlag(RegelResultat resultat, BeregningsgrunnlagPeriode grunnlag, double bruttoPrÅr,

@@ -16,6 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.RegelmodellOversetter;
+import no.nav.folketrygdloven.beregningsgrunnlag.RegelmodellOversetterUtenVersjon;
 import no.nav.folketrygdloven.beregningsgrunnlag.foreslå.RegelForeslåBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
@@ -58,7 +59,7 @@ public class ForeslåBeregningsgrunnlagSykepengerTest {
         // Assert
         @SuppressWarnings("unused")
         String sporing = EvaluationSerializer.asJson(evaluation);
-        RegelResultat resultat = RegelmodellOversetter.getRegelResultat(evaluation, "input");
+        RegelResultat resultat = RegelmodellOversetterUtenVersjon.getRegelResultat(evaluation, "input");
 
         assertThat(resultat.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).isEmpty();
         assertThat(bgArbeidsforhold.getNaturalytelseBortfaltPrÅr().get()).isEqualByComparingTo(BigDecimal.valueOf(24000)); //NOSONAR
@@ -86,7 +87,7 @@ public class ForeslåBeregningsgrunnlagSykepengerTest {
         // Assert
         @SuppressWarnings("unused")
         String sporing = EvaluationSerializer.asJson(evaluation);
-        RegelResultat resultat = RegelmodellOversetter.getRegelResultat(evaluation, "input");
+        RegelResultat resultat = RegelmodellOversetterUtenVersjon.getRegelResultat(evaluation, "input");
 
         assertThat(resultat.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).isEmpty();
         assertThat(bgArbeidsforhold.getNaturalytelseBortfaltPrÅr()).isEmpty();

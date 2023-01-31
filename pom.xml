@@ -31,7 +31,7 @@
     </developers>
 
     <properties>
-        <revision>3.1</revision>
+        <revision>3.2</revision>
         <sha1></sha1>
         <changelist>-SNAPSHOT</changelist>
         <java.version>17</java.version>

@@ -13,7 +13,7 @@ import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenar
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.settoppMånedsinntekter;
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.settoppÅrsinntekter;
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.årsinntekterFor3SisteÅr;
-import static no.nav.folketrygdloven.beregningsgrunnlag.RegelmodellOversetter.getRegelResultat;
+import static no.nav.folketrygdloven.beregningsgrunnlag.RegelmodellOversetterUtenVersjon.getRegelResultat;
 import static no.nav.folketrygdloven.beregningsgrunnlag.VerifiserBeregningsgrunnlag.verifiserBeregningsgrunnlagBeregnet;
 import static no.nav.folketrygdloven.beregningsgrunnlag.VerifiserBeregningsgrunnlag.verifiserBeregningsgrunnlagBruttoPrPeriodeType;
 import static no.nav.folketrygdloven.beregningsgrunnlag.VerifiserBeregningsgrunnlag.verifiserBeregningsperiode;
@@ -34,6 +34,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.RegelmodellOversetter;
+import no.nav.folketrygdloven.beregningsgrunnlag.RegelmodellOversetterUtenVersjon;
 import no.nav.folketrygdloven.beregningsgrunnlag.fortsettForeslå.RegelFortsettForeslåBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel;
@@ -201,7 +202,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
 		// Assert
 		@SuppressWarnings("unused")
 		String sporing = EvaluationSerializer.asJson(evaluation);
-		RegelResultat resultat = RegelmodellOversetter.getRegelResultat(evaluation, "input");
+		RegelResultat resultat = RegelmodellOversetterUtenVersjon.getRegelResultat(evaluation, "input");
 
 
 		assertThat(resultat.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5038");
@@ -446,7 +447,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
 		Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
 		Evaluation evaluation2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
 		// Assert
-		RegelResultat resultat = RegelmodellOversetter.getRegelResultat(evaluation, "input");
+		RegelResultat resultat = RegelmodellOversetterUtenVersjon.getRegelResultat(evaluation, "input");
 		assertThat(resultat.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).isEmpty();
 		verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.K9_HJEMMEL_BARE_ARBEIDSTAKER_REFUSJON, AktivitetStatus.ATFL, 12 * månedsinntektInntektsmelding.doubleValue());
 		verifiserBeregningsgrunnlagHjemmel(grunnlag, AktivitetStatus.ATFL, BeregningsgrunnlagHjemmel.F_9_8_8_28);
@@ -473,7 +474,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
 		Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
 		Evaluation evaluation2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
 		// Assert
-		RegelResultat resultat = RegelmodellOversetter.getRegelResultat(evaluation, "input");
+		RegelResultat resultat = RegelmodellOversetterUtenVersjon.getRegelResultat(evaluation, "input");
 		assertThat(resultat.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5038");
 		verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.K9_HJEMMEL_BARE_ARBEIDSTAKER_MED_AVVIKSVURDERING, AktivitetStatus.ATFL, 12 * månedsinntektInntektsmelding.doubleValue());
 		verifiserBeregningsgrunnlagHjemmel(grunnlag, AktivitetStatus.ATFL, BeregningsgrunnlagHjemmel.F_9_9_8_28_8_30);
@@ -500,7 +501,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
 		Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
 		Evaluation evaluation2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
 		// Assert
-		RegelResultat resultat = RegelmodellOversetter.getRegelResultat(evaluation, "input");
+		RegelResultat resultat = RegelmodellOversetterUtenVersjon.getRegelResultat(evaluation, "input");
 		assertThat(resultat.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5038");
 		verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_ARBEIDSTAKER, AktivitetStatus.ATFL, 12 * månedsinntektInntektsmelding.doubleValue());
 		verifiserBeregningsgrunnlagHjemmel(grunnlag, AktivitetStatus.ATFL, BeregningsgrunnlagHjemmel.F_14_7_8_30);
@@ -555,7 +556,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
 		// Act
 		Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(førstePeriode).evaluer(førstePeriode);
 
-		RegelResultat resultat = RegelmodellOversetter.getRegelResultat(evaluation, "input");
+		RegelResultat resultat = RegelmodellOversetterUtenVersjon.getRegelResultat(evaluation, "input");
 		assertThat(resultat.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5038");
 		assertThat(førstePeriode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(240000));
 		assertThat(førstePeriode.getSammenligningsGrunnlagForType(SammenligningGrunnlagType.AT_FL).get().getAvvikPromilleUtenAvrunding()).isEqualByComparingTo(BigDecimal.valueOf(500));
@@ -587,7 +588,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
 		// Act
 		Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(førstePeriode).evaluer(førstePeriode);
 
-		RegelResultat resultat = RegelmodellOversetter.getRegelResultat(evaluation, "input");
+		RegelResultat resultat = RegelmodellOversetterUtenVersjon.getRegelResultat(evaluation, "input");
 		assertThat(resultat.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).isEmpty();
 		assertThat(førstePeriode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(240000));
 		assertThat(førstePeriode.getSammenligningsGrunnlagForType(SammenligningGrunnlagType.AT_FL)).isEmpty();

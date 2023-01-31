@@ -16,6 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.RegelmodellOversetter;
+import no.nav.folketrygdloven.beregningsgrunnlag.RegelmodellOversetterUtenVersjon;
 import no.nav.folketrygdloven.beregningsgrunnlag.fastsette.RegelFullføreBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
@@ -777,12 +778,12 @@ public class RegelFullføreBeregningsgrunnlagTest {
     private RegelResultat kjørRegelFinnGrenseverdi(BeregningsgrunnlagPeriode grunnlag) {
         RegelFinnGrenseverdi regel = new RegelFinnGrenseverdi(grunnlag);
         Evaluation evaluation = regel.evaluer(grunnlag);
-        return RegelmodellOversetter.getRegelResultat(evaluation, "input");
+        return RegelmodellOversetterUtenVersjon.getRegelResultat(evaluation, "input");
     }
 
     private RegelResultat kjørRegelFullførBeregningsgrunnlag(BeregningsgrunnlagPeriode grunnlag) {
         RegelFullføreBeregningsgrunnlag regel = new RegelFullføreBeregningsgrunnlag(grunnlag);
         Evaluation evaluation = regel.evaluer(grunnlag);
-        return RegelmodellOversetter.getRegelResultat(evaluation, "input");
+        return RegelmodellOversetterUtenVersjon.getRegelResultat(evaluation, "input");
     }
 }
