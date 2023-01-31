@@ -1,8 +1,5 @@
 package no.nav.folketrygdloven.beregningsgrunnlag;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
 import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningUtfallMerknad;
@@ -23,7 +20,6 @@ class RegelmodellOversetterImpl {
 	RegelmodellOversetterImpl(EvaluationVersion... versjoner) {
 		this.versjoner = versjoner;
 	}
-
 
 	static RegelmodellOversetterImpl utenVersjoner() {
 		return new RegelmodellOversetterImpl();
