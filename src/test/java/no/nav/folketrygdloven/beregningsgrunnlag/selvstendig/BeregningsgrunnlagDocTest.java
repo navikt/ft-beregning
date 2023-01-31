@@ -1,9 +1,12 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.selvstendig;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Arrays;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,6 +19,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
 import no.nav.fpsak.nare.doc.RuleDescriptionDigraph;
+import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 import no.nav.fpsak.nare.specification.Specification;
 
 public class BeregningsgrunnlagDocTest {
@@ -44,10 +48,9 @@ public class BeregningsgrunnlagDocTest {
     @Test
     public void test_documentation_beregningsgrunnlagSN() { // NOSONAR
         Specification<BeregningsgrunnlagPeriode> beregning = new RegelBeregningsgrunnlagSN().getSpecification();
-        RuleDescriptionDigraph digraph = new RuleDescriptionDigraph(beregning.ruleDescription());
 
-        @SuppressWarnings("unused")
-        String json = digraph.toJson();
+        String json = EvaluationSerializer.asJson(beregning);
+	    assertThat(json).isNotEmpty();
 
     }
 }
