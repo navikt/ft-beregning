@@ -8,7 +8,7 @@ import no.nav.fpsak.nare.evaluation.Evaluation;
  * <p>
  * flyttes da denne brukes for flere regler, ikke kun beregningsgrunnlag
  */
-@Deprecated(forRemoval = true, since = "2.6.0")
+@Deprecated(forRemoval = true, since = "3.3.0")
 public class RegelmodellOversetter {
 
 	private RegelmodellOversetter() {
