@@ -1,6 +1,8 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.vurder;
 
+import no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker.AvslagUnderEnG;
 import no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker.AvslagUnderEnHalvG;
+import no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker.AvslagUnderEnHalvGMidlertidigAlene;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Beregnet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.regelmodelloversetter.EksportRegel;
@@ -20,6 +22,23 @@ public class RegelVurderBeregningsgrunnlag implements EksportRegel<Beregningsgru
 	@SuppressWarnings("unchecked")
     @Override
     public Specification<BeregningsgrunnlagPeriode> getSpecification() {
+
+		Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
+
+		return rs.beregningHvisRegel(new ErMidlertidigInaktiv(),
+				rs.beregningHvisRegel(new HarForLiteBeregningsgrunnlagMidlertidigInaktiv(),
+						new AvslagUnderEnG(),
+						new Beregnet()),
+				rs.beregningHvisRegel(new GjelderKapittel9(),
+						rs.beregningHvisRegel(new HarForLiteBeregningsgrunnlagKap9(),
+								new AvslagUnderEnHalvGMidlertidigAlene(),
+								new Beregnet()),
+						rs.beregningHvisRegel(new HarForLiteBeregningsgrunnlagKap14(),
+								new AvslagUnderEnHalvGMidlertidigAlene(),
+								new Beregnet()))
+		);
+
+
         Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
 
         // FP_VK_32.2 2. Opprett regelmerknad (avslag)

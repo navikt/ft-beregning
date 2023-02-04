@@ -11,6 +11,7 @@ public enum BeregningUtfallÅrsak {
 
 	AVSLAG_UNDER_HALV_G(AVSLAG, "Avslag beregningsvilkår, brutto årsbeløp under 0.5G"),
 	AVSLAG_UNDER_TREKVART_G(AVSLAG, "Avslag beregningsvilkår, brutto årsbeløp under 0.75G"),
+	AVSLAG_UNDER_EN_G(AVSLAG, "Avslag beregningsvilkår, brutto årsbeløp under 1G"),
 	FASTSETT_AVVIK_OVER_25_PROSENT(AVVIK_25, "Avvik {0}% er > 25%, beregningsgrunnlag fastsettes ved skjønn"),
 	FASTSETT_AVVIK_OVER_25_PROSENT_ARBEIDSTAKER(AVVIK_25, "Avvik {0}% for AT er > 25%, beregningsgrunnlag fastsettes ved skjønn"),
 	FASTSETT_AVVIK_OVER_25_PROSENT_FRILANS(AVVIK_25, "Avvik {0}% for FL er > 25%, beregningsgrunnlag fastsettes ved skjønn"),
