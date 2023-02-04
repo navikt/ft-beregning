@@ -48,23 +48,27 @@ class RegelmodellOversetterImpl {
 	private static RegelResultat opprettResultat(Evaluation ev, String regelInput, String sporing) {
 		Resultat res = ev.result();
 		return switch (res) {
-			case JA -> opprettResultat(ResultatBeregningType.BEREGNET, ev, regelInput, sporing);
-			case NEI -> opprettResultat(ResultatBeregningType.IKKE_BEREGNET, ev, regelInput, sporing);
+			case JA, NEI -> opprettResultat(res, ev, regelInput, sporing);
 			case IKKE_VURDERT -> opprettResultat(ResultatBeregningType.IKKE_VURDERT, regelInput, sporing);
 		};
 	}
 
-	private static RegelResultat opprettResultat(ResultatBeregningType beregningsresultat, Evaluation ev, String input, String sporing) {
-		if (ev.getOutcome() != null) {
-			if (ev.getOutcome() instanceof BeregningUtfallMerknad merknad) {
-				return new RegelResultat(ResultatBeregningType.IKKE_BEREGNET, input, sporing)
-						.medRegelMerknad(new RegelMerknad(merknad.regelUtfallMerknad()));
-			} else {
-				throw new IllegalStateException("Utviklerfeil: Ugyldig utfall" + ev.getOutcome());
-			}
-		} else {
-			return new RegelResultat(ResultatBeregningType.BEREGNET, input, sporing);
+	private static RegelResultat opprettResultat(Resultat resultat, Evaluation ev, String input, String sporing) {
+		if (ev.getOutcome() == null && resultat != Resultat.JA) {
+			throw new IllegalStateException("Inkonsistent resultat. Har " + resultat + " og samtidig er Evaluation.getOutcome null");
 		}
+		if (ev.getOutcome() instanceof BeregningUtfallMerknad && resultat != Resultat.NEI) {
+			throw new IllegalArgumentException("Inkonsistet resultat. Har " + resultat + " og samtidig er Evaluation.getOutcome en BeregningUtfallMerknad");
+		}
+
+		if (ev.getOutcome() == null) {
+			return new RegelResultat(ResultatBeregningType.BEREGNET, input, sporing);
+		} else if (ev.getOutcome() instanceof BeregningUtfallMerknad merknad) {
+			return new RegelResultat(ResultatBeregningType.IKKE_BEREGNET, input, sporing).medRegelMerknad(new RegelMerknad(merknad.regelUtfallMerknad()));
+		} else {
+			throw new IllegalStateException("Utviklerfeil: Ugyldig utfall" + ev.getOutcome());
+		}
+
 	}
 
 	private static RegelResultat opprettResultat(ResultatBeregningType beregningsresultat, String input, String sporing) {
