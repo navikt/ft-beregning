@@ -1,4 +1,4 @@
-package no.nav.folketrygdloven.beregningsgrunnlag;
+package no.nav.folketrygdloven.regelmodelloversetter;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.RegelResultat;
 import no.nav.fpsak.nare.evaluation.Evaluation;

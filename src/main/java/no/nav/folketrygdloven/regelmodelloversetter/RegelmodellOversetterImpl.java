@@ -1,4 +1,4 @@
-package no.nav.folketrygdloven.beregningsgrunnlag;
+package no.nav.folketrygdloven.regelmodelloversetter;
 
 import java.util.stream.Collectors;
 

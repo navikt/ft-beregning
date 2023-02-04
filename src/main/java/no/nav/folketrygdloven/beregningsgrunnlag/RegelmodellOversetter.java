@@ -1,41 +1,24 @@
 package no.nav.folketrygdloven.beregningsgrunnlag;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.RegelResultat;
 import no.nav.fpsak.nare.evaluation.Evaluation;
-import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
-import no.nav.fpsak.nare.evaluation.summary.EvaluationVersion;
 
+/**
+ * bruk istedet no.nav.folketrygdloven.regelmodelloversetter.RegelmodellOversetter
+ * <p>
+ * flyttes da denne brukes for flere regler, ikke kun beregningsgrunnlag
+ */
+@Deprecated(forRemoval = true, since = "2.6.0")
 public class RegelmodellOversetter {
-
-	private static final EvaluationVersion VERSJON = hentVersjonFraPomProperties("META-INF/maven/no.nav.folketrygdloven/beregningsgrunnlag-regelmodell/pom.properties");
-	private static final RegelmodellOversetterImpl OVERSETTER = new RegelmodellOversetterImpl(VERSJON);
 
 	private RegelmodellOversetter() {
 	}
 
 	public static RegelResultat getRegelResultat(Evaluation evaluation, String regelInput) {
-		return OVERSETTER.getRegelResultat(evaluation, regelInput);
+		return no.nav.folketrygdloven.regelmodelloversetter.RegelmodellOversetter.getRegelResultat(evaluation, regelInput);
 	}
 
 	public static String getSporing(Evaluation evaluation) {
-		return OVERSETTER.getSporing(evaluation);
+		return no.nav.folketrygdloven.regelmodelloversetter.RegelmodellOversetter.getSporing(evaluation);
 	}
-
-	private static EvaluationVersion hentVersjonFraPomProperties(String path) {
-		try (InputStream fil = EvaluationSerializer.class.getClassLoader().getResourceAsStream(path)) {
-			Properties properties = new Properties();
-			properties.load(fil);
-			String versjon = properties.getProperty("version");
-			String hva = properties.getProperty("groupId") + ":" + properties.getProperty("artifactId");
-			return new EvaluationVersion(hva, versjon);
-		} catch (IOException e) {
-			throw new IllegalStateException("Klarte ikke finne versjon fra " + path, e);
-		}
-	}
-
-
 }
