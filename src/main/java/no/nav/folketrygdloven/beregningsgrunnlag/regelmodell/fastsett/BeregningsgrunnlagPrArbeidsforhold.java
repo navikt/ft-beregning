@@ -18,7 +18,9 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 	private BigDecimal bruttoPrÅr;
 	private Arbeidsforhold arbeidsforhold;
 	private BigDecimal refusjonPrÅr;
-	private BigDecimal beregnetPrÅr;
+
+	// Beregnet eller skjønnsfastsatt inntekt
+	private BigDecimal inntektsgrunnlagPrÅr;
 
 	// Output
 	private BigDecimal avkortetPrÅr;
@@ -69,13 +71,8 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 		return finnGradert(getBruttoPrÅr().orElse(null));
 	}
 
-
-	public BigDecimal getGradertBeregnetPrÅr() {
-		return beregnetPrÅr != null ? finnGradert(beregnetPrÅr) : BigDecimal.ZERO;
-	}
-
-	public BigDecimal getBeregnetPrÅr() {
-		return beregnetPrÅr != null ? beregnetPrÅr : BigDecimal.ZERO;
+	public BigDecimal getInntektsgrunnlagPrÅr() {
+		return inntektsgrunnlagPrÅr != null ? inntektsgrunnlagPrÅr : BigDecimal.ZERO;
 	}
 
 	public Optional<BigDecimal> getBruttoInkludertNaturalytelsePrÅr() {
@@ -212,8 +209,8 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 			return this;
 		}
 
-		public Builder medBeregnetPrÅr(BigDecimal beregnetPrÅr) {
-			mal.beregnetPrÅr = beregnetPrÅr;
+		public Builder medInntektsgrunnlagPrÅr(BigDecimal inntekt) {
+			mal.inntektsgrunnlagPrÅr = inntekt;
 			return this;
 		}
 
