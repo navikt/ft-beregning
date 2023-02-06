@@ -7,11 +7,11 @@ import no.nav.fpsak.nare.doc.RuleDocumentation;
 @RuleDocumentation(HarForLiteBeregningsgrunnlagMidlertidigInaktiv.ID)
 class HarForLiteBeregningsgrunnlagMidlertidigInaktiv extends SjekkBeregningsgrunnlagMindreEnnAntallG {
 
-    static final String ID = "FP_VK_47.4";
+    static final String ID = "FP_VK_8_47_5";
 	private static final BigDecimal MINIMUM_G = BigDecimal.valueOf(1);
 
 	HarForLiteBeregningsgrunnlagMidlertidigInaktiv() {
-        super(ID, MINIMUM_G, "Folketrygdloven §8-47 4.ledd");
+        super(ID, MINIMUM_G, "Folketrygdloven §8-47 5.ledd");
 	}
 
 }
