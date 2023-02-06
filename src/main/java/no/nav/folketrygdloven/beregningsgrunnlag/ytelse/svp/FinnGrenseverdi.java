@@ -44,7 +44,7 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 		if (erInaktivTypeA) {
 			grenseverdi = grenseverdi.multiply(grunnlag.getBeregningsgrunnlag().getMidlertidigInaktivTypeAReduksjonsfaktor());
 		}
-		if (grunnlag.getBeregningsgrunnlag().getToggles().isEnabled("GRADERING_MOT_INNTEKT", false)) {
+		if (grunnlag.getBeregningsgrunnlag().getToggles().isEnabled("GRADERING_MOT_INNTEKT", false) && !grunnlag.getTilkommetInntektsforholdListe().isEmpty()) {
 			grenseverdi = gradertMotTilkommetInntekt(grunnlag, grenseverdi);
 			if (grunnlag.getInntektgraderingsprosent() != null) {
 				resultater.put("inntektgraderingsprosent", grunnlag.getInntektgraderingsprosent());
