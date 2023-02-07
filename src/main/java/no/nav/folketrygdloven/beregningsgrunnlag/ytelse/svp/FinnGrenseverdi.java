@@ -44,7 +44,7 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 		if (erInaktivTypeA) {
 			grenseverdi = grenseverdi.multiply(grunnlag.getBeregningsgrunnlag().getMidlertidigInaktivTypeAReduksjonsfaktor());
 		}
-		if (grunnlag.getBeregningsgrunnlag().getToggles().isEnabled("GRADERING_MOT_INNTEKT", false)) {
+		if (grunnlag.getBeregningsgrunnlag().getToggles().isEnabled("GRADERING_MOT_INNTEKT", false) && !grunnlag.getTilkommetInntektsforholdListe().isEmpty()) {
 			grenseverdi = gradertMotTilkommetInntekt(grunnlag, grenseverdi);
 			if (grunnlag.getInntektgraderingsprosent() != null) {
 				resultater.put("inntektgraderingsprosent", grunnlag.getInntektgraderingsprosent());
@@ -74,7 +74,7 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 
 	private BigDecimal finnBortfaltInntekt(BeregningsgrunnlagPeriode grunnlag) {
 		var bortfalt = BigDecimal.ZERO;
-		for (BeregningsgrunnlagPrStatus bps : grunnlag.getBeregningsgrunnlagPrStatusSomSkalBrukes()) {
+		for (BeregningsgrunnlagPrStatus bps : grunnlag.getBeregningsgrunnlagPrStatus()) {
 			if (bps.erArbeidstakerEllerFrilanser()) {
 				bortfalt = bortfalt.add(finnBortfaltFraATFL(bps.getArbeidsforhold()));
 			} else {
@@ -95,10 +95,7 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 	private BigDecimal finnBortfaltForStatus(BeregningsgrunnlagPrStatus bps) {
 		var utbetalingsprosent = bps.getUtbetalingsprosent();
 		var utbetalingsgrad = utbetalingsprosent.divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP);
-		var inversUtbetalingsgrad = BigDecimal.ONE.subtract(utbetalingsgrad);
-		var opprettholdtInntekt = bps.getBeregnetPrÅr()
-				.multiply(inversUtbetalingsgrad);
-		return bps.getBeregnetPrÅr().subtract(opprettholdtInntekt);
+		return bps.getInntektsgrunnlagPrÅr().multiply(utbetalingsgrad);
 	}
 
 	private BigDecimal finnBortfaltFraATFL(List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold1) {
@@ -106,11 +103,7 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 				.map(arbeidsforhold -> {
 					var utbetalingsprosent = arbeidsforhold.getUtbetalingsprosent();
 					var utbetalingsgrad = utbetalingsprosent.divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP);
-					var inversUtbetalingsgrad = BigDecimal.ONE.subtract(utbetalingsgrad);
-					var opprettholdtInntekt = arbeidsforhold.getBeregnetPrÅr()
-							.multiply(inversUtbetalingsgrad);
-					return arbeidsforhold.getBeregnetPrÅr()
-							.subtract(opprettholdtInntekt);
+					return arbeidsforhold.getInntektsgrunnlagPrÅr().multiply(utbetalingsgrad);
 				})
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
 	}

@@ -1641,7 +1641,7 @@ public class RegelFinnGrenseverdiTest {
 				.medAndelNr(andelsnr)
 				.medAktivitetStatus(AktivitetStatus.SN)
 				.medBruttoPrÅr(bruttoPrÅr)
-				.medBeregnetPrÅr(bruttoPrÅr)
+				.medInntektsgrunnlagPrÅr(bruttoPrÅr)
 				.medUtbetalingsprosent(BigDecimal.valueOf(utbetalingsgrad))
 				.build();
 		status.setErSøktYtelseFor(utbetalingsgrad > 0);
@@ -1660,7 +1660,7 @@ public class RegelFinnGrenseverdiTest {
 		BeregningsgrunnlagPrArbeidsforhold arb = BeregningsgrunnlagPrArbeidsforhold.builder()
 				.medAndelNr(andelsnr)
 				.medArbeidsforhold(arbeidsforhold)
-				.medBeregnetPrÅr(beregnetPrÅr != null ? BigDecimal.valueOf(beregnetPrÅr) : null)
+				.medInntektsgrunnlagPrÅr(beregnetPrÅr != null ? BigDecimal.valueOf(beregnetPrÅr) : null)
 				.medBruttoPrÅr(bruttoPrÅr)
 				.medRefusjonPrÅr(BigDecimal.valueOf(refusjonskrav))
 				.medUtbetalingsprosent(BigDecimal.valueOf(utbetalingsgrad))
