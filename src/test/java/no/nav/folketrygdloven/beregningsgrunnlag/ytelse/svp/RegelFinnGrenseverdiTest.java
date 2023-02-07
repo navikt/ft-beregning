@@ -191,7 +191,53 @@ public class RegelFinnGrenseverdiTest {
 		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(150_000));
 	}
 
+	@Test
+	public void kun_ytelse_og_brutto_tilkommet_inntekt_lavere_enn_beregningsgrunnlag() {
+		//Arrange
+		double beregnetPrÅr = 250_000;
+		double tilkommetPrÅr2 = 100_000;
 
+		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
+				.build();
+
+		Beregningsgrunnlag.builder()
+				.leggTilToggle("GRADERING_MOT_INNTEKT", true)
+				.medBeregningsgrunnlagPeriode(periode)
+				.medGrunnbeløp(BigDecimal.valueOf(100_000));
+
+		leggTilBrukersAndel(periode, 1L, beregnetPrÅr, 0,50);
+		leggTilArbeidsforhold(periode, 2L, ORGNR_2, null, beregnetPrÅr, tilkommetPrÅr2, 50);
+
+		//Act
+		kjørRegel(periode);
+
+		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(125_000));
+	}
+
+	@Test
+	public void kun_ytelse_og_brutto_tilkommet_inntekt_høyere_enn_beregningsgrunnlag() {
+		//Arrange
+		double beregnetPrÅr = 250_000;
+		double tilkommetPrÅr2 = 150_000;
+
+		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
+				.build();
+
+		Beregningsgrunnlag.builder()
+				.leggTilToggle("GRADERING_MOT_INNTEKT", true)
+				.medBeregningsgrunnlagPeriode(periode)
+				.medGrunnbeløp(BigDecimal.valueOf(100_000));
+
+		leggTilBrukersAndel(periode, 1L, beregnetPrÅr, 0,50);
+		leggTilArbeidsforhold(periode, 2L, ORGNR_2, null, beregnetPrÅr, tilkommetPrÅr2, 50);
+
+		//Act
+		kjørRegel(periode);
+
+		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(100_000));
+	}
 
 	@Test
 	public void to_arbeidsforhold_over_6G() {
@@ -1623,6 +1669,24 @@ public class RegelFinnGrenseverdiTest {
 				.medAndelNr(andelsnr)
 				.medAktivitetStatus(AktivitetStatus.SN)
 				.medBruttoPrÅr(BigDecimal.valueOf(beregnetPrÅr))
+				.medUtbetalingsprosent(BigDecimal.valueOf(utbetalingsgrad))
+				.build();
+		status.setErSøktYtelseFor(utbetalingsgrad > 0);
+		BeregningsgrunnlagPeriode.oppdater(periode)
+				.medBeregningsgrunnlagPrStatus(status);
+	}
+
+	private void leggTilBrukersAndel(BeregningsgrunnlagPeriode periode,
+	                           long andelsnr,
+	                           double beregnetPrÅr,
+	                                 double fordeltPrÅr,
+	                                 double utbetalingsgrad) {
+		BeregningsgrunnlagPrStatus status = BeregningsgrunnlagPrStatus
+				.builder()
+				.medAndelNr(andelsnr)
+				.medAktivitetStatus(AktivitetStatus.BA)
+				.medBruttoPrÅr(BigDecimal.valueOf(fordeltPrÅr))
+				.medInntektsgrunnlagPrÅr(BigDecimal.valueOf(beregnetPrÅr))
 				.medUtbetalingsprosent(BigDecimal.valueOf(utbetalingsgrad))
 				.build();
 		status.setErSøktYtelseFor(utbetalingsgrad > 0);

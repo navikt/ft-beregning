@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.MidlertidigInaktivType;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrArbeidsforhold;
@@ -67,8 +68,10 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 			return BigDecimal.ZERO;
 		}
 		var gradering = bortfalt.divide(totaltGradertGrunnlag, 10, RoundingMode.HALF_UP);
-		grunnlag.setInntektgraderingsprosent(gradering.multiply(BigDecimal.valueOf(100)));
-		grenseverdi = grenseverdi.multiply(gradering);
+		if (gradering.compareTo(BigDecimal.ONE) < 0) {
+			grunnlag.setInntektgraderingsprosent(gradering.multiply(BigDecimal.valueOf(100)));
+			grenseverdi = grenseverdi.multiply(gradering);
+		}
 		return grenseverdi;
 	}
 
@@ -89,13 +92,20 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 
 		var nettoBortfaltInntekt = bortfalt.subtract(tilkommetInntekt);
 
-		return nettoBortfaltInntekt;
+		return nettoBortfaltInntekt.max(BigDecimal.ZERO);
 	}
 
 	private BigDecimal finnBortfaltForStatus(BeregningsgrunnlagPrStatus bps) {
-		var utbetalingsprosent = bps.getUtbetalingsprosent();
+		var utbetalingsprosent = getUtbetalingsprosentForStatus(bps);
 		var utbetalingsgrad = utbetalingsprosent.divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP);
 		return bps.getInntektsgrunnlagPrÅr().multiply(utbetalingsgrad);
+	}
+
+	private static BigDecimal getUtbetalingsprosentForStatus(BeregningsgrunnlagPrStatus bps) {
+		if (bps.getAktivitetStatus().erAAPellerDP() || bps.getAktivitetStatus().equals(AktivitetStatus.BA)) {
+			return BigDecimal.valueOf(100); // Regner hele grunnlaget som bortfalt ved DP/AAP/bruker andel (kun ytelse og midlertidig inaktiv)
+		}
+		return bps.getUtbetalingsprosent();
 	}
 
 	private BigDecimal finnBortfaltFraATFL(List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold1) {
