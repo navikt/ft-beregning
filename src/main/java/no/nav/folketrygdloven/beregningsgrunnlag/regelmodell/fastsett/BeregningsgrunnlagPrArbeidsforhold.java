@@ -22,7 +22,7 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 	// Beregnet eller skjønnsfastsatt inntekt
 	private BigDecimal inntektsgrunnlagPrÅr;
 
-	private Boolean erIkkeYrkesaktiv;
+	private boolean erIkkeYrkesaktiv;
 
 	// Output
 	private BigDecimal avkortetPrÅr;
@@ -165,7 +165,7 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 		return andelsmessigFørGraderingPrAar;
 	}
 
-	public Boolean getErIkkeYrkesaktiv() {
+	public boolean getErIkkeYrkesaktiv() {
 		return erIkkeYrkesaktiv;
 	}
 
