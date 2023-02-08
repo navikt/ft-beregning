@@ -96,12 +96,20 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 	}
 
 	private BigDecimal finnBortfaltForStatus(BeregningsgrunnlagPrStatus bps) {
-		var utbetalingsprosent = getUtbetalingsprosentForStatus(bps);
-		var utbetalingsgrad = utbetalingsprosent.divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP);
-		return bps.getInntektsgrunnlagPrÅr().multiply(utbetalingsgrad);
+		var bortfaltInntektsprosent = finnBortfaltInntektsprosentForStatus(bps);
+		var bortfaltInntektsgrad = bortfaltInntektsprosent.divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP);
+		return bps.getInntektsgrunnlagPrÅr().multiply(bortfaltInntektsgrad);
 	}
 
-	private static BigDecimal getUtbetalingsprosentForStatus(BeregningsgrunnlagPrStatus bps) {
+	/** Finner bortfalt inntektsprosent for status
+	 * For statusene DP, AAP og brukers andel som brukes til ytelser og midlertidig inaktiv
+	 * brukes en bortfalt inntektsgrad på 100% siden disse aktivitene ikke er løpende
+	 * For andre statuser antar vi en bortfalt inntektsgrad som tilsvarer utbetalingsgraden
+	 *
+	 * @param bps Status
+	 * @return Bortfalt inntektsprosent
+	 */
+	private static BigDecimal finnBortfaltInntektsprosentForStatus(BeregningsgrunnlagPrStatus bps) {
 		if (bps.getAktivitetStatus().erAAPellerDP() || bps.getAktivitetStatus().equals(AktivitetStatus.BA)) {
 			return BigDecimal.valueOf(100); // Regner hele grunnlaget som bortfalt ved DP/AAP/bruker andel (kun ytelse og midlertidig inaktiv)
 		}
@@ -111,10 +119,24 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 	private BigDecimal finnBortfaltFraATFL(List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold1) {
 		return arbeidsforhold1.stream()
 				.map(arbeidsforhold -> {
-					var utbetalingsprosent = arbeidsforhold.getUtbetalingsprosent();
-					var utbetalingsgrad = utbetalingsprosent.divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP);
-					return arbeidsforhold.getInntektsgrunnlagPrÅr().multiply(utbetalingsgrad);
+					var bortfaltInntektsprosent = finnBortfaltInntektsprosentForArbeidsforhold(arbeidsforhold);
+					var bortfaltInntektsgrad = bortfaltInntektsprosent.divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP);
+					return arbeidsforhold.getInntektsgrunnlagPrÅr().multiply(bortfaltInntektsgrad);
 				})
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
+	}
+
+	/** Finner grad av inntekt som er bortfalt
+	 * Dersom arbeidsforholdet ikke er aktivt bruker vi 100% fordi all inntekten er bortfalt
+	 * Dersom arbeidsforholdet er aktivt brukes utbetalingsgraden
+	 *
+	 * @param arbeidsforhold Arbeidsforhold
+	 * @return Bortfalt inntektsprosent
+	 */
+	private static BigDecimal finnBortfaltInntektsprosentForArbeidsforhold(BeregningsgrunnlagPrArbeidsforhold arbeidsforhold) {
+		if (arbeidsforhold.getErIkkeYrkesaktiv()) {
+			return BigDecimal.valueOf(100);
+		}
+		return arbeidsforhold.getUtbetalingsprosent();
 	}
 }

@@ -22,6 +22,8 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 	// Beregnet eller skjønnsfastsatt inntekt
 	private BigDecimal inntektsgrunnlagPrÅr;
 
+	private Boolean erIkkeYrkesaktiv;
+
 	// Output
 	private BigDecimal avkortetPrÅr;
 	private BigDecimal redusertPrÅr;
@@ -163,6 +165,9 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 		return andelsmessigFørGraderingPrAar;
 	}
 
+	public Boolean getErIkkeYrkesaktiv() {
+		return erIkkeYrkesaktiv;
+	}
 
 	@Override
 	public String toString() {
@@ -201,6 +206,11 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 
 		public Builder erNytt(boolean erNytt) {
 			this.erNytt = erNytt;
+			return this;
+		}
+
+		public Builder medIkkeYrkesaktiv(boolean erIkkeYrkesaktiv) {
+			mal.erIkkeYrkesaktiv = erIkkeYrkesaktiv;
 			return this;
 		}
 
