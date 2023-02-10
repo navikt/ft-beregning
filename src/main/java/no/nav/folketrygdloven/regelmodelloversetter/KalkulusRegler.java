@@ -39,92 +39,92 @@ public final class KalkulusRegler {
 	private KalkulusRegler() {
 	}
 
-	public static RegelResultat RegelFastsettSkjæringstidspunkt(AktivitetStatusModell input) {
+	public static RegelResultat fastsettSkjæringstidspunkt(AktivitetStatusModell input) {
 		return new RegelFastsettSkjæringstidspunkt().evaluerRegel(input);
 	}
 
-	public static RegelResultat RegelFastsettSkjæringstidspunktK9(AktivitetStatusModell input) {
+	public static RegelResultat fastsettSkjæringstidspunktK9(AktivitetStatusModell input) {
 		return new RegelFastsettSkjæringstidspunktK9().evaluerRegel(input);
 	}
 
-	public static RegelResultat RegelFastsettStatusVedSkjæringstidspunkt(AktivitetStatusModell input) {
+	public static RegelResultat fastsettStatusVedSkjæringstidspunkt(AktivitetStatusModell input) {
 		return new RegelFastsettStatusVedSkjæringstidspunkt().evaluerRegel(input);
 	}
 
-	public static RegelResultat RegelForeslåBeregningsgrunnlag(BeregningsgrunnlagPeriode input) {
+	public static RegelResultat foreslåBeregningsgrunnlag(BeregningsgrunnlagPeriode input) {
 		return new RegelForeslåBeregningsgrunnlag(input).evaluerRegel(input);
 	}
 
-	public static RegelResultat RegelFortsettForeslåBeregningsgrunnlag(BeregningsgrunnlagPeriode input) {
+	public static RegelResultat fortsettForeslåBeregningsgrunnlag(BeregningsgrunnlagPeriode input) {
 		return new RegelFortsettForeslåBeregningsgrunnlag(input).evaluerRegel(input);
 	}
 
 
-	public static RegelResultat RegelFordelBeregningsgrunnlag(FordelPeriodeModell input, Object perioder) {
+	public static RegelResultat fordelBeregningsgrunnlag(FordelPeriodeModell input, Object perioder) {
 		return new RegelFordelBeregningsgrunnlag().evaluerRegel(input, perioder);
 	}
 
-	public static RegelResultat FastsettPerioderGraderingRegel(PeriodeModellGradering input, Object perioder) {
+	public static RegelResultat fastsettPerioderGradering(PeriodeModellGradering input, Object perioder) {
 		return new FastsettPerioderGraderingRegel().evaluerRegel(input, perioder);
 	}
 
-	public static RegelResultat FastsettPerioderNaturalytelseRegel(PeriodeModellNaturalytelse input, Object perioder) {
+	public static RegelResultat fastsettPerioderNaturalytelse(PeriodeModellNaturalytelse input, Object perioder) {
 		return new FastsettPerioderNaturalytelseRegel().evaluerRegel(input, perioder);
 	}
 
-	public static RegelResultat FastsettPerioderRefusjonRegel(PeriodeModellRefusjon input, Object perioder) {
+	public static RegelResultat fastsettPerioderRefusjon(PeriodeModellRefusjon input, Object perioder) {
 		return new FastsettPerioderRefusjonRegel().evaluerRegel(input, perioder);
 	}
 
-	public static RegelResultat FastsettPerioderForUtbetalingsgradRegel(PeriodeModellUtbetalingsgrad input, Object perioder) {
+	public static RegelResultat fastsettPerioderForUtbetalingsgrad(PeriodeModellUtbetalingsgrad input, Object perioder) {
 		return new FastsettPerioderForUtbetalingsgradRegel().evaluerRegel(input, perioder);
 	}
 
-	public static RegelResultat RegelVurderBeregningsgrunnlag(BeregningsgrunnlagPeriode input) {
+	public static RegelResultat vurderBeregningsgrunnlag(BeregningsgrunnlagPeriode input) {
 		return new RegelVurderBeregningsgrunnlag().evaluerRegel(input);
 	}
 
-	public static RegelResultat RegelFinnGrenseverdi(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode input) {
+	public static RegelResultat finnGrenseverdi(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode input) {
 		return new RegelFinnGrenseverdi(input).evaluerRegel(input);
 	}
 
 
 
-	public static RegelResultat RegelFullføreBeregningsgrunnla(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode input) {
+	public static RegelResultat fullføreBeregningsgrunnla(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode input) {
 		return new RegelFullføreBeregningsgrunnlag(input).evaluerRegel(input);
 	}
 
 	/**
 	 * FORELDREPENGER
 	 */
-	public static RegelResultat RegelForeslåBesteberegning(BesteberegningRegelmodell input) {
+	public static RegelResultat foreslåBesteberegning(BesteberegningRegelmodell input) {
 		return new RegelForeslåBesteberegning().evaluerRegel(input);
 	}
 
 	/**
 	 * FRISINN
 	 */
-	public static RegelResultat regelFastsettSkjæringstidspunktFrisinn(AktivitetStatusModellFRISINN input) {
+	public static RegelResultat fastsettSkjæringstidspunktFrisinn(AktivitetStatusModellFRISINN input) {
 		return new RegelFastsettSkjæringstidspunktFrisinn().evaluerRegel(input);
 	}
 
-	public static RegelResultat regelFastsettStatusVedSkjæringstidspunktFRISINN(AktivitetStatusModell input) {
+	public static RegelResultat fastsettStatusVedSkjæringstidspunktFRISINN(AktivitetStatusModell input) {
 		return new RegelFastsettStatusVedSkjæringstidspunktFRISINN().evaluerRegel(input);
 	}
 
-	public static RegelResultat regelForeslåBeregningsgrunnlagFRISINN(BeregningsgrunnlagPeriode input) {
+	public static RegelResultat foreslåBeregningsgrunnlagFRISINN(BeregningsgrunnlagPeriode input) {
 		return new RegelForeslåBeregningsgrunnlagFRISINN(input).evaluerRegel(input);
 	}
 
-	public static RegelResultat regelVurderBeregningsgrunnlagFRISINN(BeregningsgrunnlagPeriode input) {
+	public static RegelResultat vurderBeregningsgrunnlagFRISINN(BeregningsgrunnlagPeriode input) {
 		return new RegelVurderBeregningsgrunnlagFRISINN().evaluerRegel(input);
 	}
 
-	public static RegelResultat regelFinnGrenseverdiFRISINN(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode input) {
+	public static RegelResultat finnGrenseverdiFRISINN(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode input) {
 		return new RegelFinnGrenseverdiFRISINN().evaluerRegel(input);
 	}
 
-	public static RegelResultat regelFullføreBeregningsgrunnlagFRISINN(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode input) {
+	public static RegelResultat fullføreBeregningsgrunnlagFRISINN(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode input) {
 		return new RegelFullføreBeregningsgrunnlagFRISINN().evaluerRegel(input);
 	}
 
