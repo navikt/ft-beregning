@@ -46,8 +46,8 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 		}
 		if (grunnlag.getBeregningsgrunnlag().getToggles().isEnabled("GRADERING_MOT_INNTEKT", false) && !grunnlag.getTilkommetInntektsforholdListe().isEmpty()) {
 			grenseverdi = gradertMotTilkommetInntekt(grunnlag, grenseverdi);
-			if (grunnlag.getInntektgraderingsprosent() != null) {
-				resultater.put("inntektgraderingsprosent", grunnlag.getInntektgraderingsprosent());
+			if (grunnlag.getInntektsgraderingFraBruttoBeregningsgrunnlag() != null) {
+				resultater.put("inntektgraderingsprosent", grunnlag.getInntektsgraderingFraBruttoBeregningsgrunnlag());
 			}
 		}
 		resultater.put("grenseverdi", grenseverdi);
@@ -66,9 +66,18 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 		if (totaltGradertGrunnlag.compareTo(BigDecimal.ZERO) == 0) {
 			return BigDecimal.ZERO;
 		}
-		var gradering = bortfalt.divide(totaltGradertGrunnlag, 10, RoundingMode.HALF_UP);
-		grunnlag.setInntektgraderingsprosent(gradering.multiply(BigDecimal.valueOf(100)));
-		grenseverdi = grenseverdi.multiply(gradering);
+		var graderingEtterGraderingMotArbeidstid = bortfalt.divide(totaltGradertGrunnlag, 10, RoundingMode.HALF_UP);
+		grunnlag.setInntektsgraderingFraArbeidstidsgradertBeregningsgrunnlag(graderingEtterGraderingMotArbeidstid.multiply(BigDecimal.valueOf(100)));
+
+		var totaltGrunnlag = grunnlag.getBeregningsgrunnlagPrStatus().stream()
+				.map(BeregningsgrunnlagPrStatus::getBruttoInkludertNaturalytelsePrÅr)
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
+
+		var graderingMotTotal = bortfalt.divide(totaltGrunnlag, 10, RoundingMode.HALF_UP);
+		grunnlag.setInntektsgraderingFraBruttoBeregningsgrunnlag(graderingMotTotal.multiply(BigDecimal.valueOf(100)));
+
+		// Grenseverdien er allerede gradert mot arbeidstid her
+		grenseverdi = grenseverdi.multiply(graderingEtterGraderingMotArbeidstid);
 		return grenseverdi;
 	}
 
