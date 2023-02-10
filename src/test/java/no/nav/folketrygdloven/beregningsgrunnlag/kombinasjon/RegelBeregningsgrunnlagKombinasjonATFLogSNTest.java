@@ -22,12 +22,11 @@ import no.nav.folketrygdloven.beregningsgrunnlag.foreslå.RegelForeslåBeregning
 import no.nav.folketrygdloven.beregningsgrunnlag.fortsettForeslå.RegelFortsettForeslåBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.RegelResultat;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
-import no.nav.fpsak.nare.evaluation.Evaluation;
-import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 
 public class RegelBeregningsgrunnlagKombinasjonATFLogSNTest {
     private LocalDate skjæringstidspunkt;
@@ -54,13 +53,12 @@ public class RegelBeregningsgrunnlagKombinasjonATFLogSNTest {
             singletonList(arbeidsforhold), singletonList(refusjonskrav.multiply(BigDecimal.valueOf(12)))).getBeregningsgrunnlagPerioder().get(0);
 
         // Act
-        Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
-	    Evaluation evaluation2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+        @SuppressWarnings("unused")
+        RegelResultat regelResultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
+	    @SuppressWarnings("unused")
+	    RegelResultat regelResultat2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 
 	    // Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
-
         double forventetSNBeløp = ((4.0d * GRUNNBELØP_2017) - (12 * månedsinntekt.doubleValue())); // Differanse siden SN > ATFL: SN - ATFL
         verifiserBeregningsgrunnlagBeregnet(grunnlag, forventetSNBeløp + 12 * månedsinntekt.doubleValue());
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, AktivitetStatus.SN, forventetSNBeløp, 4.0d * GRUNNBELØP_2017);
@@ -82,12 +80,11 @@ public class RegelBeregningsgrunnlagKombinasjonATFLogSNTest {
             singletonList(arbeidsforhold),  singletonList(refusjonskrav.multiply(BigDecimal.valueOf(12)))).getBeregningsgrunnlagPerioder().get(0);
 
         // Act
-	    Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
-	    Evaluation evaluation2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+	    @SuppressWarnings("unused")
+	    RegelResultat regelResultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
+	    @SuppressWarnings("unused")
+	    RegelResultat regelResultat2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
         // Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
-
         verifiserBeregningsgrunnlagBeregnet(grunnlag, 12 * månedsinntekt.doubleValue());
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, AktivitetStatus.SN, 0.0d, 2.5d * GRUNNBELØP_2017);
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, AktivitetStatus.ATFL, 12 * månedsinntekt.doubleValue());

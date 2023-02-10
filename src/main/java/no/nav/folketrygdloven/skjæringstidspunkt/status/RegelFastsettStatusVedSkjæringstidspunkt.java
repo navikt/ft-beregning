@@ -1,7 +1,7 @@
 package no.nav.folketrygdloven.skjæringstidspunkt.status;
 
+import no.nav.folketrygdloven.regelmodelloversetter.EksportRegel;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModell;
-import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
@@ -12,11 +12,11 @@ import no.nav.fpsak.nare.specification.Specification;
  */
 
 @RuleDocumentation(value = RegelFastsettStatusVedSkjæringstidspunkt.ID, specificationReference = "https://confluence.adeo.no/display/MODNAV/Funksjonell+beskrivelse+-+Fastsette+status")
-public class RegelFastsettStatusVedSkjæringstidspunkt implements RuleService<AktivitetStatusModell> {
+public class RegelFastsettStatusVedSkjæringstidspunkt implements EksportRegel<AktivitetStatusModell> {
 
     static final String ID = "FP_BR_19";
 
-    @Override
+	@Override
     public Evaluation evaluer(AktivitetStatusModell regelmodell) {
         return getSpecification().evaluate(regelmodell);
     }

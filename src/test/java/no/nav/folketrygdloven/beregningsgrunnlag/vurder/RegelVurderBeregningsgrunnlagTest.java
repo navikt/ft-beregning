@@ -12,7 +12,6 @@ import java.time.Month;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.Test;
 
-import no.nav.folketrygdloven.regelmodelloversetter.RegelmodellOversetterUtenVersjon;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Dekningsgrad;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.RegelMerknad;
@@ -22,7 +21,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
-import no.nav.fpsak.nare.evaluation.Evaluation;
 
 public class RegelVurderBeregningsgrunnlagTest {
 
@@ -64,9 +62,7 @@ public class RegelVurderBeregningsgrunnlagTest {
     }
 
     private RegelResultat kjørRegel(BeregningsgrunnlagPeriode grunnlag) {
-        RegelVurderBeregningsgrunnlag regel = new RegelVurderBeregningsgrunnlag();
-        Evaluation evaluation = regel.evaluer(grunnlag);
-        return RegelmodellOversetterUtenVersjon.getRegelResultat(evaluation, "input");
+        return new RegelVurderBeregningsgrunnlag().evaluerRegel(grunnlag);
     }
 
     private Beregningsgrunnlag opprettBeregningsgrunnlag(LocalDate skjæringstidspunkt, double beregnetPrÅr, double refusjonskravPrÅr) {

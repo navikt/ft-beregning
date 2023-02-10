@@ -4,9 +4,9 @@ import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenar
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.GRUNNBELØP_2017;
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.settoppÅrsinntekter;
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.årsinntekterFor3SisteÅr;
-import static no.nav.folketrygdloven.regelmodelloversetter.RegelmodellOversetterUtenVersjon.getRegelResultat;
 import static no.nav.folketrygdloven.beregningsgrunnlag.VerifiserBeregningsgrunnlag.verifiserRegelmerknad;
 import static no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil.TIDENES_ENDE;
+import static no.nav.folketrygdloven.regelmodelloversetter.RegelmodellOversetter.getRegelResultat;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;

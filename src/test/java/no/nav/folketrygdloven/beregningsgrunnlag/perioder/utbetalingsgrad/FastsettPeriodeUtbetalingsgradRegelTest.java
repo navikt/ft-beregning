@@ -123,7 +123,7 @@ class FastsettPeriodeUtbetalingsgradRegelTest {
 
 
 	private void kjørRegel(PeriodeModellUtbetalingsgrad inputMedGraderingFraStartForNyttArbeid, List<SplittetPeriode> perioder) {
-		new FastsettPerioderForUtbetalingsgradRegel().evaluer(inputMedGraderingFraStartForNyttArbeid, perioder);
+		new FastsettPerioderForUtbetalingsgradRegel().evaluerRegel(inputMedGraderingFraStartForNyttArbeid, perioder);
 	}
 
 	private List<AndelUtbetalingsgrad> lagGraderingFraSkjæringstidspunkt(Arbeidsforhold arbeidsforhold2) {

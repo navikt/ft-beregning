@@ -15,17 +15,15 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import no.nav.folketrygdloven.regelmodelloversetter.RegelmodellOversetterUtenVersjon;
 import no.nav.folketrygdloven.beregningsgrunnlag.fastsette.RegelFullføreBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.RegelResultat;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.Beregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrStatus;
-import no.nav.fpsak.nare.evaluation.Evaluation;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 
 public class RegelFullføreBeregningsgrunnlagTest {
     public static final String ORGNR1 = "910";
@@ -775,14 +773,10 @@ public class RegelFullføreBeregningsgrunnlagTest {
 
 
     private RegelResultat kjørRegelFinnGrenseverdi(BeregningsgrunnlagPeriode grunnlag) {
-        RegelFinnGrenseverdi regel = new RegelFinnGrenseverdi(grunnlag);
-        Evaluation evaluation = regel.evaluer(grunnlag);
-        return RegelmodellOversetterUtenVersjon.getRegelResultat(evaluation, "input");
+        return new RegelFinnGrenseverdi(grunnlag).evaluerRegel(grunnlag);
     }
 
     private RegelResultat kjørRegelFullførBeregningsgrunnlag(BeregningsgrunnlagPeriode grunnlag) {
-        RegelFullføreBeregningsgrunnlag regel = new RegelFullføreBeregningsgrunnlag(grunnlag);
-        Evaluation evaluation = regel.evaluer(grunnlag);
-        return RegelmodellOversetterUtenVersjon.getRegelResultat(evaluation, "input");
+        return new RegelFullføreBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
     }
 }

@@ -18,6 +18,7 @@ public class RegelmodellOversetter {
 		return no.nav.folketrygdloven.regelmodelloversetter.RegelmodellOversetter.getRegelResultat(evaluation, regelInput);
 	}
 
+	@Deprecated(forRemoval = true) // Hent fra RegelResultat sin sporing
 	public static String getSporing(Evaluation evaluation) {
 		return no.nav.folketrygdloven.regelmodelloversetter.RegelmodellOversetter.getSporing(evaluation);
 	}

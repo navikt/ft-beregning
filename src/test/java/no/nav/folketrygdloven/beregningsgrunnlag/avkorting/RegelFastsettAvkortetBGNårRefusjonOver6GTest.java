@@ -26,8 +26,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Ar
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
-import no.nav.fpsak.nare.evaluation.Evaluation;
-import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 
 /**
  * Testen kjøres når Regelflyt 13 blir implementert
@@ -59,11 +57,9 @@ public class RegelFastsettAvkortetBGNårRefusjonOver6GTest {
             .getBeregningsgrunnlagPerioder().get(0);
 
         //Act
-        Evaluation evaluation = new RegelFullføreBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+        new RegelFullføreBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 
         //Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
         verifiserBrukersAndel(grunnlag, List.of(0d, 0d));
         verifiserArbeidsgiversAndel(grunnlag, List.of(refusjonsKrav1, refusjonsKrav2),
             List.of(forventetRedusert1, forventetRedusert2));
@@ -89,11 +85,9 @@ public class RegelFastsettAvkortetBGNårRefusjonOver6GTest {
             .getBeregningsgrunnlagPerioder().get(0);
 
         //Act
-        Evaluation evaluation = new RegelFullføreBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+        new RegelFullføreBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 
         //Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
         verifiserBrukersAndel(grunnlag, List.of(0d, 0d, 0d));
         verifiserArbeidsgiversAndel(grunnlag, List.of(refusjonsKrav1, refusjonsKrav2, refusjonsKrav3),
             List.of(forventetRedusert1, forventetRedusert2, forventetRedusert3));
@@ -121,11 +115,9 @@ public class RegelFastsettAvkortetBGNårRefusjonOver6GTest {
             .getBeregningsgrunnlagPerioder().get(0);
 
         //Act
-        Evaluation evaluation = new RegelFullføreBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+        new RegelFullføreBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 
         //Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
         verifiserBrukersAndel(grunnlag, List.of(0d, 0d, 0d));
         verifiserArbeidsgiversAndel(grunnlag, List.of(refusjonsKrav1, refusjonsKrav2, refusjonsKrav3),
             List.of(forventetRedusert1, forventetRedusert2, forventetRedusert3));
@@ -153,11 +145,9 @@ public class RegelFastsettAvkortetBGNårRefusjonOver6GTest {
             .getBeregningsgrunnlagPerioder().get(0);
 
         //Act
-        Evaluation evaluation = new RegelFullføreBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+        new RegelFullføreBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 
         //Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
         verifiserBrukersAndel(grunnlag, List.of(0d, 0d, 0d));
         verifiserArbeidsgiversAndel(grunnlag, List.of(refusjonsKrav1, refusjonsKrav2, refusjonsKrav3),
             List.of(forventetRedusert1, forventetRedusert2, forventetRedusert3));
@@ -188,11 +178,9 @@ public class RegelFastsettAvkortetBGNårRefusjonOver6GTest {
             .getBeregningsgrunnlagPerioder().get(0);
 
         //Act
-        Evaluation evaluation = new RegelFullføreBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+        new RegelFullføreBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 
         //Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
         verifiserBrukersAndel(grunnlag, List.of(0d, 0d, 0d, 0d));
         verifiserArbeidsgiversAndel(grunnlag, List.of(refusjonsKrav1, refusjonsKrav2, refusjonsKrav3, refusjonsKrav4),
             List.of(forventetRedusert1, forventetRedusert2, forventetRedusert3, forventetRedusert4));
@@ -219,11 +207,9 @@ public class RegelFastsettAvkortetBGNårRefusjonOver6GTest {
             .getBeregningsgrunnlagPerioder().get(0);
 
         //Act
-        Evaluation evaluation = new RegelFullføreBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+        new RegelFullføreBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 
         //Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
         verifiserBrukersAndel(grunnlag, List.of(0d, 0d, 0d));
         verifiserArbeidsgiversAndel(grunnlag, List.of(refusjonsKrav1, refusjonsKrav2, refusjonsKrav3),
             List.of(forventetRedusert1, forventetRedusert2, forventetRedusert3));
@@ -250,11 +236,9 @@ public class RegelFastsettAvkortetBGNårRefusjonOver6GTest {
             .getBeregningsgrunnlagPerioder().get(0);
 
         //Act
-        Evaluation evaluation = new RegelFullføreBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+        new RegelFullføreBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 
         //Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
         verifiserBrukersAndel(grunnlag, List.of(0d, 0d, 0d));
         verifiserArbeidsgiversAndel(grunnlag, List.of(refusjonsKrav1, refusjonsKrav2, refusjonsKrav3),
             List.of(forventetRedusert1, forventetRedusert2, forventetRedusert3));
@@ -282,11 +266,9 @@ public class RegelFastsettAvkortetBGNårRefusjonOver6GTest {
             .getBeregningsgrunnlagPerioder().get(0);
 
         //Act
-        Evaluation evaluation = new RegelFullføreBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+        new RegelFullføreBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 
         //Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
         verifiserBrukersAndel(grunnlag, List.of(0d, 0d, 0d));
         verifiserArbeidsgiversAndel(grunnlag, List.of(refusjonsKrav1, refusjonsKrav2, refusjonsKrav3),
             List.of(forventetRedusert1, forventetRedusert2, forventetRedusert3));

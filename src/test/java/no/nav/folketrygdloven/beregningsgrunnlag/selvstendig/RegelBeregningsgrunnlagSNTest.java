@@ -10,10 +10,10 @@ import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenar
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.settoppÅrsinntekterForOppgittÅrene;
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.årsinntektForOppgittÅrene;
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.årsinntekterFor3SisteÅr;
-import static no.nav.folketrygdloven.regelmodelloversetter.RegelmodellOversetterUtenVersjon.getRegelResultat;
 import static no.nav.folketrygdloven.beregningsgrunnlag.VerifiserBeregningsgrunnlag.verifiserBeregningsgrunnlagBruttoPrPeriodeType;
 import static no.nav.folketrygdloven.beregningsgrunnlag.VerifiserBeregningsgrunnlag.verifiserBeregningsperiode;
 import static no.nav.folketrygdloven.beregningsgrunnlag.VerifiserBeregningsgrunnlag.verifiserRegelmerknad;
+import static no.nav.folketrygdloven.regelmodelloversetter.RegelmodellOversetter.getRegelResultat;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;

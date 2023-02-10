@@ -29,8 +29,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Ar
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
-import no.nav.fpsak.nare.evaluation.Evaluation;
-import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 
 /**
  * Testen kjøres når Regelflyt 8 blir implementert
@@ -61,11 +59,9 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
             .getBeregningsgrunnlagPerioder().get(0);
 
         //Act
-        Evaluation evaluation = new RegelFullføreBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+        new RegelFullføreBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 
         //Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
         verifiserBrukersAndel(grunnlag, Collections.singletonList(forventetRedusertBrukersAndel));
         verifiserArbeidsgiversAndel(grunnlag, Collections.singletonList(refusjonsKrav), Collections.singletonList(refusjonsKrav));
         verifiserBeregningsgrunnlagAvkortetPrÅr(grunnlag, null, AktivitetStatus.ATFL, forventetRedusert);
@@ -83,11 +79,9 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
         BeregningsgrunnlagPeriode grunnlag = lagBeregningsgrunnlag(1, Collections.singletonList(bruttoBG), Collections.singletonList(refusjonsKrav))
             .getBeregningsgrunnlagPerioder().get(0);
         //Act
-        Evaluation evaluation = new RegelFullføreBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+        new RegelFullføreBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 
         //Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
         verifiserBrukersAndel(grunnlag, Collections.singletonList(forventetRedusertBrukersAndel));
         verifiserArbeidsgiversAndel(grunnlag, Collections.singletonList(refusjonsKrav), Collections.singletonList(refusjonsKrav));
         verifiserBeregningsgrunnlagAvkortetPrÅr(grunnlag, null, AktivitetStatus.ATFL, forventetRedusert);
@@ -105,11 +99,9 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
         BeregningsgrunnlagPeriode grunnlag = lagBeregningsgrunnlag(1, Collections.singletonList(bruttoBG), Collections.singletonList(refusjonsKrav))
             .getBeregningsgrunnlagPerioder().get(0);
         //Act
-        Evaluation evaluation = new RegelFullføreBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+        new RegelFullføreBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 
         //Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
         verifiserBrukersAndel(grunnlag, Collections.singletonList(forventetRedusertBrukersAndel));
         verifiserArbeidsgiversAndel(grunnlag, Collections.singletonList(refusjonsKrav), Collections.singletonList(refusjonsKrav));
         verifiserBeregningsgrunnlagAvkortetPrÅr(grunnlag, null, AktivitetStatus.ATFL, forventetRedusert);
@@ -134,11 +126,9 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
             List.of(refusjonsKrav1, refusjonsKrav2))
             .getBeregningsgrunnlagPerioder().get(0);
         //Act
-        Evaluation evaluation = new RegelFullføreBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+        new RegelFullføreBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 
         //Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
         verifiserBrukersAndel(grunnlag, List.of(forventetRedusertBrukersAndel1, forventetRedusertBrukersAndel2));
         verifiserArbeidsgiversAndel(grunnlag, List.of(refusjonsKrav1, refusjonsKrav2), List.of(refusjonsKrav1, refusjonsKrav2));
         verifiserBeregningsgrunnlagAvkortetPrÅr(grunnlag, null, AktivitetStatus.ATFL, forventetRedusert);
@@ -167,11 +157,9 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
             List.of(refusjonsKrav1, refusjonsKrav2, refusjonsKrav3))
             .getBeregningsgrunnlagPerioder().get(0);
         //Act
-        Evaluation evaluation = new RegelFullføreBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+        new RegelFullføreBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 
         //Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
         verifiserBrukersAndel(grunnlag, List.of(forventetRedusertBrukersAndel1, forventetRedusertBrukersAndel2, forventetRedusertBrukersAndel3));
         verifiserArbeidsgiversAndel(grunnlag, List.of(refusjonsKrav1, refusjonsKrav2, refusjonsKrav3),
             List.of(refusjonsKrav1, refusjonsKrav2, refusjonsKrav3));
@@ -201,11 +189,9 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
             List.of(refusjonsKrav1, refusjonsKrav2, refusjonsKrav3))
             .getBeregningsgrunnlagPerioder().get(0);
         //Act
-        Evaluation evaluation = new RegelFullføreBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+        new RegelFullføreBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 
         //Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
         verifiserBrukersAndel(grunnlag, List.of(forventetRedusertBrukersAndel1, forventetRedusertBrukersAndel2, forventetRedusertBrukersAndel3));
         verifiserArbeidsgiversAndel(grunnlag, List.of(refusjonsKrav1, refusjonsKrav2, refusjonsKrav3),
             List.of(refusjonsKrav1, refusjonsKrav2, refusjonsKrav3));
@@ -238,11 +224,9 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
             List.of(refusjonsKrav1, refusjonsKrav2, refusjonsKrav3))
             .getBeregningsgrunnlagPerioder().get(0);
         //Act
-        Evaluation evaluation = new RegelFullføreBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+        new RegelFullføreBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 
         //Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
         verifiserBrukersAndel(grunnlag, List.of(forventetRedusertBrukersAndel1, forventetRedusertBrukersAndel2, forventetRedusertBrukersAndel3));
         verifiserArbeidsgiversAndel(grunnlag, List.of(refusjonsKrav1, refusjonsKrav2, refusjonsKrav3),
             List.of(forventetRedusertArbeidsgiver1, forventetRedusertArbeidsgiver2, forventetRedusertArbeidsgiver3));
@@ -271,10 +255,9 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
         double forventetAvkortet = seksG - bruttoBG1;
 
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        Evaluation evaluation = new RegelFullføreBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
-        verifiserBeregningsgrunnlagAvkortetPrÅr(grunnlag, null, AktivitetStatus.DP, forventetAvkortet);
+        new RegelFullføreBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
+
+		verifiserBeregningsgrunnlagAvkortetPrÅr(grunnlag, null, AktivitetStatus.DP, forventetAvkortet);
     }
 
     @Test
@@ -304,10 +287,9 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
         double forventetAvkortet2 = seksG - bruttoBG1 - bruttoBG2;
 
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        Evaluation evaluation = new RegelFullføreBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
-        verifiserBeregningsgrunnlagAvkortetPrÅr(grunnlag, null, AktivitetStatus.DP, forventetAvkortet);
+        new RegelFullføreBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
+
+		verifiserBeregningsgrunnlagAvkortetPrÅr(grunnlag, null, AktivitetStatus.DP, forventetAvkortet);
         verifiserBeregningsgrunnlagAvkortetPrÅr(grunnlag, null, AktivitetStatus.AAP, forventetAvkortet2);
     }
 
@@ -343,10 +325,9 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
         double forventetAvkortet3 = 0d;
 
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        Evaluation evaluation = new RegelFullføreBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
-        verifiserBeregningsgrunnlagAvkortetPrÅr(grunnlag, null, AktivitetStatus.DP, forventetAvkortet);
+        new RegelFullføreBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
+
+		verifiserBeregningsgrunnlagAvkortetPrÅr(grunnlag, null, AktivitetStatus.DP, forventetAvkortet);
         verifiserBeregningsgrunnlagAvkortetPrÅr(grunnlag, null, AktivitetStatus.AAP, forventetAvkortet2);
         verifiserBeregningsgrunnlagAvkortetPrÅr(grunnlag, null, AktivitetStatus.SN, forventetAvkortet3);
     }
@@ -376,10 +357,9 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
         double forventetAvkortetDP = 0d;
 
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        Evaluation evaluation = new RegelFullføreBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
-        verifiserBeregningsgrunnlagAvkortetPrÅrFrilanser(grunnlag, null,  forventetAvkortetFrilanser);
+        new RegelFullføreBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
+
+		verifiserBeregningsgrunnlagAvkortetPrÅrFrilanser(grunnlag, null,  forventetAvkortetFrilanser);
         verifiserBeregningsgrunnlagAvkortetPrÅr(grunnlag, null, AktivitetStatus.DP, forventetAvkortetDP);
     }
 
@@ -408,10 +388,9 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
         double forventetAvkortetDP = seksG - bruttoAT - bruttoFL;
 
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        Evaluation evaluation = new RegelFullføreBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
-        verifiserBeregningsgrunnlagAvkortetPrÅrFrilanser(grunnlag, null,  forventetAvkortetFrilanser);
+        new RegelFullføreBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
+
+		verifiserBeregningsgrunnlagAvkortetPrÅrFrilanser(grunnlag, null,  forventetAvkortetFrilanser);
         verifiserBeregningsgrunnlagAvkortetPrÅr(grunnlag, null, AktivitetStatus.DP, forventetAvkortetDP);
     }
 

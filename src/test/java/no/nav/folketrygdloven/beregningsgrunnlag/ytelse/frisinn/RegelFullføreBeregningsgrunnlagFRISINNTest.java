@@ -12,7 +12,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import no.nav.folketrygdloven.regelmodelloversetter.RegelmodellOversetterUtenVersjon;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Dekningsgrad;
@@ -23,7 +22,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
-import no.nav.fpsak.nare.evaluation.Evaluation;
 
 class RegelFullføreBeregningsgrunnlagFRISINNTest {
     public static final String ORGNR = "14263547852";
@@ -297,11 +295,8 @@ class RegelFullføreBeregningsgrunnlagFRISINNTest {
     }
 
     private RegelResultat kjørRegel(BeregningsgrunnlagPeriode grunnlag) {
-        RegelFinnGrenseverdiFRISINN grenseregel = new RegelFinnGrenseverdiFRISINN();
-        RegelFullføreBeregningsgrunnlagFRISINN fastsettregel = new RegelFullføreBeregningsgrunnlagFRISINN();
-        grenseregel.evaluer(grunnlag);
-        Evaluation evaluation = fastsettregel.evaluer(grunnlag);
-        return RegelmodellOversetterUtenVersjon.getRegelResultat(evaluation, "input");
+		new RegelFinnGrenseverdiFRISINN().evaluerRegel(grunnlag);
+        return new RegelFullføreBeregningsgrunnlagFRISINN().evaluerRegel(grunnlag);
     }
 
     private Beregningsgrunnlag lagBeregningsgrunnlag(Double snInntektPrÅr, Double frilansInntektPrÅr, Double arbeidsinntektPrÅr, Double snUtbetalingsgrad, Double flUtbetalingsgrad) {

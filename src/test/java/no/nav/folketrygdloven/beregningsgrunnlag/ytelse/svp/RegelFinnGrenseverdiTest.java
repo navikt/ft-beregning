@@ -10,7 +10,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import no.nav.folketrygdloven.regelmodelloversetter.RegelmodellOversetterUtenVersjon;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.MidlertidigInaktivType;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
@@ -21,7 +20,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.TilkommetInntekt;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
-import no.nav.fpsak.nare.evaluation.Evaluation;
 
 public class RegelFinnGrenseverdiTest {
 
@@ -1488,9 +1486,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	private RegelResultat kjørRegel(BeregningsgrunnlagPeriode periode) {
-		RegelFinnGrenseverdi regel = new RegelFinnGrenseverdi(periode);
-		Evaluation evaluation = regel.evaluer(periode);
-		return RegelmodellOversetterUtenVersjon.getRegelResultat(evaluation, "input");
+		return new RegelFinnGrenseverdi(periode).evaluerRegel(periode);
 	}
 
 

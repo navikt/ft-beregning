@@ -1,20 +1,20 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.fordel;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelAndelModell;
-import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelteAndelerModell;
-import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelModell;
-import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelPeriodeModell;
-import no.nav.fpsak.nare.RuleService;
-import no.nav.fpsak.nare.Ruleset;
-import no.nav.fpsak.nare.evaluation.Evaluation;
-import no.nav.fpsak.nare.specification.Specification;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class RegelFordelBeregningsgrunnlag implements RuleService<FordelPeriodeModell> {
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelAndelModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelPeriodeModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelteAndelerModell;
+import no.nav.folketrygdloven.regelmodelloversetter.EksportRegel;
+import no.nav.fpsak.nare.Ruleset;
+import no.nav.fpsak.nare.evaluation.Evaluation;
+import no.nav.fpsak.nare.specification.Specification;
+
+public class RegelFordelBeregningsgrunnlag implements EksportRegel<FordelPeriodeModell> {
 
     public static final String ID = "FP_BR 22.3";
 	private FordelModell modell;

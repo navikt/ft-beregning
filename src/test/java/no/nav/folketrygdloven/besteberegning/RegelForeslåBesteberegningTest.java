@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import no.nav.folketrygdloven.beregningsgrunnlag.Grunnbeløp;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.RegelResultat;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
@@ -23,7 +24,6 @@ import no.nav.folketrygdloven.besteberegning.modell.BesteberegningRegelmodell;
 import no.nav.folketrygdloven.besteberegning.modell.input.BesteberegningInput;
 import no.nav.folketrygdloven.besteberegning.modell.output.BesteberegnetAndel;
 import no.nav.folketrygdloven.besteberegning.modell.output.BesteberegnetGrunnlag;
-import no.nav.fpsak.nare.evaluation.Evaluation;
 
 class RegelForeslåBesteberegningTest {
 
@@ -76,8 +76,8 @@ class RegelForeslåBesteberegningTest {
 		assertThat(andeler.get(1).getBesteberegnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(240_000));
 	}
 
-	private Evaluation evaluer(BesteberegningRegelmodell regelmodell) {
-		return new RegelForeslåBesteberegning().getSpecification().evaluate(regelmodell);
+	private RegelResultat evaluer(BesteberegningRegelmodell regelmodell) {
+		return new RegelForeslåBesteberegning().evaluerRegel(regelmodell);
 	}
 
 	private Periodeinntekt lagPeriodeInntektArbeidstaker(int månaderFørStpFom, BigDecimal inntekt, String orgnr) {

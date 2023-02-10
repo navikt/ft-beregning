@@ -17,7 +17,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import no.nav.folketrygdloven.regelmodelloversetter.RegelmodellOversetterUtenVersjon;
 import no.nav.folketrygdloven.beregningsgrunnlag.foreslå.RegelForeslåBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
@@ -31,7 +30,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.In
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
-import no.nav.fpsak.nare.evaluation.Evaluation;
 
 public class BeregningsgrunnlagTidsbegrensetArbeidsforholdTest {
 
@@ -51,10 +49,9 @@ public class BeregningsgrunnlagTidsbegrensetArbeidsforholdTest {
 		opprettSammenligningsgrunnlag(grunnlag.getInntektsgrunnlag(), skjæringstidspunkt2, månedsinntekt);
 
 		// Act
-		Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+		RegelResultat regelResultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 
 		// Assert
-		RegelResultat regelResultat = RegelmodellOversetterUtenVersjon.getRegelResultat(evaluation, "input");
 		assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
 		verifiserRegelmerknad(regelResultat, "5047");
 		verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_FRILANSER, AktivitetStatus.ATFL, 12 * månedsinntekt.doubleValue() * 2 / 3);
@@ -77,10 +74,9 @@ public class BeregningsgrunnlagTidsbegrensetArbeidsforholdTest {
 		opprettSammenligningsgrunnlag(grunnlag.getInntektsgrunnlag(), skjæringstidspunkt2, månedsinntekt);
 
 		// Act
-		Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+		RegelResultat regelResultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 
 		// Assert
-		RegelResultat regelResultat = RegelmodellOversetterUtenVersjon.getRegelResultat(evaluation, "input");
 		assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
 		verifiserRegelmerknad(regelResultat, "5047");
 		verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_FRILANSER, AktivitetStatus.ATFL, 12 * månedsinntekt.doubleValue() * 2 / 3);
@@ -99,10 +95,9 @@ public class BeregningsgrunnlagTidsbegrensetArbeidsforholdTest {
 		BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 		opprettSammenligningsgrunnlag(grunnlag.getInntektsgrunnlag(), skjæringstidspunkt, månedsinntektSammenligning);
 		// Act
-		Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+		RegelResultat regelResultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 		// Assert
 
-		RegelResultat regelResultat = RegelmodellOversetterUtenVersjon.getRegelResultat(evaluation, "input");
 		assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
 		verifiserRegelmerknad(regelResultat, "5047");
 		verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_FRILANSER, AktivitetStatus.ATFL, 12 * månedsinntekt.doubleValue());
@@ -121,10 +116,9 @@ public class BeregningsgrunnlagTidsbegrensetArbeidsforholdTest {
 		BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 		opprettSammenligningsgrunnlag(grunnlag.getInntektsgrunnlag(), skjæringstidspunkt, månedsinntektSammenligning);
 		// Act
-		Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+		RegelResultat regelResultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 		// Assert
 
-		RegelResultat regelResultat = RegelmodellOversetterUtenVersjon.getRegelResultat(evaluation, "input");
 		assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
 		verifiserRegelmerknad(regelResultat, "5047");
 		verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_FRILANSER, AktivitetStatus.ATFL, 12 * månedsinntekt.doubleValue());
@@ -150,10 +144,9 @@ public class BeregningsgrunnlagTidsbegrensetArbeidsforholdTest {
 				.build();
 
 		// Act
-		Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+		RegelResultat regelResultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 
 		// Assert
-		RegelResultat regelResultat = RegelmodellOversetterUtenVersjon.getRegelResultat(evaluation, "input");
 		verifiserRegelmerknad(regelResultat, "5047");
 
 		verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_ARBEIDSTAKER, AktivitetStatus.ATFL, 12 * månedsinntektFraSaksbehandler.doubleValue());
@@ -179,10 +172,9 @@ public class BeregningsgrunnlagTidsbegrensetArbeidsforholdTest {
 				.build();
 
 		// Act
-		Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+		RegelResultat regelResultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 
 		// Assert
-		RegelResultat regelResultat = RegelmodellOversetterUtenVersjon.getRegelResultat(evaluation, "input");
 		verifiserRegelmerknad(regelResultat, "5047");
 
 		verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_ARBEIDSTAKER, AktivitetStatus.ATFL, 12 * månedsinntektFraSaksbehandler.doubleValue());

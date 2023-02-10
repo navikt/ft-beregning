@@ -5,7 +5,7 @@ import java.util.List;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.gradering.PeriodeModellGradering;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.gradering.PeriodiseringGraderingProsesstruktur;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SplittetPeriode;
-import no.nav.fpsak.nare.RuleService;
+import no.nav.folketrygdloven.regelmodelloversetter.EksportRegel;
 import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.Specification;
@@ -13,7 +13,7 @@ import no.nav.fpsak.nare.specification.Specification;
 /**
  * Splitter beregningsgrunnlaget i perioder på grunn av naturalytelse
  */
-public class FastsettPerioderGraderingRegel implements RuleService<PeriodeModellGradering> {
+public class FastsettPerioderGraderingRegel implements EksportRegel<PeriodeModellGradering> {
 
     static final String ID = "FT_43";
 

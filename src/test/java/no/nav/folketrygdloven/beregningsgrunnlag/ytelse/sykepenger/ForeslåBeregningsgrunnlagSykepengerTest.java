@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import no.nav.folketrygdloven.regelmodelloversetter.RegelmodellOversetterUtenVersjon;
 import no.nav.folketrygdloven.beregningsgrunnlag.foreslå.RegelForeslåBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
@@ -26,8 +25,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.SammenligningGrunnl
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
-import no.nav.fpsak.nare.evaluation.Evaluation;
-import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 
 public class ForeslåBeregningsgrunnlagSykepengerTest {
 
@@ -54,12 +51,8 @@ public class ForeslåBeregningsgrunnlagSykepengerTest {
         BeregningsgrunnlagPrArbeidsforhold bgArbeidsforhold = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
         BeregningsgrunnlagPrArbeidsforhold.builder(bgArbeidsforhold).medArbeidsgiverperioder(arbeidsgiversPeriode).build();
         // Act
-        Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+	    RegelResultat resultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
         // Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
-        RegelResultat resultat = RegelmodellOversetterUtenVersjon.getRegelResultat(evaluation, "input");
-
         assertThat(resultat.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).isEmpty();
         assertThat(bgArbeidsforhold.getNaturalytelseBortfaltPrÅr().get()).isEqualByComparingTo(BigDecimal.valueOf(24000)); //NOSONAR
         assertBeregningsgrunnlag(grunnlag, månedsinntekt, 24000);
@@ -82,12 +75,8 @@ public class ForeslåBeregningsgrunnlagSykepengerTest {
         BeregningsgrunnlagPrArbeidsforhold bgArbeidsforhold = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
         BeregningsgrunnlagPrArbeidsforhold.builder(bgArbeidsforhold).medArbeidsgiverperioder(arbeidsgiversPeriode).build();
         // Act
-        Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+	    RegelResultat resultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
         // Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
-        RegelResultat resultat = RegelmodellOversetterUtenVersjon.getRegelResultat(evaluation, "input");
-
         assertThat(resultat.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).isEmpty();
         assertThat(bgArbeidsforhold.getNaturalytelseBortfaltPrÅr()).isEmpty();
         assertBeregningsgrunnlag(grunnlag, månedsinntekt, 0);
@@ -108,7 +97,7 @@ public class ForeslåBeregningsgrunnlagSykepengerTest {
         BeregningsgrunnlagPrArbeidsforhold bgArbeidsforhold = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
         BeregningsgrunnlagPrArbeidsforhold.builder(bgArbeidsforhold).medArbeidsgiverperioder(arbeidsgiversPeriode).build();
         // Act
-        new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+        new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
         // Assert
         assertThat(bgArbeidsforhold.getNaturalytelseBortfaltPrÅr()).isEmpty();
         assertBeregningsgrunnlag(grunnlag, månedsinntekt, 0);

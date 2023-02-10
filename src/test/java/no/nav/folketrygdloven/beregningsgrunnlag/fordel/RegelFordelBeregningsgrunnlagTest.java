@@ -8,12 +8,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelAndelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelPeriodeModell;
-
-import org.junit.jupiter.api.Test;
-
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
@@ -116,8 +114,7 @@ public class RegelFordelBeregningsgrunnlagTest {
 
 
     private void kjørRegel(FordelPeriodeModell periode) {
-        RegelFordelBeregningsgrunnlag regel = new RegelFordelBeregningsgrunnlag();
-        regel.evaluer(periode, new ArrayList<>());
+        new RegelFordelBeregningsgrunnlag().evaluerRegel(periode, new ArrayList<>());
     }
 
     private FordelAndelModell lagArbeidsforhold(BigDecimal refusjonskravPrÅr, BigDecimal beregnetPrÅr, Long andelsnr, String orgnr) {

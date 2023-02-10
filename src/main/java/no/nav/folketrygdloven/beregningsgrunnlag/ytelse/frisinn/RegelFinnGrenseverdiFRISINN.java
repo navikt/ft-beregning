@@ -2,12 +2,12 @@ package no.nav.folketrygdloven.beregningsgrunnlag.ytelse.frisinn;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.fastsette.SjekkBeregningsgrunnlagStørreEnnGrenseverdi;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode;
-import no.nav.fpsak.nare.RuleService;
+import no.nav.folketrygdloven.regelmodelloversetter.EksportRegel;
 import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.Specification;
 
-public class RegelFinnGrenseverdiFRISINN implements RuleService<BeregningsgrunnlagPeriode> {
+public class RegelFinnGrenseverdiFRISINN implements EksportRegel<BeregningsgrunnlagPeriode> {
 
     public static final String ID = "FRISINN 6.1";
     public static final String BESKRIVELSE = "Finner grenseverdi for FRISINN ytelsen";

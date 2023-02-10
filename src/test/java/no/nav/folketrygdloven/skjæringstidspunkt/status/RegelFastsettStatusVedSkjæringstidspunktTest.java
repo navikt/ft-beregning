@@ -7,9 +7,9 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.RegelResultat;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivPeriode;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModell;
-import no.nav.fpsak.nare.evaluation.Evaluation;
 
 class RegelFastsettStatusVedSkjæringstidspunktTest {
 
@@ -42,7 +42,7 @@ class RegelFastsettStatusVedSkjæringstidspunktTest {
         assertThat(regelModell.getBeregningsgrunnlagPrStatusListe().size()).isEqualTo(1);
     }
 
-    private Evaluation kjørRegel(AktivitetStatusModell regelModell) {
-        return new RegelFastsettStatusVedSkjæringstidspunkt().evaluer(regelModell);
+    private RegelResultat kjørRegel(AktivitetStatusModell regelModell) {
+        return new RegelFastsettStatusVedSkjæringstidspunkt().evaluerRegel(regelModell);
     }
 }

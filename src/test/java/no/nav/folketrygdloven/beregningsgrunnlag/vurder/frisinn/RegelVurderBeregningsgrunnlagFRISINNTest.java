@@ -12,7 +12,6 @@ import java.util.List;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.Test;
 
-import no.nav.folketrygdloven.regelmodelloversetter.RegelmodellOversetterUtenVersjon;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
@@ -24,7 +23,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
-import no.nav.fpsak.nare.evaluation.Evaluation;
 
 class RegelVurderBeregningsgrunnlagFRISINNTest {
 
@@ -240,9 +238,7 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
     }
 
     private RegelResultat kjørRegel(BeregningsgrunnlagPeriode grunnlag) {
-        RegelVurderBeregningsgrunnlagFRISINN regel = new RegelVurderBeregningsgrunnlagFRISINN();
-        Evaluation evaluation = regel.evaluer(grunnlag);
-        return RegelmodellOversetterUtenVersjon.getRegelResultat(evaluation, "input");
+        return new RegelVurderBeregningsgrunnlagFRISINN().evaluerRegel(grunnlag);
     }
 
     private Beregningsgrunnlag lagBeregningsgrunnlag(Double snInntektPrÅr, Double frilansInntektPrÅr, Double arbeidsinntektPrÅr) {

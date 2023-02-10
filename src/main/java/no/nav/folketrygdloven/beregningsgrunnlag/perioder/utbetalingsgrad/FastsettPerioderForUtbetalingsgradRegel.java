@@ -5,7 +5,7 @@ import java.util.List;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.utbetalingsgrad.PeriodeModellUtbetalingsgrad;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.utbetalingsgrad.PeriodiseringUtbetalingsgradProsesstruktur;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SplittetPeriode;
-import no.nav.fpsak.nare.RuleService;
+import no.nav.folketrygdloven.regelmodelloversetter.EksportRegel;
 import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.Specification;
@@ -13,7 +13,7 @@ import no.nav.fpsak.nare.specification.Specification;
 /**
  * Splitter beregningsgrunnlaget i perioder på grunn av endring i utbetalingsgrad
  */
-public class FastsettPerioderForUtbetalingsgradRegel implements RuleService<PeriodeModellUtbetalingsgrad> {
+public class FastsettPerioderForUtbetalingsgradRegel implements EksportRegel<PeriodeModellUtbetalingsgrad> {
 
     static final String ID = "FT_40";
 
