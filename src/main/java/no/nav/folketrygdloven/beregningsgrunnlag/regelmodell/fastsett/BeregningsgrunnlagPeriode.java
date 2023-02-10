@@ -29,7 +29,15 @@ public class BeregningsgrunnlagPeriode {
 	@JsonBackReference
 	private Beregningsgrunnlag beregningsgrunnlag;
 	private BigDecimal grenseverdi;
-	private BigDecimal inntektgraderingsprosent;
+	/**
+	 * Graderingsprosent fra totalt brutto beregningsgrunnlag
+	 */
+	private BigDecimal inntektsgraderingFraBruttoBeregningsgrunnlag;
+
+	/**
+	 * Graderingsprosent fra totalt arbeidstidsgradert beregningsgrunnlag (etter fordeling)
+	 */
+	private BigDecimal inntektsgraderingFraArbeidstidsgradertBeregningsgrunnlag;
 	private Dekningsgrad dekningsgrad = Dekningsgrad.DEKNINGSGRAD_100;
 	private boolean erVilkårOppfylt = true;
 
@@ -175,12 +183,20 @@ public class BeregningsgrunnlagPeriode {
 		return erVilkårOppfylt;
 	}
 
-	public BigDecimal getInntektgraderingsprosent() {
-		return inntektgraderingsprosent;
+	public BigDecimal getInntektsgraderingFraBruttoBeregningsgrunnlag() {
+		return inntektsgraderingFraBruttoBeregningsgrunnlag;
 	}
 
-	public void setInntektgraderingsprosent(BigDecimal inntektgraderingsprosent) {
-		this.inntektgraderingsprosent = inntektgraderingsprosent;
+	public void setInntektsgraderingFraBruttoBeregningsgrunnlag(BigDecimal inntektsgraderingFraBruttoBeregningsgrunnlag) {
+		this.inntektsgraderingFraBruttoBeregningsgrunnlag = inntektsgraderingFraBruttoBeregningsgrunnlag;
+	}
+
+	public BigDecimal getInntektsgraderingFraArbeidstidsgradertBeregningsgrunnlag() {
+		return inntektsgraderingFraArbeidstidsgradertBeregningsgrunnlag;
+	}
+
+	public void setInntektsgraderingFraArbeidstidsgradertBeregningsgrunnlag(BigDecimal inntektsgraderingFraArbeidstidsgradertBeregningsgrunnlag) {
+		this.inntektsgraderingFraArbeidstidsgradertBeregningsgrunnlag = inntektsgraderingFraArbeidstidsgradertBeregningsgrunnlag;
 	}
 
 	public static Builder builder() {
