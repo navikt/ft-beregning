@@ -60,24 +60,24 @@ public final class KalkulusRegler {
 	}
 
 
-	public static RegelResultat RegelFordelBeregningsgrunnlag(FordelPeriodeModell input) {
-		return new RegelFordelBeregningsgrunnlag().evaluerRegel(input);
+	public static RegelResultat RegelFordelBeregningsgrunnlag(FordelPeriodeModell input, Object perioder) {
+		return new RegelFordelBeregningsgrunnlag().evaluerRegel(input, perioder);
 	}
 
-	public static RegelResultat FastsettPerioderGraderingRegel(PeriodeModellGradering input) {
-		return new FastsettPerioderGraderingRegel().evaluerRegel(input);
+	public static RegelResultat FastsettPerioderGraderingRegel(PeriodeModellGradering input, Object perioder) {
+		return new FastsettPerioderGraderingRegel().evaluerRegel(input, perioder);
 	}
 
-	public static RegelResultat FastsettPerioderNaturalytelseRegel(PeriodeModellNaturalytelse input) {
-		return new FastsettPerioderNaturalytelseRegel().evaluerRegel(input);
+	public static RegelResultat FastsettPerioderNaturalytelseRegel(PeriodeModellNaturalytelse input, Object perioder) {
+		return new FastsettPerioderNaturalytelseRegel().evaluerRegel(input, perioder);
 	}
 
-	public static RegelResultat FastsettPerioderRefusjonRegel(PeriodeModellRefusjon input) {
-		return new FastsettPerioderRefusjonRegel().evaluerRegel(input);
+	public static RegelResultat FastsettPerioderRefusjonRegel(PeriodeModellRefusjon input, Object perioder) {
+		return new FastsettPerioderRefusjonRegel().evaluerRegel(input, perioder);
 	}
 
-	public static RegelResultat FastsettPerioderForUtbetalingsgradRegel(PeriodeModellUtbetalingsgrad input) {
-		return new FastsettPerioderForUtbetalingsgradRegel().evaluerRegel(input);
+	public static RegelResultat FastsettPerioderForUtbetalingsgradRegel(PeriodeModellUtbetalingsgrad input, Object perioder) {
+		return new FastsettPerioderForUtbetalingsgradRegel().evaluerRegel(input, perioder);
 	}
 
 	public static RegelResultat RegelVurderBeregningsgrunnlag(BeregningsgrunnlagPeriode input) {
