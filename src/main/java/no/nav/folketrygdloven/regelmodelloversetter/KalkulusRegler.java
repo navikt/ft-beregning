@@ -90,7 +90,7 @@ public final class KalkulusRegler {
 
 
 
-	public static RegelResultat fullføreBeregningsgrunnla(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode input) {
+	public static RegelResultat fullføreBeregningsgrunnlag(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode input) {
 		return new RegelFullføreBeregningsgrunnlag(input).evaluerRegel(input);
 	}
 
@@ -104,7 +104,7 @@ public final class KalkulusRegler {
 	/**
 	 * FRISINN
 	 */
-	public static RegelResultat fastsettSkjæringstidspunktFrisinn(AktivitetStatusModellFRISINN input) {
+	public static RegelResultat fastsettSkjæringstidspunktFRISINN(AktivitetStatusModellFRISINN input) {
 		return new RegelFastsettSkjæringstidspunktFrisinn().evaluerRegel(input);
 	}
 
