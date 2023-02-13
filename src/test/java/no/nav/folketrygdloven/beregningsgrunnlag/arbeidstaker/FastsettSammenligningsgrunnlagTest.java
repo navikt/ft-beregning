@@ -6,9 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.Period;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
@@ -17,7 +15,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.SammenligningGrunnl
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SammenligningsGrunnlag;
-import no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil;
 
 public class FastsettSammenligningsgrunnlagTest {
 
@@ -25,32 +22,18 @@ public class FastsettSammenligningsgrunnlagTest {
     Scenarioer i testene er tatt fra https://confluence.adeo.no/display/MODNAV/3b+Fastsette+sammenligningsgrunnlagsperiode#FunksjonellogUX
      */
 
-    private static final String FUNKSJONELT_TIDSOFFSET = DateUtil.SystemConfiguredClockProvider.PROPERTY_KEY_OFFSET_PERIODE;
-
-    @AfterAll
-    public static void after() {
-        System.clearProperty(DateUtil.SystemConfiguredClockProvider.PROPERTY_KEY_OFFSET_PERIODE);
-        DateUtil.init();
-    }
-
-    private void settSimulertNåtidTil(LocalDate dato) {
-        Period periode = Period.between(LocalDate.now(), dato);
-        System.setProperty(FUNKSJONELT_TIDSOFFSET, periode.toString());
-        DateUtil.init();
-    }
-
     //Eksempel 1
     @Test
     public void sammenligningsgrunnlagFørFristMedSisteInntektIkkeRapportert() {
         //Arrange
-        settSimulertNåtidTil(LocalDate.of(2019, 4, 3));
+        var behandlingsdato = LocalDate.of(2019, 4, 3);
         LocalDate skjæringstidspunkt = LocalDate.of(2019, 5, 1);
         Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektsmelding(skjæringstidspunkt, BigDecimal.ZERO, BigDecimal.ZERO);
         Periode periode = Periode.of(LocalDate.of(2018, 1, 1), LocalDate.of(2019, 2, 1));
         opprettSammenligningsgrunnlagIPeriode(beregningsgrunnlag.getInntektsgrunnlag(), periode, BigDecimal.valueOf(25000), AktivitetStatus.ATFL);
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         //Act
-        new FastsettSammenligningsgrunnlag().evaluate(grunnlag);
+        new FastsettSammenligningsgrunnlag().evaluate(grunnlag, behandlingsdato);
         //Assert
         SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.AT_FL);
         assertThat(sg.getRapportertPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(300000));
@@ -62,14 +45,14 @@ public class FastsettSammenligningsgrunnlagTest {
     @Test
     public void sammenligningsgrunnlagFørFristMedSisteInntektRapportert() {
         //Arrange
-        settSimulertNåtidTil(LocalDate.of(2019, 4, 3));
+        var behandlingsdato = LocalDate.of(2019, 4, 3);
         LocalDate skjæringstidspunkt = LocalDate.of(2019, 5, 1);
         Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektsmelding(skjæringstidspunkt, BigDecimal.ZERO, BigDecimal.ZERO);
         Periode periode = Periode.of(LocalDate.of(2018, 1, 1), LocalDate.of(2019, 4, 1));
         opprettSammenligningsgrunnlagIPeriode(beregningsgrunnlag.getInntektsgrunnlag(), periode, BigDecimal.valueOf(25000), AktivitetStatus.ATFL);
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         //Act
-        new FastsettSammenligningsgrunnlag().evaluate(grunnlag);
+        new FastsettSammenligningsgrunnlag().evaluate(grunnlag, behandlingsdato);
         //Assert
 	    SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.AT_FL);
         assertThat(sg.getRapportertPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(300000));
@@ -81,14 +64,14 @@ public class FastsettSammenligningsgrunnlagTest {
     @Test
     public void sammenligningsgrunnlagFørIHelgFristMedSisteInntektIkkeRapportert() {
         //Arrange
-        settSimulertNåtidTil(LocalDate.of(2019, 1, 7));
+        var behandlingsdato = LocalDate.of(2019, 1, 7);
         LocalDate skjæringstidspunkt = LocalDate.of(2019, 2, 1);
         Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektsmelding(skjæringstidspunkt, BigDecimal.ZERO, BigDecimal.ZERO);
         Periode periode = Periode.of(LocalDate.of(2017, 10, 1), LocalDate.of(2018, 11, 1));
         opprettSammenligningsgrunnlagIPeriode(beregningsgrunnlag.getInntektsgrunnlag(), periode, BigDecimal.valueOf(25000), AktivitetStatus.ATFL);
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         //Act
-        new FastsettSammenligningsgrunnlag().evaluate(grunnlag);
+        new FastsettSammenligningsgrunnlag().evaluate(grunnlag, behandlingsdato);
         //Assert
 	    SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.AT_FL);
         assertThat(sg.getRapportertPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(300000));
@@ -99,14 +82,14 @@ public class FastsettSammenligningsgrunnlagTest {
     @Test
     public void sammenligningsgrunnlagEtterFristMedSisteInntektIkkeRapportert() {
         //Arrange
-        settSimulertNåtidTil(LocalDate.of(2019, 10, 8));
+        var behandlingsdato = LocalDate.of(2019, 10, 8);
         LocalDate skjæringstidspunkt = LocalDate.of(2019, 11, 1);
         Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektsmelding(skjæringstidspunkt, BigDecimal.ZERO, BigDecimal.ZERO);
         Periode periode = Periode.of(LocalDate.of(2018, 10, 1), LocalDate.of(2019, 8, 1));
         opprettSammenligningsgrunnlagIPeriode(beregningsgrunnlag.getInntektsgrunnlag(), periode, BigDecimal.valueOf(25000), AktivitetStatus.ATFL);
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         //Act
-        new FastsettSammenligningsgrunnlag().evaluate(grunnlag);
+        new FastsettSammenligningsgrunnlag().evaluate(grunnlag, behandlingsdato);
         //Assert
 	    SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.AT_FL);
         assertThat(sg.getSammenligningsperiode().getFom()).isEqualTo(LocalDate.of(2018, 10, 1));
@@ -117,14 +100,14 @@ public class FastsettSammenligningsgrunnlagTest {
     @Test
     public void sammenligningsgrunnlagEtterFristMedSisteInntektRapportert() {
         //Arrange
-        settSimulertNåtidTil(LocalDate.of(2019, 10, 8));
+	    var behandlingsdato = LocalDate.of(2019, 10, 8);
         LocalDate skjæringstidspunkt = LocalDate.of(2019, 11, 1);
         Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektsmelding(skjæringstidspunkt, BigDecimal.ZERO, BigDecimal.ZERO);
         Periode periode = Periode.of(LocalDate.of(2018, 10, 1), LocalDate.of(2019, 9, 1));
         opprettSammenligningsgrunnlagIPeriode(beregningsgrunnlag.getInntektsgrunnlag(), periode, BigDecimal.valueOf(25000), AktivitetStatus.ATFL);
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         //Act
-        new FastsettSammenligningsgrunnlag().evaluate(grunnlag);
+        new FastsettSammenligningsgrunnlag().evaluate(grunnlag, behandlingsdato);
         //Assert
 	    SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.AT_FL);
         assertThat(sg.getSammenligningsperiode().getFom()).isEqualTo(LocalDate.of(2018, 10, 1));
@@ -136,14 +119,14 @@ public class FastsettSammenligningsgrunnlagTest {
     @Test
     public void sammenligningsgrunnlagBehandlingEtterStp() {
         //Arrange
-        settSimulertNåtidTil(LocalDate.of(2019, 5, 11));
+        var behandlingsdato = LocalDate.of(2019, 5, 11);
         LocalDate skjæringstidspunkt = LocalDate.of(2019, 5, 1);
         Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektsmelding(skjæringstidspunkt, BigDecimal.ZERO, BigDecimal.ZERO);
         Periode periode = Periode.of(LocalDate.of(2017, 10, 1), LocalDate.of(2018, 12, 1));
         opprettSammenligningsgrunnlagIPeriode(beregningsgrunnlag.getInntektsgrunnlag(), periode, BigDecimal.valueOf(25000), AktivitetStatus.ATFL);
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         //Act
-        new FastsettSammenligningsgrunnlag().evaluate(grunnlag);
+        new FastsettSammenligningsgrunnlag().evaluate(grunnlag, behandlingsdato);
         //Assert
 	    SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.AT_FL);
         assertThat(sg.getRapportertPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(200000));
@@ -154,7 +137,7 @@ public class FastsettSammenligningsgrunnlagTest {
     @Test
     public void sammenligningsgrunnlagBehandlingLengeEtterStp() {
         //Arrange
-        settSimulertNåtidTil(LocalDate.of(2019, 6, 11));
+        var behandlingsdato = LocalDate.of(2019, 6, 11);
         LocalDate skjæringstidspunkt = LocalDate.of(2019, 5, 1);
         Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektsmelding(skjæringstidspunkt, BigDecimal.ZERO, BigDecimal.ZERO);
         Periode periode = Periode.of(LocalDate.of(2018, 1, 1), LocalDate.of(2019, 12, 1));
@@ -163,7 +146,7 @@ public class FastsettSammenligningsgrunnlagTest {
         opprettSammenligningsgrunnlagIPeriode(beregningsgrunnlag.getInntektsgrunnlag(), periode2, BigDecimal.valueOf(333333), AktivitetStatus.ATFL);
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         //Act
-        new FastsettSammenligningsgrunnlag().evaluate(grunnlag);
+        new FastsettSammenligningsgrunnlag().evaluate(grunnlag, behandlingsdato);
         //Assert
 	    SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.AT_FL);
         assertThat(sg.getRapportertPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(300000));

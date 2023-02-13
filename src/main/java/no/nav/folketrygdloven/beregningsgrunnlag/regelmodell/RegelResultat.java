@@ -8,7 +8,7 @@ public class RegelResultat {
 
     private final ResultatBeregningType beregningsresultat;
     private final List<RegelMerknad> merknader = new ArrayList<>();
-    private RegelSporing sporing;
+    private final RegelSporing sporing;
     private RegelSporing sporingFinnGrenseverdi;
 
     public RegelResultat(ResultatBeregningType beregningsresultat, String regelInput, String regelSporing) {
