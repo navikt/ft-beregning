@@ -13,7 +13,6 @@ import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenar
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.settoppMånedsinntekter;
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.settoppÅrsinntekter;
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.årsinntekterFor3SisteÅr;
-import static no.nav.folketrygdloven.beregningsgrunnlag.RegelmodellOversetter.getRegelResultat;
 import static no.nav.folketrygdloven.beregningsgrunnlag.VerifiserBeregningsgrunnlag.verifiserBeregningsgrunnlagBeregnet;
 import static no.nav.folketrygdloven.beregningsgrunnlag.VerifiserBeregningsgrunnlag.verifiserBeregningsgrunnlagBruttoPrPeriodeType;
 import static no.nav.folketrygdloven.beregningsgrunnlag.VerifiserBeregningsgrunnlag.verifiserBeregningsperiode;
@@ -33,7 +32,6 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.RegelmodellOversetter;
 import no.nav.folketrygdloven.beregningsgrunnlag.fortsettForeslå.RegelFortsettForeslåBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel;
@@ -52,8 +50,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.fp.ForeldrepengerGrunnlag;
-import no.nav.fpsak.nare.evaluation.Evaluation;
-import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 
 public class RegelForeslåBeregningsgrunnlagTest {
 
@@ -76,12 +72,12 @@ public class RegelForeslåBeregningsgrunnlagTest {
 		Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektskomponenten(skjæringstidspunkt, månedsinntekt, refusjonskrav, true);
 		BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 		// Act
-		Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
-		Evaluation evaluation2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
-		// Assert
 		@SuppressWarnings("unused")
-		String sporing = EvaluationSerializer.asJson(evaluation);
+		RegelResultat resultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
+		@SuppressWarnings("unused")
+		RegelResultat resultat2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 
+		// Assert
 		verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_FRILANSER, AktivitetStatus.ATFL, 12 * månedsinntekt.doubleValue());
 		verifiserBeregningsgrunnlagBeregnet(grunnlag, 12 * månedsinntekt.doubleValue());
 	}
@@ -94,12 +90,12 @@ public class RegelForeslåBeregningsgrunnlagTest {
 		Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektskomponenten(skjæringstidspunkt, månedsinntekt, refusjonskrav, false);
 		BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 		// Act
-		Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
-		Evaluation evaluation2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
-		// Assert
 		@SuppressWarnings("unused")
-		String sporing = EvaluationSerializer.asJson(evaluation);
+		RegelResultat resultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
+		@SuppressWarnings("unused")
+		RegelResultat resultat2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 
+		// Assert
 		verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_ARBEIDSTAKER, AktivitetStatus.ATFL, 12 * månedsinntekt.doubleValue());
 		verifiserBeregningsgrunnlagBeregnet(grunnlag, 12 * månedsinntekt.doubleValue());
 	}
@@ -117,12 +113,12 @@ public class RegelForeslåBeregningsgrunnlagTest {
 		BeregningsgrunnlagPeriode grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL_SN),
 				List.of(arbeidsforhold), Collections.singletonList(refusjonskrav.multiply(BigDecimal.valueOf(12)))).getBeregningsgrunnlagPerioder().get(0);
 		// Act
-		Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
-		Evaluation evaluation2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
-		// Assert
 		@SuppressWarnings("unused")
-		String sporing = EvaluationSerializer.asJson(evaluation);
+		RegelResultat resultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
+		@SuppressWarnings("unused")
+		RegelResultat resultat2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 
+		// Assert
 		verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, AktivitetStatus.ATFL, 12 * månedsinntekt.doubleValue());
 		Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
 		verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, grunnlag, beregningsperiode);
@@ -145,12 +141,12 @@ public class RegelForeslåBeregningsgrunnlagTest {
 		BeregningsgrunnlagPeriode grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL_SN),
 				List.of(arbeidsforhold), Collections.singletonList(refusjonskrav.multiply(BigDecimal.valueOf(12)))).getBeregningsgrunnlagPerioder().get(0);
 		// Act
-		Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
-		Evaluation evaluation2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
-		// Assert
 		@SuppressWarnings("unused")
-		String sporing = EvaluationSerializer.asJson(evaluation);
+		RegelResultat resultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
+		@SuppressWarnings("unused")
+		RegelResultat resultat2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 
+		// Assert
 		verifiserBeregningsgrunnlagBeregnet(grunnlag, 12 * månedsinntekt.doubleValue());
 		verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, AktivitetStatus.ATFL, 12 * månedsinntekt.doubleValue());
 		double forventetPGI = 5.0d * GRUNNBELØP_2017;
@@ -171,12 +167,12 @@ public class RegelForeslåBeregningsgrunnlagTest {
 		BeregningsgrunnlagPeriode grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL_SN),
 				List.of(arbeidsforhold), Collections.singletonList(refusjonskrav.multiply(BigDecimal.valueOf(12)))).getBeregningsgrunnlagPerioder().get(0);
 		// Act
-		Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
-		Evaluation evaluation2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
-		// Assert
 		@SuppressWarnings("unused")
-		String sporing = EvaluationSerializer.asJson(evaluation);
+		RegelResultat resultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
+		@SuppressWarnings("unused")
+		RegelResultat resultat2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 
+		// Assert
 		double forventetATFL = 12 * månedsinntekt.doubleValue();
 		double forventetPGI = 593015.333333;
 		double forventetSN = forventetPGI - forventetATFL;
@@ -196,14 +192,12 @@ public class RegelForeslåBeregningsgrunnlagTest {
 		opprettSammenligningsgrunnlag(beregningsgrunnlag.getInntektsgrunnlag(), skjæringstidspunkt, BigDecimal.valueOf(30000));
 		BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 		// Act
-		Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
-		Evaluation evaluation2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
-		// Assert
 		@SuppressWarnings("unused")
-		String sporing = EvaluationSerializer.asJson(evaluation);
-		RegelResultat resultat = RegelmodellOversetter.getRegelResultat(evaluation, "input");
+		RegelResultat resultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
+		@SuppressWarnings("unused")
+		RegelResultat resultat2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 
-
+		// Assert
 		assertThat(resultat.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5038");
 		assertThat(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).samletNaturalytelseBortfaltMinusTilkommetPrÅr()).isEqualTo(BigDecimal.valueOf(24000));
 		assertThat(grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.AT_FL).getAvvikPromille()).isEqualTo(400);
@@ -225,12 +219,12 @@ public class RegelForeslåBeregningsgrunnlagTest {
 		Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.DP));
 		BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 		// Act
-		Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
-		Evaluation evaluation2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
-		// Assert
 		@SuppressWarnings("unused")
-		String sporing = EvaluationSerializer.asJson(evaluation);
+		RegelResultat resultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
+		@SuppressWarnings("unused")
+		RegelResultat resultat2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 
+		// Assert
 		verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.F_14_7_8_49, AktivitetStatus.DP, 260 * dagsats.doubleValue());
 		verifiserBeregningsgrunnlagBeregnet(grunnlag, 260 * dagsats.doubleValue());
 	}
@@ -252,12 +246,11 @@ public class RegelForeslåBeregningsgrunnlagTest {
 				List.of(AktivitetStatus.SN, AktivitetStatus.DP));
 		BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 		// Act
-		Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
-		Evaluation evaluation2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
-		// Assert
 		@SuppressWarnings("unused")
-		String sporing = EvaluationSerializer.asJson(evaluation);
-
+		RegelResultat resultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
+		@SuppressWarnings("unused")
+		RegelResultat resultat2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
+		// Assert
 		double expectedbruttoDP = dagsats.doubleValue() * 260 * utbetalingsfaktor.doubleValue();
 		double expectedPGIsnitt = 5.0 * GRUNNBELØP_2017;
 		double expectedBruttoSN = expectedPGIsnitt - expectedbruttoDP;
@@ -287,12 +280,11 @@ public class RegelForeslåBeregningsgrunnlagTest {
 				Collections.singletonList(månedsinntektATFL.multiply(BigDecimal.valueOf(12))));
 		BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 		// Act
-		Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
-		Evaluation evaluation2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
-		// Assert
 		@SuppressWarnings("unused")
-		String sporing = EvaluationSerializer.asJson(evaluation);
-
+		RegelResultat resultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
+		@SuppressWarnings("unused")
+		RegelResultat resultat2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
+		// Assert
 		double expectedbruttoAAP = dagsatsAAP.doubleValue() * 260 * utbetalingsfaktor.doubleValue();
 		double expectedPGIsnitt = 6.0 * GRUNNBELØP_2017;
 		double expectedBruttoATFL = 12 * månedsinntektATFL.doubleValue();
@@ -317,12 +309,13 @@ public class RegelForeslåBeregningsgrunnlagTest {
 				.build();
 
 		// Act
-		Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
-		Evaluation evaluation2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+		@SuppressWarnings("unused")
+		RegelResultat resultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
+		@SuppressWarnings("unused")
+		RegelResultat resultat2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 
 		// Assert
-		RegelResultat regelResultat = getRegelResultat(evaluation, "input");
-		assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+		assertThat(resultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
 		BeregningsgrunnlagPrArbeidsforhold af = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
 		LocalDate fom = skjæringstidspunkt.minusMonths(3).withDayOfMonth(1);
 		LocalDate tom = skjæringstidspunkt.minusMonths(1).with(TemporalAdjusters.lastDayOfMonth());
@@ -343,12 +336,13 @@ public class RegelForeslåBeregningsgrunnlagTest {
 				.build();
 
 		// Act
-		Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
-		Evaluation evaluation2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+		@SuppressWarnings("unused")
+		RegelResultat resultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
+		@SuppressWarnings("unused")
+		RegelResultat resultat2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 
 		// Assert
-		RegelResultat regelResultat = getRegelResultat(evaluation, "input");
-		assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+		assertThat(resultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
 		BeregningsgrunnlagPrArbeidsforhold af = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
 		LocalDate fom = skjæringstidspunkt.minusMonths(3).withDayOfMonth(1);
 		LocalDate tom = skjæringstidspunkt.minusMonths(1).with(TemporalAdjusters.lastDayOfMonth());
@@ -366,12 +360,13 @@ public class RegelForeslåBeregningsgrunnlagTest {
 		BeregningsgrunnlagPrStatus prStatus = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.BA);
 		BeregningsgrunnlagPrStatus.builder(prStatus).medFastsattAvSaksbehandler(true).medBeregnetPrÅr(BigDecimal.valueOf(100000));
 		// Act
-		Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
-		Evaluation evaluation2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+		@SuppressWarnings("unused")
+		RegelResultat resultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
+		@SuppressWarnings("unused")
+		RegelResultat resultat2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 
 		// Assert
-		RegelResultat regelResultat = getRegelResultat(evaluation, "input");
-		assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+		assertThat(resultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
 		assertThat(grunnlag.getBruttoPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(100000));
 		assertThat(grunnlag.getBeregningsgrunnlag().getAktivitetStatus(AktivitetStatus.KUN_YTELSE).getHjemmel()).isEqualTo(F_14_7);
 	}
@@ -386,12 +381,11 @@ public class RegelForeslåBeregningsgrunnlagTest {
 		leggtilStatus(beregningsgrunnlag, AktivitetStatus.UDEFINERT);
 		BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 		// Act
-		Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
-		Evaluation evaluation2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
-		// Assert
 		@SuppressWarnings("unused")
-		String sporing = EvaluationSerializer.asJson(evaluation);
-
+		RegelResultat resultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
+		@SuppressWarnings("unused")
+		RegelResultat resultat2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
+		// Assert
 		verifiserBeregningsgrunnlagHjemmel(grunnlag, AktivitetStatus.ATFL, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_FRILANSER);
 		verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_FRILANSER, AktivitetStatus.ATFL, 12 * månedsinntekt.doubleValue());
 		verifiserBeregningsgrunnlagBeregnet(grunnlag, 12 * månedsinntekt.doubleValue());
@@ -412,11 +406,12 @@ public class RegelForeslåBeregningsgrunnlagTest {
 
 		BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
-		Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
-		Evaluation evaluation2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+		@SuppressWarnings("unused")
+		RegelResultat resultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
+		@SuppressWarnings("unused")
+		RegelResultat resultat2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 
-		String sporing = EvaluationSerializer.asJson(evaluation);
-		assertThat(sporing).isNotBlank();
+		assertThat(resultat.getRegelSporing().sporing()).isNotBlank();
 		//SÅ skal brutto beregningsgrunnlag i beregningsperioden settes til 0
 		assertThat(grunnlag.getBruttoPrÅr().compareTo(BigDecimal.ZERO)).isZero();
 		// skal beregningsperioden settes til de tre siste månedene før skjæringstidspunktet for beregning
@@ -443,11 +438,11 @@ public class RegelForeslåBeregningsgrunnlagTest {
 
 		// Act
 		@SuppressWarnings("unused")
-		Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
-		Evaluation evaluation2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+		RegelResultat resultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
+		@SuppressWarnings("unused")
+		RegelResultat resultat2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 		// Assert
-		RegelResultat resultat = RegelmodellOversetter.getRegelResultat(evaluation, "input");
-		assertThat(resultat.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).isEmpty();
+		assertThat(resultat.getMerknader().stream().map(RegelMerknad::utfallÅrsak).collect(Collectors.toList())).isEmpty();
 		verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.K9_HJEMMEL_BARE_ARBEIDSTAKER_REFUSJON, AktivitetStatus.ATFL, 12 * månedsinntektInntektsmelding.doubleValue());
 		verifiserBeregningsgrunnlagHjemmel(grunnlag, AktivitetStatus.ATFL, BeregningsgrunnlagHjemmel.F_9_8_8_28);
 		verifiserBeregningsgrunnlagBeregnet(grunnlag, 12 * månedsinntektInntektsmelding.doubleValue());
@@ -470,10 +465,10 @@ public class RegelForeslåBeregningsgrunnlagTest {
 
 		// Act
 		@SuppressWarnings("unused")
-		Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
-		Evaluation evaluation2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+		RegelResultat resultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
+		@SuppressWarnings("unused")
+		RegelResultat resultat2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 		// Assert
-		RegelResultat resultat = RegelmodellOversetter.getRegelResultat(evaluation, "input");
 		assertThat(resultat.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5038");
 		verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.K9_HJEMMEL_BARE_ARBEIDSTAKER_MED_AVVIKSVURDERING, AktivitetStatus.ATFL, 12 * månedsinntektInntektsmelding.doubleValue());
 		verifiserBeregningsgrunnlagHjemmel(grunnlag, AktivitetStatus.ATFL, BeregningsgrunnlagHjemmel.F_9_9_8_28_8_30);
@@ -497,10 +492,10 @@ public class RegelForeslåBeregningsgrunnlagTest {
 
 		// Act
 		@SuppressWarnings("unused")
-		Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
-		Evaluation evaluation2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
+		RegelResultat resultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
+		@SuppressWarnings("unused")
+		RegelResultat resultat2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 		// Assert
-		RegelResultat resultat = RegelmodellOversetter.getRegelResultat(evaluation, "input");
 		assertThat(resultat.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5038");
 		verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_ARBEIDSTAKER, AktivitetStatus.ATFL, 12 * månedsinntektInntektsmelding.doubleValue());
 		verifiserBeregningsgrunnlagHjemmel(grunnlag, AktivitetStatus.ATFL, BeregningsgrunnlagHjemmel.F_14_7_8_30);
@@ -522,12 +517,11 @@ public class RegelForeslåBeregningsgrunnlagTest {
 				singletonList(arbeidsforhold), singletonList(refusjonskrav.multiply(BigDecimal.valueOf(12)))).getBeregningsgrunnlagPerioder().get(0);
 
 		// Act
-		Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
-		Evaluation evaluation2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluer(grunnlag);
-		// Assert
 		@SuppressWarnings("unused")
-		String sporing = EvaluationSerializer.asJson(evaluation);
-
+		RegelResultat resultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
+		@SuppressWarnings("unused")
+		RegelResultat resultat2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
+		// Assert
 		verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.F_14_7, AktivitetStatus.MS, 0);
 	}
 
@@ -553,9 +547,9 @@ public class RegelForeslåBeregningsgrunnlagTest {
 		var førstePeriode = grunnlagMedFomForIndividuellRegelendring.getBeregningsgrunnlagPerioder().get(0);
 
 		// Act
-		Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(førstePeriode).evaluer(førstePeriode);
+		@SuppressWarnings("unused")
+		RegelResultat resultat = new RegelForeslåBeregningsgrunnlag(førstePeriode).evaluerRegel(førstePeriode);
 
-		RegelResultat resultat = RegelmodellOversetter.getRegelResultat(evaluation, "input");
 		assertThat(resultat.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5038");
 		assertThat(førstePeriode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(240000));
 		assertThat(førstePeriode.getSammenligningsGrunnlagForType(SammenligningGrunnlagType.AT_FL).get().getAvvikPromilleUtenAvrunding()).isEqualByComparingTo(BigDecimal.valueOf(500));
@@ -585,10 +579,10 @@ public class RegelForeslåBeregningsgrunnlagTest {
 		var førstePeriode = grunnlagMedFomForIndividuellRegelendring.getBeregningsgrunnlagPerioder().get(0);
 
 		// Act
-		Evaluation evaluation = new RegelForeslåBeregningsgrunnlag(førstePeriode).evaluer(førstePeriode);
+		@SuppressWarnings("unused")
+		RegelResultat resultat = new RegelForeslåBeregningsgrunnlag(førstePeriode).evaluerRegel(førstePeriode);
 
-		RegelResultat resultat = RegelmodellOversetter.getRegelResultat(evaluation, "input");
-		assertThat(resultat.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).isEmpty();
+		assertThat(resultat.getMerknader().stream().map(RegelMerknad::utfallÅrsak).collect(Collectors.toList())).isEmpty();
 		assertThat(førstePeriode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(240000));
 		assertThat(førstePeriode.getSammenligningsGrunnlagForType(SammenligningGrunnlagType.AT_FL)).isEmpty();
 		verifiserBeregningsgrunnlagBruttoPrPeriodeType(førstePeriode, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, AktivitetStatus.ATFL, 12 * månedsinntekt.doubleValue());

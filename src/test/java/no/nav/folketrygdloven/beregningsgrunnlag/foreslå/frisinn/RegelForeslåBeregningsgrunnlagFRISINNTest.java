@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Test;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.RegelResultat;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
@@ -33,8 +34,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.frisinn.FrisinnGrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.frisinn.FrisinnPeriode;
-import no.nav.fpsak.nare.evaluation.Evaluation;
-import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 
 class RegelForeslåBeregningsgrunnlagFRISINNTest {
 
@@ -60,11 +59,9 @@ class RegelForeslåBeregningsgrunnlagFRISINNTest {
         beregningsgrunnlag = Beregningsgrunnlag.builder(beregningsgrunnlag).medYtelsesSpesifiktGrunnlag(frisinnGrunnlag).build();
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         // Act
-        Evaluation evaluation = new RegelForeslåBeregningsgrunnlagFRISINN(grunnlag).evaluer(grunnlag);
+	    @SuppressWarnings("unused")
+	    RegelResultat regelResultat = new RegelForeslåBeregningsgrunnlagFRISINN(grunnlag).evaluerRegel(grunnlag);
         // Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
-
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.KORONALOVEN_3, AktivitetStatus.ATFL, 12 * månedsinntekt.doubleValue());
         verifiserBeregningsgrunnlagBeregnet(grunnlag, 12 * månedsinntekt.doubleValue());
     }
@@ -78,10 +75,9 @@ class RegelForeslåBeregningsgrunnlagFRISINNTest {
         beregningsgrunnlag = Beregningsgrunnlag.builder(beregningsgrunnlag).medYtelsesSpesifiktGrunnlag(frisinnGrunnlag).build();
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         // Act
-        Evaluation evaluation = new RegelForeslåBeregningsgrunnlagFRISINN(grunnlag).evaluer(grunnlag);
+	    @SuppressWarnings("unused")
+	    RegelResultat regelResultat = new RegelForeslåBeregningsgrunnlagFRISINN(grunnlag).evaluerRegel(grunnlag);
         // Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
 
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.KORONALOVEN_3, AktivitetStatus.ATFL, 12 * månedsinntekt.doubleValue());
         verifiserBeregningsgrunnlagBeregnet(grunnlag, 12 * månedsinntekt.doubleValue());
@@ -106,11 +102,9 @@ class RegelForeslåBeregningsgrunnlagFRISINNTest {
         ).getBeregningsgrunnlagPerioder().get(0);
 
         // Act
-        Evaluation evaluation = new RegelForeslåBeregningsgrunnlagFRISINN(grunnlag).evaluer(grunnlag);
+	    @SuppressWarnings("unused")
+	    RegelResultat regelResultat = new RegelForeslåBeregningsgrunnlagFRISINN(grunnlag).evaluerRegel(grunnlag);
         // Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
-
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.KORONALOVEN_3, AktivitetStatus.ATFL, 12 * månedsinntekt.doubleValue());
         LocalDate FRISINN_FOM = LocalDate.of(2017, 1, 1);
         LocalDate FRISINN_TOM = LocalDate.of(2019, 12, 31);
@@ -136,11 +130,9 @@ class RegelForeslåBeregningsgrunnlagFRISINNTest {
         BeregningsgrunnlagPeriode grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL_SN),
             List.of(arbeidsforhold), Collections.emptyList(), Optional.of(frisinnGrunnlag)).getBeregningsgrunnlagPerioder().get(0);
         // Act
-        Evaluation evaluation = new RegelForeslåBeregningsgrunnlagFRISINN(grunnlag).evaluer(grunnlag);
+	    @SuppressWarnings("unused")
+	    RegelResultat regelResultat = new RegelForeslåBeregningsgrunnlagFRISINN(grunnlag).evaluerRegel(grunnlag);
         // Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
-
         verifiserBeregningsgrunnlagBeregnet(grunnlag, 12 * månedsinntekt.doubleValue() + inntektSn.intValue());
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.KORONALOVEN_3, AktivitetStatus.ATFL, 12 * månedsinntekt.doubleValue());
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.KORONALOVEN_3, AktivitetStatus.SN, inntektSn.intValue());
@@ -161,12 +153,10 @@ class RegelForeslåBeregningsgrunnlagFRISINNTest {
             .medPeriode(Periode.of(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30)));
 
         // Act
-        Evaluation evaluation = new RegelForeslåBeregningsgrunnlagFRISINN(grunnlag).evaluer(grunnlag);
+	    @SuppressWarnings("unused")
+	    RegelResultat regelResultat = new RegelForeslåBeregningsgrunnlagFRISINN(grunnlag).evaluerRegel(grunnlag);
 
         // Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
-
         double expectedbruttoDP = dagsats.doubleValue() * 260 * utbetalingsfaktor.doubleValue();
         double expectedBruttoSN = 5.0 * GSNITT_2019;
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.KORONALOVEN_3, AktivitetStatus.DP, expectedbruttoDP);
@@ -194,11 +184,9 @@ class RegelForeslåBeregningsgrunnlagFRISINNTest {
             .medPeriode(Periode.of(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30)));
 
         // Act
-        Evaluation evaluation = new RegelForeslåBeregningsgrunnlagFRISINN(grunnlag).evaluer(grunnlag);
+	    @SuppressWarnings("unused")
+	    RegelResultat regelResultat = new RegelForeslåBeregningsgrunnlagFRISINN(grunnlag).evaluerRegel(grunnlag);
         // Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
-
         double expectedbruttoAAP = dagsatsAAP.doubleValue() * 260 * utbetalingsfaktor.doubleValue();
         double expectedBruttoATFL = 12 * månedsinntektATFL.doubleValue();
         double expectedBruttoSN = 6.0 * GSNITT_2019;
@@ -226,10 +214,9 @@ class RegelForeslåBeregningsgrunnlagFRISINNTest {
 
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
-        Evaluation evaluation = new RegelForeslåBeregningsgrunnlagFRISINN(grunnlag).evaluer(grunnlag);
+	    RegelResultat regelResultat = new RegelForeslåBeregningsgrunnlagFRISINN(grunnlag).evaluerRegel(grunnlag);
 
-        String sporing = EvaluationSerializer.asJson(evaluation);
-        assertThat(sporing).isNotBlank();
+        assertThat(regelResultat.getRegelSporing().sporing()).isNotBlank();
         //SÅ skal brutto beregningsgrunnlag i beregningsperioden settes til 0
         assertThat(grunnlag.getBruttoPrÅr().compareTo(BigDecimal.ZERO)).isZero();
     }
@@ -243,11 +230,9 @@ class RegelForeslåBeregningsgrunnlagFRISINNTest {
         BeregningsgrunnlagPeriode grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.SN),
             Collections.emptyList(), Collections.emptyList(), Optional.of(frisinnGrunnlag)).getBeregningsgrunnlagPerioder().get(0);
         // Act
-        Evaluation evaluation = new RegelForeslåBeregningsgrunnlagFRISINN(grunnlag).evaluer(grunnlag);
+	    @SuppressWarnings("unused")
+	    RegelResultat regelResultat = new RegelForeslåBeregningsgrunnlagFRISINN(grunnlag).evaluerRegel(grunnlag);
         // Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
-
         LocalDate FRISINN_FOM = LocalDate.of(2017, 1, 1);
         LocalDate FRISINN_TOM = LocalDate.of(2019, 12, 31);
         Periode beregningsperiode = Periode.of(FRISINN_FOM, FRISINN_TOM);

@@ -11,10 +11,9 @@ import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.RegelResultat;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivPeriode;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModell;
-import no.nav.fpsak.nare.evaluation.Evaluation;
-import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 
 public class RegelFastsettSkjæringstidspunktTest {
     private static final String ARBEIDSFORHOLD = "5678";
@@ -52,12 +51,11 @@ public class RegelFastsettSkjæringstidspunktTest {
         regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode);
 
         // Act
-        Evaluation evaluation = new RegelFastsettSkjæringstidspunkt().evaluer(regelmodell);
-        // Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
+	    @SuppressWarnings("unused")
+	    RegelResultat resultat = new RegelFastsettSkjæringstidspunkt().evaluerRegel(regelmodell);
 
-        assertThat(regelmodell.getSkjæringstidspunktForBeregning()).isEqualTo(skjæringstidspunktForOpptjening);
+		// Assert
+	    assertThat(regelmodell.getSkjæringstidspunktForBeregning()).isEqualTo(skjæringstidspunktForOpptjening);
     }
 
     @Test
@@ -67,11 +65,10 @@ public class RegelFastsettSkjæringstidspunktTest {
         regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode);
 
         // Act
-        Evaluation evaluation = new RegelFastsettSkjæringstidspunkt().evaluer(regelmodell);
-        // Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
+	    @SuppressWarnings("unused")
+	    RegelResultat resultat = new RegelFastsettSkjæringstidspunkt().evaluerRegel(regelmodell);
 
+		// Assert
         assertThat(regelmodell.getSkjæringstidspunktForBeregning()).isEqualTo(skjæringstidspunktForOpptjening);
     }
 
@@ -83,11 +80,10 @@ public class RegelFastsettSkjæringstidspunktTest {
         regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode);
 
         // Act
-        Evaluation evaluation = new RegelFastsettSkjæringstidspunkt().evaluer(regelmodell);
-        // Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
+	    @SuppressWarnings("unused")
+	    RegelResultat resultat = new RegelFastsettSkjæringstidspunkt().evaluerRegel(regelmodell);
 
+		// Assert
         assertThat(regelmodell.getSkjæringstidspunktForBeregning()).isEqualTo(sisteAktivitetsdag.plusDays(1));
     }
 
@@ -104,11 +100,10 @@ public class RegelFastsettSkjæringstidspunktTest {
         assertThat(regelmodell.getAktivePerioder()).hasSize(3);
 
         // Act
-        Evaluation evaluation = new RegelFastsettSkjæringstidspunkt().evaluer(regelmodell);
-        // Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
+	    @SuppressWarnings("unused")
+	    RegelResultat resultat = new RegelFastsettSkjæringstidspunkt().evaluerRegel(regelmodell);
 
+		// Assert
         assertThat(regelmodell.getSkjæringstidspunktForBeregning()).isEqualTo(sisteAktivitetsdag.plusDays(1));
         assertThat(regelmodell.getAktivePerioder()).hasSize(3);
         assertThat(regelmodell.getAktivePerioder().stream().map(AktivPeriode::getAktivitet).collect(Collectors.toList()))
@@ -126,11 +121,10 @@ public class RegelFastsettSkjæringstidspunktTest {
         assertThat(regelmodell.getAktivePerioder()).hasSize(2);
 
         // Act
-        Evaluation evaluation = new RegelFastsettSkjæringstidspunkt().evaluer(regelmodell);
-        // Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
+	    @SuppressWarnings("unused")
+	    RegelResultat resultat = new RegelFastsettSkjæringstidspunkt().evaluerRegel(regelmodell);
 
+		// Assert
         assertThat(regelmodell.getSkjæringstidspunktForBeregning()).isEqualTo(sisteArbeidsdag.plusDays(1));
         assertThat(regelmodell.getAktivePerioder()).hasSize(2);
     }
@@ -143,11 +137,10 @@ public class RegelFastsettSkjæringstidspunktTest {
         assertThat(regelmodell.getAktivePerioder()).hasSize(1);
 
         // Act
-        Evaluation evaluation = new RegelFastsettSkjæringstidspunkt().evaluer(regelmodell);
-        // Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
+	    @SuppressWarnings("unused")
+	    RegelResultat resultat = new RegelFastsettSkjæringstidspunkt().evaluerRegel(regelmodell);
 
+        // Assert
         assertThat(regelmodell.getSkjæringstidspunktForBeregning()).isEqualTo(skjæringstidspunktForOpptjening);
         assertThat(regelmodell.getAktivePerioder()).hasSize(1);
     }

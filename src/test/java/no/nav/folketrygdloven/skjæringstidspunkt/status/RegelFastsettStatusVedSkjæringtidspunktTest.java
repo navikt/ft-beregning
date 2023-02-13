@@ -12,12 +12,11 @@ import org.junit.jupiter.api.Test;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.RegelResultat;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivPeriode;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModell;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.BeregningsgrunnlagPrStatus;
-import no.nav.fpsak.nare.evaluation.Evaluation;
-import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 
 public class RegelFastsettStatusVedSkjæringtidspunktTest {
     private static final String ORGNR = "7654";
@@ -40,12 +39,10 @@ public class RegelFastsettStatusVedSkjæringtidspunktTest {
         assertThat(regelmodell.getAktivePerioder()).hasSize(1);
 
         // Act
-        Evaluation evaluation = new RegelFastsettStatusVedSkjæringstidspunkt().evaluer(regelmodell);
+	    @SuppressWarnings("unused")
+	    RegelResultat resultat = new RegelFastsettStatusVedSkjæringstidspunkt().evaluerRegel(regelmodell);
 
         // Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
-
         assertThat(regelmodell.getAktivitetStatuser()).containsOnly(AktivitetStatus.DP);
         assertThat(regelmodell.getBeregningsgrunnlagPrStatusListe()).hasSize(1);
         assertThat(regelmodell.getBeregningsgrunnlagPrStatusListe().get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.DP);
@@ -61,12 +58,10 @@ public class RegelFastsettStatusVedSkjæringtidspunktTest {
         assertThat(regelmodell.getAktivePerioder()).hasSize(2);
 
         // Act
-        Evaluation evaluation = new RegelFastsettStatusVedSkjæringstidspunkt().evaluer(regelmodell);
+	    @SuppressWarnings("unused")
+	    RegelResultat resultat = new RegelFastsettStatusVedSkjæringstidspunkt().evaluerRegel(regelmodell);
 
         // Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
-
         assertThat(regelmodell.getAktivitetStatuser()).containsOnly(AktivitetStatus.ATFL);
         assertThat(regelmodell.getBeregningsgrunnlagPrStatusListe()).hasSize(1);
         BeregningsgrunnlagPrStatus bgPrStatus = regelmodell.getBeregningsgrunnlagPrStatusListe().get(0);
@@ -85,12 +80,10 @@ public class RegelFastsettStatusVedSkjæringtidspunktTest {
         assertThat(regelmodell.getAktivePerioder()).hasSize(2);
 
         // Act
-        Evaluation evaluation = new RegelFastsettStatusVedSkjæringstidspunkt().evaluer(regelmodell);
+	    @SuppressWarnings("unused")
+	    RegelResultat resultat = new RegelFastsettStatusVedSkjæringstidspunkt().evaluerRegel(regelmodell);
 
         // Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
-
         assertThat(regelmodell.getAktivitetStatuser()).containsOnly(AktivitetStatus.ATFL);
         assertThat(regelmodell.getBeregningsgrunnlagPrStatusListe()).hasSize(1);
         BeregningsgrunnlagPrStatus bgPrStatus = regelmodell.getBeregningsgrunnlagPrStatusListe().get(0);
@@ -106,12 +99,10 @@ public class RegelFastsettStatusVedSkjæringtidspunktTest {
         regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode);
         assertThat(regelmodell.getAktivePerioder()).hasSize(1);
         // Act
-        Evaluation evaluation = new RegelFastsettStatusVedSkjæringstidspunkt().evaluer(regelmodell);
+	    @SuppressWarnings("unused")
+	    RegelResultat resultat = new RegelFastsettStatusVedSkjæringstidspunkt().evaluerRegel(regelmodell);
 
         // Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
-
         assertThat(regelmodell.getAktivitetStatuser()).containsOnly(AktivitetStatus.KUN_YTELSE);
         assertThat(regelmodell.getBeregningsgrunnlagPrStatusListe()).hasSize(1);
         assertThat(regelmodell.getBeregningsgrunnlagPrStatusListe().get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.BA);
@@ -129,12 +120,10 @@ public class RegelFastsettStatusVedSkjæringtidspunktTest {
         assertThat(regelmodell.getAktivePerioder()).hasSize(3);
 
         // Act
-        Evaluation evaluation = new RegelFastsettStatusVedSkjæringstidspunkt().evaluer(regelmodell);
+	    @SuppressWarnings("unused")
+	    RegelResultat resultat = new RegelFastsettStatusVedSkjæringstidspunkt().evaluerRegel(regelmodell);
 
         // Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
-
         assertThat(regelmodell.getAktivitetStatuser()).containsOnly(AktivitetStatus.KUN_YTELSE);
         assertThat(regelmodell.getBeregningsgrunnlagPrStatusListe()).hasSize(1);
         assertThat(regelmodell.getBeregningsgrunnlagPrStatusListe().get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.BA);
@@ -152,12 +141,10 @@ public class RegelFastsettStatusVedSkjæringtidspunktTest {
         assertThat(regelmodell.getAktivePerioder()).hasSize(2);
 
         // Act
-        Evaluation evaluation = new RegelFastsettStatusVedSkjæringstidspunkt().evaluer(regelmodell);
+	    @SuppressWarnings("unused")
+	    RegelResultat resultat = new RegelFastsettStatusVedSkjæringstidspunkt().evaluerRegel(regelmodell);
 
         // Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
-
         assertThat(regelmodell.getAktivitetStatuser()).hasSize(1);
         assertThat(regelmodell.getAktivitetStatuser()).containsOnly(AktivitetStatus.ATFL);
         assertThat(regelmodell.getBeregningsgrunnlagPrStatusListe()).hasSize(1);
@@ -177,12 +164,10 @@ public class RegelFastsettStatusVedSkjæringtidspunktTest {
         assertThat(regelmodell.getAktivePerioder()).hasSize(2);
 
         // Act
-        Evaluation evaluation = new RegelFastsettStatusVedSkjæringstidspunkt().evaluer(regelmodell);
+	    @SuppressWarnings("unused")
+	    RegelResultat resultat = new RegelFastsettStatusVedSkjæringstidspunkt().evaluerRegel(regelmodell);
 
         // Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
-
         assertThat(regelmodell.getAktivitetStatuser()).hasSize(1);
         assertThat(regelmodell.getAktivitetStatuser()).containsExactlyInAnyOrder(AktivitetStatus.AAP);
         assertThat(regelmodell.getBeregningsgrunnlagPrStatusListe()).hasSize(1);
@@ -200,12 +185,10 @@ public class RegelFastsettStatusVedSkjæringtidspunktTest {
         assertThat(regelmodell.getAktivePerioder()).hasSize(2);
 
         // Act
-        Evaluation evaluation = new RegelFastsettStatusVedSkjæringstidspunkt().evaluer(regelmodell);
+	    @SuppressWarnings("unused")
+	    RegelResultat resultat = new RegelFastsettStatusVedSkjæringstidspunkt().evaluerRegel(regelmodell);
 
         // Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
-
         assertThat(regelmodell.getAktivitetStatuser()).hasSize(1);
         assertThat(regelmodell.getAktivitetStatuser()).containsExactlyInAnyOrder(AktivitetStatus.DP);
         assertThat(regelmodell.getBeregningsgrunnlagPrStatusListe()).hasSize(1);
@@ -223,12 +206,10 @@ public class RegelFastsettStatusVedSkjæringtidspunktTest {
         assertThat(regelmodell.getAktivePerioder()).hasSize(2);
 
         // Act
-        Evaluation evaluation = new RegelFastsettStatusVedSkjæringstidspunkt().evaluer(regelmodell);
+	    @SuppressWarnings("unused")
+	    RegelResultat resultat = new RegelFastsettStatusVedSkjæringstidspunkt().evaluerRegel(regelmodell);
 
         // Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
-
         assertThat(regelmodell.getAktivitetStatuser()).containsOnly(AktivitetStatus.ATFL_SN);
         assertThat(regelmodell.getBeregningsgrunnlagPrStatusListe()).hasSize(2);
         List<BeregningsgrunnlagPrStatus> bgPrStatuser = regelmodell.getBeregningsgrunnlagPrStatusListe();
@@ -250,12 +231,10 @@ public class RegelFastsettStatusVedSkjæringtidspunktTest {
         assertThat(regelmodell.getAktivePerioder()).hasSize(3);
 
         // Act
-        Evaluation evaluation = new RegelFastsettStatusVedSkjæringstidspunkt().evaluer(regelmodell);
+	    @SuppressWarnings("unused")
+	    RegelResultat resultat = new RegelFastsettStatusVedSkjæringstidspunkt().evaluerRegel(regelmodell);
 
         // Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
-
         assertThat(regelmodell.getAktivitetStatuser()).containsExactlyInAnyOrder(AktivitetStatus.ATFL_SN);
         assertThat(regelmodell.getBeregningsgrunnlagPrStatusListe()).hasSize(2);
         List<BeregningsgrunnlagPrStatus> bgPrStatuser = regelmodell.getBeregningsgrunnlagPrStatusListe();
@@ -274,13 +253,11 @@ public class RegelFastsettStatusVedSkjæringtidspunktTest {
         assertThat(regelmodell.getAktivePerioder()).hasSize(1);
 
         // Actautoaut
-        Evaluation evaluation = new RegelFastsettStatusVedSkjæringstidspunkt().evaluer(regelmodell);
+	    @SuppressWarnings("unused")
+	    RegelResultat resultat = new RegelFastsettStatusVedSkjæringstidspunkt().evaluerRegel(regelmodell);
 
         // Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
-
-        assertThat(regelmodell.getAktivitetStatuser()).containsExactlyInAnyOrder(AktivitetStatus.MS);
+	    assertThat(regelmodell.getAktivitetStatuser()).containsExactlyInAnyOrder(AktivitetStatus.MS);
         assertThat(regelmodell.getBeregningsgrunnlagPrStatusListe()).hasSize(1);
         List<BeregningsgrunnlagPrStatus> bgPrStatuser = regelmodell.getBeregningsgrunnlagPrStatusListe();
         assertThat(bgPrStatuser.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.MS);
@@ -297,12 +274,10 @@ public class RegelFastsettStatusVedSkjæringtidspunktTest {
         assertThat(regelmodell.getAktivePerioder()).hasSize(2);
 
         // Act
-        Evaluation evaluation = new RegelFastsettStatusVedSkjæringstidspunkt().evaluer(regelmodell);
+	    @SuppressWarnings("unused")
+	    RegelResultat resultat = new RegelFastsettStatusVedSkjæringstidspunkt().evaluerRegel(regelmodell);
 
         // Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
-
         assertThat(regelmodell.getAktivitetStatuser()).containsExactlyInAnyOrder(AktivitetStatus.ATFL);
         assertThat(regelmodell.getBeregningsgrunnlagPrStatusListe()).hasSize(1);
         List<BeregningsgrunnlagPrStatus> bgPrStatuser = regelmodell.getBeregningsgrunnlagPrStatusListe();

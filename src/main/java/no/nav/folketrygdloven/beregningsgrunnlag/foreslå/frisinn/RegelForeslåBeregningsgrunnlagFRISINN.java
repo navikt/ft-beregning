@@ -8,14 +8,14 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningUtfallMerk
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningUtfallÅrsak;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.IkkeBeregnet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
-import no.nav.fpsak.nare.RuleService;
+import no.nav.folketrygdloven.regelmodelloversetter.EksportRegel;
 import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.ServiceArgument;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.Specification;
 
 
-public class RegelForeslåBeregningsgrunnlagFRISINN implements RuleService<BeregningsgrunnlagPeriode> {
+public class RegelForeslåBeregningsgrunnlagFRISINN implements EksportRegel<BeregningsgrunnlagPeriode> {
 
     public static final String ID = "BG-FORESLÅ-FRISINN";
 

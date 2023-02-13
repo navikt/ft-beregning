@@ -12,9 +12,9 @@ import java.util.List;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.Test;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.RegelmodellOversetter;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningUtfallÅrsak;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.RegelMerknad;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.RegelResultat;
@@ -24,7 +24,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
-import no.nav.fpsak.nare.evaluation.Evaluation;
 
 class RegelVurderBeregningsgrunnlagFRISINNTest {
 
@@ -46,7 +45,7 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
         RegelResultat resultat = kjørRegel(grunnlag);
 
         //Assert
-        assertThat(resultat.getMerknader().stream().map(RegelMerknad::getMerknadKode)).containsOnly("1041");
+        assertThat(resultat.getMerknader().stream().map(RegelMerknad::utfallÅrsak)).containsOnly(BeregningUtfallÅrsak.AVSLAG_UNDER_TREKVART_G);
         assertThat(grunnlag.getBruttoPrÅr().doubleValue()).isEqualTo(beregnetPrÅr, offset);
     }
 
@@ -91,7 +90,7 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
         RegelResultat resultat = kjørRegel(grunnlag);
 
         //Assert
-        assertThat(resultat.getMerknader().stream().map(RegelMerknad::getMerknadKode)).containsOnly("1041");
+	    assertThat(resultat.getMerknader().stream().map(RegelMerknad::utfallÅrsak)).containsOnly(BeregningUtfallÅrsak.AVSLAG_UNDER_TREKVART_G);
         assertThat(grunnlag.getBruttoPrÅr().doubleValue()).isEqualTo(beregnetPrÅr, offset);
     }
 
@@ -138,7 +137,7 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
         RegelResultat resultat = kjørRegel(grunnlag);
 
         //Assert
-        assertThat(resultat.getMerknader().stream().map(RegelMerknad::getMerknadKode)).containsOnly("1041");
+	    assertThat(resultat.getMerknader().stream().map(RegelMerknad::utfallÅrsak)).containsOnly(BeregningUtfallÅrsak.AVSLAG_UNDER_TREKVART_G);
         assertThat(grunnlag.getBruttoPrÅr().doubleValue()).isEqualTo(beregnetPrÅrFL + beregnetPrÅrSN, offset);
     }
 
@@ -203,7 +202,7 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
         RegelResultat resultat = kjørRegel(grunnlag);
 
         //Assert
-        assertThat(resultat.getMerknader().stream().map(RegelMerknad::getMerknadKode)).containsOnly("1041");
+	    assertThat(resultat.getMerknader().stream().map(RegelMerknad::utfallÅrsak)).containsOnly(BeregningUtfallÅrsak.AVSLAG_UNDER_TREKVART_G);
         assertThat(grunnlag.getBruttoPrÅr().doubleValue()).isEqualTo(beregnetPrÅrSN + beregnetPrÅrAT, offset);
     }
 
@@ -219,7 +218,7 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
         RegelResultat resultat = kjørRegel(grunnlag);
 
         //Assert
-        assertThat(resultat.getMerknader().stream().map(RegelMerknad::getMerknadKode)).containsOnly("1041");
+	    assertThat(resultat.getMerknader().stream().map(RegelMerknad::utfallÅrsak)).containsOnly(BeregningUtfallÅrsak.AVSLAG_UNDER_TREKVART_G);
         assertThat(grunnlag.getBruttoPrÅr().doubleValue()).isEqualTo(beregnetPrÅrFL + beregnetPrÅrAT, offset);
     }
 
@@ -235,14 +234,12 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
         RegelResultat resultat = kjørRegel(grunnlag);
 
         //Assert
-        assertThat(resultat.getMerknader().stream().map(RegelMerknad::getMerknadKode)).containsOnly("1041");
+	    assertThat(resultat.getMerknader().stream().map(RegelMerknad::utfallÅrsak)).containsOnly(BeregningUtfallÅrsak.AVSLAG_UNDER_TREKVART_G);
         assertThat(grunnlag.getBruttoPrÅr().doubleValue()).isEqualTo(beregnetPrÅrFL + beregnetPrÅrAT, offset);
     }
 
     private RegelResultat kjørRegel(BeregningsgrunnlagPeriode grunnlag) {
-        RegelVurderBeregningsgrunnlagFRISINN regel = new RegelVurderBeregningsgrunnlagFRISINN();
-        Evaluation evaluation = regel.evaluer(grunnlag);
-        return RegelmodellOversetter.getRegelResultat(evaluation, "input");
+        return new RegelVurderBeregningsgrunnlagFRISINN().evaluerRegel(grunnlag);
     }
 
     private Beregningsgrunnlag lagBeregningsgrunnlag(Double snInntektPrÅr, Double frilansInntektPrÅr, Double arbeidsinntektPrÅr) {

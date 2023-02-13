@@ -1,10 +1,10 @@
 package no.nav.folketrygdloven.skjæringstidspunkt.status.frisinn;
 
+import no.nav.folketrygdloven.regelmodelloversetter.EksportRegel;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModell;
 import no.nav.folketrygdloven.skjæringstidspunkt.status.FastsettKombinasjoner;
 import no.nav.folketrygdloven.skjæringstidspunkt.status.FastsettStatusForBeregningsgrunnlag;
 import no.nav.folketrygdloven.skjæringstidspunkt.status.SjekkAktuelleKombinasjoner;
-import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
@@ -12,7 +12,7 @@ import no.nav.fpsak.nare.specification.Specification;
 
 
 @RuleDocumentation(value = RegelFastsettStatusVedSkjæringstidspunktFRISINN.ID, specificationReference = "https://confluence.adeo.no/display/SIF/30.+Beregningsgrunnlag")
-public class RegelFastsettStatusVedSkjæringstidspunktFRISINN implements RuleService<AktivitetStatusModell> {
+public class RegelFastsettStatusVedSkjæringstidspunktFRISINN implements EksportRegel<AktivitetStatusModell> {
 
     static final String ID = "FP_BR_19";
 

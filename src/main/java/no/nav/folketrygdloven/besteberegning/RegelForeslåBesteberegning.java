@@ -1,13 +1,13 @@
 package no.nav.folketrygdloven.besteberegning;
 
 import no.nav.folketrygdloven.besteberegning.modell.BesteberegningRegelmodell;
-import no.nav.fpsak.nare.RuleService;
+import no.nav.folketrygdloven.regelmodelloversetter.EksportRegel;
 import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.Specification;
 
 
-public class RegelForeslåBesteberegning implements RuleService<BesteberegningRegelmodell> {
+public class RegelForeslåBesteberegning implements EksportRegel<BesteberegningRegelmodell> {
 
 	public static final String ID = "14-7-3";
 

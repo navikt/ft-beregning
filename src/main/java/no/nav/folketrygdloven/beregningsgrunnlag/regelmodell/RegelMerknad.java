@@ -2,28 +2,11 @@ package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell;
 
 import java.util.Objects;
 
-public record RegelMerknad(String merknadKode,
-                           BeregningUtfallÅrsak utfallÅrsak,
-                           @Deprecated(forRemoval = true) String merknadTekst) {
+public record RegelMerknad(BeregningUtfallÅrsak utfallÅrsak) {
 
-	// Foretrukket
-	public RegelMerknad(BeregningUtfallÅrsak utfallÅrsak) {
-		this(utfallÅrsak.getKode(), utfallÅrsak, "");
-	}
-
-	@Deprecated // inntill ryddet i kalkulus
-	public RegelMerknad(String merknadKode, String merknadTekst) {
-		this(merknadKode, BeregningUtfallÅrsak.UDEFINERT, merknadTekst);
-	}
-
-    @Deprecated // Bruk utfallÅrsak() eller merknadKode()
+	@Deprecated // Bruk utfallÅrsak()
 	public String getMerknadKode() {
-        return merknadKode;
-    }
-
-	@Deprecated // BrukmerknadTekst()
-    public String getMerknadTekst() {
-        return merknadTekst;
+        return utfallÅrsak().getKode();
     }
 
 	@Override
@@ -31,11 +14,11 @@ public record RegelMerknad(String merknadKode,
 		if (this == o) return true;
 		if (!(o instanceof RegelMerknad)) return false;
 		RegelMerknad that = (RegelMerknad) o;
-		return Objects.equals(merknadKode, that.merknadKode) && utfallÅrsak == that.utfallÅrsak;
+		return utfallÅrsak == that.utfallÅrsak;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(merknadKode, utfallÅrsak);
+		return Objects.hash(utfallÅrsak);
 	}
 }

@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.RegelmodellOversetter;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
@@ -29,8 +28,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
-import no.nav.fpsak.nare.evaluation.Evaluation;
-import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 
 public class BeregningsgrunnlagFlerePerioderTest {
 
@@ -69,22 +66,16 @@ public class BeregningsgrunnlagFlerePerioderTest {
             .build();
 
         // Act
-	    RegelForeslåBeregningsgrunnlag regel1 = new RegelForeslåBeregningsgrunnlag(førstePeriode);
-	    RegelForeslåBeregningsgrunnlag regel2 = new RegelForeslåBeregningsgrunnlag(andrePeriode);
-        Evaluation evaluation1 = regel1.evaluer(førstePeriode);
-        Evaluation evaluation2 = regel2.evaluer(andrePeriode);
+	    var resultat = new RegelForeslåBeregningsgrunnlag(førstePeriode).evaluerRegel(førstePeriode);
+	    new RegelForeslåBeregningsgrunnlag(andrePeriode).evaluerRegel(andrePeriode);
         // Assert
-        @SuppressWarnings("unused")
-        String sporing1 = EvaluationSerializer.asJson(evaluation1);
-        @SuppressWarnings("unused")
-        String sporing2 = EvaluationSerializer.asJson(evaluation2);
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(førstePeriode, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_ARBEIDSTAKER, AktivitetStatus.ATFL, 12 * månedsinntekt.doubleValue());
         assertThat(førstePeriode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).samletNaturalytelseBortfaltMinusTilkommetPrÅr()).isZero();
 
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(andrePeriode, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_ARBEIDSTAKER, AktivitetStatus.ATFL, 12 * månedsinntekt.doubleValue());
         assertThat(andrePeriode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).samletNaturalytelseBortfaltMinusTilkommetPrÅr()).isEqualTo(naturalytelse.multiply(BigDecimal.valueOf(12)));
 
-        verifiserRegelresultat(beregningsgrunnlag, evaluation1);
+        verifiserRegelresultat(beregningsgrunnlag, resultat);
     }
 
     @Test
@@ -131,19 +122,9 @@ public class BeregningsgrunnlagFlerePerioderTest {
             .build();
 
         // Act
-	    RegelForeslåBeregningsgrunnlag regel1 = new RegelForeslåBeregningsgrunnlag(periode1);
-	    RegelForeslåBeregningsgrunnlag regel2 = new RegelForeslåBeregningsgrunnlag(periode2);
-	    RegelForeslåBeregningsgrunnlag regel3 = new RegelForeslåBeregningsgrunnlag(periode3);
-        Evaluation evaluation1 = regel1.evaluer(periode1);
-        Evaluation evaluation2 = regel2.evaluer(periode2);
-        Evaluation evaluation3 = regel3.evaluer(periode3);
-        // Assert
-        @SuppressWarnings("unused")
-        String sporing1 = EvaluationSerializer.asJson(evaluation1);
-        @SuppressWarnings("unused")
-        String sporing2 = EvaluationSerializer.asJson(evaluation2);
-        @SuppressWarnings("unused")
-        String sporing3 = EvaluationSerializer.asJson(evaluation3);
+	    var resultat = new RegelForeslåBeregningsgrunnlag(periode1).evaluerRegel(periode1);
+	    new RegelForeslåBeregningsgrunnlag(periode2).evaluerRegel(periode2);
+	    new RegelForeslåBeregningsgrunnlag(periode3).evaluerRegel(periode3);
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(periode1, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_ARBEIDSTAKER, AktivitetStatus.ATFL, 12 * månedsinntekt.doubleValue());
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(periode2, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_ARBEIDSTAKER, AktivitetStatus.ATFL, 12 * månedsinntekt.doubleValue());
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(periode3, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_ARBEIDSTAKER, AktivitetStatus.ATFL, 12 * månedsinntekt.doubleValue());
@@ -151,13 +132,12 @@ public class BeregningsgrunnlagFlerePerioderTest {
         assertThat(periode2.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).samletNaturalytelseBortfaltMinusTilkommetPrÅr()).isEqualTo(naturalytelse1.multiply(tolv));
         assertThat(periode3.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).samletNaturalytelseBortfaltMinusTilkommetPrÅr()).isEqualTo(naturalytelse1.add(naturalytelse2).multiply(tolv));
 
-        verifiserRegelresultat(beregningsgrunnlag, evaluation1);
+        verifiserRegelresultat(beregningsgrunnlag, resultat);
 
 
     }
 
-    private void verifiserRegelresultat(Beregningsgrunnlag beregningsgrunnlag, Evaluation evaluation1) {
-        RegelResultat resultat = RegelmodellOversetter.getRegelResultat(evaluation1, "input");
+    private void verifiserRegelresultat(Beregningsgrunnlag beregningsgrunnlag, RegelResultat resultat) {
         assertThat(resultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
         assertThat(resultat.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5038");
 	    assertThat(beregningsgrunnlag.getSammenligningsgrunnlagForStatus(SammenligningGrunnlagType.AT_FL).get().getAvvikPromille()).isEqualTo(11000L);

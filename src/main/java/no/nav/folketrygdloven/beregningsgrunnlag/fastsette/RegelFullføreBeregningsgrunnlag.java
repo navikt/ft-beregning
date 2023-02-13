@@ -7,12 +7,12 @@ import no.nav.folketrygdloven.beregningsgrunnlag.fastsette.refusjon.over6g.Regel
 import no.nav.folketrygdloven.beregningsgrunnlag.reduksjon.FastsettDagsatsPrAndel;
 import no.nav.folketrygdloven.beregningsgrunnlag.reduksjon.ReduserBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode;
-import no.nav.fpsak.nare.RuleService;
+import no.nav.folketrygdloven.regelmodelloversetter.EksportRegel;
 import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.Specification;
 
-public class RegelFullføreBeregningsgrunnlag implements RuleService<BeregningsgrunnlagPeriode> {
+public class RegelFullføreBeregningsgrunnlag implements EksportRegel<BeregningsgrunnlagPeriode> {
 
     public static final String ID = "FP_BR_29";
 

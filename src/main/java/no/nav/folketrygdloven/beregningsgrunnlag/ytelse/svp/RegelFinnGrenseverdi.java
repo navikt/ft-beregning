@@ -1,14 +1,14 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.ytelse.svp;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.fastsette.SjekkBeregningsgrunnlagStørreEnnGrenseverdi;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.Fastsatt;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode;
-import no.nav.fpsak.nare.RuleService;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.Fastsatt;
+import no.nav.folketrygdloven.regelmodelloversetter.EksportRegel;
 import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.Specification;
 
-public class RegelFinnGrenseverdi implements RuleService<BeregningsgrunnlagPeriode> {
+public class RegelFinnGrenseverdi implements EksportRegel<BeregningsgrunnlagPeriode> {
 
     public static final String ID = "FP_BR_29";
 

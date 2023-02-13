@@ -13,7 +13,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.In
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SammenligningsGrunnlag;
-import no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
@@ -30,8 +29,12 @@ class FastsettSammenligningsgrunnlag extends LeafSpecification<Beregningsgrunnla
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
+		return evaluate(grunnlag, LocalDate.now());
+    }
+
+	public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag, LocalDate behandlingsdato) {
         if (grunnlag.getBeregningsgrunnlag().getSammenligningsgrunnlagForStatus(SammenligningGrunnlagType.AT_FL).isEmpty()) {
-            Periode sammenligningsPeriode = lagSammenligningsPeriode(grunnlag.getInntektsgrunnlag(), grunnlag.getSkjæringstidspunkt());
+            Periode sammenligningsPeriode = lagSammenligningsPeriode(grunnlag.getInntektsgrunnlag(), behandlingsdato, grunnlag.getSkjæringstidspunkt());
             BigDecimal sammenligningsgrunnlagInntekt = grunnlag.getInntektsgrunnlag().getSamletInntektISammenligningsperiode(sammenligningsPeriode);
 
 			// Setter sammenligningsgrunnlag pr status
@@ -50,11 +53,10 @@ class FastsettSammenligningsgrunnlag extends LeafSpecification<Beregningsgrunnla
         return beregnet(resultater);
     }
 
-    private Periode lagSammenligningsPeriode(Inntektsgrunnlag inntektsgrunnlag, LocalDate skjæringstidspunkt) {
-        LocalDate behandlingsTidspunkt = DateUtil.iDag();
-        LocalDate gjeldendeTidspunkt = behandlingsTidspunkt.isBefore(skjæringstidspunkt) ? behandlingsTidspunkt : skjæringstidspunkt;
+    private Periode lagSammenligningsPeriode(Inntektsgrunnlag inntektsgrunnlag, LocalDate behandlingsdato, LocalDate skjæringstidspunkt) {
+        LocalDate gjeldendeTidspunkt = behandlingsdato.isBefore(skjæringstidspunkt) ? behandlingsdato : skjæringstidspunkt;
         LocalDate sisteØnskedeInntektMåned = gjeldendeTidspunkt.minusMonths(1).withDayOfMonth(1);
-        if (erEtterRapporteringsFrist(inntektsgrunnlag.getInntektRapporteringFristDag(), gjeldendeTidspunkt, behandlingsTidspunkt)) {
+        if (erEtterRapporteringsFrist(inntektsgrunnlag.getInntektRapporteringFristDag(), gjeldendeTidspunkt, behandlingsdato)) {
             return lag12MånedersPeriodeTilOgMed(sisteØnskedeInntektMåned);
         }
         return lag12MånedersPeriodeTilOgMed(sisteØnskedeInntektMåned.minusMonths(1));

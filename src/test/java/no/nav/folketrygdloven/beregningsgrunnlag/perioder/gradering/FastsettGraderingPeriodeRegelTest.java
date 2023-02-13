@@ -11,7 +11,6 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.gradering.Gradering;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AktivitetStatusV2;
@@ -19,6 +18,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.Brutt
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.EksisterendeAndel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.PeriodisertBruttoBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.gradering.AndelGradering;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.gradering.Gradering;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.gradering.PeriodeModellGradering;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SplittetPeriode;
 
@@ -29,7 +29,7 @@ class FastsettGraderingPeriodeRegelTest {
 	private static final String ORGNR2 = "89729572935";
 
 	private void kjørRegel(PeriodeModellGradering inputMedGraderingFraStartForNyttArbeid, List<SplittetPeriode> perioder) {
-		new FastsettPerioderGraderingRegel().evaluer(inputMedGraderingFraStartForNyttArbeid, perioder);
+		new FastsettPerioderGraderingRegel().evaluerRegel(inputMedGraderingFraStartForNyttArbeid, perioder);
 	}
 
 	@Test

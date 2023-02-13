@@ -6,9 +6,11 @@ import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenar
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.settoppGrunnlagMedEnPeriode;
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.settoppÅrsinntekter;
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.årsinntekterFor3SisteÅr;
-import static no.nav.folketrygdloven.beregningsgrunnlag.RegelmodellOversetter.getRegelResultat;
 import static no.nav.folketrygdloven.beregningsgrunnlag.VerifiserBeregningsgrunnlag.verifiserBeregningsgrunnlagBruttoPrPeriodeType;
 import static no.nav.folketrygdloven.beregningsgrunnlag.VerifiserBeregningsgrunnlag.verifiserBeregningsperiode;
+import static no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningUtfallÅrsak.FASTSETT_SELVSTENDIG_NY_ARBEIDSLIVET;
+import static no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningUtfallÅrsak.VARIG_ENDRING_OG_AVVIK_STØRRE_ENN_25_PROSENT;
+import static no.nav.folketrygdloven.regelmodelloversetter.RegelmodellOversetter.getRegelResultat;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 
@@ -172,7 +174,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
 
         RegelResultat regelResultat = getRegelResultat(evaluation2, "input");
         assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
-        assertThat(regelResultat.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5039");
+        assertThat(regelResultat.getMerknader().stream().map(RegelMerknad::utfallÅrsak).collect(Collectors.toList())).containsExactly(VARIG_ENDRING_OG_AVVIK_STØRRE_ENN_25_PROSENT);
 
 
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
@@ -229,7 +231,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
 
         RegelResultat regelResultat = getRegelResultat(evaluation2, "input");
         assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
-        assertThat(regelResultat.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5039");
+        assertThat(regelResultat.getMerknader().stream().map(RegelMerknad::utfallÅrsak).collect(Collectors.toList())).containsExactly(VARIG_ENDRING_OG_AVVIK_STØRRE_ENN_25_PROSENT);
 
 
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
@@ -304,7 +306,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
         RegelResultat regelResultat1 = getRegelResultat(evaluation2p1, "input");
         RegelResultat regelResultat2 = getRegelResultat(evaluation2p2, "input");
         assertThat(regelResultat1.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
-        assertThat(regelResultat1.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5039");
+        assertThat(regelResultat1.getMerknader().stream().map(RegelMerknad::utfallÅrsak).collect(Collectors.toList())).containsExactly(VARIG_ENDRING_OG_AVVIK_STØRRE_ENN_25_PROSENT);
 
 
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
@@ -466,7 +468,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
         // Assert
         RegelResultat regelResultat = getRegelResultat(evaluation2, "input");
         assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
-        assertThat(regelResultat.getMerknader().get(0).getMerknadKode()).isEqualTo("5049");
+        assertThat(regelResultat.getMerknader().get(0).utfallÅrsak()).isEqualTo(FASTSETT_SELVSTENDIG_NY_ARBEIDSLIVET);
         assertThat(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getBeregnetPrÅr()).isCloseTo(inntektATFL.multiply(TOLV), within(BigDecimal.valueOf(0.01)));
         assertThat(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN).getGjennomsnittligPGI()).isNotNull();
         assertThat(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN).getPgiListe()).hasSize(3);
