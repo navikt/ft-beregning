@@ -66,9 +66,6 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 		if (totaltGradertGrunnlag.compareTo(BigDecimal.ZERO) == 0) {
 			return BigDecimal.ZERO;
 		}
-		var graderingEtterGraderingMotArbeidstid = bortfalt.divide(totaltGradertGrunnlag, 10, RoundingMode.HALF_UP);
-		grunnlag.setInntektsgraderingFraArbeidstidsgradertBeregningsgrunnlag(graderingEtterGraderingMotArbeidstid.multiply(BigDecimal.valueOf(100)));
-
 		var totaltGrunnlag = grunnlag.getBeregningsgrunnlagPrStatus().stream()
 				.map(BeregningsgrunnlagPrStatus::getBruttoInkludertNaturalytelsePrÅr)
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -77,6 +74,7 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 		grunnlag.setInntektsgraderingFraBruttoBeregningsgrunnlag(graderingMotTotal.multiply(BigDecimal.valueOf(100)));
 
 		// Grenseverdien er allerede gradert mot arbeidstid her
+		var graderingEtterGraderingMotArbeidstid = bortfalt.divide(totaltGradertGrunnlag, 10, RoundingMode.HALF_UP);
 		grenseverdi = grenseverdi.multiply(graderingEtterGraderingMotArbeidstid);
 		return grenseverdi;
 	}
