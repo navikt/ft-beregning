@@ -2,7 +2,6 @@ package no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel;
@@ -96,7 +95,7 @@ class FastsettBeregnetPrÅr extends LeafSpecification<BeregningsgrunnlagPeriode>
         if (frilans) {
             return BeregningsgrunnlagHjemmel.K9_HJEMMEL_ARBEIDSTAKER_OG_FRILANSER;
         }
-        if (ompGrunnlag instanceof  OmsorgspengerGrunnlag && !((OmsorgspengerGrunnlag) ompGrunnlag).erDirekteUtbetaling()) {
+        if (ompGrunnlag instanceof  OmsorgspengerGrunnlag && !((OmsorgspengerGrunnlag) ompGrunnlag).skalAvviksvurdere()) {
             return BeregningsgrunnlagHjemmel.K9_HJEMMEL_BARE_ARBEIDSTAKER_REFUSJON;
         }
         return BeregningsgrunnlagHjemmel.K9_HJEMMEL_BARE_ARBEIDSTAKER_MED_AVVIKSVURDERING;

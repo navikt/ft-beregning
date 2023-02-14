@@ -153,7 +153,7 @@ public class BeregningsgrunnlagScenario {
             .build();
     }
 
-    public static Beregningsgrunnlag settOppGrunnlagMedEnPeriode(LocalDate skjæringstidspunkt, Inntektsgrunnlag inntektsgrunnlag, AktivitetStatus aktivitetStatus, List<Arbeidsforhold> arbeidsforhold, List<BigDecimal> refusjonskravPrår, boolean skalSjekkeRefusjonFørSetteAksjonspunkt, BigDecimal maksRefusjon) {
+    public static Beregningsgrunnlag settOppGrunnlagMedEnPeriode(LocalDate skjæringstidspunkt, Inntektsgrunnlag inntektsgrunnlag, AktivitetStatus aktivitetStatus, List<Arbeidsforhold> arbeidsforhold, List<BigDecimal> refusjonskravPrår, boolean skalSjekkeRefusjonFørSetteAksjonspunkt) {
         BeregningsgrunnlagPrStatus bgps = BeregningsgrunnlagPrStatus.builder()
             .medAktivitetStatus(aktivitetStatus)
             .medArbeidsforhold(arbeidsforhold, refusjonskravPrår, skjæringstidspunkt)
@@ -167,7 +167,7 @@ public class BeregningsgrunnlagScenario {
             .medSkjæringstidspunkt(skjæringstidspunkt)
             .medGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2017))
             .medYtelsesSpesifiktGrunnlag(skalSjekkeRefusjonFørSetteAksjonspunkt
-		            ? new OmsorgspengerGrunnlag(maksRefusjon, false, false, true)
+		            ? new OmsorgspengerGrunnlag(false, false)
 		            : new ForeldrepengerGrunnlag(false))
             .medAktivitetStatuser(List.of(new AktivitetStatusMedHjemmel(aktivitetStatus, null)))
             .medBeregningsgrunnlagPeriode(periodeBuilder.build())

@@ -129,7 +129,8 @@ class FastsettBeregnetPrÅrTest {
     void skal_sette_riktig_hjemmel_for_omp_arbeidstaker_full_refusjon() {
         // Arrange
         BigDecimal bgPrÅr = BigDecimal.valueOf(100_000);
-        Beregningsgrunnlag regelBg = lagBeregningsgrunnlagArbeidstakerOMP(bgPrÅr, bgPrÅr);
+	    boolean harBrukerSøkt = false;
+	    Beregningsgrunnlag regelBg = lagBeregningsgrunnlagArbeidstakerOMP(bgPrÅr, harBrukerSøkt);
 
         // Act
         kjørRegel(regelBg.getBeregningsgrunnlagPerioder().get(0));
@@ -142,7 +143,7 @@ class FastsettBeregnetPrÅrTest {
     void skal_sette_riktig_hjemmel_for_omp_arbeidstaker_direkte_utbetaling() {
         // Arrange
         BigDecimal bgPrÅr = BigDecimal.valueOf(100_000);
-        Beregningsgrunnlag regelBg = lagBeregningsgrunnlagArbeidstakerOMP(bgPrÅr, BigDecimal.ZERO);
+        Beregningsgrunnlag regelBg = lagBeregningsgrunnlagArbeidstakerOMP(bgPrÅr, true);
 
         // Act
         kjørRegel(regelBg.getBeregningsgrunnlagPerioder().get(0));
@@ -184,7 +185,7 @@ class FastsettBeregnetPrÅrTest {
             .medBeregningsgrunnlagPrStatus(atflStatus)
             .medBeregningsgrunnlagPrStatus(snStatus)
             .build();
-        return lagBgOMP(periode, BigDecimal.ZERO, AktivitetStatus.ATFL_SN);
+        return lagBgOMP(periode, AktivitetStatus.ATFL_SN, true);
     }
 
     private Beregningsgrunnlag lagBeregningsgrunnlagFLSNFP() {
@@ -224,7 +225,7 @@ class FastsettBeregnetPrÅrTest {
             .medPeriode(Periode.of(LocalDate.now(), LocalDate.now()))
             .medBeregningsgrunnlagPrStatus(atflStatus)
             .build();
-        return lagBgOMP(periode, BigDecimal.ZERO, AktivitetStatus.ATFL);
+        return lagBgOMP(periode, AktivitetStatus.ATFL, true);
     }
 
     private Beregningsgrunnlag lagBeregningsgrunnlagFLFP() {
@@ -267,7 +268,7 @@ class FastsettBeregnetPrÅrTest {
             .medBeregningsgrunnlagPrStatus(atflStatus)
             .medBeregningsgrunnlagPrStatus(snStatus)
             .build();
-        return lagBgOMP(periode, BigDecimal.ZERO, AktivitetStatus.ATFL_SN);
+        return lagBgOMP(periode, AktivitetStatus.ATFL_SN, true);
     }
 
     private Beregningsgrunnlag lagBeregningsgrunnlagATFLSNFP() {
@@ -315,7 +316,7 @@ class FastsettBeregnetPrÅrTest {
             .medPeriode(Periode.of(LocalDate.now(), LocalDate.now()))
             .medBeregningsgrunnlagPrStatus(atflStatus)
             .build();
-        return lagBgOMP(periode, BigDecimal.ZERO, AktivitetStatus.ATFL);
+        return lagBgOMP(periode, AktivitetStatus.ATFL, true);
     }
 
     private Beregningsgrunnlag lagBeregningsgrunnlagATFLFP() {
@@ -340,7 +341,7 @@ class FastsettBeregnetPrÅrTest {
     }
 
 
-    private Beregningsgrunnlag lagBgOMP(BeregningsgrunnlagPeriode periode, BigDecimal refusjonskrav, AktivitetStatus aktivitetStatus) {
+    private Beregningsgrunnlag lagBgOMP(BeregningsgrunnlagPeriode periode, AktivitetStatus aktivitetStatus, boolean harBrukerSøkt) {
         return Beregningsgrunnlag.builder()
             .medAktivitetStatuser(List.of(new AktivitetStatusMedHjemmel(aktivitetStatus, null)))
             .medGrunnbeløp(BigDecimal.valueOf(99000))
@@ -348,12 +349,12 @@ class FastsettBeregnetPrÅrTest {
             .medSkjæringstidspunkt(LocalDate.now())
             .medInntektsgrunnlag(new Inntektsgrunnlag())
             .medBeregningsgrunnlagPeriode(periode)
-            .medYtelsesSpesifiktGrunnlag(new OmsorgspengerGrunnlag(refusjonskrav, false, false, refusjonskrav.compareTo(BigDecimal.ZERO) > 0))
+            .medYtelsesSpesifiktGrunnlag(new OmsorgspengerGrunnlag(false, harBrukerSøkt))
             .build();
     }
 
 
-    private Beregningsgrunnlag lagBeregningsgrunnlagArbeidstakerOMP(BigDecimal bgPrÅr, BigDecimal totalRefusjon) {
+    private Beregningsgrunnlag lagBeregningsgrunnlagArbeidstakerOMP(BigDecimal bgPrÅr, boolean harBrukerSøkt) {
         BeregningsgrunnlagPrStatus atflStatus = BeregningsgrunnlagPrStatus.builder()
             .medAktivitetStatus(AktivitetStatus.ATFL)
             .medArbeidsforhold(BeregningsgrunnlagPrArbeidsforhold.builder()
@@ -366,7 +367,7 @@ class FastsettBeregnetPrÅrTest {
             .medPeriode(Periode.of(LocalDate.now(), LocalDate.now()))
             .medBeregningsgrunnlagPrStatus(atflStatus)
             .build();
-        return lagBgOMP(periode, totalRefusjon, AktivitetStatus.ATFL);
+        return lagBgOMP(periode, AktivitetStatus.ATFL, harBrukerSøkt);
     }
 
     private Beregningsgrunnlag lagBeregningsgrunnlagArbeidstakerFP(BigDecimal bgPrÅr) {
