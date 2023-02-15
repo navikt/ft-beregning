@@ -7,18 +7,18 @@ import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
-@RuleDocumentation(AvslagUnderEnHalvG.ID)
-public class AvslagUnderEnHalvG extends LeafSpecification<BeregningsgrunnlagPeriode> {
+@RuleDocumentation(AvslagUnderEnG.ID)
+public class AvslagUnderEnG extends LeafSpecification<BeregningsgrunnlagPeriode> {
 
-    static final String ID = "FP_VK_8_47_5";
-    static final String BESKRIVELSE = "Opprett regelmerknad om avslag under 0.5G";
+    static final String ID = "FP_VK_8_47.4";
+    static final String BESKRIVELSE = "Opprett regelmerknad om avslag under 1G";
 
-    public AvslagUnderEnHalvG() {
+    public AvslagUnderEnG() {
         super(ID, BESKRIVELSE);
     }
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        return nei(new BeregningUtfallMerknad(BeregningUtfallÅrsak.AVSLAG_UNDER_HALV_G));
+        return nei(new BeregningUtfallMerknad(BeregningUtfallÅrsak.AVSLAG_UNDER_EN_G));
     }
 }

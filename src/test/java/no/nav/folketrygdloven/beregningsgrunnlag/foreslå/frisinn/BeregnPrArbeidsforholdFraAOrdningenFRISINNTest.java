@@ -413,7 +413,6 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
             .medInntektsgrunnlag(ig)
             .medGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2019))
             .medSkjæringstidspunkt(skjæringstidspunkt)
-            .medAntallGMinstekravVilkår(BigDecimal.valueOf(0.75))
             .medGrunnbeløpSatser(GRUNNBELØPLISTE)
             .medAktivitetStatuser(List.of(new AktivitetStatusMedHjemmel(AktivitetStatus.ATFL_SN, null)))
             .medBeregningsgrunnlagPeriode(periode)

@@ -1,16 +1,20 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.vurder;
 
+import no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker.AvslagUnderEnG;
 import no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker.AvslagUnderEnHalvG;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Beregnet;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Innvilget;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.regelmodelloversetter.EksportRegel;
 import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.evaluation.Evaluation;
+import no.nav.fpsak.nare.specification.ConditionalOrSpecification;
 import no.nav.fpsak.nare.specification.Specification;
 
 public class RegelVurderBeregningsgrunnlag implements EksportRegel<BeregningsgrunnlagPeriode> {
 
-    public static final String ID = "FP_BR_29";
+	public static final String ID = "FP_BR_29";
+
+	private static final Ruleset<BeregningsgrunnlagPeriode> RS = new Ruleset<>();
 
 	@Override
 	public Evaluation evaluer(BeregningsgrunnlagPeriode regelmodell) {
@@ -18,21 +22,25 @@ public class RegelVurderBeregningsgrunnlag implements EksportRegel<Beregningsgru
 	}
 
 	@SuppressWarnings("unchecked")
-    @Override
-    public Specification<BeregningsgrunnlagPeriode> getSpecification() {
-        Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
+	@Override
+	public Specification<BeregningsgrunnlagPeriode> getSpecification() {
+		/*
+		hjemler for sjekk mot minstekrav på 0.5 G for beregningsgrunnlag:
+			Foreldrepenger: Folketrygdloven §14-7 1. ledd
+			Svangerskapspenger: Folketrygdloven §14-4 3. ledd
+			Pleiepenger,omsorgspenger: Folketrygdloven §9-3 2. ledd
+		for midlertidig inaktiv (vurderes kun for k9-ytelsene) Folketrygdloven §8-47 5.ledd
+		 */
 
-        // FP_VK_32.2 2. Opprett regelmerknad (avslag)
-        Specification<BeregningsgrunnlagPeriode> avslagUnderEnHalvG = new AvslagUnderEnHalvG();
+		Specification<BeregningsgrunnlagPeriode> sjekkMotHalvG = RS.beregningHvisRegel(new BeregningsgrunnlagUnderHalvG(), new AvslagUnderEnHalvG(), new Innvilget());
+		Specification<BeregningsgrunnlagPeriode> sjekkMotEnG = RS.beregningHvisRegel(new BeregningsgrunnlagUnderEnG(), new AvslagUnderEnG(), new Innvilget());
+		Specification<BeregningsgrunnlagPeriode> k9Regel = RS.beregningHvisRegel(new ErMidlertidigInaktiv(), sjekkMotEnG, sjekkMotHalvG);
+		Specification<BeregningsgrunnlagPeriode> ompRegel = RS.beregningHvisRegel(new SjekkErOmsorgspengerTilArbeidsgiver(), new Innvilget(), k9Regel);
 
-        // FP_VK_32.1 1. Brutto BG > 0,5G ?
-        Specification<BeregningsgrunnlagPeriode> sjekkOmBGUnderHalvG = rs.beregningHvisRegel(new SjekkBeregningsgrunnlagMindreEnn(),
-            avslagUnderEnHalvG, new Beregnet());
-
-		// FP_VK_32.3 Gjelder omsorgspenger til arbeidsgiver ?
-		Specification<BeregningsgrunnlagPeriode> sjekkOmsorgspengerTilArbeidsgiver = rs.beregningHvisRegel(new SjekkErOmsorgspengerTilArbeidsgiver(),
-				new Beregnet(), sjekkOmBGUnderHalvG);
-
-        return sjekkOmsorgspengerTilArbeidsgiver;
-    }
+		return new ConditionalOrSpecification.Builder<BeregningsgrunnlagPeriode>(ID, "Velg regel for ytelse")
+				.hvis(new GjelderForeldrepenger(), sjekkMotHalvG)
+				.hvis(new GjelderSvangerskapspenger(), sjekkMotHalvG)
+				.hvis(new GjelderOmsorgspenger(), ompRegel)
+				.ellers(k9Regel);
+	}
 }

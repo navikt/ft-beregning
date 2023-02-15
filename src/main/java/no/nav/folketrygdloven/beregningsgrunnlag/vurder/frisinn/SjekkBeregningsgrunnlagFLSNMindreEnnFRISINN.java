@@ -19,6 +19,8 @@ class SjekkBeregningsgrunnlagFLSNMindreEnnFRISINN extends LeafSpecification<Bere
     static final String ID = "FRISINN 3.2";
     static final String BESKRIVELSE = "Er beregningsgrunnlag fra SN/FL mindre enn en 0,75G?";
 
+	private static final BigDecimal FRISINN_MINSTEKRAV_BEREGNINGSGRUNNLAG_ANTALL_G = new BigDecimal("0.75");
+
     SjekkBeregningsgrunnlagFLSNMindreEnnFRISINN() {
         super(ID, BESKRIVELSE);
     }
@@ -26,7 +28,7 @@ class SjekkBeregningsgrunnlagFLSNMindreEnnFRISINN extends LeafSpecification<Bere
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
         BigDecimal grunnbeløpForVilkårsvurdering = FinnGrunnbeløpForVilkårsvurdering.finnGrunnbeløpForVilkårsvurdering(grunnlag);
-        BigDecimal minstekrav = grunnbeløpForVilkårsvurdering.multiply(grunnlag.getAntallGMinstekravVilkår());
+        BigDecimal minstekrav = grunnbeløpForVilkårsvurdering.multiply(FRISINN_MINSTEKRAV_BEREGNINGSGRUNNLAG_ANTALL_G);
         BigDecimal bruttoForSøkteAndeler = BigDecimal.ZERO;
 
         var frilansandel = finnFrilansAndel(grunnlag);
