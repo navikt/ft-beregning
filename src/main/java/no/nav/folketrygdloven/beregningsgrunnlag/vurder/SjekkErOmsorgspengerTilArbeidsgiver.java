@@ -20,10 +20,8 @@ class SjekkErOmsorgspengerTilArbeidsgiver extends LeafSpecification<Beregningsgr
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
 
 		if (grunnlag.getBeregningsgrunnlag().getYtelsesSpesifiktGrunnlag() instanceof OmsorgspengerGrunnlag ompGrunnlag) {
-
 			return ompGrunnlag.omfattesAvKap9Paragraf9() ? nei() : ja();
 		}
-
 	    return nei();
 
     }

@@ -7,13 +7,13 @@ import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
-@RuleDocumentation(AvslagUnderEnHalvGMidlertidigAlene.ID)
-public class AvslagUnderEnHalvGMidlertidigAlene extends LeafSpecification<BeregningsgrunnlagPeriode> {
+@RuleDocumentation(AvslagUnderEnHalvG.ID)
+public class AvslagUnderEnHalvG extends LeafSpecification<BeregningsgrunnlagPeriode> {
 
     static final String ID = "FP_VK_8_47_5";
     static final String BESKRIVELSE = "Opprett regelmerknad om avslag under 0.5G";
 
-    public AvslagUnderEnHalvGMidlertidigAlene() {
+    public AvslagUnderEnHalvG() {
         super(ID, BESKRIVELSE);
     }
 

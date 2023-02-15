@@ -2,16 +2,19 @@ package no.nav.folketrygdloven.beregningsgrunnlag.vurder;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker.AvslagUnderEnG;
 import no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker.AvslagUnderEnHalvG;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Beregnet;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Innvilget;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.regelmodelloversetter.EksportRegel;
 import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.evaluation.Evaluation;
+import no.nav.fpsak.nare.specification.ConditionalOrSpecification;
 import no.nav.fpsak.nare.specification.Specification;
 
 public class RegelVurderBeregningsgrunnlag implements EksportRegel<BeregningsgrunnlagPeriode> {
 
-    public static final String ID = "FP_BR_29";
+	public static final String ID = "FP_BR_29";
+
+	private static final Ruleset<BeregningsgrunnlagPeriode> RS = new Ruleset<>();
 
 	@Override
 	public Evaluation evaluer(BeregningsgrunnlagPeriode regelmodell) {
@@ -19,38 +22,22 @@ public class RegelVurderBeregningsgrunnlag implements EksportRegel<Beregningsgru
 	}
 
 	@SuppressWarnings("unchecked")
-    @Override
-    public Specification<BeregningsgrunnlagPeriode> getSpecification() {
+	@Override
+	public Specification<BeregningsgrunnlagPeriode> getSpecification() {
+		//splittet i ulike regler pga ulik hjemmel
+		Specification<BeregningsgrunnlagPeriode> sjekkMotHalvGFP = RS.beregningHvisRegel(new HarForLiteBeregningsgrunnlagFP(), new AvslagUnderEnHalvG(), new Innvilget());
+		Specification<BeregningsgrunnlagPeriode> sjekkMotHalvGSVP = RS.beregningHvisRegel(new HarForLiteBeregningsgrunnlagSVP(), new AvslagUnderEnHalvG(), new Innvilget());
+		Specification<BeregningsgrunnlagPeriode> sjekkMotHalvGK9 = RS.beregningHvisRegel(new HarForLiteBeregningsgrunnlagKap9(), new AvslagUnderEnHalvG(), new Innvilget());
 
-		Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
+		Specification<BeregningsgrunnlagPeriode> sjekkMidlertidigAleneMot1G = RS.beregningHvisRegel(new HarForLiteBeregningsgrunnlagMidlertidigInaktiv(), new AvslagUnderEnG(), new Innvilget());
+		Specification<BeregningsgrunnlagPeriode> k9Regel = RS.beregningHvisRegel(new ErMidlertidigInaktiv(), sjekkMidlertidigAleneMot1G, sjekkMotHalvGK9);
 
-		return rs.beregningHvisRegel(new ErMidlertidigInaktiv(),
-				rs.beregningHvisRegel(new HarForLiteBeregningsgrunnlagMidlertidigInaktiv(),
-						new AvslagUnderEnG(),
-						new Beregnet()),
-				rs.beregningHvisRegel(new GjelderKapittel9(),
-						rs.beregningHvisRegel(new HarForLiteBeregningsgrunnlagKap9(),
-								new AvslagUnderEnHalvGMidlertidigAlene(),
-								new Beregnet()),
-						rs.beregningHvisRegel(new HarForLiteBeregningsgrunnlagKap14(),
-								new AvslagUnderEnHalvGMidlertidigAlene(),
-								new Beregnet()))
-		);
+		Specification<BeregningsgrunnlagPeriode> ompRegel = RS.beregningHvisRegel(new SjekkErOmsorgspengerTilArbeidsgiver(), new Innvilget(), k9Regel);
 
-
-        Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
-
-        // FP_VK_32.2 2. Opprett regelmerknad (avslag)
-        Specification<BeregningsgrunnlagPeriode> avslagUnderEnHalvG = new AvslagUnderEnHalvG();
-
-        // FP_VK_32.1 1. Brutto BG > 0,5G ?
-        Specification<BeregningsgrunnlagPeriode> sjekkOmBGUnderHalvG = rs.beregningHvisRegel(new SjekkBeregningsgrunnlagMindreEnn(),
-            avslagUnderEnHalvG, new Beregnet());
-
-		// FP_VK_32.3 Gjelder omsorgspenger til arbeidsgiver ?
-		Specification<BeregningsgrunnlagPeriode> sjekkOmsorgspengerTilArbeidsgiver = rs.beregningHvisRegel(new SjekkErOmsorgspengerTilArbeidsgiver(),
-				new Beregnet(), sjekkOmBGUnderHalvG);
-
-        return sjekkOmsorgspengerTilArbeidsgiver;
-    }
+		return new ConditionalOrSpecification.Builder<BeregningsgrunnlagPeriode>(ID, "Velg regel for ytelse")
+				.hvis(new GjelderForeldrepenger(), sjekkMotHalvGFP)
+				.hvis(new GjelderSvangerskapspenger(), sjekkMotHalvGSVP)
+				.hvis(new GjelderOmsorgspenger(), ompRegel)
+				.ellers(k9Regel);
+	}
 }
