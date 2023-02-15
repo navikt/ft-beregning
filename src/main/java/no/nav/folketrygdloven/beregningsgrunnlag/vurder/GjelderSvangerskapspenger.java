@@ -9,7 +9,7 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 @RuleDocumentation(GjelderSvangerskapspenger.ID)
 class GjelderSvangerskapspenger extends LeafSpecification<BeregningsgrunnlagPeriode> {
 
-	static final String ID = "FP_VK_x";
+	static final String ID = "FP_BR_29";
 
 	GjelderSvangerskapspenger() {
 		super(ID, "Gjelder det svangerskapspenger?");

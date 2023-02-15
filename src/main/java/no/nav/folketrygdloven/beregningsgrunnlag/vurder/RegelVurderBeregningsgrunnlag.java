@@ -24,19 +24,22 @@ public class RegelVurderBeregningsgrunnlag implements EksportRegel<Beregningsgru
 	@SuppressWarnings("unchecked")
 	@Override
 	public Specification<BeregningsgrunnlagPeriode> getSpecification() {
-		//splittet i ulike regler pga ulik hjemmel
-		Specification<BeregningsgrunnlagPeriode> sjekkMotHalvGFP = RS.beregningHvisRegel(new HarForLiteBeregningsgrunnlagFP(), new AvslagUnderEnHalvG(), new Innvilget());
-		Specification<BeregningsgrunnlagPeriode> sjekkMotHalvGSVP = RS.beregningHvisRegel(new HarForLiteBeregningsgrunnlagSVP(), new AvslagUnderEnHalvG(), new Innvilget());
-		Specification<BeregningsgrunnlagPeriode> sjekkMotHalvGK9 = RS.beregningHvisRegel(new HarForLiteBeregningsgrunnlagKap9(), new AvslagUnderEnHalvG(), new Innvilget());
+		/*
+		hjemler for sjekk mot minstekrav på 0.5 G for beregningsgrunnlag:
+			Foreldrepenger: Folketrygdloven §14-7 1. ledd
+			Svangerskapspenger: Folketrygdloven §14-4 3. ledd
+			Pleiepenger,omsorgspenger: Folketrygdloven §9-3 2. ledd
+		for midlertidig inaktiv (vurderes kun for k9-ytelsene) Folketrygdloven §8-47 5.ledd
+		 */
 
-		Specification<BeregningsgrunnlagPeriode> sjekkMidlertidigAleneMot1G = RS.beregningHvisRegel(new HarForLiteBeregningsgrunnlagMidlertidigInaktiv(), new AvslagUnderEnG(), new Innvilget());
-		Specification<BeregningsgrunnlagPeriode> k9Regel = RS.beregningHvisRegel(new ErMidlertidigInaktiv(), sjekkMidlertidigAleneMot1G, sjekkMotHalvGK9);
-
+		Specification<BeregningsgrunnlagPeriode> sjekkMotHalvG = RS.beregningHvisRegel(new BeregningsgrunnlagUnderHalvG(), new AvslagUnderEnHalvG(), new Innvilget());
+		Specification<BeregningsgrunnlagPeriode> sjekkMotEnG = RS.beregningHvisRegel(new BeregningsgrunnlagUnderEnG(), new AvslagUnderEnG(), new Innvilget());
+		Specification<BeregningsgrunnlagPeriode> k9Regel = RS.beregningHvisRegel(new ErMidlertidigInaktiv(), sjekkMotEnG, sjekkMotHalvG);
 		Specification<BeregningsgrunnlagPeriode> ompRegel = RS.beregningHvisRegel(new SjekkErOmsorgspengerTilArbeidsgiver(), new Innvilget(), k9Regel);
 
 		return new ConditionalOrSpecification.Builder<BeregningsgrunnlagPeriode>(ID, "Velg regel for ytelse")
-				.hvis(new GjelderForeldrepenger(), sjekkMotHalvGFP)
-				.hvis(new GjelderSvangerskapspenger(), sjekkMotHalvGSVP)
+				.hvis(new GjelderForeldrepenger(), sjekkMotHalvG)
+				.hvis(new GjelderSvangerskapspenger(), sjekkMotHalvG)
 				.hvis(new GjelderOmsorgspenger(), ompRegel)
 				.ellers(k9Regel);
 	}

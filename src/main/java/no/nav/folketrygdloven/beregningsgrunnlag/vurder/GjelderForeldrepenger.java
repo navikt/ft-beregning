@@ -9,7 +9,7 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 @RuleDocumentation(GjelderForeldrepenger.ID)
 class GjelderForeldrepenger extends LeafSpecification<BeregningsgrunnlagPeriode> {
 
-	static final String ID = "FP_VK_x";
+	static final String ID = "FP_BR_29";
 
 	GjelderForeldrepenger() {
 		super(ID, "Gjelder det foreldrepenger?");

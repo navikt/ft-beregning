@@ -9,14 +9,12 @@ import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.node.SingleEvaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
-abstract class SjekkBeregningsgrunnlagMindreEnnAntallG extends LeafSpecification<BeregningsgrunnlagPeriode> {
+class SjekkBeregningsgrunnlagMindreEnnAntallG extends LeafSpecification<BeregningsgrunnlagPeriode> {
 	private BigDecimal minimumAntallG;
-	private String hjemmel;
 
-	SjekkBeregningsgrunnlagMindreEnnAntallG(String ID, BigDecimal minimumAntallG, String hjemmel) {
-		super(ID, "Er beregningsgrunnlag mindre enn " + minimumAntallG.toPlainString().replace('.', ',') + "?");
+	SjekkBeregningsgrunnlagMindreEnnAntallG(String ID, BigDecimal minimumAntallG) {
+		super(ID, "Er beregningsgrunnlag mindre enn " + minimumAntallG.toPlainString() + "?");
 		this.minimumAntallG = minimumAntallG;
-		this.hjemmel = hjemmel;
 	}
 
 	@Override
@@ -31,7 +29,6 @@ abstract class SjekkBeregningsgrunnlagMindreEnnAntallG extends LeafSpecification
 		resultat.setEvaluationProperty("minstekravBeløp", minstekrav);
 		resultat.setEvaluationProperty("faktiskGrunnbeløp", grunnlag.getGrunnbeløp());
 		resultat.setEvaluationProperty("bruttoPrÅr", grunnlag.getBruttoPrÅr());
-		resultat.setEvaluationProperty("hjemmel", hjemmel);
 		return resultat;
 	}
 
