@@ -22,7 +22,7 @@ class SkalGjøreAvviksvurdering extends LeafSpecification<BeregningsgrunnlagPeri
             return ja();
         }
         OmsorgspengerGrunnlag ompGrunnlag = (OmsorgspengerGrunnlag) grunnlag.getBeregningsgrunnlag().getYtelsesSpesifiktGrunnlag();
-        return ompGrunnlag.skalAvviksvurdere() ? ja() : nei();
+        return ompGrunnlag.omfattesAvKap9Paragraf9() ? ja() : nei();
     }
 
     private boolean skalAlltidSetteAksjonspunktOmAvvik(BeregningsgrunnlagPeriode grunnlag){

@@ -29,6 +29,10 @@ public class RegelVurderBeregningsgrunnlag implements EksportRegel<Beregningsgru
         Specification<BeregningsgrunnlagPeriode> sjekkOmBGUnderHalvG = rs.beregningHvisRegel(new SjekkBeregningsgrunnlagMindreEnn(),
             avslagUnderEnHalvG, new Beregnet());
 
-        return sjekkOmBGUnderHalvG;
+		// FP_VK_32.3 Gjelder omsorgspenger til arbeidsgiver ?
+		Specification<BeregningsgrunnlagPeriode> sjekkOmsorgspengerTilArbeidsgiver = rs.beregningHvisRegel(new SjekkErOmsorgspengerTilArbeidsgiver(),
+				new Beregnet(), sjekkOmBGUnderHalvG);
+
+        return sjekkOmsorgspengerTilArbeidsgiver;
     }
 }
