@@ -138,10 +138,6 @@ public class Beregningsgrunnlag {
         return konstanter.getAvviksgrenseProsent();
     }
 
-    public BigDecimal getAntallGMinstekravVilkår() {
-        return konstanter.getAntallGMinstekravVilkår();
-    }
-
 	public List<Grunnbeløp> getGrunnbeløpsatser() {
 		return konstanter.getGrunnbeløpSatser();
 	}
@@ -291,11 +287,6 @@ public class Beregningsgrunnlag {
 
         public Builder medAvviksgrenseProsent(BigDecimal avviksgrenseProsent) {
             beregningsgrunnlagMal.konstanter.setAvviksgrenseProsent(avviksgrenseProsent);
-            return this;
-        }
-
-        public Builder medAntallGMinstekravVilkår(BigDecimal antallGMinstekravVilkår) {
-            beregningsgrunnlagMal.konstanter.setAntallGMinstekravVilkår(antallGMinstekravVilkår);
             return this;
         }
 

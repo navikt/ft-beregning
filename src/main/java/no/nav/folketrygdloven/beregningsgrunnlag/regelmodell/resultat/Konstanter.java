@@ -17,7 +17,6 @@ public class Konstanter {
 
     private int antallGMilitærHarKravPå = 3;
     private BigDecimal antallGØvreGrenseverdi = BigDecimal.valueOf(6);
-    private BigDecimal antallGMinstekravVilkår = BigDecimal.valueOf(0.5);
 	private BigDecimal midlertidigInaktivTypeAReduksjonsfaktor = BigDecimal.valueOf(0.65);
 	private BigDecimal ytelsedagerIPrÅr = BigDecimal.valueOf(260);
     private BigDecimal avviksgrenseProsent = BigDecimal.valueOf(25);
@@ -35,10 +34,6 @@ public class Konstanter {
 
 	public void setAntallGØvreGrenseverdi(BigDecimal antallGØvreGrenseverdi) {
         this.antallGØvreGrenseverdi = antallGØvreGrenseverdi;
-    }
-
-	public void setAntallGMinstekravVilkår(BigDecimal antallGMinstekravVilkår) {
-        this.antallGMinstekravVilkår = antallGMinstekravVilkår;
     }
 
 	public void setMidlertidigInaktivTypeAReduksjonsfaktor(BigDecimal midlertidigInaktivTypeAReduksjonsfaktor) {
@@ -71,10 +66,6 @@ public class Konstanter {
 
     public BigDecimal getAntallGØvreGrenseverdi() {
         return antallGØvreGrenseverdi;
-    }
-
-    public BigDecimal getAntallGMinstekravVilkår() {
-        return antallGMinstekravVilkår;
     }
 
     public BigDecimal getYtelsedagerIPrÅr() {

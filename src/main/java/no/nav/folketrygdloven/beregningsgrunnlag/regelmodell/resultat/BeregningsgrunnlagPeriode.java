@@ -202,9 +202,6 @@ public class BeregningsgrunnlagPeriode {
 		return getBeregningsgrunnlag().getYtelsedagerPrÅr();
 	}
 
-	public BigDecimal getAntallGMinstekravVilkår() {
-		return beregningsgrunnlag.getAntallGMinstekravVilkår();
-	}
 
 	public boolean skalSjekkeUtbetalingTilBrukerFørAvviksvurdering() {
 		YtelsesSpesifiktGrunnlag ytelsesSpesifiktGrunnlag = beregningsgrunnlag.getYtelsesSpesifiktGrunnlag();
