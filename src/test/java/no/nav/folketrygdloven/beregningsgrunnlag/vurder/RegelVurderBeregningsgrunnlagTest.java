@@ -4,6 +4,7 @@ import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenar
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.leggTilArbeidsforholdMedInntektsmelding;
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.opprettBeregningsgrunnlagFraInntektsmelding;
 import static no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningUtfallÅrsak.AVSLAG_UNDER_HALV_G;
+import static no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ResultatBeregningType.BEREGNET;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
@@ -14,6 +15,7 @@ import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Beregnet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Dekningsgrad;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.RegelMerknad;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.RegelResultat;
@@ -22,6 +24,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.omp.OmsorgspengerGrunnlag;
 
 public class RegelVurderBeregningsgrunnlagTest {
 
@@ -61,6 +64,47 @@ public class RegelVurderBeregningsgrunnlagTest {
         assertThat(resultat.getMerknader().stream().map(RegelMerknad::utfallÅrsak)).containsOnly(AVSLAG_UNDER_HALV_G);
         assertThat(grunnlag.getBruttoPrÅr().doubleValue()).isEqualTo(beregnetPrÅr + beregnetPrÅr2, offset);
     }
+
+	@Test
+	public void skalIkkeAvslåOmsorgspengerTilArbeidsgiverUndeEnHalvG() {
+		//Arrange
+		double beregnetPrÅr = GRUNNBELØP_2017 * 0.25;
+		double beregnetPrÅr2 = GRUNNBELØP_2017 * 0.24; //Totalt under 0,5G
+		Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlag(skjæringstidspunkt, beregnetPrÅr, 0);
+
+		Beregningsgrunnlag.builder(beregningsgrunnlag)
+						.medYtelsesSpesifiktGrunnlag(new OmsorgspengerGrunnlag(false, false));
+		leggTilArbeidsforhold(beregningsgrunnlag, beregnetPrÅr2, 0);
+		BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+
+		//Act
+		RegelResultat resultat = kjørRegel(grunnlag);
+
+		//Assert
+		assertThat(resultat.getMerknader()).isEmpty();
+		assertThat(resultat.getBeregningsresultat()).isEqualTo(BEREGNET);
+		assertThat(grunnlag.getBruttoPrÅr().doubleValue()).isEqualTo(beregnetPrÅr + beregnetPrÅr2, offset);
+	}
+
+	@Test
+	public void skalAvslåOmsorgspengerTilBrukerUndeEnHalvG() {
+		//Arrange
+		double beregnetPrÅr = GRUNNBELØP_2017 * 0.25;
+		double beregnetPrÅr2 = GRUNNBELØP_2017 * 0.24; //Totalt under 0,5G
+		Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlag(skjæringstidspunkt, beregnetPrÅr, 0);
+
+		Beregningsgrunnlag.builder(beregningsgrunnlag)
+				.medYtelsesSpesifiktGrunnlag(new OmsorgspengerGrunnlag(false, true));
+		leggTilArbeidsforhold(beregningsgrunnlag, beregnetPrÅr2, 0);
+		BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+
+		//Act
+		RegelResultat resultat = kjørRegel(grunnlag);
+
+		//Assert
+		assertThat(resultat.getMerknader().stream().map(RegelMerknad::utfallÅrsak)).containsOnly(AVSLAG_UNDER_HALV_G);
+		assertThat(grunnlag.getBruttoPrÅr().doubleValue()).isEqualTo(beregnetPrÅr + beregnetPrÅr2, offset);
+	}
 
     private RegelResultat kjørRegel(BeregningsgrunnlagPeriode grunnlag) {
         return new RegelVurderBeregningsgrunnlag().evaluerRegel(grunnlag);
