@@ -16,6 +16,9 @@ public class FeatureToggles {
 	}
 
 	public void leggTilToggle(Toggle toggle) {
+		if (toggles.stream().anyMatch(toggle::equals)) {
+			toggles.remove(toggle);
+		}
 		toggles.add(toggle);
 	}
 
