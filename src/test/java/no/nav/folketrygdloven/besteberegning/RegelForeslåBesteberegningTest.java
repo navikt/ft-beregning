@@ -69,8 +69,7 @@ class RegelForeslåBesteberegningTest {
 
 		// Assert
 		BesteberegnetGrunnlag besteberegnetGrunnlag = regelmodell.getOutput().getBesteberegnetGrunnlag();
-		List<BesteberegnetAndel> andeler = besteberegnetGrunnlag.getBesteberegnetAndelList();
-		andeler.sort(Comparator.comparing(BesteberegnetAndel::getBesteberegnetPrÅr));
+		List<BesteberegnetAndel> andeler = besteberegnetGrunnlag.getBesteberegnetAndelList().stream().sorted(Comparator.comparing(BesteberegnetAndel::getBesteberegnetPrÅr)).toList();
 		assertThat(andeler.size()).isEqualTo(2);
 		assertThat(andeler.get(0).getBesteberegnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(120_000));
 		assertThat(andeler.get(1).getBesteberegnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(240_000));
