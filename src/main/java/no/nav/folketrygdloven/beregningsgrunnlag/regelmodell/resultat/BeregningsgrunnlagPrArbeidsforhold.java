@@ -48,7 +48,7 @@ public class BeregningsgrunnlagPrArbeidsforhold {
     private BigDecimal utbetalingsprosent = BigDecimal.valueOf(100);
     private BigDecimal andelsmessigFørGraderingPrAar;
 
-    public BeregningsgrunnlagPrArbeidsforhold() {
+    private BeregningsgrunnlagPrArbeidsforhold() {
     }
 
     public String getArbeidsgiverId() {
