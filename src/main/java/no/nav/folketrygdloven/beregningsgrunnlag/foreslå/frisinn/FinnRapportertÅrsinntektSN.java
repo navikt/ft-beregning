@@ -14,6 +14,10 @@ import no.nav.folketrygdloven.beregningsgrunnlag.util.Virkedager;
 
 class FinnRapportertÅrsinntektSN {
 
+	private FinnRapportertÅrsinntektSN() {
+		// Skjuler default konstruktør
+	}
+
     static BigDecimal finnRapportertÅrsinntekt(BeregningsgrunnlagPeriode grunnlag) {
         Optional<BigDecimal> inntekt2019 = finnInntekter2019(grunnlag);
         return inntekt2019.orElseGet(() -> finnInntekter2020(grunnlag).orElse(BigDecimal.ZERO));

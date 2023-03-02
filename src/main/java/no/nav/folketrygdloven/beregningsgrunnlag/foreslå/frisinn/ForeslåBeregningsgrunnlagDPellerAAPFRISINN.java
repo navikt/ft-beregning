@@ -46,7 +46,7 @@ class ForeslåBeregningsgrunnlagDPellerAAPFRISINN extends LeafSpecification<Bere
         List<Periodeinntekt> overlappendeMeldkortListe = grunnlag.getInntektsgrunnlag().getPeriodeinntekter().stream()
             .filter(pi -> pi.getInntektskilde().equals(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP))
             .filter(pi -> Periode.of(pi.getFom(), pi.getTom()).overlapper(beregningsgrunnlagPeriode))
-            .collect(Collectors.toList());
+            .toList();
         BigDecimal totalInntektFraMeldekortIPeriode = overlappendeMeldkortListe.stream()
             .map(pi -> {
                 var overlappendePeriodeFom = pi.getFom().isBefore(beregningsgrunnlagPeriode.getFom()) ? beregningsgrunnlagPeriode.getFom() : pi.getFom();

@@ -47,7 +47,7 @@ public class Inntektsgrunnlag {
 				.filter(i -> i.getInntektskilde().equals(Inntektskilde.SØKNAD)
 						&& i.erSelvstendingNæringsdrivende()
 						&& periode.overlapper(Periode.of(i.getFom(), i.getTom())))
-				.collect(Collectors.toUnmodifiableList());
+				.toList();
 	}
 
 	public Optional<Periodeinntekt> getPeriodeinntekt(Inntektskilde inntektskilde, LocalDate dato) {
@@ -63,13 +63,13 @@ public class Inntektsgrunnlag {
 					.filter(pi -> pi.getArbeidsgiver().get().erFrilanser()) //NOSONAR
 					.filter(pi -> pi.getArbeidsgiver().get().equals(arbeidsforhold.getArbeidsforhold())) //NOSONAR
 					.filter(pi -> pi.erInnenforPeriode(periode))
-					.collect(Collectors.toList());
+					.toList();
 		} else {
 			return getPeriodeinntektMedKilde(inntektskilde)
 					.filter(pi -> pi.erInnenforPeriode(periode))
 					.filter(pi -> pi.getArbeidsgiver().isPresent())
 					.filter(pi -> pi.getArbeidsgiver().get().equals(arbeidsforhold.getArbeidsforhold()))
-					.collect(Collectors.toList());
+					.toList();
 		}
 	}
 
@@ -112,7 +112,7 @@ public class Inntektsgrunnlag {
 		return getPeriodeinntektMedKilde(Inntektskilde.SØKNAD)
 				.filter(pi -> Objects.equals(pi.getAktivitetStatus(), status))
 				.filter(i -> periode.overlapper(Periode.of(i.getFom(), i.getTom())))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	private BigDecimal finnÅrsinntektForPeriode(Periodeinntekt oppgittInntekt) {
@@ -206,7 +206,7 @@ public class Inntektsgrunnlag {
 				.filter(pi -> pi.getArbeidsgiver().get().erFrilanser()) //NOSONAR
 				.filter(pi -> pi.getArbeidsgiver().get().equals(arbeidsforhold)) //NOSONAR
 				.filter(pi -> pi.erInnenforPeriode(periode))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	private List<BigDecimal> getAlleFrilansinntekter(Inntektskilde inntektskilde, LocalDate førDato, int måneder) {
@@ -214,7 +214,7 @@ public class Inntektsgrunnlag {
 		return finnAlleFrilansInntektPerioder(inntektskilde, periode)
 				.stream()
 				.map(Periodeinntekt::getInntekt)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	public List<Periodeinntekt> finnAlleFrilansInntektPerioder(Inntektskilde inntektskilde, Periode periode) {
@@ -222,7 +222,7 @@ public class Inntektsgrunnlag {
 				.filter(pi -> pi.getArbeidsgiver().isPresent())
 				.filter(pi -> pi.getArbeidsgiver().get().erFrilanser()) //NOSONAR
 				.filter(pi -> pi.erInnenforPeriode(periode))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	private Stream<Periodeinntekt> getPeriodeinntektMedKilde(Inntektskilde inntektskilde) {

@@ -34,7 +34,7 @@ class VurderOmAndelerErFerdigFordeltOgOppdaterFordeltTilBruker extends LeafSpeci
         List<BeregningsgrunnlagPrArbeidsforhold> ikkeFastsattAf = arbeidsforholdene.stream()
             .filter(af -> af.getMaksimalRefusjonPrÅr() != null)
             .filter(af -> af.getAvkortetRefusjonPrÅr() == null)
-            .collect(Collectors.toList());
+            .toList();
         if (!ikkeFastsattAf.isEmpty()) {
             return resultat;
         }

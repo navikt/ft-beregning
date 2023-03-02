@@ -30,6 +30,10 @@ import java.util.stream.Collectors;
  */
 public class FastsettYtelseFordeling {
 
+	private FastsettYtelseFordeling() {
+		// Skjuler default konstruktør
+	}
+
 	public static List<Inntekt> fordelYtelse(List<Ytelsegrunnlag> alleYtelsegrunnlag, Periodeinntekt periodeinntekt) {
 		List<YtelsegrunnlagPeriode> ytelseperioder = søkEtterYtelseMedOverlappIPeriode(alleYtelsegrunnlag, periodeinntekt.getYtelse(), periodeinntekt.getPeriode());
 		if (!ytelseperioder.isEmpty()) {
@@ -107,7 +111,7 @@ public class FastsettYtelseFordeling {
 				.map(Ytelsegrunnlag::getPerioder)
 				.flatMap(Collection::stream)
 				.filter(ytelsePeriode -> overlapperInntektsperiode(periodeViSkalOverlappeMed, ytelsePeriode))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	private static List<Inntekt> utledFordelingSykepenger(List<YtelsegrunnlagPeriode> perioderSomOverlapperInntektsperiode,

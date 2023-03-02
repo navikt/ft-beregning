@@ -63,7 +63,7 @@ public class PeriodiserForNaturalytelse extends LeafSpecification<PeriodiseringN
             List<EksisterendeAndel> førstePeriodeAndeler = input.getNaturalytelserPrArbeidsforhold().stream()
                 .filter(im -> !im.erNyAktivitet())
                 .map(im -> mapToArbeidsforhold(im, periodeFom))
-                .collect(Collectors.toList());
+                .toList();
 
 
             Periode periode = new Periode(periodeFom, periodeTom);
@@ -108,7 +108,7 @@ public class PeriodiserForNaturalytelse extends LeafSpecification<PeriodiseringN
             .filter(periodeÅrsak -> !PeriodeÅrsak.UDEFINERT.equals(periodeÅrsak))
             .filter(periodeÅrsak -> !(Set.of(PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV, PeriodeÅrsak.ENDRING_I_AKTIVITETER_SØKT_FOR).contains(periodeÅrsak)
                 && skjæringstidspunkt.equals(periodeFom)))
-            .collect(Collectors.toList());
+            .toList();
     }
 
 }

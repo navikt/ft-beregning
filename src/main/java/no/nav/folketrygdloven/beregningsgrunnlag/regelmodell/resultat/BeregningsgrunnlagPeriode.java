@@ -145,7 +145,7 @@ public class BeregningsgrunnlagPeriode {
 	}
 
 	public List<BeregningsgrunnlagPrStatus> getBeregningsgrunnlagPrStatusSomSkalBrukes() {
-		return beregningsgrunnlagPrStatus.stream().filter(BeregningsgrunnlagPrStatus::erSøktYtelseFor).collect(Collectors.toUnmodifiableList());
+		return beregningsgrunnlagPrStatus.stream().filter(BeregningsgrunnlagPrStatus::erSøktYtelseFor).toList();
 	}
 
 	public Inntektsgrunnlag getInntektsgrunnlag() {
@@ -180,7 +180,7 @@ public class BeregningsgrunnlagPeriode {
 	public List<AktivitetStatusMedHjemmel> getAktivitetStatuser() {
 		return beregningsgrunnlag.getAktivitetStatuser().stream()
 				.sorted(Comparator.comparing(as -> as.getAktivitetStatus().getBeregningPrioritet()))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	public List<PeriodeÅrsak> getPeriodeÅrsaker() {

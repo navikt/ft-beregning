@@ -178,19 +178,11 @@ public class BeregningsgrunnlagPrStatus {
     }
 
     public List<BeregningsgrunnlagPrArbeidsforhold> getArbeidsforholdSomSkalBrukes() {
-        return getArbeidsforhold().stream().filter(BeregningsgrunnlagPrArbeidsforhold::getErSøktYtelseFor).collect(Collectors.toUnmodifiableList());
-    }
-
-    public List<BeregningsgrunnlagPrArbeidsforhold> getArbeidsforholdSomSkalBrukesIkkeFrilans() {
-        return getArbeidsforholdSomSkalBrukes().stream().filter(af -> !af.erFrilanser()).collect(Collectors.toList());
+        return getArbeidsforhold().stream().filter(BeregningsgrunnlagPrArbeidsforhold::getErSøktYtelseFor).toList();
     }
 
     public List<BeregningsgrunnlagPrArbeidsforhold> getArbeidsforholdIkkeFrilans() {
         return getArbeidsforhold().stream().filter(af -> !af.erFrilanser()).collect(Collectors.toList());
-    }
-
-    public Optional<BeregningsgrunnlagPrArbeidsforhold> getFrilansArbeidsforholdSomSkalBrukes() {
-        return getArbeidsforhold().stream().filter(BeregningsgrunnlagPrArbeidsforhold::erFrilanser).filter(BeregningsgrunnlagPrArbeidsforhold::getErSøktYtelseFor).findAny();
     }
 
     public Optional<BeregningsgrunnlagPrArbeidsforhold> getFrilansArbeidsforhold() {

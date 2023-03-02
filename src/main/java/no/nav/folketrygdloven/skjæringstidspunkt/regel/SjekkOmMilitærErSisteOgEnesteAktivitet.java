@@ -29,7 +29,7 @@ class SjekkOmMilitærErSisteOgEnesteAktivitet extends LeafSpecification<Aktivite
         List<Aktivitet> sisteAktiviteter = aktivePerioder.stream()
             .filter(ap -> !ap.getPeriode().getTom().isBefore(regelmodell.sisteAktivitetsdato()))
             .map(AktivPeriode::getAktivitet)
-            .collect(Collectors.toList());
+            .toList();
 
         return sisteAktiviteter.size() == 1
             && sisteAktiviteter.contains(MILITÆR_ELLER_SIVILTJENESTE)

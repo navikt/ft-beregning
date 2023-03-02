@@ -24,7 +24,7 @@ class SjekkHarRefusjonSomOverstigerBeregningsgrunnlag extends LeafSpecification<
     public Evaluation evaluate(FordelModell grunnlag) {
 	    var arbeidsandeler = grunnlag.getInput().getAlleAndelerForStatus(AktivitetStatus.AT);
 	    var arbeidsforholdSomHarRefusjonStørreEnnBG = arbeidsandeler.stream()
-            .filter(this::harRefusjonskravStørreEnnBg).collect(Collectors.toList());
+            .filter(this::harRefusjonskravStørreEnnBg).toList();
 	    var resultat = arbeidsforholdSomHarRefusjonStørreEnnBG.isEmpty() ? nei() : ja();
 	    for (FordelAndelModell arbeidsforhold : arbeidsforholdSomHarRefusjonStørreEnnBG) {
             resultat.setEvaluationProperty("refusjonPrÅr." + arbeidsforhold.getArbeidsgiverId().orElseThrow(), arbeidsforhold.getGjeldendeRefusjonPrÅr().orElse(BigDecimal.ZERO));

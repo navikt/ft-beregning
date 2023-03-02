@@ -42,7 +42,7 @@ class FastsettBesteberegningGrunnlag extends LeafSpecification<BesteberegningReg
 	private BesteberegnetGrunnlag lagBesteberegningGrunnlag(List<BeregnetMånedsgrunnlag> besteMåneder) {
 		Map<AktivitetNøkkel, List<Inntekt>> nøkkelTilInntekter = lagAktivitetTilInntekterMap(besteMåneder);
 		List<BesteberegnetAndel> andeler = nøkkelTilInntekter.entrySet().stream().map(entry -> new BesteberegnetAndel(entry.getKey(), finnSnittÅrsinntekt(entry.getValue())))
-				.collect(Collectors.toList());
+				.toList();
 		return new BesteberegnetGrunnlag(andeler);
 	}
 

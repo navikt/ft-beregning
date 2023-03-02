@@ -6,7 +6,11 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 
 public class FinnGrunnbeløpForVilkårsvurdering {
 
-    /**
+	private FinnGrunnbeløpForVilkårsvurdering() {
+		// Skjuler default konstruktør
+	}
+
+	/**
      * Finner det riktige grunnbeløpet som skal brukes i vilkårsvurdering
      *
      * @param grunnlag Beregningsgrunnlagperiode

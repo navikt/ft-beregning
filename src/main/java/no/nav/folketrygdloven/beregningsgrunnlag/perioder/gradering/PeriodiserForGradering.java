@@ -55,7 +55,7 @@ public class PeriodiserForGradering extends LeafSpecification<PeriodiseringGrade
 					.filter(utbGrad -> utbGrad.erNyAktivitetPåDato(periodeFom))
 					.filter(andel -> harGraderingFørPeriode(andel, periodeFom))
 					.map(FinnNyeAndelerMedGradering::mapSplittetAndel)
-					.collect(Collectors.toList());
+					.toList();
 		}
 
 
