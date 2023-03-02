@@ -51,7 +51,7 @@ public class RegelFortsettForeslåBeregningsgrunnlag implements EksportRegel<Ber
 		var speclist = regelmodell.getAktivitetStatuser().stream()
 				.map(AktivitetStatusMedHjemmel::getAktivitetStatus)
 				.map(this::velgSpecification)
-				.collect(Collectors.toList());
+				.toList();
 		Specification<BeregningsgrunnlagPeriode> foreslåBeregningsgrunnlag =
 				rs.beregningsRegel("FP_BR fortsett pr status", "Fastsett beregningsgrunnlag fortsett pr status", speclist, new Beregnet());
 

@@ -13,10 +13,10 @@ public class SettAndelerUtenSøktYtelseTilNull extends LeafSpecification<FordelM
 
 
 	public static final String ID = "FP_BR 22.3.9";
-	public static final String BESKRIVELSE = "Sett fordeling for nye andeler uten søkt ytelse til 0.";
+	public static final String REGEL_BESKRIVELSE = "Sett fordeling for nye andeler uten søkt ytelse til 0.";
 
 	public SettAndelerUtenSøktYtelseTilNull() {
-		super(ID, BESKRIVELSE);
+		super(ID, REGEL_BESKRIVELSE);
 	}
 
 	@Override
@@ -42,6 +42,6 @@ public class SettAndelerUtenSøktYtelseTilNull extends LeafSpecification<FordelM
 
 	@Override
 	public String beskrivelse() {
-		return BESKRIVELSE;
+		return REGEL_BESKRIVELSE;
 	}
 }

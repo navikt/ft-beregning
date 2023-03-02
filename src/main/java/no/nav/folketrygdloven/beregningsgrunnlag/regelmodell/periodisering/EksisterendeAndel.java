@@ -18,7 +18,7 @@ public class EksisterendeAndel {
     private BeregningsgrunnlagHjemmel anvendtRefusjonskravfristHjemmel;
     private Utfall refusjonskravFristVurderingUtfall;
 
-    public EksisterendeAndel() {
+    private EksisterendeAndel() {
     }
 
     public String getArbeidsgiverId() {
