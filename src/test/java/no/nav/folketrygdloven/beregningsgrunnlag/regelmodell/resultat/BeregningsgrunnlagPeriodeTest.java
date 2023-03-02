@@ -30,7 +30,7 @@ public class BeregningsgrunnlagPeriodeTest {
         //Arrange
         List<AktivitetStatusMedHjemmel> alleStatuser = Stream.of(AktivitetStatus.values())
                 .map(as -> new AktivitetStatusMedHjemmel(as, null))
-                .collect(Collectors.toList());
+                .toList();
         BeregningsgrunnlagPeriode bgPeriode = BeregningsgrunnlagPeriode.builder()
             .medPeriode(Periode.of(skjæringstidspunkt, null))
             .build();
@@ -47,7 +47,7 @@ public class BeregningsgrunnlagPeriodeTest {
         List<AktivitetStatus> treSisteStatuser = aktivitetStatuser.stream()
             .skip(aktivitetStatuser.size()-3)
             .map(AktivitetStatusMedHjemmel::getAktivitetStatus)
-            .collect(Collectors.toList());
+            .toList();
         assertThat(treSisteStatuser).containsExactlyInAnyOrder(AktivitetStatus.MS, AktivitetStatus.SN, AktivitetStatus.ATFL_SN);
     }
 

@@ -66,14 +66,14 @@ public class PeriodiserForRefusjon extends LeafSpecification<PeriodiseringRefusj
 			List<EksisterendeAndel> førstePeriodeAndeler = input.getArbeidsforholdOgInntektsmeldinger().stream()
 					.filter(im -> !im.erNyAktivitet())
 					.map(im -> mapToArbeidsforhold(im, periodeFom))
-					.collect(Collectors.toList());
+					.toList();
 
 			List<SplittetAndel> nyeAndeler = input.getArbeidsforholdOgInntektsmeldinger().stream()
 					.filter(ArbeidsforholdOgInntektsmelding::erNyAktivitet)
 					.filter(im -> !im.slutterFørSkjæringstidspunkt(input.getSkjæringstidspunkt()))
 					.filter(im -> harRefusjonskravIPeriode(im, periodeFom))
 					.map(im -> mapSplittetAndel(im, periodeFom))
-					.collect(Collectors.toList());
+					.toList();
 
 			Periode periode = new Periode(periodeFom, periodeTom);
 			SplittetPeriode splittetPeriode = SplittetPeriode.builder()
@@ -170,7 +170,7 @@ public class PeriodiserForRefusjon extends LeafSpecification<PeriodiseringRefusj
 				.map(PeriodeSplittData::getPeriodeÅrsak)
 				.filter(periodeÅrsak -> !PeriodeÅrsak.UDEFINERT.equals(periodeÅrsak))
 				.filter(periodeÅrsak -> !skjæringstidspunkt.equals(periodeFom))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 }

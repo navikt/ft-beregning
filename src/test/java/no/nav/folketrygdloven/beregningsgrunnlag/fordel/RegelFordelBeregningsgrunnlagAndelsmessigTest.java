@@ -217,6 +217,6 @@ class RegelFordelBeregningsgrunnlagAndelsmessigTest {
 		return modell.getMellomregninger().stream()
 				.map(FordelteAndelerModell::getFordelteAndeler)
 				.flatMap(Collection::stream)
-				.collect(Collectors.toList());
+				.toList();
 	}
 }

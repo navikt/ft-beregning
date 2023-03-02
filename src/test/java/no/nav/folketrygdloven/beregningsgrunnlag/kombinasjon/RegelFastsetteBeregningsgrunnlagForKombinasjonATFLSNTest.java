@@ -174,7 +174,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
 
         RegelResultat regelResultat = getRegelResultat(evaluation2, "input");
         assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
-        assertThat(regelResultat.getMerknader().stream().map(RegelMerknad::utfallÅrsak).collect(Collectors.toList())).containsExactly(VARIG_ENDRING_OG_AVVIK_STØRRE_ENN_25_PROSENT);
+        assertThat(regelResultat.getMerknader().stream().map(RegelMerknad::utfallÅrsak).toList()).containsExactly(VARIG_ENDRING_OG_AVVIK_STØRRE_ENN_25_PROSENT);
 
 
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
@@ -231,7 +231,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
 
         RegelResultat regelResultat = getRegelResultat(evaluation2, "input");
         assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
-        assertThat(regelResultat.getMerknader().stream().map(RegelMerknad::utfallÅrsak).collect(Collectors.toList())).containsExactly(VARIG_ENDRING_OG_AVVIK_STØRRE_ENN_25_PROSENT);
+        assertThat(regelResultat.getMerknader().stream().map(RegelMerknad::utfallÅrsak).toList()).containsExactly(VARIG_ENDRING_OG_AVVIK_STØRRE_ENN_25_PROSENT);
 
 
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
@@ -306,7 +306,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
         RegelResultat regelResultat1 = getRegelResultat(evaluation2p1, "input");
         RegelResultat regelResultat2 = getRegelResultat(evaluation2p2, "input");
         assertThat(regelResultat1.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
-        assertThat(regelResultat1.getMerknader().stream().map(RegelMerknad::utfallÅrsak).collect(Collectors.toList())).containsExactly(VARIG_ENDRING_OG_AVVIK_STØRRE_ENN_25_PROSENT);
+        assertThat(regelResultat1.getMerknader().stream().map(RegelMerknad::utfallÅrsak).toList()).containsExactly(VARIG_ENDRING_OG_AVVIK_STØRRE_ENN_25_PROSENT);
 
 
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);

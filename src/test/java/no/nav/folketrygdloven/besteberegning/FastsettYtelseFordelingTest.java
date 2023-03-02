@@ -229,7 +229,7 @@ class FastsettYtelseFordelingTest {
 	}
 
 	private void assertInntekt(List<Inntekt> fordeltInntekt, AktivitetNøkkel forventetNøkkel, int forventetInntekt) {
-		List<Inntekt> alleMatchendeInntekter = fordeltInntekt.stream().filter(inntekt -> inntekt.getAktivitetNøkkel().equals(forventetNøkkel)).collect(Collectors.toList());
+		List<Inntekt> alleMatchendeInntekter = fordeltInntekt.stream().filter(inntekt -> inntekt.getAktivitetNøkkel().equals(forventetNøkkel)).toList();
 		assertThat(alleMatchendeInntekter).hasSize(1);
 		assertThat(alleMatchendeInntekter.get(0).getInntektPrMåned().setScale(0, RoundingMode.HALF_UP).intValue()).isEqualTo(forventetInntekt);
 	}

@@ -41,7 +41,7 @@ class BeregnArbeidsgiversAndeler extends LeafSpecification<BeregningsgrunnlagPer
 				.stream()
 				.filter(af -> af.getMaksimalRefusjonPrÅr() != null)
 				.filter(af -> af.getAvkortetPrÅr() == null)
-				.collect(Collectors.toList());
+				.toList();
 		if (ikkeFastsatt.isEmpty()) {
 			resultater.put(REFUSJON_TIL_FORDELING, NULL);
 			return resultat;

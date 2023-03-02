@@ -70,11 +70,11 @@ public class IdentifiserPerioderForRefusjonTest {
 	}
 
 	private LocalDateTimeline<Utfall> godkjennIPerioder(List<Periode> perioder) {
-		return new LocalDateTimeline<>(perioder.stream().map(p -> new LocalDateSegment<>(p.getFom(), p.getTom(), Utfall.GODKJENT)).collect(Collectors.toList()));
+		return new LocalDateTimeline<>(perioder.stream().map(p -> new LocalDateSegment<>(p.getFom(), p.getTom(), Utfall.GODKJENT)).toList());
 	}
 
 	private LocalDateTimeline<Utfall> avslåIPerioder(List<Periode> perioder) {
-		return new LocalDateTimeline<>(perioder.stream().map(p -> new LocalDateSegment<>(p.getFom(), p.getTom(), Utfall.UNDERKJENT)).collect(Collectors.toList()));
+		return new LocalDateTimeline<>(perioder.stream().map(p -> new LocalDateSegment<>(p.getFom(), p.getTom(), Utfall.UNDERKJENT)).toList());
 	}
 
 
@@ -103,11 +103,11 @@ public class IdentifiserPerioderForRefusjonTest {
 	}
 
 	private LocalDateTimeline<Utfall> godkjennIAllePerioder(List<Refusjonskrav> refusjoner) {
-		return godkjennIPerioder(refusjoner.stream().map(Refusjonskrav::getPeriode).collect(Collectors.toList()));
+		return godkjennIPerioder(refusjoner.stream().map(Refusjonskrav::getPeriode).toList());
 	}
 
 	private LocalDateTimeline<Utfall> avslåttIAllePerioder(List<Refusjonskrav> refusjoner) {
-		return avslåIPerioder(refusjoner.stream().map(Refusjonskrav::getPeriode).collect(Collectors.toList()));
+		return avslåIPerioder(refusjoner.stream().map(Refusjonskrav::getPeriode).toList());
 	}
 
 	private LocalDateTimeline<Utfall> tidslinjeMedAvslåttOgGodkjent(List<Periode> godkjentPerioder, List<Periode> avslåttPerioder) {

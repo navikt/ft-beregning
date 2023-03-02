@@ -106,7 +106,7 @@ public class RegelFastsettSkjæringstidspunktTest {
 		// Assert
         assertThat(regelmodell.getSkjæringstidspunktForBeregning()).isEqualTo(sisteAktivitetsdag.plusDays(1));
         assertThat(regelmodell.getAktivePerioder()).hasSize(3);
-        assertThat(regelmodell.getAktivePerioder().stream().map(AktivPeriode::getAktivitet).collect(Collectors.toList()))
+        assertThat(regelmodell.getAktivePerioder().stream().map(AktivPeriode::getAktivitet).toList())
             .containsExactlyInAnyOrder(Aktivitet.ARBEIDSTAKERINNTEKT, Aktivitet.MILITÆR_ELLER_SIVILTJENESTE, Aktivitet.SYKEPENGER_MOTTAKER);
     }
 

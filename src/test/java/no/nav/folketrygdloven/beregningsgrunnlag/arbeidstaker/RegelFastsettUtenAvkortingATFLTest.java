@@ -149,7 +149,7 @@ public class RegelFastsettUtenAvkortingATFLTest {
 
     private void verifiserBrukersAndel(BeregningsgrunnlagPeriode grunnlag, Double beløp1, Double beløp2) {
         List<BigDecimal> brukersAndel = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().stream().
-            map(BeregningsgrunnlagPrArbeidsforhold::getAvkortetBrukersAndelPrÅr).collect(Collectors.toList());
+            map(BeregningsgrunnlagPrArbeidsforhold::getAvkortetBrukersAndelPrÅr).toList();
 
         if(brukersAndel.size() == 1) {
             assertThat(brukersAndel.get(0).doubleValue()).isCloseTo(beløp1, within(0.01));
@@ -162,7 +162,7 @@ public class RegelFastsettUtenAvkortingATFLTest {
 
     private void verifiserArbeidsgiversAndel(BeregningsgrunnlagPeriode grunnlag, Double beløp1, Double beløp2) {
         List<BigDecimal> arbeidsgiversAndel = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().stream().
-            map(BeregningsgrunnlagPrArbeidsforhold::getMaksimalRefusjonPrÅr).collect(Collectors.toList());
+            map(BeregningsgrunnlagPrArbeidsforhold::getMaksimalRefusjonPrÅr).toList();
 
         if(arbeidsgiversAndel.size() == 1) {
             assertThat(arbeidsgiversAndel.get(0).doubleValue()).isCloseTo(beløp1, within(0.01));

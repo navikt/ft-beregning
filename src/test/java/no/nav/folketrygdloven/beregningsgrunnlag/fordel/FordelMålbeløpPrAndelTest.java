@@ -259,7 +259,7 @@ class FordelMålbeløpPrAndelTest {
 
 	private FordelModell kjørRegel(FordelteAndelerModell... regelobjekter) {
 		List<FordelteAndelerModell> mellomregninger = Arrays.asList(regelobjekter);
-		List<FordelAndelModell> input = mellomregninger.stream().map(FordelteAndelerModell::getInputAndel).collect(Collectors.toList());
+		List<FordelAndelModell> input = mellomregninger.stream().map(FordelteAndelerModell::getInputAndel).toList();
 		FordelPeriodeModell periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), LocalDateInterval.TIDENES_ENDE), input);
 		FordelModell modell = new FordelModell(periode);
 		mellomregninger.forEach(modell::leggTilMellomregningAndel);

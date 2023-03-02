@@ -141,7 +141,7 @@ class BeregnPrArbeidsforholdFraAOrdningen extends LeafSpecification<Beregningsgr
 				.stream()
 				.filter(a -> a.getArbeidsgiverId() != null)
 				.filter(a -> a.getArbeidsgiverId().equals(arbeidsforhold.getArbeidsgiverId()))
-				.collect(Collectors.toList());
+				.toList();
 		BigDecimal beløpFraInntektsmeldingPrÅr = arbeidsforholdISammeOrg.stream()
 				.map(inntektsgrunnlag::getInntektFraInntektsmelding)
 				.map(beløp -> beløp.multiply(BigDecimal.valueOf(12)))

@@ -88,7 +88,7 @@ public class AvkortBGAndelerSomIkkeGjelderArbeidsforholdAndelsmessig extends Lea
         return grunnlag.getBeregningsgrunnlagPrStatusSomSkalBrukes().stream()
             .filter(bgps -> !bgps.erArbeidstakerEllerFrilanser())
             .sorted(Comparator.comparingInt(bgps -> bgps.getAktivitetStatus().getAvkortingPrioritet()))
-            .collect(Collectors.toList());
+            .toList();
     }
 
     private void lagResultaterFrilanser(BeregningsgrunnlagPrArbeidsforhold af, BigDecimal avkortetBrukersAndel, Map<String, Object> resultater) {

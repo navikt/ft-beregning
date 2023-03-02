@@ -180,7 +180,7 @@ public class BeregningsgrunnlagPeriode {
 	public List<AktivitetStatusMedHjemmel> getAktivitetStatuser() {
 		return beregningsgrunnlag.getAktivitetStatuser().stream()
 				.sorted(Comparator.comparing(as -> as.getAktivitetStatus().getBeregningPrioritet()))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	public List<PeriodeÅrsak> getPeriodeÅrsaker() {

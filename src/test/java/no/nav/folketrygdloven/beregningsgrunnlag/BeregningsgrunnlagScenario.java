@@ -146,7 +146,7 @@ public class BeregningsgrunnlagScenario {
             .medSkjæringstidspunkt(skjæringstidspunkt)
             .medGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2017))
             .medUregulertGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2017))
-            .medAktivitetStatuser(aktivitetStatuser.stream().map(as -> new AktivitetStatusMedHjemmel(as, null)).collect(Collectors.toList()))
+            .medAktivitetStatuser(aktivitetStatuser.stream().map(as -> new AktivitetStatusMedHjemmel(as, null)).toList())
             .medBeregningsgrunnlagPeriode(bgPeriode)
             .medGrunnbeløpSatser(GRUNNBELØPLISTE)
             .medYtelsesSpesifiktGrunnlag(ytelsesSpesifiktGrunnlag.orElse(new ForeldrepengerGrunnlag(false)))

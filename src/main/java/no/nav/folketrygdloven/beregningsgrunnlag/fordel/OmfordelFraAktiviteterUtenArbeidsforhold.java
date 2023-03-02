@@ -158,7 +158,7 @@ class OmfordelFraAktiviteterUtenArbeidsforhold extends LeafSpecification<FordelM
 		return beregningsgrunnlagPeriode.getAlleAndelerForStatus(AktivitetStatus.AT)
 				.stream()
 				.filter(this::matcherArbeidsforhold)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	private boolean matcherArbeidsforhold(FordelAndelModell a) {

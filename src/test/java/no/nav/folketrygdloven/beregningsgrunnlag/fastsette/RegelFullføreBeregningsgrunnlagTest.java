@@ -294,11 +294,11 @@ public class RegelFullføreBeregningsgrunnlagTest {
 	private List<Double> getForventetBrukersAndeler(List<Double> brutto, List<Double> bortfalteYtelser, List<Double> refusjonsBelop, Double belopTilFordeling) {
 		double forventetBG = brutto.stream().reduce(0d, (a, b) -> a + b) + bortfalteYtelser.stream().reduce(0d, (v1, v2) -> v1 + v2);
 		Iterator<Double> byIterator = bortfalteYtelser.iterator();
-		List<Double> fraksjonBrukersAndeler = brutto.stream().map(v -> (v + byIterator.next()) / forventetBG).collect(Collectors.toList());
+		List<Double> fraksjonBrukersAndeler = brutto.stream().map(v -> (v + byIterator.next()) / forventetBG).toList();
 		assertThat(fraksjonBrukersAndeler.stream().reduce(0d, (v1, v2) -> v1 + v2)).isEqualTo(1, offset);
-		List<Double> fordelingArbeidsforhold = fraksjonBrukersAndeler.stream().map(v -> belopTilFordeling * v).collect(Collectors.toList());
+		List<Double> fordelingArbeidsforhold = fraksjonBrukersAndeler.stream().map(v -> belopTilFordeling * v).toList();
 		Iterator<Double> refusjonIterator = refusjonsBelop.iterator();
-		List<Double> forventetBrukersAndeler = fordelingArbeidsforhold.stream().map(v -> (v - refusjonIterator.next())).collect(Collectors.toList());
+		List<Double> forventetBrukersAndeler = fordelingArbeidsforhold.stream().map(v -> (v - refusjonIterator.next())).toList();
 		if (forventetBrukersAndeler.get(0) < 0) {
 			if (brutto.size() > 1) {
 				List<Double> restListe = getForventetBrukersAndeler(brutto.subList(1, brutto.size()), bortfalteYtelser.subList(1, brutto.size()),

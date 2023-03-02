@@ -365,7 +365,7 @@ public class RegelFastsettAvkortetBGNårRefusjonOver6GTest {
 
     private void verifiserBrukersAndel(BeregningsgrunnlagPeriode grunnlag, List<Double> beløp) {
         List<BigDecimal> brukersAndel = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().stream().
-            map(BeregningsgrunnlagPrArbeidsforhold::getAvkortetBrukersAndelPrÅr).collect(Collectors.toList());
+            map(BeregningsgrunnlagPrArbeidsforhold::getAvkortetBrukersAndelPrÅr).toList();
         assertThat(brukersAndel).hasSameSizeAs(beløp);
         for (int ix = 0; ix < beløp.size(); ix++) {
             assertThat(brukersAndel.get(ix).doubleValue()).isCloseTo(beløp.get(ix), within(0.01));

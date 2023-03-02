@@ -86,7 +86,7 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
 	private List<BeregningsgrunnlagPrStatus> justerListeForFlereDagpengekilder(List<BeregningsgrunnlagPrStatus> andeler) {
 		if (andeler.stream().filter(a -> a.getAktivitetStatus().erDP()).count() > 1) {
 			andeler = andeler.stream().filter(a -> !a.getAktivitetStatus().erDP())
-					.collect(Collectors.toList());
+					.toList();
 			andeler.add(new BeregningsgrunnlagPrStatus(AktivitetStatus.DP));
 		}
 		return andeler;
@@ -134,7 +134,7 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
 
 	private List<AktivPeriode> hentAktivePerioder(LocalDate beregningstidspunkt, List<AktivPeriode> aktivePerioder) {
 		return aktivePerioder.stream()
-				.filter(ap -> ap.inneholder(beregningstidspunkt)).collect(Collectors.toList());
+				.filter(ap -> ap.inneholder(beregningstidspunkt)).toList();
 	}
 
 }

@@ -101,7 +101,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
 	                                                                 LocalDate skjæringstidspunktOpptjening) {
 		List<Periode> perioderEtterGrenseUtenYtelse = perioderUtenYtelse.stream()
 				.filter(p -> !p.getFom().isBefore(NYOPPSTARTET_FL_GRENSE))
-				.collect(Collectors.toList());
+				.toList();
 		LocalDate førsteDatoMedInntekt = finnFørsteDatoMedFrilansInntektEtterDato(grunnlag, NYOPPSTARTET_FL_GRENSE, skjæringstidspunktOpptjening);
 		if (perioderEtterGrenseUtenYtelse.isEmpty()) {
 			// Lager 12 måneder før første inntektsdato
@@ -109,7 +109,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
 		}
 		return perioderEtterGrenseUtenYtelse.stream()
 				.filter(p -> !p.getFom().isBefore(førsteDatoMedInntekt))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	private List<Periode> lag12MånederFørOgInkludertDato(LocalDate tidligsteDato, LocalDate senesteDato) {

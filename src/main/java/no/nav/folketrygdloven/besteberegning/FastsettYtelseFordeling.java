@@ -107,7 +107,7 @@ public class FastsettYtelseFordeling {
 				.map(Ytelsegrunnlag::getPerioder)
 				.flatMap(Collection::stream)
 				.filter(ytelsePeriode -> overlapperInntektsperiode(periodeViSkalOverlappeMed, ytelsePeriode))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	private static List<Inntekt> utledFordelingSykepenger(List<YtelsegrunnlagPeriode> perioderSomOverlapperInntektsperiode,

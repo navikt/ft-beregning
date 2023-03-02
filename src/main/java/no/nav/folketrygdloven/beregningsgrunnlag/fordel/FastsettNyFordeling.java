@@ -44,7 +44,7 @@ class FastsettNyFordeling implements RuleService<FordelModell> {
         var arbeidsandeler = beregningsgrunnlagPeriode.getAlleAndelerForStatus(AktivitetStatus.AT);
         return arbeidsandeler.stream()
             .filter(this::refusjonskravOverstigerBg)
-            .collect(Collectors.toList());
+            .toList();
     }
 
     private boolean refusjonskravOverstigerBg(FordelAndelModell arbeidsforhold) {

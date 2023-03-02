@@ -16,7 +16,7 @@ public class BeregningsgrunnlagPrStatus {
     public BeregningsgrunnlagPrStatus(AktivitetStatus aktivitetStatus, Arbeidsforhold... arbeidsforhold) {
         this.aktivitetStatus = aktivitetStatus;
         this.arbeidsforholdList = (arbeidsforhold != null)
-            ? Arrays.stream(arbeidsforhold).filter(Objects::nonNull).collect(Collectors.toList())
+            ? Arrays.stream(arbeidsforhold).filter(Objects::nonNull).toList()
             : Collections.emptyList();
     }
 

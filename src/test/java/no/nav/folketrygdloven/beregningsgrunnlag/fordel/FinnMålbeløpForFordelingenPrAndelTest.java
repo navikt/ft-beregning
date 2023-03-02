@@ -39,7 +39,7 @@ class FinnMålbeløpForFordelingenPrAndelTest {
 
 	private void kjørRegel(FordelteAndelerModell... mellom) {
 		List<FordelteAndelerModell> mellomregninger = Arrays.asList(mellom);
-		List<FordelAndelModell> inputAndeler = mellomregninger.stream().map(FordelteAndelerModell::getInputAndel).collect(Collectors.toList());
+		List<FordelAndelModell> inputAndeler = mellomregninger.stream().map(FordelteAndelerModell::getInputAndel).toList();
 		FordelPeriodeModell periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), LocalDateInterval.TIDENES_ENDE), inputAndeler);
 		FordelModell modell = new FordelModell(periode);
 		mellomregninger.forEach(modell::leggTilMellomregningAndel);

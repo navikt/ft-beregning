@@ -31,7 +31,7 @@ public class IdentifiserPerioderForRefusjon {
 
 		List<LocalDateSegment<BigDecimal>> kravSegmenter = inntektsmelding.getRefusjoner().stream()
 				.map(r -> new LocalDateSegment<>(r.getPeriode().getFom(), r.getPeriode().getTom(), r.getMånedsbeløp()))
-				.collect(Collectors.toList());
+				.toList();
 
 		LocalDateTimeline<BigDecimal> kravTidslinje = new LocalDateTimeline<>(kravSegmenter);
 

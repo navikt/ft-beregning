@@ -139,7 +139,7 @@ public class BeregningsgrunnlagFlerePerioderTest {
 
     private void verifiserRegelresultat(Beregningsgrunnlag beregningsgrunnlag, RegelResultat resultat) {
         assertThat(resultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
-        assertThat(resultat.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5038");
+        assertThat(resultat.getMerknader().stream().map(RegelMerknad::getMerknadKode).toList()).containsExactly("5038");
 	    assertThat(beregningsgrunnlag.getSammenligningsgrunnlagForStatus(SammenligningGrunnlagType.AT_FL).get().getAvvikPromille()).isEqualTo(11000L);
     }
 
