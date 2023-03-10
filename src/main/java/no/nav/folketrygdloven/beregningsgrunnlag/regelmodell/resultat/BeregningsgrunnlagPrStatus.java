@@ -182,7 +182,7 @@ public class BeregningsgrunnlagPrStatus {
     }
 
     public List<BeregningsgrunnlagPrArbeidsforhold> getArbeidsforholdIkkeFrilans() {
-        return getArbeidsforhold().stream().filter(af -> !af.erFrilanser()).collect(Collectors.toList());
+        return getArbeidsforhold().stream().filter(af -> !af.erFrilanser()).toList();
     }
 
     public Optional<BeregningsgrunnlagPrArbeidsforhold> getFrilansArbeidsforhold() {

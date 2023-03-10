@@ -109,7 +109,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
 		}
 		return perioderEtterGrenseUtenYtelse.stream()
 				.filter(p -> !p.getFom().isBefore(førsteDatoMedInntekt))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	private List<Periode> lag12MånederFørOgInkludertDato(LocalDate tidligsteDato, LocalDate senesteDato) {
