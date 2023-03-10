@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
@@ -109,7 +108,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
 		}
 		return perioderEtterGrenseUtenYtelse.stream()
 				.filter(p -> !p.getFom().isBefore(førsteDatoMedInntekt))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	private List<Periode> lag12MånederFørOgInkludertDato(LocalDate tidligsteDato, LocalDate senesteDato) {

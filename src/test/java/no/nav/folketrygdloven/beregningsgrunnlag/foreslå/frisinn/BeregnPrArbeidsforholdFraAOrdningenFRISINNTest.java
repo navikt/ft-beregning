@@ -43,7 +43,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
     @Test
     void nyoppstartet_fl_uten_ytelse() {
         // Arrange
-        BeregningsgrunnlagPrArbeidsforhold andel = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(FRILANS_ARBEIDSFORHOLD).medAndelNr(1L).build();
+	    BeregningsgrunnlagPrArbeidsforhold andel = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(FRILANS_ARBEIDSFORHOLD).medAndelNr(1L).build();
         inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,7,1), LocalDate.of(2019,7,31)), FRILANS_ARBEIDSFORHOLD, 8));
         Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(inntektsgrunnlag, STP);
 

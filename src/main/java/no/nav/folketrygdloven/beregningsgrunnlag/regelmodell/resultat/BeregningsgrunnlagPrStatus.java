@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -182,7 +181,7 @@ public class BeregningsgrunnlagPrStatus {
     }
 
     public List<BeregningsgrunnlagPrArbeidsforhold> getArbeidsforholdIkkeFrilans() {
-        return getArbeidsforhold().stream().filter(af -> !af.erFrilanser()).collect(Collectors.toList());
+        return getArbeidsforhold().stream().filter(af -> !af.erFrilanser()).toList();
     }
 
     public Optional<BeregningsgrunnlagPrArbeidsforhold> getFrilansArbeidsforhold() {
