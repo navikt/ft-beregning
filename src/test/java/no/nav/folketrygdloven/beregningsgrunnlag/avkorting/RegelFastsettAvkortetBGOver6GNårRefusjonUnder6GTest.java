@@ -48,7 +48,7 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
 
     @Test
     //Scenario 1: Arbeidsgiver har refusjonskrav er lik 6G
-    public void skalBeregneNårRefusjonKravErLik6G() {
+    void skalBeregneNårRefusjonKravErLik6G() {
         //Arrange
         double bruttoBG = 672000d;
         double refusjonsKrav = seksG;
@@ -69,7 +69,7 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
 
     @Test
     //Scenario 2: Arbeidsgiver har refusjonskrav mindre enn 6G
-    public void skalBeregneNårRefusjonKravErMindreEnn6G() {
+    void skalBeregneNårRefusjonKravErMindreEnn6G() {
         //Arrange
         double bruttoBG = 672000d;
         double refusjonsKrav = 300000d;
@@ -89,7 +89,7 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
 
     @Test
     //Scenario 3: Arbeidsgiver har ikke refusjonskrav
-    public void skalBeregneNårRefusjonKravErLikNull() {
+    void skalBeregneNårRefusjonKravErLikNull() {
         //Arrange
         double bruttoBG = 672000d;
         double refusjonsKrav = 0d;
@@ -109,7 +109,7 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
 
     @Test
     //Scenario 6: Brutto beregningsgrunnlag > 6G i ett av arbeidsforholdene, denne arbeidsgivers refusjonskrav er 6G, de andre arbeidsgiverne har ikke refusjonskrav
-    public void skalBeregneNårRefusjonKravErNullForEnAvDeToArbeidsgiverne() {
+    void skalBeregneNårRefusjonKravErNullForEnAvDeToArbeidsgiverne() {
         //Arrange
         double bruttoBG1 = 896000d;
         double bruttoBG2 = 448000d;
@@ -136,7 +136,7 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
 
     @Test
     //Scenario 9: En arbeidsgiver har refusjonskrav < 6G, de andre arbeidsgiverne har ikke refusjonskrav
-    public void skalBeregneNårRefusjonKravErNullForToAvDeTreArbeidsgiverne() {
+    void skalBeregneNårRefusjonKravErNullForToAvDeTreArbeidsgiverne() {
         //Arrange
         double bruttoBG1 = 100000d;
         double bruttoBG2 = 400000d;
@@ -168,7 +168,7 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
 
     @Test
     //Scenario 10: Flere arbeidsgiver har refusjonskrav < brutto beregningsgrunnlag for arbeidsgiveren, totalt refusjonskrav < 6G
-    public void skalBeregneNårRefusjonKravErNullForEnAvDeTreArbeidsgiverne() {
+    void skalBeregneNårRefusjonKravErNullForEnAvDeTreArbeidsgiverne() {
         //Arrange
         double bruttoBG1 = 400000d;
         double bruttoBG2 = 500000d;
@@ -200,7 +200,7 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
 
     @Test
     //Scenario 10: Flere arbeidsgiver har refusjonskrav < brutto beregningsgrunnlag for arbeidsgiveren, totalt refusjonskrav < 6G
-    public void skalBeregneNårAlleArbeidsgivereHarRefusjonKravMindreEnn6G() {
+    void skalBeregneNårAlleArbeidsgivereHarRefusjonKravMindreEnn6G() {
         //Arrange
         double bruttoBG1 = 400000d;
         double bruttoBG2 = 500000d;
@@ -237,7 +237,7 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
     // Scenario 11: Flere arbeidsforhold og totalt brutto BG > 6G , total refusjonskrav < 6G,
     // totalt BG for beregningsgrunnlagsandeler fra arbeidsforhold < 6G
     // arbeidsforhold arbeidstaker og dagpenger
-    public void skalBeregneAvkortningAvUlikeBeregningsgrunnlagsandelerMedEnAndelUtenArbeidsforhold(){ // NOSONAR
+    void skalBeregneAvkortningAvUlikeBeregningsgrunnlagsandelerMedEnAndelUtenArbeidsforhold(){ // NOSONAR
         double bruttoBG1 = 300000d;
         double refusjonsKrav1 = 20000d;
         double bruttoBG2 = 263000d;
@@ -266,7 +266,7 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
     // arbeidsforhold arbeidstaker
     // dagpenger
     // arbeidsavklaringspenger
-    public void skalBeregneAvkortningAvUlikeBeregningsgrunnlagsandelerMedToAndelUtenArbeidsforhold() { // NOSONAR
+    void skalBeregneAvkortningAvUlikeBeregningsgrunnlagsandelerMedToAndelUtenArbeidsforhold() { // NOSONAR
         double bruttoBG1 = 300000d;
         double bruttoBG2 = 130000d;
         double bruttoBG3 = 120000d;
@@ -300,7 +300,7 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
     // dagpenger
     // arbeidsavklaringspenger
     // selvstendig næringsdrivende
-    public void skalBeregneAvkortningAvUlikeBeregningsgrunnlagsandelerMedFlereAndelUtenArbeidsforhold() { // NOSONAR
+    void skalBeregneAvkortningAvUlikeBeregningsgrunnlagsandelerMedFlereAndelUtenArbeidsforhold() { // NOSONAR
         double bruttoBG1 = 300000d;
         double bruttoBG2 = 130000d;
         double bruttoBG3 = 110000d;
@@ -337,7 +337,7 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
     // totalt brutto BG > 6G , total refusjonskrav < 6G,
     // totalt BG for beregningsgrunnlagsandeler fra arbeidsforhold < 6G
     // Brutto beregningsgrunnlag for andelen fra frilanser >= beregningsgrunnlag uten arbeidsforhold til fordeling
-    public void skalBeregneAvkortningAvFrilanserMedBruttoBGForAndelenStørreEnnBGUtenArbeidsforhold() { // NOSONAR
+    void skalBeregneAvkortningAvFrilanserMedBruttoBGForAndelenStørreEnnBGUtenArbeidsforhold() { // NOSONAR
         double bruttoAT = 300000d;
         double refusjonsKrav = 20000d;
         double bruttoFL = 260000d;
@@ -368,7 +368,7 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
     // totalt brutto BG > 6G , total refusjonskrav < 6G,
     // totalt BG for beregningsgrunnlagsandeler fra arbeidsforhold < 6G
     // Brutto beregningsgrunnlag for andelen fra frilanser <= beregningsgrunnlag uten arbeidsforhold til fordeling
-    public void skalBeregneAvkortningAvFrilanserMedBruttoBGForAndelenMindreEnnBGUtenArbeidsforhold() { // NOSONAR
+    void skalBeregneAvkortningAvFrilanserMedBruttoBGForAndelenMindreEnnBGUtenArbeidsforhold() { // NOSONAR
         double bruttoAT = 300000d;
         double refusjonsKrav = 20000d;
         double bruttoFL = 200000d;

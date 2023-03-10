@@ -27,7 +27,7 @@ public class SjekkOmBortfallAvNaturalytelseTest {
     private Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("12345");
 
     @Test
-    public void skalReturnereNeiNårNaturalytelserHarOpphørtFørSkjæringstidspunkt() {
+    void skalReturnereNeiNårNaturalytelserHarOpphørtFørSkjæringstidspunkt() {
         //Arrange
         Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
         List<NaturalYtelse> naturalYtelser = List.of(new NaturalYtelse(BigDecimal.TEN, SKJÆRINGSTIDSPUNKT.minusYears(1), SKJÆRINGSTIDSPUNKT.minusDays(2)));
@@ -48,7 +48,7 @@ public class SjekkOmBortfallAvNaturalytelseTest {
     }
 
     @Test
-    public void skalReturnereJaNårNaturalytelserHarOpphørtPåSkjæringstidspunkt() {
+    void skalReturnereJaNårNaturalytelserHarOpphørtPåSkjæringstidspunkt() {
         //Arrange
         Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
         List<NaturalYtelse> naturalYtelser = List.of(new NaturalYtelse(BigDecimal.TEN, SKJÆRINGSTIDSPUNKT.minusYears(1), SKJÆRINGSTIDSPUNKT.minusDays(1)));

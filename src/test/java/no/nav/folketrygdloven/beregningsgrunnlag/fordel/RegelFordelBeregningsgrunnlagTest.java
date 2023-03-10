@@ -25,7 +25,7 @@ public class RegelFordelBeregningsgrunnlagTest {
     private static final String ORGNR3 = "973";
 
     @Test
-    public void skal_flytte_beregningsgrunnlag_fra_SN_til_to_arbeidsforhold_uten_rest() {
+    void skal_flytte_beregningsgrunnlag_fra_SN_til_to_arbeidsforhold_uten_rest() {
         // Arrange
         var refusjonskrav1 = BigDecimal.valueOf(200_000);
 	    var beregnetPrÅr1 = BigDecimal.valueOf(100_000);
@@ -61,7 +61,7 @@ public class RegelFordelBeregningsgrunnlagTest {
 
 
 	@Test
-	public void skal_flytte_beregningsgrunnlag_fra_ett_arbeidsforhold_til_to_andre_arbeidsforhold_uten_rest() {
+	void skal_flytte_beregningsgrunnlag_fra_ett_arbeidsforhold_til_to_andre_arbeidsforhold_uten_rest() {
 		// Arrange
 		var refusjonskrav1 = BigDecimal.valueOf(200_000);
 		var beregnetPrÅr1 = BigDecimal.valueOf(100_000);
@@ -87,7 +87,7 @@ public class RegelFordelBeregningsgrunnlagTest {
 	}
 
     @Test
-    public void skal_ikkje_omfordele() {
+    void skal_ikkje_omfordele() {
         // Arrange
         var refusjonskrav1 = BigDecimal.valueOf(200_000);
 	    var beregnetPrÅr1 = BigDecimal.valueOf(200_000);

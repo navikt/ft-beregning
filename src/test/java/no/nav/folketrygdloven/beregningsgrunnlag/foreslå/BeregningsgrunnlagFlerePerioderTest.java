@@ -35,12 +35,12 @@ public class BeregningsgrunnlagFlerePerioderTest {
     private LocalDate skjæringstidspunkt;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         skjæringstidspunkt = LocalDate.of(2018, Month.JANUARY, 15);
     }
 
     @Test
-    public void skalBeregneGrunnlagMedToPerioder() {
+    void skalBeregneGrunnlagMedToPerioder() {
         // Arrange
         BigDecimal månedsinntekt = BigDecimal.valueOf(20000d);
         BigDecimal refusjonskrav = BigDecimal.valueOf(20000d);
@@ -79,7 +79,7 @@ public class BeregningsgrunnlagFlerePerioderTest {
     }
 
     @Test
-    public void skalBeregneGrunnlagMedTrePerioder() {
+    void skalBeregneGrunnlagMedTrePerioder() {
         // Arrange
         BigDecimal månedsinntekt1 = BigDecimal.valueOf(20000);
         BigDecimal refusjonskrav1 = BigDecimal.valueOf(20000);

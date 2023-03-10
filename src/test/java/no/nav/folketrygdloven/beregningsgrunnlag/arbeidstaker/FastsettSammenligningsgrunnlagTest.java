@@ -24,7 +24,7 @@ public class FastsettSammenligningsgrunnlagTest {
 
     //Eksempel 1
     @Test
-    public void sammenligningsgrunnlagFørFristMedSisteInntektIkkeRapportert() {
+    void sammenligningsgrunnlagFørFristMedSisteInntektIkkeRapportert() {
         //Arrange
         var behandlingsdato = LocalDate.of(2019, 4, 3);
         LocalDate skjæringstidspunkt = LocalDate.of(2019, 5, 1);
@@ -43,7 +43,7 @@ public class FastsettSammenligningsgrunnlagTest {
 
     //Eksempel 2
     @Test
-    public void sammenligningsgrunnlagFørFristMedSisteInntektRapportert() {
+    void sammenligningsgrunnlagFørFristMedSisteInntektRapportert() {
         //Arrange
         var behandlingsdato = LocalDate.of(2019, 4, 3);
         LocalDate skjæringstidspunkt = LocalDate.of(2019, 5, 1);
@@ -62,7 +62,7 @@ public class FastsettSammenligningsgrunnlagTest {
 
     //Eksempel 3
     @Test
-    public void sammenligningsgrunnlagFørIHelgFristMedSisteInntektIkkeRapportert() {
+    void sammenligningsgrunnlagFørIHelgFristMedSisteInntektIkkeRapportert() {
         //Arrange
         var behandlingsdato = LocalDate.of(2019, 1, 7);
         LocalDate skjæringstidspunkt = LocalDate.of(2019, 2, 1);
@@ -80,7 +80,7 @@ public class FastsettSammenligningsgrunnlagTest {
     }
 
     @Test
-    public void sammenligningsgrunnlagEtterFristMedSisteInntektIkkeRapportert() {
+    void sammenligningsgrunnlagEtterFristMedSisteInntektIkkeRapportert() {
         //Arrange
         var behandlingsdato = LocalDate.of(2019, 10, 8);
         LocalDate skjæringstidspunkt = LocalDate.of(2019, 11, 1);
@@ -98,7 +98,7 @@ public class FastsettSammenligningsgrunnlagTest {
     }
 
     @Test
-    public void sammenligningsgrunnlagEtterFristMedSisteInntektRapportert() {
+    void sammenligningsgrunnlagEtterFristMedSisteInntektRapportert() {
         //Arrange
 	    var behandlingsdato = LocalDate.of(2019, 10, 8);
         LocalDate skjæringstidspunkt = LocalDate.of(2019, 11, 1);
@@ -117,7 +117,7 @@ public class FastsettSammenligningsgrunnlagTest {
 
     //Eksempel 4
     @Test
-    public void sammenligningsgrunnlagBehandlingEtterStp() {
+    void sammenligningsgrunnlagBehandlingEtterStp() {
         //Arrange
         var behandlingsdato = LocalDate.of(2019, 5, 11);
         LocalDate skjæringstidspunkt = LocalDate.of(2019, 5, 1);
@@ -135,7 +135,7 @@ public class FastsettSammenligningsgrunnlagTest {
     }
 
     @Test
-    public void sammenligningsgrunnlagBehandlingLengeEtterStp() {
+    void sammenligningsgrunnlagBehandlingLengeEtterStp() {
         //Arrange
         var behandlingsdato = LocalDate.of(2019, 6, 11);
         LocalDate skjæringstidspunkt = LocalDate.of(2019, 5, 1);
@@ -155,7 +155,7 @@ public class FastsettSammenligningsgrunnlagTest {
     }
 
     @Test
-    public void skalIkkeLageNyttSammenligningsgrunnlagNårAlleredeEksisterer() {
+    void skalIkkeLageNyttSammenligningsgrunnlagNårAlleredeEksisterer() {
         //Arrange
         LocalDate skjæringstidspunkt = LocalDate.of(2018, 10, 10);
         Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektsmelding(skjæringstidspunkt, BigDecimal.ZERO, BigDecimal.ZERO);

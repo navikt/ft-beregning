@@ -27,7 +27,7 @@ class FinnFraksjonPrAndelTest {
 
 
 	@Test
-	public void skal_teste_to_andeler_lik_inntekt_og_refusjon() {
+	void skal_teste_to_andeler_lik_inntekt_og_refusjon() {
 		// Arrange
 		FordelAndelModell foreslåttAndel = lagFordelAndelMedForeslått(AktivitetStatus.AT, arbeid("999", "abc"), 500_000, 500_000);
 		FordelAndelModell tilkommet = lagFordelAndelTilkommet(AktivitetStatus.AT, arbeid("888", "abc"), 500_000, 500_000);
@@ -42,7 +42,7 @@ class FinnFraksjonPrAndelTest {
 	}
 
 	@Test
-	public void skal_teste_to_andeler_en_krever_mindre_refusjon_enn_den_har_i_brutto() {
+	void skal_teste_to_andeler_en_krever_mindre_refusjon_enn_den_har_i_brutto() {
 		// Arrange
 		FordelAndelModell foreslåttAndel = lagFordelAndelMedForeslått(AktivitetStatus.AT, arbeid("999", "abc"), 500_000, 300_000);
 		FordelAndelModell tilkommet = lagFordelAndelTilkommet(AktivitetStatus.AT, arbeid("888", "abc"), 500_000, 500_000);
@@ -57,7 +57,7 @@ class FinnFraksjonPrAndelTest {
 	}
 
 	@Test
-	public void skal_akseptere_lite_avvik_når_beløp_ikke_er_delbart() {
+	void skal_akseptere_lite_avvik_når_beløp_ikke_er_delbart() {
 		// Arrange
 		FordelAndelModell foreslåttAndel = lagFordelAndelMedForeslått(AktivitetStatus.AT, arbeid("999", "abc"), 100_000, 100_000);
 		FordelAndelModell tilkommet1 = lagFordelAndelTilkommet(AktivitetStatus.AT, arbeid("999", "def"), 100_000, 100_000);
@@ -82,7 +82,7 @@ class FinnFraksjonPrAndelTest {
 	 * for tilkommet andel er det laveste av årsinntekt fra inntektsmelding og refusjon pr år
 	 */
 	@Test
-	public void skal_teste_fem_andeler_der_enkelte_ikke_krever_refusjon() {
+	void skal_teste_fem_andeler_der_enkelte_ikke_krever_refusjon() {
 		// Arrange
 
 		// Foreslåtte andeler
@@ -108,7 +108,7 @@ class FinnFraksjonPrAndelTest {
 	}
 
 	@Test
-	public void skal_teste_at_refusjonsbeløp_brukes_til_å_bestemme_fraksjon_om_mindre_enn_inntekt() {
+	void skal_teste_at_refusjonsbeløp_brukes_til_å_bestemme_fraksjon_om_mindre_enn_inntekt() {
 		// Arrange
 		FordelAndelModell foreslåttAndel = lagFordelAndelMedForeslått(AktivitetStatus.AT, arbeid("999", "abc"), 100_000, 100_000);
 		FordelAndelModell foreslåttAndelUtenRef = lagFordelAndelMedForeslått(AktivitetStatus.AT, arbeid("888", "abc"), 200_000, 0);
@@ -126,7 +126,7 @@ class FinnFraksjonPrAndelTest {
 	}
 
 	@Test
-	public void skal_teste_tre_andeler_som_ikke_kan_deles_perfekt_på_tre() {
+	void skal_teste_tre_andeler_som_ikke_kan_deles_perfekt_på_tre() {
 		// Arrange
 		FordelAndelModell foreslåttAndel1 = lagFordelAndelMedForeslått(AktivitetStatus.AT, arbeid("999", "abc"), 586_104, 586_104);
 		FordelAndelModell foreslåttAndel2 = lagFordelAndelTilkommet(AktivitetStatus.AT, arbeid("888", "abc"), 624_996, 624_996);

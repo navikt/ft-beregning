@@ -41,7 +41,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
 
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         PERIODE = BeregningsgrunnlagPeriode.builder()
             .medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
             .build();
@@ -51,7 +51,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
     }
 
     @Test
-    public void to_arbeidsforhold_hel_og_halv_utbetaling_kun_penger_til_refusjon() {
+    void to_arbeidsforhold_hel_og_halv_utbetaling_kun_penger_til_refusjon() {
         //Arrange
         double bruttoEn = 624_000;
         double refusjonEn = 600_000;
@@ -85,7 +85,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
     }
 
     @Test
-    public void to_arbeidsforhold_hel_og_halv_utbetaling_penger_til_bruker_og_refusjon() {
+    void to_arbeidsforhold_hel_og_halv_utbetaling_penger_til_bruker_og_refusjon() {
         //Arrange
         double bruttoEn = 624_000;
         double refusjonEn = 300_000;
@@ -116,7 +116,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
     }
 
     @Test
-    public void tre_arbeidsforhold_halv_og_halv_og_ingen_utbetaling_penger_til_bruker_og_refusjon() {
+    void tre_arbeidsforhold_halv_og_halv_og_ingen_utbetaling_penger_til_bruker_og_refusjon() {
         //Arrange
         double bruttoEn = 600_000;
         double refusjonEn = 560_000.04;
@@ -151,7 +151,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skal_teste_et_arbeidsforhold_med_refusjon_over_6G() {
+    void skal_teste_et_arbeidsforhold_med_refusjon_over_6G() {
         // Arrange
         leggTilArbeidsforhold(PERIODE, 1L, ORGNR1, ARB_ID_1, 612_000, 612_000, 100);
 
@@ -168,7 +168,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skal_teste_to_arbeidsforhold_beregningsgrunnlag_under_6G_full_refusjon_gradert() {
+    void skal_teste_to_arbeidsforhold_beregningsgrunnlag_under_6G_full_refusjon_gradert() {
         // Arrange
         leggTilArbeidsforhold(PERIODE, 1L, ORGNR1, ARB_ID_1, 200_000, 200_000, 100);
         leggTilArbeidsforhold(PERIODE, 2L, ORGNR2, ARB_ID_2, 300_000, 300_000, 50);
@@ -187,7 +187,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
     }
 
     @Test
-    public void næring_med_beregningsgrunnlag_under_6G() {
+    void næring_med_beregningsgrunnlag_under_6G() {
         // Arrange
         leggTilNæring(300_000, 100, 1L);
 
@@ -203,7 +203,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
     }
 
     @Test
-    public void næring_med_beregningsgrunnlag_under_6G_ikke_søkt_ytelse() {
+    void næring_med_beregningsgrunnlag_under_6G_ikke_søkt_ytelse() {
         // Arrange
         leggTilNæring(300_000, 0, 1L);
 
@@ -219,7 +219,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
     }
 
     @Test
-    public void næring_med_beregningsgrunnlag_under_6G_delvis_søkt_ytelse() {
+    void næring_med_beregningsgrunnlag_under_6G_delvis_søkt_ytelse() {
         // Arrange
         leggTilNæring(300_000, 50, 1L);
 
@@ -235,7 +235,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
     }
 
     @Test
-    public void næring_med_beregningsgrunnlag_over_6G_delvis_søkt_ytelse() {
+    void næring_med_beregningsgrunnlag_over_6G_delvis_søkt_ytelse() {
         // Arrange
         leggTilNæring(800_000, 50, 1L);
 
@@ -251,7 +251,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skal_teste_to_arbeidsforhold_beregningsgrunnlag_over_6G_refusjon_under_6G_gradert() {
+    void skal_teste_to_arbeidsforhold_beregningsgrunnlag_over_6G_refusjon_under_6G_gradert() {
         // Arrange
         leggTilArbeidsforhold(PERIODE, 1L, ORGNR1, ARB_ID_1, 800_000, 200_000, 100);
         leggTilArbeidsforhold(PERIODE, 2L, ORGNR2, ARB_ID_2, 200_000, 200_000, 50);
@@ -270,7 +270,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skal_teste_to_arbeidsforhold_med_refusjon_over_6G() {
+    void skal_teste_to_arbeidsforhold_med_refusjon_over_6G() {
         // Arrange
         leggTilArbeidsforhold(PERIODE, 1L, ORGNR1, ARB_ID_1, 600_000, 560_000, 100);
         leggTilArbeidsforhold(PERIODE, 2L, ORGNR2, ARB_ID_2, 750_000, 200_000, 100);
@@ -291,7 +291,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skal_teste_to_arbeidsforhold_med_refusjon_under_6G() {
+    void skal_teste_to_arbeidsforhold_med_refusjon_under_6G() {
         // Arrange
         leggTilArbeidsforhold(PERIODE, 1L, ORGNR1, ARB_ID_1, 600_000, 150_000, 100);
         leggTilArbeidsforhold(PERIODE, 2L, ORGNR2, ARB_ID_2, 750_000, 200_000, 100);
@@ -312,7 +312,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skal_teste_to_arbeidsforhold_med_refusjon_og_inntekt_under_6G() {
+    void skal_teste_to_arbeidsforhold_med_refusjon_og_inntekt_under_6G() {
         // Arrange
         leggTilArbeidsforhold(PERIODE, 1L, ORGNR1, ARB_ID_1, 150_000, 100_000, 100);
         leggTilArbeidsforhold(PERIODE, 2L, ORGNR2, ARB_ID_2, 200_000, 200_000, 100);
@@ -333,7 +333,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skal_teste_to_arbeidsforhold_med_refusjon_lik_6G_og_inntekt_over_6G_gradert() {
+    void skal_teste_to_arbeidsforhold_med_refusjon_lik_6G_og_inntekt_over_6G_gradert() {
         // Arrange
         leggTilArbeidsforhold(PERIODE, 1L, ORGNR1, ARB_ID_1, 600_000, 600_000, 100);
         leggTilArbeidsforhold(PERIODE, 2L, ORGNR2, ARB_ID_2, 600_000, 0, 50);
@@ -352,7 +352,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skal_teste_to_arbeidsforhold_med_refusjon_lik_6G_for_begge_og_inntekt_over_6G_gradert() {
+    void skal_teste_to_arbeidsforhold_med_refusjon_lik_6G_for_begge_og_inntekt_over_6G_gradert() {
         // Arrange
         leggTilArbeidsforhold(PERIODE, 1L, ORGNR1, ARB_ID_1, 600_000, 600_000, 100);
         leggTilArbeidsforhold(PERIODE, 2L, ORGNR2, ARB_ID_2, 600_000, 600_000, 50);
@@ -371,7 +371,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skal_teste_to_arbeidsforhold_med_refusjon_lik_6G_og_1G_og_inntekt_over_6G_gradert() {
+    void skal_teste_to_arbeidsforhold_med_refusjon_lik_6G_og_1G_og_inntekt_over_6G_gradert() {
         // Arrange
         leggTilArbeidsforhold(PERIODE, 1L, ORGNR1, ARB_ID_1, 600_000, 600_000, 100);
         leggTilArbeidsforhold(PERIODE, 2L, ORGNR2, ARB_ID_2, 600_000, 100_000, 50);
@@ -390,7 +390,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skal_teste_arbeidsforhold_med_refusjon_uten_tilrettelegging_og_tilrettelegging_uten_refusjon() {
+    void skal_teste_arbeidsforhold_med_refusjon_uten_tilrettelegging_og_tilrettelegging_uten_refusjon() {
         // Arrange
         leggTilArbeidsforhold(PERIODE, 1L, ORGNR1, ARB_ID_1, 300_000, 150_000, 100);
         leggTilArbeidsforhold(PERIODE, 2L, ORGNR2, ARB_ID_2, 210_000, 210_000, 0);
@@ -411,7 +411,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skal_teste_arbeidstaker_med_delvis_søkt_ytelse() {
+    void skal_teste_arbeidstaker_med_delvis_søkt_ytelse() {
         // Arrange
         leggTilArbeidsforhold(PERIODE, 1L, ORGNR1, ARB_ID_1, 300_000, 0, 45);
 
@@ -428,7 +428,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skal_teste_frilans_med_beregningsgrunnlag_under_6G() {
+    void skal_teste_frilans_med_beregningsgrunnlag_under_6G() {
         // Arrange
         leggTilFrilans(300_000, 100, 1L);
 
@@ -444,7 +444,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skal_teste_frilans_med_beregningsgrunnlag_under_6G_delvis_søkt_ytelse() {
+    void skal_teste_frilans_med_beregningsgrunnlag_under_6G_delvis_søkt_ytelse() {
         // Arrange
         leggTilFrilans(300_000, 50, 1L);
 
@@ -460,7 +460,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skal_teste_frilans_med_beregningsgrunnlag_under_6G_ikke_søkt_ytelse() {
+    void skal_teste_frilans_med_beregningsgrunnlag_under_6G_ikke_søkt_ytelse() {
         // Arrange
         leggTilFrilans(300_000, 0, 1L);
 
@@ -476,7 +476,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skal_teste_frilans_og_arbeid_med_beregningsgrunnlag_under_6G_søkt_ytelse_for_alle() {
+    void skal_teste_frilans_og_arbeid_med_beregningsgrunnlag_under_6G_søkt_ytelse_for_alle() {
         // Arrange
         leggTilFrilans(200_000, 100, 1L);
         leggTilArbeidsforhold(PERIODE, 2L, ORGNR1, ARB_ID_1, 200_000, 0, 100);
@@ -495,7 +495,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skal_teste_frilans_og_arbeid_med_beregningsgrunnlag_over_6G_for_arbeid_søkt_ytelse_for_alle() {
+    void skal_teste_frilans_og_arbeid_med_beregningsgrunnlag_over_6G_for_arbeid_søkt_ytelse_for_alle() {
         // Arrange
         leggTilFrilans(200_000, 100, 1L);
         leggTilArbeidsforhold(PERIODE, 2L, ORGNR1, ARB_ID_1, 800_000, 0, 100);
@@ -514,7 +514,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skal_teste_frilans_og_arbeid_med_beregningsgrunnlag_over_6G_for_arbeid_søkt_ytelse_for_frilans() {
+    void skal_teste_frilans_og_arbeid_med_beregningsgrunnlag_over_6G_for_arbeid_søkt_ytelse_for_frilans() {
         // Arrange
         leggTilFrilans(200_000, 100, 1L);
         leggTilArbeidsforhold(PERIODE, 2L, ORGNR1, ARB_ID_1, 800_000, 0, 0);
@@ -533,7 +533,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skal_teste_frilans_og_arbeid_med_beregningsgrunnlag_over_6G_til_sammen_søkt_delvis_ytelse_for_frilans() {
+    void skal_teste_frilans_og_arbeid_med_beregningsgrunnlag_over_6G_til_sammen_søkt_delvis_ytelse_for_frilans() {
         // Arrange
         leggTilFrilans(500_000, 50, 1L);
         leggTilArbeidsforhold(PERIODE, 2L, ORGNR1, ARB_ID_1, 500_000, 0, 0);
@@ -552,7 +552,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skal_teste_frilans_og_to_arbeid_med_beregningsgrunnlag_over_6G_til_sammen_søkt_ytelse_for_alle_med_refusjonkrav_som_overstiger_total_avkortet_for_arbeid() {
+    void skal_teste_frilans_og_to_arbeid_med_beregningsgrunnlag_over_6G_til_sammen_søkt_ytelse_for_alle_med_refusjonkrav_som_overstiger_total_avkortet_for_arbeid() {
         // Arrange
         leggTilFrilans(500_000, 100, 1L);
         leggTilArbeidsforhold(PERIODE, 2L, ORGNR1, ARB_ID_1, 500_000, 500_000, 100);
@@ -573,7 +573,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skal_teste_frilans_og_to_arbeid_med_beregningsgrunnlag_over_6G_til_sammen_søkt_ytelse_for_alle_med_refusjonkrav_som_overstiger_total_avkortet_for_arbeid_med_fordeling_av_refusjonskrav() {
+    void skal_teste_frilans_og_to_arbeid_med_beregningsgrunnlag_over_6G_til_sammen_søkt_ytelse_for_alle_med_refusjonkrav_som_overstiger_total_avkortet_for_arbeid_med_fordeling_av_refusjonskrav() {
         // Arrange
         leggTilFrilans(500_000, 100, 1L);
         leggTilArbeidsforhold(PERIODE, 2L, ORGNR1, ARB_ID_1, 500_000, 500_000, 100);
@@ -594,7 +594,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skal_teste_to_arbeidsforhold_hos_en_arbeidsgiver_med_beregningsgrunnlag_over_6G() {
+    void skal_teste_to_arbeidsforhold_hos_en_arbeidsgiver_med_beregningsgrunnlag_over_6G() {
         // Arrange
         leggTilArbeidsforhold(PERIODE, 2L, ORGNR1, ARB_ID_1, 400_000, 300_000, 100);
         leggTilArbeidsforhold(PERIODE, 3L, ORGNR2, ARB_ID_2, 300_000, 300_000, 100);
@@ -613,7 +613,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skal_teste_to_arbeidsforhold_hos_en_arbeidsgiver_med_beregningsgrunnlag_over_6G_ikke_full_utbetaling() {
+    void skal_teste_to_arbeidsforhold_hos_en_arbeidsgiver_med_beregningsgrunnlag_over_6G_ikke_full_utbetaling() {
         // Arrange
         leggTilArbeidsforhold(PERIODE, 2L, ORGNR1, ARB_ID_1, 624_000, 300_000, 50);
         leggTilArbeidsforhold(PERIODE, 3L, ORGNR2, ARB_ID_2, 576_000, 200_000, 100);

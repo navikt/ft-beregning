@@ -43,7 +43,7 @@ public class BeregningsgrunnlagTest {
 
 
 	@Test
-	public void skalGiRegelmerknadVedNullFrilansInntektSisteTreMåneder() {
+	void skalGiRegelmerknadVedNullFrilansInntektSisteTreMåneder() {
 		// Arrange
 		BigDecimal månedsinntekt = BigDecimal.ZERO;
 		BigDecimal refusjonskrav = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
@@ -64,7 +64,7 @@ public class BeregningsgrunnlagTest {
 	}
 
 	@Test
-	public void skalBeregneGrunnlagAGVedSammeFrilansInntektSisteTreMåneder() {
+	void skalBeregneGrunnlagAGVedSammeFrilansInntektSisteTreMåneder() {
 		// Arrange
 		BigDecimal månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
 		BigDecimal refusjonskrav = månedsinntekt;
@@ -83,7 +83,7 @@ public class BeregningsgrunnlagTest {
 	}
 
 	@Test
-	public void skalBeregneGrunnlagUtenInntektsmeldingN1N2N3() {
+	void skalBeregneGrunnlagUtenInntektsmeldingN1N2N3() {
 		// Arrange
 		BigDecimal månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
 		BigDecimal refusjonskrav = månedsinntekt;
@@ -102,7 +102,7 @@ public class BeregningsgrunnlagTest {
 	}
 
 	@Test
-	public void skalBeregneGrunnlagUtenInntektsmeldingN1N3() {
+	void skalBeregneGrunnlagUtenInntektsmeldingN1N3() {
 		// Arrange
 		BigDecimal månedsinntekt = BigDecimal.valueOf(25000);
 		LocalDate skjæringstidspunkt2 = LocalDate.of(2018, Month.APRIL, 26);
@@ -127,7 +127,7 @@ public class BeregningsgrunnlagTest {
 	}
 
 	@Test
-	public void skalBeregneGrunnlagUtenInntektsmeldingN1N2() {
+	void skalBeregneGrunnlagUtenInntektsmeldingN1N2() {
 		// Arrange
 		BigDecimal månedsinntektForSG = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 3);
 		BigDecimal månedsinntektForBG = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
@@ -149,7 +149,7 @@ public class BeregningsgrunnlagTest {
 	}
 
 	@Test
-	public void skalBeregneGrunnlagUtenInntektsmeldingN1() {
+	void skalBeregneGrunnlagUtenInntektsmeldingN1() {
 		// Arrange
 		BigDecimal månedsinntektForBG = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
 		BigDecimal månedsinntektForSG = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 6);
@@ -171,7 +171,7 @@ public class BeregningsgrunnlagTest {
 	}
 
 	@Test
-	public void skalBeregneGrunnlagAGUtenInntektsmeldingMedLønnsendring1Måned() {
+	void skalBeregneGrunnlagAGUtenInntektsmeldingMedLønnsendring1Måned() {
 		// Arrange
 		BigDecimal månedsinntekt = BigDecimal.valueOf(25000);
 		BigDecimal refusjonskrav = månedsinntekt;
@@ -198,7 +198,7 @@ public class BeregningsgrunnlagTest {
 	}
 
 	@Test
-	public void skalBeregneGrunnlagAGUtenInntektsmeldingMedLønnsendring2Måneder() {
+	void skalBeregneGrunnlagAGUtenInntektsmeldingMedLønnsendring2Måneder() {
 		// Arrange
 		BigDecimal månedsinntekt = BigDecimal.valueOf(25000);
 		BigDecimal refusjonskrav = månedsinntekt;
@@ -226,7 +226,7 @@ public class BeregningsgrunnlagTest {
 	}
 
 	@Test
-	public void skalBeregneGrunnlagAGUtenInntektsmeldingMedLønnsendring3Måneder() {
+	void skalBeregneGrunnlagAGUtenInntektsmeldingMedLønnsendring3Måneder() {
 		// Arrange
 		BigDecimal månedsinntekt = BigDecimal.valueOf(25000);
 		BigDecimal refusjonskrav = månedsinntekt;
@@ -253,7 +253,7 @@ public class BeregningsgrunnlagTest {
 	}
 
 	@Test
-	public void skalGiRegelmerknadVedAvvikVedLønnsøkning() {
+	void skalGiRegelmerknadVedAvvikVedLønnsøkning() {
 		// Arrange
 		BigDecimal månedsinntekt = BigDecimal.valueOf(25000);
 		BigDecimal refusjonskrav = månedsinntekt;
@@ -281,7 +281,7 @@ public class BeregningsgrunnlagTest {
 	}
 
 	@Test
-	public void skalBeregneGrunnlagAGMedInntektsmelding() {
+	void skalBeregneGrunnlagAGMedInntektsmelding() {
 		// Arrange
 		BigDecimal månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
 		BigDecimal refusjonskrav = månedsinntekt;
@@ -307,7 +307,7 @@ public class BeregningsgrunnlagTest {
 	}
 
 	@Test
-	public void toArbeidsforholdMedInntektsmelding() {
+	void toArbeidsforholdMedInntektsmelding() {
 		// Arrange
 		BigDecimal månedsinntekt1 = BigDecimal.valueOf(15000);
 		BigDecimal månedsinntekt2 = BigDecimal.valueOf(25000);
@@ -332,7 +332,7 @@ public class BeregningsgrunnlagTest {
 	}
 
 	@Test
-	public void toFrilansArbeidsforhold() {
+	void toFrilansArbeidsforhold() {
 		// Arrange
 		BigDecimal månedsinntekt1 = BigDecimal.valueOf(15000);
 		BigDecimal månedsinntekt2 = BigDecimal.valueOf(25000);
@@ -356,7 +356,7 @@ public class BeregningsgrunnlagTest {
 	}
 
 	@Test
-	public void kombinasjonArbeidstakerOgFrilans() {
+	void kombinasjonArbeidstakerOgFrilans() {
 		// Arrange
 		BigDecimal månedsinntektFrilans = BigDecimal.valueOf(15000);
 		BigDecimal månedsinntektArbeidstaker = BigDecimal.valueOf(25000);
@@ -381,7 +381,7 @@ public class BeregningsgrunnlagTest {
 	}
 
 	@Test
-	public void kombinasjonArbeidstakerOgFrilansDerFrilansinntektErNull() {
+	void kombinasjonArbeidstakerOgFrilansDerFrilansinntektErNull() {
 		// Arrange
 		BigDecimal månedsinntektFrilans = BigDecimal.ZERO;
 		BigDecimal månedsinntektArbeidstaker = BigDecimal.valueOf(25000);
@@ -407,7 +407,7 @@ public class BeregningsgrunnlagTest {
 	}
 
 	@Test
-	public void skalTesteManueltFastsattMånedsinntekt() {
+	void skalTesteManueltFastsattMånedsinntekt() {
 		int beregnetPrÅr = 250000;
 		List<Arbeidsforhold> arbeidsforholdList = Collections.singletonList(Arbeidsforhold.builder().medOrgnr("123").medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT).build());
 		Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, new Inntektsgrunnlag(),

@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 public class BevegeligeHelligdagerUtilTest {
 
     @Test
-    public void skal_gi_helligdagene_for_2017() {
+    void skal_gi_helligdagene_for_2017() {
         // 1.nyttårsdag, palmesømdag og 1.påskedag fjernes fordi de er søndager
         LocalDate skjærTorsdag = LocalDate.of(2017, 4, 13);
         LocalDate langFredag = LocalDate.of(2017, 4, 14);
@@ -39,7 +39,7 @@ public class BevegeligeHelligdagerUtilTest {
     }
 
     @Test
-    public void skal_gi_helligdagene_for_2018() {
+    void skal_gi_helligdagene_for_2018() {
         // palmesømdag og 1.påskedag fjernes fordi de er søndager
 
         LocalDate førsteNyttårsdag = LocalDate.of(2018, 1, 1);
@@ -71,7 +71,7 @@ public class BevegeligeHelligdagerUtilTest {
     }
 
     @Test
-    public void skal_gi_helligdagene_for_2019() {
+    void skal_gi_helligdagene_for_2019() {
         // palmesømdag og 1.påskedag fjernes fordi de er søndager
         LocalDate førsteNyttårsdag = LocalDate.of(2019, 1, 1);
         LocalDate skjærTorsdag = LocalDate.of(2019, 4, 18);
@@ -102,49 +102,49 @@ public class BevegeligeHelligdagerUtilTest {
     }
 
     @Test
-    public void skal_gi_samme_virkedag_når_dato_er_virkedag() {
+    void skal_gi_samme_virkedag_når_dato_er_virkedag() {
         LocalDate dato = LocalDate.of(2018, 9, 18);
         LocalDate nesteVirkedag = BevegeligeHelligdagerUtil.hentFørsteVirkedagFraOgMed(dato);
         assertThat(nesteVirkedag).isEqualTo(dato);
     }
 
     @Test
-    public void skal_gi_neste_virkedag_når_dato_er_lørdag() {
+    void skal_gi_neste_virkedag_når_dato_er_lørdag() {
         LocalDate dato = LocalDate.of(2019, 2, 2);
         LocalDate nesteVirkedag = BevegeligeHelligdagerUtil.hentFørsteVirkedagFraOgMed(dato);
         assertThat(nesteVirkedag).isEqualTo(LocalDate.of(2019, 2, 4));
     }
 
     @Test
-    public void skal_gi_neste_virkedag_når_dato_er_søndag() {
+    void skal_gi_neste_virkedag_når_dato_er_søndag() {
         LocalDate dato = LocalDate.of(2019, 4, 28);
         LocalDate nesteVirkedag = BevegeligeHelligdagerUtil.hentFørsteVirkedagFraOgMed(dato);
         assertThat(nesteVirkedag).isEqualTo(LocalDate.of(2019, 4, 29));
     }
 
     @Test
-    public void skal_gi_neste_virkedag_når_dato_er_helligdag() {
+    void skal_gi_neste_virkedag_når_dato_er_helligdag() {
         LocalDate dato = LocalDate.of(2019, 5, 17);
         LocalDate nesteVirkedag = BevegeligeHelligdagerUtil.hentFørsteVirkedagFraOgMed(dato);
         assertThat(nesteVirkedag).isEqualTo(LocalDate.of(2019, 5, 20));
     }
 
     @Test
-    public void skal_gi_at_det_er_helligdag() {
+    void skal_gi_at_det_er_helligdag() {
         LocalDate dato = LocalDate.of(2019, 4, 21);
         boolean resultat = BevegeligeHelligdagerUtil.erDatoHelligdagEllerHelg(dato);
         assertThat(resultat).isTrue();
     }
 
     @Test
-    public void skal_gi_at_det_er_helg() {
+    void skal_gi_at_det_er_helg() {
         LocalDate dato = LocalDate.of(2019, 3, 3);
         boolean resultat = BevegeligeHelligdagerUtil.erDatoHelligdagEllerHelg(dato);
         assertThat(resultat).isTrue();
     }
 
     @Test
-    public void skal_gi_at_det_ikke_er_helg_eller_helligdag() {
+    void skal_gi_at_det_ikke_er_helg_eller_helligdag() {
         LocalDate dato = LocalDate.of(2019, 5, 6);
         boolean resultat = BevegeligeHelligdagerUtil.erDatoHelligdagEllerHelg(dato);
         assertThat(resultat).isFalse();

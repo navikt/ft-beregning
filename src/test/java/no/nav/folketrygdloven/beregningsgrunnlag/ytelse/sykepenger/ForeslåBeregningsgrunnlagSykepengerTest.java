@@ -31,12 +31,12 @@ public class ForeslåBeregningsgrunnlagSykepengerTest {
     private LocalDate skjæringstidspunkt;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         skjæringstidspunkt = LocalDate.of(2018, Month.JANUARY, 15);
     }
 
     @Test
-    public void skalBeregneSykepengerGrunnlagMedInntektsmeldingMedNaturalYtelserIArbeidsgiverperioden() {
+    void skalBeregneSykepengerGrunnlagMedInntektsmeldingMedNaturalYtelserIArbeidsgiverperioden() {
         // Arrange
         BigDecimal månedsinntekt = BigDecimal.valueOf(40000);
         BigDecimal refusjonskrav = BigDecimal.valueOf(10000);
@@ -59,7 +59,7 @@ public class ForeslåBeregningsgrunnlagSykepengerTest {
     }
 
     @Test
-    public void skalBeregneSykepengerGrunnlagMedInntektsmeldingMedNaturalYtelserUtenforArbeidsgiverperioden() {
+    void skalBeregneSykepengerGrunnlagMedInntektsmeldingMedNaturalYtelserUtenforArbeidsgiverperioden() {
         // Arrange
         BigDecimal månedsinntekt = BigDecimal.valueOf(40000);
         BigDecimal refusjonskrav = BigDecimal.valueOf(10000);
@@ -83,7 +83,7 @@ public class ForeslåBeregningsgrunnlagSykepengerTest {
     }
 
     @Test
-    public void skalIkkeBeregneSykepengerGrunnlagMedInntektsmeldingMedNaturalYtelserIArbeidsgiverperiodenNårIFPSAK() {
+    void skalIkkeBeregneSykepengerGrunnlagMedInntektsmeldingMedNaturalYtelserIArbeidsgiverperiodenNårIFPSAK() {
         // Arrange
         BigDecimal månedsinntekt = BigDecimal.valueOf(40000);
         BigDecimal refusjonskrav = BigDecimal.valueOf(10000);

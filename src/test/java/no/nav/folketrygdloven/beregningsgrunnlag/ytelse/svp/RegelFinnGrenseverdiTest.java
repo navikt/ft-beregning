@@ -28,7 +28,7 @@ public class RegelFinnGrenseverdiTest {
 	private static final String ORGNR_3 = "976967631";
 
 	@Test
-	public void ett_arbeidsforhold_under_6G() {
+	void ett_arbeidsforhold_under_6G() {
 		//Arrange
 		double beregnetPrÅr = 400_000;
 
@@ -49,7 +49,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void ett_arbeidsforhold_under_6G_midlertidig_inaktiv_type_A() {
+	void ett_arbeidsforhold_under_6G_midlertidig_inaktiv_type_A() {
 		//Arrange
 		double beregnetPrÅr = 400_000;
 
@@ -74,7 +74,7 @@ public class RegelFinnGrenseverdiTest {
 
 
 	@Test
-	public void ett_arbeidsforhold_under_6G_ikkje_søkt_ytelse() {
+	void ett_arbeidsforhold_under_6G_ikkje_søkt_ytelse() {
 		//Arrange
 		double beregnetPrÅr = 400_000;
 
@@ -95,7 +95,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void ett_arbeidsforhold_over_6G() {
+	void ett_arbeidsforhold_over_6G() {
 		//Arrange
 		double beregnetPrÅr = 800_000;
 
@@ -116,7 +116,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void to_arbeidsforhold_under_6G() {
+	void to_arbeidsforhold_under_6G() {
 		//Arrange
 		double beregnetPrÅr = 250_000;
 		double beregnetPrÅr2 = 300_000;
@@ -139,7 +139,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void to_arbeidsforhold_under_6G_tilkommet_inntekt_i_det_ene() {
+	void to_arbeidsforhold_under_6G_tilkommet_inntekt_i_det_ene() {
 		//Arrange
 		double beregnetPrÅr = 250_000;
 		double tilkommetPrÅr2 = 100_000;
@@ -163,7 +163,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void to_arbeidsforhold_under_6G_fordelt_og_tilkommet_inntekt_i_det_ene() {
+	void to_arbeidsforhold_under_6G_fordelt_og_tilkommet_inntekt_i_det_ene() {
 		//Arrange
 		double beregnetPrÅr = 250_000;
 		double fordeltPrÅr = 150_000;
@@ -192,7 +192,7 @@ public class RegelFinnGrenseverdiTest {
 
 
 	@Test
-	public void to_arbeidsforhold_over_6G() {
+	void to_arbeidsforhold_over_6G() {
 		//Arrange
 		double beregnetPrÅr = 350_000;
 		double beregnetPrÅr2 = 300_000;
@@ -215,7 +215,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void to_arbeidsforhold_over_6G_pluss_et_tilkommet() {
+	void to_arbeidsforhold_over_6G_pluss_et_tilkommet() {
 		//Arrange
 		double beregnetPrÅr = 500_000;
 		double beregnetPrÅr2 = 300_000;
@@ -242,7 +242,7 @@ public class RegelFinnGrenseverdiTest {
 
 
 	@Test
-	public void to_arbeidsforhold_under_6G_søkt_ytelse_for_en() {
+	void to_arbeidsforhold_under_6G_søkt_ytelse_for_en() {
 		//Arrange
 		double beregnetPrÅr = 250_000;
 		double beregnetPrÅr2 = 300_000;
@@ -265,7 +265,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void to_arbeidsforhold_under_6G_søkt_ytelse_for_en_pluss_et_tilkommet() {
+	void to_arbeidsforhold_under_6G_søkt_ytelse_for_en_pluss_et_tilkommet() {
 		//Arrange
 		double beregnetPrÅr = 250_000;
 		double beregnetPrÅr2 = 300_000;
@@ -292,7 +292,7 @@ public class RegelFinnGrenseverdiTest {
 
 
 	@Test
-	public void to_arbeidsforhold_til_sammen_over_6G_søkt_ytelse_for_en() {
+	void to_arbeidsforhold_til_sammen_over_6G_søkt_ytelse_for_en() {
 		//Arrange
 		double beregnetPrÅr = 500_000;
 		double beregnetPrÅr2 = 500_000;
@@ -315,7 +315,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void to_arbeidsforhold_til_sammen_over_6G_søkt_ytelse_for_en_pluss_et_tilkommet() {
+	void to_arbeidsforhold_til_sammen_over_6G_søkt_ytelse_for_en_pluss_et_tilkommet() {
 		//Arrange
 		double beregnetPrÅr = 500_000;
 		double beregnetPrÅr2 = 500_000;
@@ -341,7 +341,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void to_arbeidsforhold_til_sammen_over_6G_søkt_ytelse_for_begge_gradert_pluss_et_tilkommet() {
+	void to_arbeidsforhold_til_sammen_over_6G_søkt_ytelse_for_begge_gradert_pluss_et_tilkommet() {
 		//Arrange
 		double beregnetPrÅr = 500_000;
 		double beregnetPrÅr2 = 500_000;
@@ -367,7 +367,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void to_arbeidsforhold_den_ene_over_6G_søkt_ytelse_for_en() {
+	void to_arbeidsforhold_den_ene_over_6G_søkt_ytelse_for_en() {
 		//Arrange
 		double beregnetPrÅr = 800_000;
 		double beregnetPrÅr2 = 200_000;
@@ -390,7 +390,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void to_arbeidsforhold_under_6G_delvis_søkt_ytelse_for_en_full_ytelse_for_en() {
+	void to_arbeidsforhold_under_6G_delvis_søkt_ytelse_for_en_full_ytelse_for_en() {
 		//Arrange
 		double beregnetPrÅr = 250_000;
 		double beregnetPrÅr2 = 300_000;
@@ -413,7 +413,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void to_arbeidsforhold_over_6G_for_begge_delvis_søkt_ytelse_for_en_full_ytelse_for_en() {
+	void to_arbeidsforhold_over_6G_for_begge_delvis_søkt_ytelse_for_en_full_ytelse_for_en() {
 		//Arrange
 		double beregnetPrÅr = 600_000;
 		double beregnetPrÅr2 = 600_000;
@@ -436,7 +436,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void to_arbeidsforhold_over_6G_for_en_delvis_søkt_ytelse_for_en_full_ytelse_for_en() {
+	void to_arbeidsforhold_over_6G_for_en_delvis_søkt_ytelse_for_en_full_ytelse_for_en() {
 		//Arrange
 		double beregnetPrÅr = 800_000;
 		double beregnetPrÅr2 = 200_000;
@@ -459,7 +459,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void to_arbeidsforhold_over_6G_for_en_delvis_søkt_ytelse_for_en_full_ytelse_for_den_over_6G() {
+	void to_arbeidsforhold_over_6G_for_en_delvis_søkt_ytelse_for_en_full_ytelse_for_den_over_6G() {
 		//Arrange
 		double beregnetPrÅr = 600_000;
 		double beregnetPrÅr2 = 300_000;
@@ -483,7 +483,7 @@ public class RegelFinnGrenseverdiTest {
 
 
 	@Test
-	public void to_arbeidsforhold_under_6G_delvis_søkt_ytelse_for_begge() {
+	void to_arbeidsforhold_under_6G_delvis_søkt_ytelse_for_begge() {
 		//Arrange
 		double beregnetPrÅr = 250_000;
 		double beregnetPrÅr2 = 300_000;
@@ -506,7 +506,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void to_arbeidsforhold_over_6G_for_begge_delvis_søkt_ytelse_for_begge() {
+	void to_arbeidsforhold_over_6G_for_begge_delvis_søkt_ytelse_for_begge() {
 		//Arrange
 		double beregnetPrÅr = 600_000;
 		double beregnetPrÅr2 = 600_000;
@@ -529,7 +529,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void to_arbeidsforhold_over_6G_for_en_delvis_søkt_ytelse_for_begge() {
+	void to_arbeidsforhold_over_6G_for_en_delvis_søkt_ytelse_for_begge() {
 		//Arrange
 		double beregnetPrÅr = 600_000;
 		double beregnetPrÅr2 = 300_000;
@@ -552,7 +552,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void to_arbeidsforhold_over_6G_delvis_søkt_ytelse_for_begge() {
+	void to_arbeidsforhold_over_6G_delvis_søkt_ytelse_for_begge() {
 		//Arrange
 		double beregnetPrÅr = 250_000;
 		double beregnetPrÅr2 = 300_000;
@@ -576,7 +576,7 @@ public class RegelFinnGrenseverdiTest {
 
 
 	@Test
-	public void tre_arbeidsforhold_over_6G_søkt_ytelse_for_en() {
+	void tre_arbeidsforhold_over_6G_søkt_ytelse_for_en() {
 		//Arrange
 		double beregnetPrÅr = 300_000;
 		double beregnetPrÅr2 = 300_000;
@@ -602,7 +602,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void tre_arbeidsforhold_over_6G_søkt_ytelse_for_to() {
+	void tre_arbeidsforhold_over_6G_søkt_ytelse_for_to() {
 		//Arrange
 		double beregnetPrÅr = 300_000;
 		double beregnetPrÅr2 = 300_000;
@@ -628,7 +628,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void tre_arbeidsforhold_over_6G_delvis_søkt_ytelse_for_en_full_for_en() {
+	void tre_arbeidsforhold_over_6G_delvis_søkt_ytelse_for_en_full_for_en() {
 		//Arrange
 		double beregnetPrÅr = 300_000;
 		double beregnetPrÅr2 = 300_000;
@@ -654,7 +654,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void tre_arbeidsforhold_over_6G_søkt_ytelse_for_alle() {
+	void tre_arbeidsforhold_over_6G_søkt_ytelse_for_alle() {
 		//Arrange
 		double beregnetPrÅr = 300_000;
 		double beregnetPrÅr2 = 300_000;
@@ -680,7 +680,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void frilans_under_6G_søkt_ytelse() {
+	void frilans_under_6G_søkt_ytelse() {
 		//Arrange
 		double beregnetPrÅr = 300_000;
 
@@ -701,7 +701,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void frilans_under_6G_ikkje_søkt_ytelse() {
+	void frilans_under_6G_ikkje_søkt_ytelse() {
 		//Arrange
 		double beregnetPrÅr = 300_000;
 
@@ -722,7 +722,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void frilans_over_6G_søkt_ytelse() {
+	void frilans_over_6G_søkt_ytelse() {
 		//Arrange
 		double beregnetPrÅr = 800_000;
 
@@ -743,7 +743,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void frilans_under_6G_delvis_søkt_ytelse() {
+	void frilans_under_6G_delvis_søkt_ytelse() {
 		//Arrange
 		double beregnetPrÅr = 300_000;
 
@@ -764,7 +764,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void frilans_over_6G_delvis_søkt_ytelse() {
+	void frilans_over_6G_delvis_søkt_ytelse() {
 		//Arrange
 		double beregnetPrÅr = 800_000;
 
@@ -787,7 +787,7 @@ public class RegelFinnGrenseverdiTest {
 
 
 	@Test
-	public void frilans_og_et_arbeidsforhold_under_6G_søkt_ytelse_for_begge() {
+	void frilans_og_et_arbeidsforhold_under_6G_søkt_ytelse_for_begge() {
 		//Arrange
 		double beregnetPrÅr = 300_000;
 		double beregnetPrÅr2 = 200_000;
@@ -811,7 +811,7 @@ public class RegelFinnGrenseverdiTest {
 
 
 	@Test
-	public void et_arbeidsforhold_under_6G_tilkommet_frilansinntekt() {
+	void et_arbeidsforhold_under_6G_tilkommet_frilansinntekt() {
 		//Arrange
 		double beregnetPrÅr = 300_000;
 		double tilkommetFrilansinntekt = 100_000;
@@ -835,7 +835,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void frilans_og_et_arbeidsforhold_under_6G_søkt_ytelse_for_begge_tilkommet_frilansinntekt() {
+	void frilans_og_et_arbeidsforhold_under_6G_søkt_ytelse_for_begge_tilkommet_frilansinntekt() {
 		//Arrange
 		double beregnetPrÅr = 300_000;
 		double beregnetPrÅr2 = 200_000;
@@ -860,7 +860,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void frilans_og_et_arbeidsforhold_over_6G_søkt_ytelse_for_begge_tilkommet_frilansinntekt() {
+	void frilans_og_et_arbeidsforhold_over_6G_søkt_ytelse_for_begge_tilkommet_frilansinntekt() {
 		//Arrange
 		double beregnetPrÅr = 800_000;
 		double beregnetPrÅr2 = 200_000;
@@ -886,7 +886,7 @@ public class RegelFinnGrenseverdiTest {
 
 
 	@Test
-	public void frilans_og_et_arbeidsforhold_over_6G_søkt_ytelse_for_begge() {
+	void frilans_og_et_arbeidsforhold_over_6G_søkt_ytelse_for_begge() {
 		//Arrange
 		double beregnetPrÅr = 800_000;
 		double beregnetPrÅr2 = 200_000;
@@ -910,7 +910,7 @@ public class RegelFinnGrenseverdiTest {
 
 
 	@Test
-	public void frilans_og_et_arbeidsforhold_under_6G_søkt_ytelse_for_kun_frilans() {
+	void frilans_og_et_arbeidsforhold_under_6G_søkt_ytelse_for_kun_frilans() {
 		//Arrange
 		double beregnetPrÅr = 200_000;
 		double beregnetPrÅr2 = 300_000;
@@ -933,7 +933,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void frilans_og_et_arbeidsforhold_under_6G_søkt_ytelse_for_kun_arbeid() {
+	void frilans_og_et_arbeidsforhold_under_6G_søkt_ytelse_for_kun_arbeid() {
 		//Arrange
 		double beregnetPrÅr = 200_000;
 		double beregnetPrÅr2 = 300_000;
@@ -956,7 +956,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void frilans_og_et_arbeidsforhold_over_6G_til_sammen_søkt_ytelse_for_kun_frilans() {
+	void frilans_og_et_arbeidsforhold_over_6G_til_sammen_søkt_ytelse_for_kun_frilans() {
 		//Arrange
 		double beregnetPrÅr = 500_000;
 		double beregnetPrÅr2 = 500_000;
@@ -979,7 +979,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void frilans_og_et_arbeidsforhold_over_6G_til_sammen_søkt_ytelse_for_kun_arbeid() {
+	void frilans_og_et_arbeidsforhold_over_6G_til_sammen_søkt_ytelse_for_kun_arbeid() {
 		//Arrange
 		double beregnetPrÅr = 500_000;
 		double beregnetPrÅr2 = 500_000;
@@ -1002,7 +1002,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void frilans_og_et_arbeidsforhold_over_6G_for_arbeidsforhold_søkt_ytelse_for_begge() {
+	void frilans_og_et_arbeidsforhold_over_6G_for_arbeidsforhold_søkt_ytelse_for_begge() {
 		//Arrange
 		double beregnetPrÅr = 200_000;
 		double beregnetPrÅr2 = 800_000;
@@ -1025,7 +1025,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void frilans_og_et_arbeidsforhold_over_6G_for_arbeidsforhold_søkt_ytelse_for_kun_frilans() {
+	void frilans_og_et_arbeidsforhold_over_6G_for_arbeidsforhold_søkt_ytelse_for_kun_frilans() {
 		//Arrange
 		double beregnetPrÅr = 200_000;
 		double beregnetPrÅr2 = 800_000;
@@ -1048,7 +1048,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void frilans_og_et_arbeidsforhold_over_6G_for_arbeidsforhold_søkt_ytelse_for_kun_arbeid() {
+	void frilans_og_et_arbeidsforhold_over_6G_for_arbeidsforhold_søkt_ytelse_for_kun_arbeid() {
 		//Arrange
 		double beregnetPrÅr = 200_000;
 		double beregnetPrÅr2 = 800_000;
@@ -1072,7 +1072,7 @@ public class RegelFinnGrenseverdiTest {
 
 
 	@Test
-	public void næring_under_6G_søkt_ytelse() {
+	void næring_under_6G_søkt_ytelse() {
 		//Arrange
 		double beregnetPrÅr = 200_000;
 
@@ -1093,7 +1093,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void næring_under_6G_søkt_delvis_ytelse() {
+	void næring_under_6G_søkt_delvis_ytelse() {
 		//Arrange
 		double beregnetPrÅr = 200_000;
 
@@ -1114,7 +1114,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void næring_under_6G_søkt_delvis_ytelse_tilkommet_inntekt() {
+	void næring_under_6G_søkt_delvis_ytelse_tilkommet_inntekt() {
 		//Arrange
 		double beregnetPrÅr = 200_000;
 		double tilkommet = 50_000;
@@ -1138,7 +1138,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void næring_under_6G_ikkje_søkt_ytelse() {
+	void næring_under_6G_ikkje_søkt_ytelse() {
 		//Arrange
 		double beregnetPrÅr = 200_000;
 
@@ -1159,7 +1159,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void næring_og_frilans_under_6G_søkt_ytelse_for_begge() {
+	void næring_og_frilans_under_6G_søkt_ytelse_for_begge() {
 		//Arrange
 		double beregnetPrÅr = 200_000;
 
@@ -1181,7 +1181,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void næring_og_frilans_over_6G_søkt_ytelse_for_begge() {
+	void næring_og_frilans_over_6G_søkt_ytelse_for_begge() {
 		//Arrange
 		double beregnetPrÅr = 500_000;
 
@@ -1203,7 +1203,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void næring_og_frilans_over_6G_søkt_ytelse_for_begge_tilkommet_næring() {
+	void næring_og_frilans_over_6G_søkt_ytelse_for_begge_tilkommet_næring() {
 		//Arrange
 		double beregnetPrÅr = 500_000;
 		double tilkommet = 100_000;
@@ -1227,7 +1227,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void næring_og_frilans_over_6G_for_næring_søkt_ytelse_for_næring() {
+	void næring_og_frilans_over_6G_for_næring_søkt_ytelse_for_næring() {
 		//Arrange
 		double beregnetPrÅr = 800_000;
 		double beregnetPrÅr2 = 200_000;
@@ -1250,7 +1250,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void næring_og_frilans_over_6G_for_frilans_søkt_ytelse_for_næring() {
+	void næring_og_frilans_over_6G_for_frilans_søkt_ytelse_for_næring() {
 		//Arrange
 		double beregnetPrÅr = 200_000;
 		double beregnetPrÅr2 = 800_000;
@@ -1273,7 +1273,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void næring_og_frilans_over_6G_for_frilans_søkt_ytelse_for_frilans() {
+	void næring_og_frilans_over_6G_for_frilans_søkt_ytelse_for_frilans() {
 		//Arrange
 		double beregnetPrÅr = 200_000;
 		double beregnetPrÅr2 = 800_000;
@@ -1296,7 +1296,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void næring_frilans_og_arbeidsforhold_under_6G_søkt_ytelse_for_alle() {
+	void næring_frilans_og_arbeidsforhold_under_6G_søkt_ytelse_for_alle() {
 		//Arrange
 		double beregnetPrÅr = 100_000;
 
@@ -1319,7 +1319,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void næring_frilans_og_arbeidsforhold_under_6G_søkt_ytelse_for_næring() {
+	void næring_frilans_og_arbeidsforhold_under_6G_søkt_ytelse_for_næring() {
 		//Arrange
 		double beregnetPrÅr = 100_000;
 
@@ -1342,7 +1342,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void næring_frilans_og_arbeidsforhold_under_6G_søkt_ytelse_for_arbeid() {
+	void næring_frilans_og_arbeidsforhold_under_6G_søkt_ytelse_for_arbeid() {
 		//Arrange
 		double beregnetPrÅr = 100_000;
 
@@ -1365,7 +1365,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void næring_frilans_og_arbeidsforhold_over_6G_for_næring_søkt_ytelse_for_arbeid() {
+	void næring_frilans_og_arbeidsforhold_over_6G_for_næring_søkt_ytelse_for_arbeid() {
 		//Arrange
 		double beregnetPrÅr = 800_000;
 		double beregnetPrÅr2 = 100_000;
@@ -1390,7 +1390,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void næring_frilans_og_arbeidsforhold_over_6G_for_næring_søkt_ytelse_for_næring() {
+	void næring_frilans_og_arbeidsforhold_over_6G_for_næring_søkt_ytelse_for_næring() {
 		//Arrange
 		double beregnetPrÅr = 800_000;
 		double beregnetPrÅr2 = 100_000;
@@ -1415,7 +1415,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void næring_frilans_og_arbeidsforhold_over_6G_for_næring_søkt_delvis_ytelse_for_næring() {
+	void næring_frilans_og_arbeidsforhold_over_6G_for_næring_søkt_delvis_ytelse_for_næring() {
 		//Arrange
 		double beregnetPrÅr = 800_000;
 		double beregnetPrÅr2 = 100_000;
@@ -1440,7 +1440,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void næring_og_arbeidsforhold_over_6G_til_sammen_søkt_delvis_ytelse_for_næring_rest_etter_arbeid_mindre_enn_bg_for_frilans() {
+	void næring_og_arbeidsforhold_over_6G_til_sammen_søkt_delvis_ytelse_for_næring_rest_etter_arbeid_mindre_enn_bg_for_frilans() {
 		//Arrange
 		double beregnetPrÅr = 500_000;
 		double beregnetPrÅr2 = 200_000;
@@ -1463,7 +1463,7 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
-	public void næring_og_arbeidsforhold_over_6G_til_sammen_søkt_delvis_ytelse_for_næring_rest_etter_arbeid_mindre_enn_gradert_bg_for_frilans() {
+	void næring_og_arbeidsforhold_over_6G_til_sammen_søkt_delvis_ytelse_for_næring_rest_etter_arbeid_mindre_enn_gradert_bg_for_frilans() {
 		//Arrange
 		double beregnetPrÅr = 500_000;
 		double beregnetPrÅr2 = 400_000;

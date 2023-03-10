@@ -29,7 +29,7 @@ public class RegelForeslåBeregningsgrunnlagMilitærTest {
     private static final BigDecimal BELØP_MILITÆR_HAR_KRAV_PÅ_FP = GRUNNBELØP_2018.multiply(ANTALL_G_MILITÆR_HAR_KRAV_PÅ_FP);
 
     @Test
-    public void skalTesteAtMSBlirSattTil3GNårIkkeFastsattAvSaksbehandler() {
+    void skalTesteAtMSBlirSattTil3GNårIkkeFastsattAvSaksbehandler() {
         //Arrange
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(SKJÆRINGSTIDSPUNKT, new Inntektsgrunnlag(),
             Collections.singletonList(AktivitetStatus.MS));
@@ -46,7 +46,7 @@ public class RegelForeslåBeregningsgrunnlagMilitærTest {
     }
 
     @Test
-    public void skalTesteAtMSBlirSattTil3GNårSaksbehandlerHarFastsattMindreEnn3G() {
+    void skalTesteAtMSBlirSattTil3GNårSaksbehandlerHarFastsattMindreEnn3G() {
         //Arrange
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(SKJÆRINGSTIDSPUNKT, new Inntektsgrunnlag(),
             Collections.singletonList(AktivitetStatus.MS));
@@ -67,7 +67,7 @@ public class RegelForeslåBeregningsgrunnlagMilitærTest {
     }
 
     @Test
-    public void skalTesteAtMSBlirSattTilDetSaksbehandlerHarFastsattNårMerEnn3G() {
+    void skalTesteAtMSBlirSattTilDetSaksbehandlerHarFastsattNårMerEnn3G() {
         //Arrange
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(SKJÆRINGSTIDSPUNKT, new Inntektsgrunnlag(),
             Collections.singletonList(AktivitetStatus.MS));
@@ -88,7 +88,7 @@ public class RegelForeslåBeregningsgrunnlagMilitærTest {
     }
 
     @Test
-    public void skalTesteAtMSFårDifferansenOver0Mellom3GogBruttoPåGrunnlaget() {
+    void skalTesteAtMSFårDifferansenOver0Mellom3GogBruttoPåGrunnlaget() {
         //Arrange
         BigDecimal snInntekt = BigDecimal.valueOf(76783);
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(SKJÆRINGSTIDSPUNKT, new Inntektsgrunnlag(),
@@ -113,7 +113,7 @@ public class RegelForeslåBeregningsgrunnlagMilitærTest {
     }
 
     @Test
-    public void skalTesteAtMSIkkeFårPengerNårSamletBruttoOver3G() {
+    void skalTesteAtMSIkkeFårPengerNårSamletBruttoOver3G() {
         //Arrange
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(SKJÆRINGSTIDSPUNKT, new Inntektsgrunnlag(),
             Arrays.asList(AktivitetStatus.MS, AktivitetStatus.SN, AktivitetStatus.DP));

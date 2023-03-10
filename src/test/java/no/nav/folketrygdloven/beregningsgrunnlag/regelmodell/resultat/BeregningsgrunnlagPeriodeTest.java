@@ -26,7 +26,7 @@ public class BeregningsgrunnlagPeriodeTest {
     private static final LocalDate skjæringstidspunkt = LocalDate.of(2018, Month.JANUARY, 15);
 
     @Test
-    public void skal_teste_at_aktivitetstatuser_MS_og_SN_og_ATFLSN_returneres_sist() {
+    void skal_teste_at_aktivitetstatuser_MS_og_SN_og_ATFLSN_returneres_sist() {
         //Arrange
         List<AktivitetStatusMedHjemmel> alleStatuser = Stream.of(AktivitetStatus.values())
                 .map(as -> new AktivitetStatusMedHjemmel(as, null))

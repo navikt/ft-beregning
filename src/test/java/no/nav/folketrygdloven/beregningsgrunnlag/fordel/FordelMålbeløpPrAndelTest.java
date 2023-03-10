@@ -29,7 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class FordelMålbeløpPrAndelTest {
 
 	@Test
-	public void skal_teste_fordeling_mellom_arbeidsforhold_med_refusjon_med_samme_inntektskategori() {
+	void skal_teste_fordeling_mellom_arbeidsforhold_med_refusjon_med_samme_inntektskategori() {
 		// Arrange
 		FordelteAndelerModell andel1 = lagArbeidsandel(arbeid("999", "abc"), 200_000, 150_000);
 		FordelteAndelerModell andel2 = lagArbeidsandel(arbeid("888", "abc"), null, 50_000);
@@ -48,7 +48,7 @@ class FordelMålbeløpPrAndelTest {
 	}
 
 	@Test
-	public void skal_teste_fordeling_fra_en_eksisterende_med_ref_til_to_tilkomne() {
+	void skal_teste_fordeling_fra_en_eksisterende_med_ref_til_to_tilkomne() {
 		// Arrange
 		FordelteAndelerModell andel1 = lagArbeidsandel(arbeid("999", "abc"), 200_000, 150_000);
 		FordelteAndelerModell andel2 = lagArbeidsandel(arbeid("888", "abc"), null, 20_000);
@@ -71,7 +71,7 @@ class FordelMålbeløpPrAndelTest {
 	}
 
 	@Test
-	public void skal_overskrive_andel_med_inntektskategori_udefinert() {
+	void skal_overskrive_andel_med_inntektskategori_udefinert() {
 		// Arrange
 		FordelteAndelerModell andel1 = lagArbeidsandel(arbeid("999", "abc"), 400_000, 150_000);
 		FordelteAndelerModell andel2 = lagArbeidsandelUdefinertIK(arbeid("888", "abc"), null, 250_000);
@@ -90,7 +90,7 @@ class FordelMålbeløpPrAndelTest {
 	}
 
 	@Test
-	public void skal_teste_fordeling_fra_næring_og_arbeid_til_to_tilkomne_likt_fordelt() {
+	void skal_teste_fordeling_fra_næring_og_arbeid_til_to_tilkomne_likt_fordelt() {
 		// Arrange
 		FordelteAndelerModell atAndel = lagArbeidsandel(arbeid("999", "abc"), 60_000, 60_000);
 		FordelteAndelerModell snAndel = lagSNAndel(100_000, 0);
@@ -117,7 +117,7 @@ class FordelMålbeløpPrAndelTest {
 	}
 
 	@Test
-	public void skal_fordele_fra_tre_eksisterende_til_et_tilkommet_arbeidsforhold() {
+	void skal_fordele_fra_tre_eksisterende_til_et_tilkommet_arbeidsforhold() {
 		// Arrange
 		FordelteAndelerModell andel1 = lagArbeidsandel(arbeid("999", "abc"), 200_000, 50_000);
 		FordelteAndelerModell andel2 = lagArbeidsandel(arbeid("888", "abc"), 100_000, 100_000);
@@ -144,7 +144,7 @@ class FordelMålbeløpPrAndelTest {
 	}
 
 	@Test
-	public void skal_fordele_fra_frilans_og_næring_og_arbeid_til_tilkommet_arbeid() {
+	void skal_fordele_fra_frilans_og_næring_og_arbeid_til_tilkommet_arbeid() {
 		// Arrange
 		FordelteAndelerModell arbeid = lagArbeidsandel(arbeid("999", "abc"), 200_000, 150_000);
 		FordelteAndelerModell frilans = lagFLAndel(100_000, 0);

@@ -27,7 +27,7 @@ import no.nav.fpsak.nare.specification.Specification;
 public class BeregningsgrunnlagDocTest {
 
     @Test
-    public void test_documentation() { // NOSONAR
+    void test_documentation() { // NOSONAR
         String orgnr = "4353";
         LocalDate skjæringstidspunkt = LocalDate.of(2018, Month.JANUARY, 15);
         BigDecimal månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);

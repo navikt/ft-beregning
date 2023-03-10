@@ -26,7 +26,7 @@ public class BeregnPrArbeidsforholdNaturalytelseBortfaltTest {
     private Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("12345");
 
     @Test
-    public void skalSummereNaturalytelserBortfaltPåSkjæringstidspunktet() {
+    void skalSummereNaturalytelserBortfaltPåSkjæringstidspunktet() {
         //Arrange
         Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
         List<NaturalYtelse> naturalYtelser = List.of(

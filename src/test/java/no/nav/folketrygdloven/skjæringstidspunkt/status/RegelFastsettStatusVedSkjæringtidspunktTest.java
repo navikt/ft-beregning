@@ -25,14 +25,14 @@ public class RegelFastsettStatusVedSkjæringtidspunktTest {
     private AktivitetStatusModell regelmodell;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         skjæringstidspunktForBeregning = LocalDate.of(2018, Month.JANUARY, 15);
         regelmodell = new AktivitetStatusModell();
         regelmodell.setSkjæringstidspunktForBeregning(skjæringstidspunktForBeregning);
     }
 
     @Test
-    public void skalFastsetteStatusDPNårAktivitetErDagpengerMottaker(){
+    void skalFastsetteStatusDPNårAktivitetErDagpengerMottaker(){
         // Arrange
         AktivPeriode aktivPeriode = AktivPeriode.forAndre(Aktivitet.DAGPENGEMOTTAKER, Periode.of(skjæringstidspunktForBeregning.minusWeeks(4), skjæringstidspunktForBeregning.plusWeeks(2)));
         regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode);
@@ -49,7 +49,7 @@ public class RegelFastsettStatusVedSkjæringtidspunktTest {
     }
 
     @Test
-    public void skalFastsetteStatusATFLNårAktivitetErArbeidsinntektOgSykepengerOpphørtToDagerFørSP(){
+    void skalFastsetteStatusATFLNårAktivitetErArbeidsinntektOgSykepengerOpphørtToDagerFørSP(){
         // Arrange
         AktivPeriode aktivPeriode = new AktivPeriode(Aktivitet.ARBEIDSTAKERINNTEKT, Periode.of(skjæringstidspunktForBeregning.minusWeeks(2), skjæringstidspunktForBeregning.plusWeeks(3)), ARBEIDSFORHOLD);
         regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode);
@@ -71,7 +71,7 @@ public class RegelFastsettStatusVedSkjæringtidspunktTest {
     }
 
     @Test
-    public void skalFastsetteStatusArbeidstakerNårAktivitetErArbeidsinntektOgSykepengerOpphørt1DagFørSP(){
+    void skalFastsetteStatusArbeidstakerNårAktivitetErArbeidsinntektOgSykepengerOpphørt1DagFørSP(){
         // Arrange
         AktivPeriode aktivPeriode = new AktivPeriode(Aktivitet.ARBEIDSTAKERINNTEKT, Periode.of(skjæringstidspunktForBeregning.minusWeeks(2), skjæringstidspunktForBeregning.plusWeeks(3)), ARBEIDSFORHOLD);
         regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode);
@@ -93,7 +93,7 @@ public class RegelFastsettStatusVedSkjæringtidspunktTest {
     }
 
     @Test
-    public void skalFastsetteStatusKUNTYNårAktivitetErSvangerskapspenger(){
+    void skalFastsetteStatusKUNTYNårAktivitetErSvangerskapspenger(){
         // Arrange
         AktivPeriode aktivPeriode = AktivPeriode.forAndre(Aktivitet.SVANGERSKAPSPENGER_MOTTAKER, Periode.of(skjæringstidspunktForBeregning.minusMonths(1), skjæringstidspunktForBeregning.plusWeeks(3)));
         regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode);
@@ -110,7 +110,7 @@ public class RegelFastsettStatusVedSkjæringtidspunktTest {
     }
 
     @Test
-    public void skalFastsetteStatusKUNTYNårAktivitetErKunSykepengerPåSkjæringstidspunktet() {
+    void skalFastsetteStatusKUNTYNårAktivitetErKunSykepengerPåSkjæringstidspunktet() {
         AktivPeriode aktivPeriode = new AktivPeriode(Aktivitet.ARBEIDSTAKERINNTEKT, Periode.of(skjæringstidspunktForBeregning.minusMonths(12), skjæringstidspunktForBeregning.minusDays(2)), ARBEIDSFORHOLD);
         regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode);
         AktivPeriode aktivPeriode2 = new AktivPeriode(Aktivitet.FRILANSINNTEKT, Periode.of(skjæringstidspunktForBeregning.minusMonths(12), skjæringstidspunktForBeregning.minusMonths(2)), Arbeidsforhold.frilansArbeidsforhold());
@@ -132,7 +132,7 @@ public class RegelFastsettStatusVedSkjæringtidspunktTest {
 
 
     @Test
-    public void skalFastsetteStatusATFLNårKombinasjonerAvAktivitetErArbeidsinntektOgSykepenger(){
+    void skalFastsetteStatusATFLNårKombinasjonerAvAktivitetErArbeidsinntektOgSykepenger(){
         // Arrange
         AktivPeriode aktivPeriode = new AktivPeriode(Aktivitet.ARBEIDSTAKERINNTEKT, Periode.of(skjæringstidspunktForBeregning.minusWeeks(2), skjæringstidspunktForBeregning.plusWeeks(3)), ARBEIDSFORHOLD);
         regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode);
@@ -155,7 +155,7 @@ public class RegelFastsettStatusVedSkjæringtidspunktTest {
     }
 
     @Test
-    public void skalFastsetteStatusAAPVedKombinasjonerAvTYOgAAP(){
+    void skalFastsetteStatusAAPVedKombinasjonerAvTYOgAAP(){
         // Arrange
         AktivPeriode aktivPeriode = AktivPeriode.forAndre(Aktivitet.AAP_MOTTAKER, Periode.of(skjæringstidspunktForBeregning.minusWeeks(2), skjæringstidspunktForBeregning.plusWeeks(3)));
         regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode);
@@ -176,7 +176,7 @@ public class RegelFastsettStatusVedSkjæringtidspunktTest {
     }
 
     @Test
-    public void skalFastsetteStatusDPVedKombinasjonerAvTYOgDP(){
+    void skalFastsetteStatusDPVedKombinasjonerAvTYOgDP(){
         // Arrange
         AktivPeriode aktivPeriode = AktivPeriode.forAndre(Aktivitet.DAGPENGEMOTTAKER, Periode.of(skjæringstidspunktForBeregning.minusDays(1), skjæringstidspunktForBeregning.plusWeeks(3)));
         regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode);
@@ -197,7 +197,7 @@ public class RegelFastsettStatusVedSkjæringtidspunktTest {
     }
 
     @Test
-    public void skalFastsetteStatusATFL_SNVedKombinasjonerAvAktivitetFrilanserOgNæringsinntekt(){
+    void skalFastsetteStatusATFL_SNVedKombinasjonerAvAktivitetFrilanserOgNæringsinntekt(){
         // Arrange
         AktivPeriode aktivPeriode = new AktivPeriode(Aktivitet.FRILANSINNTEKT, Periode.of(skjæringstidspunktForBeregning.minusDays(3), skjæringstidspunktForBeregning.plusWeeks(2)), Arbeidsforhold.frilansArbeidsforhold());
         regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode);
@@ -220,7 +220,7 @@ public class RegelFastsettStatusVedSkjæringtidspunktTest {
     }
 
     @Test
-    public void skalFastsetteStatusATFL_SNogDPVedKombinasjonerAvAktivitetArbeidsinntektNæringsinntektogMilitær(){
+    void skalFastsetteStatusATFL_SNogDPVedKombinasjonerAvAktivitetArbeidsinntektNæringsinntektogMilitær(){
         // Arrange
         AktivPeriode aktivPeriode = new AktivPeriode(Aktivitet.FRILANSINNTEKT, Periode.of(skjæringstidspunktForBeregning.minusDays(3), skjæringstidspunktForBeregning.plusWeeks(2)), Arbeidsforhold.frilansArbeidsforhold());
         regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode);
@@ -245,7 +245,7 @@ public class RegelFastsettStatusVedSkjæringtidspunktTest {
     }
 
     @Test
-    public void skalFastsetteStatusMSNårBareErMilitærPåStp(){
+    void skalFastsetteStatusMSNårBareErMilitærPåStp(){
         // Arrange
         AktivPeriode aktivPeriode = new AktivPeriode(Aktivitet.MILITÆR_ELLER_SIVILTJENESTE, Periode.of(skjæringstidspunktForBeregning.minusMonths(4),
             skjæringstidspunktForBeregning.plusDays(5)), null);
@@ -265,7 +265,7 @@ public class RegelFastsettStatusVedSkjæringtidspunktTest {
     }
 
     @Test
-    public void skalFastsetteStatusATFLNårErBådeArbeidstakerOgMilitærPåStp(){
+    void skalFastsetteStatusATFLNårErBådeArbeidstakerOgMilitærPåStp(){
         // Arrange
         AktivPeriode aktivPeriode = new AktivPeriode(Aktivitet.ARBEIDSTAKERINNTEKT, Periode.of(skjæringstidspunktForBeregning.minusMonths(8), skjæringstidspunktForBeregning), ARBEIDSFORHOLD);
         regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode);

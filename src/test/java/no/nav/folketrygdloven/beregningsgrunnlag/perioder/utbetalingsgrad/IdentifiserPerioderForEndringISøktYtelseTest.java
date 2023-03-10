@@ -22,7 +22,7 @@ public class IdentifiserPerioderForEndringISøktYtelseTest {
 
 
     @Test
-    public void skal_støtte_hull_i_utbetalingsperioder() {
+    void skal_støtte_hull_i_utbetalingsperioder() {
         // Arrange
         LocalDate fom = LocalDate.now();
         LocalDate tom = fom.plusMonths(1);
@@ -62,7 +62,7 @@ public class IdentifiserPerioderForEndringISøktYtelseTest {
 
 
     @Test
-    public void fårSplittForFørstePeriode() {
+    void fårSplittForFørstePeriode() {
         // Arrange
         LocalDate fom = LocalDate.now();
         LocalDate tom = fom.plusMonths(1);
@@ -88,7 +88,7 @@ public class IdentifiserPerioderForEndringISøktYtelseTest {
     }
 
     @Test
-    public void fårSplittForPerioderMedForskjelligUtbetaling() {
+    void fårSplittForPerioderMedForskjelligUtbetaling() {
         // Arrange
         LocalDate fom = LocalDate.now();
         LocalDate tom1 = fom.plusMonths(1);
@@ -125,7 +125,7 @@ public class IdentifiserPerioderForEndringISøktYtelseTest {
     }
 
     @Test
-    public void fårBareSplittForFørstePeriodeMedLikUtbetaling() {
+    void fårBareSplittForFørstePeriodeMedLikUtbetaling() {
         // Arrange
         LocalDate fom = LocalDate.now();
         Periode p0 = Periode.of(fom.minusDays(14), fom.minusDays(1));
@@ -158,7 +158,7 @@ public class IdentifiserPerioderForEndringISøktYtelseTest {
 
 
     @Test
-    public void fårSplittForFlerePerioderMedUlikUtbetaling() {
+    void fårSplittForFlerePerioderMedUlikUtbetaling() {
         // Arrange
         LocalDate fom = LocalDate.now();
         Periode p1 = Periode.of(fom, fom.plusMonths(1));
@@ -209,7 +209,7 @@ public class IdentifiserPerioderForEndringISøktYtelseTest {
 
 
 	@Test
-	public void ingen_splitt_med_kun_null() {
+	void ingen_splitt_med_kun_null() {
 		// Arrange
 		LocalDate fom = LocalDate.now();
 		LocalDate tom = fom.plusMonths(1);

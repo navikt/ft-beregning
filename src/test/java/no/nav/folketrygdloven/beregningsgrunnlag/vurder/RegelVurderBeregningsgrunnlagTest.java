@@ -34,7 +34,7 @@ public class RegelVurderBeregningsgrunnlagTest {
     private static final LocalDate skjæringstidspunkt = LocalDate.of(2018, Month.JANUARY, 15);
 
     @Test
-    public void skalOppretteRegelmerknadForAvslagNårBruttoInntektPrÅrMindreEnnHalvG() {
+    void skalOppretteRegelmerknadForAvslagNårBruttoInntektPrÅrMindreEnnHalvG() {
         //Arrange
         double beregnetPrÅr = GRUNNBELØP_2017 * 0.49;
         Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlag(skjæringstidspunkt, beregnetPrÅr, 0);
@@ -49,7 +49,7 @@ public class RegelVurderBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skalOppretteRegelmerknadForAvslagForFlereArbeidsforholdNårBruttoInntektPrÅrMindreEnnHalvG() {
+    void skalOppretteRegelmerknadForAvslagForFlereArbeidsforholdNårBruttoInntektPrÅrMindreEnnHalvG() {
         //Arrange
         double beregnetPrÅr = GRUNNBELØP_2017 * 0.25;
         double beregnetPrÅr2 = GRUNNBELØP_2017 * 0.24; //Totalt under 0,5G
@@ -66,7 +66,7 @@ public class RegelVurderBeregningsgrunnlagTest {
     }
 
 	@Test
-	public void skalIkkeAvslåOmsorgspengerTilArbeidsgiverUndeEnHalvG() {
+	void skalIkkeAvslåOmsorgspengerTilArbeidsgiverUndeEnHalvG() {
 		//Arrange
 		double beregnetPrÅr = GRUNNBELØP_2017 * 0.25;
 		double beregnetPrÅr2 = GRUNNBELØP_2017 * 0.24; //Totalt under 0,5G
@@ -87,7 +87,7 @@ public class RegelVurderBeregningsgrunnlagTest {
 	}
 
 	@Test
-	public void skalAvslåOmsorgspengerTilBrukerUndeEnHalvG() {
+	void skalAvslåOmsorgspengerTilBrukerUndeEnHalvG() {
 		//Arrange
 		double beregnetPrÅr = GRUNNBELØP_2017 * 0.25;
 		double beregnetPrÅr2 = GRUNNBELØP_2017 * 0.24; //Totalt under 0,5G

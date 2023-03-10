@@ -25,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class RegelFordelBeregningsgrunnlagAndelsmessigTest {
 
 	@Test
-	public void et_foreslått_og_et_tilkommet_arbeidsforhold() {
+	void et_foreslått_og_et_tilkommet_arbeidsforhold() {
 		// Arrange
 		FordelAndelModell foreslåttAndel = lagForeslåttAndel(AktivitetStatus.AT, Inntektskategori.ARBEIDSTAKER, arbeid("999", "abc"), 500000, 500000);
 		FordelAndelModell tilkommetAndel = lagTilkommetAndel(AktivitetStatus.AT, Inntektskategori.ARBEIDSTAKER, arbeid("888", "abc"), 500000, 500000);
@@ -40,7 +40,7 @@ class RegelFordelBeregningsgrunnlagAndelsmessigTest {
 	}
 
 	@Test
-	public void et_foreslått_og_to_tilkommne_arbeidsforhold_kan_ikke_deles_likt() {
+	void et_foreslått_og_to_tilkommne_arbeidsforhold_kan_ikke_deles_likt() {
 		// Arrange
 		FordelAndelModell foreslåttAndel = lagForeslåttAndel(AktivitetStatus.AT, Inntektskategori.ARBEIDSTAKER, arbeid("999", "abc"), 100000, 100000);
 		FordelAndelModell tilkommetAndel1 = lagTilkommetAndel(AktivitetStatus.AT, Inntektskategori.ARBEIDSTAKER, arbeid("888", "abc"), 100000, 100000);
@@ -63,7 +63,7 @@ class RegelFordelBeregningsgrunnlagAndelsmessigTest {
 	// Fraksjoner: foreslåttAndel: 100000 / 500000 = 0.2 tilkommetAndel: 400000 / 500000 = 0.8
 	// Fordelt: foreslåttAndel: 0.2 * 300000 = 60000 tilkommetAndel: 0.8 * 300000 = 240000
 	@Test
-	public void fordel_fra_at_og_sn_til_tilkommet() {
+	void fordel_fra_at_og_sn_til_tilkommet() {
 		// Arrange
 		FordelAndelModell foreslåttAndel = lagForeslåttAndel(AktivitetStatus.AT, Inntektskategori.ARBEIDSTAKER, arbeid("999", "abc"), 100000, 100000);
 		FordelAndelModell foreslåttSN = lagForeslåttAndel(AktivitetStatus.SN, Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE, null, 200000, null);
@@ -84,7 +84,7 @@ class RegelFordelBeregningsgrunnlagAndelsmessigTest {
 	// Fraksjoner: tikommetAndel1: 100000 / 400000 = 0.25 tilkommetAndel2: 300000 / 400000 = 0.75
 	// Fordelt: foreslåttAndel1: 0.25 * 200000 = 50000 tilkommetAndel2: 0.75 * 200000 = 150000
 	@Test
-	public void fordel_fra_dp_til_flere_tilkommet() {
+	void fordel_fra_dp_til_flere_tilkommet() {
 		// Arrange
 		FordelAndelModell foreslåttDP = lagForeslåttAndel(AktivitetStatus.DP, Inntektskategori.DAGPENGER, null, 200000, null);
 		FordelAndelModell tilkommetAndel1 = lagTilkommetAndel(AktivitetStatus.AT, Inntektskategori.ARBEIDSTAKER, arbeid("888", "abc"), 10_000, 100000);
@@ -101,7 +101,7 @@ class RegelFordelBeregningsgrunnlagAndelsmessigTest {
 	}
 
 	@Test
-	public void fordel_fra_dp_fl_sn_til_en_tilkommet() {
+	void fordel_fra_dp_fl_sn_til_en_tilkommet() {
 		// Arrange
 		FordelAndelModell foreslåttDP = lagForeslåttAndel(AktivitetStatus.DP, Inntektskategori.DAGPENGER, null, 100000, null);
 		FordelAndelModell foreslåttSN = lagForeslåttAndel(AktivitetStatus.SN, Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE, null, 140000, null);
@@ -131,7 +131,7 @@ class RegelFordelBeregningsgrunnlagAndelsmessigTest {
 	// tilkommetAndel1: 0.3652589206 * 586104 = 214079,7143993424
 	// tilkommetAndel2: 0,2922113442 * 586104 = 171266,2376809968
 	@Test
-	public void fordel_fra_et_foreslått_til_to_tilkomne_alle_med_refusjon_går_ikke_opp() {
+	void fordel_fra_et_foreslått_til_to_tilkomne_alle_med_refusjon_går_ikke_opp() {
 		// Arrange
 		FordelAndelModell foreslåttAndel = lagForeslåttAndel(AktivitetStatus.AT, Inntektskategori.ARBEIDSTAKER, arbeid("999", "abc"), 586_104, 586_104);
 		FordelAndelModell tilkommetAndel1 = lagTilkommetAndel(AktivitetStatus.AT, Inntektskategori.ARBEIDSTAKER, arbeid("888", "abc"), 52_083, 624_996);

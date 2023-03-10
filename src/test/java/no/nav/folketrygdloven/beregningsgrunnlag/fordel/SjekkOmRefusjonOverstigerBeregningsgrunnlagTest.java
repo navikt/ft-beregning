@@ -26,7 +26,7 @@ public class SjekkOmRefusjonOverstigerBeregningsgrunnlagTest {
     private static final String ORGNR = "995";
 
     @Test
-    public void skal_gi_at_refusjon_overstiger_bg() {
+    void skal_gi_at_refusjon_overstiger_bg() {
         // Arrange
         var refusjonskravPrÅr = BigDecimal.valueOf(200_000);
         var beregnetPrÅr = BigDecimal.valueOf(100_000);
@@ -42,7 +42,7 @@ public class SjekkOmRefusjonOverstigerBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skal_gi_at_refusjon_ikkje_overstiger_bg() {
+    void skal_gi_at_refusjon_ikkje_overstiger_bg() {
         // Arrange
 	    var refusjonskravPrÅr = BigDecimal.valueOf(200_000);
 	    var beregnetPrÅr = BigDecimal.valueOf(250_000);

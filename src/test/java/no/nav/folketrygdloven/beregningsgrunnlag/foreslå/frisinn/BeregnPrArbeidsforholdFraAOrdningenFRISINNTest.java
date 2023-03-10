@@ -41,7 +41,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
     }
 
     @Test
-    public void nyoppstartet_fl_uten_ytelse() {
+    void nyoppstartet_fl_uten_ytelse() {
         // Arrange
         BeregningsgrunnlagPrArbeidsforhold andel = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(FRILANS_ARBEIDSFORHOLD).medAndelNr(1L).build();
         inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,7,1), LocalDate.of(2019,7,31)), FRILANS_ARBEIDSFORHOLD, 8));
@@ -60,7 +60,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
     }
 
     @Test
-    public void nyoppstartet_fl_uten_ytelse_inntekt_første_mars_2019() {
+    void nyoppstartet_fl_uten_ytelse_inntekt_første_mars_2019() {
         // Arrange
         BeregningsgrunnlagPrArbeidsforhold andel = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(FRILANS_ARBEIDSFORHOLD).medAndelNr(1L).build();
         inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,3,1), LocalDate.of(2019,3,1)), FRILANS_ARBEIDSFORHOLD, 12));
@@ -79,7 +79,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
     }
 
     @Test
-    public void nyoppstartet_fl_uten_ytelse_ingen_inntekt_før_stp() {
+    void nyoppstartet_fl_uten_ytelse_ingen_inntekt_før_stp() {
         // Arrange
         BeregningsgrunnlagPrArbeidsforhold andel = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(FRILANS_ARBEIDSFORHOLD).medAndelNr(1L).build();
         inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,3,1), LocalDate.of(2020,3,31)), FRILANS_ARBEIDSFORHOLD, 12));
@@ -98,7 +98,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
     }
 
     @Test
-    public void nyoppstartet_fl_med_ytelse() {
+    void nyoppstartet_fl_med_ytelse() {
         // Arrange
         BeregningsgrunnlagPrArbeidsforhold andel = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(FRILANS_ARBEIDSFORHOLD).medAndelNr(1L).build();
         inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,3,1), LocalDate.of(2019,3,31)), FRILANS_ARBEIDSFORHOLD, 10));
@@ -118,7 +118,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
     }
 
     @Test
-    public void kun_inntekt_før_stp_ingen_ytelser() {
+    void kun_inntekt_før_stp_ingen_ytelser() {
         // Arrange
         BeregningsgrunnlagPrArbeidsforhold andel = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_MED_REF).medAndelNr(1L).build();
         inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,2,1), LocalDate.of(2020,2,29)), ARBFOR_MED_REF, 1));
@@ -136,7 +136,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
     }
 
     @Test
-    public void skal_ignorere_inntekt_fra_frilans() {
+    void skal_ignorere_inntekt_fra_frilans() {
         // Arrange
         BeregningsgrunnlagPrArbeidsforhold andel = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_MED_REF).medAndelNr(1L).build();
         inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,2,1), LocalDate.of(2020,2,29)), ARBFOR_MED_REF, 1));
@@ -154,7 +154,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
 
 
     @Test
-    public void skal_ignorere_inntekt_etter_stp() {
+    void skal_ignorere_inntekt_etter_stp() {
         // Arrange
         BeregningsgrunnlagPrArbeidsforhold andel = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_MED_REF).medAndelNr(1L).build();
         inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,3,1), LocalDate.of(2020,3,31)), ARBFOR_MED_REF, 100_000)); // Etter STP, skal ignoreres
@@ -172,7 +172,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
     }
 
     @Test
-    public void skal_ikke_matche_på_inntekt_som_ikke_har_arbfor_ref() {
+    void skal_ikke_matche_på_inntekt_som_ikke_har_arbfor_ref() {
         // Arrange
         BeregningsgrunnlagPrArbeidsforhold andel = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_MED_REF).medAndelNr(1L).build();
         inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,2,1), LocalDate.of(2020,2,29)), ARBFOR_UTEN_REF, 100000));
@@ -189,7 +189,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
     }
 
     @Test
-    public void skal_ikke_ta_med_inntekt_som_overlapper_med_ytelser() {
+    void skal_ikke_ta_med_inntekt_som_overlapper_med_ytelser() {
         // Arrange
         BeregningsgrunnlagPrArbeidsforhold andel = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_MED_REF).medAndelNr(1L).build();
         inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,2,1), LocalDate.of(2020,2,29)), ARBFOR_MED_REF, 1));
@@ -209,7 +209,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
     }
 
     @Test
-    public void skal_ta_inntekt_langt_tilbake_hvis_alle_nylige_måneder_har_hatt_ytelse() {
+    void skal_ta_inntekt_langt_tilbake_hvis_alle_nylige_måneder_har_hatt_ytelse() {
         // Arrange
         BeregningsgrunnlagPrArbeidsforhold andel = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_MED_REF).medAndelNr(1L).build();
         inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,2,1), LocalDate.of(2020,2,29)), ARBFOR_MED_REF, 1));
@@ -232,7 +232,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
     }
 
     @Test
-    public void skal_ta_inntekt_langt_tilbake_hvis_alle_nylige_måneder_har_hatt_ytelse_frilans() {
+    void skal_ta_inntekt_langt_tilbake_hvis_alle_nylige_måneder_har_hatt_ytelse_frilans() {
         // Arrange
         BeregningsgrunnlagPrArbeidsforhold andel = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_FL).medAndelNr(1L).build();
         inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,2,1), LocalDate.of(2020,2,29)), ARBFOR_FL, 2));
@@ -255,7 +255,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
     }
 
     @Test
-    public void skal_teste_at_nyoppstartet_fl_ikke_bruker_helt_år_som_snitt() {
+    void skal_teste_at_nyoppstartet_fl_ikke_bruker_helt_år_som_snitt() {
         // Arrange
         BeregningsgrunnlagPrArbeidsforhold andel = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_FL).medAndelNr(1L).build();
         inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,2,1), LocalDate.of(2020,2,29)), ARBFOR_FL, 6));
@@ -271,7 +271,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
     }
 
     @Test
-    public void skal_teste_at_nyoppstartet_fl_beregnes_vanlig_når_det_finne_eldre_frilansinntekter() {
+    void skal_teste_at_nyoppstartet_fl_beregnes_vanlig_når_det_finne_eldre_frilansinntekter() {
         // Arrange
         BeregningsgrunnlagPrArbeidsforhold andel = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_FL).medAndelNr(1L).build();
         inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2020,2,1), LocalDate.of(2020,2,29)), ARBFOR_FL, 6));
@@ -288,7 +288,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
     }
 
     @Test
-    public void arbeid_med_ytelse_siste_9_mnd() {
+    void arbeid_med_ytelse_siste_9_mnd() {
         // Arrange
         BeregningsgrunnlagPrArbeidsforhold andel = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_UTEN_REF).medAndelNr(1L).build();
         inntektsgrunnlag.leggTilPeriodeinntekt(byggInntekt(Periode.of(LocalDate.of(2019,5,1), LocalDate.of(2019,5,31)), ARBFOR_UTEN_REF, 10));
@@ -314,7 +314,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
 
 
     @Test
-    public void skal_bruke_oppgitt_inntekt_om_fastsatt_manuelt() {
+    void skal_bruke_oppgitt_inntekt_om_fastsatt_manuelt() {
         // Arrange
         BeregningsgrunnlagPrArbeidsforhold andel = BeregningsgrunnlagPrArbeidsforhold.builder().medFastsattAvSaksbehandler(true)
             .medBeregnetPrÅr(BigDecimal.valueOf(20_000))
@@ -335,7 +335,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
     }
 
     @Test
-    public void skal_håndtere_frilans_uten_inntekt() {
+    void skal_håndtere_frilans_uten_inntekt() {
         // Arrange
         BeregningsgrunnlagPrArbeidsforhold andel = BeregningsgrunnlagPrArbeidsforhold.builder()
             .medArbeidsforhold(FRILANS_ARBEIDSFORHOLD).medAndelNr(1L).build();
@@ -355,7 +355,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
     }
 
     @Test
-    public void skal_håndtere_nyoppstartet_frilans_med_ytelse_siste_24_måneder() {
+    void skal_håndtere_nyoppstartet_frilans_med_ytelse_siste_24_måneder() {
         // Arrange
         BeregningsgrunnlagPrArbeidsforhold andel = BeregningsgrunnlagPrArbeidsforhold.builder()
             .medArbeidsforhold(FRILANS_ARBEIDSFORHOLD).medAndelNr(1L).build();

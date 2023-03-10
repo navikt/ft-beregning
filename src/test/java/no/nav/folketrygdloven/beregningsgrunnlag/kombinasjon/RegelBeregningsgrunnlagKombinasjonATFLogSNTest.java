@@ -33,13 +33,13 @@ public class RegelBeregningsgrunnlagKombinasjonATFLogSNTest {
     private String orgnr;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         skjæringstidspunkt = LocalDate.of(2018, Month.JANUARY, 15);
         orgnr = "987";
     }
 
     @Test
-    public void skalBeregneAndelGrunnlagSNHvorSNStørreEnnATFL() { // NOSONAR
+    void skalBeregneAndelGrunnlagSNHvorSNStørreEnnATFL() { // NOSONAR
         // Arrange
         BigDecimal månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
         Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr);
@@ -66,7 +66,7 @@ public class RegelBeregningsgrunnlagKombinasjonATFLogSNTest {
     }
 
     @Test
-    public void skalBeregneAndelGrunnlagSNHvorSNMindreEnnATFL() { // NOSONAR
+    void skalBeregneAndelGrunnlagSNHvorSNMindreEnnATFL() { // NOSONAR
         // Arrange
         BigDecimal månedsinntekt = BigDecimal.valueOf(5.0 * GRUNNBELØP_2017 / 12);
         Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr);

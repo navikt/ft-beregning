@@ -10,7 +10,6 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
@@ -18,14 +17,13 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Ar
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
-import no.nav.fpsak.nare.doc.RuleDescriptionDigraph;
 import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 import no.nav.fpsak.nare.specification.Specification;
 
 public class BeregningsgrunnlagDocTest {
 
     @Test
-    public void test_documentation() { // NOSONAR
+    void test_documentation() { // NOSONAR
         String orgnr = "987";
         LocalDate skjæringstidspunkt = LocalDate.of(2018, Month.JANUARY, 15);
         BigDecimal månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);

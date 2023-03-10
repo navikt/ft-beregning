@@ -58,14 +58,14 @@ public class RegelForeslåBeregningsgrunnlagTest {
 	private Arbeidsforhold arbeidsforhold;
 
 	@BeforeEach
-	public void setup() {
+	void setup() {
 		skjæringstidspunkt = LocalDate.of(2018, Month.JANUARY, 15);
 		orgnr = "987";
 		arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr);
 	}
 
 	@Test
-	public void skalBeregneGrunnlagAGVedSammeFrilansInntektSisteTreMåneder() { // NOSONAR
+	void skalBeregneGrunnlagAGVedSammeFrilansInntektSisteTreMåneder() { // NOSONAR
 		// Arrange
 		BigDecimal månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
 		BigDecimal refusjonskrav = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
@@ -83,7 +83,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
 	}
 
 	@Test
-	public void skalBeregneGrunnlagAGVedSammeInntektSisteTreMåneder() { // NOSONAR
+	void skalBeregneGrunnlagAGVedSammeInntektSisteTreMåneder() { // NOSONAR
 		// Arrange
 		BigDecimal månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
 		BigDecimal refusjonskrav = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
@@ -101,7 +101,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
 	}
 
 	@Test
-	public void skalBeregneGrunnlagAGVedKombinasjonATFLogSN() { // NOSONAR
+	void skalBeregneGrunnlagAGVedKombinasjonATFLogSN() { // NOSONAR
 		// Arrange
 		BigDecimal månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
 		BigDecimal refusjonskrav = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
@@ -128,7 +128,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
 	}
 
 	@Test
-	public void skalBeregneGrunnlagAGVedKombinasjonATFLogSNHvorATFLStørreEnnSNMedAvkorting() { // NOSONAR
+	void skalBeregneGrunnlagAGVedKombinasjonATFLogSNHvorATFLStørreEnnSNMedAvkorting() { // NOSONAR
 		// ATFL > 6G, SN < ATFL: ATFL blir avkortet til 6G og SN blir satt til 0.
 		// Arrange
 		BigDecimal månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 1.5);
@@ -154,7 +154,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
 	}
 
 	@Test
-	public void BeregningsgrunnlagKombinasjonATFLStørreEnnSNMedAvkorting() { // NOSONAR
+	void BeregningsgrunnlagKombinasjonATFLStørreEnnSNMedAvkorting() { // NOSONAR
 		// SN > 6G, SN > ATFL: Både ATFL og SN blir avkortet.
 		// Arrange
 		BigDecimal månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 3);
@@ -182,7 +182,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
 	}
 
 	@Test
-	public void skalBeregneGrunnlagMedInntektsmeldingMedNaturalYtelser() {
+	void skalBeregneGrunnlagMedInntektsmeldingMedNaturalYtelser() {
 		// Arrange
 		BigDecimal månedsinntekt = BigDecimal.valueOf(40000);
 		BigDecimal refusjonskrav = BigDecimal.valueOf(10000);
@@ -206,7 +206,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
 	}
 
 	@Test
-	public void skalBeregneGrunnlagForTilstøtendeYtelseDagpenger() { // NOSONAR
+	void skalBeregneGrunnlagForTilstøtendeYtelseDagpenger() { // NOSONAR
 		// Arrange
 		BigDecimal dagsats = BigDecimal.valueOf(716);
 		Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
@@ -230,7 +230,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
 	}
 
 	@Test
-	public void skalBeregneGrunnlagForKombinasjonSNOgDagpenger() { // NOSONAR
+	void skalBeregneGrunnlagForKombinasjonSNOgDagpenger() { // NOSONAR
 		// Arrange
 		BigDecimal utbetalingsfaktor = BigDecimal.valueOf(0.75);
 		BigDecimal dagsats = BigDecimal.valueOf(900);
@@ -261,7 +261,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
 
 
 	@Test
-	public void skalBeregneGrunnlagForKombinasjonATFL_SNOgAAP() { // NOSONAR
+	void skalBeregneGrunnlagForKombinasjonATFL_SNOgAAP() { // NOSONAR
 		// Arrange
 		BigDecimal utbetalingsfaktor = new BigDecimal("1");
 		BigDecimal dagsatsAAP = BigDecimal.valueOf(700);
@@ -297,7 +297,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
 
 
 	@Test
-	public void skalTesteNyoppstartetFrilanser() {
+	void skalTesteNyoppstartetFrilanser() {
 		Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
 		opprettSammenligningsgrunnlag(inntektsgrunnlag, skjæringstidspunkt, BigDecimal.valueOf(25000));
 		Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag,
@@ -324,7 +324,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
 	}
 
 	@Test
-	public void skalTesteArbeidsforholdInntektSattAvSaksbehandlerNårIkkeInntektsmelding() {
+	void skalTesteArbeidsforholdInntektSattAvSaksbehandlerNårIkkeInntektsmelding() {
 		Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
 		Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag,
 				Collections.singletonList(AktivitetStatus.ATFL), Collections.singletonList(arbeidsforhold));
@@ -352,7 +352,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
 	}
 
 	@Test
-	public void skalTesteKjøringAvKunYtelse() {
+	void skalTesteKjøringAvKunYtelse() {
 		Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, new Inntektsgrunnlag(),
 				Collections.singletonList(AktivitetStatus.KUN_YTELSE));
 		Beregningsgrunnlag.builder(beregningsgrunnlag).medYtelsesSpesifiktGrunnlag(new ForeldrepengerGrunnlag(false));
@@ -373,7 +373,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
 
 
 	@Test
-	public void skalTåleUkjentStatustype() {
+	void skalTåleUkjentStatustype() {
 		// Arrange
 		BigDecimal månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
 		BigDecimal refusjonskrav = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
@@ -392,7 +392,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
 	}
 
 	@Test
-	public void skalFastsetteBeregningsperiondenUtenInntektDeTreSisteMånederAT() {
+	void skalFastsetteBeregningsperiondenUtenInntektDeTreSisteMånederAT() {
 		// arbeidstaker uten inntektsmelding OG det finnes ikke inntekt i de tre siste månedene
 		// før skjæringstidspunktet (beregningsperioden)
 		BigDecimal månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
@@ -422,7 +422,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
 	}
 
 	@Test
-	public void skalIkkeSetteAksjonspunktForATNårBrukerIkkeHarSøkt() {
+	void skalIkkeSetteAksjonspunktForATNårBrukerIkkeHarSøkt() {
 		// Arrange
 		BigDecimal månedsinntektGammel = BigDecimal.valueOf(GRUNNBELØP_2017 / 12);
 		BigDecimal månedsinntektNy = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
@@ -449,7 +449,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
 	}
 
 	@Test
-	public void skalSetteAksjonspunktForATMedVarierendeInntekterNårRefusjonLikBeregnetOgIkkeOmsorgspenger() {
+	void skalSetteAksjonspunktForATMedVarierendeInntekterNårRefusjonLikBeregnetOgIkkeOmsorgspenger() {
 		// Arrange
 		BigDecimal månedsinntektGammel = BigDecimal.valueOf(GRUNNBELØP_2017 / 12);
 		BigDecimal månedsinntektNy = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
@@ -476,7 +476,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
 	}
 
 	@Test
-	public void skalBeregneMilitærKombinertMedNæringOgArbeid() { // NOSONAR
+	void skalBeregneMilitærKombinertMedNæringOgArbeid() { // NOSONAR
 		// Arrange
 		BigDecimal månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
 		Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr);
@@ -499,7 +499,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
 	}
 
 	@Test
-	public void skalBeregneAvvikPåArbeidNårPassertFomdatoForIndividuellSammenligning() {
+	void skalBeregneAvvikPåArbeidNårPassertFomdatoForIndividuellSammenligning() {
 		// Arrange
 		BigDecimal månedsinntekt = BigDecimal.valueOf(20000);
 		Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr);
@@ -531,7 +531,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
 	}
 
 	@Test
-	public void skalIkkeBeregneAvvikPåArbeidNårPassertFomdatoForIndividuellSammenligning() {
+	void skalIkkeBeregneAvvikPåArbeidNårPassertFomdatoForIndividuellSammenligning() {
 		// Arrange
 		BigDecimal månedsinntekt = BigDecimal.valueOf(20000);
 		Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr);

@@ -35,7 +35,7 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
     private static final LocalDate skjæringstidspunkt = LocalDate.of(2020, Month.MARCH, 15);
 
     @Test
-    public void skalOppretteRegelmerknadForAvslagNårSNErUnderTreKvartG() {
+    void skalOppretteRegelmerknadForAvslagNårSNErUnderTreKvartG() {
         //Arrange
         double beregnetPrÅr = GRUNNBELØP_2019 * 0.74;
         Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(beregnetPrÅr, null, null);
@@ -50,7 +50,7 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
     }
 
     @Test
-    public void skalIkkeOppretteRegelmerknadForAvslagNårSNErLikTreKvartG() {
+    void skalIkkeOppretteRegelmerknadForAvslagNårSNErLikTreKvartG() {
         //Arrange
         double beregnetPrÅr = GRUNNBELØP_2019 * 0.75;
         Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(beregnetPrÅr, null, null);
@@ -65,7 +65,7 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
     }
 
     @Test
-    public void skalIkkeOppretteRegelmerknadForAvslagNårSNErOverTreKvartG() {
+    void skalIkkeOppretteRegelmerknadForAvslagNårSNErOverTreKvartG() {
         //Arrange
         double beregnetPrÅr = GRUNNBELØP_2019 * 0.76;
         Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(beregnetPrÅr, null, null);
@@ -80,7 +80,7 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
     }
 
     @Test
-    public void skalOppretteRegelmerknadForAvslagNårFLErUnderTreKvartG() {
+    void skalOppretteRegelmerknadForAvslagNårFLErUnderTreKvartG() {
         //Arrange
         double beregnetPrÅr = GRUNNBELØP_2019 * 0.74;
         Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(null, beregnetPrÅr, null);
@@ -95,7 +95,7 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
     }
 
     @Test
-    public void skalIkkeOppretteRegelmerknadForAvslagNårFLErLikTreKvartG() {
+    void skalIkkeOppretteRegelmerknadForAvslagNårFLErLikTreKvartG() {
         //Arrange
         double beregnetPrÅr = GRUNNBELØP_2019 * 0.75;
         Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(null, beregnetPrÅr, null);
@@ -110,7 +110,7 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
     }
 
     @Test
-    public void skalIkkeOppretteRegelmerknadForAvslagNårFLErOverTreKvartG() {
+    void skalIkkeOppretteRegelmerknadForAvslagNårFLErOverTreKvartG() {
         //Arrange
         double beregnetPrÅr = GRUNNBELØP_2019 * 0.76;
         Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(null, beregnetPrÅr, null);
@@ -125,7 +125,7 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
     }
 
     @Test
-    public void skalOppretteRegelmerknadForAvslagNårFLOgSNErUnderTreKvartG() {
+    void skalOppretteRegelmerknadForAvslagNårFLOgSNErUnderTreKvartG() {
         //Arrange
         double beregnetPrÅrFL = GRUNNBELØP_2019 * 0.5;
         double beregnetPrÅrSN = GRUNNBELØP_2019 * 0.15;
@@ -142,7 +142,7 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
     }
 
     @Test
-    public void skalIkkeOppretteRegelmerknadForAvslagNårFLOgSNErLikTreKvartG() {
+    void skalIkkeOppretteRegelmerknadForAvslagNårFLOgSNErLikTreKvartG() {
         //Arrange
         double beregnetPrÅrFL = GRUNNBELØP_2019 * 0.5;
         double beregnetPrÅrSN = GRUNNBELØP_2019 * 0.25;
@@ -159,7 +159,7 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
     }
 
     @Test
-    public void skalIkkeOppretteRegelmerknadForAvslagNårFLOgSNErOverTreKvartGFLErUnder() {
+    void skalIkkeOppretteRegelmerknadForAvslagNårFLOgSNErOverTreKvartGFLErUnder() {
         //Arrange
         double beregnetPrÅrFL = GRUNNBELØP_2019 * 0.5;
         double beregnetPrÅrSN = GRUNNBELØP_2019;
@@ -175,7 +175,7 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
     }
 
     @Test
-    public void skalIkkeOppretteRegelmerknadForAvslagNårFLOgSNErOverTreKvartGBeggeErOver() {
+    void skalIkkeOppretteRegelmerknadForAvslagNårFLOgSNErOverTreKvartGBeggeErOver() {
         //Arrange
         double beregnetPrÅrFL = GRUNNBELØP_2019;
         double beregnetPrÅrSN = GRUNNBELØP_2019;
@@ -191,7 +191,7 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
     }
 
     @Test
-    public void skalOppretteRegelmerknadForAvslagNårSNErUnderTreKvartGTotalsumErOver() {
+    void skalOppretteRegelmerknadForAvslagNårSNErUnderTreKvartGTotalsumErOver() {
         //Arrange
         double beregnetPrÅrSN = GRUNNBELØP_2019 * 0.74;
         double beregnetPrÅrAT = GRUNNBELØP_2019 * 0.5;
@@ -207,7 +207,7 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
     }
 
     @Test
-    public void skalOppretteRegelmerknadForAvslagNårFLErUnderTreKvartGTotalsumErOver() {
+    void skalOppretteRegelmerknadForAvslagNårFLErUnderTreKvartGTotalsumErOver() {
         //Arrange
         double beregnetPrÅrFL = GRUNNBELØP_2019 * 0.74;
         double beregnetPrÅrAT = GRUNNBELØP_2019 * 0.5;
@@ -223,7 +223,7 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
     }
 
     @Test
-    public void skalOppretteRegelmerknadForAvslagNårFLErUnderTreKvartGTATErOver() {
+    void skalOppretteRegelmerknadForAvslagNårFLErUnderTreKvartGTATErOver() {
         //Arrange
         double beregnetPrÅrFL = GRUNNBELØP_2019 * 0.74;
         double beregnetPrÅrAT = GRUNNBELØP_2019;

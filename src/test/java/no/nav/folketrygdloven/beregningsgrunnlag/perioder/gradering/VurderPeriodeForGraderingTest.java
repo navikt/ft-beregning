@@ -34,7 +34,7 @@ public class VurderPeriodeForGraderingTest {
 	public static final String ORGNR2 = "8732987432";
 
 	@Test
-	public void totalRefusjonOver6GEksisterendeAktivitetIngenRefusjonPåDato() {
+	void totalRefusjonOver6GEksisterendeAktivitetIngenRefusjonPåDato() {
 		// Arrange
 		Periode gradering = new Periode(LocalDate.of(2019, Month.MARCH, 1), TIDENES_ENDE);
 		AndelGradering andelGradering = AndelGradering.builder()
@@ -70,7 +70,7 @@ public class VurderPeriodeForGraderingTest {
 	}
 
 	@Test
-	public void totalRefusjonOver6GEksisterendeAktivitetIngenRefusjonPåDatoAvsluttetGradering() {
+	void totalRefusjonOver6GEksisterendeAktivitetIngenRefusjonPåDatoAvsluttetGradering() {
 		// Arrange
 		Periode gradering = new Periode(LocalDate.of(2019, Month.MARCH, 1),
 				LocalDate.of(2019, Month.JULY, 1));
@@ -95,7 +95,7 @@ public class VurderPeriodeForGraderingTest {
 	}
 
 	@Test
-	public void totalRefusjonOver6GEksisterendeAktivitetIngenRefusjonPåDatoAvsluttetGraderingMedTotalRefusjonUnder6GVedEndtGradering() {
+	void totalRefusjonOver6GEksisterendeAktivitetIngenRefusjonPåDatoAvsluttetGraderingMedTotalRefusjonUnder6GVedEndtGradering() {
 		// Arrange
 		PeriodisertBruttoBeregningsgrunnlag.Builder periode1Builder = PeriodisertBruttoBeregningsgrunnlag.builder()
 				.medPeriode(new Periode(DateUtil.TIDENES_BEGYNNELSE, LocalDate.of(2019, Month.APRIL, 1)));
@@ -135,7 +135,7 @@ public class VurderPeriodeForGraderingTest {
 	}
 
 	@Test
-	public void totalRefusjonOver6GEksisterendeAktivitetIngenRefusjonPåDatoAvsluttetGraderingMedRefusjonskravVedEndtGradering() {
+	void totalRefusjonOver6GEksisterendeAktivitetIngenRefusjonPåDatoAvsluttetGraderingMedRefusjonskravVedEndtGradering() {
 		// Arrange
 		Periode gradering = new Periode(LocalDate.of(2019, Month.MARCH, 1), LocalDate.of(2019, Month.JULY, 1));
 
@@ -168,7 +168,7 @@ public class VurderPeriodeForGraderingTest {
 	}
 
 	@Test
-	public void totalRefusjonUnder6GEksisterendeAktivitetIngenRefusjonPåDato() {
+	void totalRefusjonUnder6GEksisterendeAktivitetIngenRefusjonPåDato() {
 		// Arrange
 		PeriodisertBruttoBeregningsgrunnlag.Builder periode1Builder = PeriodisertBruttoBeregningsgrunnlag.builder()
 				.medPeriode(new Periode(DateUtil.TIDENES_BEGYNNELSE, TIDENES_ENDE));
@@ -196,7 +196,7 @@ public class VurderPeriodeForGraderingTest {
 	}
 
 	@Test
-	public void totalRefusjonOver6GEksisterendeAktivitetHarRefusjonPåDato() {
+	void totalRefusjonOver6GEksisterendeAktivitetHarRefusjonPåDato() {
 		// Arrange
 		PeriodisertBruttoBeregningsgrunnlag.Builder periode1Builder = PeriodisertBruttoBeregningsgrunnlag.builder()
 				.medPeriode(new Periode(DateUtil.TIDENES_BEGYNNELSE, TIDENES_ENDE));
@@ -223,7 +223,7 @@ public class VurderPeriodeForGraderingTest {
 	}
 
 	@Test
-	public void totalRefusjonUnder6GEksisterendeAktivitetHarRefusjonPåDato() {
+	void totalRefusjonUnder6GEksisterendeAktivitetHarRefusjonPåDato() {
 		// Arrange
 		BigDecimal grunnbeløp = BigDecimal.valueOf(90000);
 
@@ -253,7 +253,7 @@ public class VurderPeriodeForGraderingTest {
 	}
 
 	@Test
-	public void totalRefusjonOver6GNyAktivitetIngenRefusjonPåDato() {
+	void totalRefusjonOver6GNyAktivitetIngenRefusjonPåDato() {
 		// Arrange
 		BigDecimal grunnbeløp = BigDecimal.valueOf(90000);
 		PeriodisertBruttoBeregningsgrunnlag.Builder periode1Builder = PeriodisertBruttoBeregningsgrunnlag.builder()
@@ -281,7 +281,7 @@ public class VurderPeriodeForGraderingTest {
 	}
 
 	@Test
-	public void totalRefusjonUnder6GNyAktivitetIngenRefusjonPåDato() {
+	void totalRefusjonUnder6GNyAktivitetIngenRefusjonPåDato() {
 		// Arrange
 		BigDecimal grunnbeløp = BigDecimal.valueOf(90000);
 		PeriodisertBruttoBeregningsgrunnlag.Builder periode1Builder = PeriodisertBruttoBeregningsgrunnlag.builder()
@@ -311,7 +311,7 @@ public class VurderPeriodeForGraderingTest {
 
 
 	@Test
-	public void totalRefusjonUnder6GNyAktivitetHarIkkeRefusjonPåDato() {
+	void totalRefusjonUnder6GNyAktivitetHarIkkeRefusjonPåDato() {
 		// Arrange
 		BigDecimal grunnbeløp = BigDecimal.valueOf(90000);
 
@@ -341,7 +341,7 @@ public class VurderPeriodeForGraderingTest {
 	}
 
 	@Test
-	public void skalLageToPerioderNårBruttoForAndelSnErNullOgMedOpphørAvGraderingISammePeriode() {
+	void skalLageToPerioderNårBruttoForAndelSnErNullOgMedOpphørAvGraderingISammePeriode() {
 		// Arrange
 		Periode graderingsPeriode = new Periode(LocalDate.of(2019, Month.MARCH, 1), LocalDate.of(2019, Month.MARCH, 8));
 		Gradering gradering = new Gradering(graderingsPeriode);
@@ -372,7 +372,7 @@ public class VurderPeriodeForGraderingTest {
 	}
 
 	@Test
-	public void skalIkkeLagePerioderNårBruttoForAndelSnIkkeErNullOgMedOpphørAvGraderingISammePeriode() {
+	void skalIkkeLagePerioderNårBruttoForAndelSnIkkeErNullOgMedOpphørAvGraderingISammePeriode() {
 		// Arrange
 		Periode graderingsPeriode = new Periode(LocalDate.of(2019, Month.MARCH, 1), LocalDate.of(2019, Month.MARCH, 8));
 		Gradering gradering = new Gradering(graderingsPeriode);
@@ -402,7 +402,7 @@ public class VurderPeriodeForGraderingTest {
 	}
 
 	@Test
-	public void skalLageToPerioderNårBruttoForAndelAtErNullOgToArbeidsforholdHosPrivatpersonOgMedOpphørAvGraderingISammePeriode() {
+	void skalLageToPerioderNårBruttoForAndelAtErNullOgToArbeidsforholdHosPrivatpersonOgMedOpphørAvGraderingISammePeriode() {
 		// Arrange
 		Periode graderingsPeriode = new Periode(LocalDate.of(2019, Month.MARCH, 1), LocalDate.of(2019, Month.MARCH, 8));
 		Gradering gradering = new Gradering(graderingsPeriode);
@@ -438,7 +438,7 @@ public class VurderPeriodeForGraderingTest {
 	}
 
 	@Test
-	public void skalLageToPerioderNårBruttoForAndelAtErNullOgBrukerAnsattIOrganisasjonOgMedOpphørAvGraderingISammePeriode() {
+	void skalLageToPerioderNårBruttoForAndelAtErNullOgBrukerAnsattIOrganisasjonOgMedOpphørAvGraderingISammePeriode() {
 		// Arrange
 		Periode graderingsPeriode = new Periode(LocalDate.of(2019, Month.MARCH, 1), LocalDate.of(2019, Month.MARCH, 8));
 		Gradering gradering = new Gradering(graderingsPeriode);
@@ -474,7 +474,7 @@ public class VurderPeriodeForGraderingTest {
 	}
 
 	@Test
-	public void skalLageEnPerioderNårBruttoForAndelFlErNullOgMedOpphørAvGraderingIAnnenPeriode() {
+	void skalLageEnPerioderNårBruttoForAndelFlErNullOgMedOpphørAvGraderingIAnnenPeriode() {
 		// Arrange
 		Periode graderingsPeriode = new Periode(LocalDate.of(2019, Month.MARCH, 1), LocalDate.of(2019, Month.MARCH, 8));
 		Gradering gradering = new Gradering(graderingsPeriode);

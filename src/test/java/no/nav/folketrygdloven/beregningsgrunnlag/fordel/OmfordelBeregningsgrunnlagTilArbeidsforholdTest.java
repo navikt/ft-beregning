@@ -26,7 +26,7 @@ public class OmfordelBeregningsgrunnlagTilArbeidsforholdTest {
     private static final String ORGNR2 = "910";
 
     @Test
-    public void skal_flytte_beregningsgrunnlag_fra_SN_til_arbeidsforhold_uten_rest_uten_å_ta_fra_arbeidsforhold() {
+    void skal_flytte_beregningsgrunnlag_fra_SN_til_arbeidsforhold_uten_rest_uten_å_ta_fra_arbeidsforhold() {
         // Arrange
         var refusjonskrav1 = BigDecimal.valueOf(200_000);
         var beregnetPrÅr1 = BigDecimal.valueOf(100_000);
@@ -58,7 +58,7 @@ public class OmfordelBeregningsgrunnlagTilArbeidsforholdTest {
     }
 
     @Test
-    public void skal_flytte_beregningsgrunnlag_fra_SN_til_arbeidsforhold_uten_rest_og_skal_ta_fra_arbeidsforhold() {
+    void skal_flytte_beregningsgrunnlag_fra_SN_til_arbeidsforhold_uten_rest_og_skal_ta_fra_arbeidsforhold() {
         // Arrange
         var refusjonskrav1 = BigDecimal.valueOf(200_000);
         var beregnetPrÅr1 = BigDecimal.valueOf(100_000);
@@ -88,7 +88,7 @@ public class OmfordelBeregningsgrunnlagTilArbeidsforholdTest {
     }
 
 	@Test
-    public void skal_flytte_beregningsgrunnlag_fra_SN_til_arbeidsforhold_uten_rest_og_skal_ta_fra_FL() {
+    void skal_flytte_beregningsgrunnlag_fra_SN_til_arbeidsforhold_uten_rest_og_skal_ta_fra_FL() {
         // Arrange
         var refusjonskrav1 = BigDecimal.valueOf(200_000);
         var beregnetPrÅr1 = BigDecimal.valueOf(100_000);
@@ -131,7 +131,7 @@ public class OmfordelBeregningsgrunnlagTilArbeidsforholdTest {
     }
 
     @Test
-    public void skal_flytte_beregningsgrunnlag_fra_SN_og_FL_til_arbeidsforhold_uten_rest_og_ta_fra_arbeidsforhold() {
+    void skal_flytte_beregningsgrunnlag_fra_SN_og_FL_til_arbeidsforhold_uten_rest_og_ta_fra_arbeidsforhold() {
         // Arrange
         var refusjonskrav1 = BigDecimal.valueOf(200_000);
         var beregnetPrÅr1 = BigDecimal.valueOf(100_000);

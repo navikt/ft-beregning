@@ -30,7 +30,7 @@ class RegelForeslåBeregningsgrunnlagTYTest {
 	private static final LocalDate STP = LocalDate.now();
 
 	@Test
-	public void skalBeregneFraYtelseVedtakMedKunArbeidstaker() {
+	void skalBeregneFraYtelseVedtakMedKunArbeidstaker() {
 		// Arrange
 		var beregningsgrunnlagPeriode = lagPeriodeMedInntektskategorier(List.of(Inntektskategori.ARBEIDSTAKER), Periode.of(STP, null));
 		var inntektsgrunnlag = lagInntektsgrunnlag(Periode.of(STP.minusMonths(1), STP.minusDays(1)), Map.of(Inntektskategori.ARBEIDSTAKER, BigDecimal.valueOf(1000)));
@@ -46,7 +46,7 @@ class RegelForeslåBeregningsgrunnlagTYTest {
 	}
 
 	@Test
-	public void skalBeregneFraYtelseVedtakMedKunFrilanser() {
+	void skalBeregneFraYtelseVedtakMedKunFrilanser() {
 		// Arrange
 		var beregningsgrunnlagPeriode = lagPeriodeMedInntektskategorier(List.of(Inntektskategori.FRILANSER), Periode.of(STP, null));
 		var inntektsgrunnlag = lagInntektsgrunnlag(Periode.of(STP.minusMonths(1), STP.minusDays(1)),
@@ -63,7 +63,7 @@ class RegelForeslåBeregningsgrunnlagTYTest {
 	}
 
 	@Test
-	public void skalBeregneFraYtelseVedtakMedArbeidstakerOgFrilanser() {
+	void skalBeregneFraYtelseVedtakMedArbeidstakerOgFrilanser() {
 		// Arrange
 		var beregningsgrunnlagPeriode = lagPeriodeMedInntektskategorier(List.of(Inntektskategori.FRILANSER,
 				Inntektskategori.ARBEIDSTAKER), Periode.of(STP, null));
@@ -85,7 +85,7 @@ class RegelForeslåBeregningsgrunnlagTYTest {
 	}
 
 	@Test
-	public void skalBeregneFraYtelseVedtakMedArbeidstakerOgSjømann() {
+	void skalBeregneFraYtelseVedtakMedArbeidstakerOgSjømann() {
 		// Arrange
 		var beregningsgrunnlagPeriode = lagPeriodeMedInntektskategorier(List.of(Inntektskategori.SJØMANN,
 				Inntektskategori.ARBEIDSTAKER), Periode.of(STP, null));
@@ -108,7 +108,7 @@ class RegelForeslåBeregningsgrunnlagTYTest {
 
 
 	@Test
-	public void skalIkkeBeregneFraYtelsevedtakOmManueltFastsatt() {
+	void skalIkkeBeregneFraYtelsevedtakOmManueltFastsatt() {
 		// Arrange
 		var beregningsgrunnlagPeriode = lagPeriodeMedInntektskategorier(List.of(Inntektskategori.ARBEIDSTAKER), Periode.of(STP, null));
 		BeregningsgrunnlagPrStatus.builder(beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatus(AktivitetStatus.BA)).medFastsattAvSaksbehandler(true)
