@@ -60,7 +60,7 @@ public class PeriodiserForUtbetalingsgrad extends LeafSpecification<Periodiserin
 							erHelgMedManuellFordelingFørOgEtter(andel, periodeFom, periodeTom) ||
 							harHattRefusjonTidligereOgFortsetterYtelse(andel, periodeModell.getPeriodisertBruttoBeregningsgrunnlagList(), periodeFom))
 					.map(FinnNyeAndelerMedUtbetalingsgrad::mapSplittetAndel)
-					.collect(Collectors.toList());
+					.toList();
 		}
 
 

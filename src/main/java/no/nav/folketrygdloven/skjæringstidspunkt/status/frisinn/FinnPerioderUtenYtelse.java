@@ -69,18 +69,18 @@ public class FinnPerioderUtenYtelse {
     private static List<Periode> finn6MndUtenYtelse36MndFørStp(List<Periode> beregningsperioder) {
         List<Periode> perioderSortertOmvendtKronologisk = beregningsperioder.stream()
             .sorted(Comparator.comparing(Periode::getFom).reversed())
-            .collect(Collectors.toList());
+            .toList();
         if (perioderSortertOmvendtKronologisk.size() <= 6) {
-            return perioderSortertOmvendtKronologisk.stream().sorted(Comparator.comparing(Periode::getFom)).collect(Collectors.toList());
+            return perioderSortertOmvendtKronologisk.stream().sorted(Comparator.comparing(Periode::getFom)).toList();
         }
         return perioderSortertOmvendtKronologisk.subList(0, 6)
-            .stream().sorted(Comparator.comparing(Periode::getFom)).collect(Collectors.toList());
+            .stream().sorted(Comparator.comparing(Periode::getFom)).toList();
     }
 
     private static List<Periode> finnPerioderUtenYtelse12MndFørStp(LocalDate skjæringstidspunktForOpptjening, List<Periode> beregningsperioder) {
         return beregningsperioder.stream()
             .filter(p -> !p.getFom().isBefore(skjæringstidspunktForOpptjening.minusMonths(12).withDayOfMonth(1)))
-            .collect(Collectors.toList());
+            .toList();
     }
 
     private static List<Periode> finnPerioderUtenYtelseFra36MndFørStp(LocalDate skjæringstidspunktForBeregning, List<YtelsePeriode> ytelseperioder) {
@@ -112,7 +112,7 @@ public class FinnPerioderUtenYtelse {
             .filter(i -> i.getFom().isBefore(skjæringstidspunktForBeregning))
             .map(i -> new YtelsePeriode(i.getInntektskilde(), Periode.of(i.getFom(), i.getTom())))
             .sorted(Comparator.comparing(p -> p.periode().getFom()))
-            .collect(Collectors.toList());
+            .toList();
     }
 
     private static void leggTilMånederMellom(List<Periode> beregningsperioder, LocalDate førsteDato, LocalDate sisteDato) {

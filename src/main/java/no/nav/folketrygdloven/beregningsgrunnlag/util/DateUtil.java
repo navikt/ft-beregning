@@ -8,6 +8,10 @@ import java.time.Month;
  */
 public class DateUtil {
 
+	private DateUtil() {
+		// Skjuler default konstruktør
+	}
+
     /** Null object pattern - for å unngå håndtere null (men må av og til håndtere denne). */
     public static final LocalDate TIDENES_BEGYNNELSE = LocalDate.of(-4712, Month.JANUARY, 1);
 

@@ -12,6 +12,10 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.utbet
 
 class RefusjonForUtbetalingsgradAndel {
 
+	private RefusjonForUtbetalingsgradAndel() {
+		// SKjuler default konstruktør
+	}
+
 	static boolean harRefusjonFørDato(AndelUtbetalingsgrad andelGradering, List<PeriodisertBruttoBeregningsgrunnlag> periodisertBg, LocalDate graderingFom) {
 		return periodisertBg.stream()
 				.filter(p -> graderingFom.isAfter(p.getPeriode().getTom()))

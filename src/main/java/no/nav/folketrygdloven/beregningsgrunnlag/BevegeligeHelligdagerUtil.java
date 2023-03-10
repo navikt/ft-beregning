@@ -101,7 +101,7 @@ public class BevegeligeHelligdagerUtil {
         return bevegeligeHelligdager.stream()
                 .filter(dato -> dato.getDayOfWeek().getValue() < DayOfWeek.SATURDAY.getValue())
                 .sorted()
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private static boolean erDatoHelg(LocalDate dato) {

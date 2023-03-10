@@ -134,7 +134,7 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
 
 	private List<AktivPeriode> hentAktivePerioder(LocalDate beregningstidspunkt, List<AktivPeriode> aktivePerioder) {
 		return aktivePerioder.stream()
-				.filter(ap -> ap.inneholder(beregningstidspunkt)).collect(Collectors.toList());
+				.filter(ap -> ap.inneholder(beregningstidspunkt)).toList();
 	}
 
 }

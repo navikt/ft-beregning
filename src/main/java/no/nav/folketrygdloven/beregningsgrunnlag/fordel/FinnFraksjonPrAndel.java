@@ -30,7 +30,7 @@ class FinnFraksjonPrAndel extends LeafSpecification<FordelModell> {
 	    List<FordelteAndelerModell> mellomregninger = modell.getInput().getAndeler()
 			    .stream()
 			    .map(andelInput -> finnFraksjonsbestemmendeBeløpOgLagMellomregning(andelInput, resultater))
-			    .collect(Collectors.toList());
+			    .toList();
 	    BigDecimal totaltBeløp = finnTotaltFraksjonsbestemmendeBeløp(mellomregninger);
 	    resultater.put("totaltFraksjonsbestemmendeBeløp", totaltBeløp);
 		BigDecimal gjennståendeFraksjon = BigDecimal.valueOf(1);

@@ -96,7 +96,8 @@ class OmfordelFraAktiviteterUtenArbeidsforhold extends LeafSpecification<FordelM
 		return getGrunnlagForArbeidsforhold(beregningsgrunnlagPeriode)
 				.stream()
 				.filter(a -> a.getInntektskategori() == null || a.getInntektskategori().equals(Inntektskategori.UDEFINERT)
-						|| a.getInntektskategori().equals(bgPrStatus.getInntektskategori())).findFirst();
+						|| a.getInntektskategori().equals(bgPrStatus.getInntektskategori()))
+				.findFirst();
 	}
 
 	private FordelAndelModell opprettNyAndel(FordelPeriodeModell beregningsgrunnlagPeriode) {
@@ -158,7 +159,7 @@ class OmfordelFraAktiviteterUtenArbeidsforhold extends LeafSpecification<FordelM
 		return beregningsgrunnlagPeriode.getAlleAndelerForStatus(AktivitetStatus.AT)
 				.stream()
 				.filter(this::matcherArbeidsforhold)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	private boolean matcherArbeidsforhold(FordelAndelModell a) {

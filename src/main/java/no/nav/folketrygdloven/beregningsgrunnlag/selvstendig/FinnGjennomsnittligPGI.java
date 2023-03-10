@@ -12,6 +12,10 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.In
 
 public class FinnGjennomsnittligPGI {
 
+	private FinnGjennomsnittligPGI() {
+		// Skjuler default konstruktør
+	}
+
 	private static final String BIDRAG_TIL_BG = "bidragTilBG";
 
 	public static BigDecimal finnGjennomsnittligPGI(LocalDate beregningsperiodeTom,

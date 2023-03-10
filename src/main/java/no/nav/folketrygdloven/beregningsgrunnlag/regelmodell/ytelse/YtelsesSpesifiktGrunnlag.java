@@ -12,7 +12,7 @@ public abstract class YtelsesSpesifiktGrunnlag {
     @JsonBackReference
     protected Beregningsgrunnlag beregningsgrunnlag;
 
-    public YtelsesSpesifiktGrunnlag(String ytelseType) {
+    protected YtelsesSpesifiktGrunnlag(String ytelseType) {
         this.ytelseType = ytelseType;
     }
 

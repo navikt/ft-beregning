@@ -13,6 +13,10 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.grade
 
 class RefusjonForGraderingAndel {
 
+	private RefusjonForGraderingAndel() {
+		// Skjuler default konstruktør
+	}
+
 	static boolean harRefusjonPåDato(AndelGradering andelGradering, List<PeriodisertBruttoBeregningsgrunnlag> periodisertBg, LocalDate graderingFom) {
 		return periodisertBg.stream()
 				.filter(p -> p.getPeriode().inneholder(graderingFom))

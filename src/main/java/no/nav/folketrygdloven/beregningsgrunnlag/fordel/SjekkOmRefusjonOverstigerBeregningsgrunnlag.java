@@ -46,6 +46,6 @@ class SjekkOmRefusjonOverstigerBeregningsgrunnlag extends LeafSpecification<Ford
     private List<FordelAndelModell> finnGrunnlagFraArbeidsforhold(FordelPeriodeModell grunnlag) {
         return grunnlag.getAlleAndelerForStatus(AktivitetStatus.AT).stream()
         .filter(a -> Objects.requireNonNull(a.getArbeidsforhold().orElse(null)).equals(arbeidsforhold))
-            .collect(Collectors.toList());
+            .toList();
     }
 }

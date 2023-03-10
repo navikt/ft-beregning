@@ -43,7 +43,7 @@ public class IdentifiserPerioderForEndringISøktYtelse {
 		var graderingSegmenter = graderinger.stream()
 				.filter(g -> g.getUtbetalingsprosent().compareTo(BigDecimal.ZERO) != 0)
 				.map(g -> new LocalDateSegment<>(g.getFom(), g.getTom(), g.getUtbetalingsprosent()))
-				.collect(Collectors.toList());
+				.toList();
 		return new LocalDateTimeline<>(graderingSegmenter, StandardCombinators::rightOnly);
 	}
 
