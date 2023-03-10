@@ -27,7 +27,7 @@ public class OmfordelFraFrilansTest {
     private static final String ORGNR = "995";
 
     @Test
-    public void skal_ikkje_flytte_om_det_ikkje_finnes_frilans() {
+    void skal_ikkje_flytte_om_det_ikkje_finnes_frilans() {
         // Arrange
         var refusjonskravPrÅr = BigDecimal.valueOf(200_000);
         var beregnetPrÅr = BigDecimal.valueOf(100_000);
@@ -43,7 +43,7 @@ public class OmfordelFraFrilansTest {
     }
 
     @Test
-    public void skal_flytte_fra_frilans_til_arbeid_frilans_avkortet_til_0() {
+    void skal_flytte_fra_frilans_til_arbeid_frilans_avkortet_til_0() {
         // Arrange
         var refusjonskravPrÅr = BigDecimal.valueOf(200_000);
         var beregnetPrÅr = BigDecimal.valueOf(100_000);
@@ -72,7 +72,7 @@ public class OmfordelFraFrilansTest {
     }
 
     @Test
-    public void skal_flytte_fra_frilans_til_arbeid_med_restbeløp_å_flytte() {
+    void skal_flytte_fra_frilans_til_arbeid_med_restbeløp_å_flytte() {
         // Arrange
         var refusjonskravPrÅr = BigDecimal.valueOf(200_000);
 	    var beregnetPrÅr = BigDecimal.valueOf(100_000);
@@ -103,7 +103,7 @@ public class OmfordelFraFrilansTest {
 
 
     @Test
-    public void skal_flytte_fra_frilans_til_arbeid_med_restbeløp_på_frilans() {
+    void skal_flytte_fra_frilans_til_arbeid_med_restbeløp_på_frilans() {
         // Arrange
 	    var refusjonskravPrÅr = BigDecimal.valueOf(200_000);
 	    var beregnetPrÅr = BigDecimal.valueOf(100_000);

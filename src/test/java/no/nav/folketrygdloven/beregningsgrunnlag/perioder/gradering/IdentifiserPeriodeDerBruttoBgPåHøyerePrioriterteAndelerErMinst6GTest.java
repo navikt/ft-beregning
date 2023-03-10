@@ -29,7 +29,7 @@ public class IdentifiserPeriodeDerBruttoBgPåHøyerePrioriterteAndelerErMinst6GT
     private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.of(2019, Month.FEBRUARY, 14);
 
     @Test
-    public void frilansOver6GSNGraderer() {
+    void frilansOver6GSNGraderer() {
         // Arrange
         PeriodisertBruttoBeregningsgrunnlag periodertBg = PeriodisertBruttoBeregningsgrunnlag.builder()
             .medPeriode(Periode.of(SKJÆRINGSTIDSPUNKT, DateUtil.TIDENES_ENDE))
@@ -63,7 +63,7 @@ public class IdentifiserPeriodeDerBruttoBgPåHøyerePrioriterteAndelerErMinst6GT
     }
 
     @Test
-    public void naturalytelseBortfallerEtterSNGraderes() {
+    void naturalytelseBortfallerEtterSNGraderes() {
         // Arrange
         Periode p1 = Periode.of(SKJÆRINGSTIDSPUNKT, LocalDate.of(2019, Month.APRIL, 21));
         Periode p2 = Periode.of(LocalDate.of(2019, Month.APRIL, 22), DateUtil.TIDENES_ENDE);
@@ -113,7 +113,7 @@ public class IdentifiserPeriodeDerBruttoBgPåHøyerePrioriterteAndelerErMinst6GT
     }
 
     @Test
-    public void naturalytelseBortfallerEtterSNGraderingSlutter() {
+    void naturalytelseBortfallerEtterSNGraderingSlutter() {
         // Arrange
         Periode p1 = Periode.of(SKJÆRINGSTIDSPUNKT, LocalDate.of(2019, Month.APRIL, 21));
         Periode p2 = Periode.of(LocalDate.of(2019, Month.APRIL, 22), DateUtil.TIDENES_ENDE);

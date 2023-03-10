@@ -26,7 +26,7 @@ public class OmfordelFraAktiviteterUtenArbeidsforholdTest {
     private static final String ORGNR = "995";
 
     @Test
-    public void skal_flytte_beregningsgrunnlag_fra_SN_til_arbeidsforhold_uten_rest() {
+    void skal_flytte_beregningsgrunnlag_fra_SN_til_arbeidsforhold_uten_rest() {
         var refusjonskravPrÅr = BigDecimal.valueOf(200_000);
         var beregnetPrÅr = BigDecimal.valueOf(100_000);
         var arbeidsforhold = lagArbeidsforhold(refusjonskravPrÅr, beregnetPrÅr);
@@ -44,7 +44,7 @@ public class OmfordelFraAktiviteterUtenArbeidsforholdTest {
     }
 
     @Test
-    public void skal_flytte_beregningsgrunnlag_fra_SN_til_arbeidsforhold_med_resterende_beløp_å_flytte() {
+    void skal_flytte_beregningsgrunnlag_fra_SN_til_arbeidsforhold_med_resterende_beløp_å_flytte() {
         var refusjonskravPrÅr = BigDecimal.valueOf(200_000);
         var beregnetPrÅr = BigDecimal.valueOf(100_000);
         var arbeidsforhold = lagArbeidsforhold(refusjonskravPrÅr, beregnetPrÅr);
@@ -62,7 +62,7 @@ public class OmfordelFraAktiviteterUtenArbeidsforholdTest {
     }
 
     @Test
-    public void skal_flytte_beregningsgrunnlag_fra_SN_til_arbeidsforhold_med_resterende_beløp_på_SN_andel() {
+    void skal_flytte_beregningsgrunnlag_fra_SN_til_arbeidsforhold_med_resterende_beløp_på_SN_andel() {
         var refusjonskravPrÅr = BigDecimal.valueOf(200_000);
         var beregnetPrÅr = BigDecimal.valueOf(100_000);
         var arbeidsforhold = lagArbeidsforhold(refusjonskravPrÅr, beregnetPrÅr);
@@ -80,7 +80,7 @@ public class OmfordelFraAktiviteterUtenArbeidsforholdTest {
     }
 
     @Test
-    public void beregningsgrunnlag_med_SN_DP_og_ARBEID_flytter_fra_SN() {
+    void beregningsgrunnlag_med_SN_DP_og_ARBEID_flytter_fra_SN() {
 	    var refusjonskravPrÅr = BigDecimal.valueOf(200_000);
 	    var beregnetPrÅr = BigDecimal.valueOf(100_000);
 	    var arbeidsforhold = lagArbeidsforhold(refusjonskravPrÅr, beregnetPrÅr);
@@ -104,7 +104,7 @@ public class OmfordelFraAktiviteterUtenArbeidsforholdTest {
     }
 
     @Test
-    public void beregningsgrunnlag_med_SN_DP_og_ARBEID_flytter_fra_SN_før_DP() {
+    void beregningsgrunnlag_med_SN_DP_og_ARBEID_flytter_fra_SN_før_DP() {
 	    var refusjonskravPrÅr = BigDecimal.valueOf(225_000);
 	    var beregnetPrÅr = BigDecimal.valueOf(100_000);
 	    var arbeidsforhold = lagArbeidsforhold(refusjonskravPrÅr, beregnetPrÅr);
@@ -138,7 +138,7 @@ public class OmfordelFraAktiviteterUtenArbeidsforholdTest {
 	}
 
 	@Test
-    public void beregningsgrunnlag_med_SN_DP_AAP_og_ARBEID_flytter_fra_AAP_før_DP() {
+    void beregningsgrunnlag_med_SN_DP_AAP_og_ARBEID_flytter_fra_AAP_før_DP() {
 	    var refusjonskravPrÅr = BigDecimal.valueOf(225_000);
 	    var beregnetPrÅr = BigDecimal.valueOf(100_000);
 	    var arbeidsforhold = lagArbeidsforhold(refusjonskravPrÅr, beregnetPrÅr);

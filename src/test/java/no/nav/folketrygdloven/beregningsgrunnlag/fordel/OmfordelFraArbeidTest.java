@@ -84,7 +84,7 @@ public class OmfordelFraArbeidTest {
 
 
 	@Test
-	public void skal_flytte_beregningsgrunnlag_fra_et_annet_arbeidsforhold() {
+	void skal_flytte_beregningsgrunnlag_fra_et_annet_arbeidsforhold() {
 		// Arrange
 		var refusjonskrav1 = BigDecimal.valueOf(200_000);
 		var beregnetPrÅr1 = BigDecimal.valueOf(100_000);
@@ -105,7 +105,7 @@ public class OmfordelFraArbeidTest {
 	}
 
 	@Test
-	public void skal_flytte_beregningsgrunnlag_fra_et_annet_arbeidsforhold_med_ulik_utbetalingsgrad() {
+	void skal_flytte_beregningsgrunnlag_fra_et_annet_arbeidsforhold_med_ulik_utbetalingsgrad() {
 		// slik regner vi det ut:
 		// Kompensert grunnlag for A2 er 100_000 * 0,25 = 25_0000
 		// Dette grunnlaget flyttes til A1 og skaleres opp slik at skalert_grunnlag * utbetalingsgrad_A1 = 25_0000
@@ -133,7 +133,7 @@ public class OmfordelFraArbeidTest {
 
 
 	@Test
-	public void skal_flytte_deler_av_beregningsgrunnlag_fra_et_annet_arbeidsforhold() {
+	void skal_flytte_deler_av_beregningsgrunnlag_fra_et_annet_arbeidsforhold() {
 		// Arrange
 		var refusjonskrav1 = BigDecimal.valueOf(200_000);
 		var beregnetPrÅr1 = BigDecimal.valueOf(100_000);
@@ -154,7 +154,7 @@ public class OmfordelFraArbeidTest {
 	}
 
 	@Test
-	public void skal_flytte_beregningsgrunnlag_fra_to_arbeidsforhold() {
+	void skal_flytte_beregningsgrunnlag_fra_to_arbeidsforhold() {
 		// Arrange
 		var refusjonskrav1 = BigDecimal.valueOf(300_000);
 		var beregnetPrÅr1 = BigDecimal.valueOf(100_000);
@@ -180,7 +180,7 @@ public class OmfordelFraArbeidTest {
 	}
 
 	@Test
-	public void skal_kun_flytte_beregningsgrunnlag_fra_arbeidsforhold_som_har_lavere_refusjon_enn_beregningsgrunnlag() {
+	void skal_kun_flytte_beregningsgrunnlag_fra_arbeidsforhold_som_har_lavere_refusjon_enn_beregningsgrunnlag() {
 		// Arrange
 		var refusjonskrav1 = BigDecimal.valueOf(300_000);
 		var beregnetPrÅr1 = BigDecimal.valueOf(100_000);

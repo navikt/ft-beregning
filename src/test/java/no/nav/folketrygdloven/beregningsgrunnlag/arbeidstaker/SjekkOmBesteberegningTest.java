@@ -25,7 +25,7 @@ public class SjekkOmBesteberegningTest {
     private Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("12345");
 
     @Test
-    public void skalReturnereNeiNårIkkeDagpengerStatus() {
+    void skalReturnereNeiNårIkkeDagpengerStatus() {
         //Arrange
         Beregningsgrunnlag grunnlag = settoppGrunnlagMedEnPeriode(LocalDate.now(), new Inntektsgrunnlag(), List.of(AktivitetStatus.ATFL), List.of(arbeidsforhold));
         BeregningsgrunnlagPeriode periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
@@ -36,7 +36,7 @@ public class SjekkOmBesteberegningTest {
     }
 
     @Test
-    public void skalReturnereNeiNårDagpengerStatusMenIkkeBesteberegning() {
+    void skalReturnereNeiNårDagpengerStatusMenIkkeBesteberegning() {
         //Arrange
         Beregningsgrunnlag grunnlag = settoppGrunnlagMedEnPeriode(LocalDate.now(), new Inntektsgrunnlag(), List.of(AktivitetStatus.ATFL, AktivitetStatus.DP), List.of(arbeidsforhold));
         BeregningsgrunnlagPeriode periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
@@ -47,7 +47,7 @@ public class SjekkOmBesteberegningTest {
     }
 
     @Test
-    public void skalReturnereJaNårDagpengerStatusOgBesteberegning() {
+    void skalReturnereJaNårDagpengerStatusOgBesteberegning() {
         //Arrange
         Beregningsgrunnlag grunnlag = Beregningsgrunnlag.builder(settoppGrunnlagMedEnPeriode(LocalDate.now(), new Inntektsgrunnlag(), List.of(AktivitetStatus.ATFL, AktivitetStatus.DP), List.of(arbeidsforhold)))
             .medYtelsesSpesifiktGrunnlag(new ForeldrepengerGrunnlag(true)).build();
@@ -65,7 +65,7 @@ public class SjekkOmBesteberegningTest {
     }
 
     @Test
-    public void skalReturnereNeiNårFastsattDagpengerStatusOgIkkeFastsattATFLSTatus() { //Skal vanligvis ikke skje
+    void skalReturnereNeiNårFastsattDagpengerStatusOgIkkeFastsattATFLSTatus() { //Skal vanligvis ikke skje
         //Arrange
         Beregningsgrunnlag grunnlag = settoppGrunnlagMedEnPeriode(LocalDate.now(), new Inntektsgrunnlag(), List.of(AktivitetStatus.ATFL, AktivitetStatus.DP), List.of(arbeidsforhold));
         BeregningsgrunnlagPeriode periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);

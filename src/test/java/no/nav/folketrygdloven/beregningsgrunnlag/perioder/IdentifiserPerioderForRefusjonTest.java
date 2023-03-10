@@ -32,7 +32,7 @@ public class IdentifiserPerioderForRefusjonTest {
 	private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.of(2019, Month.JANUARY, 4);
 
 	@Test
-	public void ingenRefusjon() {
+	void ingenRefusjon() {
 		// Arrange
 		var im = ArbeidsforholdOgInntektsmelding.builder()
 				.medStartdatoPermisjon(SKJÆRINGSTIDSPUNKT)
@@ -49,7 +49,7 @@ public class IdentifiserPerioderForRefusjonTest {
 	}
 
 	@Test
-	public void refusjonFraSkjæringstidspunkt() {
+	void refusjonFraSkjæringstidspunkt() {
 		// Arrange
 		var im = ArbeidsforholdOgInntektsmelding.builder()
 				.medStartdatoPermisjon(SKJÆRINGSTIDSPUNKT)
@@ -79,7 +79,7 @@ public class IdentifiserPerioderForRefusjonTest {
 
 
 	@Test
-	public void refusjonFraSenereDato() {
+	void refusjonFraSenereDato() {
 		// Arrange
 		LocalDate endringFom = LocalDate.of(2019, Month.JANUARY, 26);
 		ArbeidsforholdOgInntektsmelding im = ArbeidsforholdOgInntektsmelding.builder()
@@ -127,7 +127,7 @@ public class IdentifiserPerioderForRefusjonTest {
 	}
 
 	@Test
-	public void refusjonFraStartOgOpphør() {
+	void refusjonFraStartOgOpphør() {
 		// Arrange
 		LocalDate opphørFom = LocalDate.of(2019, Month.JANUARY, 26);
 		ArbeidsforholdOgInntektsmelding im = ArbeidsforholdOgInntektsmelding.builder()
@@ -153,7 +153,7 @@ public class IdentifiserPerioderForRefusjonTest {
 	}
 
 	@Test
-	public void refusjonFraStartOgEndring() {
+	void refusjonFraStartOgEndring() {
 		// Arrange
 		LocalDate endringFom = LocalDate.of(2019, Month.JANUARY, 26);
 		ArbeidsforholdOgInntektsmelding im = ArbeidsforholdOgInntektsmelding.builder()
@@ -178,7 +178,7 @@ public class IdentifiserPerioderForRefusjonTest {
 	}
 
 	@Test
-	public void refusjonFraStartEndringOgOpphør() {
+	void refusjonFraStartEndringOgOpphør() {
 		// Arrange
 		LocalDate endringFom = LocalDate.of(2019, Month.JANUARY, 26);
 		LocalDate opphørFom = LocalDate.of(2019, Month.FEBRUARY, 17);
@@ -208,7 +208,7 @@ public class IdentifiserPerioderForRefusjonTest {
 	}
 
 	@Test
-	public void refusjonFraSkjæringstidspunktArbeidsgiverSøkerForSent() {
+	void refusjonFraSkjæringstidspunktArbeidsgiverSøkerForSent() {
 		// Arrange
 		var im = ArbeidsforholdOgInntektsmelding.builder()
 				.medStartdatoPermisjon(SKJÆRINGSTIDSPUNKT)
@@ -233,7 +233,7 @@ public class IdentifiserPerioderForRefusjonTest {
 	}
 
 	@Test
-	public void refusjonFraStartOgOpphørArbeidsgiverSøkerForSent() {
+	void refusjonFraStartOgOpphørArbeidsgiverSøkerForSent() {
 		// Arrange
 		LocalDate opphørFom = LocalDate.of(2019, Month.JANUARY, 26);
 		ArbeidsforholdOgInntektsmelding im = ArbeidsforholdOgInntektsmelding.builder()
@@ -263,7 +263,7 @@ public class IdentifiserPerioderForRefusjonTest {
 	// Bedt om refusjon fra 4. januar, opphør 15. mars
 	// Forventet resultat: Får refusjon fra 1. februar, opphør fra 15. mars
 	@Test
-	public void refusjonFraStartOgOpphørEtterFørsteDagIMånedenFørsteIMMottattMinus3MånederArbeidsgiverSøkerForSent() {
+	void refusjonFraStartOgOpphørEtterFørsteDagIMånedenFørsteIMMottattMinus3MånederArbeidsgiverSøkerForSent() {
 		// Arrange
 		LocalDate opphørFom = LocalDate.of(2019, Month.MARCH, 15);
 		ArbeidsforholdOgInntektsmelding im = ArbeidsforholdOgInntektsmelding.builder()
@@ -297,7 +297,7 @@ public class IdentifiserPerioderForRefusjonTest {
 	}
 
 	@Test
-	public void refusjonFraStartOgEndringArbeidsgiverSøkerForSent() {
+	void refusjonFraStartOgEndringArbeidsgiverSøkerForSent() {
 		// Arrange
 		LocalDate endringFom = LocalDate.of(2019, Month.JANUARY, 26);
 		ArbeidsforholdOgInntektsmelding im = ArbeidsforholdOgInntektsmelding.builder()
@@ -331,7 +331,7 @@ public class IdentifiserPerioderForRefusjonTest {
 	}
 
 	@Test
-	public void refusjonFraStartOgEndringEtter1FebruarArbeidsgiverSøkerForSent() {
+	void refusjonFraStartOgEndringEtter1FebruarArbeidsgiverSøkerForSent() {
 		// Arrange
 		LocalDate endringFom = LocalDate.of(2019, Month.FEBRUARY, 26);
 		ArbeidsforholdOgInntektsmelding im = ArbeidsforholdOgInntektsmelding.builder()
@@ -365,7 +365,7 @@ public class IdentifiserPerioderForRefusjonTest {
 	}
 
 	@Test
-	public void refusjonFraStartEndringOgOpphørArbeidsgiverSøkerForSent() {
+	void refusjonFraStartEndringOgOpphørArbeidsgiverSøkerForSent() {
 		// Arrange
 		LocalDate endringFom = LocalDate.of(2019, Month.JANUARY, 26);
 		LocalDate opphørFom = LocalDate.of(2019, Month.FEBRUARY, 17);
@@ -404,7 +404,7 @@ public class IdentifiserPerioderForRefusjonTest {
 	}
 
 	@Test
-	public void refusjonFraStartEndringEtter1FebruarOgOpphørArbeidsgiverSøkerForSent() {
+	void refusjonFraStartEndringEtter1FebruarOgOpphørArbeidsgiverSøkerForSent() {
 		// Arrange
 		LocalDate endringFom = LocalDate.of(2019, Month.FEBRUARY, 26);
 		LocalDate opphørFom = LocalDate.of(2019, Month.MARCH, 17);

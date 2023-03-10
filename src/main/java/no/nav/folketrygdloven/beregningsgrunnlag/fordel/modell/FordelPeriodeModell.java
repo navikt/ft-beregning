@@ -41,7 +41,7 @@ public class FordelPeriodeModell {
 	public List<FordelAndelModell> getAlleAndelerForStatus(AktivitetStatus status) {
 		return getAndeler().stream()
 				.filter(andel -> andel.getAktivitetStatus().equals(status))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	public List<FordelAndelModell> getBeregningsgrunnlagPrStatusSomSkalBrukes() {

@@ -33,20 +33,19 @@ public class BeregnPrArbeidsforholdFraAOrdningenTest {
     private Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("12345");
 
     @Test
-    public void skalKasteExceptionNårBeregningperiodeErNull() {
+    void skalKasteExceptionNårBeregningperiodeErNull() {
         //Arrange
         Beregningsgrunnlag grunnlag = opprettBeregningsgrunnlagFraInntektskomponenten(SKJÆRINGSTIDSPUNKT, BigDecimal.valueOf(35000), BigDecimal.ZERO, false);
         BeregningsgrunnlagPeriode periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
         BeregningsgrunnlagPrArbeidsforhold.builder(periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0)).medBeregningsperiode(null);
         BeregningsgrunnlagPrArbeidsforhold arbeidstakerStatus = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
         //Act
-        Assertions.assertThrows(IllegalStateException.class, () -> {
-            new BeregnPrArbeidsforholdFraAOrdningen(arbeidstakerStatus).evaluate(periode);
-        });
+	    BeregnPrArbeidsforholdFraAOrdningen beregnPrArbeidsforholdFraAOrdningen = new BeregnPrArbeidsforholdFraAOrdningen(arbeidstakerStatus);
+	    Assertions.assertThrows(IllegalStateException.class, () -> beregnPrArbeidsforholdFraAOrdningen.evaluate(periode));
     }
 
     @Test
-    public void skalBeregneSnittAvInntekterIBeregningperioden() {
+    void skalBeregneSnittAvInntekterIBeregningperioden() {
         //Arrange
         Periode beregningsperiode = Periode.of(SKJÆRINGSTIDSPUNKT.minusMonths(3).withDayOfMonth(1), SKJÆRINGSTIDSPUNKT.minusMonths(1).with(TemporalAdjusters.lastDayOfMonth()));
         Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
@@ -68,7 +67,7 @@ public class BeregnPrArbeidsforholdFraAOrdningenTest {
     }
 
 	@Test
-	public void skalBeregneSnittAvInntekterMedToHeleMånederOgEnHalv() {
+	void skalBeregneSnittAvInntekterMedToHeleMånederOgEnHalv() {
 		//Arrange
 		LocalDate startArbeidsforhold = SKJÆRINGSTIDSPUNKT.minusMonths(3).withDayOfMonth(15);
 		Periode beregningsperiode = Periode.of(startArbeidsforhold, SKJÆRINGSTIDSPUNKT.minusMonths(1).with(TemporalAdjusters.lastDayOfMonth()));
@@ -91,7 +90,7 @@ public class BeregnPrArbeidsforholdFraAOrdningenTest {
 	}
 
 	@Test
-	public void skalBeregneSnittAvInntekterMedEnHelMånedOgEnHalv() {
+	void skalBeregneSnittAvInntekterMedEnHelMånedOgEnHalv() {
 		//Arrange
 		LocalDate startArbeidsforhold = SKJÆRINGSTIDSPUNKT.minusMonths(2).withDayOfMonth(15);
 		Periode beregningsperiode = Periode.of(startArbeidsforhold, SKJÆRINGSTIDSPUNKT.minusMonths(1).with(TemporalAdjusters.lastDayOfMonth()));
@@ -113,7 +112,7 @@ public class BeregnPrArbeidsforholdFraAOrdningenTest {
 	}
 
 	@Test
-	public void skalBeregneSnittAvInntekterMedEnHalvMåned() {
+	void skalBeregneSnittAvInntekterMedEnHalvMåned() {
 		//Arrange
 		// 12 Virkedager gjenstående
 		LocalDate startArbeidsforhold = SKJÆRINGSTIDSPUNKT.minusMonths(1).withDayOfMonth(15);
@@ -137,7 +136,7 @@ public class BeregnPrArbeidsforholdFraAOrdningenTest {
 
 
 	@Test
-    public void OMS_Skal_gi_fordele_restinntekt_fra_aordningen_til_arbeidsforhold_uten_inntektsmelding() {
+    void OMS_Skal_gi_fordele_restinntekt_fra_aordningen_til_arbeidsforhold_uten_inntektsmelding() {
         //Arrange
         var arbeidsforholdMedInntektsmelding = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("12345", "ARB1");
         var arbeidsforholdUtenInntektsmelding = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("12345", "ARB2");
@@ -172,7 +171,7 @@ public class BeregnPrArbeidsforholdFraAOrdningenTest {
     }
 
     @Test
-    public void OMS_Skal_gi_fordele_restinntekt_fra_aordningen_til_to_arbeidsforhold_uten_inntektsmelding() {
+    void OMS_Skal_gi_fordele_restinntekt_fra_aordningen_til_to_arbeidsforhold_uten_inntektsmelding() {
         //Arrange
         var arbeidsforholdMedInntektsmelding = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("12345", "ARB1");
         var arbeidsforholdUtenInntektsmelding = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("12345", "ARB2");
@@ -206,7 +205,7 @@ public class BeregnPrArbeidsforholdFraAOrdningenTest {
     }
 
     @Test
-    public void OMS_Skal_gi_fordele_restinntekt_fra_aordningen_til_to_arbeidsforhold_uten_inntektsmelding_med_to_arbeidsforhold_med_inntektsmelding() {
+    void OMS_Skal_gi_fordele_restinntekt_fra_aordningen_til_to_arbeidsforhold_uten_inntektsmelding_med_to_arbeidsforhold_med_inntektsmelding() {
         //Arrange
         var arbeidsforholdMedInntektsmelding = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("12345", "ARB1");
         var arbeidsforholdMedInntektsmelding2 = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("12345", "ARB4");

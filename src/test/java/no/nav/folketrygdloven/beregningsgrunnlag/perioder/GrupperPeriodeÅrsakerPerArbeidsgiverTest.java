@@ -22,7 +22,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.PeriodeSpl
 
 public class GrupperPeriodeÅrsakerPerArbeidsgiverTest {
     @Test
-    public void toArbeidsgivereTreDatoer() {
+    void toArbeidsgivereTreDatoer() {
         // Arrange
         ArbeidsforholdOgInntektsmelding a1 = ArbeidsforholdOgInntektsmelding.builder()
             .medArbeidsforhold(Arbeidsforhold.builder()

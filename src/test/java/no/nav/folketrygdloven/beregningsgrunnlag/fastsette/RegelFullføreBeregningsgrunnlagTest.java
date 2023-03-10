@@ -47,7 +47,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
 	// Har flere arbeidsforhold og totalt brutto beregningsgrunnlag for disse < 6G
 	// Flere arbeidsgiver har refusjonskrav
 	// Ingen naturalytelse bortfaller
-	public void totaltBruttoBGUnder6GMedRefusjonUtenNaturalYtelseBortfallerForToArbeidsgivere() {
+	void totaltBruttoBGUnder6GMedRefusjonUtenNaturalYtelseBortfallerForToArbeidsgivere() {
 		//Arrange
 		double bruttoBG1 = 200000d;
 		double refusjonskrav1 = 200000d;
@@ -83,7 +83,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
 	// Har flere arbeidsforhold og totalt brutto beregningsgrunnlag for disse < 6G
 	// Flere arbeidsgiver har refusjonskrav
 	// Naturalytelse for ein av arbeidsgiverane bortfaller
-	public void totaltBruttoBGUnder6GMedRefusjonMedNaturalYtelseBortfallerForEnAvToArbeidsgivere() {
+	void totaltBruttoBGUnder6GMedRefusjonMedNaturalYtelseBortfallerForEnAvToArbeidsgivere() {
 		//Arrange
 		double bruttoBG1 = 200000d;
 		double refusjonskrav1 = 200000d;
@@ -119,7 +119,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
 	// Har flere arbeidsforhold og totalt brutto beregningsgrunnlag for disse < 6G
 	// Flere arbeidsgiver har refusjonskrav
 	// Naturalytelse for begge arbeidsgiverane bortfaller
-	public void totaltBruttoBGUnder6GMedRefusjonMedNaturalYtelseBortfallerForBeggeArbeidsgivere() {
+	void totaltBruttoBGUnder6GMedRefusjonMedNaturalYtelseBortfallerForBeggeArbeidsgivere() {
 		//Arrange
 		double bruttoBG1 = 200000d;
 		double refusjonskrav1 = 200000d;
@@ -155,7 +155,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
 	// Har flere arbeidsforhold og totalt brutto beregningsgrunnlag for disse < 6G
 	// Flere arbeidsgiver har refusjonskrav
 	// Naturalytelse for begge arbeidsgiverane bortfaller medfører BG over 6G
-	public void totaltBruttoBGUnder6GMedRefusjonMedNaturalYtelseBortfallerForBeggeArbeidsgivereOgMedførerBGOver6G() {
+	void totaltBruttoBGUnder6GMedRefusjonMedNaturalYtelseBortfallerForBeggeArbeidsgivereOgMedførerBGOver6G() {
 		//Arrange
 		double bruttoBG1 = GRUNNBELØP_2017 * 3; //Totalt under 6G
 		double refusjonskrav1 = GRUNNBELØP_2017 * 3;
@@ -200,7 +200,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
 	//          - Naturalytelse for arbeidsgiver1 i 2. periode
 	//          - Naturalytelse for arbeidsgiver2 i 3. periode
 	//          - Naturalytelse for arbeidsgiver3 i 4. periode
-	public void totaltBruttoBGOver6GMedRefusjonMedNaturalYtelseBortfallerForTreArbeidsgivere() {
+	void totaltBruttoBGOver6GMedRefusjonMedNaturalYtelseBortfallerForTreArbeidsgivere() {
 		//Arrange
 		double bruttoBG1 = GRUNNBELØP_2017 * 4; //Totalt over 6G
 		double refusjonskrav1 = GRUNNBELØP_2017 * 3;
@@ -312,14 +312,14 @@ public class RegelFullføreBeregningsgrunnlagTest {
 	}
 
 	@Test
-	public void totaltBruttoBGUnder6GUtenRefusjonSkalIkkeAvkortesØvreGrenseScenario() {
+	void totaltBruttoBGUnder6GUtenRefusjonSkalIkkeAvkortesØvreGrenseScenario() {
 		//Arrange
 		double beregnetPrÅr = GRUNNBELØP_2017 * 5.99;
 		totaltBruttoBGUnder6GUtenRefusjonSkalIkkeAvkortesScenario(beregnetPrÅr);
 	}
 
 	@Test
-	public void totaltBruttoBGUnder6GUtenRefusjonSkalIkkeAvkortesNedreGrenseScenario() {
+	void totaltBruttoBGUnder6GUtenRefusjonSkalIkkeAvkortesNedreGrenseScenario() {
 		//Arrange
 		double beregnetPrÅr = GRUNNBELØP_2017 * 0.50;
 		totaltBruttoBGUnder6GUtenRefusjonSkalIkkeAvkortesScenario(beregnetPrÅr);
@@ -340,7 +340,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
 	}
 
 	@Test
-	public void totaltBruttoBGUnder6GUtenRefusjonSkalIkkeAvkortesNedreGrenseMedFlereArbeidsforholdScenario() {
+	void totaltBruttoBGUnder6GUtenRefusjonSkalIkkeAvkortesNedreGrenseMedFlereArbeidsforholdScenario() {
 		//Arrange
 		double beregnetPrÅr = GRUNNBELØP_2017 * 0.25;
 		double beregnetPrÅr2 = GRUNNBELØP_2017 * 0.15;
@@ -364,7 +364,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
 	}
 
 	@Test
-	public void totaltBruttoBGUnder6GUtenRefusjonSkalIkkeAvkortesØvreGrenseMedFlereArbeidsforholdScenario() {
+	void totaltBruttoBGUnder6GUtenRefusjonSkalIkkeAvkortesØvreGrenseMedFlereArbeidsforholdScenario() {
 		//Arrange
 		double beregnetPrÅr = GRUNNBELØP_2017 * 3.0;
 		double beregnetPrÅr2 = GRUNNBELØP_2017 * 2.0;
@@ -388,7 +388,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
 	}
 
 	@Test
-	public void totaltBruttoBGUnder6GMedRefusjonØvreGrenseScenario() {
+	void totaltBruttoBGUnder6GMedRefusjonØvreGrenseScenario() {
 		//Arrange
 		double beregnetPrÅr = GRUNNBELØP_2017 * 5.99;
 		double refusjonskrav = GRUNNBELØP_2017 * 3.0;
@@ -409,7 +409,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
 	}
 
 	@Test
-	public void totaltBruttoBGUnder6GMedRefusjonStørreEnnBruttoBGScenario() {
+	void totaltBruttoBGUnder6GMedRefusjonStørreEnnBruttoBGScenario() {
 		//Arrange
 		double beregnetPrÅr = GRUNNBELØP_2017 * 4.0;
 		double refusjonskrav = GRUNNBELØP_2017 * 5.0;
@@ -428,7 +428,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
 	}
 
 	@Test
-	public void totaltBruttoBGUnder6GUtenRefusjonMedReduksjonScenario() {
+	void totaltBruttoBGUnder6GUtenRefusjonMedReduksjonScenario() {
 		//Arrange
 		double beregnetPrÅr = GRUNNBELØP_2017 * 4.0;
 		double redusertPrÅr = 0.80 * beregnetPrÅr;
@@ -447,7 +447,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
 	}
 
 	@Test
-	public void totalBruttoOver6GRefusjonKravUnder6GTotalBGForArbeidsforholdUnder6G() {
+	void totalBruttoOver6GRefusjonKravUnder6GTotalBGForArbeidsforholdUnder6G() {
 		double bruttoATFL = 300000d;
 		double refusjonsKrav = 20000d;
 		double bruttoDP = 130000d;
@@ -481,7 +481,7 @@ public class RegelFullføreBeregningsgrunnlagTest {
 	}
 
 	@Test
-	public void maksimalRefusjonSkalIkkeOverskrives() {
+	void maksimalRefusjonSkalIkkeOverskrives() {
 		//Arrange
 		double beregnetPrÅr = GRUNNBELØP_2017 * 4.0;
 		double maksimalRefusjonPrÅr = 238000;

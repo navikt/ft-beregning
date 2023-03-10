@@ -32,7 +32,7 @@ class RegelFullføreBeregningsgrunnlagFRISINNTest {
 
 
     @Test
-    public void kun_sn_under_6G_inntekt_ingen_avkorting_100_prosent_utbetaling() {
+    void kun_sn_under_6G_inntekt_ingen_avkorting_100_prosent_utbetaling() {
         Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(100_000d, null, null, 100d, 0d);
         BeregningsgrunnlagPeriode bgPeriode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         RegelResultat regelResultat = kjørRegel(bgPeriode);
@@ -41,7 +41,7 @@ class RegelFullføreBeregningsgrunnlagFRISINNTest {
         assertSNAndel(bgPeriode.getBeregningsgrunnlagPrStatus(), BigDecimal.valueOf(100_000), BigDecimal.valueOf(80_000));
     }
     @Test
-    public void kun_sn_under_6G_inntekt_ingen_avkorting_50_prosent_utbetaling() {
+    void kun_sn_under_6G_inntekt_ingen_avkorting_50_prosent_utbetaling() {
         Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(100_000d, null, null, 50d, 0d);
         BeregningsgrunnlagPeriode bgPeriode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         RegelResultat regelResultat = kjørRegel(bgPeriode);
@@ -50,7 +50,7 @@ class RegelFullføreBeregningsgrunnlagFRISINNTest {
         assertSNAndel(bgPeriode.getBeregningsgrunnlagPrStatus(), BigDecimal.valueOf(50_000), BigDecimal.valueOf(40_000));
     }
     @Test
-    public void kun_sn_over_6G_inntekt_ingen_avkorting_100_prosent_utbetaling() {
+    void kun_sn_over_6G_inntekt_ingen_avkorting_100_prosent_utbetaling() {
         Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(800_000d, null, null, 100d, 0d);
         BeregningsgrunnlagPeriode bgPeriode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         RegelResultat regelResultat = kjørRegel(bgPeriode);
@@ -62,7 +62,7 @@ class RegelFullføreBeregningsgrunnlagFRISINNTest {
     }
 
     @Test
-    public void kun_sn_over_6G_inntekt_ingen_avkorting_50_prosent_utbetaling() {
+    void kun_sn_over_6G_inntekt_ingen_avkorting_50_prosent_utbetaling() {
         Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(800_000d, null, null, 50d, 0d);
         BeregningsgrunnlagPeriode bgPeriode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         RegelResultat regelResultat = kjørRegel(bgPeriode);
@@ -74,7 +74,7 @@ class RegelFullføreBeregningsgrunnlagFRISINNTest {
     }
 
     @Test
-    public void fl_sn_over_under_6G_inntekt_ingen_avkorting_100_prosent_utbetaling() {
+    void fl_sn_over_under_6G_inntekt_ingen_avkorting_100_prosent_utbetaling() {
         Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(200_000d, 200_000d, null, 100d, 100d);
         BeregningsgrunnlagPeriode bgPeriode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         RegelResultat regelResultat = kjørRegel(bgPeriode);
@@ -87,7 +87,7 @@ class RegelFullføreBeregningsgrunnlagFRISINNTest {
     }
 
     @Test
-    public void fl_sn_over_over_6G_med_ingen_avkorting_100_prosent_utbetaling() {
+    void fl_sn_over_over_6G_med_ingen_avkorting_100_prosent_utbetaling() {
         Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(400_000d, 400_000d, null, 100d, 100d);
         BeregningsgrunnlagPeriode bgPeriode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         RegelResultat regelResultat = kjørRegel(bgPeriode);
@@ -102,7 +102,7 @@ class RegelFullføreBeregningsgrunnlagFRISINNTest {
     }
 
     @Test
-    public void fl_sn_over_over_6G_med_ingen_avkorting_delvis_utbetaling_fl_full_sn() {
+    void fl_sn_over_over_6G_med_ingen_avkorting_delvis_utbetaling_fl_full_sn() {
         Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(400_000d, 400_000d, null, 100d, 50d);
         BeregningsgrunnlagPeriode bgPeriode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         RegelResultat regelResultat = kjørRegel(bgPeriode);
@@ -118,7 +118,7 @@ class RegelFullføreBeregningsgrunnlagFRISINNTest {
     }
 
     @Test
-    public void at_sn_under_6G_med_ingen_avkorting_full_utb_sn() {
+    void at_sn_under_6G_med_ingen_avkorting_full_utb_sn() {
         Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(300_000d, null, 200_000d, 100d, null);
         BeregningsgrunnlagPeriode bgPeriode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         RegelResultat regelResultat = kjørRegel(bgPeriode);
@@ -130,7 +130,7 @@ class RegelFullføreBeregningsgrunnlagFRISINNTest {
     }
 
     @Test
-    public void at_sn_over_6G_med_avkorting_delvis_utb_sn() {
+    void at_sn_over_6G_med_avkorting_delvis_utb_sn() {
         Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(600_000d, null, 500_000d, 50d, null);
         BeregningsgrunnlagPeriode bgPeriode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         RegelResultat regelResultat = kjørRegel(bgPeriode);
@@ -142,7 +142,7 @@ class RegelFullføreBeregningsgrunnlagFRISINNTest {
     }
 
     @Test
-    public void at_sn_over_6G_med_avkorting_full_utb_sn() {
+    void at_sn_over_6G_med_avkorting_full_utb_sn() {
         Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(600_000d, null, 500_000d, 100d, null);
         BeregningsgrunnlagPeriode bgPeriode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         RegelResultat regelResultat = kjørRegel(bgPeriode);
@@ -155,7 +155,7 @@ class RegelFullføreBeregningsgrunnlagFRISINNTest {
     }
 
     @Test
-    public void at_sn_under_6G_uten_avkorting_delvis_utb_sn() {
+    void at_sn_under_6G_uten_avkorting_delvis_utb_sn() {
         Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(100_000d, null, 400_000d, 50d, null);
         BeregningsgrunnlagPeriode bgPeriode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         RegelResultat regelResultat = kjørRegel(bgPeriode);
@@ -167,7 +167,7 @@ class RegelFullføreBeregningsgrunnlagFRISINNTest {
     }
 
     @Test
-    public void at_fl_sn_under_6G_uten_avkorting_full_utb_sn_og_fl() {
+    void at_fl_sn_under_6G_uten_avkorting_full_utb_sn_og_fl() {
         Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(100_000d, 50_000d, 200_000d, 100d, 100d);
         BeregningsgrunnlagPeriode bgPeriode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         RegelResultat regelResultat = kjørRegel(bgPeriode);
@@ -183,7 +183,7 @@ class RegelFullføreBeregningsgrunnlagFRISINNTest {
     }
 
     @Test
-    public void at_fl_sn_under_6G_uten_avkorting_delvis_utb_fl() {
+    void at_fl_sn_under_6G_uten_avkorting_delvis_utb_fl() {
         Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(100_000d, 50_000d, 200_000d, 100d, 50d);
         BeregningsgrunnlagPeriode bgPeriode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         RegelResultat regelResultat = kjørRegel(bgPeriode);
@@ -199,7 +199,7 @@ class RegelFullføreBeregningsgrunnlagFRISINNTest {
     }
 
     @Test
-    public void at_fl_sn_over_6G_med_avkorting_av_sn_full_utb_fl_sn() {
+    void at_fl_sn_over_6G_med_avkorting_av_sn_full_utb_fl_sn() {
         Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(200_000d, 200_000d, 400_000d, 100d, 100d);
         BeregningsgrunnlagPeriode bgPeriode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         RegelResultat regelResultat = kjørRegel(bgPeriode);
@@ -216,7 +216,7 @@ class RegelFullføreBeregningsgrunnlagFRISINNTest {
     }
 
     @Test
-    public void at_fl_sn_over_6G_uten_avkorting_delvis_utb_fl_sn() {
+    void at_fl_sn_over_6G_uten_avkorting_delvis_utb_fl_sn() {
         Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(200_000d, 200_000d, 400_000d, 100d, 10d);
         BeregningsgrunnlagPeriode bgPeriode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         RegelResultat regelResultat = kjørRegel(bgPeriode);
@@ -234,7 +234,7 @@ class RegelFullføreBeregningsgrunnlagFRISINNTest {
     }
 
     @Test
-    public void at_fl_sn_over_6G_uten_avkorting_ingen_utb_fl() {
+    void at_fl_sn_over_6G_uten_avkorting_ingen_utb_fl() {
         Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(200_000d, 200_000d, 400_000d, 100d, 0d);
         BeregningsgrunnlagPeriode bgPeriode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         RegelResultat regelResultat = kjørRegel(bgPeriode);
@@ -252,7 +252,7 @@ class RegelFullføreBeregningsgrunnlagFRISINNTest {
     }
 
     @Test
-    public void at_fl_sn_over_6G_uten_avkorting_ingen_utb_fl_utb_sn() {
+    void at_fl_sn_over_6G_uten_avkorting_ingen_utb_fl_utb_sn() {
         Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(200_000d, 100_000d, 400_000d, 100d, 0d);
         BeregningsgrunnlagPeriode bgPeriode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         RegelResultat regelResultat = kjørRegel(bgPeriode);

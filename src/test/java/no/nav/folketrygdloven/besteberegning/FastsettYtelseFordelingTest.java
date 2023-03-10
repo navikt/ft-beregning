@@ -35,7 +35,7 @@ class FastsettYtelseFordelingTest {
 	private List<Ytelsegrunnlag> grunnlag = new ArrayList<>();
 
 	@Test
-	public void skal_fordele_sykepenger_ved_ett_vedtak_perfekt_overlapp() {
+	void skal_fordele_sykepenger_ved_ett_vedtak_perfekt_overlapp() {
 		// Arrange
 		Periodeinntekt inntekt = lagPeriodeinntekt(YearMonth.of(2021, 1), RelatertYtelseType.SYKEPENGER, BigDecimal.valueOf(10000));
 		lagSykepengeperiode(LocalDate.of(2021,1,1), LocalDate.of(2021,1,31), YtelseAktivitetType.YTELSE_FOR_DAGPENGER);
@@ -49,7 +49,7 @@ class FastsettYtelseFordelingTest {
 	}
 
 	@Test
-	public void skal_fordele_sykepenger_ved_ett_vedtak_delvis_overlapp() {
+	void skal_fordele_sykepenger_ved_ett_vedtak_delvis_overlapp() {
 		// Arrange
 		Periodeinntekt inntekt = lagPeriodeinntekt(YearMonth.of(2021, 3), RelatertYtelseType.SYKEPENGER, BigDecimal.valueOf(10000));
 		lagSykepengeperiode(LocalDate.of(2021,2,20), LocalDate.of(2021,3,12), YtelseAktivitetType.YTELSE_FOR_DAGPENGER);
@@ -63,7 +63,7 @@ class FastsettYtelseFordelingTest {
 	}
 
 	@Test
-	public void skal_fordele_sykepenger_ved_ett_vedtak_gjeldende_måned_før_utbetaling() {
+	void skal_fordele_sykepenger_ved_ett_vedtak_gjeldende_måned_før_utbetaling() {
 		// Arrange
 		Periodeinntekt inntekt = lagPeriodeinntekt(YearMonth.of(2021, 3), RelatertYtelseType.SYKEPENGER, BigDecimal.valueOf(10000));
 		lagSykepengeperiode(LocalDate.of(2021,2,1), LocalDate.of(2021,2,28), YtelseAktivitetType.YTELSE_FOR_DAGPENGER);
@@ -77,7 +77,7 @@ class FastsettYtelseFordelingTest {
 	}
 
 	@Test
-	public void skal_fordele_sykepenger_ved_kun_en_dag_utvidet_overlapp() {
+	void skal_fordele_sykepenger_ved_kun_en_dag_utvidet_overlapp() {
 		// Arrange
 		Periodeinntekt inntekt = lagPeriodeinntekt(YearMonth.of(2021, 3), RelatertYtelseType.SYKEPENGER, BigDecimal.valueOf(10000));
 		lagSykepengeperiode(LocalDate.of(2021,1,1), LocalDate.of(2021,2,1), YtelseAktivitetType.YTELSE_FOR_ARBEID);
@@ -91,7 +91,7 @@ class FastsettYtelseFordelingTest {
 	}
 
 	@Test
-	public void skal_fordele_sykepenger_ved_flere_vedtak_likt_grunnlag() {
+	void skal_fordele_sykepenger_ved_flere_vedtak_likt_grunnlag() {
 		// Arrange
 		Periodeinntekt inntekt = lagPeriodeinntekt(YearMonth.of(2021, 3), RelatertYtelseType.SYKEPENGER, BigDecimal.valueOf(10000));
 		lagSykepengeperiode(LocalDate.of(2021,3,1), LocalDate.of(2021,3,10), YtelseAktivitetType.YTELSE_FOR_ARBEID);
@@ -107,7 +107,7 @@ class FastsettYtelseFordelingTest {
 	}
 
 	@Test
-	public void skal_fordele_sykepenger_ved_flere_vedtak_ulikt_grunnlag() {
+	void skal_fordele_sykepenger_ved_flere_vedtak_ulikt_grunnlag() {
 		// Arrange
 		// 21 dager totalt, 1/3 på arbeid of 2/3 på dagpenger
 		Periodeinntekt inntekt = lagPeriodeinntekt(YearMonth.of(2021, 3), RelatertYtelseType.SYKEPENGER, BigDecimal.valueOf(15000));
@@ -124,7 +124,7 @@ class FastsettYtelseFordelingTest {
 	}
 
 	@Test
-	public void skal_ikke_bruke_ytelsen_om_ingen_overlappende_vedtak_finnes() {
+	void skal_ikke_bruke_ytelsen_om_ingen_overlappende_vedtak_finnes() {
 		// Arrange
 		Periodeinntekt inntekt = lagPeriodeinntekt(YearMonth.of(2021, 4), RelatertYtelseType.FORELDREPENGER, BigDecimal.valueOf(15000));
 		lagForeldrepengeperiode(LocalDate.of(2021,1,1), LocalDate.of(2021,1,31), lagYtelseAndel(YtelseAktivitetType.YTELSE_FOR_DAGPENGER, 400));
@@ -138,7 +138,7 @@ class FastsettYtelseFordelingTest {
 	}
 
 	@Test
-	public void skal_håndtere_0_ytelse_foreldrepenger() {
+	void skal_håndtere_0_ytelse_foreldrepenger() {
 		// Arrange
 		Periodeinntekt inntekt = lagPeriodeinntekt(YearMonth.of(2021, 3), RelatertYtelseType.FORELDREPENGER, BigDecimal.ZERO);
 		lagForeldrepengeperiode(LocalDate.of(2021,3,1), LocalDate.of(2021,3,31), lagYtelseAndel(YtelseAktivitetType.YTELSE_FOR_ARBEID, 0));
@@ -153,7 +153,7 @@ class FastsettYtelseFordelingTest {
 
 
 	@Test
-	public void skal_fordele_foreldrepenger_et_grunnlag_en_andel() {
+	void skal_fordele_foreldrepenger_et_grunnlag_en_andel() {
 		// Arrange
 		Periodeinntekt inntekt = lagPeriodeinntekt(YearMonth.of(2021, 3), RelatertYtelseType.FORELDREPENGER, BigDecimal.valueOf(15000));
 		lagForeldrepengeperiode(LocalDate.of(2021,3,1), LocalDate.of(2021,3,31), lagYtelseAndel(YtelseAktivitetType.YTELSE_FOR_ARBEID, 500));
@@ -167,7 +167,7 @@ class FastsettYtelseFordelingTest {
 	}
 
 	@Test
-	public void skal_fordele_foreldrepenger_et_grunnlag_flere_like_andeler() {
+	void skal_fordele_foreldrepenger_et_grunnlag_flere_like_andeler() {
 		// Arrange
 		Periodeinntekt inntekt = lagPeriodeinntekt(YearMonth.of(2021, 3), RelatertYtelseType.FORELDREPENGER, BigDecimal.valueOf(20000));
 		lagForeldrepengeperiode(LocalDate.of(2021,3,1), LocalDate.of(2021,3,31), lagYtelseAndel(YtelseAktivitetType.YTELSE_FOR_ARBEID, 500));
@@ -183,7 +183,7 @@ class FastsettYtelseFordelingTest {
 	}
 
 	@Test
-	public void skal_fordele_foreldrepenger_flere_perioder_flere_ulike_andeler() {
+	void skal_fordele_foreldrepenger_flere_perioder_flere_ulike_andeler() {
 		// Arrange
 		// AT 11 * 500 = 5500
 		// DP 11 * 500 = 5500
@@ -206,7 +206,7 @@ class FastsettYtelseFordelingTest {
 	}
 
 	@Test
-	public void skal_fordele_foreldrepenger_starter_måned_før_inntekt() {
+	void skal_fordele_foreldrepenger_starter_måned_før_inntekt() {
 		// Arrange
 		// AT 11 * 350 + 9 * 500 = 8350
 		// DP 11 * 400 + 9 * 700 = 10700

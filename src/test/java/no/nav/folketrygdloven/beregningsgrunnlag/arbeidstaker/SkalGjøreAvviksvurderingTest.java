@@ -31,7 +31,7 @@ public class SkalGjøreAvviksvurderingTest {
 	private long gVerdi = 99858L;
 
 	@Test
-	public void skalIkkeSetteAksjonspunktNårBrukerIkkeHarSøkt() {
+	void skalIkkeSetteAksjonspunktNårBrukerIkkeHarSøkt() {
 		//Arrange
 		BigDecimal beregnetPrÅr = BigDecimal.valueOf(450_000);
 
@@ -45,7 +45,7 @@ public class SkalGjøreAvviksvurderingTest {
 	}
 
 	@Test
-	public void skalSetteAksjonspunktNårBrukerHarSøkt() {
+	void skalSetteAksjonspunktNårBrukerHarSøkt() {
 		//Arrange
 		BigDecimal beregnetPrÅr = BigDecimal.valueOf(450_000);
 

@@ -36,7 +36,7 @@ class RegelVurderRegisterinntektMotOppgittInntektATFLFRISINNTest {
     private Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
 
     @Test
-    public void skal_bare_returnere_beregnet_om_oppgitt_inntekt_ikke_finnes() {
+    void skal_bare_returnere_beregnet_om_oppgitt_inntekt_ikke_finnes() {
         BigDecimal beregnetPrÅr = BigDecimal.valueOf(100_000);
         BeregningsgrunnlagPrArbeidsforhold arbfor = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_MED_REF).medBeregnetPrÅr(beregnetPrÅr).medAndelNr(1L).build();
         BeregningsgrunnlagPrStatus andel = BeregningsgrunnlagPrStatus.builder().medArbeidsforhold(arbfor).medAktivitetStatus(AktivitetStatus.ATFL).build();
@@ -50,7 +50,7 @@ class RegelVurderRegisterinntektMotOppgittInntektATFLFRISINNTest {
     }
 
     @Test
-    public void skal_ikke_endre_inntekt_om_oppgitt_inntekt_er_lavere() {
+    void skal_ikke_endre_inntekt_om_oppgitt_inntekt_er_lavere() {
         BigDecimal beregnetPrÅr = BigDecimal.valueOf(100_000);
         BeregningsgrunnlagPrArbeidsforhold arbfor = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_MED_REF).medBeregnetPrÅr(beregnetPrÅr).medAndelNr(1L).build();
         BeregningsgrunnlagPrStatus andel = BeregningsgrunnlagPrStatus.builder().medArbeidsforhold(arbfor).medAktivitetStatus(AktivitetStatus.ATFL).build();
@@ -65,7 +65,7 @@ class RegelVurderRegisterinntektMotOppgittInntektATFLFRISINNTest {
     }
 
     @Test
-    public void skal_endre_inntekt_dersom_oppgitt_inntekt_er_høyere_enn_beregnet() {
+    void skal_endre_inntekt_dersom_oppgitt_inntekt_er_høyere_enn_beregnet() {
         BigDecimal beregnetPrÅr = BigDecimal.valueOf(100_000);
         BigDecimal oppgitt = BigDecimal.valueOf(20000);
         BeregningsgrunnlagPrArbeidsforhold arbfor = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_MED_REF).medBeregnetPrÅr(beregnetPrÅr).medAndelNr(1L).build();
@@ -82,7 +82,7 @@ class RegelVurderRegisterinntektMotOppgittInntektATFLFRISINNTest {
     }
 
     @Test
-    public void skal_summere_grunnlag_for_at_ved_flere_arbfor() {
+    void skal_summere_grunnlag_for_at_ved_flere_arbfor() {
         BigDecimal beregnetPrÅr = BigDecimal.valueOf(100_000);
         BigDecimal oppgitt = BigDecimal.valueOf(20000);
         BeregningsgrunnlagPrArbeidsforhold arbfor = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_MED_REF).medBeregnetPrÅr(beregnetPrÅr).medAndelNr(1L).build();
@@ -102,7 +102,7 @@ class RegelVurderRegisterinntektMotOppgittInntektATFLFRISINNTest {
     }
 
     @Test
-    public void flere_andeler_overstiger_oppgitt_skal_ikke_bruke_oppgitt() {
+    void flere_andeler_overstiger_oppgitt_skal_ikke_bruke_oppgitt() {
         BigDecimal beregnetPrÅr1 = BigDecimal.valueOf(100_000);
         BigDecimal beregnetPrÅr2 = BigDecimal.valueOf(200_000);
         BigDecimal oppgitt = BigDecimal.valueOf(20000);
@@ -121,7 +121,7 @@ class RegelVurderRegisterinntektMotOppgittInntektATFLFRISINNTest {
     }
 
     @Test
-    public void flere_andeler_overstiger_ikke_oppgitt_skal_fordele_oppgitt_riktig() {
+    void flere_andeler_overstiger_ikke_oppgitt_skal_fordele_oppgitt_riktig() {
         BigDecimal beregnetPrÅr1 = BigDecimal.valueOf(40_000);
         BigDecimal beregnetPrÅr2 = BigDecimal.valueOf(60_000);
         BigDecimal oppgitt = BigDecimal.valueOf(20000);
@@ -143,7 +143,7 @@ class RegelVurderRegisterinntektMotOppgittInntektATFLFRISINNTest {
     }
 
     @Test
-    public void flere_andeler_med_samlet_inntekt_0_skal_fordele_oppgitt_likt() {
+    void flere_andeler_med_samlet_inntekt_0_skal_fordele_oppgitt_likt() {
         BigDecimal beregnetPrÅr1 = BigDecimal.valueOf(0);
         BigDecimal beregnetPrÅr2 = BigDecimal.valueOf(0);
         BigDecimal oppgitt = BigDecimal.valueOf(20000);

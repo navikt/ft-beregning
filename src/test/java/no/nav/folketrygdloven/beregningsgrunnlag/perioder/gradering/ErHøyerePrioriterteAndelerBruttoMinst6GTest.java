@@ -27,7 +27,7 @@ public class ErHøyerePrioriterteAndelerBruttoMinst6GTest {
     private static final BigDecimal MÅNEDSBELØP_OVER_6G = BigDecimal.valueOf(70_000);
 
     @Test
-    public void gradert_SN_selvstendigErLaverePrioritertEnnFL() {
+    void gradert_SN_selvstendigErLaverePrioritertEnnFL() {
         // Arrange
         PeriodisertBruttoBeregningsgrunnlag periodisertBg = PeriodisertBruttoBeregningsgrunnlag.builder()
             .medPeriode(Periode.of(SKJÆRINGSTIDSPUNKT, DateUtil.TIDENES_ENDE))
@@ -55,7 +55,7 @@ public class ErHøyerePrioriterteAndelerBruttoMinst6GTest {
     }
 
     @Test
-    public void gradert_frilans_frilansErHøyerePrioritertEnnSN() {
+    void gradert_frilans_frilansErHøyerePrioritertEnnSN() {
         // Arrange
         PeriodisertBruttoBeregningsgrunnlag periodisertBg = PeriodisertBruttoBeregningsgrunnlag.builder()
             .medPeriode(Periode.of(SKJÆRINGSTIDSPUNKT, DateUtil.TIDENES_ENDE))
@@ -83,7 +83,7 @@ public class ErHøyerePrioriterteAndelerBruttoMinst6GTest {
     }
 
     @Test
-    public void gradert_frilans_frilansErLaverePrioritertEnnAT() {
+    void gradert_frilans_frilansErLaverePrioritertEnnAT() {
         // Arrange
         PeriodisertBruttoBeregningsgrunnlag periodisertBg = PeriodisertBruttoBeregningsgrunnlag.builder()
             .medPeriode(Periode.of(SKJÆRINGSTIDSPUNKT, DateUtil.TIDENES_ENDE))
@@ -112,7 +112,7 @@ public class ErHøyerePrioriterteAndelerBruttoMinst6GTest {
     }
 
     @Test
-    public void gradert_frilans_BGUnder6G() {
+    void gradert_frilans_BGUnder6G() {
         // Arrange
         PeriodisertBruttoBeregningsgrunnlag periodisertBg = PeriodisertBruttoBeregningsgrunnlag.builder()
             .medPeriode(Periode.of(SKJÆRINGSTIDSPUNKT, DateUtil.TIDENES_ENDE))

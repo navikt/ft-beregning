@@ -36,7 +36,7 @@ public class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
 
     private LocalDate skjæringstidspunkt = LocalDate.of(2018, Month.JANUARY, 15);
     @Test
-    public void skalForeslåBeregningsgrunnlagForDagpenger() {
+    void skalForeslåBeregningsgrunnlagForDagpenger() {
         //Arrange
         BigDecimal dagsats = new BigDecimal("1142");
         Inntektsgrunnlag inntektsgrunnlag = lagInntektsgrunnlag(dagsats, skjæringstidspunkt, 0.75);
@@ -64,7 +64,7 @@ public class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
     }
 
     @Test
-    public void skalForeslåBeregningsgrunnlagForAAP() {
+    void skalForeslåBeregningsgrunnlagForAAP() {
         //Arrange
         BigDecimal dagsats = new BigDecimal("1611");
         Inntektsgrunnlag inntektsgrunnlag = lagInntektsgrunnlag(dagsats, skjæringstidspunkt, 0.75);
@@ -91,7 +91,7 @@ public class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
     }
 
     @Test
-    public void skalForeslåBeregningsgrunnlagForAAPMedManueltFastsattBeløp() {
+    void skalForeslåBeregningsgrunnlagForAAPMedManueltFastsattBeløp() {
         //Arrange
         BigDecimal dagsats = new BigDecimal("1611");
         BigDecimal beregnetPrÅr = new BigDecimal(324423);
@@ -123,7 +123,7 @@ public class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
 
 
     @Test
-    public void skalForeslåBeregningsgrunnlagForAAPMedKombinasjonsStatus() {
+    void skalForeslåBeregningsgrunnlagForAAPMedKombinasjonsStatus() {
         //Arrange
         BigDecimal dagsats = new BigDecimal("1400");
         Inntektsgrunnlag inntektsgrunnlag = lagInntektsgrunnlag(dagsats, skjæringstidspunkt, 0.75);
@@ -152,7 +152,7 @@ public class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
     }
 
     @Test
-    public void skalForeslåBeregningsgrunnlagForDagpengerMedBesteberegningFødendeKvinne() {
+    void skalForeslåBeregningsgrunnlagForDagpengerMedBesteberegningFødendeKvinne() {
         //Arrange
         BigDecimal beregnetDagsats = BigDecimal.valueOf(600);
         BigDecimal brutto = BigDecimal.valueOf(260000);
@@ -176,7 +176,7 @@ public class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
     }
 
     @Test
-    public void skalForeslåBeregningsgrunnlagForDagpengerIKombinasjonSNOgMedBesteberegningFødendeKvinne() {
+    void skalForeslåBeregningsgrunnlagForDagpengerIKombinasjonSNOgMedBesteberegningFødendeKvinne() {
         //Arrange
         BigDecimal beregnetDagsats = BigDecimal.valueOf(720);
         BigDecimal brutto = BigDecimal.valueOf(240000);
@@ -200,7 +200,7 @@ public class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
     }
 
     @Test
-    public void skalForeslåBeregningsgrunnlagForDagpengerIKombinasjonATOgMedBesteberegningFødendeKvinne() {
+    void skalForeslåBeregningsgrunnlagForDagpengerIKombinasjonATOgMedBesteberegningFødendeKvinne() {
         //Arrange
         BigDecimal fastsattPrÅr = BigDecimal.valueOf(120000);
         BigDecimal beregnetDagsats = BigDecimal.valueOf(720);

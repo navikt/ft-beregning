@@ -47,12 +47,12 @@ public class RegelBeregningsgrunnlagSNTest {
     private LocalDate skjæringstidspunkt;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         skjæringstidspunkt = LocalDate.of(2018, Month.JANUARY, 15);
     }
 
     @Test
-    public void skalBeregneGrunnlagSNForNormalInntektUnder6G() {
+    void skalBeregneGrunnlagSNForNormalInntektUnder6G() {
         // Arrange
         //PGI <= 6xGsnitt: Bidrag til beregningsgrunnlaget = PGI/Gsnitt
         Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(skjæringstidspunkt,
@@ -74,7 +74,7 @@ public class RegelBeregningsgrunnlagSNTest {
     }
 
     @Test
-    public void skalBeregneGrunnlagSNForNormalInntektOver12G() {
+    void skalBeregneGrunnlagSNForNormalInntektOver12G() {
         // Arrange
         //PGI >= 12Gsnitt: Bidrag til beregningsgrunnlaget = 8
         Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(skjæringstidspunkt,
@@ -95,7 +95,7 @@ public class RegelBeregningsgrunnlagSNTest {
     }
 
     @Test
-    public void skalBeregneGrunnlagSNForNormalInntektMellom6Gog12G() {
+    void skalBeregneGrunnlagSNForNormalInntektMellom6Gog12G() {
         // Arrange
         //6Gsnitt<PGI<12Gsnitt: Bidrag til beregningsgrunnlaget = 6 + (PGI-6*Gsnitt)/3*Gsnitt
         Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(skjæringstidspunkt,
@@ -116,7 +116,7 @@ public class RegelBeregningsgrunnlagSNTest {
     }
 
     @Test
-    public void skalBeregneGrunnlagSNForSterktVarierendeInntekt() {
+    void skalBeregneGrunnlagSNForSterktVarierendeInntekt() {
         // Arrange
         //PGI <= 6xGsnitt: Bidrag til beregningsgrunnlaget = PGI/Gsnitt
         //PGI >= 12Gsnitt: Bidrag til beregningsgrunnlaget = 8
@@ -138,7 +138,7 @@ public class RegelBeregningsgrunnlagSNTest {
     }
 
     @Test
-    public void skalBeregneAvvikVedVarigEndring() {
+    void skalBeregneAvvikVedVarigEndring() {
         // Arrange
         //PGI >= 12Gsnitt: Bidrag til beregningsgrunnlaget = 8
         List<BigDecimal> årsinntekter = List.of(BigDecimal.valueOf(12 * GSNITT_2015), BigDecimal.valueOf(12 * GSNITT_2016), BigDecimal.valueOf(12 * GSNITT_2017));
@@ -167,7 +167,7 @@ public class RegelBeregningsgrunnlagSNTest {
     }
 
     @Test
-    public void skalGiRegelmerknadVedAvvikStørreEnn25Prosent() {
+    void skalGiRegelmerknadVedAvvikStørreEnn25Prosent() {
         // Arrange
         List<BigDecimal> årsinntekter = List.of(BigDecimal.valueOf(7 * GSNITT_2015), BigDecimal.valueOf(8 * GSNITT_2016), BigDecimal.valueOf(9 * GSNITT_2017));
         //6Gsnitt<PGI<12Gsnitt: Bidrag til beregningsgrunnlaget = 6 + (PGI-6*Gsnitt)/3*Gsnitt
@@ -193,7 +193,7 @@ public class RegelBeregningsgrunnlagSNTest {
     }
 
     @Test
-    public void skalBeregneGrunnlagSNNårBareToFerdiglignedeÅrForeligger() {
+    void skalBeregneGrunnlagSNNårBareToFerdiglignedeÅrForeligger() {
         // Arrange
         //PGI <= 6xGsnitt: Bidrag til beregningsgrunnlaget = PGI/Gsnitt
         Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(skjæringstidspunkt,
@@ -218,7 +218,7 @@ public class RegelBeregningsgrunnlagSNTest {
     }
 
     @Test
-    public void skalBeregneGrunnlagSNiKombinasjonMedDagpenger() {
+    void skalBeregneGrunnlagSNiKombinasjonMedDagpenger() {
         // Arrange
         BigDecimal bruttoDP = BigDecimal.valueOf(155500);
         //PGI <= 6xGsnitt: Bidrag til beregningsgrunnlaget = PGI/Gsnitt
@@ -243,7 +243,7 @@ public class RegelBeregningsgrunnlagSNTest {
     }
 
     @Test
-    public void skalBeregneGrunnlagSNiKombinasjonMedAAP() {
+    void skalBeregneGrunnlagSNiKombinasjonMedAAP() {
         // Arrange
         BigDecimal bruttoAAP = BigDecimal.valueOf(158400);
         //PGI <= 6xGsnitt: Bidrag til beregningsgrunnlaget = PGI/Gsnitt
@@ -274,7 +274,7 @@ public class RegelBeregningsgrunnlagSNTest {
     }
 
     @Test
-    public void skalBeregneGrunnlagSNiKombinasjonMedDP() {
+    void skalBeregneGrunnlagSNiKombinasjonMedDP() {
         // Arrange
         BigDecimal bruttoDP = BigDecimal.valueOf(118560);
         BigDecimal oppgittÅrsInntektSN = BigDecimal.valueOf(240000);
@@ -304,7 +304,7 @@ public class RegelBeregningsgrunnlagSNTest {
     }
 
     @Test
-    public void skalBeregneGrunnlagSNmedSigrunInntekterSomEr0() {
+    void skalBeregneGrunnlagSNmedSigrunInntekterSomEr0() {
         // Arrange
         Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(skjæringstidspunkt,
             årsinntekterFor3SisteÅr(0.0d, 0.0d, 0.0d), Inntektskilde.SIGRUN);
@@ -328,7 +328,7 @@ public class RegelBeregningsgrunnlagSNTest {
     }
 
     @Test
-    public void skalGiRegelmerknadForSNSomErNyIArbeidslivet() {
+    void skalGiRegelmerknadForSNSomErNyIArbeidslivet() {
         //Arrange
         Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(skjæringstidspunkt,
             årsinntekterFor3SisteÅr(6d, 3d, 0.0d), Inntektskilde.SIGRUN);
@@ -349,7 +349,7 @@ public class RegelBeregningsgrunnlagSNTest {
     }
 
     @Test
-    public void skalBeregneGrunnlagNårToÅreneErFerdiglignet() {
+    void skalBeregneGrunnlagNårToÅreneErFerdiglignet() {
         // Arrange
         //6Gsnitt<PGI<12Gsnitt: Bidrag til beregningsgrunnlaget = 6 + (PGI-6*Gsnitt)/3*Gsnitt
         Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekterForOppgittÅrene(
@@ -373,7 +373,7 @@ public class RegelBeregningsgrunnlagSNTest {
     }
 
     @Test
-    public void skalBeregneGrunnlagNårEttÅrErFerdiglignet() {
+    void skalBeregneGrunnlagNårEttÅrErFerdiglignet() {
         // Arrange
         //PGI <= 6xGsnitt: Bidrag til beregningsgrunnlaget = PGI/Gsnitt
         Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekterForOppgittÅrene(
@@ -397,7 +397,7 @@ public class RegelBeregningsgrunnlagSNTest {
     }
 
     @Test
-    public void skalBeregneGrunnlagNårDetFinnesIngenFerdiglignetÅr() {
+    void skalBeregneGrunnlagNårDetFinnesIngenFerdiglignetÅr() {
         // Arrange
         Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.SN));
@@ -418,7 +418,7 @@ public class RegelBeregningsgrunnlagSNTest {
     }
 
     @Test
-    public void skalBeregneGrunnlagNårDetFinnesIngenFerdiglignetÅrOgNyoppstartetSN() {
+    void skalBeregneGrunnlagNårDetFinnesIngenFerdiglignetÅrOgNyoppstartetSN() {
         // Arrange
         Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
         Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.SN));
@@ -444,7 +444,7 @@ public class RegelBeregningsgrunnlagSNTest {
     }
 
     @Test
-    public void skalIkkeBeregneGrunnlagNårAlleredeFastsattAvSaksbehandler() {
+    void skalIkkeBeregneGrunnlagNårAlleredeFastsattAvSaksbehandler() {
         // Arrange
         Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(skjæringstidspunkt,
             årsinntekterFor3SisteÅr(5.0d, 3.0d, 4.0d), Inntektskilde.SIGRUN);
@@ -466,7 +466,7 @@ public class RegelBeregningsgrunnlagSNTest {
     }
 
     @Test
-    public void skalIkkeBeregneBruttoNårGrunnlagErBesteberegnet() {
+    void skalIkkeBeregneBruttoNårGrunnlagErBesteberegnet() {
         // Arrange
         Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(skjæringstidspunkt,
             årsinntekterFor3SisteÅr(5.0d, 3.0d, 4.0d), Inntektskilde.SIGRUN);
@@ -491,7 +491,7 @@ public class RegelBeregningsgrunnlagSNTest {
     }
 
     @Test
-    public void skalGjøreAvviksberegningSelvOmFastsattAvSaksbehandlerOgIkkeBesteberegnet() {
+    void skalGjøreAvviksberegningSelvOmFastsattAvSaksbehandlerOgIkkeBesteberegnet() {
         // Arrange
         Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(skjæringstidspunkt,
             årsinntekterFor3SisteÅr(5.0d, 3.0d, 4.0d), Inntektskilde.SIGRUN);

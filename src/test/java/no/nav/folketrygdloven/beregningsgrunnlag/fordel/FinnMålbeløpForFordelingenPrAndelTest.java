@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class FinnMålbeløpForFordelingenPrAndelTest {
 
 	@Test
-	public void skal_sette_målbeløp_for_to_andeler_der_et_er_tilkommet() {
+	void skal_sette_målbeløp_for_to_andeler_der_et_er_tilkommet() {
 		// Arrange
 		FordelteAndelerModell foreslåttAndel = new FordelteAndelerModell(lagFordelAndelMedForeslått(AktivitetStatus.AT, arbeid("999", "abc"), 500_000, 300_000));
 		FordelteAndelerModell tilkommetAndel = new FordelteAndelerModell(lagFordelAndelTilkommet(AktivitetStatus.AT, arbeid("888", "abc"), 500_000, 500_000));

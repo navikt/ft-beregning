@@ -28,7 +28,7 @@ public class BeregningsgrunnlagDocTest {
     private BeregningsgrunnlagPeriode regelmodell;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         regelmodell = BeregningsgrunnlagPeriode.builder()
                 .medPeriode(Periode.of(skjæringstidspunkt, null))
                 .medBeregningsgrunnlagPrStatus(BeregningsgrunnlagPrStatus.builder()
@@ -46,7 +46,7 @@ public class BeregningsgrunnlagDocTest {
     }
 
     @Test
-    public void test_documentation_beregningsgrunnlagSN() { // NOSONAR
+    void test_documentation_beregningsgrunnlagSN() { // NOSONAR
         Specification<BeregningsgrunnlagPeriode> beregning = new RegelBeregningsgrunnlagSN().getSpecification();
 
         String json = EvaluationSerializer.asJson(beregning);

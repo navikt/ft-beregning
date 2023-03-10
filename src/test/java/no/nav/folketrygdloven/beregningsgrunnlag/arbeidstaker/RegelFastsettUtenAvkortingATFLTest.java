@@ -29,7 +29,7 @@ public class RegelFastsettUtenAvkortingATFLTest {
     private static final String ARBEIDSFORHOLDID2 = "456";
 
     @Test
-    public void skalFastsetteNårBruttoBGLikRefusjon() {
+    void skalFastsetteNårBruttoBGLikRefusjon() {
         //Arrange
         BigDecimal bruttoBG = BigDecimal.valueOf(448000d);
         BigDecimal refusjonsKrav = BigDecimal.valueOf(448000d);
@@ -49,7 +49,7 @@ public class RegelFastsettUtenAvkortingATFLTest {
 
 
     @Test
-    public void skalFastsetteNårRefusjonErDelerAvInntekten() {
+    void skalFastsetteNårRefusjonErDelerAvInntekten() {
         //Arrange
         BigDecimal bruttoBG = BigDecimal.valueOf(448000d);
         BigDecimal refusjonsKrav = BigDecimal.valueOf(300000d);
@@ -68,7 +68,7 @@ public class RegelFastsettUtenAvkortingATFLTest {
     }
 
     @Test
-    public void skalFastsetteNårRefusjonKravErNull() {
+    void skalFastsetteNårRefusjonKravErNull() {
         //Arrange
         BigDecimal bruttoBG1 = BigDecimal.valueOf(168000d);
         BigDecimal bruttoBG2 = BigDecimal.valueOf(336000d);
@@ -88,7 +88,7 @@ public class RegelFastsettUtenAvkortingATFLTest {
     }
 
     @Test
-    public void skalFastsetteNårRefusjonErDelerAvInntektenMedFlereArbeidsforhold() {
+    void skalFastsetteNårRefusjonErDelerAvInntektenMedFlereArbeidsforhold() {
         //Arrange
         BigDecimal bruttoBG1 = BigDecimal.valueOf(168000d);
         BigDecimal bruttoBG2 = BigDecimal.valueOf(336000d);

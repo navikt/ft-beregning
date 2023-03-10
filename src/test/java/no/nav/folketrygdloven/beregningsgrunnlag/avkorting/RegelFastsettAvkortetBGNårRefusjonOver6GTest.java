@@ -43,7 +43,7 @@ public class RegelFastsettAvkortetBGNårRefusjonOver6GTest {
 
     @Test
     //Scenario 8: Alle arbeidsgivere har refusjonskrav lik brukers brutto beregningsgrunnlag
-    public void skalBeregneNårRefusjonKravLikBruttoBGForBeggeToArbeidsgivere() {
+    void skalBeregneNårRefusjonKravLikBruttoBGForBeggeToArbeidsgivere() {
         //Arrange
         double bruttoBG1 = 448000d;
         double bruttoBG2 = 336000d;
@@ -68,7 +68,7 @@ public class RegelFastsettAvkortetBGNårRefusjonOver6GTest {
 
     @Test
     //Scenario 8: Alle arbeidsgivere har refusjonskrav lik brukers brutto beregningsgrunnlag
-    public void skalBeregneNårRefusjonKravLikBruttoBGForAlleTreArbeidsgivere() {
+    void skalBeregneNårRefusjonKravLikBruttoBGForAlleTreArbeidsgivere() {
         //Arrange
         double bruttoBG1 = 100000d;
         double bruttoBG2 = 400000d;
@@ -96,7 +96,7 @@ public class RegelFastsettAvkortetBGNårRefusjonOver6GTest {
 
     @Test
     //Scenario 8: En av de tre arbeidsgiverne har refusjonskrav mindre enn brukers brutto beregningsgrunnlag ndre
-    public void skalBeregneNårRefusjonKravErIkkeLikBGForEnAvDeTreArbeidsgivere() {
+    void skalBeregneNårRefusjonKravErIkkeLikBGForEnAvDeTreArbeidsgivere() {
         //Arrange
         double bruttoBG1 = 100000d;
         double bruttoBG2 = 400000d;
@@ -126,7 +126,7 @@ public class RegelFastsettAvkortetBGNårRefusjonOver6GTest {
 
     @Test
     //Scenario 11: Alle arbeidsgivere har refusjonskrav mindre enn brutto beregningsgrunnlag for arbeidsgiveren
-    public void skalBeregneNårRefusjonKravErNullForEnAvDeTreArbeidsgivere() {
+    void skalBeregneNårRefusjonKravErNullForEnAvDeTreArbeidsgivere() {
         //Arrange
         double bruttoBG1 = 600000d;
         double bruttoBG2 = 750000d;
@@ -156,7 +156,7 @@ public class RegelFastsettAvkortetBGNårRefusjonOver6GTest {
 
     @Test
     //Scenario 11A: Alle arbeidsgivere har refusjonskrav mindre enn brutto beregningsgrunnlag for arbeidsgiveren
-    public void skalBeregneNårRefusjonKravLavereEnnBGForFireArbeidsforhold() {
+    void skalBeregneNårRefusjonKravLavereEnnBGForFireArbeidsforhold() {
         //Arrange
         double bruttoBG1 = 400000d;
         double bruttoBG2 = 500000d;
@@ -189,7 +189,7 @@ public class RegelFastsettAvkortetBGNårRefusjonOver6GTest {
 
     @Test
     //Scenario 12: Flere arbeidsgivere har refusjonskrav og totalt refusjonskrav større enn 6G
-    public void skalBeregneNårMaksRefusjonKravErMerEnnFordeltRefusjonForToArbeidsgivere() {
+    void skalBeregneNårMaksRefusjonKravErMerEnnFordeltRefusjonForToArbeidsgivere() {
         //Arrange
         double bruttoBG1 = 600000d;
         double bruttoBG2 = 750000d;
@@ -218,7 +218,7 @@ public class RegelFastsettAvkortetBGNårRefusjonOver6GTest {
 
     @Test
     //Scenario 12: Flere arbeidsgivere har refusjonskrav og totalt refusjonskrav større enn 6G
-    public void skalBeregneNårMaksRefusjonKravErMerEnnFordeltRefusjonForEttArbeidsgiver() {
+    void skalBeregneNårMaksRefusjonKravErMerEnnFordeltRefusjonForEttArbeidsgiver() {
         //Arrange
         double bruttoBG1 = 600000d;
         double bruttoBG2 = 750000d;
@@ -247,7 +247,7 @@ public class RegelFastsettAvkortetBGNårRefusjonOver6GTest {
 
     @Test
     //Scenario 12: Flere arbeidsgivere har refusjonskrav og totalt refusjonskrav større enn 6G
-    public void skalBeregneNårMaksRefusjonKravEr6GForToAvDeTreArbeidsgiverne() {
+    void skalBeregneNårMaksRefusjonKravEr6GForToAvDeTreArbeidsgiverne() {
         //Arrange
         double bruttoBG1 = 600000d;
         double bruttoBG2 = 750000d;

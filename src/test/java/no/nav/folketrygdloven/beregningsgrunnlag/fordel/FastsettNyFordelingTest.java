@@ -26,7 +26,7 @@ public class FastsettNyFordelingTest {
 
 
 	@Test
-	public void skal_flytte_beregningsgrunnlag_fra_SN_til_et_nytt_arbeidsforhold_uten_rest() {
+	void skal_flytte_beregningsgrunnlag_fra_SN_til_et_nytt_arbeidsforhold_uten_rest() {
 		// Arrange
 		var refusjonskrav1 = BigDecimal.valueOf(150_000);
 		var a1 = lagNyttArbeidsforhold(refusjonskrav1, 1L, ORGNR1, 100);
@@ -45,7 +45,7 @@ public class FastsettNyFordelingTest {
 	}
 
 	@Test
-	public void skal_flytte_beregningsgrunnlag_fra_SN_til_to_arbeidsforhold_uten_rest() {
+	void skal_flytte_beregningsgrunnlag_fra_SN_til_to_arbeidsforhold_uten_rest() {
 		// Arrange
 		var refusjonskrav1 = BigDecimal.valueOf(200_000);
 		var beregnetPrÅr1 = BigDecimal.valueOf(100_000);
@@ -80,7 +80,7 @@ public class FastsettNyFordelingTest {
 
 
 	@Test
-	public void skal_flytte_beregningsgrunnlag_fra_ett_arbeidsforhold_til_to_andre_arbeidsforhold_uten_rest() {
+	void skal_flytte_beregningsgrunnlag_fra_ett_arbeidsforhold_til_to_andre_arbeidsforhold_uten_rest() {
 		// Arrange
 		var refusjonskrav1 = BigDecimal.valueOf(200_000);
 		var beregnetPrÅr1 = BigDecimal.valueOf(100_000);
@@ -106,7 +106,7 @@ public class FastsettNyFordelingTest {
 	}
 
 	@Test
-	public void skal_ikkje_omfordele() {
+	void skal_ikkje_omfordele() {
 		// Arrange
 		var refusjonskrav1 = BigDecimal.valueOf(200_000);
 		var beregnetPrÅr1 = BigDecimal.valueOf(200_000);
@@ -132,7 +132,7 @@ public class FastsettNyFordelingTest {
 	}
 
 	@Test
-	public void skal_sette_nye_ufordelte_andeler_til_0_når_det_ikke_fordeles_mellom_andre() {
+	void skal_sette_nye_ufordelte_andeler_til_0_når_det_ikke_fordeles_mellom_andre() {
 		// Arrange
 		var refusjonskrav1 = BigDecimal.valueOf(200_000);
 		var beregnetPrÅr1 = BigDecimal.valueOf(200_000);
@@ -157,7 +157,7 @@ public class FastsettNyFordelingTest {
 	}
 
 	@Test
-	public void skal_sette_nye_ufordelte_andeler_til_0_når_det_fordeles_mellom_andre() {
+	void skal_sette_nye_ufordelte_andeler_til_0_når_det_fordeles_mellom_andre() {
 		// Arrange
 		var refusjonskrav1 = BigDecimal.valueOf(250_000);
 		var beregnetPrÅr1 = BigDecimal.valueOf(200_000);

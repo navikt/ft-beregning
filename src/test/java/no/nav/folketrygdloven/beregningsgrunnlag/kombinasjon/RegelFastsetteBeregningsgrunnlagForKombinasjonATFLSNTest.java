@@ -55,7 +55,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
     private static final BigDecimal TOLV = new BigDecimal("12");
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         skjæringstidspunkt = LocalDate.of(2018, Month.JANUARY, 15);
         arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("123");
         arbeidsforhold2 = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("frilans");
@@ -63,7 +63,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
     }
 
     @Test
-    public void skalBeregneBeregningsgrunnlagForKombinasjonUtenVarigEndringOppgitt() {
+    void skalBeregneBeregningsgrunnlagForKombinasjonUtenVarigEndringOppgitt() {
         // Arrange
         Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(
             skjæringstidspunkt,
@@ -95,7 +95,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
     }
 
     @Test
-    public void skalBeregneBeregningsgrunnlagForKombinasjonMedVarigEndringOppgittUnder25ProsentAvvik() {
+    void skalBeregneBeregningsgrunnlagForKombinasjonMedVarigEndringOppgittUnder25ProsentAvvik() {
 
         // Arrange
         BigDecimal sigrun = new BigDecimal("5").multiply(Gverdi);
@@ -139,7 +139,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
     }
 
     @Test
-    public void skalBeregneBeregningsgrunnlagForKombinasjonMedVarigEndringOppgittOver25ProsentAvvik() {
+    void skalBeregneBeregningsgrunnlagForKombinasjonMedVarigEndringOppgittOver25ProsentAvvik() {
 
         // Arrange
         BigDecimal sigrun = new BigDecimal("5").multiply(Gverdi);
@@ -188,7 +188,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
     }
 
     @Test
-    public void skalBeregneBeregningsgrunnlagForKombinasjonMedNaturalYtelserBortfalt() {
+    void skalBeregneBeregningsgrunnlagForKombinasjonMedNaturalYtelserBortfalt() {
         // Arrange
         BigDecimal sigrun = new BigDecimal("5").multiply(Gverdi);
         BigDecimal inntektATFL = new BigDecimal("80000");
@@ -246,7 +246,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
     }
 
     @Test
-    public void skalBeregneBeregningsgrunnlagForKombinasjonMedNaturalYtelserBortfaltMedFlerePerioder() {
+    void skalBeregneBeregningsgrunnlagForKombinasjonMedNaturalYtelserBortfaltMedFlerePerioder() {
         // Arrange
         BigDecimal sigrun = new BigDecimal("5").multiply(Gverdi);
         BigDecimal inntektATFL = new BigDecimal("80000");
@@ -326,7 +326,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
     }
 
     @Test
-    public void skalBeregneBeregningsgrunnlagForKombinasjonMedDagpenger() {
+    void skalBeregneBeregningsgrunnlagForKombinasjonMedDagpenger() {
         // Arrange
         Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(
             skjæringstidspunkt,
@@ -361,7 +361,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
     }
 
     @Test
-    public void skalBeregneBeregningsgrunnlagForKombinasjonMedVarigEndringMedAAP() {
+    void skalBeregneBeregningsgrunnlagForKombinasjonMedVarigEndringMedAAP() {
         // Arrange
         BigDecimal sigrun = BigDecimal.valueOf(540996.444434);
         BigDecimal inntektATFL = new BigDecimal("18000");
@@ -403,7 +403,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
     }
 
     @Test
-    public void skalBeregneBeregningsgrunnlagForKombinasjonMedVarigEndringMedDP() {
+    void skalBeregneBeregningsgrunnlagForKombinasjonMedVarigEndringMedDP() {
         // Arrange
         BigDecimal sigrun = BigDecimal.valueOf(655438);
         BigDecimal inntektATFL = new BigDecimal("18000");
@@ -445,7 +445,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
     }
 
     @Test
-    public void skalGiRegelmerknadForSNSomErNyIArbeidslivet() {
+    void skalGiRegelmerknadForSNSomErNyIArbeidslivet() {
         // Arrange
         Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(
             skjæringstidspunkt,
@@ -475,7 +475,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
     }
 
     @Test
-    public void skalIkkeBeregneSNNårFastsattAvSaksbehandler() {
+    void skalIkkeBeregneSNNårFastsattAvSaksbehandler() {
         // Arrange
         Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(skjæringstidspunkt, årsinntekterFor3SisteÅr(5, 3, 4), Inntektskilde.SIGRUN);
         BigDecimal inntektATFL = new BigDecimal("15000");
