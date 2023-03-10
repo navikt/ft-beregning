@@ -25,7 +25,7 @@ public class SjekkÅrsinntektMotSammenligningsgrunnlagTest {
     private Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("12345");
 
     @Test
-    public void skalReturnereJaNårSammenligningsGrunnlagEr0() {
+    void skalReturnereJaNårSammenligningsGrunnlagEr0() {
         //Arrange
         Beregningsgrunnlag grunnlag = settoppGrunnlagMedEnPeriode(LocalDate.now(), new Inntektsgrunnlag(),
             Collections.singletonList(AktivitetStatus.ATFL), Collections.singletonList(arbeidsforhold));
@@ -45,20 +45,19 @@ public class SjekkÅrsinntektMotSammenligningsgrunnlagTest {
     }
 
     @Test
-    public void skalKasteExceptionNårSammenligningsgrunnlagErNull() {
+    void skalKasteExceptionNårSammenligningsgrunnlagErNull() {
         //Arrange
         Beregningsgrunnlag grunnlag = settoppGrunnlagMedEnPeriode(LocalDate.now(), new Inntektsgrunnlag(),
             Collections.singletonList(AktivitetStatus.ATFL), Collections.singletonList(arbeidsforhold));
         BeregningsgrunnlagPeriode periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         //Act
-        Assertions.assertThrows(IllegalStateException.class, () -> {
-            new SjekkÅrsinntektMotSammenligningsgrunnlag().evaluate(periode);
-        });
+	    SjekkÅrsinntektMotSammenligningsgrunnlag sjekkÅrsinntektMotSammenligningsgrunnlag = new SjekkÅrsinntektMotSammenligningsgrunnlag();
+	    Assertions.assertThrows(IllegalStateException.class, () -> sjekkÅrsinntektMotSammenligningsgrunnlag.evaluate(periode));
     }
 
     @Test
-    public void skalReturnereNeiNårAvvikErAkkurat25Prosent() {
+    void skalReturnereNeiNårAvvikErAkkurat25Prosent() {
         //Arrange
         Beregningsgrunnlag grunnlag = settoppGrunnlagMedEnPeriode(LocalDate.now(), new Inntektsgrunnlag(),
             Collections.singletonList(AktivitetStatus.ATFL), Collections.singletonList(arbeidsforhold));
@@ -83,7 +82,7 @@ public class SjekkÅrsinntektMotSammenligningsgrunnlagTest {
     }
 
     @Test
-    public void skalReturnereJaNårAvvikErAkkuratOver25Prosent() {
+    void skalReturnereJaNårAvvikErAkkuratOver25Prosent() {
         //Arrange
         Beregningsgrunnlag grunnlag = settoppGrunnlagMedEnPeriode(LocalDate.now(), new Inntektsgrunnlag(),
             Collections.singletonList(AktivitetStatus.ATFL), Collections.singletonList(arbeidsforhold));
@@ -107,7 +106,7 @@ public class SjekkÅrsinntektMotSammenligningsgrunnlagTest {
     }
 
     @Test
-    public void skalTesteAtAvvikKanReturneresMedFullNøyaktighet() {
+    void skalTesteAtAvvikKanReturneresMedFullNøyaktighet() {
         //Arrange
         Beregningsgrunnlag grunnlag = settoppGrunnlagMedEnPeriode(LocalDate.now(), new Inntektsgrunnlag(),
             Collections.singletonList(AktivitetStatus.ATFL), Collections.singletonList(arbeidsforhold));

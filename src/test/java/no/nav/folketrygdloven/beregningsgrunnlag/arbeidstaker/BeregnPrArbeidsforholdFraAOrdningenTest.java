@@ -40,9 +40,8 @@ public class BeregnPrArbeidsforholdFraAOrdningenTest {
         BeregningsgrunnlagPrArbeidsforhold.builder(periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0)).medBeregningsperiode(null);
         BeregningsgrunnlagPrArbeidsforhold arbeidstakerStatus = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
         //Act
-        Assertions.assertThrows(IllegalStateException.class, () -> {
-            new BeregnPrArbeidsforholdFraAOrdningen(arbeidstakerStatus).evaluate(periode);
-        });
+	    BeregnPrArbeidsforholdFraAOrdningen beregnPrArbeidsforholdFraAOrdningen = new BeregnPrArbeidsforholdFraAOrdningen(arbeidstakerStatus);
+	    Assertions.assertThrows(IllegalStateException.class, () -> beregnPrArbeidsforholdFraAOrdningen.evaluate(periode));
     }
 
     @Test
