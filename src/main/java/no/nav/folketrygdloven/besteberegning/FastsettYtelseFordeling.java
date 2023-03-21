@@ -21,7 +21,6 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Tjeneste som skal fastsette hvot stor andel hver aktivitet bidrar til for en ytelse.

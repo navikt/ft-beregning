@@ -6,7 +6,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelAndelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelteAndelerModell;

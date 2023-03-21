@@ -1,7 +1,5 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.fortsettForeslå;
 
-import java.util.stream.Collectors;
-
 import no.nav.folketrygdloven.beregningsgrunnlag.foreslå.RegelForeslåBeregningsgrunnlagTilNull;
 import no.nav.folketrygdloven.beregningsgrunnlag.inaktiv.RegelBeregningsgrunnlagInaktivMedAvviksvurdering;
 import no.nav.folketrygdloven.beregningsgrunnlag.militær.RegelForeslåBeregningsgrunnlagMilitær;

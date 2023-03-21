@@ -3,7 +3,6 @@ package no.nav.folketrygdloven.skjæringstidspunkt.regel;
 import static no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet.MILITÆR_ELLER_SIVILTJENESTE;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivPeriode;
