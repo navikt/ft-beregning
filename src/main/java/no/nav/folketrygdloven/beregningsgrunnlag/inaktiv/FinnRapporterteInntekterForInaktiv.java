@@ -53,10 +53,13 @@ public class FinnRapporterteInntekterForInaktiv implements FinnRapporterteInntek
 	}
 
 	private boolean harMinstEnVirkedag(Periodeinntekt p) {
-		Optional<Periode> gyldigAnsettelsesperidoe = p.getArbeidsgiver()
-				.flatMap(Arbeidsforhold::getAnsettelsesPeriode)
-				.filter(ansettelsesperiode -> ansettelsesperiode.getTom().isAfter(p.getTom()));
-		return gyldigAnsettelsesperidoe.filter(periode -> Virkedager.beregnAntallVirkedager(periode.getFom(), p.getTom()) > 0).isPresent();
+		if (p.getArbeidsgiver().isEmpty() || p.getArbeidsgiver().get().getAnsettelsesPeriode().isEmpty()) {
+			return false;
+		}
+		if (p.getArbeidsgiver().get().getAnsettelsesPeriode().get().getFom().isAfter(p.getTom())) {
+			return false;
+		}
+		return Virkedager.beregnAntallVirkedager(p.getArbeidsgiver().get().getAnsettelsesPeriode().get().getFom(), p.getTom()) > 0;
 	}
 
 	private boolean starterFørStp(BeregningsgrunnlagPeriode grunnlag, Periodeinntekt p) {
