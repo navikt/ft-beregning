@@ -2,7 +2,6 @@ package no.nav.folketrygdloven.beregningsgrunnlag.perioder.gradering;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.perioder.PeriodiserBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;

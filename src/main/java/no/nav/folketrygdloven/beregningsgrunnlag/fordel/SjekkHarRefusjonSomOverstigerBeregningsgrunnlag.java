@@ -1,7 +1,6 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.fordel;
 
 import java.math.BigDecimal;
-import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelAndelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelModell;
