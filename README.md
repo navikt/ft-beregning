@@ -3,6 +3,7 @@
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=navikt_folketrygdloven-beregningsgrunnlag-regelmodell&metric=coverage)](https://sonarcloud.io/summary/new_code?id=navikt_folketrygdloven-beregningsgrunnlag-regelmodell)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=navikt_folketrygdloven-beregningsgrunnlag-regelmodell&metric=bugs)](https://sonarcloud.io/summary/new_code?id=navikt_folketrygdloven-beregningsgrunnlag-regelmodell)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=navikt_folketrygdloven-beregningsgrunnlag-regelmodell&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=navikt_folketrygdloven-beregningsgrunnlag-regelmodell)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=navikt_folketrygdloven-beregningsgrunnlag-regelmodell&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=navikt_folketrygdloven-beregningsgrunnlag-regelmodell)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/navikt/folketrygdloven-beregningsgrunnlag-regelmodell)
 ![GitHub](https://img.shields.io/github/license/navikt/folketrygdloven-beregningsgrunnlag-regelmodell)
 # Beregningsgrunnlag (fra folketrygdloven kapittel 8)
