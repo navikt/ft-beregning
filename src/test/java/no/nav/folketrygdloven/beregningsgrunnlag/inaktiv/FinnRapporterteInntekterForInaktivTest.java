@@ -147,7 +147,7 @@ class FinnRapporterteInntekterForInaktivTest {
 		// Act
 		var periodeinntekt = finnRapporterteInntekter.finnRapportertInntekt(grunnlag);
 
-		assertThat(periodeinntekt.get().getInntekt().compareTo(BigDecimal.valueOf(146_250))).isEqualTo(0);
+		assertThat(periodeinntekt.get().getInntekt()).isEqualByComparingTo(BigDecimal.valueOf(146_250));
 	}
 
 	private void leggTilMånedsinntekt(BigDecimal nesteMåned, LocalDate skjæringstidspunkt, Arbeidsforhold arbeidsforhold, Inntektsgrunnlag inntektsgrunnlag, int månederFørStp) {
