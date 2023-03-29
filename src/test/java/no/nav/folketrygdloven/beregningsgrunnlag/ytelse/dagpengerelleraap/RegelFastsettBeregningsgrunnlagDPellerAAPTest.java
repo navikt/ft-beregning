@@ -207,7 +207,7 @@ public class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
         BigDecimal besteberegning = BigDecimal.valueOf(240000);
         Inntektsgrunnlag inntektsgrunnlag = lagInntektsgrunnlag(beregnetDagsats, skjæringstidspunkt, 0.5);
         Beregningsgrunnlag beregningsgrunnlag = Beregningsgrunnlag.builder(settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag,
-            List.of(AktivitetStatus.DP, AktivitetStatus.ATFL), Collections.singletonList(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("12345"))))
+            List.of(AktivitetStatus.DP, AktivitetStatus.ATFL), Collections.singletonList(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(skjæringstidspunkt.minusYears(1), "12345"))))
             .medYtelsesSpesifiktGrunnlag(new ForeldrepengerGrunnlag(true)).build();
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         BeregningsgrunnlagPrStatus dp = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP);

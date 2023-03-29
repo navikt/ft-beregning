@@ -316,7 +316,8 @@ public class BeregningsgrunnlagTest {
 
 		kopierOgLeggTilMånedsinntekter(beregningsgrunnlag.getInntektsgrunnlag(), skjæringstidspunkt, månedsinntekt1.add(månedsinntekt2), Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, null, 12);
 
-		Arbeidsforhold arbeidsforhold2 = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR2);
+		LocalDate arbeidsforholStartdato = skjæringstidspunkt.minusYears(2);
+		Arbeidsforhold arbeidsforhold2 = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(arbeidsforholStartdato, ORGNR2);
 		BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 		leggTilArbeidsforholdMedInntektsmelding(grunnlag, skjæringstidspunkt, månedsinntekt2, refusjonskrav, arbeidsforhold2, BigDecimal.ZERO, null);
 
@@ -365,7 +366,8 @@ public class BeregningsgrunnlagTest {
 
 		kopierOgLeggTilMånedsinntekter(beregningsgrunnlag.getInntektsgrunnlag(), skjæringstidspunkt, månedsinntektFrilans.add(månedsinntektArbeidstaker), Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, null, 12);
 
-		Arbeidsforhold frilans = Arbeidsforhold.frilansArbeidsforhold();
+		LocalDate arbeidsforholStartdato = skjæringstidspunkt.minusYears(2);
+		Arbeidsforhold frilans = Arbeidsforhold.frilansArbeidsforhold(arbeidsforholStartdato);
 		BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 		leggTilArbeidsforholdUtenInntektsmelding(grunnlag, skjæringstidspunkt, månedsinntektFrilans, null, frilans);
 
@@ -391,7 +393,8 @@ public class BeregningsgrunnlagTest {
 
 		kopierOgLeggTilMånedsinntekter(beregningsgrunnlag.getInntektsgrunnlag(), skjæringstidspunkt, månedsinntektFrilans.add(månedsinntektArbeidstaker), Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, null, 12);
 
-		Arbeidsforhold frilans = Arbeidsforhold.frilansArbeidsforhold();
+		LocalDate arbeidsforholStartdato = skjæringstidspunkt.minusYears(2);
+		Arbeidsforhold frilans = Arbeidsforhold.frilansArbeidsforhold(arbeidsforholStartdato);
 		BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 		leggTilArbeidsforholdUtenInntektsmelding(grunnlag, skjæringstidspunkt, månedsinntektFrilans, refusjonskravFrilans, frilans);
 
@@ -409,7 +412,7 @@ public class BeregningsgrunnlagTest {
 	@Test
 	void skalTesteManueltFastsattMånedsinntekt() {
 		int beregnetPrÅr = 250000;
-		List<Arbeidsforhold> arbeidsforholdList = Collections.singletonList(Arbeidsforhold.builder().medOrgnr("123").medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT).build());
+		List<Arbeidsforhold> arbeidsforholdList = Collections.singletonList(Arbeidsforhold.builder().medOrgnr("123").medStartdato(skjæringstidspunkt.minusYears(2)).medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT).build());
 		Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, new Inntektsgrunnlag(),
 				Collections.singletonList(AktivitetStatus.ATFL), arbeidsforholdList);
 		opprettSammenligningsgrunnlag(beregningsgrunnlag.getInntektsgrunnlag(), skjæringstidspunkt, BigDecimal.valueOf(22500));

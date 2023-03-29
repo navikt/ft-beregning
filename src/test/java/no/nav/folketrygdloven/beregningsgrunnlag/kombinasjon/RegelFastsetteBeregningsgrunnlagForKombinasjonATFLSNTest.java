@@ -57,8 +57,9 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
     @BeforeEach
     void setup() {
         skjæringstidspunkt = LocalDate.of(2018, Month.JANUARY, 15);
-        arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("123");
-        arbeidsforhold2 = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("frilans");
+	    LocalDate arbeidsforholStartdato = skjæringstidspunkt.minusYears(2);
+        arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(arbeidsforholStartdato,"123");
+        arbeidsforhold2 = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(arbeidsforholStartdato, "frilans");
         Gverdi = BigDecimal.valueOf(GRUNNBELØP_2017);
     }
 

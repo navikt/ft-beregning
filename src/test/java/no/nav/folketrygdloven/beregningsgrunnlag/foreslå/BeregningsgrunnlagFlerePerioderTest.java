@@ -93,7 +93,8 @@ public class BeregningsgrunnlagFlerePerioderTest {
         LocalDate naturalytelseOpphørFom2 = skjæringstidspunkt.plusMonths(5);
 
         Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektsmelding(skjæringstidspunkt, månedsinntekt1, refusjonskrav1, naturalytelse1, naturalytelseOpphørFom1);
-        Arbeidsforhold arbeidsforhold2 = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR2);
+        LocalDate startdatoArbeidsforhold = skjæringstidspunkt.minusYears(2);
+		Arbeidsforhold arbeidsforhold2 = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(startdatoArbeidsforhold, ORGNR2);
 
         BeregningsgrunnlagPeriode periode1 = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 

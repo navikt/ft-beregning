@@ -2,6 +2,8 @@ package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.Month;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -136,6 +138,11 @@ public class Periodeinntekt {
             kladd.periode = Periode.of(dato.withDayOfMonth(1), dato.withDayOfMonth(1).plusMonths(1).minusDays(1));
             return this;
         }
+
+	    public Builder medMåned(YearMonth måned) {
+			kladd.periode = Periode.of(måned.atDay(1), måned.atEndOfMonth());
+		    return this;
+	    }
 
         public Builder medArbeidsgiver(Arbeidsforhold arbeidsgiver) {
             kladd.arbeidsgiver = arbeidsgiver;
