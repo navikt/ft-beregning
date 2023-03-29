@@ -124,6 +124,32 @@ class FinnRapporterteInntekterForInaktivTest {
 
 	}
 
+	@Test
+	void skal_ikke_bruke_ansettelsesperiode_som_starter_etter_inntektsperiode() {
+		// Arrange
+		BigDecimal forrigeMåned = BigDecimal.valueOf(8000);
+		BigDecimal nesteMåned = BigDecimal.valueOf(9000);
+		var skjæringstidspunkt = LocalDate.of(2022, 11, 11);
+		Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR);
+		Arbeidsforhold.builder(arbeidsforhold).medAnsettelsesPeriode(Periode.of(LocalDate.of(2022, 11, 9), LocalDate.of(2023, 3, 11)));
+		Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
+		leggTilMånedsinntekt(nesteMåned, skjæringstidspunkt, arbeidsforhold, inntektsgrunnlag, 0);
+		leggTilMånedsinntekt(forrigeMåned, skjæringstidspunkt, arbeidsforhold, inntektsgrunnlag, 1);
+
+		var bg = settoppGrunnlagMedEnPeriode(skjæringstidspunkt,
+				inntektsgrunnlag,
+				singletonList(AktivitetStatus.ATFL),
+				singletonList(arbeidsforhold),
+				emptyList(),
+				emptyList());
+		BeregningsgrunnlagPeriode grunnlag = bg.getBeregningsgrunnlagPerioder().get(0);
+
+		// Act
+		var periodeinntekt = finnRapporterteInntekter.finnRapportertInntekt(grunnlag);
+
+		assertThat(periodeinntekt.get().getInntekt()).isEqualByComparingTo(BigDecimal.valueOf(146_250));
+	}
+
 	private void leggTilMånedsinntekt(BigDecimal nesteMåned, LocalDate skjæringstidspunkt, Arbeidsforhold arbeidsforhold, Inntektsgrunnlag inntektsgrunnlag, int månederFørStp) {
 		inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
 				.medInntektskildeOgPeriodeType(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING)

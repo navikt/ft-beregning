@@ -46,7 +46,7 @@ public class Virkedager {
         Objects.requireNonNull(fom);
         Objects.requireNonNull(tom);
         if (fom.isAfter(tom)) {
-            throw new IllegalArgumentException("Utviklerfeil: fom " + fom + " kan ikke være før tom " + tom);
+            throw new IllegalArgumentException("Utviklerfeil: fom " + fom + " kan ikke være etter tom " + tom);
         }
 
         return beregnVirkedager(fom, tom);
