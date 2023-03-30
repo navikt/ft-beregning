@@ -237,12 +237,6 @@ public class BeregningsgrunnlagScenario {
         return inntektsgrunnlag;
     }
 
-    public static Inntektsgrunnlag settoppMånedsinntekterPrAktivitet(LocalDate skjæringstidspunkt, List<BigDecimal> månedsinntekt, Inntektskilde inntektskilde, Arbeidsforhold arbeidsforhold, AktivitetStatus aktivitetStatus) {
-        Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
-        leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, månedsinntekt, inntektskilde, arbeidsforhold, aktivitetStatus);
-        return inntektsgrunnlag;
-    }
-
     public static void leggTilMånedsinntekter(Inntektsgrunnlag inntektsgrunnlag, LocalDate skjæringstidspunkt, List<BigDecimal> månedsinntekt, Inntektskilde inntektskilde, Arbeidsforhold arbeidsforhold, AktivitetStatus aktivitetStatus) {
         int månederSiden = månedsinntekt.size();
         for (BigDecimal beløp : månedsinntekt) {
@@ -343,7 +337,8 @@ public class BeregningsgrunnlagScenario {
 
     public static Beregningsgrunnlag opprettBeregningsgrunnlagFraInntektskomponenten(LocalDate skjæringstidspunkt, BigDecimal månedsinntekt, BigDecimal refusjonskrav, boolean frilans,
                                                                                      int antallMåneder, List<PeriodeÅrsak> periodeÅrsaker) {
-        Arbeidsforhold arbeidsforhold = frilans ? Arbeidsforhold.frilansArbeidsforhold() : Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR);
+        LocalDate startdatoArbeidsforhold = skjæringstidspunkt.minusYears(2);
+		Arbeidsforhold arbeidsforhold = frilans ? Arbeidsforhold.frilansArbeidsforhold(startdatoArbeidsforhold) : Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(startdatoArbeidsforhold, ORGNR);
         List<BigDecimal> månedsinntekter = new ArrayList<>();
         for (int m = 0; m < antallMåneder; m++) {
             månedsinntekter.add(månedsinntekt);
@@ -353,28 +348,10 @@ public class BeregningsgrunnlagScenario {
             singletonList(arbeidsforhold), periodeÅrsaker, refusjonskrav == null ? Collections.emptyList() : singletonList(refusjonskrav.multiply(BigDecimal.valueOf(12))));
     }
 
-    public static Beregningsgrunnlag opprettBeregningsgrunnlagFraInntektskomponentenPrAktivitet(LocalDate skjæringstidspunkt, BigDecimal månedsinntekt, BigDecimal refusjonskrav, boolean frilans,
-                                                                                                int antallMåneder, List<PeriodeÅrsak> periodeÅrsaker, AktivitetStatus aktivitetStatus) {
-        Arbeidsforhold arbeidsforhold = frilans ? Arbeidsforhold.frilansArbeidsforhold() : Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR);
-        List<BigDecimal> månedsinntekter = new ArrayList<>();
-        for (int m = 0; m < antallMåneder; m++) {
-            månedsinntekter.add(månedsinntekt);
-        }
-        Inntektsgrunnlag inntektsgrunnlag = settoppMånedsinntekterPrAktivitet(skjæringstidspunkt, månedsinntekter, Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold, aktivitetStatus);
-        return settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, singletonList(AktivitetStatus.ATFL),
-                singletonList(arbeidsforhold), periodeÅrsaker, refusjonskrav == null ? Collections.emptyList() : singletonList(refusjonskrav.multiply(BigDecimal.valueOf(12))));
-    }
-
     public static void opprettSammenligningsgrunnlag(Inntektsgrunnlag inntektsgrunnlag, LocalDate skjæringstidspunkt, BigDecimal månedsinntekt) {
         leggTilMånedsinntekter(inntektsgrunnlag, skjæringstidspunkt,
             Arrays.asList(månedsinntekt, månedsinntekt, månedsinntekt, månedsinntekt, månedsinntekt, månedsinntekt, månedsinntekt, månedsinntekt,
                 månedsinntekt, månedsinntekt, månedsinntekt, månedsinntekt), Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, null);
-    }
-
-    public static void opprettSammenligningsgrunnlagPrAktivitet(Inntektsgrunnlag inntektsgrunnlag, LocalDate skjæringstidspunkt, BigDecimal månedsinntekt, AktivitetStatus aktivitetStatus) {
-        leggTilMånedsinntekter(inntektsgrunnlag, skjæringstidspunkt,
-                Arrays.asList(månedsinntekt, månedsinntekt, månedsinntekt, månedsinntekt, månedsinntekt, månedsinntekt, månedsinntekt, månedsinntekt,
-                        månedsinntekt, månedsinntekt, månedsinntekt, månedsinntekt, månedsinntekt), Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, null, aktivitetStatus);
     }
 
     public static void opprettSammenligningsgrunnlagIPeriode(Inntektsgrunnlag inntektsgrunnlag, Periode periode, BigDecimal månedsinntekt, AktivitetStatus aktivitetStatus) {
@@ -388,24 +365,13 @@ public class BeregningsgrunnlagScenario {
         }
     }
 
-    public static void opprettInntektsmeldingIPeriode(Inntektsgrunnlag inntektsgrunnlag, Periode periode, BigDecimal månedsinntekt, AktivitetStatus aktivitetStatus, Arbeidsforhold arbeidsforhold) {
-        for (LocalDate date = periode.getFom(); date.isBefore(periode.getTom().plusMonths(1)) ; date = date.plusMonths(1)) {
-            inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
-                .medInntektskildeOgPeriodeType(Inntektskilde.INNTEKTSMELDING)
-                .medMåned(date)
-                .medInntekt(månedsinntekt)
-                .medAktivitetStatus(aktivitetStatus)
-                .medArbeidsgiver(arbeidsforhold)
-                .build());
-        }
-    }
-
     public static Beregningsgrunnlag opprettBeregningsgrunnlagFraInntektsmelding(LocalDate skjæringstidspunkt, BigDecimal månedsinntekt, BigDecimal refusjonskrav) {
         return opprettBeregningsgrunnlagFraInntektsmelding(skjæringstidspunkt, månedsinntekt, refusjonskrav, BigDecimal.ZERO, null);
     }
 
     public static Beregningsgrunnlag opprettBeregningsgrunnlagFraInntektsmelding(LocalDate skjæringstidspunkt, BigDecimal månedsinntekt, BigDecimal refusjonskrav, BigDecimal naturalytelse, LocalDate naturalytelseOpphørFom) {
-        Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR);
+		LocalDate arbeidsforholdStart = skjæringstidspunkt.minusYears(2);
+        Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(arbeidsforholdStart, ORGNR);
         Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
         inntektsgrunnlag.setInntektRapporteringFristDag(5);
         List<NaturalYtelse> naturalYtelser = lagNaturalYtelseListe(naturalytelse, naturalytelseOpphørFom);

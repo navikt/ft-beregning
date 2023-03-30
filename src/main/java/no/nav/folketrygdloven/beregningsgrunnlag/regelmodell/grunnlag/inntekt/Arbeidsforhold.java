@@ -1,5 +1,6 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt;
 
+import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -13,6 +14,7 @@ public class Arbeidsforhold {
 	private String aktørId;
 	private ReferanseType referanseType;
 	private Periode ansettelsesPeriode;
+	private LocalDate startdato;
 
 	private Arbeidsforhold() {
 	}
@@ -50,6 +52,10 @@ public class Arbeidsforhold {
 			return getAktørId();
 		}
 		return getOrgnr();
+	}
+
+	public LocalDate getStartdato() {
+		return startdato;
 	}
 
 	@Override
@@ -127,6 +133,11 @@ public class Arbeidsforhold {
 			return this;
 		}
 
+		public Builder medStartdato(LocalDate startdato) {
+			arbeidsforhold.startdato = startdato;
+			return this;
+		}
+
 		public Arbeidsforhold build() {
 			verifyForBuild();
 			return arbeidsforhold;
@@ -156,6 +167,13 @@ public class Arbeidsforhold {
 		return anonymtArbeidsforhold(Aktivitet.FRILANSINNTEKT);
 	}
 
+	public static Arbeidsforhold frilansArbeidsforhold(LocalDate startdato) {
+		return Arbeidsforhold.builder()
+				.medAktivitet(Aktivitet.FRILANSINNTEKT)
+				.medStartdato(startdato)
+				.build();
+	}
+
 	public static Arbeidsforhold anonymtArbeidsforhold(Aktivitet aktivitet) {
 		return Arbeidsforhold.builder()
 				.medAktivitet(aktivitet)
@@ -169,10 +187,27 @@ public class Arbeidsforhold {
 				.build();
 	}
 
+	public static Arbeidsforhold nyttArbeidsforholdHosVirksomhet(LocalDate startdato, String orgnr) {
+		return Arbeidsforhold.builder()
+				.medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT)
+				.medStartdato(startdato)
+				.medOrgnr(orgnr)
+				.build();
+	}
+
 
 	public static Arbeidsforhold nyttArbeidsforholdHosVirksomhet(String orgnr, String arbeidsforholdId) {
 		return Arbeidsforhold.builder()
 				.medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT)
+				.medOrgnr(orgnr)
+				.medArbeidsforholdId(arbeidsforholdId)
+				.build();
+	}
+
+	public static Arbeidsforhold nyttArbeidsforholdHosVirksomhet(LocalDate startdato, String orgnr, String arbeidsforholdId) {
+		return Arbeidsforhold.builder()
+				.medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT)
+				.medStartdato(startdato)
 				.medOrgnr(orgnr)
 				.medArbeidsforholdId(arbeidsforholdId)
 				.build();

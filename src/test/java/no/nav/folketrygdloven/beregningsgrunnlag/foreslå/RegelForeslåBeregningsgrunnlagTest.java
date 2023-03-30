@@ -61,7 +61,8 @@ public class RegelForeslåBeregningsgrunnlagTest {
 	void setup() {
 		skjæringstidspunkt = LocalDate.of(2018, Month.JANUARY, 15);
 		orgnr = "987";
-		arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr);
+		LocalDate arbeidsforholdStartdato = skjæringstidspunkt.minusYears(2);
+		arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(arbeidsforholdStartdato, orgnr);
 	}
 
 	@Test
@@ -300,8 +301,9 @@ public class RegelForeslåBeregningsgrunnlagTest {
 	void skalTesteNyoppstartetFrilanser() {
 		Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
 		opprettSammenligningsgrunnlag(inntektsgrunnlag, skjæringstidspunkt, BigDecimal.valueOf(25000));
+		LocalDate arbeidsforholStartdato = skjæringstidspunkt.minusYears(2);
 		Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag,
-				Collections.singletonList(AktivitetStatus.ATFL), Collections.singletonList(Arbeidsforhold.frilansArbeidsforhold()));
+				Collections.singletonList(AktivitetStatus.ATFL), Collections.singletonList(Arbeidsforhold.frilansArbeidsforhold(arbeidsforholStartdato)));
 		BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 		BeregningsgrunnlagPrArbeidsforhold.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0))
 				.medFastsattAvSaksbehandler(true)
@@ -479,7 +481,8 @@ public class RegelForeslåBeregningsgrunnlagTest {
 	void skalBeregneMilitærKombinertMedNæringOgArbeid() { // NOSONAR
 		// Arrange
 		BigDecimal månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
-		Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr);
+		LocalDate arbeidsforholStartdato = skjæringstidspunkt.minusYears(2);
+		Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(arbeidsforholStartdato, orgnr);
 		BigDecimal refusjonskrav = BigDecimal.valueOf(4.0d * GSNITT_2017 / 12);
 		Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(skjæringstidspunkt,
 				årsinntekterFor3SisteÅr(5, 3, 4), Inntektskilde.SIGRUN);
@@ -502,7 +505,8 @@ public class RegelForeslåBeregningsgrunnlagTest {
 	void skalBeregneAvvikPåArbeidNårPassertFomdatoForIndividuellSammenligning() {
 		// Arrange
 		BigDecimal månedsinntekt = BigDecimal.valueOf(20000);
-		Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr);
+		LocalDate arbeidsforholStartdato = skjæringstidspunkt.minusYears(2);
+		Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(arbeidsforholStartdato, orgnr);
 		Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(skjæringstidspunkt,
 				årsinntekterFor3SisteÅr(5, 3, 4), Inntektskilde.SIGRUN);
 
@@ -534,7 +538,8 @@ public class RegelForeslåBeregningsgrunnlagTest {
 	void skalIkkeBeregneAvvikPåArbeidNårPassertFomdatoForIndividuellSammenligning() {
 		// Arrange
 		BigDecimal månedsinntekt = BigDecimal.valueOf(20000);
-		Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr);
+		LocalDate arbeidsforholStartdato = skjæringstidspunkt.minusYears(2);
+		Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(arbeidsforholStartdato, orgnr);
 		Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(skjæringstidspunkt,
 				årsinntekterFor3SisteÅr(5, 3, 4), Inntektskilde.SIGRUN);
 

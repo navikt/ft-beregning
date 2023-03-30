@@ -42,7 +42,8 @@ public class RegelBeregningsgrunnlagKombinasjonATFLogSNTest {
     void skalBeregneAndelGrunnlagSNHvorSNStørreEnnATFL() { // NOSONAR
         // Arrange
         BigDecimal månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
-        Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr);
+	    LocalDate arbeidsforholStartdato = skjæringstidspunkt.minusYears(2);
+        Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(arbeidsforholStartdato, orgnr);
         BigDecimal refusjonskrav = BigDecimal.valueOf(4.0d * GSNITT_2017 / 12);
         Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(skjæringstidspunkt,
                 årsinntekterFor3SisteÅr(5,  3,  4), Inntektskilde.SIGRUN);
@@ -69,7 +70,8 @@ public class RegelBeregningsgrunnlagKombinasjonATFLogSNTest {
     void skalBeregneAndelGrunnlagSNHvorSNMindreEnnATFL() { // NOSONAR
         // Arrange
         BigDecimal månedsinntekt = BigDecimal.valueOf(5.0 * GRUNNBELØP_2017 / 12);
-        Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr);
+	    LocalDate arbeidsforholStartdato = skjæringstidspunkt.minusYears(2);
+        Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(arbeidsforholStartdato, orgnr);
         BigDecimal refusjonskrav = månedsinntekt;
         Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(skjæringstidspunkt,
                 årsinntekterFor3SisteÅr(3.0,  2.0,  2.5), Inntektskilde.SIGRUN);
