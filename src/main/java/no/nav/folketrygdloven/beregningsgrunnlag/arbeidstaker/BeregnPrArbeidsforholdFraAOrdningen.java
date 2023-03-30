@@ -112,8 +112,8 @@ class BeregnPrArbeidsforholdFraAOrdningen extends LeafSpecification<Beregningsgr
 		if (arbeidsforholdetAktivtBareIdelerAvPerioden) {
 			int virkedagerMåned = Virkedager.beregnAntallVirkedager(forrigeMåned.atDay(1), forrigeMåned.atEndOfMonth());
 			int virkedagerInntekt = antallVirkedagerFallbackTilAntallDagerVed0(arbeidsforhold.getArbeidsforhold().getStartdato(), forrigeMåned.atEndOfMonth());
-			BigDecimal inntektFaktor = BigDecimal.valueOf(virkedagerMåned).divide(BigDecimal.valueOf(virkedagerInntekt), 10, RoundingMode.HALF_UP);
-			return utbetaltForrigeMåned.multiply(inntektFaktor);
+			BigDecimal inntektFaktor = BigDecimal.valueOf(virkedagerInntekt).divide(BigDecimal.valueOf(virkedagerMåned), 10, RoundingMode.HALF_UP);
+			return utbetaltForrigeMåned.divide(inntektFaktor, 10, RoundingMode.HALF_UP);
 		}
 		return utbetaltForrigeMåned;
 	}
