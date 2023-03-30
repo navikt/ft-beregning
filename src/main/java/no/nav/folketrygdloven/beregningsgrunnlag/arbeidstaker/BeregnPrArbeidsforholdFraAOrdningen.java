@@ -26,7 +26,7 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 @RuleDocumentation(BeregnPrArbeidsforholdFraAOrdningen.ID)
 class BeregnPrArbeidsforholdFraAOrdningen extends LeafSpecification<BeregningsgrunnlagPeriode> {
 
-	static final String ID = "FB_BR 14.3 v2";
+	static final String ID = "FB_BR 14.3";
 	static final String BESKRIVELSE = "Rapportert inntekt = snitt av mnd-inntekter i beregningsperioden * 12";
 	private BeregningsgrunnlagPrArbeidsforhold arbeidsforhold;
 
@@ -94,9 +94,11 @@ class BeregnPrArbeidsforholdFraAOrdningen extends LeafSpecification<Beregningsgr
 		int virkedagerGammelSats = virkedagerMåned - virkedagerNySats;
 
 		BigDecimal månedsinntektForrigeMåned = utledInntektForForrigeMåned(inntektsgrunnlag, beregningsperiodeStart);
-		BigDecimal månedsinntektNySats = utbetaltForMånedMedEndring.subtract(månedsinntektForrigeMåned.multiply(BigDecimal.valueOf(virkedagerGammelSats).divide(BigDecimal.valueOf(virkedagerMåned), 10, RoundingMode.HALF_DOWN)))
-				.multiply(BigDecimal.valueOf(virkedagerMåned)).divide(BigDecimal.valueOf(virkedagerNySats), 10, RoundingMode.HALF_UP);
-		return månedsinntektNySats.multiply(BigDecimal.valueOf(12)).setScale(0, RoundingMode.HALF_UP);
+		BigDecimal inntektFaktorGammelInntekt = BigDecimal.valueOf(virkedagerGammelSats).divide(BigDecimal.valueOf(virkedagerMåned), 10, RoundingMode.HALF_DOWN);
+		BigDecimal inntektFaktorNyInntekt = BigDecimal.valueOf(virkedagerNySats).divide(BigDecimal.valueOf(virkedagerMåned), 10, RoundingMode.HALF_DOWN);
+		BigDecimal månedsinntektNySats = utbetaltForMånedMedEndring.subtract(månedsinntektForrigeMåned.multiply(inntektFaktorGammelInntekt))
+				.divide(inntektFaktorNyInntekt, 10, RoundingMode.HALF_UP);
+		return skalerTilÅrsinntekt(månedsinntektNySats);
 	}
 
 	private BigDecimal utledInntektForForrigeMåned(Inntektsgrunnlag inntektsgrunnlag, LocalDate beregningsperiodeStart) {
@@ -110,9 +112,14 @@ class BeregnPrArbeidsforholdFraAOrdningen extends LeafSpecification<Beregningsgr
 		if (arbeidsforholdetAktivtBareIdelerAvPerioden) {
 			int virkedagerMåned = Virkedager.beregnAntallVirkedager(forrigeMåned.atDay(1), forrigeMåned.atEndOfMonth());
 			int virkedagerInntekt = antallVirkedagerFallbackTilAntallDagerVed0(arbeidsforhold.getArbeidsforhold().getStartdato(), forrigeMåned.atEndOfMonth());
-			return utbetaltForrigeMåned.multiply(BigDecimal.valueOf(virkedagerMåned)).divide(BigDecimal.valueOf(virkedagerInntekt), 10, RoundingMode.HALF_UP);
+			BigDecimal inntektFaktor = BigDecimal.valueOf(virkedagerMåned).divide(BigDecimal.valueOf(virkedagerInntekt), 10, RoundingMode.HALF_UP);
+			return utbetaltForrigeMåned.multiply(inntektFaktor);
 		}
 		return utbetaltForrigeMåned;
+	}
+
+	private BigDecimal skalerTilÅrsinntekt(BigDecimal månedsinntekt) {
+		return månedsinntekt.multiply(BigDecimal.valueOf(12)).setScale(0, RoundingMode.HALF_UP);
 	}
 
 	private BigDecimal hentInntektForMåned(Inntektsgrunnlag inntektsgrunnlag, LocalDate dato) {
