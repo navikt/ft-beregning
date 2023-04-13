@@ -1,7 +1,7 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.fordel;
 
 import static no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil.TIDENES_ENDE;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -53,7 +53,7 @@ class OmfordelFraBrukersAndelTest {
 		kjørRegel(regelmodell);
 
 		// Regelen endrer på input så vi kan asserte på brukers_andel og frilans
-		assertThat(periode.getAndeler().size()).isEqualTo(4);
+		assertThat(periode.getAndeler()).hasSize(4);
 		assertThat(brukers_andel.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.ZERO);
 		assertThat(brukers_andel2.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.ZERO);
 		assertThat(frilans.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(inntekt);
@@ -101,7 +101,7 @@ class OmfordelFraBrukersAndelTest {
 		kjørRegel(regelmodell);
 
 		// Regelen endrer på input så vi kan asserte på brukers_andel og sn
-		assertThat(periode.getAndeler().size()).isEqualTo(4);
+		assertThat(periode.getAndeler()).hasSize(4);
 		assertThat(brukers_andel.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.ZERO);
 		assertThat(brukers_andel2.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.ZERO);
 		assertThat(snStatus.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(inntekt);

@@ -1,6 +1,6 @@
 package no.nav.folketrygdloven.skjæringstidspunkt.status.frisinn;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -28,7 +28,7 @@ class FinnPerioderUtenYtelseTest {
         List<Periode> perioder = FinnPerioderUtenYtelse.finnPerioder(inntektsgrunnlag, stp, res);
 
         // Assert
-        assertThat(perioder.size()).isEqualTo(12);
+        assertThat(perioder).hasSize(12);
         for (int i = 12; i >= 1; i--) {
             LocalDate måned = stp.minusMonths(i);
             assertThat(perioder.get(12 - i).getFom()).isEqualTo(måned.withDayOfMonth(1));
@@ -52,7 +52,7 @@ class FinnPerioderUtenYtelseTest {
         List<Periode> perioder = FinnPerioderUtenYtelse.finnPerioder(inntektsgrunnlag, stp, res);
 
         // Assert
-        assertThat(perioder.size()).isEqualTo(7);
+        assertThat(perioder).hasSize(7);
         for (int i = 12; i >= 6; i--) {
             LocalDate måned = stp.minusMonths(i);
             assertThat(perioder.get(12 - i).getFom()).isEqualTo(måned.withDayOfMonth(1));
@@ -77,7 +77,7 @@ class FinnPerioderUtenYtelseTest {
         List<Periode> perioder = FinnPerioderUtenYtelse.finnPerioder(inntektsgrunnlag, stp, res);
 
         // Assert
-        assertThat(perioder.size()).isEqualTo(6);
+        assertThat(perioder).hasSize(6);
         for (int i = 12; i >= 7; i--) {
             LocalDate måned = stp.minusMonths(i);
             assertThat(perioder.get(12 - i).getFom()).isEqualTo(måned.withDayOfMonth(1));
@@ -101,7 +101,7 @@ class FinnPerioderUtenYtelseTest {
         List<Periode> perioder = FinnPerioderUtenYtelse.finnPerioder(inntektsgrunnlag, stp, res);
 
         // Assert
-        assertThat(perioder.size()).isEqualTo(6);
+        assertThat(perioder).hasSize(6);
         for (int i = 6; i >= 1; i--) {
             LocalDate måned = stp.minusMonths(i);
             assertThat(perioder.get(6 - i).getFom()).isEqualTo(måned.withDayOfMonth(1));
@@ -126,9 +126,9 @@ class FinnPerioderUtenYtelseTest {
         List<Periode> perioder = FinnPerioderUtenYtelse.finnPerioder(inntektsgrunnlag, stp, res);
 
         // Assert
-        assertThat(perioder.size()).isEqualTo(6);
+        assertThat(perioder).hasSize(6);
         for (int i = 6; i >= 1; i--) {
-            LocalDate måned = stp.minusMonths(i*2);
+            LocalDate måned = stp.minusMonths(i* 2L);
             assertThat(perioder.get(6 - i).getFom()).isEqualTo(måned.withDayOfMonth(1));
             assertThat(perioder.get(6 - i).getTom()).isEqualTo(måned.withDayOfMonth(måned.lengthOfMonth()));
         }
@@ -146,7 +146,7 @@ class FinnPerioderUtenYtelseTest {
         List<Periode> perioder = FinnPerioderUtenYtelse.finnPerioder(inntektsgrunnlag, stp, res);
 
         // Assert
-        assertThat(perioder.size()).isEqualTo(6);
+        assertThat(perioder).hasSize(6);
         for (int i = 16; i >= 11; i--) {
             LocalDate måned = stp.minusMonths(i);
             assertThat(perioder.get(16 - i).getFom()).isEqualTo(måned.withDayOfMonth(1));
@@ -166,7 +166,7 @@ class FinnPerioderUtenYtelseTest {
         List<Periode> perioder = FinnPerioderUtenYtelse.finnPerioder(inntektsgrunnlag, stp, res);
 
         // Assert
-        assertThat(perioder.size()).isEqualTo(6);
+        assertThat(perioder).hasSize(6);
         for (int i = 20; i >= 15; i--) {
             LocalDate måned = stp.minusMonths(i);
             assertThat(perioder.get(20 - i).getFom()).isEqualTo(måned.withDayOfMonth(1));
@@ -186,7 +186,7 @@ class FinnPerioderUtenYtelseTest {
         List<Periode> perioder = FinnPerioderUtenYtelse.finnPerioder(inntektsgrunnlag, stp, res);
 
         // Assert
-        assertThat(perioder.size()).isEqualTo(6);
+        assertThat(perioder).hasSize(6);
         for (int i = 36; i >= 31; i--) {
             LocalDate måned = stp.minusMonths(i);
             assertThat(perioder.get(36 - i).getFom()).isEqualTo(måned.withDayOfMonth(1));
@@ -206,7 +206,7 @@ class FinnPerioderUtenYtelseTest {
         List<Periode> perioder = FinnPerioderUtenYtelse.finnPerioder(inntektsgrunnlag, stp, res);
 
         // Assert
-        assertThat(perioder.size()).isEqualTo(0);
+        assertThat(perioder).isEmpty();
     }
 
     @Test
@@ -221,7 +221,7 @@ class FinnPerioderUtenYtelseTest {
         List<Periode> perioder = FinnPerioderUtenYtelse.finnPerioder(inntektsgrunnlag, stp, res);
 
         // Assert
-        assertThat(perioder.size()).isEqualTo(6);
+        assertThat(perioder).hasSize(6);
     }
 
     @Test
@@ -236,7 +236,7 @@ class FinnPerioderUtenYtelseTest {
         List<Periode> perioder = FinnPerioderUtenYtelse.finnPerioder(inntektsgrunnlag, stp, res);
 
         // Assert
-        assertThat(perioder.size()).isEqualTo(6);
+        assertThat(perioder).hasSize(6);
     }
 
     private Periodeinntekt byggDPEllerAAPYtelse(Periode periode) {

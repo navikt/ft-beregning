@@ -21,7 +21,7 @@ class OmfordelFraAktiviteterUtenArbeidsforhold extends LeafSpecification<FordelM
 
 	private static final String ID = "FP_BR 22.3.6";
 	private static final String BESKRIVELSE = "Flytt beregningsgrunnlag fra aktivitet uten arbeidsforhold";
-	private final Comparator<FordelAndelModell> AVKORTING_COMPARATOR = Comparator.comparingInt(a -> a.getAktivitetStatus().getAvkortingPrioritet());
+	private static final Comparator<FordelAndelModell> AVKORTING_COMPARATOR = Comparator.comparingInt(a -> a.getAktivitetStatus().getAvkortingPrioritet());
 
 	private Arbeidsforhold arbeidsforholdForAndelÅFordeleTil;
 	private BigDecimal utbetalingsgradForAndelÅFordeleTil;

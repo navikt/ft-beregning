@@ -86,7 +86,7 @@ class FastsettBeregnetPrÅr extends LeafSpecification<BeregningsgrunnlagPeriode>
         return frilans ? BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_FRILANSER : BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_ARBEIDSTAKER;
     }
 
-    private BeregningsgrunnlagHjemmel finnHjemmelForArbeidstakerK9(YtelsesSpesifiktGrunnlag ompGrunnlag,
+    private BeregningsgrunnlagHjemmel finnHjemmelForArbeidstakerK9(YtelsesSpesifiktGrunnlag grunnlag,
                                                                    boolean kombinasjon,
                                                                    boolean frilans) {
         if (kombinasjon) {
@@ -95,7 +95,7 @@ class FastsettBeregnetPrÅr extends LeafSpecification<BeregningsgrunnlagPeriode>
         if (frilans) {
             return BeregningsgrunnlagHjemmel.K9_HJEMMEL_ARBEIDSTAKER_OG_FRILANSER;
         }
-        if (ompGrunnlag instanceof  OmsorgspengerGrunnlag && !((OmsorgspengerGrunnlag) ompGrunnlag).omfattesAvKap9Paragraf9()) {
+        if (grunnlag instanceof  OmsorgspengerGrunnlag ompGrunnlag && !ompGrunnlag.omfattesAvKap9Paragraf9()) {
             return BeregningsgrunnlagHjemmel.K9_HJEMMEL_BARE_ARBEIDSTAKER_REFUSJON;
         }
         return BeregningsgrunnlagHjemmel.K9_HJEMMEL_BARE_ARBEIDSTAKER_MED_AVVIKSVURDERING;

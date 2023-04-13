@@ -233,7 +233,7 @@ public class BeregningsgrunnlagPeriode {
 	}
 
 	public Optional<LocalDate> getFomDatoForIndividuellSammenligningATFL_SN() {
-		return beregningsgrunnlag.getFomDatoForIndividuellSammenligningATFL_SN();
+		return beregningsgrunnlag.getFomDatoForIndividuellSammenligningATFLSN();
 	}
 
 	public static class Builder {

@@ -1,14 +1,10 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.fordel;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelAndelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelModell;
@@ -19,7 +15,11 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Ar
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
 import no.nav.fpsak.nare.ServiceArgument;
 
-public class OmfordelBeregningsgrunnlagTilArbeidsforholdTest {
+import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.jupiter.api.Test;
+
+class OmfordelBeregningsgrunnlagTilArbeidsforholdTest {
 
     private static final LocalDate STP = LocalDate.now();
     private static final String ORGNR1 = "995";
@@ -46,7 +46,7 @@ public class OmfordelBeregningsgrunnlagTilArbeidsforholdTest {
 
         // Assert
         List<FordelAndelModell> arbeidsforhold = periode.getAlleAndelerForStatus(AktivitetStatus.AT);
-        assertThat(arbeidsforhold.size()).isEqualTo(3);
+        assertThat(arbeidsforhold).hasSize(3);
         assertThat(a1.getFordeltPrÅr()).isEmpty();
         assertThat(a1.getBruttoPrÅr().orElse(BigDecimal.ZERO)).isEqualByComparingTo(BigDecimal.valueOf(100_000));
         var andelFraSN = arbeidsforhold.stream()
@@ -77,7 +77,7 @@ public class OmfordelBeregningsgrunnlagTilArbeidsforholdTest {
 
         // Assert
         List<FordelAndelModell> arbeidsforhold = periode.getAlleAndelerForStatus(AktivitetStatus.AT);
-        assertThat(arbeidsforhold.size()).isEqualTo(3);
+        assertThat(arbeidsforhold).hasSize(3);
         assertThat(a1.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.valueOf(150_000));
         var andelFraSN = arbeidsforhold.stream()
 		        .filter(a -> matcherOrgnr(a, ORGNR1) && a.getInntektskategori().equals(Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE))
@@ -113,7 +113,7 @@ public class OmfordelBeregningsgrunnlagTilArbeidsforholdTest {
         List<FordelAndelModell> arbeidsforhold = periode.getAlleAndelerForStatus(AktivitetStatus.AT);
 		assertThat(periode.getEnesteAndelForStatus(AktivitetStatus.FL)).isPresent();
 		assertThat(periode.getEnesteAndelForStatus(AktivitetStatus.SN)).isPresent();
-		assertThat(arbeidsforhold.size()).isEqualTo(4);
+		assertThat(arbeidsforhold).hasSize(4);
         assertThat(a1.getFordeltPrÅr()).isEmpty();
         var andelFraSN = arbeidsforhold.stream()
 		        .filter(a -> matcherOrgnr(a, ORGNR1) && a.getInntektskategori().equals(Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE))
@@ -154,7 +154,7 @@ public class OmfordelBeregningsgrunnlagTilArbeidsforholdTest {
 
         // Assert
         List<FordelAndelModell> arbeidsforhold = periode.getAlleAndelerForStatus(AktivitetStatus.AT);
-        assertThat(arbeidsforhold.size()).isEqualTo(4);
+        assertThat(arbeidsforhold).hasSize(4);
         assertThat(a1.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.valueOf(125_000));
         var andelFraSN = arbeidsforhold.stream()
 		        .filter(a -> matcherOrgnr(a, ORGNR1) && a.getInntektskategori().equals(Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE))

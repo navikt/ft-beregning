@@ -1,7 +1,7 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.ytelse.svp;
 
 import static no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil.TIDENES_ENDE;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -237,7 +237,7 @@ public class RegelFinnGrenseverdiTest {
 		//Act
 		kjørRegel(periode);
 
-		assertThat(periode.getGrenseverdi().compareTo(BigDecimal.valueOf(450_000))).isEqualTo(0);
+		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(450_000));
 	}
 
 

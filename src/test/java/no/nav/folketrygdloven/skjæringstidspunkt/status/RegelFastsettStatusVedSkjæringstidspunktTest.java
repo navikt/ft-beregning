@@ -1,6 +1,6 @@
 package no.nav.folketrygdloven.skjæringstidspunkt.status;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 
@@ -26,7 +26,7 @@ class RegelFastsettStatusVedSkjæringstidspunktTest {
             "12356794", null));
         kjørRegel(regelModell);
 
-        assertThat(regelModell.getBeregningsgrunnlagPrStatusListe().size()).isEqualTo(1);
+        assertThat(regelModell.getBeregningsgrunnlagPrStatusListe()).hasSize(1);
     }
 
     @Test
@@ -39,7 +39,7 @@ class RegelFastsettStatusVedSkjæringstidspunktTest {
             "12356794", null));
         kjørRegel(regelModell);
 
-        assertThat(regelModell.getBeregningsgrunnlagPrStatusListe().size()).isEqualTo(1);
+        assertThat(regelModell.getBeregningsgrunnlagPrStatusListe()).hasSize(1);
     }
 
     private RegelResultat kjørRegel(AktivitetStatusModell regelModell) {

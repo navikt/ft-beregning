@@ -50,12 +50,12 @@ public class AndelGradering {
         }
 
 	    public Builder medEksisterendeAktivitetFraDato(LocalDate fom) {
-		    kladd.nyAktivitetTidslinje = new LocalDateTimeline<Boolean>(fom, TIDENES_ENDE, false);
+		    kladd.nyAktivitetTidslinje = new LocalDateTimeline<>(fom, TIDENES_ENDE, false);
 		    return this;
 	    }
 
 	    public Builder medNyAktivitetFraDato(LocalDate fom) {
-		    kladd.nyAktivitetTidslinje = new LocalDateTimeline<Boolean>(fom, TIDENES_ENDE, true);
+		    kladd.nyAktivitetTidslinje = new LocalDateTimeline<>(fom, TIDENES_ENDE, true);
 		    return this;
 	    }
 

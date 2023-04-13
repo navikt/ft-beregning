@@ -26,7 +26,7 @@ public class Konstanter {
 	 * https://jira.adeo.no/browse/TFP-5171
 	 * Bør gjøres obligatorisk når tatt i bruk i kalkulus
 	 */
-	private LocalDate fomDatoForIndividuellSammenligningATFL_SN;
+	private LocalDate fomDatoForIndividuellSammenligningATFLSN;
 
 	public void setAntallGMilitærHarKravPå(int antallGMilitærHarKravPå) {
         this.antallGMilitærHarKravPå = antallGMilitærHarKravPå;
@@ -44,12 +44,12 @@ public class Konstanter {
         this.ytelsedagerIPrÅr = ytelsedagerIPrÅr;
     }
 
-	public Optional<LocalDate> getFomDatoForIndividuellSammenligningATFL_SN() {
-		return Optional.ofNullable(fomDatoForIndividuellSammenligningATFL_SN);
+	public Optional<LocalDate> getFomDatoForIndividuellSammenligningATFLSN() {
+		return Optional.ofNullable(fomDatoForIndividuellSammenligningATFLSN);
 	}
 
-	public void setFomDatoForIndividuellSammenligningATFL_SN(LocalDate fomDatoForIndividuellSammenligningATFL_SN) {
-		this.fomDatoForIndividuellSammenligningATFL_SN = fomDatoForIndividuellSammenligningATFL_SN;
+	public void setFomDatoForIndividuellSammenligningATFLSN(LocalDate fomDatoForIndividuellSammenligningATFLSN) {
+		this.fomDatoForIndividuellSammenligningATFLSN = fomDatoForIndividuellSammenligningATFLSN;
 	}
 
 	public void setAvviksgrenseProsent(BigDecimal avviksgrenseProsent) {

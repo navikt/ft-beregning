@@ -1,7 +1,6 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.SammenligningGrunnlagType;
@@ -22,14 +21,6 @@ public class SammenligningsGrunnlag {
 
     public BigDecimal getRapportertPrÅr() {
         return rapportertPrÅr;
-    }
-
-    /**
-     * @deprecated erstattes av #getAvvikPromilleUtenAvrunding
-     */
-    @Deprecated(forRemoval = true)
-    public Long getAvvikPromille() {
-        return avvikProsent.scaleByPowerOfTen(1).setScale(0, RoundingMode.HALF_UP).longValue();
     }
 
     public BigDecimal getAvvikPromilleUtenAvrunding() {

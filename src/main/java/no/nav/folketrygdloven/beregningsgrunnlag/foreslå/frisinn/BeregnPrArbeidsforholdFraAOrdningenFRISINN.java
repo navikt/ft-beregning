@@ -43,16 +43,15 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
 	@Override
 	public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
 		Map<String, Object> resultater = new HashMap<>();
-		if (arbeidsforhold.getFastsattAvSaksbehandler()) {
+		if (Boolean.TRUE.equals(arbeidsforhold.getFastsattAvSaksbehandler())) {
 			resultater.put("beregnetPrÅr", arbeidsforhold.getBeregnetPrÅr());
 			return beregnet(resultater);
 		}
 		Inntektsgrunnlag inntektsgrunnlag = grunnlag.getInntektsgrunnlag();
 		YtelsesSpesifiktGrunnlag ytelsesSpesifiktGrunnlag = grunnlag.getBeregningsgrunnlag().getYtelsesSpesifiktGrunnlag();
-		if (!(ytelsesSpesifiktGrunnlag instanceof FrisinnGrunnlag)) {
+		if (!(ytelsesSpesifiktGrunnlag instanceof FrisinnGrunnlag frisinnGrunnlag)) {
 			throw new IllegalStateException("Har ikke frisinngrunnlag for fastsetting av frilans, ugyldig tilstand");
 		}
-		FrisinnGrunnlag frisinnGrunnlag = (FrisinnGrunnlag) ytelsesSpesifiktGrunnlag;
 		LocalDate skjæringstidspunktOpptjening = frisinnGrunnlag.getSkjæringstidspunktOpptjening();
 		List<Periode> perioderSomSkalBrukesForInntekter = FinnPerioderUtenYtelse.finnPerioder(inntektsgrunnlag, skjæringstidspunktOpptjening);
 

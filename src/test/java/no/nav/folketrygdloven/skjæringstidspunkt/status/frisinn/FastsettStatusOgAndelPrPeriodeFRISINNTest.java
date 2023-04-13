@@ -1,7 +1,7 @@
 package no.nav.folketrygdloven.skjæringstidspunkt.status.frisinn;
 
 import static no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil.TIDENES_ENDE;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -43,7 +43,7 @@ class FastsettStatusOgAndelPrPeriodeFRISINNTest {
         List<BeregningsgrunnlagPrStatus> statusListe = kjørRegel(regelmodell);
 
         // Assert
-        assertThat(statusListe.size()).isEqualTo(1);
+        assertThat(statusListe).hasSize(1);
         assertThat(statusListe.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.SN);
 
     }
@@ -65,7 +65,7 @@ class FastsettStatusOgAndelPrPeriodeFRISINNTest {
         List<BeregningsgrunnlagPrStatus> statusListe = kjørRegel(regelmodell);
 
         // Assert
-        assertThat(statusListe.size()).isEqualTo(1);
+        assertThat(statusListe).hasSize(1);
         assertThat(statusListe.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.SN);
 
     }
@@ -88,7 +88,7 @@ class FastsettStatusOgAndelPrPeriodeFRISINNTest {
         List<BeregningsgrunnlagPrStatus> statusListe = kjørRegel(regelmodell);
 
         // Assert
-        assertThat(statusListe.size()).isEqualTo(2);
+        assertThat(statusListe).hasSize(2);
         assertThat(statusListe.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.ATFL);
         assertThat(statusListe.get(1).getAktivitetStatus()).isEqualTo(AktivitetStatus.SN);
 
@@ -112,7 +112,7 @@ class FastsettStatusOgAndelPrPeriodeFRISINNTest {
         List<BeregningsgrunnlagPrStatus> statusListe = kjørRegel(regelmodell);
 
         // Assert
-        assertThat(statusListe.size()).isEqualTo(1);
+        assertThat(statusListe).hasSize(1);
         assertThat(statusListe.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.SN);
     }
 
@@ -134,7 +134,7 @@ class FastsettStatusOgAndelPrPeriodeFRISINNTest {
         List<BeregningsgrunnlagPrStatus> statusListe = kjørRegel(regelmodell);
 
         // Assert
-        assertThat(statusListe.size()).isEqualTo(2);
+        assertThat(statusListe).hasSize(2);
         assertThat(statusListe.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.SN);
         assertThat(statusListe.get(1).getAktivitetStatus()).isEqualTo(AktivitetStatus.ATFL);
     }

@@ -21,7 +21,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Sammenlign
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.Resultat;
 
-public class SjekkÅrsinntektMotSammenligningsgrunnlagTest {
+class SjekkÅrsinntektMotSammenligningsgrunnlagTest {
     private Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("12345");
 
     @Test
@@ -40,7 +40,7 @@ public class SjekkÅrsinntektMotSammenligningsgrunnlagTest {
         //Assert
         assertThat(resultat.result()).isEqualTo(Resultat.JA);
 	    var sgPrStatusResultat = grunnlag.getSammenligningsgrunnlagForStatus(SammenligningGrunnlagType.AT_FL).orElseThrow();
-	    assertThat(sgPrStatusResultat.getAvvikPromille()).isEqualTo(1000L);
+	    assertThat(sgPrStatusResultat.getAvvikPromilleUtenAvrunding()).isEqualByComparingTo(BigDecimal.valueOf(1000));
 
     }
 
@@ -76,7 +76,7 @@ public class SjekkÅrsinntektMotSammenligningsgrunnlagTest {
         assertThat(resultat.result()).isEqualTo(Resultat.NEI);
 
 	    var sgPrStatusResultat = grunnlag.getSammenligningsgrunnlagForStatus(SammenligningGrunnlagType.AT_FL).orElseThrow();
-	    assertThat(sgPrStatusResultat.getAvvikPromille()).isEqualTo(250);
+	    assertThat(sgPrStatusResultat.getAvvikPromilleUtenAvrunding()).isEqualByComparingTo(BigDecimal.valueOf(250));
 	    assertThat(sgPrStatusResultat.getAvvikProsent()).isEqualByComparingTo(BigDecimal.valueOf(25));
 
     }
@@ -101,7 +101,7 @@ public class SjekkÅrsinntektMotSammenligningsgrunnlagTest {
         assertThat(resultat.result()).isEqualTo(Resultat.JA);
 
 	    var sgPrStatusResultat = grunnlag.getSammenligningsgrunnlagForStatus(SammenligningGrunnlagType.AT_FL).orElseThrow();
-	    assertThat(sgPrStatusResultat.getAvvikPromille()).isEqualTo(250);
+	    assertThat(sgPrStatusResultat.getAvvikPromilleUtenAvrunding()).isEqualByComparingTo(BigDecimal.valueOf(250.01));
 	    assertThat(sgPrStatusResultat.getAvvikProsent()).isEqualByComparingTo(BigDecimal.valueOf(25.001));
     }
 

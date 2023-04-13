@@ -1,6 +1,6 @@
 package no.nav.folketrygdloven.skjæringstidspunkt.status;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -31,7 +31,7 @@ class FastsettStatusOgAndelPrPeriodeTest {
         List<BeregningsgrunnlagPrStatus> statusListe = kjørRegel(regelmodell);
 
         // Assert
-        assertThat(statusListe.size()).isEqualTo(1);
+        assertThat(statusListe).hasSize(1);
         assertThat(statusListe.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.ATFL);
 		verifiserArbeidsforhold(statusListe.get(0).getArbeidsforholdList(), "999999999");
     }
@@ -48,7 +48,7 @@ class FastsettStatusOgAndelPrPeriodeTest {
 		List<BeregningsgrunnlagPrStatus> statusListe = kjørRegel(regelmodell);
 
 		// Assert
-		assertThat(statusListe.size()).isEqualTo(1);
+		assertThat(statusListe).hasSize(1);
 		assertThat(statusListe.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.ATFL);
 		verifiserArbeidsforhold(statusListe.get(0).getArbeidsforholdList(), "999999999");
 		verifiserArbeidsforhold(statusListe.get(0).getArbeidsforholdList(), "8888888888888");
@@ -66,7 +66,7 @@ class FastsettStatusOgAndelPrPeriodeTest {
 		List<BeregningsgrunnlagPrStatus> statusListe = kjørRegel(regelmodell);
 
 		// Assert
-		assertThat(statusListe.size()).isEqualTo(1);
+		assertThat(statusListe).hasSize(1);
 		assertThat(statusListe.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.SN);
 	}
 
@@ -81,7 +81,7 @@ class FastsettStatusOgAndelPrPeriodeTest {
 		List<BeregningsgrunnlagPrStatus> statusListe = kjørRegel(regelmodell);
 
 		// Assert
-		assertThat(statusListe.size()).isEqualTo(1);
+		assertThat(statusListe).hasSize(1);
 		assertThat(statusListe.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.BA);
 	}
 
@@ -97,7 +97,7 @@ class FastsettStatusOgAndelPrPeriodeTest {
 		List<BeregningsgrunnlagPrStatus> statusListe = kjørRegel(regelmodell);
 
 		// Assert
-		assertThat(statusListe.size()).isEqualTo(1);
+		assertThat(statusListe).hasSize(1);
 		assertThat(statusListe.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.DP);
 	}
 

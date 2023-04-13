@@ -1,7 +1,7 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.perioder.gradering;
 
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -41,9 +41,9 @@ class FastsettGraderingPeriodeRegelTest {
 				.build();
 		List<SplittetPeriode> perioder = new ArrayList<>();
 		kjørRegel(inputMedGraderingFraStartForNyttArbeid, perioder);
-		assertThat(perioder.size()).isEqualTo(2);
-		assertThat(perioder.get(0).getNyeAndeler().size()).isEqualTo(1);
-		assertThat(perioder.get(1).getNyeAndeler().size()).isEqualTo(1);
+		assertThat(perioder).hasSize(2);
+		assertThat(perioder.get(0).getNyeAndeler()).hasSize(1);
+		assertThat(perioder.get(1).getNyeAndeler()).hasSize(1);
 	}
 
 

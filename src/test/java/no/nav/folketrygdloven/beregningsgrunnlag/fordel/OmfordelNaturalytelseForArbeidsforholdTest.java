@@ -1,6 +1,6 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.fordel;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -49,7 +49,7 @@ class OmfordelNaturalytelseForArbeidsforholdTest {
         new OmfordelNaturalytelseForArbeidsforhold(new FordelModell(periode)).omfordelForArbeidsforhold(aktivitet, (periode1) -> Optional.of(arbeidMedBortfaltNatYtelsePrÅr));
 
         // Assert
-        assertThat(arbeidMedBortfaltNatYtelsePrÅr.getNaturalytelseBortfaltPrÅr().get().compareTo(BigDecimal.ZERO) == 0).isTrue();
+        assertThat(arbeidMedBortfaltNatYtelsePrÅr.getNaturalytelseBortfaltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.ZERO);
         assertThat(aktivitet.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.valueOf(100_000));
     }
 

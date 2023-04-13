@@ -1,6 +1,6 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.fordel;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -16,7 +16,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
 
-public class OmfordelFraArbeidTest {
+class OmfordelFraArbeidTest {
 
 	private static final LocalDate STP = LocalDate.now();
 	private static final String ORGNR1 = "995";
@@ -49,7 +49,7 @@ public class OmfordelFraArbeidTest {
 
 		// Assert
 		assertThat(arbeidMedBortfaltNatYtelsePrÅr.getNaturalytelseBortfaltPrÅr().orElseThrow()).isEqualTo(BigDecimal.valueOf(50_000));
-		assertThat(arbeidMedBortfaltNatYtelsePrÅr.getFordeltPrÅr().orElseThrow().compareTo(BigDecimal.ZERO) == 0).isTrue();
+		assertThat(arbeidMedBortfaltNatYtelsePrÅr.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.ZERO);
 		assertThat(aktivitet.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.valueOf(100_000));
 	}
 
@@ -77,8 +77,8 @@ public class OmfordelFraArbeidTest {
 		kjørRegel(aktivitet, periode);
 
 		// Assert
-		assertThat(arbeidMedBortfaltNatYtelsePrÅr.getNaturalytelseBortfaltPrÅr().orElseThrow().compareTo(BigDecimal.ZERO) == 0 ).isTrue();
-		assertThat(arbeidMedBortfaltNatYtelsePrÅr.getFordeltPrÅr().orElseThrow().compareTo(BigDecimal.ZERO) == 0).isTrue();
+		assertThat(arbeidMedBortfaltNatYtelsePrÅr.getNaturalytelseBortfaltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.ZERO);
+		assertThat(arbeidMedBortfaltNatYtelsePrÅr.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.ZERO);
 		assertThat(aktivitet.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.valueOf(150_000));
 	}
 
@@ -127,8 +127,8 @@ public class OmfordelFraArbeidTest {
 		kjørRegel(a1, periode);
 
 		// Assert
-		assertThat(a1.getFordeltPrÅr().orElseThrow().compareTo(BigDecimal.valueOf(150_000)) == 0).isTrue();
-		assertThat(a2.getFordeltPrÅr().orElseThrow().compareTo(BigDecimal.ZERO) == 0).isTrue();
+		assertThat(a1.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.valueOf(150_000));
+		assertThat(a2.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.ZERO);
 	}
 
 

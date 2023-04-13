@@ -29,7 +29,6 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
 
 
     public static final String ORGNR = "14263547852";
-    private static Long generatedId = 1L;
     private final Offset<Double> offset = Offset.offset(0.01);
 
     private static final LocalDate skjæringstidspunkt = LocalDate.of(2020, Month.MARCH, 15);
@@ -60,7 +59,7 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
         RegelResultat resultat = kjørRegel(grunnlag);
 
         //Assert
-        assertThat(resultat.getMerknader()).hasSize(0);
+        assertThat(resultat.getMerknader()).isEmpty();
         assertThat(grunnlag.getBruttoPrÅr().doubleValue()).isEqualTo(beregnetPrÅr, offset);
     }
 
@@ -75,7 +74,7 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
         RegelResultat resultat = kjørRegel(grunnlag);
 
         //Assert
-        assertThat(resultat.getMerknader()).hasSize(0);
+        assertThat(resultat.getMerknader()).isEmpty();
         assertThat(grunnlag.getBruttoPrÅr().doubleValue()).isEqualTo(beregnetPrÅr, offset);
     }
 
@@ -105,7 +104,7 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
         RegelResultat resultat = kjørRegel(grunnlag);
 
         //Assert
-        assertThat(resultat.getMerknader()).hasSize(0);
+        assertThat(resultat.getMerknader()).isEmpty();
         assertThat(grunnlag.getBruttoPrÅr().doubleValue()).isEqualTo(beregnetPrÅr, offset);
     }
 
@@ -120,7 +119,7 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
         RegelResultat resultat = kjørRegel(grunnlag);
 
         //Assert
-        assertThat(resultat.getMerknader()).hasSize(0);
+        assertThat(resultat.getMerknader()).isEmpty();
         assertThat(grunnlag.getBruttoPrÅr().doubleValue()).isEqualTo(beregnetPrÅr, offset);
     }
 
@@ -154,7 +153,7 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
         RegelResultat resultat = kjørRegel(grunnlag);
 
         //Assert
-        assertThat(resultat.getMerknader()).hasSize(0);
+        assertThat(resultat.getMerknader()).isEmpty();
         assertThat(grunnlag.getBruttoPrÅr().doubleValue()).isEqualTo(beregnetPrÅrFL + beregnetPrÅrSN, offset);
     }
 
@@ -170,7 +169,7 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
         RegelResultat resultat = kjørRegel(grunnlag);
 
         //Assert
-        assertThat(resultat.getMerknader()).hasSize(0);
+        assertThat(resultat.getMerknader()).isEmpty();
         assertThat(grunnlag.getBruttoPrÅr().doubleValue()).isEqualTo(beregnetPrÅrFL + beregnetPrÅrSN, offset);
     }
 
@@ -186,7 +185,7 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
         RegelResultat resultat = kjørRegel(grunnlag);
 
         //Assert
-        assertThat(resultat.getMerknader()).hasSize(0);
+        assertThat(resultat.getMerknader()).isEmpty();
         assertThat(grunnlag.getBruttoPrÅr().doubleValue()).isEqualTo(beregnetPrÅrFL + beregnetPrÅrSN, offset);
     }
 

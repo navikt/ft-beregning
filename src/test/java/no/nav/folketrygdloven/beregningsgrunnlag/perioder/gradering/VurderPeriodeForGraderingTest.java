@@ -511,7 +511,7 @@ public class VurderPeriodeForGraderingTest {
 	}
 
 	private void assertGraderingFom(List<PeriodeSplittData> resultatList, List<LocalDate> foms) {
-		assertThat(resultatList.size()).isEqualTo(foms.size());
+		assertThat(resultatList).hasSameSizeAs(foms);
 		for (int i = 0; i < resultatList.size(); i++) {
 			PeriodeSplittData resultat = resultatList.get(i);
 			assertThat(resultat.getFom()).as("fom").isEqualTo(foms.get(i));

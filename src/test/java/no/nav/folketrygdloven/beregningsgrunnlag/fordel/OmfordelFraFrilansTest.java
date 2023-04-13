@@ -1,6 +1,6 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.fordel;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -21,7 +21,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
 
-public class OmfordelFraFrilansTest {
+class OmfordelFraFrilansTest {
 
     private static final LocalDate STP = LocalDate.now();
     private static final String ORGNR = "995";
@@ -57,7 +57,7 @@ public class OmfordelFraFrilansTest {
 
         // Assert
 	    var alleArbeidsforhold = periode.getAlleAndelerForStatus(AktivitetStatus.AT);
-	    assertThat(alleArbeidsforhold.size()).isEqualTo(2);
+	    assertThat(alleArbeidsforhold).hasSize(2);
         assertThat(totalBrutto(alleArbeidsforhold)).isEqualByComparingTo(refusjonskravPrÅr);
         var flyttetFraFL = alleArbeidsforhold.stream().filter(a ->
             a.getArbeidsforhold().equals(arbeidsforhold.getArbeidsforhold())
@@ -88,7 +88,7 @@ public class OmfordelFraFrilansTest {
 	    var alleArbeidsforhold = periode.getAlleAndelerForStatus(AktivitetStatus.AT);
 
         // Assert
-        assertThat(alleArbeidsforhold.size()).isEqualTo(2);
+        assertThat(alleArbeidsforhold).hasSize(2);
         assertThat(totalBrutto(alleArbeidsforhold)).isEqualByComparingTo(BigDecimal.valueOf(150_000));
         var flyttetFraFL = alleArbeidsforhold.stream()
             .filter(a -> a.getArbeidsforhold().equals(arbeidsforhold.getArbeidsforhold()) && a.getInntektskategori().equals(Inntektskategori.FRILANSER)).findFirst().orElseThrow();
@@ -118,7 +118,7 @@ public class OmfordelFraFrilansTest {
 
         // Assert
 	    var alleArbeidsforhold = periode.getAlleAndelerForStatus(AktivitetStatus.AT);
-	    assertThat(alleArbeidsforhold.size()).isEqualTo(2);
+	    assertThat(alleArbeidsforhold).hasSize(2);
         assertThat(totalBrutto(alleArbeidsforhold)).isEqualByComparingTo(BigDecimal.valueOf(200_000));
         var flyttetFraFL = alleArbeidsforhold.stream()
             .filter(a -> a.getArbeidsforhold().equals(arbeidsforhold.getArbeidsforhold()) && a.getInntektskategori().equals(Inntektskategori.FRILANSER)).findFirst().orElseThrow();
