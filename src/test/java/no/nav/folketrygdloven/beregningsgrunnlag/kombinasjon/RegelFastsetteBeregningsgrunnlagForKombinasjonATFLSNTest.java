@@ -517,7 +517,8 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
         assertThat(sg).isNotNull();
         assertThat(sg.getRapportertPrÅr()).isCloseTo(beløp, within(BigDecimal.valueOf(0.01)));
         assertThat(sg.getAvvikProsent()).isCloseTo(prosent, within(BigDecimal.valueOf(0.01)));
-        assertThat(sg.getAvvikPromille()).isEqualTo(prosent.movePointRight(1).setScale(0, RoundingMode.HALF_UP).longValue());
+        assertThat(sg.getAvvikPromilleUtenAvrunding().setScale(0, RoundingMode.HALF_UP))
+		        .isEqualByComparingTo(prosent.movePointRight(1).setScale(0, RoundingMode.HALF_UP));
     }
 
     private void kopierBeregningsgrunnlagPeriode(BeregningsgrunnlagPeriode grunnlag, BeregningsgrunnlagPeriode kopi) {

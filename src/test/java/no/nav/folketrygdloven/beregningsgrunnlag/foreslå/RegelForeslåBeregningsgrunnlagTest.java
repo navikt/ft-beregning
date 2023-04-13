@@ -51,7 +51,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.fp.ForeldrepengerGrunnlag;
 
-public class RegelForeslåBeregningsgrunnlagTest {
+class RegelForeslåBeregningsgrunnlagTest {
 
 	private LocalDate skjæringstidspunkt;
 	private String orgnr;
@@ -201,7 +201,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
 		// Assert
 		assertThat(resultat.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5038");
 		assertThat(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).samletNaturalytelseBortfaltMinusTilkommetPrÅr()).isEqualTo(BigDecimal.valueOf(24000));
-		assertThat(grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.AT_FL).getAvvikPromille()).isEqualTo(400);
+		assertThat(grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.AT_FL).getAvvikPromilleUtenAvrunding()).isEqualByComparingTo(BigDecimal.valueOf(400));
 		verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_ARBEIDSTAKER, AktivitetStatus.ATFL, 12 * månedsinntekt.doubleValue());
 		verifiserBeregningsgrunnlagBeregnet(grunnlag, 12 * månedsinntekt.doubleValue());
 	}
@@ -415,7 +415,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
 
 		assertThat(resultat.getRegelSporing().sporing()).isNotBlank();
 		//SÅ skal brutto beregningsgrunnlag i beregningsperioden settes til 0
-		assertThat(grunnlag.getBruttoPrÅr().compareTo(BigDecimal.ZERO)).isZero();
+		assertThat(grunnlag.getBruttoPrÅr()).isEqualByComparingTo(BigDecimal.ZERO);
 		// skal beregningsperioden settes til de tre siste månedene før skjæringstidspunktet for beregning
 		LocalDate fom = skjæringstidspunkt.minusMonths(3).withDayOfMonth(1);
 		LocalDate tom = skjæringstidspunkt.minusMonths(1).with(TemporalAdjusters.lastDayOfMonth());
@@ -529,7 +529,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
 
 		assertThat(resultat.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5038");
 		assertThat(førstePeriode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(240000));
-		assertThat(førstePeriode.getSammenligningsGrunnlagForType(SammenligningGrunnlagType.AT_FL).get().getAvvikPromilleUtenAvrunding()).isEqualByComparingTo(BigDecimal.valueOf(500));
+		assertThat(førstePeriode.getSammenligningsGrunnlagForType(SammenligningGrunnlagType.AT_FL).orElseThrow().getAvvikPromilleUtenAvrunding()).isEqualByComparingTo(BigDecimal.valueOf(500));
 		verifiserBeregningsgrunnlagBruttoPrPeriodeType(førstePeriode, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, AktivitetStatus.ATFL, 12 * månedsinntekt.doubleValue());
 		verifiserBeregningsgrunnlagBeregnet(førstePeriode, 12 * månedsinntekt.doubleValue());
 	}
