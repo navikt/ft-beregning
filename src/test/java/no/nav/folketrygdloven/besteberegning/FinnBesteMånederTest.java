@@ -5,7 +5,7 @@ import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenar
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.GSNITT_2016;
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.GSNITT_2017;
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.GSNITT_2018;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -16,7 +16,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.RelatertYtelseType;
 
@@ -45,7 +44,6 @@ class FinnBesteMånederTest {
 	public static final List<Grunnbeløp> GRUNNBELØP_SATSER = GRUNNBELØPLISTE;
 
 	private List<Ytelsegrunnlag> alleYtelsegrunnlag = new ArrayList<>();
-	public static final BigDecimal G_VERDI = BigDecimal.valueOf(100_000);
 	public static final LocalDate SKJÆRINGSTIDSPUNKT_OPPTJENING = LocalDate.of(2019, 11, 1);
 	public static final String ORGNR = "123467890";
 	public static final String ORGNR2 = "434643243";
@@ -64,7 +62,7 @@ class FinnBesteMånederTest {
 
 	    // Assert
 		List<BeregnetMånedsgrunnlag> besteMåneder = regelmodell.getOutput().getBesteMåneder();
-		assertThat(besteMåneder.size()).isEqualTo(6);
+		assertThat(besteMåneder).hasSize(6);
 		assertThat(besteMåneder.get(0).getMåned()).isEqualTo(YearMonth.of(2019, 10));
 		assertThat(besteMåneder.get(1).getMåned()).isEqualTo(YearMonth.of(2019, 9));
 		assertThat(besteMåneder.get(2).getMåned()).isEqualTo(YearMonth.of(2019, 8));
@@ -90,7 +88,7 @@ class FinnBesteMånederTest {
 
 		// Assert
 		List<BeregnetMånedsgrunnlag> besteMåneder = regelmodell.getOutput().getBesteMåneder();
-		assertThat(besteMåneder.size()).isEqualTo(6);
+		assertThat(besteMåneder).hasSize(6);
 		assertThat(besteMåneder.get(0).getMåned()).isEqualTo(YearMonth.of(2019, 6));
 		assertThat(besteMåneder.get(1).getMåned()).isEqualTo(YearMonth.of(2019, 5));
 		assertThat(besteMåneder.get(2).getMåned()).isEqualTo(YearMonth.of(2019, 4));
@@ -116,7 +114,7 @@ class FinnBesteMånederTest {
 
 		// Assert
 		List<BeregnetMånedsgrunnlag> besteMåneder = regelmodell.getOutput().getBesteMåneder();
-		assertThat(besteMåneder.size()).isEqualTo(6);
+		assertThat(besteMåneder).hasSize(6);
 		assertThat(besteMåneder.get(0).getMåned()).isEqualTo(YearMonth.of(2019, 10));
 		assertThat(besteMåneder.get(1).getMåned()).isEqualTo(YearMonth.of(2019, 8));
 		assertThat(besteMåneder.get(2).getMåned()).isEqualTo(YearMonth.of(2019, 6));
@@ -142,7 +140,7 @@ class FinnBesteMånederTest {
 
 		// Assert
 		List<BeregnetMånedsgrunnlag> besteMåneder = regelmodell.getOutput().getBesteMåneder();
-		assertThat(besteMåneder.size()).isEqualTo(6);
+		assertThat(besteMåneder).hasSize(6);
 		assertThat(besteMåneder.get(0).getMåned()).isEqualTo(YearMonth.of(2019, 10));
 		assertThat(besteMåneder.get(1).getMåned()).isEqualTo(YearMonth.of(2019, 9));
 		assertThat(besteMåneder.get(2).getMåned()).isEqualTo(YearMonth.of(2019, 8));
@@ -165,7 +163,7 @@ class FinnBesteMånederTest {
 
 		// Assert
 		List<BeregnetMånedsgrunnlag> besteMåneder = regelmodell.getOutput().getBesteMåneder();
-		assertThat(besteMåneder.size()).isEqualTo(6);
+		assertThat(besteMåneder).hasSize(6);
 		assertThat(besteMåneder.get(0).getMåned()).isEqualTo(YearMonth.of(2019, 10));
 		assertThat(besteMåneder.get(1).getMåned()).isEqualTo(YearMonth.of(2019, 9));
 		assertThat(besteMåneder.get(2).getMåned()).isEqualTo(YearMonth.of(2019, 8));
@@ -188,7 +186,7 @@ class FinnBesteMånederTest {
 
 		// Assert
 		List<BeregnetMånedsgrunnlag> besteMåneder = regelmodell.getOutput().getBesteMåneder();
-		assertThat(besteMåneder.size()).isEqualTo(6);
+		assertThat(besteMåneder).hasSize(6);
 		assertThat(besteMåneder.get(0).getMåned()).isEqualTo(YearMonth.of(2019, 10));
 		assertThat(besteMåneder.get(1).getMåned()).isEqualTo(YearMonth.of(2019, 9));
 		assertThat(besteMåneder.get(2).getMåned()).isEqualTo(YearMonth.of(2019, 8));
@@ -215,7 +213,7 @@ class FinnBesteMånederTest {
 
 		// Assert
 		List<BeregnetMånedsgrunnlag> besteMåneder = regelmodell.getOutput().getBesteMåneder();
-		assertThat(besteMåneder.size()).isEqualTo(6);
+		assertThat(besteMåneder).hasSize(6);
 		assertThat(besteMåneder.get(0).getMåned()).isEqualTo(YearMonth.of(2019, 10));
 		assertThat(besteMåneder.get(0).finnSum()).isEqualByComparingTo(BigDecimal.valueOf(2*GRUNNBELØP_2019/12));
 		assertThat(besteMåneder.get(1).getMåned()).isEqualTo(YearMonth.of(2019, 9));
@@ -250,8 +248,8 @@ class FinnBesteMånederTest {
 		// Assert
 		List<BeregnetMånedsgrunnlag> besteMåneder = regelmodell.getOutput().getBesteMåneder().stream()
 				.sorted(Comparator.comparing(p -> p.getMåned().getMonth()))
-				.collect(Collectors.toList());
-		assertThat(besteMåneder.size()).isEqualTo(6);
+				.toList();
+		assertThat(besteMåneder).hasSize(6);
 		assertThat(besteMåneder.get(0).getMåned()).isEqualTo(YearMonth.of(2019, 2));
 		assertThat(besteMåneder.get(0).finnSum()).isEqualByComparingTo(BigDecimal.valueOf(15000));
 		assertThat(besteMåneder.get(1).getMåned()).isEqualTo(YearMonth.of(2019, 4));
@@ -288,8 +286,8 @@ class FinnBesteMånederTest {
 		// Assert
 		List<BeregnetMånedsgrunnlag> besteMåneder = regelmodell.getOutput().getBesteMåneder().stream()
 				.sorted(Comparator.comparing(p -> p.getMåned().getMonth()))
-				.collect(Collectors.toList());
-		assertThat(besteMåneder.size()).isEqualTo(6);
+				.toList();
+		assertThat(besteMåneder).hasSize(6);
 		assertThat(besteMåneder.get(0).getMåned()).isEqualTo(YearMonth.of(2019, 5));
 		assertThat(besteMåneder.get(0).finnSum()).isEqualByComparingTo(BigDecimal.valueOf(10000));
 		assertThat(besteMåneder.get(1).getMåned()).isEqualTo(YearMonth.of(2019, 6));
@@ -326,8 +324,8 @@ class FinnBesteMånederTest {
 		// Assert
 		List<BeregnetMånedsgrunnlag> besteMåneder = regelmodell.getOutput().getBesteMåneder().stream()
 				.sorted(Comparator.comparing(p -> p.getMåned().getMonth()))
-				.collect(Collectors.toList());
-		assertThat(besteMåneder.size()).isEqualTo(6);
+				.toList();
+		assertThat(besteMåneder).hasSize(6);
 		assertThat(besteMåneder.get(0).getMåned()).isEqualTo(YearMonth.of(2019, 2));
 		assertThat(besteMåneder.get(0).finnSum()).isEqualByComparingTo(BigDecimal.valueOf(15000));
 		assertThat(besteMåneder.get(1).getMåned()).isEqualTo(YearMonth.of(2019, 4));
@@ -369,8 +367,8 @@ class FinnBesteMånederTest {
 		// Assert
 		List<BeregnetMånedsgrunnlag> besteMåneder = regelmodell.getOutput().getBesteMåneder().stream()
 				.sorted(Comparator.comparing(p -> p.getMåned().getMonth()))
-				.collect(Collectors.toList());
-		assertThat(besteMåneder.size()).isEqualTo(6);
+				.toList();
+		assertThat(besteMåneder).hasSize(6);
 		assertThat(besteMåneder.get(0).getMåned()).isEqualTo(YearMonth.of(2019, 5));
 		assertThat(besteMåneder.get(0).finnSum()).isEqualByComparingTo(BigDecimal.valueOf(10000));
 		assertThat(besteMåneder.get(1).getMåned()).isEqualTo(YearMonth.of(2019, 6));

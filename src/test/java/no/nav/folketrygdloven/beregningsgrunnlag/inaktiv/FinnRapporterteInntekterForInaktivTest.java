@@ -47,7 +47,7 @@ class FinnRapporterteInntekterForInaktivTest {
 		// Act
 		var periodeinntekt = finnRapporterteInntekter.finnRapportertInntekt(grunnlag);
 
-		assertThat(periodeinntekt.get().getInntekt().compareTo(BigDecimal.valueOf(260_000))).isEqualTo(0);
+		assertThat(periodeinntekt.orElseThrow().getInntekt()).isEqualByComparingTo(BigDecimal.valueOf(260_000));
 
 	}
 
@@ -72,7 +72,7 @@ class FinnRapporterteInntekterForInaktivTest {
 		// Act
 		var periodeinntekt = finnRapporterteInntekter.finnRapportertInntekt(grunnlag);
 
-		assertThat(periodeinntekt.get().getInntekt().compareTo(BigDecimal.valueOf(260_000))).isEqualTo(0);
+		assertThat(periodeinntekt.orElseThrow().getInntekt()).isEqualByComparingTo(BigDecimal.valueOf(260_000));
 
 	}
 
@@ -95,7 +95,7 @@ class FinnRapporterteInntekterForInaktivTest {
 		// Act
 		var periodeinntekt = finnRapporterteInntekter.finnRapportertInntekt(grunnlag);
 
-		assertThat(periodeinntekt.isEmpty()).isTrue();
+		assertThat(periodeinntekt).isEmpty();
 
 	}
 
@@ -120,7 +120,7 @@ class FinnRapporterteInntekterForInaktivTest {
 		// Act
 		var periodeinntekt = finnRapporterteInntekter.finnRapportertInntekt(grunnlag);
 
-		assertThat(periodeinntekt.isEmpty()).isTrue();
+		assertThat(periodeinntekt).isEmpty();
 
 	}
 

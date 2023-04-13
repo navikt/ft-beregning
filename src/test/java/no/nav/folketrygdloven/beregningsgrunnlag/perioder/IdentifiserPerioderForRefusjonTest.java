@@ -27,7 +27,7 @@ import no.nav.fpsak.tidsserie.LocalDateSegment;
 import no.nav.fpsak.tidsserie.LocalDateTimeline;
 import no.nav.fpsak.tidsserie.StandardCombinators;
 
-public class IdentifiserPerioderForRefusjonTest {
+class IdentifiserPerioderForRefusjonTest {
 
 	private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.of(2019, Month.JANUARY, 4);
 
@@ -96,9 +96,8 @@ public class IdentifiserPerioderForRefusjonTest {
 				new HashMap<>());
 
 		// Assert
-		assertThat(periodesplitter).hasSize(1);
-		assertThat(periodesplitter).anySatisfy(endring ->
-				assertPeriodeSplitt(endring, im, endringFom, PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV, 10)
+		assertThat(periodesplitter).hasSize(1)
+				.anySatisfy(endring ->assertPeriodeSplitt(endring, im, endringFom, PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV, 10)
 		);
 	}
 
@@ -143,12 +142,9 @@ public class IdentifiserPerioderForRefusjonTest {
 				godkjennIAllePerioder(im.getRefusjoner()), new HashMap<>());
 
 		// Assert
-		assertThat(periodesplitter).hasSize(2);
-		assertThat(periodesplitter).anySatisfy(endring ->
-				assertPeriodeSplitt(endring, im, SKJÆRINGSTIDSPUNKT, PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV, 10)
-		);
-		assertThat(periodesplitter).anySatisfy(opphør ->
-				assertPeriodeSplitt(opphør, im, opphørFom, PeriodeÅrsak.REFUSJON_OPPHØRER, 0)
+		assertThat(periodesplitter).hasSize(2)
+				.anySatisfy(endring -> assertPeriodeSplitt(endring, im, SKJÆRINGSTIDSPUNKT, PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV, 10))
+				.anySatisfy(opphør -> assertPeriodeSplitt(opphør, im, opphørFom, PeriodeÅrsak.REFUSJON_OPPHØRER, 0)
 		);
 	}
 
@@ -168,12 +164,9 @@ public class IdentifiserPerioderForRefusjonTest {
 		Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im, godkjennIAllePerioder(im.getRefusjoner()), new HashMap<>());
 
 		// Assert
-		assertThat(periodesplitter).hasSize(2);
-		assertThat(periodesplitter).anySatisfy(start ->
-				assertPeriodeSplitt(start, im, SKJÆRINGSTIDSPUNKT, PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV, 20_000)
-		);
-		assertThat(periodesplitter).anySatisfy(endring ->
-				assertPeriodeSplitt(endring, im, endringFom, PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV, 10_000)
+		assertThat(periodesplitter).hasSize(2)
+				.anySatisfy(start -> assertPeriodeSplitt(start, im, SKJÆRINGSTIDSPUNKT, PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV, 20_000))
+				.anySatisfy(endring -> assertPeriodeSplitt(endring, im, endringFom, PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV, 10_000)
 		);
 	}
 
@@ -195,16 +188,10 @@ public class IdentifiserPerioderForRefusjonTest {
 		Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im, godkjennIAllePerioder(im.getRefusjoner()), new HashMap<>());
 
 		// Assert
-		assertThat(periodesplitter).hasSize(3);
-		assertThat(periodesplitter).anySatisfy(start ->
-				assertPeriodeSplitt(start, im, SKJÆRINGSTIDSPUNKT, PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV, 20_000)
-		);
-		assertThat(periodesplitter).anySatisfy(endring ->
-				assertPeriodeSplitt(endring, im, endringFom, PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV, 10_000)
-		);
-		assertThat(periodesplitter).anySatisfy(opphør ->
-				assertPeriodeSplitt(opphør, im, opphørFom, PeriodeÅrsak.REFUSJON_OPPHØRER, 0)
-		);
+		assertThat(periodesplitter).hasSize(3)
+				.anySatisfy(start -> assertPeriodeSplitt(start, im, SKJÆRINGSTIDSPUNKT, PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV, 20_000))
+				.anySatisfy(endring -> assertPeriodeSplitt(endring, im, endringFom, PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV, 10_000)).
+				anySatisfy(opphør -> assertPeriodeSplitt(opphør, im, opphørFom, PeriodeÅrsak.REFUSJON_OPPHØRER, 0));
 	}
 
 	@Test
@@ -223,13 +210,9 @@ public class IdentifiserPerioderForRefusjonTest {
 						List.of(Periode.of(SKJÆRINGSTIDSPUNKT, godkjentRefusjonFom.minusDays(1)))), new HashMap<>());
 
 		// Assert
-		assertThat(periodesplitter).hasSize(2);
-		assertThat(periodesplitter).anySatisfy(endring ->
-				assertPeriodeSplitt(endring, im, SKJÆRINGSTIDSPUNKT, PeriodeÅrsak.REFUSJON_AVSLÅTT, 10)
-		);
-		assertThat(periodesplitter).anySatisfy(endring ->
-				assertPeriodeSplitt(endring, im, godkjentRefusjonFom, PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV, 10)
-		);
+		assertThat(periodesplitter).hasSize(2)
+				.anySatisfy(endring -> assertPeriodeSplitt(endring, im, SKJÆRINGSTIDSPUNKT, PeriodeÅrsak.REFUSJON_AVSLÅTT, 10))
+				.anySatisfy(endring -> assertPeriodeSplitt(endring, im, godkjentRefusjonFom, PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV, 10));
 	}
 
 	@Test
@@ -250,12 +233,9 @@ public class IdentifiserPerioderForRefusjonTest {
 				avslåttIAllePerioder(im.getRefusjoner()), new HashMap<>());
 
 		// Assert
-		assertThat(periodesplitter).hasSize(2);
-		assertThat(periodesplitter).anySatisfy(endring ->
-				assertPeriodeSplitt(endring, im, SKJÆRINGSTIDSPUNKT, PeriodeÅrsak.REFUSJON_AVSLÅTT, 10)
-		);
-		assertThat(periodesplitter).anySatisfy(endring ->
-				assertPeriodeSplitt(endring, im, opphørFom, PeriodeÅrsak.REFUSJON_AVSLÅTT, 0)
+		assertThat(periodesplitter).hasSize(2)
+				.anySatisfy(endring -> assertPeriodeSplitt(endring, im, SKJÆRINGSTIDSPUNKT, PeriodeÅrsak.REFUSJON_AVSLÅTT, 10))
+				.anySatisfy(endring -> assertPeriodeSplitt(endring, im, opphørFom, PeriodeÅrsak.REFUSJON_AVSLÅTT, 0)
 		);
 	}
 
@@ -284,15 +264,10 @@ public class IdentifiserPerioderForRefusjonTest {
 				new HashMap<>());
 
 		// Assert
-		assertThat(periodesplitter).hasSize(3);
-		assertThat(periodesplitter).anySatisfy(endring ->
-				assertPeriodeSplitt(endring, im, SKJÆRINGSTIDSPUNKT, PeriodeÅrsak.REFUSJON_AVSLÅTT, 10)
-		);
-		assertThat(periodesplitter).anySatisfy(endring ->
-				assertPeriodeSplitt(endring, im, refusjonGodkjentFom, PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV, 10)
-		);
-		assertThat(periodesplitter).anySatisfy(opphør ->
-				assertPeriodeSplitt(opphør, im, opphørFom, PeriodeÅrsak.REFUSJON_OPPHØRER, 0)
+		assertThat(periodesplitter).hasSize(3)
+				.anySatisfy(endring -> assertPeriodeSplitt(endring, im, SKJÆRINGSTIDSPUNKT, PeriodeÅrsak.REFUSJON_AVSLÅTT, 10))
+				.anySatisfy(endring -> assertPeriodeSplitt(endring, im, refusjonGodkjentFom, PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV, 10))
+				.anySatisfy(opphør -> assertPeriodeSplitt(opphør, im, opphørFom, PeriodeÅrsak.REFUSJON_OPPHØRER, 0)
 		);
 	}
 
@@ -318,16 +293,10 @@ public class IdentifiserPerioderForRefusjonTest {
 				new HashMap<>());
 
 		// Assert
-		assertThat(periodesplitter).hasSize(3);
-		assertThat(periodesplitter).anySatisfy(endring ->
-				assertPeriodeSplitt(endring, im, SKJÆRINGSTIDSPUNKT, PeriodeÅrsak.REFUSJON_AVSLÅTT, 20000)
-		);
-		assertThat(periodesplitter).anySatisfy(endring ->
-				assertPeriodeSplitt(endring, im, endringFom, PeriodeÅrsak.REFUSJON_AVSLÅTT, 10_000)
-		);
-		assertThat(periodesplitter).anySatisfy(endring ->
-				assertPeriodeSplitt(endring, im, refusjonGodkjentFom, PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV, 10_000)
-		);
+		assertThat(periodesplitter).hasSize(3)
+				.anySatisfy(endring -> assertPeriodeSplitt(endring, im, SKJÆRINGSTIDSPUNKT, PeriodeÅrsak.REFUSJON_AVSLÅTT, 20000))
+				.anySatisfy(endring -> assertPeriodeSplitt(endring, im, endringFom, PeriodeÅrsak.REFUSJON_AVSLÅTT, 10_000))
+				.anySatisfy(endring -> assertPeriodeSplitt(endring, im, refusjonGodkjentFom, PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV, 10_000));
 	}
 
 	@Test
@@ -352,16 +321,10 @@ public class IdentifiserPerioderForRefusjonTest {
 				new HashMap<>());
 
 		// Assert
-		assertThat(periodesplitter).hasSize(3);
-		assertThat(periodesplitter).anySatisfy(endring1 ->
-				assertPeriodeSplitt(endring1, im, SKJÆRINGSTIDSPUNKT, PeriodeÅrsak.REFUSJON_AVSLÅTT, 20_000)
-		);
-		assertThat(periodesplitter).anySatisfy(endring1 ->
-				assertPeriodeSplitt(endring1, im, refusjonGodkjentFom, PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV, 20_000)
-		);
-		assertThat(periodesplitter).anySatisfy(endring2 ->
-				assertPeriodeSplitt(endring2, im, endringFom, PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV, 10_000)
-		);
+		assertThat(periodesplitter).hasSize(3)
+				.anySatisfy(endring1 -> assertPeriodeSplitt(endring1, im, SKJÆRINGSTIDSPUNKT, PeriodeÅrsak.REFUSJON_AVSLÅTT, 20_000))
+				.anySatisfy(endring1 -> assertPeriodeSplitt(endring1, im, refusjonGodkjentFom, PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV, 20_000))
+				.anySatisfy(endring2 -> assertPeriodeSplitt(endring2, im, endringFom, PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV, 10_000));
 	}
 
 	@Test
@@ -388,19 +351,11 @@ public class IdentifiserPerioderForRefusjonTest {
 				new HashMap<>());
 
 		// Assert
-		assertThat(periodesplitter).hasSize(4);
-		assertThat(periodesplitter).anySatisfy(endring ->
-				assertPeriodeSplitt(endring, im, SKJÆRINGSTIDSPUNKT, PeriodeÅrsak.REFUSJON_AVSLÅTT, 20000)
-		);
-		assertThat(periodesplitter).anySatisfy(endring ->
-				assertPeriodeSplitt(endring, im, endringFom, PeriodeÅrsak.REFUSJON_AVSLÅTT, 10_000)
-		);
-		assertThat(periodesplitter).anySatisfy(endring ->
-				assertPeriodeSplitt(endring, im, godkjentRefusjonFom, PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV, 10_000)
-		);
-		assertThat(periodesplitter).anySatisfy(opphør ->
-				assertPeriodeSplitt(opphør, im, opphørFom, PeriodeÅrsak.REFUSJON_OPPHØRER, 0)
-		);
+		assertThat(periodesplitter).hasSize(4)
+				.anySatisfy(endring -> assertPeriodeSplitt(endring, im, SKJÆRINGSTIDSPUNKT, PeriodeÅrsak.REFUSJON_AVSLÅTT, 20000))
+				.anySatisfy(endring -> assertPeriodeSplitt(endring, im, endringFom, PeriodeÅrsak.REFUSJON_AVSLÅTT, 10_000))
+				.anySatisfy(endring -> assertPeriodeSplitt(endring, im, godkjentRefusjonFom, PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV, 10_000))
+				.anySatisfy(opphør -> assertPeriodeSplitt(opphør, im, opphørFom, PeriodeÅrsak.REFUSJON_OPPHØRER, 0));
 	}
 
 	@Test
@@ -427,18 +382,10 @@ public class IdentifiserPerioderForRefusjonTest {
 				new HashMap<>());
 
 		// Assert
-		assertThat(periodesplitter).hasSize(4);
-		assertThat(periodesplitter).anySatisfy(endring1 ->
-				assertPeriodeSplitt(endring1, im, SKJÆRINGSTIDSPUNKT, PeriodeÅrsak.REFUSJON_AVSLÅTT, 20_000)
-		);
-		assertThat(periodesplitter).anySatisfy(endring1 ->
-				assertPeriodeSplitt(endring1, im, godkjentRefusjonFom, PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV, 20_000)
-		);
-		assertThat(periodesplitter).anySatisfy(endring2 ->
-				assertPeriodeSplitt(endring2, im, endringFom, PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV, 10_000)
-		);
-		assertThat(periodesplitter).anySatisfy(opphør ->
-				assertPeriodeSplitt(opphør, im, opphørFom, PeriodeÅrsak.REFUSJON_OPPHØRER, 0)
-		);
+		assertThat(periodesplitter).hasSize(4)
+				.anySatisfy(endring1 -> assertPeriodeSplitt(endring1, im, SKJÆRINGSTIDSPUNKT, PeriodeÅrsak.REFUSJON_AVSLÅTT, 20_000))
+				.anySatisfy(endring1 -> assertPeriodeSplitt(endring1, im, godkjentRefusjonFom, PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV, 20_000))
+				.anySatisfy(endring2 -> assertPeriodeSplitt(endring2, im, endringFom, PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV, 10_000)).
+				anySatisfy(opphør -> assertPeriodeSplitt(opphør, im, opphørFom, PeriodeÅrsak.REFUSJON_OPPHØRER, 0));
 	}
 }

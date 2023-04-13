@@ -17,9 +17,8 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
 
-public class FastsettNyFordelingTest {
+class FastsettNyFordelingTest {
 
-	private static final LocalDate STP = LocalDate.now();
 	private static final String ORGNR1 = "995";
 	private static final String ORGNR2 = "910";
 	private static final String ORGNR3 = "973";
@@ -153,7 +152,7 @@ public class FastsettNyFordelingTest {
 		// Assert
 		assertThat(a1.getFordeltPrÅr()).isEmpty();
 		assertThat(a2.getFordeltPrÅr()).isEmpty();
-		assertThat(a3.getFordeltPrÅr().get().compareTo(BigDecimal.ZERO) == 0).isTrue();
+		assertThat(a3.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.ZERO);
 	}
 
 	@Test
@@ -176,9 +175,9 @@ public class FastsettNyFordelingTest {
 		kjørRegel(periode);
 
 		// Assert
-		assertThat(a1.getFordeltPrÅr().get().compareTo(BigDecimal.valueOf(250_000)) == 0).isTrue();
-		assertThat(a2.getFordeltPrÅr().get().compareTo(BigDecimal.valueOf(100_000)) == 0).isTrue();
-		assertThat(a3.getFordeltPrÅr().get().compareTo(BigDecimal.ZERO) == 0).isTrue();
+		assertThat(a1.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.valueOf(250_000));
+		assertThat(a2.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.valueOf(100_000));
+		assertThat(a3.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.ZERO);
 	}
 
 	private void kjørRegel(FordelPeriodeModell periode) {

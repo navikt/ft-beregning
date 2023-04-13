@@ -22,12 +22,11 @@ class ErTotaltRefusjonskravStørreEnnEllerLikSeksG {
     }
 
     private static BigDecimal beregnTotaltRefusjonskravPrÅrPåDato(List<PeriodisertBruttoBeregningsgrunnlag> grunnlag, LocalDate dato) {
-        BigDecimal årsbeløp = grunnlag.stream()
+	    return grunnlag.stream()
 		        .filter(p -> p.getPeriode().inneholder(dato))
                 .flatMap(p -> p.getBruttoBeregningsgrunnlag().stream())
 		        .map(BruttoBeregningsgrunnlag::getRefusjonPrÅr)
 		        .filter(Objects::nonNull)
 		        .reduce(BigDecimal.ZERO, BigDecimal::add);
-        return årsbeløp;
     }
 }

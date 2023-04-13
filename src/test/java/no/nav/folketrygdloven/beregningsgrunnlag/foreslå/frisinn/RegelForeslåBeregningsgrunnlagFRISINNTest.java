@@ -218,7 +218,7 @@ class RegelForeslåBeregningsgrunnlagFRISINNTest {
 
         assertThat(regelResultat.getRegelSporing().sporing()).isNotBlank();
         //SÅ skal brutto beregningsgrunnlag i beregningsperioden settes til 0
-        assertThat(grunnlag.getBruttoPrÅr().compareTo(BigDecimal.ZERO)).isZero();
+        assertThat(grunnlag.getBruttoPrÅr()).isEqualByComparingTo(BigDecimal.ZERO);
     }
 
     @Test

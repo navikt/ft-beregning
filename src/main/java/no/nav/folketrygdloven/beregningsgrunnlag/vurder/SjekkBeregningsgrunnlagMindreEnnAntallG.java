@@ -12,8 +12,8 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 class SjekkBeregningsgrunnlagMindreEnnAntallG extends LeafSpecification<BeregningsgrunnlagPeriode> {
 	private BigDecimal minimumAntallG;
 
-	SjekkBeregningsgrunnlagMindreEnnAntallG(String ID, BigDecimal minimumAntallG) {
-		super(ID, "Er beregningsgrunnlag mindre enn " + minimumAntallG.toPlainString() + "?");
+	SjekkBeregningsgrunnlagMindreEnnAntallG(String Id, BigDecimal minimumAntallG) {
+		super(Id, "Er beregningsgrunnlag mindre enn " + minimumAntallG.toPlainString() + "?");
 		this.minimumAntallG = minimumAntallG;
 	}
 

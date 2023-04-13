@@ -520,7 +520,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
 
 		Beregningsgrunnlag grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL_SN),
 				singletonList(arbeidsforhold));
-		var grunnlagMedFomForIndividuellRegelendring = Beregningsgrunnlag.builder(grunnlag).medFomDatoForIndividuellSammenligningATFL_SN(skjæringstidspunkt.minusMonths(1)).build();
+		var grunnlagMedFomForIndividuellRegelendring = Beregningsgrunnlag.builder(grunnlag).medFomDatoForIndividuellSammenligningATFLSN(skjæringstidspunkt.minusMonths(1)).build();
 		var førstePeriode = grunnlagMedFomForIndividuellRegelendring.getBeregningsgrunnlagPerioder().get(0);
 
 		// Act
@@ -553,7 +553,7 @@ public class RegelForeslåBeregningsgrunnlagTest {
 
 		Beregningsgrunnlag grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL_SN),
 				singletonList(arbeidsforhold));
-		var grunnlagMedFomForIndividuellRegelendring = Beregningsgrunnlag.builder(grunnlag).medFomDatoForIndividuellSammenligningATFL_SN(skjæringstidspunkt.plusDays(1)).build();
+		var grunnlagMedFomForIndividuellRegelendring = Beregningsgrunnlag.builder(grunnlag).medFomDatoForIndividuellSammenligningATFLSN(skjæringstidspunkt.plusDays(1)).build();
 		var førstePeriode = grunnlagMedFomForIndividuellRegelendring.getBeregningsgrunnlagPerioder().get(0);
 
 		// Act

@@ -26,7 +26,7 @@ class OmfordelFraBrukersAndel extends LeafSpecification<FordelModell> {
 
 	public static final String ID = "OMFORDEL_FRA_BA";
 	public static final String BESKRIVELSE = "Flytt beregningsgrunnlag fra brukers andel til aktivitetstatus med høyere prioritet";
-	private final Comparator<FordelAndelModell> AVKORTING_COMPARATOR = Comparator.comparingInt(a -> a.getAktivitetStatus().getAvkortingPrioritet());
+	private static final Comparator<FordelAndelModell> AVKORTING_COMPARATOR = Comparator.comparingInt(a -> a.getAktivitetStatus().getAvkortingPrioritet());
 
 	OmfordelFraBrukersAndel() {
 		super(ID, BESKRIVELSE);

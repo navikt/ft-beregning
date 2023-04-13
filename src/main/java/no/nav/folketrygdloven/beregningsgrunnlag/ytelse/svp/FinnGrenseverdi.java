@@ -94,9 +94,7 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 				.reduce(BigDecimal::add)
 				.orElse(BigDecimal.ZERO);
 
-		var nettoBortfaltInntekt = bortfalt.subtract(tilkommetInntekt);
-
-		return nettoBortfaltInntekt;
+		return bortfalt.subtract(tilkommetInntekt);
 	}
 
 	private BigDecimal finnBortfaltForStatus(BeregningsgrunnlagPrStatus bps) {

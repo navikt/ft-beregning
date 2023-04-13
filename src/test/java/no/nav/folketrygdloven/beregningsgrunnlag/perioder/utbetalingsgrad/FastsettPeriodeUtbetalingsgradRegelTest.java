@@ -2,7 +2,7 @@ package no.nav.folketrygdloven.beregningsgrunnlag.perioder.utbetalingsgrad;
 
 
 import static no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil.TIDENES_ENDE;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -43,9 +43,9 @@ class FastsettPeriodeUtbetalingsgradRegelTest {
 				.build();
 		List<SplittetPeriode> perioder = new ArrayList<>();
 		kjørRegel(inputMedGraderingFraStartForNyttArbeid, perioder);
-		assertThat(perioder.size()).isEqualTo(2);
-		assertThat(perioder.get(0).getNyeAndeler().size()).isEqualTo(1);
-		assertThat(perioder.get(1).getNyeAndeler().size()).isEqualTo(0);
+		assertThat(perioder).hasSize(2);
+		assertThat(perioder.get(0).getNyeAndeler()).hasSize(1);
+		assertThat(perioder.get(1).getNyeAndeler().size()).isZero();
 	}
 
 	@Test
@@ -64,11 +64,11 @@ class FastsettPeriodeUtbetalingsgradRegelTest {
 				.build();
 		List<SplittetPeriode> perioder = new ArrayList<>();
 		kjørRegel(inputMedGraderingFraStartForNyttArbeid, perioder);
-		assertThat(perioder.size()).isEqualTo(4);
-		assertThat(perioder.get(0).getNyeAndeler().size()).isEqualTo(1);
-		assertThat(perioder.get(1).getNyeAndeler().size()).isEqualTo(1);
-		assertThat(perioder.get(2).getNyeAndeler().size()).isEqualTo(1);
-		assertThat(perioder.get(3).getNyeAndeler().size()).isEqualTo(0);
+		assertThat(perioder).hasSize(4);
+		assertThat(perioder.get(0).getNyeAndeler()).hasSize(1);
+		assertThat(perioder.get(1).getNyeAndeler()).hasSize(1);
+		assertThat(perioder.get(2).getNyeAndeler()).hasSize(1);
+		assertThat(perioder.get(3).getNyeAndeler()).isEmpty();
 	}
 
 
@@ -90,10 +90,10 @@ class FastsettPeriodeUtbetalingsgradRegelTest {
 				.build();
 		List<SplittetPeriode> perioder = new ArrayList<>();
 		kjørRegel(inputMedGraderingFraStartForNyttArbeid, perioder);
-		assertThat(perioder.size()).isEqualTo(3);
-		assertThat(perioder.get(0).getNyeAndeler().size()).isEqualTo(1);
-		assertThat(perioder.get(1).getNyeAndeler().size()).isEqualTo(1);
-		assertThat(perioder.get(2).getNyeAndeler().size()).isEqualTo(0);
+		assertThat(perioder).hasSize(3);
+		assertThat(perioder.get(0).getNyeAndeler()).hasSize(1);
+		assertThat(perioder.get(1).getNyeAndeler()).hasSize(1);
+		assertThat(perioder.get(2).getNyeAndeler()).isEmpty();
 	}
 
 	@Test
@@ -114,11 +114,11 @@ class FastsettPeriodeUtbetalingsgradRegelTest {
 				.build();
 		List<SplittetPeriode> perioder = new ArrayList<>();
 		kjørRegel(inputMedGraderingFraStartForNyttArbeid, perioder);
-		assertThat(perioder.size()).isEqualTo(4);
-		assertThat(perioder.get(0).getNyeAndeler().size()).isEqualTo(0);
-		assertThat(perioder.get(1).getNyeAndeler().size()).isEqualTo(0);
-		assertThat(perioder.get(2).getNyeAndeler().size()).isEqualTo(1);
-		assertThat(perioder.get(3).getNyeAndeler().size()).isEqualTo(0);
+		assertThat(perioder).hasSize(4);
+		assertThat(perioder.get(0).getNyeAndeler()).isEmpty();
+		assertThat(perioder.get(1).getNyeAndeler()).isEmpty();
+		assertThat(perioder.get(2).getNyeAndeler()).hasSize(1);
+		assertThat(perioder.get(3).getNyeAndeler()).isEmpty();
 	}
 
 

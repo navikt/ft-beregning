@@ -39,7 +39,7 @@ class SettAndelerUtenSøktYtelseTilNullTest {
 
 		kjørRegel(andeler);
 
-		assertThat(andel.getInntektskategori()).isEqualTo(null);
+		assertThat(andel.getInntektskategori()).isNull();
 		assertThat(andel.getFordeltPrÅr()).isEmpty();
 	}
 
@@ -51,7 +51,7 @@ class SettAndelerUtenSøktYtelseTilNullTest {
 		kjørRegel(andeler);
 
 		assertThat(andel.getInntektskategori()).isEqualTo(Inntektskategori.ARBEIDSTAKER);
-		assertThat(andel.getFordeltPrÅr().get().compareTo(BigDecimal.valueOf(100_000)) == 0).isTrue();
+		assertThat(andel.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.valueOf(100_000));
 	}
 
 	@Test
@@ -62,7 +62,7 @@ class SettAndelerUtenSøktYtelseTilNullTest {
 		kjørRegel(andeler);
 
 		assertThat(andel.getInntektskategori()).isEqualTo(Inntektskategori.ARBEIDSTAKER);
-		assertThat(andel.getFordeltPrÅr().get().compareTo(BigDecimal.ZERO) == 0).isTrue();
+		assertThat(andel.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.ZERO);
 	}
 
 	@Test
@@ -73,7 +73,7 @@ class SettAndelerUtenSøktYtelseTilNullTest {
 		kjørRegel(andeler);
 
 		assertThat(andel.getInntektskategori()).isEqualTo(Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE);
-		assertThat(andel.getFordeltPrÅr().get().compareTo(BigDecimal.ZERO) == 0).isTrue();
+		assertThat(andel.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.ZERO);
 	}
 
 	@Test
@@ -84,7 +84,7 @@ class SettAndelerUtenSøktYtelseTilNullTest {
 		kjørRegel(andeler);
 
 		assertThat(andel.getInntektskategori()).isEqualTo(Inntektskategori.FRILANSER);
-		assertThat(andel.getFordeltPrÅr().get().compareTo(BigDecimal.ZERO) == 0).isTrue();
+		assertThat(andel.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.ZERO);
 	}
 
 
@@ -96,7 +96,7 @@ class SettAndelerUtenSøktYtelseTilNullTest {
 		kjørRegel(andeler);
 
 		assertThat(andel.getInntektskategori()).isEqualTo(Inntektskategori.DAGPENGER);
-		assertThat(andel.getFordeltPrÅr().get().compareTo(BigDecimal.ZERO) == 0).isTrue();
+		assertThat(andel.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.ZERO);
 	}
 
 	@Test
@@ -107,7 +107,7 @@ class SettAndelerUtenSøktYtelseTilNullTest {
 		kjørRegel(andeler);
 
 		assertThat(andel.getInntektskategori()).isEqualTo(Inntektskategori.ARBEIDSAVKLARINGSPENGER);
-		assertThat(andel.getFordeltPrÅr().get().compareTo(BigDecimal.ZERO) == 0).isTrue();
+		assertThat(andel.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.ZERO);
 	}
 
 	@Test
@@ -118,7 +118,7 @@ class SettAndelerUtenSøktYtelseTilNullTest {
 		kjørRegel(andeler);
 
 		assertThat(andel.getInntektskategori()).isEqualTo(Inntektskategori.ARBEIDSTAKER_UTEN_FERIEPENGER);
-		assertThat(andel.getFordeltPrÅr().get().compareTo(BigDecimal.ZERO) == 0).isTrue();
+		assertThat(andel.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.ZERO);
 	}
 
 

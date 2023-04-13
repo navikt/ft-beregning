@@ -93,7 +93,7 @@ public class FinnGrenseverdiForTotalOver6G extends LeafSpecification<Beregningsg
 		}
 		Optional<BeregningsgrunnlagPrArbeidsforhold> frilansArbeidsforhold = atflAndel.getFrilansArbeidsforhold();
 		Boolean erSøktForFrilans = frilansArbeidsforhold.map(BeregningsgrunnlagPrArbeidsforhold::getErSøktYtelseFor).orElse(false);
-		if (!erSøktForFrilans || !erSøktYtelseForFrilansNestePeriode(grunnlag)) {
+		if (Boolean.FALSE.equals(erSøktForFrilans) || !erSøktYtelseForFrilansNestePeriode(grunnlag)) {
 			return BigDecimal.ZERO;
 		}
 		return finnRestFratrekkForNestePeriode(grunnlag, løpendeFL, grenseverdiFratrektAT);

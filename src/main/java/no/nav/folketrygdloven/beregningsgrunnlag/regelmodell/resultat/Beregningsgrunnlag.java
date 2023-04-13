@@ -101,8 +101,8 @@ public class Beregningsgrunnlag {
         return grunnbeløp.multiply(BigDecimal.valueOf(getAntallGMilitærHarKravPå()));
     }
 
-	public Optional<LocalDate> getFomDatoForIndividuellSammenligningATFL_SN() {
-		return konstanter.getFomDatoForIndividuellSammenligningATFL_SN();
+	public Optional<LocalDate> getFomDatoForIndividuellSammenligningATFLSN() {
+		return konstanter.getFomDatoForIndividuellSammenligningATFLSN();
 	}
 
     public AktivitetStatusMedHjemmel getAktivitetStatus(AktivitetStatus aktivitetStatus) {
@@ -280,8 +280,8 @@ public class Beregningsgrunnlag {
             return this;
         }
 
-	    public Builder medFomDatoForIndividuellSammenligningATFL_SN(LocalDate fomDatoForIndividuellSammenligningATFL_SN) {
-		    beregningsgrunnlagMal.konstanter.setFomDatoForIndividuellSammenligningATFL_SN(fomDatoForIndividuellSammenligningATFL_SN);
+	    public Builder medFomDatoForIndividuellSammenligningATFLSN(LocalDate fomDatoForIndividuellSammenligningATFLSN) {
+		    beregningsgrunnlagMal.konstanter.setFomDatoForIndividuellSammenligningATFLSN(fomDatoForIndividuellSammenligningATFLSN);
 		    return this;
 	    }
 

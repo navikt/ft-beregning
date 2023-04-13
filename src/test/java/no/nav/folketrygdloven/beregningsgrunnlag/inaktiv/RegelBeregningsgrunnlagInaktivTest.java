@@ -127,7 +127,7 @@ class RegelBeregningsgrunnlagInaktivTest {
 		assertThat(bg.getAktivitetStatuser().get(0).getHjemmel()).isEqualTo(BeregningsgrunnlagHjemmel.K9_HJEMMEL_MIDLERTIDIG_INAKTIV);
 
 		var sg = bg.getSammenligningsgrunnlagForStatus(SammenligningGrunnlagType.MIDLERTIDIG_INAKTIV).orElseThrow();
-		assertThat(sg.getRapportertPrÅr().compareTo(BigDecimal.valueOf(240_000))).isEqualTo(0);
+		assertThat(sg.getRapportertPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(240_000));
 	}
 
 	@Test
@@ -230,7 +230,7 @@ class RegelBeregningsgrunnlagInaktivTest {
 		assertThat(bg.getAktivitetStatuser().get(0).getHjemmel()).isEqualTo(BeregningsgrunnlagHjemmel.K9_HJEMMEL_MIDLERTIDIG_INAKTIV);
 
 		var sg = bg.getSammenligningsgrunnlagForStatus(SammenligningGrunnlagType.MIDLERTIDIG_INAKTIV).orElseThrow();
-		assertThat(sg.getRapportertPrÅr().compareTo(BigDecimal.valueOf(260_000))).isEqualTo(0);
+		assertThat(sg.getRapportertPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(260_000));
 	}
 
 	@Test

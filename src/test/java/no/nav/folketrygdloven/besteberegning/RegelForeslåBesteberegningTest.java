@@ -1,7 +1,7 @@
 package no.nav.folketrygdloven.besteberegning;
 
 import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenario.GRUNNBELØPLISTE;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -48,7 +48,7 @@ class RegelForeslåBesteberegningTest {
 		// Assert
 		BesteberegnetGrunnlag besteberegnetGrunnlag = regelmodell.getOutput().getBesteberegnetGrunnlag();
 		List<BesteberegnetAndel> andeler = besteberegnetGrunnlag.getBesteberegnetAndelList();
-		assertThat(andeler.size()).isEqualTo(1);
+		assertThat(andeler).hasSize(1);
 		assertThat(andeler.get(0).getBesteberegnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(120_000));
 	}
 
@@ -70,7 +70,7 @@ class RegelForeslåBesteberegningTest {
 		// Assert
 		BesteberegnetGrunnlag besteberegnetGrunnlag = regelmodell.getOutput().getBesteberegnetGrunnlag();
 		List<BesteberegnetAndel> andeler = besteberegnetGrunnlag.getBesteberegnetAndelList().stream().sorted(Comparator.comparing(BesteberegnetAndel::getBesteberegnetPrÅr)).toList();
-		assertThat(andeler.size()).isEqualTo(2);
+		assertThat(andeler).hasSize(2);
 		assertThat(andeler.get(0).getBesteberegnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(120_000));
 		assertThat(andeler.get(1).getBesteberegnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(240_000));
 	}

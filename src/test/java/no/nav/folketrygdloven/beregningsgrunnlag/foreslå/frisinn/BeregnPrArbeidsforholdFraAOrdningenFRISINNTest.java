@@ -94,7 +94,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
             .build(), andel);
 
         // Assert
-        assertThat(andel.getBeregnetPrÅr().intValue()).isEqualTo(0);
+        assertThat(andel.getBeregnetPrÅr().intValue()).isZero();
     }
 
     @Test
@@ -351,7 +351,7 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINNTest {
             .build(), andel);
 
         // Assert
-        assertThat(andel.getBeregnetPrÅr().intValue()).isEqualTo(0);
+        assertThat(andel.getBeregnetPrÅr().intValue()).isZero();
     }
 
     @Test

@@ -1,6 +1,6 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.fordel;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -20,7 +20,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
 
-public class OmfordelFraAktiviteterUtenArbeidsforholdTest {
+class OmfordelFraAktiviteterUtenArbeidsforholdTest {
 
     private static final LocalDate STP = LocalDate.now();
     private static final String ORGNR = "995";
@@ -121,7 +121,7 @@ public class OmfordelFraAktiviteterUtenArbeidsforholdTest {
 
 	    var alleArbeidsforhold = periode.getAlleAndelerForStatus(AktivitetStatus.AT);
 
-	    assertThat(alleArbeidsforhold.size()).isEqualTo(2);
+	    assertThat(alleArbeidsforhold).hasSize(2);
         assertThat(totalBrutto(alleArbeidsforhold)).isEqualByComparingTo(refusjonskravPrÅr);
         var flyttetFraSN = alleArbeidsforhold.stream().filter(a -> a.getInntektskategori().equals(Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE)).findFirst().orElseThrow();
         assertThat(flyttetFraSN.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(beregnetPrÅrSN.add(beregnetPrÅr));
@@ -158,7 +158,7 @@ public class OmfordelFraAktiviteterUtenArbeidsforholdTest {
 
 		var alleArbeidsforhold = periode.getAlleAndelerForStatus(AktivitetStatus.AT);
 
-        assertThat(alleArbeidsforhold.size()).isEqualTo(2);
+        assertThat(alleArbeidsforhold).hasSize(2);
         assertThat(totalBrutto(alleArbeidsforhold)).isEqualByComparingTo(refusjonskravPrÅr);
         var flyttetFraSN = alleArbeidsforhold.stream().filter(a -> a.getInntektskategori().equals(Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE)).findFirst().orElseThrow();
         assertThat(flyttetFraSN.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(beregnetPrÅrSN.add(beregnetPrÅr));
