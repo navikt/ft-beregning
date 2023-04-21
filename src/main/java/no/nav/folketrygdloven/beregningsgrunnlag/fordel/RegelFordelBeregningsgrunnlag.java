@@ -46,6 +46,7 @@ public class RegelFordelBeregningsgrunnlag implements EksportRegel<FordelPeriode
 
 	private void validerAtBruttoErUendret(FordelModell modell) {
 		BigDecimal bruttoInn = modell.getInput().getAndeler().stream()
+				.filter(a -> a.getUtbetalingsgrad().compareTo(BigDecimal.ZERO) > 0)
 				.map(a -> a.getForeslåttPrÅr().orElse(BigDecimal.ZERO))
 				.reduce(BigDecimal::add)
 				.orElse(BigDecimal.ZERO);
