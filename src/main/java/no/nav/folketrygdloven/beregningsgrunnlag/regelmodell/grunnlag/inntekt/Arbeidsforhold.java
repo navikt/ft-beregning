@@ -167,13 +167,6 @@ public class Arbeidsforhold {
 		return anonymtArbeidsforhold(Aktivitet.FRILANSINNTEKT);
 	}
 
-	public static Arbeidsforhold frilansArbeidsforhold(LocalDate startdato) {
-		return Arbeidsforhold.builder()
-				.medAktivitet(Aktivitet.FRILANSINNTEKT)
-				.medStartdato(startdato)
-				.build();
-	}
-
 	public static Arbeidsforhold anonymtArbeidsforhold(Aktivitet aktivitet) {
 		return Arbeidsforhold.builder()
 				.medAktivitet(aktivitet)

@@ -33,7 +33,6 @@ class BeregnPrArbeidsforholdFraAOrdningen extends LeafSpecification<Beregningsgr
 	BeregnPrArbeidsforholdFraAOrdningen(BeregningsgrunnlagPrArbeidsforhold arbeidsforhold) {
 		super(ID, BESKRIVELSE);
 		Objects.requireNonNull(arbeidsforhold, "arbeidsforhold");
-		Objects.requireNonNull(arbeidsforhold.getArbeidsforhold().getStartdato(), "mangler startdato for arbeidsforholdet");
 		this.arbeidsforhold = arbeidsforhold;
 	}
 

@@ -338,7 +338,7 @@ public class BeregningsgrunnlagScenario {
     public static Beregningsgrunnlag opprettBeregningsgrunnlagFraInntektskomponenten(LocalDate skjæringstidspunkt, BigDecimal månedsinntekt, BigDecimal refusjonskrav, boolean frilans,
                                                                                      int antallMåneder, List<PeriodeÅrsak> periodeÅrsaker) {
         LocalDate startdatoArbeidsforhold = skjæringstidspunkt.minusYears(2);
-		Arbeidsforhold arbeidsforhold = frilans ? Arbeidsforhold.frilansArbeidsforhold(startdatoArbeidsforhold) : Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(startdatoArbeidsforhold, ORGNR);
+		Arbeidsforhold arbeidsforhold = frilans ? Arbeidsforhold.frilansArbeidsforhold() : Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(startdatoArbeidsforhold, ORGNR);
         List<BigDecimal> månedsinntekter = new ArrayList<>();
         for (int m = 0; m < antallMåneder; m++) {
             månedsinntekter.add(månedsinntekt);
