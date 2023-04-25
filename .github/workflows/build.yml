@@ -1,0 +1,31 @@
+name: Bygg
+
+on:
+  push:
+    branches:
+      - '**'
+    paths-ignore:
+      - '**.md'
+      - '**.MD'
+      - '.editorconfig'
+      - '.gitignore'
+      - '.java-version'
+      - 'LICENSE'
+      - 'CODEOWNERS'
+      - 'docs/**'
+      - '.github/*.yml'
+
+jobs:
+  build-feature:
+    name: Build
+    uses: navikt/fp-gha-workflows/.github/workflows/build-feature.yml@main
+    with:
+      sonar-scan: true
+    secrets: inherit
+
+  release-drafter:
+    name: Update
+    if: github.ref_name == 'master'
+    needs: build-feature
+    uses: navikt/fp-gha-workflows/.github/workflows/release-drafter.yml@main
+    secrets: inherit
