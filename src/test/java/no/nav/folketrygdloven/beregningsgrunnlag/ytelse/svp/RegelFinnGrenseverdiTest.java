@@ -163,6 +163,30 @@ public class RegelFinnGrenseverdiTest {
 	}
 
 	@Test
+	void to_arbeidsforhold_under_6G_tilkommet_inntekt_i_det_ene_mer_enn_totalt_grunnlag_på_stp() {
+		//Arrange
+		double beregnetPrÅr = 250_000;
+		double tilkommetPrÅr2 = 300_000;
+
+		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
+				.build();
+
+		Beregningsgrunnlag.builder()
+				.leggTilToggle("GRADERING_MOT_INNTEKT", true)
+				.medBeregningsgrunnlagPeriode(periode)
+				.medGrunnbeløp(BigDecimal.valueOf(100_000));
+
+		leggTilArbeidsforhold(periode, 1L, ORGNR, beregnetPrÅr, 100);
+		leggTilArbeidsforhold(periode, 2L, ORGNR_2, null, tilkommetPrÅr2, 100);
+
+		//Act
+		kjørRegel(periode);
+
+		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.ZERO);
+	}
+
+	@Test
 	void to_arbeidsforhold_under_6G_fordelt_og_tilkommet_inntekt_i_det_ene() {
 		//Arrange
 		double beregnetPrÅr = 250_000;
