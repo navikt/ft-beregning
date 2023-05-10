@@ -61,7 +61,7 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 	private BigDecimal gradertMotTilkommetInntekt(BeregningsgrunnlagPeriode grunnlag, BigDecimal grenseverdi) {
 		BigDecimal bortfalt = finnBortfaltInntekt(grunnlag);
 		var totaltGradertGrunnlag = grunnlag.getBeregningsgrunnlagPrStatus().stream()
-				.map(BeregningsgrunnlagPrStatus::getGradertBruttoInkludertNaturalytelsePrÅr)
+				.map(BeregningsgrunnlagPrStatus::getGradertBruttoInkludertNaturalytelsePrÅr) // TODO Stian Bør man her istedenfor sjekke på 100 - arbeidsprosent? Nå bruker man utb.grad
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
 		if (totaltGradertGrunnlag.compareTo(BigDecimal.ZERO) == 0) {
 			return BigDecimal.ZERO;
@@ -99,6 +99,11 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 	}
 
 	private BigDecimal finnBortfaltForStatus(BeregningsgrunnlagPrStatus bps) {
+		if (bps.getAktivitetsgrad().isPresent()) {
+			var aktivitetsgrad = bps.getAktivitetsgrad().get().divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP);
+			var opprettholdtInntekt = bps.getInntektsgrunnlagPrÅr().multiply(aktivitetsgrad);
+			return bps.getInntektsgrunnlagPrÅr().subtract(opprettholdtInntekt);
+		}
 		var utbetalingsprosent = bps.getUtbetalingsprosent();
 		var utbetalingsgrad = utbetalingsprosent.divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP);
 		return bps.getInntektsgrunnlagPrÅr().multiply(utbetalingsgrad);
@@ -107,6 +112,11 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 	private BigDecimal finnBortfaltFraATFL(List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold1) {
 		return arbeidsforhold1.stream()
 				.map(arbeidsforhold -> {
+					if (arbeidsforhold.getAktivitetsgrad().isPresent()) {
+						var aktivitetsgrad = arbeidsforhold.getAktivitetsgrad().get().divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP);
+						var opprettholdtInntekt = arbeidsforhold.getInntektsgrunnlagPrÅr().multiply(aktivitetsgrad);
+						return arbeidsforhold.getInntektsgrunnlagPrÅr().subtract(opprettholdtInntekt);
+					}
 					var utbetalingsprosent = arbeidsforhold.getUtbetalingsprosent();
 					var utbetalingsgrad = utbetalingsprosent.divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP);
 					return arbeidsforhold.getInntektsgrunnlagPrÅr().multiply(utbetalingsgrad);

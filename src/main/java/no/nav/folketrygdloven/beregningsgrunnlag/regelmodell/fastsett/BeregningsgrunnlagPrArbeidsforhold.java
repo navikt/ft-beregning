@@ -13,6 +13,7 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 	private Long andelNr;
 	private Boolean erSøktYtelseFor;
 	private BigDecimal utbetalingsprosent = BigDecimal.valueOf(100);
+	private BigDecimal aktivitetsgrad; // For bruk til å regne fortsatt arbeid (Mer nøyaktig enn å se på (1-utbetalingsprosent)
 	private BigDecimal naturalytelseBortfaltPrÅr;
 	private BigDecimal naturalytelseTilkommetPrÅr;
 	private BigDecimal bruttoPrÅr;
@@ -73,6 +74,10 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 
 	public BigDecimal getInntektsgrunnlagPrÅr() {
 		return inntektsgrunnlagPrÅr != null ? inntektsgrunnlagPrÅr : BigDecimal.ZERO;
+	}
+
+	public Optional<BigDecimal> getAktivitetsgrad() {
+		return Optional.ofNullable(aktivitetsgrad);
 	}
 
 	public Optional<BigDecimal> getBruttoInkludertNaturalytelsePrÅr() {
@@ -162,7 +167,6 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 	public BigDecimal getAndelsmessigFørGraderingPrAar() {
 		return andelsmessigFørGraderingPrAar;
 	}
-
 
 	@Override
 	public String toString() {
@@ -279,6 +283,14 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 
 		public Builder medUtbetalingsprosent(BigDecimal utbetalingsprosent) {
 			mal.utbetalingsprosent = utbetalingsprosent;
+			return this;
+		}
+
+		public Builder medAktivitetsgrad(BigDecimal aktivitetsgrad) {
+			if (aktivitetsgrad != null && (aktivitetsgrad.compareTo(BigDecimal.ZERO) < 0 || aktivitetsgrad.compareTo(BigDecimal.valueOf(100)) > 0)) {
+				throw new IllegalArgumentException("Aktivitetsgrad må ha verdi fra 0 til 100, faktisk: " + aktivitetsgrad);
+			}
+			mal.aktivitetsgrad = aktivitetsgrad;
 			return this;
 		}
 
