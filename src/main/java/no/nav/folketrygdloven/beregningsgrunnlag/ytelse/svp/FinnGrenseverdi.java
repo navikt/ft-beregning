@@ -61,7 +61,7 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 	private BigDecimal gradertMotTilkommetInntekt(BeregningsgrunnlagPeriode grunnlag, BigDecimal grenseverdi) {
 		BigDecimal bortfalt = finnBortfaltInntekt(grunnlag);
 		var totaltGradertGrunnlag = grunnlag.getBeregningsgrunnlagPrStatus().stream()
-				.map(BeregningsgrunnlagPrStatus::getGradertBruttoInkludertNaturalytelsePrÅr) // TODO Stian Bør man her istedenfor sjekke på 100 - arbeidsprosent? Nå bruker man utb.grad
+				.map(BeregningsgrunnlagPrStatus::getGradertBruttoInkludertNaturalytelsePrÅr)
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
 		if (totaltGradertGrunnlag.compareTo(BigDecimal.ZERO) == 0) {
 			return BigDecimal.ZERO;
@@ -75,8 +75,13 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 
 		// Grenseverdien er allerede gradert mot arbeidstid her
 		var graderingEtterGraderingMotArbeidstid = bortfalt.divide(totaltGradertGrunnlag, 10, RoundingMode.HALF_UP);
-		grenseverdi = grenseverdi.multiply(graderingEtterGraderingMotArbeidstid);
-		return grenseverdi;
+		var grenseverdiGradertMotInntekt = grenseverdi.multiply(graderingEtterGraderingMotArbeidstid);
+
+		if (grenseverdi.compareTo(grenseverdiGradertMotInntekt) < 0) {
+			return grenseverdi;
+		} else {
+			return grenseverdiGradertMotInntekt;
+		}
 	}
 
 	private BigDecimal finnBortfaltInntekt(BeregningsgrunnlagPeriode grunnlag) {
