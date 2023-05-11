@@ -104,8 +104,9 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 	}
 
 	private BigDecimal finnBortfaltForStatus(BeregningsgrunnlagPrStatus bps) {
-		if (bps.getAktivitetsgrad().isPresent()) {
-			var aktivitetsgrad = bps.getAktivitetsgrad().get().divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP);
+		var aktivitetsgradOpt = bps.getAktivitetsgrad();
+		if (aktivitetsgradOpt.isPresent()) {
+			var aktivitetsgrad = aktivitetsgradOpt.get().divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP);
 			var opprettholdtInntekt = bps.getInntektsgrunnlagPrÅr().multiply(aktivitetsgrad);
 			return bps.getInntektsgrunnlagPrÅr().subtract(opprettholdtInntekt);
 		}
@@ -117,8 +118,9 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 	private BigDecimal finnBortfaltFraATFL(List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold1) {
 		return arbeidsforhold1.stream()
 				.map(arbeidsforhold -> {
-					if (arbeidsforhold.getAktivitetsgrad().isPresent()) {
-						var aktivitetsgrad = arbeidsforhold.getAktivitetsgrad().get().divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP);
+					var aktivitetsgradOpt = arbeidsforhold.getAktivitetsgrad();
+					if (aktivitetsgradOpt.isPresent()) {
+						var aktivitetsgrad = aktivitetsgradOpt.get().divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP);
 						var opprettholdtInntekt = arbeidsforhold.getInntektsgrunnlagPrÅr().multiply(aktivitetsgrad);
 						return arbeidsforhold.getInntektsgrunnlagPrÅr().subtract(opprettholdtInntekt);
 					}
