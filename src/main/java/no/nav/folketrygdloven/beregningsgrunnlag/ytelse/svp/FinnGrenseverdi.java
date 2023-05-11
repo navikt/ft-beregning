@@ -75,8 +75,13 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 
 		// Grenseverdien er allerede gradert mot arbeidstid her
 		var graderingEtterGraderingMotArbeidstid = bortfalt.divide(totaltGradertGrunnlag, 10, RoundingMode.HALF_UP);
-		grenseverdi = grenseverdi.multiply(graderingEtterGraderingMotArbeidstid);
-		return grenseverdi;
+		var grenseverdiGradertMotInntekt = grenseverdi.multiply(graderingEtterGraderingMotArbeidstid);
+
+		if (grenseverdi.compareTo(grenseverdiGradertMotInntekt) < 0) {
+			return grenseverdi;
+		} else {
+			return grenseverdiGradertMotInntekt;
+		}
 	}
 
 	private BigDecimal finnBortfaltInntekt(BeregningsgrunnlagPeriode grunnlag) {
@@ -99,6 +104,12 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 	}
 
 	private BigDecimal finnBortfaltForStatus(BeregningsgrunnlagPrStatus bps) {
+		var aktivitetsgradOpt = bps.getAktivitetsgrad();
+		if (aktivitetsgradOpt.isPresent()) {
+			var aktivitetsgrad = aktivitetsgradOpt.get().divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP);
+			var opprettholdtInntekt = bps.getInntektsgrunnlagPrÅr().multiply(aktivitetsgrad);
+			return bps.getInntektsgrunnlagPrÅr().subtract(opprettholdtInntekt);
+		}
 		var utbetalingsprosent = bps.getUtbetalingsprosent();
 		var utbetalingsgrad = utbetalingsprosent.divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP);
 		return bps.getInntektsgrunnlagPrÅr().multiply(utbetalingsgrad);
@@ -107,6 +118,12 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 	private BigDecimal finnBortfaltFraATFL(List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold1) {
 		return arbeidsforhold1.stream()
 				.map(arbeidsforhold -> {
+					var aktivitetsgradOpt = arbeidsforhold.getAktivitetsgrad();
+					if (aktivitetsgradOpt.isPresent()) {
+						var aktivitetsgrad = aktivitetsgradOpt.get().divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP);
+						var opprettholdtInntekt = arbeidsforhold.getInntektsgrunnlagPrÅr().multiply(aktivitetsgrad);
+						return arbeidsforhold.getInntektsgrunnlagPrÅr().subtract(opprettholdtInntekt);
+					}
 					var utbetalingsprosent = arbeidsforhold.getUtbetalingsprosent();
 					var utbetalingsgrad = utbetalingsprosent.divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP);
 					return arbeidsforhold.getInntektsgrunnlagPrÅr().multiply(utbetalingsgrad);

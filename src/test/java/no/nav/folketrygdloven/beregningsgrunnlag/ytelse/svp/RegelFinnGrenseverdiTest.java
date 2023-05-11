@@ -26,6 +26,9 @@ public class RegelFinnGrenseverdiTest {
 	public static final String ORGNR = "910";
 	private static final String ORGNR_2 = "974760673";
 	private static final String ORGNR_3 = "976967631";
+	public static final Arbeidsforhold AF_1 = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR);
+	public static final Arbeidsforhold AF_2 = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR_2);
+	public static final Arbeidsforhold AF_3 = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR_3);
 
 	@Test
 	void ett_arbeidsforhold_under_6G() {
@@ -40,7 +43,7 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilArbeidsforhold(periode, 1L, ORGNR, beregnetPrÅr, 100);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 100D, 0D);
 
 		//Act
 		kjørRegel(periode);
@@ -62,7 +65,7 @@ public class RegelFinnGrenseverdiTest {
 				.medMidlertidigInaktivType(MidlertidigInaktivType.A)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilArbeidsforhold(periode, 1L, ORGNR, beregnetPrÅr, 100);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 100D, 0D);
 
 		var forventet = 260_000;
 
@@ -86,7 +89,7 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilArbeidsforhold(periode, 1L, ORGNR, beregnetPrÅr, 0);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 0D, 100D);
 
 		//Act
 		kjørRegel(periode);
@@ -107,7 +110,7 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilArbeidsforhold(periode, 1L, ORGNR, beregnetPrÅr, 100);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 100D, 0D);
 
 		//Act
 		kjørRegel(periode);
@@ -129,8 +132,8 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilArbeidsforhold(periode, 1L, ORGNR, beregnetPrÅr, 100);
-		leggTilArbeidsforhold(periode, 2L, ORGNR_2, beregnetPrÅr2, 100);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 100D, 0D);
+		leggTilArbeidsforhold(periode, AF_2, beregnetPrÅr2, null, 100D, 0D);
 
 		//Act
 		kjørRegel(periode);
@@ -153,8 +156,9 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilArbeidsforhold(periode, 1L, ORGNR, beregnetPrÅr, 100);
-		leggTilArbeidsforhold(periode, 2L, ORGNR_2, null, tilkommetPrÅr2, 100);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 100D, 0D);
+		leggTilArbeidsforhold(periode, AF_2, null, null, 100D, 0D);
+		leggTilTilkommet(periode, AF_2, tilkommetPrÅr2);
 
 		//Act
 		kjørRegel(periode);
@@ -177,8 +181,9 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilArbeidsforhold(periode, 1L, ORGNR, beregnetPrÅr, 100);
-		leggTilArbeidsforhold(periode, 2L, ORGNR_2, null, tilkommetPrÅr2, 100);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 100D, 0D);
+		leggTilArbeidsforhold(periode, AF_2, null, null, 100D, 0D);
+		leggTilTilkommet(periode, AF_2, tilkommetPrÅr2);
 
 		//Act
 		kjørRegel(periode);
@@ -204,9 +209,9 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilArbeidsforhold(periode, 1L, ORGNR, beregnetPrÅr, fordeltPrÅr, null,100);
-		leggTilArbeidsforhold(periode, 2L, ORGNR_2, null, fordeltPrÅr2, tilkommetPrÅr2, 50);
-
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, fordeltPrÅr, 100D,0D);
+		leggTilArbeidsforhold(periode, AF_2, null, fordeltPrÅr2, 50D,50D);
+		leggTilTilkommet(periode, AF_2, tilkommetPrÅr2);
 		//Act
 		kjørRegel(periode);
 
@@ -229,8 +234,8 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilArbeidsforhold(periode, 1L, ORGNR, beregnetPrÅr, 100);
-		leggTilArbeidsforhold(periode, 2L, ORGNR_2, beregnetPrÅr2, 100);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 100D, 0D);
+		leggTilArbeidsforhold(periode, AF_2, beregnetPrÅr2, null, 100D, 0D);
 
 		//Act
 		kjørRegel(periode);
@@ -254,9 +259,10 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilArbeidsforhold(periode, 1L, ORGNR, beregnetPrÅr, 100);
-		leggTilArbeidsforhold(periode, 2L, ORGNR_2, beregnetPrÅr2, 100);
-		leggTilArbeidsforhold(periode, 3L, ORGNR_3, null, tilkommetPrÅr, 100);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 100D, 0D);
+		leggTilArbeidsforhold(periode, AF_2, beregnetPrÅr2, null, 100D, 0D);
+		leggTilArbeidsforhold(periode, AF_3, null, null, 100D, 0D);
+		leggTilTilkommet(periode, AF_3, tilkommetPrÅr);
 
 		//Act
 		kjørRegel(periode);
@@ -279,8 +285,9 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilArbeidsforhold(periode, 1L, ORGNR, beregnetPrÅr, 100);
-		leggTilArbeidsforhold(periode, 2L, ORGNR_2, beregnetPrÅr2, 0);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 100D, 0D);
+		leggTilArbeidsforhold(periode, AF_2, beregnetPrÅr2, null, 0D, 100D);
+
 
 		//Act
 		kjørRegel(periode);
@@ -304,9 +311,10 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilArbeidsforhold(periode, 1L, ORGNR, beregnetPrÅr, 100);
-		leggTilArbeidsforhold(periode, 2L, ORGNR_2, beregnetPrÅr2, 0);
-		leggTilArbeidsforhold(periode, 3L, ORGNR_3, null, tilkommetPrÅr, 100);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 100D, 0D);
+		leggTilArbeidsforhold(periode, AF_2, beregnetPrÅr2, null, 0D, 100D);
+		leggTilArbeidsforhold(periode, AF_3, null, null, 100D, 100D);
+		leggTilTilkommet(periode, AF_3, tilkommetPrÅr);
 
 		//Act
 		kjørRegel(periode);
@@ -329,8 +337,8 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilArbeidsforhold(periode, 1L, ORGNR, beregnetPrÅr, 100);
-		leggTilArbeidsforhold(periode, 2L, ORGNR_2, beregnetPrÅr2, 0);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 100D, 0D);
+		leggTilArbeidsforhold(periode, AF_2, beregnetPrÅr2, null, 0D, 100D);
 
 		//Act
 		kjørRegel(periode);
@@ -354,10 +362,10 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilArbeidsforhold(periode, 1L, ORGNR, beregnetPrÅr, 100);
-		leggTilArbeidsforhold(periode, 2L, ORGNR_2, beregnetPrÅr2, 0);
-		leggTilArbeidsforhold(periode, 3L, ORGNR_3, null,tilkommetPrÅr, 0);
-
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 100D, 0D);
+		leggTilArbeidsforhold(periode, AF_2, beregnetPrÅr2, null, 0D, 100D);
+		leggTilArbeidsforhold(periode, AF_3, null, null, 0D, 100D);
+		leggTilTilkommet(periode, AF_3,tilkommetPrÅr);
 		//Act
 		kjørRegel(periode);
 
@@ -380,9 +388,10 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilArbeidsforhold(periode, 1L, ORGNR, beregnetPrÅr, 20);
-		leggTilArbeidsforhold(periode, 2L, ORGNR_2, beregnetPrÅr2, 50);
-		leggTilArbeidsforhold(periode, 3L, ORGNR_3, null,tilkommetPrÅr, 0);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 20D, 80D);
+		leggTilArbeidsforhold(periode, AF_2, beregnetPrÅr2, null, 50D, 50D);
+		leggTilArbeidsforhold(periode, AF_3, null, null, 0D, 100D);
+		leggTilTilkommet(periode, AF_3, tilkommetPrÅr);
 
 		//Act
 		kjørRegel(periode);
@@ -404,8 +413,8 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilArbeidsforhold(periode, 1L, ORGNR, beregnetPrÅr, 100);
-		leggTilArbeidsforhold(periode, 2L, ORGNR_2, beregnetPrÅr2, 0);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 100D, 0D);
+		leggTilArbeidsforhold(periode, AF_2, beregnetPrÅr2, null, 0D, 100D);
 
 		//Act
 		kjørRegel(periode);
@@ -427,8 +436,8 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilArbeidsforhold(periode, 1L, ORGNR, beregnetPrÅr, 100);
-		leggTilArbeidsforhold(periode, 2L, ORGNR_2, beregnetPrÅr2, 50);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 100D, 0D);
+		leggTilArbeidsforhold(periode, AF_2, beregnetPrÅr2, null, 50D, 50D);
 
 		//Act
 		kjørRegel(periode);
@@ -450,8 +459,8 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilArbeidsforhold(periode, 1L, ORGNR, beregnetPrÅr, 100);
-		leggTilArbeidsforhold(periode, 2L, ORGNR_2, beregnetPrÅr2, 50);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 100D, 0D);
+		leggTilArbeidsforhold(periode, AF_2, beregnetPrÅr2, null, 50D, 50D);
 
 		//Act
 		kjørRegel(periode);
@@ -473,8 +482,8 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilArbeidsforhold(periode, 1L, ORGNR, beregnetPrÅr, 100);
-		leggTilArbeidsforhold(periode, 2L, ORGNR_2, beregnetPrÅr2, 50);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 100D, 0D);
+		leggTilArbeidsforhold(periode, AF_2, beregnetPrÅr2, null, 50D, 50D);
 
 		//Act
 		kjørRegel(periode);
@@ -496,8 +505,8 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilArbeidsforhold(periode, 1L, ORGNR, beregnetPrÅr, 50);
-		leggTilArbeidsforhold(periode, 2L, ORGNR_2, beregnetPrÅr2, 100);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 50D, 50D);
+		leggTilArbeidsforhold(periode, AF_2, beregnetPrÅr2, null, 100D, 0D);
 
 		//Act
 		kjørRegel(periode);
@@ -520,8 +529,8 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilArbeidsforhold(periode, 1L, ORGNR, beregnetPrÅr, 50);
-		leggTilArbeidsforhold(periode, 2L, ORGNR_2, beregnetPrÅr2, 50);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 50D, 50D);
+		leggTilArbeidsforhold(periode, AF_2, beregnetPrÅr2, null, 50D, 50D);
 
 		//Act
 		kjørRegel(periode);
@@ -543,8 +552,8 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilArbeidsforhold(periode, 1L, ORGNR, beregnetPrÅr, 50);
-		leggTilArbeidsforhold(periode, 2L, ORGNR_2, beregnetPrÅr2, 50);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 50D, 50D);
+		leggTilArbeidsforhold(periode, AF_2, beregnetPrÅr2, null, 50D, 50D);
 
 		//Act
 		kjørRegel(periode);
@@ -566,8 +575,8 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilArbeidsforhold(periode, 1L, ORGNR, beregnetPrÅr, 50);
-		leggTilArbeidsforhold(periode, 2L, ORGNR_2, beregnetPrÅr2, 50);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 50D, 50D);
+		leggTilArbeidsforhold(periode, AF_2, beregnetPrÅr2, null, 50D, 50D);
 
 		//Act
 		kjørRegel(periode);
@@ -589,8 +598,8 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilArbeidsforhold(periode, 1L, ORGNR, beregnetPrÅr, 50);
-		leggTilArbeidsforhold(periode, 2L, ORGNR_2, beregnetPrÅr2, 50);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 50D, 50D);
+		leggTilArbeidsforhold(periode, AF_2, beregnetPrÅr2, null, 50D, 50D);
 
 		//Act
 		kjørRegel(periode);
@@ -614,9 +623,9 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilArbeidsforhold(periode, 1L, ORGNR, beregnetPrÅr, 100);
-		leggTilArbeidsforhold(periode, 2L, ORGNR_2, beregnetPrÅr2, 0);
-		leggTilArbeidsforhold(periode, 3L, ORGNR_3, beregnetPrÅr3, 0);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 100D, 0D);
+		leggTilArbeidsforhold(periode, AF_2, beregnetPrÅr2, null, 0D, 100D);
+		leggTilArbeidsforhold(periode, AF_3, beregnetPrÅr3, null, 0D, 100D);
 
 
 		//Act
@@ -640,10 +649,9 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilArbeidsforhold(periode, 1L, ORGNR, beregnetPrÅr, 100);
-		leggTilArbeidsforhold(periode, 2L, ORGNR_2, beregnetPrÅr2, 100);
-		leggTilArbeidsforhold(periode, 3L, ORGNR_3, beregnetPrÅr3, 0);
-
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 100D, 0D);
+		leggTilArbeidsforhold(periode, AF_2, beregnetPrÅr2, null, 100D, 0D);
+		leggTilArbeidsforhold(periode, AF_3, beregnetPrÅr3, null, 0D, 100D);
 
 		//Act
 		kjørRegel(periode);
@@ -666,9 +674,9 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilArbeidsforhold(periode, 1L, ORGNR, beregnetPrÅr, 100);
-		leggTilArbeidsforhold(periode, 2L, ORGNR_2, beregnetPrÅr2, 50);
-		leggTilArbeidsforhold(periode, 3L, ORGNR_3, beregnetPrÅr3, 0);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 100D, 0D);
+		leggTilArbeidsforhold(periode, AF_2, beregnetPrÅr2, null, 50D, 50D);
+		leggTilArbeidsforhold(periode, AF_3, beregnetPrÅr3, null, 0D, 100D);
 
 
 		//Act
@@ -692,9 +700,9 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilArbeidsforhold(periode, 1L, ORGNR, beregnetPrÅr, 100);
-		leggTilArbeidsforhold(periode, 2L, ORGNR_2, beregnetPrÅr2, 100);
-		leggTilArbeidsforhold(periode, 3L, ORGNR_3, beregnetPrÅr3, 100);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 100D, 0D);
+		leggTilArbeidsforhold(periode, AF_2, beregnetPrÅr2, null, 100D, 0D);
+		leggTilArbeidsforhold(periode, AF_3, beregnetPrÅr3, null, 100D, 0D);
 
 
 		//Act
@@ -716,7 +724,7 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilFrilans(periode, 1L, beregnetPrÅr, 100);
+		leggTilStatus(periode, AktivitetStatus.FL, beregnetPrÅr, 100D, 0D);
 
 		//Act
 		kjørRegel(periode);
@@ -737,7 +745,7 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilFrilans(periode, 1L, beregnetPrÅr, 0);
+		leggTilStatus(periode, AktivitetStatus.FL, beregnetPrÅr, 0D, 100D);
 
 		//Act
 		kjørRegel(periode);
@@ -758,7 +766,7 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilFrilans(periode, 1L, beregnetPrÅr, 100);
+		leggTilStatus(periode, AktivitetStatus.FL, beregnetPrÅr, 100D, 0D);
 
 		//Act
 		kjørRegel(periode);
@@ -779,7 +787,7 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilFrilans(periode, 1L, beregnetPrÅr, 50);
+		leggTilStatus(periode, AktivitetStatus.FL, beregnetPrÅr, 50D, 50D);
 
 		//Act
 		kjørRegel(periode);
@@ -800,8 +808,7 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilFrilans(periode, 1L, beregnetPrÅr, 50);
-
+		leggTilStatus(periode, AktivitetStatus.FL, beregnetPrÅr, 50D, 50D);
 
 		//Act
 		kjørRegel(periode);
@@ -824,8 +831,8 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilFrilans(periode, 1L, beregnetPrÅr, 100);
-		leggTilArbeidsforhold(periode, 2L, ORGNR, beregnetPrÅr2, 100);
+		leggTilStatus(periode, AktivitetStatus.FL, beregnetPrÅr, 100D, 0D);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr2, null, 100D, 0D);
 
 		//Act
 		kjørRegel(periode);
@@ -849,8 +856,9 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilFrilans(periode, 1L, null, tilkommetFrilansinntekt, 100);
-		leggTilArbeidsforhold(periode, 2L, ORGNR, beregnetPrÅr, 100);
+		leggTilStatus(periode, AktivitetStatus.FL, null, 100D, 0D);
+		leggTilTilkommet(periode, Arbeidsforhold.frilansArbeidsforhold(), tilkommetFrilansinntekt);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 100D, 0D);
 
 		//Act
 		kjørRegel(periode);
@@ -874,8 +882,9 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilFrilans(periode, 1L, beregnetPrÅr, tilkommetFrilansinntekt,100);
-		leggTilArbeidsforhold(periode, 2L, ORGNR, beregnetPrÅr2, 100);
+		leggTilStatus(periode, AktivitetStatus.FL, beregnetPrÅr, 100D, 0D);
+		leggTilTilkommet(periode, Arbeidsforhold.frilansArbeidsforhold(), tilkommetFrilansinntekt);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr2, null, 100D, 0D);
 
 		//Act
 		kjørRegel(periode);
@@ -899,8 +908,9 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilFrilans(periode, 1L, beregnetPrÅr, tilkommetFrilansinntekt, 100);
-		leggTilArbeidsforhold(periode, 2L, ORGNR, beregnetPrÅr2, 100);
+		leggTilStatus(periode, AktivitetStatus.FL, beregnetPrÅr, 100D, 0D);
+		leggTilTilkommet(periode, Arbeidsforhold.frilansArbeidsforhold(), tilkommetFrilansinntekt);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr2, null, 100D, 0D);
 
 		//Act
 		kjørRegel(periode);
@@ -923,8 +933,8 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilFrilans(periode, 1L, beregnetPrÅr, 100);
-		leggTilArbeidsforhold(periode, 2L, ORGNR, beregnetPrÅr2, 100);
+		leggTilStatus(periode, AktivitetStatus.FL, beregnetPrÅr, 100D, 0D);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr2, null, 100D, 0D);
 
 		//Act
 		kjørRegel(periode);
@@ -947,8 +957,8 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilFrilans(periode, 1L, beregnetPrÅr, 100);
-		leggTilArbeidsforhold(periode, 2L, ORGNR, beregnetPrÅr2, 0);
+		leggTilStatus(periode, AktivitetStatus.FL, beregnetPrÅr, 100D, 0D);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr2, null, 0D, 100D);
 
 		//Act
 		kjørRegel(periode);
@@ -970,8 +980,8 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilFrilans(periode, 1L, beregnetPrÅr, 0);
-		leggTilArbeidsforhold(periode, 2L, ORGNR, beregnetPrÅr2, 100);
+		leggTilStatus(periode, AktivitetStatus.FL, beregnetPrÅr, 0D, 100D);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr2, null, 100D, 0D);
 
 		//Act
 		kjørRegel(periode);
@@ -993,8 +1003,8 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilFrilans(periode, 1L, beregnetPrÅr, 100);
-		leggTilArbeidsforhold(periode, 2L, ORGNR, beregnetPrÅr2, 0);
+		leggTilStatus(periode, AktivitetStatus.FL, beregnetPrÅr, 100D, 0D);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr2, null, 0D, 100D);
 
 		//Act
 		kjørRegel(periode);
@@ -1016,8 +1026,8 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilFrilans(periode, 1L, beregnetPrÅr, 0);
-		leggTilArbeidsforhold(periode, 2L, ORGNR, beregnetPrÅr2, 100);
+		leggTilStatus(periode, AktivitetStatus.FL, beregnetPrÅr, 0D, 100D);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr2, null, 100D, 0D);
 
 		//Act
 		kjørRegel(periode);
@@ -1039,8 +1049,8 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilFrilans(periode, 1L, beregnetPrÅr, 100);
-		leggTilArbeidsforhold(periode, 2L, ORGNR, beregnetPrÅr2, 100);
+		leggTilStatus(periode, AktivitetStatus.FL, beregnetPrÅr, 100D, 0D);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr2, null, 100D, 0D);
 
 		//Act
 		kjørRegel(periode);
@@ -1062,8 +1072,8 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilFrilans(periode, 1L, beregnetPrÅr, 100);
-		leggTilArbeidsforhold(periode, 2L, ORGNR, beregnetPrÅr2, 0);
+		leggTilStatus(periode, AktivitetStatus.FL, beregnetPrÅr, 100D, 0D);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr2, null, 0D, 100D);
 
 		//Act
 		kjørRegel(periode);
@@ -1085,8 +1095,8 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilFrilans(periode, 1L, beregnetPrÅr, 0);
-		leggTilArbeidsforhold(periode, 2L, ORGNR, beregnetPrÅr2, 100);
+		leggTilStatus(periode, AktivitetStatus.FL, beregnetPrÅr, 0D, 100D);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr2, null, 100D, 0D);
 
 		//Act
 		kjørRegel(periode);
@@ -1108,7 +1118,7 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilNæring(periode, 1L, beregnetPrÅr, 100);
+		leggTilStatus(periode, AktivitetStatus.SN, beregnetPrÅr, 100D, 0D);
 
 		//Act
 		kjørRegel(periode);
@@ -1129,7 +1139,7 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilNæring(periode, 1L, beregnetPrÅr, 50);
+		leggTilStatus(periode, AktivitetStatus.SN, beregnetPrÅr, 50D, 50D);
 
 		//Act
 		kjørRegel(periode);
@@ -1153,7 +1163,8 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilNæring(periode, 1L, beregnetPrÅr, tilkommet, 50);
+		leggTilStatus(periode, AktivitetStatus.SN, beregnetPrÅr, 50D, 50D);
+		leggTilTilkommet(periode, null, tilkommet);
 
 		//Act
 		kjørRegel(periode);
@@ -1174,7 +1185,7 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilNæring(periode, 1L, beregnetPrÅr, 0);
+		leggTilStatus(periode, AktivitetStatus.SN, beregnetPrÅr, 0D, 100D);
 
 		//Act
 		kjørRegel(periode);
@@ -1195,8 +1206,8 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilNæring(periode, 1L, beregnetPrÅr, 100);
-		leggTilFrilans(periode, 2L, beregnetPrÅr, 100);
+		leggTilStatus(periode, AktivitetStatus.SN, beregnetPrÅr, 100D, 0D);
+		leggTilStatus(periode, AktivitetStatus.FL, beregnetPrÅr, 100D, 0D);
 
 		//Act
 		kjørRegel(periode);
@@ -1217,8 +1228,8 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilNæring(periode, 1L, beregnetPrÅr, 100);
-		leggTilFrilans(periode, 2L, beregnetPrÅr, 100);
+		leggTilStatus(periode, AktivitetStatus.SN, beregnetPrÅr, 100D, 0D);
+		leggTilStatus(periode, AktivitetStatus.FL, beregnetPrÅr, 100D, 0D);
 
 		//Act
 		kjørRegel(periode);
@@ -1241,8 +1252,9 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilNæring(periode, 1L, beregnetPrÅr, tilkommet, 100);
-		leggTilFrilans(periode, 2L, beregnetPrÅr, 100);
+		leggTilStatus(periode, AktivitetStatus.SN, beregnetPrÅr, 100D, 0D);
+		leggTilTilkommet(periode, null, tilkommet);
+		leggTilStatus(periode, AktivitetStatus.FL, beregnetPrÅr, 100D, 0D);
 
 		//Act
 		kjørRegel(periode);
@@ -1264,8 +1276,8 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilNæring(periode, 1L, beregnetPrÅr, 100);
-		leggTilFrilans(periode, 2L, beregnetPrÅr2, 0);
+		leggTilStatus(periode, AktivitetStatus.SN, beregnetPrÅr, 100D, 0D);
+		leggTilStatus(periode, AktivitetStatus.FL, beregnetPrÅr2, 0D, 100D);
 
 		//Act
 		kjørRegel(periode);
@@ -1287,8 +1299,8 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilNæring(periode, 1L, beregnetPrÅr, 100);
-		leggTilFrilans(periode, 2L, beregnetPrÅr2, 0);
+		leggTilStatus(periode, AktivitetStatus.SN, beregnetPrÅr, 100D, 0D);
+		leggTilStatus(periode, AktivitetStatus.FL, beregnetPrÅr2, 0D, 100D);
 
 		//Act
 		kjørRegel(periode);
@@ -1310,8 +1322,8 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilNæring(periode, 1L, beregnetPrÅr, 0);
-		leggTilFrilans(periode, 2L, beregnetPrÅr2, 100);
+		leggTilStatus(periode, AktivitetStatus.SN, beregnetPrÅr, 0D, 100D);
+		leggTilStatus(periode, AktivitetStatus.FL, beregnetPrÅr2, 100D, 0D);
 
 		//Act
 		kjørRegel(periode);
@@ -1332,9 +1344,9 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilNæring(periode, 1L, beregnetPrÅr, 100);
-		leggTilFrilans(periode, 2L, beregnetPrÅr, 100);
-		leggTilArbeidsforhold(periode, 3L, ORGNR, beregnetPrÅr, 100);
+		leggTilStatus(periode, AktivitetStatus.SN, beregnetPrÅr, 100D, 0D);
+		leggTilStatus(periode, AktivitetStatus.FL, beregnetPrÅr, 100D, 0D);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 100D, 0D);
 
 		//Act
 		kjørRegel(periode);
@@ -1355,9 +1367,9 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilNæring(periode, 1L, beregnetPrÅr, 100);
-		leggTilFrilans(periode, 2L, beregnetPrÅr, 0);
-		leggTilArbeidsforhold(periode, 3L, ORGNR, beregnetPrÅr, 0);
+		leggTilStatus(periode, AktivitetStatus.SN, beregnetPrÅr, 100D, 0D);
+		leggTilStatus(periode, AktivitetStatus.FL, beregnetPrÅr, 0D, 100D);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 0D, 100D);
 
 		//Act
 		kjørRegel(periode);
@@ -1378,9 +1390,9 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilNæring(periode, 1L, beregnetPrÅr, 0);
-		leggTilFrilans(periode, 2L, beregnetPrÅr, 0);
-		leggTilArbeidsforhold(periode, 3L, ORGNR, beregnetPrÅr, 100);
+		leggTilStatus(periode, AktivitetStatus.SN, beregnetPrÅr, 0D, 100D);
+		leggTilStatus(periode, AktivitetStatus.FL, beregnetPrÅr, 0D, 100D);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 100D, 0D);
 
 		//Act
 		kjørRegel(periode);
@@ -1403,9 +1415,9 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilNæring(periode, 1L, beregnetPrÅr, 0);
-		leggTilFrilans(periode, 2L, beregnetPrÅr2, 0);
-		leggTilArbeidsforhold(periode, 3L, ORGNR, beregnetPrÅr3, 100);
+		leggTilStatus(periode, AktivitetStatus.SN, beregnetPrÅr, 0D, 100D);
+		leggTilStatus(periode, AktivitetStatus.FL, beregnetPrÅr2, 0D, 100D);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr3, null, 100D, 0D);
 
 		//Act
 		kjørRegel(periode);
@@ -1428,9 +1440,9 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilNæring(periode, 1L, beregnetPrÅr, 100);
-		leggTilFrilans(periode, 2L, beregnetPrÅr2, 0);
-		leggTilArbeidsforhold(periode, 3L, ORGNR, beregnetPrÅr3, 0);
+		leggTilStatus(periode, AktivitetStatus.SN, beregnetPrÅr, 100D, 0D);
+		leggTilStatus(periode, AktivitetStatus.FL, beregnetPrÅr2, 0D, 100D);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr3, null, 0D, 100D);
 
 		//Act
 		kjørRegel(periode);
@@ -1453,9 +1465,9 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilNæring(periode, 1L, beregnetPrÅr, 50);
-		leggTilFrilans(periode, 2L, beregnetPrÅr2, 0);
-		leggTilArbeidsforhold(periode, 3L, ORGNR, beregnetPrÅr3, 0);
+		leggTilStatus(periode, AktivitetStatus.SN, beregnetPrÅr, 50D, 50D);
+		leggTilStatus(periode, AktivitetStatus.FL, beregnetPrÅr2, 0D, 100D);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr3, null, 0D, 100D);
 
 		//Act
 		kjørRegel(periode);
@@ -1477,8 +1489,8 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilNæring(periode, 1L, beregnetPrÅr, 50);
-		leggTilArbeidsforhold(periode, 2L, ORGNR, beregnetPrÅr2, 0);
+		leggTilStatus(periode, AktivitetStatus.SN, beregnetPrÅr, 50D, 50D);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr2, null, 0D, 100D);
 
 		//Act
 		kjørRegel(periode);
@@ -1500,8 +1512,8 @@ public class RegelFinnGrenseverdiTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilNæring(periode, 1L, beregnetPrÅr, 50);
-		leggTilArbeidsforhold(periode, 2L, ORGNR, beregnetPrÅr2, 0);
+		leggTilStatus(periode, AktivitetStatus.SN, beregnetPrÅr, 50D, 0D);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr2, null, 0D, 0D);
 
 		//Act
 		kjørRegel(periode);
@@ -1509,165 +1521,164 @@ public class RegelFinnGrenseverdiTest {
 		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(100_000));
 	}
 
+	@Test
+	void to_arbeidsforhold_under_6G_aktivitetsgrad_høyere_enn_utbetalingsgrad() {
+		//Arrange
+		double beregnetPrÅr = 250_000;
+		double tilkommetPrÅr2 = 100_000;
+
+		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
+				.build();
+
+		Beregningsgrunnlag.builder()
+				.leggTilToggle("GRADERING_MOT_INNTEKT", true)
+				.medBeregningsgrunnlagPeriode(periode)
+				.medGrunnbeløp(BigDecimal.valueOf(100_000));
+
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 50D, 70D);
+		leggTilArbeidsforhold(periode, AF_2, beregnetPrÅr, null, 50D, 70D);
+		leggTilTilkommet(periode, AF_2, tilkommetPrÅr2);
+
+		//Act
+		kjørRegel(periode);
+
+		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(50_000));
+	}
+
+	@Test
+	void to_arbeidsforhold_under_6G_aktivitetsgrad_mye_høyere_enn_utbetalingsgrad() {
+		//Arrange
+		double beregnetPrÅr = 250_000;
+		double tilkommetPrÅr2 = 30_000;
+
+		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
+				.build();
+
+		Beregningsgrunnlag.builder()
+				.leggTilToggle("GRADERING_MOT_INNTEKT", true)
+				.medBeregningsgrunnlagPeriode(periode)
+				.medGrunnbeløp(BigDecimal.valueOf(100_000));
+
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 50D, 90D);
+		leggTilArbeidsforhold(periode, AF_2, beregnetPrÅr, null, 30D, 90D);
+		leggTilTilkommet(periode, AF_2, tilkommetPrÅr2);
+
+		//Act
+		kjørRegel(periode);
+
+		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(20_000));
+	}
+
+	@Test
+	void to_arbeidsforhold_under_6G_aktivitetsgrad_lavere_enn_utbetalingsgrad() {
+		//Arrange
+		double beregnetPrÅr = 250_000;
+		double tilkommetPrÅr2 = 30_000;
+
+		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
+				.build();
+
+		Beregningsgrunnlag.builder()
+				.leggTilToggle("GRADERING_MOT_INNTEKT", true)
+				.medBeregningsgrunnlagPeriode(periode)
+				.medGrunnbeløp(BigDecimal.valueOf(100_000));
+
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 90D, 20D);
+		leggTilArbeidsforhold(periode, AF_2, beregnetPrÅr, null, 95D, 10D);
+		leggTilTilkommet(periode, AF_2, tilkommetPrÅr2);
+
+		//Act
+		kjørRegel(periode);
+
+		assertThat(periode.getGrenseverdi().setScale(2, RoundingMode.HALF_UP)).isEqualByComparingTo(BigDecimal.valueOf(395_000));
+	}
+
+
 	private RegelResultat kjørRegel(BeregningsgrunnlagPeriode periode) {
 		return new RegelFinnGrenseverdi(periode).evaluerRegel(periode);
 	}
 
-
 	private void leggTilArbeidsforhold(BeregningsgrunnlagPeriode periode,
-	                                   long andelsnr,
-	                                   String orgnr,
-	                                   double beregnetPrÅr,
-	                                   double utbetalingsgrad) {
-		Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr);
-		BeregningsgrunnlagPrStatus atfl = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
-
-		if (atfl == null) {
-			BeregningsgrunnlagPeriode.oppdater(periode)
-					.medBeregningsgrunnlagPrStatus(BeregningsgrunnlagPrStatus
-							.builder()
-							.medAktivitetStatus(AktivitetStatus.ATFL)
-							.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, null, 100_000, utbetalingsgrad, arbeidsforhold))
-							.build());
-		} else {
-			BeregningsgrunnlagPrStatus.builder(atfl)
-					.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, null, 100_000, utbetalingsgrad, arbeidsforhold))
-					.build();
-		}
-	}
-
-
-	private void leggTilArbeidsforhold(BeregningsgrunnlagPeriode periode,
-	                                   long andelsnr,
-	                                   String orgnr,
+	                                   Arbeidsforhold arbeidsforhold,
 	                                   Double beregnetPrÅr,
-									   Double tilkommetPrÅr,
-	                                   double utbetalingsgrad) {
-		Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr);
+	                                   Double fordeltPrÅr,
+	                                   Double utbetalingsgrad,
+	                                   Double aktivitetsgrad) {
 		BeregningsgrunnlagPrStatus atfl = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
-		leggTilTilkommet(periode, tilkommetPrÅr, arbeidsforhold, AktivitetStatus.AT);
 		if (atfl == null) {
 			BeregningsgrunnlagPeriode.oppdater(periode)
 					.medBeregningsgrunnlagPrStatus(BeregningsgrunnlagPrStatus
 							.builder()
 							.medAktivitetStatus(AktivitetStatus.ATFL)
-							.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, null, 100_000, utbetalingsgrad, arbeidsforhold))
+							.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(finnHøyestLedigeAndelsnr(periode), beregnetPrÅr, fordeltPrÅr, 100_000, utbetalingsgrad, aktivitetsgrad, arbeidsforhold))
 							.build());
 		} else {
 			BeregningsgrunnlagPrStatus.builder(atfl)
-					.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, null, 100_000, utbetalingsgrad, arbeidsforhold))
+					.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(finnHøyestLedigeAndelsnr(periode), beregnetPrÅr, fordeltPrÅr, 100_000, utbetalingsgrad, aktivitetsgrad, arbeidsforhold))
 					.build();
 		}
 	}
 
-	private void leggTilTilkommet(BeregningsgrunnlagPeriode periode, Double tilkommetPrÅr, Arbeidsforhold arbeidsforhold, AktivitetStatus aktivitetStatus) {
+
+	private void leggTilTilkommet(BeregningsgrunnlagPeriode periode,
+	                              Arbeidsforhold arbeidsforhold,
+	                              Double tilkommetPrÅr) {
+		AktivitetStatus status;
+		if (arbeidsforhold == null) {
+			status = AktivitetStatus.SN;
+		} else {
+			status = arbeidsforhold.erFrilanser() ? AktivitetStatus.FL : AktivitetStatus.AT;
+		}
+		lagTilkommet(periode, tilkommetPrÅr, arbeidsforhold, status);
+	}
+
+	private void lagTilkommet(BeregningsgrunnlagPeriode periode, Double tilkommetPrÅr, Arbeidsforhold arbeidsforhold, AktivitetStatus aktivitetStatus) {
 		if (tilkommetPrÅr != null) {
 			var tilkommetInntekt = new TilkommetInntekt(aktivitetStatus, arbeidsforhold, BigDecimal.valueOf(tilkommetPrÅr));
 			BeregningsgrunnlagPeriode.oppdater(periode).leggTilTilkommetInntektsforhold(List.of(tilkommetInntekt));
 		}
 	}
-
-	private void leggTilArbeidsforhold(BeregningsgrunnlagPeriode periode,
-	                                   long andelsnr,
-	                                   String orgnr,
-	                                   Double beregnetPrÅr,
-									   double fordeltPrÅr,
-	                                   Double tilkommetPrÅr,
-	                                   double utbetalingsgrad) {
-		Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr);
-		BeregningsgrunnlagPrStatus atfl = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
-
-		var beregningsgrunnlagPrArbeidsforhold = lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, fordeltPrÅr, 100_000, utbetalingsgrad, arbeidsforhold);
-		leggTilTilkommet(periode, tilkommetPrÅr, arbeidsforhold, AktivitetStatus.AT);
-		if (atfl == null) {
-			BeregningsgrunnlagPeriode.oppdater(periode)
-					.medBeregningsgrunnlagPrStatus(BeregningsgrunnlagPrStatus
-							.builder()
-							.medAktivitetStatus(AktivitetStatus.ATFL)
-							.medArbeidsforhold(beregningsgrunnlagPrArbeidsforhold)
-							.build());
-		} else {
-			BeregningsgrunnlagPrStatus.builder(atfl)
-					.medArbeidsforhold(beregningsgrunnlagPrArbeidsforhold)
-					.build();
-		}
-	}
-
-	private void leggTilFrilans(BeregningsgrunnlagPeriode periode,
-	                            long andelsnr,
-	                            double beregnetPrÅr, double utbetalingsgrad) {
-		Arbeidsforhold arbeidsforhold = Arbeidsforhold.frilansArbeidsforhold();
-		BeregningsgrunnlagPrStatus atfl = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
-
-		if (atfl == null) {
-			BeregningsgrunnlagPeriode.oppdater(periode)
-					.medBeregningsgrunnlagPrStatus(BeregningsgrunnlagPrStatus
-							.builder()
-							.medAktivitetStatus(AktivitetStatus.ATFL)
-							.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, null, 0, utbetalingsgrad, arbeidsforhold))
-							.build());
-		} else {
-			BeregningsgrunnlagPrStatus.builder(atfl)
-					.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, null, 0, utbetalingsgrad, arbeidsforhold))
-					.build();
-		}
-	}
-
-	private void leggTilFrilans(BeregningsgrunnlagPeriode periode,
-	                            long andelsnr,
-	                            Double beregnetPrÅr,
-								Double tilkommetPrÅr,
-	                            double utbetalingsgrad) {
-		Arbeidsforhold arbeidsforhold = Arbeidsforhold.frilansArbeidsforhold();
-		BeregningsgrunnlagPrStatus atfl = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
-		leggTilTilkommet(periode, tilkommetPrÅr, arbeidsforhold, AktivitetStatus.FL);
-		if (atfl == null) {
-			BeregningsgrunnlagPeriode.oppdater(periode)
-					.medBeregningsgrunnlagPrStatus(BeregningsgrunnlagPrStatus
-							.builder()
-							.medAktivitetStatus(AktivitetStatus.ATFL)
-							.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, null, 0, utbetalingsgrad, arbeidsforhold))
-							.build());
-		} else {
-			BeregningsgrunnlagPrStatus.builder(atfl)
-					.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(andelsnr, beregnetPrÅr, null, 0, utbetalingsgrad, arbeidsforhold))
-					.build();
-		}
-	}
-
-	private void leggTilNæring(BeregningsgrunnlagPeriode periode,
-	                           long andelsnr,
-	                           double beregnetPrÅr, double utbetalingsgrad) {
-		BeregningsgrunnlagPrStatus status = BeregningsgrunnlagPrStatus
-				.builder()
-				.medAndelNr(andelsnr)
-				.medAktivitetStatus(AktivitetStatus.SN)
-				.medBruttoPrÅr(BigDecimal.valueOf(beregnetPrÅr))
-				.medUtbetalingsprosent(BigDecimal.valueOf(utbetalingsgrad))
-				.build();
-		status.setErSøktYtelseFor(utbetalingsgrad > 0);
-		BeregningsgrunnlagPeriode.oppdater(periode)
-				.medBeregningsgrunnlagPrStatus(status);
-	}
-
-	private void leggTilNæring(BeregningsgrunnlagPeriode periode,
-	                           long andelsnr,
+	private void leggTilStatus(BeregningsgrunnlagPeriode periode,
+	                           AktivitetStatus status,
 	                           Double beregnetPrÅr,
-	                           double tilkommet,
-	                           double utbetalingsgrad) {
-		var bruttoPrÅr = beregnetPrÅr != null ? BigDecimal.valueOf(beregnetPrÅr) : null;
-		BeregningsgrunnlagPrStatus status = BeregningsgrunnlagPrStatus
-				.builder()
-				.medAndelNr(andelsnr)
-				.medAktivitetStatus(AktivitetStatus.SN)
-				.medBruttoPrÅr(bruttoPrÅr)
-				.medInntektsgrunnlagPrÅr(bruttoPrÅr)
-				.medUtbetalingsprosent(BigDecimal.valueOf(utbetalingsgrad))
-				.build();
-		status.setErSøktYtelseFor(utbetalingsgrad > 0);
-		BeregningsgrunnlagPeriode.oppdater(periode)
-				.leggTilTilkommetInntektsforhold(List.of(new TilkommetInntekt(AktivitetStatus.SN, null, BigDecimal.valueOf(tilkommet))))
-				.medBeregningsgrunnlagPrStatus(status);
+	                           Double utbetalingsgrad,
+	                           Double aktivitetsgrad) {
+		finnHøyestLedigeAndelsnr(periode);
+		if (status.equals(AktivitetStatus.FL)) {
+			Arbeidsforhold arbeidsforhold = Arbeidsforhold.frilansArbeidsforhold();
+			BeregningsgrunnlagPrStatus atfl = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+			if (atfl == null) {
+				BeregningsgrunnlagPeriode.oppdater(periode)
+						.medBeregningsgrunnlagPrStatus(BeregningsgrunnlagPrStatus
+								.builder()
+								.medAktivitetStatus(AktivitetStatus.ATFL)
+								.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(finnHøyestLedigeAndelsnr(periode), beregnetPrÅr, null, 0, utbetalingsgrad, aktivitetsgrad, arbeidsforhold))
+								.build());
+			} else {
+				BeregningsgrunnlagPrStatus.builder(atfl)
+						.medArbeidsforhold(lagBeregningsgrunnlagPrArbeidsforhold(finnHøyestLedigeAndelsnr(periode), beregnetPrÅr, null, 0, utbetalingsgrad, aktivitetsgrad, arbeidsforhold))
+						.build();
+			}
+		} else if (status.equals(AktivitetStatus.SN)) {
+			var bruttoPrÅr = beregnetPrÅr != null ? BigDecimal.valueOf(beregnetPrÅr) : null;
+			BeregningsgrunnlagPrStatus prStatus = BeregningsgrunnlagPrStatus
+					.builder()
+					.medAndelNr(finnHøyestLedigeAndelsnr(periode))
+					.medAktivitetStatus(AktivitetStatus.SN)
+					.medBruttoPrÅr(bruttoPrÅr)
+					.medInntektsgrunnlagPrÅr(bruttoPrÅr)
+					.medAktivitetsgrad(aktivitetsgrad == null ? null : BigDecimal.valueOf(aktivitetsgrad))
+					.medUtbetalingsprosent(BigDecimal.valueOf(utbetalingsgrad))
+					.build();
+			prStatus.setErSøktYtelseFor(utbetalingsgrad > 0);
+			BeregningsgrunnlagPeriode.oppdater(periode)
+					.medBeregningsgrunnlagPrStatus(prStatus);
+
+		}
+
 	}
 
 	private BeregningsgrunnlagPrArbeidsforhold lagBeregningsgrunnlagPrArbeidsforhold(long andelsnr,
@@ -1675,6 +1686,7 @@ public class RegelFinnGrenseverdiTest {
 	                                                                                 Double fordeltPrÅr,
 	                                                                                 double refusjonskrav,
 	                                                                                 double utbetalingsgrad,
+																					 Double aktivitetsgrad,
 	                                                                                 Arbeidsforhold arbeidsforhold) {
 		var bruttoPrÅr = finnBrutto(beregnetPrÅr, fordeltPrÅr);
 		BeregningsgrunnlagPrArbeidsforhold arb = BeregningsgrunnlagPrArbeidsforhold.builder()
@@ -1684,6 +1696,7 @@ public class RegelFinnGrenseverdiTest {
 				.medBruttoPrÅr(bruttoPrÅr)
 				.medRefusjonPrÅr(BigDecimal.valueOf(refusjonskrav))
 				.medUtbetalingsprosent(BigDecimal.valueOf(utbetalingsgrad))
+				.medAktivitetsgrad(aktivitetsgrad == null ? null : BigDecimal.valueOf(aktivitetsgrad))
 				.build();
 		arb.setErSøktYtelseFor(utbetalingsgrad > 0);
 		return arb;
@@ -1694,6 +1707,15 @@ public class RegelFinnGrenseverdiTest {
 			return BigDecimal.valueOf(fordeltPrÅr);
 		}
 		return beregnetPrÅr != null ? BigDecimal.valueOf(beregnetPrÅr) : BigDecimal.ZERO;
+	}
+
+	private static long finnHøyestLedigeAndelsnr(BeregningsgrunnlagPeriode periode) {
+		return periode.getBeregningsgrunnlagPrStatus().stream()
+				.mapToLong(bga -> bga.getAndelNr() != null
+						? bga.getAndelNr()
+						: bga.getArbeidsforhold().stream().mapToLong(BeregningsgrunnlagPrArbeidsforhold::getAndelNr).max().orElse(0L))
+				.max()
+				.orElse(0L);
 	}
 
 
