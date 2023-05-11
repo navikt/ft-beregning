@@ -1571,6 +1571,32 @@ public class RegelFinnGrenseverdiTest {
 		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(20_000));
 	}
 
+	@Test
+	void to_arbeidsforhold_under_6G_aktivitetsgrad_lavere_enn_utbetalingsgrad() {
+		//Arrange
+		double beregnetPrÅr = 250_000;
+		double tilkommetPrÅr2 = 30_000;
+
+		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
+				.build();
+
+		Beregningsgrunnlag.builder()
+				.leggTilToggle("GRADERING_MOT_INNTEKT", true)
+				.medBeregningsgrunnlagPeriode(periode)
+				.medGrunnbeløp(BigDecimal.valueOf(100_000));
+
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 90D, 20D);
+		leggTilArbeidsforhold(periode, AF_2, beregnetPrÅr, null, 95D, 10D);
+		leggTilTilkommet(periode, AF_2, tilkommetPrÅr2);
+
+		//Act
+		kjørRegel(periode);
+
+		assertThat(periode.getGrenseverdi().setScale(2, RoundingMode.HALF_UP)).isEqualByComparingTo(BigDecimal.valueOf(395_000));
+	}
+
+
 	private RegelResultat kjørRegel(BeregningsgrunnlagPeriode periode) {
 		return new RegelFinnGrenseverdi(periode).evaluerRegel(periode);
 	}
