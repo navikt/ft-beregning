@@ -107,4 +107,18 @@ public class SplittetAndel {
             return kladd;
         }
     }
+
+	@Override
+	public String toString() {
+		return "SplittetAndel{" +
+				"aktivitetStatus=" + aktivitetStatus +
+				", arbeidsforhold=" + arbeidsforhold +
+				", refusjonskravPrÅr=" + refusjonskravPrÅr +
+				", innvilgetRefusjonskravPrÅr=" + innvilgetRefusjonskravPrÅr +
+				", refusjonskravFristUtfall=" + refusjonskravFristUtfall +
+				", arbeidsperiodeFom=" + arbeidsperiodeFom +
+				", arbeidsperiodeTom=" + arbeidsperiodeTom +
+				", anvendtRefusjonskravfristHjemmel=" + anvendtRefusjonskravfristHjemmel +
+				'}';
+	}
 }
