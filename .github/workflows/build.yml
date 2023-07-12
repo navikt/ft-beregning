@@ -18,6 +18,8 @@ on:
 jobs:
   build-feature:
     name: Build
+    permissions:
+      contents: read
     uses: navikt/fp-gha-workflows/.github/workflows/build-feature.yml@main
     with:
       sonar-scan: true
@@ -25,6 +27,9 @@ jobs:
 
   release-drafter:
     name: Update
+    permissions:
+      contents: write
+      pull-requests: read
     if: github.ref_name == 'master'
     needs: build-feature
     uses: navikt/fp-gha-workflows/.github/workflows/release-drafter.yml@main
