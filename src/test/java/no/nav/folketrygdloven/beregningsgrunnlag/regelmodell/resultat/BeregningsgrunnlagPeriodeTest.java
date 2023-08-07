@@ -16,7 +16,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedH
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 
-public class BeregningsgrunnlagPeriodeTest {
+class BeregningsgrunnlagPeriodeTest {
 
     /*
     Rekkefølge for beregning av BeregningsgrunnlagPrStatus er viktig pga avhengigheter. Denne testen tester at status MS, SN

@@ -17,7 +17,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
 
-public class RegelFordelBeregningsgrunnlagTest {
+class RegelFordelBeregningsgrunnlagTest {
 
     private static final LocalDate STP = LocalDate.now();
     private static final String ORGNR1 = "995";

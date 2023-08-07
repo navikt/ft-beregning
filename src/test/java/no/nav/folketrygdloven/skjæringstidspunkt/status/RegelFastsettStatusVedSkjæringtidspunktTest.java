@@ -18,7 +18,7 @@ import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivPeriode;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModell;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.BeregningsgrunnlagPrStatus;
 
-public class RegelFastsettStatusVedSkjæringtidspunktTest {
+class RegelFastsettStatusVedSkjæringtidspunktTest {
     private static final String ORGNR = "7654";
     private static final Arbeidsforhold ARBEIDSFORHOLD =  Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR);
     private LocalDate skjæringstidspunktForBeregning;

@@ -29,7 +29,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.In
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
 
-public class RegelFullføreBeregningsgrunnlagTest {
+class RegelFullføreBeregningsgrunnlagTest {
 
 	private static Long generatedId = 1L;
 	private final Offset<Double> offset = Offset.offset(0.01);

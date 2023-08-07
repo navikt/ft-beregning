@@ -20,7 +20,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 import no.nav.fpsak.nare.specification.Specification;
 
-public class BeregningsgrunnlagDocTest {
+class BeregningsgrunnlagDocTest {
 
     @Test
     void test_documentation() { // NOSONAR

@@ -23,7 +23,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.grade
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.PeriodeSplittData;
 import no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil;
 
-public class VurderPeriodeForGraderingTest {
+class VurderPeriodeForGraderingTest {
 
 	// månedsbeløp tilsvarende 5,3G
 	private static final BigDecimal MÅNEDSBELØP_5_3G = BigDecimal.valueOf(40_000);

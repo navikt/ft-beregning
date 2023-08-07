@@ -26,7 +26,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.omp.OmsorgspengerGrunnlag;
 
-public class RegelVurderBeregningsgrunnlagTest {
+class RegelVurderBeregningsgrunnlagTest {
 
     private static Long generatedId = 1L;
     private final Offset<Double> offset = Offset.offset(0.01);

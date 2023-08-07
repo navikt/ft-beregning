@@ -20,7 +20,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.In
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.Resultat;
 
-public class SjekkOmRefusjonOverstigerBeregningsgrunnlagTest {
+class SjekkOmRefusjonOverstigerBeregningsgrunnlagTest {
 
     private static final LocalDate STP = LocalDate.now();
     private static final String ORGNR = "995";
@@ -48,7 +48,7 @@ public class SjekkOmRefusjonOverstigerBeregningsgrunnlagTest {
 	    var beregnetPrÅr = BigDecimal.valueOf(250_000);
         var andel = lagArbeidsforhold(refusjonskravPrÅr, beregnetPrÅr);
 	    var periode = new FordelPeriodeModell(Periode.of(STP, null), Collections.singletonList(andel));
-	    
+
         // Act
         var evaluering = kjørRegel(andel, periode);
 

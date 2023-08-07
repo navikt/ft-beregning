@@ -232,7 +232,7 @@ public class BeregningsgrunnlagPeriode {
 		return beregningsgrunnlag.getMinsteinntektMilitærHarKravPå();
 	}
 
-	public Optional<LocalDate> getFomDatoForIndividuellSammenligningATFL_SN() {
+	public Optional<LocalDate> getFomDatoForIndividuellSammenligningATFLSN() {
 		return beregningsgrunnlag.getFomDatoForIndividuellSammenligningATFLSN();
 	}
 

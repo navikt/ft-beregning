@@ -28,7 +28,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.In
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 
-public class RegelBeregningsgrunnlagKombinasjonATFLogSNTest {
+class RegelBeregningsgrunnlagKombinasjonATFLogSNTest {
     private LocalDate skjæringstidspunkt;
     private String orgnr;
 
