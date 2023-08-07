@@ -18,7 +18,7 @@ class SkalAvviksvurdereATFL extends LeafSpecification<BeregningsgrunnlagPeriode>
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-	    var fomdatoIndividuellSammenligning = grunnlag.getFomDatoForIndividuellSammenligningATFL_SN();
+	    var fomdatoIndividuellSammenligning = grunnlag.getFomDatoForIndividuellSammenligningATFLSN();
 	    var harStatusSN = grunnlag.getBeregningsgrunnlagPrStatus().stream()
 			    .anyMatch(bgps -> AktivitetStatus.SN.equals(bgps.getAktivitetStatus()));
 	    if (fomdatoIndividuellSammenligning.isEmpty()) {

@@ -46,7 +46,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Sammenlign
 import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.RegelBeregningsgrunnlagSN;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 
-public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
+class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
 
     private LocalDate skjæringstidspunkt;
     private Arbeidsforhold arbeidsforhold;

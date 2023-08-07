@@ -21,7 +21,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.Resultat;
 
-public class SjekkOmBortfallAvNaturalytelseTest {
+class SjekkOmBortfallAvNaturalytelseTest {
 
     private final static LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.now();
     private Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("12345");

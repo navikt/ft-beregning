@@ -45,7 +45,7 @@ class FastsettPeriodeUtbetalingsgradRegelTest {
 		kjørRegel(inputMedGraderingFraStartForNyttArbeid, perioder);
 		assertThat(perioder).hasSize(2);
 		assertThat(perioder.get(0).getNyeAndeler()).hasSize(1);
-		assertThat(perioder.get(1).getNyeAndeler().size()).isZero();
+		assertThat(perioder.get(1).getNyeAndeler()).isEmpty();
 	}
 
 	@Test

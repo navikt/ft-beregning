@@ -20,7 +20,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.Perio
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.gradering.PeriodeModellGradering;
 import no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil;
 
-public class IdentifiserPeriodeDerBruttoBgPåHøyerePrioriterteAndelerErMinst6GTest {
+class IdentifiserPeriodeDerBruttoBgPåHøyerePrioriterteAndelerErMinst6GTest {
 
     private static final BigDecimal GRUNNBELØP = BigDecimal.valueOf(90_000);
     private static final BigDecimal MÅNEDSBELØP_2G = BigDecimal.valueOf(15000);

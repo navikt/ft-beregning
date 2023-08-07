@@ -34,7 +34,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Pe
  * Testen kjøres når Regelflyt 8 blir implementert
  */
 
-public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
+class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
 
     private static final LocalDate skjæringstidspunkt = LocalDate.of(2018, Month.JANUARY, 15);
     private static final BigDecimal GRUNNBELØP = BigDecimal.valueOf(90000);

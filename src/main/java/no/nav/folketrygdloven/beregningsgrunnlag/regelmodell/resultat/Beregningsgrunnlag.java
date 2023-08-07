@@ -82,8 +82,8 @@ public class Beregningsgrunnlag {
     }
 
     public boolean erBesteberegnet() {
-        if (ytelsesSpesifiktGrunnlag instanceof ForeldrepengerGrunnlag) {
-            return ((ForeldrepengerGrunnlag) ytelsesSpesifiktGrunnlag).erBesteberegnet();
+        if (ytelsesSpesifiktGrunnlag instanceof ForeldrepengerGrunnlag fpGr) {
+            return fpGr.erBesteberegnet();
         }
         return false;
     }

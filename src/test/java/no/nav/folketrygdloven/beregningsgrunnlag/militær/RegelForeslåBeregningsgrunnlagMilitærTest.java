@@ -21,7 +21,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 
-public class RegelForeslåBeregningsgrunnlagMilitærTest {
+class RegelForeslåBeregningsgrunnlagMilitærTest {
 
     private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.of(2019, 2, 1);
     private static final BigDecimal GRUNNBELØP_2018 = BigDecimal.valueOf(96883);

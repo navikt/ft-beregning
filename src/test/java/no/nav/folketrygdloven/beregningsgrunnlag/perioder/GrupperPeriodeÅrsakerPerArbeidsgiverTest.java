@@ -20,7 +20,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Re
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.ArbeidsforholdOgInntektsmelding;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.PeriodeSplittData;
 
-public class GrupperPeriodeÅrsakerPerArbeidsgiverTest {
+class GrupperPeriodeÅrsakerPerArbeidsgiverTest {
     @Test
     void toArbeidsgivereTreDatoer() {
         // Arrange

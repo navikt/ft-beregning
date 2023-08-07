@@ -20,7 +20,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.fp.Foreldrep
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.Resultat;
 
-public class SjekkOmBesteberegningTest {
+class SjekkOmBesteberegningTest {
 
     private Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("12345");
 

@@ -31,7 +31,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Pe
  * Testen kjøres når Regelflyt 13 blir implementert
  */
 
-public class RegelFastsettAvkortetBGNårRefusjonOver6GTest {
+class RegelFastsettAvkortetBGNårRefusjonOver6GTest {
 
     private final LocalDate skjæringstidspunkt = LocalDate.of(2018, Month.JANUARY, 15);
     private final long seksG = GRUNNBELØP_2017 * 6;

@@ -29,7 +29,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.omp.Omsorgsp
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.Resultat;
 
-public class BeregnPrArbeidsforholdFraAOrdningenTest {
+class BeregnPrArbeidsforholdFraAOrdningenTest {
 
 	private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.of(2021, 10, 15);
 	private Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(SKJÆRINGSTIDSPUNKT.minusYears(2), "12345");

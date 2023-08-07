@@ -22,7 +22,7 @@ import no.nav.fpsak.nare.doc.RuleDescriptionDigraph;
 import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 import no.nav.fpsak.nare.specification.Specification;
 
-public class BeregningsgrunnlagDocTest {
+class BeregningsgrunnlagDocTest {
 
     private static final LocalDate skjæringstidspunkt = LocalDate.of(2018, Month.JANUARY, 15);
     private BeregningsgrunnlagPeriode regelmodell;

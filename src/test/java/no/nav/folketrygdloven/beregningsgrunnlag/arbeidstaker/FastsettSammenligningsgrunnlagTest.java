@@ -16,7 +16,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SammenligningsGrunnlag;
 
-public class FastsettSammenligningsgrunnlagTest {
+class FastsettSammenligningsgrunnlagTest {
 
     /*
     Scenarioer i testene er tatt fra https://confluence.adeo.no/display/MODNAV/3b+Fastsette+sammenligningsgrunnlagsperiode#FunksjonellogUX

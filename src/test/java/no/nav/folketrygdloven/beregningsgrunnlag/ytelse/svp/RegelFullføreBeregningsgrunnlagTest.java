@@ -25,7 +25,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 
-public class RegelFullføreBeregningsgrunnlagTest {
+class RegelFullføreBeregningsgrunnlagTest {
     public static final String ORGNR1 = "910";
     private static final String ORGNR2 = "974760673";
     private static final String ORGNR3 = "976967631";

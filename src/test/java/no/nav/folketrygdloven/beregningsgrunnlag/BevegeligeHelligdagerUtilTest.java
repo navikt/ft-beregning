@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-public class BevegeligeHelligdagerUtilTest {
+class BevegeligeHelligdagerUtilTest {
 
     @Test
     void skal_gi_helligdagene_for_2017() {
