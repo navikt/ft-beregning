@@ -32,7 +32,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.fp.Foreldrep
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 
-public class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
+class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
 
     private LocalDate skjæringstidspunkt = LocalDate.of(2018, Month.JANUARY, 15);
     @Test

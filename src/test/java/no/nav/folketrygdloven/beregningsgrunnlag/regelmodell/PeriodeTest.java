@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
 
-public class PeriodeTest {
+class PeriodeTest {
 
     @Test
     void overlapper_A_starter_før_og_slutter_etter_B() {

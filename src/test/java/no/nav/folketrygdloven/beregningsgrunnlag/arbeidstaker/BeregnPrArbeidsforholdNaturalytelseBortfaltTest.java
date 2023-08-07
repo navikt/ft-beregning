@@ -19,7 +19,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
 
-public class BeregnPrArbeidsforholdNaturalytelseBortfaltTest {
+class BeregnPrArbeidsforholdNaturalytelseBortfaltTest {
 
 
     private final static LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.now();

@@ -36,7 +36,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
 
-public class BeregningsgrunnlagTest {
+class BeregningsgrunnlagTest {
 
 	private static final String ORGNR2 = "654321987";
 	private final LocalDate skjæringstidspunkt = LocalDate.of(2018, Month.JANUARY, 15);

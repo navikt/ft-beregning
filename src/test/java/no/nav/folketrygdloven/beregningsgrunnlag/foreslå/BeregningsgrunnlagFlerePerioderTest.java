@@ -29,7 +29,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
 
-public class BeregningsgrunnlagFlerePerioderTest {
+class BeregningsgrunnlagFlerePerioderTest {
 
     private static final String ORGNR2 = "456";
     private LocalDate skjæringstidspunkt;

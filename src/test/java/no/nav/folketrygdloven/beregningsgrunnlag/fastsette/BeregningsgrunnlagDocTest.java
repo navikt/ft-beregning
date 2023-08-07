@@ -24,7 +24,7 @@ import no.nav.fpsak.nare.doc.RuleDescriptionDigraph;
 import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 import no.nav.fpsak.nare.specification.Specification;
 
-public class BeregningsgrunnlagDocTest {
+class BeregningsgrunnlagDocTest {
 
     @Test
     void test_documentation() { // NOSONAR

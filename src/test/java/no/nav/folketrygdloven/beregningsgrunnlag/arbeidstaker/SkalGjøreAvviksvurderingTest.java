@@ -26,7 +26,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.omp.Omsorgsp
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.Resultat;
 
-public class SkalGjøreAvviksvurderingTest {
+class SkalGjøreAvviksvurderingTest {
 	private Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("12345");
 	private long gVerdi = 99858L;
 

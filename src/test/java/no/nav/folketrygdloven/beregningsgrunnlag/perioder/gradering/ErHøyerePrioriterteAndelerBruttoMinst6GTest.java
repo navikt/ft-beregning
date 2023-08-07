@@ -18,7 +18,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.Brutt
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.PeriodisertBruttoBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil;
 
-public class ErHøyerePrioriterteAndelerBruttoMinst6GTest {
+class ErHøyerePrioriterteAndelerBruttoMinst6GTest {
     private static final BigDecimal GRUNNBELØP = BigDecimal.valueOf(90_000);
     private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.of(2019, Month.FEBRUARY, 14);
 

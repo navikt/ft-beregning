@@ -15,7 +15,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.RegelResultat;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivPeriode;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModell;
 
-public class RegelFastsettSkjæringstidspunktTest {
+class RegelFastsettSkjæringstidspunktTest {
     private static final String ARBEIDSFORHOLD = "5678";
     private final LocalDate skjæringstidspunktForOpptjening = LocalDate.of(2017, Month.DECEMBER, 5);
     private AktivitetStatusModell regelmodell;

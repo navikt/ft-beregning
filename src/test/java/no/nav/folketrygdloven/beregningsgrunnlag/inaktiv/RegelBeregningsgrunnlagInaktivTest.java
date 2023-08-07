@@ -284,7 +284,7 @@ class RegelBeregningsgrunnlagInaktivTest {
 		assertThat(bg.getAktivitetStatuser().get(0).getHjemmel()).isEqualTo(BeregningsgrunnlagHjemmel.K9_HJEMMEL_MIDLERTIDIG_INAKTIV);
 
 		var sg = bg.getSammenligningsgrunnlagForStatus(SammenligningGrunnlagType.MIDLERTIDIG_INAKTIV).orElseThrow();
-		assertThat(sg.getRapportertPrÅr().compareTo(forventet_rapportert)).isEqualTo(0);
+		assertThat(sg.getRapportertPrÅr()).isEqualByComparingTo(forventet_rapportert);
 	}
 
 	@Test

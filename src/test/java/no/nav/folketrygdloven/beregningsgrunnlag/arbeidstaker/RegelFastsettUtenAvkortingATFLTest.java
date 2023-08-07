@@ -21,7 +21,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.Beregnings
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 
-public class RegelFastsettUtenAvkortingATFLTest {
+class RegelFastsettUtenAvkortingATFLTest {
 
     LocalDate skjæringstidspunkt = LocalDate.of(2018, Month.JANUARY, 15);
 
