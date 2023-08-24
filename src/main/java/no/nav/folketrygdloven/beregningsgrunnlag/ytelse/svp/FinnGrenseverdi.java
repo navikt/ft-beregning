@@ -34,7 +34,7 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 		BigDecimal summerAvkortetGradertMotUttak = summerAvkortetGradertMotUttak(grunnlag);
 		var grenseverdi = summerAvkortetGradertMotUttak;
 		BigDecimal sumAvkortet = summerAvkortet(grunnlag);
-		BigDecimal totalUtbetalingsgradFraUttak = summerAvkortetGradertMotUttak.divide(sumAvkortet, 4, RoundingMode.HALF_UP);
+		BigDecimal totalUtbetalingsgradFraUttak = sumAvkortet.signum() != 0 ? summerAvkortetGradertMotUttak.divide(sumAvkortet, 4, RoundingMode.HALF_UP) : BigDecimal.ZERO;
 		grunnlag.setTotalUtbetalingsgradFraUttak(totalUtbetalingsgradFraUttak);
 		resultater.put("totalUtbetalingsgradFraUttak", totalUtbetalingsgradFraUttak);
 
