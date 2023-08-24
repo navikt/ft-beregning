@@ -32,24 +32,24 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 
 		//gradering mot uttak
 		BigDecimal summerAvkortetGradertMotUttak = summerAvkortetGradertMotUttak(grunnlag);
+		var grenseverdi = summerAvkortetGradertMotUttak;
 		BigDecimal sumAvkortet = summerAvkortet(grunnlag);
-		BigDecimal totalUtbetalingsgradFraUttak = summerAvkortetGradertMotUttak.divide(sumAvkortet, 4, RoundingMode.HALF_UP); //her prosenter
+		BigDecimal totalUtbetalingsgradFraUttak = summerAvkortetGradertMotUttak.divide(sumAvkortet, 4, RoundingMode.HALF_UP);
 		grunnlag.setTotalUtbetalingsgradFraUttak(totalUtbetalingsgradFraUttak);
 		resultater.put("totalUtbetalingsgradFraUttak", totalUtbetalingsgradFraUttak);
 
 		//hvis §8-47a, skaler med fast faktor
 		var erInaktivTypeA = MidlertidigInaktivType.A.equals(grunnlag.getBeregningsgrunnlag().getMidlertidigInaktivType());
-		var grenseverdi = summerAvkortetGradertMotUttak;
 		if (erInaktivTypeA) {
 			BigDecimal reduksjonsfaktor = grunnlag.getBeregningsgrunnlag().getMidlertidigInaktivTypeAReduksjonsfaktor();
 			grenseverdi = grenseverdi.multiply(reduksjonsfaktor);
-			resultater.put("grad847a", reduksjonsfaktor);//og sett på grunnlag
+			resultater.put("grad847a", reduksjonsfaktor);
 		}
 
 		//juster ned med tilkommet inntekt hvis det gir lavere utbetaling enn overstående
 		if (grunnlag.getBeregningsgrunnlag().getToggles().isEnabled("GRADERING_MOT_INNTEKT", false) && !grunnlag.getTilkommetInntektsforholdListe().isEmpty()) {
 			BigDecimal totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt = andelBeholdtEtterGradertMotTilkommetInntekt(grunnlag);
-			resultater.put("totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt", totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt); //og sett på grunnlag
+			resultater.put("totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt", totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt);
 			grunnlag.setTotalUtbetalingsgradEtterReduksjonVedTilkommetInntekt(totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt);
 
 			//deprecated etter totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt ble lagt til?
