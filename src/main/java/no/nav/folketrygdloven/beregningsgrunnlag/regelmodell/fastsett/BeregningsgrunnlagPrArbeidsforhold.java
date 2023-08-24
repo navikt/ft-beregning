@@ -33,7 +33,7 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 	private BigDecimal redusertBrukersAndelPrÅr;
 	private Long dagsatsBruker;
 	private Long dagsatsArbeidsgiver;
-	private BigDecimal andelsmessigFørGraderingPrAar;
+	private BigDecimal andelsmessigFørGraderingPrAar; //avkortet mot 6G, innført for å støtte at utbetalingsgrader settes i beregning for k9 og SVP (isdf i tilkjent ytelse-steg som for FP)
 
 
 	public String getArbeidsgiverId() {

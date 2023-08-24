@@ -29,23 +29,31 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 	@Override
 	public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
 		Map<String, Object> resultater = new HashMap<>();
-		BigDecimal sumAvkortetSkalBrukes = BigDecimal.ZERO;
-		for (BeregningsgrunnlagPrStatus bps : grunnlag.getBeregningsgrunnlagPrStatusSomSkalBrukes()) {
-			if (bps.erArbeidstakerEllerFrilanser()) {
-				sumAvkortetSkalBrukes = sumAvkortetSkalBrukes.add(bps.getArbeidsforholdSomSkalBrukes().stream()
-						.map(arb -> arb.getAndelsmessigFørGraderingPrAar().multiply(arb.getUtbetalingsprosent().scaleByPowerOfTen(-2)))
-						.reduce(BigDecimal::add).orElse(BigDecimal.ZERO));
-			} else {
-				sumAvkortetSkalBrukes = sumAvkortetSkalBrukes.add(bps.getAndelsmessigFørGraderingPrAar().multiply(bps.getUtbetalingsprosent().scaleByPowerOfTen(-2)));
-			}
-		}
+
+		//gradering mot uttak
+		BigDecimal summerAvkortetGradertMotUttak = summerAvkortetGradertMotUttak(grunnlag);
+		BigDecimal sumAvkortet = summerAvkortet(grunnlag);
+		BigDecimal totalUtbetalingsgradFraUttak = summerAvkortetGradertMotUttak.divide(sumAvkortet, 4, RoundingMode.HALF_UP); //her prosenter
+		grunnlag.setTotalUtbetalingsgradFraUttak(totalUtbetalingsgradFraUttak);
+		resultater.put("totalUtbetalingsgradFraUttak", totalUtbetalingsgradFraUttak);
+
+		//hvis §8-47a, skaler med fast faktor
 		var erInaktivTypeA = MidlertidigInaktivType.A.equals(grunnlag.getBeregningsgrunnlag().getMidlertidigInaktivType());
-		var grenseverdi = sumAvkortetSkalBrukes;
+		var grenseverdi = summerAvkortetGradertMotUttak;
 		if (erInaktivTypeA) {
-			grenseverdi = grenseverdi.multiply(grunnlag.getBeregningsgrunnlag().getMidlertidigInaktivTypeAReduksjonsfaktor());
+			BigDecimal reduksjonsfaktor = grunnlag.getBeregningsgrunnlag().getMidlertidigInaktivTypeAReduksjonsfaktor();
+			grenseverdi = grenseverdi.multiply(reduksjonsfaktor);
+			resultater.put("grad847a", reduksjonsfaktor);//og sett på grunnlag
 		}
+
+		//juster ned med tilkommet inntekt hvis det gir lavere utbetaling enn overstående
 		if (grunnlag.getBeregningsgrunnlag().getToggles().isEnabled("GRADERING_MOT_INNTEKT", false) && !grunnlag.getTilkommetInntektsforholdListe().isEmpty()) {
-			grenseverdi = gradertMotTilkommetInntekt(grunnlag, grenseverdi);
+			BigDecimal totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt = andelBeholdtEtterGradertMotTilkommetInntekt(grunnlag);
+			resultater.put("totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt", totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt); //og sett på grunnlag
+			grunnlag.setTotalUtbetalingsgradEtterReduksjonVedTilkommetInntekt(totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt);
+
+			//deprecated etter totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt ble lagt til?
+			grenseverdi = totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt.compareTo(BigDecimal.ONE) < 0 ? grenseverdi.multiply(totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt) : grenseverdi;
 			if (grunnlag.getInntektsgraderingFraBruttoBeregningsgrunnlag() != null) {
 				resultater.put("inntektgraderingsprosent", grunnlag.getInntektsgraderingFraBruttoBeregningsgrunnlag());
 			}
@@ -58,7 +66,35 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 
 	}
 
-	private BigDecimal gradertMotTilkommetInntekt(BeregningsgrunnlagPeriode grunnlag, BigDecimal grenseverdi) {
+	private static BigDecimal summerAvkortetGradertMotUttak(BeregningsgrunnlagPeriode grunnlag) {
+		BigDecimal sum = BigDecimal.ZERO;
+		for (BeregningsgrunnlagPrStatus bps : grunnlag.getBeregningsgrunnlagPrStatusSomSkalBrukes()) {
+			if (bps.erArbeidstakerEllerFrilanser()) {
+				sum = sum.add(bps.getArbeidsforholdSomSkalBrukes().stream()
+						.map(arb -> arb.getAndelsmessigFørGraderingPrAar().multiply(arb.getUtbetalingsprosent().scaleByPowerOfTen(-2)))
+						.reduce(BigDecimal::add).orElse(BigDecimal.ZERO));
+			} else {
+				sum = sum.add(bps.getAndelsmessigFørGraderingPrAar().multiply(bps.getUtbetalingsprosent().scaleByPowerOfTen(-2)));
+			}
+		}
+		return sum;
+	}
+
+	private static BigDecimal summerAvkortet(BeregningsgrunnlagPeriode grunnlag) {
+		BigDecimal sum = BigDecimal.ZERO;
+		for (BeregningsgrunnlagPrStatus bps : grunnlag.getBeregningsgrunnlagPrStatusSomSkalBrukes()) {
+			if (bps.erArbeidstakerEllerFrilanser()) {
+				sum = sum.add(bps.getArbeidsforholdSomSkalBrukes().stream()
+						.map(arb -> arb.getAndelsmessigFørGraderingPrAar())
+						.reduce(BigDecimal::add).orElse(BigDecimal.ZERO));
+			} else {
+				sum = sum.add(bps.getAndelsmessigFørGraderingPrAar());
+			}
+		}
+		return sum;
+	}
+
+	private BigDecimal andelBeholdtEtterGradertMotTilkommetInntekt(BeregningsgrunnlagPeriode grunnlag) {
 		BigDecimal bortfalt = finnBortfaltInntekt(grunnlag);
 		var totaltGradertGrunnlag = grunnlag.getBeregningsgrunnlagPrStatus().stream()
 				.map(BeregningsgrunnlagPrStatus::getGradertBruttoInkludertNaturalytelsePrÅr)
@@ -73,15 +109,7 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 		var graderingMotTotal = bortfalt.divide(totaltGrunnlag, 10, RoundingMode.HALF_UP);
 		grunnlag.setInntektsgraderingFraBruttoBeregningsgrunnlag(graderingMotTotal.multiply(BigDecimal.valueOf(100)));
 
-		// Grenseverdien er allerede gradert mot arbeidstid her
-		var graderingEtterGraderingMotArbeidstid = bortfalt.divide(totaltGradertGrunnlag, 10, RoundingMode.HALF_UP);
-		var grenseverdiGradertMotInntekt = grenseverdi.multiply(graderingEtterGraderingMotArbeidstid);
-
-		if (grenseverdi.compareTo(grenseverdiGradertMotInntekt) < 0) {
-			return grenseverdi;
-		} else {
-			return grenseverdiGradertMotInntekt;
-		}
+		return bortfalt.divide(totaltGradertGrunnlag, 10, RoundingMode.HALF_UP);
 	}
 
 	private BigDecimal finnBortfaltInntekt(BeregningsgrunnlagPeriode grunnlag) {

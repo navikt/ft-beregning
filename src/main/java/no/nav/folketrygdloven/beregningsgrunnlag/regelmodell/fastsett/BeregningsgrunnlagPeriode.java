@@ -34,6 +34,9 @@ public class BeregningsgrunnlagPeriode {
 	 */
 	private BigDecimal inntektsgraderingFraBruttoBeregningsgrunnlag;
 
+	private BigDecimal totalUtbetalingsgradFraUttak;
+	private BigDecimal totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt;
+
 	private Dekningsgrad dekningsgrad = Dekningsgrad.DEKNINGSGRAD_100;
 	private boolean erVilkårOppfylt = true;
 
@@ -193,6 +196,22 @@ public class BeregningsgrunnlagPeriode {
 
 	public static Builder oppdater(BeregningsgrunnlagPeriode eksisterendeBeregningsgrunnlagPeriode) {
 		return new Builder(eksisterendeBeregningsgrunnlagPeriode);
+	}
+
+	public BigDecimal getTotalUtbetalingsgradFraUttak() {
+		return totalUtbetalingsgradFraUttak;
+	}
+
+	public void setTotalUtbetalingsgradFraUttak(BigDecimal totalUtbetalingsgradFraUttak) {
+		this.totalUtbetalingsgradFraUttak = totalUtbetalingsgradFraUttak;
+	}
+
+	public BigDecimal getTotalUtbetalingsgradEtterReduksjonVedTilkommetInntekt() {
+		return totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt;
+	}
+
+	public void setTotalUtbetalingsgradEtterReduksjonVedTilkommetInntekt(BigDecimal totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt) {
+		this.totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt = totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt;
 	}
 
 	public static class Builder {
