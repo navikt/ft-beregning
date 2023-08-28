@@ -48,12 +48,14 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 
 		//juster ned med tilkommet inntekt hvis det gir lavere utbetaling enn overstående
 		if (grunnlag.getBeregningsgrunnlag().getToggles().isEnabled("GRADERING_MOT_INNTEKT", false) && !grunnlag.getTilkommetInntektsforholdListe().isEmpty()) {
-			BigDecimal totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt = andelBeholdtEtterGradertMotTilkommetInntekt(grunnlag);
+			BigDecimal graderingPåToppenAvUttakgraderingPgaTilkommetInntekt = andelBeholdtEtterGradertMotTilkommetInntekt(grunnlag);
+			resultater.put("graderingPåToppenAvUttakgraderingPgaTilkommetInntekt", min(BigDecimal.ONE, graderingPåToppenAvUttakgraderingPgaTilkommetInntekt));
+			BigDecimal totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt = min(BigDecimal.ONE, totalUtbetalingsgradFraUttak.multiply(graderingPåToppenAvUttakgraderingPgaTilkommetInntekt));
 			resultater.put("totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt", totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt);
 			grunnlag.setTotalUtbetalingsgradEtterReduksjonVedTilkommetInntekt(totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt);
 
 			//deprecated etter totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt ble lagt til?
-			grenseverdi = totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt.compareTo(BigDecimal.ONE) < 0 ? grenseverdi.multiply(totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt) : grenseverdi;
+			grenseverdi = graderingPåToppenAvUttakgraderingPgaTilkommetInntekt.compareTo(BigDecimal.ONE) < 0 ? grenseverdi.multiply(graderingPåToppenAvUttakgraderingPgaTilkommetInntekt) : grenseverdi;
 			if (grunnlag.getInntektsgraderingFraBruttoBeregningsgrunnlag() != null) {
 				resultater.put("inntektgraderingsprosent", grunnlag.getInntektsgraderingFraBruttoBeregningsgrunnlag());
 			}
@@ -64,6 +66,10 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 		resultat.setEvaluationProperties(resultater);
 		return resultat;
 
+	}
+
+	static BigDecimal min(BigDecimal value, BigDecimal maxValue){
+		return value.compareTo(maxValue) > 0 ? maxValue : value;
 	}
 
 	private static BigDecimal summerAvkortetGradertMotUttak(BeregningsgrunnlagPeriode grunnlag) {
@@ -109,8 +115,7 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 		var graderingMotTotal = bortfalt.divide(totaltGrunnlag, 10, RoundingMode.HALF_UP);
 		grunnlag.setInntektsgraderingFraBruttoBeregningsgrunnlag(graderingMotTotal.multiply(BigDecimal.valueOf(100)));
 
-		BigDecimal andel = bortfalt.divide(totaltGradertGrunnlag, 10, RoundingMode.HALF_UP);
-		return andel.compareTo(BigDecimal.ONE) < 0 ? andel : BigDecimal.ONE;
+		return bortfalt.divide(totaltGradertGrunnlag, 10, RoundingMode.HALF_UP);
 	}
 
 	private BigDecimal finnBortfaltInntekt(BeregningsgrunnlagPeriode grunnlag) {
