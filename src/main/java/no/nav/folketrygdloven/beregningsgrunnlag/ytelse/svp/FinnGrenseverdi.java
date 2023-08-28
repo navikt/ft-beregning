@@ -109,7 +109,8 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 		var graderingMotTotal = bortfalt.divide(totaltGrunnlag, 10, RoundingMode.HALF_UP);
 		grunnlag.setInntektsgraderingFraBruttoBeregningsgrunnlag(graderingMotTotal.multiply(BigDecimal.valueOf(100)));
 
-		return bortfalt.divide(totaltGradertGrunnlag, 10, RoundingMode.HALF_UP);
+		BigDecimal andel = bortfalt.divide(totaltGradertGrunnlag, 10, RoundingMode.HALF_UP);
+		return andel.compareTo(BigDecimal.ONE) < 0 ? andel : BigDecimal.ONE;
 	}
 
 	private BigDecimal finnBortfaltInntekt(BeregningsgrunnlagPeriode grunnlag) {
