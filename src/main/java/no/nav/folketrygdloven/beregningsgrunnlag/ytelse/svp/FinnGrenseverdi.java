@@ -68,8 +68,8 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 
 	}
 
-	static BigDecimal min(BigDecimal value, BigDecimal maxValue){
-		return value.compareTo(maxValue) > 0 ? maxValue : value;
+	static BigDecimal min(BigDecimal a, BigDecimal b){
+		return a.compareTo(b) > 0 ? b : a;
 	}
 
 	private static BigDecimal summerAvkortetGradertMotUttak(BeregningsgrunnlagPeriode grunnlag) {
