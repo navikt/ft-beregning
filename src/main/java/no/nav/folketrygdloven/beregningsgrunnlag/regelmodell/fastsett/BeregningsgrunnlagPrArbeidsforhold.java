@@ -19,6 +19,7 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 	private BigDecimal bruttoPrÅr;
 	private Arbeidsforhold arbeidsforhold;
 	private BigDecimal refusjonPrÅr;
+	private Boolean erAndelMedTilkommetInntekt;
 
 	// Beregnet eller skjønnsfastsatt inntekt
 	private BigDecimal inntektsgrunnlagPrÅr;
@@ -103,6 +104,10 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 
 	public Optional<BigDecimal> getGradertRefusjonskravPrÅr() {
 		return Optional.ofNullable(finnGradert(refusjonPrÅr));
+	}
+
+	public Boolean erAndelMedTilkommetInntekt() {
+		return erAndelMedTilkommetInntekt;
 	}
 
 	public Optional<BigDecimal> getGradertBruttoInkludertNaturalytelsePrÅr() {
@@ -245,6 +250,11 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 
 		public Builder medRefusjonPrÅr(BigDecimal refusjonPrÅr) {
 			mal.refusjonPrÅr = refusjonPrÅr;
+			return this;
+		}
+
+		public Builder medErAndelMedTilkommetInntekt(Boolean erAndelMedTilkommetInntekt) {
+			mal.erAndelMedTilkommetInntekt = erAndelMedTilkommetInntekt;
 			return this;
 		}
 
