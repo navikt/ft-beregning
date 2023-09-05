@@ -24,7 +24,6 @@ public class BeregningsgrunnlagPrStatus {
 	// Alltid full utbetaling for foreldrepenger
 	private BigDecimal utbetalingsprosent = BigDecimal.valueOf(100);
 	private BigDecimal aktivitetsgrad; // For bruk til å regne fortsatt arbeid (Mer nøyaktig enn å se på (1-utbetalingsprosent)
-	private Boolean erAndelMedTilkommetInntekt;
 	private BigDecimal andelsmessigFørGraderingPrAar;
 	private BigDecimal bruttoPrÅr;
 
@@ -143,10 +142,6 @@ public class BeregningsgrunnlagPrStatus {
 
 	public Optional<BigDecimal> getAktivitetsgrad() {
 		return Optional.ofNullable(aktivitetsgrad);
-	}
-
-	public Boolean erAndelMedTilkommetInntekt() {
-		return erAndelMedTilkommetInntekt;
 	}
 
 	public List<BeregningsgrunnlagPrArbeidsforhold> getArbeidsforholdSomSkalBrukes() {
@@ -308,14 +303,9 @@ public class BeregningsgrunnlagPrStatus {
 
 		public Builder medAktivitetsgrad(BigDecimal aktivitetsgrad) {
 			if (aktivitetsgrad != null && (aktivitetsgrad.compareTo(BigDecimal.ZERO) < 0 || aktivitetsgrad.compareTo(BigDecimal.valueOf(100)) > 0)) {
-				throw new IllegalArgumentException("Aktivitetsgrad må ha verdi fra 0 til 100, faktisk: " + aktivitetsgrad);
+					throw new IllegalArgumentException("Aktivitetsgrad må ha verdi fra 0 til 100, faktisk: " + aktivitetsgrad);
 			}
 			beregningsgrunnlagPrStatusMal.aktivitetsgrad = aktivitetsgrad;
-			return this;
-		}
-
-		public Builder medErAndelMedTilkommetInntekt(Boolean erAndelMedTilkommetInntekt) {
-			beregningsgrunnlagPrStatusMal.erAndelMedTilkommetInntekt = erAndelMedTilkommetInntekt;
 			return this;
 		}
 
