@@ -68,7 +68,7 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 
 	}
 
-	static BigDecimal min(BigDecimal a, BigDecimal b) {
+	static BigDecimal min(BigDecimal a, BigDecimal b){
 		return a.compareTo(b) > 0 ? b : a;
 	}
 
@@ -77,31 +77,24 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 		for (BeregningsgrunnlagPrStatus bps : grunnlag.getBeregningsgrunnlagPrStatusSomSkalBrukes()) {
 			if (bps.erArbeidstakerEllerFrilanser()) {
 				sum = sum.add(bps.getArbeidsforholdSomSkalBrukes().stream()
-						.filter(arb -> !Boolean.TRUE.equals(arb.erAndelMedTilkommetInntekt()))
 						.map(arb -> arb.getAndelsmessigFørGraderingPrAar().multiply(arb.getUtbetalingsprosent().scaleByPowerOfTen(-2)))
 						.reduce(BigDecimal::add).orElse(BigDecimal.ZERO));
 			} else {
-				if (!Boolean.TRUE.equals(bps.erAndelMedTilkommetInntekt())) {
-					sum = sum.add(bps.getAndelsmessigFørGraderingPrAar().multiply(bps.getUtbetalingsprosent().scaleByPowerOfTen(-2)));
-				}
+				sum = sum.add(bps.getAndelsmessigFørGraderingPrAar().multiply(bps.getUtbetalingsprosent().scaleByPowerOfTen(-2)));
 			}
 		}
 		return sum;
 	}
-
 
 	private static BigDecimal summerAvkortet(BeregningsgrunnlagPeriode grunnlag) {
 		BigDecimal sum = BigDecimal.ZERO;
 		for (BeregningsgrunnlagPrStatus bps : grunnlag.getBeregningsgrunnlagPrStatusSomSkalBrukes()) {
 			if (bps.erArbeidstakerEllerFrilanser()) {
 				sum = sum.add(bps.getArbeidsforholdSomSkalBrukes().stream()
-						.filter(arb -> !Boolean.TRUE.equals(arb.erAndelMedTilkommetInntekt()))
 						.map(arb -> arb.getAndelsmessigFørGraderingPrAar())
 						.reduce(BigDecimal::add).orElse(BigDecimal.ZERO));
 			} else {
-				if (!Boolean.TRUE.equals(bps.erAndelMedTilkommetInntekt())) {
-					sum = sum.add(bps.getAndelsmessigFørGraderingPrAar());
-				}
+				sum = sum.add(bps.getAndelsmessigFørGraderingPrAar());
 			}
 		}
 		return sum;
