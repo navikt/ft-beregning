@@ -76,6 +76,17 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 		return inntektsgrunnlagPrÅr != null ? inntektsgrunnlagPrÅr : BigDecimal.ZERO;
 	}
 
+	public BigDecimal getGradertInntektsgrunnlagInkludertNaturalytelsePrÅr() {
+		return finnGradert(getInntektsgrunnlagInkludertNaturalytelsePrÅr());
+	}
+
+
+	public BigDecimal getInntektsgrunnlagInkludertNaturalytelsePrÅr() {
+		BigDecimal bortfaltNaturalytelse = naturalytelseBortfaltPrÅr != null ? naturalytelseBortfaltPrÅr : BigDecimal.ZERO;
+		BigDecimal tilkommetNaturalytelse = naturalytelseTilkommetPrÅr != null ? naturalytelseTilkommetPrÅr : BigDecimal.ZERO;
+		return getInntektsgrunnlagPrÅr().add(bortfaltNaturalytelse).subtract(tilkommetNaturalytelse); // NOSONAR
+	}
+
 	public Optional<BigDecimal> getAktivitetsgrad() {
 		return Optional.ofNullable(aktivitetsgrad);
 	}
