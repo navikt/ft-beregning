@@ -21,6 +21,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.vurder.frisinn.RegelVurderBereg
 import no.nav.folketrygdloven.beregningsgrunnlag.ytelse.frisinn.RegelFinnGrenseverdiFRISINN;
 import no.nav.folketrygdloven.beregningsgrunnlag.ytelse.frisinn.RegelFullføreBeregningsgrunnlagFRISINN;
 import no.nav.folketrygdloven.beregningsgrunnlag.ytelse.svp.RegelFinnGrenseverdi;
+import no.nav.folketrygdloven.beregningsgrunnlag.ytelse.svp.RegelFinnGrenseverdiUtenFordeling;
 import no.nav.folketrygdloven.besteberegning.RegelForeslåBesteberegning;
 import no.nav.folketrygdloven.besteberegning.modell.BesteberegningRegelmodell;
 import no.nav.folketrygdloven.skjæringstidspunkt.regel.RegelFastsettSkjæringstidspunkt;
@@ -88,7 +89,9 @@ public final class KalkulusRegler {
 		return new RegelFinnGrenseverdi(input).evaluerRegel(input);
 	}
 
-
+	public static RegelResultat finnGrenseverdiUtenFordeling(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode input) {
+		return new RegelFinnGrenseverdiUtenFordeling(input).evaluerRegel(input);
+	}
 
 	public static RegelResultat fullføreBeregningsgrunnlag(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode input) {
 		return new RegelFullføreBeregningsgrunnlag(input).evaluerRegel(input);
