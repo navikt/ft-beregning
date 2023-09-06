@@ -69,6 +69,12 @@ public class BeregningsgrunnlagPrStatus {
 				.orElse(BigDecimal.ZERO);
 	}
 
+	public BigDecimal getGradertInntektsgrunnlagInkludertNaturalytelsePrÅr() {
+		return inntektsgrunnlagPrÅr != null ? finnGradert(inntektsgrunnlagPrÅr) : getArbeidsforhold().stream()
+				.map(BeregningsgrunnlagPrArbeidsforhold::getGradertInntektsgrunnlagInkludertNaturalytelsePrÅr)
+				.filter(Objects::nonNull)
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
+	}
 
 	public boolean erArbeidstakerEllerFrilanser() {
 		return AktivitetStatus.erArbeidstaker(aktivitetStatus) || AktivitetStatus.erFrilanser(aktivitetStatus);
@@ -125,6 +131,12 @@ public class BeregningsgrunnlagPrStatus {
 		BigDecimal brutto = getBruttoPrÅr();
 		BigDecimal samletNaturalytelse = samletNaturalytelseBortfaltMinusTilkommetPrÅr();
 		return brutto.add(samletNaturalytelse);
+	}
+
+	public BigDecimal getInntektsgrunnlagInkludertNaturalytelsePrÅr() {
+		BigDecimal inntektsgrunnlag = getInntektsgrunnlagPrÅr();
+		BigDecimal samletNaturalytelse = samletNaturalytelseBortfaltMinusTilkommetPrÅr();
+		return inntektsgrunnlag.add(samletNaturalytelse);
 	}
 
 	public BigDecimal getGradertBruttoInkludertNaturalytelsePrÅr() {
