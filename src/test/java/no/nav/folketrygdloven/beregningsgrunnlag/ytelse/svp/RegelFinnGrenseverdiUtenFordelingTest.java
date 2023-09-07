@@ -11,6 +11,8 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.MidlertidigInaktivType;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.RegelResultat;
@@ -18,8 +20,10 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.PleiepengerSyktBarnGrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.TilkommetInntekt;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
+import no.nav.fpsak.tidsserie.LocalDateTimeline;
 
 class RegelFinnGrenseverdiUtenFordelingTest {
 
@@ -117,6 +121,31 @@ class RegelFinnGrenseverdiUtenFordelingTest {
 
 		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(600_000));
 	}
+
+	@Test
+	void ett_arbeidsforhold_over_6G_og_gradering_mot_tilsyn() {
+		//Arrange
+		double beregnetPrÅr = 800_000;
+
+		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
+				.build();
+
+		Beregningsgrunnlag.builder()
+				.medBeregningsgrunnlagPeriode(periode)
+				.medGrunnbeløp(BigDecimal.valueOf(100_000))
+				.medYtelsesSpesifiktGrunnlag(new PleiepengerSyktBarnGrunnlag(new LocalDateTimeline<>(
+						periode.getPeriodeFom(), periode.getPeriodeTom(), BigDecimal.valueOf(50)
+				)));
+
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 100D, 0D);
+
+		//Act
+		kjørRegel(periode);
+
+		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(300_000));
+	}
+
 
 	@Test
 	void to_arbeidsforhold_under_6G() {

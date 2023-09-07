@@ -10,11 +10,14 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.MidlertidigInaktivT
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.PleiepengerSyktBarnGrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.TilkommetInntekt;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.node.SingleEvaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
+import no.nav.fpsak.tidsserie.LocalDateInterval;
+import no.nav.fpsak.tidsserie.StandardCombinators;
 
 @RuleDocumentation(FinnGrenseverdi.ID)
 public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode> {
@@ -38,14 +41,19 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 		grunnlag.setTotalUtbetalingsgradFraUttak(totalUtbetalingsgradFraUttak);
 		resultater.put("totalUtbetalingsgradFraUttak", totalUtbetalingsgradFraUttak);
 
-		//hvis §8-47a, skaler med fast faktor
-		var erInaktivTypeA = MidlertidigInaktivType.A.equals(grunnlag.getBeregningsgrunnlag().getMidlertidigInaktivType());
-		if (erInaktivTypeA) {
-			BigDecimal reduksjonsfaktor = grunnlag.getBeregningsgrunnlag().getMidlertidigInaktivTypeAReduksjonsfaktor();
-			grenseverdi = grenseverdi.multiply(reduksjonsfaktor);
-			resultater.put("grad847a", reduksjonsfaktor);
-		}
+		grenseverdi = utførMidlertidigInaktivGradering(grunnlag, resultater, grenseverdi);
+		grenseverdi = utførYtelsesspesifikkGradering(grunnlag, grenseverdi);
+		grenseverdi = utførGraderingMotInntekt(grunnlag, resultater, grenseverdi, totalUtbetalingsgradFraUttak);
 
+		resultater.put("grenseverdi", grenseverdi);
+		grunnlag.setGrenseverdi(grenseverdi);
+		SingleEvaluation resultat = ja();
+		resultat.setEvaluationProperties(resultater);
+		return resultat;
+
+	}
+
+	private BigDecimal utførGraderingMotInntekt(BeregningsgrunnlagPeriode grunnlag, Map<String, Object> resultater, BigDecimal grenseverdi, BigDecimal totalUtbetalingsgradFraUttak) {
 		//juster ned med tilkommet inntekt hvis det gir lavere utbetaling enn overstående
 		if (grunnlag.getBeregningsgrunnlag().getToggles().isEnabled("GRADERING_MOT_INNTEKT", false) && !grunnlag.getTilkommetInntektsforholdListe().isEmpty()) {
 			BigDecimal graderingPåToppenAvUttakgraderingPgaTilkommetInntekt = andelBeholdtEtterGradertMotTilkommetInntekt(grunnlag);
@@ -60,15 +68,37 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 				resultater.put("inntektgraderingsprosent", grunnlag.getInntektsgraderingFraBruttoBeregningsgrunnlag());
 			}
 		}
-		resultater.put("grenseverdi", grenseverdi);
-		grunnlag.setGrenseverdi(grenseverdi);
-		SingleEvaluation resultat = ja();
-		resultat.setEvaluationProperties(resultater);
-		return resultat;
-
+		return grenseverdi;
 	}
 
-	static BigDecimal min(BigDecimal a, BigDecimal b){
+	private static BigDecimal utførMidlertidigInaktivGradering(BeregningsgrunnlagPeriode grunnlag, Map<String, Object> resultater, BigDecimal grenseverdi) {
+		//hvis §8-47a, skaler med fast faktor
+		var erInaktivTypeA = MidlertidigInaktivType.A.equals(grunnlag.getBeregningsgrunnlag().getMidlertidigInaktivType());
+		if (erInaktivTypeA) {
+			BigDecimal reduksjonsfaktor = grunnlag.getBeregningsgrunnlag().getMidlertidigInaktivTypeAReduksjonsfaktor();
+			grenseverdi = grenseverdi.multiply(reduksjonsfaktor);
+			resultater.put("grad847a", reduksjonsfaktor);
+		}
+		return grenseverdi;
+	}
+
+	private static BigDecimal utførYtelsesspesifikkGradering(BeregningsgrunnlagPeriode grunnlag, BigDecimal grenseverdi) {
+		if (grunnlag.getBeregningsgrunnlag().getYtelsesSpesifiktGrunnlag() != null && grunnlag.getBeregningsgrunnlag().getYtelsesSpesifiktGrunnlag() instanceof PleiepengerSyktBarnGrunnlag psbGrunnlag) {
+			var tilsynsgraderingsprosent = psbGrunnlag.getTilsynsgraderingsprosent().compress((b1, b2) -> b1.compareTo(b2) == 0, StandardCombinators::leftOnly);
+			var intersection = tilsynsgraderingsprosent.intersection(new LocalDateInterval(grunnlag.getPeriodeFom(), grunnlag.getPeriodeTom()));
+			if (intersection.toSegments().size() > 1) {
+				throw new IllegalStateException("Fant flere tilsynsgrader for samme periode " + grunnlag.getPeriodeFom());
+			}
+			if (!intersection.isEmpty()) {
+				var tilsynsgradering = intersection.toSegments().first().getValue();
+				grenseverdi = grenseverdi.multiply(tilsynsgradering.divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP));
+			}
+		}
+		return grenseverdi;
+	}
+
+
+	static BigDecimal min(BigDecimal a, BigDecimal b) {
 		return a.compareTo(b) > 0 ? b : a;
 	}
 
@@ -91,7 +121,7 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 		for (BeregningsgrunnlagPrStatus bps : grunnlag.getBeregningsgrunnlagPrStatusSomSkalBrukes()) {
 			if (bps.erArbeidstakerEllerFrilanser()) {
 				sum = sum.add(bps.getArbeidsforholdSomSkalBrukes().stream()
-						.map(arb -> arb.getAndelsmessigFørGraderingPrAar())
+						.map(BeregningsgrunnlagPrArbeidsforhold::getAndelsmessigFørGraderingPrAar)
 						.reduce(BigDecimal::add).orElse(BigDecimal.ZERO));
 			} else {
 				sum = sum.add(bps.getAndelsmessigFørGraderingPrAar());
