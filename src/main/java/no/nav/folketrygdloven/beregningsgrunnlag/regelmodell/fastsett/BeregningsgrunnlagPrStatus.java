@@ -94,20 +94,6 @@ public class BeregningsgrunnlagPrStatus {
 		return sumBortfaltNaturalYtelse.subtract(sumTilkommetNaturalYtelse);
 	}
 
-	public BigDecimal samletGradertNaturalytelseBortfaltMinusTilkommetPrÅr() {
-		BigDecimal sumBortfaltNaturalYtelse = getArbeidsforhold().stream()
-				.map(BeregningsgrunnlagPrArbeidsforhold::getGradertNaturalytelseBortfaltPrÅr)
-				.filter(Optional::isPresent)
-				.map(Optional::get)
-				.reduce(BigDecimal.ZERO, BigDecimal::add);
-		BigDecimal sumTilkommetNaturalYtelse = getArbeidsforhold().stream()
-				.map(BeregningsgrunnlagPrArbeidsforhold::getGradertNaturalytelseTilkommetPrÅr)
-				.filter(Optional::isPresent)
-				.map(Optional::get)
-				.reduce(BigDecimal.ZERO, BigDecimal::add);
-		return sumBortfaltNaturalYtelse.subtract(sumTilkommetNaturalYtelse);
-	}
-
 	public BigDecimal getBruttoPrÅr() {
 		return bruttoPrÅr != null ? bruttoPrÅr : getArbeidsforhold().stream()
 				.map(BeregningsgrunnlagPrArbeidsforhold::getBruttoPrÅr)
@@ -123,9 +109,27 @@ public class BeregningsgrunnlagPrStatus {
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
 	}
 
+	public BigDecimal getAktivitetsgradertBruttoPrÅr() {
+		return bruttoPrÅr != null ? finnAktivitetsgradert(bruttoPrÅr) : getArbeidsforhold().stream()
+				.map(BeregningsgrunnlagPrArbeidsforhold::getAktivitetsgradertBruttoPrÅr)
+				.filter(Objects::nonNull)
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
+	}
+
 	private BigDecimal finnGradert(BigDecimal verdi) {
 		return verdi == null ? null : verdi.multiply(utbetalingsprosent.scaleByPowerOfTen(-2));
 	}
+
+	private BigDecimal finnAktivitetsgradert(BigDecimal verdi) {
+		if (verdi == null) {
+			return null;
+		}
+		if (aktivitetsgrad == null) {
+			return finnGradert(verdi);
+		}
+		return verdi.multiply(BigDecimal.valueOf(100).subtract(aktivitetsgrad).scaleByPowerOfTen(-2));
+	}
+
 
 	public BigDecimal getBruttoInkludertNaturalytelsePrÅr() {
 		BigDecimal brutto = getBruttoPrÅr();
@@ -147,6 +151,13 @@ public class BeregningsgrunnlagPrStatus {
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
 	}
 
+	public BigDecimal getAktivitetsgradertBruttoInkludertNaturalytelsePrÅr() {
+		return bruttoPrÅr != null ? finnAktivitetsgradert(getBruttoInkludertNaturalytelsePrÅr()) : getArbeidsforhold().stream()
+				.map(BeregningsgrunnlagPrArbeidsforhold::getGradertBruttoInkludertNaturalytelsePrÅr)
+				.filter(Optional::isPresent)
+				.map(Optional::get)
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
+	}
 
 	public List<BeregningsgrunnlagPrArbeidsforhold> getArbeidsforhold() {
 		return Collections.unmodifiableList(arbeidsforhold);

@@ -26,7 +26,7 @@ class FastsettAvkortetLikBruttoBG extends LeafSpecification<BeregningsgrunnlagPe
         for (BeregningsgrunnlagPrStatus beregningsgrunnlagPrStatus : grunnlag.getBeregningsgrunnlagPrStatusSomSkalBrukes()) {
             if (AktivitetStatus.erArbeidstaker(beregningsgrunnlagPrStatus.getAktivitetStatus())) {
                 for (BeregningsgrunnlagPrArbeidsforhold af : beregningsgrunnlagPrStatus.getArbeidsforholdSomSkalBrukes()) {
-                    BigDecimal bruttoInkludertNaturalytelsePrÅr = af.getGradertBruttoInkludertNaturalytelsePrÅr()
+                    BigDecimal bruttoInkludertNaturalytelsePrÅr = af.getAktivitetsgradertBruttoInkludertNaturalytelsePrÅr()
                         .orElseThrow(() -> new IllegalStateException("Brutto er ikke satt for arbeidsforhold " + af.toString()));
                     BeregningsgrunnlagPrArbeidsforhold.builder(af)
                         .medAvkortetPrÅr(bruttoInkludertNaturalytelsePrÅr)
@@ -35,7 +35,7 @@ class FastsettAvkortetLikBruttoBG extends LeafSpecification<BeregningsgrunnlagPe
                         .build();
                 }
             } else {
-                BigDecimal avkortetPrStatus = beregningsgrunnlagPrStatus.getGradertBruttoPrÅr();
+                BigDecimal avkortetPrStatus = beregningsgrunnlagPrStatus.getAktivitetsgradertBruttoPrÅr();
                 BeregningsgrunnlagPrStatus.builder(beregningsgrunnlagPrStatus).medAvkortetPrÅr(avkortetPrStatus).build();
             }
         }

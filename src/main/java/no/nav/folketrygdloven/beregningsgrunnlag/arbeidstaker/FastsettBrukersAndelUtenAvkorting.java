@@ -28,6 +28,7 @@ class FastsettBrukersAndelUtenAvkorting extends LeafSpecification<Beregningsgrun
             return ja(); // Andre statuser har alltid brukers andel lik brutto/avkortet/redusert BG
         }
 
+		// Kva skjer her?
         for (BeregningsgrunnlagPrArbeidsforhold arbeidsforhold : bgps.getArbeidsforholdSomSkalBrukes()) {
             BigDecimal arbeidsgiversAndel = arbeidsforhold.getMaksimalRefusjonPrÅr();
 

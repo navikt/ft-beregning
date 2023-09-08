@@ -106,21 +106,15 @@ public class BeregningsgrunnlagPeriode {
 		return brutto.add(naturalytelser);
 	}
 
-	public BigDecimal getGradertBruttoPrÅrInkludertNaturalytelser() {
-		BigDecimal naturalytelser = getGradertNaturalytelserBortfaltMinusTilkommetPrÅr();
-		BigDecimal brutto = getGradertBruttoPrÅr();
-		return brutto.add(naturalytelser);
+	public BigDecimal getAktivitetsgradertBruttoPrÅrInkludertNaturalytelser() {
+		return getBeregningsgrunnlagPrStatus().stream()
+				.map(BeregningsgrunnlagPrStatus::getAktivitetsgradertBruttoInkludertNaturalytelsePrÅr)
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
 	}
 
 	private BigDecimal getNaturalytelserBortfaltMinusTilkommetPrÅr() {
 		return beregningsgrunnlagPrStatus.stream()
 				.map(BeregningsgrunnlagPrStatus::samletNaturalytelseBortfaltMinusTilkommetPrÅr)
-				.reduce(BigDecimal.ZERO, BigDecimal::add);
-	}
-
-	private BigDecimal getGradertNaturalytelserBortfaltMinusTilkommetPrÅr() {
-		return beregningsgrunnlagPrStatus.stream()
-				.map(BeregningsgrunnlagPrStatus::samletGradertNaturalytelseBortfaltMinusTilkommetPrÅr)
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
 	}
 

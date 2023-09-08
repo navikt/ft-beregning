@@ -28,11 +28,11 @@ public class FastsettMaksimalRefusjon extends LeafSpecification<Beregningsgrunnl
         grunnlag.getBeregningsgrunnlagPrStatusSomSkalBrukes().stream()
             .flatMap(bgs -> bgs.getArbeidsforholdSomSkalBrukes().stream())
             .forEach(af -> {
-                BigDecimal refusjonskravPrArbeidsforholdPrÅr =  af.getGradertRefusjonskravPrÅr().orElse(BigDecimal.ZERO);
+                BigDecimal refusjonskravPrArbeidsforholdPrÅr =  af.getAktivitetsgradertRefusjonskravPrÅr().orElse(BigDecimal.ZERO);
 
                 if (af.getMaksimalRefusjonPrÅr() == null) {
                     BeregningsgrunnlagPrArbeidsforhold.Builder bgArbeidsforholdBuilder = BeregningsgrunnlagPrArbeidsforhold.builder(af);
-                    BigDecimal maksimalRefusjon = af.getGradertBruttoPrÅr().min(refusjonskravPrArbeidsforholdPrÅr);
+                    BigDecimal maksimalRefusjon = af.getAktivitetsgradertBruttoPrÅr().min(refusjonskravPrArbeidsforholdPrÅr);
                     bgArbeidsforholdBuilder.medMaksimalRefusjonPrÅr(maksimalRefusjon);
                     bgArbeidsforholdBuilder.build();
                 }
