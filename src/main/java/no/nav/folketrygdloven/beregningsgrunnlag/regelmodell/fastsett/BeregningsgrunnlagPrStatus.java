@@ -153,7 +153,7 @@ public class BeregningsgrunnlagPrStatus {
 
 	public BigDecimal getAktivitetsgradertBruttoInkludertNaturalytelsePrÅr() {
 		return bruttoPrÅr != null ? finnAktivitetsgradert(getBruttoInkludertNaturalytelsePrÅr()) : getArbeidsforhold().stream()
-				.map(BeregningsgrunnlagPrArbeidsforhold::getGradertBruttoInkludertNaturalytelsePrÅr)
+				.map(BeregningsgrunnlagPrArbeidsforhold::getAktivitetsgradertBruttoInkludertNaturalytelsePrÅr)
 				.filter(Optional::isPresent)
 				.map(Optional::get)
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
