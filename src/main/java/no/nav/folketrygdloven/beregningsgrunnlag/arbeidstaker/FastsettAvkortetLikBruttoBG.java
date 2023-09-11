@@ -26,7 +26,7 @@ class FastsettAvkortetLikBruttoBG extends LeafSpecification<BeregningsgrunnlagPe
         for (BeregningsgrunnlagPrStatus beregningsgrunnlagPrStatus : grunnlag.getBeregningsgrunnlagPrStatusSomSkalBrukes()) {
             if (AktivitetStatus.erArbeidstaker(beregningsgrunnlagPrStatus.getAktivitetStatus())) {
                 for (BeregningsgrunnlagPrArbeidsforhold af : beregningsgrunnlagPrStatus.getArbeidsforholdSomSkalBrukes()) {
-                    BigDecimal bruttoInkludertNaturalytelsePrÅr = af.getAktivitetsgradertBruttoInkludertNaturalytelsePrÅr()
+                    BigDecimal bruttoInkludertNaturalytelsePrÅr = af.getBruttoInkludertNaturalytelsePrÅr()
                         .orElseThrow(() -> new IllegalStateException("Brutto er ikke satt for arbeidsforhold " + af.toString()));
                     BeregningsgrunnlagPrArbeidsforhold.builder(af)
                         .medAvkortetPrÅr(bruttoInkludertNaturalytelsePrÅr)

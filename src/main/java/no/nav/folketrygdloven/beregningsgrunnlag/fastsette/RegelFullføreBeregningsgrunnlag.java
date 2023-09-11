@@ -60,7 +60,7 @@ public class RegelFullføreBeregningsgrunnlag implements EksportRegel<Beregnings
             new RegelFastsettUtenAvkortingATFL().getSpecification(), fastsettReduksjon);
 
         // FP_BR_29.4 4. Brutto beregnings-grunnlag totalt > 6G?
-        Specification<BeregningsgrunnlagPeriode> beregnEventuellAvkorting = rs.beregningHvisRegel(new SjekkGradertBeregningsgrunnlagStørreEnnGrenseverdi(), sjekkMaksimaltRefusjonskrav, fastsettUtenAvkorting);
+        Specification<BeregningsgrunnlagPeriode> beregnEventuellAvkorting = rs.beregningHvisRegel(new SjekkBeregningsgrunnlagStørreEnnGrenseverdi(), sjekkMaksimaltRefusjonskrav, fastsettUtenAvkorting);
 
         // FP_BR_29.3 3. For hver beregningsgrunnlagsandel: Fastsett Refusjonskrav for beregnings-grunnlagsandel
         Specification<BeregningsgrunnlagPeriode> fastsettMaksimalRefusjon = rs.beregningsRegel(FastsettMaksimalRefusjon.ID, FastsettMaksimalRefusjon.BESKRIVELSE,
