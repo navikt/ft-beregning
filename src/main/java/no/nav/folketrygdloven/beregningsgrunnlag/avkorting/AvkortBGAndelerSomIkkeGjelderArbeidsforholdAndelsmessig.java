@@ -31,7 +31,7 @@ public class AvkortBGAndelerSomIkkeGjelderArbeidsforholdAndelsmessig extends Lea
         BeregningsgrunnlagPrStatus atfl = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
         BigDecimal sumBeregningsgrunnlagArbeidsforhold = atfl == null ? BigDecimal.ZERO : atfl.getArbeidsforholdSomSkalBrukesIkkeFrilans()
             .stream()
-            .map(BeregningsgrunnlagPrArbeidsforhold::getGradertBruttoInkludertNaturalytelsePrÅr)
+            .map(BeregningsgrunnlagPrArbeidsforhold::getAktivitetsgradertBruttoInkludertNaturalytelsePrÅr)
             .filter(Optional::isPresent)
             .map(Optional::get)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -44,7 +44,7 @@ public class AvkortBGAndelerSomIkkeGjelderArbeidsforholdAndelsmessig extends Lea
             Optional<BeregningsgrunnlagPrArbeidsforhold> frilansArbeidsforholdOpt = atfl.getFrilansArbeidsforholdSomSkalBrukes();
             if (frilansArbeidsforholdOpt.isPresent()) {
                 BeregningsgrunnlagPrArbeidsforhold af = frilansArbeidsforholdOpt.get();
-                BigDecimal bruttoBeregningsgrunnlagForAndelen = af.getGradertBruttoInkludertNaturalytelsePrÅr()
+                BigDecimal bruttoBeregningsgrunnlagForAndelen = af.getAktivitetsgradertBruttoInkludertNaturalytelsePrÅr()
                     .orElseThrow(() -> new IllegalStateException("Brutto er ikke satt for arbeidsforhold " + af.toString()));
                 BigDecimal avkortetBrukersAndel;
                 if (bruttoBeregningsgrunnlagForAndelen.compareTo(bGUtenArbeidsforholdTilFordeling) >= 0) {
@@ -67,7 +67,7 @@ public class AvkortBGAndelerSomIkkeGjelderArbeidsforholdAndelsmessig extends Lea
         Iterator<BeregningsgrunnlagPrStatus> bgpsIter = bgpsSorted.iterator();
         while (bgpsIter.hasNext()) {
             BeregningsgrunnlagPrStatus bgps = bgpsIter.next();
-            BigDecimal bruttoBeregningsgrunnlagForAndelen = bgps.getGradertBruttoInkludertNaturalytelsePrÅr();
+            BigDecimal bruttoBeregningsgrunnlagForAndelen = bgps.getAktivitetsgradertBruttoInkludertNaturalytelsePrÅr();
             BigDecimal avkortetBrukersAndel;
             if (bruttoBeregningsgrunnlagForAndelen.compareTo(bGUtenArbeidsforholdTilFordeling) >= 0) {
                 avkortetBrukersAndel = bGUtenArbeidsforholdTilFordeling;

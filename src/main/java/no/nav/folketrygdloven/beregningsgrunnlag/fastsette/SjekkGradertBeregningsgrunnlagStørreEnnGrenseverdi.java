@@ -21,7 +21,7 @@ public class SjekkGradertBeregningsgrunnlagStørreEnnGrenseverdi extends LeafSpe
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
 
-        BigDecimal bruttoInklBortfaltNaturalytelsePrÅr = grunnlag.getGradertBruttoPrÅrInkludertNaturalytelser();
+        BigDecimal bruttoInklBortfaltNaturalytelsePrÅr = grunnlag.getAktivitetsgradertBruttoPrÅrInkludertNaturalytelser();
         BigDecimal grenseverdi = grunnlag.getGrenseverdi();
         SingleEvaluation resultat = bruttoInklBortfaltNaturalytelsePrÅr.compareTo(grenseverdi) > 0 ? ja() : nei();
         resultat.setEvaluationProperty("bruttoPrÅr", bruttoInklBortfaltNaturalytelsePrÅr);

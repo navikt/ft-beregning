@@ -48,16 +48,9 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 		return Optional.ofNullable(naturalytelseBortfaltPrÅr);
 	}
 
-	public Optional<BigDecimal> getGradertNaturalytelseBortfaltPrÅr() {
-		return Optional.ofNullable(finnGradert(naturalytelseBortfaltPrÅr));
-	}
 
 	public Optional<BigDecimal> getNaturalytelseTilkommetPrÅr() {
 		return Optional.ofNullable(naturalytelseTilkommetPrÅr);
-	}
-
-	public Optional<BigDecimal> getGradertNaturalytelseTilkommetPrÅr() {
-		return Optional.ofNullable(finnGradert(naturalytelseTilkommetPrÅr));
 	}
 
 	public String getBeskrivelse() {
@@ -71,6 +64,11 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 	public BigDecimal getGradertBruttoPrÅr() {
 		return finnGradert(getBruttoPrÅr().orElse(null));
 	}
+
+	public BigDecimal getAktivitetsgradertBruttoPrÅr() {
+		return finnAktivitetsgradert(getBruttoPrÅr().orElse(null));
+	}
+
 
 	public BigDecimal getInntektsgrunnlagPrÅr() {
 		return inntektsgrunnlagPrÅr != null ? inntektsgrunnlagPrÅr : BigDecimal.ZERO;
@@ -112,13 +110,18 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 		return arbeidsforhold;
 	}
 
-	public Optional<BigDecimal> getGradertRefusjonskravPrÅr() {
-		return Optional.ofNullable(finnGradert(refusjonPrÅr));
+	public Optional<BigDecimal> getAktivitetsgradertRefusjonskravPrÅr() {
+		return Optional.ofNullable(finnAktivitetsgradert(refusjonPrÅr));
 	}
 
 	public Optional<BigDecimal> getGradertBruttoInkludertNaturalytelsePrÅr() {
 		Optional<BigDecimal> brutto = getBruttoInkludertNaturalytelsePrÅr();
 		return brutto.map(this::finnGradert);
+	}
+
+	public Optional<BigDecimal> getAktivitetsgradertBruttoInkludertNaturalytelsePrÅr() {
+		Optional<BigDecimal> brutto = getBruttoInkludertNaturalytelsePrÅr();
+		return brutto.map(this::finnAktivitetsgradert);
 	}
 
 	public BigDecimal getMaksimalRefusjonPrÅr() {
@@ -186,6 +189,16 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 
 	private BigDecimal finnGradert(BigDecimal verdi) {
 		return verdi == null ? null : verdi.multiply(utbetalingsprosent.scaleByPowerOfTen(-2));
+	}
+
+	private BigDecimal finnAktivitetsgradert(BigDecimal verdi) {
+		if (verdi == null) {
+			return null;
+		}
+		if (aktivitetsgrad == null) {
+			return finnGradert(verdi);
+		}
+		return verdi.multiply(BigDecimal.valueOf(100).subtract(aktivitetsgrad).scaleByPowerOfTen(-2));
 	}
 
 	public static Builder builder() {

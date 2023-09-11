@@ -58,12 +58,12 @@ class BeregnArbeidsgiversAndeler extends LeafSpecification<BeregningsgrunnlagPer
 						.orElse(BigDecimal.ZERO));
 
 		// Forsøk å tildele avkortede andeler til alle
-		BigDecimal gradertBruttoSum = ikkeFastsatt.stream().map(BeregningsgrunnlagPrArbeidsforhold::getGradertBruttoPrÅr)
+		BigDecimal gradertBruttoSum = ikkeFastsatt.stream().map(BeregningsgrunnlagPrArbeidsforhold::getAktivitetsgradertBruttoPrÅr)
 				.filter(Objects::nonNull)
 				.reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
 		resultater.put(REFUSJON_TIL_FORDELING, refusjonTilFordeling);
 		ikkeFastsatt.forEach(af -> {
-			var gradertBruttoPrÅr = af.getGradertBruttoPrÅr() == null ? BigDecimal.ZERO : af.getGradertBruttoPrÅr();
+			var gradertBruttoPrÅr = af.getAktivitetsgradertBruttoPrÅr() == null ? BigDecimal.ZERO : af.getAktivitetsgradertBruttoPrÅr();
 			BigDecimal andel = refusjonTilFordeling.multiply(gradertBruttoPrÅr)
 					.divide(gradertBruttoSum, 10, RoundingMode.HALF_EVEN);
 			BeregningsgrunnlagPrArbeidsforhold.builder(af)
