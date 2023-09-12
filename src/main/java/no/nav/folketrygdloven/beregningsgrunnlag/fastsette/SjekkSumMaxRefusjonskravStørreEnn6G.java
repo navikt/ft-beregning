@@ -28,7 +28,7 @@ class SjekkSumMaxRefusjonskravStørreEnn6G extends LeafSpecification<Beregningsg
             return nei();
         }
         BigDecimal grenseverdi = grunnlag.getGrenseverdi();
-        BigDecimal sum = atfl.getArbeidsforholdSomSkalBrukes().stream()
+        BigDecimal sum = atfl.getArbeidsforhold().stream()
             .filter(bpaf -> bpaf.getMaksimalRefusjonPrÅr() != null)
             .map(BeregningsgrunnlagPrArbeidsforhold::getMaksimalRefusjonPrÅr)
             .reduce(BigDecimal::add)

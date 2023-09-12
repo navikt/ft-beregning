@@ -29,7 +29,7 @@ class FastsettBrukersAndelForBGAndelerSomGjelderArbeidsforhold extends LeafSpeci
         if (atfl != null) {
             Map<String, Object> resultater = new HashMap<>();
             resultat.setEvaluationProperties(resultater);
-            atfl.getArbeidsforholdSomSkalBrukesIkkeFrilans().forEach(arbeidsforhold -> {
+            atfl.getArbeidsforholdIkkeFrilans().forEach(arbeidsforhold -> {
                 BigDecimal avkortetRefusjonPrÅr = arbeidsforhold.getMaksimalRefusjonPrÅr() == null ? BigDecimal.ZERO : arbeidsforhold.getMaksimalRefusjonPrÅr();
                 BigDecimal avkortetBrukersAndel = arbeidsforhold.getAktivitetsgradertBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO).subtract(avkortetRefusjonPrÅr);
                 BeregningsgrunnlagPrArbeidsforhold.builder(arbeidsforhold)

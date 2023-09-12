@@ -27,7 +27,7 @@ class VurderOmAndelerErFerdigFordeltOgOppdaterFordeltTilBruker extends LeafSpeci
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
         SingleEvaluation resultat = ja();
 
-        List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforholdene = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforholdSomSkalBrukes();
+        List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforholdene = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
 
 // Er det arbeidsforhold som ikke er fastsatt i tidligere runder?
         List<BeregningsgrunnlagPrArbeidsforhold> ikkeFastsattAf = arbeidsforholdene.stream()

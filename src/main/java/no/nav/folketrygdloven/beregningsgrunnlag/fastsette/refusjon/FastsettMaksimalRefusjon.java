@@ -25,8 +25,8 @@ public class FastsettMaksimalRefusjon extends LeafSpecification<Beregningsgrunnl
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
 
         Map<String, Object> resultater = new HashMap<>();
-        grunnlag.getBeregningsgrunnlagPrStatusSomSkalBrukes().stream()
-            .flatMap(bgs -> bgs.getArbeidsforholdSomSkalBrukes().stream())
+        grunnlag.getBeregningsgrunnlagPrStatus().stream()
+            .flatMap(bgs -> bgs.getArbeidsforhold().stream())
             .forEach(af -> {
                 BigDecimal refusjonskravPrArbeidsforholdPrÅr =  af.getAktivitetsgradertRefusjonskravPrÅr().orElse(BigDecimal.ZERO);
 

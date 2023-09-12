@@ -28,7 +28,7 @@ class FastsettBrukersAndelFraArbeidsforholdSomIkkeErFordelt extends LeafSpecific
         SingleEvaluation resultat = ja();
         resultat.setEvaluationProperties(resultater);
 
-        List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforholdene = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforholdSomSkalBrukes();
+        List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforholdene = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
         arbeidsforholdene.stream()
                 .filter(af -> af.getMaksimalRefusjonPrÅr() != null)
                 .filter(af -> af.getAvkortetRefusjonPrÅr() != null)

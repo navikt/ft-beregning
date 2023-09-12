@@ -25,7 +25,7 @@ class BeregnAvkortetRefusjon extends LeafSpecification<BeregningsgrunnlagPeriode
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
         Map<String, Object> resultater = new HashMap<>();
         // Finn alle arbeidsforhold som ikke er avkortet allerede
-        grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforholdSomSkalBrukes()
+        grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold()
             .stream()
             .filter(af -> af.getAvkortetRefusjonPrÅr() != null)
             .filter(af -> af.getAvkortetPrÅr() == null)

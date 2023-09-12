@@ -28,9 +28,9 @@ public class ReduserBeregningsgrunnlag extends LeafSpecification<Beregningsgrunn
         Map<String, Object> resultater = new HashMap<>();
         resultater.put("dekningsgrad", grunnlag.getDekningsgrad());
 
-        grunnlag.getBeregningsgrunnlagPrStatusSomSkalBrukes().forEach(bps -> {
+        grunnlag.getBeregningsgrunnlagPrStatus().forEach(bps -> {
             if (bps.erArbeidstakerEllerFrilanser()) {
-                bps.getArbeidsforholdSomSkalBrukes().forEach(af -> {
+                bps.getArbeidsforhold().forEach(af -> {
                     BigDecimal redusertAF = dekningsgrad.multiply(af.getAvkortetPrÅr());
                     BeregningsgrunnlagPrArbeidsforhold.builder(af)
                         .medRedusertPrÅr(dekningsgrad.multiply(af.getAvkortetPrÅr()))

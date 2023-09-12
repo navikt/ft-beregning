@@ -26,7 +26,7 @@ public class FastsettIkkeSøktForTil0 extends LeafSpecification<Beregningsgrunnl
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
 
         Map<String, Object> resultater = new HashMap<>();
-        grunnlag.getBeregningsgrunnlagPrStatusSomSkalBrukes().stream()
+        grunnlag.getBeregningsgrunnlagPrStatus().stream()
             .flatMap(bgs -> bgs.getArbeidsforhold().stream())
             .filter(af -> !af.getErSøktYtelseFor())
             .forEach(af -> {

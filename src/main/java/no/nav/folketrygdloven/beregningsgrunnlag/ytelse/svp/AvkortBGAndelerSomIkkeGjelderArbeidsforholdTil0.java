@@ -25,7 +25,7 @@ class AvkortBGAndelerSomIkkeGjelderArbeidsforholdTil0 extends LeafSpecification<
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
 
         Map<String, Object> resultater = new HashMap<>();
-        grunnlag.getBeregningsgrunnlagPrStatusSomSkalBrukes().stream()
+        grunnlag.getBeregningsgrunnlagPrStatus().stream()
             .filter(bgps -> !bgps.erArbeidstakerEllerFrilanser())
             .forEach(bgps -> {
                 BeregningsgrunnlagPrStatus.builder(bgps)

@@ -24,7 +24,7 @@ class SjekkOmTotaltBGForArbeidsforholdStørreEnnGrenseverdi extends LeafSpecific
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
         BigDecimal grenseverdi = grunnlag.getGrenseverdi();
         BeregningsgrunnlagPrStatus atfl = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
-        BigDecimal totaltBG = atfl == null ? BigDecimal.ZERO : atfl.getArbeidsforholdSomSkalBrukesIkkeFrilans().stream()
+        BigDecimal totaltBG = atfl == null ? BigDecimal.ZERO : atfl.getArbeidsforholdIkkeFrilans().stream()
             .map(af -> af.getAktivitetsgradertBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO))
             .reduce(BigDecimal.ZERO, BigDecimal::add);
         SingleEvaluation resultat = totaltBG.compareTo(grenseverdi) > 0 ? ja() : nei();

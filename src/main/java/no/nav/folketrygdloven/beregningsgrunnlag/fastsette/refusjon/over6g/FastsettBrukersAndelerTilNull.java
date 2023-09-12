@@ -26,13 +26,13 @@ class FastsettBrukersAndelerTilNull extends LeafSpecification<Beregningsgrunnlag
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
         Map<String, Object> resultater = new HashMap<>();
         BigDecimal avkortetTilNull = BigDecimal.ZERO;
-        grunnlag.getBeregningsgrunnlagPrStatusSomSkalBrukes().stream()
-            .flatMap(bgs -> bgs.getArbeidsforholdSomSkalBrukes().stream())
+        grunnlag.getBeregningsgrunnlagPrStatus().stream()
+            .flatMap(bgs -> bgs.getArbeidsforhold().stream())
             .forEach(af -> {
                 BeregningsgrunnlagPrArbeidsforhold.builder(af).medAvkortetBrukersAndelPrÅr(avkortetTilNull).build();
                 resultater.put("brukersAndel." + af.getArbeidsgiverId(), avkortetTilNull);
             });
-        grunnlag.getBeregningsgrunnlagPrStatusSomSkalBrukes().stream()
+        grunnlag.getBeregningsgrunnlagPrStatus().stream()
             .filter(bgps -> !bgps.erArbeidstakerEllerFrilanser())
             .forEach(bgps -> {
                 BeregningsgrunnlagPrStatus.builder(bgps).medAvkortetPrÅr(avkortetTilNull).build();

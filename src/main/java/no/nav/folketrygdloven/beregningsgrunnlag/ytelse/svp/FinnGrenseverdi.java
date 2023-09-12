@@ -74,9 +74,9 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 
 	private static BigDecimal summerAvkortetGradertMotUttak(BeregningsgrunnlagPeriode grunnlag) {
 		BigDecimal sum = BigDecimal.ZERO;
-		for (BeregningsgrunnlagPrStatus bps : grunnlag.getBeregningsgrunnlagPrStatusSomSkalBrukes()) {
+		for (BeregningsgrunnlagPrStatus bps : grunnlag.getBeregningsgrunnlagPrStatus()) {
 			if (bps.erArbeidstakerEllerFrilanser()) {
-				sum = sum.add(bps.getArbeidsforholdSomSkalBrukes().stream()
+				sum = sum.add(bps.getArbeidsforhold().stream()
 						.map(arb -> arb.getAndelsmessigFørGraderingPrAar().multiply(arb.getUtbetalingsprosent().scaleByPowerOfTen(-2)))
 						.reduce(BigDecimal::add).orElse(BigDecimal.ZERO));
 			} else {
@@ -88,10 +88,10 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 
 	private static BigDecimal summerAvkortet(BeregningsgrunnlagPeriode grunnlag) {
 		BigDecimal sum = BigDecimal.ZERO;
-		for (BeregningsgrunnlagPrStatus bps : grunnlag.getBeregningsgrunnlagPrStatusSomSkalBrukes()) {
+		for (BeregningsgrunnlagPrStatus bps : grunnlag.getBeregningsgrunnlagPrStatus()) {
 			if (bps.erArbeidstakerEllerFrilanser()) {
-				sum = sum.add(bps.getArbeidsforholdSomSkalBrukes().stream()
-						.map(arb -> arb.getAndelsmessigFørGraderingPrAar())
+				sum = sum.add(bps.getArbeidsforhold().stream()
+						.map(BeregningsgrunnlagPrArbeidsforhold::getAndelsmessigFørGraderingPrAar)
 						.reduce(BigDecimal::add).orElse(BigDecimal.ZERO));
 			} else {
 				sum = sum.add(bps.getAndelsmessigFørGraderingPrAar());

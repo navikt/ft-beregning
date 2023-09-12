@@ -25,7 +25,7 @@ class AvkortBGAndelerSomIkkeGjelderArbeidsforholdTil0 extends LeafSpecification<
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
 
         Map<String, Object> resultater = new HashMap<>();
-        grunnlag.getBeregningsgrunnlagPrStatusSomSkalBrukes().stream()
+        grunnlag.getBeregningsgrunnlagPrStatus().stream()
             .filter(bgps -> !bgps.erArbeidstakerEllerFrilanser())
             .forEach(bgps -> {
                 BeregningsgrunnlagPrStatus.builder(bgps).medAvkortetPrÅr(BigDecimal.ZERO).build();
@@ -34,7 +34,7 @@ class AvkortBGAndelerSomIkkeGjelderArbeidsforholdTil0 extends LeafSpecification<
 
         BeregningsgrunnlagPrStatus atfl = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
         if (atfl != null) {
-            atfl.getFrilansArbeidsforholdSomSkalBrukes().ifPresent(af -> {
+            atfl.getFrilansArbeidsforhold().ifPresent(af -> {
                     BeregningsgrunnlagPrArbeidsforhold.builder(af).medAvkortetPrÅr(BigDecimal.ZERO).medAvkortetRefusjonPrÅr(BigDecimal.ZERO).medAvkortetBrukersAndelPrÅr(BigDecimal.ZERO).build();
                     resultater.put("avkortetPrÅr.status." + atfl.getAktivitetStatus().name() + "." + af.getArbeidsgiverId(), af.getAvkortetPrÅr());
                 });
