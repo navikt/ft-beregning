@@ -134,10 +134,6 @@ public class BeregningsgrunnlagPeriode {
 		return Collections.unmodifiableCollection(beregningsgrunnlagPrStatus);
 	}
 
-	public List<BeregningsgrunnlagPrStatus> getBeregningsgrunnlagPrStatusSomSkalBrukes() {
-		return beregningsgrunnlagPrStatus.stream().filter(BeregningsgrunnlagPrStatus::erSøktYtelseFor).toList();
-	}
-
 	public BigDecimal getGrunnbeløp() {
 		return beregningsgrunnlag.getGrunnbeløp();
 	}

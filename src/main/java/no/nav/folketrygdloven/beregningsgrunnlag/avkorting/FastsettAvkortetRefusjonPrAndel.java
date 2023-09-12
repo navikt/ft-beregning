@@ -27,7 +27,7 @@ class FastsettAvkortetRefusjonPrAndel extends LeafSpecification<Beregningsgrunnl
         if (atfl != null) {
             Map<String, Object> resultater = new HashMap<>();
             resultat.setEvaluationProperties(resultater);
-            atfl.getArbeidsforholdSomSkalBrukes().forEach(af ->
+            atfl.getArbeidsforhold().forEach(af ->
                 resultater.put("avkortetRefusjonPrÅr" + "." + af.getArbeidsgiverId(), af.getMaksimalRefusjonPrÅr())
             );
         }

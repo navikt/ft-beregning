@@ -23,9 +23,9 @@ public class FastsettDagsatsPrAndel extends LeafSpecification<Beregningsgrunnlag
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
         Map<String, Object> resultater = new HashMap<>();
-        grunnlag.getBeregningsgrunnlagPrStatusSomSkalBrukes().forEach(bgps -> {
+        grunnlag.getBeregningsgrunnlagPrStatus().forEach(bgps -> {
             if (bgps.erArbeidstakerEllerFrilanser()) {
-                bgps.getArbeidsforholdSomSkalBrukes().forEach(af ->
+                bgps.getArbeidsforhold().forEach(af ->
                     resultater.put("dagsats." + af.getArbeidsgiverId(), af.getDagsats())
                 );
             } else {

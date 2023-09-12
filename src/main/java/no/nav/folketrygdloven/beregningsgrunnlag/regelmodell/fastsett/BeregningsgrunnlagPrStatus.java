@@ -167,20 +167,8 @@ public class BeregningsgrunnlagPrStatus {
 		return Optional.ofNullable(aktivitetsgrad);
 	}
 
-	public List<BeregningsgrunnlagPrArbeidsforhold> getArbeidsforholdSomSkalBrukes() {
-		return getArbeidsforhold().stream().filter(BeregningsgrunnlagPrArbeidsforhold::getErSøktYtelseFor).toList();
-	}
-
-	public List<BeregningsgrunnlagPrArbeidsforhold> getArbeidsforholdSomSkalBrukesIkkeFrilans() {
-		return getArbeidsforholdSomSkalBrukes().stream().filter(af -> !af.erFrilanser()).toList();
-	}
-
 	public List<BeregningsgrunnlagPrArbeidsforhold> getArbeidsforholdIkkeFrilans() {
 		return getArbeidsforhold().stream().filter(af -> !af.erFrilanser()).toList();
-	}
-
-	public Optional<BeregningsgrunnlagPrArbeidsforhold> getFrilansArbeidsforholdSomSkalBrukes() {
-		return getArbeidsforhold().stream().filter(BeregningsgrunnlagPrArbeidsforhold::erFrilanser).filter(BeregningsgrunnlagPrArbeidsforhold::getErSøktYtelseFor).findAny();
 	}
 
 	public Optional<BeregningsgrunnlagPrArbeidsforhold> getFrilansArbeidsforhold() {
@@ -329,6 +317,11 @@ public class BeregningsgrunnlagPrStatus {
 					throw new IllegalArgumentException("Aktivitetsgrad må ha verdi fra 0 til 100, faktisk: " + aktivitetsgrad);
 			}
 			beregningsgrunnlagPrStatusMal.aktivitetsgrad = aktivitetsgrad;
+			return this;
+		}
+
+		public Builder medErSøktYtelseFor(boolean erSøktYtelseFor) {
+			beregningsgrunnlagPrStatusMal.erSøktYtelseFor = erSøktYtelseFor;
 			return this;
 		}
 

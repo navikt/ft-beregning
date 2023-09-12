@@ -50,7 +50,7 @@ public class AvkortBGAndelerSomIkkeGjelderArbeidsforholdAndelsmessig extends Lea
                 if (bruttoBeregningsgrunnlagForAndelen.compareTo(bGUtenArbeidsforholdTilFordeling) >= 0) {
                     avkortetBrukersAndel = bGUtenArbeidsforholdTilFordeling;
                     lagResultaterFrilanser(af, avkortetBrukersAndel, resultater);
-                    grunnlag.getBeregningsgrunnlagPrStatusSomSkalBrukes().stream()
+                    grunnlag.getBeregningsgrunnlagPrStatus().stream()
                         .filter(bgps -> !bgps.erArbeidstakerEllerFrilanser())
                         .forEach(bgp -> lagResultaterUtenArbeidsforhold(bgp, BigDecimal.ZERO, resultater));
                     return beregnet(resultater);

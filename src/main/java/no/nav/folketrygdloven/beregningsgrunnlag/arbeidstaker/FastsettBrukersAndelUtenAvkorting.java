@@ -29,7 +29,7 @@ class FastsettBrukersAndelUtenAvkorting extends LeafSpecification<Beregningsgrun
         }
 
 		// Kva skjer her?
-        for (BeregningsgrunnlagPrArbeidsforhold arbeidsforhold : bgps.getArbeidsforholdSomSkalBrukes()) {
+        for (BeregningsgrunnlagPrArbeidsforhold arbeidsforhold : bgps.getArbeidsforhold()) {
             BigDecimal arbeidsgiversAndel = arbeidsforhold.getMaksimalRefusjonPrÅr();
 
             BeregningsgrunnlagPrArbeidsforhold.builder(arbeidsforhold)

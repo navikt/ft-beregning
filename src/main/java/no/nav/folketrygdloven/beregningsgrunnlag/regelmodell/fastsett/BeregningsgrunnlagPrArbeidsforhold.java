@@ -318,6 +318,11 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 			return this;
 		}
 
+		public Builder medErSøktYtelseFor(boolean erSøktYtelseFor) {
+			mal.erSøktYtelseFor = erSøktYtelseFor;
+			return this;
+		}
+
 		public BeregningsgrunnlagPrArbeidsforhold build() {
 			verifyStateForBuild();
 			return mal;

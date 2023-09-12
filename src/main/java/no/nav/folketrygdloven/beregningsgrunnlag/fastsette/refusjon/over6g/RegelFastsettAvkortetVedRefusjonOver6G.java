@@ -34,7 +34,7 @@ public class RegelFastsettAvkortetVedRefusjonOver6G implements RuleService<Bereg
 
         Specification<BeregningsgrunnlagPeriode> fastsettBrukersAndelerTilNull = new FastsettBrukersAndelerTilNull();
 
-        int antallKjøringer = bgpsa.getArbeidsforholdSomSkalBrukes().size();
+        int antallKjøringer = bgpsa.getArbeidsforhold().size();
         Specification<BeregningsgrunnlagPeriode> fastsettAvkortetBeregningsgrunnlag = new Fastsatt();
         if (antallKjøringer > 0) {
             List<Specification<BeregningsgrunnlagPeriode>> prArbeidsforhold = new ArrayList<>();

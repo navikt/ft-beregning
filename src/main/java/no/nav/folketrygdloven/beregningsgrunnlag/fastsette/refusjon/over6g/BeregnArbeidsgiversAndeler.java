@@ -36,7 +36,7 @@ class BeregnArbeidsgiversAndeler extends LeafSpecification<BeregningsgrunnlagPer
 		final Map<String, Object> resultater = new HashMap<>();
 		resultat.setEvaluationProperties(resultater);
 		// Finn alle arbeidsforhold som ikke er avkortet allerede
-		List<BeregningsgrunnlagPrArbeidsforhold> ikkeFastsatt = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforholdSomSkalBrukes()
+		List<BeregningsgrunnlagPrArbeidsforhold> ikkeFastsatt = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold()
 				.stream()
 				.filter(af -> af.getMaksimalRefusjonPrÅr() != null)
 				.filter(af -> af.getAvkortetPrÅr() == null)
@@ -50,7 +50,7 @@ class BeregnArbeidsgiversAndeler extends LeafSpecification<BeregningsgrunnlagPer
 		resultater.put("grunnbeløp", grunnlag.getGrunnbeløp());
 		resultater.put("grenseverdi", grenseverdi);
 		BigDecimal refusjonTilFordeling = grenseverdi.subtract(
-				grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforholdSomSkalBrukes()
+				grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold()
 						.stream()
 						.map(BeregningsgrunnlagPrArbeidsforhold::getAvkortetRefusjonPrÅr)
 						.filter(Objects::nonNull)
