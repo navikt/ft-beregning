@@ -6,6 +6,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelPeriodeMode
 import no.nav.folketrygdloven.beregningsgrunnlag.foreslå.RegelForeslåBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.foreslå.frisinn.RegelForeslåBeregningsgrunnlagFRISINN;
 import no.nav.folketrygdloven.beregningsgrunnlag.fortsettForeslå.RegelFortsettForeslåBeregningsgrunnlag;
+import no.nav.folketrygdloven.beregningsgrunnlag.grenseverdi.RegelFinnGrenseverdi;
 import no.nav.folketrygdloven.beregningsgrunnlag.perioder.gradering.FastsettPerioderGraderingRegel;
 import no.nav.folketrygdloven.beregningsgrunnlag.perioder.naturalytelse.FastsettPerioderNaturalytelseRegel;
 import no.nav.folketrygdloven.beregningsgrunnlag.perioder.refusjon.FastsettPerioderRefusjonRegel;
@@ -20,8 +21,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.vurder.RegelVurderBeregningsgru
 import no.nav.folketrygdloven.beregningsgrunnlag.vurder.frisinn.RegelVurderBeregningsgrunnlagFRISINN;
 import no.nav.folketrygdloven.beregningsgrunnlag.ytelse.frisinn.RegelFinnGrenseverdiFRISINN;
 import no.nav.folketrygdloven.beregningsgrunnlag.ytelse.frisinn.RegelFullføreBeregningsgrunnlagFRISINN;
-import no.nav.folketrygdloven.beregningsgrunnlag.ytelse.svp.RegelFinnGrenseverdi;
-import no.nav.folketrygdloven.beregningsgrunnlag.ytelse.svp.RegelFinnGrenseverdiUtenFordeling;
 import no.nav.folketrygdloven.besteberegning.RegelForeslåBesteberegning;
 import no.nav.folketrygdloven.besteberegning.modell.BesteberegningRegelmodell;
 import no.nav.folketrygdloven.skjæringstidspunkt.regel.RegelFastsettSkjæringstidspunkt;
@@ -87,10 +86,6 @@ public final class KalkulusRegler {
 
 	public static RegelResultat finnGrenseverdi(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode input) {
 		return new RegelFinnGrenseverdi(input).evaluerRegel(input);
-	}
-
-	public static RegelResultat finnGrenseverdiUtenFordeling(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode input) {
-		return new RegelFinnGrenseverdiUtenFordeling(input).evaluerRegel(input);
 	}
 
 	public static RegelResultat fullføreBeregningsgrunnlag(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode input) {

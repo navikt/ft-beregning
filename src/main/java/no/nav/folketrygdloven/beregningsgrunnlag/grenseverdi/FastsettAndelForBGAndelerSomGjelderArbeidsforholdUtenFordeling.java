@@ -1,4 +1,4 @@
-package no.nav.folketrygdloven.beregningsgrunnlag.ytelse.svp;
+package no.nav.folketrygdloven.beregningsgrunnlag.grenseverdi;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -13,12 +13,12 @@ import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.node.SingleEvaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
-@RuleDocumentation(FastsettAndelForBGAndelerSomGjelderArbeidsforhold.ID)
-class FastsettAndelForBGAndelerSomGjelderArbeidsforhold extends LeafSpecification<BeregningsgrunnlagPeriode> {
+@RuleDocumentation(FastsettAndelForBGAndelerSomGjelderArbeidsforholdUtenFordeling.ID)
+class FastsettAndelForBGAndelerSomGjelderArbeidsforholdUtenFordeling extends LeafSpecification<BeregningsgrunnlagPeriode> {
     static final String ID = "FP_BR 29.8.10";
     static final String BESKRIVELSE = "Fastsett brukers andel for alle beregningsgrunnlagsandeler som gjelder arbeidsforhold.";
 
-    FastsettAndelForBGAndelerSomGjelderArbeidsforhold() {
+    FastsettAndelForBGAndelerSomGjelderArbeidsforholdUtenFordeling() {
         super(ID, BESKRIVELSE);
     }
 
@@ -30,7 +30,7 @@ class FastsettAndelForBGAndelerSomGjelderArbeidsforhold extends LeafSpecificatio
             Map<String, Object> resultater = new HashMap<>();
             resultat.setEvaluationProperties(resultater);
             atfl.getArbeidsforholdIkkeFrilans().forEach(arbeidsforhold -> {
-                BigDecimal avkortetPrÅr = arbeidsforhold.getBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO);
+                BigDecimal avkortetPrÅr = arbeidsforhold.getInntektsgrunnlagInkludertNaturalytelsePrÅr();
                 BeregningsgrunnlagPrArbeidsforhold.builder(arbeidsforhold)
                     .medAndelsmessigFørGraderingPrAar(avkortetPrÅr)
                     .build();

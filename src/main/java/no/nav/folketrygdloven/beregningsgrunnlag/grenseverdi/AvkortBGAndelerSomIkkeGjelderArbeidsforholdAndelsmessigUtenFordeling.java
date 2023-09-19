@@ -1,4 +1,4 @@
-package no.nav.folketrygdloven.beregningsgrunnlag.ytelse.svp;
+package no.nav.folketrygdloven.beregningsgrunnlag.grenseverdi;
 
 import java.math.BigDecimal;
 import java.util.Comparator;
@@ -16,12 +16,12 @@ import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
-@RuleDocumentation(AvkortBGAndelerSomIkkeGjelderArbeidsforholdAndelsmessig.ID)
-public class AvkortBGAndelerSomIkkeGjelderArbeidsforholdAndelsmessig extends LeafSpecification<BeregningsgrunnlagPeriode> {
+@RuleDocumentation(AvkortBGAndelerSomIkkeGjelderArbeidsforholdAndelsmessigUtenFordeling.ID)
+public class AvkortBGAndelerSomIkkeGjelderArbeidsforholdAndelsmessigUtenFordeling extends LeafSpecification<BeregningsgrunnlagPeriode> {
     public static final String ID = "FP_BR 29.8.4";
     public static final String BESKRIVELSE = "Avkort alle beregningsgrunnlagsandeler som ikke gjelder arbeidsforhold andelsmessig.";
 
-    AvkortBGAndelerSomIkkeGjelderArbeidsforholdAndelsmessig() {
+    AvkortBGAndelerSomIkkeGjelderArbeidsforholdAndelsmessigUtenFordeling() {
         super(ID, BESKRIVELSE);
     }
 
@@ -31,9 +31,7 @@ public class AvkortBGAndelerSomIkkeGjelderArbeidsforholdAndelsmessig extends Lea
         BeregningsgrunnlagPrStatus atfl = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
         BigDecimal sumBeregningsgrunnlagArbeidsforhold = atfl == null ? BigDecimal.ZERO : atfl.getArbeidsforholdIkkeFrilans()
             .stream()
-            .map(BeregningsgrunnlagPrArbeidsforhold::getBruttoInkludertNaturalytelsePrÅr)
-            .filter(Optional::isPresent)
-            .map(Optional::get)
+            .map(BeregningsgrunnlagPrArbeidsforhold::getInntektsgrunnlagInkludertNaturalytelsePrÅr)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
         BigDecimal grenseverdi = grunnlag.getGrenseverdi();
         resultater.put("grenseverdi", grenseverdi);
@@ -44,8 +42,7 @@ public class AvkortBGAndelerSomIkkeGjelderArbeidsforholdAndelsmessig extends Lea
             Optional<BeregningsgrunnlagPrArbeidsforhold> frilansArbeidsforholdOpt = atfl.getFrilansArbeidsforhold();
             if (frilansArbeidsforholdOpt.isPresent()) {
                 BeregningsgrunnlagPrArbeidsforhold af = frilansArbeidsforholdOpt.get();
-                BigDecimal bruttoBeregningsgrunnlagForAndelen = af.getBruttoInkludertNaturalytelsePrÅr()
-                    .orElseThrow(() -> new IllegalStateException("Brutto er ikke satt for arbeidsforhold " + af.toString()));
+                BigDecimal bruttoBeregningsgrunnlagForAndelen = af.getInntektsgrunnlagInkludertNaturalytelsePrÅr();
                 BigDecimal avkortetBrukersAndel;
                 if (bruttoBeregningsgrunnlagForAndelen.compareTo(bGUtenArbeidsforholdTilFordeling) >= 0) {
                     avkortetBrukersAndel = bGUtenArbeidsforholdTilFordeling;
@@ -67,7 +64,7 @@ public class AvkortBGAndelerSomIkkeGjelderArbeidsforholdAndelsmessig extends Lea
         Iterator<BeregningsgrunnlagPrStatus> bgpsIter = bgpsSorted.iterator();
         while (bgpsIter.hasNext()) {
             BeregningsgrunnlagPrStatus bgps = bgpsIter.next();
-            BigDecimal bruttoBeregningsgrunnlagForAndelen = bgps.getBruttoInkludertNaturalytelsePrÅr();
+            BigDecimal bruttoBeregningsgrunnlagForAndelen = bgps.getInntektsgrunnlagPrÅr();
             BigDecimal avkortetBrukersAndel;
             if (bruttoBeregningsgrunnlagForAndelen.compareTo(bGUtenArbeidsforholdTilFordeling) >= 0) {
                 avkortetBrukersAndel = bGUtenArbeidsforholdTilFordeling;

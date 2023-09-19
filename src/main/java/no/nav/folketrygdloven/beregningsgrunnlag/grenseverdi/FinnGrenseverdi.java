@@ -1,4 +1,4 @@
-package no.nav.folketrygdloven.beregningsgrunnlag.ytelse.svp;
+package no.nav.folketrygdloven.beregningsgrunnlag.grenseverdi;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -16,13 +16,13 @@ import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.node.SingleEvaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
-@RuleDocumentation(FinnGrenseverdiUtenFordeling.ID)
-public class FinnGrenseverdiUtenFordeling extends LeafSpecification<BeregningsgrunnlagPeriode> {
+@RuleDocumentation(FinnGrenseverdi.ID)
+public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode> {
 
 	public static final String ID = "FP_BR 6.2";
 	public static final String BESKRIVELSE = "Finn grenseverdi";
 
-	public FinnGrenseverdiUtenFordeling() {
+	public FinnGrenseverdi() {
 		super(ID, BESKRIVELSE);
 	}
 
@@ -103,13 +103,13 @@ public class FinnGrenseverdiUtenFordeling extends LeafSpecification<Beregningsgr
 	private BigDecimal andelBeholdtEtterGradertMotTilkommetInntekt(BeregningsgrunnlagPeriode grunnlag) {
 		BigDecimal bortfalt = finnBortfaltInntekt(grunnlag);
 		var totaltGradertGrunnlag = grunnlag.getBeregningsgrunnlagPrStatus().stream()
-				.map(BeregningsgrunnlagPrStatus::getGradertInntektsgrunnlagInkludertNaturalytelsePrÅr)
+				.map(BeregningsgrunnlagPrStatus::getGradertBruttoInkludertNaturalytelsePrÅr)
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
 		if (totaltGradertGrunnlag.compareTo(BigDecimal.ZERO) == 0) {
 			return BigDecimal.ZERO;
 		}
 		var totaltGrunnlag = grunnlag.getBeregningsgrunnlagPrStatus().stream()
-				.map(BeregningsgrunnlagPrStatus::getInntektsgrunnlagInkludertNaturalytelsePrÅr)
+				.map(BeregningsgrunnlagPrStatus::getBruttoInkludertNaturalytelsePrÅr)
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
 
 		var graderingMotTotal = bortfalt.divide(totaltGrunnlag, 10, RoundingMode.HALF_UP);
