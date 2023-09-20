@@ -13,7 +13,7 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 @RuleDocumentation(FastsettAndelLikBruttoBG.ID)
 public class FastsettAndelLikBruttoBG extends LeafSpecification<BeregningsgrunnlagPeriode> {
 
-    static final String ID = "FP_BR 29.6.2";
+    static final String ID = "FP_BR 29.6.2_med_fordeling";
     static final String BESKRIVELSE = "Fastsett andel lik brutto bg";
 
     public FastsettAndelLikBruttoBG() {

@@ -41,7 +41,7 @@ public class RegelFinnGrenseverdiUtenFordeling implements EksportRegel<Beregning
 
 		// Fastsett uten avkorting
 		Specification<BeregningsgrunnlagPeriode> fastsettUtenAvkorting = rs.beregningsRegel(
-				"FP_BR_29.6",
+				"FP_BR_29.6_uten_fordeling",
 				"Fastsett BG uten avkorting",
 				new FastsettAndelLikBruttoBGUtenFordeling(),
 				fastsettGrenseverdi);

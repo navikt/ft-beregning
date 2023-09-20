@@ -19,7 +19,7 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 @RuleDocumentation(FinnGrenseverdi.ID)
 public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode> {
 
-	public static final String ID = "FP_BR 6.2";
+	public static final String ID = "FP_BR 6.2_med_fordeling";
 	public static final String BESKRIVELSE = "Finn grenseverdi";
 
 	public FinnGrenseverdi() {

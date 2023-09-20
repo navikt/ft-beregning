@@ -19,8 +19,8 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 @RuleDocumentation(FinnGrenseverdiUtenFordeling.ID)
 public class FinnGrenseverdiUtenFordeling extends LeafSpecification<BeregningsgrunnlagPeriode> {
 
-	public static final String ID = "FP_BR 6.2";
-	public static final String BESKRIVELSE = "Finn grenseverdi";
+	public static final String ID = "FP_BR 6.2_uten_fordeling";
+	public static final String BESKRIVELSE = "Finn grenseverdi uten fordeling";
 
 	public FinnGrenseverdiUtenFordeling() {
 		super(ID, BESKRIVELSE);

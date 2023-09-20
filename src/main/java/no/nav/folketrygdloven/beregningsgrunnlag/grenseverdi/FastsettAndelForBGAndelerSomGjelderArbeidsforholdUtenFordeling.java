@@ -15,7 +15,7 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(FastsettAndelForBGAndelerSomGjelderArbeidsforholdUtenFordeling.ID)
 class FastsettAndelForBGAndelerSomGjelderArbeidsforholdUtenFordeling extends LeafSpecification<BeregningsgrunnlagPeriode> {
-    static final String ID = "FP_BR 29.8.10";
+    static final String ID = "FP_BR 29.8.10_uten_fordeling";
     static final String BESKRIVELSE = "Fastsett brukers andel for alle beregningsgrunnlagsandeler som gjelder arbeidsforhold.";
 
     FastsettAndelForBGAndelerSomGjelderArbeidsforholdUtenFordeling() {

@@ -18,7 +18,7 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(AvkortBGAndelerSomIkkeGjelderArbeidsforholdAndelsmessigUtenFordeling.ID)
 public class AvkortBGAndelerSomIkkeGjelderArbeidsforholdAndelsmessigUtenFordeling extends LeafSpecification<BeregningsgrunnlagPeriode> {
-    public static final String ID = "FP_BR 29.8.4";
+    public static final String ID = "FP_BR 29.8.4_uten_fordeling";
     public static final String BESKRIVELSE = "Avkort alle beregningsgrunnlagsandeler som ikke gjelder arbeidsforhold andelsmessig.";
 
     AvkortBGAndelerSomIkkeGjelderArbeidsforholdAndelsmessigUtenFordeling() {

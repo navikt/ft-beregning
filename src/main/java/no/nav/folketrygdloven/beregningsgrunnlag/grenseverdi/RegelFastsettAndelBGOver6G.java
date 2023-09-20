@@ -9,7 +9,7 @@ import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.specification.Specification;
 
 public class RegelFastsettAndelBGOver6G implements RuleService<BeregningsgrunnlagPeriode> {
-    public static final String ID = "FP_BR_29.8";
+    public static final String ID = "FP_BR_29.8_med_fordeling";
     public static final String BESKRIVELSE = "Fastsett avkortet BG over 6G når refusjon under 6G";
     private BeregningsgrunnlagPeriode regelmodell;
 
