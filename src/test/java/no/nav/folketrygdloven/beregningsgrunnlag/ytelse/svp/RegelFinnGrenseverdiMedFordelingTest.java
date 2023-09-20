@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import no.nav.folketrygdloven.beregningsgrunnlag.grenseverdi.RegelFinnGrenseverdiMedFordeling;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.MidlertidigInaktivType;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
@@ -21,7 +22,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.TilkommetInntekt;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 
-class RegelFinnGrenseverdiUtenFordelingTest {
+class RegelFinnGrenseverdiMedFordelingTest {
 
 	public static final String ORGNR = "910";
 	private static final String ORGNR_2 = "974760673";
@@ -197,8 +198,8 @@ class RegelFinnGrenseverdiUtenFordelingTest {
 		double beregnetPrÅr = 250_000;
 		double fordeltPrÅr = 150_000;
 
-		double tilkommetPrÅr2 = 25_000;
-		double fordeltPrÅr2 = 100_000;
+		double tilkommetPrÅr2 = 100_000;
+		double fordeltPrÅr2 = tilkommetPrÅr2;
 
 		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
@@ -209,13 +210,13 @@ class RegelFinnGrenseverdiUtenFordelingTest {
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
-		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, fordeltPrÅr, 100d,0D);
-		leggTilArbeidsforhold(periode, AF_2, null, fordeltPrÅr2, 50d,50D);
+		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, fordeltPrÅr, 100D,0D);
+		leggTilArbeidsforhold(periode, AF_2, null, fordeltPrÅr2, 50D,50D);
 		leggTilTilkommet(periode, AF_2, tilkommetPrÅr2);
 		//Act
 		kjørRegel(periode);
 
-		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(225_000));
+		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(150_000));
 	}
 
 
@@ -1598,7 +1599,7 @@ class RegelFinnGrenseverdiUtenFordelingTest {
 
 
 	private RegelResultat kjørRegel(BeregningsgrunnlagPeriode periode) {
-		return new RegelFinnGrenseverdiUtenFordeling(periode).evaluerRegel(periode);
+		return new RegelFinnGrenseverdiMedFordeling(periode).evaluerRegel(periode);
 	}
 
 	private void leggTilArbeidsforhold(BeregningsgrunnlagPeriode periode,

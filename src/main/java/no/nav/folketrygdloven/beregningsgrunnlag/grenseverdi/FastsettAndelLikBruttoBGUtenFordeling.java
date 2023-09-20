@@ -1,4 +1,4 @@
-package no.nav.folketrygdloven.beregningsgrunnlag.ytelse.svp;
+package no.nav.folketrygdloven.beregningsgrunnlag.grenseverdi;
 
 import java.math.BigDecimal;
 
@@ -13,7 +13,7 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 @RuleDocumentation(FastsettAndelLikBruttoBGUtenFordeling.ID)
 public class FastsettAndelLikBruttoBGUtenFordeling extends LeafSpecification<BeregningsgrunnlagPeriode> {
 
-    static final String ID = "FP_BR 29.6.2";
+    static final String ID = "FP_BR 29.6.2_uten_fordeling";
     static final String BESKRIVELSE = "Fastsett andel lik brutto bg";
 
     public FastsettAndelLikBruttoBGUtenFordeling() {

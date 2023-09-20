@@ -1,4 +1,4 @@
-package no.nav.folketrygdloven.beregningsgrunnlag.ytelse.svp;
+package no.nav.folketrygdloven.beregningsgrunnlag.grenseverdi;
 
 
 import java.math.BigDecimal;
@@ -25,7 +25,7 @@ class SjekkOmTotaltBGForArbeidsforholdStørreEnnGrenseverdi extends LeafSpecific
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
         BigDecimal grenseverdi = grunnlag.getGrenseverdi();
         BeregningsgrunnlagPrStatus atfl = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
-        BigDecimal totaltBG = atfl == null ? BigDecimal.ZERO : atfl.getArbeidsforholdIkkeFrilans().stream()
+	    BigDecimal totaltBG = atfl == null ? BigDecimal.ZERO : atfl.getArbeidsforholdIkkeFrilans().stream()
             .map(af -> af.getBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO))
             .reduce(BigDecimal.ZERO, BigDecimal::add);
         SingleEvaluation resultat = totaltBG.compareTo(grenseverdi) > 0 ? ja() : nei();

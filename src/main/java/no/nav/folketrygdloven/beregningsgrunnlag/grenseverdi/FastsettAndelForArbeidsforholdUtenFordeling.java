@@ -1,4 +1,4 @@
-package no.nav.folketrygdloven.beregningsgrunnlag.ytelse.svp;
+package no.nav.folketrygdloven.beregningsgrunnlag.grenseverdi;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -16,7 +16,7 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(FastsettAndelForArbeidsforholdUtenFordeling.ID)
 class FastsettAndelForArbeidsforholdUtenFordeling extends LeafSpecification<BeregningsgrunnlagPeriode> {
-	static final String ID = "FP_BR 29.8.6";
+	static final String ID = "FP_BR 29.8.6_uten_fordeling";
 	static final String BESKRIVELSE = "Fastsett andeleler pr Arbeidsforhold";
 
 	FastsettAndelForArbeidsforholdUtenFordeling() {
