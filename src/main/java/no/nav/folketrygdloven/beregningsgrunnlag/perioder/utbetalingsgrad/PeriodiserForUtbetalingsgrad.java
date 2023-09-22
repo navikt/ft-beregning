@@ -8,7 +8,6 @@ import java.util.List;
 import no.nav.folketrygdloven.beregningsgrunnlag.perioder.PeriodiserBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AktivitetStatusV2;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.PeriodisertBruttoBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.utbetalingsgrad.AndelUtbetalingsgrad;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.utbetalingsgrad.PeriodeModellUtbetalingsgrad;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.utbetalingsgrad.PeriodiseringUtbetalingsgradProsesstruktur;
@@ -56,22 +55,9 @@ public class PeriodiserForUtbetalingsgrad extends LeafSpecification<Periodiserin
 			return periodeModell.getEndringerISøktYtelse().stream()
 					.filter(utbGrad -> utbGrad.erNyAktivitetPåDato(periodeFom))
 					.filter(andel -> harSøkOmUtbetalingIPeriode(andel, periodeFom) ||
-							erHelgMedManuellFordelingFørOgEtter(andel, periodeFom, periodeTom) ||
-							harHattRefusjonTidligereOgFortsetterYtelse(andel, periodeModell.getPeriodisertBruttoBeregningsgrunnlagList(), periodeFom))
+							erHelgMedManuellFordelingFørOgEtter(andel, periodeFom, periodeTom))
 					.map(FinnNyeAndelerMedUtbetalingsgrad::mapSplittetAndel)
 					.toList();
-		}
-
-
-		private static boolean harHattRefusjonTidligereOgFortsetterYtelse(AndelUtbetalingsgrad gradering,
-		                                                                  List<PeriodisertBruttoBeregningsgrunnlag> periodisertBruttoBeregningsgrunnlagList,
-		                                                                  LocalDate periodeFom) {
-			// For tilfeller der SVP har et tilkommet arbeidsforhold i SVP men det ikke søkes refusjon for dette arbeidsforholdet for alle utbetalingsperioder
-			boolean harSøktYtelseIPeriode = gradering.getUbetalingsgrader() != null && gradering.getUbetalingsgrader().stream()
-					.filter(uttak -> uttak.getPeriode().inneholder(periodeFom))
-					.anyMatch(uttak -> uttak.getUtbetalingsprosent().compareTo(BigDecimal.ZERO) > 0);
-			boolean harHattRefusjonIEnTidligerePeriode = RefusjonForUtbetalingsgradAndel.harRefusjonFørDato(gradering, periodisertBruttoBeregningsgrunnlagList, periodeFom);
-			return harSøktYtelseIPeriode && harHattRefusjonIEnTidligerePeriode;
 		}
 
 		private static boolean erHelgMedManuellFordelingFørOgEtter(AndelUtbetalingsgrad andel,
