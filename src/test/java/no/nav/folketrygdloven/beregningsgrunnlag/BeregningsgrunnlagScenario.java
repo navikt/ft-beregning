@@ -302,19 +302,6 @@ public class BeregningsgrunnlagScenario {
         }
     }
 
-    public static void kopierOgLeggTilMånedsinntekterPrAktivitet(Inntektsgrunnlag inntektsgrunnlag, LocalDate skjæringstidspunkt, BigDecimal månedsinntekt, Inntektskilde inntektskilde, Arbeidsforhold arbeidsforhold, int måneder, AktivitetStatus aktivitetStatus) {
-        for (int månederSiden = måneder; månederSiden > 0; månederSiden--) {
-            inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
-                    .medInntektskildeOgPeriodeType(inntektskilde)
-                    .medArbeidsgiver(arbeidsforhold)
-                    .medMåned(skjæringstidspunkt.minusMonths(månederSiden))
-                    .medInntekt(månedsinntekt)
-                    .medAktivitetStatus(aktivitetStatus)
-                    .build());
-
-        }
-    }
-
     public static Beregningsgrunnlag opprettBeregningsgrunnlagFraInntektskomponenten(LocalDate skjæringstidspunkt, BigDecimal månedsinntekt, BigDecimal refusjonskrav, boolean frilans) {
         return opprettBeregningsgrunnlagFraInntektskomponenten(skjæringstidspunkt, månedsinntekt, refusjonskrav, frilans, 12);
     }

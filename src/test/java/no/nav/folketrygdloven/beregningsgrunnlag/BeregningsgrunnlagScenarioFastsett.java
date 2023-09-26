@@ -64,22 +64,6 @@ public class BeregningsgrunnlagScenarioFastsett {
 				.build();
 	}
 
-	public static Beregningsgrunnlag settOppGrunnlagMedEnPeriode(LocalDate skjæringstidspunkt, AktivitetStatus aktivitetStatus, List<Arbeidsforhold> arbeidsforhold, List<BigDecimal> refusjonskravPrår) {
-		BeregningsgrunnlagPrStatus bgps = BeregningsgrunnlagPrStatus.builder()
-				.medAktivitetStatus(aktivitetStatus)
-				.medArbeidsforhold(arbeidsforhold, refusjonskravPrår)
-				.build();
-		BeregningsgrunnlagPeriode.Builder periodeBuilder = BeregningsgrunnlagPeriode.builder()
-				.medBeregningsgrunnlagPrStatus(bgps)
-				.medPeriode(Periode.of(skjæringstidspunkt, null));
-
-		return Beregningsgrunnlag.builder()
-				.medGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2017))
-				.medAktivitetStatuser(List.of(new AktivitetStatusMedHjemmel(aktivitetStatus, null)))
-				.medBeregningsgrunnlagPeriode(periodeBuilder.build())
-				.build();
-	}
-
 	public static Beregningsgrunnlag opprettBeregningsgrunnlagFraInntektsmelding(LocalDate skjæringstidspunkt, BigDecimal refusjonskrav) {
 		Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR);
 		return settoppGrunnlagMedEnPeriode(skjæringstidspunkt, singletonList(AktivitetStatus.ATFL), singletonList(arbeidsforhold), singletonList(refusjonskrav.multiply(BigDecimal.valueOf(12))));

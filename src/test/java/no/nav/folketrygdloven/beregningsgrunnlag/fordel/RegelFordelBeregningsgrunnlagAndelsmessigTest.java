@@ -194,13 +194,6 @@ class RegelFordelBeregningsgrunnlagAndelsmessigTest {
 		return fordelAndel.build();
 	}
 
-	private FordelAndelModell lagFordelAndelUtenArbeidsforhold(AktivitetStatus status, Inntektskategori ik, Integer brutto) {
-		FordelAndelModell.Builder fordelAndel = FordelAndelModell.builder()
-				.medAktivitetStatus(status)
-				.medInntektskategori(ik);
-		return brutto == null ? fordelAndel.build() : fordelAndel.medForeslåttPrÅr(BigDecimal.valueOf(brutto)).build();
-	}
-
 	private Arbeidsforhold arbeid(String orgnr, String arbeidsforholdId) {
 		return Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr, arbeidsforholdId);
 	}
