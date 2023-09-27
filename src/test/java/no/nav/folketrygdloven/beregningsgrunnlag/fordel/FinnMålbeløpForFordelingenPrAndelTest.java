@@ -72,12 +72,4 @@ class FinnMålbeløpForFordelingenPrAndelTest {
 		}
 		return fordelAndel.build();
 	}
-
-	private FordelAndelModell lagFordelAndelForStatus(AktivitetStatus status, Integer brutto) {
-		FordelAndelModell.Builder fordelAndel = FordelAndelModell.builder()
-				.medAktivitetStatus(status)
-				.medForeslåttPrÅr(BigDecimal.valueOf(brutto));
-		return fordelAndel.build();
-	}
-
 }
