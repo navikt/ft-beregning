@@ -16,7 +16,7 @@ import no.nav.fpsak.nare.specification.Specification;
 
 public class RegelFordelBeregningsgrunnlag implements EksportRegel<FordelPeriodeModell> {
 
-    public static final String ID = "FP_BR 22.3";
+	public static final String ID = "FP_BR 22.3";
 	private FordelModell modell;
 
 	public RegelFordelBeregningsgrunnlag() {
@@ -58,31 +58,26 @@ public class RegelFordelBeregningsgrunnlag implements EksportRegel<FordelPeriode
 				.orElse(BigDecimal.ZERO);
 		if (bruttoInn.compareTo(bruttoUt) != 0) {
 			throw new IllegalStateException("Missmatch mellom fordelt beløp før og etter andelsmessig fordeling." +
-					" Inn i regel var brutto " +  bruttoInn + ". Ut av regel var brutto " + bruttoUt);
+					" Inn i regel var brutto " + bruttoInn + ". Ut av regel var brutto " + bruttoUt);
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-    @Override
-    public Specification<FordelModell> getSpecification() {
-        Ruleset<FordelModell> rs = new Ruleset<>();
+	@Override
+	public Specification<FordelModell> getSpecification() {
+		Ruleset<FordelModell> rs = new Ruleset<>();
 
-        Specification<FordelModell> fastsettFordelingAvBeregningsgrunnlag = new FastsettNyFordeling(modell).getSpecification();
+		Specification<FordelModell> fastsettFordelingAvBeregningsgrunnlag = new FastsettNyFordeling(modell).getSpecification();
 
-        Specification<FordelModell> sjekkRefusjonMotBeregningsgrunnlag = rs.beregningHvisRegel(new SjekkHarRefusjonSomOverstigerBeregningsgrunnlag(),
-            fastsettFordelingAvBeregningsgrunnlag, new SettAndelerUtenSøktYtelseTilNull());
-
-	    Specification<FordelModell> omfordelFraBrukersAndel = rs.beregningsRegel(OmfordelFraBrukersAndel.ID,
-			    OmfordelFraBrukersAndel.BESKRIVELSE, new OmfordelFraBrukersAndel(), sjekkRefusjonMotBeregningsgrunnlag);
-
-	    Specification<FordelModell> sjekkOmSkalFordeleFraBrukersAndel = rs.beregningHvisRegel(new SkalOmfordeleFraBrukersAndelTilFLEllerSN(), omfordelFraBrukersAndel, sjekkRefusjonMotBeregningsgrunnlag);
+		Specification<FordelModell> sjekkRefusjonMotBeregningsgrunnlag = rs.beregningHvisRegel(new SjekkHarRefusjonSomOverstigerBeregningsgrunnlag(),
+				fastsettFordelingAvBeregningsgrunnlag, new SettAndelerUtenSøktYtelseTilNull());
 
 		Specification<FordelModell> fordelBruttoAndelsmessig = rs.beregningsRegel(RegelFordelBeregningsgrunnlagAndelsmessig.ID, RegelFordelBeregningsgrunnlagAndelsmessig.BESKRIVELSE, new RegelFordelBeregningsgrunnlagAndelsmessig().getSpecification(), new Fordelt());
 
-		Specification<FordelModell> sjekkOmBruttoKanDekkeAllRefusjon = rs.beregningHvisRegel(new FinnesMerRefusjonEnnBruttoTilgjengeligOgFlereAndelerKreverRefusjon(), fordelBruttoAndelsmessig, sjekkOmSkalFordeleFraBrukersAndel);
+		Specification<FordelModell> sjekkOmBruttoKanDekkeAllRefusjon = rs.beregningHvisRegel(new FinnesMerRefusjonEnnBruttoTilgjengeligOgFlereAndelerKreverRefusjon(), fordelBruttoAndelsmessig, sjekkRefusjonMotBeregningsgrunnlag);
 
-		Specification<FordelModell> sjekkOmDetFinnesTilkommetRefkrav = rs.beregningHvisRegel(new FinnesTilkommetArbeidsandelMedRefusjonskrav(), sjekkOmBruttoKanDekkeAllRefusjon, sjekkOmSkalFordeleFraBrukersAndel);
+		Specification<FordelModell> sjekkOmDetFinnesTilkommetRefkrav = rs.beregningHvisRegel(new FinnesTilkommetArbeidsandelMedRefusjonskrav(), sjekkOmBruttoKanDekkeAllRefusjon, sjekkRefusjonMotBeregningsgrunnlag);
 
 		return sjekkOmDetFinnesTilkommetRefkrav;
-    }
+	}
 }
