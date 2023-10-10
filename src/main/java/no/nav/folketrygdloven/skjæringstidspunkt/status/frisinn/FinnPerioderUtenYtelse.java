@@ -116,7 +116,7 @@ public class FinnPerioderUtenYtelse {
 
     private static void leggTilMånederMellom(List<Periode> beregningsperioder, LocalDate førsteDato, LocalDate sisteDato) {
         long månederMellom = finnHeleMånederMellom(førsteDato, sisteDato);
-        for (int k = 1; k <= månederMellom; k++) {
+        for (long k = 1; k <= månederMellom; k++) {
             LocalDate måned = førsteDato.plusMonths(k);
             beregningsperioder.add(Periode.of(måned.withDayOfMonth(1), måned.withDayOfMonth(måned.lengthOfMonth())));
         }
