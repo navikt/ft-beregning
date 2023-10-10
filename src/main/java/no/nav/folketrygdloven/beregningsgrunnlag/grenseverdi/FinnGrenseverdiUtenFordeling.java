@@ -44,6 +44,7 @@ public class FinnGrenseverdiUtenFordeling extends LeafSpecification<Beregningsgr
 			BigDecimal reduksjonsfaktor = grunnlag.getBeregningsgrunnlag().getMidlertidigInaktivTypeAReduksjonsfaktor();
 			grenseverdi = grenseverdi.multiply(reduksjonsfaktor);
 			resultater.put("grad847a", reduksjonsfaktor);
+			grunnlag.setReduksjonsfaktorInaktivTypeA(reduksjonsfaktor);
 		}
 
 		//juster ned med tilkommet inntekt hvis det gir lavere utbetaling enn overstående

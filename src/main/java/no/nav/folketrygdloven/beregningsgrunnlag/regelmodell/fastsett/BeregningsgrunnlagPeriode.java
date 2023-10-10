@@ -37,6 +37,11 @@ public class BeregningsgrunnlagPeriode {
 	private BigDecimal totalUtbetalingsgradFraUttak;
 	private BigDecimal totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt;
 
+	/**
+	 * satt hvis folketrygdloven §8-47a påvirker perioden
+	 */
+	private BigDecimal reduksjonsfaktorInaktivTypeA;
+
 	private Dekningsgrad dekningsgrad = Dekningsgrad.DEKNINGSGRAD_100;
 	private boolean erVilkårOppfylt = true;
 
@@ -202,6 +207,14 @@ public class BeregningsgrunnlagPeriode {
 
 	public void setTotalUtbetalingsgradEtterReduksjonVedTilkommetInntekt(BigDecimal totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt) {
 		this.totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt = totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt;
+	}
+
+	public BigDecimal getReduksjonsfaktorInaktivTypeA() {
+		return reduksjonsfaktorInaktivTypeA;
+	}
+
+	public void setReduksjonsfaktorInaktivTypeA(BigDecimal reduksjonsfaktorInaktivTypeA) {
+		this.reduksjonsfaktorInaktivTypeA = reduksjonsfaktorInaktivTypeA;
 	}
 
 	public static class Builder {
