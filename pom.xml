@@ -6,7 +6,7 @@
     <name>Folketrygdloven Beregningsgrunnlag Regelmodell</name>
     <groupId>no.nav.folketrygdloven</groupId>
     <artifactId>beregningsgrunnlag-regelmodell</artifactId>
-    <version>${revision}${sha1}${changelist}</version>
+    <version>4.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <url>https://github.com/navikt/folketrygdloven-beregningsgrunnlag-regelmodell</url>
 
@@ -31,16 +31,8 @@
     </developers>
 
     <properties>
-        <revision>4.1</revision>
-        <sha1></sha1>
-        <changelist>-SNAPSHOT</changelist>
-        <java.version>17</java.version>
+        <java.version>17</java.version> <!-- behold så lenge kalkulus-kalkulator er på 17 -->
 
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <additionalparam>-Xdoclint:none</additionalparam>
         <sonar.projectKey>navikt_folketrygdloven-beregningsgrunnlag-regelmodell</sonar.projectKey>
         <sonar.organization>navikt</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>

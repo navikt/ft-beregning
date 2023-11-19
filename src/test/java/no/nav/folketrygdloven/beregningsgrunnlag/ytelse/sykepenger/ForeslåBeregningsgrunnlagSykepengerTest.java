@@ -53,7 +53,7 @@ class ForeslåBeregningsgrunnlagSykepengerTest {
         // Act
 	    RegelResultat resultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
         // Assert
-        assertThat(resultat.getMerknader().stream().map(RegelMerknad::utfallÅrsak).collect(Collectors.toList())).isEmpty();
+        assertThat(resultat.merknader().stream().map(RegelMerknad::utfallÅrsak).collect(Collectors.toList())).isEmpty();
         assertThat(bgArbeidsforhold.getNaturalytelseBortfaltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.valueOf(24000)); //NOSONAR
         assertBeregningsgrunnlag(grunnlag, månedsinntekt, 24000);
     }
@@ -77,7 +77,7 @@ class ForeslåBeregningsgrunnlagSykepengerTest {
         // Act
 	    RegelResultat resultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
         // Assert
-        assertThat(resultat.getMerknader().stream().map(RegelMerknad::utfallÅrsak).collect(Collectors.toList())).isEmpty();
+        assertThat(resultat.merknader().stream().map(RegelMerknad::utfallÅrsak).collect(Collectors.toList())).isEmpty();
         assertThat(bgArbeidsforhold.getNaturalytelseBortfaltPrÅr()).isEmpty();
         assertBeregningsgrunnlag(grunnlag, månedsinntekt, 0);
     }

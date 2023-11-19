@@ -50,7 +50,7 @@ class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
         //Assert
 
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
 
         Periode periode = new Periode(skjæringstidspunkt, null);
         assertThat(grunnlag.getBeregningsgrunnlagPeriode()).isEqualTo(periode);
@@ -77,7 +77,7 @@ class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
         //Assert
 
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
 
         Periode periode = new Periode(skjæringstidspunkt, null);
         assertThat(grunnlag.getBeregningsgrunnlagPeriode()).isEqualTo(periode);
@@ -109,7 +109,7 @@ class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
         //Assert
 
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
 
         Periode periode = new Periode(skjæringstidspunkt, null);
         assertThat(grunnlag.getBeregningsgrunnlagPeriode()).isEqualTo(periode);
@@ -138,7 +138,7 @@ class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
         String sporing = EvaluationSerializer.asJson(evaluation);
 
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
 
         Periode periode = new Periode(skjæringstidspunkt, null);
         assertThat(grunnlag.getBeregningsgrunnlagPeriode()).isEqualTo(periode);
@@ -167,7 +167,7 @@ class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
 
         //Assert
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
         BeregningsgrunnlagPrStatus bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP);
         assertThat(bgps.getBruttoPrÅr()).isEqualByComparingTo(brutto);
         assertThat(bgps.getÅrsbeløpFraTilstøtendeYtelse()).isEqualByComparingTo(brutto);
@@ -191,7 +191,7 @@ class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
 
         //Assert
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
         BeregningsgrunnlagPrStatus bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP);
         assertThat(bgps.getBruttoPrÅr()).isEqualByComparingTo(brutto);
         assertThat(bgps.getÅrsbeløpFraTilstøtendeYtelse()).isEqualByComparingTo(brutto);
@@ -222,7 +222,7 @@ class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
 	    RegelResultat regelResultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 
         //Assert
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
         BeregningsgrunnlagPrStatus bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP);
         assertThat(bgps.getBeregnetPrÅr()).isEqualByComparingTo(besteberegning);
         assertThat(bgps.getBruttoPrÅr()).isEqualByComparingTo(besteberegning);

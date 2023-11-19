@@ -505,7 +505,7 @@ class RegelFullføreBeregningsgrunnlagTest {
 
 	private void verifiserBeregningsgrunnlag(RegelResultat resultat, BeregningsgrunnlagPeriode grunnlag, double bruttoPrÅr,
 	                                         double avkortetPrÅr, double redusertPrÅr) {
-		assertThat(resultat.getMerknader()).isEmpty();
+		assertThat(resultat.merknader()).isEmpty();
 		assertThat(grunnlag.getBruttoPrÅr().doubleValue()).isEqualTo(bruttoPrÅr, offset);
 		assertThat(grunnlag.getAvkortetPrÅr().doubleValue()).isEqualTo(avkortetPrÅr, offset);
 		assertThat(grunnlag.getRedusertPrÅr().doubleValue()).isEqualTo(redusertPrÅr, offset);

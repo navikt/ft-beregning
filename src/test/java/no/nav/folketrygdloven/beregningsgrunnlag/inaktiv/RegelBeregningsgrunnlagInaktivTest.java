@@ -71,7 +71,7 @@ class RegelBeregningsgrunnlagInaktivTest {
 		double forventet_bg = 4.0d * GRUNNBELØP_2017;
 
 		RegelResultat regelResultat = getRegelResultat(evaluation, "input");
-		assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+		assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
 
 		assertThat(brukers_andel.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(forventet_bg));
 		assertThat(bg.getAktivitetStatuser().get(0).getHjemmel()).isEqualTo(BeregningsgrunnlagHjemmel.K9_HJEMMEL_MIDLERTIDIG_INAKTIV);
@@ -120,7 +120,7 @@ class RegelBeregningsgrunnlagInaktivTest {
 
 		EvaluationSerializer.asJson(evaluation);
 		RegelResultat regelResultat = getRegelResultat(evaluation, "input");
-		assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
+		assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
 		verifiserRegelmerknad(regelResultat, "5054");
 
 		assertThat(brukers_andel.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(forventet_bg));
@@ -172,7 +172,7 @@ class RegelBeregningsgrunnlagInaktivTest {
 
 		EvaluationSerializer.asJson(evaluation);
 		RegelResultat regelResultat = getRegelResultat(evaluation, "input");
-		assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+		assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
 
 		assertThat(brukers_andel.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(forventet_bg));
 		assertThat(bg.getAktivitetStatuser().get(0).getHjemmel()).isEqualTo(BeregningsgrunnlagHjemmel.K9_HJEMMEL_MIDLERTIDIG_INAKTIV);
@@ -223,7 +223,7 @@ class RegelBeregningsgrunnlagInaktivTest {
 
 		EvaluationSerializer.asJson(evaluation);
 		RegelResultat regelResultat = getRegelResultat(evaluation, "input");
-		assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
+		assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
 		verifiserRegelmerknad(regelResultat, "5054");
 
 		assertThat(brukers_andel.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(forventet_bg));
@@ -278,7 +278,7 @@ class RegelBeregningsgrunnlagInaktivTest {
 		var forventet_rapportert = inntekt.divide(antallVirkedagerMedInntekt, 10, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(260));
 		EvaluationSerializer.asJson(evaluation);
 		RegelResultat regelResultat = getRegelResultat(evaluation, "input");
-		assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+		assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
 
 		assertThat(brukers_andel.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(forventet_bg));
 		assertThat(bg.getAktivitetStatuser().get(0).getHjemmel()).isEqualTo(BeregningsgrunnlagHjemmel.K9_HJEMMEL_MIDLERTIDIG_INAKTIV);
@@ -330,7 +330,7 @@ class RegelBeregningsgrunnlagInaktivTest {
 
 		EvaluationSerializer.asJson(evaluation);
 		RegelResultat regelResultat = getRegelResultat(evaluation, "input");
-		assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+		assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
 
 		assertThat(brukers_andel.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(forventet_bg));
 		assertThat(bg.getAktivitetStatuser().get(0).getHjemmel()).isEqualTo(BeregningsgrunnlagHjemmel.K9_HJEMMEL_MIDLERTIDIG_INAKTIV);

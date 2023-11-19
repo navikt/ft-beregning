@@ -39,6 +39,10 @@ public class RegelmodellOversetter {
 		return EvaluationSerializer.asJson(evaluation, NareVersion.NARE_VERSION, BeregningRegelmodellVersjon.BEREGNING_REGELMODELL_VERSJON);
 	}
 
+	public static String getRegelVersjonsNummer() {
+		return BeregningRegelmodellVersjon.BEREGNING_REGELMODELL_VERSJON.version();
+	}
+
 	private static RegelResultat opprettResultat(Evaluation ev, String regelInput, String sporing) {
 		Resultat res = ev.result();
 		return switch (res) {
@@ -56,9 +60,10 @@ public class RegelmodellOversetter {
 		}
 
 		if (ev.getOutcome() == null) {
-			return new RegelResultat(ResultatBeregningType.BEREGNET, input, sporing);
+			return new RegelResultat(ResultatBeregningType.BEREGNET, getRegelVersjonsNummer(), input, sporing);
 		} else if (ev.getOutcome() instanceof BeregningUtfallMerknad merknad) {
-			return new RegelResultat(ResultatBeregningType.IKKE_BEREGNET, input, sporing).medRegelMerknad(new RegelMerknad(merknad.regelUtfallMerknad()));
+			var ikkeBeregnet = new RegelResultat(ResultatBeregningType.IKKE_BEREGNET, getRegelVersjonsNummer(), input, sporing);
+			return RegelResultat.medRegelMerknad(ikkeBeregnet, new RegelMerknad(merknad.regelUtfallMerknad()));
 		} else {
 			throw new IllegalStateException("Utviklerfeil: Ugyldig utfall" + ev.getOutcome());
 		}
@@ -66,7 +71,7 @@ public class RegelmodellOversetter {
 	}
 
 	private static RegelResultat opprettResultat(ResultatBeregningType beregningsresultat, String input, String sporing) {
-		return new RegelResultat(beregningsresultat, input, sporing);
+		return new RegelResultat(beregningsresultat, getRegelVersjonsNummer(), input, sporing);
 	}
 
 

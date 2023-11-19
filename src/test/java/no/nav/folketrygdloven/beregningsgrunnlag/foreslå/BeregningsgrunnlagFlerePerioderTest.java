@@ -139,8 +139,8 @@ class BeregningsgrunnlagFlerePerioderTest {
     }
 
     private void verifiserRegelresultat(Beregningsgrunnlag beregningsgrunnlag, RegelResultat resultat) {
-        assertThat(resultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
-        assertThat(resultat.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5038");
+        assertThat(resultat.beregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
+        assertThat(resultat.merknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5038");
 	    assertThat(beregningsgrunnlag.getSammenligningsgrunnlagForStatus(SammenligningGrunnlagType.AT_FL).orElseThrow().getAvvikPromilleUtenAvrunding()).isEqualByComparingTo(BigDecimal.valueOf(11000));
     }
 

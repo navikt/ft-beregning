@@ -40,7 +40,7 @@ class RegelForeslåBeregningsgrunnlagMilitærTest {
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
 
         //Assert
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
         assertThat(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.MS).getBeregnetPrÅr()).isEqualByComparingTo(BELØP_MILITÆR_HAR_KRAV_PÅ_FP);
         assertThat(beregningsgrunnlag.getAktivitetStatus(AktivitetStatus.MS).getHjemmel()).isEqualTo(BeregningsgrunnlagHjemmel.F_14_7);
     }
@@ -61,7 +61,7 @@ class RegelForeslåBeregningsgrunnlagMilitærTest {
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
 
         //Assert
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
         assertThat(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.MS).getBeregnetPrÅr()).isEqualByComparingTo(BELØP_MILITÆR_HAR_KRAV_PÅ_FP);
         assertThat(beregningsgrunnlag.getAktivitetStatus(AktivitetStatus.MS).getHjemmel()).isEqualTo(BeregningsgrunnlagHjemmel.F_14_7);
     }
@@ -82,7 +82,7 @@ class RegelForeslåBeregningsgrunnlagMilitærTest {
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
 
         //Assert
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
         assertThat(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.MS).getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(420_000));
         assertThat(beregningsgrunnlag.getAktivitetStatus(AktivitetStatus.MS).getHjemmel()).isEqualTo(BeregningsgrunnlagHjemmel.F_14_7);
     }
@@ -106,7 +106,7 @@ class RegelForeslåBeregningsgrunnlagMilitærTest {
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
 
         //Assert
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
         BigDecimal diffMellom3GOgATFLInntekt = BELØP_MILITÆR_HAR_KRAV_PÅ_FP.subtract(snInntekt);
         assertThat(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.MS).getBeregnetPrÅr()).isEqualByComparingTo(diffMellom3GOgATFLInntekt);
         assertThat(beregningsgrunnlag.getAktivitetStatus(AktivitetStatus.MS).getHjemmel()).isEqualTo(BeregningsgrunnlagHjemmel.F_14_7);
@@ -133,7 +133,7 @@ class RegelForeslåBeregningsgrunnlagMilitærTest {
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
 
         //Assert
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
         assertThat(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.MS).getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.ZERO);
         assertThat(beregningsgrunnlag.getAktivitetStatus(AktivitetStatus.MS).getHjemmel()).isEqualTo(BeregningsgrunnlagHjemmel.F_14_7);
     }

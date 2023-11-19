@@ -216,7 +216,7 @@ class RegelForeslåBeregningsgrunnlagFRISINNTest {
 
 	    RegelResultat regelResultat = new RegelForeslåBeregningsgrunnlagFRISINN(grunnlag).evaluerRegel(grunnlag);
 
-        assertThat(regelResultat.getRegelSporing().sporing()).isNotBlank();
+        assertThat(regelResultat.sporing().sporing()).isNotBlank();
         //SÅ skal brutto beregningsgrunnlag i beregningsperioden settes til 0
         assertThat(grunnlag.getBruttoPrÅr()).isEqualByComparingTo(BigDecimal.ZERO);
     }
