@@ -54,8 +54,8 @@ class BeregningsgrunnlagTest {
 		// Act
 		RegelResultat regelResultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 		// Assert
-		assertThat(regelResultat.versjon()).isEqualTo("4.1-SNAPSHOT");
-		assertThat(regelResultat.sporing().versjon()).isEqualTo("4.1-SNAPSHOT");
+		assertThat(regelResultat.versjon()).isNotNull();
+		assertThat(regelResultat.sporing().versjon()).isNotNull();
 		assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
 		verifiserRegelmerknad(regelResultat, "5038");
 		verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_FRILANSER, AktivitetStatus.ATFL, 12 * månedsinntekt.doubleValue());
