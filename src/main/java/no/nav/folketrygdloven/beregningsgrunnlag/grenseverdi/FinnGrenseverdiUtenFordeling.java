@@ -38,20 +38,13 @@ public class FinnGrenseverdiUtenFordeling extends LeafSpecification<Beregningsgr
 		grunnlag.setTotalUtbetalingsgradFraUttak(totalUtbetalingsgradFraUttak);
 		resultater.put("totalUtbetalingsgradFraUttak", totalUtbetalingsgradFraUttak);
 
-		//hvis §8-47a, skaler med fast faktor
-		var erInaktivTypeA = MidlertidigInaktivType.A.equals(grunnlag.getBeregningsgrunnlag().getMidlertidigInaktivType());
-		if (erInaktivTypeA) {
-			BigDecimal reduksjonsfaktor = grunnlag.getBeregningsgrunnlag().getMidlertidigInaktivTypeAReduksjonsfaktor();
-			grenseverdi = grenseverdi.multiply(reduksjonsfaktor);
-			resultater.put("grad847a", reduksjonsfaktor);
-			grunnlag.setReduksjonsfaktorInaktivTypeA(reduksjonsfaktor);
-		}
 
 		//juster ned med tilkommet inntekt hvis det gir lavere utbetaling enn overstående
+		BigDecimal totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt = null;
 		if (grunnlag.getBeregningsgrunnlag().getToggles().isEnabled("GRADERING_MOT_INNTEKT", false) && !grunnlag.getTilkommetInntektsforholdListe().isEmpty()) {
 			BigDecimal graderingPåToppenAvUttakgraderingPgaTilkommetInntekt = andelBeholdtEtterGradertMotTilkommetInntekt(grunnlag);
 			resultater.put("graderingPåToppenAvUttakgraderingPgaTilkommetInntekt", min(BigDecimal.ONE, graderingPåToppenAvUttakgraderingPgaTilkommetInntekt));
-			BigDecimal totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt = min(BigDecimal.ONE, totalUtbetalingsgradFraUttak.multiply(graderingPåToppenAvUttakgraderingPgaTilkommetInntekt));
+			totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt = min(BigDecimal.ONE, totalUtbetalingsgradFraUttak.multiply(graderingPåToppenAvUttakgraderingPgaTilkommetInntekt));
 			resultater.put("totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt", totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt);
 			grunnlag.setTotalUtbetalingsgradEtterReduksjonVedTilkommetInntekt(totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt);
 
@@ -61,12 +54,31 @@ public class FinnGrenseverdiUtenFordeling extends LeafSpecification<Beregningsgr
 				resultater.put("inntektgraderingsprosent", grunnlag.getInntektsgraderingFraBruttoBeregningsgrunnlag());
 			}
 		}
+		
+		//hvis §8-47a, skaler med fast faktor
+		var erInaktivTypeA = MidlertidigInaktivType.A.equals(grunnlag.getBeregningsgrunnlag().getMidlertidigInaktivType());
+		if (erInaktivTypeA) {
+			BigDecimal reduksjonsfaktor = grunnlag.getBeregningsgrunnlag().getMidlertidigInaktivTypeAReduksjonsfaktor();
+			grenseverdi = grenseverdi.multiply(reduksjonsfaktor);
+			resultater.put("grad847a", reduksjonsfaktor);
+			grunnlag.setReduksjonsfaktorInaktivTypeA(reduksjonsfaktor);
+			
+			BigDecimal justertTotalUtbetalingsgradFraUttak = totalUtbetalingsgradFraUttak.multiply(reduksjonsfaktor);
+			grunnlag.setTotalUtbetalingsgradFraUttak(justertTotalUtbetalingsgradFraUttak);
+			resultater.put("totalUtbetalingsgradFraUttak", justertTotalUtbetalingsgradFraUttak);
+			
+			if (totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt != null) {
+				BigDecimal justertTotalUtbetalingsgradEtterReduksjonVedTilkommetInntekt = totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt.multiply(reduksjonsfaktor);
+				grunnlag.setTotalUtbetalingsgradEtterReduksjonVedTilkommetInntekt(justertTotalUtbetalingsgradEtterReduksjonVedTilkommetInntekt);
+				resultater.put("totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt", justertTotalUtbetalingsgradEtterReduksjonVedTilkommetInntekt);
+			}
+		}
+
 		resultater.put("grenseverdi", grenseverdi);
 		grunnlag.setGrenseverdi(grenseverdi);
 		SingleEvaluation resultat = ja();
 		resultat.setEvaluationProperties(resultater);
 		return resultat;
-
 	}
 
 	static BigDecimal min(BigDecimal a, BigDecimal b){
