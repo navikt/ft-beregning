@@ -3,8 +3,6 @@ package no.nav.folketrygdloven.beregningsgrunnlag;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 
-import java.util.Optional;
-
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
@@ -67,8 +65,8 @@ public class VerifiserBeregningsgrunnlag {
     }
 
     public static void verifiserRegelmerknad(RegelResultat regelResultat, String kode) {
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
-        assertThat(regelResultat.getMerknader()).hasSize(1);
-        assertThat(regelResultat.getMerknader().get(0).getMerknadKode()).isEqualTo(kode);
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
+        assertThat(regelResultat.merknader()).hasSize(1);
+        assertThat(regelResultat.merknader().get(0).getMerknadKode()).isEqualTo(kode);
     }
 }

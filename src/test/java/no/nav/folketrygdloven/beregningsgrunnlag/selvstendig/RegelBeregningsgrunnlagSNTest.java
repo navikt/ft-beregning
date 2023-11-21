@@ -67,7 +67,7 @@ class RegelBeregningsgrunnlagSNTest {
         String sporing = EvaluationSerializer.asJson(evaluation);
 
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_SELVSTENDIG, grunnlag, beregningsperiode);
         //Gjennomsnittlig PGI = SUM(Bidrag til beregningsgrunnlaget)/3 * G
@@ -88,7 +88,7 @@ class RegelBeregningsgrunnlagSNTest {
         @SuppressWarnings("unused")
         String sporing = EvaluationSerializer.asJson(evaluation);
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_SELVSTENDIG, grunnlag, beregningsperiode);
         //Gjennomsnittlig PGI = SUM(Bidrag til beregningsgrunnlaget)/3 * G = 8 * G
@@ -109,7 +109,7 @@ class RegelBeregningsgrunnlagSNTest {
         @SuppressWarnings("unused")
         String sporing = EvaluationSerializer.asJson(evaluation);
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_SELVSTENDIG, grunnlag, beregningsperiode);
         //Gjennomsnittlig PGI = SUM(Bidrag til beregningsgrunnlaget)/3 * G
@@ -131,7 +131,7 @@ class RegelBeregningsgrunnlagSNTest {
         @SuppressWarnings("unused")
         String sporing = EvaluationSerializer.asJson(evaluation);
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_SELVSTENDIG, grunnlag, beregningsperiode);
         //Gjennomsnittlig PGI = SUM(Bidrag til beregningsgrunnlaget)/3 * G
@@ -153,7 +153,7 @@ class RegelBeregningsgrunnlagSNTest {
         @SuppressWarnings("unused")
         String sporing = EvaluationSerializer.asJson(evaluation);
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_SELVSTENDIG, grunnlag, beregningsperiode);
         //Gjennomsnittlig PGI = SUM(Bidrag til beregningsgrunnlaget)/3 * G = 8 * G
@@ -182,7 +182,7 @@ class RegelBeregningsgrunnlagSNTest {
         @SuppressWarnings("unused")
         String sporing = EvaluationSerializer.asJson(evaluation);
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
         verifiserRegelmerknad(regelResultat, "5039");
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_SELVSTENDIG, grunnlag, beregningsperiode);
@@ -211,7 +211,7 @@ class RegelBeregningsgrunnlagSNTest {
         String sporing = EvaluationSerializer.asJson(evaluation);
 
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_SELVSTENDIG, grunnlag, beregningsperiode);
         //Gjennomsnittlig PGI = SUM(Bidrag til beregningsgrunnlaget)/3 * G
@@ -239,7 +239,7 @@ class RegelBeregningsgrunnlagSNTest {
 
         //Gjennomsnittlig PGI = SUM(Bidrag til beregningsgrunnlaget)/3 * G
         double actualBruttoSN = 540996.4434041 - bruttoDP.doubleValue();
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_SELVSTENDIG, AktivitetStatus.SN, actualBruttoSN, 540996.4434041);
     }
 
@@ -264,7 +264,7 @@ class RegelBeregningsgrunnlagSNTest {
 
         double actualBruttoSN = 4.0d * GRUNNBELØP_2017 - bruttoAAP.doubleValue() ;
 	    SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.SN);
-	    assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
+	    assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
         int oppgittSN = 30000 * 12;
 	    assertThat(sg.getRapportertPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(oppgittSN+bruttoAAP.doubleValue() ));
 	    assertThat(sg.getAvvikPromilleUtenAvrunding().setScale(0, RoundingMode.HALF_UP)).isEqualByComparingTo(BigDecimal.valueOf(384));
@@ -296,7 +296,7 @@ class RegelBeregningsgrunnlagSNTest {
 
 	    SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.SN);
 	    double actualBruttoSN = 4.0d * GRUNNBELØP_2017 - bruttoDP.doubleValue();
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
         int oppgittSN = 20000 * 12;
 	    assertThat(sg.getRapportertPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(oppgittSN+bruttoDP.doubleValue()));
 	    assertThat(sg.getAvvikPromilleUtenAvrunding().setScale(0, RoundingMode.HALF_UP)).isEqualByComparingTo(BigDecimal.valueOf(43));
@@ -321,7 +321,7 @@ class RegelBeregningsgrunnlagSNTest {
 
 
 	    SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.SN);
-	    assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
+	    assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
 	    assertThat(sg.getRapportertPrÅr().doubleValue()).isEqualTo(10000 * 12);
 	    assertThat(sg.getAvvikPromilleUtenAvrunding()).isEqualByComparingTo(BigDecimal.valueOf(1000));
 	    verifiserRegelmerknad(regelResultat, "5039");
@@ -342,7 +342,7 @@ class RegelBeregningsgrunnlagSNTest {
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
 
         // Assert
-	    assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
+	    assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
         assertThat(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN).getBeregnetPrÅr()).isNull();
         assertThat(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN).getPgiListe()).hasSize(3);
         assertThat(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN).getGjennomsnittligPGI()).isNotNull();
@@ -364,7 +364,7 @@ class RegelBeregningsgrunnlagSNTest {
         String sporing = EvaluationSerializer.asJson(evaluation);
 
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
         BeregningsgrunnlagPrStatus bgpsa = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
         assertThat(bgpsa.getPgiListe()).anySatisfy(pgi -> assertThat(pgi).isEqualTo(BigDecimal.ZERO));
@@ -388,7 +388,7 @@ class RegelBeregningsgrunnlagSNTest {
         String sporing = EvaluationSerializer.asJson(evaluation);
 
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt.minusYears(1), 3);
         BeregningsgrunnlagPrStatus bgpsa = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
         assertThat(bgpsa.getPgiListe()).anySatisfy(pgi -> assertThat(pgi).isEqualTo(BigDecimal.ZERO));
@@ -410,7 +410,7 @@ class RegelBeregningsgrunnlagSNTest {
         String sporing = EvaluationSerializer.asJson(evaluation);
 
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt.minusYears(1), 3);
         BeregningsgrunnlagPrStatus bgpsa = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
         assertThat(bgpsa.getPgiListe()).anySatisfy(pgi -> assertThat(pgi).isEqualTo(BigDecimal.ZERO));
@@ -433,7 +433,7 @@ class RegelBeregningsgrunnlagSNTest {
         Evaluation evaluation = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
         // Assert
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt.minusYears(1), 3);
         BeregningsgrunnlagPrStatus bgpsa = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
         assertThat(bgpsa.getPgiListe()).anySatisfy(pgi -> assertThat(pgi).isEqualTo(BigDecimal.ZERO));
@@ -457,7 +457,7 @@ class RegelBeregningsgrunnlagSNTest {
         Evaluation evaluation = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
         // Assert
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_SELVSTENDIG, grunnlag, beregningsperiode);
         BeregningsgrunnlagPrStatus bgpsa = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
@@ -482,7 +482,7 @@ class RegelBeregningsgrunnlagSNTest {
         Evaluation evaluation = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
         // Assert
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_SELVSTENDIG, grunnlag, beregningsperiode);
         BeregningsgrunnlagPrStatus bgpsa = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
@@ -508,7 +508,7 @@ class RegelBeregningsgrunnlagSNTest {
         Evaluation evaluation = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
         // Assert
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_SELVSTENDIG, grunnlag, beregningsperiode);
         BeregningsgrunnlagPrStatus bgpsa = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);

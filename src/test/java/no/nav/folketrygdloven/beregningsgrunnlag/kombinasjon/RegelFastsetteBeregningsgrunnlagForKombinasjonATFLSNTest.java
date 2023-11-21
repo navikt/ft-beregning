@@ -87,7 +87,7 @@ class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
         // Assert
 
         RegelResultat regelResultat = getRegelResultat(evaluation2, "input");
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, grunnlag, beregningsperiode);
 
@@ -130,7 +130,7 @@ class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
 
         // Assert
         RegelResultat regelResultat = getRegelResultat(evaluation2, "input");
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, grunnlag, beregningsperiode);
 
@@ -174,8 +174,8 @@ class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
         // Assert
 
         RegelResultat regelResultat = getRegelResultat(evaluation2, "input");
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
-        assertThat(regelResultat.getMerknader().stream().map(RegelMerknad::utfallÅrsak).collect(Collectors.toList())).containsExactly(VARIG_ENDRING_OG_AVVIK_STØRRE_ENN_25_PROSENT);
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
+        assertThat(regelResultat.merknader().stream().map(RegelMerknad::utfallÅrsak).collect(Collectors.toList())).containsExactly(VARIG_ENDRING_OG_AVVIK_STØRRE_ENN_25_PROSENT);
 
 
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
@@ -231,8 +231,8 @@ class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
         // Assert
 
         RegelResultat regelResultat = getRegelResultat(evaluation2, "input");
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
-        assertThat(regelResultat.getMerknader().stream().map(RegelMerknad::utfallÅrsak).collect(Collectors.toList())).containsExactly(VARIG_ENDRING_OG_AVVIK_STØRRE_ENN_25_PROSENT);
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
+        assertThat(regelResultat.merknader().stream().map(RegelMerknad::utfallÅrsak).collect(Collectors.toList())).containsExactly(VARIG_ENDRING_OG_AVVIK_STØRRE_ENN_25_PROSENT);
 
 
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
@@ -306,8 +306,8 @@ class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
 
         RegelResultat regelResultat1 = getRegelResultat(evaluation2p1, "input");
         RegelResultat regelResultat2 = getRegelResultat(evaluation2p2, "input");
-        assertThat(regelResultat1.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
-        assertThat(regelResultat1.getMerknader().stream().map(RegelMerknad::utfallÅrsak).collect(Collectors.toList())).containsExactly(VARIG_ENDRING_OG_AVVIK_STØRRE_ENN_25_PROSENT);
+        assertThat(regelResultat1.beregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
+        assertThat(regelResultat1.merknader().stream().map(RegelMerknad::utfallÅrsak).collect(Collectors.toList())).containsExactly(VARIG_ENDRING_OG_AVVIK_STØRRE_ENN_25_PROSENT);
 
 
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
@@ -323,7 +323,7 @@ class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
         //Verifiser andre periode
         assertThat(andrePeriode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).samletNaturalytelseBortfaltMinusTilkommetPrÅr()).isCloseTo(naturalytelseBeløp.multiply(TOLV).multiply(BigDecimal.valueOf(2)), within(BigDecimal.valueOf(0.001)));
         verifiserSammenligningsgrunnlag(andrePeriode, sammenligningsgrunnlag, avvik);
-        assertThat(regelResultat2.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+        assertThat(regelResultat2.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
     }
 
     @Test
@@ -351,7 +351,7 @@ class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
 
         // Assert
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, grunnlag, beregningsperiode);
 
@@ -393,7 +393,7 @@ class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
 
         // Assert
         RegelResultat regelResultat = getRegelResultat(evaluation2, "input");
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, grunnlag, beregningsperiode);
 
@@ -435,7 +435,7 @@ class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
 
         // Assert
         RegelResultat regelResultat = getRegelResultat(evaluation2, "input");
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, grunnlag, beregningsperiode);
 
@@ -468,8 +468,8 @@ class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
 
         // Assert
         RegelResultat regelResultat = getRegelResultat(evaluation2, "input");
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
-        assertThat(regelResultat.getMerknader().get(0).utfallÅrsak()).isEqualTo(FASTSETT_SELVSTENDIG_NY_ARBEIDSLIVET);
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
+        assertThat(regelResultat.merknader().get(0).utfallÅrsak()).isEqualTo(FASTSETT_SELVSTENDIG_NY_ARBEIDSLIVET);
         assertThat(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getBeregnetPrÅr()).isCloseTo(inntektATFL.multiply(TOLV), within(BigDecimal.valueOf(0.01)));
         assertThat(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN).getGjennomsnittligPGI()).isNotNull();
         assertThat(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN).getPgiListe()).hasSize(3);
@@ -496,7 +496,7 @@ class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
 
         // Assert
         RegelResultat regelResultat = getRegelResultat(evaluation, "input");
-        assertThat(regelResultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
         Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, grunnlag, beregningsperiode);
         verifiserBeregningsgrunnlagBruttoATFL_SN(grunnlag, BigDecimal.valueOf(232323), BigDecimal.valueOf(323232));

@@ -199,7 +199,7 @@ class RegelForeslåBeregningsgrunnlagTest {
 		RegelResultat resultat2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 
 		// Assert
-		assertThat(resultat.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5038");
+		assertThat(resultat.merknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5038");
 		assertThat(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).samletNaturalytelseBortfaltMinusTilkommetPrÅr()).isEqualTo(BigDecimal.valueOf(24000));
 		assertThat(grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.AT_FL).getAvvikPromilleUtenAvrunding()).isEqualByComparingTo(BigDecimal.valueOf(400));
 		verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_ARBEIDSTAKER, AktivitetStatus.ATFL, 12 * månedsinntekt.doubleValue());
@@ -317,7 +317,7 @@ class RegelForeslåBeregningsgrunnlagTest {
 		RegelResultat resultat2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 
 		// Assert
-		assertThat(resultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+		assertThat(resultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
 		BeregningsgrunnlagPrArbeidsforhold af = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
 		LocalDate fom = skjæringstidspunkt.minusMonths(3).withDayOfMonth(1);
 		LocalDate tom = skjæringstidspunkt.minusMonths(1).with(TemporalAdjusters.lastDayOfMonth());
@@ -344,7 +344,7 @@ class RegelForeslåBeregningsgrunnlagTest {
 		RegelResultat resultat2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 
 		// Assert
-		assertThat(resultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+		assertThat(resultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
 		BeregningsgrunnlagPrArbeidsforhold af = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
 		LocalDate fom = skjæringstidspunkt.minusMonths(3).withDayOfMonth(1);
 		LocalDate tom = skjæringstidspunkt.minusMonths(1).with(TemporalAdjusters.lastDayOfMonth());
@@ -368,7 +368,7 @@ class RegelForeslåBeregningsgrunnlagTest {
 		RegelResultat resultat2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 
 		// Assert
-		assertThat(resultat.getBeregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+		assertThat(resultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
 		assertThat(grunnlag.getBruttoPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(100000));
 		assertThat(grunnlag.getBeregningsgrunnlag().getAktivitetStatus(AktivitetStatus.KUN_YTELSE).getHjemmel()).isEqualTo(F_14_7);
 	}
@@ -413,7 +413,7 @@ class RegelForeslåBeregningsgrunnlagTest {
 		@SuppressWarnings("unused")
 		RegelResultat resultat2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 
-		assertThat(resultat.getRegelSporing().sporing()).isNotBlank();
+		assertThat(resultat.sporing().sporing()).isNotBlank();
 		//SÅ skal brutto beregningsgrunnlag i beregningsperioden settes til 0
 		assertThat(grunnlag.getBruttoPrÅr()).isEqualByComparingTo(BigDecimal.ZERO);
 		// skal beregningsperioden settes til de tre siste månedene før skjæringstidspunktet for beregning
@@ -444,7 +444,7 @@ class RegelForeslåBeregningsgrunnlagTest {
 		@SuppressWarnings("unused")
 		RegelResultat resultat2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 		// Assert
-		assertThat(resultat.getMerknader().stream().map(RegelMerknad::utfallÅrsak).collect(Collectors.toList())).isEmpty();
+		assertThat(resultat.merknader().stream().map(RegelMerknad::utfallÅrsak).collect(Collectors.toList())).isEmpty();
 		verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.K9_HJEMMEL_BARE_ARBEIDSTAKER_REFUSJON, AktivitetStatus.ATFL, 12 * månedsinntektInntektsmelding.doubleValue());
 		verifiserBeregningsgrunnlagHjemmel(grunnlag, AktivitetStatus.ATFL, BeregningsgrunnlagHjemmel.F_9_8_8_28);
 		verifiserBeregningsgrunnlagBeregnet(grunnlag, 12 * månedsinntektInntektsmelding.doubleValue());
@@ -471,7 +471,7 @@ class RegelForeslåBeregningsgrunnlagTest {
 		@SuppressWarnings("unused")
 		RegelResultat resultat2 = new RegelFortsettForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 		// Assert
-		assertThat(resultat.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5038");
+		assertThat(resultat.merknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5038");
 		verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_ARBEIDSTAKER, AktivitetStatus.ATFL, 12 * månedsinntektInntektsmelding.doubleValue());
 		verifiserBeregningsgrunnlagHjemmel(grunnlag, AktivitetStatus.ATFL, BeregningsgrunnlagHjemmel.F_14_7_8_30);
 		verifiserBeregningsgrunnlagBeregnet(grunnlag, 12 * månedsinntektInntektsmelding.doubleValue());
@@ -527,7 +527,7 @@ class RegelForeslåBeregningsgrunnlagTest {
 		@SuppressWarnings("unused")
 		RegelResultat resultat = new RegelForeslåBeregningsgrunnlag(førstePeriode).evaluerRegel(førstePeriode);
 
-		assertThat(resultat.getMerknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5038");
+		assertThat(resultat.merknader().stream().map(RegelMerknad::getMerknadKode).collect(Collectors.toList())).containsExactly("5038");
 		assertThat(førstePeriode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(240000));
 		assertThat(førstePeriode.getSammenligningsGrunnlagForType(SammenligningGrunnlagType.AT_FL).orElseThrow().getAvvikPromilleUtenAvrunding()).isEqualByComparingTo(BigDecimal.valueOf(500));
 		verifiserBeregningsgrunnlagBruttoPrPeriodeType(førstePeriode, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, AktivitetStatus.ATFL, 12 * månedsinntekt.doubleValue());
@@ -560,7 +560,7 @@ class RegelForeslåBeregningsgrunnlagTest {
 		@SuppressWarnings("unused")
 		RegelResultat resultat = new RegelForeslåBeregningsgrunnlag(førstePeriode).evaluerRegel(førstePeriode);
 
-		assertThat(resultat.getMerknader().stream().map(RegelMerknad::utfallÅrsak).collect(Collectors.toList())).isEmpty();
+		assertThat(resultat.merknader().stream().map(RegelMerknad::utfallÅrsak).collect(Collectors.toList())).isEmpty();
 		assertThat(førstePeriode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(240000));
 		assertThat(førstePeriode.getSammenligningsGrunnlagForType(SammenligningGrunnlagType.AT_FL)).isEmpty();
 		verifiserBeregningsgrunnlagBruttoPrPeriodeType(førstePeriode, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, AktivitetStatus.ATFL, 12 * månedsinntekt.doubleValue());

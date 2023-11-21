@@ -15,7 +15,6 @@ import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Beregnet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Dekningsgrad;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.RegelMerknad;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.RegelResultat;
@@ -44,7 +43,7 @@ class RegelVurderBeregningsgrunnlagTest {
         RegelResultat resultat = kjørRegel(grunnlag);
 
         //Assert
-        assertThat(resultat.getMerknader().stream().map(RegelMerknad::utfallÅrsak)).containsOnly(AVSLAG_UNDER_HALV_G);
+        assertThat(resultat.merknader().stream().map(RegelMerknad::utfallÅrsak)).containsOnly(AVSLAG_UNDER_HALV_G);
         assertThat(grunnlag.getBruttoPrÅr().doubleValue()).isEqualTo(beregnetPrÅr, offset);
     }
 
@@ -61,7 +60,7 @@ class RegelVurderBeregningsgrunnlagTest {
         RegelResultat resultat = kjørRegel(grunnlag);
 
         //Assert
-        assertThat(resultat.getMerknader().stream().map(RegelMerknad::utfallÅrsak)).containsOnly(AVSLAG_UNDER_HALV_G);
+        assertThat(resultat.merknader().stream().map(RegelMerknad::utfallÅrsak)).containsOnly(AVSLAG_UNDER_HALV_G);
         assertThat(grunnlag.getBruttoPrÅr().doubleValue()).isEqualTo(beregnetPrÅr + beregnetPrÅr2, offset);
     }
 
@@ -81,8 +80,8 @@ class RegelVurderBeregningsgrunnlagTest {
 		RegelResultat resultat = kjørRegel(grunnlag);
 
 		//Assert
-		assertThat(resultat.getMerknader()).isEmpty();
-		assertThat(resultat.getBeregningsresultat()).isEqualTo(BEREGNET);
+		assertThat(resultat.merknader()).isEmpty();
+		assertThat(resultat.beregningsresultat()).isEqualTo(BEREGNET);
 		assertThat(grunnlag.getBruttoPrÅr().doubleValue()).isEqualTo(beregnetPrÅr + beregnetPrÅr2, offset);
 	}
 
@@ -102,7 +101,7 @@ class RegelVurderBeregningsgrunnlagTest {
 		RegelResultat resultat = kjørRegel(grunnlag);
 
 		//Assert
-		assertThat(resultat.getMerknader().stream().map(RegelMerknad::utfallÅrsak)).containsOnly(AVSLAG_UNDER_HALV_G);
+		assertThat(resultat.merknader().stream().map(RegelMerknad::utfallÅrsak)).containsOnly(AVSLAG_UNDER_HALV_G);
 		assertThat(grunnlag.getBruttoPrÅr().doubleValue()).isEqualTo(beregnetPrÅr + beregnetPrÅr2, offset);
 	}
 
