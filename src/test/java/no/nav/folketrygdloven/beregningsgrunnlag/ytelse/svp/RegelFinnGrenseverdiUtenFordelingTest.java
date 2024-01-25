@@ -22,7 +22,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.TilkommetInntekt;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 
-class RegelFinnGrenseverdiMedFordelingUtenFordelingTest {
+class RegelFinnGrenseverdiUtenFordelingTest {
 
 	public static final String ORGNR = "910";
 	private static final String ORGNR_2 = "974760673";
