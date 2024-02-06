@@ -20,29 +20,30 @@ public class BeregningsgrunnlagPrStatus {
     @JsonBackReference
     protected BeregningsgrunnlagPeriode beregningsgrunnlagPeriode;
     private AktivitetStatus aktivitetStatus;
-    private Periode beregningsperiode;
     protected List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = new ArrayList<>();
 
-    private BigDecimal overstyrtPrÅr;
-    private BigDecimal fordeltPrÅr;
-    private BigDecimal beregnetPrÅr;
-    private BigDecimal avkortetPrÅr;
-    private BigDecimal redusertPrÅr;
-    private BigDecimal gjennomsnittligPGI;
-    private List<BigDecimal> pgiListe = new ArrayList<>();
-    private BigDecimal årsbeløpFraTilstøtendeYtelse;
-    private BigDecimal besteberegningPrÅr;
-    private Boolean nyIArbeidslivet;
-    private Long andelNr;
-    private Inntektskategori inntektskategori;
+	// Brukes i regler
+	private BigDecimal overstyrtPrÅr;
+	private BigDecimal fordeltPrÅr;
+	private BigDecimal beregnetPrÅr;
+	private BigDecimal besteberegningPrÅr;
+	private Boolean nyIArbeidslivet; // Kun SN
+	private Inntektskategori inntektskategori;
     private boolean fastsattAvSaksbehandler = false;
-    private boolean lagtTilAvSaksbehandler = false;
+	private BigDecimal gjennomsnittligPGI;
+	private Periode beregningsperiode;
+
+	// Kun brukt i output
+	private BigDecimal årsbeløpFraTilstøtendeYtelse;
+	private Long andelNr;
     private Long orginalDagsatsFraTilstøtendeYtelse;
+	private List<BigDecimal> pgiListe = new ArrayList<>();
+	private BigDecimal avkortetPrÅr;
+	private BigDecimal redusertPrÅr;
+
+    // Disse er kun brukt av FRISINN i denne modellen
     private Boolean erSøktYtelseFor;
-    // Alltid full utbetaling for foreldrepenger
     private BigDecimal utbetalingsprosent = BigDecimal.valueOf(100);
-    private BigDecimal andelsmessigFørGraderingPrAar;
-    private boolean flOgAtISammeOrganisasjon;
 
     @JsonIgnore
     public BeregningsgrunnlagPeriode getBeregningsgrunnlagPeriode() {
@@ -148,29 +149,11 @@ public class BeregningsgrunnlagPrStatus {
 		return bruttoPrÅr;
 	}
 
-	public BigDecimal getGradertBruttoPrÅr() {
-        return getBruttoFraStatus() != null ? finnGradert(getBruttoFraStatus()) : getArbeidsforhold().stream()
-                .map(BeregningsgrunnlagPrArbeidsforhold::getGradertBruttoPrÅr)
-                .filter(Objects::nonNull)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
-    private BigDecimal finnGradert(BigDecimal verdi) {
-        return verdi == null ? null : verdi.multiply(utbetalingsprosent.scaleByPowerOfTen(-2));
-    }
-
     public BigDecimal getBruttoInkludertNaturalytelsePrÅr() {
         BigDecimal brutto = getBruttoPrÅr();
         BigDecimal samletNaturalytelse = samletNaturalytelseBortfaltMinusTilkommetPrÅr();
         return brutto.add(samletNaturalytelse);
     }
-
-    public BigDecimal getGradertBruttoInkludertNaturalytelsePrÅr() {
-        BigDecimal brutto = getBruttoPrÅr();
-        BigDecimal samletNaturalytelse = samletNaturalytelseBortfaltMinusTilkommetPrÅr();
-        return finnGradert(brutto.add(samletNaturalytelse));
-    }
-
 
     public List<BeregningsgrunnlagPrArbeidsforhold> getArbeidsforhold() {
         return Collections.unmodifiableList(arbeidsforhold);
@@ -190,24 +173,6 @@ public class BeregningsgrunnlagPrStatus {
 
     public BigDecimal getBeregnetPrÅr() {
         return beregnetPrÅr != null ? beregnetPrÅr : getArbeidsforhold().stream()
-            .map(BeregningsgrunnlagPrArbeidsforhold::getBeregnetPrÅr)
-            .filter(Objects::nonNull)
-            .reduce(BigDecimal::add)
-            .orElse(null);
-    }
-
-    public BigDecimal getBeregnetPrÅrForAT() {
-        return getArbeidsforhold().stream()
-            .filter(a -> !a.erFrilanser())
-            .map(BeregningsgrunnlagPrArbeidsforhold::getBeregnetPrÅr)
-            .filter(Objects::nonNull)
-            .reduce(BigDecimal::add)
-            .orElse(null);
-    }
-
-    public BigDecimal getBeregnetPrÅrForFL() {
-        return getArbeidsforhold().stream()
-            .filter(BeregningsgrunnlagPrArbeidsforhold::erFrilanser)
             .map(BeregningsgrunnlagPrArbeidsforhold::getBeregnetPrÅr)
             .filter(Objects::nonNull)
             .reduce(BigDecimal::add)
@@ -246,16 +211,8 @@ public class BeregningsgrunnlagPrStatus {
         return fastsattAvSaksbehandler;
     }
 
-    public boolean erLagtTilAvSaksbehandler() {
-        return lagtTilAvSaksbehandler;
-    }
-
     public Long getOrginalDagsatsFraTilstøtendeYtelse() {
         return orginalDagsatsFraTilstøtendeYtelse;
-    }
-
-    public BigDecimal getUtbetalingsprosent() {
-        return utbetalingsprosent;
     }
 
     public boolean erSøktYtelseFor() {
@@ -268,16 +225,8 @@ public class BeregningsgrunnlagPrStatus {
         this.erSøktYtelseFor = erSøktYtelseFor;
     }
 
-    public boolean erFlOgAtISammeOrganisasjon() {
-        return flOgAtISammeOrganisasjon;
-    }
-
     void setBeregningsgrunnlagPeriode(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
         this.beregningsgrunnlagPeriode = beregningsgrunnlagPeriode;
-    }
-
-    public BigDecimal getAndelsmessigFørGraderingPrAar() {
-        return andelsmessigFørGraderingPrAar;
     }
 
     public static Builder builder() {
@@ -332,12 +281,6 @@ public class BeregningsgrunnlagPrStatus {
             return this;
         }
 
-        public Builder medAndelsmessigFørGraderingPrAar(BigDecimal andelsmessigFørGraderingPrAar) {
-            sjekkIkkeArbeidstaker();
-            beregningsgrunnlagPrStatusMal.andelsmessigFørGraderingPrAar = andelsmessigFørGraderingPrAar;
-            return this;
-        }
-
         public Builder medAvkortetPrÅr(BigDecimal avkortetPrÅr) {
             sjekkIkkeArbeidstaker();
             beregningsgrunnlagPrStatusMal.avkortetPrÅr = avkortetPrÅr;
@@ -374,13 +317,6 @@ public class BeregningsgrunnlagPrStatus {
         public Builder medFastsattAvSaksbehandler(Boolean fastsattAvSaksbehandler) {
             if (fastsattAvSaksbehandler != null) {
                 beregningsgrunnlagPrStatusMal.fastsattAvSaksbehandler = fastsattAvSaksbehandler;
-            }
-            return this;
-        }
-
-        public Builder medLagtTilAvSaksbehandler(Boolean lagtTilAvSaksbehandler) {
-            if (lagtTilAvSaksbehandler != null) {
-                beregningsgrunnlagPrStatusMal.lagtTilAvSaksbehandler = lagtTilAvSaksbehandler;
             }
             return this;
         }
@@ -451,17 +387,12 @@ public class BeregningsgrunnlagPrStatus {
             return this;
         }
 
-        public Builder medUtbetalingsprosentSVP(BigDecimal utbetalingsprosentSVP){
+        public Builder medUtbetalingsprosent(BigDecimal utbetalingsprosentSVP){
             beregningsgrunnlagPrStatusMal.utbetalingsprosent = utbetalingsprosentSVP;
             return this;
         }
 
-        public Builder medFlOgAtISammeOrganisasjon(boolean flOgAtISammeOrganisasjon){
-            beregningsgrunnlagPrStatusMal.flOgAtISammeOrganisasjon = flOgAtISammeOrganisasjon;
-            return this;
-        }
-
-        public BeregningsgrunnlagPrStatus build() {
+		public BeregningsgrunnlagPrStatus build() {
             verifyStateForBuild();
             return beregningsgrunnlagPrStatusMal;
         }

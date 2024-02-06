@@ -53,7 +53,7 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 				resultater.put("inntektgraderingsprosent", grunnlag.getInntektsgraderingFraBruttoBeregningsgrunnlag());
 			}
 		}
-		
+
 		//hvis §8-47a, skaler med fast faktor
 		var erInaktivTypeA = MidlertidigInaktivType.A.equals(grunnlag.getBeregningsgrunnlag().getMidlertidigInaktivType());
 		if (erInaktivTypeA) {
@@ -61,18 +61,18 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 			grenseverdi = grenseverdi.multiply(reduksjonsfaktor);
 			resultater.put("grad847a", reduksjonsfaktor);
 			grunnlag.setReduksjonsfaktorInaktivTypeA(reduksjonsfaktor);
-			
+
 			BigDecimal justertTotalUtbetalingsgradFraUttak = totalUtbetalingsgradFraUttak.multiply(reduksjonsfaktor);
 			grunnlag.setTotalUtbetalingsgradFraUttak(justertTotalUtbetalingsgradFraUttak);
 			resultater.put("totalUtbetalingsgradFraUttak", justertTotalUtbetalingsgradFraUttak);
-			
+
 			if (totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt != null) {
 				BigDecimal justertTotalUtbetalingsgradEtterReduksjonVedTilkommetInntekt = totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt.multiply(reduksjonsfaktor);
 				grunnlag.setTotalUtbetalingsgradEtterReduksjonVedTilkommetInntekt(justertTotalUtbetalingsgradEtterReduksjonVedTilkommetInntekt);
 				resultater.put("totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt", justertTotalUtbetalingsgradEtterReduksjonVedTilkommetInntekt);
 			}
 		}
-		
+
 		resultater.put("grenseverdi", grenseverdi);
 		grunnlag.setGrenseverdi(grenseverdi);
 		SingleEvaluation resultat = ja();
