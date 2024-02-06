@@ -367,7 +367,6 @@ class BeregningsgrunnlagTest {
 
 		kopierOgLeggTilMånedsinntekter(beregningsgrunnlag.getInntektsgrunnlag(), skjæringstidspunkt, månedsinntektFrilans.add(månedsinntektArbeidstaker), Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, null, 12);
 
-		LocalDate arbeidsforholStartdato = skjæringstidspunkt.minusYears(2);
 		Arbeidsforhold frilans = Arbeidsforhold.frilansArbeidsforhold();
 		BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 		leggTilArbeidsforholdUtenInntektsmelding(grunnlag, skjæringstidspunkt, månedsinntektFrilans, null, frilans);
@@ -394,7 +393,6 @@ class BeregningsgrunnlagTest {
 
 		kopierOgLeggTilMånedsinntekter(beregningsgrunnlag.getInntektsgrunnlag(), skjæringstidspunkt, månedsinntektFrilans.add(månedsinntektArbeidstaker), Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, null, 12);
 
-		LocalDate arbeidsforholStartdato = skjæringstidspunkt.minusYears(2);
 		Arbeidsforhold frilans = Arbeidsforhold.frilansArbeidsforhold();
 		BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 		leggTilArbeidsforholdUtenInntektsmelding(grunnlag, skjæringstidspunkt, månedsinntektFrilans, refusjonskravFrilans, frilans);

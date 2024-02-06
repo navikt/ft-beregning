@@ -19,7 +19,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.In
 
 class RegelFordelBeregningsgrunnlagTest {
 
-    private static final LocalDate STP = LocalDate.now();
     private static final String ORGNR1 = "995";
     private static final String ORGNR2 = "910";
     private static final String ORGNR3 = "973";
