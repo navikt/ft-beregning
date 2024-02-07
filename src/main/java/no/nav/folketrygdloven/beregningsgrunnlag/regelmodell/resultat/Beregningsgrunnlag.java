@@ -36,7 +36,6 @@ public class Beregningsgrunnlag {
      * Ved G-regulering skal gammel G-verdi brukes til å vurdere vilkåret (https://jira.adeo.no/browse/TFP-3599 / https://confluence.adeo.no/display/TVF/G-regulering)
      */
     private BigDecimal uregulertGrunnbeløp;
-    private boolean hattMilitærIOpptjeningsperioden = false;
     private Konstanter konstanter = new Konstanter();
 
 	private FeatureToggles toggles = new FeatureToggles();
@@ -122,17 +121,9 @@ public class Beregningsgrunnlag {
         }
     }
 
-    public BigDecimal getAntallGØvreGrenseverdi() {
-        return konstanter.getAntallGØvreGrenseverdi();
-    }
-
     public BigDecimal getYtelsedagerPrÅr() {
         return konstanter.getYtelsedagerIPrÅr();
     }
-
-	public BigDecimal getMidlertidigInaktivTypeAReduksjonsfaktor() {
-		return konstanter.getMidlertidigInaktivTypeAReduksjonsfaktor();
-	}
 
     public BigDecimal getAvviksgrenseProsent() {
         return konstanter.getAvviksgrenseProsent();
@@ -153,10 +144,6 @@ public class Beregningsgrunnlag {
 
     public boolean isBeregningForSykepenger() {
         return ytelsesSpesifiktGrunnlag instanceof SykepengerGrunnlag;
-    }
-
-    public boolean harHattMilitærIOpptjeningsperioden() {
-        return hattMilitærIOpptjeningsperioden;
     }
 
     public int getAntallGMilitærHarKravPå() {
@@ -257,11 +244,6 @@ public class Beregningsgrunnlag {
             if (beregningForSykepenger) {
                 beregningsgrunnlagMal.ytelsesSpesifiktGrunnlag = new SykepengerGrunnlag();
             }
-            return this;
-        }
-
-        public Builder medMilitærIOpptjeningsperioden(boolean hattMilitærIOpptjeningsperioden) {
-            beregningsgrunnlagMal.hattMilitærIOpptjeningsperioden = hattMilitærIOpptjeningsperioden;
             return this;
         }
 

@@ -38,15 +38,21 @@ public class BeregningsgrunnlagPrArbeidsforhold {
     private BigDecimal redusertBrukersAndelPrÅr;
     private Long dagsatsBruker;
     private Long dagsatsArbeidsgiver;
-    private Boolean tidsbegrensetArbeidsforhold;
-    private Boolean fastsattAvSaksbehandler;
-    private Boolean lagtTilAvSaksbehandler;
-    private Long andelNr;
-    private Inntektskategori inntektskategori;
-    private List<Periode> arbeidsgiverperioder = new ArrayList<>(); //Brukes i beregning for sykepenger
-    private Boolean erSøktYtelseFor;
+
+	// Brukes i beregning for sykepenger
+    private List<Periode> arbeidsgiverperioder = new ArrayList<>();
+
+	// Disse er kun brukt av FRISINN i denne modellen
+	private Boolean erSøktYtelseFor;
     private BigDecimal utbetalingsprosent = BigDecimal.valueOf(100);
-    private BigDecimal andelsmessigFørGraderingPrAar;
+
+	// Bare brukt i output
+	private Boolean tidsbegrensetArbeidsforhold;
+	private Long andelNr;
+	private Boolean fastsattAvSaksbehandler;
+	private Boolean lagtTilAvSaksbehandler;
+	private BigDecimal andelsmessigFørGraderingPrAar;
+	private Inntektskategori inntektskategori;
 
     private BeregningsgrunnlagPrArbeidsforhold() {
     }

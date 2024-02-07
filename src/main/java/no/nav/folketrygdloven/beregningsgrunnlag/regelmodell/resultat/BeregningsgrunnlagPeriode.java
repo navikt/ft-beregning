@@ -16,7 +16,6 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Dekningsgrad;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.PeriodeÅrsak;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.SammenligningGrunnlagType;
@@ -33,8 +32,6 @@ public class BeregningsgrunnlagPeriode {
 	private List<PeriodeÅrsak> periodeÅrsaker = new ArrayList<>();
 	@JsonBackReference
 	private Beregningsgrunnlag beregningsgrunnlag;
-	private BigDecimal grenseverdi;
-	private Dekningsgrad dekningsgrad = Dekningsgrad.DEKNINGSGRAD_100;
 	private boolean erVilkårOppfylt = true;
 
 
@@ -81,12 +78,6 @@ public class BeregningsgrunnlagPeriode {
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
 	}
 
-	public BigDecimal getGradertBruttoPrÅr() {
-		return getBeregningsgrunnlagPrStatus().stream()
-				.map(BeregningsgrunnlagPrStatus::getGradertBruttoPrÅr)
-				.reduce(BigDecimal.ZERO, BigDecimal::add);
-	}
-
 	public BigDecimal getAvkortetPrÅr() {
 		return getBeregningsgrunnlagPrStatus().stream()
 				.map(BeregningsgrunnlagPrStatus::getAvkortetPrÅr)
@@ -103,30 +94,6 @@ public class BeregningsgrunnlagPeriode {
 				.orElse(null);
 	}
 
-	public BigDecimal getBruttoPrÅrInkludertNaturalytelser() {
-		BigDecimal naturalytelser = getNaturalytelserBortfaltMinusTilkommetPrÅr();
-		BigDecimal brutto = getBruttoPrÅr();
-		return brutto.add(naturalytelser);
-	}
-
-	public BigDecimal getGradertBruttoPrÅrInkludertNaturalytelser() {
-		BigDecimal naturalytelser = getGradertNaturalytelserBortfaltMinusTilkommetPrÅr();
-		BigDecimal brutto = getGradertBruttoPrÅr();
-		return brutto.add(naturalytelser);
-	}
-
-	private BigDecimal getNaturalytelserBortfaltMinusTilkommetPrÅr() {
-		return beregningsgrunnlagPrStatus.stream()
-				.map(BeregningsgrunnlagPrStatus::samletNaturalytelseBortfaltMinusTilkommetPrÅr)
-				.reduce(BigDecimal.ZERO, BigDecimal::add);
-	}
-
-	private BigDecimal getGradertNaturalytelserBortfaltMinusTilkommetPrÅr() {
-		return beregningsgrunnlagPrStatus.stream()
-				.map(BeregningsgrunnlagPrStatus::samletGradertNaturalytelseBortfaltMinusTilkommetPrÅr)
-				.reduce(BigDecimal.ZERO, BigDecimal::add);
-	}
-
 	public Periode getBeregningsgrunnlagPeriode() {
 		return bgPeriode;
 	}
@@ -141,10 +108,6 @@ public class BeregningsgrunnlagPeriode {
 
 	public Collection<BeregningsgrunnlagPrStatus> getBeregningsgrunnlagPrStatus() {
 		return Collections.unmodifiableCollection(beregningsgrunnlagPrStatus);
-	}
-
-	public List<BeregningsgrunnlagPrStatus> getBeregningsgrunnlagPrStatusSomSkalBrukes() {
-		return beregningsgrunnlagPrStatus.stream().filter(BeregningsgrunnlagPrStatus::erSøktYtelseFor).toList();
 	}
 
 	public Inntektsgrunnlag getInntektsgrunnlag() {
@@ -172,10 +135,6 @@ public class BeregningsgrunnlagPeriode {
 				.orElseThrow(() -> new IllegalStateException("FEIL: Forventet å finne sammenligningsgrunnlag for type " + type + " men denne var ikke satt"));
 	}
 
-	public Dekningsgrad getDekningsgrad() {
-		return dekningsgrad;
-	}
-
 	public List<AktivitetStatusMedHjemmel> getAktivitetStatuser() {
 		return beregningsgrunnlag.getAktivitetStatuser().stream()
 				.sorted(Comparator.comparing(as -> as.getAktivitetStatus().getBeregningPrioritet()))
@@ -184,13 +143,6 @@ public class BeregningsgrunnlagPeriode {
 
 	public List<PeriodeÅrsak> getPeriodeÅrsaker() {
 		return periodeÅrsaker;
-	}
-
-	public BigDecimal getGrenseverdi() {
-		if (grenseverdi == null) {
-			return getBeregningsgrunnlag().getGrunnbeløp().multiply(BigDecimal.valueOf(6));
-		}
-		return grenseverdi;
 	}
 
 	public BigDecimal getAvviksgrenseProsent() {
@@ -205,10 +157,6 @@ public class BeregningsgrunnlagPeriode {
 	public boolean skalSjekkeUtbetalingTilBrukerFørAvviksvurdering() {
 		YtelsesSpesifiktGrunnlag ytelsesSpesifiktGrunnlag = beregningsgrunnlag.getYtelsesSpesifiktGrunnlag();
 		return ytelsesSpesifiktGrunnlag instanceof OmsorgspengerGrunnlag;
-	}
-
-	public void setGrenseverdi(BigDecimal grenseverdi) {
-		this.grenseverdi = grenseverdi;
 	}
 
 	public boolean erBesteberegnet() {
@@ -270,11 +218,6 @@ public class BeregningsgrunnlagPeriode {
 
 		public Builder medErVilkårOppfylt(boolean erVilkårOppfylt) {
 			beregningsgrunnlagPeriodeMal.erVilkårOppfylt = erVilkårOppfylt;
-			return this;
-		}
-
-		public Builder medDekningsgrad(Dekningsgrad dekningsgrad) {
-			beregningsgrunnlagPeriodeMal.dekningsgrad = dekningsgrad;
 			return this;
 		}
 

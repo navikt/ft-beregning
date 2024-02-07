@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -15,7 +14,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Dekningsgrad;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.fpsak.nare.doc.RuleDocumentationGrunnlag;
@@ -83,12 +81,6 @@ public class BeregningsgrunnlagPeriode {
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
 	}
 
-	public BigDecimal getGradertBruttoPrÅr() {
-		return getBeregningsgrunnlagPrStatus().stream()
-				.map(BeregningsgrunnlagPrStatus::getGradertBruttoPrÅr)
-				.reduce(BigDecimal.ZERO, BigDecimal::add);
-	}
-
 	public BigDecimal getAvkortetPrÅr() {
 		return getBeregningsgrunnlagPrStatus().stream()
 				.map(BeregningsgrunnlagPrStatus::getAvkortetPrÅr)
@@ -145,11 +137,6 @@ public class BeregningsgrunnlagPeriode {
 
 	public Dekningsgrad getDekningsgrad() {
 		return dekningsgrad;
-	}
-
-	public List<AktivitetStatusMedHjemmel> getAktivitetStatuser() {
-		return beregningsgrunnlag.getAktivitetStatuser().stream()
-				.sorted(Comparator.comparing(as -> as.getAktivitetStatus().getBeregningPrioritet())).toList();
 	}
 
 	public List<TilkommetInntekt> getTilkommetInntektsforholdListe() {

@@ -212,6 +212,5 @@ class OmfordelFraAktiviteterUtenArbeidsforholdTest {
         OmfordelFraAktiviteterUtenArbeidsforhold regel = new OmfordelFraAktiviteterUtenArbeidsforhold(arbeidsforhold);
 	    var modell = new FordelModell(periode);
 	    regel.evaluate(modell);
-		String s = "";
     }
 }

@@ -69,7 +69,7 @@ public class RegelForeslåBeregningsgrunnlag implements EksportRegel<Beregningsg
 			return new RegelFastsettBeregningsgrunnlagDPellerAAP().getSpecification().medEvaluationProperty(sporingsproperty);
 		}
 		return switch (aktivitetStatus) {
-			case MS, SN, MIDL_INAKTIV -> new Beregnet();
+			case MS, SN, MIDL_INAKTIV -> new Beregnet(); // Håndteres i RegelFortsettForeslåBeregningsgrunnlag
 			case ATFL, ATFL_SN -> new RegelBeregningsgrunnlagATFL(regelmodell).getSpecification().medEvaluationProperty(sporingsproperty);
 			case KUN_YTELSE -> new RegelForeslåBeregningsgrunnlagTY(regelmodell).getSpecification().medEvaluationProperty(sporingsproperty);
 			default -> new RegelForeslåBeregningsgrunnlagTilNull(aktivitetStatus).getSpecification().medEvaluationProperty(sporingsproperty);
