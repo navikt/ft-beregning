@@ -45,8 +45,8 @@ class FinnBesteMånederTest {
 
 	private List<Ytelsegrunnlag> alleYtelsegrunnlag = new ArrayList<>();
 	public static final LocalDate SKJÆRINGSTIDSPUNKT_OPPTJENING = LocalDate.of(2019, 11, 1);
-	public static final String ORGNR = "123467890";
-	public static final String ORGNR2 = "434643243";
+	public static final String ORGNR = "999999999";
+	public static final String ORGNR2 = "999999998";
 
 	@Test
     void skal_finne_6_siste_måneder_med_eit_arbeidsforhold_like_inntekter() {

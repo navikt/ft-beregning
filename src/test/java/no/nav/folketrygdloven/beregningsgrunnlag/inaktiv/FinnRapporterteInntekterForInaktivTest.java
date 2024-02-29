@@ -21,7 +21,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 class FinnRapporterteInntekterForInaktivTest {
 
 
-	private static final String ORGNR = "123436589";
+	private static final String ORGNR = "999999999";
 	private final FinnRapporterteInntekterForInaktiv finnRapporterteInntekter = new FinnRapporterteInntekterForInaktiv();
 
 	@Test

@@ -30,8 +30,8 @@ class RegelForeslåBesteberegningTest {
 	public static final List<Grunnbeløp> GRUNNBELØP_SATSER = GRUNNBELØPLISTE;
 	public static final BigDecimal G_VERDI = BigDecimal.valueOf(100_000);
 	public static final LocalDate SKJÆRINGSTIDSPUNKT_OPPTJENING = LocalDate.of(2019, 11, 1);
-	public static final String ORGNR = "123467890";
-	public static final String ORGNR2 = "434643243";
+	public static final String ORGNR = "999999999";
+	public static final String ORGNR2 = "999999998";
 
 	@Test
 	void skal_finne_besteberegnet_grunnlag_for_eit_arbeidsforhold_like_inntekter() {

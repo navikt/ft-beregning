@@ -24,9 +24,9 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Ar
 
 class RegelFinnGrenseverdiUtenFordelingTest {
 
-	public static final String ORGNR = "910";
-	private static final String ORGNR_2 = "974760673";
-	private static final String ORGNR_3 = "976967631";
+	public static final String ORGNR = "999999999";
+	private static final String ORGNR_2 = "999999998";
+	private static final String ORGNR_3 = "999999997";
 	public static final Arbeidsforhold AF_1 = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR);
 	public static final Arbeidsforhold AF_2 = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR_2);
 	public static final Arbeidsforhold AF_3 = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR_3);

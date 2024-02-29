@@ -34,7 +34,7 @@ class SkalFinneGrenseverdiUtenFordelingTest {
 								.medAndelNr(1L)
 								.medBruttoPrÅr(BigDecimal.valueOf(100_000))
 								.medArbeidsforhold(Arbeidsforhold.builder()
-										.medOrgnr("123456789")
+										.medOrgnr("999999999")
 										.medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT).build()).build())
 						.build()).build();
 
@@ -65,7 +65,7 @@ class SkalFinneGrenseverdiUtenFordelingTest {
 								.medAndelNr(1L)
 								.medBruttoPrÅr(BigDecimal.valueOf(100_000))
 								.medArbeidsforhold(Arbeidsforhold.builder()
-										.medOrgnr("123456789")
+										.medOrgnr("999999999")
 										.medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT).build()).build())
 						.build()).build();
 
@@ -95,7 +95,7 @@ class SkalFinneGrenseverdiUtenFordelingTest {
 								.medAndelNr(1L)
 								.medBruttoPrÅr(BigDecimal.valueOf(100_000))
 								.medArbeidsforhold(Arbeidsforhold.builder()
-										.medOrgnr("123456789")
+										.medOrgnr("999999999")
 										.medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT).build()).build())
 						.build()).build();
 
@@ -127,7 +127,7 @@ class SkalFinneGrenseverdiUtenFordelingTest {
 								.medAndelNr(1L)
 								.medBruttoPrÅr(BigDecimal.valueOf(100_000))
 								.medArbeidsforhold(Arbeidsforhold.builder()
-										.medOrgnr("123456789")
+										.medOrgnr("999999999")
 										.medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT).build()).build())
 						.build()).build();
 
@@ -159,7 +159,7 @@ class SkalFinneGrenseverdiUtenFordelingTest {
 								.medAndelNr(1L)
 								.medBruttoPrÅr(BigDecimal.valueOf(100_000))
 								.medArbeidsforhold(Arbeidsforhold.builder()
-										.medOrgnr("123456789")
+										.medOrgnr("999999999")
 										.medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT).build()).build())
 						.build()).build();
 

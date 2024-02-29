@@ -30,8 +30,8 @@ class VurderPeriodeForGraderingTest {
 	private static final BigDecimal MÅNEDSBELØP_OVER_6G = BigDecimal.valueOf(70_000);
 	private static final BigDecimal ÅRSBBELØP_OVER_6G = MÅNEDSBELØP_OVER_6G.multiply(BigDecimal.valueOf(12));
 	private static final BigDecimal ÅRSBBELØP_OVER_3G = MÅNEDSBELØP_5_3G.multiply(BigDecimal.valueOf(12));
-	public static final String ORGNR1 = "83764874";
-	public static final String ORGNR2 = "8732987432";
+	public static final String ORGNR1 = "999999999";
+	public static final String ORGNR2 = "999999998";
 
 	@Test
 	void totalRefusjonOver6GEksisterendeAktivitetIngenRefusjonPåDato() {

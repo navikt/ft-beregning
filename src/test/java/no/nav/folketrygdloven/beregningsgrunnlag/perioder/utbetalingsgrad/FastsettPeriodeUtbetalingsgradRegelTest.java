@@ -30,8 +30,8 @@ class FastsettPeriodeUtbetalingsgradRegelTest {
 	private static final LocalDate SKJÆRINGSTIDSPUNKT = MANDAG;
 	private static final LocalDate FREDAG = LocalDate.of(2021, 11, 12);
 	private static final LocalDate PÅFØLGENDE_MANDAG = LocalDate.of(2021, 11, 15);
-	private static final String ORGNR = "1234657";
-	private static final String ORGNR2 = "89729572935";
+	private static final String ORGNR = "999999999";
+	private static final String ORGNR2 = "999999998";
 
 	@Test
 	void skalLageNyAndelForSVPForArbeidsforholdMedSøktYtelseFraSTP() {

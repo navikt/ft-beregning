@@ -158,7 +158,7 @@ class ForeslåBeregningsgrunnlagDPellerAAPKombinasjonMedAnnenStatusTest {
 				.medArbeidsforhold(BeregningsgrunnlagPrArbeidsforhold.builder()
 						.medAndelNr(2L)
 						.medArbeidsforhold(Arbeidsforhold.builder()
-								.medOrgnr("123456789")
+								.medOrgnr("999999999")
 								.medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT).build()).build())
 				.build();
 	}

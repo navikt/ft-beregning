@@ -28,7 +28,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 class RegelVurderBeregningsgrunnlagFRISINNTest {
 
 
-    public static final String ORGNR = "14263547852";
+    public static final String ORGNR = "999999999";
     private final Offset<Double> offset = Offset.offset(0.01);
 
     private static final LocalDate skjæringstidspunkt = LocalDate.of(2020, Month.MARCH, 15);

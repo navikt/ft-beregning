@@ -42,7 +42,7 @@ class FastsettStatusOgAndelPrPeriodeTest {
 		AktivitetStatusModell regelmodell = new AktivitetStatusModell();
 		regelmodell.setSkjæringstidspunktForBeregning(STP);
 		regelmodell.leggTilEllerOppdaterAktivPeriode(AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(STP.minusMonths(36), STP.plusMonths(12)), "999999999", null));
-		regelmodell.leggTilEllerOppdaterAktivPeriode(AktivPeriode.forArbeidstakerHosPrivatperson(Periode.of(STP.minusMonths(36), STP.plusMonths(12)), "8888888888888"));
+		regelmodell.leggTilEllerOppdaterAktivPeriode(AktivPeriode.forArbeidstakerHosPrivatperson(Periode.of(STP.minusMonths(36), STP.plusMonths(12)), "9999999999999"));
 
 		// Act
 		List<BeregningsgrunnlagPrStatus> statusListe = kjørRegel(regelmodell);
@@ -51,7 +51,7 @@ class FastsettStatusOgAndelPrPeriodeTest {
 		assertThat(statusListe).hasSize(1);
 		assertThat(statusListe.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.ATFL);
 		verifiserArbeidsforhold(statusListe.get(0).getArbeidsforholdList(), "999999999");
-		verifiserArbeidsforhold(statusListe.get(0).getArbeidsforholdList(), "8888888888888");
+		verifiserArbeidsforhold(statusListe.get(0).getArbeidsforholdList(), "999999998");
 	}
 
 	@Test
