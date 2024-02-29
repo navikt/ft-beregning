@@ -42,7 +42,7 @@ class FastsettStatusOgAndelPrPeriodeTest {
 		AktivitetStatusModell regelmodell = new AktivitetStatusModell();
 		regelmodell.setSkjæringstidspunktForBeregning(STP);
 		regelmodell.leggTilEllerOppdaterAktivPeriode(AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(STP.minusMonths(36), STP.plusMonths(12)), "999999999", null));
-		regelmodell.leggTilEllerOppdaterAktivPeriode(AktivPeriode.forArbeidstakerHosPrivatperson(Periode.of(STP.minusMonths(36), STP.plusMonths(12)), "9999999999999"));
+		regelmodell.leggTilEllerOppdaterAktivPeriode(AktivPeriode.forArbeidstakerHosPrivatperson(Periode.of(STP.minusMonths(36), STP.plusMonths(12)), "999999998"));
 
 		// Act
 		List<BeregningsgrunnlagPrStatus> statusListe = kjørRegel(regelmodell);
