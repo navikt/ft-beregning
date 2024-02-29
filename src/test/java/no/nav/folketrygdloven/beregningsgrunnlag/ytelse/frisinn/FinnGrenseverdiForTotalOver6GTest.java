@@ -24,7 +24,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.util.Virkedager;
 
 class FinnGrenseverdiForTotalOver6GTest {
 
-	public static final String ORGNR = "14263547852";
+	public static final String ORGNR = "999999999";
 	public static final int GRUNNBELØP = 100_000;
 	public static final BigDecimal SEKS_G = BigDecimal.valueOf(GRUNNBELØP * 6);
 

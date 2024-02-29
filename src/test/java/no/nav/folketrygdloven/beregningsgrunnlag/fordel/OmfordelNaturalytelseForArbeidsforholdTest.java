@@ -23,8 +23,8 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Ar
 class OmfordelNaturalytelseForArbeidsforholdTest {
 
 
-    public static final Arbeidsforhold ARBEID1 = Arbeidsforhold.builder().medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT).medOrgnr("12343543543").build();
-    public static final Arbeidsforhold ARBEID2 = Arbeidsforhold.builder().medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT).medOrgnr("087435984").build();
+    public static final Arbeidsforhold ARBEID1 = Arbeidsforhold.builder().medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT).medOrgnr("999999999").build();
+    public static final Arbeidsforhold ARBEID2 = Arbeidsforhold.builder().medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT).medOrgnr("999999998").build();
 
     @Test
     void skal_omfordele_naturalytelse() {

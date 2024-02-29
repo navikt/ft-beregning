@@ -24,7 +24,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 
 class RegelFullføreBeregningsgrunnlagFRISINNTest {
-    public static final String ORGNR = "14263547852";
+    public static final String ORGNR = "999999999";
     public static final BigDecimal SEKS_G = BigDecimal.valueOf(GRUNNBELØP_2019 * 6);
     private static final BigDecimal DEKNINGSGRAD_80 = BigDecimal.valueOf(0.8);
 

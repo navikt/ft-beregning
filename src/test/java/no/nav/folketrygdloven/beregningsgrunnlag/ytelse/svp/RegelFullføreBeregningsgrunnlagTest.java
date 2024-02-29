@@ -27,9 +27,9 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 
 class RegelFullføreBeregningsgrunnlagTest {
-	public static final String ORGNR1 = "910";
-	private static final String ORGNR2 = "974760673";
-	private static final String ORGNR3 = "976967631";
+	public static final String ORGNR1 = "999999999";
+	private static final String ORGNR2 = "999999998";
+	private static final String ORGNR3 = "999999997";
 	private static final String ARB_ID_1 = "arbeidsforholdId_1";
 	private static final String ARB_ID_2 = "arbeidsforholdId_2";
 	private static final String ARB_ID_3 = "arbeidsforholdId_3";

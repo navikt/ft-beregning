@@ -25,8 +25,8 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SplittetPe
 class FastsettGraderingPeriodeRegelTest {
 
 	private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.of(2021, 11, 8);
-	private static final String ORGNR = "1234657";
-	private static final String ORGNR2 = "89729572935";
+	private static final String ORGNR = "999999999";
+	private static final String ORGNR2 = "999999998";
 
 	private void kjørRegel(PeriodeModellGradering inputMedGraderingFraStartForNyttArbeid, List<SplittetPeriode> perioder) {
 		new FastsettPerioderGraderingRegel().evaluerRegel(inputMedGraderingFraStartForNyttArbeid, perioder);
