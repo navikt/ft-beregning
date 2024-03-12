@@ -40,6 +40,8 @@
     <properties>
         <java.version>21</java.version>
 
+        <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
+        <sonar.projectName>ft-berergning</sonar.projectName>
         <sonar.projectKey>navikt_ft-beregning</sonar.projectKey>
         <sonar.organization>navikt</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
