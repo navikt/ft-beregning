@@ -61,17 +61,17 @@
         <dependencies>
             <dependency>
                 <groupId>no.nav.folketrygdloven.kalkulus</groupId>
-                <artifactId>kalkulus-beregningsregler</artifactId>
+                <artifactId>beregningsregler</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.folketrygdloven.kalkulus</groupId>
-                <artifactId>kalkulus-kodeverk</artifactId>
+                <artifactId>kodeverk</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.folketrygdloven.kalkulus</groupId>
-                <artifactId>kalkulus-kontrakt</artifactId>
+                <artifactId>kontrakt</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -88,7 +88,7 @@
             <dependency>
                 <groupId>org.glassfish</groupId>
                 <artifactId>jakarta.el</artifactId>
-                <version>4.0.2</version>
+                <version>4.0.1</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -121,7 +121,7 @@
             <dependency>
                 <groupId>com.fasterxml.jackson</groupId>
                 <artifactId>jackson-bom</artifactId>
-                <version>2.16.2</version>
+                <version>2.16.1</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
@@ -293,6 +293,31 @@
         </plugins>
 
     </build>
+
+    <profiles>
+        <profile>
+            <id>sonar</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>deploy</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>flatten-maven-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <scm>
         <connection>scm:git:ssh://git@github.com:navikt/ft-beregning.git</connection>

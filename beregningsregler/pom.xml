@@ -9,8 +9,8 @@
         <version>3.0-SNAPSHOT</version>
     </parent>
 
-    <name>Kalkulus :: Regelmodell</name>
-    <artifactId>kalkulus-beregningsregler</artifactId>
+    <name>Regelmodell</name>
+    <artifactId>beregningsregler</artifactId>
     <packaging>jar</packaging>
 
     <properties>
