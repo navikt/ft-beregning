@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: no.nav.folketrygdloven.kalkulus.mappers.KontraktTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.263 s -- in no.nav.folketrygdloven.kalkulus.mappers.KontraktTest

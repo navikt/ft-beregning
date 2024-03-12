@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: no.nav.folketrygdloven.beregningsgrunnlag.kombinasjon.RegelBeregningsgrunnlagKombinasjonATFLogSNTest
+-------------------------------------------------------------------------------
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 s -- in no.nav.folketrygdloven.beregningsgrunnlag.kombinasjon.RegelBeregningsgrunnlagKombinasjonATFLogSNTest

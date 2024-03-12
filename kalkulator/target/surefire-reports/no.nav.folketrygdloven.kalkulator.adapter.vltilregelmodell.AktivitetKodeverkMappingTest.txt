@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.AktivitetKodeverkMappingTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 s -- in no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.AktivitetKodeverkMappingTest
