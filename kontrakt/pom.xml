@@ -10,7 +10,7 @@
         <version>3.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>kontrakt</artifactId>
+    <artifactId>beregning-kontrakt</artifactId>
     <packaging>jar</packaging>
     <name>Kontrakt</name>
 
@@ -22,7 +22,7 @@
         <!-- Interne avhengigheter -->
         <dependency>
             <groupId>no.nav.folketrygdloven.kalkulus</groupId>
-            <artifactId>kodeverk</artifactId>
+            <artifactId>beregning-kodeverk</artifactId>
         </dependency>
 
         <!-- Eksterne avhengigheter til andre prosjekter -->
