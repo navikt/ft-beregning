@@ -1,3 +1,18 @@
+# Eclipse
+.project
+.classpath
+.settings/
+bin/
+
+# IntelliJ
+.idea
+*.ipr
+*.iml
+*.iws
+
+# Visual Studio Code
+.vscode
+
 # Compiled class file
 *.class
 
@@ -18,14 +33,20 @@
 *.zip
 *.tar.gz
 *.rar
-*.iml
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
-/target/
-/.classpath
-/.project
-/.flattened
-/.settings
-/.flattened*
-/.idea
+target/
+.flattened
+.settings
+.flattened*
+
+
+# Maven
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+release.properties
+maven-eclipse.xml
+.mvn/maven.config
+.mvn/jvm.config

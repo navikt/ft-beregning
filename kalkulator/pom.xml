@@ -9,9 +9,9 @@
         <version>3.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>kalkulus-kalkulator</artifactId>
+    <artifactId>kalkulator</artifactId>
     <packaging>jar</packaging>
-    <name>Kalkulus :: Kalkulator</name>
+    <name>Kalkulator</name>
 
     <properties>
         <maven.deploy.skip>false</maven.deploy.skip>
@@ -21,13 +21,13 @@
         <!-- Interne avhengigheter  -->
         <dependency>
             <groupId>no.nav.folketrygdloven.kalkulus</groupId>
-            <artifactId>kalkulus-kontrakt</artifactId>
+            <artifactId>kontrakt</artifactId>
         </dependency>
 
         <!-- Eksterne avhengigheter til andre NAV-prosjekter-->
         <dependency>
             <groupId>no.nav.folketrygdloven.kalkulus</groupId>
-            <artifactId>kalkulus-beregningsregler</artifactId>
+            <artifactId>beregningsregler</artifactId>
         </dependency>
 
         <dependency>

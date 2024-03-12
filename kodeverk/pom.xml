@@ -11,9 +11,9 @@
         <version>3.0-SNAPSHOT</version>
     </parent>
 
-    <name>Kalkulus :: Kodeverk</name>
+    <name>Kodeverk</name>
     <packaging>jar</packaging>
-    <artifactId>kalkulus-kodeverk</artifactId>
+    <artifactId>kodeverk</artifactId>
 
     <properties>
         <maven.deploy.skip>false</maven.deploy.skip>
