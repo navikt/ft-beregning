@@ -61,17 +61,17 @@
         <dependencies>
             <dependency>
                 <groupId>no.nav.folketrygdloven.kalkulus</groupId>
-                <artifactId>beregningsregler</artifactId>
+                <artifactId>beregning-regler</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.folketrygdloven.kalkulus</groupId>
-                <artifactId>kodeverk</artifactId>
+                <artifactId>beregning-kodeverk</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.folketrygdloven.kalkulus</groupId>
-                <artifactId>kontrakt</artifactId>
+                <artifactId>beregning-kontrakt</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

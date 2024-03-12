@@ -13,7 +13,7 @@
 
     <name>Kodeverk</name>
     <packaging>jar</packaging>
-    <artifactId>kodeverk</artifactId>
+    <artifactId>beregning-kodeverk</artifactId>
 
     <properties>
         <maven.deploy.skip>false</maven.deploy.skip>

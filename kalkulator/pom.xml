@@ -9,7 +9,7 @@
         <version>3.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>kalkulator</artifactId>
+    <artifactId>beregning-kalkulator</artifactId>
     <packaging>jar</packaging>
     <name>Kalkulator</name>
 
@@ -21,13 +21,13 @@
         <!-- Interne avhengigheter  -->
         <dependency>
             <groupId>no.nav.folketrygdloven.kalkulus</groupId>
-            <artifactId>kontrakt</artifactId>
+            <artifactId>beregning-kontrakt</artifactId>
         </dependency>
 
         <!-- Eksterne avhengigheter til andre NAV-prosjekter-->
         <dependency>
             <groupId>no.nav.folketrygdloven.kalkulus</groupId>
-            <artifactId>beregningsregler</artifactId>
+            <artifactId>beregning-regler</artifactId>
         </dependency>
 
         <dependency>

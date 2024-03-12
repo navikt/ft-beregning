@@ -10,7 +10,7 @@
     </parent>
 
     <name>Regelmodell</name>
-    <artifactId>beregningsregler</artifactId>
+    <artifactId>beregning-regler</artifactId>
     <packaging>jar</packaging>
 
     <properties>
