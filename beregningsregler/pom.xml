@@ -10,7 +10,7 @@
     </parent>
 
     <name>Kalkulus :: Regelmodell</name>
-    <artifactId>kalkulus-beregningsregler</artifactId>
+    <artifactId>beregningsregler</artifactId>
     <packaging>jar</packaging>
 
     <properties>

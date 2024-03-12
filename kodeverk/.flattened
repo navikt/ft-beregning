@@ -3,10 +3,10 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>no.nav.folketrygdloven.kalkulus</groupId>
-  <artifactId>kalkulus-kodeverk</artifactId>
+  <artifactId>kodeverk</artifactId>
   <version>3.0-SNAPSHOT</version>
   <name>Kalkulus :: Kodeverk</name>
-  <url>https://github.com/navikt/ft-beregning/kalkulus-kodeverk</url>
+  <url>https://github.com/navikt/ft-beregning/kodeverk</url>
   <organization>
     <name>no.nav</name>
     <url>https://github.com/navikt</url>
@@ -24,9 +24,9 @@
     </developer>
   </developers>
   <scm>
-    <connection>scm:git:ssh://git@github.com:navikt/ft-beregning.git/kalkulus-kodeverk</connection>
-    <developerConnection>scm:git:ssh://git@github.com:navikt/ft-beregning.git/kalkulus-kodeverk</developerConnection>
-    <url>https://github.com/navikt/ft-beregning/kalkulus-kodeverk</url>
+    <connection>scm:git:ssh://git@github.com:navikt/ft-beregning.git/kodeverk</connection>
+    <developerConnection>scm:git:ssh://git@github.com:navikt/ft-beregning.git/kodeverk</developerConnection>
+    <url>https://github.com/navikt/ft-beregning/kodeverk</url>
   </scm>
   <distributionManagement>
     <repository>
@@ -36,8 +36,10 @@
     </repository>
   </distributionManagement>
   <properties>
+    <sonar.projectName>ft-berergning</sonar.projectName>
     <sonar.projectKey>navikt_ft-beregning</sonar.projectKey>
     <java.version>21</java.version>
+    <sonar.moduleKey>kodeverk</sonar.moduleKey>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     <sonar.organization>navikt</sonar.organization>
     <maven.deploy.skip>false</maven.deploy.skip>

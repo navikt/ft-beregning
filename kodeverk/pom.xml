@@ -13,7 +13,7 @@
 
     <name>Kalkulus :: Kodeverk</name>
     <packaging>jar</packaging>
-    <artifactId>kalkulus-kodeverk</artifactId>
+    <artifactId>kodeverk</artifactId>
 
     <properties>
         <maven.deploy.skip>false</maven.deploy.skip>

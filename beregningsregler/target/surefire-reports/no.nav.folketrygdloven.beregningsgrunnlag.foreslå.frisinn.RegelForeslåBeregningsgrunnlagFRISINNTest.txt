@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: no.nav.folketrygdloven.beregningsgrunnlag.foreslå.frisinn.RegelForeslåBeregningsgrunnlagFRISINNTest
 -------------------------------------------------------------------------------
-Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.041 s -- in no.nav.folketrygdloven.beregningsgrunnlag.foreslå.frisinn.RegelForeslåBeregningsgrunnlagFRISINNTest
+Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.047 s -- in no.nav.folketrygdloven.beregningsgrunnlag.foreslå.frisinn.RegelForeslåBeregningsgrunnlagFRISINNTest

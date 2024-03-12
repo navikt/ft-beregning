@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: no.nav.folketrygdloven.kalkulator.steg.foreslå.ForeslåBeregningsgrunnlagSNTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.059 s -- in no.nav.folketrygdloven.kalkulator.steg.foreslå.ForeslåBeregningsgrunnlagSNTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.044 s -- in no.nav.folketrygdloven.kalkulator.steg.foreslå.ForeslåBeregningsgrunnlagSNTest

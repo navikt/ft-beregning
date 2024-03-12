@@ -3,10 +3,10 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>no.nav.folketrygdloven.kalkulus</groupId>
-  <artifactId>kalkulus-kalkulator</artifactId>
+  <artifactId>kalkulator</artifactId>
   <version>3.0-SNAPSHOT</version>
   <name>Kalkulus :: Kalkulator</name>
-  <url>https://github.com/navikt/ft-beregning/kalkulus-kalkulator</url>
+  <url>https://github.com/navikt/ft-beregning/kalkulator</url>
   <organization>
     <name>no.nav</name>
     <url>https://github.com/navikt</url>
@@ -24,9 +24,9 @@
     </developer>
   </developers>
   <scm>
-    <connection>scm:git:ssh://git@github.com:navikt/ft-beregning.git/kalkulus-kalkulator</connection>
-    <developerConnection>scm:git:ssh://git@github.com:navikt/ft-beregning.git/kalkulus-kalkulator</developerConnection>
-    <url>https://github.com/navikt/ft-beregning/kalkulus-kalkulator</url>
+    <connection>scm:git:ssh://git@github.com:navikt/ft-beregning.git/kalkulator</connection>
+    <developerConnection>scm:git:ssh://git@github.com:navikt/ft-beregning.git/kalkulator</developerConnection>
+    <url>https://github.com/navikt/ft-beregning/kalkulator</url>
   </scm>
   <distributionManagement>
     <repository>
@@ -36,8 +36,10 @@
     </repository>
   </distributionManagement>
   <properties>
+    <sonar.projectName>ft-berergning</sonar.projectName>
     <sonar.projectKey>navikt_ft-beregning</sonar.projectKey>
     <java.version>21</java.version>
+    <sonar.moduleKey>kalkulator</sonar.moduleKey>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     <sonar.organization>navikt</sonar.organization>
     <maven.deploy.skip>false</maven.deploy.skip>
@@ -46,13 +48,13 @@
   <dependencies>
     <dependency>
       <groupId>no.nav.folketrygdloven.kalkulus</groupId>
-      <artifactId>kalkulus-kontrakt</artifactId>
+      <artifactId>kontrakt</artifactId>
       <version>3.0-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>no.nav.folketrygdloven.kalkulus</groupId>
-      <artifactId>kalkulus-beregningsregler</artifactId>
+      <artifactId>beregningsregler</artifactId>
       <version>3.0-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>

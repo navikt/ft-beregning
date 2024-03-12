@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.MapBeregningAktiviteterFraVLTilRegelFellesTest
 -------------------------------------------------------------------------------
-Tests run: 21, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.115 s -- in no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.MapBeregningAktiviteterFraVLTilRegelFellesTest
+Tests run: 21, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.108 s -- in no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.MapBeregningAktiviteterFraVLTilRegelFellesTest

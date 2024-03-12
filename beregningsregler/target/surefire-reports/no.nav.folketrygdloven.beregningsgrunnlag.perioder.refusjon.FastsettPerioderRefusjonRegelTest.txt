@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: no.nav.folketrygdloven.beregningsgrunnlag.perioder.refusjon.FastsettPerioderRefusjonRegelTest
 -------------------------------------------------------------------------------
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.029 s -- in no.nav.folketrygdloven.beregningsgrunnlag.perioder.refusjon.FastsettPerioderRefusjonRegelTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.032 s -- in no.nav.folketrygdloven.beregningsgrunnlag.perioder.refusjon.FastsettPerioderRefusjonRegelTest

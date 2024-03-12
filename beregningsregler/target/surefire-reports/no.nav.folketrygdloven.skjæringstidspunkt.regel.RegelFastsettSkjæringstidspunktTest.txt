@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: no.nav.folketrygdloven.skjæringstidspunkt.regel.RegelFastsettSkjæringstidspunktTest
 -------------------------------------------------------------------------------
-Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.022 s -- in no.nav.folketrygdloven.skjæringstidspunkt.regel.RegelFastsettSkjæringstidspunktTest
+Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.021 s -- in no.nav.folketrygdloven.skjæringstidspunkt.regel.RegelFastsettSkjæringstidspunktTest

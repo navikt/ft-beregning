@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker.FastsettSammenligningsgrunnlagTest
 -------------------------------------------------------------------------------
-Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.012 s -- in no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker.FastsettSammenligningsgrunnlagTest
+Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.010 s -- in no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker.FastsettSammenligningsgrunnlagTest

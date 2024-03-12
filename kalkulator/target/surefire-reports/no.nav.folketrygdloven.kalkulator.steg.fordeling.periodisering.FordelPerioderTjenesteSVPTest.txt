@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: no.nav.folketrygdloven.kalkulator.steg.fordeling.periodisering.FordelPerioderTjenesteSVPTest
 -------------------------------------------------------------------------------
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.012 s -- in no.nav.folketrygdloven.kalkulator.steg.fordeling.periodisering.FordelPerioderTjenesteSVPTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.014 s -- in no.nav.folketrygdloven.kalkulator.steg.fordeling.periodisering.FordelPerioderTjenesteSVPTest
