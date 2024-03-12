@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>no.nav.folketrygdloven.kalkulus</groupId>
+  <artifactId>kalkulus-beregningsregler</artifactId>
+  <version>3.0-SNAPSHOT</version>
+  <name>Kalkulus :: Regelmodell</name>
+  <url>https://github.com/navikt/ft-beregning/kalkulus-beregningsregler</url>
+  <organization>
+    <name>no.nav</name>
+    <url>https://github.com/navikt</url>
+  </organization>
+  <licenses>
+    <license>
+      <name>MIT License</name>
+      <url>https://opensource.org/licenses/MIT</url>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <organization>NAV (Arbeids- og velferdsdirektoratet) - The Norwegian Labour and Welfare Administration</organization>
+      <organizationUrl>https://www.nav.no</organizationUrl>
+    </developer>
+  </developers>
+  <scm>
+    <connection>scm:git:ssh://git@github.com:navikt/ft-beregning.git/kalkulus-beregningsregler</connection>
+    <developerConnection>scm:git:ssh://git@github.com:navikt/ft-beregning.git/kalkulus-beregningsregler</developerConnection>
+    <url>https://github.com/navikt/ft-beregning/kalkulus-beregningsregler</url>
+  </scm>
+  <distributionManagement>
+    <repository>
+      <id>github</id>
+      <name>GitHub navikt Apache Maven Packages</name>
+      <url>https://maven.pkg.github.com/navikt/ft-beregning</url>
+    </repository>
+  </distributionManagement>
+  <properties>
+    <sonar.projectKey>navikt_ft-beregning</sonar.projectKey>
+    <java.version>21</java.version>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+    <sonar.organization>navikt</sonar.organization>
+    <maven.deploy.skip>false</maven.deploy.skip>
+    <argLine>-Dfile.encoding=UTF-8</argLine>
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jsr310</artifactId>
+      <version>2.16.1</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>no.nav.fpsak.nare</groupId>
+      <artifactId>fpsak-nare-core</artifactId>
+      <version>2.6.1</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>no.nav.fpsak.tidsserie</groupId>
+      <artifactId>fpsak-tidsserie</artifactId>
+      <version>2.7.1</version>
+      <scope>compile</scope>
+    </dependency>
+  </dependencies>
+  <repositories>
+    <repository>
+      <id>github</id>
+      <name>GitHub Apache Maven Packages</name>
+      <url>https://maven.pkg.github.com/navikt/ft-beregning/</url>
+    </repository>
+  </repositories>
+</project>

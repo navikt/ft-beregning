@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker.BeregningsgrunnlagTest
+-------------------------------------------------------------------------------
+Tests run: 16, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.069 s -- in no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker.BeregningsgrunnlagTest

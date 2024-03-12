@@ -4,11 +4,18 @@
     <modelVersion>4.0.0</modelVersion>
 
     <name>Folketrygdloven Beregningsgrunnlag Regelmodell</name>
-    <groupId>no.nav.folketrygdloven</groupId>
-    <artifactId>beregningsgrunnlag-regelmodell</artifactId>
-    <version>4.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
-    <url>https://github.com/navikt/folketrygdloven-beregningsgrunnlag-regelmodell</url>
+    <groupId>no.nav.folketrygdloven.kalkulus</groupId>
+    <artifactId>ftberegning</artifactId>
+    <version>3.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <url>https://github.com/navikt/ft-beregning</url>
+
+    <modules>
+        <module>beregningsregler</module>
+        <module>kalkulator</module>
+        <module>kontrakt</module>
+        <module>kodeverk</module>
+    </modules>
 
     <organization>
         <name>no.nav</name>
@@ -33,7 +40,7 @@
     <properties>
         <java.version>21</java.version>
 
-        <sonar.projectKey>navikt_folketrygdloven-beregningsgrunnlag-regelmodell</sonar.projectKey>
+        <sonar.projectKey>navikt_ft-beregning</sonar.projectKey>
         <sonar.organization>navikt</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 
@@ -44,12 +51,56 @@
         <repository>
             <id>github</id>
             <name>GitHub Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/navikt/folketrygdloven-beregningsgrunnlag-regelmodell/</url>
+            <url>https://maven.pkg.github.com/navikt/ft-beregning/</url>
         </repository>
     </repositories>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>no.nav.folketrygdloven.kalkulus</groupId>
+                <artifactId>kalkulus-beregningsregler</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.folketrygdloven.kalkulus</groupId>
+                <artifactId>kalkulus-kodeverk</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.folketrygdloven.kalkulus</groupId>
+                <artifactId>kalkulus-kontrakt</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>jakarta.validation</groupId>
+                <artifactId>jakarta.validation-api</artifactId>
+                <version>3.0.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate.validator</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version>8.0.1.Final</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish</groupId>
+                <artifactId>jakarta.el</artifactId>
+                <version>4.0.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>2.0.12</version>
+            </dependency>
+
+            <!-- Felles biblioteker - Importerte avhengigheter. -->
+            <dependency>
+                <groupId>no.nav.fpsak.tidsserie</groupId>
+                <artifactId>fpsak-tidsserie</artifactId>
+                <version>2.7.1</version>
+            </dependency>
+
             <dependency>
                 <groupId>no.nav.fpsak.nare</groupId>
                 <artifactId>fpsak-nare-core</artifactId>
@@ -72,25 +123,27 @@
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>5.10.2</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- Mockito -->
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-bom</artifactId>
+                <version>5.11.0</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
     <dependencies>
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr310</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.fpsak.nare</groupId>
-            <artifactId>fpsak-nare-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <scope>test</scope>
-        </dependency>
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -99,9 +152,15 @@
         </dependency>
 
         <dependency>
-            <groupId>no.nav.fpsak.tidsserie</groupId>
-            <artifactId>fpsak-tidsserie</artifactId>
-            <version>2.7.1</version>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -218,20 +277,26 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>UTF-8</encoding>
+                    <release>${java.version}</release>
+                    <parameters>true</parameters>
+                </configuration>
+            </plugin>
         </plugins>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
+
     </build>
 
     <scm>
-        <connection>scm:git:ssh://git@github.com:navikt/folketrygdloven-beregningsgrunnlag-regelmodell.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com:navikt/folketrygdloven-beregningsgrunnlag-regelmodell.git
+        <connection>scm:git:ssh://git@github.com:navikt/ft-beregning.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com:navikt/ft-beregning.git
         </developerConnection>
-        <url>https://github.com/navikt/folketrygdloven-beregningsgrunnlag-regelmodell</url>
+        <url>https://github.com/navikt/ft-beregning</url>
         <tag>HEAD</tag>
     </scm>
 
@@ -239,7 +304,7 @@
         <repository>
             <id>github</id>
             <name>GitHub navikt Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/navikt/folketrygdloven-beregningsgrunnlag-regelmodell</url>
+            <url>https://maven.pkg.github.com/navikt/ft-beregning</url>
         </repository>
     </distributionManagement>
 </project>
