@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import no.nav.folketrygdloven.kalkulator.KonfigurasjonVerdi;
 import no.nav.folketrygdloven.kalkulator.input.FaktaOmBeregningInput;
 import no.nav.folketrygdloven.kalkulator.input.FastsettBeregningsaktiviteterInput;
 import no.nav.folketrygdloven.kalkulator.input.ForeslåBeregningsgrunnlagInput;
@@ -182,6 +183,14 @@ public class BeregningsgrunnlagTjeneste implements KalkulatorInterface {
             if (harUttakForBrukersAndel && bgHarIkkeBrukersAndel) {
                 throw new IllegalStateException("Uttak og beregning i ugyldig tilstand. Saken må flippes til manuell revurdering og flyttes til start.");
             }
+
+	        var erMidlertidigInaktiv = input.getOpptjeningAktiviteter().erMidlertidigInaktiv();
+	        var harUttakForMidlertidigInaktiv = utbetalingsgradGrunnlag.getUtbetalingsgradPrAktivitet()
+			        .stream().anyMatch(a -> a.getUtbetalingsgradArbeidsforhold().getUttakArbeidType().equals(UttakArbeidType.MIDL_INAKTIV));
+	        if (KonfigurasjonVerdi.instance().get("BRUKERS_ANDEL_8_47_B", false) && erMidlertidigInaktiv && !harUttakForMidlertidigInaktiv) {
+		        throw new IllegalStateException("Må ha uttak for midlertidig inaktiv ved beregning av midlertidig inaktiv");
+	        }
+
         }
     }
 
