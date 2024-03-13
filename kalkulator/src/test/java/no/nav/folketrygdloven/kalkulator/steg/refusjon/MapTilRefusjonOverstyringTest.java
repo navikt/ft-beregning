@@ -33,7 +33,7 @@ class MapTilRefusjonOverstyringTest {
     private BeregningsgrunnlagInput input;
 
     @Test
-    public void skal_oppdatere_en_refusjonsperiode_når_ingen_finnes_fra_før() {
+    void skal_oppdatere_en_refusjonsperiode_når_ingen_finnes_fra_før() {
         // Arrange
         VurderRefusjonAndelBeregningsgrunnlagDto oppdatering = lagDtoForAG(Arbeidsgiver.virksomhet("999999999"), null, LocalDate.of(2020, 7, 1));
 
@@ -45,7 +45,7 @@ class MapTilRefusjonOverstyringTest {
     }
 
     @Test
-    public void skal_oppdatere_flere_refusjonsperioder_ulik_ag_når_ingen_finnes_fra_før() {
+    void skal_oppdatere_flere_refusjonsperioder_ulik_ag_når_ingen_finnes_fra_før() {
         // Arrange
         VurderRefusjonAndelBeregningsgrunnlagDto oppdatering = lagDtoForAG(Arbeidsgiver.virksomhet("999999999"), null, LocalDate.of(2020, 7, 1));
         VurderRefusjonAndelBeregningsgrunnlagDto oppdatering2 = lagDtoForAG(Arbeidsgiver.virksomhet("999999998"), null, LocalDate.of(2020, 6, 1));
@@ -59,7 +59,7 @@ class MapTilRefusjonOverstyringTest {
     }
 
     @Test
-    public void skal_oppdatere_flere_refusjonsperioder_samme_ag_når_ingen_finnes_fra_før() {
+    void skal_oppdatere_flere_refusjonsperioder_samme_ag_når_ingen_finnes_fra_før() {
         // Arrange
         VurderRefusjonAndelBeregningsgrunnlagDto oppdatering = lagDtoForAG(Arbeidsgiver.virksomhet("999999999"), UUID.randomUUID().toString(), LocalDate.of(2020, 7, 1));
         VurderRefusjonAndelBeregningsgrunnlagDto oppdatering2 = lagDtoForAG(Arbeidsgiver.virksomhet("999999999"), UUID.randomUUID().toString(), LocalDate.of(2020, 6, 1));
@@ -73,7 +73,7 @@ class MapTilRefusjonOverstyringTest {
     }
 
     @Test
-    public void skal_oppdatere_flere_refusjonsperioder_samme_ag_når_fra_dato_finnes_fra_før() {
+    void skal_oppdatere_flere_refusjonsperioder_samme_ag_når_fra_dato_finnes_fra_før() {
         // Arrange
         Arbeidsgiver ag = Arbeidsgiver.virksomhet("999999999");
         VurderRefusjonAndelBeregningsgrunnlagDto oppdatering = lagDtoForAG(ag, UUID.randomUUID().toString(), LocalDate.of(2020, 7, 1));

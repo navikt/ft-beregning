@@ -66,7 +66,7 @@ public class BeregningsgrunnlagDtoTjenesteImplTest {
     private BeregningAktivitetAggregatDto beregningAktiviteter;
 
     @Test
-    public void skal_teste_at_beregningsgrunnlagDto_aktivitetStatus_får_korrekte_verdier() {
+    void skal_teste_at_beregningsgrunnlagDto_aktivitetStatus_får_korrekte_verdier() {
         // Arrange
         lagBehandlingMedBgOgOpprettFagsakRelasjon(virksomhet);
         // Act
@@ -80,7 +80,7 @@ public class BeregningsgrunnlagDtoTjenesteImplTest {
     }
 
     @Test
-    public void skal_teste_at_beregningsgrunnlagDto_sammenligningsgrunnlag_får_korrekte_verdier() {
+    void skal_teste_at_beregningsgrunnlagDto_sammenligningsgrunnlag_får_korrekte_verdier() {
         // Arrange
         lagBehandlingMedBgOgOpprettFagsakRelasjon(virksomhet);
 
@@ -98,7 +98,7 @@ public class BeregningsgrunnlagDtoTjenesteImplTest {
     }
 
     @Test
-    public void skal_teste_at_beregningsgrunnlagDto_får_korrekte_verdier() {
+    void skal_teste_at_beregningsgrunnlagDto_får_korrekte_verdier() {
         // Arrange
         Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         lagBehandlingMedBgOgOpprettFagsakRelasjon(arbeidsgiver);
@@ -113,7 +113,7 @@ public class BeregningsgrunnlagDtoTjenesteImplTest {
     }
 
     @Test
-    public void skal_teste_at_beregningsgrunnlagDto_får_korrekte_verdier_om_fakta_om_beregning_er_utført_uten_fastsatt_inntekt() {
+    void skal_teste_at_beregningsgrunnlagDto_får_korrekte_verdier_om_fakta_om_beregning_er_utført_uten_fastsatt_inntekt() {
         // Arrange
         Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto faktaOmBeregningBg = lagBehandlingMedBgOgOpprettFagsakRelasjon(arbeidsgiver);
@@ -132,7 +132,7 @@ public class BeregningsgrunnlagDtoTjenesteImplTest {
     }
 
     @Test
-    public void skal_teste_at_beregningsgrunnlagDto_beregningsgrunnlagperiode_får_korrekte_verdier() {
+    void skal_teste_at_beregningsgrunnlagDto_beregningsgrunnlagperiode_får_korrekte_verdier() {
         lagBehandlingMedBgOgOpprettFagsakRelasjon(virksomhet);
         InntektArbeidYtelseGrunnlagDtoBuilder builder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
         BeregningsgrunnlagDto beregningsgrunnlagDto = lagBeregningsgrunnlagDto(lagReferanseMedStp(koblingReferanse), grunnlag, builder.build());
@@ -156,7 +156,7 @@ public class BeregningsgrunnlagDtoTjenesteImplTest {
     }
 
     @Test
-    public void skal_teste_at_beregningsgrunnlagDto_beregningsgrunnlagperiode_får_korrekte_verdier_ved_arbeidsgiver_privatperson() {
+    void skal_teste_at_beregningsgrunnlagDto_beregningsgrunnlagperiode_får_korrekte_verdier_ved_arbeidsgiver_privatperson() {
         // Arrange
         AktørId aktørId = AktørId.dummy();
         Arbeidsgiver person = Arbeidsgiver.person(aktørId);
@@ -183,7 +183,7 @@ public class BeregningsgrunnlagDtoTjenesteImplTest {
     }
 
     @Test
-    public void skalSetteSammenligningsgrunnlagDtoMedDifferanseNårFlereAndeler() {
+    void skalSetteSammenligningsgrunnlagDtoMedDifferanseNårFlereAndeler() {
         // Arrange
         Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         lagBehandlingMedBgOgOpprettFagsakRelasjonFlereAndeler(arbeidsgiver);
@@ -219,7 +219,7 @@ public class BeregningsgrunnlagDtoTjenesteImplTest {
     }
 
     @Test
-    public void skalSetteFastsettingGrunnlagForHverBeregningsgrunnlagPrStatusOgAndelNårFlereAndelerMedUlikeAvvik() {
+    void skalSetteFastsettingGrunnlagForHverBeregningsgrunnlagPrStatusOgAndelNårFlereAndelerMedUlikeAvvik() {
         // Arrange
         Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         lagBehandlingMedBgOgOpprettFagsakRelasjonFlereAndeler(arbeidsgiver);
@@ -243,7 +243,7 @@ public class BeregningsgrunnlagDtoTjenesteImplTest {
     }
 
     @Test
-    public void skalSetteBeregningsgrunnlagPrStatusOgAndelDtoForArbeidstakerNårSammenligningsTypeErATFLSN() {
+    void skalSetteBeregningsgrunnlagPrStatusOgAndelDtoForArbeidstakerNårSammenligningsTypeErATFLSN() {
         // Arrange
         Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         lagBehandlingMedBgOgOpprettFagsakRelasjon(arbeidsgiver);

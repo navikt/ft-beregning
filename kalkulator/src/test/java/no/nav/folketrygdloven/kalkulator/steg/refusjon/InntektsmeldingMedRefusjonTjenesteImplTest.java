@@ -52,7 +52,7 @@ public class InntektsmeldingMedRefusjonTjenesteImplTest {
     private KoblingReferanse koblingReferanse = new KoblingReferanseMock(SKJÆRINGSTIDSPUNKT);
 
     @Test
-    public void skal_finne_arbeidsgiver_som_har_søkt_for_sent_med_flere_arbeidsforhold_et_som_tilkommer_etter_skjæringstidspunktet() {
+    void skal_finne_arbeidsgiver_som_har_søkt_for_sent_med_flere_arbeidsforhold_et_som_tilkommer_etter_skjæringstidspunktet() {
         // Arrange
         Map<Arbeidsgiver, LocalDate> førsteInnsendingMap = new HashMap<>();
         InntektArbeidYtelseAggregatBuilder registerBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
@@ -85,7 +85,7 @@ public class InntektsmeldingMedRefusjonTjenesteImplTest {
     }
 
     @Test
-    public void skal_finne_arbeidsgivere_som_har_søkt_for_sent() {
+    void skal_finne_arbeidsgivere_som_har_søkt_for_sent() {
         // Arrange
         Map<Arbeidsgiver, LocalDate> førsteInnsendingMap = new HashMap<>();
         InntektArbeidYtelseAggregatBuilder registerBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
@@ -117,7 +117,7 @@ public class InntektsmeldingMedRefusjonTjenesteImplTest {
 
 
     @Test
-    public void skal_returnere_tomt_set_om_ingen_inntektsmeldinger_er_mottatt() {
+    void skal_returnere_tomt_set_om_ingen_inntektsmeldinger_er_mottatt() {
         // Arrange
         InntektArbeidYtelseAggregatBuilder registerBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
         BeregningAktivitetAggregatDto aktivitetAggregat = leggTilAktivitet(registerBuilder, List.of(ORGNR, ORGNR2));
@@ -142,7 +142,7 @@ public class InntektsmeldingMedRefusjonTjenesteImplTest {
     }
 
     @Test
-    public void skal_returnere_tomt_set_om_ingen_inntektsmeldinger_er_mottatt_for_sent() {
+    void skal_returnere_tomt_set_om_ingen_inntektsmeldinger_er_mottatt_for_sent() {
         // Arrange
         Map<Arbeidsgiver, LocalDate> førsteInnsendingMap = new HashMap<>();
         InntektArbeidYtelseAggregatBuilder registerBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);

@@ -25,7 +25,7 @@ class FinnFørsteDagEtterPermisjonTest {
 
 
     @Test
-    public void tester_ingen_permisjoner() {
+    void tester_ingen_permisjoner() {
         var ya = lagYA("999999999", InternArbeidsforholdRefDto.nullRef(), førStp(100), etterStp(100));
         var filter = new PermisjonFilter(Collections.emptyList(), Collections.singletonList(ya), STP);
         var førsteAnsettelsesdagUtenPerm = FinnFørsteDagEtterPermisjon.finn(Collections.singletonList(ya), Periode.of(førStp(100), etterStp(100)), STP, filter);
@@ -35,7 +35,7 @@ class FinnFørsteDagEtterPermisjonTest {
     }
 
     @Test
-    public void tester_en_permisjon() {
+    void tester_en_permisjon() {
         var ya = lagYA("999999999", InternArbeidsforholdRefDto.nullRef(), førStp(100), etterStp(100), lagPerm(førStp(50), etterStp(10)));
         var filter = new PermisjonFilter(Collections.emptyList(), Collections.singletonList(ya), STP);
         var førsteAnsettelsesdagUtenPerm = FinnFørsteDagEtterPermisjon.finn(Collections.singletonList(ya), Periode.of(førStp(100), etterStp(100)), STP, filter);
@@ -45,7 +45,7 @@ class FinnFørsteDagEtterPermisjonTest {
     }
 
     @Test
-    public void tester_flere_ya_en_med_permisjon() {
+    void tester_flere_ya_en_med_permisjon() {
         var ya1 = lagYA("999999999", InternArbeidsforholdRefDto.nyRef(), førStp(100), etterStp(100), lagPerm(førStp(50), etterStp(10)));
         var ya2 = lagYA("999999999", InternArbeidsforholdRefDto.nyRef(), førStp(100), etterStp(100));
         var filter = new PermisjonFilter(Collections.emptyList(), Arrays.asList(ya1, ya2), STP);

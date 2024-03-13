@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class MapTilBesteberegningRegelmodellTest {
 
     @Test
-    public void skal_mappe_ytelse_andel() {
+    void skal_mappe_ytelse_andel() {
         //Arrange
         Ytelseandel ytelseandelArbeidsKategori = new Ytelseandel(Arbeidskategori.INAKTIV, 100L);
         Ytelseandel ytelseandelAktivitetsstatus = new Ytelseandel(AktivitetStatus.ARBEIDSTAKER, Inntektskategori.ARBEIDSTAKER,250L);

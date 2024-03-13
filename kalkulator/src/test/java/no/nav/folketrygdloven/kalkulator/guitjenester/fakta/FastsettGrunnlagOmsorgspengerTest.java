@@ -65,7 +65,7 @@ public class FastsettGrunnlagOmsorgspengerTest {
     private BeregningsgrunnlagGrunnlagDto grunnlag;
 
     @Test
-    public void skalIkkeFastsetteGrunnlagNårYtelseErOmsorgspengerMedAvvikIBeregningOgFullRefusjon() {
+    void skalIkkeFastsetteGrunnlagNårYtelseErOmsorgspengerMedAvvikIBeregningOgFullRefusjon() {
         //Arange
         Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         BeregningsgrunnlagDto Beregningsgrunnlag = lagBeregningsgrunnlagMedAvvikOver25ProsentMedKunSammenligningsgrunnlag();
@@ -98,7 +98,7 @@ public class FastsettGrunnlagOmsorgspengerTest {
     }
 
     @Test
-    public void skalIkkeFastsetteGrunnlagNårYtelseErOmsorgspengerMedAvvikIBeregningOgRefusjonEr6G() {
+    void skalIkkeFastsetteGrunnlagNårYtelseErOmsorgspengerMedAvvikIBeregningOgRefusjonEr6G() {
         //Arange
         Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         BeregningsgrunnlagDto Beregningsgrunnlag = lagBeregningsgrunnlagMedAvvikOver25ProsentMedKunSammenligningsgrunnlag();
@@ -144,7 +144,7 @@ public class FastsettGrunnlagOmsorgspengerTest {
     }
 
     @Test
-    public void skalIkkeFastsetteGrunnlagNårYtelseErOmsorgspengerUtenAvvikIBeregning() {
+    void skalIkkeFastsetteGrunnlagNårYtelseErOmsorgspengerUtenAvvikIBeregning() {
         //Arange
         Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         BeregningsgrunnlagDto Beregningsgrunnlag = lagBeregningsgrunnlagMedAvvikUnder25ProsentMedKunSammenligningsgrunnlag();
@@ -176,7 +176,7 @@ public class FastsettGrunnlagOmsorgspengerTest {
     }
 
     @Test
-    public void skalFastsetteGrunnlagNårYtelseErOmsorgspengerMedAvvikIBeregningOgIkkeFullRefusjon() {
+    void skalFastsetteGrunnlagNårYtelseErOmsorgspengerMedAvvikIBeregningOgIkkeFullRefusjon() {
         //Arange
         Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         BeregningsgrunnlagDto Beregningsgrunnlag = lagBeregningsgrunnlagMedAvvikOver25ProsentMedKunSammenligningsgrunnlag();
@@ -209,7 +209,7 @@ public class FastsettGrunnlagOmsorgspengerTest {
     }
 
     @Test
-    public void skalReturnereFalseNårForeslåBeregningIkkeErKjørt() {
+    void skalReturnereFalseNårForeslåBeregningIkkeErKjørt() {
         //Arange
         Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlagMedAvvikOver25ProsentMedKunSammenligningsgrunnlag();

@@ -66,7 +66,7 @@ public class FordelBeregningsgrunnlagTjenesteImplTest {
 
 
     @BeforeEach
-    public void oppsett() {
+    void oppsett() {
         fordelPerioderTjeneste = lagTjeneste();
         fordelBeregningsgrunnlagTjeneste = new FordelBeregningsgrunnlagTjenesteImpl();
         iayGrunnlagBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
@@ -77,7 +77,7 @@ public class FordelBeregningsgrunnlagTjenesteImplTest {
     }
 
     @Test
-    public void skal_omfordele_når_refusjon_overstiger_beregningsgrunnlag_for_ein_andel() {
+    void skal_omfordele_når_refusjon_overstiger_beregningsgrunnlag_for_ein_andel() {
         // Arrange
         // Beregningsgrunnlag fra Foreslå
         BigDecimal beregnetPrÅr1 = BigDecimal.valueOf(120_000);

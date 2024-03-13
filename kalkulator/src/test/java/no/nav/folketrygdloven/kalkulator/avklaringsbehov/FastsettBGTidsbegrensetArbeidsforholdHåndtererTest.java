@@ -51,7 +51,7 @@ public class FastsettBGTidsbegrensetArbeidsforholdHåndtererTest {
 
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         fastsatteInnteker = lagFastsatteAndelerListe();
         arbeidsgiver1 = Arbeidsgiver.virksomhet("123");
         arbeidsgiver2 = Arbeidsgiver.virksomhet("456");
@@ -81,7 +81,7 @@ public class FastsettBGTidsbegrensetArbeidsforholdHåndtererTest {
 
 
     @Test
-    public void skal_sette_korrekt_overstyrtSum_på_korrekt_periode_og_korrekt_andel() {
+    void skal_sette_korrekt_overstyrtSum_på_korrekt_periode_og_korrekt_andel() {
         //Arrange
         lagBehandlingMedBeregningsgrunnlag();
 

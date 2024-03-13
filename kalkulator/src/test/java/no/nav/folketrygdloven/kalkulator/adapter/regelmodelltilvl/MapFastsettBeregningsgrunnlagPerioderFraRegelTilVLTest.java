@@ -44,7 +44,7 @@ public class MapFastsettBeregningsgrunnlagPerioderFraRegelTilVLTest {
 
 
     @Test
-    public void skalMappeBeregningsgrunnlagUtenSplittNaturalytelse() {
+    void skalMappeBeregningsgrunnlagUtenSplittNaturalytelse() {
         // Arrange
         BeregningsgrunnlagDto vlBeregningsgrunnlag = lagBeregningsgrunnlag();
         byggAktivitetStatus(vlBeregningsgrunnlag);
@@ -64,7 +64,7 @@ public class MapFastsettBeregningsgrunnlagPerioderFraRegelTilVLTest {
     }
 
     @Test
-    public void skalMappeBeregningsgrunnlagUtenSplittRefusjonOgGradering() {
+    void skalMappeBeregningsgrunnlagUtenSplittRefusjonOgGradering() {
         // Arrange
         BeregningsgrunnlagDto vlBeregningsgrunnlag = lagBeregningsgrunnlag();
         byggAktivitetStatus(vlBeregningsgrunnlag);

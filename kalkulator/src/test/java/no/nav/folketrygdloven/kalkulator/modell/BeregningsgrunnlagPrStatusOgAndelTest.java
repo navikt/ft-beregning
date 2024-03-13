@@ -31,7 +31,7 @@ public class BeregningsgrunnlagPrStatusOgAndelTest {
     private BeregningsgrunnlagPrStatusOgAndelDto prStatusOgAndel;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlag();
         BeregningsgrunnlagPeriodeDto.Builder builder = lagBeregningsgrunnlagPeriodeBuilder();
         beregningsgrunnlagPeriode= builder.build(beregningsgrunnlag);
@@ -39,7 +39,7 @@ public class BeregningsgrunnlagPrStatusOgAndelTest {
     }
 
     @Test
-    public void skal_bygge_instans_med_påkrevde_felter() {
+    void skal_bygge_instans_med_påkrevde_felter() {
         assertThat(prStatusOgAndel.getAktivitetStatus()).isEqualTo(AktivitetStatus.ARBEIDSTAKER);
         assertThat(prStatusOgAndel.getBgAndelArbeidsforhold().map(BGAndelArbeidsforholdDto::getArbeidsforholdOrgnr).get()).isEqualTo(ORGNR);
         assertThat(prStatusOgAndel.getBgAndelArbeidsforhold().map(BGAndelArbeidsforholdDto::getArbeidsforholdRef).get()).isEqualTo(ARBEIDSFORHOLD_ID);
@@ -47,7 +47,7 @@ public class BeregningsgrunnlagPrStatusOgAndelTest {
     }
 
     @Test
-    public void skal_ikke_bygge_instans_hvis_mangler_påkrevde_felter() {
+    void skal_ikke_bygge_instans_hvis_mangler_påkrevde_felter() {
         BeregningsgrunnlagPrStatusOgAndelDto.Builder builder = BeregningsgrunnlagPrStatusOgAndelDto.ny();
         try {
             builder.build(null);
@@ -94,14 +94,14 @@ public class BeregningsgrunnlagPrStatusOgAndelTest {
     }
 
     @Test
-    public void skal_håndtere_null_this_feilKlasse_i_equals() {
+    void skal_håndtere_null_this_feilKlasse_i_equals() {
         assertThat(prStatusOgAndel).isNotEqualTo(null);
         assertThat(prStatusOgAndel).isNotEqualTo("blabla");
         assertThat(prStatusOgAndel).isEqualTo(prStatusOgAndel);
     }
 
     @Test
-    public void skal_ha_refleksiv_equalsOgHashCode() {
+    void skal_ha_refleksiv_equalsOgHashCode() {
         BeregningsgrunnlagPrStatusOgAndelDto prStatusOgAndel2 = lagBeregningsgrunnlagPrStatusOgAndel(beregningsgrunnlagPeriode);
 
         assertThat(prStatusOgAndel).isEqualTo(prStatusOgAndel2);
@@ -119,7 +119,7 @@ public class BeregningsgrunnlagPrStatusOgAndelTest {
     }
 
     @Test
-    public void skal_bruke_aktivitetStatus_i_equalsOgHashCode() {
+    void skal_bruke_aktivitetStatus_i_equalsOgHashCode() {
         BeregningsgrunnlagPrStatusOgAndelDto prStatusOgAndel2 = lagBeregningsgrunnlagPrStatusOgAndel(beregningsgrunnlagPeriode);
 
         assertThat(prStatusOgAndel).isEqualTo(prStatusOgAndel2);
@@ -134,7 +134,7 @@ public class BeregningsgrunnlagPrStatusOgAndelTest {
     }
 
     @Test
-    public void skal_runde_av_og_sette_dagsats_riktig() {
+    void skal_runde_av_og_sette_dagsats_riktig() {
         prStatusOgAndel = BeregningsgrunnlagPrStatusOgAndelDto.kopier(prStatusOgAndel)
             .medRedusertBrukersAndelPrÅr(Beløp.fra(BigDecimal.valueOf(377127.4)))
             .medRedusertRefusjonPrÅr(Beløp.fra(BigDecimal.valueOf(214892.574)))
@@ -146,7 +146,7 @@ public class BeregningsgrunnlagPrStatusOgAndelTest {
     }
 
     @Test
-    public void skal_kunne_ha_privatperson_som_arbeidsgiver() {
+    void skal_kunne_ha_privatperson_som_arbeidsgiver() {
         AktørId aktørId = AktørId.dummy();
         BeregningsgrunnlagPrStatusOgAndelDto.Builder builder = lagBeregningsgrunnlagPrStatusOgAndelBuilder(Arbeidsgiver.person(aktørId));
         builder.medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER);
@@ -156,7 +156,7 @@ public class BeregningsgrunnlagPrStatusOgAndelTest {
     }
 
     @Test
-    public void oppdatering_av_beregnet_skal_ikkje_endre_brutto_om_fordelt_er_satt() {
+    void oppdatering_av_beregnet_skal_ikkje_endre_brutto_om_fordelt_er_satt() {
         prStatusOgAndel = BeregningsgrunnlagPrStatusOgAndelDto.kopier(prStatusOgAndel)
             .medFordeltPrÅr(Beløp.fra(BigDecimal.valueOf(377127.4)))
             .medBeregnetPrÅr(Beløp.fra(BigDecimal.valueOf(214892.574)))
@@ -166,7 +166,7 @@ public class BeregningsgrunnlagPrStatusOgAndelTest {
     }
 
     @Test
-    public void oppdatering_av_beregnet_skal_ikkje_endre_brutto_om_overstyrt_er_satt() {
+    void oppdatering_av_beregnet_skal_ikkje_endre_brutto_om_overstyrt_er_satt() {
         prStatusOgAndel = BeregningsgrunnlagPrStatusOgAndelDto.kopier(prStatusOgAndel)
             .medOverstyrtPrÅr(Beløp.fra(BigDecimal.valueOf(377127.4)))
             .medBeregnetPrÅr(Beløp.fra(BigDecimal.valueOf(214892.574)))
@@ -176,7 +176,7 @@ public class BeregningsgrunnlagPrStatusOgAndelTest {
     }
 
     @Test
-    public void oppdatering_av_overstyrt_skal_ikkje_endre_brutto_om_fordelt_er_satt() {
+    void oppdatering_av_overstyrt_skal_ikkje_endre_brutto_om_fordelt_er_satt() {
         prStatusOgAndel = BeregningsgrunnlagPrStatusOgAndelDto.kopier(prStatusOgAndel)
             .medFordeltPrÅr(Beløp.fra(BigDecimal.valueOf(377127.4)))
             .medOverstyrtPrÅr(Beløp.fra(BigDecimal.valueOf(214892.574)))

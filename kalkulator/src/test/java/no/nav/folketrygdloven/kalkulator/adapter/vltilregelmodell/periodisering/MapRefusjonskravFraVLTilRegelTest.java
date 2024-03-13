@@ -39,7 +39,7 @@ public class MapRefusjonskravFraVLTilRegelTest {
     public BeregningRefusjonOverstyringerDto.Builder refusjonOverstyringer = BeregningRefusjonOverstyringerDto.builder();
 
     @Test
-    public void refusjonFraSenereDato() {
+    void refusjonFraSenereDato() {
         // Arrange
         LocalDate skjæringstidspunkt = LocalDate.now();
         LocalDate endringFom = skjæringstidspunkt.plusMonths(1);
@@ -67,7 +67,7 @@ public class MapRefusjonskravFraVLTilRegelTest {
     }
 
     @Test
-    public void refusjonFraSenereDatoUnderGyldigGrense() {
+    void refusjonFraSenereDatoUnderGyldigGrense() {
         // Arrange
         LocalDate skjæringstidspunkt = LocalDate.now();
         LocalDate endringFom = skjæringstidspunkt.plusMonths(1);
@@ -92,7 +92,7 @@ public class MapRefusjonskravFraVLTilRegelTest {
 
 
     @Test
-    public void refusjonFraStpUnderGyldigGrense() {
+    void refusjonFraStpUnderGyldigGrense() {
         // Arrange
         LocalDate skjæringstidspunkt = LocalDate.now();
         InntektsmeldingDto inntektsmeldingEntitet = InntektsmeldingDtoBuilder.builder()
@@ -116,7 +116,7 @@ public class MapRefusjonskravFraVLTilRegelTest {
 
 
     @Test
-    public void skal_finne_refusjonskrav_på_stp_med_uten_refusjon_fra_start() {
+    void skal_finne_refusjonskrav_på_stp_med_uten_refusjon_fra_start() {
         // Arrange
         LocalDate idag = LocalDate.now();
         InntektsmeldingAggregatDtoBuilder inntektsmeldingAggregatDtoBuilder = InntektsmeldingAggregatDtoBuilder.ny();
@@ -152,7 +152,7 @@ public class MapRefusjonskravFraVLTilRegelTest {
 
 
     @Test
-    public void skal_finne_refusjonskrav_på_stp_med_endring_i_refusjonskrav() {
+    void skal_finne_refusjonskrav_på_stp_med_endring_i_refusjonskrav() {
         // Arrange
         LocalDate idag = LocalDate.now();
         InntektsmeldingAggregatDtoBuilder inntektsmeldingAggregatDtoBuilder = InntektsmeldingAggregatDtoBuilder.ny();
@@ -187,7 +187,7 @@ public class MapRefusjonskravFraVLTilRegelTest {
     }
 
     @Test
-    public void skal_bruke_overstyrt_dato_om_denne_finnes_og_matcher_arbeidsforholdet() {
+    void skal_bruke_overstyrt_dato_om_denne_finnes_og_matcher_arbeidsforholdet() {
         // Arrange
         LocalDate skjæringstidspunkt = LocalDate.now();
         InternArbeidsforholdRefDto ref = InternArbeidsforholdRefDto.nyRef();
@@ -214,7 +214,7 @@ public class MapRefusjonskravFraVLTilRegelTest {
     }
 
     @Test
-    public void skal_ikke_bruke_overstyrt_dato_om_denne_finnes_og_ikke_matcher_arbeidsforholdet() {
+    void skal_ikke_bruke_overstyrt_dato_om_denne_finnes_og_ikke_matcher_arbeidsforholdet() {
         // Arrange
         LocalDate skjæringstidspunkt = LocalDate.now();
         InternArbeidsforholdRefDto refIM = InternArbeidsforholdRefDto.nyRef();
@@ -242,7 +242,7 @@ public class MapRefusjonskravFraVLTilRegelTest {
 
 
     @Test
-    public void skal_finne_refusjonskrav_for_perioder_med_opphør_og_restart() {
+    void skal_finne_refusjonskrav_for_perioder_med_opphør_og_restart() {
         // Arrange
         LocalDate skjæringstidspunkt = LocalDate.now();
         LocalDate endringFom = skjæringstidspunkt.plusMonths(1);

@@ -61,7 +61,7 @@ public class MapPerioderForGraderingFraVLTilRegelOgUtbetalingsgradTest {
      * Inntektsmelding kommer med Id for arbeidsforholdet som er aktivt på skjæringstidspunktet.
      */
     @Test
-    public void skal_mappe_til_regel_for_arbeid_over_skjæringstidspunktet_med_inntektsmelding_med_id_og_arbeid_i_samme_virksomhet_som_tilkommer_etter_skjæringstidspunkt() {
+    void skal_mappe_til_regel_for_arbeid_over_skjæringstidspunktet_med_inntektsmelding_med_id_og_arbeid_i_samme_virksomhet_som_tilkommer_etter_skjæringstidspunkt() {
         Arbeidsgiver ag1 = Arbeidsgiver.virksomhet("994507508");
         MapRefusjonPerioderFraVLTilRegel mapper = new MapRefusjonPerioderFraVLTilRegelFP();
         KoblingReferanseMock behandlingRef = new KoblingReferanseMock(SKJÆRINGSTIDSPUNKT);
@@ -91,7 +91,7 @@ public class MapPerioderForGraderingFraVLTilRegelOgUtbetalingsgradTest {
      * Inntektsmelding kommer inn uten id med start i permisjon på skjæringstidspunkt for opptjening.
      */
     @Test
-    public void arbeid_slutter_før_skjæringstidspunkt_for_opptjening_inntektsmelding_kommer_uten_id_for_arbeidsforhold_i_samme_virksomhet_etter_skjæringstidspunktet() {
+    void arbeid_slutter_før_skjæringstidspunkt_for_opptjening_inntektsmelding_kommer_uten_id_for_arbeidsforhold_i_samme_virksomhet_etter_skjæringstidspunktet() {
         Arbeidsgiver ag1 = Arbeidsgiver.virksomhet("994507508");
         MapRefusjonPerioderFraVLTilRegel mapper = new MapRefusjonPerioderFraVLTilRegelFP();
         LocalDate skjæringstidspunktOpptjening = SKJÆRINGSTIDSPUNKT.plusDays(15);
@@ -123,7 +123,7 @@ public class MapPerioderForGraderingFraVLTilRegelOgUtbetalingsgradTest {
      * Inntektsmelding kommer inn med id for Arbeidsforhold2 med start i permisjon på skjæringstidspunkt for opptjening.
      */
     @Test
-    public void arbeid_slutter_før_skjæringstidspunkt_for_opptjening_inntektsmelding_kommer_med_id_for_arbeidsforhold_i_samme_virksomhet_etter_skjæringstidspunktet() {
+    void arbeid_slutter_før_skjæringstidspunkt_for_opptjening_inntektsmelding_kommer_med_id_for_arbeidsforhold_i_samme_virksomhet_etter_skjæringstidspunktet() {
         Arbeidsgiver ag1 = Arbeidsgiver.virksomhet("994507508");
         MapRefusjonPerioderFraVLTilRegel mapper = new MapRefusjonPerioderFraVLTilRegelFP();
         LocalDate skjæringstidspunktOpptjening = SKJÆRINGSTIDSPUNKT.plusDays(15);
@@ -150,7 +150,7 @@ public class MapPerioderForGraderingFraVLTilRegelOgUtbetalingsgradTest {
 
 
     @Test
-    public void skal_teste_endring_i_ytelse_svp() {
+    void skal_teste_endring_i_ytelse_svp() {
         // Skal hente gradering fra uttak fram til der oppgittfordeling starter
         String orgnr1 = "123";
         String orgnr2 = "321";
@@ -203,7 +203,7 @@ public class MapPerioderForGraderingFraVLTilRegelOgUtbetalingsgradTest {
     }
 
     @Test
-    public void skal_ikke_lage_perioder_med_fom_før_skjæringstidspunkt() {
+    void skal_ikke_lage_perioder_med_fom_før_skjæringstidspunkt() {
         // Skal hente gradering fra uttak fram til der oppgittfordeling starter
         String orgnr1 = "123";
         LocalDate date = LocalDate.now();

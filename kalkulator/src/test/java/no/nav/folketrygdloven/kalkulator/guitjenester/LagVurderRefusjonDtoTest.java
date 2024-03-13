@@ -59,7 +59,7 @@ class LagVurderRefusjonDtoTest {
     private BeregningRefusjonOverstyringerDto.Builder refusjonOverstyringerBuilder;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         beregningsgrunnlag = no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto.builder()
                 .medSkjæringstidspunkt(STP.getSkjæringstidspunktBeregning())
                 .build();
@@ -79,7 +79,7 @@ class LagVurderRefusjonDtoTest {
         }
 
     @Test
-    public void skal_ikke_lage_dto_når_det_ikke_finnes_andeler_med_økt_ref() {
+    void skal_ikke_lage_dto_når_det_ikke_finnes_andeler_med_økt_ref() {
         String internRef = UUID.randomUUID().toString();
         lagIAYGrunnlag();
         byggBGAndel(Arbeidsgiver.virksomhet("999999999"), internRef);
@@ -91,7 +91,7 @@ class LagVurderRefusjonDtoTest {
     }
 
     @Test
-    public void skal_lage_dto_når_tilkommetIM_har_refusjonskrav_tidligere_utbetalt_bruker() {
+    void skal_lage_dto_når_tilkommetIM_har_refusjonskrav_tidligere_utbetalt_bruker() {
         String internRef = UUID.randomUUID().toString();
         String orgnr = "999999999";
         LocalDate refusjonFom = BG_PERIODE.getFomDato();
@@ -108,7 +108,7 @@ class LagVurderRefusjonDtoTest {
     }
 
     @Test
-    public void skal_lage_dto_når_tilkommetIM_har_refusjonskrav_tidligere_utbetalt_refusjon() {
+    void skal_lage_dto_når_tilkommetIM_har_refusjonskrav_tidligere_utbetalt_refusjon() {
         String internRef = UUID.randomUUID().toString();
         String orgnr = "999999999";
         LocalDate refusjonFom = BG_PERIODE.getFomDato();
@@ -126,7 +126,7 @@ class LagVurderRefusjonDtoTest {
     }
 
     @Test
-    public void skal_lage_dto_når_tilkommetIM_har_refusjonskrav_tidligere_utbetalt_refusjon_for_annet_orgnr() {
+    void skal_lage_dto_når_tilkommetIM_har_refusjonskrav_tidligere_utbetalt_refusjon_for_annet_orgnr() {
         String internRef = UUID.randomUUID().toString();
         String internRef2 = UUID.randomUUID().toString();
         String orgnr = "999999999";
@@ -156,7 +156,7 @@ class LagVurderRefusjonDtoTest {
     }
 
     @Test
-    public void skal_sette_tidligste_refusjonsdato_lik_avklaring_fra_fakta_om_beregnign() {
+    void skal_sette_tidligste_refusjonsdato_lik_avklaring_fra_fakta_om_beregnign() {
         String internRef = UUID.randomUUID().toString();
         String orgnr = "999999999";
         LocalDate refusjonFom = BG_PERIODE.getFomDato();
@@ -177,7 +177,7 @@ class LagVurderRefusjonDtoTest {
     }
 
     @Test
-    public void ved_flere_andeler_skal_kun_andel_i_første_periode_brukes() {
+    void ved_flere_andeler_skal_kun_andel_i_første_periode_brukes() {
         String internRef = UUID.randomUUID().toString();
         String orgnr = "999999999";
         lagIAYGrunnlag();
@@ -200,7 +200,7 @@ class LagVurderRefusjonDtoTest {
     }
 
     @Test
-    public void skal_ignorere_tidligere_avklaring_fra_fakta_om_beregning_når_dette_gjeder_annet_arbfor() {
+    void skal_ignorere_tidligere_avklaring_fra_fakta_om_beregning_når_dette_gjeder_annet_arbfor() {
         String internRef = UUID.randomUUID().toString();
         String orgnr = "999999999";
         LocalDate refusjonFom = BG_PERIODE.getFomDato();

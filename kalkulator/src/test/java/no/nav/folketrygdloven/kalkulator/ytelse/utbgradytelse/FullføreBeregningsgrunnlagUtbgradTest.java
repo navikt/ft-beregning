@@ -82,7 +82,7 @@ public class FullføreBeregningsgrunnlagUtbgradTest {
     private BeregningsgrunnlagDto beregningsgrunnlag;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         tjeneste = new FullføreBeregningsgrunnlagUtbgrad();
         beregningsgrunnlag = lagBeregningsgrunnlagAT();
     }
@@ -167,7 +167,7 @@ public class FullføreBeregningsgrunnlagUtbgradTest {
     }
 
     @Test
-    public void skal_teste_et_arbeidsforhold_med_refusjon_over_6G() {
+    void skal_teste_et_arbeidsforhold_med_refusjon_over_6G() {
         // Arrange
         BeregningsgrunnlagPeriodeDto periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
@@ -194,7 +194,7 @@ public class FullføreBeregningsgrunnlagUtbgradTest {
 
 
     @Test
-    public void skal_teste_to_arbeidsforhold_beregningsgrunnlag_under_6G_full_refusjon_gradert() {
+    void skal_teste_to_arbeidsforhold_beregningsgrunnlag_under_6G_full_refusjon_gradert() {
         // Arrange
         BeregningsgrunnlagPeriodeDto periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         lagAndel(periode, ORGNR1, ORGNR1_ARB_ID1, 200_000, 200_000);
@@ -224,7 +224,7 @@ public class FullføreBeregningsgrunnlagUtbgradTest {
     }
 
     @Test
-    public void næring_med_beregningsgrunnlag_under_6G() {
+    void næring_med_beregningsgrunnlag_under_6G() {
         // Arrange
         BeregningsgrunnlagPeriodeDto periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         lagNæringAndel(periode, 300_000);
@@ -246,7 +246,7 @@ public class FullføreBeregningsgrunnlagUtbgradTest {
     }
 
     @Test
-    public void næring_med_beregningsgrunnlag_under_6G_ikke_søkt_ytelse() {
+    void næring_med_beregningsgrunnlag_under_6G_ikke_søkt_ytelse() {
         // Arrange
         BeregningsgrunnlagPeriodeDto periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         lagNæringAndel(periode, 300_000);
@@ -266,7 +266,7 @@ public class FullføreBeregningsgrunnlagUtbgradTest {
     }
 
     @Test
-    public void næring_med_beregningsgrunnlag_under_6G_delvis_søkt_ytelse() {
+    void næring_med_beregningsgrunnlag_under_6G_delvis_søkt_ytelse() {
         // Arrange
         BeregningsgrunnlagPeriodeDto periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         lagNæringAndel(periode, 300_000);
@@ -288,7 +288,7 @@ public class FullføreBeregningsgrunnlagUtbgradTest {
     }
 
     @Test
-    public void næring_med_beregningsgrunnlag_over_6G_delvis_søkt_ytelse() {
+    void næring_med_beregningsgrunnlag_over_6G_delvis_søkt_ytelse() {
         // Arrange
         BeregningsgrunnlagPeriodeDto periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         lagNæringAndel(periode, 800_000);
@@ -310,7 +310,7 @@ public class FullføreBeregningsgrunnlagUtbgradTest {
     }
 
     @Test
-    public void skal_teste_to_arbeidsforhold_beregningsgrunnlag_over_6G_refusjon_under_6G_gradert() {
+    void skal_teste_to_arbeidsforhold_beregningsgrunnlag_over_6G_refusjon_under_6G_gradert() {
         // Arrange
         BeregningsgrunnlagPeriodeDto periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         lagAndel(periode, ORGNR1, ORGNR1_ARB_ID1, 800_000, 200_000);
@@ -340,7 +340,7 @@ public class FullføreBeregningsgrunnlagUtbgradTest {
     }
 
     @Test
-    public void skal_teste_to_arbeidsforhold_to_perioder_med_refusjon_over_6G_gradert() {
+    void skal_teste_to_arbeidsforhold_to_perioder_med_refusjon_over_6G_gradert() {
         // Arrange
         BeregningsgrunnlagDto bg = lagBeregningsgrunnlagATMedToPerioder();
         var periode1 = bg.getBeregningsgrunnlagPerioder().get(0);
@@ -380,7 +380,7 @@ public class FullføreBeregningsgrunnlagUtbgradTest {
     }
 
     @Test
-    public void skal_teste_to_arbeidsforhold_to_perioder_med_refusjon_over_6G_gradert_ulik_refusjon() {
+    void skal_teste_to_arbeidsforhold_to_perioder_med_refusjon_over_6G_gradert_ulik_refusjon() {
         // Arrange
         BeregningsgrunnlagDto bg = lagBeregningsgrunnlagATMedToPerioder();
         var periode1 = bg.getBeregningsgrunnlagPerioder().get(0);
@@ -420,7 +420,7 @@ public class FullføreBeregningsgrunnlagUtbgradTest {
     }
 
     @Test
-    public void skal_teste_to_arbeidsforhold_to_perioder_med_refusjon_over_6G() {
+    void skal_teste_to_arbeidsforhold_to_perioder_med_refusjon_over_6G() {
         // Arrange
         BeregningsgrunnlagDto bg = lagBeregningsgrunnlagATMedToPerioder();
         var periode1 = bg.getBeregningsgrunnlagPerioder().get(0);
@@ -460,7 +460,7 @@ public class FullføreBeregningsgrunnlagUtbgradTest {
     }
 
     @Test
-    public void skal_teste_to_arbeidsforhold_med_refusjon_over_6G() {
+    void skal_teste_to_arbeidsforhold_med_refusjon_over_6G() {
         // Arrange
         var periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         lagAndel(periode, ORGNR1, ORGNR1_ARB_ID1, 600_000, 560_000);
@@ -490,7 +490,7 @@ public class FullføreBeregningsgrunnlagUtbgradTest {
     }
 
     @Test
-    public void skal_teste_to_arbeidsforhold_med_refusjon_under_6G() {
+    void skal_teste_to_arbeidsforhold_med_refusjon_under_6G() {
         // Arrange
         var periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         lagAndel(periode, ORGNR1, ORGNR1_ARB_ID1, 600_000, 150_000);
@@ -521,7 +521,7 @@ public class FullføreBeregningsgrunnlagUtbgradTest {
     }
 
     @Test
-    public void skal_teste_to_arbeidsforhold_med_refusjon_og_inntekt_under_6G() {
+    void skal_teste_to_arbeidsforhold_med_refusjon_og_inntekt_under_6G() {
         // Arrange
         var periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         lagAndel(periode, ORGNR1, ORGNR1_ARB_ID1, 150_000, 100_000);
@@ -552,7 +552,7 @@ public class FullføreBeregningsgrunnlagUtbgradTest {
     }
 
     @Test
-    public void skal_teste_to_arbeidsforhold_med_refusjon_lik_6G_og_inntekt_over_6G_gradert() {
+    void skal_teste_to_arbeidsforhold_med_refusjon_lik_6G_og_inntekt_over_6G_gradert() {
         // Arrange
         var periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         lagAndel(periode, ORGNR1, ORGNR1_ARB_ID1, 600_000, 600_000);
@@ -580,7 +580,7 @@ public class FullføreBeregningsgrunnlagUtbgradTest {
     }
 
     @Test
-    public void skal_teste_to_arbeidsforhold_med_refusjon_lik_6G_for_begge_og_inntekt_over_6G_gradert() {
+    void skal_teste_to_arbeidsforhold_med_refusjon_lik_6G_for_begge_og_inntekt_over_6G_gradert() {
         // Arrange
         var periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         lagAndel(periode, ORGNR1, ORGNR1_ARB_ID1, 600_000, 600_000);
@@ -608,7 +608,7 @@ public class FullføreBeregningsgrunnlagUtbgradTest {
     }
 
     @Test
-    public void skal_teste_to_arbeidsforhold_med_refusjon_lik_6G_og_1G_og_inntekt_over_6G_gradert() {
+    void skal_teste_to_arbeidsforhold_med_refusjon_lik_6G_og_1G_og_inntekt_over_6G_gradert() {
         // Arrange
         var periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         lagAndel(periode, ORGNR1, ORGNR1_ARB_ID1, 600_000, 600_000);
@@ -636,7 +636,7 @@ public class FullføreBeregningsgrunnlagUtbgradTest {
     }
 
     @Test //PFP-8177
-    public void skal_teste_arbeidsforhold_med_refusjon_uten_tilrettelegging_og_tilrettelegging_uten_refusjon() {
+    void skal_teste_arbeidsforhold_med_refusjon_uten_tilrettelegging_og_tilrettelegging_uten_refusjon() {
         // Arrange
         var periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         lagAndel(periode, ORGNR1, ORGNR1_ARB_ID1, 300_000, 150_000);
@@ -666,7 +666,7 @@ public class FullføreBeregningsgrunnlagUtbgradTest {
     }
 
     @Test
-    public void skal_teste_at_arbeidsforhold_uten_match_i_tilrettelegging_ikke_feiler() {
+    void skal_teste_at_arbeidsforhold_uten_match_i_tilrettelegging_ikke_feiler() {
         // Arrange
         var periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         lagAndel(periode, ORGNR1, ORGNR1_ARB_ID1, 150_000, 100_000);
@@ -692,7 +692,7 @@ public class FullføreBeregningsgrunnlagUtbgradTest {
     }
 
     @Test
-    public void skal_teste_arbeidstaker_med_delvis_søkt_ytelse() {
+    void skal_teste_arbeidstaker_med_delvis_søkt_ytelse() {
         // Arrange
         var periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         lagAndel(periode, ORGNR1, ORGNR1_ARB_ID1, 300_000, 0);
@@ -716,7 +716,7 @@ public class FullføreBeregningsgrunnlagUtbgradTest {
     }
 
     @Test
-    public void skal_teste_frilans_med_beregningsgrunnlag_under_6G() {
+    void skal_teste_frilans_med_beregningsgrunnlag_under_6G() {
         // Arrange
         BeregningsgrunnlagPeriodeDto periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         lagFrilansAndel(periode, 300_000);
@@ -740,7 +740,7 @@ public class FullføreBeregningsgrunnlagUtbgradTest {
     }
 
     @Test
-    public void skal_teste_frilans_med_beregningsgrunnlag_under_6G_delvis_søkt_ytelse() {
+    void skal_teste_frilans_med_beregningsgrunnlag_under_6G_delvis_søkt_ytelse() {
         // Arrange
         BeregningsgrunnlagPeriodeDto periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         lagFrilansAndel(periode, 300_000);
@@ -763,7 +763,7 @@ public class FullføreBeregningsgrunnlagUtbgradTest {
     }
 
     @Test
-    public void skal_teste_frilans_med_beregningsgrunnlag_over_6G_delvis_søkt_ytelse() {
+    void skal_teste_frilans_med_beregningsgrunnlag_over_6G_delvis_søkt_ytelse() {
         // Arrange
         BeregningsgrunnlagPeriodeDto periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         lagFrilansAndel(periode, 800_000);
@@ -785,7 +785,7 @@ public class FullføreBeregningsgrunnlagUtbgradTest {
     }
 
     @Test
-    public void skal_teste_frilans_med_beregningsgrunnlag_under_6G_ikkje_søkt_ytelse() {
+    void skal_teste_frilans_med_beregningsgrunnlag_under_6G_ikkje_søkt_ytelse() {
         // Arrange
         BeregningsgrunnlagPeriodeDto periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         lagFrilansAndel(periode, 300_000);
@@ -806,7 +806,7 @@ public class FullføreBeregningsgrunnlagUtbgradTest {
     }
 
     @Test
-    public void skal_teste_frilans_og_arbeid_med_beregningsgrunnlag_under_6G_søkt_ytelse_for_alle() {
+    void skal_teste_frilans_og_arbeid_med_beregningsgrunnlag_under_6G_søkt_ytelse_for_alle() {
         // Arrange
         BeregningsgrunnlagPeriodeDto periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         lagFrilansAndel(periode, 200_000);
@@ -833,7 +833,7 @@ public class FullføreBeregningsgrunnlagUtbgradTest {
     }
 
     @Test
-    public void skal_teste_frilans_og_arbeid_med_beregningsgrunnlag_over_6G_for_arbeid_søkt_ytelse_for_alle() {
+    void skal_teste_frilans_og_arbeid_med_beregningsgrunnlag_over_6G_for_arbeid_søkt_ytelse_for_alle() {
         // Arrange
         BeregningsgrunnlagPeriodeDto periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         lagFrilansAndel(periode, 200_000);
@@ -860,7 +860,7 @@ public class FullføreBeregningsgrunnlagUtbgradTest {
     }
 
     @Test
-    public void skal_teste_frilans_og_arbeid_med_beregningsgrunnlag_over_6G_for_arbeid_søkt_ytelse_for_frilans() {
+    void skal_teste_frilans_og_arbeid_med_beregningsgrunnlag_over_6G_for_arbeid_søkt_ytelse_for_frilans() {
         // Arrange
         BeregningsgrunnlagPeriodeDto periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         lagFrilansAndel(periode, 200_000);
@@ -885,7 +885,7 @@ public class FullføreBeregningsgrunnlagUtbgradTest {
     }
 
     @Test
-    public void skal_teste_frilans_og_arbeid_med_beregningsgrunnlag_over_6G_til_sammen_søkt_delvis_ytelse_for_frilans() {
+    void skal_teste_frilans_og_arbeid_med_beregningsgrunnlag_over_6G_til_sammen_søkt_delvis_ytelse_for_frilans() {
         // Arrange
         BeregningsgrunnlagPeriodeDto periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         lagFrilansAndel(periode, 500_000);
@@ -911,7 +911,7 @@ public class FullføreBeregningsgrunnlagUtbgradTest {
     }
 
     @Test
-    public void skal_teste_frilans_og_to_arbeid_med_beregningsgrunnlag_over_6G_til_sammen_søkt_ytelse_for_alle_med_refusjonkrav_som_overstiger_total_avkortet_for_arbeid() {
+    void skal_teste_frilans_og_to_arbeid_med_beregningsgrunnlag_over_6G_til_sammen_søkt_ytelse_for_alle_med_refusjonkrav_som_overstiger_total_avkortet_for_arbeid() {
         // Arrange
         BeregningsgrunnlagPeriodeDto periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         lagFrilansAndel(periode, 500_000);
@@ -943,7 +943,7 @@ public class FullføreBeregningsgrunnlagUtbgradTest {
     }
 
     @Test
-    public void skal_teste_frilans_og_to_arbeid_med_beregningsgrunnlag_over_6G_til_sammen_søkt_ytelse_for_alle_med_refusjonkrav_som_overstiger_total_avkortet_for_arbeid_med_fordeling_av_refusjonskrav() {
+    void skal_teste_frilans_og_to_arbeid_med_beregningsgrunnlag_over_6G_til_sammen_søkt_ytelse_for_alle_med_refusjonkrav_som_overstiger_total_avkortet_for_arbeid_med_fordeling_av_refusjonskrav() {
         // Arrange
         BeregningsgrunnlagPeriodeDto periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         lagFrilansAndel(periode, 500_000);
@@ -975,7 +975,7 @@ public class FullføreBeregningsgrunnlagUtbgradTest {
     }
 
     @Test
-    public void skal_teste_to_arbeidsforhold_hos_en_arbeidsgiver_med_beregningsgrunnlag_over_6G() {
+    void skal_teste_to_arbeidsforhold_hos_en_arbeidsgiver_med_beregningsgrunnlag_over_6G() {
         // Arrange
         BeregningsgrunnlagPeriodeDto periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         lagAndel(periode, ORGNR1, ORGNR1_ARB_ID1, 400_000, 300_000);
@@ -1033,7 +1033,7 @@ public class FullføreBeregningsgrunnlagUtbgradTest {
     }
 
     @Test
-    public void skal_teste_frilans_og_to_arbeid_med_beregningsgrunnlag_over_6G_til_sammen_søkt_ytelse_for_alle_med_refusjonkrav_som_overstiger_total_avkortet_for_arbeid_uten_arbeidsforhold_id() {
+    void skal_teste_frilans_og_to_arbeid_med_beregningsgrunnlag_over_6G_til_sammen_søkt_ytelse_for_alle_med_refusjonkrav_som_overstiger_total_avkortet_for_arbeid_uten_arbeidsforhold_id() {
         // Arrange
         BeregningsgrunnlagPeriodeDto periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         lagFrilansAndel(periode, 500_000);

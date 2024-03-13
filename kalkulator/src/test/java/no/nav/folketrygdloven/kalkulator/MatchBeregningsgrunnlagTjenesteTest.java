@@ -32,7 +32,7 @@ public class MatchBeregningsgrunnlagTjenesteTest {
     }
 
     @Test
-    public void skal_matche_på_andelsnr() {
+    void skal_matche_på_andelsnr() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nullRef();
         Long andelsnr = 1L;
@@ -55,7 +55,7 @@ public class MatchBeregningsgrunnlagTjenesteTest {
     }
 
     @Test
-    public void skal_matche_på_arbid_om_andelsnr_input_er_null() {
+    void skal_matche_på_arbid_om_andelsnr_input_er_null() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
         Long andelsnr = 1L;
@@ -78,7 +78,7 @@ public class MatchBeregningsgrunnlagTjenesteTest {
     }
 
     @Test
-    public void skal_kaste_exception_om_andel_ikkje_eksisterer_i_grunnlag() {
+    void skal_kaste_exception_om_andel_ikkje_eksisterer_i_grunnlag() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
         Long andelsnr = 1L;

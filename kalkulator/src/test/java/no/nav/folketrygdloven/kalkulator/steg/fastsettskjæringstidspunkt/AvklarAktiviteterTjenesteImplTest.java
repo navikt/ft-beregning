@@ -34,7 +34,7 @@ public class AvklarAktiviteterTjenesteImplTest {
     private static final Arbeidsgiver ARBEIDSGIVER = Arbeidsgiver.virksomhet("900050001");
 
     @Test
-    public void skal_returnere_false_om_ingen_aktiviteter() {
+    void skal_returnere_false_om_ingen_aktiviteter() {
         // Arrange
         BeregningAktivitetAggregatDto beregningAktivitetAggregat = BeregningAktivitetAggregatDto.builder()
             .medSkjæringstidspunktOpptjening(SKJÆRINGSTIDSPUNKT_BEREGNING)
@@ -48,7 +48,7 @@ public class AvklarAktiviteterTjenesteImplTest {
     }
 
     @Test
-    public void skal_returnere_false_om_aktiviteter_som_ikke_er_ventelønn_vartpenger() {
+    void skal_returnere_false_om_aktiviteter_som_ikke_er_ventelønn_vartpenger() {
         // Arrange
         BeregningAktivitetDto arbeidAktivitet = lagBeregningAktivitetAggregat(SKJÆRINGSTIDSPUNKT_BEREGNING.minusMonths(10),
             SKJÆRINGSTIDSPUNKT_BEREGNING, ARBEID);
@@ -66,7 +66,7 @@ public class AvklarAktiviteterTjenesteImplTest {
     }
 
     @Test
-    public void skal_returnere_false_om_ventelønn_vertpenger_ikke_er_siste_aktivitet() {
+    void skal_returnere_false_om_ventelønn_vertpenger_ikke_er_siste_aktivitet() {
         // Arrange
         BeregningAktivitetDto arbeidsperiode = lagBeregningAktivitetAggregat(SKJÆRINGSTIDSPUNKT_BEREGNING.minusMonths(10),
             SKJÆRINGSTIDSPUNKT_BEREGNING, ARBEID);
@@ -86,7 +86,7 @@ public class AvklarAktiviteterTjenesteImplTest {
     }
 
     @Test
-    public void skal_returnere_true_om_ventelønn_vertpenger_avslutter_samtidig_med_siste_aktivitet() {
+    void skal_returnere_true_om_ventelønn_vertpenger_avslutter_samtidig_med_siste_aktivitet() {
         // Arrange
         BeregningAktivitetDto arbeidsperiode = lagBeregningAktivitetAggregat(SKJÆRINGSTIDSPUNKT_BEREGNING.minusMonths(10),
             SKJÆRINGSTIDSPUNKT_BEREGNING, ARBEID);
@@ -106,7 +106,7 @@ public class AvklarAktiviteterTjenesteImplTest {
     }
 
     @Test
-    public void skal_returnere_true_om_ventelønn_vartpenger_avslutter_etter_arbeidsaktivitet_som_slutter_dagen_før_skjæringstidspunkt() {
+    void skal_returnere_true_om_ventelønn_vartpenger_avslutter_etter_arbeidsaktivitet_som_slutter_dagen_før_skjæringstidspunkt() {
         // Arrange
         BeregningAktivitetDto arbeidsperiode = lagBeregningAktivitetAggregat(SKJÆRINGSTIDSPUNKT_BEREGNING.minusMonths(10),
             SKJÆRINGSTIDSPUNKT_BEREGNING.minusDays(1), ARBEID);
@@ -126,7 +126,7 @@ public class AvklarAktiviteterTjenesteImplTest {
     }
 
     @Test
-    public void skal_returnere_true_om_ventelønn_vartpenger_sammen_med_arbeid_som_starter_på_skjæringstidspunkt() {
+    void skal_returnere_true_om_ventelønn_vartpenger_sammen_med_arbeid_som_starter_på_skjæringstidspunkt() {
         // Arrange
         BeregningAktivitetDto arbeidsperiode = lagBeregningAktivitetAggregat(SKJÆRINGSTIDSPUNKT_BEREGNING, SKJÆRINGSTIDSPUNKT_BEREGNING.plusDays(10), ARBEID);
         BeregningAktivitetDto ventelønnVartpenger = lagBeregningAktivitetAggregat(SKJÆRINGSTIDSPUNKT_BEREGNING.minusMonths(10),
@@ -145,7 +145,7 @@ public class AvklarAktiviteterTjenesteImplTest {
     }
 
     @Test
-    public void skal_returnere_false_om_ventelønn_vartpenger_starter_på_skjæringstidspunkt() {
+    void skal_returnere_false_om_ventelønn_vartpenger_starter_på_skjæringstidspunkt() {
         // Arrange
         BeregningAktivitetDto arbeidsperiode = lagBeregningAktivitetAggregat(SKJÆRINGSTIDSPUNKT_BEREGNING.minusMonths(10),
             SKJÆRINGSTIDSPUNKT_BEREGNING.plusDays(10), ARBEID);
@@ -165,7 +165,7 @@ public class AvklarAktiviteterTjenesteImplTest {
     }
 
     @Test
-    public void skal_returnere_false_når_ikke_AAP() {
+    void skal_returnere_false_når_ikke_AAP() {
         //Arrange
         var aktivitetAggregat = lagBeregningAktivitetAggregatMedType(ARBEID);
 
@@ -177,7 +177,7 @@ public class AvklarAktiviteterTjenesteImplTest {
     }
 
     @Test
-    public void skal_returnere_false_når_bare_AAP_uten_andre_aktiviteter_på_stp() {
+    void skal_returnere_false_når_bare_AAP_uten_andre_aktiviteter_på_stp() {
         //Arrange
         var aktivitetAggregat = lagBeregningAktivitetAggregatMedType(OpptjeningAktivitetType.AAP);
 
@@ -189,7 +189,7 @@ public class AvklarAktiviteterTjenesteImplTest {
     }
 
     @Test
-    public void skal_returnere_false_når_AAP_med_andre_aktiviteter_på_stp_med_siste_meldekort_uten_full_utbetaling() {
+    void skal_returnere_false_når_AAP_med_andre_aktiviteter_på_stp_med_siste_meldekort_uten_full_utbetaling() {
         //Arrange
         var aktivitetAggregatDto = lagBeregningAktivitetAggregatMedType(OpptjeningAktivitetType.AAP, ARBEID);
 
@@ -205,7 +205,7 @@ public class AvklarAktiviteterTjenesteImplTest {
     }
 
     @Test
-    public void skal_returnere_true_når_AAP_med_andre_aktiviteter_på_stp_med_siste_meldekort_med_full_utbetaling() {
+    void skal_returnere_true_når_AAP_med_andre_aktiviteter_på_stp_med_siste_meldekort_med_full_utbetaling() {
         //Arrange
         var aktivitetAggregatDto = lagBeregningAktivitetAggregatMedType(OpptjeningAktivitetType.AAP, OpptjeningAktivitetType.NÆRING);
 

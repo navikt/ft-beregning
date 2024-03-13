@@ -201,7 +201,7 @@ public class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
     }
 
     @Test
-    public void skalMapBGForSN() {
+    void skalMapBGForSN() {
         //Arrange
         InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlagBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
         InntektArbeidYtelseAggregatBuilder register = opprettForBehandling(iayGrunnlagBuilder);
@@ -274,7 +274,7 @@ public class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
     }
 
     @Test
-    public void skalMapBGForArebidstakerMedFlereBGPStatuser() {
+    void skalMapBGForArebidstakerMedFlereBGPStatuser() {
         //Arrange
         InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlagBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
         InntektArbeidYtelseAggregatBuilder register = opprettForBehandling(iayGrunnlagBuilder);
@@ -311,7 +311,7 @@ public class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
     }
 
     @Test
-    public void skal_mappe_bg_for_arbeidstaker_hos_privatperson_og_virksomhet() {
+    void skal_mappe_bg_for_arbeidstaker_hos_privatperson_og_virksomhet() {
         //Arrange
         AktørId aktørId = AktørId.dummy();
         InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlagBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
@@ -348,7 +348,7 @@ public class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
     }
 
     @Test
-    public void skalMapBGForATogSNBeregeningGPStatuser() {
+    void skalMapBGForATogSNBeregeningGPStatuser() {
         //Arrange
         InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlagBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
         InntektArbeidYtelseAggregatBuilder register = opprettForBehandling(iayGrunnlagBuilder);
@@ -378,7 +378,7 @@ public class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
     }
 
     @Test
-    public void skalMapBGForArbeidstakerMedInntektsgrunnlag() {
+    void skalMapBGForArbeidstakerMedInntektsgrunnlag() {
         // Arrange
         InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlagBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
         InntektArbeidYtelseAggregatBuilder register = opprettForBehandling(iayGrunnlagBuilder);
@@ -408,7 +408,7 @@ public class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
     }
 
     @Test
-    public void skalMappeTilstøtendeYtelserDPogAAP() {
+    void skalMappeTilstøtendeYtelserDPogAAP() {
         //Arrange
         BeregningsgrunnlagDto beregningsgrunnlag = buildVLBeregningsgrunnlag();
         InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlagBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
@@ -431,7 +431,7 @@ public class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
     }
 
     @Test
-    public void skalMappeTilstøtendeYtelserDPogAAPMarginalTilfelle() {
+    void skalMappeTilstøtendeYtelserDPogAAPMarginalTilfelle() {
         //Arrange
         BeregningsgrunnlagDto beregningsgrunnlag = buildVLBeregningsgrunnlag();
         InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlagBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
@@ -454,7 +454,7 @@ public class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
     }
 
     @Test
-    public void skalMappeTilRegelNårBrukerErFrilanser() {
+    void skalMappeTilRegelNårBrukerErFrilanser() {
         //Arrange
         InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlagBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
         InntektArbeidYtelseAggregatBuilder register = opprettForBehandling(iayGrunnlagBuilder);
@@ -479,7 +479,7 @@ public class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
     }
 
     @Test
-    public void skalMappeTilRegelNårBrukerErArbeidstaker() {
+    void skalMappeTilRegelNårBrukerErArbeidstaker() {
         //Arrange
         InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlagBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
         InntektArbeidYtelseAggregatBuilder register = opprettForBehandling(iayGrunnlagBuilder);

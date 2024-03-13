@@ -32,7 +32,7 @@ public class GraderingUtenBeregningsgrunnlagTjenesteTest {
 
 
     @Test
-    public void skalIkkeFåAvklaringsbehovArbeidstakerMedBG() {
+    void skalIkkeFåAvklaringsbehovArbeidstakerMedBG() {
         // Arrange
         var beregningsgrunnlagPeriode = lagBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT, null);
         lagBeregningsgrunnlagAndel(beregningsgrunnlagPeriode, AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE, BigDecimal.TEN);
@@ -46,7 +46,7 @@ public class GraderingUtenBeregningsgrunnlagTjenesteTest {
     }
 
     @Test
-    public void skalIkkeFåAvklaringsbehovArbeidstakerUtenGradering() {
+    void skalIkkeFåAvklaringsbehovArbeidstakerUtenGradering() {
         // Arrange
         var beregningsgrunnlagPeriode = lagBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT, null);
         lagBeregningsgrunnlagAndel(beregningsgrunnlagPeriode, AktivitetStatus.ARBEIDSTAKER, BigDecimal.ZERO);
@@ -60,7 +60,7 @@ public class GraderingUtenBeregningsgrunnlagTjenesteTest {
     }
 
     @Test
-    public void skalFåAvklaringsbehovArbeidstakerNårGraderingOgHarIkkeBG() {
+    void skalFåAvklaringsbehovArbeidstakerNårGraderingOgHarIkkeBG() {
         // Arrange
         LocalDate skjæringstidspunkt = SKJÆRINGSTIDSPUNKT;
         LocalDate graderingFom = skjæringstidspunkt;
@@ -84,7 +84,7 @@ public class GraderingUtenBeregningsgrunnlagTjenesteTest {
     }
 
     @Test
-    public void skalFåAvklaringsbehovSelvstendigNårGraderingOgHarIkkeBG() {
+    void skalFåAvklaringsbehovSelvstendigNårGraderingOgHarIkkeBG() {
         // Arrange
         LocalDate skjæringstidspunkt = SKJÆRINGSTIDSPUNKT;
         LocalDate graderingFom = skjæringstidspunkt;
@@ -106,7 +106,7 @@ public class GraderingUtenBeregningsgrunnlagTjenesteTest {
     }
 
     @Test
-    public void skalIkkeFåAvklaringsbehovSelvstendigNårGraderingOgHarBG() {
+    void skalIkkeFåAvklaringsbehovSelvstendigNårGraderingOgHarBG() {
         // Arrange
         var beregningsgrunnlagPeriode = lagBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT, null);
         lagBeregningsgrunnlagAndel(beregningsgrunnlagPeriode, AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE, BigDecimal.TEN);
@@ -120,7 +120,7 @@ public class GraderingUtenBeregningsgrunnlagTjenesteTest {
     }
 
     @Test
-    public void skalIkkeFåAvklaringsbehovSelvstendigNårIkkeGradering() {
+    void skalIkkeFåAvklaringsbehovSelvstendigNårIkkeGradering() {
         // Arrange
         var beregningsgrunnlagPeriode = lagBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT, null);
         lagBeregningsgrunnlagAndel(beregningsgrunnlagPeriode, AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE, BigDecimal.ZERO);
@@ -134,7 +134,7 @@ public class GraderingUtenBeregningsgrunnlagTjenesteTest {
     }
 
     @Test
-    public void skalFåAvklaringsbehovFrilanserNårGraderingOgHarIkkeBG() {
+    void skalFåAvklaringsbehovFrilanserNårGraderingOgHarIkkeBG() {
         // Arrange
         LocalDate skjæringstidspunkt = SKJÆRINGSTIDSPUNKT;
         LocalDate graderingFom = skjæringstidspunkt;
@@ -156,7 +156,7 @@ public class GraderingUtenBeregningsgrunnlagTjenesteTest {
     }
 
     @Test
-    public void skalIkkeFåAvklaringsbehovFrilanserNårGraderingOgHarBG() {
+    void skalIkkeFåAvklaringsbehovFrilanserNårGraderingOgHarBG() {
         // Arrange
         var beregningsgrunnlagPeriode = lagBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT, null);
         lagBeregningsgrunnlagAndel(beregningsgrunnlagPeriode, AktivitetStatus.FRILANSER, BigDecimal.TEN);
@@ -170,7 +170,7 @@ public class GraderingUtenBeregningsgrunnlagTjenesteTest {
     }
 
     @Test
-    public void skalIkkeFåAvklaringsbehovFrilanserNårIkkeGradering() {
+    void skalIkkeFåAvklaringsbehovFrilanserNårIkkeGradering() {
         // Arrange
         var beregningsgrunnlagPeriode = lagBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT, null);
         lagBeregningsgrunnlagAndel(beregningsgrunnlagPeriode, AktivitetStatus.FRILANSER, BigDecimal.ZERO);
@@ -184,7 +184,7 @@ public class GraderingUtenBeregningsgrunnlagTjenesteTest {
     }
 
     @Test
-    public void skalIkkeFåAvklaringsbehovFrilanserNårGraderingUtenforPeriodeUtenBeregningsgrunnlag() {
+    void skalIkkeFåAvklaringsbehovFrilanserNårGraderingUtenforPeriodeUtenBeregningsgrunnlag() {
         // Arrange
         var beregningsgrunnlagPeriode = lagBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(3));
         lagBeregningsgrunnlagAndel(beregningsgrunnlagPeriode, AktivitetStatus.FRILANSER, BigDecimal.ZERO);
@@ -198,7 +198,7 @@ public class GraderingUtenBeregningsgrunnlagTjenesteTest {
     }
 
     @Test
-    public void skalIkkeFåAvklaringsbehovSNNårGraderingUtenforPeriodeUtenBeregningsgrunnlag() {
+    void skalIkkeFåAvklaringsbehovSNNårGraderingUtenforPeriodeUtenBeregningsgrunnlag() {
         // Arrange
         var beregningsgrunnlagPeriode = lagBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT.plusMonths(2), null);
         lagBeregningsgrunnlagAndel(beregningsgrunnlagPeriode, AktivitetStatus.FRILANSER, BigDecimal.ZERO);
@@ -212,7 +212,7 @@ public class GraderingUtenBeregningsgrunnlagTjenesteTest {
     }
 
     @Test
-    public void skalIkkeFåAvklaringsbehovArbeidstakerNårGraderingUtenforPeriodeUtenBeregningsgrunnlag2() {
+    void skalIkkeFåAvklaringsbehovArbeidstakerNårGraderingUtenforPeriodeUtenBeregningsgrunnlag2() {
         // Arrange
         var beregningsgrunnlagPeriode = lagBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(3));
         lagBeregningsgrunnlagAndel(beregningsgrunnlagPeriode, AktivitetStatus.ARBEIDSTAKER, BigDecimal.ZERO);
@@ -226,7 +226,7 @@ public class GraderingUtenBeregningsgrunnlagTjenesteTest {
     }
 
     @Test
-    public void skalIkkeFåAvklaringsbehovNårAAP() {
+    void skalIkkeFåAvklaringsbehovNårAAP() {
         // Arrange
         var beregningsgrunnlagPeriode = lagBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT, null);
         lagBeregningsgrunnlagAndel(beregningsgrunnlagPeriode, AktivitetStatus.ARBEIDSAVKLARINGSPENGER, BigDecimal.ZERO);
@@ -239,7 +239,7 @@ public class GraderingUtenBeregningsgrunnlagTjenesteTest {
     }
 
     @Test
-    public void skal_ikke_finne_andel_når_det_er_sn_med_gradering_med_inntekt_på_grunnlag() {
+    void skal_ikke_finne_andel_når_det_er_sn_med_gradering_med_inntekt_på_grunnlag() {
         var beregningsgrunnlagPeriode = lagBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT, null);
         lagBeregningsgrunnlagAndel(beregningsgrunnlagPeriode, AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE, BigDecimal.TEN);
 
@@ -254,7 +254,7 @@ public class GraderingUtenBeregningsgrunnlagTjenesteTest {
     }
 
     @Test
-    public void skal_ikke_finne_andel_når_det_er_gradering_men_ikke_fastsatt_redusert_pr_år() {
+    void skal_ikke_finne_andel_når_det_er_gradering_men_ikke_fastsatt_redusert_pr_år() {
         // Arrange
         var beregningsgrunnlagPeriode = lagBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT, null);
         lagBeregningsgrunnlagAndel(beregningsgrunnlagPeriode, AktivitetStatus.ARBEIDSTAKER, null);
@@ -270,7 +270,7 @@ public class GraderingUtenBeregningsgrunnlagTjenesteTest {
     }
 
     @Test
-    public void skal_ikke_finne_andel_når_det_er_gradering_men_fastsatt_grunnlag_over_0_redusert_pr_år() {
+    void skal_ikke_finne_andel_når_det_er_gradering_men_fastsatt_grunnlag_over_0_redusert_pr_år() {
         // Arrange
         var beregningsgrunnlagPeriode = lagBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT, null);
         lagBeregningsgrunnlagAndel(beregningsgrunnlagPeriode, AktivitetStatus.ARBEIDSTAKER, BigDecimal.TEN);
@@ -286,7 +286,7 @@ public class GraderingUtenBeregningsgrunnlagTjenesteTest {
     }
 
     @Test
-    public void skal_finne_andel_når_det_er_gradering() {
+    void skal_finne_andel_når_det_er_gradering() {
         // Arrange
         LocalDate skjæringstidspunkt = SKJÆRINGSTIDSPUNKT;
         LocalDate graderingFom = skjæringstidspunkt;
@@ -311,7 +311,7 @@ public class GraderingUtenBeregningsgrunnlagTjenesteTest {
     }
 
     @Test
-    public void skal_finne_andel_når_det_er_sn_med_gradering_uten_inntekt_på_grunnlag() {
+    void skal_finne_andel_når_det_er_sn_med_gradering_uten_inntekt_på_grunnlag() {
         // Arrange
         LocalDate skjæringstidspunkt = SKJÆRINGSTIDSPUNKT;
         LocalDate graderingFom = skjæringstidspunkt;
@@ -336,7 +336,7 @@ public class GraderingUtenBeregningsgrunnlagTjenesteTest {
     }
 
     @Test
-    public void skal_finne_riktig_andel_når_det_er_flere_med_gradering_men_kun_en_mangler_inntekt() {
+    void skal_finne_riktig_andel_når_det_er_flere_med_gradering_men_kun_en_mangler_inntekt() {
         // Arrange
         LocalDate skjæringstidspunkt = SKJÆRINGSTIDSPUNKT;
         LocalDate graderingFom = skjæringstidspunkt;
@@ -365,7 +365,7 @@ public class GraderingUtenBeregningsgrunnlagTjenesteTest {
     }
 
     @Test
-    public void skal_gi_false_når_to_andeler_i_graderingsperiode_men_ikke_0_på_andel_som_skal_graderes() {
+    void skal_gi_false_når_to_andeler_i_graderingsperiode_men_ikke_0_på_andel_som_skal_graderes() {
         // Arrange
         LocalDate skjæringstidspunkt = SKJÆRINGSTIDSPUNKT;
         LocalDate graderingFom = skjæringstidspunkt;
@@ -391,7 +391,7 @@ public class GraderingUtenBeregningsgrunnlagTjenesteTest {
     }
 
     @Test
-    public void skalIkkeSlåUtNårDetManglerBGMenGraderingErUtenforArbeidsperiode() {
+    void skalIkkeSlåUtNårDetManglerBGMenGraderingErUtenforArbeidsperiode() {
         // Arrange
         LocalDate skjæringstidspunkt = SKJÆRINGSTIDSPUNKT;
         LocalDate graderingFom = skjæringstidspunkt;

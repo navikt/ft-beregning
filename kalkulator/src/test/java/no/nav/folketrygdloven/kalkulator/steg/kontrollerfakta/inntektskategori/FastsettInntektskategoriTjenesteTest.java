@@ -95,7 +95,7 @@ public class FastsettInntektskategoriTjenesteTest {
     }
 
     @Test
-    public void arbeidstakerSkalTilRiktigInntektskategori() {
+    void arbeidstakerSkalTilRiktigInntektskategori() {
         // Arrange
         var grunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.nytt().build();
         var beregningsgrunnlag = lagBeregningsgrunnlag(AktivitetStatus.ARBEIDSTAKER);
@@ -111,7 +111,7 @@ public class FastsettInntektskategoriTjenesteTest {
     }
 
     @Test
-    public void frilanserSkalTilRiktigInntektskategori() {
+    void frilanserSkalTilRiktigInntektskategori() {
         // Arrange
         var grunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.nytt().build();
         var beregningsgrunnlag = lagBeregningsgrunnlag(AktivitetStatus.FRILANSER);
@@ -128,7 +128,7 @@ public class FastsettInntektskategoriTjenesteTest {
 
 
     @Test
-    public void dagpengerSkalTilRiktigInntektskategori() {
+    void dagpengerSkalTilRiktigInntektskategori() {
         // Arrange
         var grunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.nytt().build();
         var beregningsgrunnlag = lagBeregningsgrunnlag(AktivitetStatus.DAGPENGER);
@@ -144,7 +144,7 @@ public class FastsettInntektskategoriTjenesteTest {
     }
 
     @Test
-    public void arbeidsavklaringspengerSkalTilRiktigInntektskategori() {
+    void arbeidsavklaringspengerSkalTilRiktigInntektskategori() {
         // Arrange
         var grunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.nytt().build();
         var beregningsgrunnlag = lagBeregningsgrunnlag(AktivitetStatus.ARBEIDSAVKLARINGSPENGER);
@@ -161,7 +161,7 @@ public class FastsettInntektskategoriTjenesteTest {
 
 
     @Test
-    public void SNUtenFiskeJordbrukEllerDagmammaSkalTilRiktigInntektskategori() {
+    void SNUtenFiskeJordbrukEllerDagmammaSkalTilRiktigInntektskategori() {
         // Arrange
         var grunnlag = opprettOppgittOpptjening(Collections.singletonList(VirksomhetType.ANNEN));
         var beregningsgrunnlag = lagBeregningsgrunnlag(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE);
@@ -177,7 +177,7 @@ public class FastsettInntektskategoriTjenesteTest {
     }
 
     @Test
-    public void SNMedFiskeSkalTilRiktigInntektskategori() {
+    void SNMedFiskeSkalTilRiktigInntektskategori() {
         // Arrange
         var grunnlag = opprettOppgittOpptjening(Collections.singletonList(VirksomhetType.FISKE));
         var beregningsgrunnlag = lagBeregningsgrunnlag(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE);
@@ -193,7 +193,7 @@ public class FastsettInntektskategoriTjenesteTest {
     }
 
     @Test
-    public void SNMedJorbrukSkalTilRiktigInntektskategori() {
+    void SNMedJorbrukSkalTilRiktigInntektskategori() {
         // Arrange
         var grunnlag = opprettOppgittOpptjening(Collections.singletonList(VirksomhetType.JORDBRUK_SKOGBRUK));
         var beregningsgrunnlag = lagBeregningsgrunnlag(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE);
@@ -209,7 +209,7 @@ public class FastsettInntektskategoriTjenesteTest {
     }
 
     @Test
-    public void SNMedDagmammaSkalTilRiktigInntektskategori() {
+    void SNMedDagmammaSkalTilRiktigInntektskategori() {
         // Arrange
         var grunnlag = opprettOppgittOpptjening(Collections.singletonList(VirksomhetType.DAGMAMMA));
         var beregningsgrunnlag = lagBeregningsgrunnlag(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE);
@@ -225,7 +225,7 @@ public class FastsettInntektskategoriTjenesteTest {
     }
 
     @Test
-    public void SNMedFiskeOgJordbrukSkalMappeTilInntektskategoriFisker() {
+    void SNMedFiskeOgJordbrukSkalMappeTilInntektskategoriFisker() {
         // Arrange
         var grunnlag = opprettOppgittOpptjening(List.of(VirksomhetType.FISKE, VirksomhetType.JORDBRUK_SKOGBRUK));
         var beregningsgrunnlag = lagBeregningsgrunnlag(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE);
@@ -241,7 +241,7 @@ public class FastsettInntektskategoriTjenesteTest {
     }
 
     @Test
-    public void SNMedFiskeOgDagmammaSkalMappeTilInntektskategoriFisker() {
+    void SNMedFiskeOgDagmammaSkalMappeTilInntektskategoriFisker() {
         // Arrange
         var grunnlag = opprettOppgittOpptjening(List.of(VirksomhetType.DAGMAMMA, VirksomhetType.FISKE));
         var beregningsgrunnlag = lagBeregningsgrunnlag(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE);
@@ -257,7 +257,7 @@ public class FastsettInntektskategoriTjenesteTest {
     }
 
     @Test
-    public void SNMedJordbrukOgDagmammaSkalMappeTilInntektskategoriJordbruker() {
+    void SNMedJordbrukOgDagmammaSkalMappeTilInntektskategoriJordbruker() {
         // Arrange
         var grunnlag = opprettOppgittOpptjening(List.of(VirksomhetType.DAGMAMMA, VirksomhetType.JORDBRUK_SKOGBRUK));
         var beregningsgrunnlag = lagBeregningsgrunnlag(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE);
@@ -273,7 +273,7 @@ public class FastsettInntektskategoriTjenesteTest {
     }
 
     @Test
-    public void SNMedJordbrukOgOrdinærNæringSkalMappeTilInntektskategoriJordbruker() {
+    void SNMedJordbrukOgOrdinærNæringSkalMappeTilInntektskategoriJordbruker() {
         // Arrange
         var grunnlag = opprettOppgittOpptjening(List.of(VirksomhetType.ANNEN, VirksomhetType.JORDBRUK_SKOGBRUK));
         var beregningsgrunnlag = lagBeregningsgrunnlag(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE);
@@ -289,7 +289,7 @@ public class FastsettInntektskategoriTjenesteTest {
     }
 
     @Test
-    public void SNMedDagmammaOgOrdinærNæringSkalMappeTilInntektskategoriJordbruker() {
+    void SNMedDagmammaOgOrdinærNæringSkalMappeTilInntektskategoriJordbruker() {
         // Arrange
         var grunnlag = opprettOppgittOpptjening(List.of(VirksomhetType.ANNEN, VirksomhetType.DAGMAMMA));
         var beregningsgrunnlag = lagBeregningsgrunnlag(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE);
@@ -305,7 +305,7 @@ public class FastsettInntektskategoriTjenesteTest {
     }
 
     @Test
-    public void SNMedFiskeOgOrdinærNæringSkalMappeTilInntektskategoriFisker() {
+    void SNMedFiskeOgOrdinærNæringSkalMappeTilInntektskategoriFisker() {
         // Arrange
         var grunnlag = opprettOppgittOpptjening(List.of(VirksomhetType.ANNEN, VirksomhetType.FISKE));
         var beregningsgrunnlag = lagBeregningsgrunnlag(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE);
@@ -321,7 +321,7 @@ public class FastsettInntektskategoriTjenesteTest {
     }
 
     @Test
-    public void skal_gi_arbeidstaker_inntektskategori_når_ingen_fisker_inntekt_hos_det_arbeidsforholdet() {
+    void skal_gi_arbeidstaker_inntektskategori_når_ingen_fisker_inntekt_hos_det_arbeidsforholdet() {
         // Arrange
         var inntektBuilder = InntektDtoBuilder.oppdatere(Optional.empty()).medInntektsKilde(InntektskildeType.INNTEKT_BEREGNING).medArbeidsgiver(Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR));
         inntektBuilder.leggTilInntektspost(lagInntektspost(1,SkatteOgAvgiftsregelType.NETTOLØNN));
@@ -342,7 +342,7 @@ public class FastsettInntektskategoriTjenesteTest {
     }
 
     @Test
-    public void skal_gi_arbeidstaker_inntektskategori_når_ingen_fisker_inntekt_siste_3_mnd() {
+    void skal_gi_arbeidstaker_inntektskategori_når_ingen_fisker_inntekt_siste_3_mnd() {
         // Arrange
         var inntektBuilder = InntektDtoBuilder.oppdatere(Optional.empty()).medInntektsKilde(InntektskildeType.INNTEKT_BEREGNING).medArbeidsgiver(Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR));
         inntektBuilder.leggTilInntektspost(lagInntektspost(1,SkatteOgAvgiftsregelType.NETTOLØNN));
@@ -363,7 +363,7 @@ public class FastsettInntektskategoriTjenesteTest {
     }
 
     @Test
-    public void skal_gi_inntektskategori_sjømann_når_fisker_inntekt_siste_3_mnd() {
+    void skal_gi_inntektskategori_sjømann_når_fisker_inntekt_siste_3_mnd() {
         // Arrange
         var inntektBuilder = InntektDtoBuilder.oppdatere(Optional.empty()).medInntektsKilde(InntektskildeType.INNTEKT_BEREGNING).medArbeidsgiver(Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR));
         inntektBuilder.leggTilInntektspost(lagInntektspost(1,SkatteOgAvgiftsregelType.NETTOLØNN));
@@ -384,7 +384,7 @@ public class FastsettInntektskategoriTjenesteTest {
     }
 
     @Test
-    public void skal_gi_arbeidstaker_inntektskategori_når_fisker_inntekt_siste_3_mnd_i_annet_orgnr() {
+    void skal_gi_arbeidstaker_inntektskategori_når_fisker_inntekt_siste_3_mnd_i_annet_orgnr() {
         // Arrange
         var inntektBuilder = InntektDtoBuilder.oppdatere(Optional.empty()).medInntektsKilde(InntektskildeType.INNTEKT_BEREGNING).medArbeidsgiver(Arbeidsgiver.virksomhet("2333"));
         inntektBuilder.leggTilInntektspost(lagInntektspost(1,SkatteOgAvgiftsregelType.NETTOLØNN_FOR_SJØFOLK));
@@ -405,28 +405,28 @@ public class FastsettInntektskategoriTjenesteTest {
     }
 
     @Test
-    public void skalReturnereFiskerSomHøgastPrioriterteInntektskategori() {
+    void skalReturnereFiskerSomHøgastPrioriterteInntektskategori() {
         var inntektskategoriList = List.of(Inntektskategori.FISKER, Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE, Inntektskategori.DAGMAMMA, Inntektskategori.JORDBRUKER);
         Optional<Inntektskategori> prioritert = FastsettInntektskategoriTjeneste.finnHøyestPrioriterteInntektskategoriForSN(inntektskategoriList);
         assertThat(prioritert.get()).isEqualTo(Inntektskategori.FISKER);
     }
 
     @Test
-    public void skalReturnereJordbrukerSomHøgastPrioriterteInntektskategori() {
+    void skalReturnereJordbrukerSomHøgastPrioriterteInntektskategori() {
         var inntektskategoriList = List.of(Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE, Inntektskategori.DAGMAMMA, Inntektskategori.JORDBRUKER);
         Optional<Inntektskategori> prioritert = FastsettInntektskategoriTjeneste.finnHøyestPrioriterteInntektskategoriForSN(inntektskategoriList);
         assertThat(prioritert.get()).isEqualTo(Inntektskategori.JORDBRUKER);
     }
 
     @Test
-    public void skalReturnereDagmammaSomHøgastPrioriterteInntektskategori() {
+    void skalReturnereDagmammaSomHøgastPrioriterteInntektskategori() {
         var inntektskategoriList = List.of(Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE, Inntektskategori.DAGMAMMA);
         Optional<Inntektskategori> prioritert = FastsettInntektskategoriTjeneste.finnHøyestPrioriterteInntektskategoriForSN(inntektskategoriList);
         assertThat(prioritert.get()).isEqualTo(Inntektskategori.DAGMAMMA);
     }
 
     @Test
-    public void skalReturnereSelvstendigNæringsdrivendeSomHøgastPrioriterteInntektskategori() {
+    void skalReturnereSelvstendigNæringsdrivendeSomHøgastPrioriterteInntektskategori() {
         var inntektskategoriList = List.of(Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE);
         Optional<Inntektskategori> prioritert = FastsettInntektskategoriTjeneste.finnHøyestPrioriterteInntektskategoriForSN(inntektskategoriList);
         assertThat(prioritert.get()).isEqualTo(Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE);

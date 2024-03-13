@@ -48,7 +48,7 @@ public class ManuellBehandlingRefusjonGraderingDtoTjenesteTest {
     private BeregningAktivitetAggregatDto aktivitetAggregatEntitet;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         aktivitetAggregatEntitet = BeregningAktivitetAggregatDto.builder()
                 .leggTilAktivitet(lagAktivitet(ARBEIDSGIVER))
                 .leggTilAktivitet(lagAktivitet(ARBEIDSGIVER2))
@@ -68,7 +68,7 @@ public class ManuellBehandlingRefusjonGraderingDtoTjenesteTest {
 
 
     @Test
-    public void skalKunneEndreInntektEtterRedusertRefusjonTilUnder6G() {
+    void skalKunneEndreInntektEtterRedusertRefusjonTilUnder6G() {
         // Arrange
         AndelGradering graderinger = lagGradering();
         BeregningsgrunnlagDto bgFørFordeling = lagBeregningsgrunnlagFørFordeling();
@@ -89,7 +89,7 @@ public class ManuellBehandlingRefusjonGraderingDtoTjenesteTest {
 
 
     @Test
-    public void skalKunneEndreInntektOmTidligerePeriodeHarGraderingForAndelSomVilBliAvkortetTil0() {
+    void skalKunneEndreInntektOmTidligerePeriodeHarGraderingForAndelSomVilBliAvkortetTil0() {
         // Arrange
         LocalDate graderingTom = SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(1);
         AndelGradering graderingNæring = lagGraderingForNæringFraSTP(graderingTom);
@@ -130,7 +130,7 @@ public class ManuellBehandlingRefusjonGraderingDtoTjenesteTest {
     }
 
     @Test
-    public void skalKunneEndreRefusjonEtterRedusertRefusjonTilUnder6G() {
+    void skalKunneEndreRefusjonEtterRedusertRefusjonTilUnder6G() {
         // Arrange
         AndelGradering graderinger = lagGradering();
         BeregningsgrunnlagDto bgFørFordeling = lagBeregningsgrunnlagFørFordeling();

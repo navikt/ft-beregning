@@ -16,7 +16,7 @@ import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.EgenN�
 public class EgenNæringMapperTest {
 
     @Test
-    public void skal_mappe_fra_entitet_til_dto() {
+    void skal_mappe_fra_entitet_til_dto() {
         OppgittOpptjeningDtoBuilder.EgenNæringBuilder egenNæringBuilder = OppgittOpptjeningDtoBuilder.EgenNæringBuilder.ny();
 
         egenNæringBuilder.medVirksomhetType(VirksomhetType.FISKE);

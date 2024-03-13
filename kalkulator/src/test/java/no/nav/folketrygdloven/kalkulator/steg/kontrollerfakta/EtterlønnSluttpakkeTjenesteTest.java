@@ -32,7 +32,7 @@ public class EtterlønnSluttpakkeTjenesteTest {
     }
 
     @Test
-    public void skalGiTilfelleDersomSøkerHarAndelMedEtterlønnSluttpakke() {
+    void skalGiTilfelleDersomSøkerHarAndelMedEtterlønnSluttpakke() {
         //Arrange
         BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlag(AktivitetStatus.ARBEIDSTAKER, Collections.singletonList(OpptjeningAktivitetType.ETTERLØNN_SLUTTPAKKE));
 
@@ -44,7 +44,7 @@ public class EtterlønnSluttpakkeTjenesteTest {
     }
 
     @Test
-    public void skalIkkeGiTilfelleDersomSøkerIkkeHarAndelMedEtterlønnSluttpakke() {
+    void skalIkkeGiTilfelleDersomSøkerIkkeHarAndelMedEtterlønnSluttpakke() {
         //Arrange
         BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlag(AktivitetStatus.ARBEIDSTAKER, Collections.singletonList(OpptjeningAktivitetType.ARBEID));
 
@@ -56,7 +56,7 @@ public class EtterlønnSluttpakkeTjenesteTest {
     }
 
     @Test
-    public void skalIkkeGiTilfelleDersomSøkerIkkeErArbeidstaker() {
+    void skalIkkeGiTilfelleDersomSøkerIkkeErArbeidstaker() {
         //Arrange
         BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlag(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE, Collections.singletonList(OpptjeningAktivitetType.NÆRING));
 
@@ -68,7 +68,7 @@ public class EtterlønnSluttpakkeTjenesteTest {
     }
 
     @Test
-    public void skalGiTilfelleDersomSøkerHarAndreAndelerMenOgsåEtterlønnSluttpakke() {
+    void skalGiTilfelleDersomSøkerHarAndreAndelerMenOgsåEtterlønnSluttpakke() {
         //Arrange
         BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlag(AktivitetStatus.ARBEIDSTAKER, List.of(OpptjeningAktivitetType.ETTERLØNN_SLUTTPAKKE, OpptjeningAktivitetType.VENTELØNN_VARTPENGER));
 

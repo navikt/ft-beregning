@@ -26,7 +26,7 @@ import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.frisin
 class MapTilPerioderFRISINNTest {
 
     @Test
-    public void en_måned_søkt_fl() {
+    void en_måned_søkt_fl() {
         // Arrange
         Intervall april = Intervall.fraOgMedTilOgMed(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30));
         FrisinnPeriode frisinnPeriode = new FrisinnPeriode(april, true, false);
@@ -44,7 +44,7 @@ class MapTilPerioderFRISINNTest {
     }
 
     @Test
-    public void en_måned_søkt_sn() {
+    void en_måned_søkt_sn() {
         // Arrange
         Intervall april = Intervall.fraOgMedTilOgMed(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30));
         FrisinnPeriode frisinnPeriode = new FrisinnPeriode(april, false, true);
@@ -62,7 +62,7 @@ class MapTilPerioderFRISINNTest {
     }
 
     @Test
-    public void en_måned_søkt_sn_har_fl() {
+    void en_måned_søkt_sn_har_fl() {
         // Arrange
         Intervall april = Intervall.fraOgMedTilOgMed(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30));
         FrisinnPeriode frisinnPeriode = new FrisinnPeriode(april, false, true);
@@ -82,7 +82,7 @@ class MapTilPerioderFRISINNTest {
     }
 
     @Test
-    public void en_måned_søkt_fl_har_sn() {
+    void en_måned_søkt_fl_har_sn() {
         // Arrange
         Intervall april = Intervall.fraOgMedTilOgMed(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30));
         FrisinnPeriode frisinnPeriode = new FrisinnPeriode(april, true, false);
@@ -102,7 +102,7 @@ class MapTilPerioderFRISINNTest {
     }
 
     @Test
-    public void en_måned_søkt_fl_sn_samme_periode() {
+    void en_måned_søkt_fl_sn_samme_periode() {
         // Arrange
         Intervall april = Intervall.fraOgMedTilOgMed(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30));
         FrisinnPeriode frisinnPeriode = new FrisinnPeriode(april, true, true);
@@ -122,7 +122,7 @@ class MapTilPerioderFRISINNTest {
     }
 
     @Test
-    public void en_måned_søkt_fl_sn_ulik_periode() {
+    void en_måned_søkt_fl_sn_ulik_periode() {
         // Arrange
         Intervall april = Intervall.fraOgMedTilOgMed(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30));
         Intervall aprilDel1 = Intervall.fraOgMedTilOgMed(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 10));
@@ -147,7 +147,7 @@ class MapTilPerioderFRISINNTest {
     }
 
     @Test
-    public void to_måneder_søkt_fl() {
+    void to_måneder_søkt_fl() {
         // Arrange
         Intervall april = Intervall.fraOgMedTilOgMed(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30));
         Intervall mai = Intervall.fraOgMedTilOgMed(LocalDate.of(2020, 5, 1), LocalDate.of(2020, 5, 31));
@@ -169,7 +169,7 @@ class MapTilPerioderFRISINNTest {
     }
 
     @Test
-    public void to_måneder_søkt_fl_oppgit_sn_i_periode_2() {
+    void to_måneder_søkt_fl_oppgit_sn_i_periode_2() {
         // Arrange
         Intervall april = Intervall.fraOgMedTilOgMed(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30));
         Intervall mai = Intervall.fraOgMedTilOgMed(LocalDate.of(2020, 5, 1), LocalDate.of(2020, 5, 31));
@@ -193,7 +193,7 @@ class MapTilPerioderFRISINNTest {
     }
 
     @Test
-    public void to_måneder_søkt_fl_søker_sn_i_periode_2() {
+    void to_måneder_søkt_fl_søker_sn_i_periode_2() {
         // Arrange
         Intervall april = Intervall.fraOgMedTilOgMed(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30));
         Intervall mai = Intervall.fraOgMedTilOgMed(LocalDate.of(2020, 5, 1), LocalDate.of(2020, 5, 31));
@@ -217,7 +217,7 @@ class MapTilPerioderFRISINNTest {
     }
 
     @Test
-    public void to_måneder_søkt_fl_sn_i_begge_perioder() {
+    void to_måneder_søkt_fl_sn_i_begge_perioder() {
         // Arrange
         Intervall april = Intervall.fraOgMedTilOgMed(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 30));
         Intervall mai = Intervall.fraOgMedTilOgMed(LocalDate.of(2020, 5, 1), LocalDate.of(2020, 5, 31));
@@ -241,7 +241,7 @@ class MapTilPerioderFRISINNTest {
     }
 
     @Test
-    public void skaL_mappe_arbeidsinntekt() {
+    void skaL_mappe_arbeidsinntekt() {
         // Arrange
         Intervall mai = Intervall.fraOgMedTilOgMed(LocalDate.of(2020, 5, 1), LocalDate.of(2020, 5, 31));
 
@@ -265,7 +265,7 @@ class MapTilPerioderFRISINNTest {
 
 
     @Test
-    public void to_måneder_første_måned_delt() {
+    void to_måneder_første_måned_delt() {
         // Arrange
         Intervall førstePeriode = Intervall.fraOgMedTilOgMed(LocalDate.of(2020, 4, 1), LocalDate.of(2020, 4, 15));
         Intervall andrePeriode = Intervall.fraOgMedTilOgMed(LocalDate.of(2020, 4, 16), LocalDate.of(2020, 4, 30));

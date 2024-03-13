@@ -19,7 +19,7 @@ public class MapBeregningAktivitetDtoTest {
     private static final AktørId AKTØRID_2 = AktørId.dummy();
 
     @Test
-    public void nyAktivitetIDetteGrunnlaget() {
+    void nyAktivitetIDetteGrunnlaget() {
         // Arrange
         BeregningAktivitetDto beregningAktivitet = lagAktivitet(AKTØRID_1);
         List<BeregningAktivitetDto> saksbehandledeAktiviteter = List.of();
@@ -33,7 +33,7 @@ public class MapBeregningAktivitetDtoTest {
     }
 
     @Test
-    public void aldriSaksbehandletEllerIngenAktiviteterIForrigeSaksbehandlet() {
+    void aldriSaksbehandletEllerIngenAktiviteterIForrigeSaksbehandlet() {
         // Arrange
         BeregningAktivitetDto beregningAktivitet = lagAktivitet(AKTØRID_1);
         List<BeregningAktivitetDto> saksbehandledeAktiviteter = List.of();
@@ -47,7 +47,7 @@ public class MapBeregningAktivitetDtoTest {
     }
 
     @Test
-    public void saksbehandletIDetteGrunnlagetSattTilBenytt() {
+    void saksbehandletIDetteGrunnlagetSattTilBenytt() {
         // Arrange
         BeregningAktivitetDto beregningAktivitet = lagAktivitet(AKTØRID_1);
         List<BeregningAktivitetDto> saksbehandledeAktiviteter = List.of(lagAktivitet(AKTØRID_1));
@@ -61,7 +61,7 @@ public class MapBeregningAktivitetDtoTest {
     }
 
     @Test
-    public void saksbehandletIDetteGrunnlagetSattTilIkkeBenytt() {
+    void saksbehandletIDetteGrunnlagetSattTilIkkeBenytt() {
         // Arrange
         var beregningAktivitet = lagAktivitet(AKTØRID_1);
         List<BeregningAktivitetDto> saksbehandledeAktiviteter = List.of(lagAktivitet(AKTØRID_2));

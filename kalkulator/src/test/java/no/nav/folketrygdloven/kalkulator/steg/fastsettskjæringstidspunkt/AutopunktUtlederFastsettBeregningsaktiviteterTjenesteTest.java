@@ -20,7 +20,7 @@ import no.nav.folketrygdloven.utils.BeregningsgrunnlagTestUtil;
 public class AutopunktUtlederFastsettBeregningsaktiviteterTjenesteTest {
 
     @Test
-    public void skal_vente_på_meldekort_når_har_AAP_og_meldekort_uten_AAP_status() {
+    void skal_vente_på_meldekort_når_har_AAP_og_meldekort_uten_AAP_status() {
         // Arrange
         LocalDate dagensdato = LocalDate.of(2019, 1, 4);
         LocalDate skjæringstidspunktOpptjening = LocalDate.of(2019, 2, 1);
@@ -40,7 +40,7 @@ public class AutopunktUtlederFastsettBeregningsaktiviteterTjenesteTest {
     }
 
     @Test
-    public void skal_vente_på_meldekort_når_har_AAP_og_meldekort_uten_AAP_status_grenseverdi() {
+    void skal_vente_på_meldekort_når_har_AAP_og_meldekort_uten_AAP_status_grenseverdi() {
         // Arrange
         LocalDate dagensdato = LocalDate.of(2019, 1, 4);
         LocalDate skjæringstidspunktOpptjening = LocalDate.of(2019, 2, 1);
@@ -60,7 +60,7 @@ public class AutopunktUtlederFastsettBeregningsaktiviteterTjenesteTest {
     }
 
     @Test
-    public void skal_vente_på_meldekort_når_har_AAP_og_meldekort_uten_AAP_status_etter_første_utta() {
+    void skal_vente_på_meldekort_når_har_AAP_og_meldekort_uten_AAP_status_etter_første_utta() {
         // Arrange
         LocalDate dagensdato = LocalDate.of(2019, 2, 2);
         LocalDate skjæringstidspunktOpptjening = LocalDate.of(2019, 2, 1);
@@ -81,7 +81,7 @@ public class AutopunktUtlederFastsettBeregningsaktiviteterTjenesteTest {
     }
 
     @Test
-    public void skal_vente_på_meldekort_også_når_har_AAP_status() {
+    void skal_vente_på_meldekort_også_når_har_AAP_status() {
         // Arrange
         LocalDate dagensdato = LocalDate.of(2019, 2, 9);
         LocalDate skjæringstidspunktOpptjening = LocalDate.of(2019, 2, 1);
@@ -103,7 +103,7 @@ public class AutopunktUtlederFastsettBeregningsaktiviteterTjenesteTest {
     }
 
     @Test
-    public void skal_ikke_vente_på_meldekort_når_14_dager_etter_første_uttaksdag() {
+    void skal_ikke_vente_på_meldekort_når_14_dager_etter_første_uttaksdag() {
         // Arrange
         LocalDate dagensdato = LocalDate.of(2019, 2, 16);
         LocalDate skjæringstidspunktOpptjening = LocalDate.of(2019, 2, 1);
@@ -123,7 +123,7 @@ public class AutopunktUtlederFastsettBeregningsaktiviteterTjenesteTest {
     }
 
     @Test
-    public void skal_ikke_vente_på_meldekort_når_ikke_har_meldekort_siste_4_måneder() {
+    void skal_ikke_vente_på_meldekort_når_ikke_har_meldekort_siste_4_måneder() {
         // Arrange
         LocalDate dagensdato = LocalDate.of(2019, 1, 4);
         LocalDate skjæringstidspunktOpptjening = LocalDate.of(2019, 2, 1);
@@ -142,7 +142,7 @@ public class AutopunktUtlederFastsettBeregningsaktiviteterTjenesteTest {
     }
 
     @Test
-    public void skal_ikke_vente_på_meldekort_når_ikke_har_løpende_vedtak() {
+    void skal_ikke_vente_på_meldekort_når_ikke_har_løpende_vedtak() {
         // Arrange
         LocalDate dagensdato = LocalDate.of(2019, 1, 4);
         LocalDate skjæringstidspunktOpptjening = LocalDate.of(2019, 2, 1);
@@ -161,7 +161,7 @@ public class AutopunktUtlederFastsettBeregningsaktiviteterTjenesteTest {
     }
 
     @Test
-    public void skal_ikke_vente_på_meldekort_når_er_vanlig_arbeidstaker() {
+    void skal_ikke_vente_på_meldekort_når_er_vanlig_arbeidstaker() {
         // Arrange
         LocalDate dagensdato = LocalDate.of(2019, 1, 4);
         LocalDate skjæringstidspunktOpptjening = LocalDate.of(2019, 2, 1);
@@ -175,7 +175,7 @@ public class AutopunktUtlederFastsettBeregningsaktiviteterTjenesteTest {
     }
 
     @Test
-    public void skal_vente_på_meldekort_når_har_DP_og_meldekort_uten_DP_status() {
+    void skal_vente_på_meldekort_når_har_DP_og_meldekort_uten_DP_status() {
         // Arrange
         LocalDate dagensdato = LocalDate.of(2019, 1, 4);
         LocalDate skjæringstidspunktOpptjening = LocalDate.of(2019, 2, 1);
@@ -195,7 +195,7 @@ public class AutopunktUtlederFastsettBeregningsaktiviteterTjenesteTest {
     }
 
     @Test
-    public void skal_vente_på_meldekort_når_har_DP_status() {
+    void skal_vente_på_meldekort_når_har_DP_status() {
         // Arrange
         LocalDate dagensdato = LocalDate.of(2019, 2, 9);
         LocalDate skjæringstidspunktOpptjening = LocalDate.of(2019, 2, 1);
@@ -216,7 +216,7 @@ public class AutopunktUtlederFastsettBeregningsaktiviteterTjenesteTest {
     }
 
     @Test
-    public void skal_vente_på_meldekort_når_ikke_har_løpende_vedtak_men_var_løpende_til_skjæringstidspunkt() {
+    void skal_vente_på_meldekort_når_ikke_har_løpende_vedtak_men_var_løpende_til_skjæringstidspunkt() {
         // Arrange
         LocalDate dagensdato = LocalDate.of(2019, 2, 12);
         LocalDate skjæringstidspunktOpptjening = LocalDate.of(2019, 2, 11);
@@ -236,7 +236,7 @@ public class AutopunktUtlederFastsettBeregningsaktiviteterTjenesteTest {
     }
 
     @Test
-    public void skalIkkeVentePåMeldekortNårMeldekortErMottatt() {
+    void skalIkkeVentePåMeldekortNårMeldekortErMottatt() {
         // Arrange
         LocalDate dagensdato = LocalDate.of(2019, 2, 12);
         LocalDate skjæringstidspunktOpptjening = LocalDate.of(2019, 2, 11);

@@ -37,7 +37,7 @@ public class MapInntektsgrunnlagVLTilRegelTest {
     private MapInntektsgrunnlagVLTilRegelFelles mapInntektsgrunnlagVLTilRegel = new MapInntektsgrunnlagVLTilRegelFelles();
 
     @Test
-    public void skal_mappe_inntektsmelding_for_arbeid_med_fleire_yrkesaktiviteter() {
+    void skal_mappe_inntektsmelding_for_arbeid_med_fleire_yrkesaktiviteter() {
         // Arrange
         InntektsmeldingDto im = InntektsmeldingDtoBuilder.builder()
                 .medBeløp(Beløp.fra(10))
@@ -61,7 +61,7 @@ public class MapInntektsgrunnlagVLTilRegelTest {
 
 
     @Test
-    public void skal_ikkje_mappe_inntektsmelding_for_arbeid_som_slutter_dagen_før_skjæringstidspunktet() {
+    void skal_ikkje_mappe_inntektsmelding_for_arbeid_som_slutter_dagen_før_skjæringstidspunktet() {
         // Arrange
         InntektsmeldingDto im = InntektsmeldingDtoBuilder.builder()
                 .medBeløp(Beløp.fra(10))
@@ -81,7 +81,7 @@ public class MapInntektsgrunnlagVLTilRegelTest {
     }
 
     @Test
-    public void skal_mappe_inntektsmelding_for_arbeid_som_slutter_på_skjæringstidspunktet() {
+    void skal_mappe_inntektsmelding_for_arbeid_som_slutter_på_skjæringstidspunktet() {
         // Arrange
         InntektsmeldingDto im = InntektsmeldingDtoBuilder.builder()
                 .medBeløp(Beløp.fra(10))
@@ -101,7 +101,7 @@ public class MapInntektsgrunnlagVLTilRegelTest {
     }
 
     @Test
-    public void skal_mappe_inntektsmelding_for_arbeid_som_slutter_dagen_etter_skjæringstidspunktet() {
+    void skal_mappe_inntektsmelding_for_arbeid_som_slutter_dagen_etter_skjæringstidspunktet() {
         // Arrange
         InntektsmeldingDto im = InntektsmeldingDtoBuilder.builder()
                 .medBeløp(Beløp.fra(10))

@@ -34,7 +34,7 @@ public class KortvarigArbeidsforholdTjenesteTest {
     private static final LocalDate SKJÆRINGSTIDSPUNKT_OPPTJENING = LocalDate.of(2018, 9, 30);
 
     @Test
-    public void skalIkkjeGiKortvarigForArbeidsforholdPå6Mnd() {
+    void skalIkkjeGiKortvarigForArbeidsforholdPå6Mnd() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
         String orgnr = "123456780";
@@ -54,7 +54,7 @@ public class KortvarigArbeidsforholdTjenesteTest {
     }
 
     @Test
-    public void skalIkkjeGiKortvarigForArbeidsforholdPå6MndIMånederMedUlikDato1() {
+    void skalIkkjeGiKortvarigForArbeidsforholdPå6MndIMånederMedUlikDato1() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
         String orgnr = "123456780";
@@ -74,7 +74,7 @@ public class KortvarigArbeidsforholdTjenesteTest {
     }
 
     @Test
-    public void skalIkkjeGiKortvarigForArbeidsforholdPå6MndIMånederMedUlikDato2() {
+    void skalIkkjeGiKortvarigForArbeidsforholdPå6MndIMånederMedUlikDato2() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
         String orgnr = "123456780";
@@ -94,7 +94,7 @@ public class KortvarigArbeidsforholdTjenesteTest {
     }
 
     @Test
-    public void skalIkkjeGiKortvarigForArbeidsforholdPå6MndIMånederMedUlikDato3() {
+    void skalIkkjeGiKortvarigForArbeidsforholdPå6MndIMånederMedUlikDato3() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
         String orgnr = "123456780";
@@ -113,7 +113,7 @@ public class KortvarigArbeidsforholdTjenesteTest {
     }
 
     @Test
-    public void skalIkkjeGiKortvarigForArbeidsforholdPå6MndIMånederMedUlikDato4() {
+    void skalIkkjeGiKortvarigForArbeidsforholdPå6MndIMånederMedUlikDato4() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
         String orgnr = "123456780";
@@ -136,7 +136,7 @@ public class KortvarigArbeidsforholdTjenesteTest {
     }
 
     @Test
-    public void skalIkkjeGiKortvarigForArbeidsforholdSomStarterPåSkjæringstidspunktet() {
+    void skalIkkjeGiKortvarigForArbeidsforholdSomStarterPåSkjæringstidspunktet() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
         String orgnr = "123456780";
@@ -158,7 +158,7 @@ public class KortvarigArbeidsforholdTjenesteTest {
     }
 
     @Test
-    public void skalIkkjeGiKortvarigForArbeidsforholdSomStarterEtterSkjæringstidspunktet() {
+    void skalIkkjeGiKortvarigForArbeidsforholdSomStarterEtterSkjæringstidspunktet() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
         String orgnr = "123456780";
@@ -181,7 +181,7 @@ public class KortvarigArbeidsforholdTjenesteTest {
 
 
     @Test
-    public void skalGiKortvarigForArbeidsforholdPå6MndMinusEinDag() {
+    void skalGiKortvarigForArbeidsforholdPå6MndMinusEinDag() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
         String orgnr = "123456780";
@@ -204,7 +204,7 @@ public class KortvarigArbeidsforholdTjenesteTest {
     }
 
     @Test
-    public void skalGiKortvarigForArbeidsforholdSomStarterDagenFørSkjæringstidspunktet() {
+    void skalGiKortvarigForArbeidsforholdSomStarterDagenFørSkjæringstidspunktet() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
         String orgnr = "123456780";
@@ -227,7 +227,7 @@ public class KortvarigArbeidsforholdTjenesteTest {
     }
 
     @Test
-    public void skalGiKortvarigVedKombinasjonMedDagpenger() {
+    void skalGiKortvarigVedKombinasjonMedDagpenger() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
         String orgnr = "123456780";
@@ -250,7 +250,7 @@ public class KortvarigArbeidsforholdTjenesteTest {
 
 
     @Test
-    public void skalGiToKortvarigeArbeidsforhold() {
+    void skalGiToKortvarigeArbeidsforhold() {
         // Arrange
         var arbId1 = InternArbeidsforholdRefDto.nyRef();
         var arbId2 = InternArbeidsforholdRefDto.nyRef();
@@ -279,7 +279,7 @@ public class KortvarigArbeidsforholdTjenesteTest {
     }
 
     @Test
-    public void skalIkkeGiKortvarigArbeidsforholdDersomBrukerErSN() {
+    void skalIkkeGiKortvarigArbeidsforholdDersomBrukerErSN() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
         String orgnr = "123456780";
@@ -300,7 +300,7 @@ public class KortvarigArbeidsforholdTjenesteTest {
     }
 
     @Test
-    public void skalGiKortvarigArbeidsforholdDersomBrukerIkkeErSN() {
+    void skalGiKortvarigArbeidsforholdDersomBrukerIkkeErSN() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
         String orgnr = "123456780";

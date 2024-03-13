@@ -62,7 +62,7 @@ public class VurderBeregningsgrunnlagTjenesteTest {
 
 
     @Test
-    public void testVilkårsvurderingArbeidstakerMedBGOverHalvG() {
+    void testVilkårsvurderingArbeidstakerMedBGOverHalvG() {
         // Arrange
         BeregningAktivitetAggregatDto beregningAktiviteter = BeregningAktivitetTestUtil.opprettBeregningAktiviteter(SKJÆRINGSTIDSPUNKT_OPPTJENING,
                 OpptjeningAktivitetType.ARBEID);
@@ -96,7 +96,7 @@ public class VurderBeregningsgrunnlagTjenesteTest {
     }
 
     @Test
-    public void testVilkårsvurderingArbeidstakerMedBGUnderHalvG() {
+    void testVilkårsvurderingArbeidstakerMedBGUnderHalvG() {
         // Arrange
         BeregningAktivitetAggregatDto beregningAktiviteter = BeregningAktivitetTestUtil.opprettBeregningAktiviteter(SKJÆRINGSTIDSPUNKT_OPPTJENING,
                 OpptjeningAktivitetType.ARBEID);

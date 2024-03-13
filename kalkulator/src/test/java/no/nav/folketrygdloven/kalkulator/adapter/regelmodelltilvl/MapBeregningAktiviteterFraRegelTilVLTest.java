@@ -23,7 +23,7 @@ public class MapBeregningAktiviteterFraRegelTilVLTest {
     private static final String ORGNR = "900050001";
 
     @Test
-    public void mapFrilanserOgArbeidstakerAktiviteter() {
+    void mapFrilanserOgArbeidstakerAktiviteter() {
         // Arrange
         AktivitetStatusModell regelmodell = new AktivitetStatusModell();
         LocalDate idag = LocalDate.now();

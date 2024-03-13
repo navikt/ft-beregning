@@ -55,7 +55,7 @@ public class VurderLønnsendringOppdatererTest {
     private BeregningsgrunnlagInput input;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         Arbeidsgiver virksomheten = Arbeidsgiver.virksomhet(ORGNR);
         beregningsgrunnlag = BeregningsgrunnlagDto.builder()
 
@@ -100,7 +100,7 @@ public class VurderLønnsendringOppdatererTest {
     }
 
     @Test
-    public void skal_sette_lønnsendring_til_true_på_arbeidstakerandel() {
+    void skal_sette_lønnsendring_til_true_på_arbeidstakerandel() {
         // Arrange
         VurderLønnsendringDto lønnsendringDto = new VurderLønnsendringDto(true);
         FaktaBeregningLagreDto dto = new FaktaBeregningLagreDto(FAKTA_OM_BEREGNING_TILFELLER);
@@ -119,7 +119,7 @@ public class VurderLønnsendringOppdatererTest {
     }
 
     @Test
-    public void skal_ikkje_sette_lønnsendring_til_true_på_arbeidstakerandel() {
+    void skal_ikkje_sette_lønnsendring_til_true_på_arbeidstakerandel() {
         // Arrange
         VurderLønnsendringDto lønnsendringDto = new VurderLønnsendringDto(false);
         FaktaBeregningLagreDto dto = new FaktaBeregningLagreDto(FAKTA_OM_BEREGNING_TILFELLER);
@@ -138,7 +138,7 @@ public class VurderLønnsendringOppdatererTest {
     }
 
     @Test
-    public void flere_yrkesaktiviteter_for_andel() {
+    void flere_yrkesaktiviteter_for_andel() {
         // Arrange
 
         var builder1 = YrkesaktivitetDtoBuilder.oppdatere(Optional.empty()).medArbeidsgiver(Arbeidsgiver.virksomhet("999999999"))

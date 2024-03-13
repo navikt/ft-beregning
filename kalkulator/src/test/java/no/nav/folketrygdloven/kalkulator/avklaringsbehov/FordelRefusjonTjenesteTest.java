@@ -63,7 +63,7 @@ public class FordelRefusjonTjenesteTest {
     private BeregningsgrunnlagDto oppdatertBg;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         oppdatertBg = BeregningsgrunnlagDto.builder()
                 .medGrunnbeløp(Beløp.fra(10))
                 .medSkjæringstidspunkt(FOM).build();
@@ -74,7 +74,7 @@ public class FordelRefusjonTjenesteTest {
     }
 
     @Test
-    public void skal_filtrere_ut_andel_uten_arbeidsforhold() {
+    void skal_filtrere_ut_andel_uten_arbeidsforhold() {
         // Arrange
         FordelBeregningsgrunnlagAndelDto fordeltAndel = new FordelBeregningsgrunnlagAndelDto(ANDEL_UTEN_ARBEID_LAGT_TIL_OPPRETTET_INFO, REFUSJON_NULL_FASTSATT_STØRRE_ENN_0,
                 Inntektskategori.DAGPENGER, null, 123_723);
@@ -90,7 +90,7 @@ public class FordelRefusjonTjenesteTest {
 
 
     @Test
-    public void skal_sette_refusjon_lik_0_for_arbeidsforhold_uten_refusjonskrav() {
+    void skal_sette_refusjon_lik_0_for_arbeidsforhold_uten_refusjonskrav() {
         // Arrange
         FordelBeregningsgrunnlagAndelDto fordeltAndel = new FordelBeregningsgrunnlagAndelDto(ANDEL_FRA_OPPRETTET_INFO, REFUSJON_LIK_0_FASTSATT_STØRRE_ENN_0, FORRIGE_INNTEKTSKATEGORI, 0, FORRIGE_ARBEIDSTINNTEKT);
         andelListe.add(fordeltAndel);
@@ -104,7 +104,7 @@ public class FordelRefusjonTjenesteTest {
     }
 
     @Test
-    public void skal_ikkje_fordele_refusjon_for_andeler_uten_arbeidsforhold() {
+    void skal_ikkje_fordele_refusjon_for_andeler_uten_arbeidsforhold() {
         // Arrange
         FordelBeregningsgrunnlagAndelDto fordeltAndel = new FordelBeregningsgrunnlagAndelDto(ANDEL_FRA_OPPRETTET_UTEN_ARBEID_INFO, REFUSJON_NULL_FASTSATT_STØRRE_ENN_0,
                 Inntektskategori.ARBEIDSTAKER, 0, FORRIGE_ARBEIDSTINNTEKT);
@@ -124,7 +124,7 @@ public class FordelRefusjonTjenesteTest {
     }
 
     @Test
-    public void skal_endre_refusjon_for_en_andel_med_refusjon_fastsatt_større_enn_0() {
+    void skal_endre_refusjon_for_en_andel_med_refusjon_fastsatt_større_enn_0() {
         // Arrange
         FordelBeregningsgrunnlagAndelDto fordeltAndel = new FordelBeregningsgrunnlagAndelDto(ANDEL_FRA_OPPRETTET_INFO, REFUSJON_STØRRE_ENN_0_FASTSATT_STØRRE_ENN_0, FORRIGE_INNTEKTSKATEGORI,
                 REFUSJONPRÅR - 12, FORRIGE_ARBEIDSTINNTEKT);
@@ -140,7 +140,7 @@ public class FordelRefusjonTjenesteTest {
     }
 
     @Test
-    public void skal_endre_refusjon_for_en_andel_med_refusjon_fastsatt_lik_0() {
+    void skal_endre_refusjon_for_en_andel_med_refusjon_fastsatt_lik_0() {
         // Arrange
         FordelBeregningsgrunnlagAndelDto fordeltAndel = new FordelBeregningsgrunnlagAndelDto(ANDEL_FRA_OPPRETTET_INFO, REFUSJON_STØRRE_ENN_0_FASTSATT_LIK_0,
                 Inntektskategori.ARBEIDSTAKER, REFUSJONPRÅR - 12, FORRIGE_ARBEIDSTINNTEKT);
@@ -156,7 +156,7 @@ public class FordelRefusjonTjenesteTest {
     }
 
     @Test
-    public void skal_ikkje_endre_refusjon_for_en_andel_uten_refusjon_fastsatt_lik_0() {
+    void skal_ikkje_endre_refusjon_for_en_andel_uten_refusjon_fastsatt_lik_0() {
         // Arrange
         FordelBeregningsgrunnlagAndelDto fordeltAndel = new FordelBeregningsgrunnlagAndelDto(ANDEL_FRA_OPPRETTET_INFO, REFUSJON_LIK_NULL_FASTSATT_LIK_0, FORRIGE_INNTEKTSKATEGORI, REFUSJONPRÅR - 12, FORRIGE_ARBEIDSTINNTEKT);
         afBuilder1.medRefusjonskravPrÅr(Beløp.fra(REFUSJONPRÅR - 12), Utfall.GODKJENT);
@@ -171,7 +171,7 @@ public class FordelRefusjonTjenesteTest {
     }
 
     @Test
-    public void skal_sette_refusjon_lik_0_en_andel_med_refusjon_og_fastsatt_lik_0() {
+    void skal_sette_refusjon_lik_0_en_andel_med_refusjon_og_fastsatt_lik_0() {
         // Arrange
         FordelBeregningsgrunnlagAndelDto fordeltAndel = new FordelBeregningsgrunnlagAndelDto(ANDEL_FRA_OPPRETTET_INFO, REFUSJON_LIK_0_FASTSATT_LIK_0, FORRIGE_INNTEKTSKATEGORI, REFUSJONPRÅR - 12, FORRIGE_ARBEIDSTINNTEKT);
         afBuilder1.medRefusjonskravPrÅr(Beløp.fra(REFUSJONPRÅR - 12), Utfall.GODKJENT);
@@ -190,7 +190,7 @@ public class FordelRefusjonTjenesteTest {
     }
 
     @Test
-    public void skal_fordele_refusjon_for_2_andeler_en_fra_opprettet_med_og_en_lagt_til_forrige_med_lik_refusjon_og_fordeling_større_enn_0() {
+    void skal_fordele_refusjon_for_2_andeler_en_fra_opprettet_med_og_en_lagt_til_forrige_med_lik_refusjon_og_fordeling_større_enn_0() {
         // Arrange
         FordelBeregningsgrunnlagAndelDto fordeltAndel = new FordelBeregningsgrunnlagAndelDto(ANDEL_FRA_OPPRETTET_INFO, REFUSJON_STØRRE_ENN_0_FASTSATT_STØRRE_ENN_0, FORRIGE_INNTEKTSKATEGORI, REFUSJONPRÅR - 12, FORRIGE_ARBEIDSTINNTEKT);
         FordelBeregningsgrunnlagAndelDto fordeltAndel2 = new FordelBeregningsgrunnlagAndelDto(ANDEL_LAGT_TIL_FORRIGE_INFO, REFUSJON_STØRRE_ENN_0_FASTSATT_STØRRE_ENN_0, null, null, null);
@@ -223,7 +223,7 @@ public class FordelRefusjonTjenesteTest {
     }
 
     @Test
-    public void skal_fordele_refusjon_for_2_andeler_en_fra_opprettet_med_og_en_lagt_til_forrige_med_lik_refusjon_og_ulik_fordeling_større_enn_0() {
+    void skal_fordele_refusjon_for_2_andeler_en_fra_opprettet_med_og_en_lagt_til_forrige_med_lik_refusjon_og_ulik_fordeling_større_enn_0() {
         // Arrange
         FordelBeregningsgrunnlagAndelDto fordeltAndel = new FordelBeregningsgrunnlagAndelDto(ANDEL_FRA_OPPRETTET_INFO, REFUSJON_STØRRE_ENN_0_FASTSATT_STØRRE_ENN_0, FORRIGE_INNTEKTSKATEGORI, 54654, FORRIGE_ARBEIDSTINNTEKT);
         FordelBeregningsgrunnlagAndelDto fordeltAndel2 = new FordelBeregningsgrunnlagAndelDto(ANDEL_LAGT_TIL_FORRIGE_INFO, REFUSJON_STØRRE_ENN_0_FASTSATT_HALVPARTEN, null, null, null);
@@ -254,7 +254,7 @@ public class FordelRefusjonTjenesteTest {
     }
 
     @Test
-    public void skal_fordele_refusjon_for_2_andeler_en_fra_opprettet_med_og_en_lagt_til_forrige_med_refusjon_lik_null_og_ulik_fordeling() {
+    void skal_fordele_refusjon_for_2_andeler_en_fra_opprettet_med_og_en_lagt_til_forrige_med_refusjon_lik_null_og_ulik_fordeling() {
         // Arrange
         FordelBeregningsgrunnlagAndelDto fordeltAndel = new FordelBeregningsgrunnlagAndelDto(ANDEL_FRA_OPPRETTET_INFO, REFUSJON_NULL_FASTSATT_STØRRE_ENN_0, FORRIGE_INNTEKTSKATEGORI, 2 * REFUSJONPRÅR, FORRIGE_ARBEIDSTINNTEKT);
         FordelBeregningsgrunnlagAndelDto fordeltAndel2 = new FordelBeregningsgrunnlagAndelDto(ANDEL_LAGT_TIL_FORRIGE_INFO, REFUSJON_NULL_FASTSATT_HALVPARTEN, null, null, null);
@@ -288,7 +288,7 @@ public class FordelRefusjonTjenesteTest {
     }
 
     @Test
-    public void skal_fordele_refusjon_for_3_andeler_en_fra_opprettet_med_og_en_lagt_til_forrige_en_ny_andel_lik_fordeling_ulik_0() {
+    void skal_fordele_refusjon_for_3_andeler_en_fra_opprettet_med_og_en_lagt_til_forrige_en_ny_andel_lik_fordeling_ulik_0() {
         // Arrange
         FordelBeregningsgrunnlagAndelDto fordeltAndel = new FordelBeregningsgrunnlagAndelDto(ANDEL_FRA_OPPRETTET_INFO, REFUSJON_STØRRE_ENN_0_FASTSATT_STØRRE_ENN_0, FORRIGE_INNTEKTSKATEGORI, 54654, FORRIGE_ARBEIDSTINNTEKT);
         FordelBeregningsgrunnlagAndelDto fordeltAndel2 = new FordelBeregningsgrunnlagAndelDto(ANDEL_LAGT_TIL_FORRIGE_INFO, REFUSJON_STØRRE_ENN_0_FASTSATT_STØRRE_ENN_0, null, null, null);
@@ -321,7 +321,7 @@ public class FordelRefusjonTjenesteTest {
     }
 
     @Test
-    public void skal_fordele_refusjon_for_3_andeler_en_fra_opprettet_med_og_en_lagt_til_forrige_en_ny_andel_ulik_fordeling() {
+    void skal_fordele_refusjon_for_3_andeler_en_fra_opprettet_med_og_en_lagt_til_forrige_en_ny_andel_ulik_fordeling() {
         // Arrange
         FordelBeregningsgrunnlagAndelDto fordeltAndel = new FordelBeregningsgrunnlagAndelDto(ANDEL_FRA_OPPRETTET_INFO, REFUSJON_STØRRE_ENN_0_FASTSATT_STØRRE_ENN_0, FORRIGE_INNTEKTSKATEGORI, 54654, FORRIGE_ARBEIDSTINNTEKT);
         FordelBeregningsgrunnlagAndelDto fordeltAndel2 = new FordelBeregningsgrunnlagAndelDto(ANDEL_LAGT_TIL_FORRIGE_INFO, REFUSJON_STØRRE_ENN_0_FASTSATT_HALVPARTEN, null, null, null);
@@ -356,7 +356,7 @@ public class FordelRefusjonTjenesteTest {
     }
 
     @Test
-    public void skal_fordele_refusjon_for_3_andeler_en_fra_opprettet_med_og_en_lagt_til_forrige_en_ny_andel_ulik_fordeling_refusjon_lik_null() {
+    void skal_fordele_refusjon_for_3_andeler_en_fra_opprettet_med_og_en_lagt_til_forrige_en_ny_andel_ulik_fordeling_refusjon_lik_null() {
         // Arrange
         FordelBeregningsgrunnlagAndelDto fordeltAndel = new FordelBeregningsgrunnlagAndelDto(ANDEL_FRA_OPPRETTET_INFO, REFUSJON_NULL_FASTSATT_STØRRE_ENN_0, FORRIGE_INNTEKTSKATEGORI, 2 * REFUSJONPRÅR, FORRIGE_ARBEIDSTINNTEKT);
         FordelBeregningsgrunnlagAndelDto fordeltAndel2 = new FordelBeregningsgrunnlagAndelDto(ANDEL_LAGT_TIL_FORRIGE_INFO, REFUSJON_NULL_FASTSATT_HALVPARTEN, null, null, null);
@@ -394,7 +394,7 @@ public class FordelRefusjonTjenesteTest {
     }
 
     @Test
-    public void skal_fordele_refusjon_for_3_andeler_en_fra_opprettet_med_og_en_lagt_til_forrige_en_ny_andel_lik_fordeling_refusjon_lik_null() {
+    void skal_fordele_refusjon_for_3_andeler_en_fra_opprettet_med_og_en_lagt_til_forrige_en_ny_andel_lik_fordeling_refusjon_lik_null() {
         // Arrange
         FordelBeregningsgrunnlagAndelDto fordeltAndel = new FordelBeregningsgrunnlagAndelDto(ANDEL_FRA_OPPRETTET_INFO, REFUSJON_NULL_FASTSATT_STØRRE_ENN_0, FORRIGE_INNTEKTSKATEGORI, 2 * REFUSJONPRÅR, FORRIGE_ARBEIDSTINNTEKT);
         FordelBeregningsgrunnlagAndelDto fordeltAndel2 = new FordelBeregningsgrunnlagAndelDto(ANDEL_LAGT_TIL_FORRIGE_INFO, REFUSJON_NULL_FASTSATT_STØRRE_ENN_0, null, null, null);

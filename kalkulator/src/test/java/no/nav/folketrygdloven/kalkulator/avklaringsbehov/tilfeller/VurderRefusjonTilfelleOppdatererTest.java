@@ -43,7 +43,7 @@ public class VurderRefusjonTilfelleOppdatererTest {
 
 
     @Test
-    public void oppdater_når_ikkje_gyldig_utvidelse() {
+    void oppdater_når_ikkje_gyldig_utvidelse() {
         // Arrange
         LocalDate førsteInnsendingAvRefusjonskrav = SKJÆRINGSTIDSPUNKT.plusMonths(4);
         LocalDate førsteDatoMedRefusjonskrav = SKJÆRINGSTIDSPUNKT;
@@ -64,7 +64,7 @@ public class VurderRefusjonTilfelleOppdatererTest {
     }
 
     @Test
-    public void oppdater_når_gyldig_utvidelse() {
+    void oppdater_når_gyldig_utvidelse() {
         // Arrange
         LocalDate førsteInnsendingAvRefusjonskrav = SKJÆRINGSTIDSPUNKT.plusMonths(4);
         LocalDate førsteDatoMedRefusjonskrav = SKJÆRINGSTIDSPUNKT;

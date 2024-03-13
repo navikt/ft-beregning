@@ -22,7 +22,7 @@ public class BeregningUtilsTest {
 
     private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.of(2019,1,1);
     @Test
-    public void skal_finne_ytelse_med_korrekt_ytelsetype() {
+    void skal_finne_ytelse_med_korrekt_ytelsetype() {
         YtelseDto aapYtelse = lagYtelse(YtelseType.ARBEIDSAVKLARINGSPENGER, SKJÆRINGSTIDSPUNKT.minusMonths(2), SKJÆRINGSTIDSPUNKT.minusMonths(1)).build();
         YtelseDto dpYtelse = lagYtelse(YtelseType.DAGPENGER, SKJÆRINGSTIDSPUNKT.minusMonths(1), SKJÆRINGSTIDSPUNKT.minusDays(1)).build();
 
@@ -35,7 +35,7 @@ public class BeregningUtilsTest {
     }
 
     @Test
-    public void skal_finne_ytelse_med_vedtak_nærmest_skjæringstidspunkt() {
+    void skal_finne_ytelse_med_vedtak_nærmest_skjæringstidspunkt() {
         YtelseDto aapYtelseGammel = lagYtelse(YtelseType.ARBEIDSAVKLARINGSPENGER, SKJÆRINGSTIDSPUNKT.minusMonths(2), SKJÆRINGSTIDSPUNKT.minusMonths(1)).build();
         YtelseDto aapYtelseNy = lagYtelse(YtelseType.ARBEIDSAVKLARINGSPENGER, SKJÆRINGSTIDSPUNKT.minusMonths(1), SKJÆRINGSTIDSPUNKT.minusDays(1)).build();
 
@@ -48,7 +48,7 @@ public class BeregningUtilsTest {
     }
 
     @Test
-    public void skal_ikke_ta_med_vedtak_med_fom_etter_skjæringstidspunkt() {
+    void skal_ikke_ta_med_vedtak_med_fom_etter_skjæringstidspunkt() {
         YtelseDto aapYtelseGammel = lagYtelse(YtelseType.ARBEIDSAVKLARINGSPENGER, SKJÆRINGSTIDSPUNKT.minusMonths(2), SKJÆRINGSTIDSPUNKT.minusMonths(1)).build();
         YtelseDto aapYtelseNy = lagYtelse(YtelseType.ARBEIDSAVKLARINGSPENGER, SKJÆRINGSTIDSPUNKT.minusMonths(1), SKJÆRINGSTIDSPUNKT.minusDays(15)).build();
         YtelseDto aapYtelseEtterStp = lagYtelse(YtelseType.ARBEIDSAVKLARINGSPENGER, SKJÆRINGSTIDSPUNKT.plusDays(1), SKJÆRINGSTIDSPUNKT.plusMonths(1)).build();
@@ -62,7 +62,7 @@ public class BeregningUtilsTest {
     }
 
     @Test
-    public void skal_finne_korrekt_meldekort_når_det_tilhører_nyeste_vedtak() {
+    void skal_finne_korrekt_meldekort_når_det_tilhører_nyeste_vedtak() {
         YtelseDtoBuilder aapGammelBuilder = lagYtelse(YtelseType.ARBEIDSAVKLARINGSPENGER, SKJÆRINGSTIDSPUNKT.minusMonths(2), SKJÆRINGSTIDSPUNKT.minusMonths(1));
         YtelseDtoBuilder aapYtelseNyBuilder = lagYtelse(YtelseType.ARBEIDSAVKLARINGSPENGER, SKJÆRINGSTIDSPUNKT.minusMonths(1), SKJÆRINGSTIDSPUNKT.minusDays(15));
 
@@ -80,7 +80,7 @@ public class BeregningUtilsTest {
     }
 
     @Test
-    public void skal_finne_korrekt_meldekort_når_det_tilhører_eldste_vedtak() {
+    void skal_finne_korrekt_meldekort_når_det_tilhører_eldste_vedtak() {
         YtelseDtoBuilder aapGammelBuilder = lagYtelse(YtelseType.ARBEIDSAVKLARINGSPENGER, SKJÆRINGSTIDSPUNKT.minusMonths(2), SKJÆRINGSTIDSPUNKT.minusMonths(1));
         YtelseDtoBuilder aapYtelseNyBuilder = lagYtelse(YtelseType.ARBEIDSAVKLARINGSPENGER, SKJÆRINGSTIDSPUNKT.minusMonths(1), SKJÆRINGSTIDSPUNKT.minusDays(15));
 
@@ -98,7 +98,7 @@ public class BeregningUtilsTest {
     }
 
     @Test
-    public void skal_finne_meldekort_fra_nyeste_vedtak_når_to_vedtak_har_meldekort_med_samme_periode() {
+    void skal_finne_meldekort_fra_nyeste_vedtak_når_to_vedtak_har_meldekort_med_samme_periode() {
         YtelseDtoBuilder aapGammelBuilder = lagYtelse(YtelseType.ARBEIDSAVKLARINGSPENGER, SKJÆRINGSTIDSPUNKT.minusMonths(2), SKJÆRINGSTIDSPUNKT.minusMonths(1));
         YtelseDtoBuilder aapYtelseNyBuilder = lagYtelse(YtelseType.ARBEIDSAVKLARINGSPENGER, SKJÆRINGSTIDSPUNKT.minusMonths(1), SKJÆRINGSTIDSPUNKT.minusDays(15));
 
@@ -116,7 +116,7 @@ public class BeregningUtilsTest {
     }
 
     @Test
-    public void skal_ikke_ta_med_meldekort_fra_vedtak_etter_stp() {
+    void skal_ikke_ta_med_meldekort_fra_vedtak_etter_stp() {
         YtelseDtoBuilder aapGammelBuilder = lagYtelse(YtelseType.ARBEIDSAVKLARINGSPENGER, SKJÆRINGSTIDSPUNKT.minusMonths(2), SKJÆRINGSTIDSPUNKT.minusMonths(1));
         YtelseDtoBuilder aapYtelseNyBuilder = lagYtelse(YtelseType.ARBEIDSAVKLARINGSPENGER, SKJÆRINGSTIDSPUNKT.minusMonths(1), SKJÆRINGSTIDSPUNKT.minusDays(15));
         YtelseDtoBuilder aapYtelseEtterStpBuilder = lagYtelse(YtelseType.ARBEIDSAVKLARINGSPENGER, SKJÆRINGSTIDSPUNKT.minusMonths(1), SKJÆRINGSTIDSPUNKT.minusDays(15));
@@ -137,7 +137,7 @@ public class BeregningUtilsTest {
     }
 
     @Test
-    public void skalFinneMeldekortVedGittDatoNårMeldekortetFinnes() {
+    void skalFinneMeldekortVedGittDatoNårMeldekortetFinnes() {
         YtelseDtoBuilder aapGammelBuilder = lagYtelse(YtelseType.ARBEIDSAVKLARINGSPENGER, SKJÆRINGSTIDSPUNKT.minusMonths(5), SKJÆRINGSTIDSPUNKT.minusMonths(1));
         YtelseDtoBuilder aapYtelseNyBuilder = lagYtelse(YtelseType.ARBEIDSAVKLARINGSPENGER, SKJÆRINGSTIDSPUNKT.minusMonths(1), SKJÆRINGSTIDSPUNKT.plusMonths(1));
 
@@ -161,7 +161,7 @@ public class BeregningUtilsTest {
     }
 
     @Test
-    public void skalIkkeFinneMeldekortNårMeldekortVedGittDatoIkkeFinnes() {
+    void skalIkkeFinneMeldekortNårMeldekortVedGittDatoIkkeFinnes() {
         YtelseDtoBuilder aapGammelBuilder = lagYtelse(YtelseType.ARBEIDSAVKLARINGSPENGER, SKJÆRINGSTIDSPUNKT.minusMonths(5), SKJÆRINGSTIDSPUNKT.minusMonths(1));
         YtelseDtoBuilder aapYtelseNyBuilder = lagYtelse(YtelseType.ARBEIDSAVKLARINGSPENGER, SKJÆRINGSTIDSPUNKT.minusMonths(1), SKJÆRINGSTIDSPUNKT.plusMonths(1));
 

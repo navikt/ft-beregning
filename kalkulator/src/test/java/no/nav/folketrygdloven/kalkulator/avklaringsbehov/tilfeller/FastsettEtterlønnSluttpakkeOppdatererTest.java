@@ -39,12 +39,12 @@ public class FastsettEtterlønnSluttpakkeOppdatererTest {
     private BeregningsgrunnlagInput input;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         beregningsgrunnlag = lagBeregningsgrunnlag();
     }
 
     @Test
-    public void skalTesteAtOppdatererSetterKorrektInntektPåSøkerensEtterlønnSluttpakkeAndel() {
+    void skalTesteAtOppdatererSetterKorrektInntektPåSøkerensEtterlønnSluttpakkeAndel() {
         // Arrange
         FastsettEtterlønnSluttpakkeDto fastsettDto = new FastsettEtterlønnSluttpakkeDto(10000);
         FaktaBeregningLagreDto dto = new FaktaBeregningLagreDto(singletonList(FaktaOmBeregningTilfelle.FASTSETT_ETTERLØNN_SLUTTPAKKE));

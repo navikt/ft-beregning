@@ -36,7 +36,7 @@ class InntektsgrunnlagMapperTest {
     private static final Intervall SG_PERIODE = Intervall.fraOgMedTilOgMed(LocalDate.now().minusMonths(12), LocalDate.now());
 
     @Test
-    public void skal_teste_at_korrekte_inntekter_mappes() {
+    void skal_teste_at_korrekte_inntekter_mappes() {
         InntektsgrunnlagMapper mapper = new InntektsgrunnlagMapper(Optional.of(SG_PERIODE), Collections.emptyList());
         InntektDtoBuilder feilKilde = lagInntekt("123", InntektskildeType.INNTEKT_BEREGNING);
         InntektDtoBuilder korrektKilde = lagInntekt("123", InntektskildeType.INNTEKT_SAMMENLIGNING);
@@ -54,7 +54,7 @@ class InntektsgrunnlagMapperTest {
     }
 
     @Test
-    public void skal_teste_at_inntekter_uten_arbeidsgiver_mappes_til_ytelse() {
+    void skal_teste_at_inntekter_uten_arbeidsgiver_mappes_til_ytelse() {
         InntektsgrunnlagMapper mapper = new InntektsgrunnlagMapper(Optional.of(SG_PERIODE), Collections.emptyList());
         InntektDtoBuilder korrektKilde = lagInntekt(null, InntektskildeType.INNTEKT_SAMMENLIGNING);
         korrektKilde.leggTilInntektspost(lagInntektspost(korrektKilde, 5000, månederFør(3), InntektspostType.YTELSE));
@@ -76,7 +76,7 @@ class InntektsgrunnlagMapperTest {
     }
 
     @Test
-    public void skal_teste_at_frilans_merkes_korrekt() {
+    void skal_teste_at_frilans_merkes_korrekt() {
         InntektsgrunnlagMapper mapper = new InntektsgrunnlagMapper(Optional.of(SG_PERIODE), Collections.singletonList(Arbeidsgiver.virksomhet("321")));
         InntektDtoBuilder inntektFL = lagInntekt("321", InntektskildeType.INNTEKT_SAMMENLIGNING);
         InntektDtoBuilder inntektAT = lagInntekt("123", InntektskildeType.INNTEKT_SAMMENLIGNING);
@@ -113,7 +113,7 @@ class InntektsgrunnlagMapperTest {
     }
 
     @Test
-    public void skal_teste_at_pgidata_mappes_alene() {
+    void skal_teste_at_pgidata_mappes_alene() {
         InntektsgrunnlagMapper mapper = new InntektsgrunnlagMapper(Optional.of(SG_PERIODE), Collections.emptyList());
         InntektDtoBuilder sigrun = lagInntekt(null, InntektskildeType.SIGRUN);
         sigrun.leggTilInntektspost(lagPGIPost(sigrun, 200000, 2020, InntektspostType.SELVSTENDIG_NÆRINGSDRIVENDE));
@@ -147,7 +147,7 @@ class InntektsgrunnlagMapperTest {
     }
 
     @Test
-    public void skal_teste_at_pgidata_mappes_med_sammenligningsgrunnlagdata() {
+    void skal_teste_at_pgidata_mappes_med_sammenligningsgrunnlagdata() {
         InntektsgrunnlagMapper mapper = new InntektsgrunnlagMapper(Optional.of(SG_PERIODE), Collections.emptyList());
         InntektDtoBuilder feilKilde = lagInntekt("123", InntektskildeType.INNTEKT_BEREGNING);
         InntektDtoBuilder korrektKilde = lagInntekt("123", InntektskildeType.INNTEKT_SAMMENLIGNING);

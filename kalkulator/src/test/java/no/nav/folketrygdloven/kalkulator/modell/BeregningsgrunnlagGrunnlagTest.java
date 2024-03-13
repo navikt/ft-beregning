@@ -26,7 +26,7 @@ public class BeregningsgrunnlagGrunnlagTest {
     private static final Intervall PERIODE = Intervall.fraOgMedTilOgMed(LocalDate.of(2019, Month.MARCH, 1), TIDENES_ENDE);
 
     @Test
-    public void skal_returnere_register() {
+    void skal_returnere_register() {
         BeregningAktivitetDto beregningAktivitetSN = BeregningAktivitetDto.builder()
                 .medPeriode(PERIODE)
                 .medOpptjeningAktivitetType(OpptjeningAktivitetType.NÆRING)
@@ -58,7 +58,7 @@ public class BeregningsgrunnlagGrunnlagTest {
     }
 
     @Test
-    public void skal_returnere_overstyringer() {
+    void skal_returnere_overstyringer() {
         BeregningAktivitetDto beregningAktivitetSN = BeregningAktivitetDto.builder()
                 .medPeriode(PERIODE)
                 .medOpptjeningAktivitetType(OpptjeningAktivitetType.NÆRING)
@@ -94,7 +94,7 @@ public class BeregningsgrunnlagGrunnlagTest {
     }
 
     @Test
-    public void skal_returnere_overstyringer_når_saksbehandlet_finnes() {
+    void skal_returnere_overstyringer_når_saksbehandlet_finnes() {
         BeregningAktivitetDto beregningAktivitetSN = BeregningAktivitetDto.builder()
                 .medPeriode(PERIODE)
                 .medOpptjeningAktivitetType(OpptjeningAktivitetType.NÆRING)

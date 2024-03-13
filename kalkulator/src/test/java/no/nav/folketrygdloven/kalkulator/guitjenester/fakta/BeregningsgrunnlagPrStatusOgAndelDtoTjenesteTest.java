@@ -58,7 +58,7 @@ public class BeregningsgrunnlagPrStatusOgAndelDtoTjenesteTest {
     private BeregningsgrunnlagGrunnlagDto grunnlag;
 
     @Test
-    public void skalFastsetteGrunnlagForSnNårAvvikOver25ProsentOgGammeltSammenligningsgrunnlag() {
+    void skalFastsetteGrunnlagForSnNårAvvikOver25ProsentOgGammeltSammenligningsgrunnlag() {
         //Arange
         Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         BeregningsgrunnlagDto Beregningsgrunnlag = lagBeregningsgrunnlagMedAvvikOver25Prosent(SammenligningsgrunnlagType.SAMMENLIGNING_ATFL_SN);
@@ -81,7 +81,7 @@ public class BeregningsgrunnlagPrStatusOgAndelDtoTjenesteTest {
     }
 
     @Test
-    public void skalFastsetteGrunnlagForBådeFlOgAtSnNårAvvikOver25ProsentOgGammeltSammenligningsgrunnlagOgKunFlOgAtAndel() {
+    void skalFastsetteGrunnlagForBådeFlOgAtSnNårAvvikOver25ProsentOgGammeltSammenligningsgrunnlagOgKunFlOgAtAndel() {
         //Arange
         Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         BeregningsgrunnlagDto Beregningsgrunnlag = lagBeregningsgrunnlagMedAvvikOver25Prosent(SammenligningsgrunnlagType.SAMMENLIGNING_ATFL_SN);
@@ -102,7 +102,7 @@ public class BeregningsgrunnlagPrStatusOgAndelDtoTjenesteTest {
     }
 
     @Test
-    public void skalFastsetteGrunnlagForSnNårAvvikErUnder25ProsentOgNyIArbeidslivet() {
+    void skalFastsetteGrunnlagForSnNårAvvikErUnder25ProsentOgNyIArbeidslivet() {
         //Arange
         Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         BeregningsgrunnlagDto Beregningsgrunnlag = lagBeregningsgrunnlagUtenSammenligningsgrunnlag();
@@ -128,7 +128,7 @@ public class BeregningsgrunnlagPrStatusOgAndelDtoTjenesteTest {
     }
 
     @Test
-    public void skalFastsetteGrunnlagForSnNårAvvikErOver25Prosent() {
+    void skalFastsetteGrunnlagForSnNårAvvikErOver25Prosent() {
         //Arange
         Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         BeregningsgrunnlagDto Beregningsgrunnlag = lagBeregningsgrunnlagMedAvvikOver25Prosent(SammenligningsgrunnlagType.SAMMENLIGNING_SN);
@@ -150,7 +150,7 @@ public class BeregningsgrunnlagPrStatusOgAndelDtoTjenesteTest {
     }
 
     @Test
-    public void skalIkkeKasteExceptionNårDetFinnesHverkenAtFlEllerSnAndelOgDetFinnesSammenligningsgrunnlagPrStatus() throws Exception {
+    void skalIkkeKasteExceptionNårDetFinnesHverkenAtFlEllerSnAndelOgDetFinnesSammenligningsgrunnlagPrStatus() throws Exception {
         //Arange
         Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         BeregningsgrunnlagDto Beregningsgrunnlag = lagBeregningsgrunnlagMedAvvikOver25Prosent(SammenligningsgrunnlagType.SAMMENLIGNING_ATFL_SN);
@@ -167,7 +167,7 @@ public class BeregningsgrunnlagPrStatusOgAndelDtoTjenesteTest {
     }
 
     @Test
-    public void skalFastsetteGrunnlagForAtNårAvvikStørreEnn25ProsentForAtAndelOgSammenligningsgrunnlagMedTypeSammenliningAt() {
+    void skalFastsetteGrunnlagForAtNårAvvikStørreEnn25ProsentForAtAndelOgSammenligningsgrunnlagMedTypeSammenliningAt() {
         //Arange
         Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         BeregningsgrunnlagDto Beregningsgrunnlag = lagBeregningsgrunnlagMedAvvikOver25Prosent(SammenligningsgrunnlagType.SAMMENLIGNING_AT);
@@ -188,7 +188,7 @@ public class BeregningsgrunnlagPrStatusOgAndelDtoTjenesteTest {
     }
 
     @Test
-    public void skalFastsetteGrunnlagForAtOgFlBasertPåSammenligningsgrunnlagNårAvvikStørreEnn25ProsentForAtAndelOgIngenSammenligningsgrunnlagPrStatus() {
+    void skalFastsetteGrunnlagForAtOgFlBasertPåSammenligningsgrunnlagNårAvvikStørreEnn25ProsentForAtAndelOgIngenSammenligningsgrunnlagPrStatus() {
         //Arange
         Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         BeregningsgrunnlagDto Beregningsgrunnlag = lagBeregningsgrunnlagMedAvvikOver25ProsentMedKunSammenligningsgrunnlag(SammenligningsgrunnlagType.SAMMENLIGNING_AT_FL);
@@ -209,7 +209,7 @@ public class BeregningsgrunnlagPrStatusOgAndelDtoTjenesteTest {
     }
 
     @Test
-    public void skalFastsetteGrunnlagForKunSnBasertPåSammenligningsgrunnlagNårAvvikStørreEnn25ProsentForAlleAndelerOgIngenSammenligningsgrunnlagPrStatus() {
+    void skalFastsetteGrunnlagForKunSnBasertPåSammenligningsgrunnlagNårAvvikStørreEnn25ProsentForAlleAndelerOgIngenSammenligningsgrunnlagPrStatus() {
         //Arange
         Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         BeregningsgrunnlagDto Beregningsgrunnlag = lagBeregningsgrunnlagMedAvvikOver25ProsentMedKunSammenligningsgrunnlag(SammenligningsgrunnlagType.SAMMENLIGNING_SN);
@@ -235,7 +235,7 @@ public class BeregningsgrunnlagPrStatusOgAndelDtoTjenesteTest {
     }
 
     @Test
-    public void skalIkkeKasteExceptionNårDetFinnesHverkenAtFlEllerSnAndelOgDeIkkeFinnesSammenligningsgrunnlagPrStatus() throws Exception {
+    void skalIkkeKasteExceptionNårDetFinnesHverkenAtFlEllerSnAndelOgDeIkkeFinnesSammenligningsgrunnlagPrStatus() throws Exception {
         //Arange
         Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         BeregningsgrunnlagDto Beregningsgrunnlag = lagBeregningsgrunnlagMedAvvikUnder25ProsentMedKunSammenligningsgrunnlag();

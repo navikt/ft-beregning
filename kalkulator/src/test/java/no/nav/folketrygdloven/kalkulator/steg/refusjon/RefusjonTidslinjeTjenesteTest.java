@@ -44,7 +44,7 @@ class RefusjonTidslinjeTjenesteTest {
 
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         originaltBG = BeregningsgrunnlagDto.builder()
                 .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING)
                 .medGrunnbeløp(Beløp.fra(GrunnbeløpTestKonstanter.GRUNNBELØP_2018))
@@ -73,7 +73,7 @@ class RefusjonTidslinjeTjenesteTest {
     }
 
     @Test
-    public void tester_at_timeline_lages_korrekt_med_en_andel_pr_periode() {
+    void tester_at_timeline_lages_korrekt_med_en_andel_pr_periode() {
         BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode1 = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_BEREGNING, TIDENES_ENDE)
                 .build(originaltBG);
@@ -90,7 +90,7 @@ class RefusjonTidslinjeTjenesteTest {
     }
 
     @Test
-    public void tester_at_timeline_lages_og_kombineres_korrekt_med_ulikt_antall_andeler() {
+    void tester_at_timeline_lages_og_kombineres_korrekt_med_ulikt_antall_andeler() {
         BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode1 = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_BEREGNING, TIDENES_ENDE)
                 .build(originaltBG);
@@ -117,7 +117,7 @@ class RefusjonTidslinjeTjenesteTest {
     }
 
     @Test
-    public void tester_at_timeline_lages_og_kombineres_korrekt_med_ulike_arbeidsgivere() {
+    void tester_at_timeline_lages_og_kombineres_korrekt_med_ulike_arbeidsgivere() {
         BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode1 = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_BEREGNING, TIDENES_ENDE)
                 .build(originaltBG);

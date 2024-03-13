@@ -24,7 +24,7 @@ public class KopierBeregningsgrunnlagUtilTest {
     private static final Periode periode = Periode.of(LocalDate.now().minusMonths(3), LocalDate.now().minusMonths(1));
 
     @Test
-    public void skalKopiereBeregninggrunnlagPeriode() {
+    void skalKopiereBeregninggrunnlagPeriode() {
         // Arrange
         BeregningsgrunnlagPeriode orginal = lagPeriode();
         BeregningsgrunnlagPeriode kopi = BeregningsgrunnlagPeriode.builder()

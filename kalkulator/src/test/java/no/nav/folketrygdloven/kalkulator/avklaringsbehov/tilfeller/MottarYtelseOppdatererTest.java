@@ -43,7 +43,7 @@ public class MottarYtelseOppdatererTest {
     private BeregningsgrunnlagInput input;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         beregningsgrunnlag = BeregningsgrunnlagDto.builder()
             .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING)
             .medGrunnbeløp(Beløp.fra(91425))
@@ -56,7 +56,7 @@ public class MottarYtelseOppdatererTest {
     }
 
     @Test
-    public void skal_sette_mottar_ytelse_kun_for_frilans() {
+    void skal_sette_mottar_ytelse_kun_for_frilans() {
         // Arrange
         FaktaBeregningLagreDto dto = new FaktaBeregningLagreDto(singletonList(FaktaOmBeregningTilfelle.VURDER_MOTTAR_YTELSE));
         dto.setMottarYtelse(new MottarYtelseDto(true, emptyList()));
@@ -74,7 +74,7 @@ public class MottarYtelseOppdatererTest {
     }
 
     @Test
-    public void skal_sette_mottar_ytelse_kun_for_frilans_og_arbeidstakerandel() {
+    void skal_sette_mottar_ytelse_kun_for_frilans_og_arbeidstakerandel() {
         // Arrange
         FaktaBeregningLagreDto dto = new FaktaBeregningLagreDto(singletonList(FaktaOmBeregningTilfelle.VURDER_MOTTAR_YTELSE));
         byggFrilansAndel();

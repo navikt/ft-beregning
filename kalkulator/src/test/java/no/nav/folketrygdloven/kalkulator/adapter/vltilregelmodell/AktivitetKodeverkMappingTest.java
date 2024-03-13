@@ -10,7 +10,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 public class AktivitetKodeverkMappingTest {
 
     @Test
-    public void skal_verifisere_at_beregningsreglene_kjenner_alle_opptjeningsaktiviteter_i_kodeverk() {
+    void skal_verifisere_at_beregningsreglene_kjenner_alle_opptjeningsaktiviteter_i_kodeverk() {
         for (OpptjeningAktivitetType kode : EnumSet.allOf(OpptjeningAktivitetType.class)) {
             //TODO(OJR) skal fjerne UTDANNINGSPERMISJON fra kodeverk
             if (!OpptjeningAktivitetType.UDEFINERT.equals(kode) && !kode.getKode().equals("UTDANNINGSPERMISJON")) {

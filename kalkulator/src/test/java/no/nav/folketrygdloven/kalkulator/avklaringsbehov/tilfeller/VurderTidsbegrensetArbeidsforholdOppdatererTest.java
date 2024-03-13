@@ -47,7 +47,7 @@ public class VurderTidsbegrensetArbeidsforholdOppdatererTest {
     private BeregningsgrunnlagInput input;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         virksomheter.add(Arbeidsgiver.virksomhet("123"));
         virksomheter.add(Arbeidsgiver.virksomhet("456"));
         virksomheter.add(Arbeidsgiver.virksomhet("789"));
@@ -78,7 +78,7 @@ public class VurderTidsbegrensetArbeidsforholdOppdatererTest {
 
 
     @Test
-    public void skal_markere_korrekte_andeler_som_tidsbegrenset() {
+    void skal_markere_korrekte_andeler_som_tidsbegrenset() {
         //Arrange
         lagBehandlingMedBeregningsgrunnlag();
 

@@ -53,7 +53,7 @@ public class YtelsespesifiktGrunnlagTjenesteOMPTest {
     private BeregningAktivitetAggregatDto beregningAktiviteter;
 
     @Test
-    public void skalSetteRiktigYtelsesspesifikkInformasjonNårOmsorgspengerOgAtOgDirekteUtbetalingTilBruker() {
+    void skalSetteRiktigYtelsesspesifikkInformasjonNårOmsorgspengerOgAtOgDirekteUtbetalingTilBruker() {
         //Arrange
         BigDecimal beregnet = BigDecimal.valueOf(20_000);
         BigDecimal beregnetPrÅr = BigDecimal.valueOf(240_000);
@@ -108,7 +108,7 @@ public class YtelsespesifiktGrunnlagTjenesteOMPTest {
     }
 
     @Test
-    public void skalSetteRiktigYtelsesspesifikkInformasjonNårOmsorgspengerOgAtOgFullRefusjon() {
+    void skalSetteRiktigYtelsesspesifikkInformasjonNårOmsorgspengerOgAtOgFullRefusjon() {
         //Arrange
         BigDecimal beregnet = BigDecimal.valueOf(20_000);
         BigDecimal beregnetPrÅr = BigDecimal.valueOf(240_000);
@@ -162,7 +162,7 @@ public class YtelsespesifiktGrunnlagTjenesteOMPTest {
     }
 
     @Test
-    public void skalSetteRiktigYtelsesspesifikkInformasjonNårOmsorgspengerOgFlOgAtOgFullRefusjon() {
+    void skalSetteRiktigYtelsesspesifikkInformasjonNårOmsorgspengerOgFlOgAtOgFullRefusjon() {
         //Arrange
         Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         this.beregningAktiviteter = lagBeregningAktiviteter(arbeidsgiver);
@@ -203,7 +203,7 @@ public class YtelsespesifiktGrunnlagTjenesteOMPTest {
     }
 
     @Test
-    public void skalSetteRiktigYtelsesspesifikkInformasjonNårOmsorgspengerOgSnOgAtOgFullRefusjon() {
+    void skalSetteRiktigYtelsesspesifikkInformasjonNårOmsorgspengerOgSnOgAtOgFullRefusjon() {
         //Arrange
         Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         this.beregningAktiviteter = lagBeregningAktiviteter(arbeidsgiver);

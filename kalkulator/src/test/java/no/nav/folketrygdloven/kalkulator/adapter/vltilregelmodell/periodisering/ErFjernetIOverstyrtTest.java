@@ -37,7 +37,7 @@ class ErFjernetIOverstyrtTest {
 
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         // Nullstiller aggregat
         IAY_BUILDER = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
         BUILDER = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
@@ -46,7 +46,7 @@ class ErFjernetIOverstyrtTest {
     }
 
     @Test
-    public void arbeidsforhold_som_var_i_permisjon_dagen_før_stp_men_ikkje_på_stp_og_er_ikke_fjernet() {
+    void arbeidsforhold_som_var_i_permisjon_dagen_før_stp_men_ikkje_på_stp_og_er_ikke_fjernet() {
         // Arrange
         Arbeidsgiver ag = Arbeidsgiver.virksomhet("999999999");
         InternArbeidsforholdRefDto ref = InternArbeidsforholdRefDto.nullRef();
@@ -70,7 +70,7 @@ class ErFjernetIOverstyrtTest {
     }
 
     @Test
-    public void arbeidsforhold_som_var_i_permisjon_og_ligger_i_overstyr_men_er_ikke_fjernet() {
+    void arbeidsforhold_som_var_i_permisjon_og_ligger_i_overstyr_men_er_ikke_fjernet() {
         // Arrange
         Arbeidsgiver ag = Arbeidsgiver.virksomhet("999999999");
         InternArbeidsforholdRefDto ref = InternArbeidsforholdRefDto.nullRef();
@@ -96,7 +96,7 @@ class ErFjernetIOverstyrtTest {
     }
 
     @Test
-    public void arbeidsforhold_som_var_i_permisjon_på_stp_ikke_fjernet() {
+    void arbeidsforhold_som_var_i_permisjon_på_stp_ikke_fjernet() {
         // Arrange
         Arbeidsgiver ag = Arbeidsgiver.virksomhet("999999999");
         InternArbeidsforholdRefDto ref = InternArbeidsforholdRefDto.nullRef();
@@ -121,7 +121,7 @@ class ErFjernetIOverstyrtTest {
     }
 
     @Test
-    public void arbeidsforhold_som_ikke_var_i_permisjon_på_stp_og_fjernet() {
+    void arbeidsforhold_som_ikke_var_i_permisjon_på_stp_og_fjernet() {
         // Arrange
         Arbeidsgiver ag = Arbeidsgiver.virksomhet("999999999");
         InternArbeidsforholdRefDto ref = InternArbeidsforholdRefDto.nullRef();
@@ -145,7 +145,7 @@ class ErFjernetIOverstyrtTest {
     }
 
     @Test
-    public void arbeidsforhold_uten_overstyring() {
+    void arbeidsforhold_uten_overstyring() {
         // Arrange
         Arbeidsgiver ag = Arbeidsgiver.virksomhet("999999999");
         InternArbeidsforholdRefDto ref = InternArbeidsforholdRefDto.nullRef();

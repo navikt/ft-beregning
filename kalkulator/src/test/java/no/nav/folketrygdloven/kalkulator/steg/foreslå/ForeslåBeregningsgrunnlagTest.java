@@ -97,7 +97,7 @@ public class ForeslåBeregningsgrunnlagTest {
     private ForeslåBeregningsgrunnlag foreslåBeregningsgrunnlag = new ForeslåBeregningsgrunnlag();
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         iayGrunnlagBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
         beregningsgrunnlag = lagBeregningsgrunnlagAT(true);
     }
@@ -197,7 +197,7 @@ public class ForeslåBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skalLageEnPeriode() {
+    void skalLageEnPeriode() {
         // Arrange
         lagBehandling(MÅNEDSINNTEKT1, MÅNEDSINNTEKT1,
                 Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR1), MINUS_YEARS_1.withDayOfMonth(1), MINUS_YEARS_1.withDayOfMonth(1).plusYears(2), iayGrunnlagBuilder);
@@ -222,7 +222,7 @@ public class ForeslåBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skalLageEnPeriodeNårNaturalytelseBortfallerPåSkjæringstidspunktet() {
+    void skalLageEnPeriodeNårNaturalytelseBortfallerPåSkjæringstidspunktet() {
         // Arrange
         lagBehandling(MÅNEDSINNTEKT1, MÅNEDSINNTEKT1,
                 Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR1), MINUS_YEARS_1.withDayOfMonth(1), MINUS_YEARS_1.withDayOfMonth(1).plusYears(2), iayGrunnlagBuilder);
@@ -266,7 +266,7 @@ public class ForeslåBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skalLageToPerioderNaturalYtelseBortfaller() {
+    void skalLageToPerioderNaturalYtelseBortfaller() {
         // Arrange
         lagBehandling(MÅNEDSINNTEKT1, MÅNEDSINNTEKT1,
                 Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR1), MINUS_YEARS_1.withDayOfMonth(1), MINUS_YEARS_1.withDayOfMonth(1).plusYears(2), iayGrunnlagBuilder);
@@ -291,7 +291,7 @@ public class ForeslåBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skalLageToPerioderNaturalYtelseTilkommer() {
+    void skalLageToPerioderNaturalYtelseTilkommer() {
         // Arrange
         lagBehandling(MÅNEDSINNTEKT1, MÅNEDSINNTEKT1,
                 Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR1), MINUS_YEARS_1.withDayOfMonth(1), MINUS_YEARS_1.withDayOfMonth(1).plusYears(2), iayGrunnlagBuilder);
@@ -317,7 +317,7 @@ public class ForeslåBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skalLageToPerioderKortvarigArbeidsforhold() {
+    void skalLageToPerioderKortvarigArbeidsforhold() {
         // Arrange
         Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR1);
         lagBehandling(MÅNEDSINNTEKT1, MÅNEDSINNTEKT1,
@@ -344,7 +344,7 @@ public class ForeslåBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skalLageTrePerioderKortvarigArbeidsforholdOgNaturalYtelse() {
+    void skalLageTrePerioderKortvarigArbeidsforholdOgNaturalYtelse() {
         // Arrange
         Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR1);
         lagBehandling(MÅNEDSINNTEKT1, MÅNEDSINNTEKT1,
@@ -381,7 +381,7 @@ public class ForeslåBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skalLageEnPeriodeFrilanser() {
+    void skalLageEnPeriodeFrilanser() {
         // Arrange
         BeregningsgrunnlagDto grunnlagFL = lagBeregningsgrunnlagFL();
         BeregningsgrunnlagPrStatusOgAndelDto.Builder.oppdatere(grunnlagFL.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().get(0))
@@ -401,7 +401,7 @@ public class ForeslåBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skal_lage_en_periode_for_private_arbeidsgiver() {
+    void skal_lage_en_periode_for_private_arbeidsgiver() {
         // Arrange
         Arbeidsgiver privateArbeidsgiver = Arbeidsgiver.person(beregningsAkrød1);
         BeregningsgrunnlagDto grunnlagAT = lagBeregningsgrunnlagAT(false);
@@ -439,7 +439,7 @@ public class ForeslåBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skalLageToPerioderKortvarigArbeidsforholdHvorTomSammenfallerMedBortfallAvNaturalytelse() {
+    void skalLageToPerioderKortvarigArbeidsforholdHvorTomSammenfallerMedBortfallAvNaturalytelse() {
         // Arrange
         Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR1);
         lagBehandling(MÅNEDSINNTEKT1, MÅNEDSINNTEKT1,
@@ -471,7 +471,7 @@ public class ForeslåBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skalLageBeregningsgrunnlagMedTrePerioder() {
+    void skalLageBeregningsgrunnlagMedTrePerioder() {
         // Arrange
         lagBehandling(MÅNEDSINNTEKT1.adder(MÅNEDSINNTEKT2), MÅNEDSINNTEKT1.adder(MÅNEDSINNTEKT2),
                 Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR1), MINUS_YEARS_1.withDayOfMonth(1), MINUS_YEARS_1.withDayOfMonth(1).plusYears(2), iayGrunnlagBuilder);
@@ -520,7 +520,7 @@ public class ForeslåBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skalLageBeregningsgrunnlagMedTrePerioderKortvarigFørNaturalytelse() {
+    void skalLageBeregningsgrunnlagMedTrePerioderKortvarigFørNaturalytelse() {
         // Arrange
         Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR1);
         lagBehandling(MÅNEDSINNTEKT1, MÅNEDSINNTEKT1,
@@ -553,7 +553,7 @@ public class ForeslåBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skalIkkeReturnereAvklaringsbehovNårOmsorgspengerOgATMedOver25ProsentAvvikOOgRefusjonTilsvarerBeregnet() {
+    void skalIkkeReturnereAvklaringsbehovNårOmsorgspengerOgATMedOver25ProsentAvvikOOgRefusjonTilsvarerBeregnet() {
         // Arrange
         PeriodeMedUtbetalingsgradDto periodeMedUtbetalingsgradDto = new PeriodeMedUtbetalingsgradDto(Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_BEREGNING,
                 SKJÆRINGSTIDSPUNKT_BEREGNING.plusMonths(1)), Utbetalingsgrad.valueOf(100));
@@ -577,7 +577,7 @@ public class ForeslåBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skalIkkeReturnereAvklaringsbehovNårOmsorgspengerOgATMedAvvikOver25ProsentAvvikOOgRefusjon6G() {
+    void skalIkkeReturnereAvklaringsbehovNårOmsorgspengerOgATMedAvvikOver25ProsentAvvikOOgRefusjon6G() {
         // Arrange
         PeriodeMedUtbetalingsgradDto periodeMedUtbetalingsgradDto = new PeriodeMedUtbetalingsgradDto(Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_BEREGNING,
                 SKJÆRINGSTIDSPUNKT_BEREGNING.plusMonths(1)), Utbetalingsgrad.valueOf(100));
@@ -602,7 +602,7 @@ public class ForeslåBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skalIkkeReturnereAvklaringsbehovNårOmsorgspengerOgATMedAvvikOver25ProsentAvvikOgAvkorting() {
+    void skalIkkeReturnereAvklaringsbehovNårOmsorgspengerOgATMedAvvikOver25ProsentAvvikOgAvkorting() {
         // Arrange
         PeriodeMedUtbetalingsgradDto periodeMedUtbetalingsgradDto = new PeriodeMedUtbetalingsgradDto(Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_BEREGNING,
                 SKJÆRINGSTIDSPUNKT_BEREGNING.plusMonths(1)), Utbetalingsgrad.valueOf(100));
@@ -627,7 +627,7 @@ public class ForeslåBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skalReturnereAvklaringsbehovNårOmsorgspengerOgATMedOver25ProsentAvvikOgUtbetalingDirekteTilBruker() {
+    void skalReturnereAvklaringsbehovNårOmsorgspengerOgATMedOver25ProsentAvvikOgUtbetalingDirekteTilBruker() {
         // Arrange
         PeriodeMedUtbetalingsgradDto periodeMedUtbetalingsgradDto = new PeriodeMedUtbetalingsgradDto(Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_BEREGNING,
                 SKJÆRINGSTIDSPUNKT_BEREGNING.plusMonths(1)), Utbetalingsgrad.valueOf(100));
@@ -658,7 +658,7 @@ public class ForeslåBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skalReturnereAvklaringsbehovNårOmsorgspengerOgFLMedOver25ProsentAvvik() {
+    void skalReturnereAvklaringsbehovNårOmsorgspengerOgFLMedOver25ProsentAvvik() {
         // Arrange
         BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlagFL();
         PeriodeMedUtbetalingsgradDto periodeMedUtbetalingsgradDto = new PeriodeMedUtbetalingsgradDto(Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_BEREGNING,
@@ -689,7 +689,7 @@ public class ForeslåBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skalIkkeReturnereAvklaringsbehovNårOmsorgspengerOgFlereArbeidsforholdMedAvvikOgEttKravMedFullRefusjon() {
+    void skalIkkeReturnereAvklaringsbehovNårOmsorgspengerOgFlereArbeidsforholdMedAvvikOgEttKravMedFullRefusjon() {
         // Arrange
         var inntektBeregnetArbeidsgiver1 = Beløp.fra(40_000);
         var refusjon =  Beløp.fra(40_000);

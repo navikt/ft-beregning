@@ -61,7 +61,7 @@ public class MapBeregningsgrunnlagFraRegelTilVLTest {
     private KoblingReferanse koblingReferanse = new KoblingReferanseMock();
 
     @Test
-    public void testMappingBGForArbeidstaker() {
+    void testMappingBGForArbeidstaker() {
         final BeregningsgrunnlagDto vlBG = buildVLBGForATOgFL();
 
         no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag resultatGrunnlag = buildRegelBGForAT();
@@ -80,7 +80,7 @@ public class MapBeregningsgrunnlagFraRegelTilVLTest {
     }
 
     @Test
-    public void skal_mappe_beregningsgrunnlag_når_arbeidsgiver_er_privatperson() {
+    void skal_mappe_beregningsgrunnlag_når_arbeidsgiver_er_privatperson() {
         // Arrange
         LocalDate skjæringstidspunkt = LocalDate.of(2018, 1, 1);
         LocalDate førsteUttaksdag = skjæringstidspunkt.plusWeeks(2);
@@ -110,7 +110,7 @@ public class MapBeregningsgrunnlagFraRegelTilVLTest {
     }
 
     @Test
-    public void skal_mappe_beregningsgrunnlag_når_arbeidsgiver_er_virksomhet() {
+    void skal_mappe_beregningsgrunnlag_når_arbeidsgiver_er_virksomhet() {
         // Arrange
         LocalDate skjæringstidspunkt = LocalDate.of(2018, 1, 1);
         LocalDate førsteUttaksdag = skjæringstidspunkt.plusWeeks(2);
@@ -139,7 +139,7 @@ public class MapBeregningsgrunnlagFraRegelTilVLTest {
     }
 
     @Test
-    public void skal_mappe_beregningsgrunnlag_for_næring() {
+    void skal_mappe_beregningsgrunnlag_for_næring() {
         // Arrange
         LocalDate skjæringstidspunkt = LocalDate.of(2018, 1, 1);
         LocalDate førsteUttaksdag = skjæringstidspunkt.plusWeeks(2);
@@ -161,7 +161,7 @@ public class MapBeregningsgrunnlagFraRegelTilVLTest {
 
 
     @Test
-    public void skalSetteRiktigSammenligningsgrunnlagPrStatusNårBeregningsgrunnlagInneholderSammenlingningsgrunnlagForFL() {
+    void skalSetteRiktigSammenligningsgrunnlagPrStatusNårBeregningsgrunnlagInneholderSammenlingningsgrunnlagForFL() {
         final BeregningsgrunnlagDto vlBG = buildVLBGForATOgFL();
 
         no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag resultatGrunnlag = buildRegelBGForFL();

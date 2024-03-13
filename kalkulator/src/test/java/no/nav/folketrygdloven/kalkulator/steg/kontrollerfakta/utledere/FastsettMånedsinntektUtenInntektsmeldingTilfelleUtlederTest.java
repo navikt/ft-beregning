@@ -39,7 +39,7 @@ public class FastsettMånedsinntektUtenInntektsmeldingTilfelleUtlederTest {
     private KoblingReferanse koblingReferanse = new KoblingReferanseMock(SKJÆRINGSTIDSPUNKT);
 
     @Test
-    public void skal_gi_tilfelle_om_beregningsgrunnlag_har_andel_med_kunstig_arbeid() {
+    void skal_gi_tilfelle_om_beregningsgrunnlag_har_andel_med_kunstig_arbeid() {
         BeregningsgrunnlagGrunnlagDto grunnlag = lagGrunnlag(true);
         FaktaOmBeregningInput faktaOmBeregningInput = lagFaktaOmBeregningInput(grunnlag, List.of());
         Optional<FaktaOmBeregningTilfelle> tilfelle = new FastsettMånedsinntektUtenInntektsmeldingTilfelleUtleder().utled(faktaOmBeregningInput, grunnlag);
@@ -47,7 +47,7 @@ public class FastsettMånedsinntektUtenInntektsmeldingTilfelleUtlederTest {
     }
 
     @Test
-    public void skal_ikkje_gi_tilfelle_om_beregningsgrunnlag_ikkje_har_andel_med_kunstig_arbeid() {
+    void skal_ikkje_gi_tilfelle_om_beregningsgrunnlag_ikkje_har_andel_med_kunstig_arbeid() {
         BeregningsgrunnlagGrunnlagDto grunnlag = lagGrunnlag(false);
         FaktaOmBeregningInput faktaOmBeregningInput = lagFaktaOmBeregningInput(grunnlag, List.of());
 
@@ -56,7 +56,7 @@ public class FastsettMånedsinntektUtenInntektsmeldingTilfelleUtlederTest {
     }
 
     @Test
-    public void skal_gi_tilfelle_om_beregningsgrunnlag_har_andeler_for_samme_virksomhet_med_og_uten_inntektsmelding() {
+    void skal_gi_tilfelle_om_beregningsgrunnlag_har_andeler_for_samme_virksomhet_med_og_uten_inntektsmelding() {
         BeregningsgrunnlagDto bg = BeregningsgrunnlagDto.builder()
                 .leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
                 .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT).build();
@@ -91,7 +91,7 @@ public class FastsettMånedsinntektUtenInntektsmeldingTilfelleUtlederTest {
     }
 
     @Test
-    public void skal_ikkje_gi_tilfelle_om_beregningsgrunnlag_kun_har_andeler_for_samme_virksomhet_med_inntektsmelding() {
+    void skal_ikkje_gi_tilfelle_om_beregningsgrunnlag_kun_har_andeler_for_samme_virksomhet_med_inntektsmelding() {
         BeregningsgrunnlagDto bg = BeregningsgrunnlagDto.builder()
                 .leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
                 .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT).build();

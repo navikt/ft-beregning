@@ -20,7 +20,7 @@ class FinnAndelerMedØktRefusjonTjenesteTest {
     List<RefusjonAndel> revurderingAndeler = new ArrayList<>();
 
     @Test
-    public void aggregat_til_spesifikk_samme_refusjon() {
+    void aggregat_til_spesifikk_samme_refusjon() {
         lagRefusjonandel(originaleAndeler, InternArbeidsforholdRefDto.nullRef(), BigDecimal.valueOf(500000));
         lagRefusjonandel(revurderingAndeler, InternArbeidsforholdRefDto.nyRef(), BigDecimal.valueOf(500000));
         List<RefusjonAndel> resultat = kjørTjeneste();
@@ -28,7 +28,7 @@ class FinnAndelerMedØktRefusjonTjenesteTest {
     }
 
     @Test
-    public void spesifikk_til_aggregat_økt_refusjon() {
+    void spesifikk_til_aggregat_økt_refusjon() {
         lagRefusjonandel(originaleAndeler, InternArbeidsforholdRefDto.nullRef(), BigDecimal.valueOf(500000));
         lagRefusjonandel(revurderingAndeler, InternArbeidsforholdRefDto.nyRef(), BigDecimal.valueOf(500001));
         List<RefusjonAndel> resultat = kjørTjeneste();
@@ -37,7 +37,7 @@ class FinnAndelerMedØktRefusjonTjenesteTest {
     }
 
     @Test
-    public void bare_spesifikk_andeler_økt_refusjon_på_en() {
+    void bare_spesifikk_andeler_økt_refusjon_på_en() {
         InternArbeidsforholdRefDto ref1 = InternArbeidsforholdRefDto.nyRef();
         InternArbeidsforholdRefDto ref2 = InternArbeidsforholdRefDto.nyRef();
         lagRefusjonandel(originaleAndeler, ref1, BigDecimal.valueOf(200000));
@@ -50,7 +50,7 @@ class FinnAndelerMedØktRefusjonTjenesteTest {
     }
 
     @Test
-    public void spesifikke_til_aggregat_økt_refusjon() {
+    void spesifikke_til_aggregat_økt_refusjon() {
         InternArbeidsforholdRefDto ref1 = InternArbeidsforholdRefDto.nyRef();
         InternArbeidsforholdRefDto ref2 = InternArbeidsforholdRefDto.nyRef();
         lagRefusjonandel(originaleAndeler, ref1, BigDecimal.valueOf(200000));
@@ -62,7 +62,7 @@ class FinnAndelerMedØktRefusjonTjenesteTest {
     }
 
     @Test
-    public void spesifikke_til_blanding_økt_refusjon() {
+    void spesifikke_til_blanding_økt_refusjon() {
         InternArbeidsforholdRefDto ref1 = InternArbeidsforholdRefDto.nyRef();
         InternArbeidsforholdRefDto ref2 = InternArbeidsforholdRefDto.nyRef();
         lagRefusjonandel(originaleAndeler, ref1, BigDecimal.valueOf(200000));
@@ -76,7 +76,7 @@ class FinnAndelerMedØktRefusjonTjenesteTest {
     }
 
     @Test
-    public void blanding_til_spesifikke_økt_refusjon_for_en_spesifikk() {
+    void blanding_til_spesifikke_økt_refusjon_for_en_spesifikk() {
         InternArbeidsforholdRefDto ref1 = InternArbeidsforholdRefDto.nyRef();
         InternArbeidsforholdRefDto ref2 = InternArbeidsforholdRefDto.nyRef();
         lagRefusjonandel(originaleAndeler, ref1, BigDecimal.valueOf(200000));
@@ -91,7 +91,7 @@ class FinnAndelerMedØktRefusjonTjenesteTest {
     }
 
     @Test
-    public void blanding_til_spesifikke_økt_refusjon_for_to_andeler() {
+    void blanding_til_spesifikke_økt_refusjon_for_to_andeler() {
         InternArbeidsforholdRefDto ref1 = InternArbeidsforholdRefDto.nyRef();
         InternArbeidsforholdRefDto ref2 = InternArbeidsforholdRefDto.nyRef();
         lagRefusjonandel(originaleAndeler, ref1, BigDecimal.valueOf(200000));
@@ -106,7 +106,7 @@ class FinnAndelerMedØktRefusjonTjenesteTest {
     }
 
     @Test
-    public void blanding_til_blanding_økt_refusjon_for_andel_uten_ref() {
+    void blanding_til_blanding_økt_refusjon_for_andel_uten_ref() {
         InternArbeidsforholdRefDto ref1 = InternArbeidsforholdRefDto.nyRef();
         lagRefusjonandel(originaleAndeler, ref1, BigDecimal.valueOf(200000));
         lagRefusjonandel(originaleAndeler, InternArbeidsforholdRefDto.nullRef(), BigDecimal.valueOf(100000));
@@ -118,7 +118,7 @@ class FinnAndelerMedØktRefusjonTjenesteTest {
     }
 
     @Test
-    public void blanding_til_blanding_med_ny_andel_økt_refusjon_for_andel_uten_ref() {
+    void blanding_til_blanding_med_ny_andel_økt_refusjon_for_andel_uten_ref() {
         InternArbeidsforholdRefDto ref1 = InternArbeidsforholdRefDto.nyRef();
         InternArbeidsforholdRefDto ref2 = InternArbeidsforholdRefDto.nyRef();
         lagRefusjonandel(originaleAndeler, ref1, BigDecimal.valueOf(200000));

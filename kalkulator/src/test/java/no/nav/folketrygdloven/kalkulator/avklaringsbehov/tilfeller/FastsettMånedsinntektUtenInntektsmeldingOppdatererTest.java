@@ -45,7 +45,7 @@ public class FastsettMånedsinntektUtenInntektsmeldingOppdatererTest {
     private BeregningsgrunnlagInput input;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         arbeidsgiver2 = Arbeidsgiver.virksomhet(ORGNR2);
 
@@ -73,7 +73,7 @@ public class FastsettMånedsinntektUtenInntektsmeldingOppdatererTest {
     }
 
     @Test
-    public void skal_sette_inntekt_på_riktige_andeler_i_alle_perioder(){
+    void skal_sette_inntekt_på_riktige_andeler_i_alle_perioder(){
         // Arrange
         FastsettMånedsinntektUtenInntektsmeldingDto dto = new FastsettMånedsinntektUtenInntektsmeldingDto();
         FastsettMånedsinntektUtenInntektsmeldingAndelDto andelDto = new FastsettMånedsinntektUtenInntektsmeldingAndelDto(1L,

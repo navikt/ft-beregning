@@ -49,7 +49,7 @@ public class AvklaringsbehovUtlederFordelBeregningTest {
 
 
     @Test
-    public void skal_ikke_lage_avklaringsbehov_dersom_det_ikke_er_endret_bg() {
+    void skal_ikke_lage_avklaringsbehov_dersom_det_ikke_er_endret_bg() {
         BeregningsgrunnlagGrunnlagDto grunnlag = lagGrunnlagutenNyttArbeidsforhold();
 
         List<BeregningAvklaringsbehovResultat> avklaringsbehovResultats = utledAvklaringsbehov(koblingReferanse, grunnlag);
@@ -64,7 +64,7 @@ public class AvklaringsbehovUtlederFordelBeregningTest {
     }
 
     @Test
-    public void skal_lage_avklaringsbehov_når_det_er_endring() {
+    void skal_lage_avklaringsbehov_når_det_er_endring() {
         BeregningsgrunnlagGrunnlagDto grunnlag = lagGrunnlagMedNyttArbeidsforhold();
 
         List<BeregningAvklaringsbehovResultat> avklaringsbehovResultats = utledAvklaringsbehov(koblingReferanse, grunnlag);
