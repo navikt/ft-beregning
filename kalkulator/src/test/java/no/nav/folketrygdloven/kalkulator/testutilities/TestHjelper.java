@@ -70,7 +70,7 @@ public class TestHjelper {
         return register;
     }
 
-    void lagBehandlingForSN(Beløp skattbarInntekt,
+    public void lagBehandlingForSN(Beløp skattbarInntekt,
                                    int førsteÅr, InntektArbeidYtelseAggregatBuilder inntektArbeidYtelseAggregatBuilder) {
         for (LocalDate året = LocalDate.of(førsteÅr, Month.JANUARY, 1); året.getYear() < førsteÅr + 3; året = året.plusYears(1)) {
             lagInntektForSN(inntektArbeidYtelseAggregatBuilder, året, skattbarInntekt);
@@ -130,7 +130,7 @@ public class TestHjelper {
         return yrkesaktivitetBuilder;
     }
 
-    void lagInntektForSammenligning(InntektArbeidYtelseAggregatBuilder inntektArbeidYtelseAggregatBuilder,
+    public void lagInntektForSammenligning(InntektArbeidYtelseAggregatBuilder inntektArbeidYtelseAggregatBuilder,
                                            LocalDate fom,
                                            LocalDate tom, Beløp månedsbeløp, Arbeidsgiver arbeidsgiver) {
         OpptjeningsnøkkelDto opptjeningsnøkkel = OpptjeningsnøkkelDto.forArbeidsgiver(arbeidsgiver);
@@ -148,7 +148,7 @@ public class TestHjelper {
         inntektArbeidYtelseAggregatBuilder.leggTilAktørInntekt(aktørInntektBuilder);
     }
 
-    void lagInntektForArbeidsforhold(InntektArbeidYtelseAggregatBuilder inntektArbeidYtelseAggregatBuilder,
+    public void lagInntektForArbeidsforhold(InntektArbeidYtelseAggregatBuilder inntektArbeidYtelseAggregatBuilder,
                                             LocalDate fom,
                                             LocalDate tom, Beløp månedsbeløp, Arbeidsgiver arbeidsgiver) {
         OpptjeningsnøkkelDto opptjeningsnøkkel = OpptjeningsnøkkelDto.forArbeidsgiver(arbeidsgiver);

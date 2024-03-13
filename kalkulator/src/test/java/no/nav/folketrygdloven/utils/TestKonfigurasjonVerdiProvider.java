@@ -13,15 +13,15 @@ public final class TestKonfigurasjonVerdiProvider implements KonfigurasjonVerdiP
         return verdier.getProperty(key);
     }
 
-    void put(String key, String value) {
+    public void put(String key, String value) {
         verdier.setProperty(key, value);
     }
 
-    void remove(String key) {
+    public void remove(String key) {
         verdier.remove(key);
     }
 
-    void clear() {
+    public void clear() {
         verdier.clear();
     }
 }
