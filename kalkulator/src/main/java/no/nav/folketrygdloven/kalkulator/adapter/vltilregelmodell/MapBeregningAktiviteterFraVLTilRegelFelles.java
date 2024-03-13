@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
+import no.nav.folketrygdloven.kalkulator.KonfigurasjonVerdi;
 import no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.kodeverk.MapOpptjeningAktivitetTypeFraVLTilRegel;
 import no.nav.folketrygdloven.kalkulator.felles.BeregningstidspunktTjeneste;
 import no.nav.folketrygdloven.kalkulator.input.FastsettBeregningsaktiviteterInput;
@@ -33,7 +34,15 @@ public class MapBeregningAktiviteterFraVLTilRegelFelles implements MapBeregningA
         var modell = new AktivitetStatusModell();
         modell.setSkjæringstidspunktForOpptjening(opptjeningSkjæringstidspunkt);
 
-        var relevanteAktiviteter = input.getOpptjeningAktiviteterForBeregning();
+
+	    if (input.getOpptjeningAktiviteter().erMidlertidigInaktiv() && KonfigurasjonVerdi.instance().get("BRUKERS_ANDEL_8_47_B", false)) {
+		    // Skal ikkje ha nokon aktiviteter ved midlertidig inaktiv
+		    // Beregningsgrunnlaget skal alltid bestå av kun BRUKERS_ANDEL og alle andre aktiviter regnes som tilkommet
+		    return modell;
+	    }
+
+
+	    var relevanteAktiviteter = input.getOpptjeningAktiviteterForBeregning();
 
         if (!relevanteAktiviteter.isEmpty()) {
             var relevantYrkesaktivitet = input.getIayGrunnlag().getAktørArbeidFraRegister()
