@@ -35,7 +35,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 class MapBesteberegningFraRegelTilVLTest {
 
     @Test
-    public void en_andel_bb_mappes_mot_matchende_andel_bg() {
+    void en_andel_bb_mappes_mot_matchende_andel_bg() {
         // Arrange
         String arbRef = UUID.randomUUID().toString();
         var bgp = BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(LocalDate.now(), null);
@@ -54,7 +54,7 @@ class MapBesteberegningFraRegelTilVLTest {
     }
 
     @Test
-    public void en_andel_bb_mappes_mot_flere_arbeidsandeler() {
+    void en_andel_bb_mappes_mot_flere_arbeidsandeler() {
         // Arrange
         String arbRef = UUID.randomUUID().toString();
         String arbRef2 = UUID.randomUUID().toString();
@@ -76,7 +76,7 @@ class MapBesteberegningFraRegelTilVLTest {
     }
 
     @Test
-    public void to_andel_bb_mappes_mot_matchende_andel_bg() {
+    void to_andel_bb_mappes_mot_matchende_andel_bg() {
         // Arrange
         String arbRef = UUID.randomUUID().toString();
         var bgp = BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(LocalDate.now(), null);
@@ -96,7 +96,7 @@ class MapBesteberegningFraRegelTilVLTest {
     }
 
     @Test
-    public void skal_ikke_mappe_andeler_når_det_ikke_skal_brukes_besteberegning() {
+    void skal_ikke_mappe_andeler_når_det_ikke_skal_brukes_besteberegning() {
         // Arrange
         String arbRef = UUID.randomUUID().toString();
         var bgp = BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(LocalDate.now(), null);
@@ -114,7 +114,7 @@ class MapBesteberegningFraRegelTilVLTest {
     }
 
     @Test
-    public void bg_andel_uten_bb_andel_skal_få_besteberegnet_lik_0() {
+    void bg_andel_uten_bb_andel_skal_få_besteberegnet_lik_0() {
         // Arrange
         String arbRef = UUID.randomUUID().toString();
         var bgp = BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(LocalDate.now(), null);
@@ -134,7 +134,7 @@ class MapBesteberegningFraRegelTilVLTest {
     }
 
     @Test
-    public void bb_ytelse_for_arbeid_mappes_til_ytelseandel() {
+    void bb_ytelse_for_arbeid_mappes_til_ytelseandel() {
         // Arrange
         var arbRef = UUID.randomUUID().toString();
         var bgp = BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(LocalDate.now(), null);
@@ -155,7 +155,7 @@ class MapBesteberegningFraRegelTilVLTest {
     }
 
     @Test
-    public void skal_mappe_seks_beste_måneder() {
+    void skal_mappe_seks_beste_måneder() {
         // Arrange
         var bbOutput = new BesteberegningOutput();
         bbOutput.setSkalBeregnesEtterSeksBesteMåneder(true);

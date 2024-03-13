@@ -46,7 +46,7 @@ public class FastsettBesteberegningFødendeKvinneOppdatererTest {
 
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         fastsettBesteberegningFødendeKvinneOppdaterer = new FastsettBesteberegningFødendeKvinneOppdaterer();
         beregningsgrunnlag = BeregningsgrunnlagDto.builder()
             .medGrunnbeløp(GRUNNBELØP)
@@ -72,7 +72,7 @@ public class FastsettBesteberegningFødendeKvinneOppdatererTest {
     }
 
     @Test
-    public void skal_sette_inntekt_på_andeler() {
+    void skal_sette_inntekt_på_andeler() {
         // Arrange
         FaktaBeregningLagreDto dto = new FaktaBeregningLagreDto(FAKTA_OM_BEREGNING_TILFELLER);
         int dagpengerBeregnet = 10000;
@@ -96,7 +96,7 @@ public class FastsettBesteberegningFødendeKvinneOppdatererTest {
     }
 
     @Test
-    public void skal_sette_inntekt_på_andeler_og_legge_til_ny_dagpengeandel() {
+    void skal_sette_inntekt_på_andeler_og_legge_til_ny_dagpengeandel() {
         // Arrange
         BeregningsgrunnlagDto bg = lagBGUtenDagpenger();
         FaktaBeregningLagreDto dto = new FaktaBeregningLagreDto(Collections.singletonList(FaktaOmBeregningTilfelle.FASTSETT_BESTEBEREGNING_FØDENDE_KVINNE));
@@ -130,7 +130,7 @@ public class FastsettBesteberegningFødendeKvinneOppdatererTest {
 
 
     @Test
-    public void skal_kunne_bekrefte_avklaringsbehov_på_nytt_med_dagpengeandel() {
+    void skal_kunne_bekrefte_avklaringsbehov_på_nytt_med_dagpengeandel() {
         // Arrange
         BeregningsgrunnlagDto nyttBg = lagBGUtenDagpenger();
         FaktaBeregningLagreDto dto = new FaktaBeregningLagreDto(Collections.singletonList(FaktaOmBeregningTilfelle.FASTSETT_BESTEBEREGNING_FØDENDE_KVINNE));

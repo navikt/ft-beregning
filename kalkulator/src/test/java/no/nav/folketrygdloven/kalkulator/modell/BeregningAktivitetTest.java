@@ -27,7 +27,7 @@ public class BeregningAktivitetTest {
     private static final Intervall PERIODE = Intervall.fraOgMedTilOgMed(LocalDate.of(2019, 1, 1), TIDENES_ENDE);
 
     @Test
-    public void skal_bruke_aktivitet_om_ingen_overstyringer_for_aktivitet() {
+    void skal_bruke_aktivitet_om_ingen_overstyringer_for_aktivitet() {
         // Arrange
         BeregningAktivitetOverstyringerDto overstyringer = lagOverstyring(1);
         BeregningAktivitetDto aktivitet = BeregningAktivitetDto.builder()
@@ -45,7 +45,7 @@ public class BeregningAktivitetTest {
     }
 
     @Test
-    public void skal_ikkje_bruke_aktivitet_om__det_finnes_overstyringer_for_aktivitet() {
+    void skal_ikkje_bruke_aktivitet_om__det_finnes_overstyringer_for_aktivitet() {
         // Arrange
         BeregningAktivitetOverstyringerDto overstyringer = lagOverstyring(1);
         BeregningAktivitetDto aktivitet = BeregningAktivitetDto.builder()
@@ -63,7 +63,7 @@ public class BeregningAktivitetTest {
     }
 
     @Test
-    public void skal_kaste_exception_om_det_finnes_flere_overstyringer_for_aktivitet() {
+    void skal_kaste_exception_om_det_finnes_flere_overstyringer_for_aktivitet() {
         // Arrange
         BeregningAktivitetOverstyringerDto overstyringer = lagOverstyring(2);
         BeregningAktivitetDto aktivitet = BeregningAktivitetDto.builder()

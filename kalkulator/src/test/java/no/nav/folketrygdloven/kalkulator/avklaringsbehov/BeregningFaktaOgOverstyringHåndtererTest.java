@@ -43,12 +43,12 @@ public class BeregningFaktaOgOverstyringHåndtererTest {
     private KoblingReferanse koblingReferanse = new KoblingReferanseMock(STP);
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         this.beregningFaktaOgOverstyringHåndterer = new BeregningFaktaOgOverstyringHåndterer();
     }
 
     @Test
-    public void skal_sette_inntekt_for_en_andel_i_en_periode() {
+    void skal_sette_inntekt_for_en_andel_i_en_periode() {
         // Arrange
         Long andelsnr = 1L;
         BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlag(andelsnr, List.of(Intervall.fraOgMedTilOgMed(STP, TIDENES_ENDE)));
@@ -73,7 +73,7 @@ public class BeregningFaktaOgOverstyringHåndtererTest {
 
 
     @Test
-    public void skal_sette_inntekt_for_en_andel_i_to_perioder() {
+    void skal_sette_inntekt_for_en_andel_i_to_perioder() {
         // Arrange
         Long andelsnr = 1L;
         LocalDate tilOgMed = STP.plusMonths(1).minusDays(1);
@@ -106,7 +106,7 @@ public class BeregningFaktaOgOverstyringHåndtererTest {
 
 
     @Test
-    public void skal_ikke_opprette_status_som_allerede_finnes_kombinert() {
+    void skal_ikke_opprette_status_som_allerede_finnes_kombinert() {
         // Arrange
         Long andelsnr = 1L;
         BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlag(andelsnr, List.of(Intervall.fraOgMedTilOgMed(STP, TIDENES_ENDE)), AktivitetStatus.KOMBINERT_AT_FL);

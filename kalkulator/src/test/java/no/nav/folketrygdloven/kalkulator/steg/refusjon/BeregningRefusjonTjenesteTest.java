@@ -47,7 +47,7 @@ class BeregningRefusjonTjenesteTest {
     private static BeregningsgrunnlagDto revurderingBG;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         originaltBG = BeregningsgrunnlagDto.builder()
                 .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING)
                 .medGrunnbeløp(Beløp.fra(GrunnbeløpTestKonstanter.GRUNNBELØP_2018))
@@ -77,7 +77,7 @@ class BeregningRefusjonTjenesteTest {
     }
 
     @Test
-    public void skal_ikke_finne_andeler_når_det_ikke_har_vært_endring_i_refusjon() {
+    void skal_ikke_finne_andeler_når_det_ikke_har_vært_endring_i_refusjon() {
         BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode1 = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_BEREGNING, TIDENES_ENDE)
                 .build(originaltBG);
@@ -94,7 +94,7 @@ class BeregningRefusjonTjenesteTest {
     }
 
     @Test
-    public void skal_ikke_ta_med_periode_som_kun_finnes_i_orginalt_grunnlag() {
+    void skal_ikke_ta_med_periode_som_kun_finnes_i_orginalt_grunnlag() {
         BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode1 = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_BEREGNING.minusDays(10), SKJÆRINGSTIDSPUNKT_BEREGNING.minusDays(1))
                 .build(originaltBG);
@@ -118,7 +118,7 @@ class BeregningRefusjonTjenesteTest {
     }
 
     @Test
-    public void skal_ikke_ta_med_periode_som_kun_finnes_i_nytt_grunnlag() {
+    void skal_ikke_ta_med_periode_som_kun_finnes_i_nytt_grunnlag() {
         BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode1 = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_BEREGNING, TIDENES_ENDE)
                 .build(originaltBG);
@@ -143,7 +143,7 @@ class BeregningRefusjonTjenesteTest {
 
 
     @Test
-    public void skal_matche_andel_når_arbeidsforhold_ref_er_tilkommet_med_økt_refkrav() {
+    void skal_matche_andel_når_arbeidsforhold_ref_er_tilkommet_med_økt_refkrav() {
         // Arrange
         BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode1 = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_BEREGNING, TIDENES_ENDE)
@@ -167,7 +167,7 @@ class BeregningRefusjonTjenesteTest {
 
 
     @Test
-    public void skal_finne_andel_hvis_refusjonskrav_har_økt() {
+    void skal_finne_andel_hvis_refusjonskrav_har_økt() {
         // Arrange
         BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode1 = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_BEREGNING, TIDENES_ENDE)
@@ -190,7 +190,7 @@ class BeregningRefusjonTjenesteTest {
     }
 
     @Test
-    public void skal_ikke_finne_andel_hvis_refusjonskrav_har_sunket() {
+    void skal_ikke_finne_andel_hvis_refusjonskrav_har_sunket() {
         BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode1 = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_BEREGNING, TIDENES_ENDE)
                 .build(originaltBG);
@@ -208,7 +208,7 @@ class BeregningRefusjonTjenesteTest {
     }
 
     @Test
-    public void skal_finne_korrekt_andel_når_flere_finnes() {
+    void skal_finne_korrekt_andel_når_flere_finnes() {
         BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode1 = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_BEREGNING, TIDENES_ENDE)
                 .build(originaltBG);
@@ -232,7 +232,7 @@ class BeregningRefusjonTjenesteTest {
     }
 
     @Test
-    public void skal_ikke_finne_andel_hvis_inntekt_og_ref_økes_like_mye() {
+    void skal_ikke_finne_andel_hvis_inntekt_og_ref_økes_like_mye() {
         BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode1 = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_BEREGNING, TIDENES_ENDE)
                 .build(originaltBG);
@@ -251,7 +251,7 @@ class BeregningRefusjonTjenesteTest {
     }
 
     @Test
-    public void skal_finne_begge_andeler_hvis_ref_økes() {
+    void skal_finne_begge_andeler_hvis_ref_økes() {
         // Original
         BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode1 = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_BEREGNING, TIDENES_ENDE)
@@ -276,7 +276,7 @@ class BeregningRefusjonTjenesteTest {
     }
 
     @Test
-    public void skal_finne_nytt_ref_krav() {
+    void skal_finne_nytt_ref_krav() {
         // Original
         BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode1 = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_BEREGNING, TIDENES_ENDE)
@@ -300,7 +300,7 @@ class BeregningRefusjonTjenesteTest {
     }
 
     @Test
-    public void skal_ikke_finne_tilkommet_arbfor_når_det_ikke_endrer_brukers_andel() {
+    void skal_ikke_finne_tilkommet_arbfor_når_det_ikke_endrer_brukers_andel() {
         // Original
         BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode1 = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_BEREGNING, TIDENES_ENDE)
@@ -330,7 +330,7 @@ class BeregningRefusjonTjenesteTest {
      * Dette betyr da at brutto er senket, enten av saksbehandler eller av ny inntektsmelding og skal ikke vurderes.
      */
     @Test
-    public void skal_ikke_finne_noen_andel_dersom_det_blir_mindre_til_bruker_men_refkrav_er_likt() {
+    void skal_ikke_finne_noen_andel_dersom_det_blir_mindre_til_bruker_men_refkrav_er_likt() {
         // Original
         BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode1 = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_BEREGNING, SKJÆRINGSTIDSPUNKT_BEREGNING.plusDays(20))
@@ -359,7 +359,7 @@ class BeregningRefusjonTjenesteTest {
     }
 
     @Test
-    public void arbeidsforhold_splittes_i_tre_andeler_og_stjeler_fra_sn() {
+    void arbeidsforhold_splittes_i_tre_andeler_og_stjeler_fra_sn() {
         InternArbeidsforholdRefDto ref1 = InternArbeidsforholdRefDto.nyRef();
         InternArbeidsforholdRefDto ref2 = InternArbeidsforholdRefDto.nyRef();
         InternArbeidsforholdRefDto ref3 = InternArbeidsforholdRefDto.nyRef();
@@ -390,7 +390,7 @@ class BeregningRefusjonTjenesteTest {
     }
 
     @Test
-    public void arbeidsforhold_slås_sammen_og_øker_refusjon_men_det_har_aldri_vært_utbetaling() {
+    void arbeidsforhold_slås_sammen_og_øker_refusjon_men_det_har_aldri_vært_utbetaling() {
         InternArbeidsforholdRefDto ref1 = InternArbeidsforholdRefDto.nyRef();
         InternArbeidsforholdRefDto ref2 = InternArbeidsforholdRefDto.nyRef();
         InternArbeidsforholdRefDto ref3 = InternArbeidsforholdRefDto.nyRef();
@@ -415,7 +415,7 @@ class BeregningRefusjonTjenesteTest {
     }
 
     @Test
-    public void arbeidsforhold_slås_sammen_og_øker_refusjon_og_det_har_tidligere_vært_utbetaling_til_søker() {
+    void arbeidsforhold_slås_sammen_og_øker_refusjon_og_det_har_tidligere_vært_utbetaling_til_søker() {
         InternArbeidsforholdRefDto ref1 = InternArbeidsforholdRefDto.nyRef();
         InternArbeidsforholdRefDto ref2 = InternArbeidsforholdRefDto.nyRef();
         InternArbeidsforholdRefDto ref3 = InternArbeidsforholdRefDto.nyRef();
@@ -444,7 +444,7 @@ class BeregningRefusjonTjenesteTest {
 
     // Skjer f.eks hvis en andel utenom AT er manuelt fastsatt til et lavere beløp
     @Test
-    public void mindre_utbetaling_til_søker_men_ingen_arbeidsforhold_har_økt_refusjon() {
+    void mindre_utbetaling_til_søker_men_ingen_arbeidsforhold_har_økt_refusjon() {
         InternArbeidsforholdRefDto ref1 = InternArbeidsforholdRefDto.nyRef();
         BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode1 = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_BEREGNING, TIDENES_ENDE)
@@ -466,7 +466,7 @@ class BeregningRefusjonTjenesteTest {
     }
 
     @Test
-    public void revurdering_andel_med_og_uten_referanse_originalt_ingen_referanse_ikke_økt_refusjon() {
+    void revurdering_andel_med_og_uten_referanse_originalt_ingen_referanse_ikke_økt_refusjon() {
         InternArbeidsforholdRefDto ref1 = InternArbeidsforholdRefDto.nyRef();
         BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode1 = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_BEREGNING, TIDENES_ENDE)
@@ -485,7 +485,7 @@ class BeregningRefusjonTjenesteTest {
     }
 
     @Test
-    public void revurdering_andel_med_og_uten_referanse_originalt_ingen_referanse_økt_refusjon() {
+    void revurdering_andel_med_og_uten_referanse_originalt_ingen_referanse_økt_refusjon() {
         InternArbeidsforholdRefDto ref1 = InternArbeidsforholdRefDto.nyRef();
         BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode1 = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_BEREGNING, TIDENES_ENDE)
@@ -508,7 +508,7 @@ class BeregningRefusjonTjenesteTest {
     }
 
     @Test
-    public void revurdering_andel_med_og_uten_referanse_originalt_med_og_uten_referanse_økt_refusjon() {
+    void revurdering_andel_med_og_uten_referanse_originalt_med_og_uten_referanse_økt_refusjon() {
         InternArbeidsforholdRefDto ref1 = InternArbeidsforholdRefDto.nyRef();
         InternArbeidsforholdRefDto ref2 = InternArbeidsforholdRefDto.nyRef();
         BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode1 = BeregningsgrunnlagPeriodeDto.ny()
@@ -533,7 +533,7 @@ class BeregningRefusjonTjenesteTest {
     }
 
     @Test
-    public void inntekt_øker_like_mye_som_refusjon_men_kuttes_av_grenseverdi() {
+    void inntekt_øker_like_mye_som_refusjon_men_kuttes_av_grenseverdi() {
         BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode1 = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_BEREGNING, TIDENES_ENDE)
                 .build(originaltBG);
@@ -553,7 +553,7 @@ class BeregningRefusjonTjenesteTest {
     }
 
     @Test
-    public void skal_finne_andel_hvis_refusjonskrav_har_økt_før_og_etter_helg() {
+    void skal_finne_andel_hvis_refusjonskrav_har_økt_før_og_etter_helg() {
         // Arrange
         BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriodeOriginal = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_BEREGNING, TIDENES_ENDE)
@@ -593,7 +593,7 @@ class BeregningRefusjonTjenesteTest {
     }
 
     @Test
-    public void skal_finne_to_andeler_hvis_refusjonskrav_har_økt_før_og_etter_helg_men_ulikt() {
+    void skal_finne_to_andeler_hvis_refusjonskrav_har_økt_før_og_etter_helg_men_ulikt() {
         // Arrange
         BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriodeOriginal = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_BEREGNING, TIDENES_ENDE)

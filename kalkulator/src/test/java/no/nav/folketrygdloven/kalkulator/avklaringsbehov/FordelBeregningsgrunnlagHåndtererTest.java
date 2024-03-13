@@ -59,7 +59,7 @@ public class FordelBeregningsgrunnlagHåndtererTest {
     }
 
     @Test
-    public void skal_fjerne_fordele_naturalytelser_der_det_finnes() {
+    void skal_fjerne_fordele_naturalytelser_der_det_finnes() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
         var arbId2 = InternArbeidsforholdRefDto.nyRef();
@@ -119,7 +119,7 @@ public class FordelBeregningsgrunnlagHåndtererTest {
     }
 
     @Test
-    public void skal_opprettholde_andelsnummer() {
+    void skal_opprettholde_andelsnummer() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
         var arbId2 = InternArbeidsforholdRefDto.nyRef();
@@ -167,7 +167,7 @@ public class FordelBeregningsgrunnlagHåndtererTest {
     }
 
     @Test
-    public void skal_sette_verdier_på_DP_lagt_til_av_saksbehandler() {
+    void skal_sette_verdier_på_DP_lagt_til_av_saksbehandler() {
         // Arrange
         Long andelsnr = 1L;
         BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlag();
@@ -195,7 +195,7 @@ public class FordelBeregningsgrunnlagHåndtererTest {
     }
 
     @Test
-    public void skal_sette_verdier_på_andel_som_eksisterte_fra_før_i_grunnlag_med_1_periode_og_1_andel_refusjon_lik_null() {
+    void skal_sette_verdier_på_andel_som_eksisterte_fra_før_i_grunnlag_med_1_periode_og_1_andel_refusjon_lik_null() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
         Long andelsnr = 1L;
@@ -228,7 +228,7 @@ public class FordelBeregningsgrunnlagHåndtererTest {
     }
 
     @Test
-    public void skal_fordele_refusjon_etter_totalrefusjon_om_lik_null() {
+    void skal_fordele_refusjon_etter_totalrefusjon_om_lik_null() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
         var arbId2 = InternArbeidsforholdRefDto.nyRef();
@@ -366,7 +366,7 @@ public class FordelBeregningsgrunnlagHåndtererTest {
     }
 
     @Test
-    public void skal_sette_verdier_på_andel_som_eksisterte_fra_før_i_grunnlag_med_1_periode_og_2_andeler() {
+    void skal_sette_verdier_på_andel_som_eksisterte_fra_før_i_grunnlag_med_1_periode_og_2_andeler() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
         var arbId2 = InternArbeidsforholdRefDto.nyRef();
@@ -401,7 +401,7 @@ public class FordelBeregningsgrunnlagHåndtererTest {
 
 
     @Test
-    public void skal_sette_verdier_på_ny_andel_med_1_periode_og_1_andel() {
+    void skal_sette_verdier_på_ny_andel_med_1_periode_og_1_andel() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
         Long andelsnr = 1L;
@@ -466,7 +466,7 @@ public class FordelBeregningsgrunnlagHåndtererTest {
 
 
     @Test
-    public void skal_sette_verdier_på_andeler_for_tilbakehopp_til_KOFAKBER_med_1_periode_og_1_andel() {
+    void skal_sette_verdier_på_andeler_for_tilbakehopp_til_KOFAKBER_med_1_periode_og_1_andel() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
         Long andelsnr = 1L;
@@ -539,7 +539,7 @@ public class FordelBeregningsgrunnlagHåndtererTest {
 
 
     @Test
-    public void skal_sette_verdier_på_andeler_for_tilbakehopp_til_steg_før_FORDEL() {
+    void skal_sette_verdier_på_andeler_for_tilbakehopp_til_steg_før_FORDEL() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
         Long andelsnr = 1L;
@@ -612,7 +612,7 @@ public class FordelBeregningsgrunnlagHåndtererTest {
 
 
     @Test
-    public void skal_ikkje_legge_til_slettet_andel_ved_tilbakehopp_til_steg_før_KOFAKBER() {
+    void skal_ikkje_legge_til_slettet_andel_ved_tilbakehopp_til_steg_før_KOFAKBER() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
         Long andelsnr = 1L;
@@ -670,7 +670,7 @@ public class FordelBeregningsgrunnlagHåndtererTest {
 
 
     @Test
-    public void skal_sette_verdier_på_andeler_for_tilbakehopp_til_steg_før_KOFAKBER_med_nye_andeler_og_eksisterende_andeler_i_ulike_arbeidsforhold() {
+    void skal_sette_verdier_på_andeler_for_tilbakehopp_til_steg_før_KOFAKBER_med_nye_andeler_og_eksisterende_andeler_i_ulike_arbeidsforhold() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
         var arbId2 = InternArbeidsforholdRefDto.nyRef();

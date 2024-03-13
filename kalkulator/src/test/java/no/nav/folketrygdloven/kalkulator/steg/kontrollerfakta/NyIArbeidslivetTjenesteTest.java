@@ -31,7 +31,7 @@ public class NyIArbeidslivetTjenesteTest {
     private static final String ORGNR = "123456780";
 
     @Test
-    public void skalGiTilfelleDeromBrukerErSNOgNyIArbeidslivet() {
+    void skalGiTilfelleDeromBrukerErSNOgNyIArbeidslivet() {
         // Arrange
         InntektArbeidYtelseGrunnlagDto iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.oppdatere(Optional.empty())
             .medOppgittOpptjening(lagEgenNæring(true)).build();
@@ -45,7 +45,7 @@ public class NyIArbeidslivetTjenesteTest {
     }
 
     @Test
-    public void skalIkkeGiTilfelleDeromBrukerIkkeErNyIArbeidslivet() {
+    void skalIkkeGiTilfelleDeromBrukerIkkeErNyIArbeidslivet() {
         // Arrange
         InntektArbeidYtelseGrunnlagDto iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.oppdatere(Optional.empty())
             .medOppgittOpptjening(lagEgenNæring(false)).build();
@@ -59,7 +59,7 @@ public class NyIArbeidslivetTjenesteTest {
     }
 
     @Test
-    public void skalIkkeGiTilfelleForNyIArbeidslivetSNDeromBrukerIkkeErSN() {
+    void skalIkkeGiTilfelleForNyIArbeidslivetSNDeromBrukerIkkeErSN() {
         // Arrange
         InntektArbeidYtelseGrunnlagDto inntektArbeidYtelseGrunnlag = lagAktørArbeid();
         BeregningsgrunnlagDto bg = lagBeregningsgrunnlagMedArbeid();

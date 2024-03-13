@@ -56,7 +56,7 @@ public class ForeslåBeregningsgrunnlagSNTest {
     private FortsettForeslåBeregningsgrunnlag fortsettForeslåBeregningsgrunnlag = new FortsettForeslåBeregningsgrunnlag();
 
     @Test
-    public void testBeregningsgrunnlagSelvstendigNæringsdrivende() {
+    void testBeregningsgrunnlagSelvstendigNæringsdrivende() {
         // Arrange
         BeregningAktivitetAggregatDto beregningAktiviteter = BeregningAktivitetTestUtil.opprettBeregningAktiviteter(SKJÆRINGSTIDSPUNKT_OPPTJENING,
             OpptjeningAktivitetType.NÆRING);

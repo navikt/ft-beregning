@@ -39,7 +39,7 @@ public class VurderSelvstendigNæringsdrivendeNyIArbeidslivetOppdatererTest {
     private BeregningsgrunnlagInput input;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         beregningsgrunnlag = BeregningsgrunnlagDto.builder()
             .medGrunnbeløp(GRUNNBELØP)
             .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT)
@@ -60,7 +60,7 @@ public class VurderSelvstendigNæringsdrivendeNyIArbeidslivetOppdatererTest {
     }
 
     @Test
-    public void skal_sette_ny_i_arbeidslivet() {
+    void skal_sette_ny_i_arbeidslivet() {
         // Arrange
         VurderSelvstendigNæringsdrivendeNyIArbeidslivetDto nyIArbeidslivetDto = new VurderSelvstendigNæringsdrivendeNyIArbeidslivetDto(true);
         FaktaBeregningLagreDto dto = new FaktaBeregningLagreDto(FAKTA_OM_BEREGNING_TILFELLER);
@@ -76,7 +76,7 @@ public class VurderSelvstendigNæringsdrivendeNyIArbeidslivetOppdatererTest {
     }
 
     @Test
-    public void skal_sette_ny_i_arbeidslivet_til_false() {
+    void skal_sette_ny_i_arbeidslivet_til_false() {
         // Arrange
         VurderSelvstendigNæringsdrivendeNyIArbeidslivetDto nyIArbeidslivetDto = new VurderSelvstendigNæringsdrivendeNyIArbeidslivetDto(false);
         FaktaBeregningLagreDto dto = new FaktaBeregningLagreDto(FAKTA_OM_BEREGNING_TILFELLER);

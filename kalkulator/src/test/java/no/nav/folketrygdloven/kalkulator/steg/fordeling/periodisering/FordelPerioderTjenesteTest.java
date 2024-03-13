@@ -90,7 +90,7 @@ public class FordelPerioderTjenesteTest {
 
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         iayGrunnlagBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
         tjeneste = lagTjeneste();
         leggTilYrkesaktiviteterOgBeregningAktiviteter(List.of(ORG_NUMMER), iayGrunnlagBuilder);
@@ -168,7 +168,7 @@ public class FordelPerioderTjenesteTest {
      * Arbeidsforhold2 er aktivt på skjæringstidspunktet og skal ha refusjon (har arbeidsforholdId ulik null)
      */
     @Test
-    public void skal_ikkje_sette_refusjon_for_andeler_som_slutter_dagen_før_skjæringstidspunktet() {
+    void skal_ikkje_sette_refusjon_for_andeler_som_slutter_dagen_før_skjæringstidspunktet() {
         // Arrange
         BeregningsgrunnlagDto beregningsgrunnlag = BeregningsgrunnlagDto.builder()
                 .medGrunnbeløp(GRUNNBELØP)
@@ -240,7 +240,7 @@ public class FordelPerioderTjenesteTest {
     }
 
     @Test
-    public void ikkeLagPeriodeForRefusjonHvisKunEnInntektsmeldingIngenEndringIRefusjon() {
+    void ikkeLagPeriodeForRefusjonHvisKunEnInntektsmeldingIngenEndringIRefusjon() {
         // Arrange
         BeregningsgrunnlagGrunnlagDto grunnlag = lagBeregningsgrunnlagMedOverstyring(List.of(ORG_NUMMER), beregningAktivitetAggregat);
         var inntekt = Beløp.fra(23987);
@@ -284,7 +284,7 @@ public class FordelPerioderTjenesteTest {
 
 
     @Test
-    public void lagPeriodeForRefusjonHvisKunEnInntektsmeldingIngenEndringIRefusjonArbeidsgiverSøkerForSent() {
+    void lagPeriodeForRefusjonHvisKunEnInntektsmeldingIngenEndringIRefusjonArbeidsgiverSøkerForSent() {
         // Arrange
         BeregningsgrunnlagGrunnlagDto grunnlag = lagBeregningsgrunnlagMedOverstyring(List.of(ORG_NUMMER), beregningAktivitetAggregat);
         var inntekt = Beløp.fra(23987);
@@ -314,7 +314,7 @@ public class FordelPerioderTjenesteTest {
     }
 
     @Test
-    public void ikkeLagPeriodeForZeroRefusjonHvisKunEnInntektsmeldingIngenEndringIRefusjon() {
+    void ikkeLagPeriodeForZeroRefusjonHvisKunEnInntektsmeldingIngenEndringIRefusjon() {
         // Arrange
         BeregningsgrunnlagGrunnlagDto grunnlag = lagBeregningsgrunnlagMedOverstyring(List.of(ORG_NUMMER), beregningAktivitetAggregat);
         var inntekt = Beløp.fra(23987);
@@ -331,7 +331,7 @@ public class FordelPerioderTjenesteTest {
     }
 
     @Test
-    public void lagPeriodeForRefusjonOpphører() {
+    void lagPeriodeForRefusjonOpphører() {
         // Arrange
         BeregningsgrunnlagGrunnlagDto grunnlag = lagBeregningsgrunnlagMedOverstyring(List.of(ORG_NUMMER), beregningAktivitetAggregat);
         var inntekt = Beløp.fra(40000);
@@ -349,7 +349,7 @@ public class FordelPerioderTjenesteTest {
     }
 
     @Test
-    public void lagPeriodeForGraderingLik6G() {
+    void lagPeriodeForGraderingLik6G() {
         // Arrange
         LocalDate refusjonOpphørerDato = SKJÆRINGSTIDSPUNKT.plusWeeks(9).minusDays(1);
         LocalDate graderingFom = refusjonOpphørerDato.plusDays(1);
@@ -381,7 +381,7 @@ public class FordelPerioderTjenesteTest {
     }
 
     @Test
-    public void lagPeriodeForGraderingSN_refusjon_over_6G() {
+    void lagPeriodeForGraderingSN_refusjon_over_6G() {
         // Arrange
         LocalDate graderingFom = SKJÆRINGSTIDSPUNKT.plusWeeks(9);
         LocalDate graderingTom = SKJÆRINGSTIDSPUNKT.plusWeeks(18).minusDays(1);
@@ -415,7 +415,7 @@ public class FordelPerioderTjenesteTest {
     }
 
     @Test
-    public void lagPeriodeForGraderingSN_bg_over_6g() {
+    void lagPeriodeForGraderingSN_bg_over_6g() {
         // Arrange
         LocalDate graderingFom = SKJÆRINGSTIDSPUNKT.plusWeeks(9);
         LocalDate graderingTom = SKJÆRINGSTIDSPUNKT.plusWeeks(18).minusDays(1);
@@ -447,7 +447,7 @@ public class FordelPerioderTjenesteTest {
     }
 
     @Test
-    public void lagPeriodeForGraderingOver6GOgOpphørRefusjonSammeDag() {
+    void lagPeriodeForGraderingOver6GOgOpphørRefusjonSammeDag() {
         // Arrange
         LocalDate refusjonOpphørerDato = SKJÆRINGSTIDSPUNKT.plusWeeks(9).minusDays(1);
         LocalDate graderingFom = refusjonOpphørerDato.plusDays(1);
@@ -486,7 +486,7 @@ public class FordelPerioderTjenesteTest {
     }
 
     @Test
-    public void lagPeriodeForGraderingOver6GFL() {
+    void lagPeriodeForGraderingOver6GFL() {
         // Arrange
         LocalDate refusjonOpphørerDato = SKJÆRINGSTIDSPUNKT.plusWeeks(9).minusDays(1);
         LocalDate graderingFom = refusjonOpphørerDato.plusDays(1);
@@ -524,7 +524,7 @@ public class FordelPerioderTjenesteTest {
     }
 
     @Test
-    public void lagPeriodeForGraderingOgRefusjonArbeidsforholdTilkomEtterStp() {
+    void lagPeriodeForGraderingOgRefusjonArbeidsforholdTilkomEtterStp() {
         // Arrange
         LocalDate graderingFom = SKJÆRINGSTIDSPUNKT.plusWeeks(9);
         LocalDate graderingTom = SKJÆRINGSTIDSPUNKT.plusWeeks(18).minusDays(1);
@@ -568,7 +568,7 @@ public class FordelPerioderTjenesteTest {
     }
 
     @Test
-    public void lagPeriodeForGraderingToArbeidsforholdTilkomEtterStpInntektsmeldingMedId() {
+    void lagPeriodeForGraderingToArbeidsforholdTilkomEtterStpInntektsmeldingMedId() {
         // Arrange
         LocalDate graderingFom = SKJÆRINGSTIDSPUNKT.plusWeeks(9);
         LocalDate graderingTom = SKJÆRINGSTIDSPUNKT.plusWeeks(18).minusDays(1);
@@ -613,7 +613,7 @@ public class FordelPerioderTjenesteTest {
 
 
     @Test
-    public void lagPeriodeForGraderingOgRefusjonArbeidsforholdTilkomEtterStpInntektsmeldingMedId() {
+    void lagPeriodeForGraderingOgRefusjonArbeidsforholdTilkomEtterStpInntektsmeldingMedId() {
         // Arrange
         LocalDate graderingFom = SKJÆRINGSTIDSPUNKT.plusWeeks(9);
         LocalDate graderingTom = SKJÆRINGSTIDSPUNKT.plusWeeks(18).minusDays(1);
@@ -658,7 +658,7 @@ public class FordelPerioderTjenesteTest {
 
 
     @Test
-    public void lagPeriodeForGraderingArbeidsforholdTilkomEtterStp() {
+    void lagPeriodeForGraderingArbeidsforholdTilkomEtterStp() {
         // Arrange
         LocalDate graderingFom = SKJÆRINGSTIDSPUNKT.plusWeeks(9);
         LocalDate graderingTom = SKJÆRINGSTIDSPUNKT.plusWeeks(18).minusDays(1);
@@ -704,7 +704,7 @@ public class FordelPerioderTjenesteTest {
     }
 
     @Test
-    public void lagPeriodeForRefusjonArbeidsforholdTilkomEtterStp() {
+    void lagPeriodeForRefusjonArbeidsforholdTilkomEtterStp() {
         var arbId = InternArbeidsforholdRefDto.namedRef("A");
 
         // Arrange
@@ -733,7 +733,7 @@ public class FordelPerioderTjenesteTest {
     }
 
     @Test
-    public void ikkeLagAndelForRefusjonForArbeidsforholdSomBortfallerFørSkjæringstidspunkt() {
+    void ikkeLagAndelForRefusjonForArbeidsforholdSomBortfallerFørSkjæringstidspunkt() {
         var arbId = InternArbeidsforholdRefDto.namedRef("A");
 
         // Arrange
@@ -757,7 +757,7 @@ public class FordelPerioderTjenesteTest {
     }
 
     @Test
-    public void lagPeriodeForRefusjonArbeidsforholdTilkomEtterStpFlerePerioder() {
+    void lagPeriodeForRefusjonArbeidsforholdTilkomEtterStpFlerePerioder() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.namedRef("A");
         Arbeidsgiver arbeidsgiver3 = Arbeidsgiver.virksomhet(ORG_NUMMER);
@@ -791,7 +791,7 @@ public class FordelPerioderTjenesteTest {
     }
 
     @Test
-    public void skalSetteRefusjonskravForSøktRefusjonFraSkjæringstidspunktUtenOpphørsdato() {
+    void skalSetteRefusjonskravForSøktRefusjonFraSkjæringstidspunktUtenOpphørsdato() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.namedRef("A");
         BeregningIAYTestUtil.byggArbeidForBehandling(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.minusYears(2), TIDENES_ENDE, arbId,
@@ -821,7 +821,7 @@ public class FordelPerioderTjenesteTest {
     }
 
     @Test
-    public void skalSetteRefusjonskravForSøktRefusjonFraSkjæringstidspunktUtenOpphørsdatoPrivatpersonSomArbeidsgiver() {
+    void skalSetteRefusjonskravForSøktRefusjonFraSkjæringstidspunktUtenOpphørsdatoPrivatpersonSomArbeidsgiver() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.namedRef("A");
         Arbeidsgiver arbeidsgiver = Arbeidsgiver.person(ARBEIDSGIVER_AKTØR_ID);
@@ -866,7 +866,7 @@ public class FordelPerioderTjenesteTest {
     }
 
     @Test
-    public void skalSetteRefusjonskravForSøktRefusjonFraSkjæringstidspunktMedOpphørsdato() {
+    void skalSetteRefusjonskravForSøktRefusjonFraSkjæringstidspunktMedOpphørsdato() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.namedRef("A");
         var arbeidsgiver = Arbeidsgiver.virksomhet(ORG_NUMMER);
@@ -909,7 +909,7 @@ public class FordelPerioderTjenesteTest {
     }
 
     @Test
-    public void skalIkkeSetteRefusjonForAktivitetSomErFjernetIOverstyring() {
+    void skalIkkeSetteRefusjonForAktivitetSomErFjernetIOverstyring() {
         // Arrange
         var arbeidsgiver = Arbeidsgiver.virksomhet(ORG_NUMMER);
 
@@ -933,7 +933,7 @@ public class FordelPerioderTjenesteTest {
     }
 
     @Test
-    public void skalSetteRefusjonForAktivitetSomErFjernetISaksbehandlet() {
+    void skalSetteRefusjonForAktivitetSomErFjernetISaksbehandlet() {
         // Arrange
         BeregningsgrunnlagGrunnlagDto grunnlag = lagBeregningsgrunnlagMedSaksbehandlet(List.of(),
                 beregningAktivitetAggregat, BeregningAktivitetAggregatDto.builder().medSkjæringstidspunktOpptjening(SKJÆRINGSTIDSPUNKT).build());
@@ -957,7 +957,7 @@ public class FordelPerioderTjenesteTest {
     }
 
     @Test
-    public void skalSetteRefusjonskravForSøktRefusjonFraEtterSkjæringstidspunktMedOpphørsdato() {
+    void skalSetteRefusjonskravForSøktRefusjonFraEtterSkjæringstidspunktMedOpphørsdato() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.namedRef("A");
         var arbeidsgiver = Arbeidsgiver.virksomhet(ORG_NUMMER);
@@ -1001,7 +1001,7 @@ public class FordelPerioderTjenesteTest {
     }
 
     @Test
-    public void skalSetteRefusjonskravForSøktRefusjonFraEtterSkjæringstidspunktUtenOpphørsdato() {
+    void skalSetteRefusjonskravForSøktRefusjonFraEtterSkjæringstidspunktUtenOpphørsdato() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.namedRef("A");
         var arbeidsgiver = Arbeidsgiver.virksomhet(ORG_NUMMER);
@@ -1038,7 +1038,7 @@ public class FordelPerioderTjenesteTest {
     }
 
     @Test
-    public void skalTesteEndringIRefusjon() {
+    void skalTesteEndringIRefusjon() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.namedRef("A");
         var arbeidsgiver = Arbeidsgiver.virksomhet(ORG_NUMMER);
@@ -1098,7 +1098,7 @@ public class FordelPerioderTjenesteTest {
     }
 
     @Test
-    public void skalSplitteBeregningsgrunnlagOgLeggeTilNyAndelVedEndringssøknadNårSelvstendigNæringsdrivendeTilkommerOgGraderes() {
+    void skalSplitteBeregningsgrunnlagOgLeggeTilNyAndelVedEndringssøknadNårSelvstendigNæringsdrivendeTilkommerOgGraderes() {
         // Arrange
         LocalDate graderingFom = SKJÆRINGSTIDSPUNKT.plusDays(10);
         LocalDate graderingTom = SKJÆRINGSTIDSPUNKT.plusDays(20);
@@ -1132,7 +1132,7 @@ public class FordelPerioderTjenesteTest {
     }
 
     @Test
-    public void skalLeggeTilAndelSomTilkommerEtterSkjæringstidspunktForSøktGraderingUtenRefusjon() {
+    void skalLeggeTilAndelSomTilkommerEtterSkjæringstidspunktForSøktGraderingUtenRefusjon() {
         // Arrange
         LocalDate graderingFom = SKJÆRINGSTIDSPUNKT.plusMonths(2);
         LocalDate graderingTom = SKJÆRINGSTIDSPUNKT.plusMonths(5);
@@ -1204,7 +1204,7 @@ public class FordelPerioderTjenesteTest {
     }
 
     @Test
-    public void skalLeggeTilAndelHvorBrukerErIPermisjonPåSkjæringstidspunktetOgSøkerRefusjon() {
+    void skalLeggeTilAndelHvorBrukerErIPermisjonPåSkjæringstidspunktetOgSøkerRefusjon() {
         InternArbeidsforholdRefDto arbeidsforholdRef = InternArbeidsforholdRefDto.nyRef();
         var inntekt = Beløp.fra(40000);
         LocalDate permisjonFom = SKJÆRINGSTIDSPUNKT.minusMonths(1);
@@ -1248,7 +1248,7 @@ public class FordelPerioderTjenesteTest {
     }
 
     @Test
-    public void skalLeggeTilAndelSomTilkommerPåSkjæringstidspunkt() {
+    void skalLeggeTilAndelSomTilkommerPåSkjæringstidspunkt() {
         var inntekt = Beløp.fra(40000);
         Intervall arbeidsperiode = fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT, TIDENES_ENDE);
 
@@ -1302,7 +1302,7 @@ public class FordelPerioderTjenesteTest {
     }
 
     @Test
-    public void skalLeggeTilAndelSomTilkommerPåSkjæringstidspunktOgSletteVedOpphør() {
+    void skalLeggeTilAndelSomTilkommerPåSkjæringstidspunktOgSletteVedOpphør() {
         var inntekt = Beløp.fra(40000);
         Intervall arbeidsperiode = fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT, TIDENES_ENDE);
         InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlagBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
@@ -1357,7 +1357,7 @@ public class FordelPerioderTjenesteTest {
     }
 
     @Test
-    public void skalLeggeTilAndelSomTilkommerPåSkjæringstidspunktForSøktGraderingUtenRefusjon() {
+    void skalLeggeTilAndelSomTilkommerPåSkjæringstidspunktForSøktGraderingUtenRefusjon() {
         // Arrange
         LocalDate graderingFom = SKJÆRINGSTIDSPUNKT;
         LocalDate graderingTom = SKJÆRINGSTIDSPUNKT.plusMonths(2);
@@ -1423,7 +1423,7 @@ public class FordelPerioderTjenesteTest {
     }
 
     @Test
-    public void skalLeggeTilAndelSomTilkommerPåSkjæringstidspunktMedOpphørUtenSlettingPgaGradering() {
+    void skalLeggeTilAndelSomTilkommerPåSkjæringstidspunktMedOpphørUtenSlettingPgaGradering() {
         // Arrange
         LocalDate graderingFom = SKJÆRINGSTIDSPUNKT;
         LocalDate graderingTom = SKJÆRINGSTIDSPUNKT.plusMonths(2);
@@ -1495,7 +1495,7 @@ public class FordelPerioderTjenesteTest {
     }
 
     @Test
-    public void lagPeriodeForGraderingOver6G() {
+    void lagPeriodeForGraderingOver6G() {
         // Arrange
         LocalDate graderingFom = SKJÆRINGSTIDSPUNKT.plusWeeks(9);
         LocalDate graderingTom = SKJÆRINGSTIDSPUNKT.plusWeeks(18).minusDays(1);
@@ -1528,7 +1528,7 @@ public class FordelPerioderTjenesteTest {
     }
 
     @Test
-    public void skalSplitteBeregningsgrunnlagOgLeggeTilNyAndelVedEndringssøknadNårFrilansTilkommerOgGraderes() {
+    void skalSplitteBeregningsgrunnlagOgLeggeTilNyAndelVedEndringssøknadNårFrilansTilkommerOgGraderes() {
         // Arrange
         LocalDate graderingFom = SKJÆRINGSTIDSPUNKT.plusDays(10);
         LocalDate graderingTom = SKJÆRINGSTIDSPUNKT.plusDays(20);
@@ -1565,7 +1565,7 @@ public class FordelPerioderTjenesteTest {
     }
 
     @Test
-    public void skalLageEnPeriodeNårGraderingPåVirksomhetOgAndelMedRefusjonIkkeHarNullIBruttoOgFlereArbeidsforholdISammeOrganisasjon() {
+    void skalLageEnPeriodeNårGraderingPåVirksomhetOgAndelMedRefusjonIkkeHarNullIBruttoOgFlereArbeidsforholdISammeOrganisasjon() {
         // Arrange
         BeregningsgrunnlagDto beregningsgrunnlag = BeregningsgrunnlagDto.builder()
                 .medGrunnbeløp(GRUNNBELØP)
@@ -1646,7 +1646,7 @@ public class FordelPerioderTjenesteTest {
     }
 
     @Test
-    public void skalLageTrePerioderForRiktigAndelNårGraderingPåEtArbeidsforholdMedNullIBrutto() {
+    void skalLageTrePerioderForRiktigAndelNårGraderingPåEtArbeidsforholdMedNullIBrutto() {
         // Arrange
         LocalDate graderingFom = SKJÆRINGSTIDSPUNKT.plusMonths(1);
         LocalDate graderingTom = SKJÆRINGSTIDSPUNKT.plusMonths(2);
@@ -1734,7 +1734,7 @@ public class FordelPerioderTjenesteTest {
     }
 
     @Test
-    public void skalLageTrePerioderNårDetIkkeErRefusjonOgAndelerHarNullIBruttoOgFlereArbeidsforholdISammeOrganisasjon() {
+    void skalLageTrePerioderNårDetIkkeErRefusjonOgAndelerHarNullIBruttoOgFlereArbeidsforholdISammeOrganisasjon() {
         // Arrange
         LocalDate graderingFom = SKJÆRINGSTIDSPUNKT.plusMonths(1);
         LocalDate graderingTom = SKJÆRINGSTIDSPUNKT.plusMonths(2);

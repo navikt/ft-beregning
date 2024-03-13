@@ -40,7 +40,7 @@ public class VurderMilitærOppdatererTest {
     private KoblingReferanse koblingReferanse = new KoblingReferanseMock(SKJÆRINGSTIDSPUNKT);
 
     @Test
-    public void skal_legge_til_militærandel_om_vurdert_til_true_og_andel_ikke_finnes() {
+    void skal_legge_til_militærandel_om_vurdert_til_true_og_andel_ikke_finnes() {
         // Arrange
         BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlag(Collections.singletonList(AktivitetStatus.ARBEIDSTAKER));
         VurderMilitærDto militærDto = new VurderMilitærDto(true);
@@ -65,7 +65,7 @@ public class VurderMilitærOppdatererTest {
     }
 
     @Test
-    public void skal_ikke_legge_til_militærandel_om_vurdert_til_true_og_andel_finnes_fra_før() {
+    void skal_ikke_legge_til_militærandel_om_vurdert_til_true_og_andel_finnes_fra_før() {
         // Arrange
         BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlag(Arrays.asList(AktivitetStatus.ARBEIDSTAKER, AktivitetStatus.MILITÆR_ELLER_SIVIL));
         VurderMilitærDto militærDto = new VurderMilitærDto(true);
@@ -87,7 +87,7 @@ public class VurderMilitærOppdatererTest {
     }
 
     @Test
-    public void skal_ikke_gjøre_noe_dersom_militær_er_false_men_det_ikke_ligger_militær_på_grunnlaget() {
+    void skal_ikke_gjøre_noe_dersom_militær_er_false_men_det_ikke_ligger_militær_på_grunnlaget() {
         // Arrange
         BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlag(Collections.singletonList(AktivitetStatus.ARBEIDSTAKER));
         VurderMilitærDto militærDto = new VurderMilitærDto(false);
@@ -110,7 +110,7 @@ public class VurderMilitærOppdatererTest {
     }
 
     @Test
-    public void skal_fjerne_andel_dersom_militær_er_false_og_det_ligger_militær_på_grunnlaget() {
+    void skal_fjerne_andel_dersom_militær_er_false_og_det_ligger_militær_på_grunnlaget() {
         // Arrange
         BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlag(Arrays.asList(AktivitetStatus.ARBEIDSTAKER, AktivitetStatus.MILITÆR_ELLER_SIVIL));
         VurderMilitærDto militærDto = new VurderMilitærDto(false);

@@ -40,7 +40,7 @@ public class VurderNyoppstartetFLOppdatererTest {
 
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         beregningsgrunnlag = BeregningsgrunnlagDto.builder()
             .medGrunnbeløp(GRUNNBELØP)
             .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT)
@@ -61,7 +61,7 @@ public class VurderNyoppstartetFLOppdatererTest {
     }
 
     @Test
-    public void skal_sette_nyoppstartet_til_true() {
+    void skal_sette_nyoppstartet_til_true() {
         // Arrange
         VurderNyoppstartetFLDto nyoppstartetDto = new VurderNyoppstartetFLDto(true);
         FaktaBeregningLagreDto dto = new FaktaBeregningLagreDto(FAKTA_OM_BEREGNING_TILFELLER);
@@ -77,7 +77,7 @@ public class VurderNyoppstartetFLOppdatererTest {
     }
 
     @Test
-    public void skal_sette_nyoppstartet_til_false() {
+    void skal_sette_nyoppstartet_til_false() {
         // Arrange
         VurderNyoppstartetFLDto nyoppstartetDto = new VurderNyoppstartetFLDto(false );
         FaktaBeregningLagreDto dto = new FaktaBeregningLagreDto(FAKTA_OM_BEREGNING_TILFELLER);

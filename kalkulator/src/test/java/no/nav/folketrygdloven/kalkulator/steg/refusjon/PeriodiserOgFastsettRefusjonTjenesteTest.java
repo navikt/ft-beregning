@@ -40,7 +40,7 @@ class PeriodiserOgFastsettRefusjonTjenesteTest {
     private BeregningsgrunnlagDto.Builder grunnlagBuilder = BeregningsgrunnlagDto.builder().medSkjæringstidspunkt(STP);
     private List<VurderRefusjonAndelBeregningsgrunnlagDto> saksbehandlerAvklaringer = new ArrayList<>();
     @Test
-    public void skal_ikke_splitte_noe_hvis_refusjon_aggregat_er_tomt() {
+    void skal_ikke_splitte_noe_hvis_refusjon_aggregat_er_tomt() {
         lagBGPeriode(STP, null, lagBGAndel(AG1, REF1, 0));
 
         BeregningsgrunnlagDto resultat = oppdater();
@@ -49,7 +49,7 @@ class PeriodiserOgFastsettRefusjonTjenesteTest {
     }
 
     @Test
-    public void skal_splitte_når_en_periode_med_en_andel_finnes_uten_refusjon() {
+    void skal_splitte_når_en_periode_med_en_andel_finnes_uten_refusjon() {
         lagBGPeriode(STP, null, lagBGAndel(AG1, REF1, 0));
         lagSaksbehandlerDto(AG1, REF1, dagerEtterSTP(10));
 
@@ -62,7 +62,7 @@ class PeriodiserOgFastsettRefusjonTjenesteTest {
     }
 
     @Test
-    public void skal_ikke_splitte_når_dato_er_stp() {
+    void skal_ikke_splitte_når_dato_er_stp() {
         lagBGPeriode(STP, UENDELIG, lagBGAndel(AG1, REF1, 250000));
         lagSaksbehandlerDto(AG1, REF1, STP);
 
@@ -75,7 +75,7 @@ class PeriodiserOgFastsettRefusjonTjenesteTest {
 
 
     @Test
-    public void skal_kopiere_med_tidligere_andeler_som_ikke_er_arbeidstakerandeler() {
+    void skal_kopiere_med_tidligere_andeler_som_ikke_er_arbeidstakerandeler() {
         lagBGPeriode(STP, null, lagBGAndel(AG1, REF1, 150000), lagBGAndel(null, null, 0));
         lagSaksbehandlerDto(AG1, REF1, dagerEtterSTP(10));
 
@@ -88,7 +88,7 @@ class PeriodiserOgFastsettRefusjonTjenesteTest {
     }
 
     @Test
-    public void skal_splitte_når_en_periode_med_en_andel_finnes_med_refusjon() {
+    void skal_splitte_når_en_periode_med_en_andel_finnes_med_refusjon() {
         lagBGPeriode(STP, UENDELIG, lagBGAndel(AG1, REF1, 500000));
         lagSaksbehandlerDto(AG1, REF1, dagerEtterSTP(10));
 
@@ -101,7 +101,7 @@ class PeriodiserOgFastsettRefusjonTjenesteTest {
     }
 
     @Test
-    public void skal_legge_til_periodeårsak_når_splitt_finnes_fra_før() {
+    void skal_legge_til_periodeårsak_når_splitt_finnes_fra_før() {
         lagBGPeriode(STP, dagerEtterSTP(10), lagBGAndel(AG1, REF1, 500000));
         lagBGPeriode(dagerEtterSTP(11), UENDELIG, PeriodeÅrsak.NATURALYTELSE_BORTFALT, lagBGAndel(AG1, REF1, 500000));
         lagSaksbehandlerDto(AG1, REF1, dagerEtterSTP(11));
@@ -115,7 +115,7 @@ class PeriodiserOgFastsettRefusjonTjenesteTest {
     }
 
     @Test
-    public void skal_splitte_når_en_periode_med_to_andeler_finnes_kun_en_med_overstyring() {
+    void skal_splitte_når_en_periode_med_to_andeler_finnes_kun_en_med_overstyring() {
         lagBGPeriode(STP, null, lagBGAndel(AG1, REF1, 500000), lagBGAndel(AG2, REF2, 100000));
         lagSaksbehandlerDto(AG2, REF2, dagerEtterSTP(15));
 
@@ -132,7 +132,7 @@ class PeriodiserOgFastsettRefusjonTjenesteTest {
     }
 
     @Test
-    public void skal_splitte_når_en_periode_med_to_andeler_finnes_med_hver_sin_overstyring() {
+    void skal_splitte_når_en_periode_med_to_andeler_finnes_med_hver_sin_overstyring() {
         lagBGPeriode(STP, null, lagBGAndel(AG1, REF1, 500000), lagBGAndel(AG2, REF2, 100000));
         lagSaksbehandlerDto(AG1, REF1, dagerEtterSTP(10));
         lagSaksbehandlerDto(AG2, REF2, dagerEtterSTP(15));
@@ -153,7 +153,7 @@ class PeriodiserOgFastsettRefusjonTjenesteTest {
     }
 
     @Test
-    public void skal_splitte_grunnlag_når_3_perioder_finnes_fra_før_og_samme_ag_med_2_ref_overstyres() {
+    void skal_splitte_grunnlag_når_3_perioder_finnes_fra_før_og_samme_ag_med_2_ref_overstyres() {
         lagBGPeriode(STP, dagerEtterSTP(10), lagBGAndel(AG1, REF1, 250000), lagBGAndel(AG1, REF2, 100000));
         lagBGPeriode(dagerEtterSTP(11), dagerEtterSTP(30), PeriodeÅrsak.NATURALYTELSE_BORTFALT, lagBGAndel(AG1, REF1, 250000), lagBGAndel(AG1, REF2, 100000));
         lagBGPeriode(dagerEtterSTP(31), UENDELIG, PeriodeÅrsak.GRADERING, lagBGAndel(AG1, REF1, 250000), lagBGAndel(AG1, REF2, 100000));
@@ -184,7 +184,7 @@ class PeriodiserOgFastsettRefusjonTjenesteTest {
     }
 
     @Test
-    public void skal_splitte_grunnlag_når_tilkommet_andel_søker_refusjon_og_splitt_skjer_samme_dag_som_annen_splitt() {
+    void skal_splitte_grunnlag_når_tilkommet_andel_søker_refusjon_og_splitt_skjer_samme_dag_som_annen_splitt() {
         lagBGPeriode(STP, dagerEtterSTP(30), lagBGAndel(AG1, REF1, 250000), lagBGAndel(AG1, REF2, 100000));
         lagBGPeriode(dagerEtterSTP(31), dagerEtterSTP(50), PeriodeÅrsak.GRADERING, lagBGAndel(AG1, REF1, 250000), lagBGAndel(AG1, REF2, 100000), lagBGAndel(AG3, REF3, 300000));
         lagBGPeriode(dagerEtterSTP(51), UENDELIG, PeriodeÅrsak.NATURALYTELSE_TILKOMMER, lagBGAndel(AG1, REF1, 250000), lagBGAndel(AG1, REF2, 100000), lagBGAndel(AG3, REF3, 300000));
@@ -215,7 +215,7 @@ class PeriodiserOgFastsettRefusjonTjenesteTest {
     }
 
     @Test
-    public void skal_splitte_og_sette_delvis_refusjon_før_startdato() {
+    void skal_splitte_og_sette_delvis_refusjon_før_startdato() {
         lagBGPeriode(STP, null, lagBGAndel(AG1, REF1, 500000), lagBGAndel(AG2, REF2, 100000));
         lagSaksbehandlerDto(AG2, REF2, dagerEtterSTP(15), 1000);
 
@@ -232,7 +232,7 @@ class PeriodiserOgFastsettRefusjonTjenesteTest {
     }
 
     @Test
-    public void skal_splitte_periode_når_det_finnes_andeler_med_og_uten_referanse() {
+    void skal_splitte_periode_når_det_finnes_andeler_med_og_uten_referanse() {
         lagBGPeriode(STP, null, lagBGAndel(AG1, InternArbeidsforholdRefDto.nullRef(), 500000), lagBGAndel(AG1, REF1, 100000));
         lagSaksbehandlerDto(AG1, InternArbeidsforholdRefDto.nullRef(), dagerEtterSTP(15));
         lagSaksbehandlerDto(AG1, REF1, dagerEtterSTP(30));

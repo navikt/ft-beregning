@@ -21,19 +21,19 @@ public class BeregningsgrunnlagAktivitetStatusTest {
     private BeregningsgrunnlagAktivitetStatusDto beregningsgrunnlagAktivitetStatus;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         beregningsgrunnlag = lagBeregningsgrunnlag();
         beregningsgrunnlagAktivitetStatus = lagMedPaakrevdeFelter();
     }
 
     @Test
-    public void skal_bygge_instans_med_påkrevde_felter() {
+    void skal_bygge_instans_med_påkrevde_felter() {
         assertThat(beregningsgrunnlagAktivitetStatus.getBeregningsgrunnlag()).isEqualTo(beregningsgrunnlag);
         assertThat(beregningsgrunnlagAktivitetStatus.getAktivitetStatus()).isEqualTo(AKTIVITET_STATUS);
     }
 
     @Test
-    public void skal_ikke_bygge_instans_hvis_mangler_påkrevde_felter() {
+    void skal_ikke_bygge_instans_hvis_mangler_påkrevde_felter() {
         BeregningsgrunnlagAktivitetStatusDto.Builder builder = BeregningsgrunnlagAktivitetStatusDto.builder();
         try {
             builder.build(null);
@@ -51,14 +51,14 @@ public class BeregningsgrunnlagAktivitetStatusTest {
     }
 
     @Test
-    public void skal_håndtere_null_this_feilKlasse_i_equals() {
+    void skal_håndtere_null_this_feilKlasse_i_equals() {
         assertThat(beregningsgrunnlagAktivitetStatus).isNotEqualTo(null);
         assertThat(beregningsgrunnlagAktivitetStatus).isNotEqualTo("blabla");
         assertThat(beregningsgrunnlagAktivitetStatus).isEqualTo(beregningsgrunnlagAktivitetStatus);
     }
 
     @Test
-    public void skal_ha_refleksiv_equalsOgHashCode() {
+    void skal_ha_refleksiv_equalsOgHashCode() {
         BeregningsgrunnlagAktivitetStatusDto beregningsgrunnlagAktivitetStatus2 = lagMedPaakrevdeFelter();
 
         assertThat(beregningsgrunnlagAktivitetStatus).isEqualTo(beregningsgrunnlagAktivitetStatus2);
@@ -74,7 +74,7 @@ public class BeregningsgrunnlagAktivitetStatusTest {
     }
 
     @Test
-    public void skal_bruke_aktivitetstatus_i_equalsOgHashCode() {
+    void skal_bruke_aktivitetstatus_i_equalsOgHashCode() {
         BeregningsgrunnlagAktivitetStatusDto beregningsgrunnlagAktivitetStatus2 = lagMedPaakrevdeFelter();
 
         assertThat(beregningsgrunnlagAktivitetStatus).isEqualTo(beregningsgrunnlagAktivitetStatus2);
@@ -87,7 +87,7 @@ public class BeregningsgrunnlagAktivitetStatusTest {
     }
 
     @Test
-    public void skal_bruke_beregningsgrunnlag_i_equalsOgHashCode() {
+    void skal_bruke_beregningsgrunnlag_i_equalsOgHashCode() {
         BeregningsgrunnlagAktivitetStatusDto beregningsgrunnlagAktivitetStatus2 = lagMedPaakrevdeFelter();
 
         assertThat(beregningsgrunnlagAktivitetStatus).isEqualTo(beregningsgrunnlagAktivitetStatus2);

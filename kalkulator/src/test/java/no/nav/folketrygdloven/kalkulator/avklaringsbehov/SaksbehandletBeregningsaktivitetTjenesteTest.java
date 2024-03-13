@@ -21,7 +21,7 @@ public class SaksbehandletBeregningsaktivitetTjenesteTest {
     private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.now();
 
     @Test
-    public void lagSaksbehandletVersjon_fjerner_ingen_aktiviteter() {
+    void lagSaksbehandletVersjon_fjerner_ingen_aktiviteter() {
         // Arrange
         Intervall periode = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT.minusYears(2), SKJÆRINGSTIDSPUNKT);
         BeregningAktivitetAggregatDto.Builder builder = BeregningAktivitetAggregatDto.builder()
@@ -50,7 +50,7 @@ public class SaksbehandletBeregningsaktivitetTjenesteTest {
     }
 
     @Test
-    public void lagSaksbehandletVersjon_fjerner_en_aktivitet() {
+    void lagSaksbehandletVersjon_fjerner_en_aktivitet() {
         // Arrange
         Intervall periode = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT.minusYears(2), SKJÆRINGSTIDSPUNKT);
         BeregningAktivitetAggregatDto.Builder builder = BeregningAktivitetAggregatDto.builder()

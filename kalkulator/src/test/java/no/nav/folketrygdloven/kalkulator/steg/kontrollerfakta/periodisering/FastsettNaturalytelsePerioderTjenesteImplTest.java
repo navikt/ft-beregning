@@ -57,7 +57,7 @@ public class FastsettNaturalytelsePerioderTjenesteImplTest {
     private InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlagBuilder;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         iayGrunnlagBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
         tjeneste = new FastsettNaturalytelsePerioderTjeneste();
         leggTilYrkesaktiviteterOgBeregningAktiviteter(List.of(ORG_NUMMER), iayGrunnlagBuilder);
@@ -130,7 +130,7 @@ public class FastsettNaturalytelsePerioderTjenesteImplTest {
     }
 
     @Test
-    public void lagPeriodeForNaturalytelseTilkommer() {
+    void lagPeriodeForNaturalytelseTilkommer() {
         // Arrange
         BeregningsgrunnlagGrunnlagDto grunnlag = lagBeregningsgrunnlagMedOverstyring(List.of(ORG_NUMMER), beregningAktivitetAggregat);
         BeregningsgrunnlagDto beregningsgrunnlag = grunnlag.getBeregningsgrunnlagHvisFinnes().get();
@@ -153,7 +153,7 @@ public class FastsettNaturalytelsePerioderTjenesteImplTest {
     }
 
     @Test
-    public void lagPeriodeForNaturalytelseBortfalt() {
+    void lagPeriodeForNaturalytelseBortfalt() {
         // Arrange
         BeregningsgrunnlagGrunnlagDto grunnlag = lagBeregningsgrunnlagMedOverstyring(List.of(ORG_NUMMER), beregningAktivitetAggregat);
         BeregningsgrunnlagDto beregningsgrunnlag = grunnlag.getBeregningsgrunnlagHvisFinnes().get();
@@ -176,7 +176,7 @@ public class FastsettNaturalytelsePerioderTjenesteImplTest {
     }
 
     @Test
-    public void ikkeLagPeriodeForNaturalytelseBortfaltPåStp() {
+    void ikkeLagPeriodeForNaturalytelseBortfaltPåStp() {
         // Arrange
         BeregningsgrunnlagGrunnlagDto grunnlag = lagBeregningsgrunnlagMedOverstyring(List.of(ORG_NUMMER), beregningAktivitetAggregat);
         BeregningsgrunnlagDto beregningsgrunnlag = grunnlag.getBeregningsgrunnlagHvisFinnes().get();
@@ -198,7 +198,7 @@ public class FastsettNaturalytelsePerioderTjenesteImplTest {
     }
 
     @Test
-    public void lagPeriodeForNaturalytelseBortfaltDagenEtterStp() {
+    void lagPeriodeForNaturalytelseBortfaltDagenEtterStp() {
         // Arrange
         BeregningsgrunnlagGrunnlagDto grunnlag = lagBeregningsgrunnlagMedOverstyring(List.of(ORG_NUMMER), beregningAktivitetAggregat);
         BeregningsgrunnlagDto beregningsgrunnlag = grunnlag.getBeregningsgrunnlagHvisFinnes().get();
@@ -221,7 +221,7 @@ public class FastsettNaturalytelsePerioderTjenesteImplTest {
     }
 
     @Test
-    public void lagPerioderForNaturalytelseBortfaltOgTilkommer() {
+    void lagPerioderForNaturalytelseBortfaltOgTilkommer() {
         // Arrange
         BeregningsgrunnlagGrunnlagDto grunnlag = lagBeregningsgrunnlagMedOverstyring(List.of(ORG_NUMMER), beregningAktivitetAggregat);
         BeregningsgrunnlagDto beregningsgrunnlag = grunnlag.getBeregningsgrunnlagHvisFinnes().get();
@@ -247,7 +247,7 @@ public class FastsettNaturalytelsePerioderTjenesteImplTest {
     }
 
     @Test
-    public void skalKasteFeilHvisAntallPerioderErMerEnn1() {
+    void skalKasteFeilHvisAntallPerioderErMerEnn1() {
         // Arrange
         BeregningsgrunnlagPeriodeDto.Builder periode1 = lagBeregningsgrunnlagPerioderBuilder(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT, List.of(ORG_NUMMER));
         BeregningsgrunnlagPeriodeDto.Builder periode2 = lagBeregningsgrunnlagPerioderBuilder(SKJÆRINGSTIDSPUNKT.plusDays(1), null, List.of(ORG_NUMMER));

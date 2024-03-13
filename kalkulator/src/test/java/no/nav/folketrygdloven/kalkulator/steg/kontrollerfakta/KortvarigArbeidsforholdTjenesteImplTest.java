@@ -20,7 +20,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.ArbeidType;
 public class KortvarigArbeidsforholdTjenesteImplTest {
 
     @Test
-    public void under_6_måneder_sammenhengende() {
+    void under_6_måneder_sammenhengende() {
         BeregningsgrunnlagDto beregningsgrunnlag = BeregningsgrunnlagDto.builder()
             .medSkjæringstidspunkt(LocalDate.now().minusMonths(1))
             .build();
@@ -37,7 +37,7 @@ public class KortvarigArbeidsforholdTjenesteImplTest {
     }
 
     @Test
-    public void under_6_måneder_delt_opp_i_flere_deler() {
+    void under_6_måneder_delt_opp_i_flere_deler() {
         LocalDate date = LocalDate.now();
         BeregningsgrunnlagDto beregningsgrunnlag = BeregningsgrunnlagDto.builder()
             .medSkjæringstidspunkt(date.minusMonths(1))
@@ -62,7 +62,7 @@ public class KortvarigArbeidsforholdTjenesteImplTest {
     }
 
     @Test
-    public void over_6_måneder_delt_opp_i_flere_deler() {
+    void over_6_måneder_delt_opp_i_flere_deler() {
         LocalDate date = LocalDate.now();
         BeregningsgrunnlagDto beregningsgrunnlag = BeregningsgrunnlagDto.builder()
             .medSkjæringstidspunkt(date.minusMonths(1))
@@ -90,7 +90,7 @@ public class KortvarigArbeidsforholdTjenesteImplTest {
 
 
     @Test
-    public void over_6_måneder_delt_opp_i_flere_deler_men_med_huller() {
+    void over_6_måneder_delt_opp_i_flere_deler_men_med_huller() {
         LocalDate date = LocalDate.now();
         BeregningsgrunnlagDto beregningsgrunnlag = BeregningsgrunnlagDto.builder()
             .medSkjæringstidspunkt(date.minusMonths(1))

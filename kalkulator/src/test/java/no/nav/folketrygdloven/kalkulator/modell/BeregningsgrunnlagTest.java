@@ -17,7 +17,7 @@ public class BeregningsgrunnlagTest {
     private BeregningsgrunnlagDto beregningsgrunnlag;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         beregningsgrunnlag = lagMedPaakrevdeFelter();
         builder = lagBuilderMedPaakrevdeFelter();
     }
@@ -31,14 +31,14 @@ public class BeregningsgrunnlagTest {
     }
 
     @Test
-    public void skal_bygge_instans_med_påkrevde_felter() {
+    void skal_bygge_instans_med_påkrevde_felter() {
         BeregningsgrunnlagDto beregningsgrunnlag = lagMedPaakrevdeFelter();
 
         assertThat(beregningsgrunnlag.getSkjæringstidspunkt()).isEqualTo(SKJÆRINGSTIDSPUNKT);
     }
 
     @Test
-    public void skal_ikke_bygge_instans_hvis_mangler_påkrevde_felter() {
+    void skal_ikke_bygge_instans_hvis_mangler_påkrevde_felter() {
         BeregningsgrunnlagDto.Builder builder = BeregningsgrunnlagDto.builder();
         try {
             builder.build();
@@ -48,7 +48,7 @@ public class BeregningsgrunnlagTest {
     }
 
     @Test
-    public void skal_håndtere_null_this_feilKlasse_i_equals() {
+    void skal_håndtere_null_this_feilKlasse_i_equals() {
         BeregningsgrunnlagDto beregningsgrunnlag = lagMedPaakrevdeFelter();
 
         assertThat(beregningsgrunnlag).isNotEqualTo(null);
@@ -57,7 +57,7 @@ public class BeregningsgrunnlagTest {
     }
 
     @Test
-    public void skal_ha_refleksiv_equalsOgHashCode() {
+    void skal_ha_refleksiv_equalsOgHashCode() {
         BeregningsgrunnlagDto beregningsgrunnlag2 = lagMedPaakrevdeFelter();
 
         assertThat(beregningsgrunnlag).isEqualTo(beregningsgrunnlag2);
@@ -70,7 +70,7 @@ public class BeregningsgrunnlagTest {
     }
 
     @Test
-    public void skal_bruke_skjaeringstidspunkt_i_equalsOgHashCode() {
+    void skal_bruke_skjaeringstidspunkt_i_equalsOgHashCode() {
         BeregningsgrunnlagDto beregningsgrunnlag2 = lagMedPaakrevdeFelter();
 
         assertThat(beregningsgrunnlag).isEqualTo(beregningsgrunnlag2);

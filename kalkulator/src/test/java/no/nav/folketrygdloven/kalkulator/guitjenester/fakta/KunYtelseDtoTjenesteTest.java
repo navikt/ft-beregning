@@ -46,12 +46,12 @@ public class KunYtelseDtoTjenesteTest {
     private KunYtelseDtoTjeneste kunYtelseDtoTjeneste;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         this.kunYtelseDtoTjeneste = new KunYtelseDtoTjeneste();
     }
 
     @Test
-    public void fødende_kvinne_uten_dagpenger() {
+    void fødende_kvinne_uten_dagpenger() {
         // Arrange
         Intervall periode = Intervall.fraOgMedTilOgMed(
                 SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(8),
@@ -73,7 +73,7 @@ public class KunYtelseDtoTjenesteTest {
     }
 
     @Test
-    public void skal_ikke_feile_hvis_svpgrunnlag() {
+    void skal_ikke_feile_hvis_svpgrunnlag() {
         Intervall periode = Intervall.fraOgMedTilOgMed(
                 SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(8),
                 SKJÆRINGSTIDSPUNKT_OPPTJENING.minusDays(1));
@@ -94,7 +94,7 @@ public class KunYtelseDtoTjenesteTest {
     }
 
     @Test
-    public void fødende_kvinne_med_dagpenger() {
+    void fødende_kvinne_med_dagpenger() {
         // Arrange
         BeregningAktivitetAggregatDto beregningAktivitetAggregat = beregningAktivitetSykepengerOgDagpenger();
         var beregningsgrunnlagGrunnlag = lagBeregningsgrunnlag(beregningAktivitetAggregat);
@@ -113,7 +113,7 @@ public class KunYtelseDtoTjenesteTest {
     }
 
     @Test
-    public void adopsjon_kvinne_med_dagpenger() {
+    void adopsjon_kvinne_med_dagpenger() {
         // Arrange
         BeregningAktivitetAggregatDto beregningAktivitetAggregat = beregningAktivitetSykepengerOgDagpenger();
 
@@ -147,7 +147,7 @@ public class KunYtelseDtoTjenesteTest {
     }
 
     @Test
-    public void mann_med_dagpenger() {
+    void mann_med_dagpenger() {
         // Arrange
         BeregningAktivitetAggregatDto beregningAktivitetAggregat = beregningAktivitetSykepengerOgDagpenger();
         var beregningsgrunnlagGrunnlag = lagBeregningsgrunnlag(beregningAktivitetAggregat);
@@ -166,7 +166,7 @@ public class KunYtelseDtoTjenesteTest {
     }
 
     @Test
-    public void skal_sette_verdier_om_forrige_grunnlag_var_kun_ytelse() {
+    void skal_sette_verdier_om_forrige_grunnlag_var_kun_ytelse() {
         // Arrange
         BeregningAktivitetAggregatDto beregningAktivitetAggregat = beregningAktivitetSykepengerOgDagpenger();
         var beregningsgrunnlagGrunnlag = lagForrigeBeregningsgrunnlagMedLagtTilAndel(beregningAktivitetAggregat);
@@ -190,7 +190,7 @@ public class KunYtelseDtoTjenesteTest {
 
 
     @Test
-    public void skal_sette_verdier_fra_forrige_med_besteberegning() {
+    void skal_sette_verdier_fra_forrige_med_besteberegning() {
         // Arrange
         Intervall periode = Intervall.fraOgMedTilOgMed(
                 SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(8),
@@ -218,7 +218,7 @@ public class KunYtelseDtoTjenesteTest {
     }
 
     @Test
-    public void skal_sette_verdier_fra_forrige_uten_besteberegning() {
+    void skal_sette_verdier_fra_forrige_uten_besteberegning() {
         // Arrange
         Intervall periode = Intervall.fraOgMedTilOgMed(
                 SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(8),

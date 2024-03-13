@@ -24,14 +24,14 @@ public class SkalKunneEndreAktivitetTest {
 
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         beregningsgrunnlag = BeregningsgrunnlagDto.builder().medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING).medGrunnbeløp(Beløp.fra(600000)).build();
         periode = BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_OPPTJENING, null)
                 .build(beregningsgrunnlag);
     }
 
     @Test
-    public void skalIkkjeKunneEndreAktivitetOmLagtTilAvSaksbehandlerOgDagpenger() {
+    void skalIkkjeKunneEndreAktivitetOmLagtTilAvSaksbehandlerOgDagpenger() {
         BeregningsgrunnlagPrStatusOgAndelDto dagpengeAndel = BeregningsgrunnlagPrStatusOgAndelDto.ny()
                 .medAktivitetStatus(AktivitetStatus.DAGPENGER)
                 .medKilde(AndelKilde.SAKSBEHANDLER_KOFAKBER)
@@ -43,7 +43,7 @@ public class SkalKunneEndreAktivitetTest {
     }
 
     @Test
-    public void skalIkkjeKunneEndreAktivitetOmIkkjeLagtTilAvSaksbehandler() {
+    void skalIkkjeKunneEndreAktivitetOmIkkjeLagtTilAvSaksbehandler() {
         BeregningsgrunnlagPrStatusOgAndelDto frilans = BeregningsgrunnlagPrStatusOgAndelDto.ny()
                 .medAktivitetStatus(AktivitetStatus.FRILANSER)
                 .build(periode);
@@ -54,7 +54,7 @@ public class SkalKunneEndreAktivitetTest {
     }
 
     @Test
-    public void skalKunneEndreAktivitetOmLagtTilAvSaksbehandler() {
+    void skalKunneEndreAktivitetOmLagtTilAvSaksbehandler() {
         BeregningsgrunnlagPrStatusOgAndelDto frilans = BeregningsgrunnlagPrStatusOgAndelDto.ny()
                 .medAktivitetStatus(AktivitetStatus.FRILANSER)
                 .medKilde(AndelKilde.SAKSBEHANDLER_KOFAKBER)

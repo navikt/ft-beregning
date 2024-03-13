@@ -34,12 +34,12 @@ public class VurderEtterlønnSluttpakkeOppdatererTest {
     private BeregningsgrunnlagInput input;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         beregningsgrunnlag = lagBeregningsgrunnlag();
     }
 
     @Test
-    public void skalTesteAtOppdatererSetterInntekt0DersomBrukerIkkeHarEtterlønnSluttpakke() {
+    void skalTesteAtOppdatererSetterInntekt0DersomBrukerIkkeHarEtterlønnSluttpakke() {
         // Arrange
         VurderEtterlønnSluttpakkeDto vurderDto = new VurderEtterlønnSluttpakkeDto(false);
         FaktaBeregningLagreDto dto = new FaktaBeregningLagreDto(Collections.singletonList(FaktaOmBeregningTilfelle.VURDER_ETTERLØNN_SLUTTPAKKE));
@@ -59,7 +59,7 @@ public class VurderEtterlønnSluttpakkeOppdatererTest {
     }
 
     @Test
-    public void skalTesteAtOppdatererIkkeSetterInntektDersomBrukerHarEtterlønnSluttpakke() {
+    void skalTesteAtOppdatererIkkeSetterInntektDersomBrukerHarEtterlønnSluttpakke() {
         // Arrange
         VurderEtterlønnSluttpakkeDto vurderDto = new VurderEtterlønnSluttpakkeDto(true);
         FaktaBeregningLagreDto dto = new FaktaBeregningLagreDto(Collections.singletonList(FaktaOmBeregningTilfelle.VURDER_ETTERLØNN_SLUTTPAKKE));

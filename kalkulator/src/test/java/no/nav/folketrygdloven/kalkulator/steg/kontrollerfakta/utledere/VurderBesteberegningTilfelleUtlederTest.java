@@ -38,13 +38,13 @@
 //    private BehandlingReferanse behandlingReferanse = mock(BehandlingReferanse.class);
 //
 //    @BeforeEach
-//    public void setUp() {
+//    void setUp() {
 //        when(behandlingReferanse.getFagsakYtelseType()).thenReturn(FagsakYtelseType.FORELDREPENGER);
 //        vurderBesteberegningTilfelleUtleder = new VurderBesteberegningTilfelleUtleder();
 //    }
 //
 //    @Test
-//    public void skal_returnere_empty_om_bg_har_status_dagpenger() {
+//    void skal_returnere_empty_om_bg_har_status_dagpenger() {
 //        // Arrange
 //        Beregningsgrunnlag bg = Beregningsgrunnlag.builder().leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatus.builder()
 //            .medAktivitetStatus(AktivitetStatus.DAGPENGER))
@@ -62,7 +62,7 @@
 //    }
 //
 //    @Test
-//    public void skal_returnere_empty_om_bg_har_status_kun_ytelse() {
+//    void skal_returnere_empty_om_bg_har_status_kun_ytelse() {
 //        // Arrange
 //        Beregningsgrunnlag bg = Beregningsgrunnlag.builder().leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatus.builder()
 //            .medAktivitetStatus(AktivitetStatus.KUN_YTELSE))
@@ -79,7 +79,7 @@
 //    }
 //
 //    @Test
-//    public void skal_returnere_empty_om_søker_er_far() {
+//    void skal_returnere_empty_om_søker_er_far() {
 //        // Arrange
 //        Beregningsgrunnlag bg = Beregningsgrunnlag.builder().leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatus.builder()
 //            .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
@@ -100,7 +100,7 @@
 //    }
 //
 //    @Test
-//    public void skal_returnere_empty_om_gjelder_adopsjon() {
+//    void skal_returnere_empty_om_gjelder_adopsjon() {
 //        // Arrange
 //        Beregningsgrunnlag bg = Beregningsgrunnlag.builder().leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatus.builder()
 //            .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
@@ -119,7 +119,7 @@
 //    }
 //
 //    @Test
-//    public void skal_returnere_empty_om_gjelder_ikkje_dagpenger_i_opptjeningsaktiviteter() {
+//    void skal_returnere_empty_om_gjelder_ikkje_dagpenger_i_opptjeningsaktiviteter() {
 //        // Arrange
 //        Beregningsgrunnlag bg = Beregningsgrunnlag.builder().leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatus.builder()
 //            .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
@@ -139,7 +139,7 @@
 //    }
 //
 //    @Test
-//    public void skal_tilfelle_om_dagpenger_i_opptjeningsaktiviteter() {
+//    void skal_tilfelle_om_dagpenger_i_opptjeningsaktiviteter() {
 //        // Arrange
 //        Beregningsgrunnlag bg = Beregningsgrunnlag.builder().leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatus.builder()
 //            .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
@@ -159,7 +159,7 @@
 //    }
 //
 //    @Test
-//    public void skal_returnere_empty_om_behandling_er_for_svangerskapspenger() {
+//    void skal_returnere_empty_om_behandling_er_for_svangerskapspenger() {
 //        // Arrange
 //        Beregningsgrunnlag bg = Beregningsgrunnlag.builder().leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatus.builder()
 //            .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))

@@ -28,14 +28,14 @@ public class MapAndelGraderingTest {
     private KoblingReferanse ref;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         ref = mock(KoblingReferanse.class);
         when(ref.getSkjæringstidspunktBeregning()).thenReturn(LocalDate.now());
         when(ref.getFagsakYtelseType()).thenReturn(FagsakYtelseType.FORELDREPENGER);
     }
 
     @Test
-    public void skalMappeAndelGraderingSN() {
+    void skalMappeAndelGraderingSN() {
         // Arrange
         LocalDate fom1 = LocalDate.now();
         LocalDate tom1 = fom1.plusWeeks(6);
@@ -75,7 +75,7 @@ public class MapAndelGraderingTest {
     }
 
     @Test
-    public void skalMappeAndelGraderingFL() {
+    void skalMappeAndelGraderingFL() {
 // Arrange
         LocalDate fom1 = LocalDate.now();
         LocalDate tom1 = fom1.plusWeeks(6);

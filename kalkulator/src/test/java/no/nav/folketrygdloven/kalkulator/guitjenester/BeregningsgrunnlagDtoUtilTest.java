@@ -45,7 +45,7 @@ public class BeregningsgrunnlagDtoUtilTest {
 
 
     @Test
-    public void arbeidsprosenter_for_uavsluttet_periode() {
+    void arbeidsprosenter_for_uavsluttet_periode() {
         // Arrange
         var arbeidsprosent1 = Aktivitetsgrad.fra(20);
         List<AndelGradering.Gradering> graderinger = new ArrayList<>();
@@ -68,7 +68,7 @@ public class BeregningsgrunnlagDtoUtilTest {
     }
 
     @Test
-    public void arbeidsprosenter_for_uavsluttet_periode_og_uavsluttet_gradering() {
+    void arbeidsprosenter_for_uavsluttet_periode_og_uavsluttet_gradering() {
         // Arrange
         var arbeidsprosent1 = Aktivitetsgrad.fra(20);
         List<AndelGradering.Gradering> graderinger = new ArrayList<>();
@@ -82,7 +82,7 @@ public class BeregningsgrunnlagDtoUtilTest {
     }
 
     @Test
-    public void arbeidsprosenter_for_samanhengande_gradering_med_hull_på_slutten() {
+    void arbeidsprosenter_for_samanhengande_gradering_med_hull_på_slutten() {
         // Arrange
         var arbeidsprosent1 = Aktivitetsgrad.fra(20);
         var arbeidsprosent2 = Aktivitetsgrad.fra(30);
@@ -102,7 +102,7 @@ public class BeregningsgrunnlagDtoUtilTest {
     }
 
     @Test
-    public void arbeidsprosenter_for_ikkje_samanhengande_gradering() {
+    void arbeidsprosenter_for_ikkje_samanhengande_gradering() {
         // Arrange
         var arbeidsprosent1 = Aktivitetsgrad.fra(20);
         var arbeidsprosent2 = Aktivitetsgrad.fra(30);
@@ -124,7 +124,7 @@ public class BeregningsgrunnlagDtoUtilTest {
     }
 
     @Test
-    public void skal_returnere_empty_om_ingen_opptjeningaktivitet_på_andel() {
+    void skal_returnere_empty_om_ingen_opptjeningaktivitet_på_andel() {
         long andelsnr = 1;
         var bg = BeregningsgrunnlagDto.builder()
             .medGrunnbeløp(GRUNNBELØP)
@@ -144,7 +144,7 @@ public class BeregningsgrunnlagDtoUtilTest {
     }
 
     @Test
-    public void skal_returnere_arbeidsforholdDto_om_virksomhet_som_arbeidsgiver_på_andel() {
+    void skal_returnere_arbeidsforholdDto_om_virksomhet_som_arbeidsgiver_på_andel() {
         long andelsnr = 1;
         String orgnr = "973093681";
         BeregningsgrunnlagDto bg = BeregningsgrunnlagDto.builder()
@@ -171,7 +171,7 @@ public class BeregningsgrunnlagDtoUtilTest {
     }
 
     @Test
-    public void skal_returnere_arbeidsforholdDto_om_privatperson_som_arbeidsgiver_på_andel() {
+    void skal_returnere_arbeidsforholdDto_om_privatperson_som_arbeidsgiver_på_andel() {
         long andelsnr = 1;
         BeregningsgrunnlagDto bg = BeregningsgrunnlagDto.builder()
             .medGrunnbeløp(GRUNNBELØP)

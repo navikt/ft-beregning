@@ -43,7 +43,7 @@ public class RefusjonDtoTjenesteImplTest {
 
 
     @Test
-    public void skal_ikkje_kunne_endre_refusjon_for_andel_uten_gradering_og_uten_refusjon() {
+    void skal_ikkje_kunne_endre_refusjon_for_andel_uten_gradering_og_uten_refusjon() {
         //Arrange
         BeregningsgrunnlagDto bg = BeregningsgrunnlagDto.builder()
             .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING)
@@ -70,7 +70,7 @@ public class RefusjonDtoTjenesteImplTest {
     }
 
     @Test
-    public void skal_ikkje_kunne_endre_refusjon_for_andel_med_gradering_og_med_refusjon() {
+    void skal_ikkje_kunne_endre_refusjon_for_andel_med_gradering_og_med_refusjon() {
         //Arrange
         BeregningsgrunnlagDto bg = BeregningsgrunnlagDto.builder()
             .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING)
@@ -98,7 +98,7 @@ public class RefusjonDtoTjenesteImplTest {
     }
 
     @Test
-    public void skal_ikkje_kunne_endre_refusjon_for_andel_med_gradering_og_uten_refusjon_totalrefusjon_under_6G() {
+    void skal_ikkje_kunne_endre_refusjon_for_andel_med_gradering_og_uten_refusjon_totalrefusjon_under_6G() {
         //Arrange
         BeregningsgrunnlagDto bg = BeregningsgrunnlagDto.builder()
             .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING)
@@ -126,7 +126,7 @@ public class RefusjonDtoTjenesteImplTest {
     }
 
     @Test
-    public void skal_kunne_endre_refusjon_for_andel_med_gradering_og_uten_refusjon_totalrefusjon_lik_6G() {
+    void skal_kunne_endre_refusjon_for_andel_med_gradering_og_uten_refusjon_totalrefusjon_lik_6G() {
         //Arrange
         BeregningsgrunnlagDto bg = BeregningsgrunnlagDto.builder()
             .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING)
@@ -163,7 +163,7 @@ public class RefusjonDtoTjenesteImplTest {
     }
 
     @Test
-    public void skal_kunne_endre_refusjon_for_andel_med_gradering_og_uten_refusjon_totalrefusjon_over_6G() {
+    void skal_kunne_endre_refusjon_for_andel_med_gradering_og_uten_refusjon_totalrefusjon_over_6G() {
         //Arrange
         BeregningsgrunnlagDto bg = BeregningsgrunnlagDto.builder()
             .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING)
@@ -200,7 +200,7 @@ public class RefusjonDtoTjenesteImplTest {
     }
 
     @Test
-    public void skal_slå_sammen_refusjon_for_andeler_i_samme_arbeidsforhold() {
+    void skal_slå_sammen_refusjon_for_andeler_i_samme_arbeidsforhold() {
         Integer refusjonskrav1 = 10000;
         Integer refusjonskrav2 = 15000;
         Integer refusjonskrav3 = 20000;

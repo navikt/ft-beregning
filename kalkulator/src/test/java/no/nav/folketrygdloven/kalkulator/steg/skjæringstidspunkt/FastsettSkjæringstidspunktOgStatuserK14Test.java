@@ -52,7 +52,7 @@ class FastsettSkjæringstidspunktOgStatuserK14Test {
     private final FastsettSkjæringstidspunktOgStatuserK14 fastsettSkjæringstidspunktOgStatuser = new FastsettSkjæringstidspunktOgStatuserK14();
 
     @Test
-    public void en_aktivitet_avsluttes_etter_stp() {
+    void en_aktivitet_avsluttes_etter_stp() {
         // Arrange
         var orgnr = "999999999";
         var arbeidsforhold = Arrays.asList(lagYA(orgnr, førSTP(200), etterStp(5)));
@@ -75,7 +75,7 @@ class FastsettSkjæringstidspunktOgStatuserK14Test {
     }
 
     @Test
-    public void en_aktivitet_avsluttes_før_stp() {
+    void en_aktivitet_avsluttes_før_stp() {
         // Arrange
         var orgnr = "999999999";
         var arbeidsforhold = Arrays.asList(lagYA(orgnr, førSTP(365), førSTP(5)));
@@ -98,7 +98,7 @@ class FastsettSkjæringstidspunktOgStatuserK14Test {
     }
 
     @Test
-    public void tester_arbeid_avsluttes_før_stp_og_militær_etter_stp_forventer_at_militær_ignoreres() {
+    void tester_arbeid_avsluttes_før_stp_og_militær_etter_stp_forventer_at_militær_ignoreres() {
         // Arrange
         var orgnr = "999999999";
         var arbeidsforhold = Arrays.asList(lagYA(orgnr, førSTP(365), førSTP(15)));
@@ -124,7 +124,7 @@ class FastsettSkjæringstidspunktOgStatuserK14Test {
     }
 
     @Test
-    public void skal_kun_velge_siste_aktiviteet() {
+    void skal_kun_velge_siste_aktiviteet() {
         // Arrange
         var orgnr = "999999999";
         var arbeidsforhold = Arrays.asList(lagYA(orgnr, førSTP(365), førSTP(15)));
@@ -153,7 +153,7 @@ class FastsettSkjæringstidspunktOgStatuserK14Test {
     }
 
     @Test
-    public void søker_er_kun_militær() {
+    void søker_er_kun_militær() {
         // Arrange
         var orgnr = "999999999";
         var arbeidsforhold = Arrays.asList(lagYA(orgnr, førSTP(365), førSTP(15)));
@@ -176,7 +176,7 @@ class FastsettSkjæringstidspunktOgStatuserK14Test {
     }
 
     @Test
-    public void søker_er_arbeidstaker_og_frilanser() {
+    void søker_er_arbeidstaker_og_frilanser() {
         // Arrange
         var orgnr = "999999999";
         var arbeidsforhold = Arrays.asList(lagYA(orgnr, førSTP(365), førSTP(15)));
@@ -202,7 +202,7 @@ class FastsettSkjæringstidspunktOgStatuserK14Test {
     }
 
     @Test
-    public void søker_har_flere_frilansaktiviteter() {
+    void søker_har_flere_frilansaktiviteter() {
         // Arrange
         var iay = ferdigstillIAY(Collections.emptyList(), Collections.emptyList());
         var frilansOpptjening1 = OpptjeningAktiviteterDto.nyPeriode(OpptjeningAktivitetType.FRILANS,
@@ -225,7 +225,7 @@ class FastsettSkjæringstidspunktOgStatuserK14Test {
     }
 
     @Test
-    public void søker_har_flere_arbeidsforhold_ulike_virksomheter() {
+    void søker_har_flere_arbeidsforhold_ulike_virksomheter() {
         // Arrange
         var orgnr1 = "999999999";
         var orgnr2 = "999999998";
@@ -252,7 +252,7 @@ class FastsettSkjæringstidspunktOgStatuserK14Test {
     }
 
     @Test
-    public void søker_har_flere_arbeidsforhold_samme_virksomheter() {
+    void søker_har_flere_arbeidsforhold_samme_virksomheter() {
         // Arrange
         var orgnr1 = "999999999";
         var arbId1 = InternArbeidsforholdRefDto.nyRef();
@@ -281,7 +281,7 @@ class FastsettSkjæringstidspunktOgStatuserK14Test {
 
 
     @Test
-    public void søker_er_arbeidstaker_og_næringsdrivede() {
+    void søker_er_arbeidstaker_og_næringsdrivede() {
         // Arrange
         var orgnr = "999999999";
         var arbeidsforhold = Arrays.asList(lagYA(orgnr, førSTP(365), førSTP(15)));
@@ -307,7 +307,7 @@ class FastsettSkjæringstidspunktOgStatuserK14Test {
     }
 
     @Test
-    public void kombinasjonstest() {
+    void kombinasjonstest() {
         // Arrange
         var orgnr = "999999999";
         var arbeidsforhold = Arrays.asList(lagYA(orgnr, førSTP(365), etterStp(15)));
@@ -344,7 +344,7 @@ class FastsettSkjæringstidspunktOgStatuserK14Test {
     }
 
     @Test
-    public void arbeidstaker_med_permisjon() {
+    void arbeidstaker_med_permisjon() {
         // Arrange
         var orgnr = "999999999";
         var arbeidsforhold = Arrays.asList(lagYAMedPermisjon(orgnr, førSTP(365), etterStp(150), null, førSTP(30), etterStp(30)));

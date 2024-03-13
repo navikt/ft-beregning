@@ -20,7 +20,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.PeriodeÅrsak;
 
 public class MapSplittetPeriodeFraVLTilRegelTest {
     @Test
-    public void ingenPeriodeårsak() {
+    void ingenPeriodeårsak() {
         // Arrange
         LocalDate fom = LocalDate.now();
         LocalDate tom = fom.plusWeeks(6);
@@ -56,7 +56,7 @@ public class MapSplittetPeriodeFraVLTilRegelTest {
     }
 
     @Test
-    public void enPeriodeårsak() {
+    void enPeriodeårsak() {
         // Arrange
         LocalDate fom = LocalDate.now();
         LocalDate tom = fom.plusWeeks(6);
@@ -77,7 +77,7 @@ public class MapSplittetPeriodeFraVLTilRegelTest {
     }
 
     @Test
-    public void toPeriodeårsaker() {
+    void toPeriodeårsaker() {
         // Arrange
         LocalDate fom = LocalDate.now();
         LocalDate tom = fom.plusWeeks(6);

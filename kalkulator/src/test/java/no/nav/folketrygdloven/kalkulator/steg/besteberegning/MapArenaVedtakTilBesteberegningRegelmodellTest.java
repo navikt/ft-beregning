@@ -24,7 +24,7 @@ class MapArenaVedtakTilBesteberegningRegelmodellTest {
     private static final LocalDate STP = LocalDate.of(2021,5,1);
 
     @Test
-    public void skal_mappe_et_meldekort_dagpenger() {
+    void skal_mappe_et_meldekort_dagpenger() {
         List<YtelseDto> vedtak = Collections.singletonList(lagVedtak(STP, stpPluss(30), YtelseType.DAGPENGER,
                 lagMeldekort(STP, stpPluss(14), 500)));
 
@@ -35,7 +35,7 @@ class MapArenaVedtakTilBesteberegningRegelmodellTest {
     }
 
     @Test
-    public void meldekort_skal_ikke_starte_før_vedtak() {
+    void meldekort_skal_ikke_starte_før_vedtak() {
         List<YtelseDto> vedtak = Collections.singletonList(lagVedtak(STP, stpPluss(30), YtelseType.DAGPENGER,
                 lagMeldekort(STP.plusDays(10), stpPluss(14), 500)));
 
@@ -46,7 +46,7 @@ class MapArenaVedtakTilBesteberegningRegelmodellTest {
     }
 
     @Test
-    public void skal_mappe_flere_meldekort_ulike_vedtak_aap() {
+    void skal_mappe_flere_meldekort_ulike_vedtak_aap() {
         List<YtelseDto> vedtak = Arrays.asList(lagVedtak(STP, stpPluss(30), YtelseType.ARBEIDSAVKLARINGSPENGER,
                 lagMeldekort(STP, stpPluss(14), 500),
                 lagMeldekort(stpPluss(15), stpPluss(35), 600)),

@@ -70,7 +70,7 @@ public class VurderMottarYtelseDtoTjenesteTest {
     private final Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         beregningsgrunnlag = BeregningsgrunnlagDto.builder()
                 .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING)
                 .medGrunnbeløp(Beløp.fra(91425))
@@ -86,7 +86,7 @@ public class VurderMottarYtelseDtoTjenesteTest {
     }
 
     @Test
-    public void skal_lage_dto_for_mottar_ytelse_uten_mottar_ytelse_satt() {
+    void skal_lage_dto_for_mottar_ytelse_uten_mottar_ytelse_satt() {
         // Arrange
         FaktaOmBeregningDto dto = new FaktaOmBeregningDto();
         byggFrilansAndel();
@@ -112,7 +112,7 @@ public class VurderMottarYtelseDtoTjenesteTest {
     }
 
     @Test
-    public void skal_lage_dto_for_mottar_ytelse_med_mottar_ytelse_satt() {
+    void skal_lage_dto_for_mottar_ytelse_med_mottar_ytelse_satt() {
         // Arrange
         FaktaOmBeregningDto dto = new FaktaOmBeregningDto();
         byggFrilansAndel();

@@ -60,7 +60,7 @@ public class AvklaringsbehovUtlederFastsettBeregningsaktiviteterPleiepengerTest 
     private BeregningsgrunnlagDto beregningsgrunnlag;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
 
         erOverstyrt = false;
 
@@ -81,7 +81,7 @@ public class AvklaringsbehovUtlederFastsettBeregningsaktiviteterPleiepengerTest 
     }
 
     @Test
-    public void skalSettePåVentNårFørRapporteringsfrist() {
+    void skalSettePåVentNårFørRapporteringsfrist() {
         // Arrange
         int rapporteringsfrist = 1000;
         LocalDateTime frist = tom.plusDays(rapporteringsfrist).plusDays(1).atStartOfDay();
@@ -115,7 +115,7 @@ public class AvklaringsbehovUtlederFastsettBeregningsaktiviteterPleiepengerTest 
 
 
     @Test
-    public void skalIkkeUtledeAutopunktNårLøpendeYtelseOgMeldekortForAAPIkkeErMottatt() {
+    void skalIkkeUtledeAutopunktNårLøpendeYtelseOgMeldekortForAAPIkkeErMottatt() {
         // Arrange
         LocalDate skjæringstidspunkt = LocalDate.now();
         LocalDate ytelsePeriodeFom = skjæringstidspunkt.minusMonths(2);
@@ -153,7 +153,7 @@ public class AvklaringsbehovUtlederFastsettBeregningsaktiviteterPleiepengerTest 
 
 
     @Test
-    public void skalUtledeAutopunktNårLøpendeYtelseOgMeldekortSomInkludererStpIkkeErMottatt() {
+    void skalUtledeAutopunktNårLøpendeYtelseOgMeldekortSomInkludererStpIkkeErMottatt() {
         // Arrange
         LocalDate skjæringstidspunkt = LocalDate.now();
         LocalDate ytelsePeriodeFom = skjæringstidspunkt.minusMonths(2);
@@ -196,7 +196,7 @@ public class AvklaringsbehovUtlederFastsettBeregningsaktiviteterPleiepengerTest 
     }
 
     @Test
-    public void skalUtledeAutopunktVentPåInntektFrilansNårManSkalVentePåBådeInntekterFrilansOgAAPMeldekort() {
+    void skalUtledeAutopunktVentPåInntektFrilansNårManSkalVentePåBådeInntekterFrilansOgAAPMeldekort() {
         // Arrange
         int rapporteringsfrist = 1000;
 
@@ -212,7 +212,7 @@ public class AvklaringsbehovUtlederFastsettBeregningsaktiviteterPleiepengerTest 
     }
 
     @Test
-    public void skalIkkeUtledeAutopunktNårLøpendeYtelseOgMeldekortSomInkludererStpErMottatt() {
+    void skalIkkeUtledeAutopunktNårLøpendeYtelseOgMeldekortSomInkludererStpErMottatt() {
         // Arrange
         LocalDate skjæringstidspunkt = LocalDate.now();
         LocalDate ytelsePeriodeFom = skjæringstidspunkt.minusMonths(2);
@@ -255,7 +255,7 @@ public class AvklaringsbehovUtlederFastsettBeregningsaktiviteterPleiepengerTest 
     }
 
     @Test
-    public void skalIkkeUtledeAutopunktNårYtelseOpphørerToDagerFørStp() {
+    void skalIkkeUtledeAutopunktNårYtelseOpphørerToDagerFørStp() {
         // Arrange
         LocalDate skjæringstidspunkt = LocalDate.now();
         Intervall periodeIntervallForAktivitet = Intervall.fraOgMedTilOgMed(skjæringstidspunkt.minusMonths(10), skjæringstidspunkt.minusDays(2));
@@ -293,7 +293,7 @@ public class AvklaringsbehovUtlederFastsettBeregningsaktiviteterPleiepengerTest 
     }
 
     @Test
-    public void skalUtledeAutopunktNårYtelseOpphørerEnDagFørStpOgMeldekortIkkeMottatt() {
+    void skalUtledeAutopunktNårYtelseOpphørerEnDagFørStpOgMeldekortIkkeMottatt() {
         // Arrange
         LocalDate skjæringstidspunkt = LocalDate.now();
         Intervall periodeIntervallForAktivitet = Intervall.fraOgMedTilOgMed(skjæringstidspunkt.minusMonths(10), skjæringstidspunkt.minusDays(1));
@@ -333,7 +333,7 @@ public class AvklaringsbehovUtlederFastsettBeregningsaktiviteterPleiepengerTest 
     }
 
     @Test
-    public void skalIkkeUtledeAutopunktNårYtelseOpphørerEnDagFørStpOgMeldekortErMottatt() {
+    void skalIkkeUtledeAutopunktNårYtelseOpphørerEnDagFørStpOgMeldekortErMottatt() {
         // Arrange
         LocalDate skjæringstidspunkt = LocalDate.now();
         Intervall periodeIntervallForAktivitet = Intervall.fraOgMedTilOgMed(skjæringstidspunkt.minusMonths(10), skjæringstidspunkt.minusDays(1));

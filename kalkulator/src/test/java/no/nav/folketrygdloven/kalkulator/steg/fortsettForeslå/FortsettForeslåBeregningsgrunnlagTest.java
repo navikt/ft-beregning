@@ -70,7 +70,7 @@ public class FortsettForeslåBeregningsgrunnlagTest {
     private final FortsettForeslåBeregningsgrunnlag fortsettForeslåBeregningsgrunnlag = new FortsettForeslåBeregningsgrunnlag();
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         iayGrunnlagBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
     }
 
@@ -132,7 +132,7 @@ public class FortsettForeslåBeregningsgrunnlagTest {
     }
 
     @Test
-    public void skalGiEittAvklaringsbehovForSNNyIArbeidslivetOgKortvarigArbeidsforhold() {
+    void skalGiEittAvklaringsbehovForSNNyIArbeidslivetOgKortvarigArbeidsforhold() {
         // Arrange
         BeregningsgrunnlagDto nyttGrunnlag = lagBeregningsgrunnlagATFL_SN();
         InntektArbeidYtelseAggregatBuilder register = testHjelper.initBehandlingFor_AT_SN(MÅNEDSINNTEKT1.multipliser(12),

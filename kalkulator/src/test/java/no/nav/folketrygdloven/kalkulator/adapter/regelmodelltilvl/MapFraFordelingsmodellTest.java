@@ -30,7 +30,7 @@ class MapFraFordelingsmodellTest {
     private BeregningsgrunnlagDto.Builder bg = BeregningsgrunnlagDto.builder().medSkjæringstidspunkt(STP);
 
     @Test
-    public void skal_teste_mapping_av_enkel_andel() {
+    void skal_teste_mapping_av_enkel_andel() {
         // Arrange
         var ref = UUID.randomUUID();
         lagBGPeriode(STP, STP.plusMonths(1),
@@ -48,7 +48,7 @@ class MapFraFordelingsmodellTest {
     }
 
     @Test
-    public void skal_teste_mapping_av_to_andeler_blir_tre() {
+    void skal_teste_mapping_av_to_andeler_blir_tre() {
         // Arrange
         var ref = UUID.randomUUID();
         lagBGPeriode(STP, STP.plusMonths(1),
@@ -77,7 +77,7 @@ class MapFraFordelingsmodellTest {
     }
 
     @Test
-    public void skal_teste_mapping_av_tre_andeler_blir_fire_med_ny_andel_frilans() {
+    void skal_teste_mapping_av_tre_andeler_blir_fire_med_ny_andel_frilans() {
         // Arrange
         lagBGPeriode(STP, STP.plusMonths(1),
                 lagBGAndel(1L, AktivitetStatus.BRUKERS_ANDEL,
@@ -111,7 +111,7 @@ class MapFraFordelingsmodellTest {
     }
 
     @Test
-    public void skal_teste_mapping_av_tre_andeler_blir_fem() {
+    void skal_teste_mapping_av_tre_andeler_blir_fem() {
         // Arrange
         var ref = UUID.randomUUID();
         var ref2 = UUID.randomUUID();

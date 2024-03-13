@@ -36,7 +36,7 @@ public class UtledPermisjonTilDtoTest {
     private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.now();
 
     @Test
-    public void skal_returne_empty_hvis_aktivitet_ikke_har_permisjon(){
+    void skal_returne_empty_hvis_aktivitet_ikke_har_permisjon(){
 
         // Arrange
         Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet("1");
@@ -65,7 +65,7 @@ public class UtledPermisjonTilDtoTest {
     }
 
     @Test
-    public void skal_returne_empty_hvis_permisjon_slutter_før_stp(){
+    void skal_returne_empty_hvis_permisjon_slutter_før_stp(){
 
         // Arrange
         Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet("1");
@@ -92,7 +92,7 @@ public class UtledPermisjonTilDtoTest {
     }
 
     @Test
-    public void skal_returne_empty_hvis_permisjon_starter_etter_stp(){
+    void skal_returne_empty_hvis_permisjon_starter_etter_stp(){
 
         // Arrange
         Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet("1");
@@ -120,7 +120,7 @@ public class UtledPermisjonTilDtoTest {
     }
 
     @Test
-    public void skal_returne_empty_hvis_permisjon_er_mindre_enn_100_prosent(){
+    void skal_returne_empty_hvis_permisjon_er_mindre_enn_100_prosent(){
 
         // Arrange
         Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet("1");
@@ -147,7 +147,7 @@ public class UtledPermisjonTilDtoTest {
     }
 
     @Test
-    public void skal_returne_permisjonDto(){
+    void skal_returne_permisjonDto(){
 
         // Arrange
         Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet("1");

@@ -41,7 +41,7 @@ public class RefusjonOgGraderingTjenesteTest {
     private Arbeidsgiver arbeidsgiver2 = Arbeidsgiver.virksomhet("999999999");
 
     @Test
-    public void returnererTrueForFLMedGraderingSomTilkommer() {
+    void returnererTrueForFLMedGraderingSomTilkommer() {
         // Arrange
         BeregningsgrunnlagDto bg = lagBg();
         BeregningsgrunnlagPeriodeDto periode1 = lagPeriode(bg);
@@ -60,7 +60,7 @@ public class RefusjonOgGraderingTjenesteTest {
     }
 
     @Test
-    public void returnererTrueForSNMedGraderingSomTilkommer() {
+    void returnererTrueForSNMedGraderingSomTilkommer() {
         // Arrange
         LocalDate fom = SKJÆRINGSTIDSPUNKT_BEREGNING;
         LocalDate tom = fom.plusWeeks(18).minusDays(1);
@@ -82,7 +82,7 @@ public class RefusjonOgGraderingTjenesteTest {
     }
 
     @Test
-    public void returnererFalseForNyInntektsmeldingUtenRefusjonskrav() {
+    void returnererFalseForNyInntektsmeldingUtenRefusjonskrav() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
         String orgnr = "123456780";
@@ -108,7 +108,7 @@ public class RefusjonOgGraderingTjenesteTest {
     // Tilkom etter skjæringstidspunktet: Ja
     // Returnerer true
     @Test
-    public void returnererTrueForGraderingOgArbeidsforholdetTilkomEtterSkjæringstidpunktet() {
+    void returnererTrueForGraderingOgArbeidsforholdetTilkomEtterSkjæringstidpunktet() {
         // Arrange
         LocalDate fom = SKJÆRINGSTIDSPUNKT_BEREGNING;
         LocalDate tom = fom.plusWeeks(18).minusDays(1);
@@ -136,7 +136,7 @@ public class RefusjonOgGraderingTjenesteTest {
     // Total refusjon under 6G
     // Returnerer false
     @Test
-    public void returnererTrueForGraderingGjeldendeBruttoBGStørreEnnNullBeregningsgrunnlagsandelAvkortetTilNull() {
+    void returnererTrueForGraderingGjeldendeBruttoBGStørreEnnNullBeregningsgrunnlagsandelAvkortetTilNull() {
         // Arrange
         var arbId1 = InternArbeidsforholdRefDto.nyRef();
         String orgnr1 = "123456780";
@@ -166,7 +166,7 @@ public class RefusjonOgGraderingTjenesteTest {
     // Tilkom etter skjæringstidspunktet: Nei
     // Returnerer True
     @Test
-    public void returnererTrueForGraderingGjeldendeBruttoBGLikNullTotalRefusjonStørreEnn6G() {
+    void returnererTrueForGraderingGjeldendeBruttoBGLikNullTotalRefusjonStørreEnn6G() {
         // Arrange
         LocalDate fom = SKJÆRINGSTIDSPUNKT_BEREGNING;
         LocalDate tom = fom.plusWeeks(18).minusDays(1);
@@ -201,7 +201,7 @@ public class RefusjonOgGraderingTjenesteTest {
     // Tilkom etter skjæringstidspunktet: Nei
     // Returnerer True
     @Test
-    public void returnererFalseForGraderingGjeldendeBruttoBGLikNullTotalRefusjonMindreEnn6G() {
+    void returnererFalseForGraderingGjeldendeBruttoBGLikNullTotalRefusjonMindreEnn6G() {
         // Arrange
         int seksG = GRUNNBELØP.multipliser(KonfigTjeneste.getAntallGØvreGrenseverdi()).intValue();
         int refusjon2 = seksG - 12;
@@ -234,7 +234,7 @@ public class RefusjonOgGraderingTjenesteTest {
     // Tilkom etter skjæringstidspunktet: Ja
     // Returnerer True
     @Test
-    public void returnererTrueForGraderingOgRefusjonUtenGjeldendeBG() {
+    void returnererTrueForGraderingOgRefusjonUtenGjeldendeBG() {
         // Arrange
         var arbId1 = InternArbeidsforholdRefDto.nyRef();
         InntektsmeldingDto im1 = BeregningInntektsmeldingTestUtil.opprettInntektsmelding(arbeidsgiver1.getIdentifikator(), arbId1,
@@ -263,7 +263,7 @@ public class RefusjonOgGraderingTjenesteTest {
     // Tilkom etter skjæringstidspunktet: Nei
     // Returnerer False
     @Test
-    public void returnererFalseForGraderingOgRefusjon() {
+    void returnererFalseForGraderingOgRefusjon() {
         // Arrange
         var arbId1 = InternArbeidsforholdRefDto.nyRef();
         InntektsmeldingDto im1 = BeregningInntektsmeldingTestUtil.opprettInntektsmelding(arbeidsgiver1.getIdentifikator(), arbId1,
@@ -291,7 +291,7 @@ public class RefusjonOgGraderingTjenesteTest {
     // Returnerer True
 
     @Test
-    public void returnererTrueForRefusjonArbfholdTilkomEtterStp() {
+    void returnererTrueForRefusjonArbfholdTilkomEtterStp() {
         // Arrange
         var arbId1 = InternArbeidsforholdRefDto.nyRef();
         InntektsmeldingDto im1 = BeregningInntektsmeldingTestUtil.opprettInntektsmelding(arbeidsgiver1.getIdentifikator(), arbId1, SKJÆRINGSTIDSPUNKT_BEREGNING, 1000);
@@ -311,7 +311,7 @@ public class RefusjonOgGraderingTjenesteTest {
     // Tilkom etter skjæringstidspunktet: Nei
     // Returnerer False
     @Test
-    public void returnererFalseForRefusjonGjeldendeBruttoBGStørreEnn0() {
+    void returnererFalseForRefusjonGjeldendeBruttoBGStørreEnn0() {
         // Arrange
         var arbId1 = InternArbeidsforholdRefDto.nyRef();
         InntektsmeldingDto im1 = BeregningInntektsmeldingTestUtil.opprettInntektsmelding(arbeidsgiver1.getIdentifikator(), arbId1, SKJÆRINGSTIDSPUNKT_BEREGNING, 1000);
@@ -328,7 +328,7 @@ public class RefusjonOgGraderingTjenesteTest {
 
 
     @Test
-    public void returnererTrueNårGradertNæringMedArbeidstakerTotalRefusjonUnder6GOgBGOver6G() {
+    void returnererTrueNårGradertNæringMedArbeidstakerTotalRefusjonUnder6GOgBGOver6G() {
         // Arrange
         var arbId1 = InternArbeidsforholdRefDto.nyRef();
         var seksG = GRUNNBELØP.multipliser(KonfigTjeneste.getAntallGØvreGrenseverdi());
@@ -355,7 +355,7 @@ public class RefusjonOgGraderingTjenesteTest {
     }
 
     @Test
-    public void returnererTrueForSNMedGraderingUtenBeregningsgrunnlag() {
+    void returnererTrueForSNMedGraderingUtenBeregningsgrunnlag() {
         // Arrange
         LocalDate fom = SKJÆRINGSTIDSPUNKT_BEREGNING;
         LocalDate tom = fom.plusWeeks(18).minusDays(1);

@@ -74,7 +74,7 @@ public class FordelPerioderTjenesteSVPTest {
 
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         this.tjeneste = new FordelPerioderTjeneste();
 
     }
@@ -129,7 +129,7 @@ public class FordelPerioderTjenesteSVPTest {
     }
 
     @Test
-    public void lagPeriodeForEndringISøktYtelseForSVP() {
+    void lagPeriodeForEndringISøktYtelseForSVP() {
         // Arrange
         PeriodeMedUtbetalingsgradDto periode1 = lagPeriodeMedUtbetaling(SKJÆRINGSTIDSPUNKT.minusMonths(1), SKJÆRINGSTIDSPUNKT.minusDays(1), BigDecimal.ZERO);
         PeriodeMedUtbetalingsgradDto periode2 = lagPeriodeMedUtbetaling(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(1), BigDecimal.valueOf(100));
@@ -177,7 +177,7 @@ public class FordelPerioderTjenesteSVPTest {
 
 
     @Test
-    public void lagPeriodeForEndringISøktYtelseFraSkjæringstidspunktet() {
+    void lagPeriodeForEndringISøktYtelseFraSkjæringstidspunktet() {
         // Arrange
         PeriodeMedUtbetalingsgradDto periode = lagPeriodeMedUtbetaling(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(1), BigDecimal.valueOf(50));
 

@@ -38,7 +38,7 @@ public class VurderBesteberegningTilfelleDtoTjenesteTest {
     private VurderBesteberegningTilfelleDtoTjeneste dtoTjeneste;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         var orgnr = "347289324";
         bgAndelArbeidsforholdBuilder
             .medArbeidsgiver(Arbeidsgiver.virksomhet(orgnr));
@@ -46,7 +46,7 @@ public class VurderBesteberegningTilfelleDtoTjenesteTest {
     }
 
     @Test
-    public void skal_ikke_sette_verdier_på_dto_om_man_ikkje_har_tilfelle() {
+    void skal_ikke_sette_verdier_på_dto_om_man_ikkje_har_tilfelle() {
         // Arrange
         var beregningAktiviteter = BeregningAktivitetTestUtil.opprettBeregningAktiviteter(STP, OPPTJENINGSPERIODE,
             OpptjeningAktivitetType.ARBEID);
@@ -70,7 +70,7 @@ public class VurderBesteberegningTilfelleDtoTjenesteTest {
     }
 
     @Test
-    public void skal_sette_verdier_på_dto() {
+    void skal_sette_verdier_på_dto() {
         // Arrange
         var beregningAktiviteter = BeregningAktivitetTestUtil.opprettBeregningAktiviteter(STP, OPPTJENINGSPERIODE,
             OpptjeningAktivitetType.ARBEID);

@@ -46,7 +46,7 @@ public class FastsettBgKunYtelseOppdatererTest {
     private BeregningsgrunnlagInput input;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         beregningsgrunnlag = BeregningsgrunnlagDto.builder()
             .medGrunnbeløp(GRUNNBELØP)
             .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT).build();
@@ -61,7 +61,7 @@ public class FastsettBgKunYtelseOppdatererTest {
     }
 
     @Test
-    public void skal_sette_verdier_på_andel_som_eksisterte_fra_før_i_grunnlag_ved_første_utførelse_av_avklaringsbehov() {
+    void skal_sette_verdier_på_andel_som_eksisterte_fra_før_i_grunnlag_ved_første_utførelse_av_avklaringsbehov() {
         // Arrange
         boolean nyAndel = false;
         boolean lagtTilAvSaksbehandler = false;
@@ -86,7 +86,7 @@ public class FastsettBgKunYtelseOppdatererTest {
     }
 
     @Test
-    public void skal_sette_verdier_på_andel_som_eksisterte_fra_før_i_grunnlag_ved_første_utførelse_av_avklaringsbehov_ved_besteberegning() {
+    void skal_sette_verdier_på_andel_som_eksisterte_fra_før_i_grunnlag_ved_første_utførelse_av_avklaringsbehov_ved_besteberegning() {
         // Arrange
         final boolean nyAndel = false;
         final boolean lagtTilAvSaksbehandler = false;
@@ -113,7 +113,7 @@ public class FastsettBgKunYtelseOppdatererTest {
     }
 
     @Test
-    public void skal_sette_verdier_på_andel_som_eksisterte_fra_før_i_grunnlag_ved_første_utførelse_av_avklaringsbehov_ved_ikkje_besteberegning() {
+    void skal_sette_verdier_på_andel_som_eksisterte_fra_før_i_grunnlag_ved_første_utførelse_av_avklaringsbehov_ved_ikkje_besteberegning() {
         // Arrange
         final boolean nyAndel = false;
         final boolean lagtTilAvSaksbehandler = false;
@@ -140,7 +140,7 @@ public class FastsettBgKunYtelseOppdatererTest {
     }
 
     @Test
-    public void skal_sette_verdier_på_andel_som_eksisterte_fra_før_i_grunnlag_med_fastsatt_lik_overstyrt_i_forrige_utførelse_av_aksonspunkt() {
+    void skal_sette_verdier_på_andel_som_eksisterte_fra_før_i_grunnlag_med_fastsatt_lik_overstyrt_i_forrige_utførelse_av_aksonspunkt() {
         // Arrange
         boolean nyAndel = false;
         boolean lagtTilAvSaksbehandler = false;
@@ -169,7 +169,7 @@ public class FastsettBgKunYtelseOppdatererTest {
     }
 
     @Test
-    public void skal_sette_verdier_på_ny_andel() {
+    void skal_sette_verdier_på_ny_andel() {
         // Arrange
         boolean nyAndel = true;
         boolean lagtTilAvSaksbehandler = true;
@@ -199,7 +199,7 @@ public class FastsettBgKunYtelseOppdatererTest {
     }
 
     @Test
-    public void skal_sette_verdier_på_andel_lagt_til_av_saksbehandler_ved_tilbakehopp_til_KOFAKBER() {
+    void skal_sette_verdier_på_andel_lagt_til_av_saksbehandler_ved_tilbakehopp_til_KOFAKBER() {
         // Arrange
         boolean nyAndel = false;
         boolean lagtTilAvSaksbehandler = true;
@@ -238,7 +238,7 @@ public class FastsettBgKunYtelseOppdatererTest {
     }
 
     @Test
-    public void skal_sette_verdier_på_andel_lagt_til_av_saksbehandler_ved_tilbakehopp_til_steg_før_KOFAKBER() {
+    void skal_sette_verdier_på_andel_lagt_til_av_saksbehandler_ved_tilbakehopp_til_steg_før_KOFAKBER() {
         // Arrange
         BeregningsgrunnlagDto førsteGrunnlag = BeregningsgrunnlagDto.builder(beregningsgrunnlag).build();
         Long andelsnr = 2133L;

@@ -65,7 +65,7 @@ public class VurderMottarYtelseTjenesteTest {
     }
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         beregningsgrunnlag = BeregningsgrunnlagDto.builder()
                 .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING)
                 .medGrunnbeløp(Beløp.fra(91425))
@@ -78,7 +78,7 @@ public class VurderMottarYtelseTjenesteTest {
     }
 
     @Test
-    public void skal_gi_frilanser() {
+    void skal_gi_frilanser() {
         // Arrange
         BeregningsgrunnlagPrStatusOgAndelDto.ny()
                 .medAktivitetStatus(AktivitetStatus.FRILANSER)
@@ -94,7 +94,7 @@ public class VurderMottarYtelseTjenesteTest {
     }
 
     @Test
-    public void skal_ikkje_gi_frilanser() {
+    void skal_ikkje_gi_frilanser() {
         // Arrange
         BeregningsgrunnlagPrStatusOgAndelDto.ny()
                 .medAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE)
@@ -109,7 +109,7 @@ public class VurderMottarYtelseTjenesteTest {
     }
 
     @Test
-    public void skal_ikke_vurdere_mottar_ytelse_for_frilans_uten_ytelse() {
+    void skal_ikke_vurdere_mottar_ytelse_for_frilans_uten_ytelse() {
         // Arrange
         BeregningsgrunnlagPrStatusOgAndelDto.ny()
                 .medAktivitetStatus(AktivitetStatus.FRILANSER)
@@ -125,7 +125,7 @@ public class VurderMottarYtelseTjenesteTest {
     }
 
     @Test
-    public void skal_vurdere_mottar_ytelse_for_frilans_med_ytelse() {
+    void skal_vurdere_mottar_ytelse_for_frilans_med_ytelse() {
         // Arrange
         BeregningsgrunnlagPrStatusOgAndelDto.ny()
                 .medAktivitetStatus(AktivitetStatus.FRILANSER)
@@ -142,7 +142,7 @@ public class VurderMottarYtelseTjenesteTest {
     }
 
     @Test
-    public void skal_ikke_vurdere_mottar_ytelse_for_frilans_uten_mottatt_ytelse_for_frilans() {
+    void skal_ikke_vurdere_mottar_ytelse_for_frilans_uten_mottatt_ytelse_for_frilans() {
         TEST_KONFIG.put("VURDER_MOTTAR_YTELSE_FL_FILTRERING", "true");
 
         // Arrange
@@ -161,7 +161,7 @@ public class VurderMottarYtelseTjenesteTest {
     }
 
     @Test
-    public void skal_vurdere_mottar_ytelse_for_frilans_med_mottatt_ytelse_for_frilans() {
+    void skal_vurdere_mottar_ytelse_for_frilans_med_mottatt_ytelse_for_frilans() {
         TEST_KONFIG.put("VURDER_MOTTAR_YTELSE_FL_FILTRERING", "true");
 
         // Arrange
@@ -180,7 +180,7 @@ public class VurderMottarYtelseTjenesteTest {
     }
 
     @Test
-    public void skal_vurdere_mottary_ytelse_for_frilans_og_arbeidstaker_uten_inntektsmelding_med_ytelse() {
+    void skal_vurdere_mottary_ytelse_for_frilans_og_arbeidstaker_uten_inntektsmelding_med_ytelse() {
         // Arrange
         Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         BeregningsgrunnlagPrStatusOgAndelDto.ny()
@@ -212,7 +212,7 @@ public class VurderMottarYtelseTjenesteTest {
 
 
     @Test
-    public void skal_vurdere_mottar_ytelse_for_arbeidstaker_uten_inntektsmelding_med_ytelse() {
+    void skal_vurdere_mottar_ytelse_for_arbeidstaker_uten_inntektsmelding_med_ytelse() {
         TEST_KONFIG.put("VURDER_MOTTAR_YTELSE_AT_FILTRERING", "true");
 
         // Arrange
@@ -241,7 +241,7 @@ public class VurderMottarYtelseTjenesteTest {
     }
 
     @Test
-    public void skal_ikke_vurdere_mottar_ytelse_for_arbeidstaker_uten_inntektsmelding_når_ytelse_er_utbetalt_til_arbeidsgiver() {
+    void skal_ikke_vurdere_mottar_ytelse_for_arbeidstaker_uten_inntektsmelding_når_ytelse_er_utbetalt_til_arbeidsgiver() {
         TEST_KONFIG.put("VURDER_MOTTAR_YTELSE_AT_FILTRERING", "true");
 
         // Arrange

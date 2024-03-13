@@ -40,7 +40,7 @@ public class FaktaOmBeregningDtoTjenesteImplTest {
     private FaktaOmBeregningDtoTjeneste faktaOmBeregningDtoTjeneste = new FaktaOmBeregningDtoTjeneste();
 
     @Test
-    public void skal_kalle_dto_tjenester() {
+    void skal_kalle_dto_tjenester() {
         // Arrange
         List<FaktaOmBeregningTilfelle> tilfeller = List.of(
             FaktaOmBeregningTilfelle.VURDER_NYOPPSTARTET_FL,
@@ -80,7 +80,7 @@ public class FaktaOmBeregningDtoTjenesteImplTest {
     }
 
     @Test
-    public void skal_lage_fakta_om_beregning_dto_når_man_har_tilfeller_i_fakta_om_beregning() {
+    void skal_lage_fakta_om_beregning_dto_når_man_har_tilfeller_i_fakta_om_beregning() {
         List<FaktaOmBeregningTilfelle> tilfeller = Collections.singletonList(FaktaOmBeregningTilfelle.FASTSETT_BESTEBEREGNING_FØDENDE_KVINNE);
         Collection<InntektsmeldingDto> inntektsmeldinger = List.of();
         var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.nytt().medInntektsmeldinger(inntektsmeldinger).build();
@@ -104,7 +104,7 @@ public class FaktaOmBeregningDtoTjenesteImplTest {
     }
 
     @Test
-    public void skal_lage_fakta_om_beregning_dto_med_avklar_aktiviterer() {
+    void skal_lage_fakta_om_beregning_dto_med_avklar_aktiviterer() {
         Collection<InntektsmeldingDto> inntektsmeldinger = List.of();
         var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.nytt().medInntektsmeldinger(inntektsmeldinger).build();
         BeregningsgrunnlagGrunnlagDto grunnlag = lagBeregningsgrunnlag(List.of(FaktaOmBeregningTilfelle.VURDER_MOTTAR_YTELSE));

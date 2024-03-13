@@ -75,13 +75,13 @@ public class FordelPerioderTjenestePSBTest {
 
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         this.tjeneste = new FordelPerioderTjeneste();
 
     }
 
     @Test
-    public void skal_ikke_legge_til_tilkommet_andel_siste_dag_med_utbetaling() {
+    void skal_ikke_legge_til_tilkommet_andel_siste_dag_med_utbetaling() {
 
         // Arrange
         PeriodeMedUtbetalingsgradDto periode1 = lagPeriodeMedUtbetaling(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(1), BigDecimal.valueOf(100), null);

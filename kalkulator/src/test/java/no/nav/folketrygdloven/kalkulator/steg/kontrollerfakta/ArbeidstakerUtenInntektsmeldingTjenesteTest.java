@@ -38,7 +38,7 @@ public class ArbeidstakerUtenInntektsmeldingTjenesteTest {
     private BeregningsgrunnlagPeriodeDto periode;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         beregningsgrunnlag = BeregningsgrunnlagDto.builder()
             .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING)
             .medGrunnbeløp(Beløp.fra(91425))
@@ -49,7 +49,7 @@ public class ArbeidstakerUtenInntektsmeldingTjenesteTest {
     }
 
     @Test
-    public void skal_returnere_andeler_uten_inntektsmelding() {
+    void skal_returnere_andeler_uten_inntektsmelding() {
         // Arrange
         Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         InntektArbeidYtelseGrunnlagDto iayGrunnlagMock = mock(InntektArbeidYtelseGrunnlagDto.class);
@@ -69,7 +69,7 @@ public class ArbeidstakerUtenInntektsmeldingTjenesteTest {
     }
 
     @Test
-    public void skal_returnere_andeler_uten_inntektsmelding_privatperson_som_arbeidsgiver() {
+    void skal_returnere_andeler_uten_inntektsmelding_privatperson_som_arbeidsgiver() {
         // Arrange
         Arbeidsgiver arbeidsgiver = Arbeidsgiver.person(AKTØR_ID_ARBEIDSGIVER);
         BeregningsgrunnlagPrStatusOgAndelDto.ny()
@@ -88,7 +88,7 @@ public class ArbeidstakerUtenInntektsmeldingTjenesteTest {
 
 
     @Test
-    public void skal_tom_liste_med_andeler_om_ingen_arbeidstakere_uten_inntektsmelding() {
+    void skal_tom_liste_med_andeler_om_ingen_arbeidstakere_uten_inntektsmelding() {
         // Arrange
         Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         InntektsmeldingDto im = InntektsmeldingDtoBuilder.builder().medArbeidsgiver(arbeidsgiver).medArbeidsforholdId(ARB_ID).build();
@@ -110,7 +110,7 @@ public class ArbeidstakerUtenInntektsmeldingTjenesteTest {
     }
 
     @Test
-    public void skal_returnere_tom_liste_med_andeler_arbeidstaker_uten_inntektsmelding_status_DP_på_skjæringstidspunktet() {
+    void skal_returnere_tom_liste_med_andeler_arbeidstaker_uten_inntektsmelding_status_DP_på_skjæringstidspunktet() {
         // Arrange
         InntektArbeidYtelseGrunnlagDto iayGrunnlagMock = mock(InntektArbeidYtelseGrunnlagDto.class);
         when(iayGrunnlagMock.getInntektsmeldinger()).thenReturn(Optional.empty());

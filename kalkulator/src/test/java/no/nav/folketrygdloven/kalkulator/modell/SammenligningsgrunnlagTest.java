@@ -22,12 +22,12 @@ public class SammenligningsgrunnlagTest {
     private SammenligningsgrunnlagPrStatusDto sammenligningsgrunnlag;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         sammenligningsgrunnlag = lagSammenligningsgrunnlagBuilder().build();
     }
 
     @Test
-    public void skal_bygge_instans_med_påkrevde_felter() {
+    void skal_bygge_instans_med_påkrevde_felter() {
         assertThat(sammenligningsgrunnlag.getSammenligningsperiodeFom()).isEqualTo(PERIODE_FOM);
         assertThat(sammenligningsgrunnlag.getSammenligningsperiodeTom()).isEqualTo(PERIODE_TOM);
         assertThat(sammenligningsgrunnlag.getRapportertPrÅr()).isEqualTo(Beløp.fra(RAPPORTERT_PR_ÅR));
@@ -35,7 +35,7 @@ public class SammenligningsgrunnlagTest {
     }
 
     @Test
-    public void skal_ikke_bygge_instans_hvis_mangler_påkrevde_felter() {
+    void skal_ikke_bygge_instans_hvis_mangler_påkrevde_felter() {
         SammenligningsgrunnlagPrStatusDto.Builder sammenligningsgrunnlagBuilder = SammenligningsgrunnlagPrStatusDto.builder();
         try {
             sammenligningsgrunnlagBuilder.build();
@@ -60,14 +60,14 @@ public class SammenligningsgrunnlagTest {
     }
 
     @Test
-    public void skal_håndtere_null_this_feilKlasse_i_equals() {
+    void skal_håndtere_null_this_feilKlasse_i_equals() {
         assertThat(sammenligningsgrunnlag).isNotEqualTo(null);
         assertThat(sammenligningsgrunnlag).isNotEqualTo("blabla");
         assertThat(sammenligningsgrunnlag).isEqualTo(sammenligningsgrunnlag);
     }
 
     @Test
-    public void skal_ha_refleksiv_equalsOgHashCode() {
+    void skal_ha_refleksiv_equalsOgHashCode() {
         SammenligningsgrunnlagPrStatusDto sammenligningsgrunnlag2 = lagSammenligningsgrunnlagBuilder().build();
 
         assertThat(sammenligningsgrunnlag).isEqualTo(sammenligningsgrunnlag2);
@@ -85,7 +85,7 @@ public class SammenligningsgrunnlagTest {
     }
 
     @Test
-    public void skal_bruke_sammenligningsgrunnlagFom_i_equalsOgHashCode() {
+    void skal_bruke_sammenligningsgrunnlagFom_i_equalsOgHashCode() {
         SammenligningsgrunnlagPrStatusDto sammenligningsgrunnlag2 = lagSammenligningsgrunnlagBuilder().build();
 
         assertThat(sammenligningsgrunnlag).isEqualTo(sammenligningsgrunnlag2);
@@ -100,7 +100,7 @@ public class SammenligningsgrunnlagTest {
     }
 
     @Test
-    public void skal_bruke_sammenligningsgrunnlagTom_i_equalsOgHashCode() {
+    void skal_bruke_sammenligningsgrunnlagTom_i_equalsOgHashCode() {
         SammenligningsgrunnlagPrStatusDto sammenligningsgrunnlag2 = lagSammenligningsgrunnlagBuilder().build();
 
         assertThat(sammenligningsgrunnlag).isEqualTo(sammenligningsgrunnlag2);
@@ -115,7 +115,7 @@ public class SammenligningsgrunnlagTest {
     }
 
     @Test
-    public void skal_bruke_rapportertPrÅr_i_equalsOgHashCode() {
+    void skal_bruke_rapportertPrÅr_i_equalsOgHashCode() {
         SammenligningsgrunnlagPrStatusDto sammenligningsgrunnlag2 = lagSammenligningsgrunnlagBuilder().build();
 
         assertThat(sammenligningsgrunnlag).isEqualTo(sammenligningsgrunnlag2);
@@ -130,7 +130,7 @@ public class SammenligningsgrunnlagTest {
     }
 
     @Test
-    public void skal_bruke_sammenligningtype_i_equalsOgHashCode() {
+    void skal_bruke_sammenligningtype_i_equalsOgHashCode() {
         SammenligningsgrunnlagPrStatusDto sammenligningsgrunnlag2 = lagSammenligningsgrunnlagBuilder().build();
 
         assertThat(sammenligningsgrunnlag).isEqualTo(sammenligningsgrunnlag2);

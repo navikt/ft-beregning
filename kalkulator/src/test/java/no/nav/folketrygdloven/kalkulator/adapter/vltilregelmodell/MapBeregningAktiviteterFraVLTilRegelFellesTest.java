@@ -216,7 +216,7 @@ class MapBeregningAktiviteterFraVLTilRegelFellesTest {
     }
 
     @Test
-    public void skal_mappe_arbeidsforhold_med_virksomhetarbeidsgiver_fra_opptjening_med_info_i_iay() {
+    void skal_mappe_arbeidsforhold_med_virksomhetarbeidsgiver_fra_opptjening_med_info_i_iay() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
         LocalDate fom = SKJÆRINGSTIDSPUNKT.minusMonths(12);
@@ -243,7 +243,7 @@ class MapBeregningAktiviteterFraVLTilRegelFellesTest {
     }
 
     @Test
-    public void skal_mappe_arbeidsforhold_med_virksomhetarbeidsgiver_fra_opptjening_med_info_i_iay_med_inntektsmelding() {
+    void skal_mappe_arbeidsforhold_med_virksomhetarbeidsgiver_fra_opptjening_med_info_i_iay_med_inntektsmelding() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
 
@@ -273,7 +273,7 @@ class MapBeregningAktiviteterFraVLTilRegelFellesTest {
     }
 
     @Test
-    public void skal_mappe_arbeidsforhold_med_virksomhetarbeidsgiver_fra_opptjening_uten_info_i_iay() {
+    void skal_mappe_arbeidsforhold_med_virksomhetarbeidsgiver_fra_opptjening_uten_info_i_iay() {
         // Arrange
         LocalDate fom = SKJÆRINGSTIDSPUNKT.minusMonths(12);
         LocalDate tom = SKJÆRINGSTIDSPUNKT.minusDays(1);
@@ -299,7 +299,7 @@ class MapBeregningAktiviteterFraVLTilRegelFellesTest {
     }
 
     @Test
-    public void skal_mappe_2_arbeidsforhold_med_permisjon_fra_det_ene() {
+    void skal_mappe_2_arbeidsforhold_med_permisjon_fra_det_ene() {
         // Arrange
         LocalDate fom = SKJÆRINGSTIDSPUNKT.minusMonths(12);
         LocalDate tom = SKJÆRINGSTIDSPUNKT.minusDays(1);
@@ -345,7 +345,7 @@ class MapBeregningAktiviteterFraVLTilRegelFellesTest {
     }
 
     @Test
-    public void skal_mappe_2_arbeidsforhold_med_permisjon_fra_det_ene_i_14_dager() {
+    void skal_mappe_2_arbeidsforhold_med_permisjon_fra_det_ene_i_14_dager() {
         // Arrange
         LocalDate fom = SKJÆRINGSTIDSPUNKT.minusMonths(12);
         LocalDate tom = SKJÆRINGSTIDSPUNKT.minusDays(1);
@@ -392,7 +392,7 @@ class MapBeregningAktiviteterFraVLTilRegelFellesTest {
 
 
     @Test
-    public void skal_mappe_2_arbeidsforhold_med_permisjon_under_14_dager_fra_det_ene() {
+    void skal_mappe_2_arbeidsforhold_med_permisjon_under_14_dager_fra_det_ene() {
         // Arrange
         LocalDate fom = SKJÆRINGSTIDSPUNKT.minusMonths(12);
         LocalDate tom = SKJÆRINGSTIDSPUNKT.minusDays(1);
@@ -438,7 +438,7 @@ class MapBeregningAktiviteterFraVLTilRegelFellesTest {
     }
 
     @Test
-    public void skal_mappe_2_arbeidsforhold_med_permisjon_som_ikke_er_relevant_fra_det_ene() {
+    void skal_mappe_2_arbeidsforhold_med_permisjon_som_ikke_er_relevant_fra_det_ene() {
         // Arrange
         LocalDate fom = SKJÆRINGSTIDSPUNKT.minusMonths(12);
         LocalDate tom = SKJÆRINGSTIDSPUNKT.minusDays(1);
@@ -487,7 +487,7 @@ class MapBeregningAktiviteterFraVLTilRegelFellesTest {
     }
 
     @Test
-    public void skal_mappe_arbeidsforhold_fra_samme_arbeidsgiver_med_inntektsmelding_i_iay() {
+    void skal_mappe_arbeidsforhold_fra_samme_arbeidsgiver_med_inntektsmelding_i_iay() {
         // Arrange
         String orgnr = ORGNR;
         var arbId1 = InternArbeidsforholdRefDto.nyRef();
@@ -536,7 +536,7 @@ class MapBeregningAktiviteterFraVLTilRegelFellesTest {
     }
 
     @Test
-    public void skal_mappe_til_kun_en_aktivitet_med_fleire_arbeidsforhold_for_samme_arbeidsgiver_i_iay_uten_inntektsmelding() {
+    void skal_mappe_til_kun_en_aktivitet_med_fleire_arbeidsforhold_for_samme_arbeidsgiver_i_iay_uten_inntektsmelding() {
         // Arrange
         String orgnr = ORGNR;
         var arbId1 = InternArbeidsforholdRefDto.nyRef();
@@ -571,7 +571,7 @@ class MapBeregningAktiviteterFraVLTilRegelFellesTest {
     }
 
     @Test
-    public void skal_mappe_til_kun_en_aktivitet_med_fleire_arbeidsforhold_i_iay_for_samme_arbeidsgiver_med_felles_inntektsmelding() {
+    void skal_mappe_til_kun_en_aktivitet_med_fleire_arbeidsforhold_i_iay_for_samme_arbeidsgiver_med_felles_inntektsmelding() {
         // Arrange
         String orgnr = ORGNR;
         var arbId1 = InternArbeidsforholdRefDto.nyRef();
@@ -607,7 +607,7 @@ class MapBeregningAktiviteterFraVLTilRegelFellesTest {
     }
 
     @Test
-    public void skal_mappe_arbeidsforhold_med_privatpersonarbeidsgiver_fra_opptjening() {
+    void skal_mappe_arbeidsforhold_med_privatpersonarbeidsgiver_fra_opptjening() {
         // Arrange
         LocalDate fom = SKJÆRINGSTIDSPUNKT.minusMonths(12);
         LocalDate tom = SKJÆRINGSTIDSPUNKT.minusDays(1);
@@ -633,7 +633,7 @@ class MapBeregningAktiviteterFraVLTilRegelFellesTest {
     }
 
     @Test
-    public void skal_mappe_frilansaktivitet_for_opptjening() {
+    void skal_mappe_frilansaktivitet_for_opptjening() {
         // Arrange
 
         var periode = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT.minusMonths(12), SKJÆRINGSTIDSPUNKT.minusMonths(6));
@@ -650,7 +650,7 @@ class MapBeregningAktiviteterFraVLTilRegelFellesTest {
     }
 
     @Test
-    public void skal_mappe_arbeid_uten_matchende_yrkesaktivitet() {
+    void skal_mappe_arbeid_uten_matchende_yrkesaktivitet() {
         LocalDate fom = SKJÆRINGSTIDSPUNKT.minusMonths(12);
         LocalDate tom = SKJÆRINGSTIDSPUNKT.minusDays(1);
         var periode = Intervall.fraOgMedTilOgMed(fom, tom);
@@ -675,7 +675,7 @@ class MapBeregningAktiviteterFraVLTilRegelFellesTest {
     }
 
     @Test
-    public void skal_mappe_alle_SN_fra_opptjening_til_ein_aktivitet() {
+    void skal_mappe_alle_SN_fra_opptjening_til_ein_aktivitet() {
         // Arrange
         var opptj1 = OpptjeningAktiviteterDto.nyPeriodeOrgnr(OpptjeningAktivitetType.NÆRING,
                 Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT.minusMonths(12), SKJÆRINGSTIDSPUNKT.minusMonths(6)), "674367833");
@@ -697,7 +697,7 @@ class MapBeregningAktiviteterFraVLTilRegelFellesTest {
     }
 
     @Test
-    public void skal_mappe_sykepenger_fra_opptjening_til_ein_aktivitet() {
+    void skal_mappe_sykepenger_fra_opptjening_til_ein_aktivitet() {
         // Arrange
         var opptj1 = OpptjeningAktiviteterDto.nyPeriodeOrgnr(OpptjeningAktivitetType.SYKEPENGER,
                 Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT.minusMonths(12), SKJÆRINGSTIDSPUNKT.minusMonths(6)), "674367833");
@@ -719,7 +719,7 @@ class MapBeregningAktiviteterFraVLTilRegelFellesTest {
     }
 
     @Test
-    public void skal_ikkje_mappe_etterutdanning() {
+    void skal_ikkje_mappe_etterutdanning() {
         // Arrange
         var periode = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT.minusMonths(12), SKJÆRINGSTIDSPUNKT);
 
@@ -738,7 +738,7 @@ class MapBeregningAktiviteterFraVLTilRegelFellesTest {
     }
 
     @Test
-    public void skal_mappe_arbeidsforhold_med_virksomhetarbeidsgiver_fra_iay_som_ikkje_finnes_i_aareg() {
+    void skal_mappe_arbeidsforhold_med_virksomhetarbeidsgiver_fra_iay_som_ikkje_finnes_i_aareg() {
 
         // Arrange
         String orgnr1 = ORGNR;

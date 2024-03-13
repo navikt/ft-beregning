@@ -26,7 +26,7 @@ public class AvklaringsbehovUtlederForeslåBeregningTest {
     private KoblingReferanse referanse = new KoblingReferanseMock();
 
     @Test
-    public void skalIkkeFåAvklaringsbehovVed100PDekningsgrad() {
+    void skalIkkeFåAvklaringsbehovVed100PDekningsgrad() {
         // Act
         List<BeregningAvklaringsbehovResultat> avklaringsbehov = AvklaringsbehovUtlederForeslåBeregning.utledAvklaringsbehov(lagInput(referanse), Collections.emptyList());
         // Assert
@@ -34,7 +34,7 @@ public class AvklaringsbehovUtlederForeslåBeregningTest {
     }
 
     @Test
-    public void skalIkkeFåAvklaringsbehovVed80PDekningsgrad() {
+    void skalIkkeFåAvklaringsbehovVed80PDekningsgrad() {
         // Arrange
         var input = lagInput();
         // Act
@@ -44,7 +44,7 @@ public class AvklaringsbehovUtlederForeslåBeregningTest {
     }
 
     @Test
-    public void skalFåAvklaringsbehov5042() {
+    void skalFåAvklaringsbehov5042() {
         // Arrange
         RegelResultat regelResultat = lagRegelResultat(BeregningUtfallÅrsak.VARIG_ENDRING_OG_AVVIK_STØRRE_ENN_25_PROSENT);
         // Act
@@ -55,7 +55,7 @@ public class AvklaringsbehovUtlederForeslåBeregningTest {
     }
 
     @Test
-    public void skalFåAvklaringsbehov5049() {
+    void skalFåAvklaringsbehov5049() {
         // Arrange
         RegelResultat regelResultat = lagRegelResultat(BeregningUtfallÅrsak.FASTSETT_SELVSTENDIG_NY_ARBEIDSLIVET);
         // Act
@@ -66,7 +66,7 @@ public class AvklaringsbehovUtlederForeslåBeregningTest {
     }
 
     @Test
-    public void skalFåAvklaringsbehov5038() {
+    void skalFåAvklaringsbehov5038() {
         // Arrange
         RegelResultat regelResultat = lagRegelResultat(BeregningUtfallÅrsak.FASTSETT_AVVIK_OVER_25_PROSENT);
 
@@ -87,7 +87,7 @@ public class AvklaringsbehovUtlederForeslåBeregningTest {
     }
 
     @Test
-    public void skal_ikke_få_avklaringsbehov5087_når_barnet_ikke_har_dødd() {
+    void skal_ikke_få_avklaringsbehov5087_når_barnet_ikke_har_dødd() {
         // Arrange
         // Act
         List<BeregningAvklaringsbehovResultat> avklaringsbehov = AvklaringsbehovUtlederForeslåBeregning.utledAvklaringsbehov(lagInput(referanse), Collections.emptyList());
@@ -97,7 +97,7 @@ public class AvklaringsbehovUtlederForeslåBeregningTest {
     }
 
     @Test
-    public void skal_ikke_få_avklaringsbehov5087_når_ingen_barn_et_født() {
+    void skal_ikke_få_avklaringsbehov5087_når_ingen_barn_et_født() {
         // Arrange
         var input = lagInput();
         // Act
@@ -108,7 +108,7 @@ public class AvklaringsbehovUtlederForeslåBeregningTest {
     }
 
     @Test
-    public void skal_ikke_få_avklaringsbehov5087_når_ikke_alle_barnene_døde_innen_seks_uker() {
+    void skal_ikke_få_avklaringsbehov5087_når_ikke_alle_barnene_døde_innen_seks_uker() {
         // Arrange
         var input = lagInput();
 
@@ -120,7 +120,7 @@ public class AvklaringsbehovUtlederForeslåBeregningTest {
     }
 
     @Test
-    public void skal_ikke_få_avklaringsbehov5087_når_ett_barn_døde_og_ett_barn_levde() {
+    void skal_ikke_få_avklaringsbehov5087_når_ett_barn_døde_og_ett_barn_levde() {
         // Arrange
         var input = lagInput();
 

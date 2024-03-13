@@ -21,7 +21,7 @@ public class FinnStartdatoPermisjonTest {
     private LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.now().minusMonths(1);
 
     @Test
-    public void finnStartdatoPermisjonNårAktivitetTilkommerEtterStpOgHarInntektsmeldingMedStartdatoEtterAnsettelsesdato() {
+    void finnStartdatoPermisjonNårAktivitetTilkommerEtterStpOgHarInntektsmeldingMedStartdatoEtterAnsettelsesdato() {
         // Arrange
         LocalDate ansettelsesDato = LocalDate.now();
         LocalDate startPermisjon = ansettelsesDato.plusMonths(1);
@@ -39,7 +39,7 @@ public class FinnStartdatoPermisjonTest {
     }
 
     @Test
-    public void finnStartdatoPermisjonNårAktivitetTilkommerEtterStpOgHarInntektsmeldingMedStartdatoFørAnsettelsesdato() {
+    void finnStartdatoPermisjonNårAktivitetTilkommerEtterStpOgHarInntektsmeldingMedStartdatoFørAnsettelsesdato() {
         // Arrange
         LocalDate ansettelsesDato = LocalDate.now();
         LocalDate startPermisjon = ansettelsesDato.minusMonths(1);
@@ -58,7 +58,7 @@ public class FinnStartdatoPermisjonTest {
 
 
     @Test
-    public void finnStartdatoPermisjonNårAktivitetTilkommerEtterStpUtenInntektsmelding() {
+    void finnStartdatoPermisjonNårAktivitetTilkommerEtterStpUtenInntektsmelding() {
         // Arrange
         LocalDate ansettelsesDato = LocalDate.now();
 

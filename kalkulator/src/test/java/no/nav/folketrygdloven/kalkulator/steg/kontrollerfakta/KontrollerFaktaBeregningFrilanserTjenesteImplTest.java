@@ -36,13 +36,13 @@ public class KontrollerFaktaBeregningFrilanserTjenesteImplTest {
     private InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlagBuilder;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         iayGrunnlagBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
     }
 
 
     @Test
-    public void skal_gi_nyoppstartet_om_oppgitt_i_søknad() {
+    void skal_gi_nyoppstartet_om_oppgitt_i_søknad() {
         //Arrange
         iayGrunnlagBuilder.medOppgittOpptjening(OppgittOpptjeningDtoBuilder.ny().leggTilFrilansOpplysninger(new OppgittFrilansDto(true)));
         InntektArbeidYtelseGrunnlagDto iayGrunnlag = iayGrunnlagBuilder.build();
@@ -59,7 +59,7 @@ public class KontrollerFaktaBeregningFrilanserTjenesteImplTest {
     }
 
     @Test
-    public void skal_gi_nyoppstartet_om_oppgitt_i_søknad_og_periode() {
+    void skal_gi_nyoppstartet_om_oppgitt_i_søknad_og_periode() {
         //Arrange
         iayGrunnlagBuilder.medOppgittOpptjening(OppgittOpptjeningDtoBuilder.ny()
                 .leggTilFrilansOpplysninger(new OppgittFrilansDto(true)));
@@ -78,7 +78,7 @@ public class KontrollerFaktaBeregningFrilanserTjenesteImplTest {
     }
 
     @Test
-    public void skal_gi_nyoppstartet_om_kun_oppgitt_periode() {
+    void skal_gi_nyoppstartet_om_kun_oppgitt_periode() {
         //Arrange
         iayGrunnlagBuilder.medOppgittOpptjening(OppgittOpptjeningDtoBuilder.ny()
                 .leggTilFrilansOpplysninger(new OppgittFrilansDto(false)));
@@ -97,7 +97,7 @@ public class KontrollerFaktaBeregningFrilanserTjenesteImplTest {
     }
 
     @Test
-    public void skal_ikke_gi_nyoppstartet_om_ikke_oppgitt_i_søknad_eller_periode() {
+    void skal_ikke_gi_nyoppstartet_om_ikke_oppgitt_i_søknad_eller_periode() {
         //Arrange
         iayGrunnlagBuilder.medOppgittOpptjening(OppgittOpptjeningDtoBuilder.ny()
                 .leggTilFrilansOpplysninger(new OppgittFrilansDto(false)));
@@ -118,7 +118,7 @@ public class KontrollerFaktaBeregningFrilanserTjenesteImplTest {
 
 
     @Test
-    public void ikkeFrilansISammeArbeidsforholdHvisBareArbeidstaker() {
+    void ikkeFrilansISammeArbeidsforholdHvisBareArbeidstaker() {
         //Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
         String orgnr = "123456780";
@@ -136,7 +136,7 @@ public class KontrollerFaktaBeregningFrilanserTjenesteImplTest {
     }
 
     @Test
-    public void ikkeFrilansISammeArbeidsforholdHvisFrilansHosAnnenOppdragsgiver() {
+    void ikkeFrilansISammeArbeidsforholdHvisFrilansHosAnnenOppdragsgiver() {
         //Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
         String orgnr = "123456780";
@@ -157,7 +157,7 @@ public class KontrollerFaktaBeregningFrilanserTjenesteImplTest {
     }
 
     @Test
-    public void frilansISammeArbeidsforhold() {
+    void frilansISammeArbeidsforhold() {
         //Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
         String orgnr = "123456780";

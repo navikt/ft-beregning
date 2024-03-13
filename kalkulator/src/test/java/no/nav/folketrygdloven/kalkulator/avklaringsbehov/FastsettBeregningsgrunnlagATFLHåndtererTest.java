@@ -45,13 +45,13 @@ public class FastsettBeregningsgrunnlagATFLHåndtererTest {
     private static final int FRILANSER_INNTEKT = 4000;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         virksomheter.add(Arbeidsgiver.virksomhet("991825827"));
         virksomheter.add(Arbeidsgiver.virksomhet("974760673"));
     }
 
     @Test
-    public void skal_oppdatere_beregningsgrunnlag_med_overstyrt_verdi_AT() {
+    void skal_oppdatere_beregningsgrunnlag_med_overstyrt_verdi_AT() {
         //Arrange
         buildOgLagreBeregningsgrunnlag(true, 1, 1);
 
@@ -67,7 +67,7 @@ public class FastsettBeregningsgrunnlagATFLHåndtererTest {
     }
 
     @Test
-    public void skal_oppdatere_bruttoPrÅr_i_beregningsgrunnlagperiode_når_andel_overstyres_AT() {
+    void skal_oppdatere_bruttoPrÅr_i_beregningsgrunnlagperiode_når_andel_overstyres_AT() {
         //Arrange
         int overstyrt1 = 1000;
         int overstyrt2 = 2000;
@@ -101,7 +101,7 @@ public class FastsettBeregningsgrunnlagATFLHåndtererTest {
     }
 
     @Test
-    public void skal_oppdatere_beregningsgrunnlag_med_overstyrt_verdi_for_fleire_perioder_med_andeler_med_ulike_inntektskategorier_AT() {
+    void skal_oppdatere_beregningsgrunnlag_med_overstyrt_verdi_for_fleire_perioder_med_andeler_med_ulike_inntektskategorier_AT() {
         //Arrange
         List<List<Boolean>> arbeidstakerPrPeriode = List.of(List.of(false, true), List.of(false, true, true, true));
         List<Inntektskategori> inntektskategoriPeriode1 = List.of(Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE, Inntektskategori.ARBEIDSTAKER);
@@ -131,7 +131,7 @@ public class FastsettBeregningsgrunnlagATFLHåndtererTest {
     }
 
     @Test
-    public void skal_oppdatere_beregningsgrunnlag_med_overstyrt_verdi_for_fleire_perioder_AT() {
+    void skal_oppdatere_beregningsgrunnlag_med_overstyrt_verdi_for_fleire_perioder_AT() {
         //Arrange
         int antallPerioder = 3;
         buildOgLagreBeregningsgrunnlag(true, antallPerioder, 1);
@@ -148,7 +148,7 @@ public class FastsettBeregningsgrunnlagATFLHåndtererTest {
     }
 
     @Test
-    public void skal_oppdatere_beregningsgrunnlag_med_overstyrt_verdi_FL() {
+    void skal_oppdatere_beregningsgrunnlag_med_overstyrt_verdi_FL() {
         //Arrange
         buildOgLagreBeregningsgrunnlag(false, 1, 1);
 
@@ -164,7 +164,7 @@ public class FastsettBeregningsgrunnlagATFLHåndtererTest {
     }
 
     @Test
-    public void skal_oppdatere_beregningsgrunnlag_med_overstyrt_verdi_for_fleire_perioder_FL() {
+    void skal_oppdatere_beregningsgrunnlag_med_overstyrt_verdi_for_fleire_perioder_FL() {
         //Arrange
         int antallPerioder = 3;
         buildOgLagreBeregningsgrunnlag(false, antallPerioder, 1);

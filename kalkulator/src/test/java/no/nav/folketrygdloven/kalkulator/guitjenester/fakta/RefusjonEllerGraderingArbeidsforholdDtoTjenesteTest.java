@@ -60,7 +60,7 @@ public class RefusjonEllerGraderingArbeidsforholdDtoTjenesteTest {
     private BeregningsgrunnlagGrunnlagDto grunnlagEntitet;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
 
         referanse = referanse.medSkjæringstidspunkt(Skjæringstidspunkt.builder().medSkjæringstidspunktOpptjening(SKJÆRINGSTIDSPUNKT_OPPTJENING).build());
         when(beregningAktivitetAggregat.getSkjæringstidspunktOpptjening()).thenReturn(SKJÆRINGSTIDSPUNKT_OPPTJENING);
@@ -86,7 +86,7 @@ public class RefusjonEllerGraderingArbeidsforholdDtoTjenesteTest {
     }
 
     @Test
-    public void skal_ikkje_lage_arbeidsforhold_dto_om_ingen_refusjon_eller_gradering() {
+    void skal_ikkje_lage_arbeidsforhold_dto_om_ingen_refusjon_eller_gradering() {
         var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.nytt().build();
         BeregningsgrunnlagGUIInput input = lagInputMedGrunnlag(iayGrunnlag);
         List<FordelBeregningsgrunnlagArbeidsforholdDto> listeMedGraderingRefusjonDto = RefusjonEllerGraderingArbeidsforholdDtoTjeneste
@@ -97,7 +97,7 @@ public class RefusjonEllerGraderingArbeidsforholdDtoTjenesteTest {
     // Periode 1:
     // Søker refusjon lik 10
     @Test
-    public void skal_lage_dto_med_refusjon_for_refusjon_i_heile_perioden() {
+    void skal_lage_dto_med_refusjon_for_refusjon_i_heile_perioden() {
         BeregningsgrunnlagPrStatusOgAndelDto.kopier(arbeidstakerAndel)
                 .medBGAndelArbeidsforhold(arbeidsforholdBuilder.medRefusjonskravPrÅr(Beløp.fra(10), Utfall.GODKJENT));
 
@@ -120,7 +120,7 @@ public class RefusjonEllerGraderingArbeidsforholdDtoTjenesteTest {
     // Periode 2:
     // Opphører refusjon
     @Test
-    public void skal_lage_dto_med_refusjon_for_refusjon_med_opphør() {
+    void skal_lage_dto_med_refusjon_for_refusjon_med_opphør() {
         BeregningsgrunnlagPrStatusOgAndelDto.Builder andelIAndrePeriode = BeregningsgrunnlagPrStatusOgAndelDto.kopier(arbeidstakerAndel);
         LocalDate andrePeriodeFom = periode.getBeregningsgrunnlagPeriodeFom().plusMonths(1);
         BeregningsgrunnlagPeriodeDto andrePeriode = BeregningsgrunnlagPeriodeDto.ny()
@@ -150,7 +150,7 @@ public class RefusjonEllerGraderingArbeidsforholdDtoTjenesteTest {
     // Periode 2:
     // Søker refusjon lik 10
     @Test
-    public void skal_lage_dto_med_refusjon_for_tilkommet_refusjon() {
+    void skal_lage_dto_med_refusjon_for_tilkommet_refusjon() {
         BeregningsgrunnlagPrStatusOgAndelDto.Builder andelIAndrePeriode = BeregningsgrunnlagPrStatusOgAndelDto.kopier(arbeidstakerAndel);
         LocalDate andrePeriodeFom = periode.getBeregningsgrunnlagPeriodeFom().plusMonths(1);
         BeregningsgrunnlagPeriodeDto andrePeriode = BeregningsgrunnlagPeriodeDto.ny()
@@ -184,7 +184,7 @@ public class RefusjonEllerGraderingArbeidsforholdDtoTjenesteTest {
     // Periode 2:
     // Søker refusjon lik 10
     @Test
-    public void skal_lage_dto_med_refusjon_for_endret_refusjon() {
+    void skal_lage_dto_med_refusjon_for_endret_refusjon() {
         BeregningsgrunnlagPrStatusOgAndelDto.Builder andelIAndrePeriode = BeregningsgrunnlagPrStatusOgAndelDto.kopier(arbeidstakerAndel);
         LocalDate andrePeriodeFom = periode.getBeregningsgrunnlagPeriodeFom().plusMonths(1);
         BeregningsgrunnlagPeriodeDto andrePeriode = BeregningsgrunnlagPeriodeDto.ny()
@@ -233,7 +233,7 @@ public class RefusjonEllerGraderingArbeidsforholdDtoTjenesteTest {
     // Periode 3:
     // Søker refusjon lik 10
     @Test
-    public void skal_lage_dto_med_refusjon_for_endret_refusjon_med_opphør_mellom_perioder() {
+    void skal_lage_dto_med_refusjon_for_endret_refusjon_med_opphør_mellom_perioder() {
         // Arrange
 
         // Tredje periode (endring i refusjon)
@@ -301,7 +301,7 @@ public class RefusjonEllerGraderingArbeidsforholdDtoTjenesteTest {
     // Arbeidsforhold 1 søker fortsatt refusjon lik 10
     // Arbeidsforhold 2 opphører refusjon
     @Test
-    public void skal_lage_dto_med_refusjon_for_refusjon_med_fleire_perioder_uten_endring() {
+    void skal_lage_dto_med_refusjon_for_refusjon_med_fleire_perioder_uten_endring() {
         // Arrange
         InternArbeidsforholdRefDto arbeidsforholdId2 = InternArbeidsforholdRefDto.nyRef();
         // Tredje periode (endring i refusjon)
@@ -389,7 +389,7 @@ public class RefusjonEllerGraderingArbeidsforholdDtoTjenesteTest {
     // Periode 2:
     // Tilkommet arbeidsforhold søker refusjon
     @Test
-    public void skal_lage_dto_med_refusjon_for_tilkommet_arbeidsforhold() {
+    void skal_lage_dto_med_refusjon_for_tilkommet_arbeidsforhold() {
         // Arrange
         var arbeidsforholdId2 = InternArbeidsforholdRefDto.nyRef();
 
@@ -436,7 +436,7 @@ public class RefusjonEllerGraderingArbeidsforholdDtoTjenesteTest {
     }
 
     @Test
-    public void skal_lage_dto_med_gradering() {
+    void skal_lage_dto_med_gradering() {
         // Arrange
         LocalDate graderingTOM = SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(2);
         Intervall graderingPeriode = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_OPPTJENING, graderingTOM);
@@ -472,7 +472,7 @@ public class RefusjonEllerGraderingArbeidsforholdDtoTjenesteTest {
     }
 
     @Test
-    public void skal_ikkje_lage_dto_for_andel_med_lagt_til_av_saksbehandler() {
+    void skal_ikkje_lage_dto_for_andel_med_lagt_til_av_saksbehandler() {
         BeregningsgrunnlagPrStatusOgAndelDto.Builder.oppdatere(arbeidstakerAndel).medKilde(AndelKilde.SAKSBEHANDLER_KOFAKBER);
         var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.nytt().build();
         BeregningsgrunnlagGUIInput input = lagInputMedGrunnlag(iayGrunnlag);

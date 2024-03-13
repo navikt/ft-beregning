@@ -11,7 +11,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 public class OpptjeningsaktiviteterPerYtelseTest {
 
     @Test
-    public void aap_relevant_for_foreldrepenger() {
+    void aap_relevant_for_foreldrepenger() {
         // Act
         var opptjeningsaktiviteterPerYtelse =  new OpptjeningsaktiviteterPerYtelse(FagsakYtelseType.FORELDREPENGER);
         boolean relevant = opptjeningsaktiviteterPerYtelse.erRelevantAktivitet(OpptjeningAktivitetType.AAP, null);
@@ -21,7 +21,7 @@ public class OpptjeningsaktiviteterPerYtelseTest {
     }
 
     @Test
-    public void dp_relevant_for_foreldrepenger() {
+    void dp_relevant_for_foreldrepenger() {
         // Act
         var opptjeningsaktiviteterPerYtelse =  new OpptjeningsaktiviteterPerYtelse(FagsakYtelseType.FORELDREPENGER);
         boolean relevant = opptjeningsaktiviteterPerYtelse.erRelevantAktivitet(OpptjeningAktivitetType.DAGPENGER, null);
@@ -31,7 +31,7 @@ public class OpptjeningsaktiviteterPerYtelseTest {
     }
 
     @Test
-    public void aap_ikke_relevant_for_svp() {
+    void aap_ikke_relevant_for_svp() {
         // Act
         var opptjeningsaktiviteterPerYtelse = new OpptjeningsaktiviteterPerYtelse(FagsakYtelseType.SVANGERSKAPSPENGER);
         boolean relevant = opptjeningsaktiviteterPerYtelse.erRelevantAktivitet(OpptjeningAktivitetType.AAP, null);
@@ -41,7 +41,7 @@ public class OpptjeningsaktiviteterPerYtelseTest {
     }
 
     @Test
-    public void dp_ikke_relevant_for_svp() {
+    void dp_ikke_relevant_for_svp() {
         // Act
         var opptjeningsaktiviteterPerYtelse = new OpptjeningsaktiviteterPerYtelse(FagsakYtelseType.SVANGERSKAPSPENGER);
         boolean relevant = opptjeningsaktiviteterPerYtelse.erRelevantAktivitet(OpptjeningAktivitetType.DAGPENGER, null);

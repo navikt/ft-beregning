@@ -33,13 +33,13 @@ public class BeregningsperiodeTjenesteTest {
 
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         input = new BeregningsgrunnlagInput(koblingReferanse, null, null, null, null);
         input.leggTilKonfigverdi(INNTEKT_RAPPORTERING_FRIST_DATO, 5);
     }
 
     @Test
-    public void skalTesteAtBeregningsperiodeBlirSattRiktig() {
+    void skalTesteAtBeregningsperiodeBlirSattRiktig() {
         // Arrange
         LocalDate skjæringstidspunkt = LocalDate.of(2019, 5, 15);
 
@@ -52,7 +52,7 @@ public class BeregningsperiodeTjenesteTest {
     }
 
     @Test
-    public void skalIkkeSettesPåVentNårIkkeErATFL() {
+    void skalIkkeSettesPåVentNårIkkeErATFL() {
         // Arrange
         LocalDate dagensdato = SKJÆRINGSTIDSPUNKT;
         var beregningAktivitetAggregatDto = lagBergningaktivitetAggregat1SNAndel();
@@ -65,7 +65,7 @@ public class BeregningsperiodeTjenesteTest {
     }
 
     @Test
-    public void skalIkkeSettesPåVentNårNåtidErEtterFrist() {
+    void skalIkkeSettesPåVentNårNåtidErEtterFrist() {
         // Arrange
         LocalDate dagensdato = SKJÆRINGSTIDSPUNKT.plusDays(7); // 8. januar
         var beregningAktivitetAggregatDto = lagBeregningaktiviteter1ArbeidstakerAndel();
@@ -78,7 +78,7 @@ public class BeregningsperiodeTjenesteTest {
     }
 
     @Test
-    public void skalIkkeSettesPåVentNårNåtidErLengeEtterFrist() {
+    void skalIkkeSettesPåVentNårNåtidErLengeEtterFrist() {
         // Arrange
         LocalDate dagensdato = SKJÆRINGSTIDSPUNKT.plusDays(45);
         var beregningAktivitetAggregatDto = lagBeregningaktiviteter1ArbeidstakerAndel();
@@ -91,7 +91,7 @@ public class BeregningsperiodeTjenesteTest {
     }
 
     @Test
-    public void skalAlltidSettesPåVentNårBrukerErFrilanserFørFrist() {
+    void skalAlltidSettesPåVentNårBrukerErFrilanserFørFrist() {
         // Arrange
         LocalDate dagensdato = SKJÆRINGSTIDSPUNKT.plusDays(4);
         var beregningAktivitetAggregatDto = lagAktivitetAggregat1FrilansAndel();
@@ -105,7 +105,7 @@ public class BeregningsperiodeTjenesteTest {
     }
 
     @Test
-    public void skalIkkeSettesPåVentNårHarInntektsmeldingFørFrist() {
+    void skalIkkeSettesPåVentNårHarInntektsmeldingFørFrist() {
         // Arrange
         LocalDate dagensdato = SKJÆRINGSTIDSPUNKT.plusDays(3);
         var beregningAktivitetAggregatDto = lagBeregningaktiviteter1ArbeidstakerAndel();
@@ -116,7 +116,7 @@ public class BeregningsperiodeTjenesteTest {
     }
 
     @Test
-    public void skalSettesPåVentNårFørFristUtenInntektsmelding() {
+    void skalSettesPåVentNårFørFristUtenInntektsmelding() {
         // Arrange
         LocalDate dagensdato = SKJÆRINGSTIDSPUNKT.plusDays(4);
         var beregningAktivitetAggregatDto = lagBeregningaktiviteter1ArbeidstakerAndel();
@@ -129,7 +129,7 @@ public class BeregningsperiodeTjenesteTest {
     }
 
     @Test
-    public void skalSettesPåVentNårUtenInntektsmeldingFørFristFlereArbeidsforhold() {
+    void skalSettesPåVentNårUtenInntektsmeldingFørFristFlereArbeidsforhold() {
         // Arrange
         LocalDate dagensdato = SKJÆRINGSTIDSPUNKT.plusDays(4);
         var beregningAktivitetAggregatDto = lagAktivitetAggregat2ArbeidstakerAndeler();
@@ -143,7 +143,7 @@ public class BeregningsperiodeTjenesteTest {
     }
 
     @Test
-    public void skalSettesPåVentNårHarInntektsmeldingFørFristForBareEttAvFlereArbeidsforhold() {
+    void skalSettesPåVentNårHarInntektsmeldingFørFristForBareEttAvFlereArbeidsforhold() {
         // Arrange
         LocalDate dagensdato = SKJÆRINGSTIDSPUNKT.plusDays(2);
         var beregningAktivitetAggregatDto = lagAktivitetAggregat2ArbeidstakerAndeler();
@@ -157,7 +157,7 @@ public class BeregningsperiodeTjenesteTest {
     }
 
     @Test
-    public void skalIkkeSettesPåVentNårAlleHarInntektsmeldingFørFristFlereArbeidsforhold() {
+    void skalIkkeSettesPåVentNårAlleHarInntektsmeldingFørFristFlereArbeidsforhold() {
         // Arrange
         LocalDate dagensdato = SKJÆRINGSTIDSPUNKT.plusDays(2);
         var beregningAktivitetAggregatDto = lagAktivitetAggregat2ArbeidstakerAndeler();
@@ -170,7 +170,7 @@ public class BeregningsperiodeTjenesteTest {
     }
 
     @Test
-    public void skalIkkeSettesPåVentNårArbeidsforholdUtenInntektsmeldingErLagtTilAvSaksbehandler() {
+    void skalIkkeSettesPåVentNårArbeidsforholdUtenInntektsmeldingErLagtTilAvSaksbehandler() {
         // Arrange
         LocalDate dagensdato = SKJÆRINGSTIDSPUNKT.plusDays(2);
         var beregningAktivitetAggregatDto = lagBeregningaktiviteter1ArbeidstakerAndel();
@@ -181,7 +181,7 @@ public class BeregningsperiodeTjenesteTest {
     }
 
     @Test
-    public void skalUtledeRiktigFrist() {
+    void skalUtledeRiktigFrist() {
         // Arrange
         LocalDate dagensdato = SKJÆRINGSTIDSPUNKT.plusDays(2);
         var beregningAktivitetAggregatDto = lagAktivitetAggregat2ArbeidstakerAndeler();
@@ -195,7 +195,7 @@ public class BeregningsperiodeTjenesteTest {
     }
 
     @Test
-    public void skalUtledeRiktigFristKunFL() {
+    void skalUtledeRiktigFristKunFL() {
         // Arrange
         LocalDate dagensdato = SKJÆRINGSTIDSPUNKT.plusDays(2);
         var beregningAktivitetAggregatDto = lagAktivitetAggregat1FrilansAndel();

@@ -66,7 +66,7 @@ public class AvklaringsbehovUtlederFaktaOmBeregningTest {
     private KoblingReferanse koblingReferanse = new KoblingReferanseMock(SKJÆRINGSTIDSPUNKT_OPPTJENING);
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         avklaringsbehovUtlederFaktaOmBeregning = new AvklaringsbehovUtlederFaktaOmBeregning();
         arbeidsgiver = Arbeidsgiver.virksomhet(orgnr);
     }
@@ -76,7 +76,7 @@ public class AvklaringsbehovUtlederFaktaOmBeregningTest {
      * SN ny i Arbeidslivet:
      */
     @Test
-    public void skalUtledeAvklaringsbehovForSNNyIArbeidslivet() {
+    void skalUtledeAvklaringsbehovForSNNyIArbeidslivet() {
         // Arrange
         LocalDate graderingStart = SKJÆRINGSTIDSPUNKT_OPPTJENING.plusWeeks(9);
         int refusjonskravAndel2 = 50000;
@@ -147,7 +147,7 @@ public class AvklaringsbehovUtlederFaktaOmBeregningTest {
     }
 
     @Test
-    public void skalUtledeAvklaringsbehovATFLSammeOrgLønnsendringNyoppstartetFL() {
+    void skalUtledeAvklaringsbehovATFLSammeOrgLønnsendringNyoppstartetFL() {
         // Arrange
         var arbId3 = InternArbeidsforholdRefDto.namedRef("3");
         Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(orgnr);
@@ -195,7 +195,7 @@ public class AvklaringsbehovUtlederFaktaOmBeregningTest {
      * orgnr2 er kortvarig arbeidsforhold med slutt STP+1 måned, søker refusjon
      */
     @Test
-    public void skalUtledeAvklaringsbehovKortvarigeArbeidsforhold() {
+    void skalUtledeAvklaringsbehovKortvarigeArbeidsforhold() {
         // Arrange
         LocalDate graderingStart = SKJÆRINGSTIDSPUNKT_OPPTJENING.plusWeeks(9);
         int refusjonskravAndel2 = 50000;
@@ -274,7 +274,7 @@ public class AvklaringsbehovUtlederFaktaOmBeregningTest {
     }
 
     @Test
-    public void skalUtledeAvklaringsbehovForFellesTilfeller() {
+    void skalUtledeAvklaringsbehovForFellesTilfeller() {
         // Act
         InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlagBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
         BeregningIAYTestUtil.lagOppgittOpptjeningForSN(SKJÆRINGSTIDSPUNKT_OPPTJENING, true, iayGrunnlagBuilder);
@@ -306,7 +306,7 @@ public class AvklaringsbehovUtlederFaktaOmBeregningTest {
     }
 
     @Test
-    public void skalUtledeAvklaringsbehovForFellesTilfellerOgReturnereOverstyring() {
+    void skalUtledeAvklaringsbehovForFellesTilfellerOgReturnereOverstyring() {
         // Act
         InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlagBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
         BeregningIAYTestUtil.lagOppgittOpptjeningForSN(SKJÆRINGSTIDSPUNKT_OPPTJENING, true, iayGrunnlagBuilder);
@@ -358,7 +358,7 @@ public class AvklaringsbehovUtlederFaktaOmBeregningTest {
     }
 
     @Test
-    public void skalReturnereIngenAvklaringsbehov() {
+    void skalReturnereIngenAvklaringsbehov() {
         // Arrange
         BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlagMedAT(Periode.of(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusYears(1), SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(2)));
 

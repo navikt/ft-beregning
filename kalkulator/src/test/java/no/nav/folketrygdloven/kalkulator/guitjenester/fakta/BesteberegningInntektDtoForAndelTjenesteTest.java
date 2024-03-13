@@ -61,7 +61,7 @@ public class BesteberegningInntektDtoForAndelTjenesteTest {
     private BeregningsgrunnlagPeriodeDto periode;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         byggArbeidsgiver();
         byggArbeidstakerYrkesaktivitet();
         byggFrilansOppdragAktivitet();
@@ -73,7 +73,7 @@ public class BesteberegningInntektDtoForAndelTjenesteTest {
     }
 
     @Test
-    public void skal_finne_snitt_inntekt_for_arbeidstaker_med_lik_inntekt_pr_mnd() {
+    void skal_finne_snitt_inntekt_for_arbeidstaker_med_lik_inntekt_pr_mnd() {
         var aktørInntekt = lagAktørInntekt(singletonList(lagLikInntektSiste3Mnd(arbeidsgiver)));
         var filter = new InntektFilterDto(aktørInntekt.build());
         var snittIBeregningsperioden = InntektForAndelTjeneste.finnSnittinntektForArbeidstakerIBeregningsperioden(filter, arbeidstakerAndel).get();
@@ -81,7 +81,7 @@ public class BesteberegningInntektDtoForAndelTjenesteTest {
     }
 
     @Test
-    public void skal_finne_snitt_inntekt_for_arbeidstaker_med_ulik_inntekt_pr_mnd() {
+    void skal_finne_snitt_inntekt_for_arbeidstaker_med_ulik_inntekt_pr_mnd() {
         var aktørInntekt = lagAktørInntekt(singletonList(lagUlikInntektSiste3Mnd(arbeidsgiver)));
         var filter = new InntektFilterDto(aktørInntekt.build());
         var snittIBeregningsperioden = InntektForAndelTjeneste.finnSnittinntektForArbeidstakerIBeregningsperioden(filter, arbeidstakerAndel).get();
@@ -89,7 +89,7 @@ public class BesteberegningInntektDtoForAndelTjenesteTest {
     }
 
     @Test
-    public void skal_finne_snitt_inntekt_for_frilans_med_lik_inntekt_pr_mnd() {
+    void skal_finne_snitt_inntekt_for_frilans_med_lik_inntekt_pr_mnd() {
         List<InntektDtoBuilder> inntekter = List.of(lagLikInntektSiste3Mnd(arbeidsgiver), lagLikInntektSiste3Mnd(frilansArbeidsgiver));
         List<YrkesaktivitetDto> aktiviteter = List.of(arbeidstakerYrkesaktivitet, frilans, frilansOppdrag);
         var grunnlagEntitet = lagIAYGrunnlagEntitet(inntekter, aktiviteter);
@@ -98,7 +98,7 @@ public class BesteberegningInntektDtoForAndelTjenesteTest {
     }
 
     @Test
-    public void skal_finne_snitt_inntekt_for_frilans_med_ulik_inntekt_pr_mnd() {
+    void skal_finne_snitt_inntekt_for_frilans_med_ulik_inntekt_pr_mnd() {
         List<InntektDtoBuilder> inntekter = List.of(lagLikInntektSiste3Mnd(arbeidsgiver), lagUlikInntektSiste3Mnd(frilansArbeidsgiver));
         List<YrkesaktivitetDto> aktiviteter = List.of(arbeidstakerYrkesaktivitet, frilans, frilansOppdrag);
         var grunnlagEntitet = lagIAYGrunnlagEntitet(inntekter, aktiviteter);
@@ -107,7 +107,7 @@ public class BesteberegningInntektDtoForAndelTjenesteTest {
     }
 
     @Test
-    public void skal_finne_snitt_inntekt_for_frilans_med_fleire_oppdragsgivere() {
+    void skal_finne_snitt_inntekt_for_frilans_med_fleire_oppdragsgivere() {
         List<InntektDtoBuilder> inntekter = List.of(lagLikInntektSiste3Mnd(arbeidsgiver), lagUlikInntektSiste3Mnd(frilansArbeidsgiver), lagUlikInntektSiste3Mnd(frilansArbeidsgiver2));
         List<YrkesaktivitetDto> aktiviteter = List.of(arbeidstakerYrkesaktivitet, frilans, frilansOppdrag, frilansOppdrag2);
         var grunnlagEntitet = lagIAYGrunnlagEntitet(inntekter, aktiviteter);
