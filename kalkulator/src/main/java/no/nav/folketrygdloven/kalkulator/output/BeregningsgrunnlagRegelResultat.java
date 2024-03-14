@@ -63,13 +63,13 @@ public class BeregningsgrunnlagRegelResultat {
         return avklaringsbehov;
     }
 
-    public Boolean getVilkårOppfylt() {
+    public Optional<Boolean> getVilkårOppfylt() {
 
         if (vilkårsresultat != null) {
-            return vilkårsresultat.stream().allMatch(BeregningVilkårResultat::getErVilkårOppfylt);
+            return Optional.of(vilkårsresultat.stream().allMatch(BeregningVilkårResultat::getErVilkårOppfylt));
         }
 
-        return null;
+        return Optional.empty();
     }
 
 

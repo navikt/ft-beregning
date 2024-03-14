@@ -7,6 +7,8 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.FaktaOmBeregningTilfelle;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.FaktaOmBeregningDto;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.VurderBesteberegningDto;
 
+import java.util.Optional;
+
 public class VurderBesteberegningTilfelleDtoTjeneste {
 
     public void lagDto(BeregningsgrunnlagGUIInput input, FaktaOmBeregningDto faktaOmBeregningDto) {
@@ -19,7 +21,7 @@ public class VurderBesteberegningTilfelleDtoTjeneste {
 
     private void settVerdier(BeregningsgrunnlagDto bg, BeregningsgrunnlagTilstand aktivTilstand, FaktaOmBeregningDto faktaOmBeregningDto) {
         VurderBesteberegningDto vurderBesteberegning = new VurderBesteberegningDto();
-        vurderBesteberegning.setSkalHaBesteberegning(harBesteberegning(bg, aktivTilstand));
+	    harBesteberegning(bg, aktivTilstand).ifPresent(vurderBesteberegning::setSkalHaBesteberegning);
         faktaOmBeregningDto.setVurderBesteberegning(vurderBesteberegning);
     }
 
@@ -28,11 +30,12 @@ public class VurderBesteberegningTilfelleDtoTjeneste {
             || beregningsgrunnlag.getFaktaOmBeregningTilfeller().contains(FaktaOmBeregningTilfelle.FASTSETT_BESTEBEREGNING_FØDENDE_KVINNE);
     }
 
-    private Boolean harBesteberegning(BeregningsgrunnlagDto beregningsgrunnlag, BeregningsgrunnlagTilstand aktivTilstand) {
+    private Optional<Boolean> harBesteberegning(BeregningsgrunnlagDto beregningsgrunnlag, BeregningsgrunnlagTilstand aktivTilstand) {
         if (aktivTilstand.erFør(BeregningsgrunnlagTilstand.KOFAKBER_UT)) {
-            return null;
+            return Optional.empty();
         }
-        return beregningsgrunnlag.getBeregningsgrunnlagPerioder().stream()
-            .flatMap(periode -> periode.getBeregningsgrunnlagPrStatusOgAndelList().stream()).anyMatch(andel -> andel.getBesteberegningPrÅr() != null);
+	    var harBesteberegning = beregningsgrunnlag.getBeregningsgrunnlagPerioder().stream()
+			    .flatMap(periode -> periode.getBeregningsgrunnlagPrStatusOgAndelList().stream()).anyMatch(andel -> andel.getBesteberegningPrÅr() != null);
+		return Optional.of(harBesteberegning);
     }
 }

@@ -1,7 +1,6 @@
 package no.nav.folketrygdloven.kalkulator.felles.periodesplitting;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 

@@ -86,7 +86,8 @@ public class VurderBeregningsgrunnlagTjenesteTest {
         // Assert
         assertThat(resultat.getBeregningsgrunnlag()).isNotNull();
         assertThat(resultat.getAvklaringsbehov()).isEmpty();
-        assertThat(resultat.getVilkårOppfylt()).isTrue();
+        assertThat(resultat.getVilkårOppfylt()).isPresent();
+	    assertThat(resultat.getVilkårOppfylt().get()).isTrue();
         assertThat(resultat.getBeregningsgrunnlag().getBeregningsgrunnlagPerioder()).hasSize(1);
         var vilkårVurdering = resultat.getRegelsporinger().get().regelsporingPerioder().stream()
                 .filter(rs -> rs.regelType().equals(BeregningsgrunnlagPeriodeRegelType.VILKÅR_VURDERING))
@@ -122,7 +123,8 @@ public class VurderBeregningsgrunnlagTjenesteTest {
         // Assert
         assertThat(resultat.getBeregningsgrunnlag()).isNotNull();
         assertThat(resultat.getAvklaringsbehov()).isEmpty();
-        assertThat(resultat.getVilkårOppfylt()).isFalse();
+	    assertThat(resultat.getVilkårOppfylt()).isPresent();
+        assertThat(resultat.getVilkårOppfylt().get()).isFalse();
         assertThat(resultat.getBeregningsgrunnlag().getBeregningsgrunnlagPerioder()).hasSize(1);
         var vilkårVurdering = resultat.getRegelsporinger().get().regelsporingPerioder().stream()
                 .filter(rs -> rs.regelType().equals(BeregningsgrunnlagPeriodeRegelType.VILKÅR_VURDERING))
