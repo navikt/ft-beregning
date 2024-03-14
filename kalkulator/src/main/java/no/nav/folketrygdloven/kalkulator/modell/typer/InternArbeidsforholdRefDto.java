@@ -1,6 +1,5 @@
 package no.nav.folketrygdloven.kalkulator.modell.typer;
 
-import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.util.Objects;
 import java.util.UUID;
@@ -14,7 +13,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.KodeKonstanter;
  * Hvis null gjelder det flere arbeidsforhold, ellers for et spesifikt forhold
  */
 
-public class InternArbeidsforholdRefDto implements Serializable, IndexKey {
+public class InternArbeidsforholdRefDto implements IndexKey {
 
     /**
      * Instans som representerer alle arbeidsforhold (for en arbeidsgiver).

@@ -1,6 +1,5 @@
 package no.nav.folketrygdloven.kalkulus.typer;
 
-import java.io.Serializable;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -16,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(value = JsonInclude.Include.NON_ABSENT, content = JsonInclude.Include.NON_EMPTY)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.NONE, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, isGetterVisibility = JsonAutoDetect.Visibility.NONE, creatorVisibility = JsonAutoDetect.Visibility.NONE)
-public class AktørId implements Serializable, Comparable<AktørId>{
+public class AktørId implements Comparable<AktørId>{
 
     @JsonProperty(value = "aktørId")
     @NotNull
@@ -26,12 +25,12 @@ public class AktørId implements Serializable, Comparable<AktørId>{
     protected AktørId() {
         // for jpa
     }
-    
+
     @JsonCreator
     public AktørId(@JsonProperty(value = "aktørId", required = true, index = 1) String aktørId) {
         this.aktørId = aktørId;
     }
-    
+
     public AktørId(Long aktørId) {
         this.aktørId = Long.toString(Objects.requireNonNull(aktørId, "aktørId"));
     }

@@ -1,6 +1,5 @@
 package no.nav.folketrygdloven.kalkulator.modell.typer;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 import no.nav.folketrygdloven.kalkulator.modell.diff.SjekkVedKopiering;
@@ -8,7 +7,7 @@ import no.nav.folketrygdloven.kalkulator.modell.diff.SjekkVedKopiering;
 /**
  * Årsgrunnlag representerer inntektsgrunnlaget for en andel
  */
-public class Årsgrunnlag implements Serializable, Comparable<Årsgrunnlag> {
+public class Årsgrunnlag implements Comparable<Årsgrunnlag> {
 
     @SjekkVedKopiering
     private Beløp beregnetPrÅr;

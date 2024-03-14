@@ -1,6 +1,5 @@
 package no.nav.folketrygdloven.kalkulator.modell.typer;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 import no.nav.folketrygdloven.kalkulator.modell.diff.IndexKey;
@@ -10,7 +9,7 @@ import no.nav.folketrygdloven.kalkulus.typer.OrgNummer;
 /**
  * En arbeidsgiver (enten virksomhet eller personlig arbeidsgiver).
  */
-public class Arbeidsgiver implements Serializable, IndexKey {
+public class Arbeidsgiver implements IndexKey {
 
     private String arbeidsgiverOrgnr;
     private AktørId arbeidsgiverAktørId;

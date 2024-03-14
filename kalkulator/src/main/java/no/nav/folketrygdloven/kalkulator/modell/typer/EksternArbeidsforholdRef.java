@@ -1,6 +1,5 @@
 package no.nav.folketrygdloven.kalkulator.modell.typer;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -10,7 +9,7 @@ import java.util.Objects;
  * Hvis null gjelder det flere arbeidsforhold, ellers for et spesifikt forhold
  */
 
-public class EksternArbeidsforholdRef implements Serializable {
+public class EksternArbeidsforholdRef {
 
     /**
      * Representerer alle arbeidsforhold for en arbeidsgiver.

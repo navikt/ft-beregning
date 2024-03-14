@@ -2,7 +2,6 @@ package no.nav.folketrygdloven.kalkulator.tid;
 
 import static no.nav.fpsak.tidsserie.LocalDateInterval.TIDENES_ENDE;
 
-import java.io.Serializable;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -11,7 +10,7 @@ import java.util.Objects;
 import no.nav.fpsak.tidsserie.LocalDateInterval;
 import no.nav.fpsak.tidsserie.LocalDateSegment;
 
-public class Intervall implements Comparable<Intervall>, Serializable {
+public class Intervall implements Comparable<Intervall> {
 
     static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     private final LocalDate fomDato;
