@@ -37,8 +37,7 @@ public class KunYtelseDtoTjeneste {
 
     KunYtelseDto lagKunYtelseDto(BeregningsgrunnlagGUIInput input) {
         KunYtelseDto dto = new KunYtelseDto();
-
-        dto.setErBesteberegning(harBesteberegning(input.getBeregningsgrunnlag(), input.getBeregningsgrunnlagGrunnlag().getBeregningsgrunnlagTilstand()));
+	    harBesteberegning(input.getBeregningsgrunnlag(), input.getBeregningsgrunnlagGrunnlag().getBeregningsgrunnlagTilstand()).ifPresent(dto::setErBesteberegning);
         settVerdier(dto, input.getBeregningsgrunnlag(), input.getIayGrunnlag());
         if (input.getYtelsespesifiktGrunnlag() instanceof ForeldrepengerGrunnlag foreldrepengerGrunnlag) {
             dto.setFodendeKvinneMedDP(foreldrepengerGrunnlag.isKvalifisererTilBesteberegning());
@@ -46,12 +45,13 @@ public class KunYtelseDtoTjeneste {
         return dto;
     }
 
-    private Boolean harBesteberegning(BeregningsgrunnlagDto beregningsgrunnlag, BeregningsgrunnlagTilstand aktivTilstand) {
+    private Optional<Boolean> harBesteberegning(BeregningsgrunnlagDto beregningsgrunnlag, BeregningsgrunnlagTilstand aktivTilstand) {
         if (aktivTilstand.erFør(BeregningsgrunnlagTilstand.KOFAKBER_UT)) {
-            return null;
+            return Optional.empty();
         }
-        return beregningsgrunnlag.getBeregningsgrunnlagPerioder().stream()
-            .flatMap(periode -> periode.getBeregningsgrunnlagPrStatusOgAndelList().stream()).anyMatch(andel -> andel.getBesteberegningPrÅr() != null);
+	    var erBesteberegnet = beregningsgrunnlag.getBeregningsgrunnlagPerioder().stream()
+			    .flatMap(periode -> periode.getBeregningsgrunnlagPrStatusOgAndelList().stream()).anyMatch(andel -> andel.getBesteberegningPrÅr() != null);
+	    return Optional.of(erBesteberegnet);
     }
 
     private void settVerdier(KunYtelseDto dto, BeregningsgrunnlagDto beregningsgrunnlag, InntektArbeidYtelseGrunnlagDto inntektArbeidYtelseGrunnlag) {

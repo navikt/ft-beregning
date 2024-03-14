@@ -3,7 +3,6 @@ package no.nav.folketrygdloven.kalkulator.modell.iay;
 import java.util.Optional;
 
 import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
-import no.nav.folketrygdloven.kalkulator.modell.typer.EksternArbeidsforholdRef;
 import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
 
 public class ArbeidsforholdInformasjonDtoBuilder {

@@ -268,11 +268,11 @@ class RegelFullføreBeregningsgrunnlagTest {
 		// Assert
 		assertPeriode(300_000, 300_000, 300_000);
 
-		Assertions.assertThat(snAndel.getAvkortetPrÅr().compareTo(BigDecimal.ZERO)).isEqualTo(0);
-		Assertions.assertThat(snAndel.getRedusertPrÅr().compareTo(BigDecimal.ZERO)).isEqualTo(0);
+		Assertions.assertThat(snAndel.getAvkortetPrÅr().compareTo(BigDecimal.ZERO)).isZero();
+		Assertions.assertThat(snAndel.getRedusertPrÅr().compareTo(BigDecimal.ZERO)).isZero();
 
-		Assertions.assertThat(andel.getAvkortetPrÅr().compareTo(BigDecimal.valueOf(300000))).isEqualTo(0);
-		Assertions.assertThat(andel.getRedusertPrÅr().compareTo(BigDecimal.valueOf(300000))).isEqualTo(0);
+		Assertions.assertThat(andel.getAvkortetPrÅr().compareTo(BigDecimal.valueOf(300000))).isZero();
+		Assertions.assertThat(andel.getRedusertPrÅr().compareTo(BigDecimal.valueOf(300000))).isZero();
 
 
 		assertThat(grenseverdiRegelesultat).isNotNull();

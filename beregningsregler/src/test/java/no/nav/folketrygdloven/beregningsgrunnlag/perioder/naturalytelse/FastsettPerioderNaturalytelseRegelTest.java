@@ -20,7 +20,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.stream.Stream;
 
 class FastsettPerioderNaturalytelseRegelTest {
 	private static final LocalDate STP = LocalDate.of(2023,5,1);

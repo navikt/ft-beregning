@@ -19,59 +19,57 @@ import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.Refusj
 
 class VurderRefusjonTilfelleDtoTjeneste {
 
-    public void lagDto(BeregningsgrunnlagGUIInput input, FaktaOmBeregningDto faktaOmBeregningDto) {
-        BeregningsgrunnlagDto beregningsgrunnlag = input.getBeregningsgrunnlag();
-        List<FaktaOmBeregningTilfelle> tilfeller = beregningsgrunnlag.getFaktaOmBeregningTilfeller();
-        if (!tilfeller.contains(FaktaOmBeregningTilfelle.VURDER_REFUSJONSKRAV_SOM_HAR_KOMMET_FOR_SENT)) {
-            return;
-        }
-        List<RefusjonskravSomKommerForSentDto> refusjonskravSomKommerForSentList = lagListeMedKravSomKommerForSent(input);
-        faktaOmBeregningDto.setRefusjonskravSomKommerForSentListe(refusjonskravSomKommerForSentList);
-    }
+	public void lagDto(BeregningsgrunnlagGUIInput input, FaktaOmBeregningDto faktaOmBeregningDto) {
+		BeregningsgrunnlagDto beregningsgrunnlag = input.getBeregningsgrunnlag();
+		List<FaktaOmBeregningTilfelle> tilfeller = beregningsgrunnlag.getFaktaOmBeregningTilfeller();
+		if (!tilfeller.contains(FaktaOmBeregningTilfelle.VURDER_REFUSJONSKRAV_SOM_HAR_KOMMET_FOR_SENT)) {
+			return;
+		}
+		List<RefusjonskravSomKommerForSentDto> refusjonskravSomKommerForSentList = lagListeMedKravSomKommerForSent(input);
+		faktaOmBeregningDto.setRefusjonskravSomKommerForSentListe(refusjonskravSomKommerForSentList);
+	}
 
-    private List<RefusjonskravSomKommerForSentDto> lagListeMedKravSomKommerForSent(BeregningsgrunnlagGUIInput input) {
-        List<BeregningRefusjonOverstyringDto> refusjonOverstyringer = input.getBeregningsgrunnlagGrunnlag().getRefusjonOverstyringer()
-            .map(BeregningRefusjonOverstyringerDto::getRefusjonOverstyringer)
-            .orElse(Collections.emptyList());
+	private List<RefusjonskravSomKommerForSentDto> lagListeMedKravSomKommerForSent(BeregningsgrunnlagGUIInput input) {
+		List<BeregningRefusjonOverstyringDto> refusjonOverstyringer = input.getBeregningsgrunnlagGrunnlag().getRefusjonOverstyringer()
+				.map(BeregningRefusjonOverstyringerDto::getRefusjonOverstyringer)
+				.orElse(Collections.emptyList());
 
-        Set<Arbeidsgiver> arbeidsgivere = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgiverSomHarSøktRefusjonForSent(
-                input.getKoblingReferanse(),
-                input.getIayGrunnlag(),
-                input.getBeregningsgrunnlagGrunnlag(),
-                input.getKravperioderPrArbeidsgiver(),
-                input.getFagsakYtelseType());
-        return arbeidsgivere
-            .stream()
-            .map(arbeidsgiver -> {
-                RefusjonskravSomKommerForSentDto dto = new RefusjonskravSomKommerForSentDto();
-                dto.setArbeidsgiverIdent(arbeidsgiver.getIdentifikator());
-                dto.setErRefusjonskravGyldig(sjekkStatusPåRefusjon(arbeidsgiver.getIdentifikator(), refusjonOverstyringer, input.getSkjæringstidspunktForBeregning()));
+		Set<Arbeidsgiver> arbeidsgivere = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgiverSomHarSøktRefusjonForSent(
+				input.getKoblingReferanse(),
+				input.getIayGrunnlag(),
+				input.getBeregningsgrunnlagGrunnlag(),
+				input.getKravperioderPrArbeidsgiver(),
+				input.getFagsakYtelseType());
+		return arbeidsgivere
+				.stream()
+				.map(arbeidsgiver -> {
+					RefusjonskravSomKommerForSentDto dto = new RefusjonskravSomKommerForSentDto();
+					dto.setArbeidsgiverIdent(arbeidsgiver.getIdentifikator());
+					sjekkStatusPåRefusjon(arbeidsgiver.getIdentifikator(), refusjonOverstyringer, input.getSkjæringstidspunktForBeregning()).ifPresent(dto::setErRefusjonskravGyldig);
+					return dto;
+				}).collect(Collectors.toList());
+	}
 
-                return dto;
-            }).collect(Collectors.toList());
-    }
+	private Optional<Boolean> sjekkStatusPåRefusjon(String identifikator,
+	                                                List<BeregningRefusjonOverstyringDto> refusjonOverstyringer, LocalDate skjæringstidspunktForBeregning) {
+		Optional<BeregningRefusjonOverstyringDto> statusOpt = refusjonOverstyringer
+				.stream()
+				.filter(refusjonOverstyring -> refusjonOverstyring.getArbeidsgiver().getIdentifikator().equals(identifikator))
+				.findFirst();
+		if (statusOpt.isEmpty() && refusjonOverstyringer.isEmpty()) {
+			return Optional.empty();
+		}
 
-    private Boolean sjekkStatusPåRefusjon(String identifikator,
-                                          List<BeregningRefusjonOverstyringDto> refusjonOverstyringer, LocalDate skjæringstidspunktForBeregning) {
-        Optional<BeregningRefusjonOverstyringDto> statusOpt = refusjonOverstyringer
-            .stream()
-            .filter(refusjonOverstyring -> refusjonOverstyring.getArbeidsgiver().getIdentifikator().equals(identifikator))
-            .findFirst();
-        if (statusOpt.isEmpty() && refusjonOverstyringer.isEmpty()) {
-            return null;
-        }
+		return getErFristUtvidet(statusOpt, skjæringstidspunktForBeregning);
+	}
 
-        Optional<Boolean> erFristUtvidet = getErFristUtvidet(statusOpt, skjæringstidspunktForBeregning);
-        return erFristUtvidet.orElse(false);
-    }
-
-    private Optional<Boolean> getErFristUtvidet(Optional<BeregningRefusjonOverstyringDto> statusOpt, LocalDate skjæringstidspunktForBeregning) {
-        return statusOpt.flatMap(o -> {
-                    if (o.getFørsteMuligeRefusjonFom().isPresent()) {
-                        return Optional.of(skjæringstidspunktForBeregning.isEqual(o.getFørsteMuligeRefusjonFom().get()));
-                    }
-                    return o.getErFristUtvidet();
-                }
-        );
-    }
+	private Optional<Boolean> getErFristUtvidet(Optional<BeregningRefusjonOverstyringDto> statusOpt, LocalDate skjæringstidspunktForBeregning) {
+		return statusOpt.flatMap(o -> {
+					if (o.getFørsteMuligeRefusjonFom().isPresent()) {
+						return Optional.of(skjæringstidspunktForBeregning.isEqual(o.getFørsteMuligeRefusjonFom().get()));
+					}
+					return o.getErFristUtvidet();
+				}
+		);
+	}
 }
