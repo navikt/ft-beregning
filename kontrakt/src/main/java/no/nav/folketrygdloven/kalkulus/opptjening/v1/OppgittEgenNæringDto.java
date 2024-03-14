@@ -73,7 +73,7 @@ public class OppgittEgenNæringDto {
                                 @Valid LocalDate endringDato,
                                 @Valid @NotNull Boolean nyIArbeidslivet,
                                 @Valid String begrunnelse,
-                                @Valid @NotNull Beløp bruttoInntekt) {
+                                @Valid Beløp bruttoInntekt) {
 
         this.periode = periode;
         this.aktør = aktør;

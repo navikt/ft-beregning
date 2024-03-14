@@ -1,6 +1,5 @@
 package no.nav.folketrygdloven.kalkulator.modell.typer;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 import no.nav.folketrygdloven.kalkulator.modell.diff.SjekkVedKopiering;
@@ -8,7 +7,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.Hjemmel;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Utfall;
 
 /** Container for refusjon. */
-public class Refusjon implements Serializable, Comparable<Refusjon> {
+public class Refusjon implements Comparable<Refusjon> {
 
 
     @SjekkVedKopiering

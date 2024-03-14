@@ -1,6 +1,5 @@
 package no.nav.folketrygdloven.kalkulus.typer;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -11,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
  *
  * Støtter også kunstige orgnummer (internt definert konstant i fp - orgnummer=342352362)
  */
-public class OrgNummer implements Serializable, Comparable<OrgNummer> {
+public class OrgNummer implements Comparable<OrgNummer> {
 
     /**
      * Orgnr for KUNSTIG organisasjoner. Går sammen med OrganisasjonType#KUNSTIG.
@@ -63,7 +62,7 @@ public class OrgNummer implements Serializable, Comparable<OrgNummer> {
     public String getOrgNummer() {
         return orgNummer;
     }
-    
+
     @Override
     public int hashCode() {
         return Objects.hash(orgNummer);

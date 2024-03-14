@@ -1,11 +1,10 @@
 package no.nav.folketrygdloven.kalkulator.modell.typer;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 import no.nav.folketrygdloven.kalkulus.kodeverk.FaktaVurderingKilde;
 
-public class FaktaVurdering implements Serializable {
+public class FaktaVurdering {
 
 
     private Boolean vurdering;
