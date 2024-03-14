@@ -150,7 +150,7 @@ public class BeregningsgrunnlagPrStatusOgAndelDtoTjenesteTest {
     }
 
     @Test
-    void skalIkkeKasteExceptionNårDetFinnesHverkenAtFlEllerSnAndelOgDetFinnesSammenligningsgrunnlagPrStatus() throws Exception {
+    void skalIkkeKasteExceptionNårDetFinnesHverkenAtFlEllerSnAndelOgDetFinnesSammenligningsgrunnlagPrStatus() {
         //Arange
         Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         BeregningsgrunnlagDto Beregningsgrunnlag = lagBeregningsgrunnlagMedAvvikOver25Prosent(SammenligningsgrunnlagType.SAMMENLIGNING_ATFL_SN);
@@ -162,8 +162,10 @@ public class BeregningsgrunnlagPrStatusOgAndelDtoTjenesteTest {
         var input = new BeregningsgrunnlagGUIInput(lagReferanseMedStp(koblingReferanse), iayGrunnlag, List.of(),  ytelsespesifiktGrunnlag).medBeregningsgrunnlagGrunnlag(grunnlag);
         BeregningsgrunnlagPrStatusOgAndelDtoTjeneste tjeneste = new BeregningsgrunnlagPrStatusOgAndelDtoTjeneste();
         //Act
-        tjeneste.lagBeregningsgrunnlagPrStatusOgAndelDto(input,
-                grunnlag.getBeregningsgrunnlagHvisFinnes().get().getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList());
+	    var beregningsgrunnlagPrStatusOgAndelDtos = tjeneste.lagBeregningsgrunnlagPrStatusOgAndelDto(input,
+			    grunnlag.getBeregningsgrunnlagHvisFinnes().get().getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList());
+
+	    assertThat(beregningsgrunnlagPrStatusOgAndelDtos).isNotEmpty();
     }
 
     @Test
@@ -235,7 +237,7 @@ public class BeregningsgrunnlagPrStatusOgAndelDtoTjenesteTest {
     }
 
     @Test
-    void skalIkkeKasteExceptionNårDetFinnesHverkenAtFlEllerSnAndelOgDeIkkeFinnesSammenligningsgrunnlagPrStatus() throws Exception {
+    void skalIkkeKasteExceptionNårDetFinnesHverkenAtFlEllerSnAndelOgDeIkkeFinnesSammenligningsgrunnlagPrStatus() {
         //Arange
         Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         BeregningsgrunnlagDto Beregningsgrunnlag = lagBeregningsgrunnlagMedAvvikUnder25ProsentMedKunSammenligningsgrunnlag();
@@ -247,8 +249,11 @@ public class BeregningsgrunnlagPrStatusOgAndelDtoTjenesteTest {
         var input = new BeregningsgrunnlagGUIInput(lagReferanseMedStp(koblingReferanse), iayGrunnlag, List.of(),  ytelsespesifiktGrunnlag).medBeregningsgrunnlagGrunnlag(grunnlag);
         BeregningsgrunnlagPrStatusOgAndelDtoTjeneste tjeneste = new BeregningsgrunnlagPrStatusOgAndelDtoTjeneste();
         //Act
-        tjeneste.lagBeregningsgrunnlagPrStatusOgAndelDto(input,
-                grunnlag.getBeregningsgrunnlagHvisFinnes().get().getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList());
+
+	    var beregningsgrunnlagPrStatusOgAndelDtos = tjeneste.lagBeregningsgrunnlagPrStatusOgAndelDto(input,
+			    grunnlag.getBeregningsgrunnlagHvisFinnes().get().getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList());
+
+		assertThat(beregningsgrunnlagPrStatusOgAndelDtos).isNotEmpty();
     }
 
 

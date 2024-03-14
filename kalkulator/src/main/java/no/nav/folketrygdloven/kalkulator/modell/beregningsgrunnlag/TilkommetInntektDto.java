@@ -83,7 +83,7 @@ public class TilkommetInntektDto implements IndexKey {
 
     public boolean matcher(TilkommetInntektDto annet) {
         return this.aktivitetStatus.equals(annet.getAktivitetStatus()) &&
-                Objects.equals(this.arbeidsgiver, annet.arbeidsgiver) &
+                Objects.equals(this.arbeidsgiver, annet.arbeidsgiver) &&
                         Objects.equals(this.arbeidsforholdRef, annet.arbeidsforholdRef);
     }
 

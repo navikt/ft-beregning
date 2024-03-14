@@ -58,7 +58,7 @@ public class ValiderKontraktDtoer {
         }
     };
 
-    public static void validerAlleDtoerIKontraken() throws IOException, ClassNotFoundException {
+    public static boolean validerAlleDtoerIKontraken() throws IOException, ClassNotFoundException {
         Class<?>[] classes = getClasses("no.nav.folketrygdloven.kalkulus");
         for (var aClass : classes) {
             for (var field : getRelevantFields(aClass)) {
@@ -74,6 +74,7 @@ public class ValiderKontraktDtoer {
                 validerRiktigAnnotert(field);
             }
         }
+		return true;
     }
 
     private static void validerRiktigAnnotert(Field field) {

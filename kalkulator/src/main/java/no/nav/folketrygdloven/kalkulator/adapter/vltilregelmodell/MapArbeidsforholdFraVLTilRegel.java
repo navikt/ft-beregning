@@ -20,6 +20,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 
 public class MapArbeidsforholdFraVLTilRegel {
+	private static final String FEILMELDING = "Arbeidsgiver må være enten aktør eller virksomhet, men var: ";
     private MapArbeidsforholdFraVLTilRegel() {
         // skjul public constructor
     }
@@ -90,9 +91,9 @@ public class MapArbeidsforholdFraVLTilRegel {
                     .medStartdato(startdato)
                     .build();
         }
-        throw new IllegalStateException("Arbeidsgiver må være enten aktør eller virksomhet, men var: " + arbeidsgiver);
+        throw new IllegalStateException(FEILMELDING + arbeidsgiver);
     }
-    
+
     private static Arbeidsforhold lagArbeidsforholdHosArbeidsgiver(Arbeidsgiver arbeidsgiver, String arbeidsforholdRef) {
         String arbRef = arbeidsforholdRef;
         if (arbeidsgiver.getErVirksomhet()) {
@@ -101,7 +102,7 @@ public class MapArbeidsforholdFraVLTilRegel {
         if (arbeidsgiver.erAktørId()) {
             return Arbeidsforhold.nyttArbeidsforholdHosPrivatperson(arbeidsgiver.getAktørId().getId(), arbRef);
         }
-        throw new IllegalStateException("Arbeidsgiver må være enten aktør eller virksomhet, men var: " + arbeidsgiver);
+        throw new IllegalStateException(FEILMELDING + arbeidsgiver);
     }
 
     private static String arbeidsforholdRefFor(BeregningsgrunnlagPrStatusOgAndelDto vlBGPStatus) {
@@ -115,7 +116,7 @@ public class MapArbeidsforholdFraVLTilRegel {
         if (arbeidsgiver.erAktørId()) {
             return Arbeidsforhold.nyttArbeidsforholdHosPrivatperson(arbeidsgiver.getAktørId().getId(), arbeidsforholdRef.getReferanse());
         }
-        throw new IllegalStateException("Arbeidsgiver må være enten aktør eller virksomhet, men var: " + arbeidsgiver);
+        throw new IllegalStateException(FEILMELDING + arbeidsgiver);
     }
 
     static Arbeidsforhold mapForInntektsmelding(InntektsmeldingDto im) {
