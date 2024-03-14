@@ -12,7 +12,8 @@ public class BesteberegningResultat extends BeregningResultatAggregat {
 
     private BesteberegningVurderingGrunnlag besteberegningVurderingGrunnlag;
 
-    public BesteberegningResultat() {
+    private BesteberegningResultat() {
+		// Hindrer default konstruktør
     }
 
     public BesteberegningVurderingGrunnlag getBesteberegningVurderingGrunnlag() {

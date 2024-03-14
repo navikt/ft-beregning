@@ -118,7 +118,7 @@ public class Refusjon implements Serializable, Comparable<Refusjon> {
     public Beløp getGjeldendeRefusjonPrÅr() {
         if (manueltFordeltRefusjonPrÅr != null) {
             return manueltFordeltRefusjonPrÅr;
-        } if (fordeltRefusjonPrÅr != null) {
+        } else if (fordeltRefusjonPrÅr != null) {
             return fordeltRefusjonPrÅr;
         } else if (saksbehandletRefusjonPrÅr != null) {
             return saksbehandletRefusjonPrÅr;

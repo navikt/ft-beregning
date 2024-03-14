@@ -40,9 +40,6 @@ public class VurderBeregningsgrunnlagTjeneste {
 
     private static final MapBeregningsgrunnlagFraVLTilRegel mapBeregningsgrunnlagFraVLTilRegel = new MapBeregningsgrunnlagFraVLTilRegel();
 
-    public VurderBeregningsgrunnlagTjeneste() {
-    }
-
     public BeregningsgrunnlagRegelResultat vurderBeregningsgrunnlag(BeregningsgrunnlagInput input, BeregningsgrunnlagGrunnlagDto oppdatertGrunnlag) {
         // Oversetter foreslått Beregningsgrunnlag -> regelmodell
         var beregningsgrunnlagRegel = mapBeregningsgrunnlagFraVLTilRegel.map(input, oppdatertGrunnlag);

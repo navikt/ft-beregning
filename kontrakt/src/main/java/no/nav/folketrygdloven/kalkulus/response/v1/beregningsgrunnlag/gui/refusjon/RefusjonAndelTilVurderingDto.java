@@ -72,9 +72,6 @@ public class RefusjonAndelTilVurderingDto {
     @JsonProperty("maksTillattDelvisRefusjonPrMnd")
     private Beløp maksTillattDelvisRefusjonPrMnd;
 
-    public RefusjonAndelTilVurderingDto() {
-    }
-
     public AktivitetStatus getAktivitetStatus() {
         return aktivitetStatus;
     }
