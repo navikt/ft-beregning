@@ -1,6 +1,7 @@
 package no.nav.folketrygdloven.kalkulus.iay.arbeid.v1;
 
 import java.util.List;
+import java.util.Set;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
@@ -22,6 +23,10 @@ public class ArbeidsforholdInformasjonDto {
     @Size(min = 1)
     private List<ArbeidsforholdOverstyringDto> overstyringer;
 
+	@JsonProperty(value = "referanser")
+	@Valid
+	@Size(min = 1)
+	private Set<ArbeidsforholdReferanseDto> referanser;
 
     public ArbeidsforholdInformasjonDto() {
         // default ctor
@@ -31,7 +36,17 @@ public class ArbeidsforholdInformasjonDto {
         this.overstyringer = overstyringer;
     }
 
+	public ArbeidsforholdInformasjonDto(@Valid @NotEmpty List<ArbeidsforholdOverstyringDto> overstyringer,
+	                                    @Valid Set<ArbeidsforholdReferanseDto> referanser) {
+		this.overstyringer = overstyringer;
+        this.referanser = referanser;
+    }
+
     public List<ArbeidsforholdOverstyringDto> getOverstyringer() {
         return overstyringer;
     }
+
+	public Set<ArbeidsforholdReferanseDto> getReferanser() {
+		return referanser;
+	}
 }
