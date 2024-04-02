@@ -25,6 +25,7 @@ public class ArbeidsforholdInformasjonDto {
 
 	@JsonProperty(value = "referanser")
 	@Valid
+	@Size(min = 1)
 	private Set<ArbeidsforholdReferanseDto> referanser;
 
     public ArbeidsforholdInformasjonDto() {
