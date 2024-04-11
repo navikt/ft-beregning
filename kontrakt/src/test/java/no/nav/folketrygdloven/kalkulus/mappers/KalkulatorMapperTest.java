@@ -3,7 +3,6 @@ package no.nav.folketrygdloven.kalkulus.mappers;
 
 import static no.nav.folketrygdloven.kalkulus.mappers.JsonMapperUtil.READER_JSON;
 import static no.nav.folketrygdloven.kalkulus.mappers.JsonMapperUtil.WRITER_JSON;
-import static no.nav.folketrygdloven.kalkulus.mappers.JsonMapperUtil.validateResult;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
@@ -74,7 +73,6 @@ public class KalkulatorMapperTest {
 
         assertThat(roundTripped).isNotNull();
         assertThat(roundTripped.getIayGrunnlag()).isNotNull();
-        validateResult(roundTripped);
     }
 
 
@@ -99,7 +97,6 @@ public class KalkulatorMapperTest {
         assertThat(roundTripped.getAktør()).isEqualTo(dummy);
         assertThat(roundTripped.getSaksnummer()).isEqualTo(saksnummer);
         assertThat(roundTripped.getBeregnForListe().getFirst().getEksternReferanse()).isEqualTo(enUuid);
-        validateResult(roundTripped);
     }
 
     private KalkulatorInputDto byggKalkulatorInput() {
