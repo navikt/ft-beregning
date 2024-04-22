@@ -18,6 +18,7 @@ import no.nav.folketrygdloven.kalkulator.modell.iay.InntektFilterDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektsmeldingDto;
 import no.nav.folketrygdloven.kalkulator.steg.kontrollerfakta.ArbeidstakerUtenInntektsmeldingTjeneste;
 import no.nav.folketrygdloven.kalkulator.steg.kontrollerfakta.VurderMottarYtelseTjeneste;
+import no.nav.folketrygdloven.kalkulus.kodeverk.AndelKilde;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FaktaOmBeregningTilfelle;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.ArbeidstakerUtenInntektsmeldingAndelDto;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.FaktaOmBeregningDto;
@@ -94,7 +95,8 @@ public class VurderMottarYtelseDtoTjeneste {
                                Optional<FaktaAktørDto> faktaAktør) {
         vurderMottarYtelseDto.setErFrilans(VurderMottarYtelseTjeneste.erFrilanser(beregningsgrunnlag));
         beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().stream()
-                .filter(andel -> andel.getAktivitetStatus().erFrilanser()).findFirst()
+                .filter(andel -> andel.getAktivitetStatus().erFrilanser()
+		                && (AndelKilde.PROSESS_START.equals(andel.getKilde()) || AndelKilde.SAKSBEHANDLER_KOFAKBER.equals(andel.getKilde()))).findFirst()
                 .ifPresent(frilansAndel -> {
                     vurderMottarYtelseDto.setFrilansMottarYtelse(faktaAktør.map(FaktaAktørDto::getHarFLMottattYtelseVurdering).orElse(null));
                     InntektForAndelTjeneste.finnSnittAvFrilansinntektIBeregningsperioden(inntektArbeidYtelseGrunnlag, frilansAndel, skjæringstidspunkt)
