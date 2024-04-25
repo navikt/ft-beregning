@@ -29,11 +29,6 @@ public class FastsettGrunnlagGenerell {
     }
 
     public boolean skalGrunnlagFastsettes(BeregningsgrunnlagGUIInput input, no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto andel) {
-		// Andel er blir manuelt fastsatt før, må kunne endres igjen
-		if (andel.getOverstyrtPrÅr() != null) {
-			return true;
-		}
-
 		// Andeler som er tilkommet skal aldri manuelt fastsettes
 		if (!AndelKilde.PROSESS_START.equals(andel.getKilde())) {
 			return false;
