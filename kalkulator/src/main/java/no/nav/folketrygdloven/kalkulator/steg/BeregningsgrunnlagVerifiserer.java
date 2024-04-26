@@ -75,7 +75,7 @@ public final class BeregningsgrunnlagVerifiserer {
                 Objects.requireNonNull(andel.getBeregningsperiodeFom(), "BeregningsperiodeFom " + andel);
                 Objects.requireNonNull(andel.getBeregningsperiodeTom(), "BeregningsperiodeTom " + andel);
             }
-            if (andel.getBgAndelArbeidsforhold().isPresent()) {
+            if (andel.getBgAndelArbeidsforhold().isPresent() && andel.getKilde().equals(AndelKilde.PROSESS_START)) {
                 BGAndelArbeidsforholdDto arbFor = andel.getBgAndelArbeidsforhold().get();
                 Objects.requireNonNull(arbFor.getArbeidsperiodeFom(), "arbeidsperiodeFom " + andel);
                 Objects.requireNonNull(arbFor.getArbeidsperiodeTom(), "arbeidsperiodeTom " + andel);
