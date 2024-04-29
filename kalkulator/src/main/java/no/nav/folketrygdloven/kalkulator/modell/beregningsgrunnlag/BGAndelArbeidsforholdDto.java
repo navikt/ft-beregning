@@ -10,7 +10,6 @@ import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Refusjon;
-import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Hjemmel;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Utfall;
 
@@ -71,13 +70,6 @@ public class BGAndelArbeidsforholdDto {
 
     public Optional<LocalDate> getArbeidsperiodeTom() {
         return Optional.ofNullable(arbeidsperiodeTom);
-    }
-
-    public Intervall getArbeidsperiode() {
-        if (arbeidsperiodeTom == null) {
-            return Intervall.fraOgMed(arbeidsperiodeFom);
-        }
-        return Intervall.fraOgMedTilOgMed(arbeidsperiodeFom, arbeidsperiodeTom);
     }
 
     public String getArbeidsforholdOrgnr() {

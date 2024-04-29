@@ -8,7 +8,6 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import no.nav.folketrygdloven.kalkulator.KalkulatorException;
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BGAndelArbeidsforholdDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
@@ -54,11 +53,6 @@ public final class BeregningsgrunnlagVerifisererFRISINN {
             }
             Objects.requireNonNull(andel.getBeregningsperiodeFom(), "BeregningsperiodeFom " + andel.toString());
             Objects.requireNonNull(andel.getBeregningsperiodeTom(), "BeregningsperiodeTom " + andel.toString());
-            if (andel.getBgAndelArbeidsforhold().isPresent()) {
-                BGAndelArbeidsforholdDto arbFor = andel.getBgAndelArbeidsforhold().get();
-                Objects.requireNonNull(arbFor.getArbeidsperiodeFom(), "arbeidsperiodeFom " + andel.toString());
-                Objects.requireNonNull(arbFor.getArbeidsperiodeTom(), "arbeidsperiodeTom " + andel.toString());
-            }
         }
     }
 

@@ -390,29 +390,6 @@ public class GraderingUtenBeregningsgrunnlagTjenesteTest {
         assertThat(harAndelerMedGraderingUtenGrunnlag).isFalse();
     }
 
-    @Test
-    void skalIkkeSlåUtNårDetManglerBGMenGraderingErUtenforArbeidsperiode() {
-        // Arrange
-        LocalDate skjæringstidspunkt = SKJÆRINGSTIDSPUNKT;
-        LocalDate graderingFom = skjæringstidspunkt;
-        LocalDate graderingTom = skjæringstidspunkt.plusMonths(4);
-
-        AktivitetGradering aktivitetGradering = new AktivitetGradering(AndelGradering.builder()
-                .medArbeidsgiver(arbeidsgiver)
-                .medStatus(AktivitetStatus.ARBEIDSTAKER)
-                .medGradering(graderingFom, graderingTom, 50)
-                .build());
-
-        var beregningsgrunnlagPeriode = lagBeregningsgrunnlagPeriode(skjæringstidspunkt, null);
-        lagBeregningsgrunnlagAndel(beregningsgrunnlagPeriode, AktivitetStatus.ARBEIDSTAKER, BigDecimal.ZERO, graderingFom.minusYears(3), graderingFom.minusDays(1));
-
-        // Act
-        boolean harAndelerMedGraderingUtenGrunnlag = harAndelerMedGraderingUtenGrunnlag(aktivitetGradering);
-
-        // Assert
-        assertThat(harAndelerMedGraderingUtenGrunnlag).isFalse();
-    }
-
     private List<BeregningsgrunnlagPrStatusOgAndelDto> finnAndelerMedGraderingUtenBG(BeregningsgrunnlagDto beregningsgrunnlag, AktivitetGradering aktivitetGradering) {
         return GraderingUtenBeregningsgrunnlagTjeneste.finnAndelerMedGraderingUtenBG(beregningsgrunnlag, aktivitetGradering);
     }
