@@ -71,14 +71,9 @@ public final class BeregningsgrunnlagVerifiserer {
             if (andel.getArbeidsforholdType().equals(OpptjeningAktivitetType.ARBEID)) {
                 verifiserOptionalPresent(andel.getBgAndelArbeidsforhold(), "BgAndelArbeidsforhold " + andel);
             }
-            if (andel.getKilde() == null || AndelKilde.PROSESS_START.equals(andel.getKilde()) || AndelKilde.SAKSBEHANDLER_KOFAKBER.equals(andel.getKilde())) {
+            if (AndelKilde.PROSESS_START.equals(andel.getKilde()) || AndelKilde.SAKSBEHANDLER_KOFAKBER.equals(andel.getKilde())) {
                 Objects.requireNonNull(andel.getBeregningsperiodeFom(), "BeregningsperiodeFom " + andel);
                 Objects.requireNonNull(andel.getBeregningsperiodeTom(), "BeregningsperiodeTom " + andel);
-            }
-            if (andel.getBgAndelArbeidsforhold().isPresent()) {
-                BGAndelArbeidsforholdDto arbFor = andel.getBgAndelArbeidsforhold().get();
-                Objects.requireNonNull(arbFor.getArbeidsperiodeFom(), "arbeidsperiodeFom " + andel);
-                Objects.requireNonNull(arbFor.getArbeidsperiodeTom(), "arbeidsperiodeTom " + andel);
             }
         }
     }

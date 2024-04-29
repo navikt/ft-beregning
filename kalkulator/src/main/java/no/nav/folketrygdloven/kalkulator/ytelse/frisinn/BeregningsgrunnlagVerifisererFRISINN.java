@@ -54,11 +54,6 @@ public final class BeregningsgrunnlagVerifisererFRISINN {
             }
             Objects.requireNonNull(andel.getBeregningsperiodeFom(), "BeregningsperiodeFom " + andel.toString());
             Objects.requireNonNull(andel.getBeregningsperiodeTom(), "BeregningsperiodeTom " + andel.toString());
-            if (andel.getBgAndelArbeidsforhold().isPresent()) {
-                BGAndelArbeidsforholdDto arbFor = andel.getBgAndelArbeidsforhold().get();
-                Objects.requireNonNull(arbFor.getArbeidsperiodeFom(), "arbeidsperiodeFom " + andel.toString());
-                Objects.requireNonNull(arbFor.getArbeidsperiodeTom(), "arbeidsperiodeTom " + andel.toString());
-            }
         }
     }
 

@@ -36,7 +36,7 @@ public class GraderingUtenBeregningsgrunnlagTjeneste {
         andelGradering.getGraderinger().forEach(gradering ->{
             Optional<BeregningsgrunnlagPeriodeDto> korrektBGPeriode = finnTilsvarendeBGPeriode(gradering, beregningsgrunnlag.getBeregningsgrunnlagPerioder());
             Optional<BeregningsgrunnlagPrStatusOgAndelDto> korrektBGAndel = korrektBGPeriode.flatMap(p -> finnTilsvarendeAndelIPeriode(andelGradering, p));
-            if (korrektBGAndel.isPresent() && harIkkeTilkjentBGEtterRedusering(korrektBGAndel.get()) && arbeidsforholdErAktivtIGraderingsperiode(gradering, korrektBGAndel.get())) {
+            if (korrektBGAndel.isPresent() && harIkkeTilkjentBGEtterRedusering(korrektBGAndel.get())) {
                 andeler.add(korrektBGAndel.get());
             }
         });
@@ -64,10 +64,4 @@ public class GraderingUtenBeregningsgrunnlagTjeneste {
     private static Optional<BeregningsgrunnlagPeriodeDto> finnTilsvarendeBGPeriode(Gradering gradering, List<BeregningsgrunnlagPeriodeDto> beregningsgrunnlagPerioder) {
         return beregningsgrunnlagPerioder.stream().filter(p -> gradering.getPeriode().overlapper(p.getPeriode())).findFirst();
     }
-
-    private static boolean arbeidsforholdErAktivtIGraderingsperiode(Gradering gradering, BeregningsgrunnlagPrStatusOgAndelDto andel) {
-        Optional<Intervall> arbeidsperiode = andel.getBgAndelArbeidsforhold().map(BGAndelArbeidsforholdDto::getArbeidsperiode);
-        return arbeidsperiode.map(ap -> ap.overlapper(gradering.getPeriode())).orElse(true);
-    }
-
 }
