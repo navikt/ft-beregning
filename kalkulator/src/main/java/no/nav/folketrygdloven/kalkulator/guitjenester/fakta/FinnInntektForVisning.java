@@ -58,7 +58,7 @@ public class FinnInntektForVisning {
         }
         if (andel.getAktivitetStatus().erDagpenger()) {
             YtelseFilterDto ytelseFilter = new YtelseFilterDto(inntektArbeidYtelseGrunnlag.getAktørYtelseFraRegister()).før(ref.getSkjæringstidspunktBeregning());
-            return FinnInntektFraYtelse.finnÅrbeløpForDagpenger(ref, andel, ytelseFilter, ref.getSkjæringstidspunktBeregning())
+            return FinnInntektFraYtelse.finnÅrbeløpForDagpenger(ref, andel, ytelseFilter)
                     .map(årsbeløp -> årsbeløp.divider(KonfigTjeneste.getMånederIÅr(), 10, RoundingMode.HALF_EVEN));
         }
         if (andel.getAktivitetStatus().equals(AktivitetStatus.ARBEIDSAVKLARINGSPENGER)) {

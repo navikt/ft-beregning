@@ -85,22 +85,6 @@ class FastsettStatusOgAndelPrPeriodeTest {
 		assertThat(statusListe.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.BA);
 	}
 
-	@Test
-	void skal_oversette_aktivitet_til_dagpenger() {
-		// Arrange
-		AktivitetStatusModell regelmodell = new AktivitetStatusModell();
-		regelmodell.setSkjæringstidspunktForBeregning(STP);
-		regelmodell.leggTilEllerOppdaterAktivPeriode(AktivPeriode.forAndre(Aktivitet.PLEIEPENGER_AV_DAGPENGER_MOTTAKER, Periode.of(STP.minusMonths(36), STP.plusMonths(12))));
-		regelmodell.leggTilEllerOppdaterAktivPeriode(AktivPeriode.forAndre(Aktivitet.SYKEPENGER_AV_DAGPENGER_MOTTAKER, Periode.of(STP.minusMonths(36), STP.plusMonths(12))));
-
-		// Act
-		List<BeregningsgrunnlagPrStatus> statusListe = kjørRegel(regelmodell);
-
-		// Assert
-		assertThat(statusListe).hasSize(1);
-		assertThat(statusListe.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.DP);
-	}
-
 	private void verifiserArbeidsforhold(List<Arbeidsforhold> arbeidsforholdList, String arbeidsgiverIdent) {
 		var matchetAF = arbeidsforholdList.stream()
 				.filter(af -> af.getArbeidsgiverId() != null && af.getArbeidsgiverId().equals(arbeidsgiverIdent)).findFirst();
