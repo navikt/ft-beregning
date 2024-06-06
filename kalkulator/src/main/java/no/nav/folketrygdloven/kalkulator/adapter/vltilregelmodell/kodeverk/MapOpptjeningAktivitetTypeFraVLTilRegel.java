@@ -24,11 +24,11 @@ public class MapOpptjeningAktivitetTypeFraVLTilRegel {
         map.put(OpptjeningAktivitetType.OMSORGSPENGER, Aktivitet.OMSORGSPENGER);
         map.put(OpptjeningAktivitetType.OPPLÆRINGSPENGER, Aktivitet.OPPLÆRINGSPENGER);
         map.put(OpptjeningAktivitetType.PLEIEPENGER, Aktivitet.PLEIEPENGER_MOTTAKER);
-        map.put(OpptjeningAktivitetType.SVANGERSKAPSPENGER, Aktivitet.SVANGERSKAPSPENGER_MOTTAKER);
+	    map.put(OpptjeningAktivitetType.PLEIEPENGER_AV_DAGPENGER, Aktivitet.PLEIEPENGER_MOTTAKER);
+	    map.put(OpptjeningAktivitetType.SVANGERSKAPSPENGER, Aktivitet.SVANGERSKAPSPENGER_MOTTAKER);
         map.put(OpptjeningAktivitetType.SYKEPENGER, Aktivitet.SYKEPENGER_MOTTAKER);
-        map.put(OpptjeningAktivitetType.SYKEPENGER_AV_DAGPENGER, Aktivitet.SYKEPENGER_AV_DAGPENGER_MOTTAKER);
-        map.put(OpptjeningAktivitetType.PLEIEPENGER_AV_DAGPENGER, Aktivitet.PLEIEPENGER_AV_DAGPENGER_MOTTAKER);
-        map.put(OpptjeningAktivitetType.VENTELØNN_VARTPENGER, Aktivitet.VENTELØNN_VARTPENGER);
+	    map.put(OpptjeningAktivitetType.SYKEPENGER_AV_DAGPENGER, Aktivitet.SYKEPENGER_MOTTAKER);
+	    map.put(OpptjeningAktivitetType.VENTELØNN_VARTPENGER, Aktivitet.VENTELØNN_VARTPENGER);
         map.put(OpptjeningAktivitetType.VIDERE_ETTERUTDANNING, Aktivitet.VIDERE_ETTERUTDANNING);
 
         map.put(OpptjeningAktivitetType.UDEFINERT, Aktivitet.UDEFINERT);

@@ -23,11 +23,9 @@ public class MapOpptjeningAktivitetFraRegelTilVL {
         aktivitetMap.put(Aktivitet.OMSORGSPENGER, OpptjeningAktivitetType.OMSORGSPENGER);
         aktivitetMap.put(Aktivitet.OPPLÆRINGSPENGER, OpptjeningAktivitetType.OPPLÆRINGSPENGER);
         aktivitetMap.put(Aktivitet.PLEIEPENGER_MOTTAKER, OpptjeningAktivitetType.PLEIEPENGER);
-        aktivitetMap.put(Aktivitet.SVANGERSKAPSPENGER_MOTTAKER, OpptjeningAktivitetType.SVANGERSKAPSPENGER);
+	    aktivitetMap.put(Aktivitet.SVANGERSKAPSPENGER_MOTTAKER, OpptjeningAktivitetType.SVANGERSKAPSPENGER);
         aktivitetMap.put(Aktivitet.SYKEPENGER_MOTTAKER, OpptjeningAktivitetType.SYKEPENGER);
-        aktivitetMap.put(Aktivitet.SYKEPENGER_AV_DAGPENGER_MOTTAKER, OpptjeningAktivitetType.SYKEPENGER_AV_DAGPENGER);
-        aktivitetMap.put(Aktivitet.PLEIEPENGER_AV_DAGPENGER_MOTTAKER, OpptjeningAktivitetType.PLEIEPENGER_AV_DAGPENGER);
-        aktivitetMap.put(Aktivitet.VENTELØNN_VARTPENGER, OpptjeningAktivitetType.VENTELØNN_VARTPENGER);
+	    aktivitetMap.put(Aktivitet.VENTELØNN_VARTPENGER, OpptjeningAktivitetType.VENTELØNN_VARTPENGER);
         aktivitetMap.put(Aktivitet.VIDERE_ETTERUTDANNING, OpptjeningAktivitetType.VIDERE_ETTERUTDANNING);
     }
 
