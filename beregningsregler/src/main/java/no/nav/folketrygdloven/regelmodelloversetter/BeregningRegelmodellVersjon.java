@@ -8,6 +8,6 @@ public class BeregningRegelmodellVersjon {
     private BeregningRegelmodellVersjon() {
     }
 
-    public static final EvaluationVersion BEREGNING_REGELMODELL_VERSJON = NareVersion.readVersionPropertyFor("beregningsgrunnlag", "nare/beregningsgrunnlag-version.properties");
+    public static final EvaluationVersion BEREGNING_REGELMODELL_VERSJON = NareVersion.readVersionPropertyFor("ft-beregning", "nare/beregningsgrunnlag-version.properties");
 
 }
