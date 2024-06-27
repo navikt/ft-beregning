@@ -73,6 +73,11 @@ public final class PeriodiserOgFastsettRefusjonTjeneste {
                             if (matchetSplittAndel.isPresent() && refusjonSkalEndres(eksisterendePeriode, matchetSplittAndel.get().getStartdatoRefusjon())) {
                                 BGAndelArbeidsforholdDto.Builder bgAndelArbforBuilder = BGAndelArbeidsforholdDto.Builder.oppdater(eksisterendeAndel.getBgAndelArbeidsforhold());
                                 bgAndelArbforBuilder.medSaksbehandletRefusjonPrÅr(matchetSplittAndel.get().getDelvisRefusjonBeløpPrÅr());
+                            } else if (matchetSplittAndel.isPresent()) {
+								// Dersom refusjonen ikkje skal settes manuelt må vi sørge for at det ikkje ligger verdi i saksbehandletRefusjonPrÅr
+	                            // Dette kan skje ved kopiering/spoling av grunnlag til steg-ut grunnlaget i kopieringslogikken som kjører før lagring i kalkulus
+	                            BGAndelArbeidsforholdDto.Builder bgAndelArbforBuilder = BGAndelArbeidsforholdDto.Builder.oppdater(eksisterendeAndel.getBgAndelArbeidsforhold());
+	                            bgAndelArbforBuilder.medSaksbehandletRefusjonPrÅr(null);
                             }
                         }));
         return nyttGrunnlag;
@@ -89,7 +94,7 @@ public final class PeriodiserOgFastsettRefusjonTjeneste {
         return eksisterendePeriode.getBeregningsgrunnlagPeriodeFom().isBefore(startdatoRefusjon);
     }
 
-    private static Optional<RefusjonSplittAndel> finnFastsattAndelForBGAndel(BeregningsgrunnlagPrStatusOgAndelDto bgAndel, List<RefusjonSplittAndel> splittAndeler) {
+	private static Optional<RefusjonSplittAndel> finnFastsattAndelForBGAndel(BeregningsgrunnlagPrStatusOgAndelDto bgAndel, List<RefusjonSplittAndel> splittAndeler) {
         return splittAndeler.stream().filter(splittAndel -> splittAndel.gjelderFor(bgAndel)).findFirst();
     }
 
