@@ -73,8 +73,21 @@ class PeriodiserOgFastsettRefusjonTjenesteTest {
         assertPeriode(STP, UENDELIG, AG1, REF1, 250000, resultat, 1);
     }
 
+	@Test
+	void skal_kunne_resette_periode_satt_i_tidligere_behandling() {
+		lagBGPeriode(STP, UENDELIG, lagBGAndel(AG1, REF1, 250000, 0));
+		lagSaksbehandlerDto(AG1, REF1, STP);
 
-    @Test
+		BeregningsgrunnlagDto resultat = oppdater();
+
+		assertThat(resultat).isEqualTo(grunnlagBuilder.build());
+		assertThat(resultat.getBeregningsgrunnlagPerioder()).hasSize(1);
+		assertPeriode(STP, UENDELIG, AG1, REF1, 250000, resultat, 1);
+	}
+
+
+
+	@Test
     void skal_kopiere_med_tidligere_andeler_som_ikke_er_arbeidstakerandeler() {
         lagBGPeriode(STP, null, lagBGAndel(AG1, REF1, 150000), lagBGAndel(null, null, 0));
         lagSaksbehandlerDto(AG1, REF1, dagerEtterSTP(10));
@@ -299,7 +312,12 @@ class PeriodiserOgFastsettRefusjonTjenesteTest {
         return STP.plusDays(i);
     }
 
-    private BeregningsgrunnlagPrStatusOgAndelDto.Builder lagBGAndel(Arbeidsgiver ag, InternArbeidsforholdRefDto ref, int refusjonPrÅr) {
+
+	private BeregningsgrunnlagPrStatusOgAndelDto.Builder lagBGAndel(Arbeidsgiver ag, InternArbeidsforholdRefDto ref, int refusjonPrÅr) {
+		return lagBGAndel(ag, ref, refusjonPrÅr, null);
+	}
+
+    private BeregningsgrunnlagPrStatusOgAndelDto.Builder lagBGAndel(Arbeidsgiver ag, InternArbeidsforholdRefDto ref, int refusjonPrÅr, Integer saksbehandletRefusjonPrÅr) {
         BeregningsgrunnlagPrStatusOgAndelDto.Builder andelBuilder = BeregningsgrunnlagPrStatusOgAndelDto.ny()
                 .medAktivitetStatus(ag == null ? AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE : AktivitetStatus.ARBEIDSTAKER);
         if (ag != null) {
@@ -307,6 +325,9 @@ class PeriodiserOgFastsettRefusjonTjenesteTest {
                     .medRefusjonskravPrÅr(Beløp.fra(refusjonPrÅr), Utfall.GODKJENT)
                     .medArbeidsforholdRef(ref)
                     .medArbeidsgiver(ag);
+			if (saksbehandletRefusjonPrÅr != null) {
+				arbforBuilder.medSaksbehandletRefusjonPrÅr(Beløp.fra(saksbehandletRefusjonPrÅr));
+			}
             andelBuilder.medBGAndelArbeidsforhold(arbforBuilder);
         }
         return andelBuilder;

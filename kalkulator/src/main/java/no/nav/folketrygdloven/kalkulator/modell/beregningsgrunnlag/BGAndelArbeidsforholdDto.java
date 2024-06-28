@@ -125,13 +125,13 @@ public class BGAndelArbeidsforholdDto {
     }
 
     private void medSaksbehandletRefusjonPrÅr(Beløp saksbehandletRefusjonPrÅr) {
-        if (saksbehandletRefusjonPrÅr == null) {
-            return;
-        }
-        if (refusjon == null) {
+        if (refusjon == null && saksbehandletRefusjonPrÅr != null) {
             refusjon = Refusjon.medSaksbehandletRefusjonPrÅr(saksbehandletRefusjonPrÅr);
-        } else {
+        } else if (refusjon != null) {
             refusjon.setSaksbehandletRefusjonPrÅr(saksbehandletRefusjonPrÅr);
+			if (refusjon.getGjeldendeRefusjonPrÅr() == null) {
+				refusjon = null;
+			}
         }
     }
 
