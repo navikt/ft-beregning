@@ -97,7 +97,41 @@ public class FastsettGrunnlagOmsorgspengerTest {
         assertThat(skalGrunnlagFastsettes).isEqualTo(false);
     }
 
-    @Test
+	@Test
+	void skalFastsetteGrunnlagNårYtelseErOmsorgspengerMedAvvikIBeregningOgFullRefusjonDersomBrukerHarSøkt() {
+		//Arange
+		Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
+		BeregningsgrunnlagDto Beregningsgrunnlag = lagBeregningsgrunnlagMedAvvikOver25ProsentMedKunSammenligningsgrunnlag();
+		BeregningsgrunnlagPeriodeDto bgPeriode = buildBeregningsgrunnlagPeriode(Beregningsgrunnlag);
+		byggAndelAt(bgPeriode, arbeidsgiver, 1L);
+		lagBehandling(Beregningsgrunnlag, arbeidsgiver);
+		LocalDate PeriodeFom =SKJÆRINGSTIDSPUNKT;
+		PeriodeMedUtbetalingsgradDto periodeMedUtbetalingsgradDto = new PeriodeMedUtbetalingsgradDto(Intervall.fraOgMedTilOgMed(PeriodeFom,
+				PeriodeFom.plusMonths(1)), Utbetalingsgrad.valueOf(100));
+		AktivitetDto aktivitetDto = new AktivitetDto(arbeidsgiver,
+				InternArbeidsforholdRefDto.nyRef(), UttakArbeidType.ORDINÆRT_ARBEID);
+		UtbetalingsgradPrAktivitetDto utbetalingsgradPrAktivitetDto = new UtbetalingsgradPrAktivitetDto(aktivitetDto, List.of(periodeMedUtbetalingsgradDto));
+		OmsorgspengerGrunnlag omsorgspengerGrunnlag = new OmsorgspengerGrunnlag(List.of(utbetalingsgradPrAktivitetDto), List.of(Intervall.fraOgMedTilOgMed(PeriodeFom, PeriodeFom.plusMonths(1))));
+		InntektsmeldingDto inntektsmelding = InntektsmeldingDtoBuilder.builder()
+				.medRefusjon(Beløp.fra(BRUTTO_PR_AAR.verdi().divide(KonfigTjeneste.getMånederIÅr())))
+				.medBeløp(Beløp.fra(BRUTTO_PR_AAR.verdi().divide(KonfigTjeneste.getMånederIÅr())))
+				.medArbeidsgiver(arbeidsgiver)
+				.build();
+		Skjæringstidspunkt skjæringstidspunkt = Skjæringstidspunkt.builder().medSkjæringstidspunktBeregning(SKJÆRINGSTIDSPUNKT)
+				.medSkjæringstidspunktOpptjening(SKJÆRINGSTIDSPUNKT).build();
+		KoblingReferanse koblingReferanse = KoblingReferanse.fra(FagsakYtelseType.OMSORGSPENGER, AktørId.dummy(), 1L, UUID.randomUUID(), Optional.empty(), skjæringstidspunkt);
+		var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.nytt().medInntektsmeldinger(List.of(inntektsmelding)).build();
+		var input = new BeregningsgrunnlagGUIInput(koblingReferanse, iayGrunnlag, List.of(), omsorgspengerGrunnlag).medBeregningsgrunnlagGrunnlag(grunnlag);
+		FastsettGrunnlagOmsorgspenger fastsettGrunnlagOmsorgspenger = new FastsettGrunnlagOmsorgspenger();
+		//Act
+		var skalGrunnlagFastsettes = fastsettGrunnlagOmsorgspenger.skalGrunnlagFastsettes(input,
+				grunnlag.getBeregningsgrunnlagHvisFinnes().get().getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().get(0));
+		// Assert
+		assertThat(skalGrunnlagFastsettes).isEqualTo(true);
+	}
+
+
+	@Test
     void skalIkkeFastsetteGrunnlagNårYtelseErOmsorgspengerMedAvvikIBeregningOgRefusjonEr6G() {
         //Arange
         Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);

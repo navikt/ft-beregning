@@ -28,13 +28,22 @@ public class FastsettGrunnlagOmsorgspenger extends FastsettGrunnlagGenerell {
         if (!harForeslåttBeregning(input.getBeregningsgrunnlagGrunnlag())) {
             return false;
         }
+	    if (erBrukerKunArbeidstaker(input) && harBrukerSøkt(input)) {
+			// Dersom bruker har søkt og vi har fått avvik antar vi at saken skal vurderes etter §9-9 og ikkje §9-8
+		    return true;
+	    }
         if (erBrukerKunArbeidstaker(input) && finnesKunFullRefusjon(input)) {
             return false;
         }
         return super.skalGrunnlagFastsettes(input, andel);
     }
 
-    public static boolean finnesKunFullRefusjon(BeregningsgrunnlagGUIInput input) {
+	private boolean harBrukerSøkt(BeregningsgrunnlagGUIInput input) {
+		var ompGrunnlag = (OmsorgspengerGrunnlag) input.getYtelsespesifiktGrunnlag();
+		return ompGrunnlag.getBrukerSøkerPerioder().map(it -> !it.isEmpty()).orElse(false);
+	}
+
+	public static boolean finnesKunFullRefusjon(BeregningsgrunnlagGUIInput input) {
         OmsorgspengerGrunnlag yg = input.getYtelsespesifiktGrunnlag();
         boolean finnesAtAndelIkkeSøktOm = input.getBeregningsgrunnlag().getBeregningsgrunnlagPerioder().get(0)
                 .getBeregningsgrunnlagPrStatusOgAndelList().stream()
