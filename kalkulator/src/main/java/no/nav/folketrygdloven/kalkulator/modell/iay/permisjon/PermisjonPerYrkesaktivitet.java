@@ -58,7 +58,7 @@ public final class PermisjonPerYrkesaktivitet {
                     .collect(Collectors.toCollection(TreeSet::new));
         } else if (it.getPermisjonsbeskrivelseType() != null && PermisjonsbeskrivelseType.K9_VELFERDSPERMISJON.contains(it.getPermisjonsbeskrivelseType())) {
             var permisjonstidslinje = new LocalDateTimeline<>(List.of(new LocalDateSegment<>(it.getPeriode().getFomDato(), it.getPeriode().getTomDato(), true)));
-            for (var aktivitetType : FagsakYtelseType.K9_YTELSER) {
+            for (var aktivitetType : YtelseType.K9_YTELSER) {
                 var ytelsesTidslinje = tidslinjePerYtelse.getOrDefault(aktivitetType, new LocalDateTimeline<>(List.of()));
                 permisjonstidslinje = permisjonstidslinje.disjoint(ytelsesTidslinje);
             }
@@ -72,7 +72,8 @@ public final class PermisjonPerYrkesaktivitet {
         return Set.of(Intervall.fraOgMedTilOgMed(it.getPeriode().getFomDato(), it.getPeriode().getTomDato()));
     }
 
-    private static boolean erStørreEllerLik100Prosent(Stillingsprosent prosentsats) {
+
+	private static boolean erStørreEllerLik100Prosent(Stillingsprosent prosentsats) {
         return prosentsats.compareTo(Stillingsprosent.HUNDRED) >= 0;
     }
 }
