@@ -72,9 +72,9 @@ public class FastsettGrunnlagOmsorgspengerTest {
         BeregningsgrunnlagPeriodeDto bgPeriode = buildBeregningsgrunnlagPeriode(Beregningsgrunnlag);
         byggAndelAt(bgPeriode, arbeidsgiver, 1L);
         lagBehandling(Beregningsgrunnlag, arbeidsgiver);
-        LocalDate PeriodeFom =SKJÆRINGSTIDSPUNKT;
-        PeriodeMedUtbetalingsgradDto periodeMedUtbetalingsgradDto = new PeriodeMedUtbetalingsgradDto(Intervall.fraOgMedTilOgMed(PeriodeFom,
-                PeriodeFom.plusMonths(1)), Utbetalingsgrad.valueOf(100));
+        LocalDate periodeFom = SKJÆRINGSTIDSPUNKT;
+        PeriodeMedUtbetalingsgradDto periodeMedUtbetalingsgradDto = new PeriodeMedUtbetalingsgradDto(Intervall.fraOgMedTilOgMed(periodeFom,
+                periodeFom.plusMonths(1)), Utbetalingsgrad.valueOf(100));
         AktivitetDto aktivitetDto = new AktivitetDto(arbeidsgiver,
                 InternArbeidsforholdRefDto.nyRef(), UttakArbeidType.ORDINÆRT_ARBEID);
         UtbetalingsgradPrAktivitetDto utbetalingsgradPrAktivitetDto = new UtbetalingsgradPrAktivitetDto(aktivitetDto, List.of(periodeMedUtbetalingsgradDto));
@@ -94,7 +94,7 @@ public class FastsettGrunnlagOmsorgspengerTest {
         var skalGrunnlagFastsettes = fastsettGrunnlagOmsorgspenger.skalGrunnlagFastsettes(input,
                 grunnlag.getBeregningsgrunnlagHvisFinnes().get().getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().get(0));
         // Assert
-        assertThat(skalGrunnlagFastsettes).isEqualTo(false);
+        assertThat(skalGrunnlagFastsettes).isFalse();
     }
 
 	@Test
@@ -105,13 +105,13 @@ public class FastsettGrunnlagOmsorgspengerTest {
 		BeregningsgrunnlagPeriodeDto bgPeriode = buildBeregningsgrunnlagPeriode(Beregningsgrunnlag);
 		byggAndelAt(bgPeriode, arbeidsgiver, 1L);
 		lagBehandling(Beregningsgrunnlag, arbeidsgiver);
-		LocalDate PeriodeFom =SKJÆRINGSTIDSPUNKT;
-		PeriodeMedUtbetalingsgradDto periodeMedUtbetalingsgradDto = new PeriodeMedUtbetalingsgradDto(Intervall.fraOgMedTilOgMed(PeriodeFom,
-				PeriodeFom.plusMonths(1)), Utbetalingsgrad.valueOf(100));
+		LocalDate periodeFom = SKJÆRINGSTIDSPUNKT;
+		PeriodeMedUtbetalingsgradDto periodeMedUtbetalingsgradDto = new PeriodeMedUtbetalingsgradDto(Intervall.fraOgMedTilOgMed(periodeFom,
+				periodeFom.plusMonths(1)), Utbetalingsgrad.valueOf(100));
 		AktivitetDto aktivitetDto = new AktivitetDto(arbeidsgiver,
 				InternArbeidsforholdRefDto.nyRef(), UttakArbeidType.ORDINÆRT_ARBEID);
 		UtbetalingsgradPrAktivitetDto utbetalingsgradPrAktivitetDto = new UtbetalingsgradPrAktivitetDto(aktivitetDto, List.of(periodeMedUtbetalingsgradDto));
-		OmsorgspengerGrunnlag omsorgspengerGrunnlag = new OmsorgspengerGrunnlag(List.of(utbetalingsgradPrAktivitetDto), List.of(Intervall.fraOgMedTilOgMed(PeriodeFom, PeriodeFom.plusMonths(1))));
+		OmsorgspengerGrunnlag omsorgspengerGrunnlag = new OmsorgspengerGrunnlag(List.of(utbetalingsgradPrAktivitetDto), List.of(Intervall.fraOgMedTilOgMed(periodeFom, periodeFom.plusMonths(1))));
 		InntektsmeldingDto inntektsmelding = InntektsmeldingDtoBuilder.builder()
 				.medRefusjon(Beløp.fra(BRUTTO_PR_AAR.verdi().divide(KonfigTjeneste.getMånederIÅr())))
 				.medBeløp(Beløp.fra(BRUTTO_PR_AAR.verdi().divide(KonfigTjeneste.getMånederIÅr())))
@@ -127,7 +127,7 @@ public class FastsettGrunnlagOmsorgspengerTest {
 		var skalGrunnlagFastsettes = fastsettGrunnlagOmsorgspenger.skalGrunnlagFastsettes(input,
 				grunnlag.getBeregningsgrunnlagHvisFinnes().get().getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().get(0));
 		// Assert
-		assertThat(skalGrunnlagFastsettes).isEqualTo(true);
+		assertThat(skalGrunnlagFastsettes).isTrue();
 	}
 
 
@@ -152,9 +152,9 @@ public class FastsettGrunnlagOmsorgspengerTest {
                 .medBeregnetPrÅr(Beløp.fra(1_200_000))
                 .build(bgPeriode);
         lagBehandling(Beregningsgrunnlag, arbeidsgiver);
-        LocalDate PeriodeFom =SKJÆRINGSTIDSPUNKT;
-        PeriodeMedUtbetalingsgradDto periodeMedUtbetalingsgradDto = new PeriodeMedUtbetalingsgradDto(Intervall.fraOgMedTilOgMed(PeriodeFom,
-                PeriodeFom.plusMonths(1)), Utbetalingsgrad.valueOf(100));
+        LocalDate periodeFom = SKJÆRINGSTIDSPUNKT;
+        PeriodeMedUtbetalingsgradDto periodeMedUtbetalingsgradDto = new PeriodeMedUtbetalingsgradDto(Intervall.fraOgMedTilOgMed(periodeFom,
+                periodeFom.plusMonths(1)), Utbetalingsgrad.valueOf(100));
         AktivitetDto aktivitetDto = new AktivitetDto(arbeidsgiver,
                 InternArbeidsforholdRefDto.nyRef(), UttakArbeidType.ORDINÆRT_ARBEID);
         UtbetalingsgradPrAktivitetDto utbetalingsgradPrAktivitetDto = new UtbetalingsgradPrAktivitetDto(aktivitetDto, List.of(periodeMedUtbetalingsgradDto));
@@ -174,7 +174,7 @@ public class FastsettGrunnlagOmsorgspengerTest {
         boolean skalGrunnlagFastsettes = fastsettGrunnlagOmsorgspenger.skalGrunnlagFastsettes(input,
                 grunnlag.getBeregningsgrunnlagHvisFinnes().get().getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().get(0));
         // Assert
-        assertThat(skalGrunnlagFastsettes).isEqualTo(false);
+        assertThat(skalGrunnlagFastsettes).isFalse();
     }
 
     @Test
@@ -206,7 +206,7 @@ public class FastsettGrunnlagOmsorgspengerTest {
         boolean skalGrunnlagFastsettes = fastsettGrunnlagOmsorgspenger.skalGrunnlagFastsettes(input,
                 grunnlag.getBeregningsgrunnlagHvisFinnes().get().getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().get(0));
         // Assert
-        assertThat(skalGrunnlagFastsettes).isEqualTo(false);
+        assertThat(skalGrunnlagFastsettes).isFalse();
     }
 
     @Test
@@ -239,7 +239,7 @@ public class FastsettGrunnlagOmsorgspengerTest {
         boolean skalGrunnlagFastsettes = fastsettGrunnlagOmsorgspenger.skalGrunnlagFastsettes(input,
                 grunnlag.getBeregningsgrunnlagHvisFinnes().get().getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().get(0));
         // Assert
-        assertThat(skalGrunnlagFastsettes).isEqualTo(true);
+        assertThat(skalGrunnlagFastsettes).isTrue();
     }
 
     @Test
@@ -290,7 +290,7 @@ public class FastsettGrunnlagOmsorgspengerTest {
         boolean skalGrunnlagFastsettes = fastsettGrunnlagOmsorgspenger.skalGrunnlagFastsettes(input,
                 grunnlag.getBeregningsgrunnlagHvisFinnes().get().getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().get(0));
         // Assert
-        assertThat(skalGrunnlagFastsettes).isEqualTo(false);
+        assertThat(skalGrunnlagFastsettes).isFalse();
     }
 
     private BeregningsgrunnlagDto lagBeregningsgrunnlagMedAvvikOver25ProsentMedKunSammenligningsgrunnlag() {

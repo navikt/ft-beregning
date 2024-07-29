@@ -104,7 +104,7 @@ public class YtelsespesifiktGrunnlagTjenesteOMPTest {
         // Assert
         assertThat(resultat.get()).isInstanceOf(OmsorgspengeGrunnlagDto.class);
         OmsorgspengeGrunnlagDto omsorgspengeGrunnlagDtoResultat = (OmsorgspengeGrunnlagDto) resultat.get();
-        assertThat(omsorgspengeGrunnlagDtoResultat.getSkalAvviksvurdere()).isEqualTo(true);
+        assertThat(omsorgspengeGrunnlagDtoResultat.getSkalAvviksvurdere()).isTrue();
     }
 
     @Test
@@ -134,9 +134,9 @@ public class YtelsespesifiktGrunnlagTjenesteOMPTest {
                 .medRegisterAktiviteter(beregningAktiviteter)
                 .medBeregningsgrunnlag(beregningsgrunnlag).build(BeregningsgrunnlagTilstand.FORESLÅTT);
 
-        LocalDate PeriodeFom =SKJÆRINGSTIDSPUNKT;
-        PeriodeMedUtbetalingsgradDto periodeMedUtbetalingsgradDto = new PeriodeMedUtbetalingsgradDto(Intervall.fraOgMedTilOgMed(PeriodeFom,
-                PeriodeFom.plusMonths(1)), Utbetalingsgrad.valueOf(100));
+        LocalDate periodeFom = SKJÆRINGSTIDSPUNKT;
+        PeriodeMedUtbetalingsgradDto periodeMedUtbetalingsgradDto = new PeriodeMedUtbetalingsgradDto(Intervall.fraOgMedTilOgMed(periodeFom,
+                periodeFom.plusMonths(1)), Utbetalingsgrad.valueOf(100));
         AktivitetDto aktivitetDto = new AktivitetDto(arbeidsgiver,
                 InternArbeidsforholdRefDto.nyRef(), UttakArbeidType.ORDINÆRT_ARBEID);
         UtbetalingsgradPrAktivitetDto utbetalingsgradPrAktivitetDto = new UtbetalingsgradPrAktivitetDto(aktivitetDto, List.of(periodeMedUtbetalingsgradDto));
@@ -158,7 +158,7 @@ public class YtelsespesifiktGrunnlagTjenesteOMPTest {
         // Assert
         assertThat(resultat.get()).isInstanceOf(OmsorgspengeGrunnlagDto.class);
         OmsorgspengeGrunnlagDto omsorgspengeGrunnlagDtoResultat = (OmsorgspengeGrunnlagDto) resultat.get();
-        assertThat(omsorgspengeGrunnlagDtoResultat.getSkalAvviksvurdere()).isEqualTo(false);
+        assertThat(omsorgspengeGrunnlagDtoResultat.getSkalAvviksvurdere()).isFalse();
     }
 
     @Test
@@ -199,7 +199,7 @@ public class YtelsespesifiktGrunnlagTjenesteOMPTest {
         // Assert
         assertThat(resultat.get()).isInstanceOf(OmsorgspengeGrunnlagDto.class);
         OmsorgspengeGrunnlagDto omsorgspengeGrunnlagDtoResultat = (OmsorgspengeGrunnlagDto) resultat.get();
-        assertThat(omsorgspengeGrunnlagDtoResultat.getSkalAvviksvurdere()).isEqualTo(true);
+        assertThat(omsorgspengeGrunnlagDtoResultat.getSkalAvviksvurdere()).isTrue();
     }
 
     @Test
@@ -240,7 +240,7 @@ public class YtelsespesifiktGrunnlagTjenesteOMPTest {
         // Assert
         assertThat(resultat.get()).isInstanceOf(OmsorgspengeGrunnlagDto.class);
         OmsorgspengeGrunnlagDto omsorgspengeGrunnlagDtoResultat = (OmsorgspengeGrunnlagDto) resultat.get();
-        assertThat(omsorgspengeGrunnlagDtoResultat.getSkalAvviksvurdere()).isEqualTo(true);
+        assertThat(omsorgspengeGrunnlagDtoResultat.getSkalAvviksvurdere()).isTrue();
     }
 
 
