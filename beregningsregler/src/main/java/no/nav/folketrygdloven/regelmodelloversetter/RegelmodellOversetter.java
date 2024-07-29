@@ -40,7 +40,7 @@ public class RegelmodellOversetter {
 	}
 
 	public static String getRegelVersjonsNummer() {
-		return BeregningRegelmodellVersjon.BEREGNING_REGELMODELL_VERSJON.version();
+		return BeregningRegelmodellVersjon.BEREGNING_REGELMODELL_VERSJON.nameAndVersion();
 	}
 
 	private static RegelResultat opprettResultat(Evaluation ev, String regelInput, String sporing) {
