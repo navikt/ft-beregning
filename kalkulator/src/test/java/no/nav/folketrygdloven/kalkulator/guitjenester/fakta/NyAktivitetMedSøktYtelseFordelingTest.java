@@ -53,7 +53,7 @@ class NyAktivitetMedSøktYtelseFordelingTest {
         assertThat(nyPeriodeDtos).hasSize(1);
         assertThat(nyPeriodeDtos.get(0).getFom()).isEqualTo(fom);
         assertThat(nyPeriodeDtos.get(0).getTom()).isEqualTo(tom);
-        assertThat(nyPeriodeDtos.get(0).isErSøktYtelse()).isEqualTo(true);
+        assertThat(nyPeriodeDtos.get(0).isErSøktYtelse()).isTrue();
     }
 
     @Test
@@ -79,7 +79,7 @@ class NyAktivitetMedSøktYtelseFordelingTest {
         assertThat(nyPeriodeDtos).hasSize(1);
         assertThat(nyPeriodeDtos.get(0).getFom()).isEqualTo(fom);
         assertThat(nyPeriodeDtos.get(0).getTom()).isEqualTo(tom);
-        assertThat(nyPeriodeDtos.get(0).isErSøktYtelse()).isEqualTo(true);
+        assertThat(nyPeriodeDtos.get(0).isErSøktYtelse()).isTrue();
     }
 
     private PeriodeMedUtbetalingsgradDto lagPeriode(LocalDate fom, LocalDate tom, BigDecimal utbetalingsgrad) {

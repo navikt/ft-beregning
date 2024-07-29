@@ -24,8 +24,9 @@ public class OmsorgspengerGrunnlagMapper {
         if (ytelsespesifiktGrunnlag instanceof no.nav.folketrygdloven.kalkulator.input.OmsorgspengerGrunnlag omsorspengegrunnlag) {
             List<UtbetalingsgradPrAktivitetDto> utbetalingsgradPrAktivitet = omsorspengegrunnlag.getUtbetalingsgradPrAktivitet();
             var finnesArbeidsandelIkkeSøktOm = finnesArbeidsandelIkkeSøktOm(utbetalingsgradPrAktivitet, beregningsgrunnlagDto);
-            if (omsorspengegrunnlag.getBrukerSøkerPerioder().isPresent()) {
-                return new OmsorgspengerGrunnlag(finnesArbeidsandelIkkeSøktOm, !omsorspengegrunnlag.getBrukerSøkerPerioder().get().isEmpty());
+	        var brukerSøkerPerioder = omsorspengegrunnlag.getBrukerSøkerPerioder();
+            if (brukerSøkerPerioder.isPresent()) {
+                return new OmsorgspengerGrunnlag(finnesArbeidsandelIkkeSøktOm, !brukerSøkerPerioder.get().isEmpty());
             } else {
                 boolean harSøktFLEllerSN = utbetalingsgradPrAktivitet.stream()
                         .filter(this::erFrilansEllerNæring)

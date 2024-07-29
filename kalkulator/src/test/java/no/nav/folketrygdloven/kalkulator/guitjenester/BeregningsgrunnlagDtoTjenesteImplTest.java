@@ -229,17 +229,17 @@ public class BeregningsgrunnlagDtoTjenesteImplTest {
         var beregningsgrunnlagPrStatusOgAndelDto = beregningsgrunnlagDto.getBeregningsgrunnlagPeriode().get(0).getBeregningsgrunnlagPrStatusOgAndel().get(0);
         assertThat(beregningsgrunnlagPrStatusOgAndelDto).isNotNull();
         assertThat(beregningsgrunnlagPrStatusOgAndelDto.getAktivitetStatus()).isEqualTo(AktivitetStatus.ARBEIDSTAKER);
-        assertThat(beregningsgrunnlagPrStatusOgAndelDto.getSkalFastsetteGrunnlag()).isEqualTo(true);
+        assertThat(beregningsgrunnlagPrStatusOgAndelDto.getSkalFastsetteGrunnlag()).isTrue();
 
         var beregningsgrunnlagPrStatusOgAndelDto2 = beregningsgrunnlagDto.getBeregningsgrunnlagPeriode().get(0).getBeregningsgrunnlagPrStatusOgAndel().get(1);
         assertThat(beregningsgrunnlagPrStatusOgAndelDto2).isNotNull();
         assertThat(beregningsgrunnlagPrStatusOgAndelDto2.getAktivitetStatus()).isEqualTo(AktivitetStatus.FRILANSER);
-        assertThat(beregningsgrunnlagPrStatusOgAndelDto2.getSkalFastsetteGrunnlag()).isEqualTo(false);
+        assertThat(beregningsgrunnlagPrStatusOgAndelDto2.getSkalFastsetteGrunnlag()).isFalse();
 
         var beregningsgrunnlagPrStatusOgAndelDto3 = beregningsgrunnlagDto.getBeregningsgrunnlagPeriode().get(0).getBeregningsgrunnlagPrStatusOgAndel().get(2);
         assertThat(beregningsgrunnlagPrStatusOgAndelDto3).isNotNull();
         assertThat(beregningsgrunnlagPrStatusOgAndelDto3.getAktivitetStatus()).isEqualTo(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE);
-        assertThat(beregningsgrunnlagPrStatusOgAndelDto3.getSkalFastsetteGrunnlag()).isEqualTo(true);
+        assertThat(beregningsgrunnlagPrStatusOgAndelDto3.getSkalFastsetteGrunnlag()).isTrue();
     }
 
     @Test
@@ -253,7 +253,7 @@ public class BeregningsgrunnlagDtoTjenesteImplTest {
         var beregningsgrunnlagPrStatusOgAndelDto = beregningsgrunnlagDto.getBeregningsgrunnlagPeriode().get(0).getBeregningsgrunnlagPrStatusOgAndel().get(0);
         assertThat(beregningsgrunnlagPrStatusOgAndelDto).isNotNull();
         assertThat(beregningsgrunnlagPrStatusOgAndelDto.getAktivitetStatus()).isEqualTo(AktivitetStatus.ARBEIDSTAKER);
-        assertThat(beregningsgrunnlagPrStatusOgAndelDto.getSkalFastsetteGrunnlag()).isEqualTo(true);
+        assertThat(beregningsgrunnlagPrStatusOgAndelDto.getSkalFastsetteGrunnlag()).isTrue();
     }
 
     private KoblingReferanse lagReferanseMedStp(KoblingReferanse koblingReferanse) {

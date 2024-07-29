@@ -75,9 +75,10 @@ public class MapTilFordelingsmodell {
 
     private static boolean kanFordeleTilAndelen(BeregningsgrunnlagPrStatusOgAndelDto bgAndel, BeregningsgrunnlagInput input) {
         var periode = bgAndel.getBeregningsgrunnlagPeriode().getPeriode();
-        if (bgAndel.getBgAndelArbeidsforhold().isPresent()) {
-            var ansattTidslinje = FinnArbeidsperiode.finnAnsettelseTidslinje(bgAndel.getBgAndelArbeidsforhold().get().getArbeidsgiver(),
-                    bgAndel.getBgAndelArbeidsforhold().get().getArbeidsforholdRef(),
+		var arbeidsforhold = bgAndel.getBgAndelArbeidsforhold();
+        if (arbeidsforhold.isPresent()) {
+            var ansattTidslinje = FinnArbeidsperiode.finnAnsettelseTidslinje(arbeidsforhold.get().getArbeidsgiver(),
+		            arbeidsforhold.get().getArbeidsforholdRef(),
                     input.getIayGrunnlag(), input.getSkjæringstidspunktForBeregning());
             var aktuellPeriode = new LocalDateTimeline<>(periode.getFomDato(), periode.getTomDato(), Boolean.TRUE);
             var erAnsattIPeriode = !ansattTidslinje.intersection(aktuellPeriode).isEmpty();
