@@ -32,7 +32,7 @@ class InntektForAndelTjeneste {
 
     static Optional<Beløp> finnSnittinntektForArbeidstakerIBeregningsperioden(InntektFilterDto filter, no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto andel) {
         LocalDate tilDato = andel.getBeregningsperiodeTom();
-        long beregningsperiodeLengdeIMnd = finnHeleMåneder(andel.getBeregningsperiode());
+        var beregningsperiodeLengdeIMnd = finnHeleMåneder(andel.getBeregningsperiode());
         if (beregningsperiodeLengdeIMnd == 0) {
             return Optional.empty();
         }
@@ -40,8 +40,8 @@ class InntektForAndelTjeneste {
         return Optional.of(totalBeløp).map(tb -> tb.divider(BigDecimal.valueOf(beregningsperiodeLengdeIMnd), 10, RoundingMode.HALF_EVEN));
     }
 
-    private static int finnHeleMåneder(Intervall periode) {
-        int antallMåneder = 0;
+    private static long finnHeleMåneder(Intervall periode) {
+        var antallMåneder = 0L;
         LocalDate date = periode.getFomDato().minusDays(1).with(TemporalAdjusters.lastDayOfMonth());
         while (date.isBefore(periode.getTomDato())) {
             antallMåneder++;
@@ -52,7 +52,7 @@ class InntektForAndelTjeneste {
 
 
     private static Beløp finnTotalbeløpIBeregningsperioden(InntektFilterDto filter, no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto andel, LocalDate tilDato,
-                                                                Long beregningsperiodeLengdeIMnd) {
+                                                                long beregningsperiodeLengdeIMnd) {
         if (filter.isEmpty()) {
             return Beløp.ZERO;
         }
@@ -71,7 +71,7 @@ class InntektForAndelTjeneste {
         }
         LocalDate fraDato = andel.getBeregningsperiodeFom();
         LocalDate tilDato = andel.getBeregningsperiodeTom();
-        long beregningsperiodeLengdeIMnd = ChronoUnit.MONTHS.between(fraDato, tilDato.plusDays(1));
+        var beregningsperiodeLengdeIMnd = ChronoUnit.MONTHS.between(fraDato, tilDato.plusDays(1));
         if (beregningsperiodeLengdeIMnd == 0) {
             return Optional.empty();
         }
@@ -89,9 +89,9 @@ class InntektForAndelTjeneste {
                 .filter(arbeidsgiver.get());
     }
 
-    private static Beløp summerInntekterIBeregningsperioden(LocalDate tilDato, Collection<InntektspostDto> inntektsposter, Long beregningsperiodeLengdeIMnd) {
+    private static Beløp summerInntekterIBeregningsperioden(LocalDate tilDato, Collection<InntektspostDto> inntektsposter, long beregningsperiodeLengdeIMnd) {
         Beløp totalBeløp = Beløp.ZERO;
-        for (int måned = 0; måned < beregningsperiodeLengdeIMnd; måned++) {
+        for (var måned = 0L; måned < beregningsperiodeLengdeIMnd; måned++) {
             LocalDate dato = tilDato.minusMonths(måned);
             var beløp = finnMånedsinntekt(inntektsposter, dato);
             totalBeløp = totalBeløp.adder(beløp);
@@ -111,7 +111,7 @@ class InntektForAndelTjeneste {
         if (!filter.isEmpty()) {
             LocalDate fraDato = frilansAndel.getBeregningsperiodeFom();
             LocalDate tilDato = frilansAndel.getBeregningsperiodeTom();
-            long beregningsperiodeLengdeIMnd = ChronoUnit.MONTHS.between(fraDato, tilDato.plusDays(1));
+            var beregningsperiodeLengdeIMnd = ChronoUnit.MONTHS.between(fraDato, tilDato.plusDays(1));
             List<YrkesaktivitetDto> yrkesaktiviteter = finnYrkesaktiviteter(grunnlag, skjæringstidspunkt);
             boolean erFrilanser = yrkesaktiviteter.stream().anyMatch(ya -> ArbeidType.FRILANSER.equals(ya.getArbeidType()));
 
