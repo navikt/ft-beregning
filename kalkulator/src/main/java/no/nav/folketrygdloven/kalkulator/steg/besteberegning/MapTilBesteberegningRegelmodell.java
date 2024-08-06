@@ -161,7 +161,7 @@ public class MapTilBesteberegningRegelmodell {
 
     private static List<Periodeinntekt> mapInntekterForBesteberegning(BeregningsgrunnlagInput input) {
         var iayGrunnlag = input.getIayGrunnlag();
-        var inntektFilterDto = new InntektFilterDto(iayGrunnlag.getAktørInntektFraRegister());
+        var inntektFilterDto = new InntektFilterDto(iayGrunnlag.getAktørInntektFraRegister()).før(input.getSkjæringstidspunktForBeregning());
         var ytelseFilterDto = new YtelseFilterDto(iayGrunnlag.getAktørYtelseFraRegister());
         YrkesaktivitetFilterDto yrkesaktivitetFilterDto = new YrkesaktivitetFilterDto(iayGrunnlag.getArbeidsforholdInformasjon(), iayGrunnlag.getAktørArbeidFraRegister());
         List<Periodeinntekt> inntekterATFLSN = finnInntekterATFLSN(input.getSkjæringstidspunktForBeregning(), inntektFilterDto, yrkesaktivitetFilterDto);
