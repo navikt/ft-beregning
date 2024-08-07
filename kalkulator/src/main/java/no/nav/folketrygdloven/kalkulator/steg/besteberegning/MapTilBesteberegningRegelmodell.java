@@ -80,6 +80,7 @@ public class MapTilBesteberegningRegelmodell {
             case FORELDREPENGER -> RelatertYtelseType.FORELDREPENGER;
             case SVANGERSKAPSPENGER -> RelatertYtelseType.SVANGERSKAPSPENGER;
             case SYKEPENGER -> RelatertYtelseType.SYKEPENGER;
+	        case PLEIEPENGER_NÆRSTÅENDE, PLEIEPENGER_SYKT_BARN -> RelatertYtelseType.PLEIEPENGER;
             default -> throw new IllegalStateException("Fikk inn ukjent ytelsetype under mapping til besteberegning " + ytelse);
         };
     }
@@ -203,6 +204,7 @@ public class MapTilBesteberegningRegelmodell {
             case FORELDREPENGER -> RelatertYtelseType.FORELDREPENGER;
             case SVANGERSKAPSPENGER -> RelatertYtelseType.SVANGERSKAPSPENGER;
             case SYKEPENGER -> RelatertYtelseType.SYKEPENGER;
+	        case PLEIEPENGER -> RelatertYtelseType.PLEIEPENGER;
             // TODO: Fyll på med ytelser fra InntektYtelseType - det er mange nye
             default -> throw new IllegalStateException("Støtte på ukjent ytelse under besteberegning " + dto.getInntektYtelseType());
         };

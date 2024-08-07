@@ -151,7 +151,7 @@ class FinnBesteMåneder extends LeafSpecification<BesteberegningRegelmodell> {
 			return Collections.emptyList();
 		}
 		if (ytelsegrunnlag.isEmpty()) {
-			// Om vi ikke har noen ytelsegrunnlag kan vi heller ikke avklare hvilken periode ytelsen gjeøder for.
+			// Om vi ikke har noen ytelsegrunnlag kan vi heller ikke avklare hvilken periode ytelsen gjelder for.
 			// Tar den derfor ikke med.
 			return Collections.emptyList();
 		}
