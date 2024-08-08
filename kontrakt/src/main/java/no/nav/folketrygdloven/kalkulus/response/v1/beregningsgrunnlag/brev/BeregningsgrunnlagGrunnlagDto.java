@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.detaljert.FaktaAggregatDto;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -27,7 +28,11 @@ public class BeregningsgrunnlagGrunnlagDto {
     @Valid
     private BeregningsgrunnlagDto beregningsgrunnlag;
 
-    @JsonProperty(value = "erForlengelse")
+	@JsonProperty(value = "faktaAvklaringer")
+	@Valid
+	private FaktaAggregatDto faktaAvklaringer;
+
+	@JsonProperty(value = "erForlengelse")
     @Valid
     @NotNull
     private Boolean erForlengelse;
@@ -37,11 +42,12 @@ public class BeregningsgrunnlagGrunnlagDto {
     }
 
     public BeregningsgrunnlagGrunnlagDto(UUID eksternReferanse,
-                                         BeregningsgrunnlagDto beregningsgrunnlag,
+                                         BeregningsgrunnlagDto beregningsgrunnlag, FaktaAggregatDto faktaAvklaringer,
                                          Boolean erForlengelse) {
         this.eksternReferanse = eksternReferanse;
         this.beregningsgrunnlag = beregningsgrunnlag;
-        this.erForlengelse = erForlengelse;
+	    this.faktaAvklaringer = faktaAvklaringer;
+	    this.erForlengelse = erForlengelse;
     }
 
     public UUID getEksternReferanse() {
@@ -55,4 +61,8 @@ public class BeregningsgrunnlagGrunnlagDto {
     public Boolean getErForlengelse() {
         return erForlengelse;
     }
+
+	public FaktaAggregatDto getFaktaAvklaringer() {
+		return faktaAvklaringer;
+	}
 }
