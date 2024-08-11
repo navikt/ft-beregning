@@ -30,7 +30,7 @@ public class BeregningsgrunnlagGrunnlagDto {
 
 	@JsonProperty(value = "faktaAvklaringer")
 	@Valid
-	private FaktaAggregatDto faktaAvklaringer;
+	private FaktaAvklaringer faktaAvklaringer;
 
 	@JsonProperty(value = "erForlengelse")
     @Valid
@@ -42,7 +42,8 @@ public class BeregningsgrunnlagGrunnlagDto {
     }
 
     public BeregningsgrunnlagGrunnlagDto(UUID eksternReferanse,
-                                         BeregningsgrunnlagDto beregningsgrunnlag, FaktaAggregatDto faktaAvklaringer,
+                                         BeregningsgrunnlagDto beregningsgrunnlag,
+                                         FaktaAvklaringer faktaAvklaringer,
                                          Boolean erForlengelse) {
         this.eksternReferanse = eksternReferanse;
         this.beregningsgrunnlag = beregningsgrunnlag;
@@ -62,7 +63,7 @@ public class BeregningsgrunnlagGrunnlagDto {
         return erForlengelse;
     }
 
-	public FaktaAggregatDto getFaktaAvklaringer() {
+	public FaktaAvklaringer getFaktaAvklaringer() {
 		return faktaAvklaringer;
 	}
 }
