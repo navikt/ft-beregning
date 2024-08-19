@@ -41,9 +41,9 @@ import no.nav.fpsak.tidsserie.StandardCombinators;
 public class TilkommetInntektPeriodeTjeneste {
 
     /**
-     * Det er bestemt at gradering mot inntekt ved tilkommet aktivitet skal gjelde perioder fom 6.11.2023.
+     * Det er bestemt at gradering mot inntekt ved tilkommet aktivitet skal gjelde perioder fom 4.11.2024.
      */
-    public static final LocalDate FOM_DATO_GRADERING_MOT_INNTEKT = LocalDate.of(2023, 11, 6);
+    public static final LocalDate FOM_DATO_GRADERING_MOT_INNTEKT = LocalDate.of(2024, 11, 4);
 
     public BeregningsgrunnlagDto splittPerioderVedTilkommetInntekt(BeregningsgrunnlagInput input, BeregningsgrunnlagDto beregningsgrunnlag) {
         if (!(input.getYtelsespesifiktGrunnlag() instanceof UtbetalingsgradGrunnlag ytelseGrunnlag)) {
