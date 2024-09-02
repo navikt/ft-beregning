@@ -17,6 +17,7 @@ import jakarta.validation.constraints.NotNull;
 import no.nav.folketrygdloven.kalkulus.felles.v1.Beløp;
 import no.nav.folketrygdloven.kalkulus.felles.v1.Periode;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
+import no.nav.folketrygdloven.kalkulus.kodeverk.AndelKilde;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 import no.nav.folketrygdloven.kalkulus.response.v1.Arbeidsgiver;
@@ -153,6 +154,10 @@ public class BeregningsgrunnlagPrStatusOgAndelDto {
     @Min(0)
     @Max(178956970)
     private Long orginalDagsatsFraTilstøtendeYtelse;
+
+	@JsonProperty(value = "kilde")
+	@Valid
+	private AndelKilde kilde;
 
     // TODO Fjern dette feltet når det er laget en egen brevtjeneste
     @JsonProperty(value = "avkortetMotInntektstak")
@@ -323,6 +328,11 @@ public class BeregningsgrunnlagPrStatusOgAndelDto {
             return this;
         }
 
+	    public Builder medAndelKilde(AndelKilde kilde) {
+		    kladd.kilde = kilde;
+		    return this;
+	    }
+
         public BeregningsgrunnlagPrStatusOgAndelDto build() {
             return kladd;
         }
@@ -361,7 +371,11 @@ public class BeregningsgrunnlagPrStatusOgAndelDto {
         return dagsatsArbeidsgiver;
     }
 
-    public Long getDagsats() {
+	public AndelKilde getKilde() {
+		return kilde;
+	}
+
+	public Long getDagsats() {
         if (dagsatsBruker == null) {
             return dagsatsArbeidsgiver;
         }
