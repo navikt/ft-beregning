@@ -70,4 +70,8 @@ public class BeregningRefusjonOverstyringDto {
     public Boolean getErFristUtvidet() {
         return erFristUtvidet;
     }
+
+	public List<BeregningRefusjonPeriodeDto> getRefusjonPerioder() {
+		return refusjonPerioder;
+	}
 }
