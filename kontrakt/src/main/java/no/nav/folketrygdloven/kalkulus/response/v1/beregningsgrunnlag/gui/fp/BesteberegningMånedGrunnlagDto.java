@@ -24,19 +24,24 @@ public class BesteberegningMånedGrunnlagDto {
     @Valid
     @JsonProperty("inntekter")
     @Size()
-    private final List<BesteberegningInntektDto> inntekter;
+    private List<BesteberegningInntektDto> inntekter;
 
     @Valid
     @JsonProperty("fom")
     @NotNull
-    private final LocalDate fom;
+    private LocalDate fom;
 
     @Valid
     @JsonProperty("tom")
     @NotNull
-    private final LocalDate tom;
+    private LocalDate tom;
 
-    public BesteberegningMånedGrunnlagDto(List<BesteberegningInntektDto> inntekter, LocalDate fom, LocalDate tom) {
+
+	public BesteberegningMånedGrunnlagDto() {
+		// Jackson
+	}
+
+	public BesteberegningMånedGrunnlagDto(List<BesteberegningInntektDto> inntekter, LocalDate fom, LocalDate tom) {
         this.inntekter = inntekter;
         this.fom = fom;
         this.tom = tom;

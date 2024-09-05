@@ -79,7 +79,11 @@ public class ForeldrepengerGrunnlag implements YtelsespesifiktGrunnlag {
         this.sisteSøkteUttaksdag = sisteSøkteUttaksdag;
     }
 
-    public Optional<LocalDate> getBehandlingstidspunkt() {
+	public void setBesteberegningVurderingGrunnlag(BesteberegningVurderingGrunnlag besteberegningVurderingGrunnlag) {
+		this.besteberegningVurderingGrunnlag = besteberegningVurderingGrunnlag;
+	}
+
+	public Optional<LocalDate> getBehandlingstidspunkt() {
         return Optional.ofNullable(behandlingstidspunkt);
     }
 
