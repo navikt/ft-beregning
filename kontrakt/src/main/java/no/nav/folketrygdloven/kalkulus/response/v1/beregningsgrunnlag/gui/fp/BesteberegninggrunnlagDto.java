@@ -22,13 +22,18 @@ public class BesteberegninggrunnlagDto {
     @Valid
     @JsonProperty("besteMåneder")
     @Size(min = 6, max = 6)
-    private final List<BesteberegningMånedGrunnlagDto> besteMåneder;
+    private List<BesteberegningMånedGrunnlagDto> besteMåneder;
 
     @Valid
     @JsonProperty("avvik")
     private Beløp avvik;
 
-    public BesteberegninggrunnlagDto(List<BesteberegningMånedGrunnlagDto> besteMåneder, Beløp avvik) {
+
+	public BesteberegninggrunnlagDto() {
+		// Jackson
+	}
+
+	public BesteberegninggrunnlagDto(List<BesteberegningMånedGrunnlagDto> besteMåneder, Beløp avvik) {
         this.besteMåneder = besteMåneder;
         this.avvik = avvik;
     }

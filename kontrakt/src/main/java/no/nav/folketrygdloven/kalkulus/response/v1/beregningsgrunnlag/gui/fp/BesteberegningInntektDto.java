@@ -42,9 +42,13 @@ public class BesteberegningInntektDto {
     @Valid
     @JsonProperty(value = "inntekt")
     @NotNull
-    private final Beløp inntekt;
+    private Beløp inntekt;
 
-    public BesteberegningInntektDto(OpptjeningAktivitetType opptjeningAktivitetType, Beløp inntekt) {
+	public BesteberegningInntektDto() {
+		// Jackson
+	}
+
+	public BesteberegningInntektDto(OpptjeningAktivitetType opptjeningAktivitetType, Beløp inntekt) {
         this.opptjeningAktivitetType = opptjeningAktivitetType;
         this.inntekt = inntekt;
     }
