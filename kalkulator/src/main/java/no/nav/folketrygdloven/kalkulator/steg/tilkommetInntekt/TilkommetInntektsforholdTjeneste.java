@@ -82,10 +82,8 @@ public class TilkommetInntektsforholdTjeneste {
 		var yrkesaktiviteter = iayGrunnlag.getAktørArbeidFraRegister().map(AktørArbeidDto::hentAlleYrkesaktiviteter).orElse(Collections.emptyList());
 		var yrkesaktivitetTidslinje = finnInntektsforholdFraYrkesaktiviteter(skjæringstidspunkt, yrkesaktiviteter);
 		var næringTidslinje = finnInntektsforholdForStatusFraFravær((UtbetalingsgradGrunnlag) utbetalingsgradGrunnlag, AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE);
-		var frilansTidslinje = finnInntektsforholdForStatusFraFravær((UtbetalingsgradGrunnlag) utbetalingsgradGrunnlag, AktivitetStatus.FRILANSER);
 		var dagpengetidslinje = finnDagpengetidslinje(iayGrunnlag, skjæringstidspunkt);
 		var aktivitetTidslinje = yrkesaktivitetTidslinje.union(næringTidslinje, StandardCombinators::union)
-				.union(frilansTidslinje, StandardCombinators::union)
 				.union(dagpengetidslinje, StandardCombinators::union);
 
 		if (!ikkeFiltrerVedFulltFravær) {
