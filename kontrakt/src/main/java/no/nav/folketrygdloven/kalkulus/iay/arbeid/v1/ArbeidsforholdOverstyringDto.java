@@ -75,4 +75,12 @@ public class ArbeidsforholdOverstyringDto {
     public ArbeidsforholdHandlingType getHandling() {
         return handling;
     }
+
+	public IayProsent getStillingsprosent() {
+		return stillingsprosent;
+	}
+
+	public List<Periode> getArbeidsforholdOverstyrtePerioder() {
+		return arbeidsforholdOverstyrtePerioder;
+	}
 }
