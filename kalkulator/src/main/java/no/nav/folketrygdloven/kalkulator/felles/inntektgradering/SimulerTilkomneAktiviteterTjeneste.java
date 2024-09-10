@@ -35,8 +35,7 @@ public class SimulerTilkomneAktiviteterTjeneste {
                 beregningsgrunnlagInput.getSkjæringstidspunktForBeregning(),
                 beregningsgrunnlagInput.getBeregningsgrunnlag().getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList(),
                 beregningsgrunnlagInput.getYtelsespesifiktGrunnlag(),
-                beregningsgrunnlagInput.getIayGrunnlag(),
-                true
+                beregningsgrunnlagInput.getIayGrunnlag()
         );
         return tilkommetTidslinje.filterValue(v -> !v.isEmpty()).compress();
     }
