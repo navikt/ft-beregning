@@ -44,6 +44,10 @@ public class TilstandResponse implements KalkulusRespons {
     @Valid
     private Vilkårsavslagsårsak vilkårsavslagsårsak;
 
+	@JsonProperty("vilkårResultat")
+	@Valid
+	private VilkårResponse vilkårResultat;
+
     public TilstandResponse() {
         // default ctor
     }
@@ -71,6 +75,18 @@ public class TilstandResponse implements KalkulusRespons {
         this.vilkårsavslagsårsak = vilkårsavslagsårsak;
         this.resultatkode = resultatkode;
     }
+
+	public TilstandResponse(@Valid UUID eksternReferanse,
+	                        @Valid List<AvklaringsbehovMedTilstandDto> avklaringsbehovMedTilstandDto,
+	                        KalkulusResultatKode resultatkode, @Valid Boolean vilkarOppfylt,
+	                        @Valid Vilkårsavslagsårsak vilkårsavslagsårsak, VilkårResponse vilkårResultat) {
+		this.eksternReferanse = eksternReferanse;
+		this.avklaringsbehovMedTilstandDto = avklaringsbehovMedTilstandDto;
+		this.vilkarOppfylt = vilkarOppfylt;
+		this.vilkårsavslagsårsak = vilkårsavslagsårsak;
+		this.resultatkode = resultatkode;
+		this.vilkårResultat = vilkårResultat;
+	}
 
     public TilstandResponse medVilkårResultat(boolean resultat) {
         vilkarOppfylt = resultat;
@@ -111,4 +127,8 @@ public class TilstandResponse implements KalkulusRespons {
     public KalkulusResultatKode getResultatkode() {
         return resultatkode;
     }
+
+	public VilkårResponse getVilkårResultat() {
+		return vilkårResultat;
+	}
 }
