@@ -90,7 +90,7 @@ public class TilkommetInntektsforholdTjeneste {
 			var utbetalingTidslinje = finnTidslinjeMedFravær((UtbetalingsgradGrunnlag) utbetalingsgradGrunnlag);
 			aktivitetTidslinje = aktivitetTidslinje.intersection(utbetalingTidslinje, StandardCombinators::leftOnly);
 		}
-		return aktivitetTidslinje.compress().map(s -> mapTilkommetTidslinje(andelerFraStart, yrkesaktiviteter, utbetalingsgradGrunnlag, s, ikkeFiltrerVedFulltFravær));
+		return aktivitetTidslinje.map(s -> mapTilkommetTidslinje(andelerFraStart, yrkesaktiviteter, utbetalingsgradGrunnlag, s, ikkeFiltrerVedFulltFravær)).compress();
 	}
 
 	private static LocalDateTimeline<Set<Inntektsforhold>> finnDagpengetidslinje(InntektArbeidYtelseGrunnlagDto iayGrunnlag, LocalDate skjæringstidspunkt) {
