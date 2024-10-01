@@ -77,9 +77,8 @@ public class SimulerGraderingMotInntektTjeneste {
                 beregningsgrunnlagInput.getIayGrunnlag()
         );
         var tidlinjeMedTilkommetAktivitet = tilkommetTidslinje.filterValue(v -> !v.isEmpty()).compress();
-        var redusertTidslinje = tidlinjeMedTilkommetAktivitet.intersection(new LocalDateInterval(TilkommetInntektPeriodeTjeneste.FOM_DATO_GRADERING_MOT_INNTEKT, LocalDateInterval.TIDENES_ENDE));
 
-        return redusertTidslinje.toSegments().stream()
+        return tidlinjeMedTilkommetAktivitet.toSegments().stream()
                 .map(s -> Intervall.fraOgMedTilOgMed(s.getFom(), s.getTom()))
                 .toList();
     }
