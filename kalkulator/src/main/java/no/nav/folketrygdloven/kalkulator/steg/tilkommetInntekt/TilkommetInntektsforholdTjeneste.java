@@ -110,8 +110,9 @@ public class TilkommetInntektsforholdTjeneste {
 	private static LocalDateTimeline<Boolean> finnTidslinjeForUtbetalingsperiode(UtbetalingsgradGrunnlag utbetalingsgradGrunnlag) {
 		return utbetalingsgradGrunnlag.getUtbetalingsgradPrAktivitet().stream()
 				.flatMap(a -> a.getPeriodeMedUtbetalingsgrad().stream())
-				.map(p -> new LocalDateSegment<>(p.getPeriode().getFomDato(), p.getPeriode().getTomDato(), Boolean.TRUE))
-				.collect(Collectors.collectingAndThen(Collectors.toList(), s -> new LocalDateTimeline<>(s, StandardCombinators::alwaysTrueForMatch)));
+				.map(p -> new LocalDateTimeline<>(p.getPeriode().getFomDato(), p.getPeriode().getTomDato(), true))
+				.reduce(LocalDateTimeline::crossJoin)
+				.orElse(LocalDateTimeline.empty());
 	}
 
 	private static List<LocalDateSegment<Set<StatusOgArbeidsgiver>>> mapTilkommetTidslinje(Collection<BeregningsgrunnlagPrStatusOgAndelDto> andeler,

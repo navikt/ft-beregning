@@ -103,7 +103,7 @@ class AvklaringsbehovUtlederTilkommetInntektTest {
 		assertThat(tilkomneAndeler.size()).isEqualTo(1);
 		assertThat(tilkomneAndeler.iterator().next().arbeidsgiver()).isEqualTo(arbeidsgiver2);
 	}
-	
+
 	@Test
 	void skal_finne_tilkommet_andel_dersom_en_andel_fra_start_med_overlapp_til_nytt_arbeid() {
 
