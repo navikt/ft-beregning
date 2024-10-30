@@ -87,7 +87,8 @@ public class TilkommetInntektsforholdTjeneste {
 				.union(dagpengetidslinje, StandardCombinators::union);
 
 		if (!ikkeFiltrerVedFulltFravær) {
-			var utbetalingTidslinje = finnTidslinjeMedFravær((UtbetalingsgradGrunnlag) utbetalingsgradGrunnlag);
+			// Filtrerer bort perioder som ligger utenfor søkte perioder
+			var utbetalingTidslinje = finnTidslinjeForUtbetalingsperiode((UtbetalingsgradGrunnlag) utbetalingsgradGrunnlag);
 			aktivitetTidslinje = aktivitetTidslinje.intersection(utbetalingTidslinje, StandardCombinators::leftOnly);
 		}
 		return aktivitetTidslinje.map(s -> mapTilkommetTidslinje(andelerFraStart, yrkesaktiviteter, utbetalingsgradGrunnlag, s, ikkeFiltrerVedFulltFravær)).compress();
@@ -106,12 +107,12 @@ public class TilkommetInntektsforholdTjeneste {
 				.collect(Collectors.collectingAndThen(Collectors.toList(), s -> new LocalDateTimeline<>(s, StandardCombinators::union)));
 	}
 
-	private static LocalDateTimeline<Boolean> finnTidslinjeMedFravær(UtbetalingsgradGrunnlag utbetalingsgradGrunnlag) {
+	private static LocalDateTimeline<Boolean> finnTidslinjeForUtbetalingsperiode(UtbetalingsgradGrunnlag utbetalingsgradGrunnlag) {
 		return utbetalingsgradGrunnlag.getUtbetalingsgradPrAktivitet().stream()
 				.flatMap(a -> a.getPeriodeMedUtbetalingsgrad().stream())
-				.filter(p -> p.getAktivitetsgrad().map(v -> v.compareTo(Aktivitetsgrad.HUNDRE) < 0).orElse(false))
-				.map(p -> new LocalDateSegment<>(p.getPeriode().getFomDato(), p.getPeriode().getTomDato(), Boolean.TRUE))
-				.collect(Collectors.collectingAndThen(Collectors.toList(), s -> new LocalDateTimeline<>(s, StandardCombinators::alwaysTrueForMatch)));
+				.map(p -> new LocalDateTimeline<>(p.getPeriode().getFomDato(), p.getPeriode().getTomDato(), true))
+				.reduce(LocalDateTimeline::crossJoin)
+				.orElse(LocalDateTimeline.empty());
 	}
 
 	private static List<LocalDateSegment<Set<StatusOgArbeidsgiver>>> mapTilkommetTidslinje(Collection<BeregningsgrunnlagPrStatusOgAndelDto> andeler,
