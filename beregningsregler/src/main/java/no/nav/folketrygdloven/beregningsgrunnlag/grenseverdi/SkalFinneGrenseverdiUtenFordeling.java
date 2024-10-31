@@ -19,13 +19,7 @@ public class SkalFinneGrenseverdiUtenFordeling extends LeafSpecification<Beregni
 
 	@Override
 	public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-
-		if (!grunnlag.getBeregningsgrunnlag().getToggles().isEnabled("GRADERING_MOT_INNTEKT")) {
-			return nei();
-		}
-
 		var ytelsesSpesifiktGrunnlag = grunnlag.getBeregningsgrunnlag().getYtelsesSpesifiktGrunnlag();
-
 		if (ytelsesSpesifiktGrunnlag instanceof PleiepengerGrunnlagFastsettGrenseverdi pleiepengergrunnlag) {
 			var startdatoNyeGraderingsregler = pleiepengergrunnlag.getStartdatoNyeGraderingsregler();
 			SingleEvaluation resultat = startdatoNyeGraderingsregler == null || grunnlag.getPeriodeFom().isBefore(startdatoNyeGraderingsregler) ? nei() : ja();

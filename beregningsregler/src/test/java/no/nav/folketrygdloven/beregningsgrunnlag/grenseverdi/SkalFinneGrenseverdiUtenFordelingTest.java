@@ -21,37 +21,6 @@ import no.nav.fpsak.nare.evaluation.Resultat;
 
 class SkalFinneGrenseverdiUtenFordelingTest {
 
-	@Test
-	void skal_finne_grenseverdi_med_fordeling_dersom_toggle_er_av() {
-
-
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
-				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
-				.medBeregningsgrunnlagPrStatus(BeregningsgrunnlagPrStatus
-						.builder()
-						.medAktivitetStatus(AktivitetStatus.ATFL)
-						.medArbeidsforhold(BeregningsgrunnlagPrArbeidsforhold.builder()
-								.medAndelNr(1L)
-								.medBruttoPrÅr(BigDecimal.valueOf(100_000))
-								.medArbeidsforhold(Arbeidsforhold.builder()
-										.medOrgnr("999999999")
-										.medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT).build()).build())
-						.build()).build();
-
-		Beregningsgrunnlag.builder()
-				.leggTilToggle("GRADERING_MOT_INNTEKT", false)
-				.medBeregningsgrunnlagPeriode(periode)
-				.medYtelsesSpesifiktGrunnlag(PleiepengerGrunnlagFastsettGrenseverdi.forSyktBarn())
-				.medGrunnbeløp(BigDecimal.valueOf(100_000));
-
-
-		//Act
-		var evaluate = new SkalFinneGrenseverdiUtenFordeling().evaluate(periode);
-
-		assertThat(evaluate.result()).isEqualTo(Resultat.NEI);
-
-	}
-
 
 	@Test
 	void skal_finne_grenseverdi_med_fordeling_dersom_toggle_er_på_og_ikke_pleiepenger() {
@@ -70,7 +39,6 @@ class SkalFinneGrenseverdiUtenFordelingTest {
 						.build()).build();
 
 		Beregningsgrunnlag.builder()
-				.leggTilToggle("GRADERING_MOT_INNTEKT", true)
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
@@ -102,7 +70,6 @@ class SkalFinneGrenseverdiUtenFordelingTest {
 		var ytelsesSpesifiktGrunnlag = PleiepengerGrunnlagFastsettGrenseverdi.forSyktBarn();
 		ytelsesSpesifiktGrunnlag.setStartdatoNyeGraderingsregler(LocalDate.now().plusDays(10));
 		Beregningsgrunnlag.builder()
-				.leggTilToggle("GRADERING_MOT_INNTEKT", true)
 				.medBeregningsgrunnlagPeriode(periode)
 				.medYtelsesSpesifiktGrunnlag(ytelsesSpesifiktGrunnlag)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
@@ -134,7 +101,6 @@ class SkalFinneGrenseverdiUtenFordelingTest {
 		var ytelsesSpesifiktGrunnlag = PleiepengerGrunnlagFastsettGrenseverdi.forSyktBarn();
 		ytelsesSpesifiktGrunnlag.setStartdatoNyeGraderingsregler(LocalDate.now());
 		Beregningsgrunnlag.builder()
-				.leggTilToggle("GRADERING_MOT_INNTEKT", true)
 				.medBeregningsgrunnlagPeriode(periode)
 				.medYtelsesSpesifiktGrunnlag(ytelsesSpesifiktGrunnlag)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
@@ -166,7 +132,6 @@ class SkalFinneGrenseverdiUtenFordelingTest {
 		var ytelsesSpesifiktGrunnlag = PleiepengerGrunnlagFastsettGrenseverdi.forSyktBarn();
 		ytelsesSpesifiktGrunnlag.setStartdatoNyeGraderingsregler(LocalDate.now().minusDays(1));
 		Beregningsgrunnlag.builder()
-				.leggTilToggle("GRADERING_MOT_INNTEKT", true)
 				.medBeregningsgrunnlagPeriode(periode)
 				.medYtelsesSpesifiktGrunnlag(ytelsesSpesifiktGrunnlag)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));

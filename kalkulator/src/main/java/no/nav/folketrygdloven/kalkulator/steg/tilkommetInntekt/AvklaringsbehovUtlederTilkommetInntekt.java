@@ -18,11 +18,9 @@ public class AvklaringsbehovUtlederTilkommetInntekt {
 
 
     public static List<BeregningAvklaringsbehovResultat> utledAvklaringsbehovFor(BeregningsgrunnlagGrunnlagDto beregningsgrunnlagGrunnlag,
-                                                                                 YtelsespesifiktGrunnlag ytelsespesifiktGrunnlag,
                                                                                  List<Intervall> forlengelseperioder) {
         var skalVurdereNyttInntektsforhold = AvklaringsbehovUtlederNyttInntektsforhold.skalVurdereNyttInntektsforhold(
                 beregningsgrunnlagGrunnlag,
-                ytelsespesifiktGrunnlag,
                 forlengelseperioder);
         var utledetbehovForAvklaring = new ArrayList<BeregningAvklaringsbehovResultat>();
         if (skalVurdereNyttInntektsforhold) {

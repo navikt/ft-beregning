@@ -143,7 +143,6 @@ public class BeregningsgrunnlagTjeneste implements KalkulatorInterface {
         var bg = new TilkommetInntektTjeneste().vurderTilkommetInntekt(input);
         var avklaringsbehov = AvklaringsbehovUtlederTilkommetInntekt.utledAvklaringsbehovFor(
                 BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag()).medBeregningsgrunnlag(bg).build(VURDERT_TILKOMMET_INNTEKT),
-                input.getYtelsespesifiktGrunnlag(),
                 input.getForlengelseperioder());
         return BeregningResultatAggregat.Builder.fra(input)
                 .medAvklaringsbehov(avklaringsbehov)
