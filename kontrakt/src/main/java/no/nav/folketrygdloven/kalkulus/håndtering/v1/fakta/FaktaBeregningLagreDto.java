@@ -5,6 +5,8 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -85,6 +87,7 @@ public class FaktaBeregningLagreDto {
         // default ctor
     }
 
+	@JsonCreator
     public FaktaBeregningLagreDto(@Valid VurderNyoppstartetFLDto vurderNyoppstartetFL,
                                   @Valid VurderTidsbegrensetArbeidsforholdDto vurderTidsbegrensetArbeidsforhold,
                                   @Valid VurderSelvstendigNæringsdrivendeNyIArbeidslivetDto vurderNyIArbeidslivet,
