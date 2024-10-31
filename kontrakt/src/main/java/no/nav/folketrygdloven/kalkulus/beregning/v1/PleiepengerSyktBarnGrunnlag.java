@@ -29,7 +29,6 @@ public class PleiepengerSyktBarnGrunnlag extends YtelsespesifiktGrunnlagDto {
     @Valid
     private LocalDate tilkommetInntektHensyntasFom;
 
-
     protected PleiepengerSyktBarnGrunnlag() {
         // default ctor
     }
