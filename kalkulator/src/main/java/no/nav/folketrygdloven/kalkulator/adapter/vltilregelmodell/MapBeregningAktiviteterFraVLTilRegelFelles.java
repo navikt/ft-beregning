@@ -35,7 +35,7 @@ public class MapBeregningAktiviteterFraVLTilRegelFelles implements MapBeregningA
         modell.setSkjæringstidspunktForOpptjening(opptjeningSkjæringstidspunkt);
 
 
-	    if (input.getOpptjeningAktiviteter().erMidlertidigInaktiv() && KonfigurasjonVerdi.instance().get("BRUKERS_ANDEL_8_47_B", false)) {
+	    if (input.getOpptjeningAktiviteter().erMidlertidigInaktiv()) {
 		    // Skal ikkje ha nokon aktiviteter ved midlertidig inaktiv
 		    // Beregningsgrunnlaget skal alltid bestå av kun BRUKERS_ANDEL og alle andre aktiviter regnes som tilkommet
 		    return modell;
