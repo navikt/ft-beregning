@@ -41,7 +41,7 @@ public class FinnGrenseverdiUtenFordeling extends LeafSpecification<Beregningsgr
 
 		//juster ned med tilkommet inntekt hvis det gir lavere utbetaling enn overstående
 		BigDecimal totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt = null;
-		if (grunnlag.getBeregningsgrunnlag().getToggles().isEnabled("GRADERING_MOT_INNTEKT", false) && !grunnlag.getTilkommetInntektsforholdListe().isEmpty()) {
+		if (!grunnlag.getTilkommetInntektsforholdListe().isEmpty()) {
 			BigDecimal graderingPåToppenAvUttakgraderingPgaTilkommetInntekt = andelBeholdtEtterGradertMotTilkommetInntekt(grunnlag);
 			resultater.put("graderingPåToppenAvUttakgraderingPgaTilkommetInntekt", min(BigDecimal.ONE, graderingPåToppenAvUttakgraderingPgaTilkommetInntekt));
 			totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt = min(BigDecimal.ONE, totalUtbetalingsgradFraUttak.multiply(graderingPåToppenAvUttakgraderingPgaTilkommetInntekt));
@@ -54,7 +54,7 @@ public class FinnGrenseverdiUtenFordeling extends LeafSpecification<Beregningsgr
 				resultater.put("inntektgraderingsprosent", grunnlag.getInntektsgraderingFraBruttoBeregningsgrunnlag());
 			}
 		}
-		
+
 		//hvis §8-47a, skaler med fast faktor
 		var erInaktivTypeA = MidlertidigInaktivType.A.equals(grunnlag.getBeregningsgrunnlag().getMidlertidigInaktivType());
 		if (erInaktivTypeA) {
@@ -62,11 +62,11 @@ public class FinnGrenseverdiUtenFordeling extends LeafSpecification<Beregningsgr
 			grenseverdi = grenseverdi.multiply(reduksjonsfaktor);
 			resultater.put("grad847a", reduksjonsfaktor);
 			grunnlag.setReduksjonsfaktorInaktivTypeA(reduksjonsfaktor);
-			
+
 			BigDecimal justertTotalUtbetalingsgradFraUttak = totalUtbetalingsgradFraUttak.multiply(reduksjonsfaktor);
 			grunnlag.setTotalUtbetalingsgradFraUttak(justertTotalUtbetalingsgradFraUttak);
 			resultater.put("totalUtbetalingsgradFraUttak", justertTotalUtbetalingsgradFraUttak);
-			
+
 			if (totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt != null) {
 				BigDecimal justertTotalUtbetalingsgradEtterReduksjonVedTilkommetInntekt = totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt.multiply(reduksjonsfaktor);
 				grunnlag.setTotalUtbetalingsgradEtterReduksjonVedTilkommetInntekt(justertTotalUtbetalingsgradEtterReduksjonVedTilkommetInntekt);

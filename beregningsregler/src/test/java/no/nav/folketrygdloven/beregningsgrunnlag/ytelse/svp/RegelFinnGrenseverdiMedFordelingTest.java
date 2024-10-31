@@ -153,7 +153,6 @@ class RegelFinnGrenseverdiMedFordelingTest {
 				.build();
 
 		Beregningsgrunnlag.builder()
-				.leggTilToggle("GRADERING_MOT_INNTEKT", true)
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
@@ -178,7 +177,6 @@ class RegelFinnGrenseverdiMedFordelingTest {
 				.build();
 
 		Beregningsgrunnlag.builder()
-				.leggTilToggle("GRADERING_MOT_INNTEKT", true)
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
@@ -206,7 +204,6 @@ class RegelFinnGrenseverdiMedFordelingTest {
 				.build();
 
 		Beregningsgrunnlag.builder()
-				.leggTilToggle("GRADERING_MOT_INNTEKT", true)
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
@@ -256,7 +253,6 @@ class RegelFinnGrenseverdiMedFordelingTest {
 				.build();
 
 		Beregningsgrunnlag.builder()
-				.leggTilToggle("GRADERING_MOT_INNTEKT", true)
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
@@ -308,7 +304,6 @@ class RegelFinnGrenseverdiMedFordelingTest {
 				.build();
 
 		Beregningsgrunnlag.builder()
-				.leggTilToggle("GRADERING_MOT_INNTEKT", true)
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
@@ -359,7 +354,6 @@ class RegelFinnGrenseverdiMedFordelingTest {
 				.build();
 
 		Beregningsgrunnlag.builder()
-				.leggTilToggle("GRADERING_MOT_INNTEKT", true)
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
@@ -385,7 +379,6 @@ class RegelFinnGrenseverdiMedFordelingTest {
 				.build();
 
 		Beregningsgrunnlag.builder()
-				.leggTilToggle("GRADERING_MOT_INNTEKT", true)
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
@@ -853,7 +846,6 @@ class RegelFinnGrenseverdiMedFordelingTest {
 				.build();
 
 		Beregningsgrunnlag.builder()
-				.leggTilToggle("GRADERING_MOT_INNTEKT", true)
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
@@ -879,7 +871,6 @@ class RegelFinnGrenseverdiMedFordelingTest {
 				.build();
 
 		Beregningsgrunnlag.builder()
-				.leggTilToggle("GRADERING_MOT_INNTEKT", true)
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
@@ -905,7 +896,6 @@ class RegelFinnGrenseverdiMedFordelingTest {
 				.build();
 
 		Beregningsgrunnlag.builder()
-				.leggTilToggle("GRADERING_MOT_INNTEKT", true)
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
@@ -1160,7 +1150,6 @@ class RegelFinnGrenseverdiMedFordelingTest {
 				.build();
 
 		Beregningsgrunnlag.builder()
-				.leggTilToggle("GRADERING_MOT_INNTEKT", true)
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
@@ -1249,7 +1238,6 @@ class RegelFinnGrenseverdiMedFordelingTest {
 				.build();
 
 		Beregningsgrunnlag.builder()
-				.leggTilToggle("GRADERING_MOT_INNTEKT", true)
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
@@ -1533,7 +1521,6 @@ class RegelFinnGrenseverdiMedFordelingTest {
 				.build();
 
 		Beregningsgrunnlag.builder()
-				.leggTilToggle("GRADERING_MOT_INNTEKT", true)
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
@@ -1558,7 +1545,6 @@ class RegelFinnGrenseverdiMedFordelingTest {
 				.build();
 
 		Beregningsgrunnlag.builder()
-				.leggTilToggle("GRADERING_MOT_INNTEKT", true)
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 
@@ -1583,7 +1569,6 @@ class RegelFinnGrenseverdiMedFordelingTest {
 				.build();
 
 		Beregningsgrunnlag.builder()
-				.leggTilToggle("GRADERING_MOT_INNTEKT", true)
 				.medBeregningsgrunnlagPeriode(periode)
 				.medGrunnbeløp(BigDecimal.valueOf(100_000));
 

@@ -20,12 +20,7 @@ public class AvklaringsbehovUtlederNyttInntektsforhold {
 
 
     public static boolean skalVurdereNyttInntektsforhold(BeregningsgrunnlagGrunnlagDto beregningsgrunnlagGrunnlag,
-                                                         YtelsespesifiktGrunnlag ytelsespesifiktGrunnlag,
                                                          List<Intervall> forlengelseperioder) {
-
-        if (!(ytelsespesifiktGrunnlag instanceof UtbetalingsgradGrunnlag) || !KonfigurasjonVerdi.instance().get("GRADERING_MOT_INNTEKT", false)) {
-            return false;
-        }
 
         var bg = beregningsgrunnlagGrunnlag.getBeregningsgrunnlagHvisFinnes().orElseThrow(() -> new IllegalStateException("Skal ha beregningsgrunnlag her"));
 

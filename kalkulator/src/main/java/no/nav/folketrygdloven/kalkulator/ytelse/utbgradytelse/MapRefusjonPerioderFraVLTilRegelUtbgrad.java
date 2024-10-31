@@ -9,7 +9,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import no.nav.folketrygdloven.kalkulator.KonfigurasjonVerdi;
 import no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.UtbetalingsgradTjeneste;
 import no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.periodisering.FinnAnsettelsesPeriode;
 import no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.periodisering.FinnFørsteDagEtterPermisjon;
@@ -82,8 +81,7 @@ public class MapRefusjonPerioderFraVLTilRegelUtbgrad
         final List<LocalDateTimeline<Boolean>> segmenterMedUtbetaling = UtbetalingsgradTjeneste.finnPerioderForArbeid(ytelsespesifiktGrunnlag, im.getArbeidsgiver(), im.getArbeidsforholdRef(), false)
                 .stream()
                 .flatMap(u -> u.getPeriodeMedUtbetalingsgrad().stream())
-                .filter(p -> p.getUtbetalingsgrad() != null && p.getUtbetalingsgrad().compareTo(Utbetalingsgrad.ZERO) > 0
-                        || harAktivitetsgradMedTilkommetInntektToggle(p))
+                .filter(p -> harOverNullProsentUtbetalingsgrad(p) || harMindreEnnHundreProsentAktivitetsgrad(p))
                 .map(PeriodeMedUtbetalingsgradDto::getPeriode)
                 .map(p -> new LocalDateTimeline<>(List.of(new LocalDateSegment<>(p.getFomDato(), p.getTomDato(), true))))
                 .toList();
@@ -97,9 +95,12 @@ public class MapRefusjonPerioderFraVLTilRegelUtbgrad
         return timeline.compress();
     }
 
-    private static boolean harAktivitetsgradMedTilkommetInntektToggle(PeriodeMedUtbetalingsgradDto p) {
-        return p.getAktivitetsgrad().map(ag -> ag.compareTo(Aktivitetsgrad.HUNDRE) < 0).orElse(false)
-                && KonfigurasjonVerdi.instance().get("GRADERING_MOT_INNTEKT", false);
+	private static boolean harOverNullProsentUtbetalingsgrad(PeriodeMedUtbetalingsgradDto p) {
+		return p.getUtbetalingsgrad() != null && p.getUtbetalingsgrad().compareTo(Utbetalingsgrad.ZERO) > 0;
+	}
+
+	private static boolean harMindreEnnHundreProsentAktivitetsgrad(PeriodeMedUtbetalingsgradDto p) {
+        return p.getAktivitetsgrad().map(ag -> ag.compareTo(Aktivitetsgrad.HUNDRE) < 0).orElse(false);
     }
 
 

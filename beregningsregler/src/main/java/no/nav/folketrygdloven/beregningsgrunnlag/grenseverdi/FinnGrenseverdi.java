@@ -40,7 +40,7 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 
 		//juster ned med tilkommet inntekt hvis det gir lavere utbetaling enn overstående
 		BigDecimal totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt = null;
-		if (grunnlag.getBeregningsgrunnlag().getToggles().isEnabled("GRADERING_MOT_INNTEKT", false) && !grunnlag.getTilkommetInntektsforholdListe().isEmpty()) {
+		if (!grunnlag.getTilkommetInntektsforholdListe().isEmpty()) {
 			BigDecimal graderingPåToppenAvUttakgraderingPgaTilkommetInntekt = andelBeholdtEtterGradertMotTilkommetInntekt(grunnlag);
 			resultater.put("graderingPåToppenAvUttakgraderingPgaTilkommetInntekt", min(BigDecimal.ONE, graderingPåToppenAvUttakgraderingPgaTilkommetInntekt));
 			totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt = min(BigDecimal.ONE, totalUtbetalingsgradFraUttak.multiply(graderingPåToppenAvUttakgraderingPgaTilkommetInntekt));

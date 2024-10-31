@@ -117,7 +117,6 @@ public class SimulerGraderingMotInntektTjeneste {
 
     private List<BeregningsgrunnlagPeriode> kjørRegel(BeregningsgrunnlagInput beregningsgrunnlagInput, BeregningsgrunnlagDto nyttBg) {
         var regelBg = mapFullføreBeregningsgrunnlagFraVLTilRegel.map(beregningsgrunnlagInput, nyttBg);
-        Beregningsgrunnlag.builder(regelBg).leggTilToggle("GRADERING_MOT_INNTEKT", true);
         var regelPerioder = regelBg.getBeregningsgrunnlagPerioder().stream()
                 .filter(p -> !p.getTilkommetInntektsforholdListe().isEmpty())
                 .toList();
