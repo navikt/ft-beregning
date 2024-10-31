@@ -22,7 +22,7 @@ Reglene er etablert gjennom juridiske vurderinger ifht. folketrygdloven kapittel
 *For updated information, always see LICENSE first!*
 
 ### For NAV-ansatte
-Interne henvendelser kan sendes via Slack i kanalen **#sykdom-i-familiien**.
+Interne henvendelser kan sendes via Slack i kanalen **#sykdom-i-familien**.
 
 # Referanser
 https://lovdata.no/dokument/NL/lov/1997-02-28-19
