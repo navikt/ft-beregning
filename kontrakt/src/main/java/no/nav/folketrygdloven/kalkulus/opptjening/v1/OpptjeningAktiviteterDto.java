@@ -6,6 +6,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -25,9 +26,8 @@ public class OpptjeningAktiviteterDto {
     @Size()
     private List<OpptjeningPeriodeDto> perioder;
 
-    @JsonProperty(value = "midlertidigInaktivType", required = false)
+    @JsonProperty(value = "midlertidigInaktivType")
     @Valid
-
     private MidlertidigInaktivType midlertidigInaktivType;
 
     protected OpptjeningAktiviteterDto() {
@@ -38,8 +38,9 @@ public class OpptjeningAktiviteterDto {
         this.perioder = perioder;
     }
 
-    public OpptjeningAktiviteterDto(@JsonProperty(value = "perioder",required = true) @Valid @NotEmpty List<OpptjeningPeriodeDto> perioder,
-                                    @JsonProperty(value = "midlertidigInaktivType",required = true) @Valid MidlertidigInaktivType midlertidigInaktivType) {
+	@JsonCreator
+    public OpptjeningAktiviteterDto(@JsonProperty(value = "perioder", required = true) @Valid @NotEmpty List<OpptjeningPeriodeDto> perioder,
+                                    @JsonProperty(value = "midlertidigInaktivType") @Valid MidlertidigInaktivType midlertidigInaktivType) {
 
         this.perioder = perioder;
         this.midlertidigInaktivType = midlertidigInaktivType;
