@@ -1,11 +1,7 @@
 package no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell;
 
-import static no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.UtbetalingsgradTjeneste.finnAktivitetsgradForAndel;
-import static no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.UtbetalingsgradTjeneste.finnUtbetalingsgradForAndel;
-
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -14,6 +10,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelPeriodeMode
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
+import no.nav.folketrygdloven.kalkulator.adapter.ErSøktYtelseFor;
 import no.nav.folketrygdloven.kalkulator.adapter.util.FinnArbeidsperiode;
 import no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.kodeverk.MapInntektskategoriFraVLTilRegel;
 import no.nav.folketrygdloven.kalkulator.avklaringsbehov.PerioderTilVurderingTjeneste;
@@ -24,9 +21,7 @@ import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.Beregningsgru
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektsmeldingDto;
-import no.nav.folketrygdloven.kalkulator.modell.typer.Aktivitetsgrad;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
-import no.nav.folketrygdloven.kalkulator.modell.typer.Utbetalingsgrad;
 import no.nav.fpsak.tidsserie.LocalDateTimeline;
 
 public class MapTilFordelingsmodell {
@@ -105,15 +100,7 @@ public class MapTilFordelingsmodell {
 	}
 
 	private static boolean erSøktYtelseFor(BeregningsgrunnlagPrStatusOgAndelDto bgAndel, YtelsespesifiktGrunnlag ytelsespesifiktGrunnlag) {
-		var erTilkommet = bgAndel.getBeregningsgrunnlagPeriode().getTilkomneInntekter()
-				.stream()
-				.anyMatch(it -> Objects.equals(it.getArbeidsgiver().orElse(null), bgAndel.getArbeidsgiver().orElse(null)) && bgAndel.getAktivitetStatus().equals(it.getAktivitetStatus()));
-		if (erTilkommet) {
-			var aktivitetsgrad = finnAktivitetsgradForAndel(bgAndel, bgAndel.getBeregningsgrunnlagPeriode().getPeriode(), ytelsespesifiktGrunnlag, false);
-			return aktivitetsgrad.orElse(Aktivitetsgrad.HUNDRE).compareTo(Aktivitetsgrad.fra(100)) < 0;
-		}
-		var ubetalingsgrad = finnUtbetalingsgradForAndel(bgAndel, bgAndel.getBeregningsgrunnlagPeriode().getPeriode(), ytelsespesifiktGrunnlag, false);
-		return ubetalingsgrad.compareTo(Utbetalingsgrad.ZERO) > 0;
+		return ErSøktYtelseFor.erSøktYtelseFor(bgAndel, bgAndel.getBeregningsgrunnlagPeriode().getPeriode(), ytelsespesifiktGrunnlag, false);
 	}
 
 	private static Optional<Arbeidsforhold> mapArbeidsforhold(BeregningsgrunnlagPrStatusOgAndelDto bgAndel) {

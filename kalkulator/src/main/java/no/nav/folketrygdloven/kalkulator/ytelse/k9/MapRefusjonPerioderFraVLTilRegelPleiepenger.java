@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.kalkulator.KonfigurasjonVerdi;
+import no.nav.folketrygdloven.kalkulator.adapter.ErSøktYtelseFor;
 import no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.UtbetalingsgradTjeneste;
 import no.nav.folketrygdloven.kalkulator.input.UtbetalingsgradGrunnlag;
 import no.nav.folketrygdloven.kalkulator.input.YtelsespesifiktGrunnlag;
@@ -87,10 +88,10 @@ public class MapRefusjonPerioderFraVLTilRegelPleiepenger extends MapRefusjonPeri
         final List<LocalDateTimeline<Boolean>> segmenterMedUtbetaling = UtbetalingsgradTjeneste.finnPerioderForArbeid(ytelsespesifiktGrunnlag, im.getArbeidsgiver(), im.getArbeidsforholdRef(), true)
                 .stream()
                 .flatMap(u -> u.getPeriodeMedUtbetalingsgrad().stream())
-                .filter(p -> harOverNullProsentUtbetalingsgrad(p) || harMindreEnnHundreProsentAktivitetsgrad(p))
+                .filter(ErSøktYtelseFor::erSøktYtelseFor)
                 .map(PeriodeMedUtbetalingsgradDto::getPeriode)
                 .map(p -> new LocalDateTimeline<>(List.of(new LocalDateSegment<>(p.getFomDato(), p.getTomDato(), true))))
-                .collect(Collectors.toList());
+                .toList();
 
         var timeline = new LocalDateTimeline<Boolean>(List.of());
 
@@ -103,14 +104,6 @@ public class MapRefusjonPerioderFraVLTilRegelPleiepenger extends MapRefusjonPeri
 
         return timeline.compress();
     }
-
-	private static boolean harOverNullProsentUtbetalingsgrad(PeriodeMedUtbetalingsgradDto p) {
-		return p.getUtbetalingsgrad() != null && p.getUtbetalingsgrad().compareTo(Utbetalingsgrad.ZERO) > 0;
-	}
-
-	private static boolean harMindreEnnHundreProsentAktivitetsgrad(PeriodeMedUtbetalingsgradDto p) {
-		return p.getAktivitetsgrad().map(ag -> ag.compareTo(Aktivitetsgrad.HUNDRE) < 0).orElse(false);
-	}
 
 
 }
