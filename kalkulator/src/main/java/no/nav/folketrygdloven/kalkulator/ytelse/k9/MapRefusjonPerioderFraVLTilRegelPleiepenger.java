@@ -91,7 +91,7 @@ public class MapRefusjonPerioderFraVLTilRegelPleiepenger extends MapRefusjonPeri
                 .filter(ErSøktYtelseFor::erSøktYtelseFor)
                 .map(PeriodeMedUtbetalingsgradDto::getPeriode)
                 .map(p -> new LocalDateTimeline<>(List.of(new LocalDateSegment<>(p.getFomDato(), p.getTomDato(), true))))
-                .collect(Collectors.toList());
+                .toList();
 
         var timeline = new LocalDateTimeline<Boolean>(List.of());
 
@@ -104,14 +104,6 @@ public class MapRefusjonPerioderFraVLTilRegelPleiepenger extends MapRefusjonPeri
 
         return timeline.compress();
     }
-
-	private static boolean harOverNullProsentUtbetalingsgrad(PeriodeMedUtbetalingsgradDto p) {
-		return p.getUtbetalingsgrad() != null && p.getUtbetalingsgrad().compareTo(Utbetalingsgrad.ZERO) > 0;
-	}
-
-	private static boolean harMindreEnnHundreProsentAktivitetsgrad(PeriodeMedUtbetalingsgradDto p) {
-		return p.getAktivitetsgrad().map(ag -> ag.compareTo(Aktivitetsgrad.HUNDRE) < 0).orElse(false);
-	}
 
 
 }
