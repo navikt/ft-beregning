@@ -87,7 +87,7 @@ public class MapRefusjonPerioderFraVLTilRegelPleiepenger extends MapRefusjonPeri
         final List<LocalDateTimeline<Boolean>> segmenterMedUtbetaling = UtbetalingsgradTjeneste.finnPerioderForArbeid(ytelsespesifiktGrunnlag, im.getArbeidsgiver(), im.getArbeidsforholdRef(), true)
                 .stream()
                 .flatMap(u -> u.getPeriodeMedUtbetalingsgrad().stream())
-                .filter(p -> harOverNullProsentUtbetalingsgrad(p) || harMindreEnnHundreProsentAktivitetsgrad(p))
+                .filter(UtbetalingsgradTjeneste::erSøktYtelseFor)
                 .map(PeriodeMedUtbetalingsgradDto::getPeriode)
                 .map(p -> new LocalDateTimeline<>(List.of(new LocalDateSegment<>(p.getFomDato(), p.getTomDato(), true))))
                 .collect(Collectors.toList());
