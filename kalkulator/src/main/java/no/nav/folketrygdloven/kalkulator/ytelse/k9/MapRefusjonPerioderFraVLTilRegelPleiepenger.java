@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.kalkulator.KonfigurasjonVerdi;
+import no.nav.folketrygdloven.kalkulator.adapter.ErSøktYtelseFor;
 import no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.UtbetalingsgradTjeneste;
 import no.nav.folketrygdloven.kalkulator.input.UtbetalingsgradGrunnlag;
 import no.nav.folketrygdloven.kalkulator.input.YtelsespesifiktGrunnlag;
@@ -87,7 +88,7 @@ public class MapRefusjonPerioderFraVLTilRegelPleiepenger extends MapRefusjonPeri
         final List<LocalDateTimeline<Boolean>> segmenterMedUtbetaling = UtbetalingsgradTjeneste.finnPerioderForArbeid(ytelsespesifiktGrunnlag, im.getArbeidsgiver(), im.getArbeidsforholdRef(), true)
                 .stream()
                 .flatMap(u -> u.getPeriodeMedUtbetalingsgrad().stream())
-                .filter(UtbetalingsgradTjeneste::erSøktYtelseFor)
+                .filter(ErSøktYtelseFor::erSøktYtelseFor)
                 .map(PeriodeMedUtbetalingsgradDto::getPeriode)
                 .map(p -> new LocalDateTimeline<>(List.of(new LocalDateSegment<>(p.getFomDato(), p.getTomDato(), true))))
                 .collect(Collectors.toList());

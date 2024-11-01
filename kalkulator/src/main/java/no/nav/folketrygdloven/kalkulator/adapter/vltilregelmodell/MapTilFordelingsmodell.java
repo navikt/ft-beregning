@@ -10,6 +10,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelPeriodeMode
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
+import no.nav.folketrygdloven.kalkulator.adapter.ErSøktYtelseFor;
 import no.nav.folketrygdloven.kalkulator.adapter.util.FinnArbeidsperiode;
 import no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.kodeverk.MapInntektskategoriFraVLTilRegel;
 import no.nav.folketrygdloven.kalkulator.avklaringsbehov.PerioderTilVurderingTjeneste;
@@ -99,7 +100,7 @@ public class MapTilFordelingsmodell {
 	}
 
 	private static boolean erSøktYtelseFor(BeregningsgrunnlagPrStatusOgAndelDto bgAndel, YtelsespesifiktGrunnlag ytelsespesifiktGrunnlag) {
-		return UtbetalingsgradTjeneste.erSøktYtelseFor(bgAndel, bgAndel.getBeregningsgrunnlagPeriode().getPeriode(), ytelsespesifiktGrunnlag, false);
+		return ErSøktYtelseFor.erSøktYtelseFor(bgAndel, bgAndel.getBeregningsgrunnlagPeriode().getPeriode(), ytelsespesifiktGrunnlag, false);
 	}
 
 	private static Optional<Arbeidsforhold> mapArbeidsforhold(BeregningsgrunnlagPrStatusOgAndelDto bgAndel) {

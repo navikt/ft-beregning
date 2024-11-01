@@ -22,25 +22,6 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 
 public class UtbetalingsgradTjeneste {
 
-
-	public static boolean erSøktYtelseFor(BeregningsgrunnlagPrStatusOgAndelDto bgAndel, Intervall periode, YtelsespesifiktGrunnlag ytelsespesifiktGrunnlag, boolean skalIgnorereIkkeYrkesaktivStatus) {
-		return harOverNullProsentUtbetalingsgrad(finnUtbetalingsgradForAndel(bgAndel, periode, ytelsespesifiktGrunnlag, skalIgnorereIkkeYrkesaktivStatus)) ||
-				harMindreEnnHundreProsentAktivitetsgrad(finnAktivitetsgradForAndel(bgAndel, periode, ytelsespesifiktGrunnlag, skalIgnorereIkkeYrkesaktivStatus));
-	}
-
-	public static boolean erSøktYtelseFor(PeriodeMedUtbetalingsgradDto p) {
-		return harOverNullProsentUtbetalingsgrad(p.getUtbetalingsgrad()) || harMindreEnnHundreProsentAktivitetsgrad(p.getAktivitetsgrad());
-	}
-
-	private static boolean harOverNullProsentUtbetalingsgrad(Utbetalingsgrad utbetalingsgrad) {
-		return utbetalingsgrad != null && utbetalingsgrad.compareTo(Utbetalingsgrad.ZERO) > 0;
-	}
-
-	private static boolean harMindreEnnHundreProsentAktivitetsgrad(Optional<Aktivitetsgrad> aktivitetsgrad) {
-		return aktivitetsgrad.map(ag -> ag.compareTo(Aktivitetsgrad.HUNDRE) < 0).orElse(false);
-	}
-
-
 	public static Beløp finnGradertBruttoForAndel(BeregningsgrunnlagPrStatusOgAndelDto andel,
 	                                              Intervall periode,
 	                                              YtelsespesifiktGrunnlag ytelsesSpesifiktGrunnlag) {
