@@ -30,6 +30,7 @@ public final class KopierBeregningsgrunnlagUtil {
                     .medBeregningsgrunnlagPeriode(kopi)
                     .medBesteberegningPrÅr(forrigeStatus.getBesteberegningPrÅr())
                     .medErNyIArbeidslivet(forrigeStatus.getNyIArbeidslivet())
+	                .medFastsattAvSaksbehandler(forrigeStatus.erFastsattAvSaksbehandler())
                     .medAndelNr(forrigeStatus.getAndelNr())
                     .medInntektskategori(forrigeStatus.getInntektskategori())
                     .build();
