@@ -53,6 +53,7 @@ public class KopierBeregningsgrunnlagUtilTest {
         assertThat(kopi.getAktivitetStatus()).isEqualTo(AktivitetStatus.SN);
         assertThat(kopi.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(100000));
         assertThat(kopi.getNyIArbeidslivet()).isFalse();
+	    assertThat(kopi.erFastsattAvSaksbehandler()).isTrue();
         assertThat(kopi.getAndelNr()).isEqualTo(2L);
         assertThat(kopi.getInntektskategori()).isEqualTo(Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE);
         assertThat(kopi.getArbeidsforhold()).isEmpty();
@@ -123,6 +124,7 @@ public class KopierBeregningsgrunnlagUtilTest {
             .medAktivitetStatus(AktivitetStatus.SN)
             .medBeregningsgrunnlagPeriode(bgPeriode)
             .medBeregnetPrÅr(BigDecimal.valueOf(100000))
+	        .medFastsattAvSaksbehandler(true)
             .medErNyIArbeidslivet(false)
             .medAndelNr(2L)
             .medInntektskategori(Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE)
