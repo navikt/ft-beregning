@@ -43,9 +43,10 @@ public class FastsettBeregningsgrunnlagATFLHåndteringDto extends HåndterBeregn
     protected FastsettBeregningsgrunnlagATFLHåndteringDto() {
         super(AvklaringsbehovDefinisjon.FASTSETT_BG_AT_FL);
     }
-    public FastsettBeregningsgrunnlagATFLHåndteringDto(@Valid @Size(max = 100) List<InntektPrAndelDto> inntektPrAndelList,
-                                                       @JsonProperty(value = "inntektFrilanser") @Valid @Min(0) @Max(100 * 1000 * 1000) Integer inntektFrilanser,
-                                                       @JsonProperty(value = "fastsatteTidsbegrensedePerioder") @Valid @Size(max = 100) List<FastsattePerioderTidsbegrensetDto> fastsatteTidsbegrensedePerioder) {
+
+	public FastsettBeregningsgrunnlagATFLHåndteringDto(@Valid @Size(max = 100) List<InntektPrAndelDto> inntektPrAndelList,
+                                                       @Valid @Min(0) @Max(100 * 1000 * 1000) Integer inntektFrilanser,
+                                                       @Valid @Size(max = 100) List<FastsattePerioderTidsbegrensetDto> fastsatteTidsbegrensedePerioder) {
         super(AvklaringsbehovDefinisjon.FASTSETT_BG_AT_FL);
         this.inntektPrAndelList = inntektPrAndelList;
         this.inntektFrilanser = inntektFrilanser;

@@ -5,14 +5,14 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
 
 import java.util.List;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(value = NON_ABSENT, content = NON_EMPTY)
@@ -93,7 +93,7 @@ public class FaktaBeregningLagreDto {
                                   @Valid FastsettMånedsinntektUtenInntektsmeldingDto fastsattUtenInntektsmelding,
                                   @Valid VurderATogFLiSammeOrganisasjonDto vurderATogFLiSammeOrganisasjon,
                                   @Valid BesteberegningFødendeKvinneDto besteberegningAndeler,
-                                  @JsonProperty("faktaOmBeregningTilfelleDto") @NotNull @Valid FaktaOmBeregningTilfelleDto faktaOmBeregningTilfelleDto,
+                                  @NotNull @Valid FaktaOmBeregningTilfelleDto faktaOmBeregningTilfelleDto,
                                   @Valid FastsettBgKunYtelseDto kunYtelseFordeling,
                                   @Valid VurderEtterlønnSluttpakkeDto vurderEtterlønnSluttpakke,
                                   @Valid FastsettEtterlønnSluttpakkeDto fastsettEtterlønnSluttpakke,
