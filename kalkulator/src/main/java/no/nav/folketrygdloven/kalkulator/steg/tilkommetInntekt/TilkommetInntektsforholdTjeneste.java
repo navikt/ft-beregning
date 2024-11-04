@@ -21,7 +21,6 @@ import no.nav.folketrygdloven.kalkulator.modell.iay.AktørArbeidDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseGrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YrkesaktivitetDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YtelseAnvistDto;
-import no.nav.folketrygdloven.kalkulator.modell.iay.permisjon.PermisjonPerYrkesaktivitet;
 import no.nav.folketrygdloven.kalkulator.modell.svp.PeriodeMedUtbetalingsgradDto;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Aktivitetsgrad;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
@@ -156,8 +155,7 @@ public class TilkommetInntektsforholdTjeneste {
 				.filter(ya -> !mapTilAktivitetStatus(ya).equals(AktivitetStatus.UDEFINERT))
 				.flatMap(ya -> {
 							var ansettelsesTidslinje = finnAnsettelseTidslinje(ya);
-							var permisjonTidslinje = PermisjonPerYrkesaktivitet.utledPermisjonPerYrkesaktivitet(ya, Collections.emptyMap(), skjæringstidspunkt);
-							return ansettelsesTidslinje.disjoint(permisjonTidslinje)
+							return ansettelsesTidslinje
 									.toSegments().stream()
 									.map(LocalDateSegment::getLocalDateInterval)
 									.filter(p -> p.getTomDato().isAfter(BeregningstidspunktTjeneste.finnBeregningstidspunkt(skjæringstidspunkt)))

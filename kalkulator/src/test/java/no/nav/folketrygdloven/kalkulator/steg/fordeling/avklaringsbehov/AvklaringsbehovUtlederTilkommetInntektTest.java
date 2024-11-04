@@ -129,6 +129,7 @@ class AvklaringsbehovUtlederTilkommetInntektTest {
 
 	@Test
 	void skal_ikke_finne_tilkommet_andel_dersom_en_andel_fra_start_og_med_overlapp_til_nytt_arbeid_med_permisjon() {
+		// Permisjon tas ikke lenger hensyn til ved utledning av tilkommet
 
 		var arbeidsgiver = Arbeidsgiver.virksomhet(ARBEIDSGIVER_ORGNR);
 		var arbeidstakerandelFraStart = lagArbeidstakerandel(arbeidsgiver, 1L, AndelKilde.PROSESS_START, InternArbeidsforholdRefDto.nullRef());
@@ -151,7 +152,8 @@ class AvklaringsbehovUtlederTilkommetInntektTest {
 
 		var tilkommetAktivitet = finnTilkomneAndeler(periode, List.of(yrkesaktivitet, nyYrkesaktivitet), List.of(arbeidstakerandelFraStart, nyAndel), new PleiepengerSyktBarnGrunnlag(List.of(utbetalingsgradFraStart, utbetalingsgradNyAndel)), STP);
 
-		assertThat(tilkommetAktivitet.isEmpty()).isTrue();
+		assertThat(tilkommetAktivitet.size()).isEqualTo(1);
+		assertThat(tilkommetAktivitet.iterator().next().arbeidsgiver()).isEqualTo(arbeidsgiver2);
 	}
 
 	@Test
