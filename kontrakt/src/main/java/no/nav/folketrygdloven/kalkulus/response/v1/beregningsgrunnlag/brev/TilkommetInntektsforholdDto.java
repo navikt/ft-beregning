@@ -19,63 +19,77 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 @JsonAutoDetect(fieldVisibility = NONE, getterVisibility = NONE, setterVisibility = NONE, isGetterVisibility = NONE, creatorVisibility = NONE)
 public class TilkommetInntektsforholdDto {
 
-    @JsonProperty("aktivitetStatus")
-    @Valid
-    @NotNull
-    private AktivitetStatus aktivitetStatus;
+	@JsonProperty("aktivitetStatus")
+	@Valid
+	@NotNull
+	private AktivitetStatus aktivitetStatus;
 
-    @JsonProperty("arbeidsgiverId")
-    @Valid
-    @Pattern(regexp = "^[\\p{Graph}\\p{Space}\\p{Sc}\\p{L}\\p{M}\\p{N}]+$", message = "'${validatedValue}' matcher ikke tillatt pattern '{regexp}'")
-    private String arbeidsgiverIdentifikator;
+	@JsonProperty("arbeidsgiverId")
+	@Valid
+	@Pattern(regexp = "^[\\p{Graph}\\p{Space}\\p{Sc}\\p{L}\\p{M}\\p{N}]+$", message = "'${validatedValue}' matcher ikke tillatt pattern '{regexp}'")
+	private String arbeidsgiverIdentifikator;
 
 
-    @JsonProperty("arbeidsforholdId")
-    @Valid
-    @Pattern(regexp = "^[\\p{Graph}\\p{Space}\\p{Sc}\\p{L}\\p{M}\\p{N}]+$", message = "'${validatedValue}' matcher ikke tillatt pattern '{regexp}'")
-    private String arbeidsforholdId;
+	@JsonProperty("arbeidsforholdId")
+	@Valid
+	@Pattern(regexp = "^[\\p{Graph}\\p{Space}\\p{Sc}\\p{L}\\p{M}\\p{N}]+$", message = "'${validatedValue}' matcher ikke tillatt pattern '{regexp}'")
+	private String arbeidsforholdId;
 
-    @JsonProperty("bruttoInntektPrÅr")
-    @Valid
-    @Min(0)
-    @Max(178956970)
-    private Integer bruttoInntektPrÅr;
-    @JsonProperty("skalRedusereUtbetaling")
-    @Valid
-    private Boolean skalRedusereUtbetaling;
+	@JsonProperty("bruttoInntektPrÅr")
+	@Valid
+	@Min(0)
+	@Max(178956970)
+	private Integer bruttoInntektPrÅr;
 
-    public TilkommetInntektsforholdDto(AktivitetStatus aktivitetStatus,
-                                       String arbeidsgiverIdentifikator,
-                                       String arbeidsforholdId,
-                                       Integer bruttoInntektPrÅr,
-                                       Boolean skalRedusereUtbetaling) {
-        this.aktivitetStatus = aktivitetStatus;
-        this.arbeidsgiverIdentifikator = arbeidsgiverIdentifikator;
-        this.arbeidsforholdId = arbeidsforholdId;
-        this.bruttoInntektPrÅr = bruttoInntektPrÅr;
-        this.skalRedusereUtbetaling = skalRedusereUtbetaling;
-    }
+	@JsonProperty("tilkommetInntektPrÅr")
+	@Valid
+	@Min(0)
+	@Max(178956970)
+	private Integer tilkommetInntektPrÅr;
 
-    public TilkommetInntektsforholdDto() {
-    }
+	@JsonProperty("skalRedusereUtbetaling")
+	@Valid
+	private Boolean skalRedusereUtbetaling;
 
-    public AktivitetStatus getAktivitetStatus() {
-        return aktivitetStatus;
-    }
+	public TilkommetInntektsforholdDto(AktivitetStatus aktivitetStatus,
+	                                   String arbeidsgiverIdentifikator,
+	                                   String arbeidsforholdId,
+	                                   Integer bruttoInntektPrÅr, Integer tilkommetInntektPrÅr,
+	                                   Boolean skalRedusereUtbetaling) {
+		this.aktivitetStatus = aktivitetStatus;
+		this.arbeidsgiverIdentifikator = arbeidsgiverIdentifikator;
+		this.arbeidsforholdId = arbeidsforholdId;
+		this.bruttoInntektPrÅr = bruttoInntektPrÅr;
+		this.tilkommetInntektPrÅr = tilkommetInntektPrÅr;
+		this.skalRedusereUtbetaling = skalRedusereUtbetaling;
+	}
 
-    public String getArbeidsgiverIdentifikator() {
-        return arbeidsgiverIdentifikator;
-    }
+	public TilkommetInntektsforholdDto(Integer tilkommetInntektPrÅr) {
+		this.tilkommetInntektPrÅr = tilkommetInntektPrÅr;
+	}
 
-    public String getArbeidsforholdId() {
-        return arbeidsforholdId;
-    }
+	public AktivitetStatus getAktivitetStatus() {
+		return aktivitetStatus;
+	}
 
-    public Integer getBruttoInntektPrÅr() {
-        return bruttoInntektPrÅr;
-    }
-    public Boolean getSkalRedusereUtbetaling() {
-        return skalRedusereUtbetaling;
-    }
+	public String getArbeidsgiverIdentifikator() {
+		return arbeidsgiverIdentifikator;
+	}
+
+	public String getArbeidsforholdId() {
+		return arbeidsforholdId;
+	}
+
+	public Integer getBruttoInntektPrÅr() {
+		return bruttoInntektPrÅr;
+	}
+
+	public Integer getTilkommetInntektPrÅr() {
+		return tilkommetInntektPrÅr;
+	}
+
+	public Boolean getSkalRedusereUtbetaling() {
+		return skalRedusereUtbetaling;
+	}
 
 }
