@@ -54,7 +54,8 @@ public class TilkommetInntektsforholdDto {
 	public TilkommetInntektsforholdDto(AktivitetStatus aktivitetStatus,
 	                                   String arbeidsgiverIdentifikator,
 	                                   String arbeidsforholdId,
-	                                   Integer bruttoInntektPrÅr, Integer tilkommetInntektPrÅr,
+	                                   Integer bruttoInntektPrÅr, 
+									   Integer tilkommetInntektPrÅr,
 	                                   Boolean skalRedusereUtbetaling) {
 		this.aktivitetStatus = aktivitetStatus;
 		this.arbeidsgiverIdentifikator = arbeidsgiverIdentifikator;
@@ -64,8 +65,7 @@ public class TilkommetInntektsforholdDto {
 		this.skalRedusereUtbetaling = skalRedusereUtbetaling;
 	}
 
-	public TilkommetInntektsforholdDto(Integer tilkommetInntektPrÅr) {
-		this.tilkommetInntektPrÅr = tilkommetInntektPrÅr;
+	public TilkommetInntektsforholdDto() {
 	}
 
 	public AktivitetStatus getAktivitetStatus() {
