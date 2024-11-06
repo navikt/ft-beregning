@@ -108,6 +108,10 @@ public class BeregningsgrunnlagPrStatusOgAndelDto {
     @Valid
     private Beløp beregnetPrÅr;
 
+	@JsonProperty(value = "gradertBeregnetPrÅr")
+	@Valid
+	private Beløp gradertBeregnetPrÅr;
+
     @JsonProperty(value = "avkortetFørGraderingPrÅr")
     @NotNull
     @Valid
@@ -132,7 +136,7 @@ public class BeregningsgrunnlagPrStatusOgAndelDto {
                                                 Beløp avkortetPrÅr,
                                                 Beløp overstyrtPrÅr,
                                                 Beløp redusertPrÅr,
-                                                Beløp beregnetPrÅr,
+                                                Beløp beregnetPrÅr, Beløp gradertBeregnetPrÅr,
                                                 Boolean fastsattAvSaksbehandler) {
         this.andelsnr = andelsnr;
         this.aktivitetStatus = aktivitetStatus;
@@ -150,7 +154,8 @@ public class BeregningsgrunnlagPrStatusOgAndelDto {
         this.overstyrtPrÅr = overstyrtPrÅr;
         this.redusertPrÅr = redusertPrÅr;
         this.beregnetPrÅr = beregnetPrÅr;
-        this.fastsattAvSaksbehandler = fastsattAvSaksbehandler;
+	    this.gradertBeregnetPrÅr = gradertBeregnetPrÅr;
+	    this.fastsattAvSaksbehandler = fastsattAvSaksbehandler;
     }
 
     public Long getAndelsnr() {
@@ -225,7 +230,11 @@ public class BeregningsgrunnlagPrStatusOgAndelDto {
         return beregnetPrÅr;
     }
 
-    public Boolean getFastsattAvSaksbehandler() {
+	public Beløp getGradertBeregnetPrÅr() {
+		return gradertBeregnetPrÅr;
+	}
+
+	public Boolean getFastsattAvSaksbehandler() {
         return fastsattAvSaksbehandler;
     }
 
