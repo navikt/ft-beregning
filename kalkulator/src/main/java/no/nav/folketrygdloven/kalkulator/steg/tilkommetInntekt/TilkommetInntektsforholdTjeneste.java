@@ -27,6 +27,7 @@ import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
 import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
 import no.nav.folketrygdloven.kalkulator.modell.typer.StatusOgArbeidsgiver;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
+import no.nav.folketrygdloven.kalkulator.tid.TimelineWeekendCompressor;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AndelKilde;
 import no.nav.folketrygdloven.kalkulus.kodeverk.UttakArbeidType;
@@ -90,7 +91,15 @@ public class TilkommetInntektsforholdTjeneste {
 			var utbetalingTidslinje = finnTidslinjeForUtbetalingsperiode((UtbetalingsgradGrunnlag) utbetalingsgradGrunnlag);
 			aktivitetTidslinje = aktivitetTidslinje.intersection(utbetalingTidslinje, StandardCombinators::leftOnly);
 		}
-		return aktivitetTidslinje.map(s -> mapTilkommetTidslinje(andelerFraStart, yrkesaktiviteter, utbetalingsgradGrunnlag, s, ikkeFiltrerVedFulltFravær)).compress();
+		var tilkommetTidslinje = aktivitetTidslinje.map(s -> mapTilkommetTidslinje(andelerFraStart, yrkesaktiviteter, utbetalingsgradGrunnlag, s, ikkeFiltrerVedFulltFravær)).compress();
+		return slåSammenOverHelgDersomLike(tilkommetTidslinje);
+	}
+
+	private static <T> LocalDateTimeline<T> slåSammenOverHelgDersomLike(LocalDateTimeline<T> tidslinje) {
+		var factory = new TimelineWeekendCompressor.CompressorFactory<T>(Objects::equals, (i, lhs, rhs) -> new LocalDateSegment<>(i, lhs.getValue()));
+		TimelineWeekendCompressor<T> compressor = tidslinje.toSegments().stream()
+				.collect(factory::get, TimelineWeekendCompressor::accept, TimelineWeekendCompressor::combine);
+		return new LocalDateTimeline<>(compressor.getSegmenter());
 	}
 
 	private static LocalDateTimeline<Set<Inntektsforhold>> finnDagpengetidslinje(InntektArbeidYtelseGrunnlagDto iayGrunnlag, LocalDate skjæringstidspunkt) {
