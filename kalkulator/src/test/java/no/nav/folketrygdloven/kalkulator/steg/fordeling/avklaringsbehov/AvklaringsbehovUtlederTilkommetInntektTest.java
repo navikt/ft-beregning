@@ -21,13 +21,13 @@ import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.Beregningsgru
 import no.nav.folketrygdloven.kalkulator.modell.iay.AktivitetsAvtaleDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.AktivitetsAvtaleDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseAggregatBuilder;
+import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseGrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseGrunnlagDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektspostDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.iay.VersjonTypeDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YrkesaktivitetDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YrkesaktivitetDtoBuilder;
-import no.nav.folketrygdloven.kalkulator.modell.iay.YtelseAnvistDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YtelseAnvistDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YtelseDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.iay.permisjon.PermisjonDtoBuilder;
@@ -594,6 +594,15 @@ class AvklaringsbehovUtlederTilkommetInntektTest {
 	                                                      PleiepengerSyktBarnGrunnlag utbetalingsgradGrunnlag,
 	                                                      LocalDate skjæringstidspunkt) {
 
+		var iay = lagIAY(yrkesaktiviteter, dagpengePerioder, inntekter);
+		var tidslinje = TilkommetInntektsforholdTjeneste.finnTilkommetInntektsforholdTidslinje(skjæringstidspunkt,
+				andelerFraStart, utbetalingsgradGrunnlag, iay);
+		var segmenter = tidslinje.intersection(new LocalDateInterval(periode.getFomDato(), periode.getTomDato())).compress().toSegments();
+		return segmenter.isEmpty() ? new LinkedHashSet<>() : segmenter.stream().map(LocalDateSegment::getValue)
+				.filter(s -> !s.isEmpty()).findFirst().orElse(Set.of());
+	}
+
+	private static InntektArbeidYtelseGrunnlagDto lagIAY(List<YrkesaktivitetDto> yrkesaktiviteter, List<Intervall> dagpengePerioder, List<InntektDtoBuilder> inntekter) {
 		var oppdatere = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
 		var aktørArbeid = InntektArbeidYtelseAggregatBuilder.AktørArbeidBuilder.oppdatere(Optional.empty());
 		yrkesaktiviteter.forEach(aktørArbeid::leggTilYrkesaktivitet);
@@ -619,11 +628,8 @@ class AvklaringsbehovUtlederTilkommetInntektTest {
 			oppdatere.leggTilAktørYtelse(aktørYtelse);
 
 		}
-		var tidslinje = TilkommetInntektsforholdTjeneste.finnTilkommetInntektsforholdTidslinje(skjæringstidspunkt,
-				andelerFraStart, utbetalingsgradGrunnlag, InntektArbeidYtelseGrunnlagDtoBuilder.nytt().medData(oppdatere).build());
-		var segmenter = tidslinje.intersection(new LocalDateInterval(periode.getFomDato(), periode.getTomDato())).compress().toSegments();
-		return segmenter.isEmpty() ? new LinkedHashSet<>() : segmenter.stream().map(LocalDateSegment::getValue)
-				.filter(s -> !s.isEmpty()).findFirst().orElse(Set.of());
+		var iay = InntektArbeidYtelseGrunnlagDtoBuilder.nytt().medData(oppdatere).build();
+		return iay;
 	}
 
 	private List<InntektDtoBuilder> lagInntektForYrkesaktiviteter(List<YrkesaktivitetDto> yrkesaktiviteter, PleiepengerSyktBarnGrunnlag utbetalingsgradGrunnlag) {
