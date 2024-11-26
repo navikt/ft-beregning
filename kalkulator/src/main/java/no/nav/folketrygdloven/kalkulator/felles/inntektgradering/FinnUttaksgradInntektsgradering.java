@@ -15,7 +15,10 @@ public class FinnUttaksgradInntektsgradering {
 
     public static LocalDateTimeline<BigDecimal> finn(BeregningsgrunnlagInput input) {
         var beregningsgrunnlagRegel = new MapBeregningsgrunnlagFraVLTilRegel().map(input, input.getBeregningsgrunnlag());
-        beregningsgrunnlagRegel.getBeregningsgrunnlagPerioder().forEach(KalkulusRegler::finnGrenseverdi);
+        beregningsgrunnlagRegel.getBeregningsgrunnlagPerioder()
+		        .stream()
+		        .filter(p -> p.getTilkommetInntektsforholdListe() != null && !p.getTilkommetInntektsforholdListe().isEmpty())
+		        .forEach(KalkulusRegler::finnGrenseverdi);
         return beregningsgrunnlagRegel.getBeregningsgrunnlagPerioder().stream()
                 .filter(p -> p.getTotalUtbetalingsgradEtterReduksjonVedTilkommetInntekt() != null)
                 .map(p -> new LocalDateSegment<>(p.getPeriodeFom(), p.getPeriodeTom(), p.getTotalUtbetalingsgradEtterReduksjonVedTilkommetInntekt()))
