@@ -40,17 +40,24 @@ class FastsettAndelForArbeidsforholdUtenFordeling extends LeafSpecification<Bere
 		BigDecimal sumBruttoBG = arbeidsforholdList.stream()
 				.map(BeregningsgrunnlagPrArbeidsforhold::getInntektsgrunnlagInkludertNaturalytelsePrÅr)
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
-		arbeidsforholdList.forEach(af -> {
-			BigDecimal prosentandel = BigDecimal.valueOf(100)
-					.multiply(af.getInntektsgrunnlagInkludertNaturalytelsePrÅr())
-					.divide(sumBruttoBG, 10, RoundingMode.HALF_EVEN);
-			resultater.put("gjenstårÅFastsetteRefusjon.prosentandel." + af.getArbeidsgiverId(), prosentandel);
-			BigDecimal andel = ikkeFordelt.multiply(af.getInntektsgrunnlagInkludertNaturalytelsePrÅr())
-					.divide(sumBruttoBG, 10, RoundingMode.HALF_EVEN);
-			BeregningsgrunnlagPrArbeidsforhold.builder(af)
-					.medAndelsmessigFørGraderingPrAar(andel)
-					.build();
-			resultater.put("brukersAndel." + af.getArbeidsgiverId(), af.getAvkortetBrukersAndelPrÅr());
-		});
+
+		if (sumBruttoBG.compareTo(BigDecimal.ZERO) == 0) {
+			arbeidsforholdList.forEach(a -> BeregningsgrunnlagPrArbeidsforhold.builder(a)
+					.medAndelsmessigFørGraderingPrAar(BigDecimal.ZERO)
+					.build());
+		} else {
+			arbeidsforholdList.forEach(af -> {
+				BigDecimal prosentandel = BigDecimal.valueOf(100)
+						.multiply(af.getInntektsgrunnlagInkludertNaturalytelsePrÅr())
+						.divide(sumBruttoBG, 10, RoundingMode.HALF_EVEN);
+				resultater.put("gjenstårÅFastsetteRefusjon.prosentandel." + af.getArbeidsgiverId(), prosentandel);
+				BigDecimal andel = ikkeFordelt.multiply(af.getInntektsgrunnlagInkludertNaturalytelsePrÅr())
+						.divide(sumBruttoBG, 10, RoundingMode.HALF_EVEN);
+				BeregningsgrunnlagPrArbeidsforhold.builder(af)
+						.medAndelsmessigFørGraderingPrAar(andel)
+						.build();
+				resultater.put("brukersAndel." + af.getArbeidsgiverId(), af.getAvkortetBrukersAndelPrÅr());
+			});
+		}
 	}
 }
