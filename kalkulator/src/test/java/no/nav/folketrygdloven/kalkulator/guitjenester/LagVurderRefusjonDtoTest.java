@@ -3,6 +3,7 @@ package no.nav.folketrygdloven.kalkulator.guitjenester;
 import static no.nav.fpsak.tidsserie.LocalDateInterval.TIDENES_ENDE;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,6 +13,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+
+import no.nav.folketrygdloven.kalkulator.modell.typer.Refusjon;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -115,7 +118,7 @@ class LagVurderRefusjonDtoTest {
         lagIAYGrunnlag();
         byggBGAndel(Arbeidsgiver.virksomhet(orgnr), internRef);
         byggRefusjonAndel(Arbeidsgiver.virksomhet(orgnr), internRef);
-        byggBGAndelOrginal(Arbeidsgiver.virksomhet(orgnr), internRef, 0, 500000);
+	    byggBGAndelOrginal(Arbeidsgiver.virksomhet(orgnr), internRef, 0, 500000);
         ferdigstillInput();
 
         Optional<RefusjonTilVurderingDto> resultat = LagVurderRefusjonDto.lagDto(andelMap, input);
@@ -124,6 +127,27 @@ class LagVurderRefusjonDtoTest {
         assertThat(resultat.get().getAndeler()).hasSize(1);
         assertAndeler(resultat.get().getAndeler(), orgnr, internRef, refusjonFom, STP.getSkjæringstidspunktBeregning(), tidligereUtb);
     }
+
+	@Test
+	void skal_teste_delvis_refusjon_pr_mnd() {
+		String internRef = UUID.randomUUID().toString();
+		String orgnr = "999999999";
+		LocalDate refusjonFom = BG_PERIODE.getFomDato();
+		lagIAYGrunnlag();
+		byggBGAndel(Arbeidsgiver.virksomhet(orgnr), internRef);
+		byggRefusjonAndel(Arbeidsgiver.virksomhet(orgnr), internRef);
+		byggBGAndelOrginal(Arbeidsgiver.virksomhet(orgnr), internRef, 0, 500000, 541031.61);
+		ferdigstillInput();
+
+		Optional<RefusjonTilVurderingDto> resultat = LagVurderRefusjonDto.lagDto(andelMap, input);
+		TidligereUtbetalingDto tidligereUtb = new TidligereUtbetalingDto(bgPeriodeOrginal.getBeregningsgrunnlagPeriodeFom(), bgPeriodeOrginal.getBeregningsgrunnlagPeriodeTom(), true);
+		assertThat(resultat).isPresent();
+		assertThat(resultat.get().getAndeler()).hasSize(1);
+		assertAndeler(resultat.get().getAndeler(), orgnr, internRef, refusjonFom, STP.getSkjæringstidspunktBeregning(), tidligereUtb);
+		var andel = resultat.get().getAndeler().getFirst();
+		assertThat(andel.getMaksTillattDelvisRefusjonPrMnd()).isNotNull();
+		assertThat(andel.getMaksTillattDelvisRefusjonPrMnd().verdi()).isEqualByComparingTo(BigDecimal.valueOf(45085));
+	}
 
     @Test
     void skal_lage_dto_når_tilkommetIM_har_refusjonskrav_tidligere_utbetalt_refusjon_for_annet_orgnr() {
@@ -298,12 +322,17 @@ class LagVurderRefusjonDtoTest {
                 .build(bgPeriode);
     }
 
-    private void byggBGAndelOrginal(Arbeidsgiver arbeidsgiver, String internRef, int redusertBruker, int redusertAG) {
+	private void byggBGAndelOrginal(Arbeidsgiver arbeidsgiver, String internRef, int redusertBruker, int redusertAG) {
+		byggBGAndelOrginal(arbeidsgiver, internRef, redusertBruker, redusertAG, null);
+	}
+
+    private void byggBGAndelOrginal(Arbeidsgiver arbeidsgiver, String internRef, int redusertBruker, int redusertAG, Double refusjonskrav) {
         BGAndelArbeidsforholdDto.Builder bga = BGAndelArbeidsforholdDto
                 .builder()
                 .medArbeidsperiodeFom(LocalDate.now().minusYears(1))
                 .medArbeidsperiodeTom(LocalDate.now().plusYears(2))
                 .medArbeidsforholdRef(internRef)
+		        .medRefusjon(refusjonskrav == null ? null : new Refusjon(Beløp.fra(BigDecimal.valueOf(refusjonskrav)), null, null, null, null, null))
                 .medArbeidsgiver(arbeidsgiver);
 
         BeregningsgrunnlagPrStatusOgAndelDto.ny()

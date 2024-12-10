@@ -145,7 +145,7 @@ public final class LagVurderRefusjonDto {
         if (Beløp.safeVerdi(årsbeløp) == null) {
             return Beløp.ZERO;
         }
-        return årsbeløp.divider(KonfigTjeneste.getMånederIÅr(), 0, RoundingMode.HALF_UP);
+        return årsbeløp.divider(KonfigTjeneste.getMånederIÅr(), 0, RoundingMode.DOWN);
     }
 
     private static boolean erTilkommetAndelEllerRefusjonTidligereInnvilgetMedLavereBeløpStørreEnnNull(Optional<Beløp> tidligereRefusjonForAndelIPeriode, RefusjonAndel andel) {
