@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektsmeldingDto;
+import no.nav.folketrygdloven.kalkulus.kodeverk.AndelKilde;
 
 public class ArbeidstakerUtenInntektsmeldingTjeneste {
 
@@ -24,6 +25,7 @@ public class ArbeidstakerUtenInntektsmeldingTjeneste {
                 .getBeregningsgrunnlagPrStatusOgAndelList()
                 .stream()
                 .filter(a -> a.getAktivitetStatus().erArbeidstaker() && a.getArbeidsgiver().isPresent())
+		        .filter(a-> AndelKilde.PROSESS_START.equals(a.getKilde()))
                 .filter(a -> inntektsmeldinger.stream().noneMatch(im -> a.gjelderInntektsmeldingFor(im.getArbeidsgiver(), im.getArbeidsforholdRef())))
                 .collect(Collectors.toList());
 
