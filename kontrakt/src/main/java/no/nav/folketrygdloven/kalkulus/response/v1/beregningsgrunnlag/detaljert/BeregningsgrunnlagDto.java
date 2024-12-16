@@ -31,11 +31,18 @@ public class BeregningsgrunnlagDto {
     @Valid
     private LocalDate skjæringstidspunkt;
 
-    @JsonProperty(value = "aktivitetStatuser")
+	@Deprecated // Gå over til å bruke aktivitetStatuserMedHjemmel liste
+	@JsonProperty(value = "aktivitetStatuser")
     @NotNull
     @Size(min = 1, max = 20)
     @Valid
     private List<AktivitetStatus> aktivitetStatuser;
+
+	@JsonProperty(value = "aktivitetStatuserMedHjemmel")
+	@NotNull
+	@Size(min = 1, max = 20)
+	@Valid
+	private List<BeregningsgrunnlagAktivitetStatusDto> aktivitetStatuserMedHjemmel;
 
     @JsonProperty(value = "beregningsgrunnlagPerioder")
     @NotNull
@@ -69,7 +76,8 @@ public class BeregningsgrunnlagDto {
                                  @Size(max = 10) @Valid List<SammenligningsgrunnlagPrStatusDto> sammenligningsgrunnlagPrStatusListe,
                                  @Size(max = 50) @Valid List<FaktaOmBeregningTilfelle> faktaOmBeregningTilfeller,
                                  boolean overstyrt,
-                                 @Valid Beløp grunnbeløp) {
+                                 @Valid Beløp grunnbeløp,
+                                 @NotNull @Size(min = 1, max = 20) @Valid List<BeregningsgrunnlagAktivitetStatusDto> aktivitetStatuserMedHjemmel) {
         this.skjæringstidspunkt = skjæringstidspunkt;
         this.aktivitetStatuser = aktivitetStatuser;
         this.beregningsgrunnlagPerioder = beregningsgrunnlagPerioder;
@@ -77,13 +85,39 @@ public class BeregningsgrunnlagDto {
         this.faktaOmBeregningTilfeller = faktaOmBeregningTilfeller;
         this.overstyrt = overstyrt;
         this.grunnbeløp = grunnbeløp;
+		this.aktivitetStatuserMedHjemmel = aktivitetStatuserMedHjemmel;
     }
+
+	// Kan fjernes når alle aktører sender med status med hjemmel
+	@Deprecated
+	public BeregningsgrunnlagDto(@NotNull @Valid LocalDate skjæringstidspunkt,
+	                             @NotNull @Size(min = 1, max = 20) @Valid List<AktivitetStatus> aktivitetStatuser,
+	                             @NotNull @Size(min = 1, max = 100) @Valid List<BeregningsgrunnlagPeriodeDto> beregningsgrunnlagPerioder,
+	                             @Size(max = 10) @Valid List<SammenligningsgrunnlagPrStatusDto> sammenligningsgrunnlagPrStatusListe,
+	                             @Size(max = 50) @Valid List<FaktaOmBeregningTilfelle> faktaOmBeregningTilfeller,
+	                             boolean overstyrt,
+	                             @Valid Beløp grunnbeløp) {
+		this.skjæringstidspunkt = skjæringstidspunkt;
+		this.aktivitetStatuser = aktivitetStatuser;
+		this.beregningsgrunnlagPerioder = beregningsgrunnlagPerioder;
+		this.sammenligningsgrunnlagPrStatusListe = sammenligningsgrunnlagPrStatusListe;
+		this.faktaOmBeregningTilfeller = faktaOmBeregningTilfeller;
+		this.overstyrt = overstyrt;
+		this.grunnbeløp = grunnbeløp;
+	}
 
     public LocalDate getSkjæringstidspunkt() {
         return skjæringstidspunkt;
     }
 
-    public List<AktivitetStatus> getAktivitetStatuser() {
+	public List<BeregningsgrunnlagAktivitetStatusDto> getAktivitetStatuserMedHjemmel() {
+		return Collections.unmodifiableList(aktivitetStatuserMedHjemmel);
+	}
+
+	public List<AktivitetStatus> getAktivitetStatuser() {
+		if (aktivitetStatuserMedHjemmel != null && !aktivitetStatuserMedHjemmel.isEmpty()) {
+			return aktivitetStatuserMedHjemmel.stream().map(BeregningsgrunnlagAktivitetStatusDto::getAktivitetStatus).toList();
+		}
         return Collections.unmodifiableList(aktivitetStatuser);
     }
 
