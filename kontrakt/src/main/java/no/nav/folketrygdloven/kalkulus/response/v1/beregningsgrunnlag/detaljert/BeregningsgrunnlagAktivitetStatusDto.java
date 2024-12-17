@@ -28,6 +28,9 @@ public class BeregningsgrunnlagAktivitetStatusDto {
     @Valid
     private Hjemmel hjemmel;
 
+	public BeregningsgrunnlagAktivitetStatusDto() {
+	}
+
 	public BeregningsgrunnlagAktivitetStatusDto(AktivitetStatus aktivitetStatus, Hjemmel hjemmel) {
 		this.aktivitetStatus = aktivitetStatus;
 		this.hjemmel = hjemmel;
