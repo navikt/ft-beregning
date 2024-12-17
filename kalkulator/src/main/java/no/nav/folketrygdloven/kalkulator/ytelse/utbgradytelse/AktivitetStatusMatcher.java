@@ -8,6 +8,8 @@ public class AktivitetStatusMatcher {
 
     public static boolean matcherStatus(AktivitetStatus status, UttakArbeidType uttakArbeidType) {
         return (UttakArbeidType.IKKE_YRKESAKTIV.equals(uttakArbeidType) && status.erArbeidstaker()) ||
+		        (UttakArbeidType.SELVSTENDIG_NÆRINGSDRIVENDE_IKKE_AKTIV.equals(uttakArbeidType) && status.erSelvstendigNæringsdrivende()) ||
+		        (UttakArbeidType.FRILANSER_IKKE_AKTIV.equals(uttakArbeidType) && status.erFrilanser()) ||
                 matcherStatusUtenIkkeYrkesaktiv(status, uttakArbeidType);
     }
 
