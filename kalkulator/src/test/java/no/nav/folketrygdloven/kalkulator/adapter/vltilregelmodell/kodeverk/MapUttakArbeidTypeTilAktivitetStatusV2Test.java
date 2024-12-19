@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class MapUttakArbeidTypeTilAktivitetStatusV2Test {
 
 	@Test
-	void skal_mappe_SN_IKKE_AKTIV_til_SN() {
+	public void skal_mappe_SN_IKKE_AKTIV_til_SN() {
 		var aktivitet = new AktivitetDto(null, InternArbeidsforholdRefDto.nullRef(), UttakArbeidType.SELVSTENDIG_NÆRINGSDRIVENDE_IKKE_AKTIV);
 		var status = MapUttakArbeidTypeTilAktivitetStatusV2.mapAktivitetStatus(aktivitet);
 		assertEquals(AktivitetStatusV2.SN, status);
