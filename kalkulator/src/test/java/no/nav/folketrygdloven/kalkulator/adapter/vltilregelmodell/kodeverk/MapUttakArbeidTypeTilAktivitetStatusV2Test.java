@@ -21,7 +21,7 @@ class MapUttakArbeidTypeTilAktivitetStatusV2Test {
 	}
 
 	@Test
-	void skal_mappe_FL_IKKE_AKTIV_til_FL() {
+	public void skal_mappe_FL_IKKE_AKTIV_til_FL() {
 		var aktivitet = new AktivitetDto(null, InternArbeidsforholdRefDto.nullRef(), UttakArbeidType.FRILANSER_IKKE_AKTIV);
 		var status = MapUttakArbeidTypeTilAktivitetStatusV2.mapAktivitetStatus(aktivitet);
 		assertEquals(AktivitetStatusV2.FL, status);
