@@ -28,6 +28,7 @@ import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.Beregningsgru
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
+import no.nav.folketrygdloven.kalkulator.modell.iay.AktivitetsAvtaleDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.AktivitetsAvtaleDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseAggregatBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseGrunnlagDto;
@@ -42,6 +43,7 @@ import no.nav.folketrygdloven.kalkulator.modell.iay.permisjon.PermisjonFilter;
 import no.nav.folketrygdloven.kalkulator.modell.svp.AktivitetDto;
 import no.nav.folketrygdloven.kalkulator.modell.svp.PeriodeMedUtbetalingsgradDto;
 import no.nav.folketrygdloven.kalkulator.modell.svp.UtbetalingsgradPrAktivitetDto;
+import no.nav.folketrygdloven.kalkulator.modell.typer.Aktivitetsgrad;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
@@ -222,6 +224,28 @@ class MapRefusjonPerioderFraVLTilRegelUtbgradTest {
         Assertions.assertThat(opphør.getMånedsbeløp()).isEqualTo(BigDecimal.ZERO);
         Assertions.assertThat(opphør.getPeriode().getFom()).isEqualTo(LocalDate.of(2020, 1, 19).plusDays(1));
     }
+
+	@Test
+	void skal_ikke_returnere_periode_for_fravær_fra_arbeidsgiver_men_ingen_uttak() {
+		var stp = LocalDate.now();
+		var arbeidsgiver = Arbeidsgiver.virksomhet("123456789");
+		var utbetalingsperiode = Intervall.fraOgMedTilOgMed(stp.plusDays(20), stp.plusDays(25));
+		var gradForTilkommetArbeid = new UtbetalingsgradPrAktivitetDto(
+				new AktivitetDto(arbeidsgiver, InternArbeidsforholdRefDto.nullRef(), UttakArbeidType.ORDINÆRT_ARBEID),
+				List.of(new PeriodeMedUtbetalingsgradDto(utbetalingsperiode, new Utbetalingsgrad(BigDecimal.ZERO),
+						new Aktivitetsgrad(BigDecimal.valueOf(50)))));
+		var ytelsespesifiktGrunnlag = new PleiepengerSyktBarnGrunnlag(List.of(gradForTilkommetArbeid));
+		var inntektsmelding = lagInntektsmelding(stp, arbeidsgiver);
+		var ansettelsesperiode = Intervall.fraOgMedTilOgMed(stp.minusYears(10), stp.plusYears(15));
+		var aktivitetsAvtaleDtoBuilder = AktivitetsAvtaleDtoBuilder.ny().medPeriode(ansettelsesperiode).medErAnsettelsesPeriode(true);
+		var permisjonsperiode = Intervall.fraOgMedTilOgMed(stp.minusDays(1), stp.plusDays(15));
+		var relaterteYrkesaktiviteter = Set.of(lagYrkesaktivitet(arbeidsgiver, aktivitetsAvtaleDtoBuilder, permisjonsperiode));
+
+		var avtaler = relaterteYrkesaktiviteter.iterator().next().getAlleAnsettelsesperioder().stream().toList();
+		var perioder = mapper.finnGyldigeRefusjonPerioder(stp, ytelsespesifiktGrunnlag, inntektsmelding, avtaler, relaterteYrkesaktiviteter);
+
+		assertThat(perioder.isEmpty()).isTrue();
+	}
 
 
     private PleiepengerSyktBarnGrunnlag lagUtbetalingsgrunnlag(Arbeidsgiver arbeidsgiver, Intervall utbetalingsperiode) {

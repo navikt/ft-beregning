@@ -78,22 +78,32 @@ public class MapRefusjonPerioderFraVLTilRegelUtbgrad
     }
 
     private LocalDateTimeline<Boolean> finnUtbetalingTidslinje(UtbetalingsgradGrunnlag ytelsespesifiktGrunnlag, InntektsmeldingDto im) {
-        final List<LocalDateTimeline<Boolean>> segmenterMedUtbetaling = UtbetalingsgradTjeneste.finnPerioderForArbeid(ytelsespesifiktGrunnlag, im.getArbeidsgiver(), im.getArbeidsforholdRef(), false)
-                .stream()
-                .flatMap(u -> u.getPeriodeMedUtbetalingsgrad().stream())
-                .filter(p -> harOverNullProsentUtbetalingsgrad(p) || harMindreEnnHundreProsentAktivitetsgrad(p))
-                .map(PeriodeMedUtbetalingsgradDto::getPeriode)
-                .map(p -> new LocalDateTimeline<>(List.of(new LocalDateSegment<>(p.getFomDato(), p.getTomDato(), true))))
-                .toList();
-
-        var timeline = new LocalDateTimeline<Boolean>(List.of());
-
-        for (LocalDateTimeline<Boolean> localDateSegments : segmenterMedUtbetaling) {
-            timeline = timeline.combine(localDateSegments, StandardCombinators::coalesceRightHandSide, LocalDateTimeline.JoinStyle.CROSS_JOIN);
-        }
-
-        return timeline.compress();
+	    final LocalDateTimeline<Boolean> tidslinjeMedFraværHosArbeidsgiver = finnTidslinjeMedFraværHosArbeidsgiver(ytelsespesifiktGrunnlag, im);
+	    final var tidslinjeForYtelse = finnTidslinjeForYtelse(ytelsespesifiktGrunnlag);
+        return tidslinjeMedFraværHosArbeidsgiver.intersection(tidslinjeForYtelse).compress();
     }
+
+	private static LocalDateTimeline<Boolean> finnTidslinjeMedFraværHosArbeidsgiver(UtbetalingsgradGrunnlag ytelsespesifiktGrunnlag, InntektsmeldingDto im) {
+		return UtbetalingsgradTjeneste.finnPerioderForArbeid(ytelsespesifiktGrunnlag, im.getArbeidsgiver(), im.getArbeidsforholdRef(), false)
+				.stream()
+				.flatMap(u -> u.getPeriodeMedUtbetalingsgrad().stream())
+				.filter(p -> harOverNullProsentUtbetalingsgrad(p) || harMindreEnnHundreProsentAktivitetsgrad(p))
+				.map(PeriodeMedUtbetalingsgradDto::getPeriode)
+				.map(p -> new LocalDateTimeline<>(p.getFomDato(), p.getTomDato(), true))
+				.reduce(LocalDateTimeline::crossJoin)
+				.orElse(LocalDateTimeline.empty());
+	}
+
+	private static LocalDateTimeline<Boolean> finnTidslinjeForYtelse(UtbetalingsgradGrunnlag ytelsespesifiktGrunnlag) {
+		return ytelsespesifiktGrunnlag.getUtbetalingsgradPrAktivitet()
+				.stream()
+				.flatMap(u -> u.getPeriodeMedUtbetalingsgrad().stream())
+				.filter(MapRefusjonPerioderFraVLTilRegelUtbgrad::harOverNullProsentUtbetalingsgrad)
+				.map(PeriodeMedUtbetalingsgradDto::getPeriode)
+				.map(p -> new LocalDateTimeline<>(p.getFomDato(), p.getTomDato(), true))
+				.reduce(LocalDateTimeline::crossJoin)
+				.orElse(LocalDateTimeline.empty());
+	}
 
 	private static boolean harOverNullProsentUtbetalingsgrad(PeriodeMedUtbetalingsgradDto p) {
 		return p.getUtbetalingsgrad() != null && p.getUtbetalingsgrad().compareTo(Utbetalingsgrad.ZERO) > 0;
