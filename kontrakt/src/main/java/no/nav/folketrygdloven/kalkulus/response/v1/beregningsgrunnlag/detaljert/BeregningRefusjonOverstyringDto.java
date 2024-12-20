@@ -52,10 +52,12 @@ public class BeregningRefusjonOverstyringDto {
 
     public BeregningRefusjonOverstyringDto(@Valid @NotNull Arbeidsgiver arbeidsgiver,
                                            @Valid LocalDate førsteMuligeRefusjonFom,
+                                           @Valid Boolean erFristUtvidet,
                                            @Valid List<BeregningRefusjonPeriodeDto> refusjonPerioder) {
         this.arbeidsgiver = arbeidsgiver;
         this.førsteMuligeRefusjonFom = førsteMuligeRefusjonFom;
         this.refusjonPerioder = refusjonPerioder;
+		this.erFristUtvidet = erFristUtvidet;
     }
 
 
