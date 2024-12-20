@@ -16,7 +16,13 @@ public class MapUttakArbeidTypeTilAktivitetStatusV2 {
         if (UttakArbeidType.SELVSTENDIG_NÆRINGSDRIVENDE.equals(uttakArbeidType)) {
             return AktivitetStatusV2.SN;
         }
+        if (UttakArbeidType.SELVSTENDIG_NÆRINGSDRIVENDE_IKKE_AKTIV.equals(uttakArbeidType)) {
+            return AktivitetStatusV2.SN;
+        }
         if (UttakArbeidType.FRILANS.equals(uttakArbeidType)) {
+            return AktivitetStatusV2.FL;
+        }
+         if (UttakArbeidType.FRILANSER_IKKE_AKTIV.equals(uttakArbeidType)) {
             return AktivitetStatusV2.FL;
         }
         if (UttakArbeidType.MIDL_INAKTIV.equals(uttakArbeidType)) {
