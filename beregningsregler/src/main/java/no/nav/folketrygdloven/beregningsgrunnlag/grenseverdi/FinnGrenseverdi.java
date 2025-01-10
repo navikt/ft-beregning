@@ -38,22 +38,6 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 		grunnlag.setTotalUtbetalingsgradFraUttak(totalUtbetalingsgradFraUttak);
 		resultater.put("totalUtbetalingsgradFraUttak", totalUtbetalingsgradFraUttak);
 
-		//juster ned med tilkommet inntekt hvis det gir lavere utbetaling enn overstående
-		BigDecimal totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt = null;
-		if (!grunnlag.getTilkommetInntektsforholdListe().isEmpty()) {
-			BigDecimal graderingPåToppenAvUttakgraderingPgaTilkommetInntekt = andelBeholdtEtterGradertMotTilkommetInntekt(grunnlag);
-			resultater.put("graderingPåToppenAvUttakgraderingPgaTilkommetInntekt", min(BigDecimal.ONE, graderingPåToppenAvUttakgraderingPgaTilkommetInntekt));
-			totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt = min(BigDecimal.ONE, totalUtbetalingsgradFraUttak.multiply(graderingPåToppenAvUttakgraderingPgaTilkommetInntekt));
-			resultater.put("totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt", totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt);
-			grunnlag.setTotalUtbetalingsgradEtterReduksjonVedTilkommetInntekt(totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt);
-
-			//deprecated etter totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt ble lagt til?
-			grenseverdi = graderingPåToppenAvUttakgraderingPgaTilkommetInntekt.compareTo(BigDecimal.ONE) < 0 ? grenseverdi.multiply(graderingPåToppenAvUttakgraderingPgaTilkommetInntekt) : grenseverdi;
-			if (grunnlag.getInntektsgraderingFraBruttoBeregningsgrunnlag() != null) {
-				resultater.put("inntektgraderingsprosent", grunnlag.getInntektsgraderingFraBruttoBeregningsgrunnlag());
-			}
-		}
-
 		//hvis §8-47a, skaler med fast faktor
 		var erInaktivTypeA = MidlertidigInaktivType.A.equals(grunnlag.getBeregningsgrunnlag().getMidlertidigInaktivType());
 		if (erInaktivTypeA) {
@@ -65,12 +49,6 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 			BigDecimal justertTotalUtbetalingsgradFraUttak = totalUtbetalingsgradFraUttak.multiply(reduksjonsfaktor);
 			grunnlag.setTotalUtbetalingsgradFraUttak(justertTotalUtbetalingsgradFraUttak);
 			resultater.put("totalUtbetalingsgradFraUttak", justertTotalUtbetalingsgradFraUttak);
-
-			if (totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt != null) {
-				BigDecimal justertTotalUtbetalingsgradEtterReduksjonVedTilkommetInntekt = totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt.multiply(reduksjonsfaktor);
-				grunnlag.setTotalUtbetalingsgradEtterReduksjonVedTilkommetInntekt(justertTotalUtbetalingsgradEtterReduksjonVedTilkommetInntekt);
-				resultater.put("totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt", justertTotalUtbetalingsgradEtterReduksjonVedTilkommetInntekt);
-			}
 		}
 
 		resultater.put("grenseverdi", grenseverdi);
@@ -79,10 +57,6 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 		resultat.setEvaluationProperties(resultater);
 		return resultat;
 
-	}
-
-	static BigDecimal min(BigDecimal a, BigDecimal b){
-		return a.compareTo(b) > 0 ? b : a;
 	}
 
 	private static BigDecimal summerAvkortetGradertMotUttak(BeregningsgrunnlagPeriode grunnlag) {
@@ -113,68 +87,4 @@ public class FinnGrenseverdi extends LeafSpecification<BeregningsgrunnlagPeriode
 		return sum;
 	}
 
-	private BigDecimal andelBeholdtEtterGradertMotTilkommetInntekt(BeregningsgrunnlagPeriode grunnlag) {
-		BigDecimal bortfalt = finnBortfaltInntekt(grunnlag);
-		var totaltGradertGrunnlag = grunnlag.getBeregningsgrunnlagPrStatus().stream()
-				.map(BeregningsgrunnlagPrStatus::getGradertBruttoInkludertNaturalytelsePrÅr)
-				.reduce(BigDecimal.ZERO, BigDecimal::add);
-		if (totaltGradertGrunnlag.compareTo(BigDecimal.ZERO) == 0) {
-			return BigDecimal.ZERO;
-		}
-		var totaltGrunnlag = grunnlag.getBeregningsgrunnlagPrStatus().stream()
-				.map(BeregningsgrunnlagPrStatus::getBruttoInkludertNaturalytelsePrÅr)
-				.reduce(BigDecimal.ZERO, BigDecimal::add);
-
-		var graderingMotTotal = bortfalt.divide(totaltGrunnlag, 10, RoundingMode.HALF_UP);
-		grunnlag.setInntektsgraderingFraBruttoBeregningsgrunnlag(graderingMotTotal.multiply(BigDecimal.valueOf(100)));
-
-		return bortfalt.divide(totaltGradertGrunnlag, 10, RoundingMode.HALF_UP);
-	}
-
-	private BigDecimal finnBortfaltInntekt(BeregningsgrunnlagPeriode grunnlag) {
-		var bortfalt = BigDecimal.ZERO;
-		for (BeregningsgrunnlagPrStatus bps : grunnlag.getBeregningsgrunnlagPrStatus()) {
-			if (bps.erArbeidstakerEllerFrilanser()) {
-				bortfalt = bortfalt.add(finnBortfaltFraATFL(bps.getArbeidsforhold()));
-			} else {
-				bortfalt = bortfalt.add(finnBortfaltForStatus(bps));
-			}
-		}
-
-		var tilkommetInntekt = grunnlag.getTilkommetInntektsforholdListe().stream()
-				.map(TilkommetInntekt::getTilkommetPrÅr)
-				.reduce(BigDecimal::add)
-				.orElse(BigDecimal.ZERO);
-
-		var bruttoBortfalt = bortfalt.subtract(tilkommetInntekt);
-		return bruttoBortfalt.max(BigDecimal.ZERO);
-	}
-
-	private BigDecimal finnBortfaltForStatus(BeregningsgrunnlagPrStatus bps) {
-		var aktivitetsgradOpt = bps.getAktivitetsgrad();
-		if (aktivitetsgradOpt.isPresent()) {
-			var aktivitetsgrad = aktivitetsgradOpt.get().divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP);
-			var opprettholdtInntekt = bps.getInntektsgrunnlagPrÅr().multiply(aktivitetsgrad);
-			return bps.getInntektsgrunnlagPrÅr().subtract(opprettholdtInntekt);
-		}
-		var utbetalingsprosent = bps.getUtbetalingsprosent();
-		var utbetalingsgrad = utbetalingsprosent.divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP);
-		return bps.getInntektsgrunnlagPrÅr().multiply(utbetalingsgrad);
-	}
-
-	private BigDecimal finnBortfaltFraATFL(List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold1) {
-		return arbeidsforhold1.stream()
-				.map(arbeidsforhold -> {
-					var aktivitetsgradOpt = arbeidsforhold.getAktivitetsgrad();
-					if (aktivitetsgradOpt.isPresent()) {
-						var aktivitetsgrad = aktivitetsgradOpt.get().divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP);
-						var opprettholdtInntekt = arbeidsforhold.getInntektsgrunnlagPrÅr().multiply(aktivitetsgrad);
-						return arbeidsforhold.getInntektsgrunnlagPrÅr().subtract(opprettholdtInntekt);
-					}
-					var utbetalingsprosent = arbeidsforhold.getUtbetalingsprosent();
-					var utbetalingsgrad = utbetalingsprosent.divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP);
-					return arbeidsforhold.getInntektsgrunnlagPrÅr().multiply(utbetalingsgrad);
-				})
-				.reduce(BigDecimal.ZERO, BigDecimal::add);
-	}
 }
