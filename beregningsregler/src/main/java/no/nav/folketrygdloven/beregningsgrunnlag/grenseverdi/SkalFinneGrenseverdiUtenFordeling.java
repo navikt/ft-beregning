@@ -22,9 +22,15 @@ public class SkalFinneGrenseverdiUtenFordeling extends LeafSpecification<Beregni
 		var ytelsesSpesifiktGrunnlag = grunnlag.getBeregningsgrunnlag().getYtelsesSpesifiktGrunnlag();
 		if (ytelsesSpesifiktGrunnlag instanceof PleiepengerGrunnlagFastsettGrenseverdi pleiepengergrunnlag) {
 			var startdatoNyeGraderingsregler = pleiepengergrunnlag.getStartdatoNyeGraderingsregler();
-			SingleEvaluation resultat = startdatoNyeGraderingsregler == null || grunnlag.getPeriodeFom().isBefore(startdatoNyeGraderingsregler) ? nei() : ja();
+			var skalKjøreMedFordeling = startdatoNyeGraderingsregler == null || grunnlag.getPeriodeFom().isBefore(startdatoNyeGraderingsregler);
+			SingleEvaluation resultat = skalKjøreMedFordeling ? nei() : ja();
 			resultat.setEvaluationProperty("startdatoNyeGraderingsregler", startdatoNyeGraderingsregler);
 			resultat.setEvaluationProperty("periodeFom", grunnlag.getPeriodeFom());
+
+			if (skalKjøreMedFordeling && grunnlag.getTilkommetInntektsforholdListe() != null && !grunnlag.getTilkommetInntektsforholdListe().isEmpty()) {
+				throw new IllegalStateException("Hadde tilkommet inntekt satt i periode for gamle regler");
+			}
+
 			return resultat;
 		} else {
 			return nei();

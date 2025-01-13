@@ -1,4 +1,4 @@
-package no.nav.folketrygdloven.beregningsgrunnlag.grenseverdi;
+package no.nav.folketrygdloven.beregningsgrunnlag.grenseverdi.utenfordeling;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode;
@@ -8,7 +8,7 @@ import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.specification.Specification;
 
-public class RegelFastsettAndelBGOver6GUtenFordeling implements RuleService<BeregningsgrunnlagPeriode> {
+class RegelFastsettAndelBGOver6GUtenFordeling implements RuleService<BeregningsgrunnlagPeriode> {
 	public static final String ID = "FP_BR_29.8_uten_fordeling";
 	public static final String BESKRIVELSE = "Fastsett avkortet BG over 6G når refusjon under 6G";
 	private BeregningsgrunnlagPeriode regelmodell;
@@ -51,7 +51,7 @@ public class RegelFastsettAndelBGOver6GUtenFordeling implements RuleService<Bere
 		}
 
 		//FP_BR_29.8.2 Er totalt BG for beregningsgrunnlagsandeler fra arbeidsforhold > 6G?
-		Specification<BeregningsgrunnlagPeriode> erTotaltBGFraArbeidforholdStørreEnn6G = rs.beregningHvisRegel(new SjekkOmTotaltBGForArbeidsforholdStørreEnnGrenseverdi(),
+		Specification<BeregningsgrunnlagPeriode> erTotaltBGFraArbeidforholdStørreEnn6G = rs.beregningHvisRegel(new SjekkOmTotaltBGForArbeidsforholdStørreEnnGrenseverdiUtenFordeling(),
 				avkortAndelerSomIkkegjelderAFtil0, avkortAndelerAndelsmessigOgFastsettBrukersAndel);
 
 

@@ -1,4 +1,4 @@
-package no.nav.folketrygdloven.beregningsgrunnlag.grenseverdi;
+package no.nav.folketrygdloven.beregningsgrunnlag.grenseverdi.utenfordeling;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -17,7 +17,7 @@ import no.nav.fpsak.nare.evaluation.node.SingleEvaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(FinnGrenseverdiUtenFordeling.ID)
-public class FinnGrenseverdiUtenFordeling extends LeafSpecification<BeregningsgrunnlagPeriode> {
+class FinnGrenseverdiUtenFordeling extends LeafSpecification<BeregningsgrunnlagPeriode> {
 
 	public static final String ID = "FP_BR 6.2_uten_fordeling";
 	public static final String BESKRIVELSE = "Finn grenseverdi uten fordeling";

@@ -4,9 +4,7 @@ import static no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil.TIDENES_EN
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +17,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrStatus;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.TilkommetInntekt;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 
 class RegelFinnGrenseverdiMedFordelingTest {
@@ -143,82 +140,6 @@ class RegelFinnGrenseverdiMedFordelingTest {
 	}
 
 	@Test
-	void to_arbeidsforhold_under_6G_tilkommet_inntekt_i_det_ene() {
-		//Arrange
-		double beregnetPrÅr = 250_000;
-		double tilkommetPrÅr2 = 100_000;
-
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
-				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
-				.build();
-
-		Beregningsgrunnlag.builder()
-				.medBeregningsgrunnlagPeriode(periode)
-				.medGrunnbeløp(BigDecimal.valueOf(100_000));
-
-		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 100D, 0D);
-		leggTilArbeidsforhold(periode, AF_2, null, null, 100D, 0D);
-		leggTilTilkommet(periode, AF_2, tilkommetPrÅr2);
-
-		//Act
-		kjørRegel(periode);
-
-		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(150_000));
-	}
-
-	@Test
-	void to_arbeidsforhold_under_6G_tilkommet_inntekt_i_det_ene_mer_enn_totalt_grunnlag_på_stp() {
-		//Arrange
-		double beregnetPrÅr = 250_000;
-		double tilkommetPrÅr2 = 300_000;
-
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
-				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
-				.build();
-
-		Beregningsgrunnlag.builder()
-				.medBeregningsgrunnlagPeriode(periode)
-				.medGrunnbeløp(BigDecimal.valueOf(100_000));
-
-		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 100D, 0D);
-		leggTilArbeidsforhold(periode, AF_2, null, null, 100D, 0D);
-		leggTilTilkommet(periode, AF_2, tilkommetPrÅr2);
-
-		//Act
-		kjørRegel(periode);
-
-		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.ZERO);
-	}
-
-	@Test
-	void to_arbeidsforhold_under_6G_fordelt_og_tilkommet_inntekt_i_det_ene() {
-		//Arrange
-		double beregnetPrÅr = 250_000;
-		double fordeltPrÅr = 150_000;
-
-		double tilkommetPrÅr2 = 100_000;
-		double fordeltPrÅr2 = tilkommetPrÅr2;
-
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
-				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
-				.build();
-
-		Beregningsgrunnlag.builder()
-				.medBeregningsgrunnlagPeriode(periode)
-				.medGrunnbeløp(BigDecimal.valueOf(100_000));
-
-		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, fordeltPrÅr, 100D,0D);
-		leggTilArbeidsforhold(periode, AF_2, null, fordeltPrÅr2, 50D,50D);
-		leggTilTilkommet(periode, AF_2, tilkommetPrÅr2);
-		//Act
-		kjørRegel(periode);
-
-		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(150_000));
-	}
-
-
-
-	@Test
 	void to_arbeidsforhold_over_6G() {
 		//Arrange
 		double beregnetPrÅr = 350_000;
@@ -240,33 +161,6 @@ class RegelFinnGrenseverdiMedFordelingTest {
 
 		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(600_000));
 	}
-
-	@Test
-	void to_arbeidsforhold_over_6G_pluss_et_tilkommet() {
-		//Arrange
-		double beregnetPrÅr = 500_000;
-		double beregnetPrÅr2 = 300_000;
-		double tilkommetPrÅr = 200_000;
-
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
-				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
-				.build();
-
-		Beregningsgrunnlag.builder()
-				.medBeregningsgrunnlagPeriode(periode)
-				.medGrunnbeløp(BigDecimal.valueOf(100_000));
-
-		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 100D, 0D);
-		leggTilArbeidsforhold(periode, AF_2, beregnetPrÅr2, null, 100D, 0D);
-		leggTilArbeidsforhold(periode, AF_3, null, null, 100D, 0D);
-		leggTilTilkommet(periode, AF_3, tilkommetPrÅr);
-
-		//Act
-		kjørRegel(periode);
-
-		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(450_000));
-	}
-
 
 	@Test
 	void to_arbeidsforhold_under_6G_søkt_ytelse_for_en() {
@@ -292,32 +186,6 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(250_000));
 	}
 
-	@Test
-	void to_arbeidsforhold_under_6G_søkt_ytelse_for_en_pluss_et_tilkommet() {
-		//Arrange
-		double beregnetPrÅr = 250_000;
-		double beregnetPrÅr2 = 300_000;
-		double tilkommetPrÅr = 100_000;
-
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
-				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
-				.build();
-
-		Beregningsgrunnlag.builder()
-				.medBeregningsgrunnlagPeriode(periode)
-				.medGrunnbeløp(BigDecimal.valueOf(100_000));
-
-		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 100D, 0D);
-		leggTilArbeidsforhold(periode, AF_2, beregnetPrÅr2, null, 0D, 100D);
-		leggTilArbeidsforhold(periode, AF_3, null, null, 100D, 100D);
-		leggTilTilkommet(periode, AF_3, tilkommetPrÅr);
-
-		//Act
-		kjørRegel(periode);
-
-		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(150_000));
-	}
-
 
 	@Test
 	void to_arbeidsforhold_til_sammen_over_6G_søkt_ytelse_for_en() {
@@ -340,57 +208,6 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		kjørRegel(periode);
 
 		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(300_000));
-	}
-
-	@Test
-	void to_arbeidsforhold_til_sammen_over_6G_søkt_ytelse_for_en_pluss_et_tilkommet() {
-		//Arrange
-		double beregnetPrÅr = 500_000;
-		double beregnetPrÅr2 = 500_000;
-		double tilkommetPrÅr = 200_000;
-
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
-				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
-				.build();
-
-		Beregningsgrunnlag.builder()
-				.medBeregningsgrunnlagPeriode(periode)
-				.medGrunnbeløp(BigDecimal.valueOf(100_000));
-
-		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 100D, 0D);
-		leggTilArbeidsforhold(periode, AF_2, beregnetPrÅr2, null, 0D, 100D);
-		leggTilArbeidsforhold(periode, AF_3, null, null, 0D, 100D);
-		leggTilTilkommet(periode, AF_3,tilkommetPrÅr);
-		//Act
-		kjørRegel(periode);
-
-		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(180_000));
-	}
-
-	@Test
-	void to_arbeidsforhold_til_sammen_over_6G_søkt_ytelse_for_begge_gradert_pluss_et_tilkommet() {
-		//Arrange
-		double beregnetPrÅr = 500_000;
-		double beregnetPrÅr2 = 500_000;
-		double tilkommetPrÅr = 200_000;
-
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
-				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
-				.build();
-
-		Beregningsgrunnlag.builder()
-				.medBeregningsgrunnlagPeriode(periode)
-				.medGrunnbeløp(BigDecimal.valueOf(100_000));
-
-		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 20D, 80D);
-		leggTilArbeidsforhold(periode, AF_2, beregnetPrÅr2, null, 50D, 50D);
-		leggTilArbeidsforhold(periode, AF_3, null, null, 0D, 100D);
-		leggTilTilkommet(periode, AF_3, tilkommetPrÅr);
-
-		//Act
-		kjørRegel(periode);
-
-		assertThat(periode.getGrenseverdi().setScale(2, RoundingMode.HALF_UP)).isEqualByComparingTo(BigDecimal.valueOf(90_000));
 	}
 
 	@Test
@@ -834,82 +651,6 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(500_000));
 	}
 
-
-	@Test
-	void et_arbeidsforhold_under_6G_tilkommet_frilansinntekt() {
-		//Arrange
-		double beregnetPrÅr = 300_000;
-		double tilkommetFrilansinntekt = 100_000;
-
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
-				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
-				.build();
-
-		Beregningsgrunnlag.builder()
-				.medBeregningsgrunnlagPeriode(periode)
-				.medGrunnbeløp(BigDecimal.valueOf(100_000));
-
-		leggTilStatus(periode, AktivitetStatus.FL, null, 100D, 0D);
-		leggTilTilkommet(periode, Arbeidsforhold.frilansArbeidsforhold(), tilkommetFrilansinntekt);
-		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 100D, 0D);
-
-		//Act
-		kjørRegel(periode);
-
-		assertThat(periode.getGrenseverdi().setScale(2, RoundingMode.HALF_UP)).isEqualByComparingTo(BigDecimal.valueOf(200_000));
-	}
-
-	@Test
-	void frilans_og_et_arbeidsforhold_under_6G_søkt_ytelse_for_begge_tilkommet_frilansinntekt() {
-		//Arrange
-		double beregnetPrÅr = 300_000;
-		double beregnetPrÅr2 = 200_000;
-		double tilkommetFrilansinntekt = 100_000;
-
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
-				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
-				.build();
-
-		Beregningsgrunnlag.builder()
-				.medBeregningsgrunnlagPeriode(periode)
-				.medGrunnbeløp(BigDecimal.valueOf(100_000));
-
-		leggTilStatus(periode, AktivitetStatus.FL, beregnetPrÅr, 100D, 0D);
-		leggTilTilkommet(periode, Arbeidsforhold.frilansArbeidsforhold(), tilkommetFrilansinntekt);
-		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr2, null, 100D, 0D);
-
-		//Act
-		kjørRegel(periode);
-
-		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(400_000));
-	}
-
-	@Test
-	void frilans_og_et_arbeidsforhold_over_6G_søkt_ytelse_for_begge_tilkommet_frilansinntekt() {
-		//Arrange
-		double beregnetPrÅr = 800_000;
-		double beregnetPrÅr2 = 200_000;
-		double tilkommetFrilansinntekt = 200_000;
-
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
-				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
-				.build();
-
-		Beregningsgrunnlag.builder()
-				.medBeregningsgrunnlagPeriode(periode)
-				.medGrunnbeløp(BigDecimal.valueOf(100_000));
-
-		leggTilStatus(periode, AktivitetStatus.FL, beregnetPrÅr, 100D, 0D);
-		leggTilTilkommet(periode, Arbeidsforhold.frilansArbeidsforhold(), tilkommetFrilansinntekt);
-		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr2, null, 100D, 0D);
-
-		//Act
-		kjørRegel(periode);
-
-		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(480_000));
-	}
-
-
 	@Test
 	void frilans_og_et_arbeidsforhold_over_6G_søkt_ytelse_for_begge() {
 		//Arrange
@@ -1139,30 +880,6 @@ class RegelFinnGrenseverdiMedFordelingTest {
 	}
 
 	@Test
-	void næring_under_6G_søkt_delvis_ytelse_tilkommet_inntekt() {
-		//Arrange
-		double beregnetPrÅr = 200_000;
-		double tilkommet = 50_000;
-
-
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
-				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
-				.build();
-
-		Beregningsgrunnlag.builder()
-				.medBeregningsgrunnlagPeriode(periode)
-				.medGrunnbeløp(BigDecimal.valueOf(100_000));
-
-		leggTilStatus(periode, AktivitetStatus.SN, beregnetPrÅr, 50D, 50D);
-		leggTilTilkommet(periode, null, tilkommet);
-
-		//Act
-		kjørRegel(periode);
-
-		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(50_000));
-	}
-
-	@Test
 	void næring_under_6G_ikkje_søkt_ytelse() {
 		//Arrange
 		double beregnetPrÅr = 200_000;
@@ -1225,30 +942,6 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		kjørRegel(periode);
 
 		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(600_000));
-	}
-
-	@Test
-	void næring_og_frilans_over_6G_søkt_ytelse_for_begge_tilkommet_næring() {
-		//Arrange
-		double beregnetPrÅr = 500_000;
-		double tilkommet = 100_000;
-
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
-				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
-				.build();
-
-		Beregningsgrunnlag.builder()
-				.medBeregningsgrunnlagPeriode(periode)
-				.medGrunnbeløp(BigDecimal.valueOf(100_000));
-
-		leggTilStatus(periode, AktivitetStatus.SN, beregnetPrÅr, 100D, 0D);
-		leggTilTilkommet(periode, null, tilkommet);
-		leggTilStatus(periode, AktivitetStatus.FL, beregnetPrÅr, 100D, 0D);
-
-		//Act
-		kjørRegel(periode);
-
-		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(540_000));
 	}
 
 	@Test
@@ -1510,79 +1203,6 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(100_000));
 	}
 
-	@Test
-	void to_arbeidsforhold_under_6G_aktivitetsgrad_høyere_enn_utbetalingsgrad() {
-		//Arrange
-		double beregnetPrÅr = 250_000;
-		double tilkommetPrÅr2 = 100_000;
-
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
-				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
-				.build();
-
-		Beregningsgrunnlag.builder()
-				.medBeregningsgrunnlagPeriode(periode)
-				.medGrunnbeløp(BigDecimal.valueOf(100_000));
-
-		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 50D, 70D);
-		leggTilArbeidsforhold(periode, AF_2, beregnetPrÅr, null, 50D, 70D);
-		leggTilTilkommet(periode, AF_2, tilkommetPrÅr2);
-
-		//Act
-		kjørRegel(periode);
-
-		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(50_000));
-	}
-
-	@Test
-	void to_arbeidsforhold_under_6G_aktivitetsgrad_mye_høyere_enn_utbetalingsgrad() {
-		//Arrange
-		double beregnetPrÅr = 250_000;
-		double tilkommetPrÅr2 = 30_000;
-
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
-				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
-				.build();
-
-		Beregningsgrunnlag.builder()
-				.medBeregningsgrunnlagPeriode(periode)
-				.medGrunnbeløp(BigDecimal.valueOf(100_000));
-
-		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 50D, 90D);
-		leggTilArbeidsforhold(periode, AF_2, beregnetPrÅr, null, 30D, 90D);
-		leggTilTilkommet(periode, AF_2, tilkommetPrÅr2);
-
-		//Act
-		kjørRegel(periode);
-
-		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(20_000));
-	}
-
-	@Test
-	void to_arbeidsforhold_under_6G_aktivitetsgrad_lavere_enn_utbetalingsgrad() {
-		//Arrange
-		double beregnetPrÅr = 250_000;
-		double tilkommetPrÅr2 = 30_000;
-
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
-				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
-				.build();
-
-		Beregningsgrunnlag.builder()
-				.medBeregningsgrunnlagPeriode(periode)
-				.medGrunnbeløp(BigDecimal.valueOf(100_000));
-
-		leggTilArbeidsforhold(periode, AF_1, beregnetPrÅr, null, 90D, 20D);
-		leggTilArbeidsforhold(periode, AF_2, beregnetPrÅr, null, 95D, 10D);
-		leggTilTilkommet(periode, AF_2, tilkommetPrÅr2);
-
-		//Act
-		kjørRegel(periode);
-
-		assertThat(periode.getGrenseverdi().setScale(2, RoundingMode.HALF_UP)).isEqualByComparingTo(BigDecimal.valueOf(395_000));
-	}
-
-
 	private RegelResultat kjørRegel(BeregningsgrunnlagPeriode periode) {
 		return new RegelFinnGrenseverdiMedFordeling(periode).evaluerRegel(periode);
 	}
@@ -1608,25 +1228,6 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		}
 	}
 
-
-	private void leggTilTilkommet(BeregningsgrunnlagPeriode periode,
-	                              Arbeidsforhold arbeidsforhold,
-	                              Double tilkommetPrÅr) {
-		AktivitetStatus status;
-		if (arbeidsforhold == null) {
-			status = AktivitetStatus.SN;
-		} else {
-			status = arbeidsforhold.erFrilanser() ? AktivitetStatus.FL : AktivitetStatus.AT;
-		}
-		lagTilkommet(periode, tilkommetPrÅr, arbeidsforhold, status);
-	}
-
-	private void lagTilkommet(BeregningsgrunnlagPeriode periode, Double tilkommetPrÅr, Arbeidsforhold arbeidsforhold, AktivitetStatus aktivitetStatus) {
-		if (tilkommetPrÅr != null) {
-			var tilkommetInntekt = new TilkommetInntekt(aktivitetStatus, arbeidsforhold, BigDecimal.valueOf(tilkommetPrÅr));
-			BeregningsgrunnlagPeriode.oppdater(periode).leggTilTilkommetInntektsforhold(List.of(tilkommetInntekt));
-		}
-	}
 	private void leggTilStatus(BeregningsgrunnlagPeriode periode,
 	                           AktivitetStatus status,
 	                           Double beregnetPrÅr,
@@ -1672,7 +1273,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 	                                                                                 Double fordeltPrÅr,
 	                                                                                 double refusjonskrav,
 	                                                                                 double utbetalingsgrad,
-																					 Double aktivitetsgrad,
+	                                                                                 Double aktivitetsgrad,
 	                                                                                 Arbeidsforhold arbeidsforhold) {
 		var bruttoPrÅr = finnBrutto(beregnetPrÅr, fordeltPrÅr);
 		BeregningsgrunnlagPrArbeidsforhold arb = BeregningsgrunnlagPrArbeidsforhold.builder()

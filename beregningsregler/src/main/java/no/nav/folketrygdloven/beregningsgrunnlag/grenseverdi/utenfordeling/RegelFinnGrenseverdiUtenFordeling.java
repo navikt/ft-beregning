@@ -1,4 +1,4 @@
-package no.nav.folketrygdloven.beregningsgrunnlag.grenseverdi;
+package no.nav.folketrygdloven.beregningsgrunnlag.grenseverdi.utenfordeling;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.fastsette.SjekkBeregningsgrunnlagStørreEnnGrenseverdi;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode;

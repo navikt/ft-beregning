@@ -1,4 +1,4 @@
-package no.nav.folketrygdloven.beregningsgrunnlag.grenseverdi;
+package no.nav.folketrygdloven.beregningsgrunnlag.grenseverdi.utenfordeling;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

@@ -1,5 +1,6 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.grenseverdi;
 
+import no.nav.folketrygdloven.beregningsgrunnlag.grenseverdi.utenfordeling.RegelFinnGrenseverdiUtenFordeling;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.regelmodelloversetter.EksportRegel;
 import no.nav.fpsak.nare.Ruleset;
