@@ -41,7 +41,13 @@ public class StegProsesseringInput extends BeregningsgrunnlagInput {
      */
     private BeregningsgrunnlagGrunnlagDto originalGrunnlagFraSteg;
 
-    public StegProsesseringInput(BeregningsgrunnlagInput input, BeregningsgrunnlagTilstand stegTilstand) {
+	/**
+	 * Grunnlag for steg-ut-tilstand fra original behandling som har samme skjæringstidspunkt som grunnlaget til behandling
+	 */
+	private BeregningsgrunnlagGrunnlagDto originalGrunnlagFraStegUt;
+
+
+	public StegProsesseringInput(BeregningsgrunnlagInput input, BeregningsgrunnlagTilstand stegTilstand) {
         super(input);
         this.stegTilstand = stegTilstand;
     }
@@ -61,6 +67,7 @@ public class StegProsesseringInput extends BeregningsgrunnlagInput {
         this.forrigeGrunnlagFraSteg = input.getForrigeGrunnlagFraSteg().orElse(null);
         this.forrigeGrunnlagFraStegUt = input.getForrigeGrunnlagFraStegUt().orElse(null);
         this.originalGrunnlagFraSteg = input.getOriginalGrunnlagFraSteg().orElse(null);
+		this.originalGrunnlagFraStegUt = input.getOriginalGrunnlagFraStegUt().orElse(null);
         this.stegTilstand = input.getStegTilstand();
         this.stegUtTilstand = input.getStegUtTilstandHvisFinnes().orElse(null);
     }
@@ -78,7 +85,11 @@ public class StegProsesseringInput extends BeregningsgrunnlagInput {
         return Optional.ofNullable(originalGrunnlagFraSteg);
     }
 
-    public BeregningsgrunnlagTilstand getStegTilstand() {
+	public Optional<BeregningsgrunnlagGrunnlagDto> getOriginalGrunnlagFraStegUt() {
+		return Optional.ofNullable(originalGrunnlagFraStegUt);
+	}
+
+	public BeregningsgrunnlagTilstand getStegTilstand() {
         return stegTilstand;
     }
 
@@ -112,7 +123,13 @@ public class StegProsesseringInput extends BeregningsgrunnlagInput {
         return newInput;
     }
 
-    public StegProsesseringInput medStegUtTilstand(BeregningsgrunnlagTilstand stegUtTilstand) {
+	public StegProsesseringInput medOriginalGrunnlagFraStegUt(BeregningsgrunnlagGrunnlagDto grunnlag) {
+		var newInput = new StegProsesseringInput(this);
+		newInput.originalGrunnlagFraStegUt = grunnlag;
+		return newInput;
+	}
+
+	public StegProsesseringInput medStegUtTilstand(BeregningsgrunnlagTilstand stegUtTilstand) {
         this.stegUtTilstand = stegUtTilstand;
         return this;
     }
