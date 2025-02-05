@@ -2,15 +2,18 @@ package no.nav.folketrygdloven.kalkulus.migrering;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import no.nav.folketrygdloven.kalkulus.felles.v1.Periode;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagPeriodeRegelType;
 
 public class RegelSporingPeriodeMigreringDto {
     @Valid
     @NotNull
+    @Pattern(regexp = "^[\\p{Graph}\\p{Space}\\p{Sc}\\p{L}\\p{M}\\p{N}]+$", message="'${validatedValue}' matcher ikke tillatt pattern '{regexp}'")
     private String regelEvaluering;
     @Valid
     @NotNull
+    @Pattern(regexp = "^[\\p{Graph}\\p{Space}\\p{Sc}\\p{L}\\p{M}\\p{N}]+$", message="'${validatedValue}' matcher ikke tillatt pattern '{regexp}'")
     private String regelInput;
     @Valid
     @NotNull
@@ -19,6 +22,7 @@ public class RegelSporingPeriodeMigreringDto {
     @NotNull
     private BeregningsgrunnlagPeriodeRegelType regelType;
     @Valid
+    @Pattern(regexp = "^[\\p{Graph}\\p{Space}\\p{Sc}\\p{L}\\p{M}\\p{N}]+$", message="'${validatedValue}' matcher ikke tillatt pattern '{regexp}'")
     private String regelVersjon;
 
     public RegelSporingPeriodeMigreringDto() {

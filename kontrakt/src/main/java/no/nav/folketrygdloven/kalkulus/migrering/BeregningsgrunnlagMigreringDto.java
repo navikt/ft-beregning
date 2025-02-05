@@ -6,6 +6,7 @@ import java.util.List;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import no.nav.folketrygdloven.kalkulus.felles.v1.Beløp;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FaktaOmBeregningTilfelle;
 
@@ -17,22 +18,26 @@ public class BeregningsgrunnlagMigreringDto extends BaseMigreringDto {
 
     @Valid
     @NotNull
+    @Size(max=10)
     private List<BeregningsgrunnlagAktivitetStatusMigreringDto> aktivitetStatuser = new ArrayList<>();
 
     @Valid
     @NotNull
+    @Size(max=100)
     private List<BeregningsgrunnlagPeriodeMigreringDto> beregningsgrunnlagPerioder = new ArrayList<>();
 
     @Valid
     private BesteberegninggrunnlagMigreringDto besteberegninggrunnlag;
 
     @Valid
+    @Size(max=3)
     private List<SammenligningsgrunnlagPrStatusMigreringDto> sammenligningsgrunnlagPrStatusListe = new ArrayList<>();
 
     @Valid
     private Beløp grunnbeløp;
 
     @Valid
+    @Size(max=10)
     private List<FaktaOmBeregningTilfelle> faktaOmBeregningTilfeller = new ArrayList<>();
 
     @Valid

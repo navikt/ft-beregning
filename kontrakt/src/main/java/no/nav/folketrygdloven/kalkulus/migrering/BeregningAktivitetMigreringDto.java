@@ -9,14 +9,18 @@ import no.nav.folketrygdloven.kalkulus.response.v1.Arbeidsgiver;
 
 public class BeregningAktivitetMigreringDto extends BaseMigreringDto {
 
-    @Valid @NotNull
+    @Valid
+    @NotNull
     private Periode periode;
 
+	@Valid
     private Arbeidsgiver arbeidsgiver;
 
+	@Valid
     private InternArbeidsforholdRefDto arbeidsforholdRef;
 
-    @Valid @NotNull
+    @Valid
+    @NotNull
     private OpptjeningAktivitetType opptjeningAktivitetType;
 
     public BeregningAktivitetMigreringDto() {

@@ -2,6 +2,7 @@ package no.nav.folketrygdloven.kalkulus.migrering;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import no.nav.folketrygdloven.kalkulus.felles.v1.Beløp;
 
 import java.util.HashSet;
@@ -12,6 +13,7 @@ public class BesteberegninggrunnlagMigreringDto extends BaseMigreringDto {
 
     @Valid
     @NotNull
+    @Size(max=6)
     private Set<BesteberegningMånedsgrunnlagMigreringDto> seksBesteMåneder = new HashSet<>();
 
     @Valid

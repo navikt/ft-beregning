@@ -4,6 +4,7 @@ import java.util.List;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
 
 public class BeregningsgrunnlagGrunnlagMigreringDto extends BaseMigreringDto {
@@ -32,10 +33,12 @@ public class BeregningsgrunnlagGrunnlagMigreringDto extends BaseMigreringDto {
 
     @Valid
     @NotNull
+    @Size(max=10)
     private List<RegelSporingGrunnlagMigreringDto> grunnlagsporinger;
 
     @Valid
     @NotNull
+    @Size(max=10)
     private List<RegelSporingPeriodeMigreringDto> periodesporinger;
 
     BeregningsgrunnlagGrunnlagMigreringDto() {

@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import no.nav.folketrygdloven.kalkulus.felles.v1.Beløp;
 import no.nav.folketrygdloven.kalkulus.felles.v1.Periode;
 import no.nav.folketrygdloven.kalkulus.kodeverk.PeriodeÅrsak;
@@ -12,6 +16,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.PeriodeÅrsak;
 public class BeregningsgrunnlagPeriodeMigreringDto extends BaseMigreringDto {
 
     @Valid
+    @Size(max=100)
     private List<BeregningsgrunnlagPrStatusOgAndelMigreringDto> beregningsgrunnlagPrStatusOgAndelList = new ArrayList<>();
 
     @Valid
@@ -28,8 +33,13 @@ public class BeregningsgrunnlagPeriodeMigreringDto extends BaseMigreringDto {
     private Beløp redusertPrÅr;
 
     @Valid
+    @DecimalMin(value = "0.00")
+    @DecimalMax(value = "3000.00")
+    @Digits(integer = 4, fraction = 0)
     private Long dagsats;
 
+	@Valid
+	@Size(max=10)
     private List<PeriodeÅrsak> beregningsgrunnlagPeriodeÅrsaker = new ArrayList<>();
 
 

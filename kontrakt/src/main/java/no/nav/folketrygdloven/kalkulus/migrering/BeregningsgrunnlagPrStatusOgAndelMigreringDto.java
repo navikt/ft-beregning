@@ -1,6 +1,9 @@
 package no.nav.folketrygdloven.kalkulus.migrering;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
 import no.nav.folketrygdloven.kalkulus.felles.v1.Beløp;
 import no.nav.folketrygdloven.kalkulus.felles.v1.Periode;
@@ -14,6 +17,9 @@ public class BeregningsgrunnlagPrStatusOgAndelMigreringDto extends BaseMigrering
 
     @Valid
     @NotNull
+    @DecimalMin(value = "0.00")
+    @DecimalMax(value = "100.00")
+    @Digits(integer = 4, fraction = 0)
     private Long andelsnr;
 
     @Valid
@@ -67,9 +73,15 @@ public class BeregningsgrunnlagPrStatusOgAndelMigreringDto extends BaseMigrering
     private Beløp redusertBrukersAndelPrÅr;
 
     @Valid
+    @DecimalMin(value = "0.00")
+    @DecimalMax(value = "3000.00")
+    @Digits(integer = 4, fraction = 0)
     private Long dagsatsBruker;
 
     @Valid
+    @DecimalMin(value = "0.00")
+    @DecimalMax(value = "3000.00")
+    @Digits(integer = 4, fraction = 0)
     private Long dagsatsArbeidsgiver;
 
     @Valid
@@ -109,6 +121,9 @@ public class BeregningsgrunnlagPrStatusOgAndelMigreringDto extends BaseMigrering
     private BGAndelArbeidsforholdMigreringDto bgAndelArbeidsforhold;
 
     @Valid
+    @DecimalMin(value = "0.00")
+    @DecimalMax(value = "3000.00")
+    @Digits(integer = 4, fraction = 0)
     private Long orginalDagsatsFraTilstøtendeYtelse;
 
     public BeregningsgrunnlagPrStatusOgAndelMigreringDto() {

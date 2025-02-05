@@ -1,6 +1,9 @@
 package no.nav.folketrygdloven.kalkulus.migrering;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
 import no.nav.folketrygdloven.kalkulus.felles.v1.Beløp;
 import no.nav.folketrygdloven.kalkulus.felles.v1.Periode;
@@ -24,6 +27,9 @@ public class SammenligningsgrunnlagPrStatusMigreringDto extends BaseMigreringDto
 
     @NotNull
     @Valid
+    @DecimalMin(value = "-10000000000.00")
+    @DecimalMax(value = "1000000000.00")
+    @Digits(integer = 20, fraction = 10)
     private BigDecimal avvikPromille = BigDecimal.ZERO;
 
     public SammenligningsgrunnlagPrStatusMigreringDto() {

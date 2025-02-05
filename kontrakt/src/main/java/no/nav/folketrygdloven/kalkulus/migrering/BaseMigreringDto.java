@@ -4,16 +4,20 @@ import java.time.LocalDateTime;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 
 public class BaseMigreringDto  {
     @Valid
     @NotNull
+    @Pattern(regexp = "^[\\p{Graph}\\p{Space}\\p{Sc}\\p{L}\\p{M}\\p{N}]+$", message="'${validatedValue}' matcher ikke tillatt pattern '{regexp}'")
     private String opprettetAv;
     @Valid
     @NotNull
     private LocalDateTime opprettetTidspunkt;
+	@Pattern(regexp = "^[\\p{Graph}\\p{Space}\\p{Sc}\\p{L}\\p{M}\\p{N}]+$", message="'${validatedValue}' matcher ikke tillatt pattern '{regexp}'")
     private String endretAv;
+	@Valid
     private LocalDateTime endretTidspunkt;
 
     public void setOpprettetAv(String opprettetAv) {

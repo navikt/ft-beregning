@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Size;
 
 
 public class FaktaAggregatMigreringDto extends BaseMigreringDto {
 
     @Valid
+    @Size(max=100)
     private List<FaktaArbeidsforholdMigreringDto> faktaArbeidsforholdListe = new ArrayList<>();
 
     @Valid

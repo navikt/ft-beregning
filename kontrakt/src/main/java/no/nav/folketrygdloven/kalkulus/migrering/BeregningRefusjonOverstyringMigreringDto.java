@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Size;
 import no.nav.folketrygdloven.kalkulus.response.v1.Arbeidsgiver;
 
 public class BeregningRefusjonOverstyringMigreringDto extends BaseMigreringDto {
@@ -19,6 +20,7 @@ public class BeregningRefusjonOverstyringMigreringDto extends BaseMigreringDto {
     private Boolean erFristUtvidet;
 
     @Valid
+    @Size(max=100)
     private List<BeregningRefusjonPeriodeMigreringDto> refusjonPerioder = new ArrayList<>();
 
     public BeregningRefusjonOverstyringMigreringDto() {

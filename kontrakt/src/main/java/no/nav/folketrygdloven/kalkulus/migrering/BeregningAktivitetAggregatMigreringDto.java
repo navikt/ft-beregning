@@ -5,12 +5,14 @@ import java.util.List;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 
 public class BeregningAktivitetAggregatMigreringDto extends BaseMigreringDto {
 
     @Valid
     @NotNull
+    @Size(max=100)
     private List<BeregningAktivitetMigreringDto> aktiviteter;
     @Valid
     @NotNull
