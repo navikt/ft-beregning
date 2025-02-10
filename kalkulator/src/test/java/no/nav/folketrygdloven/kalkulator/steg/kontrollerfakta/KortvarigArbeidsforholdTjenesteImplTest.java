@@ -17,7 +17,7 @@ import no.nav.folketrygdloven.kalkulator.modell.iay.YrkesaktivitetFilterDto;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.ArbeidType;
 
-public class KortvarigArbeidsforholdTjenesteImplTest {
+class KortvarigArbeidsforholdTjenesteImplTest {
 
     @Test
     void under_6_måneder_sammenhengende() {

@@ -28,7 +28,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FaktaOmBeregningTilfelle;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 
-public class FastsettEtterlønnSluttpakkeOppdatererTest {
+class FastsettEtterlønnSluttpakkeOppdatererTest {
     private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.of(2019,1,1);
     private static final Beløp GRUNNBELØP = Beløp.fra(85000);
 

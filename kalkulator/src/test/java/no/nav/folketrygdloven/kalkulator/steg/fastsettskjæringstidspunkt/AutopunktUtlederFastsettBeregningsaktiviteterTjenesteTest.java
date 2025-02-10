@@ -17,7 +17,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.YtelseType;
 import no.nav.folketrygdloven.utils.BeregningsgrunnlagTestUtil;
 
-public class AutopunktUtlederFastsettBeregningsaktiviteterTjenesteTest {
+class AutopunktUtlederFastsettBeregningsaktiviteterTjenesteTest {
 
     @Test
     void skal_vente_på_meldekort_når_har_AAP_og_meldekort_uten_AAP_status() {

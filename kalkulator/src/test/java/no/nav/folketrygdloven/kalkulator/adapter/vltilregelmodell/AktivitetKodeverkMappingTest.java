@@ -9,7 +9,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AktivitetKodeverkMappingTest {
+class AktivitetKodeverkMappingTest {
 
     @Test
     void skal_verifisere_at_beregningsreglene_kjenner_alle_opptjeningsaktiviteter_i_kodeverk() {

@@ -27,7 +27,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 import no.nav.folketrygdloven.kalkulus.typer.AktørId;
 
-public class ArbeidstakerUtenInntektsmeldingTjenesteTest {
+class ArbeidstakerUtenInntektsmeldingTjenesteTest {
 
     private static final LocalDate SKJÆRINGSTIDSPUNKT_OPPTJENING = LocalDate.of(2018, 9, 30);
     private static final String ORGNR = "3482934982384";

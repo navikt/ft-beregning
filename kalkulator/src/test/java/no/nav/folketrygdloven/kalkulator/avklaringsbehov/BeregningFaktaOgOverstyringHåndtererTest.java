@@ -35,7 +35,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 import no.nav.folketrygdloven.kalkulus.typer.AktørId;
 
 
-public class BeregningFaktaOgOverstyringHåndtererTest {
+class BeregningFaktaOgOverstyringHåndtererTest {
 
     private static final LocalDate STP = LocalDate.of(2019, 1, 1);
 

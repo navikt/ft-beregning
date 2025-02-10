@@ -13,7 +13,7 @@ import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulus.kodeverk.VirksomhetType;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.EgenNæringDto;
 
-public class EgenNæringMapperTest {
+class EgenNæringMapperTest {
 
     @Test
     void skal_mappe_fra_entitet_til_dto() {

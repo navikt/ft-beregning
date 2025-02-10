@@ -14,7 +14,7 @@ import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 import no.nav.folketrygdloven.kalkulus.typer.AktørId;
 
-public class MapBeregningAktivitetDtoTest {
+class MapBeregningAktivitetDtoTest {
     private static final AktørId AKTØRID_1 = AktørId.dummy();
     private static final AktørId AKTØRID_2 = AktørId.dummy();
 

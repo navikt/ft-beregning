@@ -31,7 +31,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 
-public class FastsettBeregningsgrunnlagATFLHåndtererTest {
+class FastsettBeregningsgrunnlagATFLHåndtererTest {
 
 
     public static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.now().minusDays(5);

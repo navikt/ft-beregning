@@ -21,7 +21,7 @@ import no.nav.folketrygdloven.kalkulator.modell.behandling.KoblingReferanse;
 import no.nav.folketrygdloven.kalkulator.output.BeregningAvklaringsbehovResultat;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AvklaringsbehovDefinisjon;
 
-public class AvklaringsbehovUtlederForeslåBeregningTest {
+class AvklaringsbehovUtlederForeslåBeregningTest {
 
     private KoblingReferanse referanse = new KoblingReferanseMock();
 

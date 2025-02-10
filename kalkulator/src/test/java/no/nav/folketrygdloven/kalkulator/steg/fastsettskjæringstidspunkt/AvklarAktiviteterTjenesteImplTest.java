@@ -29,7 +29,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 import no.nav.folketrygdloven.utils.Tuple;
 
 
-public class AvklarAktiviteterTjenesteImplTest {
+class AvklarAktiviteterTjenesteImplTest {
     private static final LocalDate SKJÆRINGSTIDSPUNKT_BEREGNING = LocalDate.of(2018, 9, 30);
     private static final Arbeidsgiver ARBEIDSGIVER = Arbeidsgiver.virksomhet("900050001");
 

@@ -30,7 +30,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FaktaOmBeregningTilfelle;
 
-public class VurderTidsbegrensetArbeidsforholdOppdatererTest {
+class VurderTidsbegrensetArbeidsforholdOppdatererTest {
 
     private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.now().minusDays(5);
     private static final Beløp GRUNNBELØP = Beløp.fra(90000);

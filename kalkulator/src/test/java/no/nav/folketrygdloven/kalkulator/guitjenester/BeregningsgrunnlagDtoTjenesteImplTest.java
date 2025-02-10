@@ -40,7 +40,7 @@ import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.Sammen
 import no.nav.folketrygdloven.kalkulus.typer.AktørId;
 
 
-public class BeregningsgrunnlagDtoTjenesteImplTest {
+class BeregningsgrunnlagDtoTjenesteImplTest {
 
     private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.now().minusDays(5);
     private static final Inntektskategori INNTEKTSKATEGORI = Inntektskategori.ARBEIDSTAKER;

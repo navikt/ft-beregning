@@ -32,7 +32,7 @@ import no.nav.folketrygdloven.kalkulator.modell.typer.Utbetalingsgrad;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.UttakArbeidType;
 
-public class MapRefusjonskravFraVLTilRegelTest {
+class MapRefusjonskravFraVLTilRegelTest {
 
     public static final Arbeidsgiver ARBEIDSGIVER1 = Arbeidsgiver.virksomhet("1234786124");
     public static final Arbeidsgiver ARBEIDSGIVER2 = Arbeidsgiver.virksomhet("09872335");

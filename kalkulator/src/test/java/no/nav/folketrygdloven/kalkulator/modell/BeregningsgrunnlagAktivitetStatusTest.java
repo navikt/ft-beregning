@@ -13,7 +13,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Hjemmel;
 
 
-public class BeregningsgrunnlagAktivitetStatusTest {
+class BeregningsgrunnlagAktivitetStatusTest {
     private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.now();
     private static final AktivitetStatus AKTIVITET_STATUS = AktivitetStatus.ARBEIDSTAKER;
     private static final Hjemmel BARE_ARBEIDSTAKER = Hjemmel.F_14_7_8_30;

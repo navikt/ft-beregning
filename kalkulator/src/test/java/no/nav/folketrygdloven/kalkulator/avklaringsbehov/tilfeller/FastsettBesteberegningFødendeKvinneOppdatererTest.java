@@ -29,7 +29,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FaktaOmBeregningTilfelle;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 
-public class FastsettBesteberegningFødendeKvinneOppdatererTest {
+class FastsettBesteberegningFødendeKvinneOppdatererTest {
 
     private static final Long ANDELSNR_DAGPENGER = 1L;
     private static final Long ANDELSNR_ARBEIDSTAKER = 2L;

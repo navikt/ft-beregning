@@ -23,7 +23,7 @@ import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
 
-public class MapAndelGraderingTest {
+class MapAndelGraderingTest {
 
     private KoblingReferanse ref;
 

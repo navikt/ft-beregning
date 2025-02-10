@@ -20,7 +20,7 @@ import no.nav.folketrygdloven.kalkulator.steg.fastsettskjæringstidspunkt.Autopu
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 
-public class BeregningsperiodeTjenesteTest {
+class BeregningsperiodeTjenesteTest {
 
     private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.of(2019, Month.JANUARY, 1);
     private static final String INNTEKT_RAPPORTERING_FRIST_DATO = "inntekt.rapportering.frist.dato";

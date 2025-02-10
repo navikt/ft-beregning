@@ -18,7 +18,7 @@ import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.PeriodeÅrsak;
 
-public class MapSplittetPeriodeFraVLTilRegelTest {
+class MapSplittetPeriodeFraVLTilRegelTest {
     @Test
     void ingenPeriodeårsak() {
         // Arrange

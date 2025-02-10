@@ -43,7 +43,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 
-public class InntektsmeldingMedRefusjonTjenesteImplTest {
+class InntektsmeldingMedRefusjonTjenesteImplTest {
     private static final String ORGNR = "974760673";
     private static final String ORGNR2 = "915933149";
 

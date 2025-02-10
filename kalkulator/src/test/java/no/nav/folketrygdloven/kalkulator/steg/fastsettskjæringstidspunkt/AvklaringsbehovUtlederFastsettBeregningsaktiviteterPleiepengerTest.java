@@ -42,7 +42,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.YtelseType;
 
 
-public class AvklaringsbehovUtlederFastsettBeregningsaktiviteterPleiepengerTest {
+class AvklaringsbehovUtlederFastsettBeregningsaktiviteterPleiepengerTest {
 
     private static final String INNTEKT_RAPPORTERING_FRIST_DATO = "inntekt.rapportering.frist.dato";
     private BeregningAktivitetAggregatDto beregningAktivitetAggregat;

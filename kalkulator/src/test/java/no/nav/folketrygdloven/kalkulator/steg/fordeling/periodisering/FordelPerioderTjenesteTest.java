@@ -70,7 +70,7 @@ import no.nav.folketrygdloven.kalkulus.typer.AktørId;
 import no.nav.folketrygdloven.utils.BeregningsgrunnlagTestUtil;
 import no.nav.fpsak.tidsserie.LocalDateInterval;
 
-public class FordelPerioderTjenesteTest {
+class FordelPerioderTjenesteTest {
     private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.of(2019, Month.JANUARY, 4);
     private static final Beløp GRUNNBELØP = Beløp.fra(90000L);
     private static final String ORG_NUMMER = "974652269";

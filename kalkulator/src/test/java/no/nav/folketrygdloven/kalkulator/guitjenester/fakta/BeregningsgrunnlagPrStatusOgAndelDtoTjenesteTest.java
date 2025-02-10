@@ -38,7 +38,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.SammenligningsgrunnlagType;
 
-public class BeregningsgrunnlagPrStatusOgAndelDtoTjenesteTest {
+class BeregningsgrunnlagPrStatusOgAndelDtoTjenesteTest {
     private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.now().minusDays(5);
     private static final Inntektskategori INNTEKTSKATEGORI = Inntektskategori.ARBEIDSTAKER;
     private static final Beløp AVKORTET_PR_AAR = Beløp.fra(150000);

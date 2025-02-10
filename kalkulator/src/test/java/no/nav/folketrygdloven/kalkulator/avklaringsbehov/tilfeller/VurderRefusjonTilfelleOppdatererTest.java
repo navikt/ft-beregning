@@ -34,7 +34,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FaktaOmBeregningTilfelle;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 
-public class VurderRefusjonTilfelleOppdatererTest {
+class VurderRefusjonTilfelleOppdatererTest {
     private static final Arbeidsgiver VIRKSOMHET = Arbeidsgiver.virksomhet("973861778");
     private final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.now();
     private final Beløp GRUNNBELØP = Beløp.fra(600000);

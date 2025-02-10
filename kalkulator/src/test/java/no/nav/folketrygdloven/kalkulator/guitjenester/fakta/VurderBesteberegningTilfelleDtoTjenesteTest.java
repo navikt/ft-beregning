@@ -29,7 +29,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.FaktaOmBeregningDto;
 
-public class VurderBesteberegningTilfelleDtoTjenesteTest {
+class VurderBesteberegningTilfelleDtoTjenesteTest {
 
     private static final LocalDate STP = LocalDate.of(2019, 1, 1);
     private static final Intervall OPPTJENINGSPERIODE = Intervall.fraOgMedTilOgMed(STP.minusYears(1), STP.plusYears(10));

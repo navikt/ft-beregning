@@ -54,7 +54,7 @@ import no.nav.folketrygdloven.kalkulus.mappers.JsonMapper;
 import no.nav.folketrygdloven.kalkulus.typer.AktørId;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModell;
 
-public class MapBeregningsgrunnlagFraRegelTilVLTest {
+class MapBeregningsgrunnlagFraRegelTilVLTest {
 
     private static final String ORGNR = "974652269";
 

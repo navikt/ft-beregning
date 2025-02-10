@@ -27,7 +27,7 @@ import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
 
-public class FastsettBGTidsbegrensetArbeidsforholdHåndtererTest {
+class FastsettBGTidsbegrensetArbeidsforholdHåndtererTest {
 
     private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.now().minusDays(5);
     private static final Beløp GRUNNBELØP = Beløp.fra(90000);
