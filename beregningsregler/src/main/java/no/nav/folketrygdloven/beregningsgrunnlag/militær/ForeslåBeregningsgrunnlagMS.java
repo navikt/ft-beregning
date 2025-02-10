@@ -32,9 +32,9 @@ class ForeslåBeregningsgrunnlagMS extends LeafSpecification<BeregningsgrunnlagP
         BigDecimal nyBeregnet = diffMellomBruttoOgMilitærkrav.compareTo(BigDecimal.ZERO) > 0 ? diffMellomBruttoOgMilitærkrav.add(bruttoPåAndelenFørRegel): bruttoPåAndelenFørRegel;
         BeregningsgrunnlagPrStatus.builder(andel).medBeregnetPrÅr(nyBeregnet).build();
 
-        //Sett hjemmel
+        // Sett hjemmel
         grunnlag.getBeregningsgrunnlag().getAktivitetStatus(AktivitetStatus.MS).setHjemmel(BeregningsgrunnlagHjemmel.F_14_7);
-        //Regelsporing
+        // Regelsporing
         Map<String, Object> resultater = new LinkedHashMap<>();
         resultater.put("beregnetPrÅr", nyBeregnet);
         resultater.put("erFastsattAvSaksbehandler", andel.erFastsattAvSaksbehandler());
