@@ -49,7 +49,7 @@ import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.FaktaO
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.VurderMottarYtelseDto;
 
 
-public class VurderMottarYtelseDtoTjenesteTest {
+class VurderMottarYtelseDtoTjenesteTest {
 
     private static final LocalDate SKJÆRINGSTIDSPUNKT_OPPTJENING = LocalDate.of(2018, 9, 30);
     private static final String ORGNR = "973093681";

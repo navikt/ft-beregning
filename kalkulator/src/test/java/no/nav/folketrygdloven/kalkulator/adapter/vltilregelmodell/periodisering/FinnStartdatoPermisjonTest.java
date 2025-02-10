@@ -13,7 +13,7 @@ import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
 import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
 
 
-public class FinnStartdatoPermisjonTest {
+class FinnStartdatoPermisjonTest {
 
     private final static String ORGNR = "123456780";
     private static final Arbeidsgiver ARBEIDSGIVER = Arbeidsgiver.virksomhet(ORGNR);

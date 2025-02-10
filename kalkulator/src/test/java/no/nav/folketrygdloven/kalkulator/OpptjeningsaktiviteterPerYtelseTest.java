@@ -8,7 +8,7 @@ import no.nav.folketrygdloven.kalkulator.input.OpptjeningsaktiviteterPerYtelse;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 
-public class OpptjeningsaktiviteterPerYtelseTest {
+class OpptjeningsaktiviteterPerYtelseTest {
 
     @Test
     void aap_relevant_for_foreldrepenger() {

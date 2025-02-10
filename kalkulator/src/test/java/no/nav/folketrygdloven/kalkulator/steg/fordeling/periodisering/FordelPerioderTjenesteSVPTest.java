@@ -55,7 +55,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.PeriodeÅrsak;
 import no.nav.folketrygdloven.kalkulus.kodeverk.UttakArbeidType;
 
 @ExtendWith(MockitoExtension.class)
-public class FordelPerioderTjenesteSVPTest {
+class FordelPerioderTjenesteSVPTest {
     private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.of(2019, Month.JANUARY, 4);
     private static final Skjæringstidspunkt skjæringstidspunkt = Skjæringstidspunkt.builder()
         .medSkjæringstidspunktOpptjening(SKJÆRINGSTIDSPUNKT)

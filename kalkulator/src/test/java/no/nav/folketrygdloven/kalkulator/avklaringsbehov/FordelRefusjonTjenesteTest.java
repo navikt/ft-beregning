@@ -26,7 +26,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Utfall;
 
-public class FordelRefusjonTjenesteTest {
+class FordelRefusjonTjenesteTest {
 
     private static final String ARBEIDSGIVER_ORGNR = "974652269";
     private static final int FORRIGE_ARBEIDSTINNTEKT = 100_000;

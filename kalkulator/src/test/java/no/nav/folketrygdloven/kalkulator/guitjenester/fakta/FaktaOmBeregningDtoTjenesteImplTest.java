@@ -32,7 +32,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.FaktaOmBeregningDto;
 
-public class FaktaOmBeregningDtoTjenesteImplTest {
+class FaktaOmBeregningDtoTjenesteImplTest {
 
     public static final LocalDate SKJÆRINGSTIDSPUNKT_OPPTJENING = LocalDate.now();
     private KoblingReferanse koblingReferanse = new KoblingReferanseMock(LocalDate.now());

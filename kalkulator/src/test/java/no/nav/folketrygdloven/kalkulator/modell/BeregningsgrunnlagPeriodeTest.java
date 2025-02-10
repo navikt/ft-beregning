@@ -13,7 +13,7 @@ import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.Beregningsgru
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
 
-public class BeregningsgrunnlagPeriodeTest {
+class BeregningsgrunnlagPeriodeTest {
     private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.now();
     private final LocalDate PERIODE_FOM = LocalDate.now();
 

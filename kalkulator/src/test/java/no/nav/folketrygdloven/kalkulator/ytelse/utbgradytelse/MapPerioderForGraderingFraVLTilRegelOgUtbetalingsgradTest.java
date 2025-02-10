@@ -50,7 +50,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.UttakArbeidType;
 
-public class MapPerioderForGraderingFraVLTilRegelOgUtbetalingsgradTest {
+class MapPerioderForGraderingFraVLTilRegelOgUtbetalingsgradTest {
     private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.of(2019, 1, 1);
     public static final KoblingReferanseMock REF = new KoblingReferanseMock(SKJÆRINGSTIDSPUNKT);
     public static final BigDecimal REFUSJON = BigDecimal.valueOf(44733);

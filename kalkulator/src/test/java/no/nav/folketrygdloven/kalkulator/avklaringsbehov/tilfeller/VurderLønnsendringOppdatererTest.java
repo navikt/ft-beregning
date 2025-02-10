@@ -41,7 +41,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FaktaOmBeregningTilfelle;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 
-public class VurderLønnsendringOppdatererTest {
+class VurderLønnsendringOppdatererTest {
     private static final Long ANDELSNR_ARBEIDSTAKER = 2L;
     private static final List<FaktaOmBeregningTilfelle> FAKTA_OM_BEREGNING_TILFELLER = Collections.singletonList(FaktaOmBeregningTilfelle.VURDER_LØNNSENDRING);
     public static final String ORGNR = "8934232423";

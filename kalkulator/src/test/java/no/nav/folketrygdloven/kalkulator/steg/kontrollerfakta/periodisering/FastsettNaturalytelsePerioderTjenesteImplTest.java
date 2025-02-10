@@ -45,7 +45,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.NaturalYtelseType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.PeriodeÅrsak;
 
-public class FastsettNaturalytelsePerioderTjenesteImplTest {
+class FastsettNaturalytelsePerioderTjenesteImplTest {
     private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.of(2019, Month.JANUARY, 4);
     private static final Beløp GRUNNBELØP = Beløp.fra(90000L);
     private static final String ORG_NUMMER = "974652269";

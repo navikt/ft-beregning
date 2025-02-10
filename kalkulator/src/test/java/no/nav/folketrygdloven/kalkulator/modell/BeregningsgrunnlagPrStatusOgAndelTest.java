@@ -20,7 +20,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 import no.nav.folketrygdloven.kalkulus.typer.AktørId;
 
-public class BeregningsgrunnlagPrStatusOgAndelTest {
+class BeregningsgrunnlagPrStatusOgAndelTest {
     private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.now();
     private static final String ORGNR = "987";
     private static final InternArbeidsforholdRefDto ARBEIDSFORHOLD_ID = InternArbeidsforholdRefDto.namedRef("TEST-REF");

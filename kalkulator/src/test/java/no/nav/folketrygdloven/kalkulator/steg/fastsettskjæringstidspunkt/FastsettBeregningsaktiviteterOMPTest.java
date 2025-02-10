@@ -34,7 +34,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 
-public class FastsettBeregningsaktiviteterOMPTest {
+class FastsettBeregningsaktiviteterOMPTest {
     public static final FagsakYtelseType OMSORGSPENGER = FagsakYtelseType.OMSORGSPENGER;
     public static final String ARBEIDSGIVER_ORGNR = "123456789";
     public static final Arbeidsgiver ARBEIDSGIVER = Arbeidsgiver.virksomhet(ARBEIDSGIVER_ORGNR);

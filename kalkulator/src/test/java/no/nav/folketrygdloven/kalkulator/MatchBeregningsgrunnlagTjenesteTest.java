@@ -18,7 +18,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AndelKilde;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 
-public class MatchBeregningsgrunnlagTjenesteTest {
+class MatchBeregningsgrunnlagTjenesteTest {
 
 
     private final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.now();

@@ -16,7 +16,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AndelKilde;
 
 
-public class SkalKunneEndreAktivitetTest {
+class SkalKunneEndreAktivitetTest {
 
     private static final LocalDate SKJÆRINGSTIDSPUNKT_OPPTJENING = LocalDate.of(2018, Month.MAY, 10);
     private BeregningsgrunnlagDto beregningsgrunnlag;

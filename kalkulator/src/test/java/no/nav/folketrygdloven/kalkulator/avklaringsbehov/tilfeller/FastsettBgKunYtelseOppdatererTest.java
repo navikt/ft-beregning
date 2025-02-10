@@ -32,7 +32,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FaktaOmBeregningTilfelle;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 
-public class FastsettBgKunYtelseOppdatererTest {
+class FastsettBgKunYtelseOppdatererTest {
 
 
     private static final Long ANDELSNR = 1L;

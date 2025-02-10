@@ -34,7 +34,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.InntektspostType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.SkatteOgAvgiftsregelType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.VirksomhetType;
 
-public class FastsettInntektskategoriTjenesteTest {
+class FastsettInntektskategoriTjenesteTest {
 
     private static final LocalDate SKJÆRINGSTIDSPUNKT_OPPTJENING = LocalDate.of(2018, Month.MAY, 10);
     private static final Beløp GRUNNBELØP = Beløp.fra(90000);

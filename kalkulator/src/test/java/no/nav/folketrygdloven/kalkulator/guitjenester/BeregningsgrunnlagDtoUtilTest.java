@@ -31,7 +31,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.BeregningsgrunnlagArbeidsforholdDto;
 import no.nav.folketrygdloven.kalkulus.typer.AktørId;
 
-public class BeregningsgrunnlagDtoUtilTest {
+class BeregningsgrunnlagDtoUtilTest {
 
     private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.now();
     private static final Beløp GRUNNBELØP = Beløp.fra(10);

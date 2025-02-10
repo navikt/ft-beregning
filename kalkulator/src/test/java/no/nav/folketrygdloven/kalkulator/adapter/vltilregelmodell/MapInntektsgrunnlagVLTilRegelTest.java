@@ -29,7 +29,7 @@ import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.ArbeidType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Dekningsgrad;
 
-public class MapInntektsgrunnlagVLTilRegelTest {
+class MapInntektsgrunnlagVLTilRegelTest {
 
     public static final LocalDate SKJÆRINGSTIDSPUNKT_BEREGNING = LocalDate.now();
     public static final Arbeidsgiver VIRKSOMHET = Arbeidsgiver.virksomhet("94632432");

@@ -42,7 +42,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.InntektspostType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.YtelseType;
 import no.nav.folketrygdloven.utils.TestKonfigurasjonVerdiProvider;
 
-public class VurderMottarYtelseTjenesteTest {
+class VurderMottarYtelseTjenesteTest {
 
     private static final TestKonfigurasjonVerdiProvider TEST_KONFIG = new TestKonfigurasjonVerdiProvider();
     private static final LocalDate SKJÆRINGSTIDSPUNKT_OPPTJENING = LocalDate.of(2018, 9, 30);

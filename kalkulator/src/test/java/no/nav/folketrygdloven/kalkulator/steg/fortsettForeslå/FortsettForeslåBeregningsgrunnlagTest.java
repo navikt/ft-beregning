@@ -54,7 +54,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 
 @ExtendWith(MockitoExtension.class)
-public class FortsettForeslåBeregningsgrunnlagTest {
+class FortsettForeslåBeregningsgrunnlagTest {
 
     private static final String ORGNR = "987123987";
     private static final Beløp MÅNEDSINNTEKT1 = Beløp.fra(12345);

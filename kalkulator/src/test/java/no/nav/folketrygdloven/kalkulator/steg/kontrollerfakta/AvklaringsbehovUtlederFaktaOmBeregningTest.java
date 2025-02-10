@@ -47,7 +47,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.PeriodeÅrsak;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Utfall;
 
-public class AvklaringsbehovUtlederFaktaOmBeregningTest {
+class AvklaringsbehovUtlederFaktaOmBeregningTest {
 
     private static final LocalDate SKJÆRINGSTIDSPUNKT_OPPTJENING = LocalDate.of(2018, Month.MARCH, 23);
     private final InternArbeidsforholdRefDto arbId = InternArbeidsforholdRefDto.namedRef("A");

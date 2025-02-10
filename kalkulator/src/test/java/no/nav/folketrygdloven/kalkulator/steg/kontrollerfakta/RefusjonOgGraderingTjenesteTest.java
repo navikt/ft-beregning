@@ -32,7 +32,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.AndelKilde;
 import no.nav.folketrygdloven.kalkulus.kodeverk.PeriodeÅrsak;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Utfall;
 
-public class RefusjonOgGraderingTjenesteTest {
+class RefusjonOgGraderingTjenesteTest {
 
     private static final String ORG_NUMMER = "974652269";
     private static final LocalDate SKJÆRINGSTIDSPUNKT_BEREGNING = LocalDate.of(2018, 9, 30);

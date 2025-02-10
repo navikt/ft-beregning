@@ -30,7 +30,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FaktaOmBeregningTilfelle;
 
-public class FastsettMånedsinntektUtenInntektsmeldingOppdatererTest {
+class FastsettMånedsinntektUtenInntektsmeldingOppdatererTest {
 
     private static final LocalDate SKJÆRINGSTIDSPUNKT_OPPTJENING = LocalDate.of(2018, 9, 30);
     public static final String ORGNR = "974652269";

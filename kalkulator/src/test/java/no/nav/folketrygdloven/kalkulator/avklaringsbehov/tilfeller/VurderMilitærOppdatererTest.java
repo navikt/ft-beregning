@@ -33,7 +33,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.Hjemmel;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 import no.nav.folketrygdloven.kalkulus.typer.AktørId;
 
-public class VurderMilitærOppdatererTest {
+class VurderMilitærOppdatererTest {
     private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.of(2019,1,1);
     private static final Beløp GRUNNBELØP = Beløp.fra(85000);
 

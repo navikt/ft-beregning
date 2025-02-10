@@ -31,7 +31,7 @@
 //import static org.mockito.Mockito.mock;
 //import static org.mockito.Mockito.when;
 //
-//public class VurderBesteberegningTilfelleUtlederTest {
+//class VurderBesteberegningTilfelleUtlederTest {
 //
 //    public static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.of(2019, 1, 1);
 //    private VurderBesteberegningTilfelleUtleder vurderBesteberegningTilfelleUtleder;

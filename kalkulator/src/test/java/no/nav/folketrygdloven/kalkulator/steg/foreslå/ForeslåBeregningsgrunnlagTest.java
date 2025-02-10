@@ -72,7 +72,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.UttakArbeidType;
 import no.nav.folketrygdloven.kalkulus.typer.AktørId;
 
 @ExtendWith(MockitoExtension.class)
-public class ForeslåBeregningsgrunnlagTest {
+class ForeslåBeregningsgrunnlagTest {
 
     private static final Beløp MÅNEDSINNTEKT1 = Beløp.fra(12345);
     private static final Beløp MÅNEDSINNTEKT2 = Beløp.fra(6000);

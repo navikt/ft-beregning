@@ -28,7 +28,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 import no.nav.folketrygdloven.kalkulus.kodeverk.SammenligningsgrunnlagType;
 import no.nav.folketrygdloven.kalkulus.typer.AktørId;
 
-public class MapFastsettBeregningsgrunnlagPerioderFraRegelTilVLTest {
+class MapFastsettBeregningsgrunnlagPerioderFraRegelTilVLTest {
 
     public static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.of(2019, 1, 1);
     private static final Beløp RAPPORTERT_PR_ÅR = Beløp.fra(100000);

@@ -32,7 +32,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.FaktaOmBeregningTilfelle;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 import no.nav.folketrygdloven.kalkulus.typer.OrgNummer;
 
-public class FastsettMånedsinntektUtenInntektsmeldingTilfelleUtlederTest {
+class FastsettMånedsinntektUtenInntektsmeldingTilfelleUtlederTest {
 
     public static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.of(2018, 1, 1);
     public static final String ORGNR = "21348714121";

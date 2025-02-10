@@ -29,7 +29,7 @@ import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.FaktaO
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.FordelBeregningsgrunnlagAndelDto;
 import no.nav.folketrygdloven.utils.Tuple;
 
-public class RefusjonDtoTjenesteImplTest {
+class RefusjonDtoTjenesteImplTest {
 
     private static final LocalDate SKJÆRINGSTIDSPUNKT_OPPTJENING = LocalDate.of(2018, Month.MAY, 10);
 

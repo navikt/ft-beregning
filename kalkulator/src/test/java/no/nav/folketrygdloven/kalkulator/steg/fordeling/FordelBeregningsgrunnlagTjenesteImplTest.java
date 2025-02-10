@@ -1,7 +1,6 @@
 package no.nav.folketrygdloven.kalkulator.steg.fordeling;
 
 import static no.nav.folketrygdloven.kalkulator.OpprettKravPerioderFraInntektsmeldinger.opprett;
-import static no.nav.folketrygdloven.kalkulator.adapter.regelmodelltilvl.MapFastsettBeregningsgrunnlagPerioderFraRegelTilVLTest.GRUNNBELØP;
 import static no.nav.fpsak.tidsserie.LocalDateInterval.TIDENES_ENDE;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -13,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import no.nav.folketrygdloven.kalkulator.GrunnbeløpMock;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,12 +51,13 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.Hjemmel;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 
-public class FordelBeregningsgrunnlagTjenesteImplTest {
+class FordelBeregningsgrunnlagTjenesteImplTest {
 
     private static final String ORGNR1 = "995428563";
     private static final String ORGNR2 = "974652269";
     private static final String ORGNR3 = "973861778";
     private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.of(2019, Month.JANUARY, 4);
+	public static final Beløp GRUNNBELØP = GrunnbeløpMock.finnGrunnbeløp(SKJÆRINGSTIDSPUNKT);
 
     private FordelBeregningsgrunnlagTjenesteImpl fordelBeregningsgrunnlagTjeneste;
     private List<BeregningAktivitetDto> aktiviteter = new ArrayList<>();

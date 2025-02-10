@@ -12,7 +12,7 @@ import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.Sammenligning
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulus.kodeverk.SammenligningsgrunnlagType;
 
-public class SammenligningsgrunnlagTest {
+class SammenligningsgrunnlagTest {
     private static final BigDecimal RAPPORTERT_PR_ÅR = BigDecimal.valueOf(400000d);
     private static final BigDecimal AVVIK_PROMILLE = BigDecimal.valueOf(240L);
     private final LocalDate PERIODE_FOM = LocalDate.now();

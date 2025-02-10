@@ -19,7 +19,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
 import no.nav.folketrygdloven.kalkulator.konfig.KonfigTjeneste;
 
-public class KopierBeregningsgrunnlagUtilTest {
+class KopierBeregningsgrunnlagUtilTest {
 
     private static final Periode periode = Periode.of(LocalDate.now().minusMonths(3), LocalDate.now().minusMonths(1));
 

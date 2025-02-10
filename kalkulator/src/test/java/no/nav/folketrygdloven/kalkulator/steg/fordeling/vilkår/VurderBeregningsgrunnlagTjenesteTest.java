@@ -47,7 +47,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.SammenligningsgrunnlagType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Utfall;
 
 @ExtendWith(MockitoExtension.class)
-public class VurderBeregningsgrunnlagTjenesteTest {
+class VurderBeregningsgrunnlagTjenesteTest {
 
     private static final Beløp MÅNEDSINNTEKT1 = Beløp.fra(12345);
     private static final LocalDate SKJÆRINGSTIDSPUNKT_OPPTJENING = LocalDate.of(2018, Month.MAY, 10);

@@ -39,7 +39,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Utfall;
 import no.nav.folketrygdloven.utils.Tuple;
 
-public class FordelBeregningsgrunnlagHåndtererTest {
+class FordelBeregningsgrunnlagHåndtererTest {
     private final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.now();
     private final Beløp GRUNNBELØP = Beløp.fra(600000);
     private static final String ORG_NUMMER = "974652269";

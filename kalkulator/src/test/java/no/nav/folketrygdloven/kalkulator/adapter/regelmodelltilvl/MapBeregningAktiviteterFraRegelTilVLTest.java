@@ -18,7 +18,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivPeriode;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModell;
 
-public class MapBeregningAktiviteterFraRegelTilVLTest {
+class MapBeregningAktiviteterFraRegelTilVLTest {
 
     private static final String ORGNR = "900050001";
 

@@ -20,7 +20,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningAktivitetHandlingType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 
-public class BeregningsgrunnlagGrunnlagTest {
+class BeregningsgrunnlagGrunnlagTest {
 
     private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.now();
     private static final Intervall PERIODE = Intervall.fraOgMedTilOgMed(LocalDate.of(2019, Month.MARCH, 1), TIDENES_ENDE);

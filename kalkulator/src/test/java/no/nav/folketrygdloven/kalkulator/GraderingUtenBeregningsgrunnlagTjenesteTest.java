@@ -21,7 +21,7 @@ import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.ytelse.fp.GraderingUtenBeregningsgrunnlagTjeneste;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 
-public class GraderingUtenBeregningsgrunnlagTjenesteTest {
+class GraderingUtenBeregningsgrunnlagTjenesteTest {
 
     private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.now();
     private static final String ORGNR = "915933149";

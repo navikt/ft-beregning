@@ -30,7 +30,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 import no.nav.folketrygdloven.utils.BeregningsgrunnlagTestUtil;
 
-public class KontrollerFaktaBeregningFrilanserTjenesteImplTest {
+class KontrollerFaktaBeregningFrilanserTjenesteImplTest {
 
     private static final LocalDate SKJÆRINGSTIDSPUNKT_OPPTJENING = LocalDate.of(2018, 9, 30);
     private InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlagBuilder;

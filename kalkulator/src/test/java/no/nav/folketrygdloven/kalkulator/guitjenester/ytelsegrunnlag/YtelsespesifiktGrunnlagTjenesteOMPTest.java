@@ -42,7 +42,7 @@ import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.Omsorg
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.YtelsespesifiktGrunnlagDto;
 import no.nav.folketrygdloven.kalkulus.typer.AktørId;
 
-public class YtelsespesifiktGrunnlagTjenesteOMPTest {
+class YtelsespesifiktGrunnlagTjenesteOMPTest {
     private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.now().minusDays(5);
     private BigDecimal GRUNNBELØP = BigDecimal.valueOf(99_888);
     private static final LocalDate ANDEL_FOM = LocalDate.now().minusDays(100);

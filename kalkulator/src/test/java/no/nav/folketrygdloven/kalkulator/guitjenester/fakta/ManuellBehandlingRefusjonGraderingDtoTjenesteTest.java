@@ -34,7 +34,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Utfall;
 
-public class ManuellBehandlingRefusjonGraderingDtoTjenesteTest {
+class ManuellBehandlingRefusjonGraderingDtoTjenesteTest {
 
     private static final LocalDate SKJÆRINGSTIDSPUNKT_OPPTJENING = LocalDate.now();
     private final static String ORGNR = "123456780";
