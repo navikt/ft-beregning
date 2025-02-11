@@ -38,7 +38,7 @@ class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
 
     private static final LocalDate skjæringstidspunkt = LocalDate.of(2018, Month.JANUARY, 15);
     private static final BigDecimal GRUNNBELØP = BigDecimal.valueOf(90000);
-    private static final long seksG = 90000 * 6;
+    private static final long SEKS_G = 90000 * 6;
 
     private static final String ORGNR1 = "123";
     private static final String ORGNR2 = "456";
@@ -51,8 +51,8 @@ class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
     void skalBeregneNårRefusjonKravErLik6G() {
         //Arrange
         double bruttoBG = 672000d;
-        double refusjonsKrav = seksG;
-        double forventetRedusert = seksG;
+        double refusjonsKrav = SEKS_G;
+        double forventetRedusert = SEKS_G;
         double forventetRedusertBrukersAndel = forventetRedusert - refusjonsKrav;
 
         BeregningsgrunnlagPeriode grunnlag = lagBeregningsgrunnlag(1, Collections.singletonList(bruttoBG), Collections.singletonList(refusjonsKrav))
@@ -73,7 +73,7 @@ class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
         //Arrange
         double bruttoBG = 672000d;
         double refusjonsKrav = 300000d;
-        double forventetRedusert = seksG;
+        double forventetRedusert = SEKS_G;
         double forventetRedusertBrukersAndel = forventetRedusert - refusjonsKrav;
 
         BeregningsgrunnlagPeriode grunnlag = lagBeregningsgrunnlag(1, Collections.singletonList(bruttoBG), Collections.singletonList(refusjonsKrav))
@@ -93,7 +93,7 @@ class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
         //Arrange
         double bruttoBG = 672000d;
         double refusjonsKrav = 0d;
-        double forventetRedusert = seksG;
+        double forventetRedusert = SEKS_G;
         double forventetRedusertBrukersAndel = forventetRedusert - refusjonsKrav;
 
         BeregningsgrunnlagPeriode grunnlag = lagBeregningsgrunnlag(1, Collections.singletonList(bruttoBG), Collections.singletonList(refusjonsKrav))
@@ -113,11 +113,11 @@ class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
         //Arrange
         double bruttoBG1 = 896000d;
         double bruttoBG2 = 448000d;
-        double refusjonsKrav1 = seksG;
+        double refusjonsKrav1 = SEKS_G;
         double refusjonsKrav2 = 0d;
 
-        double forventetRedusert = seksG;
-        double forventetRedusert1 = seksG;
+        double forventetRedusert = SEKS_G;
+        double forventetRedusert1 = SEKS_G;
         double forventetRedusert2 = forventetRedusert - forventetRedusert1;
         double forventetRedusertBrukersAndel1 = forventetRedusert1 - refusjonsKrav1;
         double forventetRedusertBrukersAndel2 = forventetRedusert2 - refusjonsKrav2;
@@ -145,7 +145,7 @@ class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
         double refusjonsKrav2 = 400000d;
         double refusjonsKrav3 = 0d;
 
-        double forventetRedusert = seksG;
+        double forventetRedusert = SEKS_G;
         double forventetRedusert2 = refusjonsKrav2;
         double forventetRedusert1 = (forventetRedusert - refusjonsKrav2) * bruttoBG1 / (bruttoBG1 + bruttoBG3);
         double forventetRedusert3 = (forventetRedusert - refusjonsKrav2) * bruttoBG3 / (bruttoBG1 + bruttoBG3);
@@ -177,7 +177,7 @@ class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
         double refusjonsKrav2 = 150000d;
         double refusjonsKrav3 = 0d;
 
-        double forventetRedusert = seksG;
+        double forventetRedusert = SEKS_G;
         double forventetRedusert1 = refusjonsKrav1;
         double forventetRedusert2 = (forventetRedusert - refusjonsKrav1) * bruttoBG2 / (bruttoBG2 + bruttoBG3);
         double forventetRedusert3 = (forventetRedusert - refusjonsKrav1) * bruttoBG3 / (bruttoBG2 + bruttoBG3);
@@ -209,7 +209,7 @@ class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
         double refusjonsKrav2 = 50000d;
         double refusjonsKrav3 = 220000d;
 
-        double forventetRedusert = seksG;
+        double forventetRedusert = SEKS_G;
         double forventetRedusert1 = refusjonsKrav1;
         double forventetRedusert2 = (forventetRedusert - refusjonsKrav1 - refusjonsKrav3);
         double forventetRedusert3 = refusjonsKrav3;
@@ -252,7 +252,7 @@ class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
             .build();
         Beregningsgrunnlag beregningsgrunnlag = opprettGrunnlag(periode);
 
-        double forventetAvkortet = seksG - bruttoBG1;
+        double forventetAvkortet = SEKS_G - bruttoBG1;
 
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         new RegelFullføreBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
@@ -284,7 +284,7 @@ class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
         Beregningsgrunnlag beregningsgrunnlag = opprettGrunnlag(periode);
 
         double forventetAvkortet = 130000d;
-        double forventetAvkortet2 = seksG - bruttoBG1 - bruttoBG2;
+        double forventetAvkortet2 = SEKS_G - bruttoBG1 - bruttoBG2;
 
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         new RegelFullføreBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
@@ -321,7 +321,7 @@ class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
         Beregningsgrunnlag beregningsgrunnlag = opprettGrunnlag(periode);
 
         double forventetAvkortet = 130000d;
-        double forventetAvkortet2 = seksG - bruttoBG1 - bruttoBG2;
+        double forventetAvkortet2 = SEKS_G - bruttoBG1 - bruttoBG2;
         double forventetAvkortet3 = 0d;
 
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
@@ -353,7 +353,7 @@ class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
             .build();
         Beregningsgrunnlag beregningsgrunnlag = opprettGrunnlag(periode);
 
-        double forventetAvkortetFrilanser = seksG - bruttoAT;
+        double forventetAvkortetFrilanser = SEKS_G - bruttoAT;
         double forventetAvkortetDP = 0d;
 
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
@@ -385,7 +385,7 @@ class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
         Beregningsgrunnlag beregningsgrunnlag = opprettGrunnlag(periode);
 
         double forventetAvkortetFrilanser = bruttoFL;
-        double forventetAvkortetDP = seksG - bruttoAT - bruttoFL;
+        double forventetAvkortetDP = SEKS_G - bruttoAT - bruttoFL;
 
         BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         new RegelFullføreBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);

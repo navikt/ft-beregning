@@ -29,7 +29,7 @@ public class TestHjelper {
     public TestHjelper() {
     }
 
-    private InntektsmeldingDto lagInntektsmelding(Beløp beløp,
+    private static InntektsmeldingDto lagInntektsmelding(Beløp beløp,
                                                   Arbeidsgiver arbeidsgiver,
                                                   Beløp refusjonskrav, NaturalYtelseDto naturalYtelse) {
         InntektsmeldingDtoBuilder inntektsmeldingBuilder = InntektsmeldingDtoBuilder.builder();
@@ -45,7 +45,7 @@ public class TestHjelper {
         return inntektsmeldingBuilder.build();
     }
 
-    public InntektArbeidYtelseAggregatBuilder initBehandlingFor_AT_SN(Beløp skattbarInntekt,
+    public static InntektArbeidYtelseAggregatBuilder initBehandlingFor_AT_SN(Beløp skattbarInntekt,
                                                                       int førsteÅr, LocalDate skjæringstidspunkt, String virksomhetOrgnr,
                                                                       Beløp inntektSammenligningsgrunnlag,
                                                                       Beløp inntektBeregningsgrunnlag,
@@ -70,14 +70,14 @@ public class TestHjelper {
         return register;
     }
 
-    public void lagBehandlingForSN(Beløp skattbarInntekt,
+    public static void lagBehandlingForSN(Beløp skattbarInntekt,
                                    int førsteÅr, InntektArbeidYtelseAggregatBuilder inntektArbeidYtelseAggregatBuilder) {
         for (LocalDate året = LocalDate.of(førsteÅr, Month.JANUARY, 1); året.getYear() < førsteÅr + 3; året = året.plusYears(1)) {
             lagInntektForSN(inntektArbeidYtelseAggregatBuilder, året, skattbarInntekt);
         }
     }
 
-    private void lagInntektForSN(InntektArbeidYtelseAggregatBuilder inntektArbeidYtelseAggregatBuilder,
+    private static void lagInntektForSN(InntektArbeidYtelseAggregatBuilder inntektArbeidYtelseAggregatBuilder,
                                  LocalDate år, Beløp årsinntekt) {
         InntektArbeidYtelseAggregatBuilder.AktørInntektBuilder aktørInntektBuilder = inntektArbeidYtelseAggregatBuilder.getAktørInntektBuilder();
         InntektDtoBuilder inntektBuilder = aktørInntektBuilder.getInntektBuilder(InntektskildeType.SIGRUN, null);
@@ -90,7 +90,7 @@ public class TestHjelper {
         inntektArbeidYtelseAggregatBuilder.leggTilAktørInntekt(aktørInntektBuilder);
     }
 
-    public InntektArbeidYtelseAggregatBuilder initBehandlingFL(Beløp inntektSammenligningsgrunnlag,
+    public static InntektArbeidYtelseAggregatBuilder initBehandlingFL(Beløp inntektSammenligningsgrunnlag,
                                                                Beløp inntektFrilans,
                                                                String virksomhetOrgnr, LocalDate fraOgMed, LocalDate tilOgMed, InntektArbeidYtelseAggregatBuilder inntektArbeidYtelseAggregatBuilder) {
 
@@ -107,7 +107,7 @@ public class TestHjelper {
         return inntektArbeidYtelseAggregatBuilder;
     }
 
-    public YrkesaktivitetDtoBuilder lagAktørArbeid(InntektArbeidYtelseAggregatBuilder inntektArbeidYtelseAggregatBuilder,
+    public static YrkesaktivitetDtoBuilder lagAktørArbeid(InntektArbeidYtelseAggregatBuilder inntektArbeidYtelseAggregatBuilder,
                                                    Arbeidsgiver arbeidsgiver,
                                                    LocalDate fom, ArbeidType arbeidType) {
         InntektArbeidYtelseAggregatBuilder.AktørArbeidBuilder aktørArbeidBuilder = inntektArbeidYtelseAggregatBuilder
@@ -130,7 +130,7 @@ public class TestHjelper {
         return yrkesaktivitetBuilder;
     }
 
-    public void lagInntektForSammenligning(InntektArbeidYtelseAggregatBuilder inntektArbeidYtelseAggregatBuilder,
+    public static void lagInntektForSammenligning(InntektArbeidYtelseAggregatBuilder inntektArbeidYtelseAggregatBuilder,
                                            LocalDate fom,
                                            LocalDate tom, Beløp månedsbeløp, Arbeidsgiver arbeidsgiver) {
         OpptjeningsnøkkelDto opptjeningsnøkkel = OpptjeningsnøkkelDto.forArbeidsgiver(arbeidsgiver);
@@ -148,7 +148,7 @@ public class TestHjelper {
         inntektArbeidYtelseAggregatBuilder.leggTilAktørInntekt(aktørInntektBuilder);
     }
 
-    public void lagInntektForArbeidsforhold(InntektArbeidYtelseAggregatBuilder inntektArbeidYtelseAggregatBuilder,
+    public static void lagInntektForArbeidsforhold(InntektArbeidYtelseAggregatBuilder inntektArbeidYtelseAggregatBuilder,
                                             LocalDate fom,
                                             LocalDate tom, Beløp månedsbeløp, Arbeidsgiver arbeidsgiver) {
         OpptjeningsnøkkelDto opptjeningsnøkkel = OpptjeningsnøkkelDto.forArbeidsgiver(arbeidsgiver);
@@ -166,7 +166,7 @@ public class TestHjelper {
         inntektArbeidYtelseAggregatBuilder.leggTilAktørInntekt(aktørInntektBuilder);
     }
 
-    void lagInntektForOpptjening(InntektArbeidYtelseAggregatBuilder inntektArbeidYtelseAggregatBuilder,
+    static void lagInntektForOpptjening(InntektArbeidYtelseAggregatBuilder inntektArbeidYtelseAggregatBuilder,
                                  LocalDate fom,
                                  LocalDate tom, Beløp månedsbeløp, String virksomhetOrgnr) {
         OpptjeningsnøkkelDto opptjeningsnøkkel = OpptjeningsnøkkelDto.forOrgnummer(virksomhetOrgnr);
@@ -185,7 +185,7 @@ public class TestHjelper {
         inntektArbeidYtelseAggregatBuilder.leggTilAktørInntekt(aktørInntektBuilder);
     }
 
-    public InntektsmeldingDto opprettInntektsmeldingMedRefusjonskrav(Arbeidsgiver arbeidsgiver, Beløp inntektInntektsmelding,
+    public static InntektsmeldingDto opprettInntektsmeldingMedRefusjonskrav(Arbeidsgiver arbeidsgiver, Beløp inntektInntektsmelding,
                                                                      NaturalYtelseDto naturalYtelse,
                                                                      Beløp refusjonskrav) {
         return lagInntektsmelding(inntektInntektsmelding,

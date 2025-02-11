@@ -20,7 +20,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningAktivitetHandlingType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 
-public class BeregningsgrunnlagGrunnlagTest {
+class BeregningsgrunnlagGrunnlagTest {
 
     private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.now();
     private static final Intervall PERIODE = Intervall.fraOgMedTilOgMed(LocalDate.of(2019, Month.MARCH, 1), TIDENES_ENDE);
@@ -90,7 +90,7 @@ public class BeregningsgrunnlagGrunnlagTest {
         // Assert
         assertThat(resultat.getSkjæringstidspunktOpptjening()).isEqualTo(SKJÆRINGSTIDSPUNKT);
         assertThat(resultat.getBeregningAktiviteter()).hasSize(1);
-        assertThat(resultat.getBeregningAktiviteter().get(0)).isEqualTo(beregningAktivitetSN);
+        assertThat(resultat.getBeregningAktiviteter().getFirst()).isEqualTo(beregningAktivitetSN);
     }
 
     @Test
@@ -127,7 +127,7 @@ public class BeregningsgrunnlagGrunnlagTest {
         // Assert
         assertThat(resultat.getSkjæringstidspunktOpptjening()).isEqualTo(SKJÆRINGSTIDSPUNKT);
         assertThat(resultat.getBeregningAktiviteter()).hasSize(1);
-        assertThat(resultat.getBeregningAktiviteter().get(0)).isEqualTo(beregningAktivitetSN);
+        assertThat(resultat.getBeregningAktiviteter().getFirst()).isEqualTo(beregningAktivitetSN);
     }
 
     private BeregningAktivitetOverstyringDto lagOverstyringForBA(BeregningAktivitetDto beregningAktivitet) {

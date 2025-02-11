@@ -2,10 +2,7 @@ package no.nav.folketrygdloven.kalkulator.steg.fordeling.avklaringsbehov;
 
 import java.util.List;
 
-import no.nav.folketrygdloven.kalkulator.KonfigurasjonVerdi;
 import no.nav.folketrygdloven.kalkulator.avklaringsbehov.PerioderTilVurderingTjeneste;
-import no.nav.folketrygdloven.kalkulator.input.UtbetalingsgradGrunnlag;
-import no.nav.folketrygdloven.kalkulator.input.YtelsespesifiktGrunnlag;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 
