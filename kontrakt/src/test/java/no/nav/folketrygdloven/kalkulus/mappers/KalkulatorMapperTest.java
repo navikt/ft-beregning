@@ -55,12 +55,12 @@ import no.nav.folketrygdloven.kalkulus.opptjening.v1.OpptjeningPeriodeDto;
 import no.nav.folketrygdloven.kalkulus.request.v1.BeregnForRequest;
 import no.nav.folketrygdloven.kalkulus.request.v1.BeregnListeRequest;
 
-public class KalkulatorMapperTest {
+class KalkulatorMapperTest {
 
     private final InternArbeidsforholdRefDto ref = new InternArbeidsforholdRefDto(UUID.randomUUID().toString());
     private final Periode periode = new Periode(LocalDate.now(), LocalDate.now().plusMonths(2));
     private final Organisasjon organisasjon = new Organisasjon("974652269");
-    private final Beløp beløpDto = Beløp.fra(BigDecimal.TEN);
+	private static final Beløp BELØP = Beløp.fra(BigDecimal.TEN);
 
     @Test
     void skal_generere_og_validere_roundtrip_kalkulator_input_json() throws Exception {
@@ -126,12 +126,12 @@ public class KalkulatorMapperTest {
     }
 
     private List<YtelseDto> byggYtelseDto() {
-        YtelseAnvistDto ytelseAnvistDto = new YtelseAnvistDto(periode, beløpDto, beløpDto, IayProsent.fra(10), List.of(new AnvistAndel(new Organisasjon("974652269"),
+        YtelseAnvistDto ytelseAnvistDto = new YtelseAnvistDto(periode, BELØP, BELØP, IayProsent.fra(10), List.of(new AnvistAndel(new Organisasjon("974652269"),
                 new InternArbeidsforholdRefDto("r8j3wr8w3"),
-                beløpDto,
+		        BELØP,
                 IayProsent.fra(100),
                 IayProsent.fra(100),
                 Inntektskategori.ARBEIDSTAKER)));
-        return List.of(new YtelseDto(beløpDto, Set.of(ytelseAnvistDto), YtelseType.FORELDREPENGER, periode, null));
+        return List.of(new YtelseDto(BELØP, Set.of(ytelseAnvistDto), YtelseType.FORELDREPENGER, periode, null));
     }
 }

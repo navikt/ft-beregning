@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.detaljert.FaktaAggregatDto;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

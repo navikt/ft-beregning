@@ -4,7 +4,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag;
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagInput;
 import no.nav.folketrygdloven.kalkulator.input.UtbetalingsgradGrunnlag;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;

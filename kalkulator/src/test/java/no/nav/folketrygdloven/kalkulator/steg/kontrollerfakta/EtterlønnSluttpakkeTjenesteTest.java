@@ -28,9 +28,6 @@ class EtterlønnSluttpakkeTjenesteTest {
 
     private static final LocalDate SKJÆRINGSTIDSPUNKT_OPPTJENING = LocalDate.of(2018, 9, 30);
 
-    public EtterlønnSluttpakkeTjenesteTest() {
-    }
-
     @Test
     void skalGiTilfelleDersomSøkerHarAndelMedEtterlønnSluttpakke() {
         //Arrange

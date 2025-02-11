@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
-import no.nav.folketrygdloven.kalkulator.KonfigurasjonVerdi;
 import no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.kodeverk.MapOpptjeningAktivitetTypeFraVLTilRegel;
 import no.nav.folketrygdloven.kalkulator.felles.BeregningstidspunktTjeneste;
 import no.nav.folketrygdloven.kalkulator.input.FastsettBeregningsaktiviteterInput;
