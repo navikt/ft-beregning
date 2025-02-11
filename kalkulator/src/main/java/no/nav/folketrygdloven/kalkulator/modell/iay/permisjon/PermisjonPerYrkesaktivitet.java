@@ -46,9 +46,16 @@ public final class PermisjonPerYrkesaktivitet {
         if (Objects.equals(it.getPermisjonsbeskrivelseType(), PermisjonsbeskrivelseType.PERMISJON_MED_FORELDREPENGER)) {
             var foreldrepengerTidslinje = tidslinjePerYtelse.getOrDefault(YtelseType.FORELDREPENGER, new LocalDateTimeline<>(List.of()));
             var svangerskapspengerTidslinje = tidslinjePerYtelse.getOrDefault(YtelseType.SVANGERSKAPSPENGER, new LocalDateTimeline<>(List.of()));
+	        var pleiepengerSyktBarnTidslinje = tidslinjePerYtelse.getOrDefault(YtelseType.PLEIEPENGER_SYKT_BARN, new LocalDateTimeline<>(List.of()));
+	        var pleiepengerLivetsSluttfaseTidslinje = tidslinjePerYtelse.getOrDefault(YtelseType.PLEIEPENGER_NÆRSTÅENDE, new LocalDateTimeline<>(List.of()));
 
             var permisjonstidslinje = new LocalDateTimeline<>(List.of(new LocalDateSegment<>(it.getPeriode().getFomDato(), it.getPeriode().getTomDato(), true)));
-            permisjonstidslinje = permisjonstidslinje.disjoint(foreldrepengerTidslinje).disjoint(svangerskapspengerTidslinje).disjoint(vilkårsperiodeTidslinje);
+            permisjonstidslinje = permisjonstidslinje
+		            .disjoint(foreldrepengerTidslinje)
+		            .disjoint(svangerskapspengerTidslinje)
+		            .disjoint(pleiepengerSyktBarnTidslinje)
+		            .disjoint(pleiepengerLivetsSluttfaseTidslinje)
+		            .disjoint(vilkårsperiodeTidslinje);
 
             return permisjonstidslinje.compress()
                     .toSegments()
