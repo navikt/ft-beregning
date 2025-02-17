@@ -157,7 +157,19 @@ public class Refusjon implements Comparable<Refusjon> {
         return Objects.hash(refusjonskravPrÅr, saksbehandletRefusjonPrÅr, fordeltRefusjonPrÅr, hjemmelForRefusjonskravfrist, refusjonskravFristUtfall);
     }
 
-    @Override
+	@Override
+	public String toString() {
+		return "Refusjon{" +
+				"refusjonskravPrÅr=" + refusjonskravPrÅr +
+				", saksbehandletRefusjonPrÅr=" + saksbehandletRefusjonPrÅr +
+				", fordeltRefusjonPrÅr=" + fordeltRefusjonPrÅr +
+				", manueltFordeltRefusjonPrÅr=" + manueltFordeltRefusjonPrÅr +
+				", hjemmelForRefusjonskravfrist=" + hjemmelForRefusjonskravfrist +
+				", refusjonskravFristUtfall=" + refusjonskravFristUtfall +
+				'}';
+	}
+
+	@Override
     public int compareTo(Refusjon o) {
         return this.getGjeldendeRefusjonPrÅr().compareTo(o.getGjeldendeRefusjonPrÅr());
     }
