@@ -207,7 +207,7 @@ public final class PeriodiserOgFastsettRefusjonTjeneste {
                 var refusjon = a.getBgAndelArbeidsforhold().flatMap(BGAndelArbeidsforholdDto::getRefusjon);
                 if (refusjon.isPresent() && refusjon.get().getSaksbehandletRefusjonPrÅr() != null && refusjon.get().getRefusjonskravPrÅr() != null) {
                     if (refusjon.get().getSaksbehandletRefusjonPrÅr().compareTo(refusjon.get().getRefusjonskravPrÅr()) > 0) {
-                        throw new IllegalStateException("Kan ikke øke refusjonskrav for andel " + a + " Alle endringer som skulle utføres var: " + andeler);
+                        throw new IllegalStateException("Kan ikke øke refusjonskrav for andel " + a + " Alle endringer som skulle utføres var: " + andeler + " Perioden som endres var " + p.getPeriode());
                     }
                 }
             });
