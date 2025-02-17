@@ -28,7 +28,7 @@ public class SkalFinneGrenseverdiUtenFordeling extends LeafSpecification<Beregni
 			resultat.setEvaluationProperty("periodeFom", grunnlag.getPeriodeFom());
 
 			if (skalKjøreMedFordeling && grunnlag.getTilkommetInntektsforholdListe() != null && !grunnlag.getTilkommetInntektsforholdListe().isEmpty()) {
-				throw new IllegalStateException("Hadde tilkommet inntekt satt i periode for gamle regler");
+				throw new IllegalStateException("Hadde tilkommet inntekt satt i periode for gamle regler. Gjelder periode " + grunnlag.getPeriodeFom() + " tom " + grunnlag.getPeriodeTom());
 			}
 
 			return resultat;
