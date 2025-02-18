@@ -265,6 +265,20 @@ class PeriodiserOgFastsettRefusjonTjenesteTest {
         assertPeriode(dagerEtterSTP(30), UENDELIG, AG1, REF1, 100000, resultat, 2, PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV);
     }
 
+	@Test
+	void case_der_saksbehandlet_refusjon_feilaktig_er_satt() {
+		lagBGPeriode(STP, dagerEtterSTP(30), lagBGAndel(AG1, InternArbeidsforholdRefDto.nullRef(), 600000));
+		lagBGPeriode(dagerEtterSTP(31), UENDELIG, PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV, lagBGAndel(AG1, InternArbeidsforholdRefDto.nullRef(), 0, 12));
+		lagSaksbehandlerDto(AG1, InternArbeidsforholdRefDto.nullRef(), STP);
+
+		BeregningsgrunnlagDto resultat = oppdater();
+
+		assertThat(resultat).isEqualTo(grunnlagBuilder.build());
+		assertThat(resultat.getBeregningsgrunnlagPerioder()).hasSize(2);
+
+		assertPeriode(STP, dagerEtterSTP(30), AG1, InternArbeidsforholdRefDto.nullRef(), 600000, resultat, 1);
+		assertPeriode(dagerEtterSTP(31), UENDELIG, AG1, InternArbeidsforholdRefDto.nullRef(), 0, resultat, 1, PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV);
+	}
 
 
     private BeregningsgrunnlagDto oppdater() {

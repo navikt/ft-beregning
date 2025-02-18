@@ -84,10 +84,10 @@ public final class PeriodiserOgFastsettRefusjonTjeneste {
     }
 
     private static boolean harInnvilgetRefusjonskrav(BeregningsgrunnlagPrStatusOgAndelDto a) {
-        return a.getBgAndelArbeidsforhold().isPresent() &&
-                a.getBgAndelArbeidsforhold().get().getRefusjon().isPresent() &&
-                a.getBgAndelArbeidsforhold().get().getRefusjon().get().getInnvilgetRefusjonskravPrÅr() != null &&
-                a.getBgAndelArbeidsforhold().get().getRefusjon().get().getInnvilgetRefusjonskravPrÅr().compareTo(Beløp.ZERO) > 0;
+	    var refusjon = a.getBgAndelArbeidsforhold().flatMap(BGAndelArbeidsforholdDto::getRefusjon);
+		var saksbehandletRefusjonErSatt = refusjon.map(r -> r.getSaksbehandletRefusjonPrÅr() != null && r.getSaksbehandletRefusjonPrÅr().compareTo(Beløp.ZERO) > 0).orElse(false);
+		var innvilgetRefusjonErSatt = refusjon.map(r -> r.getInnvilgetRefusjonskravPrÅr() != null && r.getInnvilgetRefusjonskravPrÅr().compareTo(Beløp.ZERO) > 0).orElse(false);
+	    return innvilgetRefusjonErSatt || saksbehandletRefusjonErSatt;
     }
 
     private static boolean refusjonSkalEndres(BeregningsgrunnlagPeriodeDto eksisterendePeriode, LocalDate startdatoRefusjon) {
