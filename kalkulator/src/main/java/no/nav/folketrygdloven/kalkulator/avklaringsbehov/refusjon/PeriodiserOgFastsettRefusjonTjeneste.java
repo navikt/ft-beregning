@@ -66,7 +66,7 @@ public final class PeriodiserOgFastsettRefusjonTjeneste {
         nyttGrunnlag.getBeregningsgrunnlagPerioder()
                 .forEach(eksisterendePeriode -> eksisterendePeriode.getBeregningsgrunnlagPrStatusOgAndelList()
                         .stream()
-                        .filter(PeriodiserOgFastsettRefusjonTjeneste::harInnvilgetRefusjonskrav)
+                        .filter(PeriodiserOgFastsettRefusjonTjeneste::harInnvilgetRefusjonEllerSattRefusjonFraSaksbehandler)
                         .forEach(eksisterendeAndel -> {
                             Optional<RefusjonSplittAndel> matchetSplittAndel = finnFastsattAndelForBGAndel(eksisterendeAndel, splittAndeler);
                             // Hvis saksbehandlet andel er tom er ikke andelens refusjon vurdert og den skal ha refusjon fra start
@@ -83,7 +83,7 @@ public final class PeriodiserOgFastsettRefusjonTjeneste {
         return nyttGrunnlag;
     }
 
-    private static boolean harInnvilgetRefusjonskrav(BeregningsgrunnlagPrStatusOgAndelDto a) {
+    private static boolean harInnvilgetRefusjonEllerSattRefusjonFraSaksbehandler(BeregningsgrunnlagPrStatusOgAndelDto a) {
 	    var refusjon = a.getBgAndelArbeidsforhold().flatMap(BGAndelArbeidsforholdDto::getRefusjon);
 		var saksbehandletRefusjonErSatt = refusjon.map(r -> r.getSaksbehandletRefusjonPrÅr() != null && r.getSaksbehandletRefusjonPrÅr().compareTo(Beløp.ZERO) > 0).orElse(false);
 		var innvilgetRefusjonErSatt = refusjon.map(r -> r.getInnvilgetRefusjonskravPrÅr() != null && r.getInnvilgetRefusjonskravPrÅr().compareTo(Beløp.ZERO) > 0).orElse(false);

@@ -266,7 +266,7 @@ class PeriodiserOgFastsettRefusjonTjenesteTest {
     }
 
 	@Test
-	void case_der_saksbehandlet_refusjon_feilaktig_er_satt() {
+	void skal_fjerne_saksbehandlet_refusjon_selv_om_opprinnelig_refsujon_er_0() {
 		lagBGPeriode(STP, dagerEtterSTP(30), lagBGAndel(AG1, InternArbeidsforholdRefDto.nullRef(), 600000));
 		lagBGPeriode(dagerEtterSTP(31), UENDELIG, PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV, lagBGAndel(AG1, InternArbeidsforholdRefDto.nullRef(), 0, 12));
 		lagSaksbehandlerDto(AG1, InternArbeidsforholdRefDto.nullRef(), STP);
