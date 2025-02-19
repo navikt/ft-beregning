@@ -64,7 +64,7 @@ public class ValiderKontraktDtoer {
         Class<?>[] classes = getClasses("no.nav.folketrygdloven.kalkulus");
         for (var aClass : classes) {
 			// Midlertidige migreringsdtoer med regelsporing som inneholder mange uvanlige tegn vi ikke tillater i vanlige dtoer, trenger ikke validere disse
-			if (aClass.getName().equals(RegelSporingGrunnlagMigreringDto.class.getName()) || aClass.getName().equals(RegelSporingPeriodeMigreringDto.class.getName())) {
+			if (aClass.isAssignableFrom(RegelSporingGrunnlagMigreringDto.class) || aClass.isAssignableFrom(RegelSporingPeriodeMigreringDto.class)) {
 				continue;
 			}
             for (var field : getRelevantFields(aClass)) {
