@@ -14,7 +14,10 @@ public class FaktaVurderingMigreringDto {
     @NotNull
     private FaktaVurderingKilde kilde;
 
-    public FaktaVurderingMigreringDto(Boolean vurdering, FaktaVurderingKilde kilde) {
+	public FaktaVurderingMigreringDto() {
+	}
+
+	public FaktaVurderingMigreringDto(Boolean vurdering, FaktaVurderingKilde kilde) {
         this.vurdering = vurdering;
         this.kilde = kilde;
     }
