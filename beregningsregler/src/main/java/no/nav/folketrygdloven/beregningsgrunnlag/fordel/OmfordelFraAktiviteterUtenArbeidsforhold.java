@@ -149,7 +149,9 @@ class OmfordelFraAktiviteterUtenArbeidsforhold extends LeafSpecification<FordelM
 				.map(Optional::get)
 				.reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
 		if (refusjonskravPrÅr.compareTo(bruttoBgForArbeidsforhold) <= 0) {
-			throw new IllegalStateException("Skal ikke flytte beregningsgrunnlag til arbeidsforhold der refusjon ikke overstiger beregningsgrunnlag som allerede er satt.");
+			throw new IllegalStateException(
+					String.format("Skal ikke flytte beregningsgrunnlag til arbeidsforhold der refusjon ikke overstiger beregningsgrunnlag som allerede er satt. Brutto: %s, refusjon: %s",
+							bruttoBgForArbeidsforhold, refusjonskravPrÅr));
 		}
 		return refusjonskravPrÅr.subtract(bruttoBgForArbeidsforhold);
 	}
