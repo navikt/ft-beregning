@@ -44,6 +44,11 @@ public class BeregningsgrunnlagGrunnlagMigreringDto extends BaseMigreringDto {
     @Size(max=200)
     private List<RegelSporingPeriodeMigreringDto> periodesporinger;
 
+	@Valid
+	@NotNull
+	@Size(max=10)
+	private List<AvklaringsbehovMigreringDto> avklaringsbehov;
+
     BeregningsgrunnlagGrunnlagMigreringDto() {
     }
 
@@ -55,7 +60,8 @@ public class BeregningsgrunnlagGrunnlagMigreringDto extends BaseMigreringDto {
                                                   FaktaAggregatMigreringDto faktaAggregat,
                                                   BeregningsgrunnlagTilstand beregningsgrunnlagTilstand,
                                                   List<RegelSporingGrunnlagMigreringDto> grunnlagsporinger,
-                                                  List<RegelSporingPeriodeMigreringDto> periodesporinger) {
+                                                  List<RegelSporingPeriodeMigreringDto> periodesporinger,
+                                                  List<AvklaringsbehovMigreringDto> avklaringsbehov) {
         this.beregningsgrunnlag = beregningsgrunnlag;
         this.registerAktiviteter = registerAktiviteter;
         this.saksbehandletAktiviteter = saksbehandletAktiviteter;
@@ -65,6 +71,7 @@ public class BeregningsgrunnlagGrunnlagMigreringDto extends BaseMigreringDto {
         this.beregningsgrunnlagTilstand = beregningsgrunnlagTilstand;
         this.grunnlagsporinger = grunnlagsporinger;
         this.periodesporinger = periodesporinger;
+	    this.avklaringsbehov = avklaringsbehov;
     }
 
     public BeregningsgrunnlagMigreringDto getBeregningsgrunnlag() {
@@ -102,4 +109,8 @@ public class BeregningsgrunnlagGrunnlagMigreringDto extends BaseMigreringDto {
     public List<RegelSporingPeriodeMigreringDto> getPeriodesporinger() {
         return periodesporinger;
     }
+
+	public List<AvklaringsbehovMigreringDto> getAvklaringsbehov() {
+		return avklaringsbehov;
+	}
 }
