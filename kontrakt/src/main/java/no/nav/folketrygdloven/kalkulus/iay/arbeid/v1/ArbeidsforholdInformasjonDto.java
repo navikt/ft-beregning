@@ -20,12 +20,12 @@ public class ArbeidsforholdInformasjonDto {
 
     @JsonProperty(value = "overstyringer")
     @Valid
-    @Size(min = 1)
+    @Size(max = 100)
     private List<ArbeidsforholdOverstyringDto> overstyringer;
 
 	@JsonProperty(value = "referanser")
 	@Valid
-	@Size(min = 1)
+	@Size(max = 100)
 	private Set<ArbeidsforholdReferanseDto> referanser;
 
     public ArbeidsforholdInformasjonDto() {
