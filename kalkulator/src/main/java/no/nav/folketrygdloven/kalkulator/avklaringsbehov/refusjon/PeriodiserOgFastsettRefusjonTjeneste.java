@@ -217,6 +217,7 @@ public final class PeriodiserOgFastsettRefusjonTjeneste {
     }
 
 	private static Beløp tilMånedsbeløp(Beløp årsbeløp) {
+		// Bruker ikke desimaler da månedsbeløp fastsatt av saksbehandler er uten desimaler
 		return årsbeløp.divider(MÅNEDER_I_ÅR, 0, RoundingMode.HALF_EVEN);
 	}
 
