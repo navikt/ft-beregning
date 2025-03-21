@@ -2,6 +2,7 @@ package no.nav.folketrygdloven.kalkulator.avklaringsbehov.refusjon;
 
 import static no.nav.fpsak.tidsserie.LocalDateInterval.TIDENES_ENDE;
 
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,6 +33,7 @@ import no.nav.folketrygdloven.kalkulus.typer.AktørId;
  * fastsatt startdato for refusjon og trenger ikke endre perioder der det skal være refusjon
  */
 public final class PeriodiserOgFastsettRefusjonTjeneste {
+	private static final int MÅNEDER_I_ÅR = 12;
 
     /**
      * @param beregningsgrunnlagDto - beregningsgrunnlaget som skal splittes.
@@ -206,15 +208,20 @@ public final class PeriodiserOgFastsettRefusjonTjeneste {
             p.getBeregningsgrunnlagPrStatusOgAndelList().forEach(a -> {
                 var refusjon = a.getBgAndelArbeidsforhold().flatMap(BGAndelArbeidsforholdDto::getRefusjon);
                 if (refusjon.isPresent() && refusjon.get().getSaksbehandletRefusjonPrÅr() != null && refusjon.get().getRefusjonskravPrÅr() != null) {
-                    if (refusjon.get().getSaksbehandletRefusjonPrÅr().compareTo(refusjon.get().getRefusjonskravPrÅr()) > 0) {
-                        throw new IllegalStateException("Kan ikke øke refusjonskrav for andel " + a + " Alle endringer som skulle utføres var: " + andeler + " Perioden som endres var " + p.getPeriode());
-                    }
+					if (tilMånedsbeløp(refusjon.get().getSaksbehandletRefusjonPrÅr()).compareTo(tilMånedsbeløp(refusjon.get().getRefusjonskravPrÅr())) > 0) {
+						throw new IllegalStateException("Kan ikke øke refusjonskrav for andel " + a + " Alle endringer som skulle utføres var: " + andeler + " Perioden som endres var " + p.getPeriode());
+					}
                 }
             });
         });
     }
 
-    private static List<BeregningsgrunnlagPrStatusOgAndelDto> finnAndelerPåDatoIGrunnlag(LocalDate dato, BeregningsgrunnlagDto grunnlag) {
+	private static Beløp tilMånedsbeløp(Beløp årsbeløp) {
+		// Bruker ikke desimaler da månedsbeløp fastsatt av saksbehandler er uten desimaler
+		return årsbeløp.divider(MÅNEDER_I_ÅR, 0, RoundingMode.HALF_EVEN);
+	}
+
+	private static List<BeregningsgrunnlagPrStatusOgAndelDto> finnAndelerPåDatoIGrunnlag(LocalDate dato, BeregningsgrunnlagDto grunnlag) {
         if (dato.isBefore(grunnlag.getSkjæringstidspunkt())) {
             return grunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList();
         }
