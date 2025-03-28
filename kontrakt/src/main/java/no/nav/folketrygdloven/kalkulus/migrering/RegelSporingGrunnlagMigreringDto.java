@@ -5,9 +5,10 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagRegelType;
 
+import java.util.Objects;
+
 public class RegelSporingGrunnlagMigreringDto {
     @Valid
-    @NotNull
     private String regelEvaluering;
     @Valid
     @NotNull
@@ -23,7 +24,9 @@ public class RegelSporingGrunnlagMigreringDto {
     }
 
     public RegelSporingGrunnlagMigreringDto(String regelEvaluering, String regelInput, BeregningsgrunnlagRegelType regelType, String regelVersjon) {
-        this.regelEvaluering = regelEvaluering;
+		if (!regelType.equals(BeregningsgrunnlagRegelType.PERIODISERING)) {
+			this.regelEvaluering = Objects.requireNonNull(regelEvaluering);
+		}
         this.regelInput = regelInput;
         this.regelType = regelType;
         this.regelVersjon = regelVersjon;
