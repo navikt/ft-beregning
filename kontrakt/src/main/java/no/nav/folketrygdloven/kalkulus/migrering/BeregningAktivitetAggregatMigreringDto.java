@@ -3,11 +3,13 @@ package no.nav.folketrygdloven.kalkulus.migrering;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class BeregningAktivitetAggregatMigreringDto extends BaseMigreringDto {
 
     @Valid
