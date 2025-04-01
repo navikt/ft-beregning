@@ -7,7 +7,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagRegelType;
 
 import java.util.Objects;
 
-public class RegelSporingGrunnlagMigreringDto {
+public class RegelSporingGrunnlagMigreringDto extends BaseMigreringDto {
     @Valid
     private String regelEvaluering;
     @Valid

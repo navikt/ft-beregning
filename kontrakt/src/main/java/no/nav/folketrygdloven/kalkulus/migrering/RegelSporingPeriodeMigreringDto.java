@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Pattern;
 import no.nav.folketrygdloven.kalkulus.felles.v1.Periode;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagPeriodeRegelType;
 
-public class RegelSporingPeriodeMigreringDto {
+public class RegelSporingPeriodeMigreringDto extends BaseMigreringDto {
     @Valid
     @NotNull
     private String regelEvaluering;
