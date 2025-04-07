@@ -29,7 +29,7 @@ public class YtelseDto {
 
     public YtelseDto(YtelseDto ytelse) {
         this.ytelseType = ytelse.getYtelseType();
-		this.ytelseKilde = ytelse.getYtelseKilde();
+		this.ytelseKilde = ytelse.getYtelseKilde().orElse(YtelseKilde.UDEFINERT);
         this.periode = ytelse.getPeriode();
         this.ytelseGrunnlag = ytelse.getYtelseGrunnlag().orElse(null);
         this.ytelseAnvist = ytelse.getYtelseAnvist().stream().map(YtelseAnvistDto::new).collect(Collectors.toCollection(LinkedHashSet::new));
@@ -52,8 +52,8 @@ public class YtelseDto {
         this.ytelseType = ytelseType;
     }
 
-	public YtelseKilde getYtelseKilde() {
-		return ytelseKilde;
+	public Optional<YtelseKilde> getYtelseKilde() {
+		return Optional.ofNullable(ytelseKilde).filter(k -> !k.equals(YtelseKilde.UDEFINERT));
 	}
 
 	public void setYtelseKilde(YtelseKilde ytelseKilde) {
