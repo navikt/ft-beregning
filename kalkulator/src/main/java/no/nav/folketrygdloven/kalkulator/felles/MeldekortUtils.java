@@ -18,7 +18,8 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.YtelseType;
 
 public class MeldekortUtils {
 
-    public static final BigDecimal MAX_UTBETALING_PROSENT_AAP_DAG = BigDecimal.valueOf(200);
+    public static final BigDecimal MAX_UTBETALING_PROSENT_AAP_DAG_ARENA = BigDecimal.valueOf(200);
+	public static final BigDecimal MAX_UTBETALING_PROSENT_AAP_KELVIN = BigDecimal.valueOf(100);
 
     private MeldekortUtils() {}
 

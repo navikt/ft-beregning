@@ -70,6 +70,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.InntektskildeType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.InntektspostType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.SammenligningsgrunnlagType;
+import no.nav.folketrygdloven.kalkulus.kodeverk.YtelseKilde;
 import no.nav.folketrygdloven.kalkulus.kodeverk.YtelseType;
 import no.nav.folketrygdloven.kalkulus.typer.AktørId;
 
@@ -115,9 +116,10 @@ class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
                 skjæring.minusMonths(1).plusDays(1),
                 skjæring.plusMonths(6),
                 Beløp.fra(MELDEKORTSATS1),
-                MeldekortUtils.MAX_UTBETALING_PROSENT_AAP_DAG,
+                MeldekortUtils.MAX_UTBETALING_PROSENT_AAP_DAG_ARENA,
                 skjæring.minusMonths(1).plusDays(2),
-                skjæring.minusMonths(1).plusDays(16));
+                skjæring.minusMonths(1).plusDays(16),
+		        YtelseKilde.ARENA);
         aktørYtelseBuilder.leggTilYtelse(ytelse);
         ytelse = lagYtelse(YtelseType.DAGPENGER,
                 skjæring.minusMonths(3),
@@ -125,11 +127,38 @@ class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
                 Beløp.fra(MELDEKORTSATS2),
                 new BigDecimal(100),
                 skjæring.minusMonths(1).minusDays(13),
-                skjæring.minusMonths(1).plusDays(1));
+                skjæring.minusMonths(1).plusDays(1),
+		        YtelseKilde.ARENA);
         aktørYtelseBuilder.leggTilYtelse(ytelse);
         iayBuilder.leggTilAktørYtelse(aktørYtelseBuilder);
         iayGrunnlagBuilder.medData(iayBuilder);
     }
+
+	private void lagIAYKelvin(InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlagBuilder, BeregningsgrunnlagDto beregningsgrunnlag) {
+		LocalDate skjæring = beregningsgrunnlag.getSkjæringstidspunkt();
+		InntektArbeidYtelseAggregatBuilder iayBuilder = opprettForBehandling(iayGrunnlagBuilder);
+		InntektArbeidYtelseAggregatBuilder.AktørYtelseBuilder aktørYtelseBuilder = iayBuilder.getAktørYtelseBuilder();
+		YtelseDtoBuilder ytelse = lagYtelse(YtelseType.ARBEIDSAVKLARINGSPENGER,
+				skjæring.minusMonths(1).plusDays(1),
+				skjæring.plusMonths(6),
+				Beløp.fra(MELDEKORTSATS1),
+				MeldekortUtils.MAX_UTBETALING_PROSENT_AAP_KELVIN,
+				skjæring.minusMonths(1).plusDays(2),
+				skjæring.minusMonths(1).plusDays(16),
+				YtelseKilde.KELVIN);
+		aktørYtelseBuilder.leggTilYtelse(ytelse);
+		ytelse = lagYtelse(YtelseType.ARBEIDSAVKLARINGSPENGER,
+				skjæring.minusMonths(3),
+				skjæring.minusMonths(1),
+				Beløp.fra(MELDEKORTSATS2),
+				MeldekortUtils.MAX_UTBETALING_PROSENT_AAP_KELVIN,
+				skjæring.minusMonths(1).minusDays(13),
+				skjæring.minusMonths(1).plusDays(1),
+				YtelseKilde.KELVIN);
+		aktørYtelseBuilder.leggTilYtelse(ytelse);
+		iayBuilder.leggTilAktørYtelse(aktørYtelseBuilder);
+		iayGrunnlagBuilder.medData(iayBuilder);
+	}
 
     private KoblingReferanse lagIAYforTilstøtendeYtelserForMarginalTilfelle(InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlagBuilder, BeregningsgrunnlagDto beregningsgrunnlag) {
         LocalDate skjæring = beregningsgrunnlag.getSkjæringstidspunkt();
@@ -139,9 +168,10 @@ class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
                 skjæring.minusWeeks(2),
                 skjæring.plusMonths(6),
                 Beløp.fra(MELDEKORTSATS1),
-                MeldekortUtils.MAX_UTBETALING_PROSENT_AAP_DAG.subtract(BigDecimal.TEN),
+                MeldekortUtils.MAX_UTBETALING_PROSENT_AAP_DAG_ARENA.subtract(BigDecimal.TEN),
                 skjæring.minusDays(5),
-                skjæring.plusDays(9));
+                skjæring.plusDays(9),
+		        YtelseKilde.ARENA);
         aktørYtelseBuilder.leggTilYtelse(ytelse);
         iayBuilder.leggTilAktørYtelse(aktørYtelseBuilder);
         iayGrunnlagBuilder.medData(iayBuilder);
@@ -150,9 +180,9 @@ class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
 
     private YtelseDtoBuilder lagYtelse(YtelseType relatertYtelseType,
                                        LocalDate fom, LocalDate tom, Beløp beløp, BigDecimal utbetalingsgrad,
-                                       LocalDate meldekortFom, LocalDate meldekortTom) {
-        YtelseDtoBuilder ytelselseBuilder = YtelseDtoBuilder.ny().medPeriode(Intervall.fraOgMedTilOgMed(fom, tom)).medYtelseType(relatertYtelseType);
-        return ytelselseBuilder.medYtelseType(YtelseType.DAGPENGER)
+                                       LocalDate meldekortFom, LocalDate meldekortTom, YtelseKilde kilde) {
+        YtelseDtoBuilder ytelselseBuilder = YtelseDtoBuilder.ny().medYtelseKilde(kilde).medPeriode(Intervall.fraOgMedTilOgMed(fom, tom)).medYtelseType(relatertYtelseType);
+        return ytelselseBuilder.medYtelseType(relatertYtelseType)
                 .medVedtaksDagsats(beløp)
                 .leggTilYtelseAnvist(ytelselseBuilder.getAnvistBuilder()
                         .medAnvistPeriode(Intervall.fraOgMedTilOgMed(meldekortFom, meldekortTom))
@@ -428,6 +458,29 @@ class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
         assertThat(dpMånedsInntekter.getFirst().getUtbetalingsfaktor()).hasValueSatisfying(utbg ->
                 assertThat(utbg).isEqualByComparingTo(BigDecimal.ONE));
     }
+
+	@Test
+	void skal_mappe_utbetalingsgrad_fra_kelvin() {
+		//Arrange
+		BeregningsgrunnlagDto beregningsgrunnlag = buildVLBeregningsgrunnlag();
+		InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlagBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
+		lagIAYKelvin(iayGrunnlagBuilder, beregningsgrunnlag);
+		buildVLBGAktivitetStatus(beregningsgrunnlag, AktivitetStatus.ARBEIDSAVKLARINGSPENGER);
+		BeregningsgrunnlagPeriodeDto bgPeriode = buildVLBGPeriode(beregningsgrunnlag);
+		buildVLBGPStatus(bgPeriode, AktivitetStatus.ARBEIDSAVKLARINGSPENGER, Inntektskategori.ARBEIDSAVKLARINGSPENGER, MINUS_DAYS_10, NOW);
+
+
+		final no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag resultatBG = map(koblingReferanse, lagGrunnlag(beregningsgrunnlag), iayGrunnlagBuilder);
+
+		List<Periodeinntekt> aapInntekter = resultatBG.getInntektsgrunnlag().getPeriodeinntekter().stream()
+				.filter(mi -> mi.getInntektskilde().equals(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP))
+				.toList();
+		assertThat(aapInntekter).hasSize(1);
+		BigDecimal dagsats = BigDecimal.valueOf(MELDEKORTSATS1);
+		assertThat(aapInntekter.getFirst().getInntekt()).isEqualByComparingTo(dagsats);
+		assertThat(aapInntekter.getFirst().getUtbetalingsfaktor()).hasValueSatisfying(utbg ->
+				assertThat(utbg).isEqualByComparingTo(BigDecimal.ONE));
+	}
 
     @Test
     void skalMappeTilstøtendeYtelserDPogAAPMarginalTilfelle() {
