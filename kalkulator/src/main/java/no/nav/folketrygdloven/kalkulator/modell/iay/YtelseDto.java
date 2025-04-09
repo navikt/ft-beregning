@@ -10,12 +10,14 @@ import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
+import no.nav.folketrygdloven.kalkulus.kodeverk.YtelseKilde;
 import no.nav.folketrygdloven.kalkulus.kodeverk.YtelseType;
 
 public class YtelseDto {
 
     private Beløp vedtaksDagsats;
     private YtelseType ytelseType = YtelseType.UDEFINERT;
+	private YtelseKilde ytelseKilde = YtelseKilde.UDEFINERT;
     private Intervall periode;
     // Brukes til å skille ulike ytelser med samme ytelsetype
     private Set<YtelseAnvistDto> ytelseAnvist = new LinkedHashSet<>();
@@ -27,6 +29,7 @@ public class YtelseDto {
 
     public YtelseDto(YtelseDto ytelse) {
         this.ytelseType = ytelse.getYtelseType();
+		this.ytelseKilde = ytelse.getYtelseKilde().orElse(YtelseKilde.UDEFINERT);
         this.periode = ytelse.getPeriode();
         this.ytelseGrunnlag = ytelse.getYtelseGrunnlag().orElse(null);
         this.ytelseAnvist = ytelse.getYtelseAnvist().stream().map(YtelseAnvistDto::new).collect(Collectors.toCollection(LinkedHashSet::new));
@@ -49,7 +52,15 @@ public class YtelseDto {
         this.ytelseType = ytelseType;
     }
 
-    public Intervall getPeriode() {
+	public Optional<YtelseKilde> getYtelseKilde() {
+		return Optional.ofNullable(ytelseKilde).filter(k -> !k.equals(YtelseKilde.UDEFINERT));
+	}
+
+	public void setYtelseKilde(YtelseKilde ytelseKilde) {
+		this.ytelseKilde = ytelseKilde;
+	}
+
+	public Intervall getPeriode() {
         return periode;
     }
 
@@ -78,16 +89,15 @@ public class YtelseDto {
     public boolean equals(Object o) {
         if (this == o)
             return true;
-        if (!(o instanceof YtelseDto))
-            return false;
-        YtelseDto that = (YtelseDto) o;
-        return Objects.equals(ytelseType, that.ytelseType) &&
+        return o instanceof YtelseDto that &&
+	            Objects.equals(ytelseType, that.ytelseType) &&
+		        Objects.equals(ytelseKilde, that.ytelseKilde) &&
                 Objects.equals(periode, that.periode);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ytelseType, periode);
+        return Objects.hash(ytelseType, ytelseKilde, periode);
     }
 
     @Override
