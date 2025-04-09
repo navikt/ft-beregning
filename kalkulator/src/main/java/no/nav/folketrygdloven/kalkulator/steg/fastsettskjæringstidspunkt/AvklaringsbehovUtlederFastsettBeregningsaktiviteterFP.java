@@ -87,8 +87,8 @@ public class AvklaringsbehovUtlederFastsettBeregningsaktiviteterFP implements Av
 	    var ytelseFilter = new YtelseFilterDto(aktørYtelse).før(skjæringstidspunkt);
 
 	    Optional<YtelseDto> nyligsteVedtak = MeldekortUtils.sisteVedtakFørStpForType(ytelseFilter, skjæringstidspunkt, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER));
-	    Optional<YtelseAnvistDto> nyligsteMeldekort = MeldekortUtils.sisteHeleMeldekortFørStp(ytelseFilter, nyligsteVedtak.get(), skjæringstidspunkt, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER));
-	    var erVedtakFraKelvin = nyligsteVedtak.map(YtelseDto::harKildeKelvin).orElse(false);
+	    Optional<YtelseAnvistDto> nyligsteMeldekort = nyligsteVedtak.flatMap(nv -> MeldekortUtils.sisteHeleMeldekortFørStp(ytelseFilter, nv, skjæringstidspunkt, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER)));
+	    boolean erVedtakFraKelvin = nyligsteVedtak.map(YtelseDto::harKildeKelvin).orElse(false);
 	    return harMaksUtbetalingsprosent(nyligsteMeldekort, erVedtakFraKelvin ? MeldekortUtils.MAX_UTBETALING_PROSENT_AAP_KELVIN : MeldekortUtils.MAX_UTBETALING_PROSENT_AAP_DAG_ARENA);
     }
 
