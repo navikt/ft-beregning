@@ -65,13 +65,13 @@ public final class LagVurderRefusjonDto {
                 // Første periode, alle andeler skal legges til
                 List<RefusjonAndelTilVurderingDto> andeler = e.getValue().stream()
                         .map(andel -> lagAndel(e.getKey(), andel, gjeldendeBeregningsgrunnlag, originaleBg, gjeldendeOverstyringer, arbeidsforholdInformasjon))
-                        .collect(Collectors.toList());
+                        .toList();
                 dtoer.addAll(andeler);
             } else {
                 // Senere perioden, kun legg til andeler som ikke var i forrige periode (vi vet periodene er sammenhengende)
                 List<RefusjonAndelTilVurderingDto> andeler = e.getValue().stream().filter(a -> !forrigeEntry.getValue().contains(a))
                         .map(andel -> lagAndel(e.getKey(), andel, gjeldendeBeregningsgrunnlag, originaleBg, gjeldendeOverstyringer, arbeidsforholdInformasjon))
-                        .collect(Collectors.toList());
+                        .toList();
                 dtoer.addAll(andeler);
             }
         }
@@ -160,7 +160,7 @@ public final class LagVurderRefusjonDto {
                     no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver bgAndelAG = bga.getArbeidsgiver().orElse(null);
                     return Objects.equals(bgAndelAG, refusjonAndel.getArbeidsgiver()) && bgAndelReferanse.gjelderFor(refusjonAndel.getArbeidsforholdRef());
                 })
-                .collect(Collectors.toList());
+                .toList();
         return matchedeAndeler.stream()
                 .filter(andel -> andel.getBgAndelArbeidsforhold().isPresent() && andel.getBgAndelArbeidsforhold().get().getGjeldendeRefusjonPrÅr() != null)
                 .map(a -> a.getBgAndelArbeidsforhold().get().getGjeldendeRefusjonPrÅr())
@@ -216,12 +216,12 @@ public final class LagVurderRefusjonDto {
         List<TidligereUtbetalingDto> tidligereUtbetalinger = new ArrayList<>();
         List<BeregningsgrunnlagPeriodeDto> alleOrginalePerioder = orginaltBG.stream().flatMap(bg -> bg.getBeregningsgrunnlagPerioder().stream())
                 .filter(p -> p.getDagsats() != null && p.getDagsats() > 0)
-                .collect(Collectors.toList());
+                .toList();
         alleOrginalePerioder.forEach(p -> {
             List<BeregningsgrunnlagPrStatusOgAndelDto> andelerMedSammeAG = p.getBeregningsgrunnlagPrStatusOgAndelList().stream()
                     .filter(andel -> andel.getArbeidsgiver().isPresent())
                     .filter(andel -> andel.getArbeidsgiver().get().equals(ag))
-                    .collect(Collectors.toList());
+                    .toList();
             andelerMedSammeAG.forEach(a -> lagTidligereUtbetaling(a).ifPresent(tidligereUtbetalinger::add));
         });
         return komprimerForHelg(tidligereUtbetalinger);
