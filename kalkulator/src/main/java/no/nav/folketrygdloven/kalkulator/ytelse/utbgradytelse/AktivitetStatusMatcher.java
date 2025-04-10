@@ -10,13 +10,15 @@ public class AktivitetStatusMatcher {
         return (UttakArbeidType.IKKE_YRKESAKTIV.equals(uttakArbeidType) && status.erArbeidstaker()) ||
 		        (UttakArbeidType.SELVSTENDIG_NÆRINGSDRIVENDE_IKKE_AKTIV.equals(uttakArbeidType) && status.erSelvstendigNæringsdrivende()) ||
 		        (UttakArbeidType.FRILANSER_IKKE_AKTIV.equals(uttakArbeidType) && status.erFrilanser()) ||
-                matcherStatusUtenIkkeYrkesaktiv(status, uttakArbeidType);
+                matcherStatusUtenIkkeAktiv(status, uttakArbeidType);
     }
 
-    public static boolean matcherStatusUtenIkkeYrkesaktiv(AktivitetStatus status, UttakArbeidType uttakArbeidType) {
-        return !UttakArbeidType.IKKE_YRKESAKTIV.equals(uttakArbeidType) && mapAktivitetStatus(uttakArbeidType).equals(status);
-    }
-
+	public static boolean matcherStatusUtenIkkeAktiv(AktivitetStatus status, UttakArbeidType uttakArbeidType) {
+		return switch (uttakArbeidType) {
+			case FRILANSER_IKKE_AKTIV, SELVSTENDIG_NÆRINGSDRIVENDE_IKKE_AKTIV, IKKE_YRKESAKTIV  -> false;
+			default -> mapAktivitetStatus(uttakArbeidType).equals(status);
+		};
+	}
 
     private static AktivitetStatus mapAktivitetStatus(UttakArbeidType uttakArbeidType) {
         if (UttakArbeidType.ORDINÆRT_ARBEID.equals(uttakArbeidType)) {

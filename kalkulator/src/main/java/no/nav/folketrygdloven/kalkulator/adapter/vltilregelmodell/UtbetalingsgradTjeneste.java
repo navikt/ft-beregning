@@ -1,7 +1,7 @@
 package no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell;
 
 import static no.nav.folketrygdloven.kalkulator.ytelse.utbgradytelse.AktivitetStatusMatcher.matcherStatus;
-import static no.nav.folketrygdloven.kalkulator.ytelse.utbgradytelse.AktivitetStatusMatcher.matcherStatusUtenIkkeYrkesaktiv;
+import static no.nav.folketrygdloven.kalkulator.ytelse.utbgradytelse.AktivitetStatusMatcher.matcherStatusUtenIkkeAktiv;
 
 import java.math.RoundingMode;
 import java.util.List;
@@ -93,16 +93,18 @@ public class UtbetalingsgradTjeneste {
 		if (status.erArbeidstaker()) {
 			throw new IllegalStateException("Bruk Arbeidsforhold-mapper");
 		}
-		return finnPerioderForStatus(status, utbetalingsgradGrunnlag)
+		return finnPerioderForStatus(status, utbetalingsgradGrunnlag, periode)
 				.stream()
 				.flatMap(utb -> utb.getPeriodeMedUtbetalingsgrad().stream())
 				.filter(p -> p.getPeriode().inkluderer(periode.getFomDato()))
 				.findFirst();
 	}
 
-	public static Optional<UtbetalingsgradPrAktivitetDto> finnPerioderForStatus(AktivitetStatus status, UtbetalingsgradGrunnlag utbetalingsgradGrunnlag) {
+	public static Optional<UtbetalingsgradPrAktivitetDto> finnPerioderForStatus(AktivitetStatus status, UtbetalingsgradGrunnlag utbetalingsgradGrunnlag, Intervall periode) {
 		return utbetalingsgradGrunnlag.getUtbetalingsgradPrAktivitet().stream()
-				.filter(ubtGrad -> matcherStatus(status, ubtGrad.getUtbetalingsgradArbeidsforhold().getUttakArbeidType())).findFirst();
+				.filter(ubtGrad -> matcherStatus(status, ubtGrad.getUtbetalingsgradArbeidsforhold().getUttakArbeidType()))
+				.filter(ubtGrad -> ubtGrad.getPeriodeMedUtbetalingsgrad().stream().anyMatch(p -> p.getPeriode().overlapper(periode)))
+				.findFirst();
 	}
 
 	public static Utbetalingsgrad finnUtbetalingsgradForArbeid(Arbeidsgiver arbeidsgiver,
@@ -151,7 +153,7 @@ public class UtbetalingsgradTjeneste {
 
 	private static boolean erArbeidstaker(UtbetalingsgradPrAktivitetDto ubtGrad, boolean ignorerIkkeYrkesaktivStatus) {
 		if (ignorerIkkeYrkesaktivStatus) {
-			return matcherStatusUtenIkkeYrkesaktiv(AktivitetStatus.ARBEIDSTAKER, ubtGrad.getUtbetalingsgradArbeidsforhold().getUttakArbeidType());
+			return matcherStatusUtenIkkeAktiv(AktivitetStatus.ARBEIDSTAKER, ubtGrad.getUtbetalingsgradArbeidsforhold().getUttakArbeidType());
 		}
 		return matcherStatus(AktivitetStatus.ARBEIDSTAKER, ubtGrad.getUtbetalingsgradArbeidsforhold().getUttakArbeidType());
 	}
