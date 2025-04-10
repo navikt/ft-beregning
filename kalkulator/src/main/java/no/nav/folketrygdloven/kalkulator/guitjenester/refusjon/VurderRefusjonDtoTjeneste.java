@@ -30,8 +30,8 @@ public final class VurderRefusjonDtoTjeneste {
     public static Optional<RefusjonTilVurderingDto> lagDto(BeregningsgrunnlagGUIInput input) {
         Optional<BeregningsgrunnlagDto> beregningsgrunnlag = input.getBeregningsgrunnlagGrunnlag().getBeregningsgrunnlagHvisFinnes();
         List<BeregningsgrunnlagDto> originaleGrunnlag = input.getBeregningsgrunnlagGrunnlagFraForrigeBehandling().stream()
-                .flatMap(gr -> gr.getBeregningsgrunnlagHvisFinnes().stream()).collect(Collectors.toList());
-        if (originaleGrunnlag.isEmpty() || beregningsgrunnlag.isEmpty()) {
+                .flatMap(gr -> gr.getBeregningsgrunnlagHvisFinnes().stream()).toList();
+        if (originaleGrunnlag.isEmpty() || beregningsgrunnlag.isEmpty() || beregningsgrunnlag.get().getGrunnbeløp() == null) {
             return Optional.empty();
         }
         var grenseverdi = beregningsgrunnlag.get().getGrunnbeløp().multipliser(KonfigTjeneste.getAntallGØvreGrenseverdi());
@@ -64,12 +64,12 @@ public final class VurderRefusjonDtoTjeneste {
                 .orElse(Collections.emptyList())
                 .stream()
                 .filter(pa -> !pa.getRefusjonPerioder().isEmpty())
-                .collect(Collectors.toList());
+                .toList();
         refusjonOverstyringer.forEach(avkalring -> {
             List<RefusjonAndel> tidligereAvklaringerPåAG = avkalring.getRefusjonPerioder().stream()
                     .map(refusjonPeriode -> new RefusjonAndel(AktivitetStatus.ARBEIDSTAKER, avkalring.getArbeidsgiver(), refusjonPeriode.getArbeidsforholdRef(),
                             Beløp.ZERO, Beløp.ZERO)) // De to siste parameterne brukes ikke for å lage dto så kan settes til dummy-verdier
-                    .collect(Collectors.toList());
+                    .toList();
             andeler.addAll(tidligereAvklaringerPåAG);
         });
         if (andeler.isEmpty()) {
