@@ -253,7 +253,7 @@ public class SimulerGraderingMotInntektTjeneste {
     }
 
     private static BigDecimal finnVektetSnittfraværForFrilans(Intervall periode, UtbetalingsgradGrunnlag utbetalingsgradGrunnlag) {
-        var utbetalingsgradPrAktivitetDtos = finnPerioderForStatus(AktivitetStatus.FRILANSER, utbetalingsgradGrunnlag);
+        var utbetalingsgradPrAktivitetDtos = finnPerioderForStatus(AktivitetStatus.FRILANSER, utbetalingsgradGrunnlag, periode);
         return finnVektetSnittfravær(periode, utbetalingsgradPrAktivitetDtos.map(List::of).orElse(Collections.emptyList()));
     }
 
