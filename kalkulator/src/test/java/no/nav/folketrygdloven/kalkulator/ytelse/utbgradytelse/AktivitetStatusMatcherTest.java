@@ -19,7 +19,7 @@ class AktivitetStatusMatcherTest {
 	@Test
 	public void skal_mappe_FL_IKKE_AKTIV_til_FL() {
 		boolean matcher = AktivitetStatusMatcher.matcherStatus(AktivitetStatus.FRILANSER, UttakArbeidType.FRILANSER_IKKE_AKTIV);
-		assertTrue(matcher, "FL_IKKE_AKTIV skulle matche sevlstendig næringsdrivende");
+		assertTrue(matcher, "FL_IKKE_AKTIV skulle matche sevlstendig frilanser");
 	}
 
 }
