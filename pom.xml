@@ -38,7 +38,7 @@
     </developers>
 
     <properties>
-        <java.version>21</java.version>
+        <java.version>24</java.version>
 
         <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
         <sonar.projectName>ft-berergning</sonar.projectName>
