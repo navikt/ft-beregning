@@ -41,7 +41,7 @@ public class BeregningsgrunnlagGrunnlagMigreringDto extends BaseMigreringDto {
 
     @Valid
     @NotNull
-    @Size(max=200)
+    @Size(max=400)
     private List<RegelSporingPeriodeMigreringDto> periodesporinger;
 
 	@Valid
