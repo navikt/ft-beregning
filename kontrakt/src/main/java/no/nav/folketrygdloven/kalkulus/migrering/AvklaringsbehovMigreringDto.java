@@ -19,7 +19,7 @@ public class AvklaringsbehovMigreringDto extends BaseMigreringDto {
 	private AvklaringsbehovStatus status;
 
 	@Valid
-	@Pattern(regexp = "^[\\p{Graph}\\p{Space}\\p{Sc}\\p{L}\\p{M}\\p{N}§]+$", message = "[${validatedValue}] matcher ikke tillatt pattern [{regexp}]")
+	@Pattern(regexp = "^[\\p{N}\\p{L}\\p{M}\\p{Z}\\p{Cf}\\p{P}\\p{Sc}\\p{Sk}\n\t+=]*$", message = "[${validatedValue}] matcher ikke tillatt pattern [{regexp}]")
 	private String begrunnelse;
 
 	@Valid
