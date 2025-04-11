@@ -84,20 +84,20 @@ public class AvklaringsbehovUtlederFastsettBeregningsaktiviteterFP implements Av
         if (beregningAktivitetAggregat.getAktiviteterPåDato(skjæringstidspunkt).size() <= 1) {
             return false;
         }
-        return hentUtbetalingsprosent(aktørYtelse, skjæringstidspunkt, YtelseType.ARBEIDSAVKLARINGSPENGER)
-                .filter(verdi -> verdi.compareTo(MeldekortUtils.MAX_UTBETALING_PROSENT_AAP_DAG) == 0)
-                .isPresent();
+	    var ytelseFilter = new YtelseFilterDto(aktørYtelse).før(skjæringstidspunkt);
+
+	    Optional<YtelseDto> nyligsteVedtak = MeldekortUtils.sisteVedtakFørStpForType(ytelseFilter, skjæringstidspunkt, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER));
+	    Optional<YtelseAnvistDto> nyligsteMeldekort = nyligsteVedtak.flatMap(nv -> MeldekortUtils.sisteHeleMeldekortFørStp(ytelseFilter, nv, skjæringstidspunkt, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER)));
+	    boolean erVedtakFraKelvin = nyligsteVedtak.map(YtelseDto::harKildeKelvin).orElse(false);
+	    return harMaksUtbetalingsprosent(nyligsteMeldekort, erVedtakFraKelvin ? MeldekortUtils.MAX_UTBETALING_PROSENT_AAP_KELVIN : MeldekortUtils.MAX_UTBETALING_PROSENT_AAP_DAG_ARENA);
     }
 
-    private static Optional<BigDecimal> hentUtbetalingsprosent(Optional<AktørYtelseDto> aktørYtelse, LocalDate skjæringstidspunkt, YtelseType ytelseTypeForMeldekort) {
-        var ytelseFilter = new YtelseFilterDto(aktørYtelse).før(skjæringstidspunkt);
+    private static boolean harMaksUtbetalingsprosent(Optional<YtelseAnvistDto> nyligsteMeldekort, BigDecimal maksGrad) {
+	    var utbetalingsprosent = Optional.of(nyligsteMeldekort.flatMap(YtelseAnvistDto::getUtbetalingsgradProsent)
+			    .map(Stillingsprosent::verdi)
+			    .orElse(maksGrad));
 
-        Optional<YtelseDto> nyligsteVedtak = MeldekortUtils.sisteVedtakFørStpForType(ytelseFilter, skjæringstidspunkt, Set.of(ytelseTypeForMeldekort));
-        if (nyligsteVedtak.isEmpty()) {
-            return Optional.empty();
-        }
-        Optional<YtelseAnvistDto> nyligsteMeldekort = MeldekortUtils.sisteHeleMeldekortFørStp(ytelseFilter, nyligsteVedtak.get(), skjæringstidspunkt, Set.of(ytelseTypeForMeldekort));
-        return Optional.of(nyligsteMeldekort.flatMap(YtelseAnvistDto::getUtbetalingsgradProsent).map(Stillingsprosent::verdi).orElse(MeldekortUtils.MAX_UTBETALING_PROSENT_AAP_DAG));
+	    return utbetalingsprosent.stream().anyMatch(verdi -> verdi.compareTo(maksGrad) == 0);
     }
 
     @Override

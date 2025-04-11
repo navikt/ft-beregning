@@ -56,6 +56,10 @@ public class YtelseDto {
 		return Optional.ofNullable(ytelseKilde).filter(k -> !k.equals(YtelseKilde.UDEFINERT));
 	}
 
+	public boolean harKildeKelvin() {
+		return getYtelseKilde().map(k -> k.equals(YtelseKilde.KELVIN)).orElse(false);
+	}
+
 	public void setYtelseKilde(YtelseKilde ytelseKilde) {
 		this.ytelseKilde = ytelseKilde;
 	}
