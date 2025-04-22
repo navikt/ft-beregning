@@ -81,8 +81,7 @@ class FinnInntektFraYtelse {
 
 		var utbetalingsfaktor = ytelseAnvist
 				.flatMap(YtelseAnvistDto::getUtbetalingsgradProsent)
-				.map(Stillingsprosent::verdi)
-				.map(verdi -> ytelse.harKildeKelvin() ? verdi.divide(MeldekortUtils.MAX_UTBETALING_PROSENT_AAP_KELVIN, 10, RoundingMode.HALF_UP) : verdi.divide(MeldekortUtils.MAX_UTBETALING_PROSENT_AAP_DAG_ARENA, 10, RoundingMode.HALF_UP))
+				.map(verdi -> ytelse.harKildeKelvin() ? verdi.tilNormalisertGrad(MeldekortUtils.MAX_UTBETALING_PROSENT_AAP_KELVIN) : verdi.tilNormalisertGrad(MeldekortUtils.MAX_UTBETALING_PROSENT_AAP_DAG_ARENA))
 				.orElse(BigDecimal.ONE);
 
 		return årsbeløpUtenHensynTilUtbetalingsfaktor.multipliser(utbetalingsfaktor);
