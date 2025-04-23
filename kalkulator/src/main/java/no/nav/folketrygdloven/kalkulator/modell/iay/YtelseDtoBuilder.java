@@ -22,6 +22,10 @@ public class YtelseDtoBuilder {
         return new YtelseDtoBuilder(new YtelseDto(), false);
     }
 
+	public static YtelseDtoBuilder oppdatere(YtelseDto ytelse) {
+		return new YtelseDtoBuilder(ytelse, true);
+	}
+
     public YtelseDtoBuilder medYtelseType(YtelseType relatertYtelseType) {
         ytelse.setYtelseType(relatertYtelseType);
         return this;

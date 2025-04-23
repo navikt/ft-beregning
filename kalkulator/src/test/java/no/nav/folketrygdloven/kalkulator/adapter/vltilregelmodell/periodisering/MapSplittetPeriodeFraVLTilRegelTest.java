@@ -1,7 +1,6 @@
 package no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.periodisering;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 
 import java.time.LocalDate;
 
@@ -24,7 +23,7 @@ class MapSplittetPeriodeFraVLTilRegelTest {
         // Arrange
         LocalDate fom = LocalDate.now();
         LocalDate tom = fom.plusWeeks(6);
-        BeregningsgrunnlagDto beregningsgrunnlag = mock(BeregningsgrunnlagDto.class);
+        BeregningsgrunnlagDto beregningsgrunnlag = new BeregningsgrunnlagDto();
         BeregningsgrunnlagPeriodeDto bgPeriode = BeregningsgrunnlagPeriodeDto.ny()
             .medBeregningsgrunnlagPeriode(fom, tom)
             .build(beregningsgrunnlag);
@@ -60,7 +59,7 @@ class MapSplittetPeriodeFraVLTilRegelTest {
         // Arrange
         LocalDate fom = LocalDate.now();
         LocalDate tom = fom.plusWeeks(6);
-        BeregningsgrunnlagDto beregningsgrunnlag = mock(BeregningsgrunnlagDto.class);
+        BeregningsgrunnlagDto beregningsgrunnlag = new BeregningsgrunnlagDto();
         BeregningsgrunnlagPeriodeDto bgPeriode = BeregningsgrunnlagPeriodeDto.ny()
             .medBeregningsgrunnlagPeriode(fom, tom)
             .leggTilPeriodeÅrsak(PeriodeÅrsak.REFUSJON_OPPHØRER)
@@ -81,7 +80,7 @@ class MapSplittetPeriodeFraVLTilRegelTest {
         // Arrange
         LocalDate fom = LocalDate.now();
         LocalDate tom = fom.plusWeeks(6);
-        BeregningsgrunnlagDto beregningsgrunnlag = mock(BeregningsgrunnlagDto.class);
+        BeregningsgrunnlagDto beregningsgrunnlag = new BeregningsgrunnlagDto();
         BeregningsgrunnlagPeriodeDto bgPeriode = BeregningsgrunnlagPeriodeDto.ny()
             .medBeregningsgrunnlagPeriode(fom, tom)
             .leggTilPeriodeÅrsak(PeriodeÅrsak.GRADERING)

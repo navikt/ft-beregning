@@ -75,7 +75,7 @@ public class KortvarigArbeidsforholdTjeneste {
 
         LocalDateTimeline<Boolean> ansettelsesTidslinje = new LocalDateTimeline<>(periodeSegmenter, håndterOverlapp()).compress();
 
-        return ansettelsesTidslinje.getDatoIntervaller()
+        return ansettelsesTidslinje.getLocalDateIntervals()
             .stream()
             .filter(avtale -> starterFørOgSlutterEtter(beregningsgrunnlag.getSkjæringstidspunkt(), avtale))
             .anyMatch(KortvarigArbeidsforholdTjeneste::isDurationLessThan6Months);

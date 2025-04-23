@@ -1,14 +1,10 @@
 package no.nav.folketrygdloven.kalkulator.guitjenester.fakta;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +18,7 @@ import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BGAndelArbeid
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningAktivitetAggregatDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDto;
+import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
 import no.nav.folketrygdloven.kalkulator.modell.gradering.AktivitetGradering;
@@ -50,7 +47,9 @@ class RefusjonEllerGraderingArbeidsforholdDtoTjenesteTest {
 
     private final Arbeidsgiver arbeidsgiver1 = Arbeidsgiver.virksomhet(ORGNR);
 
-    private final BeregningAktivitetAggregatDto beregningAktivitetAggregat = mock(BeregningAktivitetAggregatDto.class);
+    private final BeregningAktivitetAggregatDto beregningAktivitetAggregat = BeregningAktivitetAggregatDto.builder()
+		    .medSkjæringstidspunktOpptjening(SKJÆRINGSTIDSPUNKT_OPPTJENING)
+		    .build();
 
     private BeregningsgrunnlagDto beregningsgrunnlag;
     private BeregningsgrunnlagPrStatusOgAndelDto arbeidstakerAndel;
@@ -63,8 +62,7 @@ class RefusjonEllerGraderingArbeidsforholdDtoTjenesteTest {
     void setUp() {
 
         referanse = referanse.medSkjæringstidspunkt(Skjæringstidspunkt.builder().medSkjæringstidspunktOpptjening(SKJÆRINGSTIDSPUNKT_OPPTJENING).build());
-        when(beregningAktivitetAggregat.getSkjæringstidspunktOpptjening()).thenReturn(SKJÆRINGSTIDSPUNKT_OPPTJENING);
-        when(beregningAktivitetAggregat.getBeregningAktiviteter()).thenReturn(Collections.emptyList());
+
 
         beregningsgrunnlag = BeregningsgrunnlagDto.builder().medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING).medGrunnbeløp(GRUNNBELØP)
                 .build();
@@ -79,10 +77,10 @@ class RefusjonEllerGraderingArbeidsforholdDtoTjenesteTest {
                 .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                 .medBGAndelArbeidsforhold(arbeidsforholdBuilder)
                 .build(periode);
-        grunnlagEntitet = mock(BeregningsgrunnlagGrunnlagDto.class);
-        when(grunnlagEntitet.getBeregningsgrunnlagHvisFinnes()).thenReturn(Optional.of(beregningsgrunnlag));
-        when(grunnlagEntitet.getGjeldendeAktiviteter()).thenReturn(beregningAktivitetAggregat);
-        when(grunnlagEntitet.getBeregningsgrunnlagTilstand()).thenReturn(BeregningsgrunnlagTilstand.OPPDATERT_MED_REFUSJON_OG_GRADERING);
+        grunnlagEntitet = BeregningsgrunnlagGrunnlagDtoBuilder.nytt()
+		        .medBeregningsgrunnlag(beregningsgrunnlag)
+				.medRegisterAktiviteter(beregningAktivitetAggregat)
+				.build(BeregningsgrunnlagTilstand.OPPDATERT_MED_REFUSJON_OG_GRADERING);
     }
 
     @Test

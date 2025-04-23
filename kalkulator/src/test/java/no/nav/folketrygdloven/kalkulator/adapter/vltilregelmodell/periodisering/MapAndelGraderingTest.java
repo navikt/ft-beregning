@@ -2,8 +2,6 @@ package no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.periodisering
 
 import static no.nav.fpsak.tidsserie.LocalDateInterval.TIDENES_ENDE;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -11,6 +9,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import no.nav.folketrygdloven.kalkulator.KoblingReferanseMock;
 import no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.periodisering.gradering.MapAndelGradering;
 import no.nav.folketrygdloven.kalkulator.modell.behandling.KoblingReferanse;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
@@ -29,9 +28,7 @@ class MapAndelGraderingTest {
 
     @BeforeEach
     void setUp() {
-        ref = mock(KoblingReferanse.class);
-        when(ref.getSkjæringstidspunktBeregning()).thenReturn(LocalDate.now());
-        when(ref.getFagsakYtelseType()).thenReturn(FagsakYtelseType.FORELDREPENGER);
+        ref = new KoblingReferanseMock(LocalDate.now(), FagsakYtelseType.FORELDREPENGER);
     }
 
     @Test

@@ -12,9 +12,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.UtbetalingsgradTjeneste;
 import no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.fastsett.MapFullføreBeregningsgrunnlagFraVLTilRegel;
@@ -53,8 +50,6 @@ import no.nav.folketrygdloven.regelmodelloversetter.KalkulusRegler;
  * Metoder for å bestemme inntekt må gås over funksjonelt før den kan brukes i automatisk saksbehandling.
  */
 public class SimulerGraderingMotInntektTjeneste {
-
-    private static final Logger LOG = LoggerFactory.getLogger(SimulerGraderingMotInntektTjeneste.class);
 
     private final MapFullføreBeregningsgrunnlagFraVLTilRegel mapFullføreBeregningsgrunnlagFraVLTilRegel = new MapFullføreBeregningsgrunnlagFraVLTilRegel();
 
@@ -176,7 +171,6 @@ public class SimulerGraderingMotInntektTjeneste {
                     iay,
                     ytelsespesifiktGrunnlag);
         } else {
-            LOG.info("Fant tilkommet inntekt for status {}. Setter 0 i brutto inntekt.", it.getAktivitetStatus().getKode());
             inntekt = Beløp.ZERO;
         }
         return new TilkommetInntektDto(
@@ -295,7 +289,6 @@ public class SimulerGraderingMotInntektTjeneste {
 
         var antallPoster = aktuellePoster.size();
         if (antallPoster == 0) {
-            LOG.info("Fant ingen inntektsposter for arbeidsgiver {} i periode {}", arbeidsgiver, periode);
             return Beløp.ZERO;
         }
         var beløp = aktuellePoster.stream()
@@ -335,7 +328,6 @@ public class SimulerGraderingMotInntektTjeneste {
 
         var antallPoster = aktuellePoster.size();
         if (antallPoster == 0) {
-            LOG.info("Fant ingen inntektsposter for arbeidsgiver {} i periode {}", a, periode);
             return Beløp.ZERO;
         }
         return aktuellePoster.stream().map(post -> finnBruttoInntektFraInntektspostForFrilans(ytelsespesifiktGrunnlag, post))
@@ -349,7 +341,6 @@ public class SimulerGraderingMotInntektTjeneste {
         var postPeriode = post.getPeriode();
         var virkedagerIPeriode = getBeregnVirkedager(postPeriode);
         if (virkedagerIPeriode == 0) {
-            LOG.info("Fant inntektspost uten virkedager for arbeidsgiver {} i periode {}", arbeidsgiver, post.getPeriode());
             return Beløp.ZERO;
         }
         var bruttoInntekt = utledBruttoInntektFraTilkommetForArbeidstaker(post.getBeløp(), arbeidsgiver, arbeidsforholdRef, postPeriode, ytelsespesifiktGrunnlag);
