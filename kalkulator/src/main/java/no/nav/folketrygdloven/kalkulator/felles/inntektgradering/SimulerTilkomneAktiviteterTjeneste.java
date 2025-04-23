@@ -1,5 +1,9 @@
 package no.nav.folketrygdloven.kalkulator.felles.inntektgradering;
 
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagInput;
 import no.nav.folketrygdloven.kalkulator.input.UtbetalingsgradGrunnlag;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
@@ -9,10 +13,6 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.fpsak.tidsserie.LocalDateInterval;
 import no.nav.fpsak.tidsserie.LocalDateSegment;
 import no.nav.fpsak.tidsserie.LocalDateTimeline;
-
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
 
 /**
  * Utleder hvilke aktiviteter som vil bli regnet som tilkommet i hvilke perioder uten å faktisk endre grunnlaget.
