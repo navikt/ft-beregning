@@ -12,9 +12,6 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import no.nav.folketrygdloven.kalkulator.KoblingReferanseMock;
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagInput;
@@ -55,7 +52,6 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.PeriodeÅrsak;
 import no.nav.folketrygdloven.kalkulus.kodeverk.UttakArbeidType;
 
-@ExtendWith(MockitoExtension.class)
 class FordelPerioderTjenestePSBTest {
     private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.of(2019, Month.JANUARY, 4);
     private static final Skjæringstidspunkt skjæringstidspunkt = Skjæringstidspunkt.builder()
@@ -66,7 +62,7 @@ class FordelPerioderTjenestePSBTest {
     private static final String ORG_NUMMER = "45345";
     private static final String ORG_NUMMER_2 = "15345";
 
-    private final BeregningAktivitetAggregatDto beregningAktivitetAggregat = Mockito.mock(BeregningAktivitetAggregatDto.class);
+    private final BeregningAktivitetAggregatDto beregningAktivitetAggregat = new BeregningAktivitetAggregatDto();
     private List<BeregningAktivitetDto> aktiviteter = new ArrayList<>();
 
     private FordelPerioderTjeneste tjeneste;

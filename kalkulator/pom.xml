@@ -35,11 +35,6 @@
             <artifactId>fpsak-tidsserie</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
-
     </dependencies>
 
     <build>
@@ -53,6 +48,7 @@
                     <encoding>UTF-8</encoding>
                     <release>${java.version}</release>
                     <parameters>true</parameters>
+                    <proc>none</proc>
                     <!-- ikke kompiler denne modulen med enable-preview. skaper trøbbel ved oppgradering av java versjoner der kontraker benyttes av andre -->
                 </configuration>
             </plugin>

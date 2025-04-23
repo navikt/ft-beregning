@@ -40,6 +40,9 @@
     <properties>
         <java.version>21</java.version>
 
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
         <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
         <sonar.projectName>ft-berergning</sonar.projectName>
         <sonar.projectKey>navikt_ft-beregning</sonar.projectKey>
@@ -82,11 +85,6 @@
                 <artifactId>jakarta.validation-api</artifactId>
                 <version>3.1.1</version>
             </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>2.0.17</version>
-            </dependency>
 
             <!-- Felles biblioteker - Importerte avhengigheter. -->
             <dependency>
@@ -125,15 +123,6 @@
                 <scope>import</scope>
             </dependency>
 
-            <!-- Mockito -->
-            <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-bom</artifactId>
-                <version>5.17.0</version>
-                <scope>import</scope>
-                <type>pom</type>
-            </dependency>
-
         </dependencies>
     </dependencyManagement>
 
@@ -142,12 +131,6 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
 
@@ -185,6 +168,7 @@
                         <target>${java.version}</target>
                         <release>${java.version}</release>
                         <encoding>UTF-8</encoding>
+                        <proc>none</proc>
                     </configuration>
                 </plugin>
                 <plugin>
