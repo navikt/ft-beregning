@@ -2,11 +2,14 @@ package no.nav.folketrygdloven.kalkulus.migrering;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import no.nav.folketrygdloven.kalkulus.felles.v1.Periode;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class BesteberegningMånedsgrunnlagMigreringDto extends BaseMigreringDto {
 
     @Valid
