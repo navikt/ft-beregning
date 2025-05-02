@@ -25,7 +25,7 @@ import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusMod
 public class FastsettSkjæringstidspunktOgStatuserFRISINN {
 
     public static BeregningsgrunnlagRegelResultat fastsett(BeregningsgrunnlagInput input, BeregningAktivitetAggregatDto beregningAktivitetAggregat, List<Grunnbeløp> grunnbeløpSatser) {
-        AktivitetStatusModell regelmodell = MapBGStatuserFraVLTilRegel.map(beregningAktivitetAggregat);
+        AktivitetStatusModell regelmodell = MapBGStatuserFraVLTilRegel.map(beregningAktivitetAggregat, null); // TODO: Sjekk om denne skal være null eller om det skal refaktoreres for å unngå det
         RegelResultat regelResultatFastsettSkjæringstidspunkt = fastsettSkjæringstidspunkt(input, regelmodell);
         if (regelmodell.getSkjæringstidspunktForBeregning() == null) {
             return new BeregningsgrunnlagRegelResultat(null, AvklaringsbehovUtlederForeslåBeregning.utledAvklaringsbehov(input, List.of(regelResultatFastsettSkjæringstidspunkt)));

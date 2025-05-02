@@ -13,6 +13,7 @@ public class MapOpptjeningAktivitetFraRegelTilVL {
     static {
         aktivitetMap.put(Aktivitet.AAP_MOTTAKER, OpptjeningAktivitetType.AAP);
         aktivitetMap.put(Aktivitet.ARBEIDSTAKERINNTEKT, OpptjeningAktivitetType.ARBEID);
+		aktivitetMap.put(Aktivitet.ARBEID_UNDER_AAP, OpptjeningAktivitetType.ARBEID_UNDER_AAP);
         aktivitetMap.put(Aktivitet.DAGPENGEMOTTAKER, OpptjeningAktivitetType.DAGPENGER);
         aktivitetMap.put(Aktivitet.ETTERLØNN_SLUTTPAKKE, OpptjeningAktivitetType.ETTERLØNN_SLUTTPAKKE);
         aktivitetMap.put(Aktivitet.FORELDREPENGER_MOTTAKER, OpptjeningAktivitetType.FORELDREPENGER);

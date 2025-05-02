@@ -4,6 +4,7 @@ import java.util.List;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 import no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.kodeverk.MapOpptjeningAktivitetTypeFraVLTilRegel;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningAktivitetAggregatDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningAktivitetDto;
@@ -17,10 +18,11 @@ public class MapBGStatuserFraVLTilRegel {
         // Skjul
     }
 
-    public static AktivitetStatusModell map(BeregningAktivitetAggregatDto beregningAktivitetAggregat) {
+    public static AktivitetStatusModell map(BeregningAktivitetAggregatDto beregningAktivitetAggregat, Inntektsgrunnlag inntektsgrunnlag) {
         AktivitetStatusModell regelmodell = new AktivitetStatusModell();
         regelmodell.setSkjæringstidspunktForOpptjening(beregningAktivitetAggregat.getSkjæringstidspunktOpptjening());
-        leggTilAktiviteter(beregningAktivitetAggregat, regelmodell);
+	    regelmodell.setInntektsgrunnlag(inntektsgrunnlag);
+	    leggTilAktiviteter(beregningAktivitetAggregat, regelmodell);
         return regelmodell;
     }
 

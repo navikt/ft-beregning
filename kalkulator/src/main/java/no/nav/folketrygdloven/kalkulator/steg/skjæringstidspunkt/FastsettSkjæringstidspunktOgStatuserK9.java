@@ -23,7 +23,7 @@ import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusMod
 public class FastsettSkjæringstidspunktOgStatuserK9 {
 
     public static BeregningsgrunnlagRegelResultat fastsett(BeregningsgrunnlagInput input, BeregningAktivitetAggregatDto beregningAktivitetAggregat, List<Grunnbeløp> grunnbeløpSatser) {
-        AktivitetStatusModell regelmodell = MapBGStatuserFraVLTilRegel.map(beregningAktivitetAggregat);
+        AktivitetStatusModell regelmodell = MapBGStatuserFraVLTilRegel.map(beregningAktivitetAggregat, null); // TODO: Sjekk om denne skal være null eller om det skal refaktoreres for å unngå det
 
         MidlertidigInaktivType midlertidigInaktivType = null;
         if (input.getOpptjeningAktiviteter().erMidlertidigInaktiv()) {
