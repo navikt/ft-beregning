@@ -8,8 +8,6 @@ import java.util.List;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
-
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
 
@@ -105,7 +103,7 @@ class FastsettStatusOgAndelPrPeriodeTest {
 		List<BeregningsgrunnlagPrStatus> statusListe = kjørRegel(regelmodell);
 
 		assertThat(statusListe).hasSize(2);
-		assertThat(statusListe.getFirst().getAktivitetStatus()).isEqualTo(AktivitetStatus.AT);
+		assertThat(statusListe.getFirst().getAktivitetStatus()).isEqualTo(AktivitetStatus.ATFL);
 		assertThat(statusListe.getFirst().getArbeidsforholdList().getFirst().getAktivitet()).isEqualTo(Aktivitet.ARBEID_UNDER_AAP);
 	}
 
