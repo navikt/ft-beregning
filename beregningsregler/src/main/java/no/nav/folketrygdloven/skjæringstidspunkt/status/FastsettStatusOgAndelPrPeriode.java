@@ -80,7 +80,7 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
 
 	private void leggTilArbeidUnderAAP(AktivitetStatusModell regelmodell) {
 		var arbeidsforhold = Arbeidsforhold.builder().medAktivitet(Aktivitet.ARBEID_UNDER_AAP).build();
-		var bgPrStatus = new BeregningsgrunnlagPrStatus(AktivitetStatus.AT, arbeidsforhold);
+		var bgPrStatus = new BeregningsgrunnlagPrStatus(AktivitetStatus.ATFL, arbeidsforhold);
 		regelmodell.leggTilBeregningsgrunnlagPrStatus(bgPrStatus);
 	}
 

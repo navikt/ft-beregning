@@ -5,12 +5,19 @@ import static no.nav.fpsak.tidsserie.LocalDateInterval.TIDENES_ENDE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import no.nav.folketrygdloven.kalkulator.modell.iay.InntektDtoBuilder;
+
+import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
+import no.nav.folketrygdloven.kalkulus.kodeverk.InntektskildeType;
 
 import org.junit.jupiter.api.Test;
 
@@ -366,8 +373,45 @@ class FastsettSkjæringstidspunktOgStatuserK14Test {
         verifiserBeregningsgrunnlagPerioder(resultat, AktivitetStatus.ARBEIDSTAKER);
     }
 
+	@Test
+	void skal_lage_andel_arbeid_under_aap_for_søker_med_aap_og_inntekt() {
+		var orgnr = "999999999";
+		var arbeidsforhold = List.of(lagYA(orgnr, førSTP(365), førSTP(15)));
+		var inntekter = List.of(lagInntekt(orgnr, STP_OPPTJENING));
+		var iay = ferdigstillIAYMedInntekt(arbeidsforhold, Collections.emptyList(), inntekter);
+		var bgInput = new BeregningsgrunnlagInput(lagRef(), iay, null, Collections.emptyList(), null);
+		var bgAktivitetAgg = lagBGAktivitetAggregat(Arrays.asList(lagBGAktivitet(OpptjeningAktivitetType.ARBEID, orgnr, førSTP(365), førSTP(15)),
+				lagBGAktivitet(OpptjeningAktivitetType.AAP, null, førSTP(365), førSTP(15))));
+		bgInput.setToggles(Map.of("aap.praksisendring", true));
+		bgInput.leggTilKonfigverdi("inntekt.rapportering.frist.dato", 5);
 
-    private void verifiserBeregningsgrunnlagPerioder(BeregningsgrunnlagRegelResultat resultat, AktivitetStatus... expectedArray) {
+		var resultat = fastsettSkjæringstidspunktOgStatuser.fastsett(bgInput, bgAktivitetAgg, G_VERDIER);
+
+		assertStp(resultat, førSTP(14));
+		verifiserAktivitetStatuser(resultat, AktivitetStatus.ARBEIDSTAKER, AktivitetStatus.ARBEIDSAVKLARINGSPENGER);
+		verifiserAndelerPåOpptjeningstype(resultat, OpptjeningAktivitetType.ARBEID, OpptjeningAktivitetType.ARBEID_UNDER_AAP, OpptjeningAktivitetType.UDEFINERT);
+	}
+
+	@Test
+	void skal_ikke_lage_andel_arbeid_under_aap_for_søker_med_aap_og_inntekt_utenfor_beregningsperioden() {
+		var orgnr = "999999999";
+		var arbeidsforhold = List.of(lagYA(orgnr, førSTP(365), førSTP(15)));
+		var inntekter = List.of(lagInntekt(orgnr, STP_OPPTJENING.minusMonths(5)));
+		var iay = ferdigstillIAYMedInntekt(arbeidsforhold, Collections.emptyList(), inntekter);
+		var bgInput = new BeregningsgrunnlagInput(lagRef(), iay, null, Collections.emptyList(), null);
+		var bgAktivitetAgg = lagBGAktivitetAggregat(Arrays.asList(lagBGAktivitet(OpptjeningAktivitetType.ARBEID, orgnr, førSTP(365), førSTP(15)),
+				lagBGAktivitet(OpptjeningAktivitetType.AAP, null, førSTP(365), førSTP(15))));
+		bgInput.setToggles(Map.of("aap.praksisendring", true));
+		bgInput.leggTilKonfigverdi("inntekt.rapportering.frist.dato", 5);
+
+		var resultat = fastsettSkjæringstidspunktOgStatuser.fastsett(bgInput, bgAktivitetAgg, G_VERDIER);
+
+		assertStp(resultat, førSTP(14));
+		verifiserAktivitetStatuser(resultat, AktivitetStatus.ARBEIDSTAKER, AktivitetStatus.ARBEIDSAVKLARINGSPENGER);
+		verifiserAndelerPåOpptjeningstype(resultat, OpptjeningAktivitetType.ARBEID, OpptjeningAktivitetType.UDEFINERT);
+	}
+
+	private void verifiserBeregningsgrunnlagPerioder(BeregningsgrunnlagRegelResultat resultat, AktivitetStatus... expectedArray) {
         assertThat(resultat.getBeregningsgrunnlag().getBeregningsgrunnlagPerioder()).hasSize(1);
         var bgPeriode = resultat.getBeregningsgrunnlag().getBeregningsgrunnlagPerioder().get(0);
         var actualList = bgPeriode.getBeregningsgrunnlagPrStatusOgAndelList().stream()
@@ -402,6 +446,14 @@ class FastsettSkjæringstidspunktOgStatuserK14Test {
     private void assertStp(BeregningsgrunnlagRegelResultat resultat, LocalDate stp) {
         assertThat(resultat.getBeregningsgrunnlag().getSkjæringstidspunkt()).isEqualTo(stp);
     }
+
+	private void verifiserAndelerPåOpptjeningstype(BeregningsgrunnlagRegelResultat resultat, OpptjeningAktivitetType... expectedArray) {
+		assertThat(resultat.getBeregningsgrunnlag().getBeregningsgrunnlagPerioder()).hasSize(1);
+		var bgPeriode = resultat.getBeregningsgrunnlag().getBeregningsgrunnlagPerioder().getFirst();
+		var actualList = bgPeriode.getBeregningsgrunnlagPrStatusOgAndelList().stream()
+				.map(BeregningsgrunnlagPrStatusOgAndelDto::getArbeidsforholdType).toList();
+		assertThat(actualList).containsOnly(expectedArray);
+	}
 
     private BeregningAktivitetAggregatDto lagBGAktivitetAggregat(List<BeregningAktivitetDto> aktiviteter) {
         var builder = BeregningAktivitetAggregatDto.builder().medSkjæringstidspunktOpptjening(STP_OPPTJENING);
@@ -478,13 +530,35 @@ class FastsettSkjæringstidspunktOgStatuserK14Test {
     }
 
     private InntektArbeidYtelseGrunnlagDto ferdigstillIAY(List<YrkesaktivitetDto> yrkesaktiviteter, List<InntektsmeldingDto> imer) {
-        var arbeidBuilder = InntektArbeidYtelseAggregatBuilder.AktørArbeidBuilder.oppdatere(Optional.empty());
-        yrkesaktiviteter.forEach(arbeidBuilder::leggTilYrkesaktivitet);
-        arbeidBuilder.build();
-        var iayBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
-        iayBuilder.leggTilAktørArbeid(arbeidBuilder);
-
-        return InntektArbeidYtelseGrunnlagDtoBuilder.nytt().medInntektsmeldinger(imer).medData(iayBuilder).build();
+		return ferdigstillIAYMedInntekt(yrkesaktiviteter, imer, Collections.emptyList());
     }
+
+	private InntektArbeidYtelseGrunnlagDto ferdigstillIAYMedInntekt(List<YrkesaktivitetDto> yrkesaktiviteter, List<InntektsmeldingDto> imer, List<InntektDtoBuilder> inntekter) {
+		var arbeidBuilder = InntektArbeidYtelseAggregatBuilder.AktørArbeidBuilder.oppdatere(Optional.empty());
+		yrkesaktiviteter.forEach(arbeidBuilder::leggTilYrkesaktivitet);
+		arbeidBuilder.build();
+		var iayBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
+		iayBuilder.leggTilAktørArbeid(arbeidBuilder);
+
+		var inntektBuilder = InntektArbeidYtelseAggregatBuilder.AktørInntektBuilder.oppdatere(Optional.empty());
+		inntekter.forEach(inntektBuilder::leggTilInntekt);
+		iayBuilder.leggTilAktørInntekt(inntektBuilder);
+
+		return InntektArbeidYtelseGrunnlagDtoBuilder.nytt().medInntektsmeldinger(imer).medData(iayBuilder).build();
+	}
+
+	private static InntektDtoBuilder lagInntekt(String orgnr, LocalDate tom) {
+		var inntektDtoBuilder = InntektDtoBuilder.oppdatere(Optional.empty());
+		inntektDtoBuilder.medInntektsKilde(InntektskildeType.INNTEKT_BEREGNING).medArbeidsgiver(Arbeidsgiver.virksomhet(orgnr));
+		inntektDtoBuilder.leggTilInntektspost(inntektDtoBuilder.getInntektspostBuilder()
+				.medBeløp(Beløp.fra(100))
+				.medPeriode(tom.minusMonths(2).withDayOfMonth(1),
+						tom.minusMonths(1).with(TemporalAdjusters.lastDayOfMonth())));
+		inntektDtoBuilder.leggTilInntektspost(inntektDtoBuilder.getInntektspostBuilder()
+				.medBeløp(Beløp.fra(100))
+				.medPeriode(tom.minusMonths(1).withDayOfMonth(1),
+						tom.with(TemporalAdjusters.lastDayOfMonth())));
+		return inntektDtoBuilder;
+	}
 
 }
