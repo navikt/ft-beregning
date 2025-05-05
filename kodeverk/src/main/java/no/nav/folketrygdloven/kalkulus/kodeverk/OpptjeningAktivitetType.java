@@ -15,7 +15,7 @@ public enum OpptjeningAktivitetType implements Kodeverdi, DatabaseKode, Kontrakt
 
     AAP, // Arbeidsavklaringspenger
     ARBEID,
-	ARBEID_UNDER_AAP,
+    ARBEID_UNDER_AAP,
     DAGPENGER,
     FORELDREPENGER,
     FRILANS,
