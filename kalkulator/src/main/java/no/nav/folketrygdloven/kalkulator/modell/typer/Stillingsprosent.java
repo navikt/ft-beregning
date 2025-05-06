@@ -1,6 +1,7 @@
 package no.nav.folketrygdloven.kalkulator.modell.typer;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -33,7 +34,20 @@ public record Stillingsprosent(BigDecimal verdi) implements Comparable<Stillings
         return Optional.ofNullable(grad).map(IayProsent::verdi).map(Stillingsprosent::fra).orElse(null);
     }
 
-    public boolean erNullEller0() {
+	public BigDecimal tilNormalisertGrad() {
+		return tilNormalisertGrad(BigDecimal.valueOf(100));
+	}
+
+	public BigDecimal tilNormalisertGrad(BigDecimal maksProsent) {
+		Objects.requireNonNull(verdi, "stillingsprosent");
+		if (maksProsent.compareTo(BigDecimal.ZERO) <=0) {
+			throw new IllegalArgumentException("Maks prosent må være større enn 0");
+		}
+		return verdi.divide(maksProsent, 10, RoundingMode.HALF_UP);
+	}
+
+
+	public boolean erNullEller0() {
         return verdi == null || this.compareTo(ZERO) == 0;
     }
 

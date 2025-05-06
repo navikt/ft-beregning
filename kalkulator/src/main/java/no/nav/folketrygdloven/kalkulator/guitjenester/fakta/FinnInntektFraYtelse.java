@@ -78,10 +78,13 @@ class FinnInntektFraYtelse {
 
 	private static Beløp finnÅrsbeløpMedHensynTilUtbetalingsfaktor(YtelseDto ytelse, Optional<YtelseAnvistDto> ytelseAnvist) {
 		var årsbeløpUtenHensynTilUtbetalingsfaktor = finnÅrsbeløp(ytelse, ytelseAnvist);
-		BigDecimal utbetalingsgrad = ytelseAnvist.flatMap(YtelseAnvistDto::getUtbetalingsgradProsent).map(Stillingsprosent::verdi)
-				.orElse(MeldekortUtils.MAX_UTBETALING_PROSENT_AAP_DAG);
-		BigDecimal utbetalingsFaktor = utbetalingsgrad.divide(MeldekortUtils.MAX_UTBETALING_PROSENT_AAP_DAG, 10, RoundingMode.HALF_UP);
-		return årsbeløpUtenHensynTilUtbetalingsfaktor.multipliser(utbetalingsFaktor);
+
+		var utbetalingsfaktor = ytelseAnvist
+				.flatMap(YtelseAnvistDto::getUtbetalingsgradProsent)
+				.map(verdi -> ytelse.harKildeKelvin() ? verdi.tilNormalisertGrad(MeldekortUtils.MAX_UTBETALING_PROSENT_AAP_KELVIN) : verdi.tilNormalisertGrad(MeldekortUtils.MAX_UTBETALING_PROSENT_AAP_DAG_ARENA))
+				.orElse(BigDecimal.ONE);
+
+		return årsbeløpUtenHensynTilUtbetalingsfaktor.multipliser(utbetalingsfaktor);
 	}
 
 	private static Beløp finnÅrsbeløp(YtelseDto ytelse, Optional<YtelseAnvistDto> ytelseAnvist) {

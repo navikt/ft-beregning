@@ -13,6 +13,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import no.nav.folketrygdloven.kalkulus.felles.v1.Beløp;
 import no.nav.folketrygdloven.kalkulus.felles.v1.Periode;
+import no.nav.folketrygdloven.kalkulus.kodeverk.YtelseKilde;
 import no.nav.folketrygdloven.kalkulus.kodeverk.YtelseType;
 
 
@@ -45,11 +46,16 @@ public class YtelseDto {
     @Valid
     private YtelseGrunnlagDto ytelseGrunnlag;
 
+	@JsonProperty(value = "ytelseKilde")
+	@Valid
+	private YtelseKilde ytelseKilde;
+
 
     protected YtelseDto() {
         // default ctor
     }
 
+	@Deprecated // Bruk konstruktør som også tar inn ytelsekilde og slett denne når k9 og fp er over på ny konstruktør
     public YtelseDto(@Valid Beløp vedtaksDagsats,
                      @Valid @Size Set<YtelseAnvistDto> ytelseAnvist,
                      @Valid @NotNull YtelseType relatertYtelseType,
@@ -61,6 +67,20 @@ public class YtelseDto {
         this.periode = periode;
         this.ytelseGrunnlag = ytelseGrunnlag;
     }
+
+	public YtelseDto(@Valid Beløp vedtaksDagsats,
+	                 @Valid @Size Set<YtelseAnvistDto> ytelseAnvist,
+	                 @Valid @NotNull YtelseType relatertYtelseType,
+	                 @Valid @NotNull Periode periode,
+	                 @Valid YtelseGrunnlagDto ytelseGrunnlag,
+	                 @Valid @NotNull YtelseKilde ytelseKilde) {
+		this.vedtaksDagsats = vedtaksDagsats;
+		this.ytelseAnvist = ytelseAnvist;
+		this.relatertYtelseType = relatertYtelseType;
+		this.periode = periode;
+		this.ytelseGrunnlag = ytelseGrunnlag;
+		this.ytelseKilde = ytelseKilde;
+	}
 
     public Set<YtelseAnvistDto> getYtelseAnvist() {
         return ytelseAnvist;
@@ -81,4 +101,8 @@ public class YtelseDto {
     public YtelseGrunnlagDto getYtelseGrunnlag() {
         return ytelseGrunnlag;
     }
+
+	public YtelseKilde getYtelseKilde() {
+		return ytelseKilde;
+	}
 }
