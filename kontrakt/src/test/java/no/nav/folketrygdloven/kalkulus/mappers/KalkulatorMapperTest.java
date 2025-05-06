@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import no.nav.folketrygdloven.kalkulus.kodeverk.YtelseKilde;
+
 import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.kalkulus.beregning.v1.AktivitetGraderingDto;
@@ -132,6 +134,6 @@ class KalkulatorMapperTest {
                 IayProsent.fra(100),
                 IayProsent.fra(100),
                 Inntektskategori.ARBEIDSTAKER)));
-        return List.of(new YtelseDto(BELØP, Set.of(ytelseAnvistDto), YtelseType.FORELDREPENGER, periode, null));
+        return List.of(new YtelseDto(BELØP, Set.of(ytelseAnvistDto), YtelseType.FORELDREPENGER, periode, YtelseKilde.UDEFINERT));
     }
 }
