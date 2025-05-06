@@ -41,12 +41,6 @@ public class YtelseDtoBuilder {
         return this;
     }
 
-    public YtelseDtoBuilder medYtelseGrunnlag(YtelseGrunnlagDto ytelseGrunnlag) {
-        ytelse.setYtelseGrunnlag(ytelseGrunnlag);
-        return this;
-    }
-
-
     public YtelseDtoBuilder medVedtaksDagsats(Beløp vedtakDagsats) {
         ytelse.setVedtaksDagsats(vedtakDagsats);
         return this;

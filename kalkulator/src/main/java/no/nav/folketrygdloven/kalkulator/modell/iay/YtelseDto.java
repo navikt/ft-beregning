@@ -21,7 +21,6 @@ public class YtelseDto {
     private Intervall periode;
     // Brukes til å skille ulike ytelser med samme ytelsetype
     private Set<YtelseAnvistDto> ytelseAnvist = new LinkedHashSet<>();
-    private YtelseGrunnlagDto ytelseGrunnlag;
 
     public YtelseDto() {
         // hibernate
@@ -31,7 +30,6 @@ public class YtelseDto {
         this.ytelseType = ytelse.getYtelseType();
 		this.ytelseKilde = ytelse.getYtelseKilde().orElse(YtelseKilde.UDEFINERT);
         this.periode = ytelse.getPeriode();
-        this.ytelseGrunnlag = ytelse.getYtelseGrunnlag().orElse(null);
         this.ytelseAnvist = ytelse.getYtelseAnvist().stream().map(YtelseAnvistDto::new).collect(Collectors.toCollection(LinkedHashSet::new));
         ytelse.getVedtaksDagsats().ifPresent(dagsats -> this.vedtaksDagsats = dagsats);
     }
@@ -79,14 +77,6 @@ public class YtelseDto {
     void leggTilYtelseAnvist(YtelseAnvistDto ytelseAnvist) {
         this.ytelseAnvist.add(ytelseAnvist);
 
-    }
-
-    public Optional<YtelseGrunnlagDto> getYtelseGrunnlag() {
-        return Optional.ofNullable(ytelseGrunnlag);
-    }
-
-    void setYtelseGrunnlag(YtelseGrunnlagDto ytelseGrunnlag) {
-        this.ytelseGrunnlag = ytelseGrunnlag;
     }
 
     @Override
