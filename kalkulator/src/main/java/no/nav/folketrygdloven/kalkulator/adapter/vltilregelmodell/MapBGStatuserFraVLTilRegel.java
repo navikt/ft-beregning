@@ -18,9 +18,9 @@ public class MapBGStatuserFraVLTilRegel {
         // Skjul
     }
 
-	public static AktivitetStatusModell map(BeregningAktivitetAggregatDto beregningAktivitetAggregat) {
-		return map(beregningAktivitetAggregat, null);
-	}
+    public static AktivitetStatusModell map(BeregningAktivitetAggregatDto beregningAktivitetAggregat) {
+        return map(beregningAktivitetAggregat, null);
+    }
 
     public static AktivitetStatusModell map(BeregningAktivitetAggregatDto beregningAktivitetAggregat, Inntektsgrunnlag inntektsgrunnlag) {
         AktivitetStatusModell regelmodell = new AktivitetStatusModell();
