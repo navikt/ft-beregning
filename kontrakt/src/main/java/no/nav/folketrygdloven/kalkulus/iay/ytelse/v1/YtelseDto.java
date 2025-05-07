@@ -42,10 +42,6 @@ public class YtelseDto {
     @NotNull
     private Periode periode;
 
-    @JsonProperty(value = "ytelseGrunnlag")
-    @Valid
-    private YtelseGrunnlagDto ytelseGrunnlag;
-
 	@JsonProperty(value = "ytelseKilde")
 	@Valid
 	private YtelseKilde ytelseKilde;
@@ -55,30 +51,15 @@ public class YtelseDto {
         // default ctor
     }
 
-	@Deprecated // Bruk konstruktør som også tar inn ytelsekilde og slett denne når k9 og fp er over på ny konstruktør
-    public YtelseDto(@Valid Beløp vedtaksDagsats,
-                     @Valid @Size Set<YtelseAnvistDto> ytelseAnvist,
-                     @Valid @NotNull YtelseType relatertYtelseType,
-                     @Valid @NotNull Periode periode,
-                     @Valid YtelseGrunnlagDto ytelseGrunnlag) {
-        this.vedtaksDagsats = vedtaksDagsats;
-        this.ytelseAnvist = ytelseAnvist;
-        this.relatertYtelseType = relatertYtelseType;
-        this.periode = periode;
-        this.ytelseGrunnlag = ytelseGrunnlag;
-    }
-
 	public YtelseDto(@Valid Beløp vedtaksDagsats,
 	                 @Valid @Size Set<YtelseAnvistDto> ytelseAnvist,
 	                 @Valid @NotNull YtelseType relatertYtelseType,
 	                 @Valid @NotNull Periode periode,
-	                 @Valid YtelseGrunnlagDto ytelseGrunnlag,
 	                 @Valid @NotNull YtelseKilde ytelseKilde) {
 		this.vedtaksDagsats = vedtaksDagsats;
 		this.ytelseAnvist = ytelseAnvist;
 		this.relatertYtelseType = relatertYtelseType;
 		this.periode = periode;
-		this.ytelseGrunnlag = ytelseGrunnlag;
 		this.ytelseKilde = ytelseKilde;
 	}
 
@@ -96,10 +77,6 @@ public class YtelseDto {
 
     public Beløp getVedtaksDagsats() {
         return vedtaksDagsats;
-    }
-
-    public YtelseGrunnlagDto getYtelseGrunnlag() {
-        return ytelseGrunnlag;
     }
 
 	public YtelseKilde getYtelseKilde() {
