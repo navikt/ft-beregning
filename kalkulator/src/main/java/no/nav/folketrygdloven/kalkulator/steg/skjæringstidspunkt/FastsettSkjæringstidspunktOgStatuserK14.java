@@ -7,7 +7,9 @@ import java.util.List;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.Grunnbeløp;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.RegelResultat;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 import no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.MapBGStatuserFraVLTilRegel;
+import no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.MapInntektsgrunnlagVLTilRegelFelles;
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagInput;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningAktivitetAggregatDto;
 import no.nav.folketrygdloven.kalkulator.output.BeregningsgrunnlagRegelResultat;
@@ -20,7 +22,8 @@ import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusMod
 public class FastsettSkjæringstidspunktOgStatuserK14 {
 
     public static BeregningsgrunnlagRegelResultat fastsett(BeregningsgrunnlagInput input, BeregningAktivitetAggregatDto beregningAktivitetAggregat, List<Grunnbeløp> grunnbeløpSatser) {
-        AktivitetStatusModell regelmodell = MapBGStatuserFraVLTilRegel.map(beregningAktivitetAggregat);
+	    AktivitetStatusModell regelmodell = MapBGStatuserFraVLTilRegel.map(beregningAktivitetAggregat, getInntektsgrunnlag(input));
+		input.getToggles().forEach(regelmodell::leggTilToggle);
         RegelResultat regelResultatFastsettSkjæringstidspunkt = fastsettSkjæringstidspunkt(regelmodell);
         RegelResultat regelResultatFastsettStatus = fastsettStatus(regelmodell);
 
@@ -38,8 +41,15 @@ public class FastsettSkjæringstidspunktOgStatuserK14 {
                         mapRegelSporingGrunnlag(regelResultatFastsettStatus, BeregningsgrunnlagRegelType.BRUKERS_STATUS)));
     }
 
+	private static Inntektsgrunnlag getInntektsgrunnlag(BeregningsgrunnlagInput input) {
+		if (input.isEnabled("aap.praksisendring", false)) {
+			var inntektsgrunnlagMapper = new MapInntektsgrunnlagVLTilRegelFelles();
+			return inntektsgrunnlagMapper.map(input, input.getSkjæringstidspunktForBeregning());
+		}
+		return null;
+	}
 
-    private static RegelResultat fastsettSkjæringstidspunkt(AktivitetStatusModell regelmodell) {
+	private static RegelResultat fastsettSkjæringstidspunkt(AktivitetStatusModell regelmodell) {
         // Tar sporingssnapshot av regelmodell, deretter oppdateres modell med fastsatt skjæringstidspunkt for Beregning
         return KalkulusRegler.fastsettSkjæringstidspunkt(regelmodell);
     }

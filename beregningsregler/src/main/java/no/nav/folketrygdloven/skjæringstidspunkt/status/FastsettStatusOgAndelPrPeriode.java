@@ -1,6 +1,8 @@
 package no.nav.folketrygdloven.skjæringstidspunkt.status;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -10,6 +12,9 @@ import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivPeriode;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModell;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModellK9;
@@ -36,13 +41,19 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
 		regelmodell.getAktivitetStatuser()
 				.forEach(as -> resultater.put("Aktivitetstatus." + as.name(), as.getBeskrivelse()));
 		regelmodell.getBeregningsgrunnlagPrStatusListe()
-				.forEach(bgps -> resultater.put("BeregningsgrunnlagPrStatus." + bgps.getAktivitetStatus().name(), bgps.getAktivitetStatus().getBeskrivelse()));
+				.forEach(bgps -> resultater.put("BeregningsgrunnlagPrStatus." + bgps.getAktivitetStatus().name(), bgps.getAktivitetStatus().getBeskrivelse())); // TODO: Skal det inn noe regelsporing av inntekt?
 		return beregnet(resultater);
 	}
 
 	private void opprettAktivitetStatuser(AktivitetStatusModell regelmodell) {
 		List<AktivPeriode> aktivePerioder = regelmodell.getAktivePerioder();
 		List<AktivPeriode> aktivePerioderVedStp = hentAktivePerioder(regelmodell.getBeregningstidspunkt(), aktivePerioder);
+
+		var erAapPraksisendringAktiv = regelmodell.getToggles().isEnabled("aap.praksisendring");
+		if (erAapPraksisendringAktiv && harAAPOgArbeidsinntektIBeregningsperioden(regelmodell, aktivePerioderVedStp)) {
+			regelmodell.leggTilAktivitetStatus(AktivitetStatus.ATFL);
+			leggTilArbeidUnderAAP(regelmodell);
+		}
 
 		if (harKunYtelsePåSkjæringstidspunkt(aktivePerioderVedStp)) {
 			regelmodell.leggTilAktivitetStatus(AktivitetStatus.KUN_YTELSE);
@@ -67,6 +78,11 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
 		regelmodell.leggTilBeregningsgrunnlagPrStatus(bgPrStatus);
 	}
 
+	private void leggTilArbeidUnderAAP(AktivitetStatusModell regelmodell) {
+		var arbeidsforhold = Arbeidsforhold.builder().medAktivitet(Aktivitet.ARBEID_UNDER_AAP).build();
+		var bgPrStatus = new BeregningsgrunnlagPrStatus(AktivitetStatus.ATFL, arbeidsforhold);
+		regelmodell.leggTilBeregningsgrunnlagPrStatus(bgPrStatus);
+	}
 
 	private void opprettStatusForAktiviteter(AktivitetStatusModell regelmodell, List<AktivPeriode> aktivePerioderVedStp) {
 		List<BeregningsgrunnlagPrStatus> andeler = new ArrayList<>();
@@ -133,4 +149,23 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
 				.filter(ap -> ap.inneholder(beregningstidspunkt)).toList();
 	}
 
+	private boolean harAAPOgArbeidsinntektIBeregningsperioden(AktivitetStatusModell regelmodell, List<AktivPeriode> aktivePerioderVedStp) {
+		if (aktivePerioderVedStp.stream().noneMatch(ap -> ap.getAktivitet().equals(Aktivitet.AAP_MOTTAKER))) {
+			return false;
+		}
+
+		var inntektsgrunnlag = regelmodell.getInntektsgrunnlag();
+		if (inntektsgrunnlag == null) {
+			return false;
+		}
+
+		var skjæringstidspunkt = regelmodell.getSkjæringstidspunktForBeregning();
+		var beregningsperiode = new Periode(
+				skjæringstidspunkt.minusMonths(3).withDayOfMonth(1),
+				skjæringstidspunkt.minusMonths(1).with(TemporalAdjusters.lastDayOfMonth()));
+		return inntektsgrunnlag.getPeriodeinntekter().stream()
+				.anyMatch(p -> p.getInntektskilde().equals(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING)
+						&& p.getPeriode().overlapper(beregningsperiode)
+						&& p.getInntekt().compareTo(BigDecimal.ZERO) != 0); // TODO: Antakelse om at negative inntekter skal med, undersøk
+	}
 }
