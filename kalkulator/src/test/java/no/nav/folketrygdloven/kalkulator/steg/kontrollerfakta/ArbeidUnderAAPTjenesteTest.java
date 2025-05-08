@@ -1,10 +1,11 @@
 package no.nav.folketrygdloven.kalkulator.steg.kontrollerfakta;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatusDto;
@@ -18,15 +19,9 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 class ArbeidUnderAAPTjenesteTest {
 	private ArbeidUnderAAPTjeneste arbeidUnderAAPTjeneste;
 	private BeregningsgrunnlagGrunnlagDto beregningsgrunnlagGrunnlagDto;
-
-	@BeforeEach
-	void setUp() {
-	}
 
 	@Test
 	void harAndelForArbeidUnderAAP() {
