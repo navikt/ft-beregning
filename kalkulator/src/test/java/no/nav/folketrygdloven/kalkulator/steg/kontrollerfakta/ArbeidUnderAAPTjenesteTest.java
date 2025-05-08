@@ -30,53 +30,51 @@ class ArbeidUnderAAPTjenesteTest {
 
 	@Test
 	void harAndelForArbeidUnderAAP() {
-		var dto = lagBeregningsgrunnlag(List.of(OpptjeningAktivitetType.ARBEID_UNDER_AAP));
+		var dto = lagBeregningsgrunnlagDto(List.of(OpptjeningAktivitetType.ARBEID_UNDER_AAP));
 
-		var utledetArbeidUnderAapTilfelle = act(dto);
+		var harArbeidUnderAapTilfelle = kallHarAndelForArbeidUnderAAP(dto);
 
-		assertThat(utledetArbeidUnderAapTilfelle).isTrue();
+		assertThat(harArbeidUnderAapTilfelle).isTrue();
 	}
 
 	@Test
 	void harIkkeAndelForArbeidUnderAAP() {
-		var dto = lagBeregningsgrunnlag(List.of(OpptjeningAktivitetType.ETTERLØNN_SLUTTPAKKE));
+		var dto = lagBeregningsgrunnlagDto(List.of(OpptjeningAktivitetType.ETTERLØNN_SLUTTPAKKE));
 
-		var utledetArbeidUnderAapTilfelle = act(dto);
+		var harArbeidUnderAapTilfelle = kallHarAndelForArbeidUnderAAP(dto);
 
-		assertThat(utledetArbeidUnderAapTilfelle).isFalse();
+		assertThat(harArbeidUnderAapTilfelle).isFalse();
 	}
 
 	@Test
 	void harOgsåAndelForArbeidUnderAAP() {
-		var dto = lagBeregningsgrunnlag(List.of(OpptjeningAktivitetType.ETTERLØNN_SLUTTPAKKE, OpptjeningAktivitetType.ARBEID_UNDER_AAP));
+		var beregningsgrunnlagDto = lagBeregningsgrunnlagDto(List.of(OpptjeningAktivitetType.ETTERLØNN_SLUTTPAKKE, OpptjeningAktivitetType.ARBEID_UNDER_AAP));
 
-		var utledetArbeidUnderAapTilfelle = act(dto);
+		var harArbeidUnderAapTilfelle = kallHarAndelForArbeidUnderAAP(beregningsgrunnlagDto);
 
-		assertThat(utledetArbeidUnderAapTilfelle).isTrue();
+		assertThat(harArbeidUnderAapTilfelle).isTrue();
 	}
 
-	private BeregningsgrunnlagDto lagBeregningsgrunnlag(List<OpptjeningAktivitetType> opptjeningAktivitetTypes) {
-		BeregningsgrunnlagAktivitetStatusDto.Builder asb = BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER);
-		BeregningsgrunnlagAktivitetStatusDto.Builder aap = BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.ARBEIDSAVKLARINGSPENGER);
+	private BeregningsgrunnlagDto lagBeregningsgrunnlagDto(List<OpptjeningAktivitetType> opptjeningAktivitetTyper) {
+		BeregningsgrunnlagAktivitetStatusDto.Builder aktivitetStatusArbeidstaker = BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER);
+		BeregningsgrunnlagAktivitetStatusDto.Builder aktivitetstatusAAP = BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.ARBEIDSAVKLARINGSPENGER);
 		BeregningsgrunnlagDto beregningsgrunnlag = BeregningsgrunnlagDto.builder()
 				.medSkjæringstidspunkt(LocalDate.now())
-				.leggTilAktivitetStatus(asb)
-				.leggTilAktivitetStatus(aap)
+				.leggTilAktivitetStatus(aktivitetStatusArbeidstaker)
+				.leggTilAktivitetStatus(aktivitetstatusAAP)
 				.build();
 		BeregningsgrunnlagPeriodeDto.Builder periodeBuilder = BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(LocalDate.now(), null);
 		BeregningsgrunnlagPeriodeDto periode = periodeBuilder.build(beregningsgrunnlag);
-		for (OpptjeningAktivitetType type : opptjeningAktivitetTypes) {
-			BeregningsgrunnlagPrStatusOgAndelDto.ny()
+		opptjeningAktivitetTyper.forEach(opptjeningAktivitetType -> BeregningsgrunnlagPrStatusOgAndelDto.ny()
 				.medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
 				.medInntektskategori(Inntektskategori.ARBEIDSTAKER)
 				.medBeregnetPrÅr(null)
-				.medArbforholdType(type)
-				.build(periode);
-		}
+				.medArbforholdType(opptjeningAktivitetType)
+				.build(periode));
 		return beregningsgrunnlag;
 	}
 
-	private boolean act(BeregningsgrunnlagDto beregningsgrunnlag) {
+	private boolean kallHarAndelForArbeidUnderAAP(BeregningsgrunnlagDto beregningsgrunnlag) {
 		BeregningsgrunnlagGrunnlagDto grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
 				.medBeregningsgrunnlag(beregningsgrunnlag)
 				.build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER);
