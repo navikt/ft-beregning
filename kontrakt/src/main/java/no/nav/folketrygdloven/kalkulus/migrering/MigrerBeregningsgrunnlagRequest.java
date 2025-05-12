@@ -13,4 +13,5 @@ public record MigrerBeregningsgrunnlagRequest(@Valid @NotNull Saksnummer saksnum
                                               @Valid @NotNull PersonIdent aktør,
                                               @Valid @NotNull FagsakYtelseType ytelseSomSkalBeregnes,
                                               @Valid UUID originalBehandlingUuid,
-                                              @Valid @NotNull BeregningsgrunnlagGrunnlagMigreringDto grunnlag) {}
+                                              @Valid @NotNull BeregningsgrunnlagGrunnlagMigreringDto grunnlag,
+                                              @Valid @NotNull Boolean erAktivt) {}
