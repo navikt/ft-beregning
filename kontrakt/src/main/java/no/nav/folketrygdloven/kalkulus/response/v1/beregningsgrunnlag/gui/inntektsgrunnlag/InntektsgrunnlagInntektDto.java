@@ -26,13 +26,16 @@ public class InntektsgrunnlagInntektDto {
     @JsonProperty("beløp")
     private Beløp beløp;
 
-    public InntektsgrunnlagInntektDto() {
-    }
+	@Valid
+	@JsonProperty("arbeidsgiverIdent")
+	private String arbeidsgiverIdent;
 
     public InntektsgrunnlagInntektDto(@Valid @NotNull InntektAktivitetType inntektAktivitetType,
-                                      @Valid Beløp beløp) {
+                                      @Valid Beløp beløp,
+                                      @Valid String arbeidsgiverIdent) {
         this.inntektAktivitetType = inntektAktivitetType;
         this.beløp = beløp;
+	    this.arbeidsgiverIdent = arbeidsgiverIdent;
     }
 
     public Beløp getBeløp() {
@@ -42,4 +45,8 @@ public class InntektsgrunnlagInntektDto {
     public InntektAktivitetType getInntektAktivitetType() {
         return inntektAktivitetType;
     }
+
+	public String getArbeidsgiverIdent() {
+		return arbeidsgiverIdent;
+	}
 }

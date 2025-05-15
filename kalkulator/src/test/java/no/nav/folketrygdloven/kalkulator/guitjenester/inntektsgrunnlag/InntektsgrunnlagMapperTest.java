@@ -34,39 +34,60 @@ import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.inntek
 class InntektsgrunnlagMapperTest {
     private static final LocalDate STP = LocalDate.now();
     private static final Intervall SG_PERIODE = Intervall.fraOgMedTilOgMed(LocalDate.now().minusMonths(12), LocalDate.now());
+    private static final Intervall BG_PERIODE = Intervall.fraOgMedTilOgMed(LocalDate.now().minusMonths(3), LocalDate.now());
+
+	@Test
+	void skal_teste_at_korrekte_inntekter_mappes_til_måneder() {
+		InntektsgrunnlagMapper mapper = new InntektsgrunnlagMapper(Optional.of(SG_PERIODE), Optional.of(BG_PERIODE), Collections.emptyList());
+		InntektDtoBuilder feilKilde = lagInntekt("123", InntektskildeType.INNTEKT_BEREGNING);
+		InntektDtoBuilder korrektKilde = lagInntekt("123", InntektskildeType.INNTEKT_SAMMENLIGNING);
+		feilKilde.leggTilInntektspost(lagInntektspost(feilKilde, 5000, månederFør(3)));
+		feilKilde.leggTilInntektspost(lagInntektspost(feilKilde, 5000, månederFør(2)));
+		korrektKilde.leggTilInntektspost(lagInntektspost(korrektKilde, 5000, månederFør(3)));
+		korrektKilde.leggTilInntektspost(lagInntektspost(korrektKilde, 5000, månederFør(2)));
+
+		Optional<InntektsgrunnlagDto> dto = mapper.map(Arrays.asList(feilKilde.build(), korrektKilde.build()));
+
+		assertThat(dto).isPresent();
+		assertThat(dto.get().getMåneder()).hasSize(2);
+		assertThat(dto.get().getMåneder().get(0).getInntekter()).hasSize(1);
+		assertThat(dto.get().getMåneder().get(1).getInntekter()).hasSize(1);
+	}
 
     @Test
-    void skal_teste_at_korrekte_inntekter_mappes() {
-        InntektsgrunnlagMapper mapper = new InntektsgrunnlagMapper(Optional.of(SG_PERIODE), Collections.emptyList());
-        InntektDtoBuilder feilKilde = lagInntekt("123", InntektskildeType.INNTEKT_BEREGNING);
-        InntektDtoBuilder korrektKilde = lagInntekt("123", InntektskildeType.INNTEKT_SAMMENLIGNING);
-        feilKilde.leggTilInntektspost(lagInntektspost(feilKilde, 5000, månederFør(3)));
-        feilKilde.leggTilInntektspost(lagInntektspost(feilKilde, 5000, månederFør(2)));
-        korrektKilde.leggTilInntektspost(lagInntektspost(korrektKilde, 5000, månederFør(3)));
-        korrektKilde.leggTilInntektspost(lagInntektspost(korrektKilde, 5000, månederFør(2)));
+    void skal_teste_at_inntekter_mappes() {
+        InntektsgrunnlagMapper mapper = new InntektsgrunnlagMapper(Optional.of(SG_PERIODE), Optional.of(BG_PERIODE), Collections.emptyList());
+        InntektDtoBuilder beregningsinntekter = lagInntekt("123", InntektskildeType.INNTEKT_BEREGNING);
+        InntektDtoBuilder sammenligningsinntekter = lagInntekt("123", InntektskildeType.INNTEKT_SAMMENLIGNING);
+        beregningsinntekter.leggTilInntektspost(lagInntektspost(beregningsinntekter, 5000, månederFør(3)));
+        beregningsinntekter.leggTilInntektspost(lagInntektspost(beregningsinntekter, 5000, månederFør(2)));
+        sammenligningsinntekter.leggTilInntektspost(lagInntektspost(sammenligningsinntekter, 5000, månederFør(3)));
+        sammenligningsinntekter.leggTilInntektspost(lagInntektspost(sammenligningsinntekter, 5000, månederFør(2)));
 
-        Optional<InntektsgrunnlagDto> dto = mapper.map(Arrays.asList(feilKilde.build(), korrektKilde.build()));
+        Optional<InntektsgrunnlagDto> dto = mapper.map(Arrays.asList(beregningsinntekter.build(), sammenligningsinntekter.build()));
 
         assertThat(dto).isPresent();
-        assertThat(dto.get().getMåneder()).hasSize(2);
-        assertThat(dto.get().getMåneder().get(0).getInntekter()).hasSize(1);
-        assertThat(dto.get().getMåneder().get(1).getInntekter()).hasSize(1);
+        assertThat(dto.get().getSammenligningsgrunnlagInntekter()).hasSize(2);
+        assertThat(dto.get().getSammenligningsgrunnlagInntekter().get(0).getInntekter()).hasSize(1);
+        assertThat(dto.get().getSammenligningsgrunnlagInntekter().get(1).getInntekter()).hasSize(1);
+		assertThat(dto.get().getBeregningsgrunnlagInntekter()).hasSize(1);
+        assertThat(dto.get().getBeregningsgrunnlagInntekter().getFirst().getInntekter()).hasSize(1);
     }
 
     @Test
     void skal_teste_at_inntekter_uten_arbeidsgiver_mappes_til_ytelse() {
-        InntektsgrunnlagMapper mapper = new InntektsgrunnlagMapper(Optional.of(SG_PERIODE), Collections.emptyList());
-        InntektDtoBuilder korrektKilde = lagInntekt(null, InntektskildeType.INNTEKT_SAMMENLIGNING);
-        korrektKilde.leggTilInntektspost(lagInntektspost(korrektKilde, 5000, månederFør(3), InntektspostType.YTELSE));
-        korrektKilde.leggTilInntektspost(lagInntektspost(korrektKilde, 5000, månederFør(2), InntektspostType.YTELSE));
+        InntektsgrunnlagMapper mapper = new InntektsgrunnlagMapper(Optional.of(SG_PERIODE), Optional.of(BG_PERIODE), Collections.emptyList());
+        InntektDtoBuilder sammenligningsinntekter = lagInntekt(null, InntektskildeType.INNTEKT_SAMMENLIGNING);
+        sammenligningsinntekter.leggTilInntektspost(lagInntektspost(sammenligningsinntekter, 5000, månederFør(3), InntektspostType.YTELSE));
+        sammenligningsinntekter.leggTilInntektspost(lagInntektspost(sammenligningsinntekter, 5000, månederFør(2), InntektspostType.YTELSE));
 
-        Optional<InntektsgrunnlagDto> dto = mapper.map(Collections.singletonList(korrektKilde.build()));
+        Optional<InntektsgrunnlagDto> dto = mapper.map(Collections.singletonList(sammenligningsinntekter.build()));
 
         assertThat(dto).isPresent();
-        assertThat(dto.get().getMåneder()).hasSize(2);
-        assertThat(dto.get().getMåneder().get(0).getInntekter()).hasSize(1);
-        assertThat(dto.get().getMåneder().get(1).getInntekter()).hasSize(1);
-        List<InntektsgrunnlagInntektDto> alleInntekter = dto.map(InntektsgrunnlagDto::getMåneder)
+        assertThat(dto.get().getSammenligningsgrunnlagInntekter()).hasSize(2);
+        assertThat(dto.get().getSammenligningsgrunnlagInntekter().get(0).getInntekter()).hasSize(1);
+        assertThat(dto.get().getSammenligningsgrunnlagInntekter().get(1).getInntekter()).hasSize(1);
+        List<InntektsgrunnlagInntektDto> alleInntekter = dto.map(InntektsgrunnlagDto::getSammenligningsgrunnlagInntekter)
                 .orElse(Collections.emptyList())
                 .stream()
                 .map(InntektsgrunnlagMånedDto::getInntekter)
@@ -77,7 +98,7 @@ class InntektsgrunnlagMapperTest {
 
     @Test
     void skal_teste_at_frilans_merkes_korrekt() {
-        InntektsgrunnlagMapper mapper = new InntektsgrunnlagMapper(Optional.of(SG_PERIODE), Collections.singletonList(Arbeidsgiver.virksomhet("321")));
+        InntektsgrunnlagMapper mapper = new InntektsgrunnlagMapper(Optional.of(SG_PERIODE), Optional.of(BG_PERIODE), Collections.singletonList(Arbeidsgiver.virksomhet("321")));
         InntektDtoBuilder inntektFL = lagInntekt("321", InntektskildeType.INNTEKT_SAMMENLIGNING);
         InntektDtoBuilder inntektAT = lagInntekt("123", InntektskildeType.INNTEKT_SAMMENLIGNING);
         inntektFL.leggTilInntektspost(lagInntektspost(inntektFL, 3000, månederFør(3)));
@@ -88,25 +109,25 @@ class InntektsgrunnlagMapperTest {
         Optional<InntektsgrunnlagDto> dto = mapper.map(Arrays.asList(inntektFL.build(), inntektAT.build()));
 
         assertThat(dto).isPresent();
-        assertThat(dto.get().getMåneder()).hasSize(2);
-        assertThat(dto.get().getMåneder().get(0).getInntekter()).hasSize(2);
+        assertThat(dto.get().getSammenligningsgrunnlagInntekter()).hasSize(2);
+        assertThat(dto.get().getSammenligningsgrunnlagInntekter().get(0).getInntekter()).hasSize(2);
 
-        assertThat(dto.get().getMåneder().get(0).getInntekter()).hasSize(2);
-        assertThat(dto.get().getMåneder().get(0).getInntekter().stream()
+        assertThat(dto.get().getSammenligningsgrunnlagInntekter().get(0).getInntekter()).hasSize(2);
+        assertThat(dto.get().getSammenligningsgrunnlagInntekter().get(0).getInntekter().stream()
                 .anyMatch(innt -> innt.getInntektAktivitetType().equals(InntektAktivitetType.FRILANSINNTEKT)
                         && innt.getBeløp().compareTo(no.nav.folketrygdloven.kalkulus.felles.v1.Beløp.fra(3000)) == 0))
                 .isTrue();
-        assertThat(dto.get().getMåneder().get(0).getInntekter().stream()
+        assertThat(dto.get().getSammenligningsgrunnlagInntekter().get(0).getInntekter().stream()
                 .anyMatch(innt -> innt.getInntektAktivitetType().equals(InntektAktivitetType.ARBEIDSTAKERINNTEKT)
                         && innt.getBeløp().compareTo(no.nav.folketrygdloven.kalkulus.felles.v1.Beløp.fra(5000)) == 0))
                 .isTrue();
 
-        assertThat(dto.get().getMåneder().get(1).getInntekter()).hasSize(2);
-        assertThat(dto.get().getMåneder().get(1).getInntekter().stream()
+        assertThat(dto.get().getSammenligningsgrunnlagInntekter().get(1).getInntekter()).hasSize(2);
+        assertThat(dto.get().getSammenligningsgrunnlagInntekter().get(1).getInntekter().stream()
                 .anyMatch(innt -> innt.getInntektAktivitetType().equals(InntektAktivitetType.FRILANSINNTEKT)
                         && innt.getBeløp().compareTo(no.nav.folketrygdloven.kalkulus.felles.v1.Beløp.fra(3000)) == 0))
                 .isTrue();
-        assertThat(dto.get().getMåneder().get(1).getInntekter().stream()
+        assertThat(dto.get().getSammenligningsgrunnlagInntekter().get(1).getInntekter().stream()
                 .anyMatch(innt -> innt.getInntektAktivitetType().equals(InntektAktivitetType.ARBEIDSTAKERINNTEKT)
                         && innt.getBeløp().compareTo(no.nav.folketrygdloven.kalkulus.felles.v1.Beløp.fra(5000)) == 0))
                 .isTrue();
@@ -114,7 +135,7 @@ class InntektsgrunnlagMapperTest {
 
     @Test
     void skal_teste_at_pgidata_mappes_alene() {
-        InntektsgrunnlagMapper mapper = new InntektsgrunnlagMapper(Optional.of(SG_PERIODE), Collections.emptyList());
+        InntektsgrunnlagMapper mapper = new InntektsgrunnlagMapper(Optional.of(SG_PERIODE), Optional.of(BG_PERIODE), Collections.emptyList());
         InntektDtoBuilder sigrun = lagInntekt(null, InntektskildeType.SIGRUN);
         sigrun.leggTilInntektspost(lagPGIPost(sigrun, 200000, 2020, InntektspostType.SELVSTENDIG_NÆRINGSDRIVENDE));
         sigrun.leggTilInntektspost(lagPGIPost(sigrun, 50000, 2020, InntektspostType.NÆRING_FISKE_FANGST_FAMBARNEHAGE));
@@ -147,18 +168,18 @@ class InntektsgrunnlagMapperTest {
     }
 
     @Test
-    void skal_teste_at_pgidata_mappes_med_sammenligningsgrunnlagdata() {
-        InntektsgrunnlagMapper mapper = new InntektsgrunnlagMapper(Optional.of(SG_PERIODE), Collections.emptyList());
-        InntektDtoBuilder feilKilde = lagInntekt("123", InntektskildeType.INNTEKT_BEREGNING);
-        InntektDtoBuilder korrektKilde = lagInntekt("123", InntektskildeType.INNTEKT_SAMMENLIGNING);
-        feilKilde.leggTilInntektspost(lagInntektspost(feilKilde, 5000, månederFør(3)));
-        feilKilde.leggTilInntektspost(lagInntektspost(feilKilde, 5000, månederFør(2)));
-        korrektKilde.leggTilInntektspost(lagInntektspost(korrektKilde, 5000, månederFør(3)));
-        korrektKilde.leggTilInntektspost(lagInntektspost(korrektKilde, 5000, månederFør(2)));
+    void skal_teste_at_pgidata_mappes_med_inntekter() {
+        InntektsgrunnlagMapper mapper = new InntektsgrunnlagMapper(Optional.of(SG_PERIODE), Optional.of(BG_PERIODE), Collections.emptyList());
+        InntektDtoBuilder beregningsinntekter = lagInntekt("123", InntektskildeType.INNTEKT_BEREGNING);
+        InntektDtoBuilder sammenligningsinntekter = lagInntekt("123", InntektskildeType.INNTEKT_SAMMENLIGNING);
+        beregningsinntekter.leggTilInntektspost(lagInntektspost(beregningsinntekter, 5000, månederFør(3)));
+        beregningsinntekter.leggTilInntektspost(lagInntektspost(beregningsinntekter, 5000, månederFør(2)));
+        sammenligningsinntekter.leggTilInntektspost(lagInntektspost(sammenligningsinntekter, 5000, månederFør(3)));
+        sammenligningsinntekter.leggTilInntektspost(lagInntektspost(sammenligningsinntekter, 5000, månederFør(2)));
 
         var inntekter = new ArrayList<InntektDto>();
-        inntekter.add(feilKilde.build());
-        inntekter.add(korrektKilde.build());
+        inntekter.add(beregningsinntekter.build());
+        inntekter.add(sammenligningsinntekter.build());
 
         InntektDtoBuilder sigrun = lagInntekt(null, InntektskildeType.SIGRUN);
         sigrun.leggTilInntektspost(lagPGIPost(sigrun, 200000, 2020, InntektspostType.SELVSTENDIG_NÆRINGSDRIVENDE));
@@ -172,9 +193,11 @@ class InntektsgrunnlagMapperTest {
         Optional<InntektsgrunnlagDto> dto = mapper.map(inntekter);
 
         assertThat(dto).isPresent();
-        assertThat(dto.get().getMåneder()).hasSize(2);
-        assertThat(dto.get().getMåneder().get(0).getInntekter()).hasSize(1);
-        assertThat(dto.get().getMåneder().get(1).getInntekter()).hasSize(1);
+        assertThat(dto.get().getSammenligningsgrunnlagInntekter()).hasSize(2);
+        assertThat(dto.get().getSammenligningsgrunnlagInntekter().get(0).getInntekter()).hasSize(1);
+        assertThat(dto.get().getSammenligningsgrunnlagInntekter().get(1).getInntekter()).hasSize(1);
+		assertThat(dto.get().getBeregningsgrunnlagInntekter()).hasSize(1);
+        assertThat(dto.get().getBeregningsgrunnlagInntekter().getFirst().getInntekter()).hasSize(1);
 
         assertThat(dto).isPresent();
         var pgiGrunnlag = dto.get().getPgiGrunnlag().stream().sorted(Comparator.comparing(PGIPrÅrDto::getÅr)).toList();
