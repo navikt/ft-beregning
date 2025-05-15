@@ -28,23 +28,26 @@ import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.inntek
 
 public class InntektsgrunnlagMapper {
     private final Optional<Intervall> sammenligningsperiode;
+	private final Optional<Intervall> beregningsperiode;
     private final List<Arbeidsgiver> frilansArbeidsgivere;
 
     public InntektsgrunnlagMapper(Optional<Intervall> sammenligningsperiode,
+                                  Optional<Intervall> beregningsperiode,
                                   List<Arbeidsgiver> frilansArbeidsgivere) {
         this.sammenligningsperiode = sammenligningsperiode;
-        this.frilansArbeidsgivere = frilansArbeidsgivere;
+	    this.beregningsperiode = beregningsperiode;
+	    this.frilansArbeidsgivere = frilansArbeidsgivere;
     }
 
     public Optional<InntektsgrunnlagDto> map(Collection<InntektDto> alleInntekter) {
-
         if (alleInntekter.isEmpty()) {
             return Optional.empty();
         }
-        List<InntektsgrunnlagMånedDto> sammenligningsgrunnlagInntekter = mapSammenligningsgrunnlagInntekter(alleInntekter);
+	    List<InntektsgrunnlagMånedDto> sammenligningsgrunnlagInntekter = mapInntekterForFilter(alleInntekter, InntektskildeType.INNTEKT_SAMMENLIGNING);
+	    List<InntektsgrunnlagMånedDto> beregningsgrunnlagInntekter = mapInntekterForFilter(alleInntekter, InntektskildeType.INNTEKT_BEREGNING);
         List<PGIPrÅrDto> pgiGrunnlagInntekter  = mapPGIGrunnlagInntekter(alleInntekter);
 
-        return Optional.of(new InntektsgrunnlagDto(sammenligningsgrunnlagInntekter, pgiGrunnlagInntekter));
+        return Optional.of(new InntektsgrunnlagDto(sammenligningsgrunnlagInntekter, pgiGrunnlagInntekter, sammenligningsgrunnlagInntekter, beregningsgrunnlagInntekter));
     }
 
     private List<PGIPrÅrDto> mapPGIGrunnlagInntekter(Collection<InntektDto> alleInntekter) {
@@ -82,10 +85,13 @@ public class InntektsgrunnlagMapper {
         };
     }
 
-    private List<InntektsgrunnlagMånedDto> mapSammenligningsgrunnlagInntekter(Collection<InntektDto> alleInntekter) {
+    private List<InntektsgrunnlagMånedDto> mapInntekterForFilter(Collection<InntektDto> alleInntekter, InntektskildeType inntektskildeType) {
+	    if (getInntektsperiodeForKilde(inntektskildeType).isEmpty()) {
+		    return Collections.emptyList();
+	    }
         List<InntektDtoMedMåned> alleInntektsposter = alleInntekter.stream()
-                .filter(i -> i.getInntektsKilde().equals(InntektskildeType.INNTEKT_SAMMENLIGNING))
-                .map(this::mapInntektATFLYtelse)
+                .filter(i -> i.getInntektsKilde().equals(inntektskildeType))
+                .map(i -> mapInntektATFLYtelse(i, inntektskildeType))
                 .flatMap(Collection::stream)
                 .toList();
         Map<LocalDate, List<InntektDtoMedMåned>> dateMap = alleInntektsposter.stream().collect(Collectors.groupingBy(intp -> intp.månedFom));
@@ -95,7 +101,7 @@ public class InntektsgrunnlagMapper {
         List<InntektsgrunnlagMånedDto> måneder = new ArrayList<>();
         dateMap.forEach((månedFom, poster) -> {
             List<InntektsgrunnlagInntektDto> inntekDtoer = poster.stream()
-                    .map(post -> new InntektsgrunnlagInntektDto(post.inntektAktivitetType, ModellTyperMapper.beløpTilDto(post.beløp)))
+                    .map(post -> new InntektsgrunnlagInntektDto(post.inntektAktivitetType, ModellTyperMapper.beløpTilDto(post.beløp), post.arbeidsgiverIdent))
                     .toList();
             LocalDate tom = månedFom.with(TemporalAdjusters.lastDayOfMonth());
             måneder.add(new InntektsgrunnlagMånedDto(månedFom, tom, inntekDtoer));
@@ -103,17 +109,15 @@ public class InntektsgrunnlagMapper {
         return måneder;
     }
 
-    private List<InntektDtoMedMåned> mapInntektATFLYtelse(InntektDto inn) {
-        if (!inn.getInntektsKilde().equals(InntektskildeType.INNTEKT_SAMMENLIGNING) || sammenligningsperiode.isEmpty()) {
-            return Collections.emptyList();
-        }
+	private List<InntektDtoMedMåned> mapInntektATFLYtelse(InntektDto inn, InntektskildeType ønsketInntektskilde) {
+		var inntektsperiode = getInntektsperiodeForKilde(ønsketInntektskilde);
         return inn.getAlleInntektsposter().stream()
-                .filter(intp -> sammenligningsperiode.get().inkluderer(intp.getPeriode().getFomDato().withDayOfMonth(1)))
+                .filter(intp -> inntektsperiode.map(p -> p.inkluderer(intp.getPeriode().getFomDato().withDayOfMonth(1))).orElse(false))
                 .map(intp -> new InntektDtoMedMåned(finnInntektType(inn.getArbeidsgiver(), intp.getInntektspostType()),
+						inn.getArbeidsgiver() == null ? null : inn.getArbeidsgiver().getIdentifikator(),
                         Beløp.safeVerdi(intp.getBeløp()) != null ? intp.getBeløp() : Beløp.ZERO,
                         intp.getPeriode().getFomDato().withDayOfMonth(1)))
-                .collect(Collectors.toList());
-
+                .toList();
     }
 
     private InntektAktivitetType finnInntektType(Arbeidsgiver arbeidsgiver, InntektspostType inntektspostType) {
@@ -126,7 +130,12 @@ public class InntektsgrunnlagMapper {
         return frilansArbeidsgivere.contains(arbeidsgiver) ? InntektAktivitetType.FRILANSINNTEKT : InntektAktivitetType.ARBEIDSTAKERINNTEKT;
     }
 
+	private Optional<Intervall> getInntektsperiodeForKilde(InntektskildeType inntektskildeType) {
+		return inntektskildeType.equals(InntektskildeType.INNTEKT_SAMMENLIGNING) ? sammenligningsperiode : beregningsperiode;
+	}
+
     record InntektDtoMedMåned(InntektAktivitetType inntektAktivitetType,
+							  String arbeidsgiverIdent,
                               Beløp beløp, LocalDate månedFom) {
     }
 }

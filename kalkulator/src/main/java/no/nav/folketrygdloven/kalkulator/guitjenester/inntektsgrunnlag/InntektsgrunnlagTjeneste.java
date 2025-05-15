@@ -31,7 +31,12 @@ public class InntektsgrunnlagTjeneste {
         List<Arbeidsgiver> frilansArbeidsgivere = finnFrilansArbeidsgivere(input);
         Optional<Intervall> atflSgPeriode = input.getBeregningsgrunnlag().getSammenligningsgrunnlagForStatus(SammenligningsgrunnlagType.SAMMENLIGNING_AT_FL)
                 .map(sg -> Intervall.fraOgMedTilOgMed(sg.getSammenligningsperiodeFom(), sg.getSammenligningsperiodeTom()));
-        InntektsgrunnlagMapper mapper = new InntektsgrunnlagMapper(atflSgPeriode, frilansArbeidsgivere);
+		Optional<Intervall> atflBgPeriode = input.getBeregningsgrunnlag().getBeregningsgrunnlagPerioder().getFirst()
+                .getBeregningsgrunnlagPrStatusOgAndelList().stream()
+				.filter(bg -> bg.getBeregningsperiode() != null && (bg.getAktivitetStatus().erArbeidstaker() || bg.getAktivitetStatus().erFrilanser()))
+				.findFirst()
+				.map(bg -> Intervall.fraOgMedTilOgMed(bg.getBeregningsperiodeFom(), bg.getBeregningsperiodeTom()));
+        InntektsgrunnlagMapper mapper = new InntektsgrunnlagMapper(atflSgPeriode, atflBgPeriode, frilansArbeidsgivere);
         return mapper.map(alleInntekter);
     }
 

@@ -29,17 +29,32 @@ public class InntektsgrunnlagDto {
     @Valid
     @NotNull
     @JsonProperty(value = "pgiGrunnlag")
-    @Size(max = 12)
+    @Size(max = 3)
     private List<PGIPrÅrDto> pgiGrunnlag;
 
+	@Valid
+	@NotNull
+	@JsonProperty(value = "sammenligningsgrunnlagInntekter")
+	@Size(max = 12)
+	private List<InntektsgrunnlagMånedDto> sammenligningsgrunnlagInntekter;
+
+	@Valid
+	@NotNull
+	@JsonProperty(value = "beregningsgrunnlagInntekter")
+	@Size(max = 3)
+	private List<InntektsgrunnlagMånedDto> beregningsgrunnlagInntekter;
 
     public InntektsgrunnlagDto() {
     }
 
     public InntektsgrunnlagDto(@Valid @NotNull @Min(0) @Max(12) List<InntektsgrunnlagMånedDto> måneder,
-                               @Valid @NotNull @Min(0) @Max(12) List<PGIPrÅrDto> pgiGrunnlag) {
+                               @Valid @NotNull @Min(0) @Max(3) List<PGIPrÅrDto> pgiGrunnlag,
+                               @Valid @NotNull @Min(0) @Max(12) List<InntektsgrunnlagMånedDto> sammenligningsgrunnlagInntekter,
+                               @Valid @NotNull @Min(0) @Max(3) List<InntektsgrunnlagMånedDto> beregningsgrunnlagInntekter) {
         this.måneder = måneder;
         this.pgiGrunnlag = pgiGrunnlag;
+		this.sammenligningsgrunnlagInntekter = sammenligningsgrunnlagInntekter;
+		this.beregningsgrunnlagInntekter = beregningsgrunnlagInntekter;
     }
 
     public List<InntektsgrunnlagMånedDto> getMåneder() {
@@ -49,4 +64,12 @@ public class InntektsgrunnlagDto {
     public List<PGIPrÅrDto> getPgiGrunnlag() {
         return pgiGrunnlag;
     }
+
+	public List<InntektsgrunnlagMånedDto> getSammenligningsgrunnlagInntekter() {
+		return sammenligningsgrunnlagInntekter;
+	}
+
+	public List<InntektsgrunnlagMånedDto> getBeregningsgrunnlagInntekter() {
+		return beregningsgrunnlagInntekter;
+	}
 }
