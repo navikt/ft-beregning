@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import no.nav.folketrygdloven.kalkulus.felles.v1.Beløp;
 import no.nav.folketrygdloven.kalkulus.kodeverk.InntektAktivitetType;
 
@@ -28,6 +29,7 @@ public class InntektsgrunnlagInntektDto {
 
 	@Valid
 	@JsonProperty("arbeidsgiverIdent")
+	@Pattern(regexp = "^[\\p{Graph}\\p{Space}\\p{Sc}\\p{L}\\p{M}\\p{N}]+$", message="'${validatedValue}' matcher ikke tillatt pattern '{regexp}'")
 	private String arbeidsgiverIdent;
 
     public InntektsgrunnlagInntektDto(@Valid @NotNull InntektAktivitetType inntektAktivitetType,
