@@ -19,7 +19,6 @@ public class OppgittArbeidsforholdDto {
     private Periode periode;
 
     @JsonProperty("inntekt")
-    @NotNull
     @Valid
     private Beløp inntekt;
 
