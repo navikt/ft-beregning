@@ -29,10 +29,14 @@ public class Ytelseandel {
     @Valid
     private Long dagsats;
 
-    public Ytelseandel(@Valid AktivitetStatus aktivitetStatus,
-                       @Valid Inntektskategori inntektskategori,
-                       @Valid Arbeidskategori arbeidskategori,
-                       @Valid Long dagsats) {
+	protected Ytelseandel() {
+		// default ctor
+	}
+
+	public Ytelseandel(@Valid AktivitetStatus aktivitetStatus,
+	                   @Valid Inntektskategori inntektskategori,
+	                   @Valid Arbeidskategori arbeidskategori,
+	                   @Valid Long dagsats) {
         this.aktivitetStatus = aktivitetStatus;
         this.arbeidskategori = arbeidskategori;
         this.dagsats = dagsats;
