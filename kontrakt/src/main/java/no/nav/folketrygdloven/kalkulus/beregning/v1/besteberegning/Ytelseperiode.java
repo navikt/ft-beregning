@@ -26,8 +26,12 @@ public class Ytelseperiode {
     @NotNull
     private List<Ytelseandel> andeler = new ArrayList<>();
 
-    public Ytelseperiode(@Valid @NotNull Periode periode,
-                         @Valid @NotNull List<Ytelseandel> andeler) {
+	protected Ytelseperiode() {
+		// default ctor
+	}
+
+	public Ytelseperiode(@Valid @NotNull Periode periode,
+	                     @Valid @NotNull List<Ytelseandel> andeler) {
         this.periode = periode;
         this.andeler = andeler;
     }

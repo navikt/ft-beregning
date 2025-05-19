@@ -24,8 +24,12 @@ public class Ytelsegrunnlag {
     @NotNull
     private List<Ytelseperiode> perioder;
 
-    public Ytelsegrunnlag(@Valid @NotNull YtelseType ytelse,
-                          @Valid @NotNull List<Ytelseperiode> perioder) {
+	protected Ytelsegrunnlag() {
+		// default ctor
+	}
+
+	public Ytelsegrunnlag(@Valid @NotNull YtelseType ytelse,
+	                      @Valid @NotNull List<Ytelseperiode> perioder) {
         this.ytelse = ytelse;
         this.perioder = perioder;
     }
