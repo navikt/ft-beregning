@@ -40,6 +40,7 @@ public class Ytelseandel {
         this.aktivitetStatus = aktivitetStatus;
         this.arbeidskategori = arbeidskategori;
         this.dagsats = dagsats;
+		this.inntektskategori = inntektskategori;
     }
 
     public AktivitetStatus getAktivitetStatus() {
