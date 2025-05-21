@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import no.nav.folketrygdloven.kalkulus.felles.v1.Beløp;
 import no.nav.folketrygdloven.kalkulus.kodeverk.InntektAktivitetType;
 
@@ -26,13 +27,17 @@ public class InntektsgrunnlagInntektDto {
     @JsonProperty("beløp")
     private Beløp beløp;
 
-    public InntektsgrunnlagInntektDto() {
-    }
+	@Valid
+	@JsonProperty("arbeidsgiverIdent")
+	@Pattern(regexp = "^[\\p{Graph}\\p{Space}\\p{Sc}\\p{L}\\p{M}\\p{N}]+$", message="'${validatedValue}' matcher ikke tillatt pattern '{regexp}'")
+	private String arbeidsgiverIdent;
 
     public InntektsgrunnlagInntektDto(@Valid @NotNull InntektAktivitetType inntektAktivitetType,
-                                      @Valid Beløp beløp) {
+                                      @Valid Beløp beløp,
+                                      @Valid String arbeidsgiverIdent) {
         this.inntektAktivitetType = inntektAktivitetType;
         this.beløp = beløp;
+	    this.arbeidsgiverIdent = arbeidsgiverIdent;
     }
 
     public Beløp getBeløp() {
@@ -42,4 +47,8 @@ public class InntektsgrunnlagInntektDto {
     public InntektAktivitetType getInntektAktivitetType() {
         return inntektAktivitetType;
     }
+
+	public String getArbeidsgiverIdent() {
+		return arbeidsgiverIdent;
+	}
 }
