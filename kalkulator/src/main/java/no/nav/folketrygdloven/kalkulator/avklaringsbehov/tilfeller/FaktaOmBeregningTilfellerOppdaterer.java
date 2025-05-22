@@ -53,6 +53,7 @@ public class FaktaOmBeregningTilfellerOppdaterer {
             case VURDER_REFUSJONSKRAV_SOM_HAR_KOMMET_FOR_SENT -> VurderRefusjonTilfelleOppdaterer.oppdater(faktaDto, input, grunnlagBuilder);
             case VURDER_SN_NY_I_ARBEIDSLIVET -> VurderSelvstendigNæringsdrivendeNyIArbeidslivetOppdaterer.oppdater(faktaDto, grunnlagBuilder);
             case VURDER_TIDSBEGRENSET_ARBEIDSFORHOLD -> VurderTidsbegrensetArbeidsforholdOppdaterer.oppdater(faktaDto, grunnlagBuilder);
+			case FASTSETT_INNTEKT_FOR_ARBEID_UNDER_AAP -> FastsettInntektForArbeidUnderAAPOppdaterer.oppdater(faktaDto, grunnlagBuilder);
             case UDEFINERT, FASTSETT_BG_ARBEIDSTAKER_UTEN_INNTEKTSMELDING, FASTSETT_ENDRET_BEREGNINGSGRUNNLAG, VURDER_BESTEBEREGNING, TILSTØTENDE_YTELSE -> {
                 // NOOP
             }

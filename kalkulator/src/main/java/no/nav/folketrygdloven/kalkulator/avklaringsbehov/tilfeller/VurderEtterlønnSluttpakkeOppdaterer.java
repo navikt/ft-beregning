@@ -19,8 +19,8 @@ public class VurderEtterlønnSluttpakkeOppdaterer {
     }
 
     public static void oppdater(FaktaBeregningLagreDto dto, BeregningsgrunnlagGrunnlagDtoBuilder grunnlagBuilder) {
-        VurderEtterlønnSluttpakkeDto vurderDto = dto.getVurderEtterlønnSluttpakke();
-        List<BeregningsgrunnlagPrStatusOgAndelDto> etterlønnSluttpakkeAndel = finnEtterlønnSluttpakkeAndeler(grunnlagBuilder.getBeregningsgrunnlagBuilder().getBeregningsgrunnlag());
+        var vurderDto = dto.getVurderEtterlønnSluttpakke();
+        var etterlønnSluttpakkeAndel = finnEtterlønnSluttpakkeAndeler(grunnlagBuilder.getBeregningsgrunnlagBuilder().getBeregningsgrunnlag());
         if (!vurderDto.erEtterlønnSluttpakke()) {
             etterlønnSluttpakkeAndel.forEach(andel -> BeregningsgrunnlagPrStatusOgAndelDto.Builder.oppdatere(andel)
                     .medFastsattAvSaksbehandler(true)
@@ -28,8 +28,8 @@ public class VurderEtterlønnSluttpakkeOppdaterer {
         }
 
         // Setter fakta aggregat
-        FaktaAggregatDto.Builder faktaAggregatBuilder = grunnlagBuilder.getFaktaAggregatBuilder();
-        FaktaAktørDto.Builder faktaAktørBuilder = faktaAggregatBuilder.getFaktaAktørBuilder();
+        var faktaAggregatBuilder = grunnlagBuilder.getFaktaAggregatBuilder();
+        var faktaAktørBuilder = faktaAggregatBuilder.getFaktaAktørBuilder();
         faktaAktørBuilder.medMottarEtterlønnSluttpakkeFastsattAvSaksbehandler(vurderDto.erEtterlønnSluttpakke());
         faktaAggregatBuilder.medFaktaAktør(faktaAktørBuilder.build());
         grunnlagBuilder.medFaktaAggregat(faktaAggregatBuilder.build());
@@ -37,10 +37,10 @@ public class VurderEtterlønnSluttpakkeOppdaterer {
 
     private static List<BeregningsgrunnlagPrStatusOgAndelDto> finnEtterlønnSluttpakkeAndeler(BeregningsgrunnlagDto beregningsgrunnlag) {
         return beregningsgrunnlag.getBeregningsgrunnlagPerioder()
-                .get(0)
+                .getFirst()
                 .getBeregningsgrunnlagPrStatusOgAndelList()
                 .stream()
                 .filter(bpsa -> bpsa.getArbeidsforholdType().equals(OpptjeningAktivitetType.ETTERLØNN_SLUTTPAKKE))
-                .collect(Collectors.toList());
+                .toList();
     }
 }

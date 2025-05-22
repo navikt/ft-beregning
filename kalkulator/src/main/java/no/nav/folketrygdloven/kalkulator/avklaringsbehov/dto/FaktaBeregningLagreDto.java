@@ -22,6 +22,7 @@ public class FaktaBeregningLagreDto {
     private MottarYtelseDto mottarYtelse;
     private VurderMilitærDto vurderMilitaer;
     private List<RefusjonskravPrArbeidsgiverVurderingDto> refusjonskravGyldighet;
+	private FastsettInntektForArbeidUnderAAPDto fastsettInntektForArbeidUnderAAP;
 
     public FaktaBeregningLagreDto(VurderNyoppstartetFLDto vurderNyoppstartetFL,
                                   VurderTidsbegrensetArbeidsforholdDto vurderTidsbegrensetArbeidsforhold,
@@ -37,7 +38,8 @@ public class FaktaBeregningLagreDto {
                                   FastsettEtterlønnSluttpakkeDto fastsettEtterlønnSluttpakke,
                                   MottarYtelseDto mottarYtelse,
                                   VurderMilitærDto vurderMilitaer,
-                                  List<RefusjonskravPrArbeidsgiverVurderingDto> refusjonskravGyldighet) {
+                                  List<RefusjonskravPrArbeidsgiverVurderingDto> refusjonskravGyldighet,
+                                  FastsettInntektForArbeidUnderAAPDto fastsettInntektForArbeidUnderAAP) {
         this.vurderNyoppstartetFL = vurderNyoppstartetFL;
         this.vurderTidsbegrensetArbeidsforhold = vurderTidsbegrensetArbeidsforhold;
         this.vurderNyIArbeidslivet = vurderNyIArbeidslivet;
@@ -53,6 +55,7 @@ public class FaktaBeregningLagreDto {
         this.mottarYtelse = mottarYtelse;
         this.vurderMilitaer = vurderMilitaer;
         this.refusjonskravGyldighet = refusjonskravGyldighet;
+		this.fastsettInntektForArbeidUnderAAP = fastsettInntektForArbeidUnderAAP;
     }
 
     public FaktaBeregningLagreDto(List<FaktaOmBeregningTilfelle> faktaOmBeregningTilfeller) {
@@ -178,4 +181,12 @@ public class FaktaBeregningLagreDto {
     public void setVurderMilitaer(VurderMilitærDto vurderMilitaer) {
         this.vurderMilitaer = vurderMilitaer;
     }
+
+	public FastsettInntektForArbeidUnderAAPDto getFastsettInntektForArbeidUnderAAP() {
+		return fastsettInntektForArbeidUnderAAP;
+	}
+
+	public void setFastsettInntektForArbeidUnderAAP(FastsettInntektForArbeidUnderAAPDto fastsettInntektForArbeidUnderAAP) {
+		this.fastsettInntektForArbeidUnderAAP = fastsettInntektForArbeidUnderAAP;
+	}
 }
