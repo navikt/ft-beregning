@@ -1,11 +1,11 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.fordel;
 
+import java.math.BigDecimal;
+
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelPeriodeModell;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
-
-import java.math.BigDecimal;
 
 class FinnesMerRefusjonEnnBruttoTilgjengeligOgFlereAndelerKreverRefusjon extends LeafSpecification<FordelModell> {
 

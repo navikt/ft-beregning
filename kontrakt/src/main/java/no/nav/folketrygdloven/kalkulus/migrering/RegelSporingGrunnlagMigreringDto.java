@@ -1,11 +1,12 @@
 package no.nav.folketrygdloven.kalkulus.migrering;
 
+import java.util.Objects;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagRegelType;
 
-import java.util.Objects;
+import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagRegelType;
 
 public class RegelSporingGrunnlagMigreringDto extends BaseMigreringDto {
     @Valid

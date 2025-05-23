@@ -2,9 +2,9 @@ package no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag;
 
 import java.util.Objects;
 
-import no.nav.folketrygdloven.kalkulator.modell.diff.SjekkVedKopiering;
 import no.nav.folketrygdloven.kalkulator.modell.diff.DiffIgnore;
 import no.nav.folketrygdloven.kalkulator.modell.diff.IndexKey;
+import no.nav.folketrygdloven.kalkulator.modell.diff.SjekkVedKopiering;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FaktaOmBeregningTilfelle;
 
 public class BeregningsgrunnlagFaktaOmBeregningTilfelleDto implements IndexKey {

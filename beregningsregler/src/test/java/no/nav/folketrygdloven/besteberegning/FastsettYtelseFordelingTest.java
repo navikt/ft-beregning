@@ -1,22 +1,6 @@
 package no.nav.folketrygdloven.besteberegning;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.RelatertYtelseType;
-import no.nav.folketrygdloven.besteberegning.modell.input.YtelseAktivitetType;
-import no.nav.folketrygdloven.besteberegning.modell.input.Ytelsegrunnlag;
-
-import no.nav.folketrygdloven.besteberegning.modell.input.YtelsegrunnlagAndel;
-import no.nav.folketrygdloven.besteberegning.modell.input.YtelsegrunnlagPeriode;
-
-import no.nav.folketrygdloven.besteberegning.modell.output.AktivitetNøkkel;
-
-import no.nav.folketrygdloven.besteberegning.modell.output.Inntekt;
-
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Java6Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -26,10 +10,22 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
+import org.junit.jupiter.api.Test;
+
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.RelatertYtelseType;
+import no.nav.folketrygdloven.besteberegning.modell.input.YtelseAktivitetType;
+import no.nav.folketrygdloven.besteberegning.modell.input.Ytelsegrunnlag;
+import no.nav.folketrygdloven.besteberegning.modell.input.YtelsegrunnlagAndel;
+import no.nav.folketrygdloven.besteberegning.modell.input.YtelsegrunnlagPeriode;
+import no.nav.folketrygdloven.besteberegning.modell.output.AktivitetNøkkel;
+import no.nav.folketrygdloven.besteberegning.modell.output.Inntekt;
 
 class FastsettYtelseFordelingTest {
 	private List<Ytelsegrunnlag> grunnlag = new ArrayList<>();

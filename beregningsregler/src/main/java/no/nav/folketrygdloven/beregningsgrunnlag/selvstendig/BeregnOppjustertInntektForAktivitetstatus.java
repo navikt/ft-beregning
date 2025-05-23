@@ -2,7 +2,6 @@ package no.nav.folketrygdloven.beregningsgrunnlag.selvstendig;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

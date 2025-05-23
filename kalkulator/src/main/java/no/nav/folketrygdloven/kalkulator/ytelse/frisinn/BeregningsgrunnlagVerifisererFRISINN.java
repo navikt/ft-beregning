@@ -1,8 +1,6 @@
 package no.nav.folketrygdloven.kalkulator.ytelse.frisinn;
 
-import java.time.LocalDate;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;

@@ -1,8 +1,8 @@
 package no.nav.folketrygdloven.kalkulator.ytelse.utbgradytelse;
 
 
-import no.nav.folketrygdloven.kalkulus.kodeverk.UttakArbeidType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
+import no.nav.folketrygdloven.kalkulus.kodeverk.UttakArbeidType;
 
 public class AktivitetStatusMatcher {
 

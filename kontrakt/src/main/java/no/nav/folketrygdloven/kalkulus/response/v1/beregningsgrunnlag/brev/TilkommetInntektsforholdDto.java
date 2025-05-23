@@ -2,16 +2,17 @@ package no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.brev;
 
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -54,7 +55,7 @@ public class TilkommetInntektsforholdDto {
 	public TilkommetInntektsforholdDto(AktivitetStatus aktivitetStatus,
 	                                   String arbeidsgiverIdentifikator,
 	                                   String arbeidsforholdId,
-	                                   Integer bruttoInntektPrÅr, 
+	                                   Integer bruttoInntektPrÅr,
 									   Integer tilkommetInntektPrÅr,
 	                                   Boolean skalRedusereUtbetaling) {
 		this.aktivitetStatus = aktivitetStatus;

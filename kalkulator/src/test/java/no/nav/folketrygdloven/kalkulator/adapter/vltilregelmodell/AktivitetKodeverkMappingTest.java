@@ -1,13 +1,13 @@
 package no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.EnumSet;
 
 import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.kodeverk.MapOpptjeningAktivitetTypeFraVLTilRegel;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 class AktivitetKodeverkMappingTest {
 

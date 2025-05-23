@@ -7,11 +7,9 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.kalkulator.guitjenester.ModellTyperMapper;
-import no.nav.folketrygdloven.kalkulator.modell.iay.OppgittEgenNæringDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.OppgittOpptjeningDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulus.kodeverk.VirksomhetType;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.EgenNæringDto;
 
 class EgenNæringMapperTest {
 

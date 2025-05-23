@@ -1,12 +1,11 @@
 package no.nav.folketrygdloven.kalkulator.ytelse.utbgradytelse;
 
-import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
-
-import no.nav.folketrygdloven.kalkulus.kodeverk.UttakArbeidType;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
+import no.nav.folketrygdloven.kalkulus.kodeverk.UttakArbeidType;
 
 class AktivitetStatusMatcherTest {
 

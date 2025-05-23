@@ -2,7 +2,6 @@ package no.nav.folketrygdloven.beregningsgrunnlag.selvstendig;
 
 import static no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.FinnGjennomsnittligPGI.finnGjennomsnittligPGI;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 

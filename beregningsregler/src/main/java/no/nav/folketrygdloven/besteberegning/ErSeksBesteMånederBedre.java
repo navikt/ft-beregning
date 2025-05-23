@@ -2,12 +2,10 @@ package no.nav.folketrygdloven.besteberegning;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import no.nav.folketrygdloven.besteberegning.modell.BesteberegningRegelmodell;
 import no.nav.folketrygdloven.besteberegning.modell.output.BesteberegnetAndel;
-import no.nav.folketrygdloven.besteberegning.modell.output.BesteberegningOutput;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 

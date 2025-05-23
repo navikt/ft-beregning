@@ -1,7 +1,6 @@
 package no.nav.folketrygdloven.kalkulator.steg;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;

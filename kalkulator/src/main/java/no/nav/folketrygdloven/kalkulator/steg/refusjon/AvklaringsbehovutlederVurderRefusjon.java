@@ -1,6 +1,5 @@
 package no.nav.folketrygdloven.kalkulator.steg.refusjon;
 
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -9,9 +8,6 @@ import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagInput;
 import no.nav.folketrygdloven.kalkulator.input.VurderRefusjonBeregningsgrunnlagInput;
 import no.nav.folketrygdloven.kalkulator.konfig.KonfigTjeneste;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDto;
-import no.nav.folketrygdloven.kalkulator.steg.refusjon.modell.RefusjonAndel;
-import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 
 public final class AvklaringsbehovutlederVurderRefusjon {
 

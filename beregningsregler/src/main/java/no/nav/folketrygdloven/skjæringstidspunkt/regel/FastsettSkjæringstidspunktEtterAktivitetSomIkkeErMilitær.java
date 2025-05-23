@@ -1,6 +1,5 @@
 package no.nav.folketrygdloven.skjæringstidspunkt.regel;
 
-import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;

@@ -2,6 +2,7 @@ package no.nav.folketrygdloven.kalkulus.migrering;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+
 import no.nav.folketrygdloven.kalkulus.kodeverk.FaktaVurderingKilde;
 
 public class FaktaVurderingMigreringDto {
