@@ -34,7 +34,7 @@ public class BeregningsgrunnlagPeriodeMigreringDto extends BaseMigreringDto {
 
     @Valid
     @DecimalMin(value = "0.00")
-    @DecimalMax(value = "3000.00")
+    @DecimalMax(value = "4000.00")
     @Digits(integer = 4, fraction = 0)
     private Long dagsats;
 
