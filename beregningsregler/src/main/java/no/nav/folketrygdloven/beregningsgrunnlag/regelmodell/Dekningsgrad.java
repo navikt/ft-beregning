@@ -20,7 +20,7 @@ public enum Dekningsgrad {
     }
 
     public static Dekningsgrad fra(int dekningsgrad) {
-        BigDecimal norm = BigDecimal.valueOf(dekningsgrad).divide(BigDecimal.valueOf(100));
+        var norm = BigDecimal.valueOf(dekningsgrad).divide(BigDecimal.valueOf(100));
         for (var dek : values()) {
             if (dek.getVerdi().compareTo(norm) == 0) {
                 return dek;

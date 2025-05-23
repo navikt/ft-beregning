@@ -3,7 +3,6 @@ package no.nav.folketrygdloven.kalkulator.steg.kontrollerfakta.periodisering;
 import java.util.ArrayList;
 import java.util.List;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.RegelResultat;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.naturalytelse.PeriodeModellNaturalytelse;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SplittetPeriode;
 import no.nav.folketrygdloven.kalkulator.adapter.regelmodelltilvl.MapFastsettBeregningsgrunnlagPerioderFraRegelTilVLNaturalytelse;
@@ -29,14 +28,14 @@ public class FastsettNaturalytelsePerioderTjeneste {
 
     public BeregningsgrunnlagRegelResultat fastsettPerioderForNaturalytelse(BeregningsgrunnlagInput input,
                                                                             BeregningsgrunnlagDto beregningsgrunnlag) {
-        PeriodeModellNaturalytelse periodeModell = MapNaturalytelserFraVLTilRegel.map(input, beregningsgrunnlag);
+        var periodeModell = MapNaturalytelserFraVLTilRegel.map(input, beregningsgrunnlag);
         return kjørRegelOgMapTilVLNaturalytelse(beregningsgrunnlag, periodeModell);
     }
 
     private BeregningsgrunnlagRegelResultat kjørRegelOgMapTilVLNaturalytelse(BeregningsgrunnlagDto beregningsgrunnlag, PeriodeModellNaturalytelse input) {
         List<SplittetPeriode> splittedePerioder = new ArrayList<>();
-        RegelResultat regelResultat = KalkulusRegler.fastsettPerioderNaturalytelse(input, splittedePerioder);
-        BeregningsgrunnlagDto nyttBeregningsgrunnlag = oversetterFraRegelNaturalytelse.mapFraRegel(splittedePerioder, beregningsgrunnlag);
+        var regelResultat = KalkulusRegler.fastsettPerioderNaturalytelse(input, splittedePerioder);
+        var nyttBeregningsgrunnlag = oversetterFraRegelNaturalytelse.mapFraRegel(splittedePerioder, beregningsgrunnlag);
         return new BeregningsgrunnlagRegelResultat(nyttBeregningsgrunnlag,
                 new RegelSporingAggregat(MapRegelSporingFraRegelTilVL.mapRegelSporingGrunnlag(regelResultat, BeregningsgrunnlagRegelType.PERIODISERING_NATURALYTELSE)));
     }

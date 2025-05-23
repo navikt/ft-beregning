@@ -6,11 +6,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
-
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,6 +13,9 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivPeriode;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModell;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.BeregningsgrunnlagPrStatus;
@@ -42,7 +40,7 @@ class FastsettStatusOgAndelPrPeriodeTest {
         regelmodell.leggTilEllerOppdaterAktivPeriode(AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(STP.minusMonths(36), STP.plusMonths(12)), "999999999", null));
 
         // Act
-        List<BeregningsgrunnlagPrStatus> statusListe = kjørRegel(regelmodell);
+        var statusListe = kjørRegel(regelmodell);
 
         // Assert
         assertThat(statusListe).hasSize(1);
@@ -57,7 +55,7 @@ class FastsettStatusOgAndelPrPeriodeTest {
 		regelmodell.leggTilEllerOppdaterAktivPeriode(AktivPeriode.forArbeidstakerHosPrivatperson(Periode.of(STP.minusMonths(36), STP.plusMonths(12)), "999999998"));
 
 		// Act
-		List<BeregningsgrunnlagPrStatus> statusListe = kjørRegel(regelmodell);
+        var statusListe = kjørRegel(regelmodell);
 
 		// Assert
 		assertThat(statusListe).hasSize(1);
@@ -73,7 +71,7 @@ class FastsettStatusOgAndelPrPeriodeTest {
 		regelmodell.leggTilEllerOppdaterAktivPeriode(AktivPeriode.forAndre(Aktivitet.FRILANSINNTEKT, Periode.of(STP.minusMonths(36), STP.minusDays(2))));
 
 		// Act
-		List<BeregningsgrunnlagPrStatus> statusListe = kjørRegel(regelmodell);
+        var statusListe = kjørRegel(regelmodell);
 
 		// Assert
 		assertThat(statusListe).hasSize(1);
@@ -86,7 +84,7 @@ class FastsettStatusOgAndelPrPeriodeTest {
 		regelmodell.leggTilEllerOppdaterAktivPeriode(AktivPeriode.forAndre(Aktivitet.SYKEPENGER_MOTTAKER, Periode.of(STP.minusMonths(36), STP.plusMonths(12))));
 
 		// Act
-		List<BeregningsgrunnlagPrStatus> statusListe = kjørRegel(regelmodell);
+        var statusListe = kjørRegel(regelmodell);
 
 		// Assert
 		assertThat(statusListe).hasSize(1);
@@ -100,7 +98,7 @@ class FastsettStatusOgAndelPrPeriodeTest {
 		regelmodell.setInntektsgrunnlag(inntektsgrunnlag);
 		regelmodell.leggTilEllerOppdaterAktivPeriode(AktivPeriode.forAndre(Aktivitet.AAP_MOTTAKER, Periode.of(STP.minusMonths(36), STP.plusMonths(12))));
 
-		List<BeregningsgrunnlagPrStatus> statusListe = kjørRegel(regelmodell);
+        var statusListe = kjørRegel(regelmodell);
 
 		assertThat(statusListe).hasSize(2);
 		assertThat(statusListe.getFirst().getAktivitetStatus()).isEqualTo(AktivitetStatus.ATFL);
@@ -111,7 +109,7 @@ class FastsettStatusOgAndelPrPeriodeTest {
 	void skal_ikke_lage_andel_for_arbeid_under_aap_hvis_ingen_inntektsgrunnlag() {
 		regelmodell.leggTilEllerOppdaterAktivPeriode(AktivPeriode.forAndre(Aktivitet.AAP_MOTTAKER, Periode.of(STP.minusMonths(36), STP.plusMonths(12))));
 
-		List<BeregningsgrunnlagPrStatus> statusListe = kjørRegel(regelmodell);
+        var statusListe = kjørRegel(regelmodell);
 
 		assertThat(statusListe).hasSize(1);
 		assertThat(statusListe.getFirst().getAktivitetStatus()).isNotEqualTo(AktivitetStatus.AT);
@@ -124,7 +122,7 @@ class FastsettStatusOgAndelPrPeriodeTest {
 		regelmodell.setInntektsgrunnlag(inntektsgrunnlag);
 		regelmodell.leggTilEllerOppdaterAktivPeriode(AktivPeriode.forAndre(Aktivitet.AAP_MOTTAKER, Periode.of(STP.minusMonths(36), STP.plusMonths(12))));
 
-		List<BeregningsgrunnlagPrStatus> statusListe = kjørRegel(regelmodell);
+        var statusListe = kjørRegel(regelmodell);
 
 		assertThat(statusListe).hasSize(1);
 		assertThat(statusListe.getFirst().getAktivitetStatus()).isNotEqualTo(AktivitetStatus.AT);
@@ -137,7 +135,7 @@ class FastsettStatusOgAndelPrPeriodeTest {
 		regelmodell.setInntektsgrunnlag(inntektsgrunnlag);
 		regelmodell.leggTilEllerOppdaterAktivPeriode(AktivPeriode.forAndre(Aktivitet.AAP_MOTTAKER, Periode.of(STP.minusMonths(36), STP.plusMonths(12))));
 
-		List<BeregningsgrunnlagPrStatus> statusListe = kjørRegel(regelmodell);
+        var statusListe = kjørRegel(regelmodell);
 
 		assertThat(statusListe).hasSize(1);
 		assertThat(statusListe.getFirst().getAktivitetStatus()).isNotEqualTo(AktivitetStatus.AT);
@@ -150,7 +148,7 @@ class FastsettStatusOgAndelPrPeriodeTest {
 		regelmodell.setInntektsgrunnlag(inntektsgrunnlag);
 		regelmodell.leggTilEllerOppdaterAktivPeriode(AktivPeriode.forAndre(Aktivitet.ARBEIDSTAKERINNTEKT, Periode.of(STP.minusMonths(36), STP.plusMonths(12))));
 
-		List<BeregningsgrunnlagPrStatus> statusListe = kjørRegel(regelmodell);
+        var statusListe = kjørRegel(regelmodell);
 
 		assertThat(statusListe).hasSize(1);
 		assertThat(statusListe.getFirst().getAktivitetStatus()).isNotEqualTo(AktivitetStatus.AT);
@@ -163,7 +161,7 @@ class FastsettStatusOgAndelPrPeriodeTest {
 		regelmodell.setInntektsgrunnlag(inntektsgrunnlag);
 		regelmodell.leggTilEllerOppdaterAktivPeriode(AktivPeriode.forAndre(Aktivitet.ARBEIDSTAKERINNTEKT, Periode.of(STP.minusMonths(36), STP.plusMonths(12))));
 
-		List<BeregningsgrunnlagPrStatus> statusListe = kjørRegel(regelmodell);
+        var statusListe = kjørRegel(regelmodell);
 
 		assertThat(statusListe).hasSize(1);
 		assertThat(statusListe.getFirst().getAktivitetStatus()).isNotEqualTo(AktivitetStatus.AT);
@@ -176,7 +174,7 @@ class FastsettStatusOgAndelPrPeriodeTest {
 	}
 
     private List<BeregningsgrunnlagPrStatus> kjørRegel(AktivitetStatusModell regelmodell) {
-        FastsettStatusOgAndelPrPeriode regel = new FastsettStatusOgAndelPrPeriode();
+        var regel = new FastsettStatusOgAndelPrPeriode();
         regel.evaluate(regelmodell);
         return regelmodell.getBeregningsgrunnlagPrStatusListe();
     }

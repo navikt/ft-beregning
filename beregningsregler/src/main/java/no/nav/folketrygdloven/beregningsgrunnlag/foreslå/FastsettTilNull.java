@@ -28,7 +28,7 @@ class FastsettTilNull extends LeafSpecification<BeregningsgrunnlagPeriode> {
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
         Map<String, Object> resultater = new HashMap<>();
-        BeregningsgrunnlagPrStatus bgps = grunnlag.getBeregningsgrunnlagPrStatus(aktivitetStatus);
+        var bgps = grunnlag.getBeregningsgrunnlagPrStatus(aktivitetStatus);
         grunnlag.getBeregningsgrunnlag().getAktivitetStatus(aktivitetStatus).setHjemmel(HJEMMEL);
         BeregningsgrunnlagPrStatus.builder(bgps).medBeregnetPrÅr(BigDecimal.ZERO).build();
         resultater.put("aktitivetStatus", aktivitetStatus);

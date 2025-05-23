@@ -1,11 +1,8 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker;
 
-import java.math.BigDecimal;
-
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrArbeidsforhold;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrStatus;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
@@ -23,14 +20,14 @@ class FastsettBrukersAndelUtenAvkorting extends LeafSpecification<Beregningsgrun
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
 
-        BeregningsgrunnlagPrStatus bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+        var bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
         if (bgps == null) {
             return ja(); // Andre statuser har alltid brukers andel lik brutto/avkortet/redusert BG
         }
 
 		// Kva skjer her?
-        for (BeregningsgrunnlagPrArbeidsforhold arbeidsforhold : bgps.getArbeidsforhold()) {
-            BigDecimal arbeidsgiversAndel = arbeidsforhold.getMaksimalRefusjonPrÅr();
+        for (var arbeidsforhold : bgps.getArbeidsforhold()) {
+            var arbeidsgiversAndel = arbeidsforhold.getMaksimalRefusjonPrÅr();
 
             BeregningsgrunnlagPrArbeidsforhold.builder(arbeidsforhold)
                 .medMaksimalRefusjonPrÅr(arbeidsgiversAndel);

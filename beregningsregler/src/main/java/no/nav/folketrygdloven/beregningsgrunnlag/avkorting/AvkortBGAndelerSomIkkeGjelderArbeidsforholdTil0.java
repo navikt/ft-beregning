@@ -32,7 +32,7 @@ class AvkortBGAndelerSomIkkeGjelderArbeidsforholdTil0 extends LeafSpecification<
                 resultater.put("avkortetPrÅr.status." + bgps.getAktivitetStatus().name(), bgps.getAvkortetPrÅr());
             });
 
-        BeregningsgrunnlagPrStatus atfl = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+	    var atfl = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
         if (atfl != null) {
             atfl.getFrilansArbeidsforhold().ifPresent(af -> {
                     BeregningsgrunnlagPrArbeidsforhold.builder(af).medAvkortetPrÅr(BigDecimal.ZERO).medAvkortetRefusjonPrÅr(BigDecimal.ZERO).medAvkortetBrukersAndelPrÅr(BigDecimal.ZERO).build();

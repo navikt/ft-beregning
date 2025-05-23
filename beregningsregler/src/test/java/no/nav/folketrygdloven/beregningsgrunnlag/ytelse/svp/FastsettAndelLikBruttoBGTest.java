@@ -31,7 +31,7 @@ class FastsettAndelLikBruttoBGTest {
 
 		var atflStatus = lagATFL(List.of(arbeidsforholdSøktFor, arbeidsforholdIkkeSøktFor));
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medBeregningsgrunnlagPrStatus(atflStatus)
 				.medPeriode(Periode.of(STP, null))
 				.build();

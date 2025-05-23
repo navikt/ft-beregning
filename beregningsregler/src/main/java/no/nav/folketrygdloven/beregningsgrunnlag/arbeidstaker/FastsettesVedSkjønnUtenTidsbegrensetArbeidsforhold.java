@@ -1,6 +1,5 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker;
 
-import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningUtfallMerknad;
@@ -9,7 +8,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningUtfallÅrs
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.IkkeBeregnet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.SammenligningGrunnlagType;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SammenligningsGrunnlag;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 
@@ -24,8 +22,8 @@ class FastsettesVedSkjønnUtenTidsbegrensetArbeidsforhold extends IkkeBeregnet {
 
 	@Override
 	public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-		SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.AT_FL);
-		BigDecimal avvikProsent = sg.getAvvikProsent();
+        var sg = grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.AT_FL);
+        var avvikProsent = sg.getAvvikProsent();
 		return nei(ruleReasonRef, String.valueOf(avvikProsent.setScale(0, RoundingMode.HALF_UP)));
 	}
 

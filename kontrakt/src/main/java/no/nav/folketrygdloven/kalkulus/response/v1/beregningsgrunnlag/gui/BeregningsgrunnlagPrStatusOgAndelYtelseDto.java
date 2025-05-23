@@ -1,9 +1,10 @@
 package no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui;
 
+import jakarta.validation.Valid;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import jakarta.validation.Valid;
 import no.nav.folketrygdloven.kalkulus.felles.v1.Beløp;
 
 

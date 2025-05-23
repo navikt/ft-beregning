@@ -98,8 +98,8 @@ public class BeregningsgrunnlagPeriode {
 	}
 
 	public BigDecimal getBruttoPrÅrInkludertNaturalytelser() {
-		BigDecimal naturalytelser = getNaturalytelserBortfaltMinusTilkommetPrÅr();
-		BigDecimal brutto = getBruttoPrÅr();
+		var naturalytelser = getNaturalytelserBortfaltMinusTilkommetPrÅr();
+		var brutto = getBruttoPrÅr();
 		return brutto.add(naturalytelser);
 	}
 

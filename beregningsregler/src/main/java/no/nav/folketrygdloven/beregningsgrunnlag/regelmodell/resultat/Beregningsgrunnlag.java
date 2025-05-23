@@ -110,7 +110,7 @@ public class Beregningsgrunnlag {
     }
 
     public long verdiAvG(LocalDate dato) {
-        Optional<Grunnbeløp> optional = konstanter.getGrunnbeløpSatser().stream()
+	    var optional = konstanter.getGrunnbeløpSatser().stream()
             .filter(g -> !dato.isBefore(g.getFom()) && !dato.isAfter(g.getTom()))
             .findFirst();
 
@@ -134,7 +134,7 @@ public class Beregningsgrunnlag {
 	}
 
     public long snittverdiAvG(int år) {
-        Optional<Grunnbeløp> optional = konstanter.getGrunnbeløpSatser().stream().filter(g -> g.getFom().getYear() == år).findFirst();
+	    var optional = konstanter.getGrunnbeløpSatser().stream().filter(g -> g.getFom().getYear() == år).findFirst();
         if (optional.isPresent()) {
             return optional.get().getGSnitt();
         } else {

@@ -34,7 +34,7 @@ class BeregningsgrunnlagAktivitetStatusTest {
 
     @Test
     void skal_ikke_bygge_instans_hvis_mangler_påkrevde_felter() {
-        BeregningsgrunnlagAktivitetStatusDto.Builder builder = BeregningsgrunnlagAktivitetStatusDto.builder();
+	    var builder = BeregningsgrunnlagAktivitetStatusDto.builder();
         try {
             builder.build(null);
         } catch (NullPointerException e) {
@@ -59,7 +59,7 @@ class BeregningsgrunnlagAktivitetStatusTest {
 
     @Test
     void skal_ha_refleksiv_equalsOgHashCode() {
-        BeregningsgrunnlagAktivitetStatusDto beregningsgrunnlagAktivitetStatus2 = lagMedPaakrevdeFelter();
+	    var beregningsgrunnlagAktivitetStatus2 = lagMedPaakrevdeFelter();
 
         assertThat(beregningsgrunnlagAktivitetStatus).isEqualTo(beregningsgrunnlagAktivitetStatus2);
         assertThat(beregningsgrunnlagAktivitetStatus2).isEqualTo(beregningsgrunnlagAktivitetStatus);
@@ -75,7 +75,7 @@ class BeregningsgrunnlagAktivitetStatusTest {
 
     @Test
     void skal_bruke_aktivitetstatus_i_equalsOgHashCode() {
-        BeregningsgrunnlagAktivitetStatusDto beregningsgrunnlagAktivitetStatus2 = lagMedPaakrevdeFelter();
+	    var beregningsgrunnlagAktivitetStatus2 = lagMedPaakrevdeFelter();
 
         assertThat(beregningsgrunnlagAktivitetStatus).isEqualTo(beregningsgrunnlagAktivitetStatus2);
         assertThat(beregningsgrunnlagAktivitetStatus.hashCode()).isEqualTo(beregningsgrunnlagAktivitetStatus2.hashCode());
@@ -88,13 +88,13 @@ class BeregningsgrunnlagAktivitetStatusTest {
 
     @Test
     void skal_bruke_beregningsgrunnlag_i_equalsOgHashCode() {
-        BeregningsgrunnlagAktivitetStatusDto beregningsgrunnlagAktivitetStatus2 = lagMedPaakrevdeFelter();
+	    var beregningsgrunnlagAktivitetStatus2 = lagMedPaakrevdeFelter();
 
         assertThat(beregningsgrunnlagAktivitetStatus).isEqualTo(beregningsgrunnlagAktivitetStatus2);
         assertThat(beregningsgrunnlagAktivitetStatus.hashCode()).isEqualTo(beregningsgrunnlagAktivitetStatus2.hashCode());
 
-        BeregningsgrunnlagDto beregningsgrunnlag2 = lagBeregningsgrunnlagMedSkjæringstidspunkt(LocalDate.now().plusDays(1));
-        BeregningsgrunnlagAktivitetStatusDto.Builder builder = lagBuilderMedPaakrevdeFelter();
+	    var beregningsgrunnlag2 = lagBeregningsgrunnlagMedSkjæringstidspunkt(LocalDate.now().plusDays(1));
+	    var builder = lagBuilderMedPaakrevdeFelter();
         beregningsgrunnlagAktivitetStatus2 = builder.build(beregningsgrunnlag2);
 
         assertThat(beregningsgrunnlagAktivitetStatus).isNotEqualTo(beregningsgrunnlagAktivitetStatus2);

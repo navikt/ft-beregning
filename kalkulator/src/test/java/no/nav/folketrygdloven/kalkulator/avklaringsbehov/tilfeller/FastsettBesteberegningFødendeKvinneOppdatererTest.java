@@ -53,7 +53,7 @@ class FastsettBesteberegningFødendeKvinneOppdatererTest {
             .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT)
             .leggTilFaktaOmBeregningTilfeller(FAKTA_OM_BEREGNING_TILFELLER)
             .build();
-        BeregningsgrunnlagPeriodeDto periode1 = BeregningsgrunnlagPeriodeDto.ny()
+        var periode1 = BeregningsgrunnlagPeriodeDto.ny()
             .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(2).minusDays(1))
             .build(beregningsgrunnlag);
         dagpengeAndel = BeregningsgrunnlagPrStatusOgAndelDto.ny()
@@ -74,17 +74,17 @@ class FastsettBesteberegningFødendeKvinneOppdatererTest {
     @Test
     void skal_sette_inntekt_på_andeler() {
         // Arrange
-        FaktaBeregningLagreDto dto = new FaktaBeregningLagreDto(FAKTA_OM_BEREGNING_TILFELLER);
-        int dagpengerBeregnet = 10000;
-        BesteberegningFødendeKvinneAndelDto dpDto = new BesteberegningFødendeKvinneAndelDto(ANDELSNR_DAGPENGER, dagpengerBeregnet, Inntektskategori.DAGPENGER, false);
-        int arbeidstakerBeregnet = 20000;
-        BesteberegningFødendeKvinneAndelDto atDto = new BesteberegningFødendeKvinneAndelDto(ANDELSNR_ARBEIDSTAKER, arbeidstakerBeregnet,
+        var dto = new FaktaBeregningLagreDto(FAKTA_OM_BEREGNING_TILFELLER);
+        var dagpengerBeregnet = 10000;
+        var dpDto = new BesteberegningFødendeKvinneAndelDto(ANDELSNR_DAGPENGER, dagpengerBeregnet, Inntektskategori.DAGPENGER, false);
+        var arbeidstakerBeregnet = 20000;
+        var atDto = new BesteberegningFødendeKvinneAndelDto(ANDELSNR_ARBEIDSTAKER, arbeidstakerBeregnet,
             Inntektskategori.ARBEIDSTAKER, false);
-        BesteberegningFødendeKvinneDto bbDto = new BesteberegningFødendeKvinneDto(List.of(dpDto, atDto));
+        var bbDto = new BesteberegningFødendeKvinneDto(List.of(dpDto, atDto));
         dto.setBesteberegningAndeler(bbDto);
 
         // Act);
-        BeregningsgrunnlagGrunnlagDtoBuilder builder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
+        var builder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
         fastsettBesteberegningFødendeKvinneOppdaterer.oppdater(dto, Optional.empty(), builder);
 
         // Assert
@@ -98,29 +98,29 @@ class FastsettBesteberegningFødendeKvinneOppdatererTest {
     @Test
     void skal_sette_inntekt_på_andeler_og_legge_til_ny_dagpengeandel() {
         // Arrange
-        BeregningsgrunnlagDto bg = lagBGUtenDagpenger();
-        FaktaBeregningLagreDto dto = new FaktaBeregningLagreDto(Collections.singletonList(FaktaOmBeregningTilfelle.FASTSETT_BESTEBEREGNING_FØDENDE_KVINNE));
-        int dagpengerBeregnet = 10000;
+        var bg = lagBGUtenDagpenger();
+        var dto = new FaktaBeregningLagreDto(Collections.singletonList(FaktaOmBeregningTilfelle.FASTSETT_BESTEBEREGNING_FØDENDE_KVINNE));
+        var dagpengerBeregnet = 10000;
         var dpDto = new DagpengeAndelLagtTilBesteberegningDto(dagpengerBeregnet, Inntektskategori.DAGPENGER);
-        int arbeidstakerBeregnet = 20000;
+        var arbeidstakerBeregnet = 20000;
         var atDto = new BesteberegningFødendeKvinneAndelDto(ANDELSNR_ARBEIDSTAKER, arbeidstakerBeregnet,
             Inntektskategori.ARBEIDSTAKER, false);
-        BesteberegningFødendeKvinneDto bbDto = new BesteberegningFødendeKvinneDto(List.of(atDto), dpDto);
+        var bbDto = new BesteberegningFødendeKvinneDto(List.of(atDto), dpDto);
         dto.setBesteberegningAndeler(bbDto);
         input = BeregningsgrunnlagInputTestUtil.lagInputMedBeregningsgrunnlag(new KoblingReferanseMock(SKJÆRINGSTIDSPUNKT), bg, BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER);
 
         // Act
-        BeregningsgrunnlagGrunnlagDtoBuilder builder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
+        var builder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
         fastsettBesteberegningFødendeKvinneOppdaterer.oppdater(dto, Optional.empty(), builder);
 
         // Assert
-        BeregningsgrunnlagPrStatusOgAndelDto dpAndel = bg.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().stream()
+        var dpAndel = bg.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().stream()
             .filter(andel -> andel.erLagtTilAvSaksbehandler())
             .findFirst().get();
         assertThat(dpAndel.getBesteberegningPrÅr()).isEqualByComparingTo(Beløp.fra(dagpengerBeregnet*12));
         assertThat(dpAndel.getBeregnetPrÅr()).isEqualByComparingTo(Beløp.fra(dagpengerBeregnet*12));
         assertThat(dpAndel.getFastsattAvSaksbehandler()).isTrue();
-        BeregningsgrunnlagPrStatusOgAndelDto atAndel = bg.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().stream()
+        var atAndel = bg.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().stream()
             .filter(andel -> !andel.erLagtTilAvSaksbehandler())
             .findFirst().get();
         assertThat(atAndel.getBeregnetPrÅr()).isEqualByComparingTo(Beløp.fra(arbeidstakerBeregnet*12));
@@ -132,31 +132,31 @@ class FastsettBesteberegningFødendeKvinneOppdatererTest {
     @Test
     void skal_kunne_bekrefte_avklaringsbehov_på_nytt_med_dagpengeandel() {
         // Arrange
-        BeregningsgrunnlagDto nyttBg = lagBGUtenDagpenger();
-        FaktaBeregningLagreDto dto = new FaktaBeregningLagreDto(Collections.singletonList(FaktaOmBeregningTilfelle.FASTSETT_BESTEBEREGNING_FØDENDE_KVINNE));
-        int dagpengerBeregnet = 10000;
-        BesteberegningFødendeKvinneAndelDto dpDto = new BesteberegningFødendeKvinneAndelDto(ANDELSNR_DAGPENGER, dagpengerBeregnet,
+        var nyttBg = lagBGUtenDagpenger();
+        var dto = new FaktaBeregningLagreDto(Collections.singletonList(FaktaOmBeregningTilfelle.FASTSETT_BESTEBEREGNING_FØDENDE_KVINNE));
+        var dagpengerBeregnet = 10000;
+        var dpDto = new BesteberegningFødendeKvinneAndelDto(ANDELSNR_DAGPENGER, dagpengerBeregnet,
             Inntektskategori.DAGPENGER,
             true);
-        int arbeidstakerBeregnet = 20000;
-        BesteberegningFødendeKvinneAndelDto atDto = new BesteberegningFødendeKvinneAndelDto(ANDELSNR_ARBEIDSTAKER, arbeidstakerBeregnet,
+        var arbeidstakerBeregnet = 20000;
+        var atDto = new BesteberegningFødendeKvinneAndelDto(ANDELSNR_ARBEIDSTAKER, arbeidstakerBeregnet,
             Inntektskategori.ARBEIDSTAKER, false);
-        BesteberegningFødendeKvinneDto bbDto = new BesteberegningFødendeKvinneDto(List.of(dpDto, atDto));
+        var bbDto = new BesteberegningFødendeKvinneDto(List.of(dpDto, atDto));
         dto.setBesteberegningAndeler(bbDto);
         input = BeregningsgrunnlagInputTestUtil.lagInputMedBeregningsgrunnlag(new KoblingReferanseMock(SKJÆRINGSTIDSPUNKT), nyttBg, BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER);
 
 
         // Act
-        BeregningsgrunnlagGrunnlagDtoBuilder builder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
+        var builder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
         fastsettBesteberegningFødendeKvinneOppdaterer.oppdater(dto, Optional.of(beregningsgrunnlag), builder);
 
         // Assert
-        BeregningsgrunnlagPrStatusOgAndelDto dpAndel = nyttBg.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().stream().filter(andel -> andel.erLagtTilAvSaksbehandler())
+        var dpAndel = nyttBg.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().stream().filter(andel -> andel.erLagtTilAvSaksbehandler())
             .findFirst().get();
         assertThat(dpAndel.getBesteberegningPrÅr()).isEqualByComparingTo(Beløp.fra(dagpengerBeregnet*12));
         assertThat(dpAndel.getBeregnetPrÅr()).isEqualByComparingTo(Beløp.fra(dagpengerBeregnet*12));
         assertThat(dpAndel.getFastsattAvSaksbehandler()).isTrue();
-        BeregningsgrunnlagPrStatusOgAndelDto atAndel = nyttBg.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().stream()
+        var atAndel = nyttBg.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().stream()
             .filter(andel -> !andel.erLagtTilAvSaksbehandler())
             .findFirst().get();
         assertThat(atAndel.getBeregnetPrÅr()).isEqualByComparingTo(Beløp.fra(arbeidstakerBeregnet*12));
@@ -164,12 +164,12 @@ class FastsettBesteberegningFødendeKvinneOppdatererTest {
 
     }
     private BeregningsgrunnlagDto lagBGUtenDagpenger() {
-        BeregningsgrunnlagDto bg = BeregningsgrunnlagDto.builder()
+        var bg = BeregningsgrunnlagDto.builder()
             .medGrunnbeløp(GRUNNBELØP)
             .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT)
             .leggTilFaktaOmBeregningTilfeller(FAKTA_OM_BEREGNING_TILFELLER)
             .build();
-        BeregningsgrunnlagPeriodeDto periode1 = BeregningsgrunnlagPeriodeDto.ny()
+        var periode1 = BeregningsgrunnlagPeriodeDto.ny()
             .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(2).minusDays(1))
             .build(bg);
         BeregningsgrunnlagPrStatusOgAndelDto.ny()

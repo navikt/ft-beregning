@@ -1,9 +1,10 @@
 package no.nav.folketrygdloven.kalkulus.request.v1;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import no.nav.folketrygdloven.kalkulus.felles.v1.Saksnummer;
 
 public class HentForSakRequest {

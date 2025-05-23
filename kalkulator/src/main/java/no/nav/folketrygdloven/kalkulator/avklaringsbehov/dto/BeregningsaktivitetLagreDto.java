@@ -50,7 +50,7 @@ public class BeregningsaktivitetLagreDto {
     }
 
     public BeregningAktivitetNøkkel getNøkkel() {
-        BeregningAktivitetNøkkel.Builder builder = BeregningAktivitetNøkkel.builder()
+	    var builder = BeregningAktivitetNøkkel.builder()
             .medOpptjeningAktivitetType(opptjeningAktivitetType)
             .medFom(fom)
             .medArbeidsforholdRef(arbeidsforholdRef);

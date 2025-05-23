@@ -1,6 +1,7 @@
 package no.nav.folketrygdloven.kalkulus.request.v1;
 
 import java.time.LocalDate;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 

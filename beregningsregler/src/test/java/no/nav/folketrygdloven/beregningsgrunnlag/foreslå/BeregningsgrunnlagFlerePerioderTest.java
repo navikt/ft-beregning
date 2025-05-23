@@ -42,20 +42,20 @@ class BeregningsgrunnlagFlerePerioderTest {
     @Test
     void skalBeregneGrunnlagMedToPerioder() {
         // Arrange
-        BigDecimal månedsinntekt = BigDecimal.valueOf(20000d);
-        BigDecimal refusjonskrav = BigDecimal.valueOf(20000d);
-        BigDecimal naturalytelse = BigDecimal.valueOf(2000d);
-        LocalDate naturalytelseOpphørFom = skjæringstidspunkt.plusMonths(3);
+	    var månedsinntekt = BigDecimal.valueOf(20000d);
+	    var refusjonskrav = BigDecimal.valueOf(20000d);
+	    var naturalytelse = BigDecimal.valueOf(2000d);
+	    var naturalytelseOpphørFom = skjæringstidspunkt.plusMonths(3);
 
-        Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektsmelding(skjæringstidspunkt, månedsinntekt, refusjonskrav, naturalytelse, naturalytelseOpphørFom);
+	    var beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektsmelding(skjæringstidspunkt, månedsinntekt, refusjonskrav, naturalytelse, naturalytelseOpphørFom);
         leggTilMånedsinntekter(beregningsgrunnlag.getInntektsgrunnlag(), skjæringstidspunkt,
             Collections.singletonList(månedsinntekt), Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, null);
 
-        BeregningsgrunnlagPeriode førstePeriode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+	    var førstePeriode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         BeregningsgrunnlagPeriode.builder(førstePeriode)
             .medPeriode(Periode.of(skjæringstidspunkt, naturalytelseOpphørFom.minusDays(1)))
             .build();
-        BeregningsgrunnlagPeriode andrePeriode = BeregningsgrunnlagPeriode.builder()
+	    var andrePeriode = BeregningsgrunnlagPeriode.builder()
             .medPeriode(Periode.of(naturalytelseOpphørFom, null))
             .build();
 
@@ -81,22 +81,22 @@ class BeregningsgrunnlagFlerePerioderTest {
     @Test
     void skalBeregneGrunnlagMedTrePerioder() {
         // Arrange
-        BigDecimal månedsinntekt1 = BigDecimal.valueOf(20000);
-        BigDecimal refusjonskrav1 = BigDecimal.valueOf(20000);
-        BigDecimal månedsinntekt2 = BigDecimal.valueOf(10000);
-        BigDecimal refusjonskrav2 = BigDecimal.valueOf(10000);
-        BigDecimal naturalytelse1 = BigDecimal.valueOf(2000);
-        BigDecimal naturalytelse2 = BigDecimal.valueOf(500);
-        final BigDecimal tolv = BigDecimal.valueOf(12);
-        BigDecimal månedsinntekt = månedsinntekt1.add(månedsinntekt2);
-        LocalDate naturalytelseOpphørFom1 = skjæringstidspunkt.plusMonths(3);
-        LocalDate naturalytelseOpphørFom2 = skjæringstidspunkt.plusMonths(5);
+	    var månedsinntekt1 = BigDecimal.valueOf(20000);
+	    var refusjonskrav1 = BigDecimal.valueOf(20000);
+	    var månedsinntekt2 = BigDecimal.valueOf(10000);
+	    var refusjonskrav2 = BigDecimal.valueOf(10000);
+	    var naturalytelse1 = BigDecimal.valueOf(2000);
+	    var naturalytelse2 = BigDecimal.valueOf(500);
+        final var tolv = BigDecimal.valueOf(12);
+	    var månedsinntekt = månedsinntekt1.add(månedsinntekt2);
+	    var naturalytelseOpphørFom1 = skjæringstidspunkt.plusMonths(3);
+	    var naturalytelseOpphørFom2 = skjæringstidspunkt.plusMonths(5);
 
-        Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektsmelding(skjæringstidspunkt, månedsinntekt1, refusjonskrav1, naturalytelse1, naturalytelseOpphørFom1);
-        LocalDate startdatoArbeidsforhold = skjæringstidspunkt.minusYears(2);
-		Arbeidsforhold arbeidsforhold2 = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(startdatoArbeidsforhold, ORGNR2);
+	    var beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektsmelding(skjæringstidspunkt, månedsinntekt1, refusjonskrav1, naturalytelse1, naturalytelseOpphørFom1);
+	    var startdatoArbeidsforhold = skjæringstidspunkt.minusYears(2);
+	    var arbeidsforhold2 = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(startdatoArbeidsforhold, ORGNR2);
 
-        BeregningsgrunnlagPeriode periode1 = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+	    var periode1 = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         leggTilArbeidsforholdMedInntektsmelding(periode1, skjæringstidspunkt, månedsinntekt2, refusjonskrav2, arbeidsforhold2, naturalytelse2, naturalytelseOpphørFom2);
         leggTilMånedsinntekter(beregningsgrunnlag.getInntektsgrunnlag(), skjæringstidspunkt,
@@ -105,13 +105,13 @@ class BeregningsgrunnlagFlerePerioderTest {
         BeregningsgrunnlagPeriode.builder(periode1)
             .medPeriode(Periode.of(skjæringstidspunkt, naturalytelseOpphørFom1.minusDays(1)))
             .build();
-        BeregningsgrunnlagPeriode periode2 = BeregningsgrunnlagPeriode.builder()
+	    var periode2 = BeregningsgrunnlagPeriode.builder()
             .medPeriode(Periode.of(naturalytelseOpphørFom1, naturalytelseOpphørFom2.minusDays(1)))
             .build();
 
         kopierBeregningsgrunnlagPeriode(periode1, periode2);
 
-        BeregningsgrunnlagPeriode periode3 = BeregningsgrunnlagPeriode.builder()
+	    var periode3 = BeregningsgrunnlagPeriode.builder()
             .medPeriode(Periode.of(naturalytelseOpphørFom2, null))
             .build();
 
@@ -145,14 +145,14 @@ class BeregningsgrunnlagFlerePerioderTest {
     }
 
     private void kopierBeregningsgrunnlagPeriode(BeregningsgrunnlagPeriode grunnlag, BeregningsgrunnlagPeriode kopi) {
-        for (BeregningsgrunnlagPrStatus forrigeStatus : grunnlag.getBeregningsgrunnlagPrStatus()) {
+        for (var forrigeStatus : grunnlag.getBeregningsgrunnlagPrStatus()) {
             if (forrigeStatus.erArbeidstakerEllerFrilanser()) {
-                BeregningsgrunnlagPrStatus ny = BeregningsgrunnlagPrStatus.builder()
+	            var ny = BeregningsgrunnlagPrStatus.builder()
                     .medAktivitetStatus(forrigeStatus.getAktivitetStatus())
                     .medBeregningsgrunnlagPeriode(kopi)
                     .build();
-                for (BeregningsgrunnlagPrArbeidsforhold kopierFraArbeidsforhold : forrigeStatus.getArbeidsforhold()) {
-                    BeregningsgrunnlagPrArbeidsforhold kopiertArbeidsforhold = BeregningsgrunnlagPrArbeidsforhold.builder()
+                for (var kopierFraArbeidsforhold : forrigeStatus.getArbeidsforhold()) {
+	                var kopiertArbeidsforhold = BeregningsgrunnlagPrArbeidsforhold.builder()
                         .medArbeidsforhold(kopierFraArbeidsforhold.getArbeidsforhold())
                         .medAndelNr(kopierFraArbeidsforhold.getAndelNr())
                         .build();

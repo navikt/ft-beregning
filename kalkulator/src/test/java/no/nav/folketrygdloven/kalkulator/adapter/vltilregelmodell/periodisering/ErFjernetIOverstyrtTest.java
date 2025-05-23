@@ -48,13 +48,13 @@ class ErFjernetIOverstyrtTest {
     @Test
     void arbeidsforhold_som_var_i_permisjon_dagen_før_stp_men_ikkje_på_stp_og_er_ikke_fjernet() {
         // Arrange
-        Arbeidsgiver ag = Arbeidsgiver.virksomhet("999999999");
-        InternArbeidsforholdRefDto ref = InternArbeidsforholdRefDto.nullRef();
-        YrkesaktivitetDtoBuilder ya = lagYrkesaktivitet(ag, ref);
+        var ag = Arbeidsgiver.virksomhet("999999999");
+        var ref = InternArbeidsforholdRefDto.nullRef();
+        var ya = lagYrkesaktivitet(ag, ref);
         lagPermisjonForAG(ya, STP.minusMonths(3), STP.minusDays(1));
-        InntektArbeidYtelseGrunnlagDto grunnlag = ferdigstillIAYGrunnlag();
+        var grunnlag = ferdigstillIAYGrunnlag();
 
-        YrkesaktivitetFilterDto filter = new YrkesaktivitetFilterDto(grunnlag.getArbeidsforholdInformasjon(), grunnlag.getAktørArbeidFraRegister());
+        var filter = new YrkesaktivitetFilterDto(grunnlag.getArbeidsforholdInformasjon(), grunnlag.getAktørArbeidFraRegister());
 
         var overstyring = BeregningAktivitetOverstyringerDto.builder()
                 .leggTilOverstyring(BeregningAktivitetOverstyringDto.builder()
@@ -64,7 +64,7 @@ class ErFjernetIOverstyrtTest {
                 .build();
 
         // Act
-        boolean erFjernet = ErFjernetIOverstyrt.erFjernetIOverstyrt(filter, ya.build(), Optional.of(overstyring), STP);
+        var erFjernet = ErFjernetIOverstyrt.erFjernetIOverstyrt(filter, ya.build(), Optional.of(overstyring), STP);
 
         assertThat(erFjernet).isFalse();
     }
@@ -72,13 +72,13 @@ class ErFjernetIOverstyrtTest {
     @Test
     void arbeidsforhold_som_var_i_permisjon_og_ligger_i_overstyr_men_er_ikke_fjernet() {
         // Arrange
-        Arbeidsgiver ag = Arbeidsgiver.virksomhet("999999999");
-        InternArbeidsforholdRefDto ref = InternArbeidsforholdRefDto.nullRef();
-        YrkesaktivitetDtoBuilder ya = lagYrkesaktivitet(ag, ref);
+        var ag = Arbeidsgiver.virksomhet("999999999");
+        var ref = InternArbeidsforholdRefDto.nullRef();
+        var ya = lagYrkesaktivitet(ag, ref);
         lagPermisjonForAG(ya, STP.minusMonths(3), STP.plusMonths(2));
-        InntektArbeidYtelseGrunnlagDto grunnlag = ferdigstillIAYGrunnlag();
+        var grunnlag = ferdigstillIAYGrunnlag();
 
-        YrkesaktivitetFilterDto filter = new YrkesaktivitetFilterDto(grunnlag.getArbeidsforholdInformasjon(), grunnlag.getAktørArbeidFraRegister());
+        var filter = new YrkesaktivitetFilterDto(grunnlag.getArbeidsforholdInformasjon(), grunnlag.getAktørArbeidFraRegister());
 
         var overstyring = BeregningAktivitetOverstyringerDto.builder()
                 .leggTilOverstyring(BeregningAktivitetOverstyringDto.builder()
@@ -89,7 +89,7 @@ class ErFjernetIOverstyrtTest {
                 .build();
 
         // Act
-        boolean erFjernet = ErFjernetIOverstyrt.erFjernetIOverstyrt(filter, ya.build(),
+        var erFjernet = ErFjernetIOverstyrt.erFjernetIOverstyrt(filter, ya.build(),
                 Optional.of(overstyring), STP);
 
         assertThat(erFjernet).isFalse();
@@ -98,13 +98,13 @@ class ErFjernetIOverstyrtTest {
     @Test
     void arbeidsforhold_som_var_i_permisjon_på_stp_ikke_fjernet() {
         // Arrange
-        Arbeidsgiver ag = Arbeidsgiver.virksomhet("999999999");
-        InternArbeidsforholdRefDto ref = InternArbeidsforholdRefDto.nullRef();
-        YrkesaktivitetDtoBuilder ya = lagYrkesaktivitet(ag, ref);
+        var ag = Arbeidsgiver.virksomhet("999999999");
+        var ref = InternArbeidsforholdRefDto.nullRef();
+        var ya = lagYrkesaktivitet(ag, ref);
         lagPermisjonForAG(ya, STP.minusMonths(3), STP.plusMonths(2));
-        InntektArbeidYtelseGrunnlagDto grunnlag = ferdigstillIAYGrunnlag();
+        var grunnlag = ferdigstillIAYGrunnlag();
 
-        YrkesaktivitetFilterDto filter = new YrkesaktivitetFilterDto(grunnlag.getArbeidsforholdInformasjon(), grunnlag.getAktørArbeidFraRegister());
+        var filter = new YrkesaktivitetFilterDto(grunnlag.getArbeidsforholdInformasjon(), grunnlag.getAktørArbeidFraRegister());
 
 
         var overstyring = BeregningAktivitetOverstyringerDto.builder()
@@ -115,7 +115,7 @@ class ErFjernetIOverstyrtTest {
                         .medOpptjeningAktivitetType(OpptjeningAktivitetType.ARBEID).build())
                 .build();
         // Act
-        boolean erFjernet = ErFjernetIOverstyrt.erFjernetIOverstyrt(filter, ya.build(), Optional.of(overstyring), STP);
+        var erFjernet = ErFjernetIOverstyrt.erFjernetIOverstyrt(filter, ya.build(), Optional.of(overstyring), STP);
 
         assertThat(erFjernet).isFalse();
     }
@@ -123,12 +123,12 @@ class ErFjernetIOverstyrtTest {
     @Test
     void arbeidsforhold_som_ikke_var_i_permisjon_på_stp_og_fjernet() {
         // Arrange
-        Arbeidsgiver ag = Arbeidsgiver.virksomhet("999999999");
-        InternArbeidsforholdRefDto ref = InternArbeidsforholdRefDto.nullRef();
-        YrkesaktivitetDtoBuilder ya = lagYrkesaktivitet(ag, ref);
-        InntektArbeidYtelseGrunnlagDto grunnlag = ferdigstillIAYGrunnlag();
+        var ag = Arbeidsgiver.virksomhet("999999999");
+        var ref = InternArbeidsforholdRefDto.nullRef();
+        var ya = lagYrkesaktivitet(ag, ref);
+        var grunnlag = ferdigstillIAYGrunnlag();
 
-        YrkesaktivitetFilterDto filter = new YrkesaktivitetFilterDto(grunnlag.getArbeidsforholdInformasjon(), grunnlag.getAktørArbeidFraRegister());
+        var filter = new YrkesaktivitetFilterDto(grunnlag.getArbeidsforholdInformasjon(), grunnlag.getAktørArbeidFraRegister());
 
         var overstyring = BeregningAktivitetOverstyringerDto.builder()
                 .leggTilOverstyring(BeregningAktivitetOverstyringDto.builder()
@@ -139,7 +139,7 @@ class ErFjernetIOverstyrtTest {
                 .build();
 
         // Act
-        boolean erFjernet = ErFjernetIOverstyrt.erFjernetIOverstyrt(filter, ya.build(), Optional.of(overstyring), STP);
+        var erFjernet = ErFjernetIOverstyrt.erFjernetIOverstyrt(filter, ya.build(), Optional.of(overstyring), STP);
 
         assertThat(erFjernet).isTrue();
     }
@@ -147,15 +147,15 @@ class ErFjernetIOverstyrtTest {
     @Test
     void arbeidsforhold_uten_overstyring() {
         // Arrange
-        Arbeidsgiver ag = Arbeidsgiver.virksomhet("999999999");
-        InternArbeidsforholdRefDto ref = InternArbeidsforholdRefDto.nullRef();
-        YrkesaktivitetDtoBuilder ya = lagYrkesaktivitet(ag, ref);
-        InntektArbeidYtelseGrunnlagDto grunnlag = ferdigstillIAYGrunnlag();
+        var ag = Arbeidsgiver.virksomhet("999999999");
+        var ref = InternArbeidsforholdRefDto.nullRef();
+        var ya = lagYrkesaktivitet(ag, ref);
+        var grunnlag = ferdigstillIAYGrunnlag();
 
-        YrkesaktivitetFilterDto filter = new YrkesaktivitetFilterDto(grunnlag.getArbeidsforholdInformasjon(), grunnlag.getAktørArbeidFraRegister());
+        var filter = new YrkesaktivitetFilterDto(grunnlag.getArbeidsforholdInformasjon(), grunnlag.getAktørArbeidFraRegister());
 
         // Act
-        boolean erFjernet = ErFjernetIOverstyrt.erFjernetIOverstyrt(filter, ya.build(), Optional.empty(), STP);
+        var erFjernet = ErFjernetIOverstyrt.erFjernetIOverstyrt(filter, ya.build(), Optional.empty(), STP);
 
         assertThat(erFjernet).isFalse();
     }
@@ -172,7 +172,7 @@ class ErFjernetIOverstyrtTest {
     }
 
     private YrkesaktivitetDtoBuilder lagYrkesaktivitet(Arbeidsgiver ag, InternArbeidsforholdRefDto ref) {
-        YrkesaktivitetDtoBuilder yaBuilder = ARBEID_BUILDER
+        var yaBuilder = ARBEID_BUILDER
                 .getYrkesaktivitetBuilderForType(ArbeidType.ORDINÆRT_ARBEIDSFORHOLD)
                 .medArbeidsgiver(ag)
                 .medArbeidsforholdId(ref)

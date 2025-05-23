@@ -1,12 +1,5 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.fordel;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelAndelModell;
-import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelteAndelerModell;
-import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelModell;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
-import no.nav.fpsak.nare.evaluation.Evaluation;
-import no.nav.fpsak.nare.specification.LeafSpecification;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Comparator;
@@ -14,6 +7,13 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelAndelModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelteAndelerModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
+import no.nav.fpsak.nare.evaluation.Evaluation;
+import no.nav.fpsak.nare.specification.LeafSpecification;
 
 class FordelMålbeløpPrAndel extends LeafSpecification<FordelModell> {
 	private static final Comparator<Map.Entry<Inntektskategori, BigDecimal>> TILGJENGELIG_BELØP_COMPARATOR = Comparator.comparingDouble(entry -> entry.getValue().doubleValue());

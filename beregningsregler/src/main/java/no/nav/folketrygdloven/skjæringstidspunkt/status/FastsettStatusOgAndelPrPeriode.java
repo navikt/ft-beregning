@@ -46,8 +46,8 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
 	}
 
 	private void opprettAktivitetStatuser(AktivitetStatusModell regelmodell) {
-		List<AktivPeriode> aktivePerioder = regelmodell.getAktivePerioder();
-		List<AktivPeriode> aktivePerioderVedStp = hentAktivePerioder(regelmodell.getBeregningstidspunkt(), aktivePerioder);
+        var aktivePerioder = regelmodell.getAktivePerioder();
+        var aktivePerioderVedStp = hentAktivePerioder(regelmodell.getBeregningstidspunkt(), aktivePerioder);
 
 		var erAapPraksisendringAktiv = regelmodell.getToggles().isEnabled("aap.praksisendring");
 		if (erAapPraksisendringAktiv && harAAPOgArbeidsinntektIBeregningsperioden(regelmodell, aktivePerioderVedStp)) {
@@ -74,7 +74,7 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
 	}
 
 	private void leggTilBrukersAndel(AktivitetStatusModell regelmodell) {
-		BeregningsgrunnlagPrStatus bgPrStatus = new BeregningsgrunnlagPrStatus(AktivitetStatus.BA);
+        var bgPrStatus = new BeregningsgrunnlagPrStatus(AktivitetStatus.BA);
 		regelmodell.leggTilBeregningsgrunnlagPrStatus(bgPrStatus);
 	}
 
@@ -86,8 +86,8 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
 
 	private void opprettStatusForAktiviteter(AktivitetStatusModell regelmodell, List<AktivPeriode> aktivePerioderVedStp) {
 		List<BeregningsgrunnlagPrStatus> andeler = new ArrayList<>();
-		for (AktivPeriode ap : aktivePerioderVedStp) {
-			AktivitetStatus aktivitetStatus = mapAktivitetTilStatus(ap.getAktivitet());
+		for (var ap : aktivePerioderVedStp) {
+            var aktivitetStatus = mapAktivitetTilStatus(ap.getAktivitet());
 			if (!AktivitetStatus.KUN_YTELSE.equals(aktivitetStatus)
 					&& ikkeMilitærMedAndreAktiviteterPåStp(aktivePerioderVedStp, aktivitetStatus)) {
 				regelmodell.leggTilAktivitetStatus(aktivitetStatus);
@@ -118,10 +118,10 @@ public class FastsettStatusOgAndelPrPeriode extends LeafSpecification<AktivitetS
 	}
 
 	private AktivitetStatus mapAktivitetTilStatus(Aktivitet aktivitet) {
-		List<Aktivitet> arbeistaker = Arrays.asList(Aktivitet.ARBEIDSTAKERINNTEKT, Aktivitet.FRILANSINNTEKT,
+        var arbeistaker = Arrays.asList(Aktivitet.ARBEIDSTAKERINNTEKT, Aktivitet.FRILANSINNTEKT,
 				Aktivitet.VENTELØNN_VARTPENGER, Aktivitet.ETTERLØNN_SLUTTPAKKE, Aktivitet.VIDERE_ETTERUTDANNING,
 				Aktivitet.UTDANNINGSPERMISJON);
-		List<Aktivitet> tilstøtendeYtelse = Arrays.asList(Aktivitet.SYKEPENGER_MOTTAKER, Aktivitet.FORELDREPENGER_MOTTAKER,
+        var tilstøtendeYtelse = Arrays.asList(Aktivitet.SYKEPENGER_MOTTAKER, Aktivitet.FORELDREPENGER_MOTTAKER,
 				Aktivitet.PLEIEPENGER_MOTTAKER, Aktivitet.SVANGERSKAPSPENGER_MOTTAKER, Aktivitet.OPPLÆRINGSPENGER, Aktivitet.FRISINN_MOTTAKER,
 				Aktivitet.OMSORGSPENGER);
 		AktivitetStatus aktivitetStatus;

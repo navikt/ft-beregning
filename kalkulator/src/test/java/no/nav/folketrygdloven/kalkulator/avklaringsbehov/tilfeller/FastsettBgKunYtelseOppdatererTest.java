@@ -6,7 +6,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -50,7 +49,7 @@ class FastsettBgKunYtelseOppdatererTest {
         beregningsgrunnlag = BeregningsgrunnlagDto.builder()
             .medGrunnbeløp(GRUNNBELØP)
             .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT).build();
-        BeregningsgrunnlagPeriodeDto periode1 = BeregningsgrunnlagPeriodeDto.ny()
+        var periode1 = BeregningsgrunnlagPeriodeDto.ny()
             .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(2).minusDays(1))
             .build(beregningsgrunnlag);
         BeregningsgrunnlagPrStatusOgAndelDto.ny()
@@ -63,23 +62,23 @@ class FastsettBgKunYtelseOppdatererTest {
     @Test
     void skal_sette_verdier_på_andel_som_eksisterte_fra_før_i_grunnlag_ved_første_utførelse_av_avklaringsbehov() {
         // Arrange
-        boolean nyAndel = false;
-        boolean lagtTilAvSaksbehandler = false;
+        var nyAndel = false;
+        var lagtTilAvSaksbehandler = false;
         Integer fastsatt = 100000;
-        Inntektskategori inntektskategori = Inntektskategori.SJØMANN;
-        FastsattBrukersAndel andel = new FastsattBrukersAndel(nyAndel, ANDELSNR, lagtTilAvSaksbehandler, fastsatt,inntektskategori);
-        FastsettBgKunYtelseDto kunYtelseDto = new FastsettBgKunYtelseDto(Collections.singletonList(andel), null);
-        FaktaBeregningLagreDto dto = new FaktaBeregningLagreDto(Collections.singletonList(FaktaOmBeregningTilfelle.FASTSETT_BG_KUN_YTELSE));
+        var inntektskategori = Inntektskategori.SJØMANN;
+        var andel = new FastsattBrukersAndel(nyAndel, ANDELSNR, lagtTilAvSaksbehandler, fastsatt,inntektskategori);
+        var kunYtelseDto = new FastsettBgKunYtelseDto(Collections.singletonList(andel), null);
+        var dto = new FaktaBeregningLagreDto(Collections.singletonList(FaktaOmBeregningTilfelle.FASTSETT_BG_KUN_YTELSE));
         dto.setKunYtelseFordeling(kunYtelseDto);
 
         // Act
-        BeregningsgrunnlagGrunnlagDtoBuilder oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
+        var oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
         FastsettBgKunYtelseOppdaterer.oppdater(dto, Optional.empty(), oppdatere);
 
         // Assert
         assertThat(beregningsgrunnlag.getBeregningsgrunnlagPerioder()).hasSize(1);
         assertThat(beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList()).hasSize(1);
-        BeregningsgrunnlagPrStatusOgAndelDto oppdatert1 = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().get(0);
+        var oppdatert1 = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().get(0);
         assertThat(oppdatert1.getBeregnetPrÅr()).isEqualByComparingTo(Beløp.fra(fastsatt*12));
         assertThat(oppdatert1.getGjeldendeInntektskategori()).isEqualTo(inntektskategori);
         assertThat(oppdatert1.getAktivitetStatus()).isEqualTo(BRUKERS_ANDEL);
@@ -88,24 +87,24 @@ class FastsettBgKunYtelseOppdatererTest {
     @Test
     void skal_sette_verdier_på_andel_som_eksisterte_fra_før_i_grunnlag_ved_første_utførelse_av_avklaringsbehov_ved_besteberegning() {
         // Arrange
-        final boolean nyAndel = false;
-        final boolean lagtTilAvSaksbehandler = false;
+        final var nyAndel = false;
+        final var lagtTilAvSaksbehandler = false;
         Integer fastsatt = 100000;
-        Inntektskategori inntektskategori = Inntektskategori.SJØMANN;
-        FastsattBrukersAndel andel = new FastsattBrukersAndel(nyAndel, ANDELSNR, lagtTilAvSaksbehandler, fastsatt,inntektskategori);
-        final boolean skalBrukeBesteberegning = true;
-        FastsettBgKunYtelseDto kunYtelseDto = new FastsettBgKunYtelseDto(Collections.singletonList(andel), skalBrukeBesteberegning);
-        FaktaBeregningLagreDto dto = new FaktaBeregningLagreDto(Collections.singletonList(FaktaOmBeregningTilfelle.FASTSETT_BG_KUN_YTELSE));
+        var inntektskategori = Inntektskategori.SJØMANN;
+        var andel = new FastsattBrukersAndel(nyAndel, ANDELSNR, lagtTilAvSaksbehandler, fastsatt,inntektskategori);
+        final var skalBrukeBesteberegning = true;
+        var kunYtelseDto = new FastsettBgKunYtelseDto(Collections.singletonList(andel), skalBrukeBesteberegning);
+        var dto = new FaktaBeregningLagreDto(Collections.singletonList(FaktaOmBeregningTilfelle.FASTSETT_BG_KUN_YTELSE));
         dto.setKunYtelseFordeling(kunYtelseDto);
 
         // Act
-        BeregningsgrunnlagGrunnlagDtoBuilder oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
+        var oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
         FastsettBgKunYtelseOppdaterer.oppdater(dto, Optional.empty(), oppdatere);
 
         // Assert
         assertThat(beregningsgrunnlag.getBeregningsgrunnlagPerioder()).hasSize(1);
         assertThat(beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList()).hasSize(1);
-        BeregningsgrunnlagPrStatusOgAndelDto oppdatert1 = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().get(0);
+        var oppdatert1 = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().get(0);
         assertThat(oppdatert1.getBeregnetPrÅr()).isEqualByComparingTo(Beløp.fra(fastsatt*12));
         assertThat(oppdatert1.getBesteberegningPrÅr()).isEqualByComparingTo(Beløp.fra(fastsatt*12));
         assertThat(oppdatert1.getGjeldendeInntektskategori()).isEqualTo(inntektskategori);
@@ -115,24 +114,24 @@ class FastsettBgKunYtelseOppdatererTest {
     @Test
     void skal_sette_verdier_på_andel_som_eksisterte_fra_før_i_grunnlag_ved_første_utførelse_av_avklaringsbehov_ved_ikkje_besteberegning() {
         // Arrange
-        final boolean nyAndel = false;
-        final boolean lagtTilAvSaksbehandler = false;
+        final var nyAndel = false;
+        final var lagtTilAvSaksbehandler = false;
         Integer fastsatt = 100000;
-        Inntektskategori inntektskategori = Inntektskategori.SJØMANN;
-        FastsattBrukersAndel andel = new FastsattBrukersAndel(nyAndel, ANDELSNR, lagtTilAvSaksbehandler, fastsatt,inntektskategori);
-        final boolean skalBrukeBesteberegning = false;
-        FastsettBgKunYtelseDto kunYtelseDto = new FastsettBgKunYtelseDto(Collections.singletonList(andel), skalBrukeBesteberegning);
-        FaktaBeregningLagreDto dto = new FaktaBeregningLagreDto(Collections.singletonList(FaktaOmBeregningTilfelle.FASTSETT_BG_KUN_YTELSE));
+        var inntektskategori = Inntektskategori.SJØMANN;
+        var andel = new FastsattBrukersAndel(nyAndel, ANDELSNR, lagtTilAvSaksbehandler, fastsatt,inntektskategori);
+        final var skalBrukeBesteberegning = false;
+        var kunYtelseDto = new FastsettBgKunYtelseDto(Collections.singletonList(andel), skalBrukeBesteberegning);
+        var dto = new FaktaBeregningLagreDto(Collections.singletonList(FaktaOmBeregningTilfelle.FASTSETT_BG_KUN_YTELSE));
         dto.setKunYtelseFordeling(kunYtelseDto);
 
         // Act
-        BeregningsgrunnlagGrunnlagDtoBuilder oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
+        var oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
         FastsettBgKunYtelseOppdaterer.oppdater(dto, Optional.empty(), oppdatere);
 
         // Assert
         assertThat(beregningsgrunnlag.getBeregningsgrunnlagPerioder()).hasSize(1);
         assertThat(beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList()).hasSize(1);
-        BeregningsgrunnlagPrStatusOgAndelDto oppdatert1 = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().get(0);
+        var oppdatert1 = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().get(0);
         assertThat(oppdatert1.getBeregnetPrÅr()).isEqualByComparingTo(Beløp.fra(fastsatt*12));
         assertThat(oppdatert1.getBesteberegningPrÅr()).isNull();
         assertThat(oppdatert1.getGjeldendeInntektskategori()).isEqualTo(inntektskategori);
@@ -142,27 +141,27 @@ class FastsettBgKunYtelseOppdatererTest {
     @Test
     void skal_sette_verdier_på_andel_som_eksisterte_fra_før_i_grunnlag_med_fastsatt_lik_overstyrt_i_forrige_utførelse_av_aksonspunkt() {
         // Arrange
-        boolean nyAndel = false;
-        boolean lagtTilAvSaksbehandler = false;
+        var nyAndel = false;
+        var lagtTilAvSaksbehandler = false;
         Integer fastsatt = 100000;
-        Inntektskategori inntektskategori = Inntektskategori.SJØMANN;
-        FastsattBrukersAndel brukersAndel = new FastsattBrukersAndel(nyAndel, ANDELSNR, lagtTilAvSaksbehandler, fastsatt,inntektskategori);
-        FastsettBgKunYtelseDto kunYtelseDto = new FastsettBgKunYtelseDto(Collections.singletonList(brukersAndel), null);
-        FaktaBeregningLagreDto dto = new FaktaBeregningLagreDto(Collections.singletonList(FaktaOmBeregningTilfelle.FASTSETT_BG_KUN_YTELSE));
+        var inntektskategori = Inntektskategori.SJØMANN;
+        var brukersAndel = new FastsattBrukersAndel(nyAndel, ANDELSNR, lagtTilAvSaksbehandler, fastsatt,inntektskategori);
+        var kunYtelseDto = new FastsettBgKunYtelseDto(Collections.singletonList(brukersAndel), null);
+        var dto = new FaktaBeregningLagreDto(Collections.singletonList(FaktaOmBeregningTilfelle.FASTSETT_BG_KUN_YTELSE));
         dto.setKunYtelseFordeling(kunYtelseDto);
 
-        BeregningsgrunnlagDto eksisterendeGrunnlag = BeregningsgrunnlagDto.builder(beregningsgrunnlag).build();
+        var eksisterendeGrunnlag = BeregningsgrunnlagDto.builder(beregningsgrunnlag).build();
         eksisterendeGrunnlag.getBeregningsgrunnlagPerioder().forEach(periode -> periode.getBeregningsgrunnlagPrStatusOgAndelList().forEach(andel ->
             BeregningsgrunnlagPrStatusOgAndelDto.kopier(andel).medBeregnetPrÅr(Beløp.fra(fastsatt*12))));
 
         // Act
-        BeregningsgrunnlagGrunnlagDtoBuilder oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
+        var oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
         FastsettBgKunYtelseOppdaterer.oppdater(dto, Optional.of(eksisterendeGrunnlag), oppdatere);
 
         // Assert
         assertThat(beregningsgrunnlag.getBeregningsgrunnlagPerioder()).hasSize(1);
         assertThat(beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList()).hasSize(1);
-        BeregningsgrunnlagPrStatusOgAndelDto oppdatert1 = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().get(0);
+        var oppdatert1 = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().get(0);
         assertThat(oppdatert1.getBeregnetPrÅr()).isEqualByComparingTo(Beløp.fra(fastsatt*12));
         assertThat(oppdatert1.getGjeldendeInntektskategori()).isEqualTo(inntektskategori);
         assertThat(oppdatert1.getAktivitetStatus()).isEqualTo(BRUKERS_ANDEL);
@@ -171,29 +170,29 @@ class FastsettBgKunYtelseOppdatererTest {
     @Test
     void skal_sette_verdier_på_ny_andel() {
         // Arrange
-        boolean nyAndel = true;
-        boolean lagtTilAvSaksbehandler = true;
+        var nyAndel = true;
+        var lagtTilAvSaksbehandler = true;
         Integer fastsatt = 100000;
-        Inntektskategori inntektskategori = Inntektskategori.SJØMANN;
-        FastsattBrukersAndel brukersAndel = new FastsattBrukersAndel(nyAndel, null, lagtTilAvSaksbehandler, fastsatt,inntektskategori);
-        FastsettBgKunYtelseDto kunYtelseDto = new FastsettBgKunYtelseDto(Collections.singletonList(brukersAndel), null);
-        FaktaBeregningLagreDto dto = new FaktaBeregningLagreDto(Collections.singletonList(FaktaOmBeregningTilfelle.FASTSETT_BG_KUN_YTELSE));
+        var inntektskategori = Inntektskategori.SJØMANN;
+        var brukersAndel = new FastsattBrukersAndel(nyAndel, null, lagtTilAvSaksbehandler, fastsatt,inntektskategori);
+        var kunYtelseDto = new FastsettBgKunYtelseDto(Collections.singletonList(brukersAndel), null);
+        var dto = new FaktaBeregningLagreDto(Collections.singletonList(FaktaOmBeregningTilfelle.FASTSETT_BG_KUN_YTELSE));
         dto.setKunYtelseFordeling(kunYtelseDto);
 
         // Act
-        BeregningsgrunnlagGrunnlagDtoBuilder oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
+        var oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
         FastsettBgKunYtelseOppdaterer.oppdater(dto, Optional.empty(), oppdatere);
 
         // Assert
         assertThat(beregningsgrunnlag.getBeregningsgrunnlagPerioder()).hasSize(1);
         assertThat(beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList()).hasSize(2);
-        List<BeregningsgrunnlagPrStatusOgAndelDto> lagtTil1 = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0)
+        var lagtTil1 = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0)
             .getBeregningsgrunnlagPrStatusOgAndelList().stream().filter(BeregningsgrunnlagPrStatusOgAndelDto::erLagtTilAvSaksbehandler).collect(Collectors.toList());
         Assertions.assertThat(lagtTil1).hasSize(1);
         assertThat(lagtTil1.get(0).getBeregnetPrÅr()).isEqualByComparingTo(Beløp.fra(fastsatt*12));
         assertThat(lagtTil1.get(0).getGjeldendeInntektskategori()).isEqualTo(inntektskategori);
         assertThat(lagtTil1.get(0).getAktivitetStatus()).isEqualTo(BRUKERS_ANDEL);
-        List<BeregningsgrunnlagPrStatusOgAndelDto> fastsattAvSaksbehandler1 = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0)
+        var fastsattAvSaksbehandler1 = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0)
             .getBeregningsgrunnlagPrStatusOgAndelList().stream().filter(a -> Boolean.TRUE.equals(a.getFastsattAvSaksbehandler())).collect(Collectors.toList());
         Assertions.assertThat(fastsattAvSaksbehandler1).hasSize(1);
     }
@@ -201,9 +200,9 @@ class FastsettBgKunYtelseOppdatererTest {
     @Test
     void skal_sette_verdier_på_andel_lagt_til_av_saksbehandler_ved_tilbakehopp_til_KOFAKBER() {
         // Arrange
-        boolean nyAndel = false;
-        boolean lagtTilAvSaksbehandler = true;
-        BeregningsgrunnlagDto førsteGrunnlag = BeregningsgrunnlagDto.builder(beregningsgrunnlag).build();
+        var nyAndel = false;
+        var lagtTilAvSaksbehandler = true;
+        var førsteGrunnlag = BeregningsgrunnlagDto.builder(beregningsgrunnlag).build();
         Long andelsnr = 2133L;
         førsteGrunnlag.getBeregningsgrunnlagPerioder().forEach(periode -> BeregningsgrunnlagPrStatusOgAndelDto.ny()
             .medAndelsnr(andelsnr)
@@ -212,27 +211,27 @@ class FastsettBgKunYtelseOppdatererTest {
             .medAktivitetStatus(brukers_andel)
             .build(periode));
         Integer fastsatt = 100000;
-        Inntektskategori inntektskategori = Inntektskategori.SJØMANN;
-        FastsattBrukersAndel brukersAndel = new FastsattBrukersAndel(nyAndel, andelsnr, lagtTilAvSaksbehandler, fastsatt,inntektskategori);
-        FastsettBgKunYtelseDto kunYtelseDto = new FastsettBgKunYtelseDto(Collections.singletonList(brukersAndel), null);
-        FaktaBeregningLagreDto dto = new FaktaBeregningLagreDto(Collections.singletonList(FaktaOmBeregningTilfelle.FASTSETT_BG_KUN_YTELSE));
+        var inntektskategori = Inntektskategori.SJØMANN;
+        var brukersAndel = new FastsattBrukersAndel(nyAndel, andelsnr, lagtTilAvSaksbehandler, fastsatt,inntektskategori);
+        var kunYtelseDto = new FastsettBgKunYtelseDto(Collections.singletonList(brukersAndel), null);
+        var dto = new FaktaBeregningLagreDto(Collections.singletonList(FaktaOmBeregningTilfelle.FASTSETT_BG_KUN_YTELSE));
         dto.setKunYtelseFordeling(kunYtelseDto);
 
         // Act
-        BeregningsgrunnlagGrunnlagDtoBuilder oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
+        var oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
         FastsettBgKunYtelseOppdaterer.oppdater(dto, Optional.of(førsteGrunnlag), oppdatere);
 
         // Assert
         assertThat(beregningsgrunnlag.getBeregningsgrunnlagPerioder()).hasSize(1);
         assertThat(beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList()).hasSize(2);
-        List<BeregningsgrunnlagPrStatusOgAndelDto> lagtTil1 = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0)
+        var lagtTil1 = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0)
             .getBeregningsgrunnlagPrStatusOgAndelList().stream().filter(BeregningsgrunnlagPrStatusOgAndelDto::erLagtTilAvSaksbehandler).collect(Collectors.toList());
         Assertions.assertThat(lagtTil1).hasSize(1);
         assertThat(lagtTil1.get(0).getBeregnetPrÅr()).isEqualByComparingTo(Beløp.fra(fastsatt*12));
         assertThat(lagtTil1.get(0).getGjeldendeInntektskategori()).isEqualTo(inntektskategori);
         assertThat(lagtTil1.get(0).getAktivitetStatus()).isEqualTo(BRUKERS_ANDEL);
 
-        List<BeregningsgrunnlagPrStatusOgAndelDto> fastsattAvSaksbehandler1 = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0)
+        var fastsattAvSaksbehandler1 = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0)
             .getBeregningsgrunnlagPrStatusOgAndelList().stream().filter(a -> Boolean.TRUE.equals(a.getFastsattAvSaksbehandler())).collect(Collectors.toList());
         Assertions.assertThat(fastsattAvSaksbehandler1).hasSize(1);
     }
@@ -240,9 +239,9 @@ class FastsettBgKunYtelseOppdatererTest {
     @Test
     void skal_sette_verdier_på_andel_lagt_til_av_saksbehandler_ved_tilbakehopp_til_steg_før_KOFAKBER() {
         // Arrange
-        BeregningsgrunnlagDto førsteGrunnlag = BeregningsgrunnlagDto.builder(beregningsgrunnlag).build();
+        var førsteGrunnlag = BeregningsgrunnlagDto.builder(beregningsgrunnlag).build();
         Long andelsnr = 2133L;
-        int overstyrt = 5000;
+        var overstyrt = 5000;
         førsteGrunnlag.getBeregningsgrunnlagPerioder().forEach(periode -> {
             periode.getBeregningsgrunnlagPrStatusOgAndelList().forEach(andel ->
                 BeregningsgrunnlagPrStatusOgAndelDto.kopier(andel)
@@ -256,32 +255,32 @@ class FastsettBgKunYtelseOppdatererTest {
             .medBeregnetPrÅr(Beløp.fra(overstyrt *12))
             .build(periode);
         });
-        boolean nyAndel = false;
-        boolean lagtTilAvSaksbehandler = true;
+        var nyAndel = false;
+        var lagtTilAvSaksbehandler = true;
         Integer fastsatt = 100000;
-        Inntektskategori inntektskategori = Inntektskategori.SJØMANN;
-        FastsattBrukersAndel brukersAndel = new FastsattBrukersAndel(nyAndel, andelsnr, lagtTilAvSaksbehandler, fastsatt,inntektskategori);
-        FastsattBrukersAndel brukersAndel2 = new FastsattBrukersAndel(nyAndel, ANDELSNR, false, fastsatt, Inntektskategori.ARBEIDSTAKER);
+        var inntektskategori = Inntektskategori.SJØMANN;
+        var brukersAndel = new FastsattBrukersAndel(nyAndel, andelsnr, lagtTilAvSaksbehandler, fastsatt,inntektskategori);
+        var brukersAndel2 = new FastsattBrukersAndel(nyAndel, ANDELSNR, false, fastsatt, Inntektskategori.ARBEIDSTAKER);
 
-        FastsettBgKunYtelseDto kunYtelseDto = new FastsettBgKunYtelseDto(Arrays.asList(brukersAndel, brukersAndel2), null);
-        FaktaBeregningLagreDto dto = new FaktaBeregningLagreDto(Collections.singletonList(FaktaOmBeregningTilfelle.FASTSETT_BG_KUN_YTELSE));
+        var kunYtelseDto = new FastsettBgKunYtelseDto(Arrays.asList(brukersAndel, brukersAndel2), null);
+        var dto = new FaktaBeregningLagreDto(Collections.singletonList(FaktaOmBeregningTilfelle.FASTSETT_BG_KUN_YTELSE));
         dto.setKunYtelseFordeling(kunYtelseDto);
 
         // Act
-        BeregningsgrunnlagGrunnlagDtoBuilder oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
+        var oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
         FastsettBgKunYtelseOppdaterer.oppdater(dto, Optional.of(førsteGrunnlag), oppdatere);
 
         // Assert
         assertThat(beregningsgrunnlag.getBeregningsgrunnlagPerioder()).hasSize(1);
         assertThat(beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList()).hasSize(2);
-        List<BeregningsgrunnlagPrStatusOgAndelDto> lagtTil1 = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0)
+        var lagtTil1 = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0)
             .getBeregningsgrunnlagPrStatusOgAndelList().stream()
             .filter(BeregningsgrunnlagPrStatusOgAndelDto::erLagtTilAvSaksbehandler).collect(Collectors.toList());
         Assertions.assertThat(lagtTil1).hasSize(1);
         assertThat(lagtTil1.get(0).getBeregnetPrÅr()).isEqualByComparingTo(Beløp.fra(fastsatt*12));
         assertThat(lagtTil1.get(0).getGjeldendeInntektskategori()).isEqualTo(inntektskategori);
         assertThat(lagtTil1.get(0).getAktivitetStatus()).isEqualTo(BRUKERS_ANDEL);
-        List<BeregningsgrunnlagPrStatusOgAndelDto> fastsattAvSaksbehandler1 = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0)
+        var fastsattAvSaksbehandler1 = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0)
             .getBeregningsgrunnlagPrStatusOgAndelList().stream().filter(a -> Boolean.TRUE.equals(a.getFastsattAvSaksbehandler())).collect(Collectors.toList());
         Assertions.assertThat(fastsattAvSaksbehandler1).hasSize(2);
     }

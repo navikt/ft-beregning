@@ -21,10 +21,10 @@ class ErSeksBesteMånederBedreTest {
 
 	@Test
 	void skal_returnere_true_når_beste_6_måneder_gir_høyere_inntekt_en_andel() {
-		BesteberegningOutput output = new BesteberegningOutput();
-		BesteberegnetGrunnlag bbGrunnlag = new BesteberegnetGrunnlag(Collections.singletonList(lagAndel(600000, "999")));
+        var output = new BesteberegningOutput();
+        var bbGrunnlag = new BesteberegnetGrunnlag(Collections.singletonList(lagAndel(600000, "999")));
 		output.setBesteberegnetGrunnlag(bbGrunnlag);
-		BesteberegningRegelmodell bbRegelModell = new BesteberegningRegelmodell(lagInput(500000));
+        var bbRegelModell = new BesteberegningRegelmodell(lagInput(500000));
 		bbRegelModell.setOutput(output);
 
 		var regel = new ErSeksBesteMånederBedre();
@@ -36,11 +36,11 @@ class ErSeksBesteMånederBedreTest {
 
 	@Test
 	void skal_returnere_true_når_beste_6_måneder_gir_høyere_inntekt_flere_andeler() {
-		BesteberegningOutput output = new BesteberegningOutput();
-		BesteberegnetGrunnlag bbGrunnlag = new BesteberegnetGrunnlag(Arrays.asList(lagAndel(200000, "999"),
+        var output = new BesteberegningOutput();
+        var bbGrunnlag = new BesteberegnetGrunnlag(Arrays.asList(lagAndel(200000, "999"),
 				lagAndel(200000, "555"), lagAndel(200000, "777")));
 		output.setBesteberegnetGrunnlag(bbGrunnlag);
-		BesteberegningRegelmodell bbRegelModell = new BesteberegningRegelmodell(lagInput(500000));
+        var bbRegelModell = new BesteberegningRegelmodell(lagInput(500000));
 		bbRegelModell.setOutput(output);
 
 		var regel = new ErSeksBesteMånederBedre();
@@ -52,11 +52,11 @@ class ErSeksBesteMånederBedreTest {
 
 	@Test
 	void skal_returnere_false_når_beste_6_måneder_gir_lavere_inntekt_flere_andeler() {
-		BesteberegningOutput output = new BesteberegningOutput();
-		BesteberegnetGrunnlag bbGrunnlag = new BesteberegnetGrunnlag(Arrays.asList(lagAndel(200000, "999"),
+        var output = new BesteberegningOutput();
+        var bbGrunnlag = new BesteberegnetGrunnlag(Arrays.asList(lagAndel(200000, "999"),
 				lagAndel(200000, "555"), lagAndel(199999, "777")));
 		output.setBesteberegnetGrunnlag(bbGrunnlag);
-		BesteberegningRegelmodell bbRegelModell = new BesteberegningRegelmodell(lagInput(600000));
+        var bbRegelModell = new BesteberegningRegelmodell(lagInput(600000));
 		bbRegelModell.setOutput(output);
 
 		var regel = new ErSeksBesteMånederBedre();
@@ -68,11 +68,11 @@ class ErSeksBesteMånederBedreTest {
 
 	@Test
 	void skal_returnere_false_når_beste_6_måneder_gir_samme_inntekt_flere_andeler() {
-		BesteberegningOutput output = new BesteberegningOutput();
-		BesteberegnetGrunnlag bbGrunnlag = new BesteberegnetGrunnlag(Arrays.asList(lagAndel(200000, "999"),
+        var output = new BesteberegningOutput();
+        var bbGrunnlag = new BesteberegnetGrunnlag(Arrays.asList(lagAndel(200000, "999"),
 				lagAndel(200000, "555"), lagAndel(200000, "777")));
 		output.setBesteberegnetGrunnlag(bbGrunnlag);
-		BesteberegningRegelmodell bbRegelModell = new BesteberegningRegelmodell(lagInput(600000));
+        var bbRegelModell = new BesteberegningRegelmodell(lagInput(600000));
 		bbRegelModell.setOutput(output);
 
 		var regel = new ErSeksBesteMånederBedre();

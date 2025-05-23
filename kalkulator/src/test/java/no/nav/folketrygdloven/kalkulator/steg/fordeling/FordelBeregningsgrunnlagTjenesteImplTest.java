@@ -13,11 +13,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import no.nav.folketrygdloven.kalkulator.GrunnbeløpMock;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import no.nav.folketrygdloven.kalkulator.GrunnbeløpMock;
 import no.nav.folketrygdloven.kalkulator.KoblingReferanseMock;
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagInput;
 import no.nav.folketrygdloven.kalkulator.input.ForeldrepengerGrunnlag;

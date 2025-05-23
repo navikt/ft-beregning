@@ -9,7 +9,6 @@ import java.util.List;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AktivitetStatusV2;
 import no.nav.fpsak.tidsserie.LocalDateInterval;
-import no.nav.fpsak.tidsserie.LocalDateSegment;
 import no.nav.fpsak.tidsserie.LocalDateTimeline;
 
 public class AndelUtbetalingsgrad {
@@ -30,7 +29,7 @@ public class AndelUtbetalingsgrad {
     }
 
 	public boolean erNyAktivitetPåDato(LocalDate dato) {
-		LocalDateSegment<Boolean> segment = nyAktivitetTidslinje.getSegment(new LocalDateInterval(dato, dato));
+		var segment = nyAktivitetTidslinje.getSegment(new LocalDateInterval(dato, dato));
 		return segment != null && segment.getValue();
 	}
 

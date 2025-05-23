@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BGAndelArbeidsforholdDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatusDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
@@ -31,10 +30,10 @@ class EtterlønnSluttpakkeTjenesteTest {
     @Test
     void skalGiTilfelleDersomSøkerHarAndelMedEtterlønnSluttpakke() {
         //Arrange
-        BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlag(AktivitetStatus.ARBEIDSTAKER, Collections.singletonList(OpptjeningAktivitetType.ETTERLØNN_SLUTTPAKKE));
+        var beregningsgrunnlag = lagBeregningsgrunnlag(AktivitetStatus.ARBEIDSTAKER, Collections.singletonList(OpptjeningAktivitetType.ETTERLØNN_SLUTTPAKKE));
 
         //Act
-        boolean brukerHarEtterlønnSluttpakke = act(beregningsgrunnlag);
+        var brukerHarEtterlønnSluttpakke = act(beregningsgrunnlag);
 
         //Assert
         assertThat(brukerHarEtterlønnSluttpakke).isTrue();
@@ -43,10 +42,10 @@ class EtterlønnSluttpakkeTjenesteTest {
     @Test
     void skalIkkeGiTilfelleDersomSøkerIkkeHarAndelMedEtterlønnSluttpakke() {
         //Arrange
-        BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlag(AktivitetStatus.ARBEIDSTAKER, Collections.singletonList(OpptjeningAktivitetType.ARBEID));
+        var beregningsgrunnlag = lagBeregningsgrunnlag(AktivitetStatus.ARBEIDSTAKER, Collections.singletonList(OpptjeningAktivitetType.ARBEID));
 
         //Act
-        boolean brukerHarEtterlønnSluttpakke = act(beregningsgrunnlag);
+        var brukerHarEtterlønnSluttpakke = act(beregningsgrunnlag);
 
         //Assert
         assertThat(brukerHarEtterlønnSluttpakke).isFalse();
@@ -55,10 +54,10 @@ class EtterlønnSluttpakkeTjenesteTest {
     @Test
     void skalIkkeGiTilfelleDersomSøkerIkkeErArbeidstaker() {
         //Arrange
-        BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlag(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE, Collections.singletonList(OpptjeningAktivitetType.NÆRING));
+        var beregningsgrunnlag = lagBeregningsgrunnlag(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE, Collections.singletonList(OpptjeningAktivitetType.NÆRING));
 
         //Act
-        boolean brukerHarEtterlønnSluttpakke = act(beregningsgrunnlag);
+        var brukerHarEtterlønnSluttpakke = act(beregningsgrunnlag);
 
         //Assert
         assertThat(brukerHarEtterlønnSluttpakke).isFalse();
@@ -67,26 +66,26 @@ class EtterlønnSluttpakkeTjenesteTest {
     @Test
     void skalGiTilfelleDersomSøkerHarAndreAndelerMenOgsåEtterlønnSluttpakke() {
         //Arrange
-        BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlag(AktivitetStatus.ARBEIDSTAKER, List.of(OpptjeningAktivitetType.ETTERLØNN_SLUTTPAKKE, OpptjeningAktivitetType.VENTELØNN_VARTPENGER));
+        var beregningsgrunnlag = lagBeregningsgrunnlag(AktivitetStatus.ARBEIDSTAKER, List.of(OpptjeningAktivitetType.ETTERLØNN_SLUTTPAKKE, OpptjeningAktivitetType.VENTELØNN_VARTPENGER));
 
         //Act
-        boolean brukerHarEtterlønnSluttpakke = act(beregningsgrunnlag);
+        var brukerHarEtterlønnSluttpakke = act(beregningsgrunnlag);
 
         //Assert
         assertThat(brukerHarEtterlønnSluttpakke).isTrue();
     }
 
     private BeregningsgrunnlagDto lagBeregningsgrunnlag(AktivitetStatus aktivitetStatus, List<OpptjeningAktivitetType> opptjeningAktivitetTypes) {
-        BeregningsgrunnlagAktivitetStatusDto.Builder asb = BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(aktivitetStatus);
-        BeregningsgrunnlagDto beregningsgrunnlag = BeregningsgrunnlagDto.builder()
+        var asb = BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(aktivitetStatus);
+        var beregningsgrunnlag = BeregningsgrunnlagDto.builder()
             .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING)
             .medGrunnbeløp(Beløp.fra(93000))
             .leggTilAktivitetStatus(asb)
             .build();
-        BeregningsgrunnlagPeriodeDto.Builder periodeBuilder = BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusYears(1), null);
-        BeregningsgrunnlagPeriodeDto periode = periodeBuilder.build(beregningsgrunnlag);
-        for (OpptjeningAktivitetType type : opptjeningAktivitetTypes) {
-            BeregningsgrunnlagPrStatusOgAndelDto.Builder builder = BeregningsgrunnlagPrStatusOgAndelDto.ny()
+        var periodeBuilder = BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusYears(1), null);
+        var periode = periodeBuilder.build(beregningsgrunnlag);
+        for (var type : opptjeningAktivitetTypes) {
+            var builder = BeregningsgrunnlagPrStatusOgAndelDto.ny()
                 .medAktivitetStatus(aktivitetStatus)
                 .medInntektskategori(Inntektskategori.ARBEIDSTAKER)
                 .medBeregnetPrÅr(null)
@@ -101,7 +100,7 @@ class EtterlønnSluttpakkeTjenesteTest {
     }
 
     private boolean act(BeregningsgrunnlagDto beregningsgrunnlag) {
-        BeregningsgrunnlagGrunnlagDto grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
+        var grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
             .medBeregningsgrunnlag(beregningsgrunnlag)
             .build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER);
         return EtterlønnSluttpakkeTjeneste.skalVurdereOmBrukerHarEtterlønnSluttpakke(grunnlag);

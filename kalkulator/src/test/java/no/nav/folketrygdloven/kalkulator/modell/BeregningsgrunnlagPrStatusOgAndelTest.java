@@ -32,8 +32,8 @@ class BeregningsgrunnlagPrStatusOgAndelTest {
 
     @BeforeEach
     void setup() {
-        BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlag();
-        BeregningsgrunnlagPeriodeDto.Builder builder = lagBeregningsgrunnlagPeriodeBuilder();
+        var beregningsgrunnlag = lagBeregningsgrunnlag();
+        var builder = lagBeregningsgrunnlagPeriodeBuilder();
         beregningsgrunnlagPeriode= builder.build(beregningsgrunnlag);
         prStatusOgAndel = lagBeregningsgrunnlagPrStatusOgAndel(beregningsgrunnlagPeriode);
     }
@@ -48,7 +48,7 @@ class BeregningsgrunnlagPrStatusOgAndelTest {
 
     @Test
     void skal_ikke_bygge_instans_hvis_mangler_påkrevde_felter() {
-        BeregningsgrunnlagPrStatusOgAndelDto.Builder builder = BeregningsgrunnlagPrStatusOgAndelDto.ny();
+        var builder = BeregningsgrunnlagPrStatusOgAndelDto.ny();
         try {
             builder.build(null);
             fail();
@@ -102,14 +102,14 @@ class BeregningsgrunnlagPrStatusOgAndelTest {
 
     @Test
     void skal_ha_refleksiv_equalsOgHashCode() {
-        BeregningsgrunnlagPrStatusOgAndelDto prStatusOgAndel2 = lagBeregningsgrunnlagPrStatusOgAndel(beregningsgrunnlagPeriode);
+        var prStatusOgAndel2 = lagBeregningsgrunnlagPrStatusOgAndel(beregningsgrunnlagPeriode);
 
         assertThat(prStatusOgAndel).isEqualTo(prStatusOgAndel2);
         assertThat(prStatusOgAndel2).isEqualTo(prStatusOgAndel);
         assertThat(prStatusOgAndel.hashCode()).isEqualTo(prStatusOgAndel2.hashCode());
         assertThat(prStatusOgAndel2.hashCode()).isEqualTo(prStatusOgAndel.hashCode());
 
-        BeregningsgrunnlagPrStatusOgAndelDto.Builder builder = lagBeregningsgrunnlagPrStatusOgAndelBuilder(Arbeidsgiver.virksomhet(ORGNR));
+        var builder = lagBeregningsgrunnlagPrStatusOgAndelBuilder(Arbeidsgiver.virksomhet(ORGNR));
         builder.medAktivitetStatus(AktivitetStatus.FRILANSER);
         prStatusOgAndel2 = builder.build(beregningsgrunnlagPeriode);
         assertThat(prStatusOgAndel).isNotEqualTo(prStatusOgAndel2);
@@ -120,12 +120,12 @@ class BeregningsgrunnlagPrStatusOgAndelTest {
 
     @Test
     void skal_bruke_aktivitetStatus_i_equalsOgHashCode() {
-        BeregningsgrunnlagPrStatusOgAndelDto prStatusOgAndel2 = lagBeregningsgrunnlagPrStatusOgAndel(beregningsgrunnlagPeriode);
+        var prStatusOgAndel2 = lagBeregningsgrunnlagPrStatusOgAndel(beregningsgrunnlagPeriode);
 
         assertThat(prStatusOgAndel).isEqualTo(prStatusOgAndel2);
         assertThat(prStatusOgAndel.hashCode()).isEqualTo(prStatusOgAndel2.hashCode());
 
-        BeregningsgrunnlagPrStatusOgAndelDto.Builder builder = lagBeregningsgrunnlagPrStatusOgAndelBuilder(Arbeidsgiver.virksomhet(ORGNR));
+        var builder = lagBeregningsgrunnlagPrStatusOgAndelBuilder(Arbeidsgiver.virksomhet(ORGNR));
         builder.medAktivitetStatus(AktivitetStatus.FRILANSER);
         prStatusOgAndel2 = builder.build(beregningsgrunnlagPeriode);
 
@@ -147,10 +147,10 @@ class BeregningsgrunnlagPrStatusOgAndelTest {
 
     @Test
     void skal_kunne_ha_privatperson_som_arbeidsgiver() {
-        AktørId aktørId = AktørId.dummy();
-        BeregningsgrunnlagPrStatusOgAndelDto.Builder builder = lagBeregningsgrunnlagPrStatusOgAndelBuilder(Arbeidsgiver.person(aktørId));
+        var aktørId = AktørId.dummy();
+        var builder = lagBeregningsgrunnlagPrStatusOgAndelBuilder(Arbeidsgiver.person(aktørId));
         builder.medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER);
-        BeregningsgrunnlagPrStatusOgAndelDto bgpsa = builder.build(beregningsgrunnlagPeriode);
+        var bgpsa = builder.build(beregningsgrunnlagPeriode);
 
         assertThat(bgpsa.getBgAndelArbeidsforhold().get().getArbeidsgiver().getIdentifikator()).isEqualTo(aktørId.getId());
     }
@@ -191,7 +191,7 @@ class BeregningsgrunnlagPrStatusOgAndelTest {
     }
 
     private BeregningsgrunnlagPrStatusOgAndelDto.Builder lagBeregningsgrunnlagPrStatusOgAndelBuilder(Arbeidsgiver arbeidsgiver) {
-        BGAndelArbeidsforholdDto.Builder bga = BGAndelArbeidsforholdDto.builder()
+        var bga = BGAndelArbeidsforholdDto.builder()
             .medArbeidsgiver(arbeidsgiver)
             .medArbeidsforholdRef(ARBEIDSFORHOLD_ID)
             .medArbeidsperiodeFom(LocalDate.now().minusYears(1))

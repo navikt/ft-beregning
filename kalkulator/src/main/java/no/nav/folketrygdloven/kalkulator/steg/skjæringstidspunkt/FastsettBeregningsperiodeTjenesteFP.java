@@ -17,7 +17,7 @@ public class FastsettBeregningsperiodeTjenesteFP {
     public static BeregningsgrunnlagDto fastsettBeregningsperiode(BeregningsgrunnlagDto beregningsgrunnlag,
                                                            InntektArbeidYtelseGrunnlagDto inntektArbeidYtelseGrunnlag,
                                                            Collection<InntektsmeldingDto> inntektsmeldinger) {
-        BeregningsgrunnlagDto nyttBeregningsgrunnlag = BeregningsgrunnlagDto.builder(beregningsgrunnlag).build();
+        var nyttBeregningsgrunnlag = BeregningsgrunnlagDto.builder(beregningsgrunnlag).build();
         nyttBeregningsgrunnlag.getBeregningsgrunnlagPerioder().forEach(periode -> {
             periode.getBeregningsgrunnlagPrStatusOgAndelList().stream()
                     .filter(a -> a.getAktivitetStatus().erArbeidstaker() || a.getAktivitetStatus().erFrilanser())
@@ -32,9 +32,9 @@ public class FastsettBeregningsperiodeTjenesteFP {
         if (harIM) {
             return beregningsperiodeUjustert;
         }
-        LocalDate inntektsrapporteringsfrist = beregningsperiodeUjustert.getTomDato().plusDays(5);
-        LocalDate fristMedHelligdagerInkl = BevegeligeHelligdagerUtil.hentFørsteVirkedagFraOgMed(inntektsrapporteringsfrist);
-        LocalDate dagensDato = LocalDate.now();
+        var inntektsrapporteringsfrist = beregningsperiodeUjustert.getTomDato().plusDays(5);
+        var fristMedHelligdagerInkl = BevegeligeHelligdagerUtil.hentFørsteVirkedagFraOgMed(inntektsrapporteringsfrist);
+        var dagensDato = LocalDate.now();
         if (dagensDato.isAfter(fristMedHelligdagerInkl)) {
             return beregningsperiodeUjustert;
         }

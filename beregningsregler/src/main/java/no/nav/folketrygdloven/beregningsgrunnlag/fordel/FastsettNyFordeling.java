@@ -29,7 +29,7 @@ class FastsettNyFordeling implements RuleService<FordelModell> {
     @Override
     public Specification<FordelModell> getSpecification() {
         var refOverstigerBgAktivitetListe = finnListeMedAktiteterSomKreverFlyttingAvBeregningsgrunnlag(modell.getInput());
-		Ruleset<FordelModell> rs = new Ruleset<>();
+        var rs = new Ruleset<FordelModell>();
 	    var speclist = refOverstigerBgAktivitetListe.stream()
 			    .map(fam -> new OmfordelBeregningsgrunnlagTilArbeidsforhold(fam).getSpecification()
 					    .medEvaluationProperty(new ServiceArgument("arbeidsforhold", fam.getArbeidsforhold().map(Arbeidsforhold::toString).orElse("ukjent")))) // TODO (PE) hva er nyttig her?
@@ -47,7 +47,7 @@ class FastsettNyFordeling implements RuleService<FordelModell> {
     }
 
     private boolean refusjonskravOverstigerBg(FordelAndelModell arbeidsforhold) {
-        BigDecimal refusjonskrav = arbeidsforhold.getGradertRefusjonPrÅr().orElse(BigDecimal.ZERO);
+        var refusjonskrav = arbeidsforhold.getGradertRefusjonPrÅr().orElse(BigDecimal.ZERO);
         return refusjonskrav.compareTo(arbeidsforhold.getGradertBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO)) > 0;
     }
 

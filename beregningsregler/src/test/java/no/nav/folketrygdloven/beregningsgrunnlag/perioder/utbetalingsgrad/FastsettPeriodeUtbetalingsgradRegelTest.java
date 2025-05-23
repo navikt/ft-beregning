@@ -36,9 +36,9 @@ class FastsettPeriodeUtbetalingsgradRegelTest {
 	@Test
 	void skalLageNyAndelForSVPForArbeidsforholdMedSøktYtelseFraSTP() {
 
-		Arbeidsforhold arbeidsforhold2 = Arbeidsforhold.builder().medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT).medOrgnr(ORGNR2)
+        var arbeidsforhold2 = Arbeidsforhold.builder().medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT).medOrgnr(ORGNR2)
 				.medAnsettelsesPeriode(Periode.of(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(12))).build();
-		PeriodeModellUtbetalingsgrad inputMedGraderingFraStartForNyttArbeid = lagPeriodeInputMedEnAndelFraStart()
+        var inputMedGraderingFraStartForNyttArbeid = lagPeriodeInputMedEnAndelFraStart()
 				.medEndringISøktYtelse(lagGraderingFraSkjæringstidspunkt(arbeidsforhold2))
 				.build();
 		List<SplittetPeriode> perioder = new ArrayList<>();
@@ -51,7 +51,7 @@ class FastsettPeriodeUtbetalingsgradRegelTest {
 	@Test
 	void skalHaNyAndelIHelgMellomToPerioderMedUtbetaling() {
 
-		Arbeidsforhold arbeidsforhold2 = Arbeidsforhold.builder().medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT).medOrgnr(ORGNR2)
+        var arbeidsforhold2 = Arbeidsforhold.builder().medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT).medOrgnr(ORGNR2)
 				.medAnsettelsesPeriode(Periode.of(MANDAG, MANDAG.plusMonths(12))).build();
 		var utbetalingsgrader = List.of(AndelUtbetalingsgrad.builder().medAktivitetStatus(AktivitetStatusV2.AT)
 				.medArbeidsforhold(arbeidsforhold2)
@@ -59,7 +59,7 @@ class FastsettPeriodeUtbetalingsgradRegelTest {
 				.medUtbetalingsgrader(List.of(new Utbetalingsgrad(Periode.of(MANDAG, FREDAG), BigDecimal.valueOf(50)),
 						new Utbetalingsgrad(Periode.of(PÅFØLGENDE_MANDAG, PÅFØLGENDE_MANDAG.plusDays(1)), BigDecimal.valueOf(50)))).build());
 
-		PeriodeModellUtbetalingsgrad inputMedGraderingFraStartForNyttArbeid = lagPeriodeInputMedEnAndelFraStart()
+        var inputMedGraderingFraStartForNyttArbeid = lagPeriodeInputMedEnAndelFraStart()
 				.medEndringISøktYtelse(utbetalingsgrader)
 				.build();
 		List<SplittetPeriode> perioder = new ArrayList<>();
@@ -75,14 +75,14 @@ class FastsettPeriodeUtbetalingsgradRegelTest {
 	@Test
 	void skalHaNyAndelIPeriodeMedUtbetalingUtenRefusjonMedEksisterendePeriode() {
 
-		Arbeidsforhold arbeidsforhold2 = Arbeidsforhold.builder().medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT).medOrgnr(ORGNR2)
+        var arbeidsforhold2 = Arbeidsforhold.builder().medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT).medOrgnr(ORGNR2)
 				.medAnsettelsesPeriode(Periode.of(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(12))).build();
 		var utbetalingsgrader = List.of(AndelUtbetalingsgrad.builder().medAktivitetStatus(AktivitetStatusV2.AT)
 				.medArbeidsforhold(arbeidsforhold2)
 				.medNyAktivitetFraDato(SKJÆRINGSTIDSPUNKT)
 				.medUtbetalingsgrader(List.of(new Utbetalingsgrad(Periode.of(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(3)), BigDecimal.valueOf(50)))).build());
 
-		PeriodeModellUtbetalingsgrad inputMedGraderingFraStartForNyttArbeid = lagPeriodeInputMedEnAndelFraStart()
+        var inputMedGraderingFraStartForNyttArbeid = lagPeriodeInputMedEnAndelFraStart()
 				.medEksisterendePerioder(List.of(
 						SplittetPeriode.builder().medPeriode(Periode.of(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(2).minusDays(1))).medPeriodeÅrsaker(List.of(PeriodeÅrsak.ARBEIDSFORHOLD_AVSLUTTET)).build(),
 						SplittetPeriode.builder().medPeriode(Periode.of(SKJÆRINGSTIDSPUNKT.plusMonths(2), TIDENES_ENDE)).medPeriodeÅrsaker(List.of(PeriodeÅrsak.ARBEIDSFORHOLD_AVSLUTTET)).build()))
@@ -99,14 +99,14 @@ class FastsettPeriodeUtbetalingsgradRegelTest {
 	@Test
 	void skalHaNyAndelIPeriodeMedUtbetalingEnDag() {
 
-		Arbeidsforhold arbeidsforhold2 = Arbeidsforhold.builder().medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT).medOrgnr(ORGNR2)
+        var arbeidsforhold2 = Arbeidsforhold.builder().medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT).medOrgnr(ORGNR2)
 				.medAnsettelsesPeriode(Periode.of(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(12))).build();
 		var utbetalingsgrader = List.of(AndelUtbetalingsgrad.builder().medAktivitetStatus(AktivitetStatusV2.AT)
 				.medArbeidsforhold(arbeidsforhold2)
 				.medNyAktivitetFraDato(SKJÆRINGSTIDSPUNKT)
 				.medUtbetalingsgrader(List.of(new Utbetalingsgrad(Periode.of(SKJÆRINGSTIDSPUNKT.plusMonths(3), SKJÆRINGSTIDSPUNKT.plusMonths(3)), BigDecimal.valueOf(50)))).build());
 
-		PeriodeModellUtbetalingsgrad inputMedGraderingFraStartForNyttArbeid = lagPeriodeInputMedEnAndelFraStart()
+        var inputMedGraderingFraStartForNyttArbeid = lagPeriodeInputMedEnAndelFraStart()
 				.medEksisterendePerioder(List.of(
 						SplittetPeriode.builder().medPeriode(Periode.of(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(2).minusDays(1))).medPeriodeÅrsaker(List.of(PeriodeÅrsak.ARBEIDSFORHOLD_AVSLUTTET)).build(),
 						SplittetPeriode.builder().medPeriode(Periode.of(SKJÆRINGSTIDSPUNKT.plusMonths(2), TIDENES_ENDE)).medPeriodeÅrsaker(List.of(PeriodeÅrsak.ARBEIDSFORHOLD_AVSLUTTET)).build()))
@@ -134,10 +134,10 @@ class FastsettPeriodeUtbetalingsgradRegelTest {
 	}
 
 	private PeriodeModellUtbetalingsgrad.Builder lagPeriodeInputMedEnAndelFraStart() {
-		Arbeidsforhold arbeidsforhold = Arbeidsforhold.builder().medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT)
+        var arbeidsforhold = Arbeidsforhold.builder().medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT)
 				.medAnsettelsesPeriode(Periode.of(SKJÆRINGSTIDSPUNKT.minusMonths(12), SKJÆRINGSTIDSPUNKT.plusMonths(12))).medOrgnr(ORGNR).build();
-		BruttoBeregningsgrunnlag bruttoBeregningsgrunnlag = BruttoBeregningsgrunnlag.builder().medAktivitetStatus(AktivitetStatusV2.AT).medBruttoPrÅr(BigDecimal.valueOf(500_000)).medArbeidsforhold(arbeidsforhold).build();
-		PeriodisertBruttoBeregningsgrunnlag periodisertBruttoBeregningsgrunnlag = PeriodisertBruttoBeregningsgrunnlag.builder()
+        var bruttoBeregningsgrunnlag = BruttoBeregningsgrunnlag.builder().medAktivitetStatus(AktivitetStatusV2.AT).medBruttoPrÅr(BigDecimal.valueOf(500_000)).medArbeidsforhold(arbeidsforhold).build();
+        var periodisertBruttoBeregningsgrunnlag = PeriodisertBruttoBeregningsgrunnlag.builder()
 				.medPeriode(Periode.of(SKJÆRINGSTIDSPUNKT, null))
 				.leggTilBruttoBeregningsgrunnlag(bruttoBeregningsgrunnlag)
 				.build();

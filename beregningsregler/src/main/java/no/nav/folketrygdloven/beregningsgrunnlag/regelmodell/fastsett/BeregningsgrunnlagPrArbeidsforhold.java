@@ -80,8 +80,8 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 
 
 	public BigDecimal getInntektsgrunnlagInkludertNaturalytelsePrÅr() {
-		BigDecimal bortfaltNaturalytelse = naturalytelseBortfaltPrÅr != null ? naturalytelseBortfaltPrÅr : BigDecimal.ZERO;
-		BigDecimal tilkommetNaturalytelse = naturalytelseTilkommetPrÅr != null ? naturalytelseTilkommetPrÅr : BigDecimal.ZERO;
+        var bortfaltNaturalytelse = naturalytelseBortfaltPrÅr != null ? naturalytelseBortfaltPrÅr : BigDecimal.ZERO;
+        var tilkommetNaturalytelse = naturalytelseTilkommetPrÅr != null ? naturalytelseTilkommetPrÅr : BigDecimal.ZERO;
 		return getInntektsgrunnlagPrÅr().add(bortfaltNaturalytelse).subtract(tilkommetNaturalytelse); // NOSONAR
 	}
 
@@ -93,8 +93,8 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 		if (getBruttoPrÅr().isEmpty()) {
 			return Optional.empty();
 		}
-		BigDecimal bortfaltNaturalytelse = naturalytelseBortfaltPrÅr != null ? naturalytelseBortfaltPrÅr : BigDecimal.ZERO;
-		BigDecimal tilkommetNaturalytelse = naturalytelseTilkommetPrÅr != null ? naturalytelseTilkommetPrÅr : BigDecimal.ZERO;
+        var bortfaltNaturalytelse = naturalytelseBortfaltPrÅr != null ? naturalytelseBortfaltPrÅr : BigDecimal.ZERO;
+        var tilkommetNaturalytelse = naturalytelseTilkommetPrÅr != null ? naturalytelseTilkommetPrÅr : BigDecimal.ZERO;
 		return Optional.of(getBruttoPrÅr().get().add(bortfaltNaturalytelse).subtract(tilkommetNaturalytelse)); // NOSONAR
 	}
 
@@ -115,12 +115,12 @@ public class BeregningsgrunnlagPrArbeidsforhold {
 	}
 
 	public Optional<BigDecimal> getGradertBruttoInkludertNaturalytelsePrÅr() {
-		Optional<BigDecimal> brutto = getBruttoInkludertNaturalytelsePrÅr();
+        var brutto = getBruttoInkludertNaturalytelsePrÅr();
 		return brutto.map(this::finnGradert);
 	}
 
 	public Optional<BigDecimal> getAktivitetsgradertBruttoInkludertNaturalytelsePrÅr() {
-		Optional<BigDecimal> brutto = getBruttoInkludertNaturalytelsePrÅr();
+        var brutto = getBruttoInkludertNaturalytelsePrÅr();
 		return brutto.map(this::finnAktivitetsgradert);
 	}
 

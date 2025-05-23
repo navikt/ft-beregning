@@ -31,13 +31,13 @@ public class ArbeidsgiverRefusjonskravTjeneste {
                                                                                                      LocalDate skjæringstidspunktBeregning,
                                                                                                      Optional<BeregningRefusjonOverstyringerDto> refusjonOverstyringer,
                                                                                                      FagsakYtelseType ytelseType) {
-        Map<YrkesaktivitetDto, List<PerioderForKravDto>> yrkesaktivitetKravperioderMap = lagMap(yrkesaktiviteter, kravperioder);
+	    var yrkesaktivitetKravperioderMap = lagMap(yrkesaktiviteter, kravperioder);
         var tidslinjeMap = new HashMap<Arbeidsgiver, LocalDateTimeline<KravOgUtfall>>();
         for (var entry : yrkesaktivitetKravperioderMap.entrySet()) {
             if (!entry.getValue().isEmpty()) {
                 var yrkesaktivitet = entry.getKey();
                 var eksisterendeTidslinje = tidslinjeMap.get(yrkesaktivitet.getArbeidsgiver());
-                Optional<LocalDate> overstyrtRefusjonFom = refusjonOverstyringer.stream().flatMap(o -> o.getRefusjonOverstyringer().stream())
+	            var overstyrtRefusjonFom = refusjonOverstyringer.stream().flatMap(o -> o.getRefusjonOverstyringer().stream())
                         .filter(o -> o.getArbeidsgiver().equals(yrkesaktivitet.getArbeidsgiver()))
                         .findFirst()
                         .flatMap(BeregningRefusjonOverstyringDto::getFørsteMuligeRefusjonFom);

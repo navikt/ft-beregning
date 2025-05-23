@@ -24,7 +24,7 @@ public class BeregningAktivitetOverstyringerDto {
         }
 
         public Builder leggTilOverstyring(BeregningAktivitetOverstyringDto beregningAktivitetOverstyring) {
-            BeregningAktivitetOverstyringDto entitet = beregningAktivitetOverstyring;
+	        var entitet = beregningAktivitetOverstyring;
             kladd.overstyringer.add(entitet);
             entitet.setBeregningAktivitetOverstyringer(kladd);
             return this;

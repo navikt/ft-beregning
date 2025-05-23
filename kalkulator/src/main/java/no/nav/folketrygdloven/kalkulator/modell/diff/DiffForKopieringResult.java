@@ -40,7 +40,7 @@ public class DiffForKopieringResult {
         result1.getValues().forEach((key, value) -> diffs.put(key, new Pair(value, null)));
 
         result2.getValues().forEach((key, value) -> {
-            Object elem1 = diffs.containsKey(key) ? diffs.get(key).getElement1() : null;
+            var elem1 = diffs.containsKey(key) ? diffs.get(key).getElement1() : null;
             if (!areEqual(key, elem1, value)) {
                 diffs.put(key, new Pair(elem1, value));
                 if (returnOnFirstDiff) {

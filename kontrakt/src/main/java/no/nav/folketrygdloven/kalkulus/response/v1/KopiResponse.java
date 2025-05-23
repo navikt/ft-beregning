@@ -2,13 +2,13 @@ package no.nav.folketrygdloven.kalkulus.response.v1;
 
 import java.util.UUID;
 
+import jakarta.validation.Valid;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import jakarta.validation.Valid;
 
 /**
  * Beskriver hvilke avklaringsbehov som må løses av K9 eller FPSAK for at beregningen kan fortsette

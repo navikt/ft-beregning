@@ -20,13 +20,13 @@ public class FastsettPerioderRefusjonRegel implements EksportRegel<PeriodeModell
 	@Override
 	public Evaluation evaluer(PeriodeModellRefusjon input, Object perioder) {
 		var inputOgmellomregninger = new PeriodiseringRefusjonProsesstruktur(input);
-		Evaluation evaluate = this.getSpecification().evaluate(inputOgmellomregninger);
+        var evaluate = this.getSpecification().evaluate(inputOgmellomregninger);
 		oppdaterOutput((List<SplittetPeriode>) perioder, inputOgmellomregninger);
 		return evaluate;
 	}
 
 	private void oppdaterOutput(List<SplittetPeriode> outputContainer, PeriodiseringRefusjonProsesstruktur inputOgmellomregninger) {
-		List<SplittetPeriode> splittetPerioder = inputOgmellomregninger.getSplittetPerioder();
+        var splittetPerioder = inputOgmellomregninger.getSplittetPerioder();
 		outputContainer.addAll(splittetPerioder);
 	}
 
@@ -34,7 +34,7 @@ public class FastsettPerioderRefusjonRegel implements EksportRegel<PeriodeModell
 	@SuppressWarnings("unchecked")
 	public Specification<PeriodiseringRefusjonProsesstruktur> getSpecification() {
 
-		Ruleset<PeriodiseringRefusjonProsesstruktur> rs = new Ruleset<>();
+        var rs = new Ruleset<PeriodiseringRefusjonProsesstruktur>();
 
 		var periodiser = rs.beregningsRegel(
 				PeriodiserForRefusjon.ID,

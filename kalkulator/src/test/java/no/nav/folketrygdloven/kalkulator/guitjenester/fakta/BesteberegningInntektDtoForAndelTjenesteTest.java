@@ -90,8 +90,8 @@ class BesteberegningInntektDtoForAndelTjenesteTest {
 
     @Test
     void skal_finne_snitt_inntekt_for_frilans_med_lik_inntekt_pr_mnd() {
-        List<InntektDtoBuilder> inntekter = List.of(lagLikInntektSiste3Mnd(arbeidsgiver), lagLikInntektSiste3Mnd(frilansArbeidsgiver));
-        List<YrkesaktivitetDto> aktiviteter = List.of(arbeidstakerYrkesaktivitet, frilans, frilansOppdrag);
+        var inntekter = List.of(lagLikInntektSiste3Mnd(arbeidsgiver), lagLikInntektSiste3Mnd(frilansArbeidsgiver));
+        var aktiviteter = List.of(arbeidstakerYrkesaktivitet, frilans, frilansOppdrag);
         var grunnlagEntitet = lagIAYGrunnlagEntitet(inntekter, aktiviteter);
         var snittIBeregningsperioden = InntektForAndelTjeneste.finnSnittAvFrilansinntektIBeregningsperioden(grunnlagEntitet, frilansAndel, SKJÆRINGSTIDSPUNKT_OPPTJENING);
         assertThat(snittIBeregningsperioden).hasValueSatisfying(a -> assertThat(a.verdi()).isEqualByComparingTo(INNTEKT1));
@@ -99,8 +99,8 @@ class BesteberegningInntektDtoForAndelTjenesteTest {
 
     @Test
     void skal_finne_snitt_inntekt_for_frilans_med_ulik_inntekt_pr_mnd() {
-        List<InntektDtoBuilder> inntekter = List.of(lagLikInntektSiste3Mnd(arbeidsgiver), lagUlikInntektSiste3Mnd(frilansArbeidsgiver));
-        List<YrkesaktivitetDto> aktiviteter = List.of(arbeidstakerYrkesaktivitet, frilans, frilansOppdrag);
+        var inntekter = List.of(lagLikInntektSiste3Mnd(arbeidsgiver), lagUlikInntektSiste3Mnd(frilansArbeidsgiver));
+        var aktiviteter = List.of(arbeidstakerYrkesaktivitet, frilans, frilansOppdrag);
         var grunnlagEntitet = lagIAYGrunnlagEntitet(inntekter, aktiviteter);
         var snittIBeregningsperioden = InntektForAndelTjeneste.finnSnittAvFrilansinntektIBeregningsperioden(grunnlagEntitet, frilansAndel, SKJÆRINGSTIDSPUNKT_OPPTJENING);
         assertThat(snittIBeregningsperioden).hasValueSatisfying(a -> assertThat(a.verdi()).isEqualByComparingTo(SNITT_AV_ULIKE_INNTEKTER));
@@ -108,8 +108,8 @@ class BesteberegningInntektDtoForAndelTjenesteTest {
 
     @Test
     void skal_finne_snitt_inntekt_for_frilans_med_fleire_oppdragsgivere() {
-        List<InntektDtoBuilder> inntekter = List.of(lagLikInntektSiste3Mnd(arbeidsgiver), lagUlikInntektSiste3Mnd(frilansArbeidsgiver), lagUlikInntektSiste3Mnd(frilansArbeidsgiver2));
-        List<YrkesaktivitetDto> aktiviteter = List.of(arbeidstakerYrkesaktivitet, frilans, frilansOppdrag, frilansOppdrag2);
+        var inntekter = List.of(lagLikInntektSiste3Mnd(arbeidsgiver), lagUlikInntektSiste3Mnd(frilansArbeidsgiver), lagUlikInntektSiste3Mnd(frilansArbeidsgiver2));
+        var aktiviteter = List.of(arbeidstakerYrkesaktivitet, frilans, frilansOppdrag, frilansOppdrag2);
         var grunnlagEntitet = lagIAYGrunnlagEntitet(inntekter, aktiviteter);
         var snittIBeregningsperioden = InntektForAndelTjeneste.finnSnittAvFrilansinntektIBeregningsperioden(grunnlagEntitet, frilansAndel, SKJÆRINGSTIDSPUNKT_OPPTJENING);
         assertThat(snittIBeregningsperioden).hasValueSatisfying(a -> assertThat(a.verdi()).isEqualByComparingTo(SNITT_AV_ULIKE_INNTEKTER.multiply(BigDecimal.valueOf(2))));
@@ -126,7 +126,7 @@ class BesteberegningInntektDtoForAndelTjenesteTest {
     }
 
     private InntektArbeidYtelseAggregatBuilder.AktørArbeidBuilder lagAktørArbeid(List<YrkesaktivitetDto> aktiviteter) {
-        InntektArbeidYtelseAggregatBuilder.AktørArbeidBuilder builder = InntektArbeidYtelseAggregatBuilder.AktørArbeidBuilder.oppdatere(Optional.empty());
+        var builder = InntektArbeidYtelseAggregatBuilder.AktørArbeidBuilder.oppdatere(Optional.empty());
         aktiviteter.forEach(builder::leggTilYrkesaktivitet);
         return builder;
     }
@@ -137,7 +137,7 @@ class BesteberegningInntektDtoForAndelTjenesteTest {
     }
 
     private InntektArbeidYtelseAggregatBuilder.AktørInntektBuilder lagAktørInntekt(List<InntektDtoBuilder> inntektList) {
-        InntektArbeidYtelseAggregatBuilder.AktørInntektBuilder builder = InntektArbeidYtelseAggregatBuilder.AktørInntektBuilder.oppdatere(Optional.empty());
+        var builder = InntektArbeidYtelseAggregatBuilder.AktørInntektBuilder.oppdatere(Optional.empty());
         inntektList.forEach(builder::leggTilInntekt);
         return builder;
     }
@@ -184,7 +184,7 @@ class BesteberegningInntektDtoForAndelTjenesteTest {
     }
 
     private void lagBGPeriode() {
-        BeregningsgrunnlagDto beregningsgrunnlag = BeregningsgrunnlagDto.builder()
+        var beregningsgrunnlag = BeregningsgrunnlagDto.builder()
                 .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING)
                 .medGrunnbeløp(Beløp.fra(91425))
                 .build();

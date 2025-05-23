@@ -35,7 +35,7 @@ public final class AktivitetDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        AktivitetDto that = (AktivitetDto) o;
+	    var that = (AktivitetDto) o;
         return Objects.equals(arbeidsgiver, that.arbeidsgiver) &&
             Objects.equals(internArbeidsforholdRef, that.internArbeidsforholdRef) &&
             Objects.equals(uttakArbeidType, that.uttakArbeidType);

@@ -22,13 +22,13 @@ import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusMod
 public class FastsettSkjæringstidspunktOgStatuserK14 {
 
     public static BeregningsgrunnlagRegelResultat fastsett(BeregningsgrunnlagInput input, BeregningAktivitetAggregatDto beregningAktivitetAggregat, List<Grunnbeløp> grunnbeløpSatser) {
-	    AktivitetStatusModell regelmodell = MapBGStatuserFraVLTilRegel.map(beregningAktivitetAggregat, getInntektsgrunnlag(input));
+        var regelmodell = MapBGStatuserFraVLTilRegel.map(beregningAktivitetAggregat, getInntektsgrunnlag(input));
 		input.getToggles().forEach(regelmodell::leggTilToggle);
-        RegelResultat regelResultatFastsettSkjæringstidspunkt = fastsettSkjæringstidspunkt(regelmodell);
-        RegelResultat regelResultatFastsettStatus = fastsettStatus(regelmodell);
+        var regelResultatFastsettSkjæringstidspunkt = fastsettSkjæringstidspunkt(regelmodell);
+        var regelResultatFastsettStatus = fastsettStatus(regelmodell);
 
         // Oversett endelig resultat av regelmodell (+ spore input -> evaluation.)
-        List<RegelResultat> regelResultater = List.of(
+        var regelResultater = List.of(
                 regelResultatFastsettSkjæringstidspunkt,
                 regelResultatFastsettStatus);
         var nyttBeregningsgrunnlag = mapForSkjæringstidspunktOgStatuser(input.getKoblingReferanse(), regelmodell, regelResultater, input.getIayGrunnlag(), grunnbeløpSatser);

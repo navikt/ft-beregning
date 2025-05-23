@@ -20,13 +20,13 @@ public class FastsettPerioderGraderingRegel implements EksportRegel<PeriodeModel
     @Override
     public Evaluation evaluer(PeriodeModellGradering input, Object perioder) {
         var inputOgmellomregninger = new PeriodiseringGraderingProsesstruktur(input);
-        Evaluation evaluate = this.getSpecification().evaluate(inputOgmellomregninger);
+        var evaluate = this.getSpecification().evaluate(inputOgmellomregninger);
         oppdaterOutput((List<SplittetPeriode>) perioder, inputOgmellomregninger);
         return evaluate;
     }
 
     private void oppdaterOutput(List<SplittetPeriode> outputContainer, PeriodiseringGraderingProsesstruktur inputOgmellomregninger) {
-        List<SplittetPeriode> splittetPerioder = inputOgmellomregninger.getSplittetPerioder();
+        var splittetPerioder = inputOgmellomregninger.getSplittetPerioder();
         outputContainer.addAll(splittetPerioder);
     }
 
@@ -34,7 +34,7 @@ public class FastsettPerioderGraderingRegel implements EksportRegel<PeriodeModel
     @SuppressWarnings("unchecked")
     public Specification<PeriodiseringGraderingProsesstruktur> getSpecification() {
 
-        Ruleset<PeriodiseringGraderingProsesstruktur> rs = new Ruleset<>();
+        var rs = new Ruleset<PeriodiseringGraderingProsesstruktur>();
 
         var periodiser = rs.beregningsRegel(
 		        PeriodiserForGradering.ID,

@@ -41,23 +41,23 @@ public class BeregningsgrunnlagDto {
         this.skjæringstidspunkt = kopiereFra.skjæringstidspunkt;
 
         this.sammenligningsgrunnlagPrStatusListe = kopiereFra.getSammenligningsgrunnlagPrStatusListe().stream().map(s -> {
-            SammenligningsgrunnlagPrStatusDto.Builder builder = SammenligningsgrunnlagPrStatusDto.Builder.kopier(s);
-            SammenligningsgrunnlagPrStatusDto build = builder.build();
+	        var builder = SammenligningsgrunnlagPrStatusDto.Builder.kopier(s);
+	        var build = builder.build();
             return build;
         }).collect(Collectors.toList());
 
         this.beregningsgrunnlagPerioder = kopiereFra.getBeregningsgrunnlagPerioder().stream().map(p -> {
-            BeregningsgrunnlagPeriodeDto.Builder builder = BeregningsgrunnlagPeriodeDto.Builder.kopier(p);
+	        var builder = BeregningsgrunnlagPeriodeDto.Builder.kopier(p);
             return builder.build(this);
         }).collect(Collectors.toList());
 
         this.faktaOmBeregningTilfeller = kopiereFra.getFaktaOmBeregningTilfeller().stream().map(p -> {
-            BeregningsgrunnlagFaktaOmBeregningTilfelleDto.Builder builder = BeregningsgrunnlagFaktaOmBeregningTilfelleDto.Builder.kopier(p);
+	        var builder = BeregningsgrunnlagFaktaOmBeregningTilfelleDto.Builder.kopier(p);
             return builder.build(this);
         }).collect(Collectors.toList());
 
         this.aktivitetStatuser = kopiereFra.getAktivitetStatuser().stream().map(p -> {
-            BeregningsgrunnlagAktivitetStatusDto.Builder builder = BeregningsgrunnlagAktivitetStatusDto.Builder.kopier(p);
+	        var builder = BeregningsgrunnlagAktivitetStatusDto.Builder.kopier(p);
             return builder.build(this);
         }).collect(Collectors.toList());
 
@@ -106,13 +106,13 @@ public class BeregningsgrunnlagDto {
         if (aktivitetStatuser.size() == 1) {
             return aktivitetStatuser.get(0).getHjemmel();
         }
-        Optional<BeregningsgrunnlagAktivitetStatusDto> dagpenger = aktivitetStatuser.stream()
+	    var dagpenger = aktivitetStatuser.stream()
                 .filter(as -> Hjemmel.F_14_7_8_49.equals(as.getHjemmel()))
                 .findFirst();
         if (dagpenger.isPresent()) {
             return dagpenger.get().getHjemmel();
         }
-        Optional<BeregningsgrunnlagAktivitetStatusDto> gjelder = aktivitetStatuser.stream()
+	    var gjelder = aktivitetStatuser.stream()
                 .filter(as -> !Hjemmel.F_14_7.equals(as.getHjemmel()))
                 .findFirst();
         return gjelder.isPresent() ? gjelder.get().getHjemmel() : Hjemmel.F_14_7;
@@ -146,7 +146,7 @@ public class BeregningsgrunnlagDto {
         } else if (!(obj instanceof BeregningsgrunnlagDto)) {
             return false;
         }
-        BeregningsgrunnlagDto other = (BeregningsgrunnlagDto) obj;
+	    var other = (BeregningsgrunnlagDto) obj;
         return Objects.equals(this.getSkjæringstidspunkt(), other.getSkjæringstidspunkt());
     }
 
@@ -226,7 +226,7 @@ public class BeregningsgrunnlagDto {
 
         public Builder fjernAktivitetstatus(AktivitetStatus status) {
             verifiserKanModifisere();
-            List<BeregningsgrunnlagAktivitetStatusDto> statuserSomSkalFjernes = kladd.aktivitetStatuser.stream().filter(a -> Objects.equals(a.getAktivitetStatus(), status)).collect(Collectors.toList());
+	        var statuserSomSkalFjernes = kladd.aktivitetStatuser.stream().filter(a -> Objects.equals(a.getAktivitetStatus(), status)).collect(Collectors.toList());
             if (statuserSomSkalFjernes.size() != 1) {
                 throw new IllegalStateException("Ikke entydig hvilken status som skal fjernes fra beregningsgrunnlaget.");
             }
@@ -242,7 +242,7 @@ public class BeregningsgrunnlagDto {
 
         private void leggTilFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle tilfelle) {
             verifiserKanModifisere();
-            BeregningsgrunnlagFaktaOmBeregningTilfelleDto b = BeregningsgrunnlagFaktaOmBeregningTilfelleDto.builder().medFaktaOmBeregningTilfelle(tilfelle).build(kladd);
+	        var b = BeregningsgrunnlagFaktaOmBeregningTilfelleDto.builder().medFaktaOmBeregningTilfelle(tilfelle).build(kladd);
             this.kladd.faktaOmBeregningTilfeller.add(b);
         }
 

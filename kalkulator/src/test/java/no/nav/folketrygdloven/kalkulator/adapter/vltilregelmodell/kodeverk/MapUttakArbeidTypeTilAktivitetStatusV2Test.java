@@ -1,15 +1,13 @@
 package no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.kodeverk;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AktivitetStatusV2;
-
-import no.nav.folketrygdloven.kalkulator.modell.svp.AktivitetDto;
-
-import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
-import no.nav.folketrygdloven.kalkulus.kodeverk.UttakArbeidType;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AktivitetStatusV2;
+import no.nav.folketrygdloven.kalkulator.modell.svp.AktivitetDto;
+import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
+import no.nav.folketrygdloven.kalkulus.kodeverk.UttakArbeidType;
 
 class MapUttakArbeidTypeTilAktivitetStatusV2Test {
 

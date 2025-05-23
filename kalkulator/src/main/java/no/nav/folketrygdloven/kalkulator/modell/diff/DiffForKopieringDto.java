@@ -10,8 +10,8 @@ public class DiffForKopieringDto {
     }
 
     public <V> DiffForKopieringResult diff(V dto1, V dto2) {
-        TraverseGraph.TraverseResult dto1Result = traverser.traverse(dto1);
-        TraverseGraph.TraverseResult dto2Result = traverser.traverse(dto2);
+        var dto1Result = traverser.traverse(dto1);
+        var dto2Result = traverser.traverse(dto2);
 
         return new DiffForKopieringResult(this.traverser, dto1Result, dto2Result);
     }

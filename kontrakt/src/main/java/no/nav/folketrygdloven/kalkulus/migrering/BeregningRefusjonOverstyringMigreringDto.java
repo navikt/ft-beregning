@@ -6,6 +6,7 @@ import java.util.List;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
+
 import no.nav.folketrygdloven.kalkulus.response.v1.Arbeidsgiver;
 
 public class BeregningRefusjonOverstyringMigreringDto extends BaseMigreringDto {

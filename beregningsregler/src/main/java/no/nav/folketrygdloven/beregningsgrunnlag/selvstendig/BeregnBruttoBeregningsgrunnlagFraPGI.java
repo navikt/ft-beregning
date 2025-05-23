@@ -29,23 +29,23 @@ public class BeregnBruttoBeregningsgrunnlagFraPGI extends LeafSpecification<Bere
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        BeregningsgrunnlagPrStatus bgAAP = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.AAP);
+	    var bgAAP = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.AAP);
         var bgDP = grunnlag.getBeregningsgrunnlagFraDagpenger();
-        boolean harBeregnetAAPEllerDP = (bgAAP != null && bgAAP.getBeregnetPrÅr() == null) ||
+	    var harBeregnetAAPEllerDP = (bgAAP != null && bgAAP.getBeregnetPrÅr() == null) ||
 			    (bgDP.isPresent() && bgDP.get().getBeregnetPrÅr() == null);
 	    if (harBeregnetAAPEllerDP) {
             throw new IllegalStateException("Utviklerfeil: Aktivitetstatuser AAP og DP må beregnes før SN");
         }
 
-        BeregningsgrunnlagPrStatus bgps = grunnlag.getBeregningsgrunnlagPrStatus(aktivitetStatus);
-        BigDecimal gjennomsnittligPGI = bgps.getGjennomsnittligPGI() == null ? BigDecimal.ZERO : bgps.getGjennomsnittligPGI();
+	    var bgps = grunnlag.getBeregningsgrunnlagPrStatus(aktivitetStatus);
+	    var gjennomsnittligPGI = bgps.getGjennomsnittligPGI() == null ? BigDecimal.ZERO : bgps.getGjennomsnittligPGI();
 
-        BigDecimal bruttoAAP = bgAAP != null ? bgAAP.getBeregnetPrÅr() : BigDecimal.ZERO;
-        BigDecimal bruttoDP = bgDP.map(BeregningsgrunnlagPrStatus::getBeregnetPrÅr).orElse(BigDecimal.ZERO);
-	    BeregningsgrunnlagPrStatus atflAndel = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
-	    BigDecimal bruttoBGArbeidstaker = atflAndel == null ? BigDecimal.ZERO : atflAndel.getBruttoPrÅr();
+	    var bruttoAAP = bgAAP != null ? bgAAP.getBeregnetPrÅr() : BigDecimal.ZERO;
+	    var bruttoDP = bgDP.map(BeregningsgrunnlagPrStatus::getBeregnetPrÅr).orElse(BigDecimal.ZERO);
+	    var atflAndel = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+	    var bruttoBGArbeidstaker = atflAndel == null ? BigDecimal.ZERO : atflAndel.getBruttoPrÅr();
 
-	    BigDecimal bruttoForStatus = gjennomsnittligPGI.subtract(bruttoAAP).subtract(bruttoDP).subtract(bruttoBGArbeidstaker).max(BigDecimal.ZERO);
+	    var bruttoForStatus = gjennomsnittligPGI.subtract(bruttoAAP).subtract(bruttoDP).subtract(bruttoBGArbeidstaker).max(BigDecimal.ZERO);
 
         BeregningsgrunnlagPrStatus.builder(bgps).medBeregnetPrÅr(bruttoForStatus).build();
 

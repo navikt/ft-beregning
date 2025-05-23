@@ -120,7 +120,7 @@ public class AktivitetStatusModell {
 
 
 	protected LocalDate finnSisteAktivitetsdatoFraSistePeriode() {
-		AktivPeriode sistePeriode = aktivePerioder.stream().min(this::slutterEtter)
+		var sistePeriode = aktivePerioder.stream().min(this::slutterEtter)
 				.orElseThrow(() -> new IllegalStateException("Klarte ikke å finne siste avsluttede aktivitet"));
 		if (sistePeriode.inneholder(skjæringstidspunktForOpptjening)) {
 			return skjæringstidspunktForOpptjening;
@@ -141,12 +141,12 @@ public class AktivitetStatusModell {
 	}
 
 	private void leggTilFrilansPeriode(AktivPeriode aktivPeriode) {
-		Optional<AktivPeriode> frilans = aktivePerioder.stream().filter(ap -> Aktivitet.FRILANSINNTEKT.equals(ap.getAktivitet())).findFirst();
+		var frilans = aktivePerioder.stream().filter(ap -> Aktivitet.FRILANSINNTEKT.equals(ap.getAktivitet())).findFirst();
 		frilans.ifPresentOrElse(aktivPeriode1 -> aktivPeriode1.oppdaterFra(aktivPeriode), () -> leggTilNyPeriode(aktivPeriode));
 	}
 
 	private void leggTilEllerOppdater(AktivPeriode aktivPeriode, FinnAktivPeriode finnAktivPeriode) {
-		Optional<AktivPeriode> aktivPeriodeForArbeidsforhold = finnAktivPeriode.finn(aktivPeriode);
+		var aktivPeriodeForArbeidsforhold = finnAktivPeriode.finn(aktivPeriode);
 		if (aktivPeriodeForArbeidsforhold.isPresent()) {
 			aktivPeriodeForArbeidsforhold.get().oppdaterFra(aktivPeriode);
 		} else {

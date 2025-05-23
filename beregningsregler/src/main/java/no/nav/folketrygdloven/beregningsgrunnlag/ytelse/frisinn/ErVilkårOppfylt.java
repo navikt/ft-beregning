@@ -3,7 +3,6 @@ package no.nav.folketrygdloven.beregningsgrunnlag.ytelse.frisinn;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
-import no.nav.fpsak.nare.evaluation.node.SingleEvaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(ErVilkårOppfylt.ID)
@@ -18,8 +17,8 @@ public class ErVilkårOppfylt extends LeafSpecification<BeregningsgrunnlagPeriod
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        boolean erVilkårOppfylt = grunnlag.getErVilkårOppfylt();
-        SingleEvaluation resultat = erVilkårOppfylt ? ja() : nei();
+        var erVilkårOppfylt = grunnlag.getErVilkårOppfylt();
+        var resultat = erVilkårOppfylt ? ja() : nei();
         resultat.setEvaluationProperty("erVilkårOppfylt", erVilkårOppfylt);
         return resultat;
     }

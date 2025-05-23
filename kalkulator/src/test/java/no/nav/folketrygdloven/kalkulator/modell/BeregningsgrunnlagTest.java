@@ -32,14 +32,14 @@ class BeregningsgrunnlagTest {
 
     @Test
     void skal_bygge_instans_med_påkrevde_felter() {
-        BeregningsgrunnlagDto beregningsgrunnlag = lagMedPaakrevdeFelter();
+        var beregningsgrunnlag = lagMedPaakrevdeFelter();
 
         assertThat(beregningsgrunnlag.getSkjæringstidspunkt()).isEqualTo(SKJÆRINGSTIDSPUNKT);
     }
 
     @Test
     void skal_ikke_bygge_instans_hvis_mangler_påkrevde_felter() {
-        BeregningsgrunnlagDto.Builder builder = BeregningsgrunnlagDto.builder();
+        var builder = BeregningsgrunnlagDto.builder();
         try {
             builder.build();
         } catch (NullPointerException e) {
@@ -49,7 +49,7 @@ class BeregningsgrunnlagTest {
 
     @Test
     void skal_håndtere_null_this_feilKlasse_i_equals() {
-        BeregningsgrunnlagDto beregningsgrunnlag = lagMedPaakrevdeFelter();
+        var beregningsgrunnlag = lagMedPaakrevdeFelter();
 
         assertThat(beregningsgrunnlag).isNotEqualTo(null);
         assertThat(beregningsgrunnlag).isNotEqualTo("blabla");
@@ -58,7 +58,7 @@ class BeregningsgrunnlagTest {
 
     @Test
     void skal_ha_refleksiv_equalsOgHashCode() {
-        BeregningsgrunnlagDto beregningsgrunnlag2 = lagMedPaakrevdeFelter();
+        var beregningsgrunnlag2 = lagMedPaakrevdeFelter();
 
         assertThat(beregningsgrunnlag).isEqualTo(beregningsgrunnlag2);
         assertThat(beregningsgrunnlag2).isEqualTo(beregningsgrunnlag);
@@ -71,7 +71,7 @@ class BeregningsgrunnlagTest {
 
     @Test
     void skal_bruke_skjaeringstidspunkt_i_equalsOgHashCode() {
-        BeregningsgrunnlagDto beregningsgrunnlag2 = lagMedPaakrevdeFelter();
+        var beregningsgrunnlag2 = lagMedPaakrevdeFelter();
 
         assertThat(beregningsgrunnlag).isEqualTo(beregningsgrunnlag2);
         assertThat(beregningsgrunnlag.hashCode()).isEqualTo(beregningsgrunnlag2.hashCode());

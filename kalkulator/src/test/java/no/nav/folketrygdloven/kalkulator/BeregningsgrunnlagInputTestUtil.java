@@ -35,9 +35,9 @@ public class BeregningsgrunnlagInputTestUtil {
 
     public static BeregningsgrunnlagInput lagInputMedBeregningsgrunnlag(KoblingReferanse koblingReferanse,
                                                                         Tuple<BeregningsgrunnlagDto, BeregningsgrunnlagTilstand> aktivt) {
-        BeregningsgrunnlagInput input = new BeregningsgrunnlagInput(koblingReferanse, null, null, List.of(), null);
-        BeregningsgrunnlagGrunnlagDto grunnlag = lagGrunnlag(aktivt.getElement1(), aktivt.getElement2());
-        BeregningsgrunnlagInput inputMedBeregningsgrunnlag = input.medBeregningsgrunnlagGrunnlag(grunnlag);
+	    var input = new BeregningsgrunnlagInput(koblingReferanse, null, null, List.of(), null);
+	    var grunnlag = lagGrunnlag(aktivt.getElement1(), aktivt.getElement2());
+	    var inputMedBeregningsgrunnlag = input.medBeregningsgrunnlagGrunnlag(grunnlag);
         inputMedBeregningsgrunnlag.leggTilKonfigverdi(INNTEKT_RAPPORTERING_FRIST_DATO, 5);
         return inputMedBeregningsgrunnlag;
     }
@@ -46,7 +46,7 @@ public class BeregningsgrunnlagInputTestUtil {
                                                                                          Tuple<BeregningsgrunnlagDto, BeregningsgrunnlagTilstand> aktivt,
                                                                                          Tuple<BeregningsgrunnlagDto, BeregningsgrunnlagTilstand> forrige) {
         var input = new BeregningsgrunnlagInput(koblingReferanse, null, null, List.of(), null);
-        BeregningsgrunnlagGrunnlagDto grunnlag = lagGrunnlag(aktivt.getElement1(), aktivt.getElement2());
+	    var grunnlag = lagGrunnlag(aktivt.getElement1(), aktivt.getElement2());
         var inputMedBeregningsgrunnlag = input.medBeregningsgrunnlagGrunnlag(grunnlag);
         inputMedBeregningsgrunnlag.leggTilKonfigverdi(INNTEKT_RAPPORTERING_FRIST_DATO, 5);
         var håndterBeregningsgrunnlagInput = new HåndterBeregningsgrunnlagInput(inputMedBeregningsgrunnlag, forrige.getElement2());
@@ -59,16 +59,16 @@ public class BeregningsgrunnlagInputTestUtil {
                                                                                          Tuple<BeregningsgrunnlagDto, BeregningsgrunnlagTilstand> aktivt,
                                                                                          BeregningsgrunnlagTilstand forrigeTilstand) {
         var input = new BeregningsgrunnlagInput(koblingReferanse, null, null, List.of(), null);
-        BeregningsgrunnlagGrunnlagDto grunnlag = lagGrunnlag(aktivt.getElement1(), aktivt.getElement2());
+	    var grunnlag = lagGrunnlag(aktivt.getElement1(), aktivt.getElement2());
         var inputMedBeregningsgrunnlag = input.medBeregningsgrunnlagGrunnlag(grunnlag);
         inputMedBeregningsgrunnlag.leggTilKonfigverdi(INNTEKT_RAPPORTERING_FRIST_DATO, 5);
         return new HåndterBeregningsgrunnlagInput(inputMedBeregningsgrunnlag, forrigeTilstand);
     }
 
     public static BeregningsgrunnlagInput lagInputMedBeregningsgrunnlag(KoblingReferanse koblingReferanse, BeregningsgrunnlagDto beregningsgrunnlag, BeregningsgrunnlagTilstand beregningsgrunnlagTilstand) {
-        BeregningsgrunnlagInput input = new BeregningsgrunnlagInput(koblingReferanse, null, null, List.of(), null);
-        BeregningsgrunnlagGrunnlagDto grunnlag = lagGrunnlag(beregningsgrunnlag, beregningsgrunnlagTilstand);
-        BeregningsgrunnlagInput inputMedBeregningsgrunnlag = input.medBeregningsgrunnlagGrunnlag(grunnlag);
+	    var input = new BeregningsgrunnlagInput(koblingReferanse, null, null, List.of(), null);
+	    var grunnlag = lagGrunnlag(beregningsgrunnlag, beregningsgrunnlagTilstand);
+	    var inputMedBeregningsgrunnlag = input.medBeregningsgrunnlagGrunnlag(grunnlag);
         inputMedBeregningsgrunnlag.leggTilKonfigverdi(INNTEKT_RAPPORTERING_FRIST_DATO, 5);
         return inputMedBeregningsgrunnlag;
     }
@@ -78,9 +78,9 @@ public class BeregningsgrunnlagInputTestUtil {
     }
 
     public static BeregningsgrunnlagInput lagInputMedBeregningsgrunnlag(KoblingReferanse koblingReferanse, BeregningsgrunnlagGrunnlagDtoBuilder beregningsgrunnlagGrunnlagBuilder, BeregningsgrunnlagTilstand tilstand) {
-        BeregningsgrunnlagInput input = new BeregningsgrunnlagInput(koblingReferanse, null, null, List.of(), null);
-        BeregningsgrunnlagGrunnlagDto grunnlag = beregningsgrunnlagGrunnlagBuilder.build(tilstand);
-        BeregningsgrunnlagInput inputMedBeregningsgrunnlag = input.medBeregningsgrunnlagGrunnlag(grunnlag);
+	    var input = new BeregningsgrunnlagInput(koblingReferanse, null, null, List.of(), null);
+	    var grunnlag = beregningsgrunnlagGrunnlagBuilder.build(tilstand);
+	    var inputMedBeregningsgrunnlag = input.medBeregningsgrunnlagGrunnlag(grunnlag);
         inputMedBeregningsgrunnlag.leggTilKonfigverdi(INNTEKT_RAPPORTERING_FRIST_DATO, 5);
         return inputMedBeregningsgrunnlag;
     }
@@ -89,7 +89,7 @@ public class BeregningsgrunnlagInputTestUtil {
                                                                                  OpptjeningAktiviteterDto opptjeningAktiviteterDto,
                                                                                  InntektArbeidYtelseGrunnlagDto iayGrunnlag, Dekningsgrad dekningsgrad) {
         var foreldrepengerGrunnlag = new ForeldrepengerGrunnlag(dekningsgrad, false);
-        BeregningsgrunnlagInput input = new BeregningsgrunnlagInput(koblingReferanse, iayGrunnlag, opptjeningAktiviteterDto,
+	    var input = new BeregningsgrunnlagInput(koblingReferanse, iayGrunnlag, opptjeningAktiviteterDto,
                 opprett(iayGrunnlag, koblingReferanse.getSkjæringstidspunktBeregning()), foreldrepengerGrunnlag);
         input.leggTilKonfigverdi(INNTEKT_RAPPORTERING_FRIST_DATO, 5);
         return input;
@@ -100,10 +100,10 @@ public class BeregningsgrunnlagInputTestUtil {
                                                                                      BeregningsgrunnlagTilstand tilstand,
                                                                                      InntektArbeidYtelseGrunnlagDto iayGrunnlag) {
         var foreldrepengerGrunnlag = new ForeldrepengerGrunnlag(Dekningsgrad.DEKNINGSGRAD_100, false);
-        BeregningsgrunnlagInput input = new BeregningsgrunnlagInput(koblingReferanse, iayGrunnlag, null,
+	    var input = new BeregningsgrunnlagInput(koblingReferanse, iayGrunnlag, null,
                 opprett(iayGrunnlag, koblingReferanse.getSkjæringstidspunktBeregning()), foreldrepengerGrunnlag);
-        BeregningsgrunnlagGrunnlagDto grunnlag = beregningsgrunnlagGrunnlagBuilder.build(tilstand);
-        BeregningsgrunnlagInput inputMedBeregningsgrunnlag = input.medBeregningsgrunnlagGrunnlag(grunnlag);
+	    var grunnlag = beregningsgrunnlagGrunnlagBuilder.build(tilstand);
+	    var inputMedBeregningsgrunnlag = input.medBeregningsgrunnlagGrunnlag(grunnlag);
         inputMedBeregningsgrunnlag.leggTilKonfigverdi(INNTEKT_RAPPORTERING_FRIST_DATO, 5);
         return new ForeslåBeregningsgrunnlagInput(new StegProsesseringInput(inputMedBeregningsgrunnlag, BeregningsgrunnlagTilstand.FORESLÅTT))
                 .medGrunnbeløpInput(GrunnbeløpMock.GRUNNBELØPINPUT);
@@ -114,10 +114,10 @@ public class BeregningsgrunnlagInputTestUtil {
                                                                                      BeregningsgrunnlagTilstand tilstand,
                                                                                      InntektArbeidYtelseGrunnlagDto iayGrunnlag) {
         var foreldrepengerGrunnlag = new ForeldrepengerGrunnlag(Dekningsgrad.DEKNINGSGRAD_100, false);
-        BeregningsgrunnlagInput input = new BeregningsgrunnlagInput(koblingReferanse, iayGrunnlag, null,
+	    var input = new BeregningsgrunnlagInput(koblingReferanse, iayGrunnlag, null,
                 opprett(iayGrunnlag, koblingReferanse.getSkjæringstidspunktBeregning()), foreldrepengerGrunnlag);
-        BeregningsgrunnlagGrunnlagDto grunnlag = beregningsgrunnlagGrunnlagBuilder.build(tilstand);
-        BeregningsgrunnlagInput inputMedBeregningsgrunnlag = input.medBeregningsgrunnlagGrunnlag(grunnlag);
+	    var grunnlag = beregningsgrunnlagGrunnlagBuilder.build(tilstand);
+	    var inputMedBeregningsgrunnlag = input.medBeregningsgrunnlagGrunnlag(grunnlag);
         inputMedBeregningsgrunnlag.leggTilKonfigverdi(INNTEKT_RAPPORTERING_FRIST_DATO, 5);
         return new FortsettForeslåBeregningsgrunnlagInput(new StegProsesseringInput(inputMedBeregningsgrunnlag, BeregningsgrunnlagTilstand.FORESLÅTT))
                 .medGrunnbeløpInput(GrunnbeløpMock.GRUNNBELØPINPUT);
@@ -128,10 +128,10 @@ public class BeregningsgrunnlagInputTestUtil {
                                                                              BeregningsgrunnlagTilstand tilstand,
                                                                              InntektArbeidYtelseGrunnlagDto iayGrunnlag) {
         var foreldrepengerGrunnlag = new ForeldrepengerGrunnlag(Dekningsgrad.DEKNINGSGRAD_100, false);
-        BeregningsgrunnlagInput input = new BeregningsgrunnlagInput(koblingReferanse, iayGrunnlag, null,
+	    var input = new BeregningsgrunnlagInput(koblingReferanse, iayGrunnlag, null,
                 opprett(iayGrunnlag, koblingReferanse.getSkjæringstidspunktBeregning()), foreldrepengerGrunnlag);
-        BeregningsgrunnlagGrunnlagDto grunnlag = beregningsgrunnlagGrunnlagBuilder.build(tilstand);
-        BeregningsgrunnlagInput inputMedBeregningsgrunnlag = input.medBeregningsgrunnlagGrunnlag(grunnlag);
+	    var grunnlag = beregningsgrunnlagGrunnlagBuilder.build(tilstand);
+	    var inputMedBeregningsgrunnlag = input.medBeregningsgrunnlagGrunnlag(grunnlag);
         inputMedBeregningsgrunnlag.leggTilKonfigverdi(INNTEKT_RAPPORTERING_FRIST_DATO, 5);
         return inputMedBeregningsgrunnlag;
     }
@@ -140,10 +140,10 @@ public class BeregningsgrunnlagInputTestUtil {
                                                                                 BeregningsgrunnlagGrunnlagDtoBuilder beregningsgrunnlagGrunnlagBuilder,
                                                                                 BeregningsgrunnlagTilstand tilstand) {
         var foreldrepengerGrunnlag = new ForeldrepengerGrunnlag(Dekningsgrad.DEKNINGSGRAD_100, false);
-        BeregningsgrunnlagInput input = new BeregningsgrunnlagInput(koblingReferanse, null, null,
+	    var input = new BeregningsgrunnlagInput(koblingReferanse, null, null,
                 Collections.emptyList(), foreldrepengerGrunnlag);
-        BeregningsgrunnlagGrunnlagDto grunnlag = beregningsgrunnlagGrunnlagBuilder.build(tilstand);
-        BeregningsgrunnlagInput inputMedBeregningsgrunnlag = input.medBeregningsgrunnlagGrunnlag(grunnlag);
+	    var grunnlag = beregningsgrunnlagGrunnlagBuilder.build(tilstand);
+	    var inputMedBeregningsgrunnlag = input.medBeregningsgrunnlagGrunnlag(grunnlag);
         inputMedBeregningsgrunnlag.leggTilKonfigverdi(INNTEKT_RAPPORTERING_FRIST_DATO, 5);
         return inputMedBeregningsgrunnlag;
     }
@@ -154,10 +154,10 @@ public class BeregningsgrunnlagInputTestUtil {
                                                                              BeregningsgrunnlagTilstand tilstand,
                                                                              InntektArbeidYtelseGrunnlagDto iayGrunnlag,
                                                                              SvangerskapspengerGrunnlag svangerskapspengerGrunnlag) {
-        BeregningsgrunnlagInput input = new BeregningsgrunnlagInput(koblingReferanse, iayGrunnlag, null,
+	    var input = new BeregningsgrunnlagInput(koblingReferanse, iayGrunnlag, null,
                 opprett(iayGrunnlag, koblingReferanse.getSkjæringstidspunktBeregning()), svangerskapspengerGrunnlag);
-        BeregningsgrunnlagGrunnlagDto grunnlag = beregningsgrunnlagGrunnlagBuilder.build(tilstand);
-        BeregningsgrunnlagInput inputMedBeregningsgrunnlag = input.medBeregningsgrunnlagGrunnlag(grunnlag);
+	    var grunnlag = beregningsgrunnlagGrunnlagBuilder.build(tilstand);
+	    var inputMedBeregningsgrunnlag = input.medBeregningsgrunnlagGrunnlag(grunnlag);
         inputMedBeregningsgrunnlag.leggTilKonfigverdi(INNTEKT_RAPPORTERING_FRIST_DATO, 5);
         return inputMedBeregningsgrunnlag;
     }
@@ -167,10 +167,10 @@ public class BeregningsgrunnlagInputTestUtil {
                                                                                      BeregningsgrunnlagTilstand tilstand,
                                                                                      InntektArbeidYtelseGrunnlagDto iayGrunnlag,
                                                                                      OmsorgspengerGrunnlag omsorgspengerGrunnlag) {
-        BeregningsgrunnlagInput input = new BeregningsgrunnlagInput(koblingReferanse, iayGrunnlag, null,
+	    var input = new BeregningsgrunnlagInput(koblingReferanse, iayGrunnlag, null,
                 opprett(iayGrunnlag, koblingReferanse.getSkjæringstidspunktBeregning()), omsorgspengerGrunnlag);
-        BeregningsgrunnlagGrunnlagDto grunnlag = beregningsgrunnlagGrunnlagBuilder.build(tilstand);
-        BeregningsgrunnlagInput inputMedBeregningsgrunnlag = input.medBeregningsgrunnlagGrunnlag(grunnlag);
+	    var grunnlag = beregningsgrunnlagGrunnlagBuilder.build(tilstand);
+	    var inputMedBeregningsgrunnlag = input.medBeregningsgrunnlagGrunnlag(grunnlag);
         inputMedBeregningsgrunnlag.leggTilKonfigverdi(INNTEKT_RAPPORTERING_FRIST_DATO, 5);
         return new ForeslåBeregningsgrunnlagInput(new StegProsesseringInput(inputMedBeregningsgrunnlag, BeregningsgrunnlagTilstand.FORESLÅTT))
                 .medGrunnbeløpInput(GrunnbeløpMock.GRUNNBELØPINPUT);
@@ -181,10 +181,10 @@ public class BeregningsgrunnlagInputTestUtil {
                                                                              BeregningsgrunnlagTilstand tilstand,
                                                                              InntektArbeidYtelseGrunnlagDto iayGrunnlag,
                                                                              Map<Arbeidsgiver, LocalDate> førsteInnsendingAvRefusjonMap) {
-        BeregningsgrunnlagInput input = new BeregningsgrunnlagInput(koblingReferanse, iayGrunnlag, null,
+	    var input = new BeregningsgrunnlagInput(koblingReferanse, iayGrunnlag, null,
                 opprett(iayGrunnlag, koblingReferanse.getSkjæringstidspunktBeregning(), førsteInnsendingAvRefusjonMap), null);
-        BeregningsgrunnlagGrunnlagDto grunnlag = beregningsgrunnlagGrunnlagBuilder.build(tilstand);
-        BeregningsgrunnlagInput inputMedBeregningsgrunnlag = input.medBeregningsgrunnlagGrunnlag(grunnlag);
+	    var grunnlag = beregningsgrunnlagGrunnlagBuilder.build(tilstand);
+	    var inputMedBeregningsgrunnlag = input.medBeregningsgrunnlagGrunnlag(grunnlag);
         inputMedBeregningsgrunnlag.leggTilKonfigverdi(INNTEKT_RAPPORTERING_FRIST_DATO, 5);
         return inputMedBeregningsgrunnlag;
     }

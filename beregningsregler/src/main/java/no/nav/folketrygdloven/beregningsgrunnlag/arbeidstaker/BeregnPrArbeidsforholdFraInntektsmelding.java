@@ -24,7 +24,7 @@ class BeregnPrArbeidsforholdFraInntektsmelding extends LeafSpecification<Beregni
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        BigDecimal beløp = grunnlag.getInntektsgrunnlag().getInntektFraInntektsmelding(arbeidsforhold);
+        var beløp = grunnlag.getInntektsgrunnlag().getInntektFraInntektsmelding(arbeidsforhold);
         BeregningsgrunnlagPrArbeidsforhold.builder(arbeidsforhold)
             .medBeregnetPrÅr(beløp.multiply(BigDecimal.valueOf(12)))
             .build();

@@ -1,15 +1,17 @@
 package no.nav.folketrygdloven.kalkulus.håndtering.v1.foreslå;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import no.nav.folketrygdloven.kalkulus.håndtering.v1.fakta.FastsattePerioderTidsbegrensetDto;
-import no.nav.folketrygdloven.kalkulus.mappers.JsonMapper;
-import org.junit.jupiter.api.Test;
+import static no.nav.folketrygdloven.kalkulus.kodeverk.AvklaringsbehovDefinisjon.FASTSETT_BG_AT_FL;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.util.List;
 
-import static no.nav.folketrygdloven.kalkulus.kodeverk.AvklaringsbehovDefinisjon.FASTSETT_BG_AT_FL;
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import no.nav.folketrygdloven.kalkulus.håndtering.v1.fakta.FastsattePerioderTidsbegrensetDto;
+import no.nav.folketrygdloven.kalkulus.mappers.JsonMapper;
 
 class FastsettBeregningsgrunnlagATFLHåndteringDtoTest {
 

@@ -33,12 +33,12 @@ public class AvklaringsbehovUtlederFastsettBeregningsaktiviteterFP implements Av
                                                                                  BeregningsgrunnlagInput input,
                                                                                  boolean erOverstyrt,
                                                                                  LocalDate skjæringstidspunktForBeregning) {
-        Optional<AktørYtelseDto> aktørYtelse = input.getIayGrunnlag().getAktørYtelseFraRegister();
-        Optional<LocalDate> ventPåRapporteringAvInntektFrist = AutopunktUtlederFastsettBeregningsaktiviteterInntektrapporteringTjeneste.skalVentePåInnrapporteringAvInntektFL(input, LocalDate.now(), beregningAktivitetAggregat, skjæringstidspunktForBeregning);
+	    var aktørYtelse = input.getIayGrunnlag().getAktørYtelseFraRegister();
+	    var ventPåRapporteringAvInntektFrist = AutopunktUtlederFastsettBeregningsaktiviteterInntektrapporteringTjeneste.skalVentePåInnrapporteringAvInntektFL(input, LocalDate.now(), beregningAktivitetAggregat, skjæringstidspunktForBeregning);
         if (ventPåRapporteringAvInntektFrist.isPresent()) {
             return List.of(autopunkt(AvklaringsbehovDefinisjon.AUTO_VENT_PÅ_INNTKT_RAP_FRST, BeregningVenteårsak.VENT_INNTEKT_RAPPORTERINGSFRIST, ventPåRapporteringAvInntektFrist.get()));
         }
-        Optional<LocalDate> ventPåMeldekortFrist = AutopunktUtlederFastsettBeregningsaktiviteterMeldekortTjeneste.skalVenteTilDatoPåMeldekortAAPellerDP(aktørYtelse, LocalDate.now(), beregningAktivitetAggregat.getSkjæringstidspunktOpptjening(), Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER, YtelseType.DAGPENGER));
+	    var ventPåMeldekortFrist = AutopunktUtlederFastsettBeregningsaktiviteterMeldekortTjeneste.skalVenteTilDatoPåMeldekortAAPellerDP(aktørYtelse, LocalDate.now(), beregningAktivitetAggregat.getSkjæringstidspunktOpptjening(), Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER, YtelseType.DAGPENGER));
         if (ventPåMeldekortFrist.isPresent()) {
             return List.of(autopunkt(AvklaringsbehovDefinisjon.AUTO_VENT_PÅ_SISTE_AAP_DP_MELDKRT, BeregningVenteårsak.VENT_PÅ_SISTE_AAP_MELDEKORT, ventPåMeldekortFrist.get()));
         }
@@ -63,9 +63,9 @@ public class AvklaringsbehovUtlederFastsettBeregningsaktiviteterFP implements Av
     }
 
     public static boolean harVentelønnEllerVartpengerSomSisteAktivitetIOpptjeningsperioden(BeregningAktivitetAggregatDto beregningAktivitetAggregat) {
-        List<BeregningAktivitetDto> relevanteAktiviteter = beregningAktivitetAggregat.getBeregningAktiviteter();
-        LocalDate skjæringstidspunkt = beregningAktivitetAggregat.getSkjæringstidspunktOpptjening();
-        List<BeregningAktivitetDto> aktiviteterPåStp = relevanteAktiviteter.stream()
+	    var relevanteAktiviteter = beregningAktivitetAggregat.getBeregningAktiviteter();
+	    var skjæringstidspunkt = beregningAktivitetAggregat.getSkjæringstidspunktOpptjening();
+	    var aktiviteterPåStp = relevanteAktiviteter.stream()
                 .filter(opptjeningsperiode -> opptjeningsperiode.getPeriode().getFomDato().isBefore(skjæringstidspunkt))
                 .filter(opptjeningsperiode -> !opptjeningsperiode.getPeriode().getTomDato().isBefore(skjæringstidspunkt))
                 .toList();
@@ -75,8 +75,8 @@ public class AvklaringsbehovUtlederFastsettBeregningsaktiviteterFP implements Av
 
     public static boolean harFullAAPITilleggTilAnnenAktivitet(BeregningAktivitetAggregatDto beregningAktivitetAggregat,
                                                               Optional<AktørYtelseDto> aktørYtelse) {
-        LocalDate skjæringstidspunkt = beregningAktivitetAggregat.getSkjæringstidspunktOpptjening();
-        List<OpptjeningAktivitetType> opptjeningsaktivitetTyper = beregningAktivitetAggregat.getAktiviteterPåDato(skjæringstidspunkt).stream()
+	    var skjæringstidspunkt = beregningAktivitetAggregat.getSkjæringstidspunktOpptjening();
+	    var opptjeningsaktivitetTyper = beregningAktivitetAggregat.getAktiviteterPåDato(skjæringstidspunkt).stream()
                 .map(BeregningAktivitetDto::getOpptjeningAktivitetType).collect(Collectors.toList());
         if (opptjeningsaktivitetTyper.stream().noneMatch(type -> type.equals(OpptjeningAktivitetType.AAP))) {
             return false;
@@ -86,8 +86,8 @@ public class AvklaringsbehovUtlederFastsettBeregningsaktiviteterFP implements Av
         }
 	    var ytelseFilter = new YtelseFilterDto(aktørYtelse).før(skjæringstidspunkt);
 
-	    Optional<YtelseDto> nyligsteVedtak = MeldekortUtils.sisteVedtakFørStpForType(ytelseFilter, skjæringstidspunkt, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER));
-	    Optional<YtelseAnvistDto> nyligsteMeldekort = nyligsteVedtak.flatMap(nv -> MeldekortUtils.sisteHeleMeldekortFørStp(ytelseFilter, nv, skjæringstidspunkt, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER)));
+	    var nyligsteVedtak = MeldekortUtils.sisteVedtakFørStpForType(ytelseFilter, skjæringstidspunkt, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER));
+	    var nyligsteMeldekort = nyligsteVedtak.flatMap(nv -> MeldekortUtils.sisteHeleMeldekortFørStp(ytelseFilter, nv, skjæringstidspunkt, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER)));
 	    boolean erVedtakFraKelvin = nyligsteVedtak.map(YtelseDto::harKildeKelvin).orElse(false);
 	    return harMaksUtbetalingsprosent(nyligsteMeldekort, erVedtakFraKelvin ? MeldekortUtils.MAX_UTBETALING_PROSENT_AAP_KELVIN : MeldekortUtils.MAX_UTBETALING_PROSENT_AAP_DAG_ARENA);
     }
@@ -102,8 +102,8 @@ public class AvklaringsbehovUtlederFastsettBeregningsaktiviteterFP implements Av
 
     @Override
     public List<BeregningAvklaringsbehovResultat> utledAvklaringsbehov(BeregningsgrunnlagRegelResultat regelResultat, BeregningsgrunnlagInput input, boolean erOverstyrt) {
-        BeregningAktivitetAggregatDto registerAktiviteter = regelResultat.getRegisterAktiviteter();
-        LocalDate skjæringstidspunkt = regelResultat.getBeregningsgrunnlag().getSkjæringstidspunkt();
+	    var registerAktiviteter = regelResultat.getRegisterAktiviteter();
+	    var skjæringstidspunkt = regelResultat.getBeregningsgrunnlag().getSkjæringstidspunkt();
         return utledAvklaringsbehovFP(registerAktiviteter, input, erOverstyrt, skjæringstidspunkt);
     }
 }

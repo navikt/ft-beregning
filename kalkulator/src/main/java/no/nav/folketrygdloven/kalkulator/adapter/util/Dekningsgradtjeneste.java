@@ -1,12 +1,12 @@
 package no.nav.folketrygdloven.kalkulator.adapter.util;
 
+import java.time.LocalDate;
+import java.util.Optional;
+
 import no.nav.folketrygdloven.kalkulator.input.ForeldrepengerGrunnlag;
 import no.nav.folketrygdloven.kalkulator.input.YtelsespesifiktGrunnlag;
 import no.nav.folketrygdloven.kalkulator.ytelse.frisinn.FrisinnGrunnlag;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Dekningsgrad;
-
-import java.time.LocalDate;
-import java.util.Optional;
 
 public class Dekningsgradtjeneste {
     private Dekningsgradtjeneste() {

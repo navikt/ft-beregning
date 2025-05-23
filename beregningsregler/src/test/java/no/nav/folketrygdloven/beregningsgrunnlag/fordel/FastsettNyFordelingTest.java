@@ -54,7 +54,7 @@ class FastsettNyFordelingTest {
 		var beregnetPrÅr2 = BigDecimal.valueOf(100_000);
 		var a2 = lagArbeidsforhold(refusjonskrav2, beregnetPrÅr2, 2L, ORGNR2, 100);
 
-		BigDecimal beregnetPrÅrSN = BigDecimal.valueOf(150_000);
+        var beregnetPrÅrSN = BigDecimal.valueOf(150_000);
 		var sn = lagSN(beregnetPrÅrSN);
 		var periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), null), new ArrayList<>(Arrays.asList(a1, a2, sn)));
 
@@ -181,7 +181,7 @@ class FastsettNyFordelingTest {
 	}
 
 	private void kjørRegel(FordelPeriodeModell periode) {
-		FastsettNyFordeling regel = new FastsettNyFordeling(new FordelModell(periode));
+        var regel = new FastsettNyFordeling(new FordelModell(periode));
 		regel.getSpecification().evaluate(new FordelModell(periode));
 	}
 

@@ -20,13 +20,13 @@ public class FastsettPerioderForUtbetalingsgradRegel implements EksportRegel<Per
     @Override
     public Evaluation evaluer(PeriodeModellUtbetalingsgrad input, Object perioder) {
         var inputOgmellomregninger = new PeriodiseringUtbetalingsgradProsesstruktur(input);
-        Evaluation evaluate = this.getSpecification().evaluate(inputOgmellomregninger);
+        var evaluate = this.getSpecification().evaluate(inputOgmellomregninger);
         oppdaterOutput((List<SplittetPeriode>) perioder, inputOgmellomregninger);
         return evaluate;
     }
 
     private void oppdaterOutput(List<SplittetPeriode> outputContainer, PeriodiseringUtbetalingsgradProsesstruktur inputOgmellomregninger) {
-        List<SplittetPeriode> splittetPerioder = inputOgmellomregninger.getSplittetPerioder();
+        var splittetPerioder = inputOgmellomregninger.getSplittetPerioder();
         outputContainer.addAll(splittetPerioder);
     }
 
@@ -34,7 +34,7 @@ public class FastsettPerioderForUtbetalingsgradRegel implements EksportRegel<Per
     @SuppressWarnings("unchecked")
     public Specification<PeriodiseringUtbetalingsgradProsesstruktur> getSpecification() {
 
-        Ruleset<PeriodiseringUtbetalingsgradProsesstruktur> rs = new Ruleset<>();
+        var rs = new Ruleset<PeriodiseringUtbetalingsgradProsesstruktur>();
 
         var periodiser = rs.beregningsRegel(
             PeriodiserForUtbetalingsgrad.ID,

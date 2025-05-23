@@ -24,7 +24,7 @@ public class ArbeidsforholdOverstyrtePerioderDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || !(o instanceof ArbeidsforholdOverstyrtePerioderDto)) return false;
-        ArbeidsforholdOverstyrtePerioderDto that = (ArbeidsforholdOverstyrtePerioderDto) o;
+	    var that = (ArbeidsforholdOverstyrtePerioderDto) o;
         return Objects.equals(periode, that.periode);
     }
 

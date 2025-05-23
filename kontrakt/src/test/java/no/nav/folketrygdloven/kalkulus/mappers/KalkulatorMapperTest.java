@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import no.nav.folketrygdloven.kalkulus.kodeverk.YtelseKilde;
-
 import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.kalkulus.beregning.v1.AktivitetGraderingDto;
@@ -51,6 +49,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 import no.nav.folketrygdloven.kalkulus.kodeverk.InntektskildeType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.InntektspostType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
+import no.nav.folketrygdloven.kalkulus.kodeverk.YtelseKilde;
 import no.nav.folketrygdloven.kalkulus.kodeverk.YtelseType;
 import no.nav.folketrygdloven.kalkulus.opptjening.v1.OpptjeningAktiviteterDto;
 import no.nav.folketrygdloven.kalkulus.opptjening.v1.OpptjeningPeriodeDto;

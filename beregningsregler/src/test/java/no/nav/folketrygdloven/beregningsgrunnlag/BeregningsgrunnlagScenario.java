@@ -108,29 +108,29 @@ public class BeregningsgrunnlagScenario {
                                                                  List<BigDecimal> refusjonskravPrår,
                                                                  Optional<YtelsesSpesifiktGrunnlag> ytelsesSpesifiktGrunnlag) {
 
-        BeregningsgrunnlagPeriode.Builder periodeBuilder = BeregningsgrunnlagPeriode.builder()
+        var periodeBuilder = BeregningsgrunnlagPeriode.builder()
             .medPeriode(Periode.of(skjæringstidspunkt, null))
             .medPeriodeÅrsaker(periodeÅrsaker);
         long andelNr = arbeidsforhold.size() + 1;
-        for (AktivitetStatus aktivitetStatus : aktivitetStatuser) {
+        for (var aktivitetStatus : aktivitetStatuser) {
             if (AktivitetStatus.ATFL_SN.equals(aktivitetStatus)) {
-                BeregningsgrunnlagPrStatus bgpsATFL = BeregningsgrunnlagPrStatus.builder()
+                var bgpsATFL = BeregningsgrunnlagPrStatus.builder()
                     .medAktivitetStatus(AktivitetStatus.ATFL)
                     .medArbeidsforhold(arbeidsforhold, refusjonskravPrår, skjæringstidspunkt)
                     .build();
-                BeregningsgrunnlagPrStatus bgpsSN = BeregningsgrunnlagPrStatus.builder()
+                var bgpsSN = BeregningsgrunnlagPrStatus.builder()
                     .medAktivitetStatus(AktivitetStatus.SN)
                     .medAndelNr(andelNr++)
                     .build();
                 periodeBuilder.medBeregningsgrunnlagPrStatus(bgpsATFL).medBeregningsgrunnlagPrStatus(bgpsSN);
             } else if (AktivitetStatus.KUN_YTELSE.equals(aktivitetStatus)) {
-                BeregningsgrunnlagPrStatus bgpsBA = BeregningsgrunnlagPrStatus.builder()
+                var bgpsBA = BeregningsgrunnlagPrStatus.builder()
                     .medAktivitetStatus(AktivitetStatus.BA)
                     .medAndelNr(andelNr++)
                     .build();
                 periodeBuilder.medBeregningsgrunnlagPrStatus(bgpsBA);
             } else {
-                BeregningsgrunnlagPrStatus.Builder bgps = BeregningsgrunnlagPrStatus.builder()
+                var bgps = BeregningsgrunnlagPrStatus.builder()
                     .medAktivitetStatus(aktivitetStatus);
                 if (AktivitetStatus.erArbeidstakerEllerFrilanser(aktivitetStatus)) {
                     bgps.medArbeidsforhold(arbeidsforhold, refusjonskravPrår, skjæringstidspunkt);
@@ -140,7 +140,7 @@ public class BeregningsgrunnlagScenario {
                 periodeBuilder.medBeregningsgrunnlagPrStatus(bgps.build());
             }
         }
-        BeregningsgrunnlagPeriode bgPeriode = periodeBuilder.build();
+        var bgPeriode = periodeBuilder.build();
         return Beregningsgrunnlag.builder()
             .medInntektsgrunnlag(inntektsgrunnlag)
             .medSkjæringstidspunkt(skjæringstidspunkt)
@@ -154,11 +154,11 @@ public class BeregningsgrunnlagScenario {
     }
 
     public static Beregningsgrunnlag settOppGrunnlagMedEnPeriode(LocalDate skjæringstidspunkt, Inntektsgrunnlag inntektsgrunnlag, AktivitetStatus aktivitetStatus, List<Arbeidsforhold> arbeidsforhold, List<BigDecimal> refusjonskravPrår, boolean skalSjekkeRefusjonFørSetteAksjonspunkt) {
-        BeregningsgrunnlagPrStatus bgps = BeregningsgrunnlagPrStatus.builder()
+        var bgps = BeregningsgrunnlagPrStatus.builder()
             .medAktivitetStatus(aktivitetStatus)
             .medArbeidsforhold(arbeidsforhold, refusjonskravPrår, skjæringstidspunkt)
             .build();
-        BeregningsgrunnlagPeriode.Builder periodeBuilder = BeregningsgrunnlagPeriode.builder()
+        var periodeBuilder = BeregningsgrunnlagPeriode.builder()
             .medBeregningsgrunnlagPrStatus(bgps)
             .medPeriode(Periode.of(skjæringstidspunkt, null));
 
@@ -176,12 +176,12 @@ public class BeregningsgrunnlagScenario {
     }
 
     private static Inntektsgrunnlag settoppÅrsinntekterATFL(LocalDate skjæringstidspunkt, List<BigDecimal> årsinntekt, Inntektskilde inntektskilde) {
-        LocalDate førsteMåned = skjæringstidspunkt.minusYears(årsinntekt.size()).withMonth(1).withDayOfMonth(1);
-        int år = 0;
-        Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
-        for (BigDecimal beløp : årsinntekt) {
-            BigDecimal inntekt = BigDecimal.valueOf(beløp.doubleValue() / 12);
-            for (int måned = 0; måned < 12; måned++) {
+        var førsteMåned = skjæringstidspunkt.minusYears(årsinntekt.size()).withMonth(1).withDayOfMonth(1);
+        var år = 0;
+        var inntektsgrunnlag = new Inntektsgrunnlag();
+        for (var beløp : årsinntekt) {
+            var inntekt = BigDecimal.valueOf(beløp.doubleValue() / 12);
+            for (var måned = 0; måned < 12; måned++) {
                 inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
                     .medInntektskildeOgPeriodeType(inntektskilde)
                     .medMåned(førsteMåned.plusYears(år).plusMonths(måned))
@@ -194,9 +194,9 @@ public class BeregningsgrunnlagScenario {
     }
 
     private static Inntektsgrunnlag settoppÅrsinntekterSigrun(LocalDate skjæringstidspunkt, List<BigDecimal> årsinntekter) {
-        int år = skjæringstidspunkt.minusYears(årsinntekter.size()).getYear();
-        Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
-        for (BigDecimal beløp : årsinntekter) {
+        var år = skjæringstidspunkt.minusYears(årsinntekter.size()).getYear();
+        var inntektsgrunnlag = new Inntektsgrunnlag();
+        for (var beløp : årsinntekter) {
             inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
                 .medInntektskildeOgPeriodeType(Inntektskilde.SIGRUN)
                 .medPeriode(Periode.of(LocalDate.of(år, 1,1), LocalDate.of(år, 12, 31)))
@@ -216,11 +216,11 @@ public class BeregningsgrunnlagScenario {
     }
 
     public static Inntektsgrunnlag settoppÅrsinntekterForOppgittÅrene(List<BigDecimal> årsinntekt, Inntektskilde inntektskilde, int... åretArray) {
-        Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
-        for (int ix = 0; ix < åretArray.length; ix++) {
-            BigDecimal inntekt = BigDecimal.valueOf(årsinntekt.get(ix).doubleValue() / 12);
-            LocalDate førsteMåned = LocalDate.of(åretArray[ix], 1, 1);
-            for (int måned = 0; måned < 12; måned++) {
+        var inntektsgrunnlag = new Inntektsgrunnlag();
+        for (var ix = 0; ix < åretArray.length; ix++) {
+            var inntekt = BigDecimal.valueOf(årsinntekt.get(ix).doubleValue() / 12);
+            var førsteMåned = LocalDate.of(åretArray[ix], 1, 1);
+            for (var måned = 0; måned < 12; måned++) {
                 inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
                     .medInntektskildeOgPeriodeType(inntektskilde)
                     .medMåned(førsteMåned.plusMonths(måned))
@@ -232,14 +232,14 @@ public class BeregningsgrunnlagScenario {
     }
 
     public static Inntektsgrunnlag settoppMånedsinntekter(LocalDate skjæringstidspunkt, List<BigDecimal> månedsinntekt, Inntektskilde inntektskilde, Arbeidsforhold arbeidsforhold) {
-        Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
+        var inntektsgrunnlag = new Inntektsgrunnlag();
         leggTilMånedsinntekter(inntektsgrunnlag, skjæringstidspunkt, månedsinntekt, inntektskilde, arbeidsforhold);
         return inntektsgrunnlag;
     }
 
     public static void leggTilMånedsinntekter(Inntektsgrunnlag inntektsgrunnlag, LocalDate skjæringstidspunkt, List<BigDecimal> månedsinntekt, Inntektskilde inntektskilde, Arbeidsforhold arbeidsforhold, AktivitetStatus aktivitetStatus) {
-        int månederSiden = månedsinntekt.size();
-        for (BigDecimal beløp : månedsinntekt) {
+        var månederSiden = månedsinntekt.size();
+        for (var beløp : månedsinntekt) {
             inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
                     .medInntektskildeOgPeriodeType(inntektskilde)
                     .medArbeidsgiver(arbeidsforhold)
@@ -252,8 +252,8 @@ public class BeregningsgrunnlagScenario {
     }
 
     public static void leggTilMånedsinntekter(Inntektsgrunnlag inntektsgrunnlag, LocalDate skjæringstidspunkt, List<BigDecimal> månedsinntekt, Inntektskilde inntektskilde, Arbeidsforhold arbeidsforhold) {
-        int månederSiden = månedsinntekt.size();
-        for (BigDecimal beløp : månedsinntekt) {
+        var månederSiden = månedsinntekt.size();
+        for (var beløp : månedsinntekt) {
             inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
                 .medInntektskildeOgPeriodeType(inntektskilde)
                 .medArbeidsgiver(arbeidsforhold)
@@ -277,8 +277,8 @@ public class BeregningsgrunnlagScenario {
 
 
     public static void leggTilMånedsinntekterPrStatus(Inntektsgrunnlag inntektsgrunnlag, LocalDate skjæringstidspunkt, List<BigDecimal> månedsinntekt, Inntektskilde inntektskilde, Arbeidsforhold arbeidsforhold, AktivitetStatus aktivitetStatus) {
-        int månederSiden = månedsinntekt.size();
-        for (BigDecimal beløp : månedsinntekt) {
+        var månederSiden = månedsinntekt.size();
+        for (var beløp : månedsinntekt) {
             inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
                 .medInntektskildeOgPeriodeType(inntektskilde)
                 .medArbeidsgiver(arbeidsforhold)
@@ -291,7 +291,7 @@ public class BeregningsgrunnlagScenario {
     }
 
     public static void kopierOgLeggTilMånedsinntekter(Inntektsgrunnlag inntektsgrunnlag, LocalDate skjæringstidspunkt, BigDecimal månedsinntekt, Inntektskilde inntektskilde, Arbeidsforhold arbeidsforhold, int måneder) {
-        for (int månederSiden = måneder; månederSiden > 0; månederSiden--) {
+        for (var månederSiden = måneder; månederSiden > 0; månederSiden--) {
             inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
                 .medInntektskildeOgPeriodeType(inntektskilde)
                 .medArbeidsgiver(arbeidsforhold)
@@ -311,7 +311,7 @@ public class BeregningsgrunnlagScenario {
     }
 
     public static Beregningsgrunnlag opprettBeregningsgrunnlagFraInntektskomponenten(LocalDate skjæringstidspunkt, BigDecimal månedsinntekt, BigDecimal refusjonskrav, boolean frilans, boolean medSammenligningsgrunnlag) {
-        Beregningsgrunnlag bg = opprettBeregningsgrunnlagFraInntektskomponenten(skjæringstidspunkt, månedsinntekt, refusjonskrav, frilans);
+        var bg = opprettBeregningsgrunnlagFraInntektskomponenten(skjæringstidspunkt, månedsinntekt, refusjonskrav, frilans);
         if (medSammenligningsgrunnlag) {
             opprettSammenligningsgrunnlag(bg.getInntektsgrunnlag(), skjæringstidspunkt, månedsinntekt);
         }
@@ -324,13 +324,13 @@ public class BeregningsgrunnlagScenario {
 
     public static Beregningsgrunnlag opprettBeregningsgrunnlagFraInntektskomponenten(LocalDate skjæringstidspunkt, BigDecimal månedsinntekt, BigDecimal refusjonskrav, boolean frilans,
                                                                                      int antallMåneder, List<PeriodeÅrsak> periodeÅrsaker) {
-        LocalDate startdatoArbeidsforhold = skjæringstidspunkt.minusYears(2);
-		Arbeidsforhold arbeidsforhold = frilans ? Arbeidsforhold.frilansArbeidsforhold() : Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(startdatoArbeidsforhold, ORGNR);
+        var startdatoArbeidsforhold = skjæringstidspunkt.minusYears(2);
+        var arbeidsforhold = frilans ? Arbeidsforhold.frilansArbeidsforhold() : Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(startdatoArbeidsforhold, ORGNR);
         List<BigDecimal> månedsinntekter = new ArrayList<>();
-        for (int m = 0; m < antallMåneder; m++) {
+        for (var m = 0; m < antallMåneder; m++) {
             månedsinntekter.add(månedsinntekt);
         }
-        Inntektsgrunnlag inntektsgrunnlag = settoppMånedsinntekter(skjæringstidspunkt, månedsinntekter, Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold);
+        var inntektsgrunnlag = settoppMånedsinntekter(skjæringstidspunkt, månedsinntekter, Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold);
         return settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, singletonList(AktivitetStatus.ATFL),
             singletonList(arbeidsforhold), periodeÅrsaker, refusjonskrav == null ? Collections.emptyList() : singletonList(refusjonskrav.multiply(BigDecimal.valueOf(12))));
     }
@@ -342,7 +342,7 @@ public class BeregningsgrunnlagScenario {
     }
 
     public static void opprettSammenligningsgrunnlagIPeriode(Inntektsgrunnlag inntektsgrunnlag, Periode periode, BigDecimal månedsinntekt, AktivitetStatus aktivitetStatus) {
-        for (LocalDate date = periode.getFom(); date.isBefore(periode.getTom().plusMonths(1)) ; date = date.plusMonths(1)) {
+        for (var date = periode.getFom(); date.isBefore(periode.getTom().plusMonths(1)) ; date = date.plusMonths(1)) {
             inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
                 .medInntektskildeOgPeriodeType(Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING)
                 .medMåned(date)
@@ -357,11 +357,11 @@ public class BeregningsgrunnlagScenario {
     }
 
     public static Beregningsgrunnlag opprettBeregningsgrunnlagFraInntektsmelding(LocalDate skjæringstidspunkt, BigDecimal månedsinntekt, BigDecimal refusjonskrav, BigDecimal naturalytelse, LocalDate naturalytelseOpphørFom) {
-		LocalDate arbeidsforholdStart = skjæringstidspunkt.minusYears(2);
-        Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(arbeidsforholdStart, ORGNR);
-        Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
+        var arbeidsforholdStart = skjæringstidspunkt.minusYears(2);
+        var arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(arbeidsforholdStart, ORGNR);
+        var inntektsgrunnlag = new Inntektsgrunnlag();
         inntektsgrunnlag.setInntektRapporteringFristDag(5);
-        List<NaturalYtelse> naturalYtelser = lagNaturalYtelseListe(naturalytelse, naturalytelseOpphørFom);
+        var naturalYtelser = lagNaturalYtelseListe(naturalytelse, naturalytelseOpphørFom);
         inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
             .medInntektskildeOgPeriodeType(Inntektskilde.INNTEKTSMELDING)
             .medArbeidsgiver(arbeidsforhold)
@@ -399,7 +399,7 @@ public class BeregningsgrunnlagScenario {
     public static void leggTilArbeidsforholdUtenInntektsmelding(BeregningsgrunnlagPeriode grunnlag, LocalDate skjæringstidspunkt,
                                                                 BigDecimal månedsinntekt, BigDecimal refusjonskrav, Arbeidsforhold arbeidsforhold) {
         List<BigDecimal> månedsinntekter = new ArrayList<>();
-        for (int m = 0; m < 12; m++) {
+        for (var m = 0; m < 12; m++) {
             månedsinntekter.add(månedsinntekt);
         }
         leggTilMånedsinntekter(grunnlag.getInntektsgrunnlag(), skjæringstidspunkt, månedsinntekter, Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold);
@@ -415,7 +415,7 @@ public class BeregningsgrunnlagScenario {
 
     public static List<BigDecimal> årsinntektForOppgittÅrene(double pgiMultiplicand, int... åreneArray) {
         List<BigDecimal> pgiListe = new ArrayList<>();
-        for (int året : åreneArray) {
+        for (var året : åreneArray) {
             long GsnittVerdi = GRUNNBELØPLISTE.stream().filter(grunnbeløp -> grunnbeløp.getFom().getYear() == året).findFirst()
                 .orElseThrow(() -> new IllegalStateException("Mangler gsnitt beløp for " + året)).getGSnitt();
             pgiListe.add(BigDecimal.valueOf(pgiMultiplicand * GsnittVerdi));

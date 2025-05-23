@@ -2,16 +2,13 @@ package no.nav.folketrygdloven.kalkulator.steg.kontrollerfakta.utledere;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.kalkulator.input.FaktaOmBeregningInput;
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BGAndelArbeidsforholdDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektsmeldingDto;
-import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FaktaOmBeregningTilfelle;
 import no.nav.folketrygdloven.kalkulus.typer.OrgNummer;
 
@@ -25,25 +22,25 @@ public class FastsettMånedsinntektUtenInntektsmeldingTilfelleUtleder implements
 
     private Optional<FaktaOmBeregningTilfelle> utled(BeregningsgrunnlagGrunnlagDto beregningsgrunnlagGrunnlag,
                                                      Collection<InntektsmeldingDto> inntektsmeldinger) {
-        boolean harKunstigVirksomhet = harBeregningsgrunnlagKunstigVirksomhet(beregningsgrunnlagGrunnlag);
+        var harKunstigVirksomhet = harBeregningsgrunnlagKunstigVirksomhet(beregningsgrunnlagGrunnlag);
         if (harKunstigVirksomhet) {
             return Optional.of(FaktaOmBeregningTilfelle.FASTSETT_MÅNEDSLØNN_ARBEIDSTAKER_UTEN_INNTEKTSMELDING);
         }
-        boolean harAndelerForSammeVirksomhetMedOgUtenInntektsmelding = harArbeidstakerandelerForSammeVirksomhetMedOgUtenInntektsmelding(beregningsgrunnlagGrunnlag, inntektsmeldinger);
+        var harAndelerForSammeVirksomhetMedOgUtenInntektsmelding = harArbeidstakerandelerForSammeVirksomhetMedOgUtenInntektsmelding(beregningsgrunnlagGrunnlag, inntektsmeldinger);
         return harAndelerForSammeVirksomhetMedOgUtenInntektsmelding ? Optional.of(FaktaOmBeregningTilfelle.FASTSETT_MÅNEDSLØNN_ARBEIDSTAKER_UTEN_INNTEKTSMELDING) : Optional.empty();
     }
 
     private boolean harArbeidstakerandelerForSammeVirksomhetMedOgUtenInntektsmelding(BeregningsgrunnlagGrunnlagDto beregningsgrunnlagGrunnlag, Collection<InntektsmeldingDto> inntektsmeldinger) {
-        Map<Arbeidsgiver, List<BeregningsgrunnlagPrStatusOgAndelDto>> arbeidsgiverTilAndelerMap = beregningsgrunnlagGrunnlag.getBeregningsgrunnlagHvisFinnes()
+        var arbeidsgiverTilAndelerMap = beregningsgrunnlagGrunnlag.getBeregningsgrunnlagHvisFinnes()
                 .map(bg -> bg.getBeregningsgrunnlagPerioder().get(0))
                 .stream()
                 .flatMap(p -> p.getBeregningsgrunnlagPrStatusOgAndelList().stream())
                 .filter(a -> a.getAktivitetStatus().erArbeidstaker() && a.getArbeidsgiver().isPresent())
                 .collect(Collectors.groupingBy(a -> a.getArbeidsgiver().orElseThrow(() -> new IllegalStateException("Forventer å ha arbeidsgiver her"))));
         return arbeidsgiverTilAndelerMap.entrySet().stream().anyMatch(entry -> {
-            List<BeregningsgrunnlagPrStatusOgAndelDto> andeler = entry.getValue();
-            long antallAndelerlerMedInntektsmelding = finnAntallAndelerMedInntektsmelding(inntektsmeldinger, andeler);
-            long antallAndelerlerUtenInntektsmelding = finnAntallAndelerUtenInntektsmelding(inntektsmeldinger, andeler);
+            var andeler = entry.getValue();
+            var antallAndelerlerMedInntektsmelding = finnAntallAndelerMedInntektsmelding(inntektsmeldinger, andeler);
+            var antallAndelerlerUtenInntektsmelding = finnAntallAndelerUtenInntektsmelding(inntektsmeldinger, andeler);
             return antallAndelerlerMedInntektsmelding > 0 && antallAndelerlerUtenInntektsmelding > 0;
         });
     }
@@ -74,8 +71,8 @@ public class FastsettMånedsinntektUtenInntektsmeldingTilfelleUtleder implements
         if (a.getBgAndelArbeidsforhold().isEmpty()) {
             return false;
         }
-        BGAndelArbeidsforholdDto bgAndelArbeidsforhold = a.getBgAndelArbeidsforhold().get();
-        Arbeidsgiver arbeidsgiver = bgAndelArbeidsforhold.getArbeidsgiver();
+        var bgAndelArbeidsforhold = a.getBgAndelArbeidsforhold().get();
+        var arbeidsgiver = bgAndelArbeidsforhold.getArbeidsgiver();
         return arbeidsgiver.getErVirksomhet() && OrgNummer.erKunstig(arbeidsgiver.getOrgnr());
     }
 }

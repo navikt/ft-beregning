@@ -46,7 +46,7 @@ public class BeregningsgrunnlagDtoTjeneste {
     }
 
     private BeregningsgrunnlagDto lagDto(BeregningsgrunnlagGUIInput input) {
-        BeregningsgrunnlagDto dto = new BeregningsgrunnlagDto();
+	    var dto = new BeregningsgrunnlagDto();
         mapAvklaringsbehov(input, dto);
         mapFaktaOmBeregning(input, dto);
         mapForlengelsePerioder(input, dto);
@@ -97,7 +97,7 @@ public class BeregningsgrunnlagDtoTjeneste {
     }
 
     private void mapOverstyring(BeregningsgrunnlagGUIInput input, BeregningsgrunnlagDto dto) {
-        boolean overstyrt = input.getBeregningsgrunnlag().isOverstyrt();
+	    var overstyrt = input.getBeregningsgrunnlag().isOverstyrt();
         dto.setErOverstyrtInntekt(overstyrt);
     }
 
@@ -170,12 +170,12 @@ public class BeregningsgrunnlagDtoTjeneste {
     private List<SammenligningsgrunnlagDto> lagSammenligningsgrunnlagDtoPrStatus(no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto beregningsgrunnlag) {
         List<SammenligningsgrunnlagDto> sammenligningsgrunnlagDtos = new ArrayList<>();
         beregningsgrunnlag.getSammenligningsgrunnlagPrStatusListe().forEach(s -> {
-            SammenligningsgrunnlagDto dto = new SammenligningsgrunnlagDto();
+	        var dto = new SammenligningsgrunnlagDto();
             dto.setSammenligningsgrunnlagFom(s.getSammenligningsperiodeFom());
             dto.setSammenligningsgrunnlagTom(s.getSammenligningsperiodeTom());
             dto.setRapportertPrAar(ModellTyperMapper.beløpTilDto(s.getRapportertPrÅr()));
             dto.setAvvikPromille(s.getAvvikPromilleNy());
-            BigDecimal avvikProsent = s.getAvvikPromilleNy() == null ? null : s.getAvvikPromilleNy().scaleByPowerOfTen(-1);
+	        var avvikProsent = s.getAvvikPromilleNy() == null ? null : s.getAvvikPromilleNy().scaleByPowerOfTen(-1);
             dto.setAvvikProsent(avvikProsent);
             dto.setSammenligningsgrunnlagType(s.getSammenligningsgrunnlagType());
             dto.setDifferanseBeregnet(ModellTyperMapper.beløpTilDto(finnDifferanseBeregnet(beregningsgrunnlag, s)));
@@ -233,9 +233,9 @@ public class BeregningsgrunnlagDtoTjeneste {
     private List<BeregningsgrunnlagPeriodeDto> lagBeregningsgrunnlagPeriodeRestDto(BeregningsgrunnlagGUIInput input) {
         List<BeregningsgrunnlagPeriodeDto> dtoList = new ArrayList<>();
         var beregningsgrunnlag = input.getBeregningsgrunnlag();
-        List<no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto> beregningsgrunnlagPerioder = beregningsgrunnlag.getBeregningsgrunnlagPerioder();
-        for (no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto periode : beregningsgrunnlagPerioder) {
-            BeregningsgrunnlagPeriodeDto dto = lagBeregningsgrunnlagPeriode(input, periode);
+	    var beregningsgrunnlagPerioder = beregningsgrunnlag.getBeregningsgrunnlagPerioder();
+        for (var periode : beregningsgrunnlagPerioder) {
+	        var dto = lagBeregningsgrunnlagPeriode(input, periode);
             dtoList.add(dto);
         }
         return dtoList;
@@ -243,7 +243,7 @@ public class BeregningsgrunnlagDtoTjeneste {
 
     private BeregningsgrunnlagPeriodeDto lagBeregningsgrunnlagPeriode(BeregningsgrunnlagGUIInput input,
                                                                       no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto periode) {
-        BeregningsgrunnlagPeriodeDto dto = new BeregningsgrunnlagPeriodeDto();
+	    var dto = new BeregningsgrunnlagPeriodeDto();
         dto.setBeregningsgrunnlagPeriodeFom(periode.getBeregningsgrunnlagPeriodeFom());
         dto.setBeregningsgrunnlagPeriodeTom(periode.getBeregningsgrunnlagPeriodeTom() == TIDENES_ENDE ? null : periode.getBeregningsgrunnlagPeriodeTom());
         dto.setBeregnetPrAar(ModellTyperMapper.beløpTilDto(periode.getBeregnetPrÅr()));
@@ -272,7 +272,7 @@ public class BeregningsgrunnlagDtoTjeneste {
     }
 
     private List<no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus> lagAktivitetStatusListe(no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto beregningsgrunnlag) {
-        ArrayList<no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus> statusListe = new ArrayList<>();
+	    var statusListe = new ArrayList<AktivitetStatus>();
         for (var status : beregningsgrunnlag.getAktivitetStatuser()) {
             statusListe.add(status.getAktivitetStatus());
         }

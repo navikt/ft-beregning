@@ -3,7 +3,6 @@ package no.nav.folketrygdloven.kalkulator.steg.kontrollerfakta;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.Collections;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +13,6 @@ import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.Beregningsgru
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektsmeldingAggregatDto;
-import no.nav.folketrygdloven.kalkulator.modell.iay.InntektsmeldingDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektsmeldingDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
@@ -47,7 +45,7 @@ class ArbeidstakerUtenInntektsmeldingTjenesteTest {
     @Test
     void skal_returnere_andeler_uten_inntektsmelding() {
         // Arrange
-        Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
+	    var arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
 
         BeregningsgrunnlagPrStatusOgAndelDto.ny()
             .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
@@ -56,7 +54,7 @@ class ArbeidstakerUtenInntektsmeldingTjenesteTest {
             .build(periode);
 
         // Act
-        Collection<BeregningsgrunnlagPrStatusOgAndelDto> andelerUtenInntektsmelding = ArbeidstakerUtenInntektsmeldingTjeneste
+	    var andelerUtenInntektsmelding = ArbeidstakerUtenInntektsmeldingTjeneste
             .finnArbeidstakerAndelerUtenInntektsmelding(beregningsgrunnlag, Collections.emptyList());
 
         // Assert
@@ -66,7 +64,7 @@ class ArbeidstakerUtenInntektsmeldingTjenesteTest {
     @Test
     void skal_returnere_andeler_uten_inntektsmelding_privatperson_som_arbeidsgiver() {
         // Arrange
-        Arbeidsgiver arbeidsgiver = Arbeidsgiver.person(AKTØR_ID_ARBEIDSGIVER);
+	    var arbeidsgiver = Arbeidsgiver.person(AKTØR_ID_ARBEIDSGIVER);
         BeregningsgrunnlagPrStatusOgAndelDto.ny()
             .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
             .medInntektskategori(Inntektskategori.ARBEIDSTAKER)
@@ -74,7 +72,7 @@ class ArbeidstakerUtenInntektsmeldingTjenesteTest {
             .build(periode);
 
         // Act
-        Collection<BeregningsgrunnlagPrStatusOgAndelDto> andelerUtenInntektsmelding = ArbeidstakerUtenInntektsmeldingTjeneste
+	    var andelerUtenInntektsmelding = ArbeidstakerUtenInntektsmeldingTjeneste
             .finnArbeidstakerAndelerUtenInntektsmelding(beregningsgrunnlag, Collections.emptyList());
 
         // Assert
@@ -85,11 +83,11 @@ class ArbeidstakerUtenInntektsmeldingTjenesteTest {
     @Test
     void skal_tom_liste_med_andeler_om_ingen_arbeidstakere_uten_inntektsmelding() {
         // Arrange
-        Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
-        InntektsmeldingDto im = InntektsmeldingDtoBuilder.builder().medArbeidsgiver(arbeidsgiver).medArbeidsforholdId(ARB_ID).build();
-        InntektsmeldingAggregatDto.InntektsmeldingAggregatDtoBuilder aggregat = InntektsmeldingAggregatDto.InntektsmeldingAggregatDtoBuilder.ny();
+	    var arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
+	    var im = InntektsmeldingDtoBuilder.builder().medArbeidsgiver(arbeidsgiver).medArbeidsforholdId(ARB_ID).build();
+	    var aggregat = InntektsmeldingAggregatDto.InntektsmeldingAggregatDtoBuilder.ny();
         aggregat.leggTil(im);
-        InntektsmeldingAggregatDto imAgg = aggregat.build();
+	    var imAgg = aggregat.build();
         BeregningsgrunnlagPrStatusOgAndelDto.ny()
             .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
             .medInntektskategori(Inntektskategori.ARBEIDSTAKER)
@@ -97,7 +95,7 @@ class ArbeidstakerUtenInntektsmeldingTjenesteTest {
             .build(periode);
 
         // Act
-        Collection<BeregningsgrunnlagPrStatusOgAndelDto> andelerUtenInntektsmelding = ArbeidstakerUtenInntektsmeldingTjeneste
+	    var andelerUtenInntektsmelding = ArbeidstakerUtenInntektsmeldingTjeneste
             .finnArbeidstakerAndelerUtenInntektsmelding(beregningsgrunnlag, imAgg.getAlleInntektsmeldinger());
 
         // Assert
@@ -114,7 +112,7 @@ class ArbeidstakerUtenInntektsmeldingTjenesteTest {
             .build(periode);
 
         // Act
-        Collection<BeregningsgrunnlagPrStatusOgAndelDto> andelerUtenInntektsmelding = ArbeidstakerUtenInntektsmeldingTjeneste
+	    var andelerUtenInntektsmelding = ArbeidstakerUtenInntektsmeldingTjeneste
             .finnArbeidstakerAndelerUtenInntektsmelding(beregningsgrunnlag, Collections.emptyList());
 
         // Assert

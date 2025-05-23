@@ -20,13 +20,13 @@ public class FastsettPerioderNaturalytelseRegel implements EksportRegel<PeriodeM
     @Override
     public Evaluation evaluer(PeriodeModellNaturalytelse input, Object perioder) {
         var inputOgmellomregninger = new PeriodiseringNaturalytelseProsesstruktur(input);
-        Evaluation evaluate = this.getSpecification().evaluate(inputOgmellomregninger);
+        var evaluate = this.getSpecification().evaluate(inputOgmellomregninger);
         oppdaterOutput((List<SplittetPeriode>) perioder, inputOgmellomregninger);
         return evaluate;
     }
 
     private void oppdaterOutput(List<SplittetPeriode> outputContainer, PeriodiseringNaturalytelseProsesstruktur inputOgmellomregninger) {
-        List<SplittetPeriode> splittetPerioder = inputOgmellomregninger.getSplittetPerioder();
+        var splittetPerioder = inputOgmellomregninger.getSplittetPerioder();
         outputContainer.addAll(splittetPerioder);
     }
 
@@ -34,7 +34,7 @@ public class FastsettPerioderNaturalytelseRegel implements EksportRegel<PeriodeM
     @SuppressWarnings("unchecked")
     public Specification<PeriodiseringNaturalytelseProsesstruktur> getSpecification() {
 
-        Ruleset<PeriodiseringNaturalytelseProsesstruktur> rs = new Ruleset<>();
+        var rs = new Ruleset<PeriodiseringNaturalytelseProsesstruktur>();
 
         var periodiser = rs.beregningsRegel(
             PeriodiserForNaturalytelse.ID,

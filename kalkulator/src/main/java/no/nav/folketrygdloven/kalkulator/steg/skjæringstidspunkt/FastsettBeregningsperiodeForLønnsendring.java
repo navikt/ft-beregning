@@ -41,21 +41,21 @@ public class FastsettBeregningsperiodeForLønnsendring {
     static BeregningsgrunnlagDto fastsettBeregningsperiodeForLønnsendringV1(BeregningsgrunnlagDto beregningsgrunnlag,
                                                                             InntektArbeidYtelseGrunnlagDto inntektArbeidYtelseGrunnlag,
                                                                             Collection<InntektsmeldingDto> inntektsmeldinger) {
-        Intervall beregningsperiodeATFL = new BeregningsperiodeTjeneste().fastsettBeregningsperiodeForATFLAndeler(beregningsgrunnlag.getSkjæringstidspunkt());
-        Intervall toFørsteMåneder = Intervall.fraOgMedTilOgMed(beregningsperiodeATFL.getFomDato().plusDays(1), beregningsperiodeATFL.getTomDato().withDayOfMonth(1));
-        Intervall sisteMåned = Intervall.fraOgMedTilOgMed(beregningsperiodeATFL.getTomDato().withDayOfMonth(2), beregningsgrunnlag.getSkjæringstidspunkt());
+        var beregningsperiodeATFL = new BeregningsperiodeTjeneste().fastsettBeregningsperiodeForATFLAndeler(beregningsgrunnlag.getSkjæringstidspunkt());
+        var toFørsteMåneder = Intervall.fraOgMedTilOgMed(beregningsperiodeATFL.getFomDato().plusDays(1), beregningsperiodeATFL.getTomDato().withDayOfMonth(1));
+        var sisteMåned = Intervall.fraOgMedTilOgMed(beregningsperiodeATFL.getTomDato().withDayOfMonth(2), beregningsgrunnlag.getSkjæringstidspunkt());
 
-        List<YrkesaktivitetDto> yrkesaktiviteterMedLønnsendring = finnAktiviteterMedLønnsendringUtenInntektsmelding(beregningsgrunnlag, inntektArbeidYtelseGrunnlag, toFørsteMåneder, inntektsmeldinger);
-        BeregningsgrunnlagDto nyttBeregningsgrunnlag = BeregningsgrunnlagDto.builder(beregningsgrunnlag).build();
+        var yrkesaktiviteterMedLønnsendring = finnAktiviteterMedLønnsendringUtenInntektsmelding(beregningsgrunnlag, inntektArbeidYtelseGrunnlag, toFørsteMåneder, inntektsmeldinger);
+        var nyttBeregningsgrunnlag = BeregningsgrunnlagDto.builder(beregningsgrunnlag).build();
         if (!yrkesaktiviteterMedLønnsendring.isEmpty()) {
             nyttBeregningsgrunnlag.getBeregningsgrunnlagPerioder().forEach(periode -> {
-                Map<BeregningsgrunnlagPrStatusOgAndelDto, List<YrkesaktivitetDto>> andelLønnsendringMap = finnAndelAktivitetMap(yrkesaktiviteterMedLønnsendring, periode);
+                var andelLønnsendringMap = finnAndelAktivitetMap(yrkesaktiviteterMedLønnsendring, periode);
                 andelLønnsendringMap.forEach((andel, yrkesaktiviteter) -> {
-                    LocalDate sisteLønnsendring = finnSisteLønnsendringIBeregningsperioden(yrkesaktiviteter, beregningsperiodeATFL);
+                    var sisteLønnsendring = finnSisteLønnsendringIBeregningsperioden(yrkesaktiviteter, beregningsperiodeATFL);
                     if (!sisteMåned.inkluderer(sisteLønnsendring)) {
-                        LocalDate beregningsperiodeTom = andel.getBeregningsperiodeTom();
-                        LocalDate beregningsperiodeFom = andel.getBeregningsperiodeFom();
-                        LocalDate nyFom = sisteLønnsendring.isBefore(beregningsperiodeFom) ? beregningsperiodeFom : sisteLønnsendring;
+                        var beregningsperiodeTom = andel.getBeregningsperiodeTom();
+                        var beregningsperiodeFom = andel.getBeregningsperiodeFom();
+                        var nyFom = sisteLønnsendring.isBefore(beregningsperiodeFom) ? beregningsperiodeFom : sisteLønnsendring;
                         BeregningsgrunnlagPrStatusOgAndelDto.Builder.oppdatere(andel).medBeregningsperiode(nyFom, beregningsperiodeTom);
                     }
                 });
@@ -67,20 +67,20 @@ public class FastsettBeregningsperiodeForLønnsendring {
     static BeregningsgrunnlagDto fastsettBeregningsperiodeForLønnsendringV2(BeregningsgrunnlagDto beregningsgrunnlag,
                                                                             InntektArbeidYtelseGrunnlagDto inntektArbeidYtelseGrunnlag,
                                                                             Collection<InntektsmeldingDto> inntektsmeldinger) {
-        Intervall beregningsperiodeATFL = new BeregningsperiodeTjeneste().fastsettBeregningsperiodeForATFLAndeler(beregningsgrunnlag.getSkjæringstidspunkt());
+        var beregningsperiodeATFL = new BeregningsperiodeTjeneste().fastsettBeregningsperiodeForATFLAndeler(beregningsgrunnlag.getSkjæringstidspunkt());
 
-        List<YrkesaktivitetDto> yrkesaktiviteterMedLønnsendring = finnAktiviteterMedLønnsendringUtenInntektsmelding(beregningsgrunnlag, inntektArbeidYtelseGrunnlag, beregningsperiodeATFL, inntektsmeldinger);
-        BeregningsgrunnlagDto nyttBeregningsgrunnlag = BeregningsgrunnlagDto.builder(beregningsgrunnlag).build();
+        var yrkesaktiviteterMedLønnsendring = finnAktiviteterMedLønnsendringUtenInntektsmelding(beregningsgrunnlag, inntektArbeidYtelseGrunnlag, beregningsperiodeATFL, inntektsmeldinger);
+        var nyttBeregningsgrunnlag = BeregningsgrunnlagDto.builder(beregningsgrunnlag).build();
         if (!yrkesaktiviteterMedLønnsendring.isEmpty()) {
             nyttBeregningsgrunnlag.getBeregningsgrunnlagPerioder().forEach(periode -> {
-                Map<BeregningsgrunnlagPrStatusOgAndelDto, List<YrkesaktivitetDto>> andelLønnsendringMap = finnAndelAktivitetMap(yrkesaktiviteterMedLønnsendring, periode);
+                var andelLønnsendringMap = finnAndelAktivitetMap(yrkesaktiviteterMedLønnsendring, periode);
                 andelLønnsendringMap.forEach((andel, yrkesaktiviteter) -> {
-                    LocalDate sisteLønnsendring = finnSisteLønnsendringFørStp(yrkesaktiviteter, beregningsgrunnlag.getSkjæringstidspunkt());
-                    boolean harIkkeLønnsendringIMånedenFør = harIkkeLønnsendringIMånedenFør(beregningsperiodeATFL, yrkesaktiviteter, sisteLønnsendring);
+                    var sisteLønnsendring = finnSisteLønnsendringFørStp(yrkesaktiviteter, beregningsgrunnlag.getSkjæringstidspunkt());
+                    var harIkkeLønnsendringIMånedenFør = harIkkeLønnsendringIMånedenFør(beregningsperiodeATFL, yrkesaktiviteter, sisteLønnsendring);
                     if (beregningsperiodeATFL.inkluderer(sisteLønnsendring) && harIkkeLønnsendringIMånedenFør) {
-                        LocalDate beregningsperiodeTom = andel.getBeregningsperiodeTom();
-                        LocalDate beregningsperiodeFom = andel.getBeregningsperiodeFom();
-                        LocalDate nyFom = sisteLønnsendring.isBefore(beregningsperiodeFom) ? beregningsperiodeFom : sisteLønnsendring;
+                        var beregningsperiodeTom = andel.getBeregningsperiodeTom();
+                        var beregningsperiodeFom = andel.getBeregningsperiodeFom();
+                        var nyFom = sisteLønnsendring.isBefore(beregningsperiodeFom) ? beregningsperiodeFom : sisteLønnsendring;
                         BeregningsgrunnlagPrStatusOgAndelDto.Builder.oppdatere(andel).medBeregningsperiode(nyFom, beregningsperiodeTom);
                     }
                 });
@@ -90,13 +90,13 @@ public class FastsettBeregningsperiodeForLønnsendring {
     }
 
     private static boolean harIkkeLønnsendringIMånedenFør(Intervall beregningsperiodeATFL, List<YrkesaktivitetDto> yrkesaktiviteter, LocalDate sisteLønnsendring) {
-        Set<LocalDate> lønnsendringer = finnLønnsendringerIBeregningsperioden(yrkesaktiviteter, beregningsperiodeATFL);
+        var lønnsendringer = finnLønnsendringerIBeregningsperioden(yrkesaktiviteter, beregningsperiodeATFL);
         return lønnsendringer.stream().noneMatch(endring -> endring.getMonth().equals(sisteLønnsendring.minusMonths(1).getMonth()));
     }
 
 
     public static Map<BeregningsgrunnlagPrStatusOgAndelDto, List<YrkesaktivitetDto>> finnAndelAktivitetMap(List<YrkesaktivitetDto> yrkesaktiviteterMedLønnsendring, BeregningsgrunnlagPeriodeDto periode) {
-        Map<BeregningsgrunnlagPrStatusOgAndelDto, List<YrkesaktivitetDto>> andelLønnsendringMap = periode.getBeregningsgrunnlagPrStatusOgAndelList().stream()
+        var andelLønnsendringMap = periode.getBeregningsgrunnlagPrStatusOgAndelList().stream()
                 .filter(a -> harLønnsendring(yrkesaktiviteterMedLønnsendring, a))
                 .collect(Collectors.toMap(a -> a, a -> finnMatchendeYrkesaktiviteterMedLønnsendring(yrkesaktiviteterMedLønnsendring, a)));
         return andelLønnsendringMap;

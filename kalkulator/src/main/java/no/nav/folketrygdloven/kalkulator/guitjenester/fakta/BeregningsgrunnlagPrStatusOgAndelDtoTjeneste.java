@@ -5,7 +5,6 @@ import static java.util.stream.Collectors.toList;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 import no.nav.folketrygdloven.kalkulator.felles.FinnInntektsmeldingForAndel;
 import no.nav.folketrygdloven.kalkulator.guitjenester.BeregningsgrunnlagDtoUtil;
@@ -14,7 +13,6 @@ import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagGUIInput;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.FaktaAggregatDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.FaktaAktørDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.FaktaArbeidsforholdDto;
-import no.nav.folketrygdloven.kalkulator.modell.iay.InntektsmeldingDto;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AndelKilde;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
@@ -26,13 +24,13 @@ public class BeregningsgrunnlagPrStatusOgAndelDtoTjeneste {
                                                                                               List<no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto> beregningsgrunnlagPrStatusOgAndelList) {
 
         List<BeregningsgrunnlagPrStatusOgAndelDto> usortertDtoList = new ArrayList<>();
-        for (no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto andel : beregningsgrunnlagPrStatusOgAndelList) {
-            BeregningsgrunnlagPrStatusOgAndelDto dto = lagDto(input, andel);
+        for (var andel : beregningsgrunnlagPrStatusOgAndelList) {
+            var dto = lagDto(input, andel);
             usortertDtoList.add(dto);
         }
         // Følgende gjøres for å sortere arbeidsforholdene etter beregnet årsinntekt og deretter arbedsforholdId
-        List<BeregningsgrunnlagPrStatusOgAndelDto> arbeidsarbeidstakerAndeler = usortertDtoList.stream().filter(dto -> dto.getAktivitetStatus().equals(AktivitetStatus.ARBEIDSTAKER)).collect(toList());
-        List<BeregningsgrunnlagPrStatusOgAndelDto> alleAndreAndeler = usortertDtoList.stream().filter(dto -> !dto.getAktivitetStatus().equals(AktivitetStatus.ARBEIDSTAKER)).collect(toList());
+        var arbeidsarbeidstakerAndeler = usortertDtoList.stream().filter(dto -> dto.getAktivitetStatus().equals(AktivitetStatus.ARBEIDSTAKER)).collect(toList());
+        var alleAndreAndeler = usortertDtoList.stream().filter(dto -> !dto.getAktivitetStatus().equals(AktivitetStatus.ARBEIDSTAKER)).collect(toList());
         if (dtoKanSorteres(arbeidsarbeidstakerAndeler)) {
             arbeidsarbeidstakerAndeler.sort(comparatorEtterBeregnetOgArbeidsforholdId());
         }
@@ -47,9 +45,9 @@ public class BeregningsgrunnlagPrStatusOgAndelDtoTjeneste {
         var iayGrunnlag = input.getIayGrunnlag();
         var inntektsmeldinger = input.getInntektsmeldinger();
         var ref = input.getKoblingReferanse();
-        Optional<FaktaAggregatDto> faktaAggregat = input.getFaktaAggregat();
-        BeregningsgrunnlagPrStatusOgAndelDto dto = LagTilpassetDtoTjeneste.opprettTilpassetDTO(ref, andel, iayGrunnlag, faktaAggregat);
-        Optional<InntektsmeldingDto> inntektsmelding = FinnInntektsmeldingForAndel.finnInntektsmelding(andel, inntektsmeldinger);
+        var faktaAggregat = input.getFaktaAggregat();
+        var dto = LagTilpassetDtoTjeneste.opprettTilpassetDTO(ref, andel, iayGrunnlag, faktaAggregat);
+        var inntektsmelding = FinnInntektsmeldingForAndel.finnInntektsmelding(andel, inntektsmeldinger);
         BeregningsgrunnlagDtoUtil.lagArbeidsforholdDto(andel, inntektsmelding, iayGrunnlag).ifPresent(dto::setArbeidsforhold);
         dto.setDagsats(andel.getDagsats());
         dto.setOriginalDagsatsFraTilstøtendeYtelse(andel.getOrginalDagsatsFraTilstøtendeYtelse());
@@ -92,7 +90,7 @@ public class BeregningsgrunnlagPrStatusOgAndelDtoTjeneste {
     }
 
     private static boolean dtoKanSorteres(List<BeregningsgrunnlagPrStatusOgAndelDto> arbeidsarbeidstakerAndeler) {
-        List<BeregningsgrunnlagPrStatusOgAndelDto> listMedNull = arbeidsarbeidstakerAndeler
+        var listMedNull = arbeidsarbeidstakerAndeler
                 .stream()
                 .filter(a -> a.getBeregnetPrAar() == null)
                 .collect(toList());

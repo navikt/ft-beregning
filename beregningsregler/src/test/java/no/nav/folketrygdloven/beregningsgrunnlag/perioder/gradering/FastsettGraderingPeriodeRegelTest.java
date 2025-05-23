@@ -34,9 +34,9 @@ class FastsettGraderingPeriodeRegelTest {
 
 	@Test
 	void skalLageNyAndelIPeriodeEtterGraderingperiodeMedNyAndel() {
-		Arbeidsforhold arbeidsforhold2 = Arbeidsforhold.builder().medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT).medOrgnr(ORGNR2)
+        var arbeidsforhold2 = Arbeidsforhold.builder().medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT).medOrgnr(ORGNR2)
 				.medAnsettelsesPeriode(Periode.of(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(12))).build();
-		PeriodeModellGradering inputMedGraderingFraStartForNyttArbeid = lagPeriodeInputMedEnAndelFraStart()
+        var inputMedGraderingFraStartForNyttArbeid = lagPeriodeInputMedEnAndelFraStart()
 				.medAndelGraderinger(lagGraderingFraSTP(arbeidsforhold2))
 				.build();
 		List<SplittetPeriode> perioder = new ArrayList<>();
@@ -57,10 +57,10 @@ class FastsettGraderingPeriodeRegelTest {
 	}
 
 	private PeriodeModellGradering.Builder lagPeriodeInputMedEnAndelFraStart() {
-		Arbeidsforhold arbeidsforhold = Arbeidsforhold.builder().medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT)
+        var arbeidsforhold = Arbeidsforhold.builder().medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT)
 				.medAnsettelsesPeriode(Periode.of(SKJÆRINGSTIDSPUNKT.minusMonths(12), SKJÆRINGSTIDSPUNKT.plusMonths(12))).medOrgnr(ORGNR).build();
-		BruttoBeregningsgrunnlag bruttoBeregningsgrunnlag = BruttoBeregningsgrunnlag.builder().medAktivitetStatus(AktivitetStatusV2.AT).medBruttoPrÅr(BigDecimal.valueOf(500_000)).medArbeidsforhold(arbeidsforhold).build();
-		PeriodisertBruttoBeregningsgrunnlag periodisertBruttoBeregningsgrunnlag = PeriodisertBruttoBeregningsgrunnlag.builder()
+        var bruttoBeregningsgrunnlag = BruttoBeregningsgrunnlag.builder().medAktivitetStatus(AktivitetStatusV2.AT).medBruttoPrÅr(BigDecimal.valueOf(500_000)).medArbeidsforhold(arbeidsforhold).build();
+        var periodisertBruttoBeregningsgrunnlag = PeriodisertBruttoBeregningsgrunnlag.builder()
 				.medPeriode(Periode.of(SKJÆRINGSTIDSPUNKT, null))
 				.leggTilBruttoBeregningsgrunnlag(bruttoBeregningsgrunnlag)
 				.build();

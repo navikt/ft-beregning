@@ -15,7 +15,7 @@ public record DagsatsPrKategoriOgArbeidsgiver(Inntektskategori inntektskategori,
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        DagsatsPrKategoriOgArbeidsgiver that = (DagsatsPrKategoriOgArbeidsgiver) o;
+        var that = (DagsatsPrKategoriOgArbeidsgiver) o;
         return inntektskategori == that.inntektskategori && Objects.equals(arbeidsgiver, that.arbeidsgiver) && Objects.equals(dagsats, that.dagsats);
     }
 

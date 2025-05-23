@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BGAndelArbeidsforholdDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
@@ -41,12 +40,12 @@ public class AndelGradering {
             return false;
         }
         if (AktivitetStatus.ARBEIDSTAKER.equals(getAktivitetStatus())) {
-            Optional<BGAndelArbeidsforholdDto> bgaOpt = andel.getBgAndelArbeidsforhold();
-            Optional<Arbeidsgiver> arbeidsgiverOpt = bgaOpt.map(BGAndelArbeidsforholdDto::getArbeidsgiver);
+	        var bgaOpt = andel.getBgAndelArbeidsforhold();
+	        var arbeidsgiverOpt = bgaOpt.map(BGAndelArbeidsforholdDto::getArbeidsgiver);
             if (!arbeidsgiverOpt.isPresent()) {
                 return false;
             }
-            BGAndelArbeidsforholdDto bga = bgaOpt.get();
+	        var bga = bgaOpt.get();
             return gjelderFor(arbeidsgiverOpt.get(), bga.getArbeidsforholdRef());
         } else {
             return true;
@@ -66,7 +65,7 @@ public class AndelGradering {
         if (!(o instanceof AndelGradering)) {
             return false;
         }
-        AndelGradering that = (AndelGradering) o;
+	    var that = (AndelGradering) o;
         return Objects.equals(aktivitetStatus, that.aktivitetStatus)
             && Objects.equals(arbeidsgiver, that.arbeidsgiver)
             && Objects.equals(arbeidsforholdRef, that.arbeidsforholdRef);

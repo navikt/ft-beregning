@@ -25,28 +25,28 @@ public class BeregningsgrunnlagScenarioFastsett {
 	                                                             List<Arbeidsforhold> arbeidsforhold,
 	                                                             List<BigDecimal> refusjonskravPrår) {
 
-		BeregningsgrunnlagPeriode.Builder periodeBuilder = BeregningsgrunnlagPeriode.builder()
+        var periodeBuilder = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(skjæringstidspunkt, null));
 		long andelNr = arbeidsforhold.size() + 1;
-		for (AktivitetStatus aktivitetStatus : aktivitetStatuser) {
+		for (var aktivitetStatus : aktivitetStatuser) {
 			if (AktivitetStatus.ATFL_SN.equals(aktivitetStatus)) {
-				BeregningsgrunnlagPrStatus bgpsATFL = BeregningsgrunnlagPrStatus.builder()
+                var bgpsATFL = BeregningsgrunnlagPrStatus.builder()
 						.medAktivitetStatus(AktivitetStatus.ATFL)
 						.medArbeidsforhold(arbeidsforhold, refusjonskravPrår)
 						.build();
-				BeregningsgrunnlagPrStatus bgpsSN = BeregningsgrunnlagPrStatus.builder()
+                var bgpsSN = BeregningsgrunnlagPrStatus.builder()
 						.medAktivitetStatus(AktivitetStatus.SN)
 						.medAndelNr(andelNr++)
 						.build();
 				periodeBuilder.medBeregningsgrunnlagPrStatus(bgpsATFL).medBeregningsgrunnlagPrStatus(bgpsSN);
 			} else if (AktivitetStatus.KUN_YTELSE.equals(aktivitetStatus)) {
-				BeregningsgrunnlagPrStatus bgpsBA = BeregningsgrunnlagPrStatus.builder()
+                var bgpsBA = BeregningsgrunnlagPrStatus.builder()
 						.medAktivitetStatus(AktivitetStatus.BA)
 						.medAndelNr(andelNr++)
 						.build();
 				periodeBuilder.medBeregningsgrunnlagPrStatus(bgpsBA);
 			} else {
-				BeregningsgrunnlagPrStatus.Builder bgps = BeregningsgrunnlagPrStatus.builder()
+                var bgps = BeregningsgrunnlagPrStatus.builder()
 						.medAktivitetStatus(aktivitetStatus);
 				if (AktivitetStatus.erArbeidstakerEllerFrilanser(aktivitetStatus)) {
 					bgps.medArbeidsforhold(arbeidsforhold, refusjonskravPrår);
@@ -56,7 +56,7 @@ public class BeregningsgrunnlagScenarioFastsett {
 				periodeBuilder.medBeregningsgrunnlagPrStatus(bgps.build());
 			}
 		}
-		BeregningsgrunnlagPeriode bgPeriode = periodeBuilder.build();
+        var bgPeriode = periodeBuilder.build();
 		return Beregningsgrunnlag.builder()
 				.medGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2017))
 				.medAktivitetStatuser(aktivitetStatuser.stream().map(as -> new AktivitetStatusMedHjemmel(as, null)).collect(Collectors.toList()))
@@ -65,7 +65,7 @@ public class BeregningsgrunnlagScenarioFastsett {
 	}
 
 	public static Beregningsgrunnlag opprettBeregningsgrunnlagFraInntektsmelding(LocalDate skjæringstidspunkt, BigDecimal refusjonskrav) {
-		Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR);
+        var arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR);
 		return settoppGrunnlagMedEnPeriode(skjæringstidspunkt, singletonList(AktivitetStatus.ATFL), singletonList(arbeidsforhold), singletonList(refusjonskrav.multiply(BigDecimal.valueOf(12))));
 	}
 

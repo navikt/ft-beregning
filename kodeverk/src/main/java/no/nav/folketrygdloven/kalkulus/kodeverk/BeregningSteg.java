@@ -46,14 +46,14 @@ public enum BeregningSteg implements Kodeverdi, KontraktKode {
 
 
     public boolean erFør(BeregningSteg that) {
-        int thisIndex = stegRekkefølge.indexOf(this);
-        int thatIndex = stegRekkefølge.indexOf(that);
+        var thisIndex = stegRekkefølge.indexOf(this);
+        var thatIndex = stegRekkefølge.indexOf(that);
         return thisIndex < thatIndex;
     }
 
     public boolean erEtter(BeregningSteg that) {
-        int thisIndex = stegRekkefølge.indexOf(this);
-        int thatIndex = stegRekkefølge.indexOf(that);
+        var thisIndex = stegRekkefølge.indexOf(this);
+        var thatIndex = stegRekkefølge.indexOf(that);
         return thisIndex > thatIndex;
     }
 

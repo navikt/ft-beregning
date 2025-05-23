@@ -91,12 +91,12 @@ public class BeregningsgrunnlagPrStatus {
     }
 
     public BigDecimal samletNaturalytelseBortfaltMinusTilkommetPrÅr() {
-        BigDecimal sumBortfaltNaturalYtelse = getArbeidsforhold().stream()
+        var sumBortfaltNaturalYtelse = getArbeidsforhold().stream()
             .map(BeregningsgrunnlagPrArbeidsforhold::getNaturalytelseBortfaltPrÅr)
             .filter(Optional::isPresent)
             .map(Optional::get)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal sumTilkommetNaturalYtelse = getArbeidsforhold().stream()
+        var sumTilkommetNaturalYtelse = getArbeidsforhold().stream()
             .map(BeregningsgrunnlagPrArbeidsforhold::getNaturalytelseTilkommetPrÅr)
             .filter(Optional::isPresent)
             .map(Optional::get)
@@ -105,12 +105,12 @@ public class BeregningsgrunnlagPrStatus {
     }
 
     public BigDecimal samletGradertNaturalytelseBortfaltMinusTilkommetPrÅr() {
-        BigDecimal sumBortfaltNaturalYtelse = getArbeidsforhold().stream()
+        var sumBortfaltNaturalYtelse = getArbeidsforhold().stream()
                 .map(BeregningsgrunnlagPrArbeidsforhold::getGradertNaturalytelseBortfaltPrÅr)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal sumTilkommetNaturalYtelse = getArbeidsforhold().stream()
+        var sumTilkommetNaturalYtelse = getArbeidsforhold().stream()
                 .map(BeregningsgrunnlagPrArbeidsforhold::getGradertNaturalytelseTilkommetPrÅr)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
@@ -127,7 +127,7 @@ public class BeregningsgrunnlagPrStatus {
 	 */
 	// TODO (TFP-3955) Denne må vere uavhengig av prosessen i kalkulus.
     public BigDecimal getBruttoPrÅr() {
-	    BigDecimal bruttoPrÅr = getBruttoFraStatus();
+        var bruttoPrÅr = getBruttoFraStatus();
 	    return bruttoPrÅr != null ? bruttoPrÅr : getArbeidsforhold().stream()
             .map(BeregningsgrunnlagPrArbeidsforhold::getBruttoPrÅr)
             .filter(Optional::isPresent)
@@ -150,8 +150,8 @@ public class BeregningsgrunnlagPrStatus {
 	}
 
     public BigDecimal getBruttoInkludertNaturalytelsePrÅr() {
-        BigDecimal brutto = getBruttoPrÅr();
-        BigDecimal samletNaturalytelse = samletNaturalytelseBortfaltMinusTilkommetPrÅr();
+        var brutto = getBruttoPrÅr();
+        var samletNaturalytelse = samletNaturalytelseBortfaltMinusTilkommetPrÅr();
         return brutto.add(samletNaturalytelse);
     }
 
@@ -329,8 +329,8 @@ public class BeregningsgrunnlagPrStatus {
 
         public Builder medArbeidsforhold(List<Arbeidsforhold> arbeidsforhold) {
             if (arbeidsforhold != null) {
-                int andelNr = 1;
-                for (Arbeidsforhold af : arbeidsforhold) {
+                var andelNr = 1;
+                for (var af : arbeidsforhold) {
                     beregningsgrunnlagPrStatusMal.arbeidsforhold.add(BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(af).medAndelNr(andelNr++).build());
                 }
             }
@@ -343,9 +343,9 @@ public class BeregningsgrunnlagPrStatus {
                 if (!refusjonskravPrÅr.isEmpty() && arbeidsforhold.size() != refusjonskravPrÅr.size()) {
                     throw new IllegalArgumentException("Lengde på arbeidsforhold og refusjonskravPrÅr må vere like");
                 }
-                Periode beregningsperiode = Periode.of(skjæringstidspunkt.minusMonths(3).withDayOfMonth(1), skjæringstidspunkt.withDayOfMonth(1).minusDays(1));
-                int andelNr = 1;
-                for (int i = 0; i < arbeidsforhold.size(); i++) {
+                var beregningsperiode = Periode.of(skjæringstidspunkt.minusMonths(3).withDayOfMonth(1), skjæringstidspunkt.withDayOfMonth(1).minusDays(1));
+                var andelNr = 1;
+                for (var i = 0; i < arbeidsforhold.size(); i++) {
                     beregningsgrunnlagPrStatusMal.arbeidsforhold.add(BeregningsgrunnlagPrArbeidsforhold.builder()
                         .medArbeidsforhold(arbeidsforhold.get(i))
                         .medAndelNr(andelNr++)

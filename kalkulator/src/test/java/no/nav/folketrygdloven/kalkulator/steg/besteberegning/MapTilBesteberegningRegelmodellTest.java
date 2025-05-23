@@ -1,19 +1,18 @@
 package no.nav.folketrygdloven.kalkulator.steg.besteberegning;
 
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+
 import no.nav.folketrygdloven.besteberegning.modell.input.YtelseAktivitetType;
 import no.nav.folketrygdloven.besteberegning.modell.input.YtelsegrunnlagAndel;
 import no.nav.folketrygdloven.kalkulator.modell.besteberegning.Ytelseandel;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Arbeidskategori;
-
 import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
-
-import org.junit.jupiter.api.Test;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 class MapTilBesteberegningRegelmodellTest {
 

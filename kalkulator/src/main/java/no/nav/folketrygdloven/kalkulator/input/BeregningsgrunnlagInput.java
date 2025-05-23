@@ -143,7 +143,7 @@ public class BeregningsgrunnlagInput {
     }
 
     public Collection<InntektsmeldingDto> getInntektsmeldinger() {
-        LocalDate skjæringstidspunktOpptjening = getSkjæringstidspunktOpptjening();
+	    var skjæringstidspunktOpptjening = getSkjæringstidspunktOpptjening();
         if (skjæringstidspunktOpptjening == null) return Collections.emptyList();
         return new InntektsmeldingFilter(iayGrunnlag).hentInntektsmeldingerBeregning(skjæringstidspunktOpptjening);
     }
@@ -161,7 +161,7 @@ public class BeregningsgrunnlagInput {
     }
 
     public Collection<OpptjeningPeriodeDto> getOpptjeningAktiviteterForBeregning() {
-        LocalDate skjæringstidspunktOpptjening = getSkjæringstidspunktOpptjening();
+	    var skjæringstidspunktOpptjening = getSkjæringstidspunktOpptjening();
         if (skjæringstidspunktOpptjening == null) return Collections.emptyList();
         var aktivitetFilter = new OpptjeningsaktiviteterPerYtelse(getFagsakYtelseType());
         return opptjeningAktiviteter.getOpptjeningPerioder()

@@ -28,12 +28,12 @@ public class BeregnBruttoBeregningsgrunnlagSNFRISINN extends LeafSpecification<B
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        BeregningsgrunnlagPrStatus bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
-        FrisinnGrunnlag frisinngrunnlag = (FrisinnGrunnlag) grunnlag.getBeregningsgrunnlag().getYtelsesSpesifiktGrunnlag();
+	    var bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
+	    var frisinngrunnlag = (FrisinnGrunnlag) grunnlag.getBeregningsgrunnlag().getYtelsesSpesifiktGrunnlag();
         var rapportertÅrsinntekt = FinnRapportertÅrsinntektSN.finnRapportertÅrsinntekt(grunnlag);
-        BigDecimal oppgittÅrsinntektForPeriode = finnÅrsinntektPeriode(grunnlag);
+	    var oppgittÅrsinntektForPeriode = finnÅrsinntektPeriode(grunnlag);
 
-        BigDecimal bruttoSN = frisinngrunnlag.søkerNæringISøknadsperiode(grunnlag.getPeriodeFom()) || erFørstePeriodeOgSøktNæringIMinstEnPeriode(grunnlag, frisinngrunnlag)
+	    var bruttoSN = frisinngrunnlag.søkerNæringISøknadsperiode(grunnlag.getPeriodeFom()) || erFørstePeriodeOgSøktNæringIMinstEnPeriode(grunnlag, frisinngrunnlag)
             ? rapportertÅrsinntekt.max(oppgittÅrsinntektForPeriode)
             : oppgittÅrsinntektForPeriode;
 
@@ -44,7 +44,7 @@ public class BeregnBruttoBeregningsgrunnlagSNFRISINN extends LeafSpecification<B
     }
 
     private BigDecimal finnÅrsinntektPeriode(BeregningsgrunnlagPeriode grunnlag) {
-        BigDecimal effektivDagsatsIPeriode = finnEffektivDagsatsIPeriode(grunnlag);
+	    var effektivDagsatsIPeriode = finnEffektivDagsatsIPeriode(grunnlag);
         return effektivDagsatsIPeriode.multiply(BigDecimal.valueOf(260));
     }
 
@@ -61,7 +61,7 @@ public class BeregnBruttoBeregningsgrunnlagSNFRISINN extends LeafSpecification<B
     }
 
     private static BigDecimal mapTilEffektivDagsatsIPeriode(Periodeinntekt i) {
-        int virkedagerIOverlappendePeriode = Virkedager.beregnAntallVirkedager(Periode.of(i.getFom(), i.getTom()));
+	    var virkedagerIOverlappendePeriode = Virkedager.beregnAntallVirkedager(Periode.of(i.getFom(), i.getTom()));
         if (virkedagerIOverlappendePeriode == 0) {
             return BigDecimal.ZERO;
         }

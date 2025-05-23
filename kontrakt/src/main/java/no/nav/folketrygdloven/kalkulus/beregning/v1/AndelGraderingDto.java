@@ -84,7 +84,7 @@ public class AndelGraderingDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        AndelGraderingDto that = (AndelGraderingDto) o;
+	    var that = (AndelGraderingDto) o;
         return Objects.equals(aktivitetStatus, that.aktivitetStatus) &&
                 Objects.equals(arbeidsgiver, that.arbeidsgiver) &&
                 Objects.equals(arbeidsforholdRef, that.arbeidsforholdRef) &&

@@ -3,7 +3,6 @@ package no.nav.folketrygdloven.utils;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -36,9 +35,9 @@ public class BeregningsgrunnlagTestUtil {
     public static BeregningsgrunnlagDto lagGjeldendeBeregningsgrunnlag(LocalDate skjæringstidspunktOpptjening,
                                                                        Optional<InntektArbeidYtelseGrunnlagDto> inntektArbeidYtelseGrunnlagDto,
                                                                        AktivitetStatus... statuser) {
-        HashMap<String, Integer> avkortet = new HashMap<>();
-        HashMap<String, Integer> bruttoPrÅr = new HashMap<>();
-        List<LocalDateInterval> perioder = Collections.singletonList(new LocalDateInterval(skjæringstidspunktOpptjening, null));
+        var avkortet = new HashMap<String, Integer>();
+        var bruttoPrÅr = new HashMap<String, Integer>();
+        var perioder = Collections.singletonList(new LocalDateInterval(skjæringstidspunktOpptjening, null));
         return lagGjeldendeBeregningsgrunnlag(skjæringstidspunktOpptjening, avkortet,
             bruttoPrÅr, Collections.emptyMap(), perioder, Collections.singletonList(Collections.emptyList()), Collections.emptyMap(), inntektArbeidYtelseGrunnlagDto, statuser);
     }
@@ -60,7 +59,7 @@ public class BeregningsgrunnlagTestUtil {
                                                                         Map<String, List<Inntektskategori>> inntektskategoriPrAndelIArbeidsforhold,
                                                                         Optional<InntektArbeidYtelseGrunnlagDto> inntektArbeidYtelseGrunnlag,
                                                                         AktivitetStatus... statuser) {
-        BeregningsgrunnlagDto beregningsgrunnlag = BeregningsgrunnlagDto.builder()
+        var beregningsgrunnlag = BeregningsgrunnlagDto.builder()
             .medSkjæringstidspunkt(skjæringstidspunktOpptjening)
                 .medGrunnbeløp(Beløp.fra(100_000))
             .build();
@@ -75,21 +74,21 @@ public class BeregningsgrunnlagTestUtil {
     }
 
     private static void byggBGForSpesifikkeAktivitetstatuser(Optional<InntektArbeidYtelseGrunnlagDto> inntektArbeidYtelseGrunnlag, LocalDate skjæringstidspunktOpptjening, BeregningsgrunnlagDto beregningsgrunnlag, AktivitetStatus[] statuser) {
-        BeregningsgrunnlagAktivitetStatusDto.Builder bgAktivitetStatusbuilder = BeregningsgrunnlagAktivitetStatusDto.builder();
-        for (int i = 1; i < statuser.length; i++) {
+        var bgAktivitetStatusbuilder = BeregningsgrunnlagAktivitetStatusDto.builder();
+        for (var i = 1; i < statuser.length; i++) {
             bgAktivitetStatusbuilder.medAktivitetStatus(statuser[i]);
         }
         bgAktivitetStatusbuilder.medAktivitetStatus(statuser[0]).build(beregningsgrunnlag);
-        List<AktivitetStatus> enkeltstatuser = oversettTilEnkeltstatuser(statuser);
+        var enkeltstatuser = oversettTilEnkeltstatuser(statuser);
 
-        BeregningsgrunnlagPeriodeDto periode = BeregningsgrunnlagPeriodeDto.ny()
+        var periode = BeregningsgrunnlagPeriodeDto.ny()
             .medBeregningsgrunnlagPeriode(skjæringstidspunktOpptjening, null)
             .build(beregningsgrunnlag);
-        for (AktivitetStatus status : enkeltstatuser) {
+        for (var status : enkeltstatuser) {
             if (status.equals(AktivitetStatus.ARBEIDSTAKER)) {
                 continue;
             }
-            BeregningsgrunnlagPrStatusOgAndelDto.Builder andelBuilder = BeregningsgrunnlagPrStatusOgAndelDto.ny()
+            var andelBuilder = BeregningsgrunnlagPrStatusOgAndelDto.ny()
                 .medAktivitetStatus(status);
             if (status.equals(AktivitetStatus.FRILANSER)) {
                 andelBuilder.medBeregningsperiode(skjæringstidspunktOpptjening.minusMonths(3).withDayOfMonth(1), skjæringstidspunktOpptjening.withDayOfMonth(1).minusDays(1));
@@ -97,19 +96,19 @@ public class BeregningsgrunnlagTestUtil {
             andelBuilder.build(periode);
         }
         if (inntektArbeidYtelseGrunnlag.isPresent()) {
-            InntektArbeidYtelseGrunnlagDto agg = inntektArbeidYtelseGrunnlag.get();
+            var agg = inntektArbeidYtelseGrunnlag.get();
             var aktørArbeid = agg.getAktørArbeidFraRegister();
 
             var filter = new YrkesaktivitetFilterDto(agg.getArbeidsforholdInformasjon(), aktørArbeid).før(skjæringstidspunktOpptjening);
-            Collection<YrkesaktivitetDto> aktiviteterOpt = filter.getYrkesaktiviteterForBeregning();
+            var aktiviteterOpt = filter.getYrkesaktiviteterForBeregning();
 
-            List<YrkesaktivitetDto> aktiviteter = aktiviteterOpt.stream().filter(a -> a.getArbeidsforholdRef().gjelderForSpesifiktArbeidsforhold()).collect(Collectors.toList());
+            var aktiviteter = aktiviteterOpt.stream().filter(a -> a.getArbeidsforholdRef().gjelderForSpesifiktArbeidsforhold()).collect(Collectors.toList());
 
-            for (int i = 0; i < aktiviteter.size(); i++) {
-                String arbId = aktiviteter.get(i).getArbeidsforholdRef().getReferanse();
-                String orgNr = aktiviteter.get(i).getArbeidsgiver().getIdentifikator();
-                Intervall arbeidsperiode = finnArbeidsperiode(filter, aktiviteter, i);
-                BGAndelArbeidsforholdDto.Builder bga = BGAndelArbeidsforholdDto.builder()
+            for (var i = 0; i < aktiviteter.size(); i++) {
+                var arbId = aktiviteter.get(i).getArbeidsforholdRef().getReferanse();
+                var orgNr = aktiviteter.get(i).getArbeidsgiver().getIdentifikator();
+                var arbeidsperiode = finnArbeidsperiode(filter, aktiviteter, i);
+                var bga = BGAndelArbeidsforholdDto.builder()
                     .medArbeidsgiver(lagArbeidsgiver(orgNr))
                     .medArbeidsforholdRef(arbId)
                     .medArbeidsperiodeFom(arbeidsperiode.getFomDato())
@@ -128,8 +127,8 @@ public class BeregningsgrunnlagTestUtil {
         return filter.getAnsettelsesPerioder(aktiviteter.get(i)).stream()
             .map(a -> Intervall.fraOgMedTilOgMed(a.getPeriode().getFomDato(), a.getPeriode().getTomDato()))
             .reduce((p1, p2) -> {
-                LocalDate fom = p1.getFomDato().isBefore(p2.getFomDato()) ? p1.getFomDato() : p2.getFomDato();
-                LocalDate tom = p1.getTomDato().isAfter(p2.getTomDato()) ? p1.getTomDato() : p2.getTomDato();
+                var fom = p1.getFomDato().isBefore(p2.getFomDato()) ? p1.getFomDato() : p2.getFomDato();
+                var tom = p1.getTomDato().isAfter(p2.getTomDato()) ? p1.getTomDato() : p2.getTomDato();
                 return tom == null ? Intervall.fraOgMed(fom) : Intervall.fraOgMedTilOgMed(fom, tom);
         }).orElse(Intervall.fraOgMedTilOgMed(LocalDate.now().minusYears(1), LocalDate.now().plusYears(2)));
     }
@@ -144,7 +143,7 @@ public class BeregningsgrunnlagTestUtil {
             kombinasjonsstatuser.put(AktivitetStatus.KOMBINERT_AT_FL_SN, Arrays.asList(AktivitetStatus.ARBEIDSTAKER, AktivitetStatus.FRILANSER, AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE));
             kombinasjonsstatuser.put(AktivitetStatus.KOMBINERT_AT_SN, Arrays.asList(AktivitetStatus.ARBEIDSTAKER, AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE));
             kombinasjonsstatuser.put(AktivitetStatus.KOMBINERT_FL_SN, Arrays.asList(AktivitetStatus.FRILANSER, AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE));
-            for (AktivitetStatus status : statuser) {
+            for (var status : statuser) {
                 if (kombinasjonsstatuser.containsKey(status)) {
                     enkeltstatuser.addAll(kombinasjonsstatuser.get(status));
                 } else {
@@ -166,17 +165,17 @@ public class BeregningsgrunnlagTestUtil {
                                     Map<String, List<Inntektskategori>> inntektskategoriPrAndelIArbeidsforhold,
                                     Map<String, Integer> refusjonPrÅr,
                                     Optional<InntektArbeidYtelseGrunnlagDto> inntektArbeidYtelseGrunnlag) {
-        BeregningsgrunnlagAktivitetStatusDto.Builder bgAktivitetStatusbuilder = BeregningsgrunnlagAktivitetStatusDto.builder();
+        var bgAktivitetStatusbuilder = BeregningsgrunnlagAktivitetStatusDto.builder();
         bgAktivitetStatusbuilder.medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER).build(beregningsgrunnlag);
-        for (int j = 0; j < perioder.size(); j++) {
-            BeregningsgrunnlagPeriodeDto.Builder periodeBuilder = BeregningsgrunnlagPeriodeDto.ny()
+        for (var j = 0; j < perioder.size(); j++) {
+            var periodeBuilder = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(perioder.get(j).getFomDato(), perioder.get(j).getTomDato())
                 .medAvkortetPrÅr(avkortet.get(j) != null ? Beløp.fra(avkortet.get(j)) : null)
                 .medRedusertPrÅr(redusert.get(j) != null ? Beløp.fra(redusert.get(j)) : null);
             if (!periodePeriodeÅrsaker.isEmpty()) {
                 periodeBuilder.leggTilPeriodeÅrsaker(periodePeriodeÅrsaker.get(j));
             }
-            BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode = periodeBuilder.build(beregningsgrunnlag);
+            var beregningsgrunnlagPeriode = periodeBuilder.build(beregningsgrunnlag);
             inntektArbeidYtelseGrunnlag.ifPresent(iayGrunnlag -> lagAndelerPrArbeidsforhold(beregningsgrunnlag, avkortetAndel, bruttoPrÅr, lagtTilAvSaksbehandlerPrAndelIArbeidsforhold,
                 inntektskategoriPrAndelIArbeidsforhold, refusjonPrÅr, beregningsgrunnlagPeriode, iayGrunnlag));
         }
@@ -193,20 +192,20 @@ public class BeregningsgrunnlagTestUtil {
         var aktørArbeid = iayGrunnlag.getAktørArbeidFraRegister();
         var filter = new YrkesaktivitetFilterDto(iayGrunnlag.getArbeidsforholdInformasjon(), aktørArbeid);
 
-        List<YrkesaktivitetDto> aktiviteter = finnAlleYrkesaktiviteter(filter, beregningsgrunnlag);
-        List<Arbeidsgiver> arbeidsgivere = aktiviteter.stream()
+        var aktiviteter = finnAlleYrkesaktiviteter(filter, beregningsgrunnlag);
+        var arbeidsgivere = aktiviteter.stream()
             .map(YrkesaktivitetDto::getArbeidsgiver).collect(Collectors.toList());
-        for (int i = 0; i < aktiviteter.size(); i++) {
-            String arbId = aktiviteter.get(i).getArbeidsforholdRef().getReferanse();
-            Arbeidsgiver arbeidsgiver = arbeidsgivere.get(i);
-            String identifikator = arbeidsgiver.getIdentifikator();
-            List<YrkesaktivitetDto> aktivitetIPeriode = finnAktivitetForAndelIPeriode(filter, aktiviteter, beregningsgrunnlagPeriode.getPeriode(), identifikator);
-            Intervall arbeidsperiode = finnArbeidsperiode(filter, aktiviteter, i);
-            BGAndelArbeidsforholdDto.Builder bga = byggArbeidsforhold(refusjonPrÅr, arbId, arbeidsgiver, arbeidsperiode);
+        for (var i = 0; i < aktiviteter.size(); i++) {
+            var arbId = aktiviteter.get(i).getArbeidsforholdRef().getReferanse();
+            var arbeidsgiver = arbeidsgivere.get(i);
+            var identifikator = arbeidsgiver.getIdentifikator();
+            var aktivitetIPeriode = finnAktivitetForAndelIPeriode(filter, aktiviteter, beregningsgrunnlagPeriode.getPeriode(), identifikator);
+            var arbeidsperiode = finnArbeidsperiode(filter, aktiviteter, i);
+            var bga = byggArbeidsforhold(refusjonPrÅr, arbId, arbeidsgiver, arbeidsperiode);
             if (!aktivitetIPeriode.isEmpty()) {
                 if (lagtTilAvSaksbehandlerPrAndelIArbeidsforhold.get(identifikator) != null && !lagtTilAvSaksbehandlerPrAndelIArbeidsforhold.get(identifikator).isEmpty()) {
-                    for (int k = 0; k < lagtTilAvSaksbehandlerPrAndelIArbeidsforhold.get(identifikator).size(); k++) {
-                        Inntektskategori inntektskategori = finnInntektskategori(inntektskategoriPrAndelIArbeidsforhold, identifikator, k);
+                    for (var k = 0; k < lagtTilAvSaksbehandlerPrAndelIArbeidsforhold.get(identifikator).size(); k++) {
+                        var inntektskategori = finnInntektskategori(inntektskategoriPrAndelIArbeidsforhold, identifikator, k);
                         byggAndel(avkortetAndel.get(identifikator), bruttoPrÅr.get(identifikator),
                             lagtTilAvSaksbehandlerPrAndelIArbeidsforhold.get(identifikator).get(k),
                             inntektskategori, beregningsgrunnlagPeriode, bga, beregningsgrunnlag.getSkjæringstidspunkt());
@@ -222,12 +221,12 @@ public class BeregningsgrunnlagTestUtil {
     private static List<YrkesaktivitetDto> finnAlleYrkesaktiviteter(YrkesaktivitetFilterDto filter, BeregningsgrunnlagDto beregningsgrunnlag) {
 
         var filterFør = filter.før(beregningsgrunnlag.getSkjæringstidspunkt());
-        Collection<YrkesaktivitetDto> aktiviteterFørStpOpt = filterFør.getYrkesaktiviteterForBeregning();
-        Stream<YrkesaktivitetDto> aktiviteterFørStp = aktiviteterFørStpOpt.stream().filter(a -> a.getArbeidsforholdRef().gjelderForSpesifiktArbeidsforhold());
+        var aktiviteterFørStpOpt = filterFør.getYrkesaktiviteterForBeregning();
+        var aktiviteterFørStp = aktiviteterFørStpOpt.stream().filter(a -> a.getArbeidsforholdRef().gjelderForSpesifiktArbeidsforhold());
 
         var filterEtter = filter.etter(beregningsgrunnlag.getSkjæringstidspunkt());
-        Collection<YrkesaktivitetDto> aktiviteterEtterStpOpt = filterEtter.getYrkesaktiviteterForBeregning();
-        Stream<YrkesaktivitetDto> aktiviteterEtterStp = aktiviteterEtterStpOpt.stream().filter(a -> a.getArbeidsforholdRef().gjelderForSpesifiktArbeidsforhold());
+        var aktiviteterEtterStpOpt = filterEtter.getYrkesaktiviteterForBeregning();
+        var aktiviteterEtterStp = aktiviteterEtterStpOpt.stream().filter(a -> a.getArbeidsforholdRef().gjelderForSpesifiktArbeidsforhold());
 
         return Stream.concat(aktiviteterFørStp, aktiviteterEtterStp).distinct().collect(Collectors.toList());
     }
@@ -247,7 +246,7 @@ public class BeregningsgrunnlagTestUtil {
     }
 
     private static BGAndelArbeidsforholdDto.Builder byggArbeidsforhold(Map<String, Integer> refusjonPrÅr, String arbId, Arbeidsgiver arbeidsgiver, Intervall arbeidsperiode) {
-        String identifikator = arbeidsgiver.getIdentifikator();
+        var identifikator = arbeidsgiver.getIdentifikator();
         return BGAndelArbeidsforholdDto.builder()
             .medArbeidsgiver(arbeidsgiver)
             .medArbeidsforholdRef(arbId)

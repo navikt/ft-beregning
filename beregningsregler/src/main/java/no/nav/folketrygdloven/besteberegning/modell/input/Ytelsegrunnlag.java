@@ -1,9 +1,9 @@
 package no.nav.folketrygdloven.besteberegning.modell.input;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.RelatertYtelseType;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.RelatertYtelseType;
 
 public class Ytelsegrunnlag {
 	private RelatertYtelseType ytelse;

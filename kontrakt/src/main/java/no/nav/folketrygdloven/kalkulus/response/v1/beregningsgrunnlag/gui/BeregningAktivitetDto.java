@@ -5,14 +5,15 @@ import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -119,7 +120,7 @@ public class BeregningAktivitetDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        BeregningAktivitetDto that = (BeregningAktivitetDto) o;
+	    var that = (BeregningAktivitetDto) o;
         return Objects.equals(arbeidsgiverIdent, that.arbeidsgiverIdent) &&
             Objects.equals(fom, that.fom) &&
             Objects.equals(tom, that.tom) &&

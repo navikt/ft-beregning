@@ -3,7 +3,6 @@ package no.nav.folketrygdloven.kalkulator.modell.iay;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -37,18 +36,18 @@ public class AktørArbeidDto {
     }
 
     YrkesaktivitetDtoBuilder getYrkesaktivitetBuilderForNøkkel(OpptjeningsnøkkelDto identifikator, ArbeidType arbeidType) {
-        Optional<YrkesaktivitetDto> yrkesaktivitet = yrkesaktiviter.stream()
+	    var yrkesaktivitet = yrkesaktiviter.stream()
                 .filter(ya -> ya.getArbeidType().equals(arbeidType) && new OpptjeningsnøkkelDto(ya).equals(identifikator))
                 .findFirst();
-        final YrkesaktivitetDtoBuilder oppdatere = YrkesaktivitetDtoBuilder.oppdatere(yrkesaktivitet);
+        final var oppdatere = YrkesaktivitetDtoBuilder.oppdatere(yrkesaktivitet);
         oppdatere.medArbeidType(arbeidType);
         return oppdatere;
     }
     YrkesaktivitetDtoBuilder getYrkesaktivitetBuilderForType(ArbeidType type) {
-        Optional<YrkesaktivitetDto> yrkesaktivitet = yrkesaktiviter.stream()
+	    var yrkesaktivitet = yrkesaktiviter.stream()
                 .filter(ya -> ya.getArbeidType().equals(type))
                 .findFirst();
-        final YrkesaktivitetDtoBuilder oppdatere = YrkesaktivitetDtoBuilder.oppdatere(yrkesaktivitet);
+        final var oppdatere = YrkesaktivitetDtoBuilder.oppdatere(yrkesaktivitet);
         oppdatere.medArbeidType(type);
         return oppdatere;
     }
@@ -64,7 +63,7 @@ public class AktørArbeidDto {
         } else if (!(obj instanceof AktørArbeidDto)) {
             return false;
         }
-        AktørArbeidDto other = (AktørArbeidDto) obj;
+	    var other = (AktørArbeidDto) obj;
         return Objects.equals(this.hentAlleYrkesaktiviteter(), other.hentAlleYrkesaktiviteter());
     }
 

@@ -16,7 +16,7 @@ class ErMidlertidigInaktiv extends LeafSpecification<BeregningsgrunnlagPeriode> 
 
 	@Override
 	public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-		boolean midlertidigInaktiv = grunnlag.getBeregningsgrunnlag().getMidlertidigInaktivType() != null;
+        var midlertidigInaktiv = grunnlag.getBeregningsgrunnlag().getMidlertidigInaktivType() != null;
 		return midlertidigInaktiv ? ja() : nei();
 	}
 

@@ -33,15 +33,15 @@ class FastsettBesteberegningGrunnlag extends LeafSpecification<BesteberegningReg
     @Override
     public Evaluation evaluate(BesteberegningRegelmodell regelmodell) {
         Map<String, Object> resultater = new HashMap<>();
-	    BesteberegnetGrunnlag besteberegnetGrunnlag = lagBesteberegningGrunnlag(regelmodell.getOutput().getBesteMåneder());
+        var besteberegnetGrunnlag = lagBesteberegningGrunnlag(regelmodell.getOutput().getBesteMåneder());
 	    regelmodell.getOutput().setBesteberegnetGrunnlag(besteberegnetGrunnlag);
 	    resultater.put("BesteberegningGrunnlag", besteberegnetGrunnlag);
 	    return beregnet(resultater);
     }
 
 	private BesteberegnetGrunnlag lagBesteberegningGrunnlag(List<BeregnetMånedsgrunnlag> besteMåneder) {
-		Map<AktivitetNøkkel, List<Inntekt>> nøkkelTilInntekter = lagAktivitetTilInntekterMap(besteMåneder);
-		List<BesteberegnetAndel> andeler = nøkkelTilInntekter.entrySet().stream().map(entry -> new BesteberegnetAndel(entry.getKey(), finnSnittÅrsinntekt(entry.getValue())))
+        var nøkkelTilInntekter = lagAktivitetTilInntekterMap(besteMåneder);
+        var andeler = nøkkelTilInntekter.entrySet().stream().map(entry -> new BesteberegnetAndel(entry.getKey(), finnSnittÅrsinntekt(entry.getValue())))
 				.toList();
 		return new BesteberegnetGrunnlag(andeler);
 	}
@@ -52,7 +52,7 @@ class FastsettBesteberegningGrunnlag extends LeafSpecification<BesteberegningReg
 	}
 
 	private BigDecimal finnSnittÅrsinntekt(List<Inntekt> inntekter) {
-		BigDecimal sum = inntekter.stream().map(Inntekt::getInntektPrMåned)
+        var sum = inntekter.stream().map(Inntekt::getInntektPrMåned)
 				.reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
 		return sum.divide(BigDecimal.valueOf(ANTALL_MÅNEDER_I_BESTEBERGNING), 10, RoundingMode.HALF_EVEN).multiply(BigDecimal.valueOf(MÅNEDER_I_ÅRET));
 

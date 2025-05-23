@@ -13,7 +13,6 @@ import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseGrunnlagD
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektsmeldingDto;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
 import no.nav.folketrygdloven.kalkulator.modell.typer.EksternArbeidsforholdRef;
-import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Organisasjonstype;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.BeregningsgrunnlagArbeidsforholdDto;
@@ -33,7 +32,7 @@ public class BeregningsgrunnlagDtoUtil {
                                                              YtelsespesifiktGrunnlag ytelsespesifiktGrunnlag,
                                                              InntektArbeidYtelseGrunnlagDto inntektArbeidYtelseGrunnlag,
                                                              BeregningsgrunnlagPeriodeDto periode) {
-        FaktaOmBeregningAndelDto andelDto = settVerdierForAndel(andel, ytelsespesifiktGrunnlag, inntektArbeidYtelseGrunnlag, periode);
+	    var andelDto = settVerdierForAndel(andel, ytelsespesifiktGrunnlag, inntektArbeidYtelseGrunnlag, periode);
         andelDto.setAndelsnr(andel.getAndelsnr());
         return andelDto;
     }
@@ -42,7 +41,7 @@ public class BeregningsgrunnlagDtoUtil {
                                                                 YtelsespesifiktGrunnlag ytelsespesifiktGrunnlag,
                                                                 InntektArbeidYtelseGrunnlagDto inntektArbeidYtelseGrunnlag,
                                                                 BeregningsgrunnlagPeriodeDto periode) {
-        FaktaOmBeregningAndelDto andelDto = new FaktaOmBeregningAndelDto();
+	    var andelDto = new FaktaOmBeregningAndelDto();
         andelDto.setAktivitetStatus(andel.getAktivitetStatus());
         andelDto.setInntektskategori(andel.getGjeldendeInntektskategori());
         andelDto.setFastsattAvSaksbehandler(andel.getFastsattAvSaksbehandler());
@@ -57,7 +56,7 @@ public class BeregningsgrunnlagDtoUtil {
 
 
     public static Optional<BeregningsgrunnlagArbeidsforholdDto> lagArbeidsforholdDto(BeregningsgrunnlagPrStatusOgAndelDto andel, Optional<InntektsmeldingDto> inntektsmeldingOptional, InntektArbeidYtelseGrunnlagDto inntektArbeidYtelseGrunnlag) {
-        BeregningsgrunnlagArbeidsforholdDto dto = new BeregningsgrunnlagArbeidsforholdDto();
+	    var dto = new BeregningsgrunnlagArbeidsforholdDto();
         return lagBeregningsgrunnlagArbeidsforholdDto(andel, dto, inntektsmeldingOptional, inntektArbeidYtelseGrunnlag);
     }
 
@@ -78,7 +77,7 @@ public class BeregningsgrunnlagDtoUtil {
     }
 
     private static boolean skalIkkeOppretteArbeidsforhold(BeregningsgrunnlagPrStatusOgAndelDto andel) {
-        boolean arbeidsforholdTypeErIkkeSatt = andel.getArbeidsforholdType() == null
+	    var arbeidsforholdTypeErIkkeSatt = andel.getArbeidsforholdType() == null
                 || OpptjeningAktivitetType.UDEFINERT.equals(andel.getArbeidsforholdType());
         return arbeidsforholdTypeErIkkeSatt && !andel.getBgAndelArbeidsforhold().isPresent();
 
@@ -88,7 +87,7 @@ public class BeregningsgrunnlagDtoUtil {
                                                  BeregningsgrunnlagArbeidsforholdDto arbeidsforhold,
                                                  Optional<InntektsmeldingDto> inntektsmelding, InntektArbeidYtelseGrunnlagDto inntektArbeidYtelseGrunnlag) {
         andel.getBgAndelArbeidsforhold().ifPresent(bga -> {
-            Arbeidsgiver arbeidsgiver = bga.getArbeidsgiver();
+	        var arbeidsgiver = bga.getArbeidsgiver();
             arbeidsforhold.setStartdato(bga.getArbeidsperiodeFom());
             arbeidsforhold.setOpphoersdato(finnKorrektOpphørsdato(andel));
             arbeidsforhold.setArbeidsforholdId(bga.getArbeidsforholdRef().getReferanse());
@@ -102,8 +101,8 @@ public class BeregningsgrunnlagDtoUtil {
     }
 
     private static Optional<EksternArbeidsforholdRef> finnEksternArbeidsforholdId(BeregningsgrunnlagPrStatusOgAndelDto andel, InntektArbeidYtelseGrunnlagDto iayGrunnlag) {
-        Optional<Arbeidsgiver> agOpt = andel.getArbeidsgiver();
-        Optional<InternArbeidsforholdRefDto> refOpt = andel.getArbeidsforholdRef();
+	    var agOpt = andel.getArbeidsgiver();
+	    var refOpt = andel.getArbeidsforholdRef();
         if (agOpt.isEmpty() || refOpt.isEmpty()) {
             return Optional.empty();
         }

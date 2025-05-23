@@ -2,6 +2,7 @@ package no.nav.folketrygdloven.kalkulus.migrering;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+
 import no.nav.folketrygdloven.kalkulus.felles.v1.InternArbeidsforholdRefDto;
 import no.nav.folketrygdloven.kalkulus.response.v1.Arbeidsgiver;
 

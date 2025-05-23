@@ -10,7 +10,7 @@ public class FastsettBeregningsperiodeATFL {
     private FastsettBeregningsperiodeATFL() {}
 
     public static BeregningsgrunnlagDto fastsettBeregningsperiodeForATFL(BeregningsgrunnlagDto beregningsgrunnlag, Intervall beregningsperiode) {
-        BeregningsgrunnlagDto nyttBeregningsgrunnlag = BeregningsgrunnlagDto.builder(beregningsgrunnlag).build();
+        var nyttBeregningsgrunnlag = BeregningsgrunnlagDto.builder(beregningsgrunnlag).build();
         nyttBeregningsgrunnlag.getBeregningsgrunnlagPerioder().forEach(periode -> {
             periode.getBeregningsgrunnlagPrStatusOgAndelList().stream()
                     .filter(a -> a.getAktivitetStatus().erArbeidstaker() || a.getAktivitetStatus().erFrilanser())

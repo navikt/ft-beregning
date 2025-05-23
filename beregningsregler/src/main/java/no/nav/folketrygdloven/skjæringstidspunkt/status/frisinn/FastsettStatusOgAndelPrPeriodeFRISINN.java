@@ -9,7 +9,6 @@ import java.util.Map;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivPeriode;
@@ -43,14 +42,14 @@ public class FastsettStatusOgAndelPrPeriodeFRISINN extends LeafSpecification<Akt
     }
 
     private void opprettAktivitetStatuser(AktivitetStatusModellFRISINN regelmodell) {
-        LocalDate skjæringtidspktForBeregning = regelmodell.getSkjæringstidspunktForBeregning();
-        List<AktivPeriode> aktivePerioder = regelmodell.getAktivePerioder();
-        List<AktivPeriode> aktivePerioderVedStp = hentAktivePerioderPåSkjæringtidspunkt(skjæringtidspktForBeregning, aktivePerioder);
-        Inntektsgrunnlag inntektsgrunnlag = regelmodell.getInntektsgrunnlag();
-        boolean harPerioderUtenYtelse = !FinnPerioderUtenYtelse.finnPerioder(inntektsgrunnlag, regelmodell.getSkjæringstidspunktForOpptjening()).isEmpty();
-        boolean skalIkkeLeggeTilFL = skalIkkeLeggeTilFrilans(regelmodell.getSkjæringstidspunktForOpptjening(), regelmodell);
-        for (AktivPeriode ap : aktivePerioderVedStp) {
-            AktivitetStatus aktivitetStatus = mapAktivitetTilStatus(ap.getAktivitet(), harPerioderUtenYtelse);
+        var skjæringtidspktForBeregning = regelmodell.getSkjæringstidspunktForBeregning();
+        var aktivePerioder = regelmodell.getAktivePerioder();
+        var aktivePerioderVedStp = hentAktivePerioderPåSkjæringtidspunkt(skjæringtidspktForBeregning, aktivePerioder);
+        var inntektsgrunnlag = regelmodell.getInntektsgrunnlag();
+        var harPerioderUtenYtelse = !FinnPerioderUtenYtelse.finnPerioder(inntektsgrunnlag, regelmodell.getSkjæringstidspunktForOpptjening()).isEmpty();
+        var skalIkkeLeggeTilFL = skalIkkeLeggeTilFrilans(regelmodell.getSkjæringstidspunktForOpptjening(), regelmodell);
+        for (var ap : aktivePerioderVedStp) {
+            var aktivitetStatus = mapAktivitetTilStatus(ap.getAktivitet(), harPerioderUtenYtelse);
             if (skalIkkeLeggesTil(skalIkkeLeggeTilFL, ap, aktivitetStatus)) {
                 continue;
             }
@@ -61,16 +60,16 @@ public class FastsettStatusOgAndelPrPeriodeFRISINN extends LeafSpecification<Akt
     }
 
     private boolean skalIkkeLeggeTilFrilans(LocalDate stpOpptjening, AktivitetStatusModellFRISINN regelModellFrisinn) {
-        Inntektsgrunnlag inntektsgrunnlag = regelModellFrisinn.getInntektsgrunnlag();
-        boolean harIngenPerioderMedKunFrilans = regelModellFrisinn.getFrisinnPerioder().stream()
+        var inntektsgrunnlag = regelModellFrisinn.getInntektsgrunnlag();
+        var harIngenPerioderMedKunFrilans = regelModellFrisinn.getFrisinnPerioder().stream()
             .noneMatch(fp -> (fp.getSøkerYtelseFrilans() && !fp.getSøkerYtelseNæring()));
-        boolean ingenPerioderHarLøpendeInntekt = regelModellFrisinn.getFrisinnPerioder().stream()
+        var ingenPerioderHarLøpendeInntekt = regelModellFrisinn.getFrisinnPerioder().stream()
             .allMatch(fp -> {
-                List<Periodeinntekt> inntektspostFraSøknadForStatusIPeriode = inntektsgrunnlag.getInntektspostFraSøknadForStatusIPeriode(AktivitetStatus.FL, fp.getPeriode());
-                BigDecimal inntektIPeriode = inntektspostFraSøknadForStatusIPeriode.stream().map(Periodeinntekt::getInntekt).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+                var inntektspostFraSøknadForStatusIPeriode = inntektsgrunnlag.getInntektspostFraSøknadForStatusIPeriode(AktivitetStatus.FL, fp.getPeriode());
+                var inntektIPeriode = inntektspostFraSøknadForStatusIPeriode.stream().map(Periodeinntekt::getInntekt).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
                 return inntektIPeriode.compareTo(BigDecimal.ZERO) == 0;
             });
-        List<BigDecimal> flInntekterFraRegister = inntektsgrunnlag.getFrilansPeriodeinntekter(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, stpOpptjening, MND_FØR_STP_MED_FL_INNTEKT);
+        var flInntekterFraRegister = inntektsgrunnlag.getFrilansPeriodeinntekter(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, stpOpptjening, MND_FØR_STP_MED_FL_INNTEKT);
         return (flInntekterFraRegister.isEmpty() && harIngenPerioderMedKunFrilans) && ingenPerioderHarLøpendeInntekt;
     }
 
@@ -87,7 +86,7 @@ public class FastsettStatusOgAndelPrPeriodeFRISINN extends LeafSpecification<Akt
 
 
     private AktivitetStatus mapAktivitetTilStatus(Aktivitet aktivitet, boolean harPerioderUtenYtelse) {
-        List<Aktivitet> arbeistaker = Arrays.asList(Aktivitet.ARBEIDSTAKERINNTEKT, Aktivitet.FRILANSINNTEKT);
+        var arbeistaker = Arrays.asList(Aktivitet.ARBEIDSTAKERINNTEKT, Aktivitet.FRILANSINNTEKT);
         AktivitetStatus aktivitetStatus;
 
         if (Aktivitet.NÆRINGSINNTEKT.equals(aktivitet)) {

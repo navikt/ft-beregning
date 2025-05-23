@@ -43,7 +43,7 @@ public class AktivitetGraderingDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        AktivitetGraderingDto that = (AktivitetGraderingDto) o;
+	    var that = (AktivitetGraderingDto) o;
         return Objects.equals(andelGraderingDto, that.andelGraderingDto);
     }
 

@@ -32,8 +32,8 @@ public class AutopunktUtlederFastsettBeregningsaktiviteterInntektrapporteringTje
         if (!erPåvirketAvInntektsrapporteringsfrist(input, dagensDato, aktivitetAggregatDto, skjæringstidspunktForBeregning)) {
             return Optional.empty();
         }
-        boolean harArbeidUtenIM = !alleArbeidsforholdHarInntektsmelding(aktivitetAggregatDto, arbeidsgivere, skjæringstidspunktForBeregning);
-        boolean erFrilans = erFrilans(aktivitetAggregatDto, skjæringstidspunktForBeregning);
+	    var harArbeidUtenIM = !alleArbeidsforholdHarInntektsmelding(aktivitetAggregatDto, arbeidsgivere, skjæringstidspunktForBeregning);
+	    var erFrilans = erFrilans(aktivitetAggregatDto, skjæringstidspunktForBeregning);
         return erFrilans || harArbeidUtenIM
                 ? Optional.of(utledBehandlingPåVentFrist(input, skjæringstidspunktForBeregning))
                 : Optional.empty();
@@ -46,7 +46,7 @@ public class AutopunktUtlederFastsettBeregningsaktiviteterInntektrapporteringTje
         if (!erPåvirketAvInntektsrapporteringsfrist(input, dagensDato, aktivitetAggregatDto, skjæringstidspunktForBeregning)) {
             return Optional.empty();
         }
-        boolean erFrilans = erFrilans(aktivitetAggregatDto, skjæringstidspunktForBeregning);
+	    var erFrilans = erFrilans(aktivitetAggregatDto, skjæringstidspunktForBeregning);
         return erFrilans
                 ? Optional.of(utledBehandlingPåVentFrist(input, skjæringstidspunktForBeregning))
                 : Optional.empty();
@@ -56,11 +56,11 @@ public class AutopunktUtlederFastsettBeregningsaktiviteterInntektrapporteringTje
                                                                   LocalDate dagensDato,
                                                                   BeregningAktivitetAggregatDto aktivitetAggregatDto,
                                                                   LocalDate skjæringstidspunktForBeregning) {
-        boolean harRelevantAktivitet = harAktivitetStatuserSomKanSettesPåVent(aktivitetAggregatDto, skjæringstidspunktForBeregning);
-        LocalDate beregningsperiodeTom = hentBeregningsperiodeTomForATFL(skjæringstidspunktForBeregning);
-        LocalDate originalFrist = beregningsperiodeTom.plusDays((Integer) input.getKonfigVerdi(INNTEKT_RAPPORTERING_FRIST_DATO));
-        LocalDate fristMedHelligdagerInkl = BevegeligeHelligdagerUtil.hentFørsteVirkedagFraOgMed(originalFrist);
-        boolean erFristPassert = dagensDato.isAfter(fristMedHelligdagerInkl);
+	    var harRelevantAktivitet = harAktivitetStatuserSomKanSettesPåVent(aktivitetAggregatDto, skjæringstidspunktForBeregning);
+	    var beregningsperiodeTom = hentBeregningsperiodeTomForATFL(skjæringstidspunktForBeregning);
+	    var originalFrist = beregningsperiodeTom.plusDays((Integer) input.getKonfigVerdi(INNTEKT_RAPPORTERING_FRIST_DATO));
+	    var fristMedHelligdagerInkl = BevegeligeHelligdagerUtil.hentFørsteVirkedagFraOgMed(originalFrist);
+	    var erFristPassert = dagensDato.isAfter(fristMedHelligdagerInkl);
         return harRelevantAktivitet && !erFristPassert;
     }
 
@@ -79,8 +79,8 @@ public class AutopunktUtlederFastsettBeregningsaktiviteterInntektrapporteringTje
     }
 
     private static LocalDate utledBehandlingPåVentFrist(BeregningsgrunnlagInput input, LocalDate skjæringstidspunktForBeregning) {
-        LocalDate beregningsperiodeTom = hentBeregningsperiodeTomForATFL(skjæringstidspunktForBeregning);
-        LocalDate frist = beregningsperiodeTom.plusDays((Integer) input.getKonfigVerdi(INNTEKT_RAPPORTERING_FRIST_DATO));
+	    var beregningsperiodeTom = hentBeregningsperiodeTomForATFL(skjæringstidspunktForBeregning);
+	    var frist = beregningsperiodeTom.plusDays((Integer) input.getKonfigVerdi(INNTEKT_RAPPORTERING_FRIST_DATO));
         return BevegeligeHelligdagerUtil.hentFørsteVirkedagFraOgMed(frist).plusDays(1);
     }
 

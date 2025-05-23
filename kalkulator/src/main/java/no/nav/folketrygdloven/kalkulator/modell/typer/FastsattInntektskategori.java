@@ -75,7 +75,7 @@ public class FastsattInntektskategori implements Comparable<FastsattInntektskate
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        FastsattInntektskategori that = (FastsattInntektskategori) o;
+        var that = (FastsattInntektskategori) o;
         return inntektskategori == that.inntektskategori &&
                 inntektskategoriAutomatiskFordeling == that.inntektskategoriAutomatiskFordeling &&
                 inntektskategoriManuellFordeling == that.inntektskategoriManuellFordeling;

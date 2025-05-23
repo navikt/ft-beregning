@@ -7,14 +7,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.kalkulator.guitjenester.BeregningsgrunnlagDtoUtil;
 import no.nav.folketrygdloven.kalkulator.guitjenester.ModellTyperMapper;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BGAndelArbeidsforholdDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.FaktaAggregatDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseGrunnlagDto;
@@ -40,13 +38,13 @@ public class FaktaOmBeregningAndelDtoTjeneste {
         if (beregningsgrunnlag.getBeregningsgrunnlagPerioder().isEmpty()) {
             return Optional.empty();
         }
-        BeregningsgrunnlagPeriodeDto førstePeriode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        BeregningsgrunnlagPrStatusOgAndelDto frilansAndel = førstePeriode.getBeregningsgrunnlagPrStatusOgAndelList().stream()
+        var førstePeriode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var frilansAndel = førstePeriode.getBeregningsgrunnlagPrStatusOgAndelList().stream()
                 .filter(a -> a.getAktivitetStatus().equals(AktivitetStatus.FRILANSER))
                 .findFirst()
                 .orElse(null);
         if (frilansAndel != null) {
-            FaktaOmBeregningAndelDto dto = new FaktaOmBeregningAndelDto();
+            var dto = new FaktaOmBeregningAndelDto();
             BeregningsgrunnlagDtoUtil.lagArbeidsforholdDto(frilansAndel, Optional.empty(), inntektArbeidYtelseGrunnlag)
                     .ifPresent(dto::setArbeidsforhold);
             dto.setInntektskategori(frilansAndel.getGjeldendeInntektskategori());
@@ -60,21 +58,21 @@ public class FaktaOmBeregningAndelDtoTjeneste {
     static List<ATogFLISammeOrganisasjonDto> lagATogFLISAmmeOrganisasjonListe(BeregningsgrunnlagDto beregningsgrunnlag,
                                                                               Collection<InntektsmeldingDto> inntektsmeldinger,
                                                                               InntektArbeidYtelseGrunnlagDto inntektArbeidYtelseGrunnlag) {
-        Set<Arbeidsgiver> arbeidsgivere = KontrollerFaktaBeregningFrilanserTjeneste
+        var arbeidsgivere = KontrollerFaktaBeregningFrilanserTjeneste
                 .brukerErArbeidstakerOgFrilanserISammeOrganisasjon(beregningsgrunnlag, inntektArbeidYtelseGrunnlag);
         if (arbeidsgivere.isEmpty()) {
             return Collections.emptyList();
         }
 
-        Set<String> arbeidsgivereSomErVirksomheter = arbeidsgivere
+        var arbeidsgivereSomErVirksomheter = arbeidsgivere
                 .stream()
                 .filter(Arbeidsgiver::getErVirksomhet)
                 .map(Arbeidsgiver::getOrgnr)
                 .collect(Collectors.toSet());
 
-        Map<String, List<InntektsmeldingDto>> inntektsmeldingMap = KontrollerFaktaBeregningTjeneste
+        var inntektsmeldingMap = KontrollerFaktaBeregningTjeneste
                 .hentInntektsmeldingerForVirksomheter(arbeidsgivereSomErVirksomheter, inntektsmeldinger);
-        List<BeregningsgrunnlagPrStatusOgAndelDto> andeler = beregningsgrunnlag.getBeregningsgrunnlagPerioder()
+        var andeler = beregningsgrunnlag.getBeregningsgrunnlagPerioder()
                 .get(0)
                 .getBeregningsgrunnlagPrStatusOgAndelList()
                 .stream()
@@ -82,7 +80,7 @@ public class FaktaOmBeregningAndelDtoTjeneste {
                 .collect(Collectors.toList());
 
         List<ATogFLISammeOrganisasjonDto> resultatListe = new ArrayList<>();
-        for (Arbeidsgiver arbeidsgiver : arbeidsgivere) {
+        for (var arbeidsgiver : arbeidsgivere) {
             andeler.stream()
                     .filter(
                             andel -> andel.getBgAndelArbeidsforhold().map(BGAndelArbeidsforholdDto::getArbeidsgiver).map(a -> a.equals(arbeidsgiver)).orElse(false))
@@ -94,7 +92,7 @@ public class FaktaOmBeregningAndelDtoTjeneste {
     private static ATogFLISammeOrganisasjonDto lagATogFLISAmmeOrganisasjon(BeregningsgrunnlagPrStatusOgAndelDto andel,
                                                                            Map<String, List<InntektsmeldingDto>> inntektsmeldingMap,
                                                                            InntektArbeidYtelseGrunnlagDto inntektArbeidYtelseGrunnlag) {
-        ATogFLISammeOrganisasjonDto dto = new ATogFLISammeOrganisasjonDto();
+        var dto = new ATogFLISammeOrganisasjonDto();
         BeregningsgrunnlagDtoUtil.lagArbeidsforholdDto(andel, Optional.empty(), inntektArbeidYtelseGrunnlag)
                 .ifPresent(dto::setArbeidsforhold);
         dto.setAndelsnr(andel.getAndelsnr());
@@ -103,7 +101,7 @@ public class FaktaOmBeregningAndelDtoTjeneste {
 
         // Privapersoner sender ikke inntektsmelding, disse må alltid fastsettes
         if (andel.getBgAndelArbeidsforhold().map(BGAndelArbeidsforholdDto::getArbeidsgiver).map(Arbeidsgiver::getErVirksomhet).orElse(false)) {
-            Optional<InntektsmeldingDto> inntektsmelding = andel.getBgAndelArbeidsforhold().map(BGAndelArbeidsforholdDto::getArbeidsgiver)
+            var inntektsmelding = andel.getBgAndelArbeidsforhold().map(BGAndelArbeidsforholdDto::getArbeidsgiver)
                     .filter(Arbeidsgiver::getErVirksomhet)
                     .flatMap(arbeidsgiver -> finnRiktigInntektsmelding(
                             inntektsmeldingMap,
@@ -119,23 +117,23 @@ public class FaktaOmBeregningAndelDtoTjeneste {
                                                                                       Optional<FaktaAggregatDto> faktaAggregat,
                                                                                       InntektArbeidYtelseGrunnlagDto inntektArbeidYtelseGrunnlag,
                                                                                       Collection<InntektsmeldingDto> inntektsmeldinger) {
-        List<YrkesaktivitetDto> aktiviteterMedLønnsendring = LønnsendringTjeneste.finnAktiviteterMedLønnsendringUtenInntektsmeldingIBeregningsperiodenOgTilStp(beregningsgrunnlag, inntektArbeidYtelseGrunnlag, inntektsmeldinger);
+        var aktiviteterMedLønnsendring = LønnsendringTjeneste.finnAktiviteterMedLønnsendringUtenInntektsmeldingIBeregningsperiodenOgTilStp(beregningsgrunnlag, inntektArbeidYtelseGrunnlag, inntektsmeldinger);
         var aktiviteterMedLønnsendringUtenVurdering = aktiviteterMedLønnsendring.stream().filter(ya -> harIkkeBlittVurdertAutomatisk(faktaAggregat, ya))
                 .toList();
         if (aktiviteterMedLønnsendringUtenVurdering.isEmpty()) {
             return Collections.emptyList();
         }
-        List<BeregningsgrunnlagPrStatusOgAndelDto> andeler = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList()
+        var andeler = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList()
                 .stream()
                 .filter(andel -> andel.getBgAndelArbeidsforhold().map(BGAndelArbeidsforholdDto::getArbeidsgiver).isPresent())
                 .collect(Collectors.toList());
         List<FaktaOmBeregningAndelDto> arbeidsforholdMedLønnsendringUtenIMDtoList = new ArrayList<>();
-        for (YrkesaktivitetDto yrkesaktivitet : aktiviteterMedLønnsendringUtenVurdering) {
-            Optional<BeregningsgrunnlagPrStatusOgAndelDto> korrektAndel = finnKorrektAndelFraArbeidsgiver(andeler, yrkesaktivitet.getArbeidsgiver());
+        for (var yrkesaktivitet : aktiviteterMedLønnsendringUtenVurdering) {
+            var korrektAndel = finnKorrektAndelFraArbeidsgiver(andeler, yrkesaktivitet.getArbeidsgiver());
             if (korrektAndel.isEmpty()) {
                 throw new IllegalStateException("Utviklerfeil: Finner ikke korrekt andel for yrkesaktiviteten.");
             }
-            FaktaOmBeregningAndelDto dto = lagArbeidsforholdUtenInntektsmeldingDto(korrektAndel.get(), inntektArbeidYtelseGrunnlag);
+            var dto = lagArbeidsforholdUtenInntektsmeldingDto(korrektAndel.get(), inntektArbeidYtelseGrunnlag);
             arbeidsforholdMedLønnsendringUtenIMDtoList.add(dto);
         }
         return arbeidsforholdMedLønnsendringUtenIMDtoList;
@@ -151,7 +149,7 @@ public class FaktaOmBeregningAndelDtoTjeneste {
     }
 
     public static FaktaOmBeregningAndelDto lagArbeidsforholdUtenInntektsmeldingDto(BeregningsgrunnlagPrStatusOgAndelDto andel, InntektArbeidYtelseGrunnlagDto inntektArbeidYtelseGrunnlag) {
-        FaktaOmBeregningAndelDto dto = new FaktaOmBeregningAndelDto();
+        var dto = new FaktaOmBeregningAndelDto();
         BeregningsgrunnlagDtoUtil.lagArbeidsforholdDto(andel, Optional.empty(), inntektArbeidYtelseGrunnlag)
                 .ifPresent(dto::setArbeidsforhold);
         dto.setAndelsnr(andel.getAndelsnr());

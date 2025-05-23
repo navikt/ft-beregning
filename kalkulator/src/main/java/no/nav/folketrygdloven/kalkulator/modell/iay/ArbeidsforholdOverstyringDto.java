@@ -39,8 +39,8 @@ public class ArbeidsforholdOverstyringDto {
     }
 
     private void leggTilOverstyrtePerioder(ArbeidsforholdOverstyringDto arbeidsforholdOverstyringEntitet) {
-        for (ArbeidsforholdOverstyrtePerioderDto overstyrtePerioderEntitet : arbeidsforholdOverstyringEntitet.getArbeidsforholdOverstyrtePerioder()) {
-            ArbeidsforholdOverstyrtePerioderDto perioderEntitet = new ArbeidsforholdOverstyrtePerioderDto(overstyrtePerioderEntitet);
+        for (var overstyrtePerioderEntitet : arbeidsforholdOverstyringEntitet.getArbeidsforholdOverstyrtePerioder()) {
+	        var perioderEntitet = new ArbeidsforholdOverstyrtePerioderDto(overstyrtePerioderEntitet);
             this.arbeidsforholdOverstyrtePerioder.add(perioderEntitet);
         }
     }
@@ -70,7 +70,7 @@ public class ArbeidsforholdOverstyringDto {
     }
 
     void leggTilOverstyrtPeriode(LocalDate fom, LocalDate tom) {
-        ArbeidsforholdOverstyrtePerioderDto overstyrtPeriode = new ArbeidsforholdOverstyrtePerioderDto();
+	    var overstyrtPeriode = new ArbeidsforholdOverstyrtePerioderDto();
         overstyrtPeriode.setPeriode(Intervall.fraOgMedTilOgMed(fom, tom));
         arbeidsforholdOverstyrtePerioder.add(overstyrtPeriode);
     }
@@ -92,7 +92,7 @@ public class ArbeidsforholdOverstyringDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || !(o instanceof ArbeidsforholdOverstyringDto)) return false;
-        ArbeidsforholdOverstyringDto that = (ArbeidsforholdOverstyringDto) o;
+	    var that = (ArbeidsforholdOverstyringDto) o;
         return Objects.equals(arbeidsgiver, that.arbeidsgiver) &&
                 Objects.equals(arbeidsforholdRef, that.arbeidsforholdRef);
     }

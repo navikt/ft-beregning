@@ -24,7 +24,7 @@ public class ErFjernetIOverstyrt {
                                               YrkesaktivitetDto yrkesaktivitet,
                                               Optional<BeregningAktivitetOverstyringerDto> aktivitetOverstyringer, LocalDate skjæringstidspunktBeregning) {
 
-        List<Periode> ansettelsesPerioder = filter.getAnsettelsesPerioder(yrkesaktivitet).stream()
+        var ansettelsesPerioder = filter.getAnsettelsesPerioder(yrkesaktivitet).stream()
                 .map(aa -> new Periode(aa.getPeriode().getFomDato(), aa.getPeriode().getTomDato()))
                 .filter(periode -> !periode.getTom().isBefore(BeregningstidspunktTjeneste.finnBeregningstidspunkt(skjæringstidspunktBeregning)))
                 .collect(Collectors.toList());

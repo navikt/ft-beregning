@@ -5,11 +5,11 @@ import static no.nav.folketrygdloven.kalkulus.kodeverk.PeriodeÅrsak.REPRESENTER
 
 import java.util.List;
 
+import no.nav.folketrygdloven.kalkulator.felles.periodesplitting.PeriodeSplitter;
+import no.nav.folketrygdloven.kalkulator.felles.periodesplitting.SplittPeriodeConfig;
 import no.nav.folketrygdloven.kalkulator.input.HåndterBeregningsgrunnlagInput;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDtoBuilder;
-import no.nav.folketrygdloven.kalkulator.felles.periodesplitting.PeriodeSplitter;
-import no.nav.folketrygdloven.kalkulator.felles.periodesplitting.SplittPeriodeConfig;
 import no.nav.folketrygdloven.kalkulus.håndtering.v1.fordeling.VurderRepresentererStortingetHåndteringDto;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
 import no.nav.fpsak.tidsserie.LocalDateSegment;

@@ -43,7 +43,7 @@ public class BeregnetMånedsgrunnlag implements Comparable<BeregnetMånedsgrunnl
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		BeregnetMånedsgrunnlag that = (BeregnetMånedsgrunnlag) o;
+		var that = (BeregnetMånedsgrunnlag) o;
 		return Objects.equals(this.finnSum(), that.finnSum()) && Objects.equals(måned, that.måned);
 	}
 
@@ -54,7 +54,7 @@ public class BeregnetMånedsgrunnlag implements Comparable<BeregnetMånedsgrunnl
 
 	@Override
 	public int compareTo(BeregnetMånedsgrunnlag beregnetMånedsgrunnlag) {
-		int compareSum = beregnetMånedsgrunnlag.finnSum().compareTo(this.finnSum());
+		var compareSum = beregnetMånedsgrunnlag.finnSum().compareTo(this.finnSum());
 		if (compareSum != 0) {
 			return compareSum;
 		}

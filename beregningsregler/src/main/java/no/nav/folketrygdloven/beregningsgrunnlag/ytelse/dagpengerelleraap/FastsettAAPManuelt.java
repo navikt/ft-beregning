@@ -1,13 +1,11 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.ytelse.dagpengerelleraap;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
@@ -26,13 +24,13 @@ class FastsettAAPManuelt extends LeafSpecification<BeregningsgrunnlagPeriode> {
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        BeregningsgrunnlagPrStatus bgPerStatus = grunnlag.getBeregningsgrunnlagPrStatus().stream()
+        var bgPerStatus = grunnlag.getBeregningsgrunnlagPrStatus().stream()
             .filter(bgps -> bgps.getAktivitetStatus().erAAPellerDP())
             .findFirst()
             .orElseThrow(() -> new IllegalStateException("Ingen aktivitetstatus av type DP eller AAP funnet."));
-        Periodeinntekt inntekt = grunnlag.getInntektsgrunnlag().getPeriodeinntekt(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP, grunnlag.getSkjæringstidspunkt())
+        var inntekt = grunnlag.getInntektsgrunnlag().getPeriodeinntekt(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP, grunnlag.getSkjæringstidspunkt())
             .orElseThrow(() -> new IllegalStateException("Ingen inntekter fra tilstøtende ytelser funnet i siste måned med inntekt"));
-        BigDecimal beregnetPrÅr = bgPerStatus.getBeregnetPrÅr();
+        var beregnetPrÅr = bgPerStatus.getBeregnetPrÅr();
         Long originalDagsats = inntekt.getInntekt().longValue();
         BeregningsgrunnlagPrStatus.builder(bgPerStatus)
             .medBeregnetPrÅr(beregnetPrÅr)
@@ -40,7 +38,7 @@ class FastsettAAPManuelt extends LeafSpecification<BeregningsgrunnlagPeriode> {
             .medOrginalDagsatsFraTilstøtendeYtelse(originalDagsats)
             .build();
 
-        BeregningsgrunnlagHjemmel hjemmel = AktivitetStatus.AAP.equals(bgPerStatus.getAktivitetStatus()) ? BeregningsgrunnlagHjemmel.F_14_7
+        var hjemmel = AktivitetStatus.AAP.equals(bgPerStatus.getAktivitetStatus()) ? BeregningsgrunnlagHjemmel.F_14_7
             : BeregningsgrunnlagHjemmel.F_14_7_8_49;
         grunnlag.getBeregningsgrunnlag().getAktivitetStatus(bgPerStatus.getAktivitetStatus()).setHjemmel(hjemmel);
 

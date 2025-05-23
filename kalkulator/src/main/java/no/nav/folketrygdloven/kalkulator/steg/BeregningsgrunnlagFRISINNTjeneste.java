@@ -68,7 +68,7 @@ public class BeregningsgrunnlagFRISINNTjeneste implements KalkulatorInterface {
     public BeregningResultatAggregat fastsettBeregningsgrunnlag(StegProsesseringInput input) {
         validerFrisinn(input);
         var resultat = new FullføreBeregningsgrunnlagFRISINN().fullføreBeregningsgrunnlag(input);
-        Builder resultatBuilder = Builder.fra(input)
+	    var resultatBuilder = Builder.fra(input)
                 .medRegelSporingAggregat(resultat.getRegelsporinger().orElse(null))
                 .medBeregningsgrunnlag(resultat.getBeregningsgrunnlag(), input.getStegTilstand());
         var vilkårResultat = vilkårTjeneste.lagVilkårResultatFullføre(input, resultat.getBeregningsgrunnlag());
@@ -111,7 +111,7 @@ public class BeregningsgrunnlagFRISINNTjeneste implements KalkulatorInterface {
         validerFrisinn(input);
         var vilkårVurderingResultat = new VurderBeregningsgrunnlagTjenesteFRISINN()
                 .vurderBeregningsgrunnlag(input, input.getBeregningsgrunnlagGrunnlag());
-        BeregningsgrunnlagDto vurdertBeregningsgrunnlag = vilkårVurderingResultat.getBeregningsgrunnlag();
+	    var vurdertBeregningsgrunnlag = vilkårVurderingResultat.getBeregningsgrunnlag();
         var vilkårResultat = vilkårTjeneste
                 .lagVilkårResultatFordel(input, vilkårVurderingResultat.getVilkårsresultat());
         return Builder.fra(input)
@@ -204,14 +204,14 @@ public class BeregningsgrunnlagFRISINNTjeneste implements KalkulatorInterface {
                 FastsettSkjæringstidspunktOgStatuserFRISINN::fastsett,
                 FastsettBeregningsperiodeTjenesteFRISINN::fastsettBeregningsperiode);
 
-        BeregningsgrunnlagDto beregningsgrunnlag = resultat.getBeregningsgrunnlag();
-        BeregningsgrunnlagGrunnlagDto nyttGrunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag())
+	    var beregningsgrunnlag = resultat.getBeregningsgrunnlag();
+	    var nyttGrunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag())
                 .medBeregningsgrunnlag(beregningsgrunnlag)
                 .build(input.getStegTilstand());
         var avklaringsbehovresultat = new AvklaringsbehovUtlederFaktaOmBeregningFRISINN()
                 .utledAvklaringsbehovFor(input, nyttGrunnlag);
 
-        BeregningsgrunnlagDto grunnlagMedTilfeller = BeregningsgrunnlagDto.builder(beregningsgrunnlag)
+	    var grunnlagMedTilfeller = BeregningsgrunnlagDto.builder(beregningsgrunnlag)
                 .leggTilFaktaOmBeregningTilfeller(avklaringsbehovresultat.getFaktaOmBeregningTilfeller())
                 .build();
 
@@ -224,7 +224,7 @@ public class BeregningsgrunnlagFRISINNTjeneste implements KalkulatorInterface {
     }
 
     private Optional<BeregningAktivitetOverstyringerDto> hentTidligereOverstyringer(FastsettBeregningsaktiviteterInput input) {
-        Optional<BeregningsgrunnlagGrunnlagDto> overstyrtGrunnlag = input.getForrigeGrunnlagFraStegUt();
+	    var overstyrtGrunnlag = input.getForrigeGrunnlagFraStegUt();
         return overstyrtGrunnlag.flatMap(BeregningsgrunnlagGrunnlagDto::getOverstyring);
     }
 

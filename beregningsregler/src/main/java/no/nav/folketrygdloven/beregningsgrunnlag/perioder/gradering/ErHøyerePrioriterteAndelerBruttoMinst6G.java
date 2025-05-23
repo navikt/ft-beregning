@@ -17,12 +17,12 @@ class ErHøyerePrioriterteAndelerBruttoMinst6G {
     static boolean vurder(BigDecimal grunnbeløp,
                           PeriodisertBruttoBeregningsgrunnlag periodisertBruttoBeregningsgrunnlag,
                           AndelGradering andelGradering) {
-        int avkortingPrioritet = andelGradering.getAktivitetStatus().getAvkortingPrioritet();
-        BigDecimal prioritertBg = periodisertBruttoBeregningsgrunnlag.getBruttoBeregningsgrunnlag().stream()
+        var avkortingPrioritet = andelGradering.getAktivitetStatus().getAvkortingPrioritet();
+        var prioritertBg = periodisertBruttoBeregningsgrunnlag.getBruttoBeregningsgrunnlag().stream()
             .filter(a -> a.getAktivitetStatus().getAvkortingPrioritet() < avkortingPrioritet)
             .map(BruttoBeregningsgrunnlag::getBruttoPrÅr)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal seksG = grunnbeløp.multiply(BigDecimal.valueOf(ANTALL_G));
+        var seksG = grunnbeløp.multiply(BigDecimal.valueOf(ANTALL_G));
         return prioritertBg.compareTo(seksG) >= 0;
     }
 }

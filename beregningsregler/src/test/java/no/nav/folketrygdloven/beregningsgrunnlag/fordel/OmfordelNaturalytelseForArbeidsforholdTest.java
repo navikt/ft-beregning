@@ -7,14 +7,11 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Optional;
 
-
-import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelAndelModell;
-
-import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelModell;
-import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelPeriodeModell;
-
 import org.junit.jupiter.api.Test;
 
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelAndelModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelPeriodeModell;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;

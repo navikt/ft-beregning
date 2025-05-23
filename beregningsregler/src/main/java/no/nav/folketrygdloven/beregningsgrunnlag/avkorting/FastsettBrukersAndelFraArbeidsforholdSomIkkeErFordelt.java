@@ -1,15 +1,12 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.avkorting;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
-import no.nav.fpsak.nare.evaluation.node.SingleEvaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(FastsettBrukersAndelFraArbeidsforholdSomIkkeErFordelt.ID)
@@ -25,10 +22,10 @@ class FastsettBrukersAndelFraArbeidsforholdSomIkkeErFordelt extends LeafSpecific
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
         Map<String, Object> resultater = new HashMap<>();
-        SingleEvaluation resultat = ja();
+        var resultat = ja();
         resultat.setEvaluationProperties(resultater);
 
-        List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforholdene = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
+        var arbeidsforholdene = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
         arbeidsforholdene.stream()
                 .filter(af -> af.getMaksimalRefusjonPrÅr() != null)
                 .filter(af -> af.getAvkortetRefusjonPrÅr() != null)

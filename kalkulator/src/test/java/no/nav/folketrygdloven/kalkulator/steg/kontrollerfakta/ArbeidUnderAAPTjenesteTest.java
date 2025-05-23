@@ -51,15 +51,15 @@ class ArbeidUnderAAPTjenesteTest {
 	}
 
 	private BeregningsgrunnlagDto lagBeregningsgrunnlagDto(List<OpptjeningAktivitetType> opptjeningAktivitetTyper) {
-		BeregningsgrunnlagAktivitetStatusDto.Builder aktivitetStatusArbeidstaker = BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER);
-		BeregningsgrunnlagAktivitetStatusDto.Builder aktivitetstatusAAP = BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.ARBEIDSAVKLARINGSPENGER);
-		BeregningsgrunnlagDto beregningsgrunnlag = BeregningsgrunnlagDto.builder()
+		var aktivitetStatusArbeidstaker = BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER);
+		var aktivitetstatusAAP = BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.ARBEIDSAVKLARINGSPENGER);
+		var beregningsgrunnlag = BeregningsgrunnlagDto.builder()
 				.medSkjæringstidspunkt(LocalDate.now())
 				.leggTilAktivitetStatus(aktivitetStatusArbeidstaker)
 				.leggTilAktivitetStatus(aktivitetstatusAAP)
 				.build();
-		BeregningsgrunnlagPeriodeDto.Builder periodeBuilder = BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(LocalDate.now(), null);
-		BeregningsgrunnlagPeriodeDto periode = periodeBuilder.build(beregningsgrunnlag);
+		var periodeBuilder = BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(LocalDate.now(), null);
+		var periode = periodeBuilder.build(beregningsgrunnlag);
 		opptjeningAktivitetTyper.forEach(opptjeningAktivitetType -> BeregningsgrunnlagPrStatusOgAndelDto.ny()
 				.medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
 				.medInntektskategori(Inntektskategori.ARBEIDSTAKER)
@@ -70,7 +70,7 @@ class ArbeidUnderAAPTjenesteTest {
 	}
 
 	private boolean kallHarAndelForArbeidUnderAAP(BeregningsgrunnlagDto beregningsgrunnlag) {
-		BeregningsgrunnlagGrunnlagDto grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
+		var grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
 				.medBeregningsgrunnlag(beregningsgrunnlag)
 				.build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER);
 		return ArbeidUnderAAPTjeneste.harAndelForArbeidUnderAAP(grunnlag);

@@ -1,13 +1,11 @@
 package no.nav.folketrygdloven.skjæringstidspunkt.regel.ytelse;
 
-import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModellFRISINN;
 import no.nav.folketrygdloven.skjæringstidspunkt.status.frisinn.FinnPerioderUtenYtelse;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
@@ -27,10 +25,10 @@ class FastsettSkjæringstidspunktFørPeriodeMedYtelse extends LeafSpecification<
     @Override
     public Evaluation evaluate(AktivitetStatusModellFRISINN regelmodell) {
         Map<String, Object> resultater = new HashMap<>();
-        List<Periode> perioder = finnBeregningsperioder(regelmodell, resultater);
+        var perioder = finnBeregningsperioder(regelmodell, resultater);
         resultater.put("beregningsperioder", "Perioder: " + perioder.stream().map(Periode::toString).reduce("", (p1, p2) -> p1 + ", " + p2));
         regelmodell.setBeregningsperioder(perioder);
-        LocalDate sisteDatoIBeregningsperioden = perioder.stream().map(Periode::getTom)
+        var sisteDatoIBeregningsperioden = perioder.stream().map(Periode::getTom)
             .max(Comparator.naturalOrder())
             .orElse(regelmodell.getSkjæringstidspunktForOpptjening().minusDays(1));
         regelmodell.setSkjæringstidspunktForBeregning(sisteDatoIBeregningsperioden.plusDays(1));
@@ -39,7 +37,7 @@ class FastsettSkjæringstidspunktFørPeriodeMedYtelse extends LeafSpecification<
     }
 
     private List<Periode> finnBeregningsperioder(AktivitetStatusModellFRISINN regelmodell, Map<String, Object> resultater) {
-        Inntektsgrunnlag inntektsgrunnlag = regelmodell.getInntektsgrunnlag();
+        var inntektsgrunnlag = regelmodell.getInntektsgrunnlag();
         return FinnPerioderUtenYtelse.finnPerioder(inntektsgrunnlag, regelmodell.getSkjæringstidspunktForOpptjening(), resultater);
     }
 

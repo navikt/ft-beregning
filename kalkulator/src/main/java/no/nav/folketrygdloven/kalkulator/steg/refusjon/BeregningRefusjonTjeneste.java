@@ -50,17 +50,17 @@ public final class BeregningRefusjonTjeneste {
         if (alleredeUtbetaltTOM.isBefore(revurderingBeregningsgrunnlag.getSkjæringstidspunkt())) {
             return Collections.emptyMap();
         }
-        LocalDateTimeline<RefusjonPeriode> alleredeUtbetaltPeriode = finnAlleredeUtbetaltPeriode(alleredeUtbetaltTOM);
-        LocalDateTimeline<RefusjonPeriode> originalUtbetaltTidslinje = RefusjonTidslinjeTjeneste.lagTidslinje(originaltBeregningsgrunnlag, true, ytelsespesifiktGrunnlag).intersection(alleredeUtbetaltPeriode);
-        LocalDateTimeline<RefusjonPeriode> revurderingTidslinje = RefusjonTidslinjeTjeneste.lagTidslinje(revurderingBeregningsgrunnlag, false, ytelsespesifiktGrunnlag);
-        LocalDateTimeline<RefusjonPeriodeEndring> endringTidslinje = RefusjonTidslinjeTjeneste.kombinerTidslinjer(originalUtbetaltTidslinje, revurderingTidslinje);
+	    var alleredeUtbetaltPeriode = finnAlleredeUtbetaltPeriode(alleredeUtbetaltTOM);
+	    var originalUtbetaltTidslinje = RefusjonTidslinjeTjeneste.lagTidslinje(originaltBeregningsgrunnlag, true, ytelsespesifiktGrunnlag).intersection(alleredeUtbetaltPeriode);
+	    var revurderingTidslinje = RefusjonTidslinjeTjeneste.lagTidslinje(revurderingBeregningsgrunnlag, false, ytelsespesifiktGrunnlag);
+	    var endringTidslinje = RefusjonTidslinjeTjeneste.kombinerTidslinjer(originalUtbetaltTidslinje, revurderingTidslinje);
         var helgekomprimertTidslinje = komprimerForHelg(endringTidslinje);
         return vurderPerioder(helgekomprimertTidslinje, grenseverdi);
     }
 
     private static LocalDateTimeline<RefusjonPeriodeEndring> komprimerForHelg(LocalDateTimeline<RefusjonPeriodeEndring> endringTidslinje) {
         var factory = new TimelineWeekendCompressor.CompressorFactory<RefusjonPeriodeEndring>(Objects::equals, (i, lhs, rhs) -> new LocalDateSegment<>(i, lhs.getValue()));
-        TimelineWeekendCompressor<RefusjonPeriodeEndring> compressor = endringTidslinje.toSegments().stream()
+	    var compressor = endringTidslinje.toSegments().stream()
                 .collect(factory::get, TimelineWeekendCompressor::accept, TimelineWeekendCompressor::combine);
         return new LocalDateTimeline<>(compressor.getSegmenter());
     }
@@ -75,12 +75,12 @@ public final class BeregningRefusjonTjeneste {
     private static Map<Intervall, List<RefusjonAndel>> vurderPerioder(LocalDateTimeline<RefusjonPeriodeEndring> endringTidslinje, Beløp grenseverdi) {
         Map<Intervall, List<RefusjonAndel>> andelerIPeriode = new HashMap<>();
         endringTidslinje.toSegments().forEach(segment -> {
-            RefusjonPeriodeEndring refusjonsendring = segment.getValue();
+	        var refusjonsendring = segment.getValue();
             if (erMindreAndelTilgjengeligForBruker(refusjonsendring, grenseverdi)) {
                 // Bruker vil få mindre andel av beregningsgrunnlaget, sjekk om noen andeler har fått økt refusjon
-                List<RefusjonAndel> andelerMedØktRefusjon = finnAndelerMedØktRefusjon(refusjonsendring);
+	            var andelerMedØktRefusjon = finnAndelerMedØktRefusjon(refusjonsendring);
                 if (!andelerMedØktRefusjon.isEmpty()) {
-                    Intervall interval = Intervall.fraOgMedTilOgMed(segment.getFom(), segment.getTom());
+	                var interval = Intervall.fraOgMedTilOgMed(segment.getFom(), segment.getTom());
                     andelerIPeriode.put(interval, andelerMedØktRefusjon);
                 }
             }
@@ -89,15 +89,15 @@ public final class BeregningRefusjonTjeneste {
     }
 
     private static List<RefusjonAndel> finnAndelerMedØktRefusjon(RefusjonPeriodeEndring refusjonsendring) {
-        Map<RefusjonAndelNøkkel, List<RefusjonAndel>> revurderingAndeler = refusjonsendring.getRevurderingAndelerMap();
-        Map<RefusjonAndelNøkkel, List<RefusjonAndel>> originaleAndelMap = refusjonsendring.getOriginaleAndelerMap();
+	    var revurderingAndeler = refusjonsendring.getRevurderingAndelerMap();
+	    var originaleAndelMap = refusjonsendring.getOriginaleAndelerMap();
         List<RefusjonAndel> andelerMedØktRefusjon = new ArrayList<>();
         revurderingAndeler.forEach((nøkkel, andeler) -> andelerMedØktRefusjon.addAll(sjekkOmAndelerPåSammeNøkkelHarØktRefusjon(originaleAndelMap, nøkkel, andeler)));
         return andelerMedØktRefusjon;
     }
 
     private static List<RefusjonAndel> sjekkOmAndelerPåSammeNøkkelHarØktRefusjon(Map<RefusjonAndelNøkkel, List<RefusjonAndel>> originalAndelMap, RefusjonAndelNøkkel nøkkel, List<RefusjonAndel> revurderingAndeler) {
-        List<RefusjonAndel> originaleAndelerPåNøkkel = originalAndelMap.getOrDefault(nøkkel, Collections.emptyList());
+	    var originaleAndelerPåNøkkel = originalAndelMap.getOrDefault(nøkkel, Collections.emptyList());
 
         // Tilkommet arbeidsgiver
         var totalRefusjonRevurdering = totalRefusjon(revurderingAndeler);
@@ -108,7 +108,7 @@ public final class BeregningRefusjonTjeneste {
         }
 
         var totalRefusjonOriginal = totalRefusjon(originaleAndelerPåNøkkel);
-        boolean refusjonINøkkelHarØkt = totalRefusjonRevurdering.compareTo(totalRefusjonOriginal) > 0;
+	    var refusjonINøkkelHarØkt = totalRefusjonRevurdering.compareTo(totalRefusjonOriginal) > 0;
         if (refusjonINøkkelHarØkt) {
             return FinnAndelerMedØktRefusjonTjeneste.finnAndelerPåSammeNøkkelMedØktRefusjon(revurderingAndeler, originaleAndelerPåNøkkel);
         }
@@ -128,7 +128,7 @@ public final class BeregningRefusjonTjeneste {
         var originalBrutto = refusjonsendring.getOriginalBrutto().min(grenseverdi);
         var revurderingBrutto = refusjonsendring.getRevurderingBrutto().min(grenseverdi);
         var originalAndelTilBruker = originalBrutto.subtraher(refusjonsendring.getOriginalRefusjon()).max(Beløp.ZERO);
-        Beløp revurderingAndelTilBruker = revurderingBrutto.subtraher(refusjonsendring.getRevurderingRefusjon()).max(Beløp.ZERO);
+	    var revurderingAndelTilBruker = revurderingBrutto.subtraher(refusjonsendring.getRevurderingRefusjon()).max(Beløp.ZERO);
         return revurderingAndelTilBruker.compareTo(originalAndelTilBruker) < 0;
     }
 
