@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.kalkulator.avklaringsbehov.dto.FaktaBeregningLagreDto;
-import no.nav.folketrygdloven.kalkulator.avklaringsbehov.dto.FastsettEtterlønnSluttpakkeDto;
 import no.nav.folketrygdloven.kalkulator.konfig.KonfigTjeneste;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDtoBuilder;
@@ -18,9 +17,9 @@ public class FastsettEtterlønnSluttpakkeOppdaterer {
     }
 
     public static void oppdater(FaktaBeregningLagreDto dto, BeregningsgrunnlagGrunnlagDtoBuilder grunnlagBuilder) {
-        FastsettEtterlønnSluttpakkeDto fastettDto = dto.getFastsettEtterlønnSluttpakke();
-        List<BeregningsgrunnlagPrStatusOgAndelDto> etterlønnSluttpakkeAndeler = finnEtterlønnSluttpakkeAndel(grunnlagBuilder.getBeregningsgrunnlagBuilder().getBeregningsgrunnlag());
-        Integer fastsattPrMnd = fastettDto.getFastsattPrMnd();
+        var fastettDto = dto.getFastsettEtterlønnSluttpakke();
+        var etterlønnSluttpakkeAndeler = finnEtterlønnSluttpakkeAndel(grunnlagBuilder.getBeregningsgrunnlagBuilder().getBeregningsgrunnlag());
+        var fastsattPrMnd = fastettDto.getFastsattPrMnd();
         if (etterlønnSluttpakkeAndeler.isEmpty() || fastsattPrMnd ==null) {
             throw new IllegalStateException("Finner ingen andeler på beregningsgrunnlaget med sluttpakke/etterlønn under fastsetting av inntekt");
         }
