@@ -17,7 +17,7 @@ class EgenNæringMapperTest {
 
     @Test
     void skal_mappe_fra_entitet_til_dto() {
-        OppgittOpptjeningDtoBuilder.EgenNæringBuilder egenNæringBuilder = OppgittOpptjeningDtoBuilder.EgenNæringBuilder.ny();
+        var egenNæringBuilder = OppgittOpptjeningDtoBuilder.EgenNæringBuilder.ny();
 
         egenNæringBuilder.medVirksomhetType(VirksomhetType.FISKE);
         egenNæringBuilder.medVirksomhet("923609016");
@@ -27,9 +27,9 @@ class EgenNæringMapperTest {
         egenNæringBuilder.medVarigEndring(true);
         egenNæringBuilder.medNyoppstartet(false);
 
-        OppgittEgenNæringDto egenNæring = egenNæringBuilder.build();
+        var egenNæring = egenNæringBuilder.build();
 
-        EgenNæringDto dto = EgenNæringMapper.map(egenNæring);
+        var dto = EgenNæringMapper.map(egenNæring);
 
         assertThat(dto).isNotNull();
         assertThat(dto.getBegrunnelse()).isEqualTo(egenNæring.getBegrunnelse());

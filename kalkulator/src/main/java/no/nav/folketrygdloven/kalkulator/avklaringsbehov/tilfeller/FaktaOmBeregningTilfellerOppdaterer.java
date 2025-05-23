@@ -21,7 +21,7 @@ public class FaktaOmBeregningTilfellerOppdaterer {
                          BeregningsgrunnlagInput input,
                          BeregningsgrunnlagGrunnlagDtoBuilder grunnlagBuilder) {
         kjørOppdateringForTilfeller(faktaDto, forrigeBg, input, grunnlagBuilder);
-        List<FaktaOmBeregningTilfelle> tilfeller = faktaDto.getFaktaOmBeregningTilfeller();
+        var tilfeller = faktaDto.getFaktaOmBeregningTilfeller();
         settNyeFaktaOmBeregningTilfeller(grunnlagBuilder.getBeregningsgrunnlagBuilder().getBeregningsgrunnlag(), tilfeller);
     }
 
@@ -61,8 +61,8 @@ public class FaktaOmBeregningTilfellerOppdaterer {
     }
 
     private static void settNyeFaktaOmBeregningTilfeller(BeregningsgrunnlagDto nyttBeregningsgrunnlag, List<FaktaOmBeregningTilfelle> faktaOmBeregningTilfeller) {
-        List<FaktaOmBeregningTilfelle> utledetTilfeller = nyttBeregningsgrunnlag.getFaktaOmBeregningTilfeller();
-        List<FaktaOmBeregningTilfelle> tilfellerLagtTilManuelt = faktaOmBeregningTilfeller.stream()
+        var utledetTilfeller = nyttBeregningsgrunnlag.getFaktaOmBeregningTilfeller();
+        var tilfellerLagtTilManuelt = faktaOmBeregningTilfeller.stream()
             .filter(tilfelle -> !utledetTilfeller.contains(tilfelle)).collect(Collectors.toList());
         if (!tilfellerLagtTilManuelt.isEmpty()) {
             BeregningsgrunnlagDto.Builder.oppdater(Optional.of(nyttBeregningsgrunnlag)).leggTilFaktaOmBeregningTilfeller(tilfellerLagtTilManuelt);

@@ -60,7 +60,7 @@ public class AktivPeriode {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        AktivPeriode that = (AktivPeriode) o;
+	    var that = (AktivPeriode) o;
         return aktivitet == that.aktivitet &&
             Objects.equals(arbeidsforhold, that.arbeidsforhold);
     }
@@ -71,11 +71,11 @@ public class AktivPeriode {
     }
 
     public void oppdaterFra(AktivPeriode annen) {
-        LocalDate fom = periode.getFom();
+	    var fom = periode.getFom();
         if (fom.isAfter(annen.getPeriode().getFom())) {
             fom = annen.getPeriode().getFom();
         }
-        LocalDate tom = periode.getTom();
+	    var tom = periode.getTom();
         if (tom.isBefore(annen.getPeriode().getTom())) {
             tom = annen.getPeriode().getTom();
         }
@@ -83,17 +83,17 @@ public class AktivPeriode {
     }
 
     public static AktivPeriode forArbeidstakerHosVirksomhet(Periode periode, String orgnr, String arbeidsforholdId) {
-        Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr, arbeidsforholdId);
+	    var arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr, arbeidsforholdId);
         return new AktivPeriode(Aktivitet.ARBEIDSTAKERINNTEKT, periode, arbeidsforhold);
     }
 
 	public static AktivPeriode forArbeidstakerHosPrivatperson(Periode periode, String aktørId) {
-		Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosPrivatperson(aktørId);
+		var arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosPrivatperson(aktørId);
 		return new AktivPeriode(Aktivitet.ARBEIDSTAKERINNTEKT, periode, arbeidsforhold);
 	}
 
     public static AktivPeriode forFrilanser(Periode periode) {
-        Arbeidsforhold arbeidsforhold = Arbeidsforhold.frilansArbeidsforhold();
+	    var arbeidsforhold = Arbeidsforhold.frilansArbeidsforhold();
         return new AktivPeriode(Aktivitet.FRILANSINNTEKT, periode, arbeidsforhold);
     }
 
@@ -104,11 +104,11 @@ public class AktivPeriode {
      * derfor lages et anonymt arbeidsforhold for disse.
      */
     public static AktivPeriode forAndre(Aktivitet aktivitet, Periode periode) {
-        List<Aktivitet> arbeidstakerUtenArbeidsforhold = Arrays.asList(
+	    var arbeidstakerUtenArbeidsforhold = Arrays.asList(
             Aktivitet.VENTELØNN_VARTPENGER, Aktivitet.ETTERLØNN_SLUTTPAKKE, Aktivitet.VIDERE_ETTERUTDANNING,
             Aktivitet.UTDANNINGSPERMISJON);
         if (arbeidstakerUtenArbeidsforhold.contains(aktivitet)) {
-            Arbeidsforhold arbeidsforhold = Arbeidsforhold.anonymtArbeidsforhold(aktivitet);
+	        var arbeidsforhold = Arbeidsforhold.anonymtArbeidsforhold(aktivitet);
             return new AktivPeriode(aktivitet, periode, arbeidsforhold);
         } else
             return new AktivPeriode(aktivitet, periode, null);

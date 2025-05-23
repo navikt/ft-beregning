@@ -78,7 +78,7 @@ public class AvklaringsbehovMedTilstandDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        AvklaringsbehovMedTilstandDto that = (AvklaringsbehovMedTilstandDto) o;
+	    var that = (AvklaringsbehovMedTilstandDto) o;
         return Objects.equals(beregningAvklaringsbehovDefinisjon, that.beregningAvklaringsbehovDefinisjon) &&
                 Objects.equals(venteårsak, that.venteårsak) &&
                 Objects.equals(ventefrist, that.ventefrist);

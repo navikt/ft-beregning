@@ -76,7 +76,7 @@ public class BeregningsgrunnlagTjeneste implements KalkulatorInterface {
         validerIkkeFrisinn(input);
         var resultat = FullføreBeregningsgrunnlagTjenesteVelger.utledTjeneste(input.getFagsakYtelseType())
                 .fullføreBeregningsgrunnlag(input);
-        Builder resultatBuilder = Builder.fra(input)
+        var resultatBuilder = Builder.fra(input)
                 .medRegelSporingAggregat(resultat.getRegelsporinger().orElse(null))
                 .medBeregningsgrunnlag(resultat.getBeregningsgrunnlag(), input.getStegTilstand());
         var vilkårResultat = vilkårTjeneste.lagVilkårResultatFullføre(input, resultat.getBeregningsgrunnlag());
@@ -118,7 +118,7 @@ public class BeregningsgrunnlagTjeneste implements KalkulatorInterface {
         validerIkkeFrisinn(input);
         var vilkårVurderingResultat = new VurderBeregningsgrunnlagTjeneste()
                 .vurderBeregningsgrunnlag(input, input.getBeregningsgrunnlagGrunnlag());
-        BeregningsgrunnlagDto vurdertBeregningsgrunnlag = vilkårVurderingResultat.getBeregningsgrunnlag();
+        var vurdertBeregningsgrunnlag = vilkårVurderingResultat.getBeregningsgrunnlag();
         var vilkårResultat = vilkårTjeneste
                 .lagVilkårResultatFordel(input, vilkårVurderingResultat.getVilkårsresultat());
         return BeregningResultatAggregat.Builder.fra(input)
@@ -200,7 +200,7 @@ public class BeregningsgrunnlagTjeneste implements KalkulatorInterface {
                     .medBeregningsgrunnlag(new BeregningsgrunnlagDto(input.getBeregningsgrunnlag()))
                     .build();
         }
-        BesteberegningRegelResultat resultat = new ForeslåBesteberegning().foreslåBesteberegning(input);
+        var resultat = new ForeslåBesteberegning().foreslåBesteberegning(input);
         BeregningsgrunnlagVerifiserer.verifiserBesteberegnetBeregningsgrunnlag(resultat.getBeregningsgrunnlag());
         return BesteberegningResultat.Builder.fra(input)
                 .medVurderingsgrunnlag(resultat.getBesteberegningVurderingGrunnlag())
@@ -240,14 +240,14 @@ public class BeregningsgrunnlagTjeneste implements KalkulatorInterface {
                 SkjæringstidspunktFastsetter.utledFastsettSkjæringstidspunktTjeneste(input.getFagsakYtelseType()),
                 BeregningsperiodeFastsetter.utledFastsettBeregningsperiodeTjeneste(input.getFagsakYtelseType()));
 
-        BeregningsgrunnlagDto beregningsgrunnlag = resultat.getBeregningsgrunnlag();
-        BeregningsgrunnlagGrunnlagDto nyttGrunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag())
+        var beregningsgrunnlag = resultat.getBeregningsgrunnlag();
+        var nyttGrunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag())
                 .medBeregningsgrunnlag(beregningsgrunnlag)
                 .build(input.getStegTilstand());
         var avklaringsbehovresultat = new AvklaringsbehovUtlederFaktaOmBeregning()
                 .utledAvklaringsbehovFor(input, nyttGrunnlag, harOverstyrtBergningsgrunnlag(input));
 
-        BeregningsgrunnlagDto grunnlagMedTilfeller = BeregningsgrunnlagDto.builder(beregningsgrunnlag)
+        var grunnlagMedTilfeller = BeregningsgrunnlagDto.builder(beregningsgrunnlag)
                 .leggTilFaktaOmBeregningTilfeller(avklaringsbehovresultat.getFaktaOmBeregningTilfeller())
                 .build();
 
@@ -267,7 +267,7 @@ public class BeregningsgrunnlagTjeneste implements KalkulatorInterface {
     }
 
     private Optional<BeregningAktivitetOverstyringerDto> hentTidligereOverstyringer(FastsettBeregningsaktiviteterInput input) {
-        Optional<BeregningsgrunnlagGrunnlagDto> overstyrtGrunnlag = input.getForrigeGrunnlagFraStegUt();
+        var overstyrtGrunnlag = input.getForrigeGrunnlagFraStegUt();
         return overstyrtGrunnlag.flatMap(BeregningsgrunnlagGrunnlagDto::getOverstyring);
     }
 

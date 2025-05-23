@@ -29,14 +29,14 @@ public class FastsettNaturalytelsePerioderTjeneste {
 
     public BeregningsgrunnlagRegelResultat fastsettPerioderForNaturalytelse(BeregningsgrunnlagInput input,
                                                                             BeregningsgrunnlagDto beregningsgrunnlag) {
-        PeriodeModellNaturalytelse periodeModell = MapNaturalytelserFraVLTilRegel.map(input, beregningsgrunnlag);
+        var periodeModell = MapNaturalytelserFraVLTilRegel.map(input, beregningsgrunnlag);
         return kjørRegelOgMapTilVLNaturalytelse(beregningsgrunnlag, periodeModell);
     }
 
     private BeregningsgrunnlagRegelResultat kjørRegelOgMapTilVLNaturalytelse(BeregningsgrunnlagDto beregningsgrunnlag, PeriodeModellNaturalytelse input) {
         List<SplittetPeriode> splittedePerioder = new ArrayList<>();
-        RegelResultat regelResultat = KalkulusRegler.fastsettPerioderNaturalytelse(input, splittedePerioder);
-        BeregningsgrunnlagDto nyttBeregningsgrunnlag = oversetterFraRegelNaturalytelse.mapFraRegel(splittedePerioder, beregningsgrunnlag);
+        var regelResultat = KalkulusRegler.fastsettPerioderNaturalytelse(input, splittedePerioder);
+        var nyttBeregningsgrunnlag = oversetterFraRegelNaturalytelse.mapFraRegel(splittedePerioder, beregningsgrunnlag);
         return new BeregningsgrunnlagRegelResultat(nyttBeregningsgrunnlag,
                 new RegelSporingAggregat(MapRegelSporingFraRegelTilVL.mapRegelSporingGrunnlag(regelResultat, BeregningsgrunnlagRegelType.PERIODISERING_NATURALYTELSE)));
     }

@@ -56,22 +56,22 @@ class FastsettBeregningsgrunnlagATFLHåndtererTest {
         buildOgLagreBeregningsgrunnlag(true, 1, 1);
 
         //Dto
-        FastsettBeregningsgrunnlagATFLDto dto = new FastsettBeregningsgrunnlagATFLDto(Collections.singletonList(new InntektPrAndelDto(OVERSTYRT_PR_AR, 1L)), FRILANSER_INNTEKT);
+        var dto = new FastsettBeregningsgrunnlagATFLDto(Collections.singletonList(new InntektPrAndelDto(OVERSTYRT_PR_AR, 1L)), FRILANSER_INNTEKT);
 
         // Act
-        BeregningsgrunnlagGrunnlagDto grunnlag = FastsettBeregningsgrunnlagATFLHåndterer.håndter(input, dto);
+        var grunnlag = FastsettBeregningsgrunnlagATFLHåndterer.håndter(input, dto);
 
         //Assert
-        Optional<BeregningsgrunnlagDto> beregningsgrunnlagOpt = grunnlag.getBeregningsgrunnlagHvisFinnes();
+        var beregningsgrunnlagOpt = grunnlag.getBeregningsgrunnlagHvisFinnes();
         Assertions.assertThat(beregningsgrunnlagOpt).hasValueSatisfying(beregningsgrunnlag -> assertBeregningsgrunnlag(beregningsgrunnlag, 1, OVERSTYRT_PR_AR));
     }
 
     @Test
     void skal_oppdatere_bruttoPrÅr_i_beregningsgrunnlagperiode_når_andel_overstyres_AT() {
         //Arrange
-        int overstyrt1 = 1000;
-        int overstyrt2 = 2000;
-        int antallAndeler = 2;
+        var overstyrt1 = 1000;
+        var overstyrt2 = 2000;
+        var antallAndeler = 2;
         buildOgLagreBeregningsgrunnlag(true, 1, antallAndeler);
 
         List<InntektPrAndelDto> overstyrteVerdier = new ArrayList<>();
@@ -79,21 +79,21 @@ class FastsettBeregningsgrunnlagATFLHåndtererTest {
         overstyrteVerdier.add(new InntektPrAndelDto(overstyrt2, 2L));
 
         //Dto
-        FastsettBeregningsgrunnlagATFLDto dto = new FastsettBeregningsgrunnlagATFLDto(overstyrteVerdier, FRILANSER_INNTEKT);
+        var dto = new FastsettBeregningsgrunnlagATFLDto(overstyrteVerdier, FRILANSER_INNTEKT);
 
         // Act
-        BeregningsgrunnlagGrunnlagDto grunnlag = FastsettBeregningsgrunnlagATFLHåndterer.håndter(input, dto);
+        var grunnlag = FastsettBeregningsgrunnlagATFLHåndterer.håndter(input, dto);
 
         //Assert
-        Optional<BeregningsgrunnlagDto> beregningsgrunnlagOpt = grunnlag.getBeregningsgrunnlagHvisFinnes();
+        var beregningsgrunnlagOpt = grunnlag.getBeregningsgrunnlagHvisFinnes();
         Assertions.assertThat(beregningsgrunnlagOpt).hasValueSatisfying(beregningsgrunnlag -> {
-            BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-            List<BeregningsgrunnlagPrStatusOgAndelDto> andeler = beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndelList();
+            var beregningsgrunnlagPeriode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+            var andeler = beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndelList();
             Assertions.assertThat(andeler).hasSize(antallAndeler);
-            BigDecimal nyBruttoBG1 = beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndelList().get(0)
+            var nyBruttoBG1 = beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndelList().get(0)
                 .getBruttoPrÅr().verdi();
             Assertions.assertThat(nyBruttoBG1.intValue()).as("nyBruttoBG").isEqualTo(overstyrt1);
-            BigDecimal nyBruttoBG2 = beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndelList().get(1)
+            var nyBruttoBG2 = beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndelList().get(1)
                 .getBruttoPrÅr().verdi();
             Assertions.assertThat(nyBruttoBG2.intValue()).as("nyBruttoBG").isEqualTo(overstyrt2);
             assertThat(beregningsgrunnlagPeriode.getBruttoPrÅr().intValue()).as("nyBruttoBGPeriode").isEqualTo(overstyrt1 + overstyrt2);
@@ -103,27 +103,27 @@ class FastsettBeregningsgrunnlagATFLHåndtererTest {
     @Test
     void skal_oppdatere_beregningsgrunnlag_med_overstyrt_verdi_for_fleire_perioder_med_andeler_med_ulike_inntektskategorier_AT() {
         //Arrange
-        List<List<Boolean>> arbeidstakerPrPeriode = List.of(List.of(false, true), List.of(false, true, true, true));
-        List<Inntektskategori> inntektskategoriPeriode1 = List.of(Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE, Inntektskategori.ARBEIDSTAKER);
-        List<Inntektskategori> inntektskategoriPeriode2 = List.of(Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE, Inntektskategori.ARBEIDSTAKER,
+        var arbeidstakerPrPeriode = List.of(List.of(false, true), List.of(false, true, true, true));
+        var inntektskategoriPeriode1 = List.of(Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE, Inntektskategori.ARBEIDSTAKER);
+        var inntektskategoriPeriode2 = List.of(Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE, Inntektskategori.ARBEIDSTAKER,
             Inntektskategori.ARBEIDSTAKER_UTEN_FERIEPENGER, Inntektskategori.SJØMANN);
-        List<List<Inntektskategori>> inntektskategoriPrPeriode = List.of(inntektskategoriPeriode1, inntektskategoriPeriode2);
+        var inntektskategoriPrPeriode = List.of(inntektskategoriPeriode1, inntektskategoriPeriode2);
         buildOgLagreBeregningsgrunnlag(arbeidstakerPrPeriode, inntektskategoriPrPeriode);
 
         //Dto
-        FastsettBeregningsgrunnlagATFLDto dto = new FastsettBeregningsgrunnlagATFLDto(Collections.singletonList(new InntektPrAndelDto(OVERSTYRT_PR_AR, 2L)), FRILANSER_INNTEKT);
+        var dto = new FastsettBeregningsgrunnlagATFLDto(Collections.singletonList(new InntektPrAndelDto(OVERSTYRT_PR_AR, 2L)), FRILANSER_INNTEKT);
 
         // Act
-        BeregningsgrunnlagGrunnlagDto grunnlag = FastsettBeregningsgrunnlagATFLHåndterer.håndter(input, dto);
+        var grunnlag = FastsettBeregningsgrunnlagATFLHåndterer.håndter(input, dto);
 
         //Assert
-        Optional<BeregningsgrunnlagDto> beregningsgrunnlagOpt = grunnlag.getBeregningsgrunnlagHvisFinnes();
-        List<BeregningsgrunnlagPeriodeDto> perioder = beregningsgrunnlagOpt.get().getBeregningsgrunnlagPerioder();
+        var beregningsgrunnlagOpt = grunnlag.getBeregningsgrunnlagHvisFinnes();
+        var perioder = beregningsgrunnlagOpt.get().getBeregningsgrunnlagPerioder();
         Assertions.assertThat(perioder).hasSize(2);
-        List<BeregningsgrunnlagPrStatusOgAndelDto> andelerPeriode1 = perioder.get(0).getBeregningsgrunnlagPrStatusOgAndelList();
+        var andelerPeriode1 = perioder.get(0).getBeregningsgrunnlagPrStatusOgAndelList();
         Assertions.assertThat(andelerPeriode1).hasSize(2);
         assertThat(andelerPeriode1.get(1).getBruttoPrÅr().intValue()).isEqualByComparingTo(OVERSTYRT_PR_AR);
-        List<BeregningsgrunnlagPrStatusOgAndelDto> andelerPeriode2 = perioder.get(1).getBeregningsgrunnlagPrStatusOgAndelList();
+        var andelerPeriode2 = perioder.get(1).getBeregningsgrunnlagPrStatusOgAndelList();
         Assertions.assertThat(andelerPeriode2).hasSize(4);
         assertThat(andelerPeriode2.get(1).getBruttoPrÅr().intValue()).isEqualByComparingTo(OVERSTYRT_PR_AR);
         assertThat(andelerPeriode2.get(2).getBruttoPrÅr().intValue()).isEqualTo(BRUTTO_PR_AR);
@@ -133,17 +133,17 @@ class FastsettBeregningsgrunnlagATFLHåndtererTest {
     @Test
     void skal_oppdatere_beregningsgrunnlag_med_overstyrt_verdi_for_fleire_perioder_AT() {
         //Arrange
-        int antallPerioder = 3;
+        var antallPerioder = 3;
         buildOgLagreBeregningsgrunnlag(true, antallPerioder, 1);
 
         //Dto
-        FastsettBeregningsgrunnlagATFLDto dto = new FastsettBeregningsgrunnlagATFLDto(Collections.singletonList(new InntektPrAndelDto(OVERSTYRT_PR_AR, 1L)), FRILANSER_INNTEKT);
+        var dto = new FastsettBeregningsgrunnlagATFLDto(Collections.singletonList(new InntektPrAndelDto(OVERSTYRT_PR_AR, 1L)), FRILANSER_INNTEKT);
 
         // Act
-        BeregningsgrunnlagGrunnlagDto grunnlag = FastsettBeregningsgrunnlagATFLHåndterer.håndter(input, dto);
+        var grunnlag = FastsettBeregningsgrunnlagATFLHåndterer.håndter(input, dto);
 
         //Assert
-        Optional<BeregningsgrunnlagDto> beregningsgrunnlagOpt = grunnlag.getBeregningsgrunnlagHvisFinnes();
+        var beregningsgrunnlagOpt = grunnlag.getBeregningsgrunnlagHvisFinnes();
         Assertions.assertThat(beregningsgrunnlagOpt).hasValueSatisfying(beregningsgrunnlag -> assertBeregningsgrunnlag(beregningsgrunnlag, antallPerioder, OVERSTYRT_PR_AR));
     }
 
@@ -153,35 +153,35 @@ class FastsettBeregningsgrunnlagATFLHåndtererTest {
         buildOgLagreBeregningsgrunnlag(false, 1, 1);
 
         //Dto
-        FastsettBeregningsgrunnlagATFLDto dto = new FastsettBeregningsgrunnlagATFLDto(Collections.singletonList(new InntektPrAndelDto(OVERSTYRT_PR_AR, 1L)), FRILANSER_INNTEKT);
+        var dto = new FastsettBeregningsgrunnlagATFLDto(Collections.singletonList(new InntektPrAndelDto(OVERSTYRT_PR_AR, 1L)), FRILANSER_INNTEKT);
 
         // Act
-        BeregningsgrunnlagGrunnlagDto grunnlag = FastsettBeregningsgrunnlagATFLHåndterer.håndter(input, dto);
+        var grunnlag = FastsettBeregningsgrunnlagATFLHåndterer.håndter(input, dto);
 
         //Assert
-        Optional<BeregningsgrunnlagDto> beregningsgrunnlagOpt = grunnlag.getBeregningsgrunnlagHvisFinnes();
+        var beregningsgrunnlagOpt = grunnlag.getBeregningsgrunnlagHvisFinnes();
         Assertions.assertThat(beregningsgrunnlagOpt).hasValueSatisfying(beregningsgrunnlag -> assertBeregningsgrunnlag(beregningsgrunnlag, 1, FRILANSER_INNTEKT));
     }
 
     @Test
     void skal_oppdatere_beregningsgrunnlag_med_overstyrt_verdi_for_fleire_perioder_FL() {
         //Arrange
-        int antallPerioder = 3;
+        var antallPerioder = 3;
         buildOgLagreBeregningsgrunnlag(false, antallPerioder, 1);
 
         //Dto
-        FastsettBeregningsgrunnlagATFLDto dto = new FastsettBeregningsgrunnlagATFLDto(Collections.singletonList(new InntektPrAndelDto(OVERSTYRT_PR_AR, 1L)), FRILANSER_INNTEKT);
+        var dto = new FastsettBeregningsgrunnlagATFLDto(Collections.singletonList(new InntektPrAndelDto(OVERSTYRT_PR_AR, 1L)), FRILANSER_INNTEKT);
 
         // Act
-        BeregningsgrunnlagGrunnlagDto grunnlag = FastsettBeregningsgrunnlagATFLHåndterer.håndter(input, dto);
+        var grunnlag = FastsettBeregningsgrunnlagATFLHåndterer.håndter(input, dto);
 
         //Assert
-        Optional<BeregningsgrunnlagDto> beregningsgrunnlagOpt = grunnlag.getBeregningsgrunnlagHvisFinnes();
+        var beregningsgrunnlagOpt = grunnlag.getBeregningsgrunnlagHvisFinnes();
         Assertions.assertThat(beregningsgrunnlagOpt).hasValueSatisfying(beregningsgrunnlag -> assertBeregningsgrunnlag(beregningsgrunnlag, antallPerioder, FRILANSER_INNTEKT));
     }
 
     private void assertBeregningsgrunnlag(BeregningsgrunnlagDto beregningsgrunnlag, int antallPerioder, int frilanserInntekt) {
-        List<BeregningsgrunnlagPeriodeDto> beregningsgrunnlagperioder = beregningsgrunnlag.getBeregningsgrunnlagPerioder();
+        var beregningsgrunnlagperioder = beregningsgrunnlag.getBeregningsgrunnlagPerioder();
         Assertions.assertThat(beregningsgrunnlagperioder).hasSize(antallPerioder);
         beregningsgrunnlagperioder.forEach(periode -> {
                 var nyBruttoBG = periode.getBeregningsgrunnlagPrStatusOgAndelList().get(0)
@@ -193,37 +193,37 @@ class FastsettBeregningsgrunnlagATFLHåndtererTest {
 
 
     private void buildOgLagreBeregningsgrunnlag(List<List<Boolean>> erArbeidstakerPrPeriode, List<List<Inntektskategori>> inntektskategoriPrPeriode) {
-        BeregningsgrunnlagDto.Builder beregningsgrunnlagBuilder = BeregningsgrunnlagDto.Builder.oppdater(Optional.empty())
+        var beregningsgrunnlagBuilder = BeregningsgrunnlagDto.Builder.oppdater(Optional.empty())
             .medGrunnbeløp(GRUNNBELØP)
             .medSkjæringstidspunkt(LocalDate.now().minusDays(5));
 
         Assertions.assertThat(erArbeidstakerPrPeriode).hasSize(inntektskategoriPrPeriode.size());
-        for (int i = 0; i < erArbeidstakerPrPeriode.size(); i++) {
-            LocalDate fom = LocalDate.now().minusDays(20).plusDays(i * 5).plusDays(i == 0 ? 0 : 1);
-            LocalDate tom = fom.plusDays(5);
+        for (var i = 0; i < erArbeidstakerPrPeriode.size(); i++) {
+            var fom = LocalDate.now().minusDays(20).plusDays(i * 5).plusDays(i == 0 ? 0 : 1);
+            var tom = fom.plusDays(5);
             leggTilBeregningsgrunnlagPeriode(beregningsgrunnlagBuilder, fom, tom, erArbeidstakerPrPeriode.get(i), inntektskategoriPrPeriode.get(i));
         }
         input = lagInputMedBeregningsgrunnlag(koblingReferanse, beregningsgrunnlagBuilder.build(), BeregningsgrunnlagTilstand.FORESLÅTT);
     }
 
     private void buildOgLagreBeregningsgrunnlag(boolean erArbeidstaker, int antallPerioder, int antallAndeler) {
-        BeregningsgrunnlagDto.Builder beregningsgrunnlagBuilder = BeregningsgrunnlagDto.Builder.oppdater(Optional.empty())
+        var beregningsgrunnlagBuilder = BeregningsgrunnlagDto.Builder.oppdater(Optional.empty())
             .medGrunnbeløp(GRUNNBELØP)
             .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT);
 
-        for (int i = 0; i < antallPerioder; i++) {
-            LocalDate fom = LocalDate.now().minusDays(20).plusDays(i * 5).plusDays(i == 0 ? 0 : 1);
-            LocalDate tom = fom.plusDays(5);
+        for (var i = 0; i < antallPerioder; i++) {
+            var fom = LocalDate.now().minusDays(20).plusDays(i * 5).plusDays(i == 0 ? 0 : 1);
+            var tom = fom.plusDays(5);
             leggTilBeregningsgrunnlagPeriode(beregningsgrunnlagBuilder, fom, tom, erArbeidstaker, antallAndeler);
         }
         input = lagInputMedBeregningsgrunnlag(koblingReferanse, beregningsgrunnlagBuilder.build(), BeregningsgrunnlagTilstand.FORESLÅTT);
     }
 
     private void leggTilBeregningsgrunnlagPeriode(BeregningsgrunnlagDto.Builder beregningsgrunnlagBuilder, LocalDate fomDato, LocalDate tomDato, List<Boolean> erArbeidstakerList, List<Inntektskategori> inntektskategoriList) {
-        BeregningsgrunnlagPeriodeDto.Builder beregningsgrunnlagPeriodeBuilder = BeregningsgrunnlagPeriodeDto.ny()
+        var beregningsgrunnlagPeriodeBuilder = BeregningsgrunnlagPeriodeDto.ny()
             .medBeregningsgrunnlagPeriode(fomDato, tomDato);
         Assertions.assertThat(erArbeidstakerList).hasSize(inntektskategoriList.size());
-        for (int i = 0; i < erArbeidstakerList.size(); i++) {
+        for (var i = 0; i < erArbeidstakerList.size(); i++) {
             if (erArbeidstakerList.get(i)) {
                 leggTilBeregningsgrunnlagPrStatusOgAndel(beregningsgrunnlagPeriodeBuilder, AktivitetStatus.ARBEIDSTAKER, virksomheter.get(0), ARBEIDSFORHOLD_ID, (long) (i+1), inntektskategoriList.get(i));
             } else {
@@ -235,9 +235,9 @@ class FastsettBeregningsgrunnlagATFLHåndtererTest {
 
 
     private void leggTilBeregningsgrunnlagPeriode(BeregningsgrunnlagDto.Builder beregningsgrunnlagBuilder, LocalDate fomDato, LocalDate tomDato, boolean erArbeidstaker, int antallAndeler) {
-        BeregningsgrunnlagPeriodeDto.Builder beregningsgrunnlagPeriodeBuilder = BeregningsgrunnlagPeriodeDto.ny()
+        var beregningsgrunnlagPeriodeBuilder = BeregningsgrunnlagPeriodeDto.ny()
             .medBeregningsgrunnlagPeriode(fomDato, tomDato);
-        for (int i = 0; i < antallAndeler; i++) {
+        for (var i = 0; i < antallAndeler; i++) {
             if (erArbeidstaker) {
                 leggTilBeregningsgrunnlagPrStatusOgAndel(beregningsgrunnlagPeriodeBuilder, AktivitetStatus.ARBEIDSTAKER, virksomheter.get(i), ARBEIDSFORHOLD_ID, (long) (i+1), Inntektskategori.ARBEIDSTAKER);
             } else {
@@ -250,13 +250,13 @@ class FastsettBeregningsgrunnlagATFLHåndtererTest {
     private void leggTilBeregningsgrunnlagPrStatusOgAndel(BeregningsgrunnlagPeriodeDto.Builder beregningsgrunnlagPeriodeBuilder, AktivitetStatus aktivitetStatus,
                                                           Arbeidsgiver arbeidsgiver, InternArbeidsforholdRefDto arbforholdId, Long andelsnr, Inntektskategori inntektskategori) {
 
-        BeregningsgrunnlagPrStatusOgAndelDto.Builder builder = BeregningsgrunnlagPrStatusOgAndelDto.ny()
+        var builder = BeregningsgrunnlagPrStatusOgAndelDto.ny()
             .medAndelsnr(andelsnr)
             .medInntektskategori(inntektskategori)
             .medAktivitetStatus(aktivitetStatus)
             .medBeregnetPrÅr(Beløp.fra(BRUTTO_PR_AR));
         if (arbeidsgiver != null) {
-            BGAndelArbeidsforholdDto.Builder bga = BGAndelArbeidsforholdDto
+            var bga = BGAndelArbeidsforholdDto
                 .builder()
                 .medArbeidsforholdRef(arbforholdId)
                 .medArbeidsgiver(arbeidsgiver)

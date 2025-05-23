@@ -50,24 +50,24 @@ class AvklaringsbehovUtlederFordelBeregningTest {
 
     @Test
     void skal_ikke_lage_avklaringsbehov_dersom_det_ikke_er_endret_bg() {
-        BeregningsgrunnlagGrunnlagDto grunnlag = lagGrunnlagutenNyttArbeidsforhold();
+	    var grunnlag = lagGrunnlagutenNyttArbeidsforhold();
 
-        List<BeregningAvklaringsbehovResultat> avklaringsbehovResultats = utledAvklaringsbehov(koblingReferanse, grunnlag);
+	    var avklaringsbehovResultats = utledAvklaringsbehov(koblingReferanse, grunnlag);
 
         assertThat(avklaringsbehovResultats).isEmpty();
     }
 
     private List<BeregningAvklaringsbehovResultat> utledAvklaringsbehov(KoblingReferanse ref, BeregningsgrunnlagGrunnlagDto grunnlag) {
-        ForeldrepengerGrunnlag foreldrepengerGrunnlag = new ForeldrepengerGrunnlag(Dekningsgrad.DEKNINGSGRAD_100, false);
-        List<BeregningAvklaringsbehovResultat> avklaringsbehovResultats = AvklaringsbehovUtlederFordelBeregning.utledAvklaringsbehovFor(ref, grunnlag, foreldrepengerGrunnlag, InntektArbeidYtelseGrunnlagDtoBuilder.nytt().build(), Collections.emptyList());
+	    var foreldrepengerGrunnlag = new ForeldrepengerGrunnlag(Dekningsgrad.DEKNINGSGRAD_100, false);
+	    var avklaringsbehovResultats = AvklaringsbehovUtlederFordelBeregning.utledAvklaringsbehovFor(ref, grunnlag, foreldrepengerGrunnlag, InntektArbeidYtelseGrunnlagDtoBuilder.nytt().build(), Collections.emptyList());
         return avklaringsbehovResultats;
     }
 
     @Test
     void skal_lage_avklaringsbehov_når_det_er_endring() {
-        BeregningsgrunnlagGrunnlagDto grunnlag = lagGrunnlagMedNyttArbeidsforhold();
+	    var grunnlag = lagGrunnlagMedNyttArbeidsforhold();
 
-        List<BeregningAvklaringsbehovResultat> avklaringsbehovResultats = utledAvklaringsbehov(koblingReferanse, grunnlag);
+	    var avklaringsbehovResultats = utledAvklaringsbehov(koblingReferanse, grunnlag);
 
         assertThat(avklaringsbehovResultats).hasSize(1);
         assertThat(avklaringsbehovResultats.get(0).getBeregningAvklaringsbehovDefinisjon()).isEqualTo(AvklaringsbehovDefinisjon.FORDEL_BG);
@@ -75,13 +75,13 @@ class AvklaringsbehovUtlederFordelBeregningTest {
 
 
     private BeregningsgrunnlagGrunnlagDto lagGrunnlagMedNyttArbeidsforhold(FaktaOmBeregningTilfelle... tilfeller) {
-        List<FaktaOmBeregningTilfelle> listeMedTilfeller = Arrays.asList(tilfeller);
-        BeregningsgrunnlagDto beregningsgrunnlag = BeregningsgrunnlagDto.builder()
+	    var listeMedTilfeller = Arrays.asList(tilfeller);
+	    var beregningsgrunnlag = BeregningsgrunnlagDto.builder()
                 .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING)
                 .medGrunnbeløp(Beløp.fra(GrunnbeløpTestKonstanter.GRUNNBELØP_2018))
                 .leggTilFaktaOmBeregningTilfeller(listeMedTilfeller)
                 .build();
-        BeregningsgrunnlagPeriodeDto periode = BeregningsgrunnlagPeriodeDto.ny()
+	    var periode = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_OPPTJENING, null)
                 .build(beregningsgrunnlag);
         BeregningsgrunnlagPrStatusOgAndelDto.Builder.ny()
@@ -89,7 +89,7 @@ class AvklaringsbehovUtlederFordelBeregningTest {
                 .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                 .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder().medArbeidsgiver(Arbeidsgiver.virksomhet("1234534")))
                 .build(periode);
-        BeregningsgrunnlagGrunnlagDto grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
+	    var grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medBeregningsgrunnlag(beregningsgrunnlag)
                 .medRegisterAktiviteter(beregningAktivitetBuilder.build())
                 .build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER);
@@ -97,16 +97,16 @@ class AvklaringsbehovUtlederFordelBeregningTest {
     }
 
     private BeregningsgrunnlagGrunnlagDto lagGrunnlagutenNyttArbeidsforhold(FaktaOmBeregningTilfelle... tilfeller) {
-        List<FaktaOmBeregningTilfelle> listeMedTilfeller = Arrays.asList(tilfeller);
-        BeregningsgrunnlagDto beregningsgrunnlag = BeregningsgrunnlagDto.builder()
+	    var listeMedTilfeller = Arrays.asList(tilfeller);
+	    var beregningsgrunnlag = BeregningsgrunnlagDto.builder()
                 .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING)
                 .medGrunnbeløp(Beløp.fra(GrunnbeløpTestKonstanter.GRUNNBELØP_2018))
                 .leggTilFaktaOmBeregningTilfeller(listeMedTilfeller)
                 .build();
-        BeregningsgrunnlagPeriodeDto periode = BeregningsgrunnlagPeriodeDto.ny()
+	    var periode = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_OPPTJENING, null)
                 .build(beregningsgrunnlag);
-        Arbeidsgiver virksomhet = Arbeidsgiver.virksomhet("1234534");
+	    var virksomhet = Arbeidsgiver.virksomhet("1234534");
         BeregningsgrunnlagPrStatusOgAndelDto.Builder.ny()
                 .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                 .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder().medArbeidsgiver(virksomhet))
@@ -117,7 +117,7 @@ class AvklaringsbehovUtlederFordelBeregningTest {
                 .medArbeidsgiver(virksomhet)
                 .medOpptjeningAktivitetType(OpptjeningAktivitetType.ARBEID).medArbeidsforholdRef(InternArbeidsforholdRefDto.nullRef()).build());
 
-        BeregningsgrunnlagGrunnlagDto grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
+	    var grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medBeregningsgrunnlag(beregningsgrunnlag)
                 .medRegisterAktiviteter(beregningAktivitetBuilder.build())
                 .build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER);

@@ -28,11 +28,11 @@ public class FastsettMaksimalRefusjon extends LeafSpecification<Beregningsgrunnl
         grunnlag.getBeregningsgrunnlagPrStatus().stream()
             .flatMap(bgs -> bgs.getArbeidsforhold().stream())
             .forEach(af -> {
-                BigDecimal refusjonskravPrArbeidsforholdPrÅr =  af.getAktivitetsgradertRefusjonskravPrÅr().orElse(BigDecimal.ZERO);
+                var refusjonskravPrArbeidsforholdPrÅr =  af.getAktivitetsgradertRefusjonskravPrÅr().orElse(BigDecimal.ZERO);
 
                 if (af.getMaksimalRefusjonPrÅr() == null) {
-                    BeregningsgrunnlagPrArbeidsforhold.Builder bgArbeidsforholdBuilder = BeregningsgrunnlagPrArbeidsforhold.builder(af);
-                    BigDecimal maksimalRefusjon = af.getAktivitetsgradertBruttoPrÅr().min(refusjonskravPrArbeidsforholdPrÅr);
+                    var bgArbeidsforholdBuilder = BeregningsgrunnlagPrArbeidsforhold.builder(af);
+                    var maksimalRefusjon = af.getAktivitetsgradertBruttoPrÅr().min(refusjonskravPrArbeidsforholdPrÅr);
                     bgArbeidsforholdBuilder.medMaksimalRefusjonPrÅr(maksimalRefusjon);
                     bgArbeidsforholdBuilder.build();
                 }
@@ -40,7 +40,7 @@ public class FastsettMaksimalRefusjon extends LeafSpecification<Beregningsgrunnl
                 resultater.put("refusjonskravPrÅr." + af.getArbeidsgiverId(), refusjonskravPrArbeidsforholdPrÅr);
             });
 
-        SingleEvaluation resultat = ja();
+        var resultat = ja();
         resultat.setEvaluationProperties(resultater);
         return resultat;
     }

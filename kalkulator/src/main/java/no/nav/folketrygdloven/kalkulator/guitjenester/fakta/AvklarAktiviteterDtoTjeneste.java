@@ -32,9 +32,9 @@ public class AvklarAktiviteterDtoTjeneste {
                                         Optional<BeregningAktivitetAggregatDto> saksbehandletAktivitetAggregat,
                                         Optional<ArbeidsforholdInformasjonDto> arbeidsforholdInformasjon,
                                         FaktaOmBeregningDto faktaOmBeregningDto) {
-        AvklarAktiviteterDto avklarAktiviteterDto = new AvklarAktiviteterDto();
-        List<BeregningAktivitetDto> beregningAktiviteter = registerAktivitetAggregat.getBeregningAktiviteter();
-        List<BeregningAktivitetDto> saksbehandletAktiviteter = saksbehandletAktivitetAggregat
+	    var avklarAktiviteterDto = new AvklarAktiviteterDto();
+	    var beregningAktiviteter = registerAktivitetAggregat.getBeregningAktiviteter();
+	    var saksbehandletAktiviteter = saksbehandletAktivitetAggregat
                 .map(BeregningAktivitetAggregatDto::getBeregningAktiviteter)
                 .orElse(Collections.emptyList());
 
@@ -57,12 +57,12 @@ public class AvklarAktiviteterDtoTjeneste {
      */
     private static List<AktivitetTomDatoMappingDto> map(List<BeregningAktivitetDto> beregningAktiviteter, List<BeregningAktivitetDto> saksbehandletAktiviteter,
                                                         LocalDate skjæringstidspunkt, Optional<ArbeidsforholdInformasjonDto> arbeidsforholdInformasjon) {
-        Map<LocalDate, List<no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.BeregningAktivitetDto>> collect = beregningAktiviteter.stream()
+	    var collect = beregningAktiviteter.stream()
                 .map(aktivitet -> MapBeregningAktivitetDto.mapBeregningAktivitet(aktivitet, saksbehandletAktiviteter, arbeidsforholdInformasjon))
                 .collect(Collectors.groupingBy(beregningAktivitetDto -> finnTidligste(beregningAktivitetDto.getTom().plusDays(1), skjæringstidspunkt), Collectors.toList()));
         return collect.entrySet().stream()
                 .map(entry -> {
-                    AktivitetTomDatoMappingDto dto = new AktivitetTomDatoMappingDto();
+                    var dto = new AktivitetTomDatoMappingDto();
                     dto.setTom(entry.getKey());
                     dto.setAktiviteter(entry.getValue());
                     return dto;

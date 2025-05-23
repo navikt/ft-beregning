@@ -46,7 +46,7 @@ public class BeregningsgrunnlagGrunnlagDto {
     }
 
     public Optional<BeregningAktivitetAggregatDto> getOverstyrteEllerSaksbehandletAktiviteter() {
-        Optional<BeregningAktivitetAggregatDto> overstyrteAktiviteter = getOverstyrteAktiviteter();
+	    var overstyrteAktiviteter = getOverstyrteAktiviteter();
         if (overstyrteAktiviteter.isPresent()) {
             return overstyrteAktiviteter;
         }
@@ -68,7 +68,7 @@ public class BeregningsgrunnlagGrunnlagDto {
     }
 
     public BeregningAktivitetAggregatDto getOverstyrteEllerRegisterAktiviteter() {
-        Optional<BeregningAktivitetAggregatDto> overstyrteAktiviteter = getOverstyrteAktiviteter();
+	    var overstyrteAktiviteter = getOverstyrteAktiviteter();
         if (overstyrteAktiviteter.isPresent()) {
             return overstyrteAktiviteter.get();
         }
@@ -113,15 +113,15 @@ public class BeregningsgrunnlagGrunnlagDto {
 
     private Optional<BeregningAktivitetAggregatDto> getOverstyrteAktiviteter() {
         if (overstyringer != null) {
-            List<BeregningAktivitetDto> overstyrteAktiviteter = registerAktiviteter.getBeregningAktiviteter().stream()
+	        var overstyrteAktiviteter = registerAktiviteter.getBeregningAktiviteter().stream()
                     .filter(beregningAktivitet -> beregningAktivitet.skalBrukes(overstyringer))
                     .collect(Collectors.toList());
-            BeregningAktivitetAggregatDto.Builder overstyrtBuilder = BeregningAktivitetAggregatDto.builder()
+	        var overstyrtBuilder = BeregningAktivitetAggregatDto.builder()
                     .medSkjæringstidspunktOpptjening(registerAktiviteter.getSkjæringstidspunktOpptjening());
             overstyrteAktiviteter.forEach(aktivitet -> {
-                Optional<BeregningAktivitetOverstyringDto> overstyrtAktivitet
+	            var overstyrtAktivitet
                         = hentOverstyrtAktivitet(overstyringer, aktivitet);
-                BeregningAktivitetDto kopiert = BeregningAktivitetDto
+	            var kopiert = BeregningAktivitetDto
                         .kopier(aktivitet)
                         .medPeriode(getIntervall(aktivitet, overstyrtAktivitet))
                         .build();

@@ -40,27 +40,27 @@ class FastsettMånedsinntektUtenInntektsmeldingTilfelleUtlederTest {
 
     @Test
     void skal_gi_tilfelle_om_beregningsgrunnlag_har_andel_med_kunstig_arbeid() {
-        BeregningsgrunnlagGrunnlagDto grunnlag = lagGrunnlag(true);
-        FaktaOmBeregningInput faktaOmBeregningInput = lagFaktaOmBeregningInput(grunnlag, List.of());
-        Optional<FaktaOmBeregningTilfelle> tilfelle = new FastsettMånedsinntektUtenInntektsmeldingTilfelleUtleder().utled(faktaOmBeregningInput, grunnlag);
+        var grunnlag = lagGrunnlag(true);
+        var faktaOmBeregningInput = lagFaktaOmBeregningInput(grunnlag, List.of());
+        var tilfelle = new FastsettMånedsinntektUtenInntektsmeldingTilfelleUtleder().utled(faktaOmBeregningInput, grunnlag);
         assertThat(tilfelle.get()).isEqualTo(FaktaOmBeregningTilfelle.FASTSETT_MÅNEDSLØNN_ARBEIDSTAKER_UTEN_INNTEKTSMELDING);
     }
 
     @Test
     void skal_ikkje_gi_tilfelle_om_beregningsgrunnlag_ikkje_har_andel_med_kunstig_arbeid() {
-        BeregningsgrunnlagGrunnlagDto grunnlag = lagGrunnlag(false);
-        FaktaOmBeregningInput faktaOmBeregningInput = lagFaktaOmBeregningInput(grunnlag, List.of());
+        var grunnlag = lagGrunnlag(false);
+        var faktaOmBeregningInput = lagFaktaOmBeregningInput(grunnlag, List.of());
 
-        Optional<FaktaOmBeregningTilfelle> tilfelle = new FastsettMånedsinntektUtenInntektsmeldingTilfelleUtleder().utled(faktaOmBeregningInput, grunnlag);
+        var tilfelle = new FastsettMånedsinntektUtenInntektsmeldingTilfelleUtleder().utled(faktaOmBeregningInput, grunnlag);
         assertThat(tilfelle).isNotPresent();
     }
 
     @Test
     void skal_gi_tilfelle_om_beregningsgrunnlag_har_andeler_for_samme_virksomhet_med_og_uten_inntektsmelding() {
-        BeregningsgrunnlagDto bg = BeregningsgrunnlagDto.builder()
+        var bg = BeregningsgrunnlagDto.builder()
                 .leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
                 .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT).build();
-        BeregningsgrunnlagPeriodeDto periode = BeregningsgrunnlagPeriodeDto.ny()
+        var periode = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT, null).build(bg);
         BeregningsgrunnlagPrStatusOgAndelDto.Builder.ny()
                 .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder()
@@ -69,69 +69,69 @@ class FastsettMånedsinntektUtenInntektsmeldingTilfelleUtlederTest {
                 .medInntektskategori(Inntektskategori.ARBEIDSTAKER)
                 .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                 .build(periode);
-        InternArbeidsforholdRefDto ref = InternArbeidsforholdRefDto.nyRef();
+        var ref = InternArbeidsforholdRefDto.nyRef();
         BeregningsgrunnlagPrStatusOgAndelDto.Builder.ny()
                 .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder()
                         .medArbeidsgiver(Arbeidsgiver.virksomhet(ORGNR)).medArbeidsforholdRef(ref))
                 .medInntektskategori(Inntektskategori.ARBEIDSTAKER)
                 .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                 .build(periode);
-        InntektsmeldingDto im = InntektsmeldingDtoBuilder.builder()
+        var im = InntektsmeldingDtoBuilder.builder()
                 .medArbeidsgiver(Arbeidsgiver.virksomhet(ORGNR))
                 .medArbeidsforholdId(ref)
                 .medBeløp(Beløp.fra(10)).build();
-        BeregningsgrunnlagGrunnlagDto grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
+        var grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medBeregningsgrunnlag(bg).build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER);
 
-        FaktaOmBeregningInput faktaOmBeregningInput = lagFaktaOmBeregningInput(grunnlag, List.of(im));
+        var faktaOmBeregningInput = lagFaktaOmBeregningInput(grunnlag, List.of(im));
 
 
-        Optional<FaktaOmBeregningTilfelle> tilfelle = new FastsettMånedsinntektUtenInntektsmeldingTilfelleUtleder().utled(faktaOmBeregningInput, grunnlag);
+        var tilfelle = new FastsettMånedsinntektUtenInntektsmeldingTilfelleUtleder().utled(faktaOmBeregningInput, grunnlag);
         assertThat(tilfelle).isPresent();
     }
 
     @Test
     void skal_ikkje_gi_tilfelle_om_beregningsgrunnlag_kun_har_andeler_for_samme_virksomhet_med_inntektsmelding() {
-        BeregningsgrunnlagDto bg = BeregningsgrunnlagDto.builder()
+        var bg = BeregningsgrunnlagDto.builder()
                 .leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
                 .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT).build();
-        BeregningsgrunnlagPeriodeDto periode = BeregningsgrunnlagPeriodeDto.ny()
+        var periode = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT, null).build(bg);
-        InternArbeidsforholdRefDto ref2 = InternArbeidsforholdRefDto.nyRef();
+        var ref2 = InternArbeidsforholdRefDto.nyRef();
         BeregningsgrunnlagPrStatusOgAndelDto.Builder.ny()
                 .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder().medArbeidsgiver(Arbeidsgiver.virksomhet(ORGNR))
                         .medArbeidsforholdRef(ref2))
                 .medInntektskategori(Inntektskategori.ARBEIDSTAKER)
                 .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                 .build(periode);
-        InternArbeidsforholdRefDto ref1 = InternArbeidsforholdRefDto.nyRef();
+        var ref1 = InternArbeidsforholdRefDto.nyRef();
         BeregningsgrunnlagPrStatusOgAndelDto.Builder.ny()
                 .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder().medArbeidsgiver(Arbeidsgiver.virksomhet(ORGNR))
                         .medArbeidsforholdRef(ref1))
                 .medInntektskategori(Inntektskategori.ARBEIDSTAKER)
                 .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                 .build(periode);
-        BeregningsgrunnlagGrunnlagDto grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
+        var grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medBeregningsgrunnlag(bg).build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER);
 
 
-        InntektsmeldingDto im = InntektsmeldingDtoBuilder.builder()
+        var im = InntektsmeldingDtoBuilder.builder()
                 .medArbeidsgiver(Arbeidsgiver.virksomhet(ORGNR))
                 .medArbeidsforholdId(ref1)
                 .medBeløp(Beløp.fra(10)).build();
-        InntektsmeldingDto im2 = InntektsmeldingDtoBuilder.builder()
+        var im2 = InntektsmeldingDtoBuilder.builder()
                 .medArbeidsgiver(Arbeidsgiver.virksomhet(ORGNR))
                 .medArbeidsforholdId(ref2)
                 .medBeløp(Beløp.fra(10)).build();
 
-        FaktaOmBeregningInput faktaOmBeregningInput = lagFaktaOmBeregningInput(grunnlag, List.of(im, im2));
+        var faktaOmBeregningInput = lagFaktaOmBeregningInput(grunnlag, List.of(im, im2));
 
-        Optional<FaktaOmBeregningTilfelle> tilfelle = new FastsettMånedsinntektUtenInntektsmeldingTilfelleUtleder().utled(faktaOmBeregningInput, grunnlag);
+        var tilfelle = new FastsettMånedsinntektUtenInntektsmeldingTilfelleUtleder().utled(faktaOmBeregningInput, grunnlag);
         assertThat(tilfelle).isNotPresent();
     }
 
     private FaktaOmBeregningInput lagFaktaOmBeregningInput(BeregningsgrunnlagGrunnlagDto grunnlag, List<InntektsmeldingDto> inntektsmeldinger) {
-        BeregningsgrunnlagInput input = BeregningsgrunnlagInputTestUtil.lagInputMedBeregningsgrunnlagOgIAY(koblingReferanse,
+        var input = BeregningsgrunnlagInputTestUtil.lagInputMedBeregningsgrunnlagOgIAY(koblingReferanse,
                 BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(grunnlag),
                 BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER,
                 InntektArbeidYtelseGrunnlagDtoBuilder.nytt()
@@ -141,12 +141,12 @@ class FastsettMånedsinntektUtenInntektsmeldingTilfelleUtlederTest {
     }
 
     private BeregningsgrunnlagGrunnlagDto lagGrunnlag(boolean medKunstigArbeid) {
-        BeregningsgrunnlagDto bg = BeregningsgrunnlagDto.builder()
+        var bg = BeregningsgrunnlagDto.builder()
             .leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
             .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT).build();
-        BeregningsgrunnlagPeriodeDto periode = BeregningsgrunnlagPeriodeDto.ny()
+        var periode = BeregningsgrunnlagPeriodeDto.ny()
             .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT, null).build(bg);
-        String orgnr = medKunstigArbeid ? OrgNummer.KUNSTIG_ORG : ORGNR;
+        var orgnr = medKunstigArbeid ? OrgNummer.KUNSTIG_ORG : ORGNR;
         BeregningsgrunnlagPrStatusOgAndelDto.ny()
             .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder().medArbeidsgiver(Arbeidsgiver.virksomhet(orgnr)))
             .medInntektskategori(Inntektskategori.ARBEIDSTAKER)

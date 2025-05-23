@@ -28,7 +28,7 @@ class AvklaringsbehovUtlederForeslåBeregningTest {
     @Test
     void skalIkkeFåAvklaringsbehovVed100PDekningsgrad() {
         // Act
-        List<BeregningAvklaringsbehovResultat> avklaringsbehov = AvklaringsbehovUtlederForeslåBeregning.utledAvklaringsbehov(lagInput(referanse), Collections.emptyList());
+	    var avklaringsbehov = AvklaringsbehovUtlederForeslåBeregning.utledAvklaringsbehov(lagInput(referanse), Collections.emptyList());
         // Assert
         assertThat(avklaringsbehov).isEmpty();
     }
@@ -38,7 +38,7 @@ class AvklaringsbehovUtlederForeslåBeregningTest {
         // Arrange
         var input = lagInput();
         // Act
-        List<BeregningAvklaringsbehovResultat> avklaringsbehov = AvklaringsbehovUtlederForeslåBeregning.utledAvklaringsbehov(input, Collections.emptyList());
+	    var avklaringsbehov = AvklaringsbehovUtlederForeslåBeregning.utledAvklaringsbehov(input, Collections.emptyList());
         // Assert
         assertThat(avklaringsbehov).isEmpty();
     }
@@ -46,9 +46,9 @@ class AvklaringsbehovUtlederForeslåBeregningTest {
     @Test
     void skalFåAvklaringsbehov5042() {
         // Arrange
-        RegelResultat regelResultat = lagRegelResultat(BeregningUtfallÅrsak.VARIG_ENDRING_OG_AVVIK_STØRRE_ENN_25_PROSENT);
+	    var regelResultat = lagRegelResultat(BeregningUtfallÅrsak.VARIG_ENDRING_OG_AVVIK_STØRRE_ENN_25_PROSENT);
         // Act
-        List<BeregningAvklaringsbehovResultat> avklaringsbehov = AvklaringsbehovUtlederForeslåBeregning.utledAvklaringsbehov(lagInput(referanse), Collections.singletonList(regelResultat));
+	    var avklaringsbehov = AvklaringsbehovUtlederForeslåBeregning.utledAvklaringsbehov(lagInput(referanse), Collections.singletonList(regelResultat));
         // Assert
         var apDefs = avklaringsbehov.stream().map(BeregningAvklaringsbehovResultat::getBeregningAvklaringsbehovDefinisjon).collect(Collectors.toList());
         assertThat(apDefs).containsExactly(AvklaringsbehovDefinisjon.VURDER_VARIG_ENDRT_NYOPPSTR_NAERNG_SN);
@@ -57,9 +57,9 @@ class AvklaringsbehovUtlederForeslåBeregningTest {
     @Test
     void skalFåAvklaringsbehov5049() {
         // Arrange
-        RegelResultat regelResultat = lagRegelResultat(BeregningUtfallÅrsak.FASTSETT_SELVSTENDIG_NY_ARBEIDSLIVET);
+	    var regelResultat = lagRegelResultat(BeregningUtfallÅrsak.FASTSETT_SELVSTENDIG_NY_ARBEIDSLIVET);
         // Act
-        List<BeregningAvklaringsbehovResultat> avklaringsbehov = AvklaringsbehovUtlederForeslåBeregning.utledAvklaringsbehov(lagInput(referanse), Collections.singletonList(regelResultat));
+	    var avklaringsbehov = AvklaringsbehovUtlederForeslåBeregning.utledAvklaringsbehov(lagInput(referanse), Collections.singletonList(regelResultat));
         // Assert
         var apDefs = avklaringsbehov.stream().map(BeregningAvklaringsbehovResultat::getBeregningAvklaringsbehovDefinisjon).collect(Collectors.toList());
         assertThat(apDefs).containsExactly(AvklaringsbehovDefinisjon.FASTSETT_BG_SN_NY_I_ARB_LIVT);
@@ -68,12 +68,12 @@ class AvklaringsbehovUtlederForeslåBeregningTest {
     @Test
     void skalFåAvklaringsbehov5038() {
         // Arrange
-        RegelResultat regelResultat = lagRegelResultat(BeregningUtfallÅrsak.FASTSETT_AVVIK_OVER_25_PROSENT);
+	    var regelResultat = lagRegelResultat(BeregningUtfallÅrsak.FASTSETT_AVVIK_OVER_25_PROSENT);
 
         var input = lagInput();
 
         // Act
-        List<BeregningAvklaringsbehovResultat> avklaringsbehov = AvklaringsbehovUtlederForeslåBeregning.utledAvklaringsbehov(input, Collections.singletonList(regelResultat));
+	    var avklaringsbehov = AvklaringsbehovUtlederForeslåBeregning.utledAvklaringsbehov(input, Collections.singletonList(regelResultat));
         // Assert
         var apDefs = avklaringsbehov.stream().map(BeregningAvklaringsbehovResultat::getBeregningAvklaringsbehovDefinisjon).collect(Collectors.toList());
         assertThat(apDefs).containsExactlyInAnyOrder(
@@ -90,7 +90,7 @@ class AvklaringsbehovUtlederForeslåBeregningTest {
     void skal_ikke_få_avklaringsbehov5087_når_barnet_ikke_har_dødd() {
         // Arrange
         // Act
-        List<BeregningAvklaringsbehovResultat> avklaringsbehov = AvklaringsbehovUtlederForeslåBeregning.utledAvklaringsbehov(lagInput(referanse), Collections.emptyList());
+	    var avklaringsbehov = AvklaringsbehovUtlederForeslåBeregning.utledAvklaringsbehov(lagInput(referanse), Collections.emptyList());
         // Assert
         var apDefs = avklaringsbehov.stream().map(BeregningAvklaringsbehovResultat::getBeregningAvklaringsbehovDefinisjon).collect(Collectors.toList());
         assertThat(apDefs).isEmpty();
@@ -101,7 +101,7 @@ class AvklaringsbehovUtlederForeslåBeregningTest {
         // Arrange
         var input = lagInput();
         // Act
-        List<BeregningAvklaringsbehovResultat> avklaringsbehov = AvklaringsbehovUtlederForeslåBeregning.utledAvklaringsbehov(input, Collections.emptyList());
+	    var avklaringsbehov = AvklaringsbehovUtlederForeslåBeregning.utledAvklaringsbehov(input, Collections.emptyList());
         // Assert
         var apDefs = avklaringsbehov.stream().map(BeregningAvklaringsbehovResultat::getBeregningAvklaringsbehovDefinisjon).collect(Collectors.toList());
         assertThat(apDefs).isEmpty();
@@ -113,7 +113,7 @@ class AvklaringsbehovUtlederForeslåBeregningTest {
         var input = lagInput();
 
         // Act
-        List<BeregningAvklaringsbehovResultat> avklaringsbehov = AvklaringsbehovUtlederForeslåBeregning.utledAvklaringsbehov(input, Collections.emptyList());
+	    var avklaringsbehov = AvklaringsbehovUtlederForeslåBeregning.utledAvklaringsbehov(input, Collections.emptyList());
         // Assert
         var apDefs = avklaringsbehov.stream().map(BeregningAvklaringsbehovResultat::getBeregningAvklaringsbehovDefinisjon).collect(Collectors.toList());
         assertThat(apDefs).isEmpty();
@@ -125,7 +125,7 @@ class AvklaringsbehovUtlederForeslåBeregningTest {
         var input = lagInput();
 
         // Act
-        List<BeregningAvklaringsbehovResultat> avklaringsbehov = AvklaringsbehovUtlederForeslåBeregning.utledAvklaringsbehov(input, Collections.emptyList());
+	    var avklaringsbehov = AvklaringsbehovUtlederForeslåBeregning.utledAvklaringsbehov(input, Collections.emptyList());
         // Assert
         var apDefs = avklaringsbehov.stream().map(BeregningAvklaringsbehovResultat::getBeregningAvklaringsbehovDefinisjon).collect(Collectors.toList());
         assertThat(apDefs).isEmpty();
@@ -137,7 +137,7 @@ class AvklaringsbehovUtlederForeslåBeregningTest {
     }
 
     private RegelResultat lagRegelResultat(BeregningUtfallÅrsak utfallÅrsak) {
-        RegelMerknad regelMerknad = new RegelMerknad(utfallÅrsak);
+	    var regelMerknad = new RegelMerknad(utfallÅrsak);
         return RegelResultat.medRegelMerknad(new RegelResultat(ResultatBeregningType.IKKE_BEREGNET, "1.2.3", "regelInput", "regelSporing"), regelMerknad);
     }
 

@@ -65,33 +65,33 @@ public enum BeregningsgrunnlagTilstand implements Kodeverdi, DatabaseKode, Kontr
 
 
     public static Optional<BeregningsgrunnlagTilstand> finnForrigeTilstand(BeregningsgrunnlagTilstand tilstand) {
-        int tilstandIndex = tilstandRekkefølge.indexOf(tilstand);
+        var tilstandIndex = tilstandRekkefølge.indexOf(tilstand);
         if (tilstandIndex == 0) {
             return Optional.empty();
         }
-        BeregningsgrunnlagTilstand forrigeTilstand = tilstandRekkefølge.get(tilstandIndex - 1);
+        var forrigeTilstand = tilstandRekkefølge.get(tilstandIndex - 1);
         return Optional.of(forrigeTilstand);
     }
 
     public static Optional<BeregningsgrunnlagTilstand> finnNesteTilstand(BeregningsgrunnlagTilstand tilstand) {
-        int tilstandIndex = tilstandRekkefølge.indexOf(tilstand);
+        var tilstandIndex = tilstandRekkefølge.indexOf(tilstand);
         if (tilstandIndex == tilstandRekkefølge.size() - 1) {
             return Optional.empty();
         }
-        BeregningsgrunnlagTilstand forrigeTilstand = tilstandRekkefølge.get(tilstandIndex + 1);
+        var forrigeTilstand = tilstandRekkefølge.get(tilstandIndex + 1);
         return Optional.of(forrigeTilstand);
     }
 
 
     public boolean erFør(BeregningsgrunnlagTilstand that) {
-        int thisIndex = tilstandRekkefølge.indexOf(this);
-        int thatIndex = tilstandRekkefølge.indexOf(that);
+        var thisIndex = tilstandRekkefølge.indexOf(this);
+        var thatIndex = tilstandRekkefølge.indexOf(that);
         return thisIndex < thatIndex;
     }
 
     public boolean erEtter(BeregningsgrunnlagTilstand that) {
-        int thisIndex = tilstandRekkefølge.indexOf(this);
-        int thatIndex = tilstandRekkefølge.indexOf(that);
+        var thisIndex = tilstandRekkefølge.indexOf(this);
+        var thatIndex = tilstandRekkefølge.indexOf(that);
         return thisIndex > thatIndex;
     }
 

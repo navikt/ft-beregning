@@ -67,22 +67,22 @@ class FastsettNaturalytelsePerioderTjenesteImplTest {
     private void leggTilYrkesaktiviteterOgBeregningAktiviteter(List<String> orgnrs, InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlagBuilder) {
 
         var aktørArbeidBuilder = InntektArbeidYtelseAggregatBuilder.AktørArbeidBuilder.oppdatere(iayGrunnlagBuilder.getKladd().getAktørArbeidFraRegister());
-        for (String orgnr : orgnrs) {
-            Arbeidsgiver arbeidsgiver = leggTilYrkesaktivitet(ARBEIDSPERIODE, aktørArbeidBuilder, orgnr);
+        for (var orgnr : orgnrs) {
+            var arbeidsgiver = leggTilYrkesaktivitet(ARBEIDSPERIODE, aktørArbeidBuilder, orgnr);
             fjernOgLeggTilNyBeregningAktivitet(ARBEIDSPERIODE.getFomDato(), ARBEIDSPERIODE.getTomDato(), arbeidsgiver, InternArbeidsforholdRefDto.nullRef());
         }
 
-        InntektArbeidYtelseAggregatBuilder inntektArbeidYtelseAggregatBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(iayGrunnlagBuilder.getKladd().getRegisterVersjon(), VersjonTypeDto.REGISTER)
+        var inntektArbeidYtelseAggregatBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(iayGrunnlagBuilder.getKladd().getRegisterVersjon(), VersjonTypeDto.REGISTER)
                 .leggTilAktørArbeid(aktørArbeidBuilder);
         iayGrunnlagBuilder.medData(inntektArbeidYtelseAggregatBuilder);
     }
 
     private Arbeidsgiver leggTilYrkesaktivitet(Intervall arbeidsperiode, InntektArbeidYtelseAggregatBuilder.AktørArbeidBuilder aktørArbeidBuilder,
                                                String orgnr) {
-        Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(orgnr);
-        AktivitetsAvtaleDtoBuilder aaBuilder1 = AktivitetsAvtaleDtoBuilder.ny()
+        var arbeidsgiver = Arbeidsgiver.virksomhet(orgnr);
+        var aaBuilder1 = AktivitetsAvtaleDtoBuilder.ny()
                 .medPeriode(arbeidsperiode);
-        YrkesaktivitetDtoBuilder yaBuilder = YrkesaktivitetDtoBuilder.oppdatere(Optional.empty())
+        var yaBuilder = YrkesaktivitetDtoBuilder.oppdatere(Optional.empty())
                 .medArbeidsgiver(arbeidsgiver)
                 .medArbeidType(ArbeidType.ORDINÆRT_ARBEIDSFORHOLD)
                 .leggTilAktivitetsAvtale(aaBuilder1);
@@ -107,7 +107,7 @@ class FastsettNaturalytelsePerioderTjenesteImplTest {
     }
 
     private void lagAggregatEntitetFraListe(List<BeregningAktivitetDto> aktiviteter) {
-        BeregningAktivitetAggregatDto.Builder builder = BeregningAktivitetAggregatDto.builder();
+        var builder = BeregningAktivitetAggregatDto.builder();
         aktiviteter.forEach(builder::leggTilAktivitet);
         beregningAktivitetAggregat = builder.medSkjæringstidspunktOpptjening(SKJÆRINGSTIDSPUNKT).build();
     }
@@ -132,21 +132,21 @@ class FastsettNaturalytelsePerioderTjenesteImplTest {
     @Test
     void lagPeriodeForNaturalytelseTilkommer() {
         // Arrange
-        BeregningsgrunnlagGrunnlagDto grunnlag = lagBeregningsgrunnlagMedOverstyring(List.of(ORG_NUMMER), beregningAktivitetAggregat);
-        BeregningsgrunnlagDto beregningsgrunnlag = grunnlag.getBeregningsgrunnlagHvisFinnes().get();
+        var grunnlag = lagBeregningsgrunnlagMedOverstyring(List.of(ORG_NUMMER), beregningAktivitetAggregat);
+        var beregningsgrunnlag = grunnlag.getBeregningsgrunnlagHvisFinnes().get();
         var inntekt = Beløp.fra(40000);
-        NaturalYtelseDto naturalYtelseTilkommer = new NaturalYtelseDto(SKJÆRINGSTIDSPUNKT.plusDays(30), TIDENES_ENDE, Beløp.fra(350),
+        var naturalYtelseTilkommer = new NaturalYtelseDto(SKJÆRINGSTIDSPUNKT.plusDays(30), TIDENES_ENDE, Beløp.fra(350),
                 NaturalYtelseType.ELEKTRISK_KOMMUNIKASJON);
         var im1 = BeregningInntektsmeldingTestUtil.opprettInntektsmeldingMedNaturalYtelser(ORG_NUMMER, SKJÆRINGSTIDSPUNKT, inntekt, inntekt, null,
                 naturalYtelseTilkommer);
         iayGrunnlagBuilder.medInntektsmeldinger(im1);
 
         // Act
-        BeregningsgrunnlagDto nyttBeregningsgrunnlag = fastsettPerioderForNaturalytelse(behandlingRef, grunnlag, beregningsgrunnlag
+        var nyttBeregningsgrunnlag = fastsettPerioderForNaturalytelse(behandlingRef, grunnlag, beregningsgrunnlag
         );
 
         // Assert
-        List<BeregningsgrunnlagPeriodeDto> perioder = nyttBeregningsgrunnlag.getBeregningsgrunnlagPerioder();
+        var perioder = nyttBeregningsgrunnlag.getBeregningsgrunnlagPerioder();
         assertThat(perioder).hasSize(2);
         assertBeregningsgrunnlagPeriode(perioder.get(0), SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusDays(29));
         assertBeregningsgrunnlagPeriode(perioder.get(1), SKJÆRINGSTIDSPUNKT.plusDays(30), TIDENES_ENDE, PeriodeÅrsak.NATURALYTELSE_TILKOMMER);
@@ -155,21 +155,21 @@ class FastsettNaturalytelsePerioderTjenesteImplTest {
     @Test
     void lagPeriodeForNaturalytelseBortfalt() {
         // Arrange
-        BeregningsgrunnlagGrunnlagDto grunnlag = lagBeregningsgrunnlagMedOverstyring(List.of(ORG_NUMMER), beregningAktivitetAggregat);
-        BeregningsgrunnlagDto beregningsgrunnlag = grunnlag.getBeregningsgrunnlagHvisFinnes().get();
+        var grunnlag = lagBeregningsgrunnlagMedOverstyring(List.of(ORG_NUMMER), beregningAktivitetAggregat);
+        var beregningsgrunnlag = grunnlag.getBeregningsgrunnlagHvisFinnes().get();
         var inntekt = Beløp.fra(40000);
-        NaturalYtelseDto naturalYtelseBortfall = new NaturalYtelseDto(SKJÆRINGSTIDSPUNKT.minusYears(2), SKJÆRINGSTIDSPUNKT.plusDays(30),
+        var naturalYtelseBortfall = new NaturalYtelseDto(SKJÆRINGSTIDSPUNKT.minusYears(2), SKJÆRINGSTIDSPUNKT.plusDays(30),
                 Beløp.fra(350), NaturalYtelseType.ELEKTRISK_KOMMUNIKASJON);
         var im1 = BeregningInntektsmeldingTestUtil.opprettInntektsmeldingMedNaturalYtelser(ORG_NUMMER, SKJÆRINGSTIDSPUNKT, inntekt, inntekt, null,
                 naturalYtelseBortfall);
         iayGrunnlagBuilder.medInntektsmeldinger(im1);
 
         // Act
-        BeregningsgrunnlagDto nyttBeregningsgrunnlag = fastsettPerioderForNaturalytelse(behandlingRef, grunnlag, beregningsgrunnlag
+        var nyttBeregningsgrunnlag = fastsettPerioderForNaturalytelse(behandlingRef, grunnlag, beregningsgrunnlag
         );
 
         // Assert
-        List<BeregningsgrunnlagPeriodeDto> perioder = nyttBeregningsgrunnlag.getBeregningsgrunnlagPerioder();
+        var perioder = nyttBeregningsgrunnlag.getBeregningsgrunnlagPerioder();
         assertThat(perioder).hasSize(2);
         assertBeregningsgrunnlagPeriode(perioder.get(0), SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusDays(30));
         assertBeregningsgrunnlagPeriode(perioder.get(1), SKJÆRINGSTIDSPUNKT.plusDays(31), TIDENES_ENDE, PeriodeÅrsak.NATURALYTELSE_BORTFALT);
@@ -178,21 +178,21 @@ class FastsettNaturalytelsePerioderTjenesteImplTest {
     @Test
     void ikkeLagPeriodeForNaturalytelseBortfaltPåStp() {
         // Arrange
-        BeregningsgrunnlagGrunnlagDto grunnlag = lagBeregningsgrunnlagMedOverstyring(List.of(ORG_NUMMER), beregningAktivitetAggregat);
-        BeregningsgrunnlagDto beregningsgrunnlag = grunnlag.getBeregningsgrunnlagHvisFinnes().get();
+        var grunnlag = lagBeregningsgrunnlagMedOverstyring(List.of(ORG_NUMMER), beregningAktivitetAggregat);
+        var beregningsgrunnlag = grunnlag.getBeregningsgrunnlagHvisFinnes().get();
         var inntekt = Beløp.fra(40000);
-        NaturalYtelseDto naturalYtelseBortfall = new NaturalYtelseDto(SKJÆRINGSTIDSPUNKT.minusYears(2), SKJÆRINGSTIDSPUNKT.minusDays(1),
+        var naturalYtelseBortfall = new NaturalYtelseDto(SKJÆRINGSTIDSPUNKT.minusYears(2), SKJÆRINGSTIDSPUNKT.minusDays(1),
                 Beløp.fra(350), NaturalYtelseType.ELEKTRISK_KOMMUNIKASJON);
         var im1 = BeregningInntektsmeldingTestUtil.opprettInntektsmeldingMedNaturalYtelser(ORG_NUMMER, SKJÆRINGSTIDSPUNKT, inntekt, inntekt, null,
                 naturalYtelseBortfall);
         iayGrunnlagBuilder.medInntektsmeldinger(im1);
 
         // Act
-        BeregningsgrunnlagDto nyttBeregningsgrunnlag = fastsettPerioderForNaturalytelse(behandlingRef, grunnlag, beregningsgrunnlag
+        var nyttBeregningsgrunnlag = fastsettPerioderForNaturalytelse(behandlingRef, grunnlag, beregningsgrunnlag
         );
 
         // Assert
-        List<BeregningsgrunnlagPeriodeDto> perioder = nyttBeregningsgrunnlag.getBeregningsgrunnlagPerioder();
+        var perioder = nyttBeregningsgrunnlag.getBeregningsgrunnlagPerioder();
         assertThat(perioder).hasSize(1);
         assertBeregningsgrunnlagPeriode(perioder.get(0), SKJÆRINGSTIDSPUNKT, TIDENES_ENDE);
     }
@@ -200,21 +200,21 @@ class FastsettNaturalytelsePerioderTjenesteImplTest {
     @Test
     void lagPeriodeForNaturalytelseBortfaltDagenEtterStp() {
         // Arrange
-        BeregningsgrunnlagGrunnlagDto grunnlag = lagBeregningsgrunnlagMedOverstyring(List.of(ORG_NUMMER), beregningAktivitetAggregat);
-        BeregningsgrunnlagDto beregningsgrunnlag = grunnlag.getBeregningsgrunnlagHvisFinnes().get();
+        var grunnlag = lagBeregningsgrunnlagMedOverstyring(List.of(ORG_NUMMER), beregningAktivitetAggregat);
+        var beregningsgrunnlag = grunnlag.getBeregningsgrunnlagHvisFinnes().get();
         var inntekt = Beløp.fra(40000);
-        NaturalYtelseDto naturalYtelseBortfall = new NaturalYtelseDto(SKJÆRINGSTIDSPUNKT.minusYears(2), SKJÆRINGSTIDSPUNKT, Beløp.fra(350),
+        var naturalYtelseBortfall = new NaturalYtelseDto(SKJÆRINGSTIDSPUNKT.minusYears(2), SKJÆRINGSTIDSPUNKT, Beløp.fra(350),
                 NaturalYtelseType.ELEKTRISK_KOMMUNIKASJON);
         var im1 = BeregningInntektsmeldingTestUtil.opprettInntektsmeldingMedNaturalYtelser(ORG_NUMMER, SKJÆRINGSTIDSPUNKT, inntekt, inntekt, null,
                 naturalYtelseBortfall);
         iayGrunnlagBuilder.medInntektsmeldinger(im1);
 
         // Act
-        BeregningsgrunnlagDto nyttBeregningsgrunnlag = fastsettPerioderForNaturalytelse(behandlingRef, grunnlag, beregningsgrunnlag
+        var nyttBeregningsgrunnlag = fastsettPerioderForNaturalytelse(behandlingRef, grunnlag, beregningsgrunnlag
         );
 
         // Assert
-        List<BeregningsgrunnlagPeriodeDto> perioder = nyttBeregningsgrunnlag.getBeregningsgrunnlagPerioder();
+        var perioder = nyttBeregningsgrunnlag.getBeregningsgrunnlagPerioder();
         assertThat(perioder).hasSize(2);
         assertBeregningsgrunnlagPeriode(perioder.get(0), SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT);
         assertBeregningsgrunnlagPeriode(perioder.get(1), SKJÆRINGSTIDSPUNKT.plusDays(1), TIDENES_ENDE, PeriodeÅrsak.NATURALYTELSE_BORTFALT);
@@ -223,23 +223,23 @@ class FastsettNaturalytelsePerioderTjenesteImplTest {
     @Test
     void lagPerioderForNaturalytelseBortfaltOgTilkommer() {
         // Arrange
-        BeregningsgrunnlagGrunnlagDto grunnlag = lagBeregningsgrunnlagMedOverstyring(List.of(ORG_NUMMER), beregningAktivitetAggregat);
-        BeregningsgrunnlagDto beregningsgrunnlag = grunnlag.getBeregningsgrunnlagHvisFinnes().get();
+        var grunnlag = lagBeregningsgrunnlagMedOverstyring(List.of(ORG_NUMMER), beregningAktivitetAggregat);
+        var beregningsgrunnlag = grunnlag.getBeregningsgrunnlagHvisFinnes().get();
         var inntekt = Beløp.fra(40000);
-        NaturalYtelseDto naturalYtelseBortfalt = new NaturalYtelseDto(SKJÆRINGSTIDSPUNKT.minusYears(2), SKJÆRINGSTIDSPUNKT.plusDays(30),
+        var naturalYtelseBortfalt = new NaturalYtelseDto(SKJÆRINGSTIDSPUNKT.minusYears(2), SKJÆRINGSTIDSPUNKT.plusDays(30),
                 Beløp.fra(350), NaturalYtelseType.ELEKTRISK_KOMMUNIKASJON);
-        NaturalYtelseDto naturalYtelseTilkommer = new NaturalYtelseDto(SKJÆRINGSTIDSPUNKT.plusDays(90), TIDENES_ENDE, Beløp.fra(350),
+        var naturalYtelseTilkommer = new NaturalYtelseDto(SKJÆRINGSTIDSPUNKT.plusDays(90), TIDENES_ENDE, Beløp.fra(350),
                 NaturalYtelseType.ELEKTRISK_KOMMUNIKASJON);
         var im1 = BeregningInntektsmeldingTestUtil.opprettInntektsmeldingMedNaturalYtelser(ORG_NUMMER, SKJÆRINGSTIDSPUNKT, inntekt, inntekt, null,
                 naturalYtelseBortfalt, naturalYtelseTilkommer);
         iayGrunnlagBuilder.medInntektsmeldinger(im1);
 
         // Act
-        BeregningsgrunnlagDto nyttBeregningsgrunnlag = fastsettPerioderForNaturalytelse(behandlingRef, grunnlag, beregningsgrunnlag
+        var nyttBeregningsgrunnlag = fastsettPerioderForNaturalytelse(behandlingRef, grunnlag, beregningsgrunnlag
         );
 
         // Assert
-        List<BeregningsgrunnlagPeriodeDto> perioder = nyttBeregningsgrunnlag.getBeregningsgrunnlagPerioder();
+        var perioder = nyttBeregningsgrunnlag.getBeregningsgrunnlagPerioder();
         assertThat(perioder).hasSize(3);
         assertBeregningsgrunnlagPeriode(perioder.get(0), SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusDays(30));
         assertBeregningsgrunnlagPeriode(perioder.get(1), SKJÆRINGSTIDSPUNKT.plusDays(31), SKJÆRINGSTIDSPUNKT.plusDays(89), PeriodeÅrsak.NATURALYTELSE_BORTFALT);
@@ -249,15 +249,15 @@ class FastsettNaturalytelsePerioderTjenesteImplTest {
     @Test
     void skalKasteFeilHvisAntallPerioderErMerEnn1() {
         // Arrange
-        BeregningsgrunnlagPeriodeDto.Builder periode1 = lagBeregningsgrunnlagPerioderBuilder(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT, List.of(ORG_NUMMER));
-        BeregningsgrunnlagPeriodeDto.Builder periode2 = lagBeregningsgrunnlagPerioderBuilder(SKJÆRINGSTIDSPUNKT.plusDays(1), null, List.of(ORG_NUMMER));
-        BeregningsgrunnlagDto beregningsgrunnlag = BeregningsgrunnlagDto.builder()
+        var periode1 = lagBeregningsgrunnlagPerioderBuilder(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT, List.of(ORG_NUMMER));
+        var periode2 = lagBeregningsgrunnlagPerioderBuilder(SKJÆRINGSTIDSPUNKT.plusDays(1), null, List.of(ORG_NUMMER));
+        var beregningsgrunnlag = BeregningsgrunnlagDto.builder()
                 .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT)
                 .medGrunnbeløp(GRUNNBELØP)
                 .leggTilBeregningsgrunnlagPeriode(periode1)
                 .leggTilBeregningsgrunnlagPeriode(periode2)
                 .build();
-        BeregningsgrunnlagGrunnlagDto grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
+        var grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medRegisterAktiviteter(beregningAktivitetAggregat)
                 .medBeregningsgrunnlag(beregningsgrunnlag)
                 .build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER);
@@ -288,13 +288,13 @@ class FastsettNaturalytelsePerioderTjenesteImplTest {
     private BeregningsgrunnlagGrunnlagDto lagBeregningsgrunnlag(List<String> orgnrs,
                                                                 BeregningAktivitetAggregatDto beregningAktivitetAggregat,
                                                                 BeregningAktivitetOverstyringerDto BeregningAktivitetOverstyringer) {
-        BeregningsgrunnlagPeriodeDto.Builder beregningsgrunnlagPeriodeBuilder = lagBeregningsgrunnlagPerioderBuilder(SKJÆRINGSTIDSPUNKT, null, orgnrs);
-        BeregningsgrunnlagDto.Builder beregningsgrunnlagBuilder = BeregningsgrunnlagDto.builder()
+        var beregningsgrunnlagPeriodeBuilder = lagBeregningsgrunnlagPerioderBuilder(SKJÆRINGSTIDSPUNKT, null, orgnrs);
+        var beregningsgrunnlagBuilder = BeregningsgrunnlagDto.builder()
                 .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT)
                 .medGrunnbeløp(GRUNNBELØP)
                 .leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER).medHjemmel(Hjemmel.F_14_7));
         beregningsgrunnlagBuilder.leggTilBeregningsgrunnlagPeriode(beregningsgrunnlagPeriodeBuilder);
-        BeregningsgrunnlagDto bg = beregningsgrunnlagBuilder.build();
+        var bg = beregningsgrunnlagBuilder.build();
         return BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medBeregningsgrunnlag(bg)
                 .medRegisterAktiviteter(beregningAktivitetAggregat)
@@ -303,10 +303,10 @@ class FastsettNaturalytelsePerioderTjenesteImplTest {
     }
 
     private BeregningsgrunnlagPeriodeDto.Builder lagBeregningsgrunnlagPerioderBuilder(LocalDate fom, LocalDate tom, List<String> orgnrs) {
-        BeregningsgrunnlagPeriodeDto.Builder builder = BeregningsgrunnlagPeriodeDto.ny();
-        for (String orgnr : orgnrs) {
-            Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(orgnr);
-            BeregningsgrunnlagPrStatusOgAndelDto.Builder andelBuilder = BeregningsgrunnlagPrStatusOgAndelDto.ny()
+        var builder = BeregningsgrunnlagPeriodeDto.ny();
+        for (var orgnr : orgnrs) {
+            var arbeidsgiver = Arbeidsgiver.virksomhet(orgnr);
+            var andelBuilder = BeregningsgrunnlagPrStatusOgAndelDto.ny()
                     .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                     .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder()
                             .medArbeidsgiver(arbeidsgiver)

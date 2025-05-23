@@ -152,7 +152,7 @@ public class BeregningsgrunnlagPeriodeDto {
     }
 
     public void leggTilPeriodeAarsaker(List<PeriodeÅrsak> periodeAarsaker) {
-        for (PeriodeÅrsak aarsak : periodeAarsaker) {
+        for (var aarsak : periodeAarsaker) {
             leggTilPeriodeAarsak(aarsak);
         }
     }

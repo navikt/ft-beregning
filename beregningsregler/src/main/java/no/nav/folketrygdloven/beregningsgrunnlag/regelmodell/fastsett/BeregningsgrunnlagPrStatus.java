@@ -81,12 +81,12 @@ public class BeregningsgrunnlagPrStatus {
 	}
 
 	public BigDecimal samletNaturalytelseBortfaltMinusTilkommetPrÅr() {
-		BigDecimal sumBortfaltNaturalYtelse = getArbeidsforhold().stream()
+        var sumBortfaltNaturalYtelse = getArbeidsforhold().stream()
 				.map(BeregningsgrunnlagPrArbeidsforhold::getNaturalytelseBortfaltPrÅr)
 				.filter(Optional::isPresent)
 				.map(Optional::get)
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
-		BigDecimal sumTilkommetNaturalYtelse = getArbeidsforhold().stream()
+        var sumTilkommetNaturalYtelse = getArbeidsforhold().stream()
 				.map(BeregningsgrunnlagPrArbeidsforhold::getNaturalytelseTilkommetPrÅr)
 				.filter(Optional::isPresent)
 				.map(Optional::get)
@@ -132,14 +132,14 @@ public class BeregningsgrunnlagPrStatus {
 
 
 	public BigDecimal getBruttoInkludertNaturalytelsePrÅr() {
-		BigDecimal brutto = getBruttoPrÅr();
-		BigDecimal samletNaturalytelse = samletNaturalytelseBortfaltMinusTilkommetPrÅr();
+        var brutto = getBruttoPrÅr();
+        var samletNaturalytelse = samletNaturalytelseBortfaltMinusTilkommetPrÅr();
 		return brutto.add(samletNaturalytelse);
 	}
 
 	public BigDecimal getInntektsgrunnlagInkludertNaturalytelsePrÅr() {
-		BigDecimal inntektsgrunnlag = getInntektsgrunnlagPrÅr();
-		BigDecimal samletNaturalytelse = samletNaturalytelseBortfaltMinusTilkommetPrÅr();
+        var inntektsgrunnlag = getInntektsgrunnlagPrÅr();
+        var samletNaturalytelse = samletNaturalytelseBortfaltMinusTilkommetPrÅr();
 		return inntektsgrunnlag.add(samletNaturalytelse);
 	}
 
@@ -275,8 +275,8 @@ public class BeregningsgrunnlagPrStatus {
 
 		public Builder medArbeidsforhold(List<Arbeidsforhold> arbeidsforhold) {
 			if (arbeidsforhold != null) {
-				int andelNr = 1;
-				for (Arbeidsforhold af : arbeidsforhold) {
+                var andelNr = 1;
+				for (var af : arbeidsforhold) {
 					beregningsgrunnlagPrStatusMal.arbeidsforhold.add(BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(af).medAndelNr(andelNr++).build());
 				}
 			}
@@ -289,8 +289,8 @@ public class BeregningsgrunnlagPrStatus {
 				if (!refusjonskravPrÅr.isEmpty() && arbeidsforhold.size() != refusjonskravPrÅr.size()) {
 					throw new IllegalArgumentException("Lengde på arbeidsforhold og refusjonskravPrÅr må vere like");
 				}
-				int andelNr = 1;
-				for (int i = 0; i < arbeidsforhold.size(); i++) {
+                var andelNr = 1;
+				for (var i = 0; i < arbeidsforhold.size(); i++) {
 					beregningsgrunnlagPrStatusMal.arbeidsforhold.add(BeregningsgrunnlagPrArbeidsforhold.builder()
 							.medArbeidsforhold(arbeidsforhold.get(i))
 							.medAndelNr(andelNr++)

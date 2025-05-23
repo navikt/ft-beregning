@@ -70,11 +70,11 @@ class BeregningsgrunnlagDtoTjenesteImplTest {
         // Arrange
         lagBehandlingMedBgOgOpprettFagsakRelasjon(virksomhet);
         // Act
-        BeregningsgrunnlagDto beregningsgrunnlagDto = lagBeregningsgrunnlagDto(lagReferanseMedStp(koblingReferanse), grunnlag,
+	    var beregningsgrunnlagDto = lagBeregningsgrunnlagDto(lagReferanseMedStp(koblingReferanse), grunnlag,
                 InntektArbeidYtelseGrunnlagDtoBuilder.nytt().medInntektsmeldinger(List.of()).build());
 
         // Assert
-        List<AktivitetStatus> aktivitetStatus = beregningsgrunnlagDto.getAktivitetStatus();
+	    var aktivitetStatus = beregningsgrunnlagDto.getAktivitetStatus();
         assertThat(aktivitetStatus).isNotNull();
         assertThat(aktivitetStatus.get(0)).isEqualTo(AktivitetStatus.ARBEIDSTAKER);
     }
@@ -85,9 +85,9 @@ class BeregningsgrunnlagDtoTjenesteImplTest {
         lagBehandlingMedBgOgOpprettFagsakRelasjon(virksomhet);
 
         // Act
-        BeregningsgrunnlagDto beregningsgrunnlagDto = lagBeregningsgrunnlagDto(lagReferanseMedStp(koblingReferanse), grunnlag, InntektArbeidYtelseGrunnlagDtoBuilder.nytt().medInntektsmeldinger(List.of()).build());
+	    var beregningsgrunnlagDto = lagBeregningsgrunnlagDto(lagReferanseMedStp(koblingReferanse), grunnlag, InntektArbeidYtelseGrunnlagDtoBuilder.nytt().medInntektsmeldinger(List.of()).build());
 
-        SammenligningsgrunnlagDto sammenligningsgrunnlagPrStatus = beregningsgrunnlagDto.getSammenligningsgrunnlagPrStatus().get(0);
+	    var sammenligningsgrunnlagPrStatus = beregningsgrunnlagDto.getSammenligningsgrunnlagPrStatus().get(0);
         assertThat(sammenligningsgrunnlagPrStatus).isNotNull();
         assertThat(sammenligningsgrunnlagPrStatus.getAvvikPromille()).isEqualTo(AVVIK_OVER_25_PROSENT);
         assertThat(sammenligningsgrunnlagPrStatus.getRapportertPrAar().verdi()).isEqualTo(RAPPORTERT_PR_AAR.verdi());
@@ -100,11 +100,11 @@ class BeregningsgrunnlagDtoTjenesteImplTest {
     @Test
     void skal_teste_at_beregningsgrunnlagDto_får_korrekte_verdier() {
         // Arrange
-        Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
+	    var arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         lagBehandlingMedBgOgOpprettFagsakRelasjon(arbeidsgiver);
 
         // Act
-        BeregningsgrunnlagDto grunnlagDto = lagBeregningsgrunnlagDto(lagReferanseMedStp(koblingReferanse), grunnlag, InntektArbeidYtelseGrunnlagDtoBuilder.nytt().medInntektsmeldinger(List.of()).build());
+	    var grunnlagDto = lagBeregningsgrunnlagDto(lagReferanseMedStp(koblingReferanse), grunnlag, InntektArbeidYtelseGrunnlagDtoBuilder.nytt().medInntektsmeldinger(List.of()).build());
 
         // Assert
         assertThat(grunnlagDto).isNotNull();
@@ -115,17 +115,17 @@ class BeregningsgrunnlagDtoTjenesteImplTest {
     @Test
     void skal_teste_at_beregningsgrunnlagDto_får_korrekte_verdier_om_fakta_om_beregning_er_utført_uten_fastsatt_inntekt() {
         // Arrange
-        Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
-        no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto faktaOmBeregningBg = lagBehandlingMedBgOgOpprettFagsakRelasjon(arbeidsgiver);
+	    var arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
+	    var faktaOmBeregningBg = lagBehandlingMedBgOgOpprettFagsakRelasjon(arbeidsgiver);
 
-        BeregningsgrunnlagPrStatusOgAndelDto andel = faktaOmBeregningBg.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().get(0);
+	    var andel = faktaOmBeregningBg.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().get(0);
         var beregnetEtterFastsattSteg = Beløp.fra(10000);
         BeregningsgrunnlagPrStatusOgAndelDto.Builder.oppdatere(andel).medBeregnetPrÅr(beregnetEtterFastsattSteg);
 
-        InntektArbeidYtelseGrunnlagDtoBuilder builder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
+	    var builder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
 
         // Act
-        BeregningsgrunnlagDto beregningsgrunnlagDto = lagBeregningsgrunnlagDto(lagReferanseMedStp(koblingReferanse), grunnlag, builder.build());
+	    var beregningsgrunnlagDto = lagBeregningsgrunnlagDto(lagReferanseMedStp(koblingReferanse), grunnlag, builder.build());
 
         // Assert
         assertBeregningsgrunnlag(beregnetEtterFastsattSteg, beregningsgrunnlagDto);
@@ -134,8 +134,8 @@ class BeregningsgrunnlagDtoTjenesteImplTest {
     @Test
     void skal_teste_at_beregningsgrunnlagDto_beregningsgrunnlagperiode_får_korrekte_verdier() {
         lagBehandlingMedBgOgOpprettFagsakRelasjon(virksomhet);
-        InntektArbeidYtelseGrunnlagDtoBuilder builder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
-        BeregningsgrunnlagDto beregningsgrunnlagDto = lagBeregningsgrunnlagDto(lagReferanseMedStp(koblingReferanse), grunnlag, builder.build());
+	    var builder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
+	    var beregningsgrunnlagDto = lagBeregningsgrunnlagDto(lagReferanseMedStp(koblingReferanse), grunnlag, builder.build());
 
         // Assert
         var beregningsgrunnlagPeriodeDtoList = beregningsgrunnlagDto.getBeregningsgrunnlagPeriode();
@@ -158,11 +158,11 @@ class BeregningsgrunnlagDtoTjenesteImplTest {
     @Test
     void skal_teste_at_beregningsgrunnlagDto_beregningsgrunnlagperiode_får_korrekte_verdier_ved_arbeidsgiver_privatperson() {
         // Arrange
-        AktørId aktørId = AktørId.dummy();
-        Arbeidsgiver person = Arbeidsgiver.person(aktørId);
+	    var aktørId = AktørId.dummy();
+	    var person = Arbeidsgiver.person(aktørId);
         lagBehandlingMedBgOgOpprettFagsakRelasjon(person);
-        InntektArbeidYtelseGrunnlagDtoBuilder builder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
-        BeregningsgrunnlagDto beregningsgrunnlagDto = lagBeregningsgrunnlagDto(lagReferanseMedStp(koblingReferanse), grunnlag, builder.build());
+	    var builder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
+	    var beregningsgrunnlagDto = lagBeregningsgrunnlagDto(lagReferanseMedStp(koblingReferanse), grunnlag, builder.build());
 
         // Assert
         var beregningsgrunnlagPeriodeDtoList = beregningsgrunnlagDto.getBeregningsgrunnlagPeriode();
@@ -185,12 +185,12 @@ class BeregningsgrunnlagDtoTjenesteImplTest {
     @Test
     void skalSetteSammenligningsgrunnlagDtoMedDifferanseNårFlereAndeler() {
         // Arrange
-        Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
+	    var arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         lagBehandlingMedBgOgOpprettFagsakRelasjonFlereAndeler(arbeidsgiver);
         // Act
-        BeregningsgrunnlagDto beregningsgrunnlagDto = lagBeregningsgrunnlagDto(lagReferanseMedStp(koblingReferanse), grunnlag, InntektArbeidYtelseGrunnlagDtoBuilder.nytt().medInntektsmeldinger(List.of()).build());
+	    var beregningsgrunnlagDto = lagBeregningsgrunnlagDto(lagReferanseMedStp(koblingReferanse), grunnlag, InntektArbeidYtelseGrunnlagDtoBuilder.nytt().medInntektsmeldinger(List.of()).build());
         // Assert
-        SammenligningsgrunnlagDto sammenligningsgrunnlag = beregningsgrunnlagDto.getSammenligningsgrunnlagPrStatus().get(0);
+	    var sammenligningsgrunnlag = beregningsgrunnlagDto.getSammenligningsgrunnlagPrStatus().get(0);
         assertThat(sammenligningsgrunnlag).isNotNull();
         assertThat(sammenligningsgrunnlag.getAvvikPromille()).isEqualTo(AVVIK_OVER_25_PROSENT);
         assertThat(sammenligningsgrunnlag.getRapportertPrAar().verdi()).isEqualTo(RAPPORTERT_PR_AAR.verdi());
@@ -199,7 +199,7 @@ class BeregningsgrunnlagDtoTjenesteImplTest {
         assertThat(sammenligningsgrunnlag.getSammenligningsgrunnlagType()).isEqualTo(SammenligningsgrunnlagType.SAMMENLIGNING_AT);
         assertThat(sammenligningsgrunnlag.getDifferanseBeregnet().verdi()).isEqualTo(BRUTTO_PR_AAR.subtraher(RAPPORTERT_PR_AAR).verdi());
 
-        SammenligningsgrunnlagDto sammenligningsgrunnlag2 = beregningsgrunnlagDto.getSammenligningsgrunnlagPrStatus().get(1);
+	    var sammenligningsgrunnlag2 = beregningsgrunnlagDto.getSammenligningsgrunnlagPrStatus().get(1);
         assertThat(sammenligningsgrunnlag2).isNotNull();
         assertThat(sammenligningsgrunnlag2.getAvvikPromille()).isEqualTo(AVVIK_UNDER_25_PROSENT);
         assertThat(sammenligningsgrunnlag2.getRapportertPrAar().verdi()).isEqualTo(RAPPORTERT_PR_AAR.verdi());
@@ -208,7 +208,7 @@ class BeregningsgrunnlagDtoTjenesteImplTest {
         assertThat(sammenligningsgrunnlag2.getSammenligningsgrunnlagType()).isEqualTo(SammenligningsgrunnlagType.SAMMENLIGNING_FL);
         assertThat(sammenligningsgrunnlag2.getDifferanseBeregnet().verdi()).isEqualTo(BRUTTO_PR_AAR.subtraher(RAPPORTERT_PR_AAR).verdi());
 
-        SammenligningsgrunnlagDto sammenligningsgrunnlag3 = beregningsgrunnlagDto.getSammenligningsgrunnlagPrStatus().get(2);
+	    var sammenligningsgrunnlag3 = beregningsgrunnlagDto.getSammenligningsgrunnlagPrStatus().get(2);
         assertThat(sammenligningsgrunnlag3).isNotNull();
         assertThat(sammenligningsgrunnlag3.getAvvikPromille()).isEqualTo(AVVIK_OVER_25_PROSENT);
         assertThat(sammenligningsgrunnlag3.getRapportertPrAar().verdi()).isEqualTo(RAPPORTERT_PR_AAR.verdi());
@@ -221,10 +221,10 @@ class BeregningsgrunnlagDtoTjenesteImplTest {
     @Test
     void skalSetteFastsettingGrunnlagForHverBeregningsgrunnlagPrStatusOgAndelNårFlereAndelerMedUlikeAvvik() {
         // Arrange
-        Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
+	    var arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         lagBehandlingMedBgOgOpprettFagsakRelasjonFlereAndeler(arbeidsgiver);
         // Act
-        BeregningsgrunnlagDto beregningsgrunnlagDto = lagBeregningsgrunnlagDto(lagReferanseMedStp(koblingReferanse), grunnlag, InntektArbeidYtelseGrunnlagDtoBuilder.nytt().medInntektsmeldinger(List.of()).build());
+	    var beregningsgrunnlagDto = lagBeregningsgrunnlagDto(lagReferanseMedStp(koblingReferanse), grunnlag, InntektArbeidYtelseGrunnlagDtoBuilder.nytt().medInntektsmeldinger(List.of()).build());
         // Assert
         var beregningsgrunnlagPrStatusOgAndelDto = beregningsgrunnlagDto.getBeregningsgrunnlagPeriode().get(0).getBeregningsgrunnlagPrStatusOgAndel().get(0);
         assertThat(beregningsgrunnlagPrStatusOgAndelDto).isNotNull();
@@ -245,10 +245,10 @@ class BeregningsgrunnlagDtoTjenesteImplTest {
     @Test
     void skalSetteBeregningsgrunnlagPrStatusOgAndelDtoForArbeidstakerNårSammenligningsTypeErATFLSN() {
         // Arrange
-        Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
+	    var arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         lagBehandlingMedBgOgOpprettFagsakRelasjon(arbeidsgiver);
         // Act
-        BeregningsgrunnlagDto beregningsgrunnlagDto = lagBeregningsgrunnlagDto(lagReferanseMedStp(koblingReferanse), grunnlag, InntektArbeidYtelseGrunnlagDtoBuilder.nytt().medInntektsmeldinger(List.of()).build());
+	    var beregningsgrunnlagDto = lagBeregningsgrunnlagDto(lagReferanseMedStp(koblingReferanse), grunnlag, InntektArbeidYtelseGrunnlagDtoBuilder.nytt().medInntektsmeldinger(List.of()).build());
         // Assert
         var beregningsgrunnlagPrStatusOgAndelDto = beregningsgrunnlagDto.getBeregningsgrunnlagPeriode().get(0).getBeregningsgrunnlagPrStatusOgAndel().get(0);
         assertThat(beregningsgrunnlagPrStatusOgAndelDto).isNotNull();
@@ -257,7 +257,7 @@ class BeregningsgrunnlagDtoTjenesteImplTest {
     }
 
     private KoblingReferanse lagReferanseMedStp(KoblingReferanse koblingReferanse) {
-        Skjæringstidspunkt skjæringstidspunkt = Skjæringstidspunkt.builder().medSkjæringstidspunktBeregning(SKJÆRINGSTIDSPUNKT)
+	    var skjæringstidspunkt = Skjæringstidspunkt.builder().medSkjæringstidspunktBeregning(SKJÆRINGSTIDSPUNKT)
                 .medSkjæringstidspunktOpptjening(SKJÆRINGSTIDSPUNKT).build();
         return koblingReferanse.medSkjæringstidspunkt(skjæringstidspunkt);
     }
@@ -298,7 +298,7 @@ class BeregningsgrunnlagDtoTjenesteImplTest {
                 .build(beregningsgrunnlag);
 
 
-        BeregningsgrunnlagPeriodeDto bgPeriode = buildBeregningsgrunnlagPeriode(beregningsgrunnlag);
+	    var bgPeriode = buildBeregningsgrunnlagPeriode(beregningsgrunnlag);
         buildBgPrStatusOgAndel(bgPeriode, arbeidsgiver);
         return beregningsgrunnlag;
     }
@@ -332,13 +332,13 @@ class BeregningsgrunnlagDtoTjenesteImplTest {
                 .build(beregningsgrunnlag);
 
 
-        BeregningsgrunnlagPeriodeDto bgPeriode = buildBeregningsgrunnlagPeriode(beregningsgrunnlag);
+	    var bgPeriode = buildBeregningsgrunnlagPeriode(beregningsgrunnlag);
         buildBgPrStatusOgAndelForMangeAndeler(bgPeriode, arbeidsgiver);
         return beregningsgrunnlag;
     }
 
     private void buildBgPrStatusOgAndel(BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode, Arbeidsgiver arbeidsgiver) {
-        BGAndelArbeidsforholdDto.Builder bga = BGAndelArbeidsforholdDto
+	    var bga = BGAndelArbeidsforholdDto
                 .builder()
                 .medArbeidsperiodeFom(LocalDate.now().minusYears(1))
                 .medArbeidsperiodeTom(LocalDate.now().plusYears(2))
@@ -364,7 +364,7 @@ class BeregningsgrunnlagDtoTjenesteImplTest {
     }
 
     private void buildBgPrStatusOgAndelForMangeAndeler(BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode, Arbeidsgiver arbeidsgiver) {
-        BGAndelArbeidsforholdDto.Builder bga = BGAndelArbeidsforholdDto
+	    var bga = BGAndelArbeidsforholdDto
                 .builder()
                 .medArbeidsperiodeFom(LocalDate.now().minusYears(1))
                 .medArbeidsperiodeTom(LocalDate.now().plusYears(2))

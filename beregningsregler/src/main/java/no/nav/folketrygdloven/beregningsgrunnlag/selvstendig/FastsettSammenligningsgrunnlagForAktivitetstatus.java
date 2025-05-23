@@ -35,23 +35,23 @@ public class FastsettSammenligningsgrunnlagForAktivitetstatus extends LeafSpecif
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        Periodeinntekt oppgittInntekt = FinnRapporterteInntekter.finnImplementasjonForStatus(aktivitetStatus).finnRapportertInntekt(grunnlag)
+        var oppgittInntekt = FinnRapporterteInntekter.finnImplementasjonForStatus(aktivitetStatus).finnRapportertInntekt(grunnlag)
 		        .orElseThrow(() -> new IllegalStateException("Fant ikke oppgitt månedsinntekt ved varig endret inntekt"));
 
-        SammenligningsGrunnlag sammenligningsGrunnlag = opprettSammenligningsgrunnlag(grunnlag, oppgittInntekt);
+        var sammenligningsGrunnlag = opprettSammenligningsgrunnlag(grunnlag, oppgittInntekt);
 	    beregnOgFastsettAvvik(grunnlag, sammenligningsGrunnlag);
 	    Beregningsgrunnlag.builder(grunnlag.getBeregningsgrunnlag()).leggTilSammenligningsgrunnlagPrStatus(sammenligningsGrunnlag).build();
 
-	    Map<String, Object> resultater = gjørRegelsporing(grunnlag, sammenligningsGrunnlag, oppgittInntekt);
+        var resultater = gjørRegelsporing(grunnlag, sammenligningsGrunnlag, oppgittInntekt);
         return beregnet(resultater);
     }
 
     private void beregnOgFastsettAvvik(BeregningsgrunnlagPeriode grunnlag, SammenligningsGrunnlag sammenligningsGrunnlag) {
-        BigDecimal pgiSnitt = grunnlag.getBeregningsgrunnlagPrStatus(aktivitetStatus).getGjennomsnittligPGI();
-        BigDecimal sammenligning = sammenligningsGrunnlag.getRapportertPrÅr();
-        BigDecimal diff = pgiSnitt.subtract(sammenligning).abs();
+        var pgiSnitt = grunnlag.getBeregningsgrunnlagPrStatus(aktivitetStatus).getGjennomsnittligPGI();
+        var sammenligning = sammenligningsGrunnlag.getRapportertPrÅr();
+        var diff = pgiSnitt.subtract(sammenligning).abs();
 
-        BigDecimal avvikProsent = pgiSnitt.compareTo(BigDecimal.ZERO) != 0
+        var avvikProsent = pgiSnitt.compareTo(BigDecimal.ZERO) != 0
             ? diff.divide(pgiSnitt, 10, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100))
             : BigDecimal.valueOf(100);
 
@@ -59,20 +59,20 @@ public class FastsettSammenligningsgrunnlagForAktivitetstatus extends LeafSpecif
     }
 
     private SammenligningsGrunnlag opprettSammenligningsgrunnlag(BeregningsgrunnlagPeriode grunnlag, Periodeinntekt oppgittInntekt) {
-	    BeregningsgrunnlagPrStatus bgATFL = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+        var bgATFL = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
 
-	    BeregningsgrunnlagPrStatus aapStatus = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.AAP);
+        var aapStatus = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.AAP);
 	    var dpStatus = grunnlag.getBeregningsgrunnlagFraDagpenger();
 
-	    BigDecimal bruttoAAP = aapStatus == null ? BigDecimal.ZERO : aapStatus.getBeregnetPrÅr();
-	    BigDecimal bruttoDP = dpStatus.map(BeregningsgrunnlagPrStatus::getBeregnetPrÅr).orElse(BigDecimal.ZERO);
+        var bruttoAAP = aapStatus == null ? BigDecimal.ZERO : aapStatus.getBeregnetPrÅr();
+        var bruttoDP = dpStatus.map(BeregningsgrunnlagPrStatus::getBeregnetPrÅr).orElse(BigDecimal.ZERO);
 
-	    BigDecimal bruttoATFL = bgATFL != null ? bgATFL.getBruttoInkludertNaturalytelsePrÅr() : BigDecimal.ZERO;
-        BigDecimal antallPerioderPrÅr = oppgittInntekt.getInntektPeriodeType().getAntallPrÅr();
-        BigDecimal oppgittÅrsInntekt = oppgittInntekt.getInntekt().multiply(antallPerioderPrÅr);
+        var bruttoATFL = bgATFL != null ? bgATFL.getBruttoInkludertNaturalytelsePrÅr() : BigDecimal.ZERO;
+        var antallPerioderPrÅr = oppgittInntekt.getInntektPeriodeType().getAntallPrÅr();
+        var oppgittÅrsInntekt = oppgittInntekt.getInntekt().multiply(antallPerioderPrÅr);
 
-        BigDecimal sammenligningInntekt = oppgittÅrsInntekt.add(bruttoATFL).add(bruttoAAP).add(bruttoDP);
-        Periode sammenligningsperiode = Periode.of(oppgittInntekt.getFom(), oppgittInntekt.getFom().plusMonths(1).minusDays(1));
+        var sammenligningInntekt = oppgittÅrsInntekt.add(bruttoATFL).add(bruttoAAP).add(bruttoDP);
+        var sammenligningsperiode = Periode.of(oppgittInntekt.getFom(), oppgittInntekt.getFom().plusMonths(1).minusDays(1));
 
         return SammenligningsGrunnlag.builder()
             .medSammenligningsperiode(sammenligningsperiode)
@@ -83,22 +83,22 @@ public class FastsettSammenligningsgrunnlagForAktivitetstatus extends LeafSpecif
 
     private Map<String, Object> gjørRegelsporing(BeregningsgrunnlagPeriode grunnlag, SammenligningsGrunnlag sammenligningsGrunnlag, Periodeinntekt oppgittInntekt) {
         Map<String, Object> resultater = new LinkedHashMap<>();
-        BeregningsgrunnlagPrStatus bgAAP = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.AAP);
+        var bgAAP = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.AAP);
         var bgDP = grunnlag.getBeregningsgrunnlagFraDagpenger();
-	    BeregningsgrunnlagPrStatus bgATFL = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
-        BeregningsgrunnlagPrStatus bgForStatus = grunnlag.getBeregningsgrunnlagPrStatus(aktivitetStatus);
+        var bgATFL = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+        var bgForStatus = grunnlag.getBeregningsgrunnlagPrStatus(aktivitetStatus);
 
-        String bruttoString = "brutto";
+        var bruttoString = "brutto";
         if (bgATFL != null) {
-            String status = "ATFL";
+            var status = "ATFL";
             resultater.put(bruttoString + status, bgATFL.getBeregnetPrÅr());
         }
         if (bgAAP != null) {
-            String status = "AAP";
+            var status = "AAP";
             resultater.put(bruttoString + status, bgAAP.getBeregnetPrÅr());
         }
         if (bgDP.isPresent()) {
-            String status = "DP";
+            var status = "DP";
             resultater.put(bruttoString + status, bgDP.get().getBeregnetPrÅr());
         }
         resultater.put("gjennomsnittligPGI", bgForStatus.getGjennomsnittligPGI());

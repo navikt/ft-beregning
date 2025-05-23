@@ -113,7 +113,7 @@ public class BeregningsgrunnlagGUIInput {
     }
 
     public Collection<InntektsmeldingDto> getInntektsmeldinger() {
-        LocalDate skjæringstidspunktOpptjening = getSkjæringstidspunktOpptjening();
+	    var skjæringstidspunktOpptjening = getSkjæringstidspunktOpptjening();
         if(skjæringstidspunktOpptjening == null) return Collections.emptyList();
         return new InntektsmeldingFilter(iayGrunnlag).hentInntektsmeldingerBeregning(skjæringstidspunktOpptjening);
     }
@@ -150,8 +150,8 @@ public class BeregningsgrunnlagGUIInput {
      * @param referanser Referanser
      */
     public void oppdaterArbeidsgiverinformasjon(Set<ArbeidsforholdReferanseDto> referanser) {
-        InntektArbeidYtelseGrunnlagDtoBuilder oppdatere = InntektArbeidYtelseGrunnlagDtoBuilder.oppdatere(iayGrunnlag);
-        ArbeidsforholdInformasjonDtoBuilder arbeidsforholdInformasjonDtoBuilder = ArbeidsforholdInformasjonDtoBuilder.builder(Optional.ofNullable(oppdatere.getInformasjon()));
+	    var oppdatere = InntektArbeidYtelseGrunnlagDtoBuilder.oppdatere(iayGrunnlag);
+	    var arbeidsforholdInformasjonDtoBuilder = ArbeidsforholdInformasjonDtoBuilder.builder(Optional.ofNullable(oppdatere.getInformasjon()));
         referanser.forEach(arbeidsforholdInformasjonDtoBuilder::leggTilNyReferanse);
         oppdatere.medInformasjon(arbeidsforholdInformasjonDtoBuilder.build());
         this.iayGrunnlag = oppdatere.build();

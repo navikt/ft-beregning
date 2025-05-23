@@ -27,12 +27,12 @@ class BeregnPrArbeidsforholdNaturalytelseBortfalt extends LeafSpecification<Bere
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
 
-        LocalDate fom = grunnlag.getSkjæringstidspunkt();
-        LocalDate tom = grunnlag.getBeregningsgrunnlagPeriode().getFom();
-        Inntektsgrunnlag inntektsgrunnlag = grunnlag.getInntektsgrunnlag();
-        BigDecimal beløp = inntektsgrunnlag.finnTotaltNaturalytelseBeløpMedOpphørsdatoIPeriodeForArbeidsforhold(arbeidsforhold.getArbeidsforhold(), fom, tom)
+        var fom = grunnlag.getSkjæringstidspunkt();
+        var tom = grunnlag.getBeregningsgrunnlagPeriode().getFom();
+        var inntektsgrunnlag = grunnlag.getInntektsgrunnlag();
+        var beløp = inntektsgrunnlag.finnTotaltNaturalytelseBeløpMedOpphørsdatoIPeriodeForArbeidsforhold(arbeidsforhold.getArbeidsforhold(), fom, tom)
             .orElseThrow(() -> new IllegalStateException("Utviklerfeil: Skal ikke være mulig å havne i denne regelen uten beløp."));
-        BigDecimal naturalytelseBortfaltPrÅr = beløp.multiply(BigDecimal.valueOf(12));
+        var naturalytelseBortfaltPrÅr = beløp.multiply(BigDecimal.valueOf(12));
 
         BeregningsgrunnlagPrArbeidsforhold.builder(arbeidsforhold)
             .medNaturalytelseBortfaltPrÅr(naturalytelseBortfaltPrÅr)

@@ -46,13 +46,13 @@ class FastsettBeregningsaktiviteterOMPTest {
     @Test
     void skal_inkludere_aktiviteter_som_starter_en_dag_skjæringstidspunkt() {
         // Arrange
-        LocalDate ansettelsesDato = SKJÆRINGSTIDSPUNKT.minusDays(1);
-        InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlagBuilder = lagIAY(ansettelsesDato, NULL_REF, Collections.emptyList());
+        var ansettelsesDato = SKJÆRINGSTIDSPUNKT.minusDays(1);
+        var iayGrunnlagBuilder = lagIAY(ansettelsesDato, NULL_REF, Collections.emptyList());
         var opptjeningAktiviteterDto = lagOpptjeningsAktivitet(ansettelsesDato, NULL_REF);
 
         // Act
-        FastsettBeregningsaktiviteterInput input = lagFastsettBeregningsaktiviteterInput(iayGrunnlagBuilder, opptjeningAktiviteterDto);
-        BeregningAktivitetAggregatDto beregningAktivitetAggregatDto = ForeslåSkjæringstidspunktTjeneste.fastsettAktiviteter(input);
+        var input = lagFastsettBeregningsaktiviteterInput(iayGrunnlagBuilder, opptjeningAktiviteterDto);
+        var beregningAktivitetAggregatDto = ForeslåSkjæringstidspunktTjeneste.fastsettAktiviteter(input);
 
         // Assert
         assertThat(beregningAktivitetAggregatDto.getBeregningAktiviteter()).hasSize(1);
@@ -61,13 +61,13 @@ class FastsettBeregningsaktiviteterOMPTest {
     @Test
     void skal_ikke_inkludere_aktiviteter_som_starter_på_skjæringstidspunkt() {
         // Arrange
-        LocalDate ansettelsesDato = SKJÆRINGSTIDSPUNKT;
-        InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlagBuilder = lagIAY(ansettelsesDato, NULL_REF, Collections.emptyList());
+        var ansettelsesDato = SKJÆRINGSTIDSPUNKT;
+        var iayGrunnlagBuilder = lagIAY(ansettelsesDato, NULL_REF, Collections.emptyList());
         var opptjeningAktiviteterDto = lagOpptjeningsAktivitet(ansettelsesDato, NULL_REF);
 
         // Act
-        FastsettBeregningsaktiviteterInput input = lagFastsettBeregningsaktiviteterInput(iayGrunnlagBuilder, opptjeningAktiviteterDto);
-        BeregningAktivitetAggregatDto beregningAktivitetAggregatDto = ForeslåSkjæringstidspunktTjeneste.fastsettAktiviteter(input);
+        var input = lagFastsettBeregningsaktiviteterInput(iayGrunnlagBuilder, opptjeningAktiviteterDto);
+        var beregningAktivitetAggregatDto = ForeslåSkjæringstidspunktTjeneste.fastsettAktiviteter(input);
 
         // Assert
         assertThat(beregningAktivitetAggregatDto.getBeregningAktiviteter()).isEmpty();
@@ -76,13 +76,13 @@ class FastsettBeregningsaktiviteterOMPTest {
     @Test
     void skal_inkludere_aktiviteter_som_starter_to_dager_før_skjæringstidspunkt() {
         // Arrange
-        LocalDate ansettelsesDato = SKJÆRINGSTIDSPUNKT.minusDays(2);
-        InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlagBuilder = lagIAY(ansettelsesDato, NULL_REF, Collections.emptyList());
+        var ansettelsesDato = SKJÆRINGSTIDSPUNKT.minusDays(2);
+        var iayGrunnlagBuilder = lagIAY(ansettelsesDato, NULL_REF, Collections.emptyList());
         var opptjeningAktiviteterDto = lagOpptjeningsAktivitet(ansettelsesDato, NULL_REF);
 
         // Act
-        FastsettBeregningsaktiviteterInput input = lagFastsettBeregningsaktiviteterInput(iayGrunnlagBuilder, opptjeningAktiviteterDto);
-        BeregningAktivitetAggregatDto beregningAktivitetAggregatDto = ForeslåSkjæringstidspunktTjeneste.fastsettAktiviteter(input);
+        var input = lagFastsettBeregningsaktiviteterInput(iayGrunnlagBuilder, opptjeningAktiviteterDto);
+        var beregningAktivitetAggregatDto = ForeslåSkjæringstidspunktTjeneste.fastsettAktiviteter(input);
 
         // Assert
         assertThat(beregningAktivitetAggregatDto.getBeregningAktiviteter()).hasSize(1);
@@ -100,26 +100,26 @@ class FastsettBeregningsaktiviteterOMPTest {
 
     private InntektArbeidYtelseGrunnlagDtoBuilder lagIAY(LocalDate ansettelsesDato, InternArbeidsforholdRefDto arbeidsforholdReferanse, List<PermisjonDtoBuilder> permisjoner) {
         var register = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
-        InntektArbeidYtelseAggregatBuilder.AktørArbeidBuilder aktørArbeidBuilder = register.getAktørArbeidBuilder();
+        var aktørArbeidBuilder = register.getAktørArbeidBuilder();
         aktørArbeidBuilder.leggTilYrkesaktivitet(lagYrkesaktivitet(ansettelsesDato, permisjoner));
         register.leggTilAktørArbeid(aktørArbeidBuilder);
 
-        InntektsmeldingDto inntektsmelding = InntektsmeldingDtoBuilder.builder().medArbeidsgiver(ARBEIDSGIVER).medArbeidsforholdId(arbeidsforholdReferanse).medBeløp(Beløp.fra(300000)).build();
+        var inntektsmelding = InntektsmeldingDtoBuilder.builder().medArbeidsgiver(ARBEIDSGIVER).medArbeidsforholdId(arbeidsforholdReferanse).medBeløp(Beløp.fra(300000)).build();
         var iayGrunnlagBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt().medInntektsmeldinger(List.of(inntektsmelding));
         iayGrunnlagBuilder.medData(register);
         return iayGrunnlagBuilder;
     }
 
     private YrkesaktivitetDto lagYrkesaktivitet(LocalDate ansettelsesDato, List<PermisjonDtoBuilder> permisjoner) {
-        YrkesaktivitetDtoBuilder yrkesaktivitetBuilder = YrkesaktivitetDtoBuilder.oppdatere(Optional.empty());
-        AktivitetsAvtaleDtoBuilder aktivitetsavtaleBuilder = yrkesaktivitetBuilder.getAktivitetsAvtaleBuilder();
+        var yrkesaktivitetBuilder = YrkesaktivitetDtoBuilder.oppdatere(Optional.empty());
+        var aktivitetsavtaleBuilder = yrkesaktivitetBuilder.getAktivitetsAvtaleBuilder();
 
-        Intervall periode = Intervall.fraOgMedTilOgMed(ansettelsesDato, TIDENES_ENDE);
+        var periode = Intervall.fraOgMedTilOgMed(ansettelsesDato, TIDENES_ENDE);
         lagAktivitetsavtale(aktivitetsavtaleBuilder, periode);
 
-        AktivitetsAvtaleDtoBuilder ansettelsesPeriode = yrkesaktivitetBuilder.getAktivitetsAvtaleBuilder(periode, true);
+        var ansettelsesPeriode = yrkesaktivitetBuilder.getAktivitetsAvtaleBuilder(periode, true);
 
-        YrkesaktivitetDtoBuilder yrkesaktivitetDtoBuilder = yrkesaktivitetBuilder.medArbeidsgiver(ARBEIDSGIVER)
+        var yrkesaktivitetDtoBuilder = yrkesaktivitetBuilder.medArbeidsgiver(ARBEIDSGIVER)
                 .medArbeidsforholdId(ARBEIDSFORHOLD_ID)
                 .leggTilAktivitetsAvtale(aktivitetsavtaleBuilder)
                 .leggTilAktivitetsAvtale(ansettelsesPeriode)

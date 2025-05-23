@@ -153,7 +153,7 @@ public class BeregningsgrunnlagArbeidsforholdDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        BeregningsgrunnlagArbeidsforholdDto that = (BeregningsgrunnlagArbeidsforholdDto) o;
+	    var that = (BeregningsgrunnlagArbeidsforholdDto) o;
         return Objects.equals(startdato, that.startdato) &&
                 Objects.equals(opphoersdato, that.opphoersdato) &&
                 Objects.equals(arbeidsforholdId, that.arbeidsforholdId) &&

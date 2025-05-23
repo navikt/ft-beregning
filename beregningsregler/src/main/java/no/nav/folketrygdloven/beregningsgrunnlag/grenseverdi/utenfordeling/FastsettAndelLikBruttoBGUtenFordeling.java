@@ -23,16 +23,16 @@ class FastsettAndelLikBruttoBGUtenFordeling extends LeafSpecification<Beregnings
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
 
-        for (BeregningsgrunnlagPrStatus beregningsgrunnlagPrStatus : grunnlag.getBeregningsgrunnlagPrStatus()) {
+        for (var beregningsgrunnlagPrStatus : grunnlag.getBeregningsgrunnlagPrStatus()) {
             if (AktivitetStatus.erArbeidstaker(beregningsgrunnlagPrStatus.getAktivitetStatus())) {
-                for (BeregningsgrunnlagPrArbeidsforhold af : beregningsgrunnlagPrStatus.getArbeidsforhold()) {
-                    BigDecimal inntekt = af.getInntektsgrunnlagInkludertNaturalytelsePrÅr();
+                for (var af : beregningsgrunnlagPrStatus.getArbeidsforhold()) {
+                    var inntekt = af.getInntektsgrunnlagInkludertNaturalytelsePrÅr();
                     BeregningsgrunnlagPrArbeidsforhold.builder(af)
                         .medAndelsmessigFørGraderingPrAar(inntekt)
                         .build();
                 }
             } else {
-                BigDecimal avkortetPrStatus = beregningsgrunnlagPrStatus.getInntektsgrunnlagPrÅr();
+                var avkortetPrStatus = beregningsgrunnlagPrStatus.getInntektsgrunnlagPrÅr();
                 BeregningsgrunnlagPrStatus.builder(beregningsgrunnlagPrStatus)
                     .medAndelsmessigFørGraderingPrAar(avkortetPrStatus)
                     .build();

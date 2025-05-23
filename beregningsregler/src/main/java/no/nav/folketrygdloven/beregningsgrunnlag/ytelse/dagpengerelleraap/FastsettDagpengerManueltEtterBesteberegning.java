@@ -27,7 +27,7 @@ class FastsettDagpengerManueltEtterBesteberegning extends LeafSpecification<Bere
 	public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
 		var dpStatus = grunnlag.getBeregningsgrunnlagFraDagpenger();
 		if (dpStatus.isPresent()) {
-			Map<String, Object> resultater = settBesteberegningForStatus(grunnlag, dpStatus.get());
+            var resultater = settBesteberegningForStatus(grunnlag, dpStatus.get());
 			return beregnet(resultater);
 
 		}
@@ -35,11 +35,11 @@ class FastsettDagpengerManueltEtterBesteberegning extends LeafSpecification<Bere
 	}
 
 	private Map<String, Object> settBesteberegningForStatus(BeregningsgrunnlagPeriode grunnlag, BeregningsgrunnlagPrStatus dpStatus) {
-		BeregningsgrunnlagHjemmel hjemmel = BeregningsgrunnlagHjemmel.F_14_7;
+        var hjemmel = BeregningsgrunnlagHjemmel.F_14_7;
 		// TODO (PFP-8687): Migrere vekk BeregningsgrunnlagPrStatus#besteberegningPrÅr
-		BigDecimal beregnetPrÅr = dpStatus.getBesteberegningPrÅr() != null ? dpStatus.getBesteberegningPrÅr() : dpStatus.getBeregnetPrÅr();
+        var beregnetPrÅr = dpStatus.getBesteberegningPrÅr() != null ? dpStatus.getBesteberegningPrÅr() : dpStatus.getBeregnetPrÅr();
 
-		BigDecimal dagsats = grunnlag.getInntektsgrunnlag().getPeriodeinntekt(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP, grunnlag.getSkjæringstidspunkt())
+        var dagsats = grunnlag.getInntektsgrunnlag().getPeriodeinntekt(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP, grunnlag.getSkjæringstidspunkt())
 				.map(Periodeinntekt::getInntekt)
 				.orElse(BigDecimal.ZERO);
 

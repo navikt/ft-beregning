@@ -52,7 +52,7 @@ class BeregningsgrunnlagDtoUtilTest {
         graderinger.add(new AndelGradering.Gradering(SKJÆRINGSTIDSPUNKT_OPPTJENING, SKJÆRINGSTIDSPUNKT_OPPTJENING.plusWeeks(1), arbeidsprosent1));
 
         // Act
-        List<BigDecimal> arbeidsandeler = new FinnArbeidsprosenterFP().finnArbeidsprosenterIPeriode(ARBEIDSTAKER_ANDEL, lagForeldrepengerGrunnlag(graderinger), Intervall.fraOgMed(SKJÆRINGSTIDSPUNKT_OPPTJENING));
+	    var arbeidsandeler = new FinnArbeidsprosenterFP().finnArbeidsprosenterIPeriode(ARBEIDSTAKER_ANDEL, lagForeldrepengerGrunnlag(graderinger), Intervall.fraOgMed(SKJÆRINGSTIDSPUNKT_OPPTJENING));
 
         // Assert
         assertThat(arbeidsandeler).containsExactlyInAnyOrder(BigDecimal.ZERO ,arbeidsprosent1.verdi());
@@ -75,7 +75,7 @@ class BeregningsgrunnlagDtoUtilTest {
         graderinger.add(new AndelGradering.Gradering(SKJÆRINGSTIDSPUNKT_OPPTJENING, TIDENES_ENDE, arbeidsprosent1));
 
         // Act
-        List<BigDecimal> arbeidsandeler = new FinnArbeidsprosenterFP().finnArbeidsprosenterIPeriode(ARBEIDSTAKER_ANDEL, lagForeldrepengerGrunnlag(graderinger), Intervall.fraOgMed(SKJÆRINGSTIDSPUNKT_OPPTJENING));
+	    var arbeidsandeler = new FinnArbeidsprosenterFP().finnArbeidsprosenterIPeriode(ARBEIDSTAKER_ANDEL, lagForeldrepengerGrunnlag(graderinger), Intervall.fraOgMed(SKJÆRINGSTIDSPUNKT_OPPTJENING));
 
         // Assert
         assertThat(arbeidsandeler).containsExactly(arbeidsprosent1.verdi());
@@ -95,7 +95,7 @@ class BeregningsgrunnlagDtoUtilTest {
         graderinger.add(new AndelGradering.Gradering(SKJÆRINGSTIDSPUNKT_OPPTJENING.plusWeeks(3).plusDays(1), SKJÆRINGSTIDSPUNKT_OPPTJENING.plusWeeks(4), arbeidsprosent4));
 
         // Act
-        List<BigDecimal> arbeidsandeler = new FinnArbeidsprosenterFP().finnArbeidsprosenterIPeriode(ARBEIDSTAKER_ANDEL, lagForeldrepengerGrunnlag(graderinger), Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_OPPTJENING, SKJÆRINGSTIDSPUNKT_OPPTJENING.plusWeeks(4).plusDays(1)));
+	    var arbeidsandeler = new FinnArbeidsprosenterFP().finnArbeidsprosenterIPeriode(ARBEIDSTAKER_ANDEL, lagForeldrepengerGrunnlag(graderinger), Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_OPPTJENING, SKJÆRINGSTIDSPUNKT_OPPTJENING.plusWeeks(4).plusDays(1)));
 
         // Assert
         assertThat(arbeidsandeler).containsExactlyInAnyOrder(BigDecimal.ZERO ,arbeidsprosent1.verdi(), arbeidsprosent2.verdi(), arbeidsprosent3.verdi(), arbeidsprosent4.verdi());
@@ -117,7 +117,7 @@ class BeregningsgrunnlagDtoUtilTest {
         graderinger.add(new AndelGradering.Gradering(SKJÆRINGSTIDSPUNKT_OPPTJENING.plusWeeks(4).plusDays(2), SKJÆRINGSTIDSPUNKT_OPPTJENING.plusWeeks(5), arbeidsprosent5));
 
         // Act
-        List<BigDecimal> arbeidsandeler = new FinnArbeidsprosenterFP().finnArbeidsprosenterIPeriode(ARBEIDSTAKER_ANDEL, lagForeldrepengerGrunnlag(graderinger), Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_OPPTJENING, SKJÆRINGSTIDSPUNKT_OPPTJENING.plusWeeks(5)));
+	    var arbeidsandeler = new FinnArbeidsprosenterFP().finnArbeidsprosenterIPeriode(ARBEIDSTAKER_ANDEL, lagForeldrepengerGrunnlag(graderinger), Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_OPPTJENING, SKJÆRINGSTIDSPUNKT_OPPTJENING.plusWeeks(5)));
 
         // Assert
         assertThat(arbeidsandeler).containsExactlyInAnyOrder(BigDecimal.ZERO ,arbeidsprosent1.verdi(), arbeidsprosent2.verdi(), arbeidsprosent3.verdi(), arbeidsprosent4.verdi(), arbeidsprosent5.verdi());
@@ -139,23 +139,23 @@ class BeregningsgrunnlagDtoUtilTest {
             .medAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE)
             .medArbforholdType(null)
             .build(periode);
-        Optional<BeregningsgrunnlagArbeidsforholdDto> arbeidsforhold = BeregningsgrunnlagDtoUtil.lagArbeidsforholdDto(andel, Optional.empty(), InntektArbeidYtelseGrunnlagDtoBuilder.nytt().build());
+	    var arbeidsforhold = BeregningsgrunnlagDtoUtil.lagArbeidsforholdDto(andel, Optional.empty(), InntektArbeidYtelseGrunnlagDtoBuilder.nytt().build());
         assertThat(arbeidsforhold.isPresent()).isFalse();
     }
 
     @Test
     void skal_returnere_arbeidsforholdDto_om_virksomhet_som_arbeidsgiver_på_andel() {
         long andelsnr = 1;
-        String orgnr = "973093681";
-        BeregningsgrunnlagDto bg = BeregningsgrunnlagDto.builder()
+	    var orgnr = "973093681";
+	    var bg = BeregningsgrunnlagDto.builder()
             .medGrunnbeløp(GRUNNBELØP)
             .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT).build();
-        BeregningsgrunnlagPeriodeDto periode = BeregningsgrunnlagPeriodeDto.ny()
+	    var periode = BeregningsgrunnlagPeriodeDto.ny()
             .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT, null)
             .build(bg);
 
-        Arbeidsgiver virksomhet = Arbeidsgiver.virksomhet(orgnr);
-        BeregningsgrunnlagPrStatusOgAndelDto andel = BeregningsgrunnlagPrStatusOgAndelDto.ny()
+	    var virksomhet = Arbeidsgiver.virksomhet(orgnr);
+	    var andel = BeregningsgrunnlagPrStatusOgAndelDto.ny()
             .medAndelsnr(andelsnr)
             .medKilde(AndelKilde.SAKSBEHANDLER_KOFAKBER)
             .medInntektskategori(Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE)
@@ -163,9 +163,9 @@ class BeregningsgrunnlagDtoUtilTest {
             .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder().medArbeidsgiver(virksomhet))
             .build(periode);
 
-        InntektArbeidYtelseGrunnlagDtoBuilder builder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
+	    var builder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
 
-        Optional<BeregningsgrunnlagArbeidsforholdDto> arbeidsforhold = BeregningsgrunnlagDtoUtil.lagArbeidsforholdDto(andel, Optional.empty(), builder.build());
+	    var arbeidsforhold = BeregningsgrunnlagDtoUtil.lagArbeidsforholdDto(andel, Optional.empty(), builder.build());
         assertThat(arbeidsforhold.isPresent()).isTrue();
         assertThat(arbeidsforhold.get().getArbeidsgiverIdent()).isEqualTo(orgnr);
     }
@@ -173,25 +173,25 @@ class BeregningsgrunnlagDtoUtilTest {
     @Test
     void skal_returnere_arbeidsforholdDto_om_privatperson_som_arbeidsgiver_på_andel() {
         long andelsnr = 1;
-        BeregningsgrunnlagDto bg = BeregningsgrunnlagDto.builder()
+	    var bg = BeregningsgrunnlagDto.builder()
             .medGrunnbeløp(GRUNNBELØP)
             .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT).build();
-        BeregningsgrunnlagPeriodeDto periode = BeregningsgrunnlagPeriodeDto.ny()
+	    var periode = BeregningsgrunnlagPeriodeDto.ny()
             .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT, null)
             .build(bg);
 
-        AktørId aktørId = AktørId.dummy();
-        Arbeidsgiver person = Arbeidsgiver.person(aktørId);
-        BeregningsgrunnlagPrStatusOgAndelDto andel = BeregningsgrunnlagPrStatusOgAndelDto.ny()
+	    var aktørId = AktørId.dummy();
+	    var person = Arbeidsgiver.person(aktørId);
+	    var andel = BeregningsgrunnlagPrStatusOgAndelDto.ny()
             .medAndelsnr(andelsnr)
             .medKilde(AndelKilde.SAKSBEHANDLER_KOFAKBER)
             .medInntektskategori(Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE)
             .medAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE)
             .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder().medArbeidsgiver(person))
             .build(periode);
-        InntektArbeidYtelseGrunnlagDtoBuilder builder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
+	    var builder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
 
-        Optional<BeregningsgrunnlagArbeidsforholdDto> arbeidsforhold = BeregningsgrunnlagDtoUtil.lagArbeidsforholdDto(andel, Optional.empty(), builder.build());
+	    var arbeidsforhold = BeregningsgrunnlagDtoUtil.lagArbeidsforholdDto(andel, Optional.empty(), builder.build());
         assertThat(arbeidsforhold.isPresent()).isTrue();
         assertThat(arbeidsforhold.get().getArbeidsgiverIdent()).isEqualTo(aktørId.getAktørId());
     }

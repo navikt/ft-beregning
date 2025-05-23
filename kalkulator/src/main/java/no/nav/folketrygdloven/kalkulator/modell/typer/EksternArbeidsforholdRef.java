@@ -53,7 +53,7 @@ public class EksternArbeidsforholdRef {
             return true;
         }
         if (o == null || getClass() != o.getClass()) return false;
-        EksternArbeidsforholdRef that = (EksternArbeidsforholdRef) o;
+        var that = (EksternArbeidsforholdRef) o;
         return Objects.equals(referanse, that.referanse);
     }
 

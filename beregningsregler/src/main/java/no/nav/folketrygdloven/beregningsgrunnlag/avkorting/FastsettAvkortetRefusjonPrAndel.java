@@ -22,8 +22,8 @@ class FastsettAvkortetRefusjonPrAndel extends LeafSpecification<Beregningsgrunnl
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        SingleEvaluation resultat = ja();
-        BeregningsgrunnlagPrStatus atfl = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+        var resultat = ja();
+        var atfl = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
         if (atfl != null) {
             Map<String, Object> resultater = new HashMap<>();
             resultat.setEvaluationProperties(resultater);

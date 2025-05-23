@@ -23,10 +23,10 @@ public class AvklaringsbehovUtlederFaktaOmBeregning {
     public FaktaOmBeregningAvklaringsbehovResultat utledAvklaringsbehovFor(FaktaOmBeregningInput input,
                                                                            BeregningsgrunnlagGrunnlagDto beregningsgrunnlagGrunnlag,
                                                                            boolean erOverstyrt) {
-        BeregningsgrunnlagDto beregningsgrunnlag = beregningsgrunnlagGrunnlag.getBeregningsgrunnlagHvisFinnes().orElse(null);
+	    var beregningsgrunnlag = beregningsgrunnlagGrunnlag.getBeregningsgrunnlagHvisFinnes().orElse(null);
         Objects.requireNonNull(beregningsgrunnlag, "beregningsgrunnlag");
 
-        List<FaktaOmBeregningTilfelle> faktaOmBeregningTilfeller = FaktaOmBeregningTilfelleTjeneste.finnTilfellerForFellesAvklaringsbehov(input, beregningsgrunnlagGrunnlag);
+	    var faktaOmBeregningTilfeller = FaktaOmBeregningTilfelleTjeneste.finnTilfellerForFellesAvklaringsbehov(input, beregningsgrunnlagGrunnlag);
 
         if (erOverstyrt && !KonfigurasjonVerdi.instance().get("TREKKE_OVERSTYRING_ENABLED", false)) {
             return new FaktaOmBeregningAvklaringsbehovResultat(singletonList(BeregningAvklaringsbehovResultat.opprettFor(AvklaringsbehovDefinisjon.OVST_INNTEKT)),

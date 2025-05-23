@@ -25,7 +25,7 @@ class FastsettBrukersAndelerTilNull extends LeafSpecification<Beregningsgrunnlag
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
         Map<String, Object> resultater = new HashMap<>();
-        BigDecimal avkortetTilNull = BigDecimal.ZERO;
+        var avkortetTilNull = BigDecimal.ZERO;
         grunnlag.getBeregningsgrunnlagPrStatus().stream()
             .flatMap(bgs -> bgs.getArbeidsforhold().stream())
             .forEach(af -> {
@@ -40,7 +40,7 @@ class FastsettBrukersAndelerTilNull extends LeafSpecification<Beregningsgrunnlag
             });
 
 
-        SingleEvaluation resultat = ja();
+        var resultat = ja();
         resultat.setEvaluationProperties(resultater);
         return resultat;
 

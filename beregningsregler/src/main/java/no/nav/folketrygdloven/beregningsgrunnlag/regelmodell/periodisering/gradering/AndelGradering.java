@@ -30,7 +30,7 @@ public class AndelGradering {
     }
 
 	public boolean erNyAktivitetPåDato(LocalDate dato) {
-		LocalDateSegment<Boolean> segment = nyAktivitetTidslinje.getSegment(new LocalDateInterval(dato, dato));
+		var segment = nyAktivitetTidslinje.getSegment(new LocalDateInterval(dato, dato));
 		return segment != null && segment.getValue();
 	}
 

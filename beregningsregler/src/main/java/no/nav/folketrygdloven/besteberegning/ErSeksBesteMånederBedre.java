@@ -24,15 +24,15 @@ public class ErSeksBesteMånederBedre extends LeafSpecification<BesteberegningRe
 
 	@Override
 	public Evaluation evaluate(BesteberegningRegelmodell regelmodell) {
-		BesteberegningOutput output = regelmodell.getOutput();
-		List<BesteberegnetAndel> besteberegnedeAndeler = output.getBesteberegnetGrunnlag().getBesteberegnetAndelList();
-		BigDecimal besteberegnetBeløp = besteberegnedeAndeler.stream()
+        var output = regelmodell.getOutput();
+        var besteberegnedeAndeler = output.getBesteberegnetGrunnlag().getBesteberegnetAndelList();
+        var besteberegnetBeløp = besteberegnedeAndeler.stream()
 				.map(BesteberegnetAndel::getBesteberegnetPrÅr)
 				.reduce(BigDecimal::add)
 				.orElse(BigDecimal.ZERO);
-		BigDecimal beregnetBeløp = regelmodell.getInput().getBeregnetGrunnlag();
+        var beregnetBeløp = regelmodell.getInput().getBeregnetGrunnlag();
 
-		boolean besteberegningGirHøyereBeregning = besteberegnetBeløp.compareTo(beregnetBeløp) > 0;
+        var besteberegningGirHøyereBeregning = besteberegnetBeløp.compareTo(beregnetBeløp) > 0;
 		output.setSkalBeregnesEtterSeksBesteMåneder(besteberegningGirHøyereBeregning);
 
 		Map<String, Object> resultater = new HashMap<>();

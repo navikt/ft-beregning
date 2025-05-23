@@ -23,13 +23,13 @@ import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusMod
 public class FastsettSkjæringstidspunktOgStatuserK9 {
 
     public static BeregningsgrunnlagRegelResultat fastsett(BeregningsgrunnlagInput input, BeregningAktivitetAggregatDto beregningAktivitetAggregat, List<Grunnbeløp> grunnbeløpSatser) {
-        AktivitetStatusModell regelmodell = MapBGStatuserFraVLTilRegel.map(beregningAktivitetAggregat);
+        var regelmodell = MapBGStatuserFraVLTilRegel.map(beregningAktivitetAggregat);
 
         MidlertidigInaktivType midlertidigInaktivType = null;
         if (input.getOpptjeningAktiviteter().erMidlertidigInaktiv()) {
             var midlerTidigInaktivInput = input.getOpptjeningAktiviteter().getMidlertidigInaktivType();
             if (midlerTidigInaktivInput.name().equals(MidlertidigInaktivType.A.name())) {
-                List<AktivPeriode> aktiviteterPåStp = regelmodell.getAktivePerioder().stream().filter(aktivPeriode -> aktivPeriode.getPeriode().inneholder(input.getSkjæringstidspunktOpptjening())).collect(Collectors.toList());
+                var aktiviteterPåStp = regelmodell.getAktivePerioder().stream().filter(aktivPeriode -> aktivPeriode.getPeriode().inneholder(input.getSkjæringstidspunktOpptjening())).collect(Collectors.toList());
                 if (!aktiviteterPåStp.isEmpty()) {
                     throw new IllegalArgumentException("Skjæringstidspunktet kan ikke overlappe med aktive perioder for midlertidig inaktiv 8-47-A for: " + aktiviteterPåStp);
                 }
@@ -37,13 +37,13 @@ public class FastsettSkjæringstidspunktOgStatuserK9 {
             midlertidigInaktivType = MidlertidigInaktivType.valueOf(midlerTidigInaktivInput.name());
         }
 
-        AktivitetStatusModellK9 k9Modell = new AktivitetStatusModellK9(midlertidigInaktivType, regelmodell);
+        var k9Modell = new AktivitetStatusModellK9(midlertidigInaktivType, regelmodell);
 
-        RegelResultat regelResultatFastsettSkjæringstidspunkt = fastsettSkjæringstidspunkt(k9Modell);
-        RegelResultat regelResultatFastsettStatus = fastsettStatus(k9Modell);
+        var regelResultatFastsettSkjæringstidspunkt = fastsettSkjæringstidspunkt(k9Modell);
+        var regelResultatFastsettStatus = fastsettStatus(k9Modell);
 
         // Oversett endelig resultat av regelmodell (+ spore input -> evaluation)
-        List<RegelResultat> regelResultater = List.of(
+        var regelResultater = List.of(
                 regelResultatFastsettSkjæringstidspunkt,
                 regelResultatFastsettStatus);
         var nyttBeregningsgrunnlag = mapForSkjæringstidspunktOgStatuser(input.getKoblingReferanse(), k9Modell, regelResultater, input.getIayGrunnlag(), grunnbeløpSatser);

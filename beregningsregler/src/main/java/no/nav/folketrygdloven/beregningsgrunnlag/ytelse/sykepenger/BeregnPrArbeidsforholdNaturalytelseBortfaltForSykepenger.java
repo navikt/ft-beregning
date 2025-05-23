@@ -26,8 +26,8 @@ public class BeregnPrArbeidsforholdNaturalytelseBortfaltForSykepenger extends Le
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        Inntektsgrunnlag inntektsgrunnlag = grunnlag.getInntektsgrunnlag();
-        BigDecimal naturalytelseBortfaltPrÅr = arbeidsforhold.getArbeidsgiverperioder()
+        var inntektsgrunnlag = grunnlag.getInntektsgrunnlag();
+        var naturalytelseBortfaltPrÅr = arbeidsforhold.getArbeidsgiverperioder()
             .stream()
             .map(periode -> finnBortfaltNaturalytelsePrPeriode(inntektsgrunnlag, periode))
             .map(naturalYtelseBortfaltPrMnd -> naturalYtelseBortfaltPrMnd.multiply(BigDecimal.valueOf(12)))

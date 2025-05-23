@@ -104,7 +104,7 @@ public class DirekteOvergangTjeneste {
      */
     public static LocalDateTimeline<Set<DagsatsPrKategoriOgArbeidsgiver>> direkteUtbetalingTidslinje(Collection<YtelseDto> ytelser, Predicate<? super YtelseDto> ytelsePredicate) {
 
-        List<LocalDateSegment<Set<DagsatsPrKategoriOgArbeidsgiver>>> ytelserPrStatusOgArbeidsgiver = ytelser.stream()
+        var ytelserPrStatusOgArbeidsgiver = ytelser.stream()
                 .filter(ytelsePredicate)
                 .flatMap(y -> y.getYtelseAnvist().stream())
                 .flatMap(y -> {

@@ -28,7 +28,7 @@ class FastsettBeregnetPrÅrTest {
     @Test
     void skal_sette_riktig_hjemmel_for_omp_flsn() {
         // Arrange
-        Beregningsgrunnlag regelBg = lagBeregningsgrunnlagFLSNOMP();
+        var regelBg = lagBeregningsgrunnlagFLSNOMP();
 
         // Act
         kjørRegel(regelBg.getBeregningsgrunnlagPerioder().get(0));
@@ -40,7 +40,7 @@ class FastsettBeregnetPrÅrTest {
     @Test
     void skal_sette_riktig_hjemmel_for_fp_flsn() {
         // Arrange
-        Beregningsgrunnlag regelBg = lagBeregningsgrunnlagFLSNFP();
+        var regelBg = lagBeregningsgrunnlagFLSNFP();
 
         // Act
         kjørRegel(regelBg.getBeregningsgrunnlagPerioder().get(0));
@@ -54,7 +54,7 @@ class FastsettBeregnetPrÅrTest {
     @Test
     void skal_sette_riktig_hjemmel_for_omp_fl() {
         // Arrange
-        Beregningsgrunnlag regelBg = lagBeregningsgrunnlagFLOMP();
+        var regelBg = lagBeregningsgrunnlagFLOMP();
 
         // Act
         kjørRegel(regelBg.getBeregningsgrunnlagPerioder().get(0));
@@ -66,7 +66,7 @@ class FastsettBeregnetPrÅrTest {
     @Test
     void skal_sette_riktig_hjemmel_for_fp_fl() {
         // Arrange
-        Beregningsgrunnlag regelBg = lagBeregningsgrunnlagFLFP();
+        var regelBg = lagBeregningsgrunnlagFLFP();
 
         // Act
         kjørRegel(regelBg.getBeregningsgrunnlagPerioder().get(0));
@@ -78,7 +78,7 @@ class FastsettBeregnetPrÅrTest {
     @Test
     void skal_sette_riktig_hjemmel_for_omp_atflsn() {
         // Arrange
-        Beregningsgrunnlag regelBg = lagBeregningsgrunnlagATFLSNOMP();
+        var regelBg = lagBeregningsgrunnlagATFLSNOMP();
 
         // Act
         kjørRegel(regelBg.getBeregningsgrunnlagPerioder().get(0));
@@ -90,7 +90,7 @@ class FastsettBeregnetPrÅrTest {
     @Test
     void skal_sette_riktig_hjemmel_for_fp_atflsn() {
         // Arrange
-        Beregningsgrunnlag regelBg = lagBeregningsgrunnlagATFLSNFP();
+        var regelBg = lagBeregningsgrunnlagATFLSNFP();
 
         // Act
         kjørRegel(regelBg.getBeregningsgrunnlagPerioder().get(0));
@@ -102,7 +102,7 @@ class FastsettBeregnetPrÅrTest {
     @Test
     void skal_sette_riktig_hjemmel_for_omp_atfl() {
         // Arrange
-        Beregningsgrunnlag regelBg = lagBeregningsgrunnlagATFLOMP();
+        var regelBg = lagBeregningsgrunnlagATFLOMP();
 
         // Act
         kjørRegel(regelBg.getBeregningsgrunnlagPerioder().get(0));
@@ -115,7 +115,7 @@ class FastsettBeregnetPrÅrTest {
     @Test
     void skal_sette_riktig_hjemmel_for_fp_atfl() {
         // Arrange
-        Beregningsgrunnlag regelBg = lagBeregningsgrunnlagATFLFP();
+        var regelBg = lagBeregningsgrunnlagATFLFP();
 
         // Act
         kjørRegel(regelBg.getBeregningsgrunnlagPerioder().get(0));
@@ -128,9 +128,9 @@ class FastsettBeregnetPrÅrTest {
     @Test
     void skal_sette_riktig_hjemmel_for_omp_arbeidstaker_full_refusjon() {
         // Arrange
-        BigDecimal bgPrÅr = BigDecimal.valueOf(100_000);
-	    boolean harBrukerSøkt = false;
-	    Beregningsgrunnlag regelBg = lagBeregningsgrunnlagArbeidstakerOMP(bgPrÅr, harBrukerSøkt);
+        var bgPrÅr = BigDecimal.valueOf(100_000);
+        var harBrukerSøkt = false;
+        var regelBg = lagBeregningsgrunnlagArbeidstakerOMP(bgPrÅr, harBrukerSøkt);
 
         // Act
         kjørRegel(regelBg.getBeregningsgrunnlagPerioder().get(0));
@@ -142,8 +142,8 @@ class FastsettBeregnetPrÅrTest {
     @Test
     void skal_sette_riktig_hjemmel_for_omp_arbeidstaker_direkte_utbetaling() {
         // Arrange
-        BigDecimal bgPrÅr = BigDecimal.valueOf(100_000);
-        Beregningsgrunnlag regelBg = lagBeregningsgrunnlagArbeidstakerOMP(bgPrÅr, true);
+        var bgPrÅr = BigDecimal.valueOf(100_000);
+        var regelBg = lagBeregningsgrunnlagArbeidstakerOMP(bgPrÅr, true);
 
         // Act
         kjørRegel(regelBg.getBeregningsgrunnlagPerioder().get(0));
@@ -155,8 +155,8 @@ class FastsettBeregnetPrÅrTest {
     @Test
     void skal_sette_riktig_hjemmel_for_fp_arbeidstaker() {
         // Arrange
-        BigDecimal bgPrÅr = BigDecimal.valueOf(100_000);
-        Beregningsgrunnlag regelBg = lagBeregningsgrunnlagArbeidstakerFP(bgPrÅr);
+        var bgPrÅr = BigDecimal.valueOf(100_000);
+        var regelBg = lagBeregningsgrunnlagArbeidstakerFP(bgPrÅr);
 
         // Act
         kjørRegel(regelBg.getBeregningsgrunnlagPerioder().get(0));
@@ -167,7 +167,7 @@ class FastsettBeregnetPrÅrTest {
 
 
     private Beregningsgrunnlag lagBeregningsgrunnlagFLSNOMP() {
-        BeregningsgrunnlagPrStatus atflStatus = BeregningsgrunnlagPrStatus.builder()
+        var atflStatus = BeregningsgrunnlagPrStatus.builder()
             .medAktivitetStatus(AktivitetStatus.ATFL)
             .medArbeidsforhold(BeregningsgrunnlagPrArbeidsforhold.builder()
                 .medAndelNr(1L)
@@ -175,12 +175,12 @@ class FastsettBeregnetPrÅrTest {
                 .medArbeidsforhold(Arbeidsforhold.frilansArbeidsforhold())
                 .build())
             .build();
-        BeregningsgrunnlagPrStatus snStatus = BeregningsgrunnlagPrStatus.builder()
+        var snStatus = BeregningsgrunnlagPrStatus.builder()
             .medAktivitetStatus(AktivitetStatus.SN)
             .medAndelNr(3L)
             .medBeregnetPrÅr(BigDecimal.ZERO)
             .build();
-        BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
             .medPeriode(Periode.of(LocalDate.now(), LocalDate.now()))
             .medBeregningsgrunnlagPrStatus(atflStatus)
             .medBeregningsgrunnlagPrStatus(snStatus)
@@ -189,7 +189,7 @@ class FastsettBeregnetPrÅrTest {
     }
 
     private Beregningsgrunnlag lagBeregningsgrunnlagFLSNFP() {
-        BeregningsgrunnlagPrStatus atflStatus = BeregningsgrunnlagPrStatus.builder()
+        var atflStatus = BeregningsgrunnlagPrStatus.builder()
             .medAktivitetStatus(AktivitetStatus.ATFL)
             .medArbeidsforhold(BeregningsgrunnlagPrArbeidsforhold.builder()
                 .medAndelNr(1L)
@@ -197,12 +197,12 @@ class FastsettBeregnetPrÅrTest {
                 .medArbeidsforhold(Arbeidsforhold.frilansArbeidsforhold())
                 .build())
             .build();
-        BeregningsgrunnlagPrStatus snStatus = BeregningsgrunnlagPrStatus.builder()
+        var snStatus = BeregningsgrunnlagPrStatus.builder()
             .medAktivitetStatus(AktivitetStatus.SN)
             .medAndelNr(3L)
             .medBeregnetPrÅr(BigDecimal.ZERO)
             .build();
-        BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
             .medPeriode(Periode.of(LocalDate.now(), LocalDate.now()))
             .medBeregningsgrunnlagPrStatus(atflStatus)
             .medBeregningsgrunnlagPrStatus(snStatus)
@@ -213,7 +213,7 @@ class FastsettBeregnetPrÅrTest {
 
 
     private Beregningsgrunnlag lagBeregningsgrunnlagFLOMP() {
-        BeregningsgrunnlagPrStatus atflStatus = BeregningsgrunnlagPrStatus.builder()
+        var atflStatus = BeregningsgrunnlagPrStatus.builder()
             .medAktivitetStatus(AktivitetStatus.ATFL)
             .medArbeidsforhold(BeregningsgrunnlagPrArbeidsforhold.builder()
                 .medAndelNr(1L)
@@ -221,7 +221,7 @@ class FastsettBeregnetPrÅrTest {
                 .medArbeidsforhold(Arbeidsforhold.frilansArbeidsforhold())
                 .build())
             .build();
-        BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
             .medPeriode(Periode.of(LocalDate.now(), LocalDate.now()))
             .medBeregningsgrunnlagPrStatus(atflStatus)
             .build();
@@ -229,7 +229,7 @@ class FastsettBeregnetPrÅrTest {
     }
 
     private Beregningsgrunnlag lagBeregningsgrunnlagFLFP() {
-        BeregningsgrunnlagPrStatus atflStatus = BeregningsgrunnlagPrStatus.builder()
+        var atflStatus = BeregningsgrunnlagPrStatus.builder()
             .medAktivitetStatus(AktivitetStatus.ATFL)
             .medArbeidsforhold(BeregningsgrunnlagPrArbeidsforhold.builder()
                 .medAndelNr(1L)
@@ -237,7 +237,7 @@ class FastsettBeregnetPrÅrTest {
                 .medArbeidsforhold(Arbeidsforhold.frilansArbeidsforhold())
                 .build())
             .build();
-        BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
             .medPeriode(Periode.of(LocalDate.now(), LocalDate.now()))
             .medBeregningsgrunnlagPrStatus(atflStatus)
             .build();
@@ -245,7 +245,7 @@ class FastsettBeregnetPrÅrTest {
     }
 
     private Beregningsgrunnlag lagBeregningsgrunnlagATFLSNOMP() {
-        BeregningsgrunnlagPrStatus atflStatus = BeregningsgrunnlagPrStatus.builder()
+        var atflStatus = BeregningsgrunnlagPrStatus.builder()
             .medAktivitetStatus(AktivitetStatus.ATFL)
             .medArbeidsforhold(BeregningsgrunnlagPrArbeidsforhold.builder()
                 .medAndelNr(1L)
@@ -258,12 +258,12 @@ class FastsettBeregnetPrÅrTest {
                 .medArbeidsforhold(Arbeidsforhold.frilansArbeidsforhold())
                 .build())
             .build();
-        BeregningsgrunnlagPrStatus snStatus = BeregningsgrunnlagPrStatus.builder()
+        var snStatus = BeregningsgrunnlagPrStatus.builder()
             .medAktivitetStatus(AktivitetStatus.SN)
             .medAndelNr(3L)
             .medBeregnetPrÅr(BigDecimal.ZERO)
             .build();
-        BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
             .medPeriode(Periode.of(LocalDate.now(), LocalDate.now()))
             .medBeregningsgrunnlagPrStatus(atflStatus)
             .medBeregningsgrunnlagPrStatus(snStatus)
@@ -272,7 +272,7 @@ class FastsettBeregnetPrÅrTest {
     }
 
     private Beregningsgrunnlag lagBeregningsgrunnlagATFLSNFP() {
-        BeregningsgrunnlagPrStatus atflStatus = BeregningsgrunnlagPrStatus.builder()
+        var atflStatus = BeregningsgrunnlagPrStatus.builder()
             .medAktivitetStatus(AktivitetStatus.ATFL)
             .medArbeidsforhold(BeregningsgrunnlagPrArbeidsforhold.builder()
                 .medAndelNr(1L)
@@ -285,12 +285,12 @@ class FastsettBeregnetPrÅrTest {
                 .medArbeidsforhold(Arbeidsforhold.frilansArbeidsforhold())
                 .build())
             .build();
-        BeregningsgrunnlagPrStatus snStatus = BeregningsgrunnlagPrStatus.builder()
+        var snStatus = BeregningsgrunnlagPrStatus.builder()
             .medAktivitetStatus(AktivitetStatus.SN)
             .medAndelNr(3L)
             .medBeregnetPrÅr(BigDecimal.ZERO)
             .build();
-        BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
             .medPeriode(Periode.of(LocalDate.now(), LocalDate.now()))
             .medBeregningsgrunnlagPrStatus(atflStatus)
             .medBeregningsgrunnlagPrStatus(snStatus)
@@ -299,7 +299,7 @@ class FastsettBeregnetPrÅrTest {
     }
 
     private Beregningsgrunnlag lagBeregningsgrunnlagATFLOMP() {
-        BeregningsgrunnlagPrStatus atflStatus = BeregningsgrunnlagPrStatus.builder()
+        var atflStatus = BeregningsgrunnlagPrStatus.builder()
             .medAktivitetStatus(AktivitetStatus.ATFL)
             .medArbeidsforhold(BeregningsgrunnlagPrArbeidsforhold.builder()
                 .medAndelNr(1L)
@@ -312,7 +312,7 @@ class FastsettBeregnetPrÅrTest {
                 .medArbeidsforhold(Arbeidsforhold.frilansArbeidsforhold())
                 .build())
             .build();
-        BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
             .medPeriode(Periode.of(LocalDate.now(), LocalDate.now()))
             .medBeregningsgrunnlagPrStatus(atflStatus)
             .build();
@@ -320,7 +320,7 @@ class FastsettBeregnetPrÅrTest {
     }
 
     private Beregningsgrunnlag lagBeregningsgrunnlagATFLFP() {
-        BeregningsgrunnlagPrStatus atflStatus = BeregningsgrunnlagPrStatus.builder()
+        var atflStatus = BeregningsgrunnlagPrStatus.builder()
             .medAktivitetStatus(AktivitetStatus.ATFL)
             .medArbeidsforhold(BeregningsgrunnlagPrArbeidsforhold.builder()
                 .medAndelNr(1L)
@@ -333,7 +333,7 @@ class FastsettBeregnetPrÅrTest {
                 .medArbeidsforhold(Arbeidsforhold.frilansArbeidsforhold())
                 .build())
             .build();
-        BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
             .medPeriode(Periode.of(LocalDate.now(), LocalDate.now()))
             .medBeregningsgrunnlagPrStatus(atflStatus)
             .build();
@@ -355,7 +355,7 @@ class FastsettBeregnetPrÅrTest {
 
 
     private Beregningsgrunnlag lagBeregningsgrunnlagArbeidstakerOMP(BigDecimal bgPrÅr, boolean harBrukerSøkt) {
-        BeregningsgrunnlagPrStatus atflStatus = BeregningsgrunnlagPrStatus.builder()
+        var atflStatus = BeregningsgrunnlagPrStatus.builder()
             .medAktivitetStatus(AktivitetStatus.ATFL)
             .medArbeidsforhold(BeregningsgrunnlagPrArbeidsforhold.builder()
                 .medAndelNr(1L)
@@ -363,7 +363,7 @@ class FastsettBeregnetPrÅrTest {
                 .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("999999999"))
                 .build())
             .build();
-        BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
             .medPeriode(Periode.of(LocalDate.now(), LocalDate.now()))
             .medBeregningsgrunnlagPrStatus(atflStatus)
             .build();
@@ -371,7 +371,7 @@ class FastsettBeregnetPrÅrTest {
     }
 
     private Beregningsgrunnlag lagBeregningsgrunnlagArbeidstakerFP(BigDecimal bgPrÅr) {
-        BeregningsgrunnlagPrStatus atflStatus = BeregningsgrunnlagPrStatus.builder()
+        var atflStatus = BeregningsgrunnlagPrStatus.builder()
             .medAktivitetStatus(AktivitetStatus.ATFL)
             .medArbeidsforhold(BeregningsgrunnlagPrArbeidsforhold.builder()
                 .medAndelNr(1L)
@@ -379,7 +379,7 @@ class FastsettBeregnetPrÅrTest {
                 .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("999999999"))
                 .build())
             .build();
-        BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
             .medPeriode(Periode.of(LocalDate.now(), LocalDate.now()))
             .medBeregningsgrunnlagPrStatus(atflStatus)
             .build();

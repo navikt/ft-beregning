@@ -50,9 +50,9 @@ public class AvklaringsbehovUtlederFordelBeregning {
                                                                         YtelsespesifiktGrunnlag ytelsespesifiktGrunnlag,
                                                                         Collection<InntektsmeldingDto> inntektsmeldinger,
                                                                         List<Intervall> forlengelseperioder) {
-        BeregningsgrunnlagDto beregningsgrunnlag = beregningsgrunnlagGrunnlag.getBeregningsgrunnlagHvisFinnes()
+	    var beregningsgrunnlag = beregningsgrunnlagGrunnlag.getBeregningsgrunnlagHvisFinnes()
                 .orElseThrow(() -> new IllegalStateException("Utviklerfeil: Mangler beregningsgrunnlagGrunnlag"));
-        FordelBeregningsgrunnlagTilfelleInput fordelingInput = new FordelBeregningsgrunnlagTilfelleInput(beregningsgrunnlag, finnGraderinger(ytelsespesifiktGrunnlag), inntektsmeldinger, forlengelseperioder);
+	    var fordelingInput = new FordelBeregningsgrunnlagTilfelleInput(beregningsgrunnlag, finnGraderinger(ytelsespesifiktGrunnlag), inntektsmeldinger, forlengelseperioder);
         return FordelBeregningsgrunnlagTilfelleTjeneste.finnPerioderMedBehovForManuellVurdering(fordelingInput);
     }
 

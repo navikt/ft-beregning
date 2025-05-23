@@ -24,19 +24,19 @@ class BeregningsgrunnlagDocTest {
 
     @Test
     void test_documentation() { // NOSONAR
-        String orgnr = "987";
-        LocalDate skjæringstidspunkt = LocalDate.of(2018, Month.JANUARY, 15);
-	    LocalDate arbeidsforholStartdato = skjæringstidspunkt.minusYears(2);
-        BigDecimal månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
-        Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(arbeidsforholStartdato, orgnr);
-        Inntektsgrunnlag inntektsgrunnlag = settoppMånedsinntekter(skjæringstidspunkt,
+	    var orgnr = "987";
+	    var skjæringstidspunkt = LocalDate.of(2018, Month.JANUARY, 15);
+	    var arbeidsforholStartdato = skjæringstidspunkt.minusYears(2);
+	    var månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
+	    var arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(arbeidsforholStartdato, orgnr);
+	    var inntektsgrunnlag = settoppMånedsinntekter(skjæringstidspunkt,
                 List.of(månedsinntekt, månedsinntekt, månedsinntekt), Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold);
-        BeregningsgrunnlagPeriode grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL),
+	    var grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL),
                 List.of(arbeidsforhold), List.of(månedsinntekt.multiply(BigDecimal.valueOf(12)))).getBeregningsgrunnlagPerioder().get(0);
 
-        Specification<BeregningsgrunnlagPeriode> beregning = new RegelForeslåBeregningsgrunnlag(grunnlag).getSpecification();
+	    var beregning = new RegelForeslåBeregningsgrunnlag(grunnlag).getSpecification();
 
-        String json = EvaluationSerializer.asJson(beregning);
+	    var json = EvaluationSerializer.asJson(beregning);
 	    assertThat(json).isNotEmpty();
     }
 }

@@ -25,11 +25,11 @@ class FastsettAndelForArbeidsforhold extends LeafSpecification<Beregningsgrunnla
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        SingleEvaluation resultat = ja();
-        List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforholdene = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforholdIkkeFrilans();
+        var resultat = ja();
+        var arbeidsforholdene = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforholdIkkeFrilans();
         Map<String, Object> resultater = new HashMap<>();
         resultat.setEvaluationProperties(resultater);
-        BigDecimal grenseverdi = grunnlag.getGrenseverdi();
+        var grenseverdi = grunnlag.getGrenseverdi();
         resultater.put("grenseverdi", grenseverdi);
         fastsettAndelerPrArbeidsforhold(arbeidsforholdene, resultater, grenseverdi);
         return resultat ;
@@ -37,15 +37,15 @@ class FastsettAndelForArbeidsforhold extends LeafSpecification<Beregningsgrunnla
 
     private void fastsettAndelerPrArbeidsforhold(List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforholdList, Map<String, Object> resultater,
                                                  BigDecimal ikkeFordelt) {
-        BigDecimal sumBruttoBG = arbeidsforholdList.stream()
+        var sumBruttoBG = arbeidsforholdList.stream()
                 .map(af -> af.getBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         arbeidsforholdList.forEach(af -> {
-            BigDecimal prosentandel = BigDecimal.valueOf(100)
+            var prosentandel = BigDecimal.valueOf(100)
                 .multiply(af.getBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO))
                 .divide(sumBruttoBG, 10, RoundingMode.HALF_EVEN);
             resultater.put("gjenstårÅFastsetteRefusjon.prosentandel." + af.getArbeidsgiverId(), prosentandel);
-            BigDecimal andel = ikkeFordelt.multiply(af.getBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO))
+            var andel = ikkeFordelt.multiply(af.getBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO))
                 .divide(sumBruttoBG, 10, RoundingMode.HALF_EVEN);
             BeregningsgrunnlagPrArbeidsforhold.builder(af)
                 .medAndelsmessigFørGraderingPrAar(andel)

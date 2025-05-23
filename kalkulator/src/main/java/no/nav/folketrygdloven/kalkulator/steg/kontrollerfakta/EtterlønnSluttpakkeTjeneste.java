@@ -18,13 +18,13 @@ public class EtterlønnSluttpakkeTjeneste {
     }
 
     public static boolean skalVurdereOmBrukerHarEtterlønnSluttpakke(BeregningsgrunnlagGrunnlagDto beregningsgrunnlagGrunnlag) {
-        BeregningsgrunnlagDto beregningsgrunnlag = beregningsgrunnlagGrunnlag.getBeregningsgrunnlagHvisFinnes().orElse(null);
+        var beregningsgrunnlag = beregningsgrunnlagGrunnlag.getBeregningsgrunnlagHvisFinnes().orElse(null);
         Objects.requireNonNull(beregningsgrunnlag, "beregningsgrunnlag");
         return søkerErArbeidstaker(beregningsgrunnlag) && søkerHarBGAndelForEtterlønnSluttpakke(beregningsgrunnlag);
     }
 
     private static boolean søkerHarBGAndelForEtterlønnSluttpakke(BeregningsgrunnlagDto beregningsgrunnlag) {
-        List<BeregningsgrunnlagPrStatusOgAndelDto> alleAndeler = beregningsgrunnlag.getBeregningsgrunnlagPerioder()
+        var alleAndeler = beregningsgrunnlag.getBeregningsgrunnlagPerioder()
             .stream()
             .map(BeregningsgrunnlagPeriodeDto::getBeregningsgrunnlagPrStatusOgAndelList)
             .flatMap(Collection::stream)

@@ -34,14 +34,14 @@ public class FastsettYtelseFordeling {
 	}
 
 	public static List<Inntekt> fordelYtelse(List<Ytelsegrunnlag> alleYtelsegrunnlag, Periodeinntekt periodeinntekt) {
-		List<YtelsegrunnlagPeriode> ytelseperioder = søkEtterYtelseMedOverlappIPeriode(alleYtelsegrunnlag, periodeinntekt.getYtelse(), periodeinntekt.getPeriode());
+        var ytelseperioder = søkEtterYtelseMedOverlappIPeriode(alleYtelsegrunnlag, periodeinntekt.getYtelse(), periodeinntekt.getPeriode());
 		if (!ytelseperioder.isEmpty()) {
 			return fordelInntekt(ytelseperioder, periodeinntekt);
 		}
 		// Av og til utbetales en ytelse i måneden etter vedtaket er gjeldende, f.eks ved forsinket saksbehandling.
 		// Sjekker derfor måneden før også om vi ikke finner noe ytelse i måneden inntekten gjelder for
-		Periode utvidetPeriode = Periode.of(periodeinntekt.getFom().minusMonths(1), periodeinntekt.getTom());
-		List<YtelsegrunnlagPeriode> ytelseperioderUtvidet = søkEtterYtelseMedOverlappIPeriode(alleYtelsegrunnlag, periodeinntekt.getYtelse(), utvidetPeriode);
+        var utvidetPeriode = Periode.of(periodeinntekt.getFom().minusMonths(1), periodeinntekt.getTom());
+        var ytelseperioderUtvidet = søkEtterYtelseMedOverlappIPeriode(alleYtelsegrunnlag, periodeinntekt.getYtelse(), utvidetPeriode);
 		if (!ytelseperioderUtvidet.isEmpty()) {
 			return fordelInntekt(ytelseperioderUtvidet, periodeinntekt, utvidetPeriode);
 		}
@@ -68,28 +68,28 @@ public class FastsettYtelseFordeling {
 
 	private static List<Inntekt> utledFordelingK14Ytelser(List<YtelsegrunnlagPeriode> ytelseperioder, Periodeinntekt periodeinntekt, Periode periodeInntektErTjentI) {
 		validerK14Ytelser(ytelseperioder);
-		EnumMap<YtelseAktivitetType, BigDecimal> aktivitetInntektMap = new EnumMap<>(YtelseAktivitetType.class);
+        var aktivitetInntektMap = new EnumMap<YtelseAktivitetType, BigDecimal>(YtelseAktivitetType.class);
 		ytelseperioder.forEach(ytelseperiode -> {
-			Optional<Periode> overlapp = finnOverlappMellomPerioder(ytelseperiode.getPeriode(), periodeInntektErTjentI);
+            var overlapp = finnOverlappMellomPerioder(ytelseperiode.getPeriode(), periodeInntektErTjentI);
 			overlapp.ifPresent(op -> ytelseperiode.getAndeler().forEach(ytelseAndel -> {
-				int virkedagerIPeriode = Virkedager.beregnAntallVirkedager(op);
-				BigDecimal totalUtbetalingForAndelIPeriode = ytelseAndel.getDagsats().multiply(BigDecimal.valueOf(virkedagerIPeriode));
-				BigDecimal aggregertInntekt = aktivitetInntektMap.getOrDefault(ytelseAndel.getAktivitet(), BigDecimal.ZERO);
+                var virkedagerIPeriode = Virkedager.beregnAntallVirkedager(op);
+                var totalUtbetalingForAndelIPeriode = ytelseAndel.getDagsats().multiply(BigDecimal.valueOf(virkedagerIPeriode));
+                var aggregertInntekt = aktivitetInntektMap.getOrDefault(ytelseAndel.getAktivitet(), BigDecimal.ZERO);
 				aktivitetInntektMap.put(ytelseAndel.getAktivitet(), aggregertInntekt.add(totalUtbetalingForAndelIPeriode));
 			}));
 		});
 
-		BigDecimal sumYtelseIOverlappendePeriode = aktivitetInntektMap.values().stream()
+        var sumYtelseIOverlappendePeriode = aktivitetInntektMap.values().stream()
 				.reduce(BigDecimal::add)
 				.orElse(BigDecimal.ZERO);
 
 		List<Inntekt> inntekter = new ArrayList<>();
 		aktivitetInntektMap.forEach((key, value) -> {
-			BigDecimal andel = sumYtelseIOverlappendePeriode.compareTo(BigDecimal.ZERO) > 0
+            var andel = sumYtelseIOverlappendePeriode.compareTo(BigDecimal.ZERO) > 0
 					? value.divide(sumYtelseIOverlappendePeriode, 10, RoundingMode.HALF_EVEN)
 					: BigDecimal.ZERO;
-			BigDecimal andelsBeløpAvYtelse = periodeinntekt.getInntekt().multiply(andel);
-			AktivitetNøkkel aktivitetNøkkel = lagK14Aktivitet(periodeinntekt.getYtelse(), key);
+            var andelsBeløpAvYtelse = periodeinntekt.getInntekt().multiply(andel);
+            var aktivitetNøkkel = lagK14Aktivitet(periodeinntekt.getYtelse(), key);
 			inntekter.add(new Inntekt(aktivitetNøkkel, andelsBeløpAvYtelse));
 		});
 		verifiser(inntekter, periodeinntekt.getInntekt());
@@ -117,14 +117,14 @@ public class FastsettYtelseFordeling {
 	                                                      Periodeinntekt periodeinntekt, Periode periodeInntektErTjentI) {
 		validerSykepengeytele(perioderSomOverlapperInntektsperiode);
 
-		EnumMap<YtelseAktivitetType, List<Periode>> sykepengeperioderPrAktivitetMap = new EnumMap<>(YtelseAktivitetType.class);
-		BigDecimal totaltOverlappendeDager = BigDecimal.valueOf(finnTotalVarighetOverlapp(perioderSomOverlapperInntektsperiode, periodeInntektErTjentI));
+        var sykepengeperioderPrAktivitetMap = new EnumMap<YtelseAktivitetType, List<Periode>>(YtelseAktivitetType.class);
+        var totaltOverlappendeDager = BigDecimal.valueOf(finnTotalVarighetOverlapp(perioderSomOverlapperInntektsperiode, periodeInntektErTjentI));
 
-		for (YtelsegrunnlagPeriode ytelseperiode : perioderSomOverlapperInntektsperiode) {
-			Optional<Periode> overlapp = finnOverlappMellomPerioder(ytelseperiode.getPeriode(), periodeInntektErTjentI);
+		for (var ytelseperiode : perioderSomOverlapperInntektsperiode) {
+            var overlapp = finnOverlappMellomPerioder(ytelseperiode.getPeriode(), periodeInntektErTjentI);
 			overlapp.ifPresent(overlappendePeriode -> {
-				YtelsegrunnlagAndel andelPåYtelse = ytelseperiode.getAndeler().get(0);
-				List<Periode> sykepengeperiodePåAkvititet = sykepengeperioderPrAktivitetMap.getOrDefault(andelPåYtelse.getAktivitet(), new ArrayList<>());
+                var andelPåYtelse = ytelseperiode.getAndeler().get(0);
+                var sykepengeperiodePåAkvititet = sykepengeperioderPrAktivitetMap.getOrDefault(andelPåYtelse.getAktivitet(), new ArrayList<>());
 				sykepengeperiodePåAkvititet.add(overlappendePeriode);
 				sykepengeperioderPrAktivitetMap.put(andelPåYtelse.getAktivitet(), sykepengeperiodePåAkvititet);
 			});
@@ -133,13 +133,13 @@ public class FastsettYtelseFordeling {
 		// For hver nøkkel må vi finne ut hvor stor andel av total overlappende periode de bidrar med
 		List<Inntekt> inntekter = new ArrayList<>();
 		sykepengeperioderPrAktivitetMap.forEach((key, value) -> {
-			BigDecimal varighetForAktivitet = BigDecimal.valueOf(value.stream()
+            var varighetForAktivitet = BigDecimal.valueOf(value.stream()
 					.map(Periode::getVarighetDager)
 					.reduce(Long::sum)
 					.orElse(0L));
-			BigDecimal andel = varighetForAktivitet.divide(totaltOverlappendeDager, 10, RoundingMode.HALF_EVEN);
-			BigDecimal andelsBeløpAvYtelse = periodeinntekt.getInntekt().multiply(andel);
-			AktivitetNøkkel aktivitetNøkkel = AktivitetNøkkel.forYtelseFraSammenligningsfilter(Aktivitet.SYKEPENGER_MOTTAKER, key);
+            var andel = varighetForAktivitet.divide(totaltOverlappendeDager, 10, RoundingMode.HALF_EVEN);
+            var andelsBeløpAvYtelse = periodeinntekt.getInntekt().multiply(andel);
+            var aktivitetNøkkel = AktivitetNøkkel.forYtelseFraSammenligningsfilter(Aktivitet.SYKEPENGER_MOTTAKER, key);
 			inntekter.add(new Inntekt(aktivitetNøkkel, andelsBeløpAvYtelse));
 		});
 		verifiser(inntekter, periodeinntekt.getInntekt());
@@ -147,8 +147,8 @@ public class FastsettYtelseFordeling {
 	}
 
 	private static void verifiser(List<Inntekt> fordelteInntekter, BigDecimal inntektÅFordele) {
-		BigDecimal fordeltInntekt = fordelteInntekter.stream().map(Inntekt::getInntektPrMåned).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
-		boolean erDiff = inntektÅFordele.compareTo(fordeltInntekt) != 0;
+        var fordeltInntekt = fordelteInntekter.stream().map(Inntekt::getInntektPrMåned).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+        var erDiff = inntektÅFordele.compareTo(fordeltInntekt) != 0;
 		if (erDiff) {
 			throw new IllegalStateException("Fordelt inntekt og fastsatt inntekt er ikke lik." +
 					" Fordelt inntekt er " + fordeltInntekt.toPlainString() + " mens inntekt å fordele er " + inntektÅFordele.toPlainString());
@@ -156,14 +156,14 @@ public class FastsettYtelseFordeling {
 	}
 
 	private static void validerSykepengeytele(List<YtelsegrunnlagPeriode> sykepengeperioder) {
-		boolean finnesPeriodeMedUgyldigAndelsstørrelse = sykepengeperioder.stream().anyMatch(p -> p.getAndeler().size() != 1);
+        var finnesPeriodeMedUgyldigAndelsstørrelse = sykepengeperioder.stream().anyMatch(p -> p.getAndeler().size() != 1);
 		if (finnesPeriodeMedUgyldigAndelsstørrelse) {
 			throw new IllegalStateException("Finnes ikke akkurat 1 sykepengeandel for minst en periode. Sykepengeperiodene som undersøkes er " + sykepengeperioder);
 		}
 	}
 
 	private static void validerK14Ytelser(List<YtelsegrunnlagPeriode> ytelseperioder) {
-		boolean finnesUgyldigPeriode = ytelseperioder.stream()
+        var finnesUgyldigPeriode = ytelseperioder.stream()
 				.anyMatch(yp -> yp.getAndeler().stream().anyMatch(a -> a.getAktivitet() == null || a.getDagsats() == null));
 		if (finnesUgyldigPeriode) {
 			throw new IllegalStateException("Finnes ytelseperiode uten dagsats eller aktivitet. Ytelseperioder: " + ytelseperioder);
@@ -187,8 +187,8 @@ public class FastsettYtelseFordeling {
 		if (!periode1.overlapper(periode2)) {
 			return Optional.empty();
 		}
-		LocalDate fom = periode1.getFom().isBefore(periode2.getFom()) ? periode2.getFom() : periode1.getFom();
-		LocalDate tom = periode1.getTom().isBefore(periode2.getTom()) ? periode1.getTom() : periode2.getTom();
+        var fom = periode1.getFom().isBefore(periode2.getFom()) ? periode2.getFom() : periode1.getFom();
+        var tom = periode1.getTom().isBefore(periode2.getTom()) ? periode1.getTom() : periode2.getTom();
 		return Optional.of(Periode.of(fom, tom));
 	}
 

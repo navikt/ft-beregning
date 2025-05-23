@@ -34,7 +34,7 @@ public class AndelMedBeløpDto extends FaktaOmBeregningAndelDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        AndelMedBeløpDto that = (AndelMedBeløpDto) o;
+	    var that = (AndelMedBeløpDto) o;
         return Objects.equals(fastsattBelopPrMnd, that.fastsattBelopPrMnd);
     }
 

@@ -38,13 +38,13 @@ class BeregnPrArbeidsforholdFraAOrdningen extends LeafSpecification<Beregningsgr
 
 	@Override
 	public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-		Periode bp = arbeidsforhold.getBeregningsperiode();
+        var bp = arbeidsforhold.getBeregningsperiode();
 		if (bp == null) {
 			throw new IllegalStateException("Beregningsperiode mangler, kan ikke fastsette beregningsgrunnlag for arbeidsforhold");
 		}
 		var snittFraBeregningsperiodenPrÅr = finnSnittinntektFraBeregningsperiodenPrÅr(bp, grunnlag.getInntektsgrunnlag());
 
-		BigDecimal andelFraAOrdningenPrÅr = finnAndelAvBeregnet(snittFraBeregningsperiodenPrÅr, arbeidsforhold, grunnlag);
+        var andelFraAOrdningenPrÅr = finnAndelAvBeregnet(snittFraBeregningsperiodenPrÅr, arbeidsforhold, grunnlag);
 		BeregningsgrunnlagPrArbeidsforhold.builder(arbeidsforhold)
 				.medBeregnetPrÅr(andelFraAOrdningenPrÅr)
 				.build();
@@ -68,10 +68,10 @@ class BeregnPrArbeidsforholdFraAOrdningen extends LeafSpecification<Beregningsgr
 	 * @return Snittinntekt fra beregningsperioden
 	 */
 	private BigDecimal finnSnittinntektFraBeregningsperiodenPrÅr(Periode bp, Inntektsgrunnlag inntektsgrunnlag) {
-		int varighetMåneder = finnHeleMåneder(bp);
+        var varighetMåneder = finnHeleMåneder(bp);
 		if (varighetMåneder > 0) {
-			List<Periodeinntekt> inntekter = inntektsgrunnlag.getPeriodeinntekter(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold, bp.getTom(), varighetMåneder);
-			BigDecimal sum = inntekter.stream()
+            var inntekter = inntektsgrunnlag.getPeriodeinntekter(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold, bp.getTom(), varighetMåneder);
+            var sum = inntekter.stream()
 					.map(Periodeinntekt::getInntekt)
 					.reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
 			return sum.multiply(BigDecimal.valueOf(12)).divide(BigDecimal.valueOf(varighetMåneder), 10, RoundingMode.HALF_EVEN);
@@ -81,37 +81,37 @@ class BeregnPrArbeidsforholdFraAOrdningen extends LeafSpecification<Beregningsgr
 	}
 
 	private BigDecimal utledÅrsinntektVedLønnsendringEllerNystartet(Periode bp, Inntektsgrunnlag inntektsgrunnlag) {
-		LocalDate stp = bp.getTom().plusDays(1);
-		LocalDate beregningsperiodeStart = bp.getFom();
-		YearMonth månedBeregningsperiode = YearMonth.from(beregningsperiodeStart);
+        var stp = bp.getTom().plusDays(1);
+        var beregningsperiodeStart = bp.getFom();
+        var månedBeregningsperiode = YearMonth.from(beregningsperiodeStart);
 		if (månedBeregningsperiode.equals(YearMonth.from(stp))) {
 			throw new IllegalArgumentException("Beregningsperiodens start var i samme måned som skjæringstidspunkt. Kan ikke regne ut oppdatert lønn. Skulle hatt aksjonspunkt.");
 		}
-		BigDecimal utbetaltForMånedMedEndring = hentInntektForMåned(inntektsgrunnlag, beregningsperiodeStart);
-		int virkedagerMåned = Virkedager.beregnAntallVirkedager(beregningsperiodeStart.withDayOfMonth(1), beregningsperiodeStart.with(TemporalAdjusters.lastDayOfMonth()));
-		int virkedagerNySats = antallVirkedagerFallbackTilAntallDagerVed0(beregningsperiodeStart, beregningsperiodeStart.with(TemporalAdjusters.lastDayOfMonth()));
-		int virkedagerGammelSats = virkedagerMåned - virkedagerNySats;
+        var utbetaltForMånedMedEndring = hentInntektForMåned(inntektsgrunnlag, beregningsperiodeStart);
+        var virkedagerMåned = Virkedager.beregnAntallVirkedager(beregningsperiodeStart.withDayOfMonth(1), beregningsperiodeStart.with(TemporalAdjusters.lastDayOfMonth()));
+        var virkedagerNySats = antallVirkedagerFallbackTilAntallDagerVed0(beregningsperiodeStart, beregningsperiodeStart.with(TemporalAdjusters.lastDayOfMonth()));
+        var virkedagerGammelSats = virkedagerMåned - virkedagerNySats;
 
-		BigDecimal månedsinntektForrigeMåned = utledInntektForForrigeMåned(inntektsgrunnlag, beregningsperiodeStart);
-		BigDecimal inntektFaktorGammelInntekt = BigDecimal.valueOf(virkedagerGammelSats).divide(BigDecimal.valueOf(virkedagerMåned), 10, RoundingMode.HALF_DOWN);
-		BigDecimal inntektFaktorNyInntekt = BigDecimal.valueOf(virkedagerNySats).divide(BigDecimal.valueOf(virkedagerMåned), 10, RoundingMode.HALF_DOWN);
-		BigDecimal månedsinntektNySats = utbetaltForMånedMedEndring.subtract(månedsinntektForrigeMåned.multiply(inntektFaktorGammelInntekt))
+        var månedsinntektForrigeMåned = utledInntektForForrigeMåned(inntektsgrunnlag, beregningsperiodeStart);
+        var inntektFaktorGammelInntekt = BigDecimal.valueOf(virkedagerGammelSats).divide(BigDecimal.valueOf(virkedagerMåned), 10, RoundingMode.HALF_DOWN);
+        var inntektFaktorNyInntekt = BigDecimal.valueOf(virkedagerNySats).divide(BigDecimal.valueOf(virkedagerMåned), 10, RoundingMode.HALF_DOWN);
+        var månedsinntektNySats = utbetaltForMånedMedEndring.subtract(månedsinntektForrigeMåned.multiply(inntektFaktorGammelInntekt))
 				.divide(inntektFaktorNyInntekt, 10, RoundingMode.HALF_UP);
 		return skalerTilÅrsinntekt(månedsinntektNySats);
 	}
 
 	private BigDecimal utledInntektForForrigeMåned(Inntektsgrunnlag inntektsgrunnlag, LocalDate beregningsperiodeStart) {
 		//hvis det er lønnsendringer i forrige måned, skal vi ikke havne her, men ha aksjonspunkt
-		YearMonth forrigeMåned = YearMonth.from(beregningsperiodeStart).minusMonths(1);
+        var forrigeMåned = YearMonth.from(beregningsperiodeStart).minusMonths(1);
 		if (arbeidsforhold.getArbeidsforhold().getStartdato().isAfter(forrigeMåned.atEndOfMonth())) {
 			return BigDecimal.ZERO;
 		}
-		BigDecimal utbetaltForrigeMåned = hentInntektForMåned(inntektsgrunnlag, beregningsperiodeStart.minusMonths(1));
-		boolean arbeidsforholdetAktivtBareIdelerAvPerioden = arbeidsforhold.getArbeidsforhold().getStartdato().isAfter(forrigeMåned.atDay(1));
+        var utbetaltForrigeMåned = hentInntektForMåned(inntektsgrunnlag, beregningsperiodeStart.minusMonths(1));
+        var arbeidsforholdetAktivtBareIdelerAvPerioden = arbeidsforhold.getArbeidsforhold().getStartdato().isAfter(forrigeMåned.atDay(1));
 		if (arbeidsforholdetAktivtBareIdelerAvPerioden) {
-			int virkedagerMåned = Virkedager.beregnAntallVirkedager(forrigeMåned.atDay(1), forrigeMåned.atEndOfMonth());
-			int virkedagerInntekt = antallVirkedagerFallbackTilAntallDagerVed0(arbeidsforhold.getArbeidsforhold().getStartdato(), forrigeMåned.atEndOfMonth());
-			BigDecimal inntektFaktor = BigDecimal.valueOf(virkedagerInntekt).divide(BigDecimal.valueOf(virkedagerMåned), 10, RoundingMode.HALF_UP);
+            var virkedagerMåned = Virkedager.beregnAntallVirkedager(forrigeMåned.atDay(1), forrigeMåned.atEndOfMonth());
+            var virkedagerInntekt = antallVirkedagerFallbackTilAntallDagerVed0(arbeidsforhold.getArbeidsforhold().getStartdato(), forrigeMåned.atEndOfMonth());
+            var inntektFaktor = BigDecimal.valueOf(virkedagerInntekt).divide(BigDecimal.valueOf(virkedagerMåned), 10, RoundingMode.HALF_UP);
 			return utbetaltForrigeMåned.divide(inntektFaktor, 10, RoundingMode.HALF_UP);
 		}
 		return utbetaltForrigeMåned;
@@ -122,7 +122,7 @@ class BeregnPrArbeidsforholdFraAOrdningen extends LeafSpecification<Beregningsgr
 	}
 
 	private BigDecimal hentInntektForMåned(Inntektsgrunnlag inntektsgrunnlag, LocalDate dato) {
-		List<Periodeinntekt> inntekter = inntektsgrunnlag.getPeriodeinntekter(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold, dato, 1);
+        var inntekter = inntektsgrunnlag.getPeriodeinntekter(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold, dato, 1);
 		if (inntekter.size() > 1) {
 			throw new IllegalStateException("Forventet kun en månedsinntekt");
 		}
@@ -133,15 +133,15 @@ class BeregnPrArbeidsforholdFraAOrdningen extends LeafSpecification<Beregningsgr
 	}
 
 	static int antallVirkedagerFallbackTilAntallDagerVed0(LocalDate fom, LocalDate tom) {
-		int virkedager = Virkedager.beregnAntallVirkedager(fom, tom);
+        var virkedager = Virkedager.beregnAntallVirkedager(fom, tom);
 		return virkedager > 0
 				? virkedager
 				: (int) ChronoUnit.DAYS.between(fom, tom) + 1;
 	}
 
 	private int finnHeleMåneder(Periode bp) {
-		int antallMåneder = 0;
-		LocalDate date = bp.getFom().minusDays(1).with(TemporalAdjusters.lastDayOfMonth());
+        var antallMåneder = 0;
+        var date = bp.getFom().minusDays(1).with(TemporalAdjusters.lastDayOfMonth());
 		while (date.isBefore(bp.getTom())) {
 			antallMåneder++;
 			date = date.plusMonths(1).with(TemporalAdjusters.lastDayOfMonth());
@@ -169,14 +169,14 @@ class BeregnPrArbeidsforholdFraAOrdningen extends LeafSpecification<Beregningsgr
 	}
 
 	private BigDecimal fordelRestinntektFraAOrdningen(BigDecimal beregnetPrÅr, BeregningsgrunnlagPrArbeidsforhold arbeidsforhold, BeregningsgrunnlagPeriode periode) {
-		Inntektsgrunnlag inntektsgrunnlag = periode.getInntektsgrunnlag();
-		List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforholdISammeOrg = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL)
+        var inntektsgrunnlag = periode.getInntektsgrunnlag();
+        var arbeidsforholdISammeOrg = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL)
 				.getArbeidsforholdIkkeFrilans()
 				.stream()
 				.filter(a -> a.getArbeidsgiverId() != null)
 				.filter(a -> a.getArbeidsgiverId().equals(arbeidsforhold.getArbeidsgiverId()))
 				.toList();
-		BigDecimal beløpFraInntektsmeldingPrÅr = arbeidsforholdISammeOrg.stream()
+        var beløpFraInntektsmeldingPrÅr = arbeidsforholdISammeOrg.stream()
 				.map(inntektsgrunnlag::getInntektFraInntektsmelding)
 				.map(beløp -> beløp.multiply(BigDecimal.valueOf(12)))
 				.reduce(BigDecimal::add)
@@ -186,9 +186,9 @@ class BeregnPrArbeidsforholdFraAOrdningen extends LeafSpecification<Beregningsgr
 			return BigDecimal.ZERO;
 		}
 
-		BigDecimal restFraAOrdningen = beregnetPrÅr.subtract(beløpFraInntektsmeldingPrÅr);
+        var restFraAOrdningen = beregnetPrÅr.subtract(beløpFraInntektsmeldingPrÅr);
 
-		long antallArbeidsforholdUtenInntektsmelding = arbeidsforholdISammeOrg.stream()
+        var antallArbeidsforholdUtenInntektsmelding = arbeidsforholdISammeOrg.stream()
 				.filter(a -> inntektsgrunnlag.getInntektFraInntektsmelding(a) == null || inntektsgrunnlag.getInntektFraInntektsmelding(a).compareTo(BigDecimal.ZERO) == 0)
 				.count();
 

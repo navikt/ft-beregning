@@ -119,7 +119,7 @@ public class BeregningAktivitetDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        BeregningAktivitetDto that = (BeregningAktivitetDto) o;
+	    var that = (BeregningAktivitetDto) o;
         return Objects.equals(arbeidsgiverIdent, that.arbeidsgiverIdent) &&
             Objects.equals(fom, that.fom) &&
             Objects.equals(tom, that.tom) &&

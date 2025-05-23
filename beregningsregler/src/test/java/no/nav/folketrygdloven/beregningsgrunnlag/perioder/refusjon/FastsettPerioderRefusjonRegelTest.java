@@ -38,7 +38,7 @@ class FastsettPerioderRefusjonRegelTest {
 		var regel = new FastsettPerioderRefusjonRegel();
 		var utfall = Arrays.asList(new UtfallPeriode(STP, etterStp(50), Utfall.UNDERKJENT),
 				new UtfallPeriode(etterStp(51), LocalDateInterval.TIDENES_ENDE, Utfall.GODKJENT));
-		Map<Arbeidsgiver, LocalDateTimeline<Utfall>> utfallMap = Map.of(Arbeidsgiver.medOrgnr("999999999"), lagUtfallPrAg(utfall));
+        var utfallMap = Map.of(Arbeidsgiver.medOrgnr("999999999"), lagUtfallPrAg(utfall));
 		var arbeidOgInntektsmelding = Arrays.asList(lagArbeidOgInntektsmelding(arbfor, new Refusjonskrav(BigDecimal.valueOf(50000), STP, LocalDateInterval.TIDENES_ENDE)));
 		var modell = PeriodeModellRefusjon.builder()
 				.medUtfallPrArbeidsgiver(utfallMap)
@@ -64,7 +64,7 @@ class FastsettPerioderRefusjonRegelTest {
 				new UtfallPeriode(etterStp(51), etterStp(60), Utfall.GODKJENT),
 				new UtfallPeriode(etterStp(61), etterStp(70), Utfall.UNDERKJENT),
 				new UtfallPeriode(etterStp(71), LocalDateInterval.TIDENES_ENDE, Utfall.GODKJENT));
-		Map<Arbeidsgiver, LocalDateTimeline<Utfall>> utfallMap = Map.of(Arbeidsgiver.medOrgnr("999999999"), lagUtfallPrAg(utfall));
+        var utfallMap = Map.of(Arbeidsgiver.medOrgnr("999999999"), lagUtfallPrAg(utfall));
 		var arbeidOgInntektsmelding = Arrays.asList(lagArbeidOgInntektsmelding(arbfor, new Refusjonskrav(BigDecimal.valueOf(50000), STP, LocalDateInterval.TIDENES_ENDE)));
 		var modell = PeriodeModellRefusjon.builder()
 				.medUtfallPrArbeidsgiver(utfallMap)

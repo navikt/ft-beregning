@@ -13,7 +13,7 @@ public class ArbeidstakerOgFrilanserISammeOrganisasjonTilfelleUtleder implements
     @Override
     public Optional<FaktaOmBeregningTilfelle> utled(FaktaOmBeregningInput input,
                                                     BeregningsgrunnlagGrunnlagDto beregningsgrunnlagGrunnlag) {
-        boolean erATFLISammeOrg = KontrollerFaktaBeregningFrilanserTjeneste.erBrukerArbeidstakerOgFrilanserISammeOrganisasjon(
+	    var erATFLISammeOrg = KontrollerFaktaBeregningFrilanserTjeneste.erBrukerArbeidstakerOgFrilanserISammeOrganisasjon(
                 beregningsgrunnlagGrunnlag.getBeregningsgrunnlagHvisFinnes().orElse(null), input.getIayGrunnlag());
         return erATFLISammeOrg ? Optional.of(FaktaOmBeregningTilfelle.VURDER_AT_OG_FL_I_SAMME_ORGANISASJON) : Optional.empty();
     }

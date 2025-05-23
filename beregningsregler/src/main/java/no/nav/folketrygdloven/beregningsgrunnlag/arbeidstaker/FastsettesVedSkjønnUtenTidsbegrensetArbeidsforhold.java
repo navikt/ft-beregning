@@ -24,8 +24,8 @@ class FastsettesVedSkjønnUtenTidsbegrensetArbeidsforhold extends IkkeBeregnet {
 
 	@Override
 	public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-		SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.AT_FL);
-		BigDecimal avvikProsent = sg.getAvvikProsent();
+        var sg = grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.AT_FL);
+        var avvikProsent = sg.getAvvikProsent();
 		return nei(ruleReasonRef, String.valueOf(avvikProsent.setScale(0, RoundingMode.HALF_UP)));
 	}
 

@@ -33,7 +33,7 @@ class BeregnAvkortetRefusjon extends LeafSpecification<BeregningsgrunnlagPeriode
                 BeregningsgrunnlagPrArbeidsforhold.builder(af).medAvkortetPrÅr(af.getAvkortetRefusjonPrÅr()).build();
                 resultater.put("avkortetPrÅr." + af.getArbeidsgiverId(), af.getAvkortetPrÅr());
             });
-        SingleEvaluation resultat = ja();
+	    var resultat = ja();
         resultat.setEvaluationProperties(resultater);
         return resultat;
     }

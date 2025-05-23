@@ -49,7 +49,7 @@ public class BeregningsgrunnlagPeriodeDto implements IndexKey {
     public BeregningsgrunnlagPeriodeDto(BeregningsgrunnlagPeriodeDto kopiereFra) {
         this.beregningsgrunnlagPrStatusOgAndelList = kopiereFra.beregningsgrunnlagPrStatusOgAndelList.stream().map(a ->
                 {
-                    BeregningsgrunnlagPrStatusOgAndelDto kopi = new BeregningsgrunnlagPrStatusOgAndelDto(a);
+                    var kopi = new BeregningsgrunnlagPrStatusOgAndelDto(a);
                     kopi.setBeregningsgrunnlagPeriode(this);
                     return kopi;
                 }
@@ -185,7 +185,7 @@ public class BeregningsgrunnlagPeriodeDto implements IndexKey {
         } else if (!(obj instanceof BeregningsgrunnlagPeriodeDto)) {
             return false;
         }
-        BeregningsgrunnlagPeriodeDto other = (BeregningsgrunnlagPeriodeDto) obj;
+        var other = (BeregningsgrunnlagPeriodeDto) obj;
         return Objects.equals(this.periode.getFomDato(), other.periode.getFomDato())
                 && Objects.equals(this.periode.getTomDato(), other.periode.getTomDato())
                 && Objects.equals(this.getBruttoPrÅr(), other.getBruttoPrÅr())
@@ -265,7 +265,7 @@ public class BeregningsgrunnlagPeriodeDto implements IndexKey {
         public Builder fjernBeregningsgrunnlagPrStatusOgAndelerSomIkkeLiggerIListeAvAndelsnr(List<Long> listeAvAndelsnr) {
             verifiserKanModifisere();
             List<BeregningsgrunnlagPrStatusOgAndelDto> andelerSomSkalFjernes = new ArrayList<>();
-            for (BeregningsgrunnlagPrStatusOgAndelDto andel : kladd.getBeregningsgrunnlagPrStatusOgAndelList()) {
+            for (var andel : kladd.getBeregningsgrunnlagPrStatusOgAndelList()) {
                 if (!listeAvAndelsnr.contains(andel.getAndelsnr()) && andel.erLagtTilAvSaksbehandler()) {
                     andelerSomSkalFjernes.add(andel);
                 }
@@ -348,7 +348,7 @@ public class BeregningsgrunnlagPeriodeDto implements IndexKey {
         public Builder leggTilPeriodeÅrsak(PeriodeÅrsak periodeÅrsak) {
             verifiserKanModifisere();
             if (!kladd.getPeriodeÅrsaker().contains(periodeÅrsak)) {
-                BeregningsgrunnlagPeriodeÅrsakDto.Builder bgPeriodeÅrsakBuilder = new BeregningsgrunnlagPeriodeÅrsakDto.Builder();
+                var bgPeriodeÅrsakBuilder = new BeregningsgrunnlagPeriodeÅrsakDto.Builder();
                 bgPeriodeÅrsakBuilder.medPeriodeÅrsak(periodeÅrsak);
                 bgPeriodeÅrsakBuilder.build(kladd);
             }
@@ -368,7 +368,7 @@ public class BeregningsgrunnlagPeriodeDto implements IndexKey {
         }
 
         public BeregningsgrunnlagPeriodeDto build() {
-            Long dagsatsSum = kladd.beregningsgrunnlagPrStatusOgAndelList.stream()
+            var dagsatsSum = kladd.beregningsgrunnlagPrStatusOgAndelList.stream()
                     .filter(bgpsa -> bgpsa.getDagsats() != null)
                     .map(BeregningsgrunnlagPrStatusOgAndelDto::getDagsats)
                     .reduce(Long::sum)
@@ -384,7 +384,7 @@ public class BeregningsgrunnlagPeriodeDto implements IndexKey {
 
             kladd.beregningsgrunnlag.leggTilBeregningsgrunnlagPeriode(kladd);
 
-            Long dagsatsSum = kladd.beregningsgrunnlagPrStatusOgAndelList.stream()
+            var dagsatsSum = kladd.beregningsgrunnlagPrStatusOgAndelList.stream()
                     .filter(bgpsa -> bgpsa.getDagsats() != null)
                     .map(BeregningsgrunnlagPrStatusOgAndelDto::getDagsats)
                     .reduce(Long::sum)
@@ -395,7 +395,7 @@ public class BeregningsgrunnlagPeriodeDto implements IndexKey {
         }
 
         public BeregningsgrunnlagPeriodeDto buildForKopi() {
-            Long dagsatsSum = kladd.beregningsgrunnlagPrStatusOgAndelList.stream()
+            var dagsatsSum = kladd.beregningsgrunnlagPrStatusOgAndelList.stream()
                     .filter(bgpsa -> bgpsa.getDagsats() != null)
                     .map(BeregningsgrunnlagPrStatusOgAndelDto::getDagsats)
                     .reduce(Long::sum)

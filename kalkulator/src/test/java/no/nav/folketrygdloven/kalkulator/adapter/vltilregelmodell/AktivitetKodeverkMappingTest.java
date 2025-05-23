@@ -13,7 +13,7 @@ class AktivitetKodeverkMappingTest {
 
     @Test
     void skal_verifisere_at_beregningsreglene_kjenner_alle_opptjeningsaktiviteter_i_kodeverk() {
-        for (OpptjeningAktivitetType kode : EnumSet.allOf(OpptjeningAktivitetType.class)) {
+        for (var kode : EnumSet.allOf(OpptjeningAktivitetType.class)) {
             if (!OpptjeningAktivitetType.UDEFINERT.equals(kode)) {
                 assertThat(MapOpptjeningAktivitetTypeFraVLTilRegel.map(kode)).isNotNull();
             }

@@ -144,7 +144,7 @@ public class BeregningsgrunnlagPrStatusOgAndelDto implements IndexKey {
     }
 
     public boolean gjelderInntektsmeldingFor(Arbeidsgiver arbeidsgiver, InternArbeidsforholdRefDto arbeidsforholdRef) {
-        Optional<BGAndelArbeidsforholdDto> bgAndelArbeidsforholdOpt = getBgAndelArbeidsforhold();
+        var bgAndelArbeidsforholdOpt = getBgAndelArbeidsforhold();
         if (!Objects.equals(getAktivitetStatus(), AktivitetStatus.ARBEIDSTAKER) || !bgAndelArbeidsforholdOpt.isPresent()) {
             return false;
         }
@@ -155,7 +155,7 @@ public class BeregningsgrunnlagPrStatusOgAndelDto implements IndexKey {
     }
 
     private boolean gjelderSammeArbeidsforhold(Optional<Arbeidsgiver> arbeidsgiver, InternArbeidsforholdRefDto arbeidsforholdRef) {
-        Optional<BGAndelArbeidsforholdDto> bgAndelArbeidsforholdOpt = getBgAndelArbeidsforhold();
+        var bgAndelArbeidsforholdOpt = getBgAndelArbeidsforhold();
         if (!Objects.equals(getAktivitetStatus(), AktivitetStatus.ARBEIDSTAKER) || !bgAndelArbeidsforholdOpt.isPresent()) {
             return false;
         }
@@ -327,12 +327,12 @@ public class BeregningsgrunnlagPrStatusOgAndelDto implements IndexKey {
     }
 
     public Optional<Arbeidsgiver> getArbeidsgiver() {
-        Optional<BGAndelArbeidsforholdDto> beregningArbeidsforhold = getBgAndelArbeidsforhold();
+        var beregningArbeidsforhold = getBgAndelArbeidsforhold();
         return beregningArbeidsforhold.map(BGAndelArbeidsforholdDto::getArbeidsgiver);
     }
 
     public Optional<InternArbeidsforholdRefDto> getArbeidsforholdRef() {
-        Optional<BGAndelArbeidsforholdDto> beregningArbeidsforhold = getBgAndelArbeidsforhold();
+        var beregningArbeidsforhold = getBgAndelArbeidsforhold();
         return beregningArbeidsforhold.map(BGAndelArbeidsforholdDto::getArbeidsforholdRef);
     }
 
@@ -345,7 +345,7 @@ public class BeregningsgrunnlagPrStatusOgAndelDto implements IndexKey {
         }
         // Endring av denne har store konsekvenser for matching av andeler
         // Resultat av endringer må testes manuelt
-        BeregningsgrunnlagPrStatusOgAndelDto other = (BeregningsgrunnlagPrStatusOgAndelDto) obj;
+        var other = (BeregningsgrunnlagPrStatusOgAndelDto) obj;
         return Objects.equals(this.getAktivitetStatus(), other.getAktivitetStatus())
                 && Objects.equals(this.getGjeldendeInntektskategori(), other.getGjeldendeInntektskategori())
                 && Objects.equals(this.getBgAndelArbeidsforhold().map(BGAndelArbeidsforholdDto::getArbeidsgiver),

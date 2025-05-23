@@ -18,9 +18,9 @@ class ErbruttoinntektForGradertAndelLikNull {
     }
 
     public static boolean vurder(PeriodeModellGradering input, AndelGradering andelGradering, LocalDate dato){
-        for(PeriodisertBruttoBeregningsgrunnlag periodisertGrunnlag : input.getPeriodisertBruttoBeregningsgrunnlagList()){
+        for(var periodisertGrunnlag : input.getPeriodisertBruttoBeregningsgrunnlagList()){
             if(periodisertGrunnlag.getPeriode().inneholder(dato)){
-                Optional<BruttoBeregningsgrunnlag> grunnlag = finnBruttoBeregningsgrunnlagForGradering(periodisertGrunnlag.getBruttoBeregningsgrunnlag(), andelGradering);
+                var grunnlag = finnBruttoBeregningsgrunnlagForGradering(periodisertGrunnlag.getBruttoBeregningsgrunnlag(), andelGradering);
                 if(grunnlag.isPresent()){
                     return grunnlag.get().getBruttoPrÅr().equals(BigDecimal.ZERO);
                 } else{

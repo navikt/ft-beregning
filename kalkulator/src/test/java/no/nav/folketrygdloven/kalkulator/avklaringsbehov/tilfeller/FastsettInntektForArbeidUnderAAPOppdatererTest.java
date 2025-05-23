@@ -49,11 +49,11 @@ class FastsettInntektForArbeidUnderAAPOppdatererTest {
 		var bgPerioder = oppdatere.getBeregningsgrunnlagBuilder().getBeregningsgrunnlag().getBeregningsgrunnlagPerioder();
 		assertThat(bgPerioder).hasSize(1);
 		assertThat(bgPerioder.getFirst().getBeregningsgrunnlagPrStatusOgAndelList()).hasSize(2);
-		BeregningsgrunnlagPrStatusOgAndelDto arbeidUnderAapAndel = getAndel(bgPerioder, OpptjeningAktivitetType.ARBEID_UNDER_AAP);
+        var arbeidUnderAapAndel = getAndel(bgPerioder, OpptjeningAktivitetType.ARBEID_UNDER_AAP);
 		assertThat(arbeidUnderAapAndel.getBeregnetPrÅr()).isEqualByComparingTo(Beløp.fra(120000));
 		assertThat(arbeidUnderAapAndel.getFastsattAvSaksbehandler()).isTrue();
 		assertThat(arbeidUnderAapAndel.getArbeidsforholdType()).isEqualTo(OpptjeningAktivitetType.ARBEID_UNDER_AAP);
-		BeregningsgrunnlagPrStatusOgAndelDto aapAndel = getAndel(bgPerioder, OpptjeningAktivitetType.AAP);
+        var aapAndel = getAndel(bgPerioder, OpptjeningAktivitetType.AAP);
 		assertThat(aapAndel.getBeregnetPrÅr()).isNull();
 		assertThat(aapAndel.getFastsattAvSaksbehandler()).isFalse();
 		assertThat(aapAndel.getArbeidsforholdType()).isEqualTo(OpptjeningAktivitetType.AAP);
@@ -72,7 +72,7 @@ class FastsettInntektForArbeidUnderAAPOppdatererTest {
 				.medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT)
 				.build();
 
-		BeregningsgrunnlagPeriodeDto periode = buildBeregningsgrunnlagPeriode(beregningsgrunnlag,
+        var periode = buildBeregningsgrunnlagPeriode(beregningsgrunnlag,
 				SKJÆRINGSTIDSPUNKT, null);
 		buildBgPrStatusOgAndel(periode);
 		input = BeregningsgrunnlagInputTestUtil.lagInputMedBeregningsgrunnlag(koblingReferanse, beregningsgrunnlag, BeregningsgrunnlagTilstand.FORESLÅTT);

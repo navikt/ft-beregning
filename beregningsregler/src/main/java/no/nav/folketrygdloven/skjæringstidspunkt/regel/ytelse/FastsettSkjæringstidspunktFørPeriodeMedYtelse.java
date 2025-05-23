@@ -27,10 +27,10 @@ class FastsettSkjæringstidspunktFørPeriodeMedYtelse extends LeafSpecification<
     @Override
     public Evaluation evaluate(AktivitetStatusModellFRISINN regelmodell) {
         Map<String, Object> resultater = new HashMap<>();
-        List<Periode> perioder = finnBeregningsperioder(regelmodell, resultater);
+        var perioder = finnBeregningsperioder(regelmodell, resultater);
         resultater.put("beregningsperioder", "Perioder: " + perioder.stream().map(Periode::toString).reduce("", (p1, p2) -> p1 + ", " + p2));
         regelmodell.setBeregningsperioder(perioder);
-        LocalDate sisteDatoIBeregningsperioden = perioder.stream().map(Periode::getTom)
+        var sisteDatoIBeregningsperioden = perioder.stream().map(Periode::getTom)
             .max(Comparator.naturalOrder())
             .orElse(regelmodell.getSkjæringstidspunktForOpptjening().minusDays(1));
         regelmodell.setSkjæringstidspunktForBeregning(sisteDatoIBeregningsperioden.plusDays(1));
@@ -39,7 +39,7 @@ class FastsettSkjæringstidspunktFørPeriodeMedYtelse extends LeafSpecification<
     }
 
     private List<Periode> finnBeregningsperioder(AktivitetStatusModellFRISINN regelmodell, Map<String, Object> resultater) {
-        Inntektsgrunnlag inntektsgrunnlag = regelmodell.getInntektsgrunnlag();
+        var inntektsgrunnlag = regelmodell.getInntektsgrunnlag();
         return FinnPerioderUtenYtelse.finnPerioder(inntektsgrunnlag, regelmodell.getSkjæringstidspunktForOpptjening(), resultater);
     }
 

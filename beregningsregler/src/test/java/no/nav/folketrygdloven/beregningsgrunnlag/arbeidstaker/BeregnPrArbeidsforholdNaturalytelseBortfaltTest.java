@@ -28,8 +28,8 @@ class BeregnPrArbeidsforholdNaturalytelseBortfaltTest {
     @Test
     void skalSummereNaturalytelserBortfaltPåSkjæringstidspunktet() {
         //Arrange
-        Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
-        List<NaturalYtelse> naturalYtelser = List.of(
+        var inntektsgrunnlag = new Inntektsgrunnlag();
+        var naturalYtelser = List.of(
             new NaturalYtelse(BigDecimal.TEN, SKJÆRINGSTIDSPUNKT.minusYears(1), SKJÆRINGSTIDSPUNKT.minusDays(2)), //Tas ikke med
             new NaturalYtelse(BigDecimal.valueOf(5000), SKJÆRINGSTIDSPUNKT.minusYears(1), SKJÆRINGSTIDSPUNKT.minusDays(1)),
             new NaturalYtelse(BigDecimal.valueOf(3333), SKJÆRINGSTIDSPUNKT.minusYears(1), SKJÆRINGSTIDSPUNKT.minusDays(1)),
@@ -41,9 +41,9 @@ class BeregnPrArbeidsforholdNaturalytelseBortfaltTest {
             .medMåned(SKJÆRINGSTIDSPUNKT)
             .medNaturalYtelser(naturalYtelser)
             .build());
-        Beregningsgrunnlag grunnlag = settoppGrunnlagMedEnPeriode(SKJÆRINGSTIDSPUNKT, inntektsgrunnlag, List.of(AktivitetStatus.ATFL), List.of(arbeidsforhold));
-        BeregningsgrunnlagPeriode periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
-        BeregningsgrunnlagPrArbeidsforhold andel = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
+        var grunnlag = settoppGrunnlagMedEnPeriode(SKJÆRINGSTIDSPUNKT, inntektsgrunnlag, List.of(AktivitetStatus.ATFL), List.of(arbeidsforhold));
+        var periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var andel = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
         //Act
         new BeregnPrArbeidsforholdNaturalytelseBortfalt(andel).evaluate(periode);
         //Assert

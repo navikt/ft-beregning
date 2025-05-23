@@ -24,9 +24,9 @@ public class AvklaringsbehovUtlederFastsettBeregningsaktiviteterOMP implements A
     private static List<BeregningAvklaringsbehovResultat> utledAvklaringsbehovForOMP(BeregningAktivitetAggregatDto beregningAktivitetAggregat,
                                                                                      BeregningsgrunnlagInput input,
                                                                                      LocalDate skjæringstidspunktForBeregning) {
-        Collection<InntektsmeldingDto> inntektsmeldinger = input.getInntektsmeldinger();
-        List<Arbeidsgiver> arbeidsgivere = inntektsmeldinger.stream().map(InntektsmeldingDto::getArbeidsgiver).collect(Collectors.toList());
-        Optional<LocalDate> ventPåRapporteringAvInntektFrist = AutopunktUtlederFastsettBeregningsaktiviteterInntektrapporteringTjeneste.skalVentePåInnrapporteringAvInntektATFL(input, arbeidsgivere, LocalDate.now(), beregningAktivitetAggregat, skjæringstidspunktForBeregning);
+	    var inntektsmeldinger = input.getInntektsmeldinger();
+	    var arbeidsgivere = inntektsmeldinger.stream().map(InntektsmeldingDto::getArbeidsgiver).collect(Collectors.toList());
+	    var ventPåRapporteringAvInntektFrist = AutopunktUtlederFastsettBeregningsaktiviteterInntektrapporteringTjeneste.skalVentePåInnrapporteringAvInntektATFL(input, arbeidsgivere, LocalDate.now(), beregningAktivitetAggregat, skjæringstidspunktForBeregning);
         if (ventPåRapporteringAvInntektFrist.isPresent()) {
             return List.of(autopunkt(AvklaringsbehovDefinisjon.AUTO_VENT_PÅ_INNTKT_RAP_FRST, BeregningVenteårsak.VENT_INNTEKT_RAPPORTERINGSFRIST, ventPåRapporteringAvInntektFrist.get()));
         }
@@ -43,8 +43,8 @@ public class AvklaringsbehovUtlederFastsettBeregningsaktiviteterOMP implements A
         if (!vilkårErGodkjent) {
             return emptyList();
         }
-        LocalDate skjæringstidspunkt = regelResultat.getBeregningsgrunnlag().getSkjæringstidspunkt();
-        BeregningAktivitetAggregatDto registerAktiviteter = regelResultat.getRegisterAktiviteter();
+	    var skjæringstidspunkt = regelResultat.getBeregningsgrunnlag().getSkjæringstidspunkt();
+	    var registerAktiviteter = regelResultat.getRegisterAktiviteter();
         return utledAvklaringsbehovForOMP(registerAktiviteter, input, skjæringstidspunkt);
     }
 }

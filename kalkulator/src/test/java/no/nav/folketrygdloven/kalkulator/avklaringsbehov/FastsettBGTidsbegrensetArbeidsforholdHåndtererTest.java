@@ -58,19 +58,19 @@ class FastsettBGTidsbegrensetArbeidsforholdHåndtererTest {
     }
 
     private List<FastsattePerioderTidsbegrensetDto> lagFastsatteAndelerListe() {
-        FastsatteAndelerTidsbegrensetDto andelEnPeriodeEn = new FastsatteAndelerTidsbegrensetDto(FØRSTE_ANDELSNR, FØRSTE_PERIODE_FØRSTE_ANDEL_INNTEKT);
-        FastsatteAndelerTidsbegrensetDto andelToPeriodeEn = new FastsatteAndelerTidsbegrensetDto(ANDRE_ANDELSNR, FØRSTE_PERIODE_ANDRE_ANDEL_INNTEKT);
+        var andelEnPeriodeEn = new FastsatteAndelerTidsbegrensetDto(FØRSTE_ANDELSNR, FØRSTE_PERIODE_FØRSTE_ANDEL_INNTEKT);
+        var andelToPeriodeEn = new FastsatteAndelerTidsbegrensetDto(ANDRE_ANDELSNR, FØRSTE_PERIODE_ANDRE_ANDEL_INNTEKT);
 
-        FastsattePerioderTidsbegrensetDto førstePeriode = new FastsattePerioderTidsbegrensetDto(
+        var førstePeriode = new FastsattePerioderTidsbegrensetDto(
             FØRSTE_PERIODE_FOM,
             FØRSTE_PERIODE_TOM,
             List.of(andelEnPeriodeEn, andelToPeriodeEn)
         );
 
-        FastsatteAndelerTidsbegrensetDto andelEnPeriodeTo = new FastsatteAndelerTidsbegrensetDto(FØRSTE_ANDELSNR, ANDRE_PERIODE_FØRSTE_ANDEL_INNTEKT);
-        FastsatteAndelerTidsbegrensetDto andelToPeriodeTo = new FastsatteAndelerTidsbegrensetDto(ANDRE_ANDELSNR, ANDRE_PERIODE_ANDRE_ANDEL_INNTEKT);
+        var andelEnPeriodeTo = new FastsatteAndelerTidsbegrensetDto(FØRSTE_ANDELSNR, ANDRE_PERIODE_FØRSTE_ANDEL_INNTEKT);
+        var andelToPeriodeTo = new FastsatteAndelerTidsbegrensetDto(ANDRE_ANDELSNR, ANDRE_PERIODE_ANDRE_ANDEL_INNTEKT);
 
-        FastsattePerioderTidsbegrensetDto andrePeriode = new FastsattePerioderTidsbegrensetDto(
+        var andrePeriode = new FastsattePerioderTidsbegrensetDto(
             ANDRE_PERIODE_FOM,
             ANDRE_PERIODE_TOM,
             List.of(andelEnPeriodeTo, andelToPeriodeTo)
@@ -89,13 +89,13 @@ class FastsettBGTidsbegrensetArbeidsforholdHåndtererTest {
         var dto = new FastsettBGTidsbegrensetArbeidsforholdDto(fastsatteInnteker,null);
 
         // Act
-        BeregningsgrunnlagGrunnlagDto grunnlag = FastsettBGTidsbegrensetArbeidsforholdHåndterer.håndter(input, dto);
+        var grunnlag = FastsettBGTidsbegrensetArbeidsforholdHåndterer.håndter(input, dto);
 
         //Assert
-        Optional<BeregningsgrunnlagDto> beregningsgrunnlag = grunnlag.getBeregningsgrunnlagHvisFinnes();
+        var beregningsgrunnlag = grunnlag.getBeregningsgrunnlagHvisFinnes();
         Assertions.assertThat(beregningsgrunnlag.isPresent()).isTrue();
-        BeregningsgrunnlagPeriodeDto førstePeriode = beregningsgrunnlag.get().getBeregningsgrunnlagPerioder().get(0);
-        BeregningsgrunnlagPeriodeDto andrePeriode = beregningsgrunnlag.get().getBeregningsgrunnlagPerioder().get(1);
+        var førstePeriode = beregningsgrunnlag.get().getBeregningsgrunnlagPerioder().get(0);
+        var andrePeriode = beregningsgrunnlag.get().getBeregningsgrunnlagPerioder().get(1);
         assertThat(førstePeriode.getBeregningsgrunnlagPrStatusOgAndelList().get(0).getOverstyrtPrÅr()).isEqualTo(Beløp.fra(FØRSTE_PERIODE_FØRSTE_ANDEL_INNTEKT));
         assertThat(førstePeriode.getBeregningsgrunnlagPrStatusOgAndelList().get(1).getOverstyrtPrÅr()).isEqualTo(Beløp.fra(FØRSTE_PERIODE_ANDRE_ANDEL_INNTEKT));
         assertThat(andrePeriode.getBeregningsgrunnlagPrStatusOgAndelList().get(0).getOverstyrtPrÅr()).isEqualTo(Beløp.fra(ANDRE_PERIODE_FØRSTE_ANDEL_INNTEKT));
@@ -104,7 +104,7 @@ class FastsettBGTidsbegrensetArbeidsforholdHåndtererTest {
 
     private void buildBgPrStatusOgAndel(BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode,
                                         Arbeidsgiver arbeidsgiver) {
-        BGAndelArbeidsforholdDto.Builder bga = BGAndelArbeidsforholdDto
+        var bga = BGAndelArbeidsforholdDto
             .builder()
             .medArbeidsperiodeFom(LocalDate.now().minusYears(1))
             .medArbeidsperiodeTom(LocalDate.now().plusYears(2))
@@ -124,18 +124,18 @@ class FastsettBGTidsbegrensetArbeidsforholdHåndtererTest {
     private void lagBehandlingMedBeregningsgrunnlag() {
 
 
-        BeregningsgrunnlagDto beregningsgrunnlag = BeregningsgrunnlagDto.builder()
+        var beregningsgrunnlag = BeregningsgrunnlagDto.builder()
             .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT)
             .medGrunnbeløp(GRUNNBELØP)
             .build();
 
 
-        BeregningsgrunnlagPeriodeDto førstePeriode = buildBeregningsgrunnlagPeriode(beregningsgrunnlag,
+        var førstePeriode = buildBeregningsgrunnlagPeriode(beregningsgrunnlag,
             FØRSTE_PERIODE_FOM, FØRSTE_PERIODE_TOM);
         buildBgPrStatusOgAndel(førstePeriode, arbeidsgiver1);
         buildBgPrStatusOgAndel(førstePeriode, arbeidsgiver2);
 
-        BeregningsgrunnlagPeriodeDto andrePeriode = buildBeregningsgrunnlagPeriode(beregningsgrunnlag,
+        var andrePeriode = buildBeregningsgrunnlagPeriode(beregningsgrunnlag,
             ANDRE_PERIODE_FOM, ANDRE_PERIODE_TOM);
         buildBgPrStatusOgAndel(andrePeriode, arbeidsgiver1);
         buildBgPrStatusOgAndel(andrePeriode, arbeidsgiver2);

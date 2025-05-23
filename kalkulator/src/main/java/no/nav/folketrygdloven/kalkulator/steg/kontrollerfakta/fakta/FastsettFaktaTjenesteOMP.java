@@ -19,12 +19,12 @@ public class FastsettFaktaTjenesteOMP {
     public Optional<FaktaAggregatDto> fastsettFakta(BeregningsgrunnlagDto beregningsgrunnlag,
                                                     InntektArbeidYtelseGrunnlagDto iayGrunnlag,
                                                     Collection<InntektsmeldingDto> inntektsmeldinger) {
-        FaktaAggregatDto.Builder faktaBuilder = FaktaAggregatDto.builder();
+        var faktaBuilder = FaktaAggregatDto.builder();
         if (!harRefusjonPåSkjæringstidspunktet(beregningsgrunnlag.getSkjæringstidspunkt(), inntektsmeldinger)) {
-            List<FaktaArbeidsforholdDto> faktaArbeidsforholdDtos = fastsettFaktaForKortvarigeArbeidsforhold(beregningsgrunnlag, iayGrunnlag);
+            var faktaArbeidsforholdDtos = fastsettFaktaForKortvarigeArbeidsforhold(beregningsgrunnlag, iayGrunnlag);
             faktaArbeidsforholdDtos.forEach(faktaBuilder::kopierTilEksisterendeEllerLeggTil);
         }
-        List<FaktaArbeidsforholdDto> faktaLønnsendring = fastsettFaktaForLønnsendring(beregningsgrunnlag, iayGrunnlag, inntektsmeldinger);
+        var faktaLønnsendring = fastsettFaktaForLønnsendring(beregningsgrunnlag, iayGrunnlag, inntektsmeldinger);
         faktaLønnsendring.forEach(faktaBuilder::kopierTilEksisterendeEllerLeggTil);
         if (!faktaBuilder.manglerFakta()) {
             return Optional.of(faktaBuilder.build());

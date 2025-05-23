@@ -19,12 +19,12 @@ class FastsettBruttoBeregningsgrunnlagFLOppdaterer {
     }
 
     public static void oppdater(FaktaBeregningLagreDto dto, BeregningsgrunnlagInput input, BeregningsgrunnlagGrunnlagDtoBuilder grunnlagBuilder) {
-        FastsettMånedsinntektFLDto fastsettMånedsinntektFLDto = dto.getFastsettMaanedsinntektFL();
-        Integer frilansinntekt = fastsettMånedsinntektFLDto.getMaanedsinntekt();
+        var fastsettMånedsinntektFLDto = dto.getFastsettMaanedsinntektFL();
+        var frilansinntekt = fastsettMånedsinntektFLDto.getMaanedsinntekt();
         var årsinntektFL = Beløp.fra(frilansinntekt).multipliser(KonfigTjeneste.getMånederIÅr());
-        List<BeregningsgrunnlagPeriodeDto> bgPerioder = grunnlagBuilder.getBeregningsgrunnlagBuilder().getBeregningsgrunnlag().getBeregningsgrunnlagPerioder();
-        for (BeregningsgrunnlagPeriodeDto bgPeriode : bgPerioder) {
-            BeregningsgrunnlagPrStatusOgAndelDto bgAndel = bgPeriode.getBeregningsgrunnlagPrStatusOgAndelList().stream()
+        var bgPerioder = grunnlagBuilder.getBeregningsgrunnlagBuilder().getBeregningsgrunnlag().getBeregningsgrunnlagPerioder();
+        for (var bgPeriode : bgPerioder) {
+            var bgAndel = bgPeriode.getBeregningsgrunnlagPrStatusOgAndelList().stream()
                 .filter(bpsa -> AktivitetStatus.FRILANSER.equals(bpsa.getAktivitetStatus()))
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("Mangler BeregningsgrunnlagPrStatusOgAndel[FRILANS] for behandling " + input.getKoblingReferanse().getId()));

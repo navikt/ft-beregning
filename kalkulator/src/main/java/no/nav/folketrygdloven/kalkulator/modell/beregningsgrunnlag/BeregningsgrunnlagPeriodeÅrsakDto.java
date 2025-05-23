@@ -48,7 +48,7 @@ public class BeregningsgrunnlagPeriodeÅrsakDto implements IndexKey {
         } else if (!(obj instanceof BeregningsgrunnlagPeriodeÅrsakDto)) {
             return false;
         }
-        BeregningsgrunnlagPeriodeÅrsakDto other = (BeregningsgrunnlagPeriodeÅrsakDto) obj;
+        var other = (BeregningsgrunnlagPeriodeÅrsakDto) obj;
         return Objects.equals(this.getBeregningsgrunnlagPeriode(), other.getBeregningsgrunnlagPeriode())
                 && Objects.equals(this.getPeriodeÅrsak(), other.getPeriodeÅrsak());
     }

@@ -78,7 +78,7 @@ public class BeregningIAYTestUtil {
      */
     private static OppgittOpptjeningDtoBuilder lagOppgittOpptjeningForSN(LocalDate skjæringstidspunktOpptjening, boolean nyIArbeidslivet,
                                                                          Collection<Periode> perioder) {
-        OppgittOpptjeningDtoBuilder oppgittOpptjeningBuilder = OppgittOpptjeningDtoBuilder.ny();
+	    var oppgittOpptjeningBuilder = OppgittOpptjeningDtoBuilder.ny();
         List<OppgittOpptjeningDtoBuilder.EgenNæringBuilder> næringBuilders = new ArrayList<>();
         perioder.forEach(periode -> næringBuilders.add(OppgittOpptjeningDtoBuilder.EgenNæringBuilder.ny()
             .medBruttoInntekt(Beløp.fra(10000))
@@ -96,10 +96,10 @@ public class BeregningIAYTestUtil {
      * @param erNyOppstartet spesifiserer om frilans er nyoppstartet
      */
     public static OppgittOpptjeningDtoBuilder leggTilOppgittOpptjeningForFL(boolean erNyOppstartet, LocalDate fom) {
-        OppgittOpptjeningDtoBuilder oppgittOpptjeningBuilder = OppgittOpptjeningDtoBuilder.ny();
-        OppgittFrilansDto frilans = new OppgittFrilansDto();
+	    var oppgittOpptjeningBuilder = OppgittOpptjeningDtoBuilder.ny();
+	    var frilans = new OppgittFrilansDto();
         frilans.setErNyoppstartet(erNyOppstartet);
-        OppgittAnnenAktivitetDto annenAktivitet = new OppgittAnnenAktivitetDto(Intervall.fraOgMed(fom), ArbeidType.FRILANSER);
+	    var annenAktivitet = new OppgittAnnenAktivitetDto(Intervall.fraOgMed(fom), ArbeidType.FRILANSER);
         oppgittOpptjeningBuilder.leggTilAnnenAktivitet(annenAktivitet);
         oppgittOpptjeningBuilder.leggTilFrilansOpplysninger(frilans);
         return oppgittOpptjeningBuilder;
@@ -110,13 +110,13 @@ public class BeregningIAYTestUtil {
                                                     LocalDate tom, // NOSONAR - brukes bare til test
                                                     YtelseType ytelseType,
                                                     Periode... meldekortPerioder) {
-        InntektArbeidYtelseAggregatBuilder inntektArbeidYtelseAggregatBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(inntektArbeidYtelseGrunnlagBuilder.getKladd().getRegisterVersjon(), VersjonTypeDto.REGISTER);
-        InntektArbeidYtelseAggregatBuilder.AktørYtelseBuilder aktørYtelseBuilder = inntektArbeidYtelseAggregatBuilder
+	    var inntektArbeidYtelseAggregatBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(inntektArbeidYtelseGrunnlagBuilder.getKladd().getRegisterVersjon(), VersjonTypeDto.REGISTER);
+	    var aktørYtelseBuilder = inntektArbeidYtelseAggregatBuilder
             .getAktørYtelseBuilder();
-        YtelseDtoBuilder ytelseBuilder = YtelseDtoBuilder.ny().medPeriode(Intervall.fraOgMedTilOgMed(fom, tom)).medYtelseType(ytelseType);
+	    var ytelseBuilder = YtelseDtoBuilder.ny().medPeriode(Intervall.fraOgMedTilOgMed(fom, tom)).medYtelseType(ytelseType);
         if (meldekortPerioder != null) {
             Arrays.asList(meldekortPerioder).forEach(meldekortPeriode -> {
-                YtelseAnvistDto ytelseAnvist = lagYtelseAnvist(meldekortPeriode, ytelseBuilder);
+	            var ytelseAnvist = lagYtelseAnvist(meldekortPeriode, ytelseBuilder);
                 ytelseBuilder.leggTilYtelseAnvist(ytelseAnvist);
             });
         }
@@ -207,15 +207,15 @@ public class BeregningIAYTestUtil {
                                           boolean virksomhetPåInntekt,
                                           Optional<LocalDate> lønnsendringsdato,
                                           InntektArbeidYtelseGrunnlagDtoBuilder inntektArbeidYtelseGrunnlagBuilder) {
-        InntektArbeidYtelseAggregatBuilder inntektArbeidYtelseAggregatBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(inntektArbeidYtelseGrunnlagBuilder.getKladd().getRegisterVersjon(), VersjonTypeDto.REGISTER);
-        InntektArbeidYtelseAggregatBuilder.AktørArbeidBuilder aktørArbeidBuilder = inntektArbeidYtelseAggregatBuilder.getAktørArbeidBuilder();
-        YrkesaktivitetDtoBuilder yrkesaktivitetBuilder = hentYABuilder(aktørArbeidBuilder, arbeidType, arbeidsgiver, arbId);
+	    var inntektArbeidYtelseAggregatBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(inntektArbeidYtelseGrunnlagBuilder.getKladd().getRegisterVersjon(), VersjonTypeDto.REGISTER);
+	    var aktørArbeidBuilder = inntektArbeidYtelseAggregatBuilder.getAktørArbeidBuilder();
+	    var yrkesaktivitetBuilder = hentYABuilder(aktørArbeidBuilder, arbeidType, arbeidsgiver, arbId);
 
-        AktivitetsAvtaleDtoBuilder aktivitetsAvtale = yrkesaktivitetBuilder.getAktivitetsAvtaleBuilder()
+	    var aktivitetsAvtale = yrkesaktivitetBuilder.getAktivitetsAvtaleBuilder()
             .medPeriode(tilOgMed == null ? Intervall.fraOgMed(fraOgMed) : Intervall.fraOgMedTilOgMed(fraOgMed, tilOgMed))
             .medErAnsettelsesPeriode(false)
             .medSisteLønnsendringsdato(lønnsendringsdato.orElse(null));
-        AktivitetsAvtaleDtoBuilder arbeidsperiode = yrkesaktivitetBuilder.getAktivitetsAvtaleBuilder()
+	    var arbeidsperiode = yrkesaktivitetBuilder.getAktivitetsAvtaleBuilder()
             .medPeriode(tilOgMed == null ? Intervall.fraOgMed(fraOgMed) : Intervall.fraOgMedTilOgMed(fraOgMed, tilOgMed));
 
         yrkesaktivitetBuilder
@@ -227,7 +227,7 @@ public class BeregningIAYTestUtil {
             yrkesaktivitetBuilder.medArbeidsforholdId(arbId);
         }
 
-        InntektArbeidYtelseAggregatBuilder.AktørArbeidBuilder aktørArbeid = aktørArbeidBuilder
+	    var aktørArbeid = aktørArbeidBuilder
             .leggTilYrkesaktivitet(yrkesaktivitetBuilder);
         inntektArbeidYtelseAggregatBuilder.leggTilAktørArbeid(aktørArbeid);
         byggInntektForBehandling(skjæringstidspunktOpptjening, inntektArbeidYtelseAggregatBuilder, inntektPrMnd,
@@ -244,12 +244,12 @@ public class BeregningIAYTestUtil {
             .før(skjæringstidspunktOpptjening);
 
         if (!filter.getYrkesaktiviteter().isEmpty()) {
-            YrkesaktivitetDto yrkesaktivitet = finnKorresponderendeYrkesaktivitet(filter, arbeidType, arbeidsgiver);
-            final ArbeidsforholdInformasjonDtoBuilder informasjonBuilder =
+	        var yrkesaktivitet = finnKorresponderendeYrkesaktivitet(filter, arbeidType, arbeidsgiver);
+            final var informasjonBuilder =
                 ArbeidsforholdInformasjonDtoBuilder
                 .oppdatere(inntektArbeidYtelseGrunnlagBuilder.getInformasjon());
 
-            final ArbeidsforholdOverstyringDtoBuilder overstyringBuilderFor = informasjonBuilder.getOverstyringBuilderFor(yrkesaktivitet.getArbeidsgiver(),
+            final var overstyringBuilderFor = informasjonBuilder.getOverstyringBuilderFor(yrkesaktivitet.getArbeidsgiver(),
                 yrkesaktivitet.getArbeidsforholdRef());
             overstyringBuilderFor.medHandling(ArbeidsforholdHandlingType.BRUK_UTEN_INNTEKTSMELDING);
             informasjonBuilder.leggTil(overstyringBuilderFor);
@@ -259,7 +259,7 @@ public class BeregningIAYTestUtil {
     }
 
     public static YrkesaktivitetDto finnKorresponderendeYrkesaktivitet(YrkesaktivitetFilterDto filter, ArbeidType arbeidType, Arbeidsgiver arbeidsgiver) {
-        Collection<YrkesaktivitetDto> yrkesaktiviteter = finnKorresponderendeYrkesaktiviteter(filter, arbeidType);
+	    var yrkesaktiviteter = finnKorresponderendeYrkesaktiviteter(filter, arbeidType);
         return yrkesaktiviteter
             .stream()
             .filter(ya -> ya.getArbeidsgiver().equals(arbeidsgiver))
@@ -288,16 +288,16 @@ public class BeregningIAYTestUtil {
                                                 InntektArbeidYtelseAggregatBuilder inntektArbeidYtelseAggregatBuilder, List<Beløp> inntektPrMnd,
                                                 boolean virksomhetPåInntekt, Arbeidsgiver arbeidsgiver) {
 
-        InntektArbeidYtelseAggregatBuilder.AktørInntektBuilder aktørInntekt = inntektArbeidYtelseAggregatBuilder.getAktørInntektBuilder();
+	    var aktørInntekt = inntektArbeidYtelseAggregatBuilder.getAktørInntektBuilder();
 
-        InntektDtoBuilder inntektBeregningBuilder = aktørInntekt
+	    var inntektBeregningBuilder = aktørInntekt
             .getInntektBuilder(InntektskildeType.INNTEKT_BEREGNING, OpptjeningsnøkkelDto.forArbeidsforholdIdMedArbeidgiver(null, arbeidsgiver));
 
         // Lager et år (12 mnd) med inntekt for beregning
         byggInntekt(inntektBeregningBuilder, skjæringstidspunktOpptjening, inntektPrMnd, virksomhetPåInntekt, arbeidsgiver);
         aktørInntekt.leggTilInntekt(inntektBeregningBuilder);
 
-        InntektDtoBuilder inntektSammenligningBuilder = aktørInntekt
+	    var inntektSammenligningBuilder = aktørInntekt
             .getInntektBuilder(InntektskildeType.INNTEKT_SAMMENLIGNING, OpptjeningsnøkkelDto.forArbeidsforholdIdMedArbeidgiver(null, arbeidsgiver));
 
         // Lager et år (12 mnd) med inntekt for sammenligningsgrunnlag
@@ -310,7 +310,7 @@ public class BeregningIAYTestUtil {
     private static void byggInntekt(InntektDtoBuilder builder, LocalDate skjæringstidspunktOpptjening, List<Beløp> inntektPrMnd, boolean virksomhetPåInntekt,
                                     Arbeidsgiver arbeidsgiver) {
         if (virksomhetPåInntekt) {
-            for (int i = 0; i <= 12; i++) {
+            for (var i = 0; i <= 12; i++) {
                 var inntekt = getInntekt(inntektPrMnd, i);
                 builder
                     .leggTilInntektspost(
@@ -318,7 +318,7 @@ public class BeregningIAYTestUtil {
                     .medArbeidsgiver(arbeidsgiver);
             }
         } else {
-            for (int i = 0; i <= 12; i++) {
+            for (var i = 0; i <= 12; i++) {
                 var inntekt = getInntekt(inntektPrMnd, i);
                 builder.leggTilInntektspost(
                     lagInntektspost(skjæringstidspunktOpptjening.minusMonths(i + 1L).plusDays(1), skjæringstidspunktOpptjening.minusMonths(i), inntekt));

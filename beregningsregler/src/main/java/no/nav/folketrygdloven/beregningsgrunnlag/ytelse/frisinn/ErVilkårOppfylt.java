@@ -18,8 +18,8 @@ public class ErVilkårOppfylt extends LeafSpecification<BeregningsgrunnlagPeriod
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        boolean erVilkårOppfylt = grunnlag.getErVilkårOppfylt();
-        SingleEvaluation resultat = erVilkårOppfylt ? ja() : nei();
+        var erVilkårOppfylt = grunnlag.getErVilkårOppfylt();
+        var resultat = erVilkårOppfylt ? ja() : nei();
         resultat.setEvaluationProperty("erVilkårOppfylt", erVilkårOppfylt);
         return resultat;
     }

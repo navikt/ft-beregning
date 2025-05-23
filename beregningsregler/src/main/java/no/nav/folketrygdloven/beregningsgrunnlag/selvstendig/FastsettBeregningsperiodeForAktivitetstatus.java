@@ -31,17 +31,17 @@ public class FastsettBeregningsperiodeForAktivitetstatus extends LeafSpecificati
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-	    BeregningsgrunnlagPrStatus bgps = grunnlag.getBeregningsgrunnlagPrStatus(aktivitetStatus);
+        var bgps = grunnlag.getBeregningsgrunnlagPrStatus(aktivitetStatus);
 	    if (bgps == null) {
 	    	throw new IllegalStateException("Hadde ingen aktivitetstatus " + aktivitetStatus);
 	    }
         Map<String, Object> resultater = new HashMap<>();
-	    Optional<LocalDate> sisteLigningsdatoOpt = grunnlag.getInntektsgrunnlag().sistePeriodeMedInntektFørDato(Inntektskilde.SIGRUN, grunnlag.getSkjæringstidspunkt());
-        LocalDate tidligstMuligBeregningsår = grunnlag.getSkjæringstidspunkt().minusYears(4);
+        var sisteLigningsdatoOpt = grunnlag.getInntektsgrunnlag().sistePeriodeMedInntektFørDato(Inntektskilde.SIGRUN, grunnlag.getSkjæringstidspunkt());
+        var tidligstMuligBeregningsår = grunnlag.getSkjæringstidspunkt().minusYears(4);
         LocalDate tom;
         LocalDate fom;
         if (sisteLigningsdatoOpt.isPresent()) {
-            LocalDate sisteLigningsdato = sisteLigningsdatoOpt.get();
+            var sisteLigningsdato = sisteLigningsdatoOpt.get();
             if (sisteLigningsdato.getYear() <= tidligstMuligBeregningsår.plusYears(2).getYear()) {
                 fom = tidligstMuligBeregningsår.withMonth(1).withDayOfMonth(1);
                 tom = fom.plusYears(2).withMonth(12).withDayOfMonth(31);

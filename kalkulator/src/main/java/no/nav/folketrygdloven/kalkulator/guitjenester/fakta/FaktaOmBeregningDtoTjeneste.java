@@ -22,12 +22,12 @@ public class FaktaOmBeregningDtoTjeneste {
 
     // TODO (Denne burde splittes i ein del som krever bg og ein del som ikkje krever det)
     public Optional<FaktaOmBeregningDto> lagDto(BeregningsgrunnlagGUIInput input) {
-        FaktaOmBeregningDto faktaOmBeregningDto = new FaktaOmBeregningDto();
+        var faktaOmBeregningDto = new FaktaOmBeregningDto();
         var grunnlagEntitet = input.getBeregningsgrunnlagGrunnlag();
-        BeregningAktivitetAggregatDto registerAktivitetAggregat = Optional.ofNullable(grunnlagEntitet.getRegisterAktiviteter())
+        var registerAktivitetAggregat = Optional.ofNullable(grunnlagEntitet.getRegisterAktiviteter())
                 .orElse(grunnlagEntitet.getGjeldendeAktiviteter());
-        Optional<BeregningAktivitetAggregatDto> saksbehandletAktivitetAggregat = grunnlagEntitet.getOverstyrteEllerSaksbehandletAktiviteter();
-        Optional<ArbeidsforholdInformasjonDto> arbeidsforholdInformasjon = input.getIayGrunnlag().getArbeidsforholdInformasjon();
+        var saksbehandletAktivitetAggregat = grunnlagEntitet.getOverstyrteEllerSaksbehandletAktiviteter();
+        var arbeidsforholdInformasjon = input.getIayGrunnlag().getArbeidsforholdInformasjon();
         AvklarAktiviteterDtoTjeneste.lagAvklarAktiviteterDto(registerAktivitetAggregat,
                 saksbehandletAktivitetAggregat, arbeidsforholdInformasjon, faktaOmBeregningDto);
 

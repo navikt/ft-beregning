@@ -38,7 +38,7 @@ public class FastsettFaktaOmBeregningVerdierTjeneste {
                 fastsettBeløpForAndelLagtTilAvSaksbehandlerFraAndelsreferanse(andel, periode, periodeForrigeGrunnlag, fastsatteVerdier);
             }
         } else {
-            BeregningsgrunnlagPrStatusOgAndelDto.Builder korrektAndel = getKorrektAndel(periode, periodeForrigeGrunnlag, andel);
+            var korrektAndel = getKorrektAndel(periode, periodeForrigeGrunnlag, andel);
             settInntektskategoriOgFastsattBeløp(andel, fastsatteVerdier, korrektAndel, periode);
         }
     }
@@ -59,7 +59,7 @@ public class FastsettFaktaOmBeregningVerdierTjeneste {
         if (andel.getAndelsnr().isEmpty()) {
             throw new IllegalStateException("Må ha andelsnr for å fastsette beløp fra andelsnr");
         }
-        Long andelsnr = andel.getAndelsnr().get();
+        var andelsnr = andel.getAndelsnr().get();
         BeregningsgrunnlagPrStatusOgAndelDto.Builder korrektAndel;
         if (!andel.getNyAndel() && periodeForrigeGrunnlag.isPresent()) {
             korrektAndel = BeregningsgrunnlagPrStatusOgAndelDto.kopier(MatchBeregningsgrunnlagTjeneste.matchMedAndelFraPeriodePåAndelsnr(periodeForrigeGrunnlag.get(), andelsnr));
@@ -73,7 +73,7 @@ public class FastsettFaktaOmBeregningVerdierTjeneste {
                                                             FastsatteVerdierDto fastsatteVerdier,
                                                             BeregningsgrunnlagPrStatusOgAndelDto.Builder korrektAndel,
                                                             BeregningsgrunnlagPeriodeDto korrektPeriode) {
-        Inntektskategori nyInntektskategori = fastsatteVerdier.getInntektskategori();
+        var nyInntektskategori = fastsatteVerdier.getInntektskategori();
         if (nyInntektskategori != null) {
             korrektAndel.medInntektskategori(nyInntektskategori);
         }
@@ -93,7 +93,7 @@ public class FastsettFaktaOmBeregningVerdierTjeneste {
                                                                   AktivitetStatus aktivitetStatus,
                                                                   FastsatteVerdierDto fastsatteVerdier) {
         var fastsatt = fastsatteVerdier.finnEllerUtregnFastsattBeløpPrÅr();// NOSONAR
-        Inntektskategori nyInntektskategori = fastsatteVerdier.getInntektskategori();
+        var nyInntektskategori = fastsatteVerdier.getInntektskategori();
         if (nyInntektskategori == null) {
             throw new IllegalStateException("Kan ikke sette inntektskategori lik null på ny andel.");
         }
@@ -114,7 +114,7 @@ public class FastsettFaktaOmBeregningVerdierTjeneste {
         if (andel.getAndelsnr().isEmpty()) {
             throw new IllegalArgumentException("Har ikke andelsnr når man burde ha hatt det.");
         }
-        Long andelsnr = andel.getAndelsnr().get();
+        var andelsnr = andel.getAndelsnr().get();
         if (andel.getLagtTilAvSaksbehandler() && !andel.getNyAndel() && forrigePeriode.isPresent()) {
             return BeregningsgrunnlagPrStatusOgAndelDto.kopier(MatchBeregningsgrunnlagTjeneste.matchMedAndelFraPeriodePåAndelsnr(forrigePeriode.get(), andelsnr));
         }

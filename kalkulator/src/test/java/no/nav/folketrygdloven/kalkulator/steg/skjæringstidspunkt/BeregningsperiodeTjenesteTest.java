@@ -41,10 +41,10 @@ class BeregningsperiodeTjenesteTest {
     @Test
     void skalTesteAtBeregningsperiodeBlirSattRiktig() {
         // Arrange
-        LocalDate skjæringstidspunkt = LocalDate.of(2019, 5, 15);
+        var skjæringstidspunkt = LocalDate.of(2019, 5, 15);
 
         // Act
-        Intervall periode = beregningsperiodeTjeneste.fastsettBeregningsperiodeForATFLAndeler(skjæringstidspunkt);
+        var periode = beregningsperiodeTjeneste.fastsettBeregningsperiodeForATFLAndeler(skjæringstidspunkt);
 
         // Assert
         assertThat(periode.getFomDato()).isEqualTo(LocalDate.of(2019, 2, 1));
@@ -54,11 +54,11 @@ class BeregningsperiodeTjenesteTest {
     @Test
     void skalIkkeSettesPåVentNårIkkeErATFL() {
         // Arrange
-        LocalDate dagensdato = SKJÆRINGSTIDSPUNKT;
+        var dagensdato = SKJÆRINGSTIDSPUNKT;
         var beregningAktivitetAggregatDto = lagBergningaktivitetAggregat1SNAndel();
 
         // Act
-        Optional<LocalDate> resultat = AutopunktUtlederFastsettBeregningsaktiviteterInntektrapporteringTjeneste.skalVentePåInnrapporteringAvInntektATFL(input, List.of(), dagensdato, beregningAktivitetAggregatDto, input.getSkjæringstidspunktForBeregning());
+        var resultat = AutopunktUtlederFastsettBeregningsaktiviteterInntektrapporteringTjeneste.skalVentePåInnrapporteringAvInntektATFL(input, List.of(), dagensdato, beregningAktivitetAggregatDto, input.getSkjæringstidspunktForBeregning());
 
         // Assert
         assertThat(resultat).isEmpty();
@@ -67,11 +67,11 @@ class BeregningsperiodeTjenesteTest {
     @Test
     void skalIkkeSettesPåVentNårNåtidErEtterFrist() {
         // Arrange
-        LocalDate dagensdato = SKJÆRINGSTIDSPUNKT.plusDays(7); // 8. januar
+        var dagensdato = SKJÆRINGSTIDSPUNKT.plusDays(7); // 8. januar
         var beregningAktivitetAggregatDto = lagBeregningaktiviteter1ArbeidstakerAndel();
 
         // Act
-        Optional<LocalDate> resultat = AutopunktUtlederFastsettBeregningsaktiviteterInntektrapporteringTjeneste.skalVentePåInnrapporteringAvInntektATFL(input, List.of(arbeidsgiverA), dagensdato, beregningAktivitetAggregatDto, input.getSkjæringstidspunktForBeregning());
+        var resultat = AutopunktUtlederFastsettBeregningsaktiviteterInntektrapporteringTjeneste.skalVentePåInnrapporteringAvInntektATFL(input, List.of(arbeidsgiverA), dagensdato, beregningAktivitetAggregatDto, input.getSkjæringstidspunktForBeregning());
 
         // Assert
         assertThat(resultat).isEmpty();
@@ -80,11 +80,11 @@ class BeregningsperiodeTjenesteTest {
     @Test
     void skalIkkeSettesPåVentNårNåtidErLengeEtterFrist() {
         // Arrange
-        LocalDate dagensdato = SKJÆRINGSTIDSPUNKT.plusDays(45);
+        var dagensdato = SKJÆRINGSTIDSPUNKT.plusDays(45);
         var beregningAktivitetAggregatDto = lagBeregningaktiviteter1ArbeidstakerAndel();
 
         // Act
-        Optional<LocalDate> resultat = AutopunktUtlederFastsettBeregningsaktiviteterInntektrapporteringTjeneste.skalVentePåInnrapporteringAvInntektATFL(input, List.of(arbeidsgiverA), dagensdato, beregningAktivitetAggregatDto, input.getSkjæringstidspunktForBeregning());
+        var resultat = AutopunktUtlederFastsettBeregningsaktiviteterInntektrapporteringTjeneste.skalVentePåInnrapporteringAvInntektATFL(input, List.of(arbeidsgiverA), dagensdato, beregningAktivitetAggregatDto, input.getSkjæringstidspunktForBeregning());
 
         // Assert
         assertThat(resultat).isEmpty();
@@ -93,11 +93,11 @@ class BeregningsperiodeTjenesteTest {
     @Test
     void skalAlltidSettesPåVentNårBrukerErFrilanserFørFrist() {
         // Arrange
-        LocalDate dagensdato = SKJÆRINGSTIDSPUNKT.plusDays(4);
+        var dagensdato = SKJÆRINGSTIDSPUNKT.plusDays(4);
         var beregningAktivitetAggregatDto = lagAktivitetAggregat1FrilansAndel();
 
         // Act
-        Optional<LocalDate> resultat = AutopunktUtlederFastsettBeregningsaktiviteterInntektrapporteringTjeneste.skalVentePåInnrapporteringAvInntektATFL(input, List.of(), dagensdato, beregningAktivitetAggregatDto, input.getSkjæringstidspunktForBeregning());
+        var resultat = AutopunktUtlederFastsettBeregningsaktiviteterInntektrapporteringTjeneste.skalVentePåInnrapporteringAvInntektATFL(input, List.of(), dagensdato, beregningAktivitetAggregatDto, input.getSkjæringstidspunktForBeregning());
 
         // Assert
         assertThat(resultat).isPresent();
@@ -107,10 +107,10 @@ class BeregningsperiodeTjenesteTest {
     @Test
     void skalIkkeSettesPåVentNårHarInntektsmeldingFørFrist() {
         // Arrange
-        LocalDate dagensdato = SKJÆRINGSTIDSPUNKT.plusDays(3);
+        var dagensdato = SKJÆRINGSTIDSPUNKT.plusDays(3);
         var beregningAktivitetAggregatDto = lagBeregningaktiviteter1ArbeidstakerAndel();
         // Act
-        Optional<LocalDate> resultat = AutopunktUtlederFastsettBeregningsaktiviteterInntektrapporteringTjeneste.skalVentePåInnrapporteringAvInntektATFL(input, List.of(arbeidsgiverA), dagensdato, beregningAktivitetAggregatDto, input.getSkjæringstidspunktForBeregning());
+        var resultat = AutopunktUtlederFastsettBeregningsaktiviteterInntektrapporteringTjeneste.skalVentePåInnrapporteringAvInntektATFL(input, List.of(arbeidsgiverA), dagensdato, beregningAktivitetAggregatDto, input.getSkjæringstidspunktForBeregning());
         // Assert
         assertThat(resultat).isEmpty();
     }
@@ -118,10 +118,10 @@ class BeregningsperiodeTjenesteTest {
     @Test
     void skalSettesPåVentNårFørFristUtenInntektsmelding() {
         // Arrange
-        LocalDate dagensdato = SKJÆRINGSTIDSPUNKT.plusDays(4);
+        var dagensdato = SKJÆRINGSTIDSPUNKT.plusDays(4);
         var beregningAktivitetAggregatDto = lagBeregningaktiviteter1ArbeidstakerAndel();
         // Act
-        Optional<LocalDate> resultat = AutopunktUtlederFastsettBeregningsaktiviteterInntektrapporteringTjeneste.skalVentePåInnrapporteringAvInntektATFL(input, List.of(), dagensdato, beregningAktivitetAggregatDto, input.getSkjæringstidspunktForBeregning());
+        var resultat = AutopunktUtlederFastsettBeregningsaktiviteterInntektrapporteringTjeneste.skalVentePåInnrapporteringAvInntektATFL(input, List.of(), dagensdato, beregningAktivitetAggregatDto, input.getSkjæringstidspunktForBeregning());
 
         // Assert
         assertThat(resultat).isPresent();
@@ -131,11 +131,11 @@ class BeregningsperiodeTjenesteTest {
     @Test
     void skalSettesPåVentNårUtenInntektsmeldingFørFristFlereArbeidsforhold() {
         // Arrange
-        LocalDate dagensdato = SKJÆRINGSTIDSPUNKT.plusDays(4);
+        var dagensdato = SKJÆRINGSTIDSPUNKT.plusDays(4);
         var beregningAktivitetAggregatDto = lagAktivitetAggregat2ArbeidstakerAndeler();
 
         // Act
-        Optional<LocalDate> resultat = AutopunktUtlederFastsettBeregningsaktiviteterInntektrapporteringTjeneste.skalVentePåInnrapporteringAvInntektATFL(input, List.of(), dagensdato, beregningAktivitetAggregatDto, input.getSkjæringstidspunktForBeregning());
+        var resultat = AutopunktUtlederFastsettBeregningsaktiviteterInntektrapporteringTjeneste.skalVentePåInnrapporteringAvInntektATFL(input, List.of(), dagensdato, beregningAktivitetAggregatDto, input.getSkjæringstidspunktForBeregning());
 
         // Assert
         assertThat(resultat).isPresent();
@@ -145,11 +145,11 @@ class BeregningsperiodeTjenesteTest {
     @Test
     void skalSettesPåVentNårHarInntektsmeldingFørFristForBareEttAvFlereArbeidsforhold() {
         // Arrange
-        LocalDate dagensdato = SKJÆRINGSTIDSPUNKT.plusDays(2);
+        var dagensdato = SKJÆRINGSTIDSPUNKT.plusDays(2);
         var beregningAktivitetAggregatDto = lagAktivitetAggregat2ArbeidstakerAndeler();
 
         // Act
-        Optional<LocalDate> resultat = AutopunktUtlederFastsettBeregningsaktiviteterInntektrapporteringTjeneste.skalVentePåInnrapporteringAvInntektATFL(input, List.of(arbeidsgiverA), dagensdato, beregningAktivitetAggregatDto, input.getSkjæringstidspunktForBeregning());
+        var resultat = AutopunktUtlederFastsettBeregningsaktiviteterInntektrapporteringTjeneste.skalVentePåInnrapporteringAvInntektATFL(input, List.of(arbeidsgiverA), dagensdato, beregningAktivitetAggregatDto, input.getSkjæringstidspunktForBeregning());
 
         // Assert
         assertThat(resultat).isPresent();
@@ -159,11 +159,11 @@ class BeregningsperiodeTjenesteTest {
     @Test
     void skalIkkeSettesPåVentNårAlleHarInntektsmeldingFørFristFlereArbeidsforhold() {
         // Arrange
-        LocalDate dagensdato = SKJÆRINGSTIDSPUNKT.plusDays(2);
+        var dagensdato = SKJÆRINGSTIDSPUNKT.plusDays(2);
         var beregningAktivitetAggregatDto = lagAktivitetAggregat2ArbeidstakerAndeler();
 
         // Act
-        Optional<LocalDate> resultat = AutopunktUtlederFastsettBeregningsaktiviteterInntektrapporteringTjeneste.skalVentePåInnrapporteringAvInntektATFL(input, List.of(arbeidsgiverA, arbeidsgiverB), dagensdato, beregningAktivitetAggregatDto, input.getSkjæringstidspunktForBeregning());
+        var resultat = AutopunktUtlederFastsettBeregningsaktiviteterInntektrapporteringTjeneste.skalVentePåInnrapporteringAvInntektATFL(input, List.of(arbeidsgiverA, arbeidsgiverB), dagensdato, beregningAktivitetAggregatDto, input.getSkjæringstidspunktForBeregning());
 
         // Assert
         assertThat(resultat).isEmpty();
@@ -172,10 +172,10 @@ class BeregningsperiodeTjenesteTest {
     @Test
     void skalIkkeSettesPåVentNårArbeidsforholdUtenInntektsmeldingErLagtTilAvSaksbehandler() {
         // Arrange
-        LocalDate dagensdato = SKJÆRINGSTIDSPUNKT.plusDays(2);
+        var dagensdato = SKJÆRINGSTIDSPUNKT.plusDays(2);
         var beregningAktivitetAggregatDto = lagBeregningaktiviteter1ArbeidstakerAndel();
         // Act
-        Optional<LocalDate> resultat = AutopunktUtlederFastsettBeregningsaktiviteterInntektrapporteringTjeneste.skalVentePåInnrapporteringAvInntektATFL(input, List.of(arbeidsgiverA), dagensdato, beregningAktivitetAggregatDto, input.getSkjæringstidspunktForBeregning());
+        var resultat = AutopunktUtlederFastsettBeregningsaktiviteterInntektrapporteringTjeneste.skalVentePåInnrapporteringAvInntektATFL(input, List.of(arbeidsgiverA), dagensdato, beregningAktivitetAggregatDto, input.getSkjæringstidspunktForBeregning());
         // Assert
         assertThat(resultat).isEmpty();
     }
@@ -183,11 +183,11 @@ class BeregningsperiodeTjenesteTest {
     @Test
     void skalUtledeRiktigFrist() {
         // Arrange
-        LocalDate dagensdato = SKJÆRINGSTIDSPUNKT.plusDays(2);
+        var dagensdato = SKJÆRINGSTIDSPUNKT.plusDays(2);
         var beregningAktivitetAggregatDto = lagAktivitetAggregat2ArbeidstakerAndeler();
 
         // Act
-        Optional<LocalDate> frist = AutopunktUtlederFastsettBeregningsaktiviteterInntektrapporteringTjeneste.skalVentePåInnrapporteringAvInntektATFL(input, List.of(arbeidsgiverA), dagensdato, beregningAktivitetAggregatDto, input.getSkjæringstidspunktForBeregning());
+        var frist = AutopunktUtlederFastsettBeregningsaktiviteterInntektrapporteringTjeneste.skalVentePåInnrapporteringAvInntektATFL(input, List.of(arbeidsgiverA), dagensdato, beregningAktivitetAggregatDto, input.getSkjæringstidspunktForBeregning());
 
         // Assert
         assertThat(frist).isPresent();
@@ -197,11 +197,11 @@ class BeregningsperiodeTjenesteTest {
     @Test
     void skalUtledeRiktigFristKunFL() {
         // Arrange
-        LocalDate dagensdato = SKJÆRINGSTIDSPUNKT.plusDays(2);
+        var dagensdato = SKJÆRINGSTIDSPUNKT.plusDays(2);
         var beregningAktivitetAggregatDto = lagAktivitetAggregat1FrilansAndel();
 
         // Act
-        Optional<LocalDate> frist = AutopunktUtlederFastsettBeregningsaktiviteterInntektrapporteringTjeneste.skalVentePåInnrapporteringAvInntektFL(input, dagensdato, beregningAktivitetAggregatDto, input.getSkjæringstidspunktForBeregning());
+        var frist = AutopunktUtlederFastsettBeregningsaktiviteterInntektrapporteringTjeneste.skalVentePåInnrapporteringAvInntektFL(input, dagensdato, beregningAktivitetAggregatDto, input.getSkjæringstidspunktForBeregning());
 
         // Assert
         assertThat(frist).isPresent();

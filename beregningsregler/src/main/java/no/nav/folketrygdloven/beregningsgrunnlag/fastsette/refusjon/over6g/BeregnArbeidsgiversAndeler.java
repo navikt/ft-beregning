@@ -32,11 +32,11 @@ class BeregnArbeidsgiversAndeler extends LeafSpecification<BeregningsgrunnlagPer
 
 	@Override
 	public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-		SingleEvaluation resultat = ja();
+		var resultat = ja();
 		final Map<String, Object> resultater = new HashMap<>();
 		resultat.setEvaluationProperties(resultater);
 		// Finn alle arbeidsforhold som ikke er avkortet allerede
-		List<BeregningsgrunnlagPrArbeidsforhold> ikkeFastsatt = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold()
+		var ikkeFastsatt = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold()
 				.stream()
 				.filter(af -> af.getMaksimalRefusjonPrÅr() != null)
 				.filter(af -> af.getAvkortetPrÅr() == null)
@@ -46,10 +46,10 @@ class BeregnArbeidsgiversAndeler extends LeafSpecification<BeregningsgrunnlagPer
 			return resultat;
 		}
 		// Gjenstående refusjon til fordeling er 6G minus det som allerede er tildelt tidligere
-		BigDecimal grenseverdi = grunnlag.getGrenseverdi();
+		var grenseverdi = grunnlag.getGrenseverdi();
 		resultater.put("grunnbeløp", grunnlag.getGrunnbeløp());
 		resultater.put("grenseverdi", grenseverdi);
-		BigDecimal refusjonTilFordeling = grenseverdi.subtract(
+		var refusjonTilFordeling = grenseverdi.subtract(
 				grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold()
 						.stream()
 						.map(BeregningsgrunnlagPrArbeidsforhold::getAvkortetRefusjonPrÅr)
@@ -58,13 +58,13 @@ class BeregnArbeidsgiversAndeler extends LeafSpecification<BeregningsgrunnlagPer
 						.orElse(BigDecimal.ZERO));
 
 		// Forsøk å tildele avkortede andeler til alle
-		BigDecimal gradertBruttoSum = ikkeFastsatt.stream().map(BeregningsgrunnlagPrArbeidsforhold::getAktivitetsgradertBruttoPrÅr)
+		var gradertBruttoSum = ikkeFastsatt.stream().map(BeregningsgrunnlagPrArbeidsforhold::getAktivitetsgradertBruttoPrÅr)
 				.filter(Objects::nonNull)
 				.reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
 		resultater.put(REFUSJON_TIL_FORDELING, refusjonTilFordeling);
 		ikkeFastsatt.forEach(af -> {
 			var gradertBruttoPrÅr = af.getAktivitetsgradertBruttoPrÅr() == null ? BigDecimal.ZERO : af.getAktivitetsgradertBruttoPrÅr();
-			BigDecimal andel = refusjonTilFordeling.multiply(gradertBruttoPrÅr)
+			var andel = refusjonTilFordeling.multiply(gradertBruttoPrÅr)
 					.divide(gradertBruttoSum, 10, RoundingMode.HALF_EVEN);
 			BeregningsgrunnlagPrArbeidsforhold.builder(af)
 					.medAvkortetRefusjonPrÅr(andel)
@@ -74,7 +74,7 @@ class BeregnArbeidsgiversAndeler extends LeafSpecification<BeregningsgrunnlagPer
 		});
 
 		// Hvis noen er tildelt mer enn kravet - reduser disse til kravet og sett andre til null
-		Optional<BeregningsgrunnlagPrArbeidsforhold> tildeltMerEnnKravet = ikkeFastsatt.stream()
+		var tildeltMerEnnKravet = ikkeFastsatt.stream()
 				.filter(af -> af.getAvkortetRefusjonPrÅr().compareTo(af.getMaksimalRefusjonPrÅr()) > 0)
 				.findAny();
 		if (tildeltMerEnnKravet.isPresent()) {
@@ -82,7 +82,7 @@ class BeregnArbeidsgiversAndeler extends LeafSpecification<BeregningsgrunnlagPer
 			korrigerteResultater.put(REFUSJON_TIL_FORDELING, refusjonTilFordeling);
 			resultat.setEvaluationProperties(korrigerteResultater);
 			ikkeFastsatt.forEach(af -> {
-				BigDecimal avkortet = (af.getAvkortetRefusjonPrÅr().compareTo(af.getMaksimalRefusjonPrÅr()) > 0 ? af.getMaksimalRefusjonPrÅr() : null);
+				var avkortet = (af.getAvkortetRefusjonPrÅr().compareTo(af.getMaksimalRefusjonPrÅr()) > 0 ? af.getMaksimalRefusjonPrÅr() : null);
 				BeregningsgrunnlagPrArbeidsforhold.builder(af)
 						.medAvkortetRefusjonPrÅr(avkortet)
 						.build();

@@ -24,14 +24,14 @@ class FastsettBrukersAndelForBGAndelerSomGjelderArbeidsforhold extends LeafSpeci
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        SingleEvaluation resultat = ja();
-        BeregningsgrunnlagPrStatus atfl = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+        var resultat = ja();
+        var atfl = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
         if (atfl != null) {
             Map<String, Object> resultater = new HashMap<>();
             resultat.setEvaluationProperties(resultater);
             atfl.getArbeidsforholdIkkeFrilans().forEach(arbeidsforhold -> {
-                BigDecimal avkortetRefusjonPrÅr = arbeidsforhold.getMaksimalRefusjonPrÅr() == null ? BigDecimal.ZERO : arbeidsforhold.getMaksimalRefusjonPrÅr();
-                BigDecimal avkortetBrukersAndel = arbeidsforhold.getAktivitetsgradertBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO).subtract(avkortetRefusjonPrÅr);
+                var avkortetRefusjonPrÅr = arbeidsforhold.getMaksimalRefusjonPrÅr() == null ? BigDecimal.ZERO : arbeidsforhold.getMaksimalRefusjonPrÅr();
+                var avkortetBrukersAndel = arbeidsforhold.getAktivitetsgradertBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO).subtract(avkortetRefusjonPrÅr);
                 BeregningsgrunnlagPrArbeidsforhold.builder(arbeidsforhold)
                     .medAvkortetPrÅr(avkortetRefusjonPrÅr.add(avkortetBrukersAndel))
                     .medAvkortetRefusjonPrÅr(avkortetRefusjonPrÅr)

@@ -78,14 +78,14 @@ class AvklaringsbehovUtlederFaktaOmBeregningTest {
     @Test
     void skalUtledeAvklaringsbehovForSNNyIArbeidslivet() {
         // Arrange
-        LocalDate graderingStart = SKJÆRINGSTIDSPUNKT_OPPTJENING.plusWeeks(9);
-        int refusjonskravAndel2 = 50000;
+	    var graderingStart = SKJÆRINGSTIDSPUNKT_OPPTJENING.plusWeeks(9);
+	    var refusjonskravAndel2 = 50000;
 
-        HashMap<String, Periode> opptjeningMap = new HashMap<>();
+	    var opptjeningMap = new HashMap<String, Periode>();
         opptjeningMap.put(orgnr, Periode.månederFør(SKJÆRINGSTIDSPUNKT_OPPTJENING, 12));
         opptjeningMap.put(orgnr2, Periode.månederFør(SKJÆRINGSTIDSPUNKT_OPPTJENING, 12));
 
-        InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlagBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
+	    var iayGrunnlagBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
         BeregningIAYTestUtil.lagOppgittOpptjeningForSN(SKJÆRINGSTIDSPUNKT_OPPTJENING, true, iayGrunnlagBuilder);
 
         BeregningIAYTestUtil.byggArbeidForBehandling(
@@ -95,7 +95,7 @@ class AvklaringsbehovUtlederFaktaOmBeregningTest {
         BeregningIAYTestUtil.byggArbeidForBehandling(SKJÆRINGSTIDSPUNKT_OPPTJENING, SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(2),
                 SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(1), arbId2, arbeidsgiver2, iayGrunnlagBuilder);
 
-        BeregningsgrunnlagDto beregningsgrunnlag = BeregningsgrunnlagDto.builder()
+	    var beregningsgrunnlag = BeregningsgrunnlagDto.builder()
                 .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING)
                 .medGrunnbeløp(Beløp.fra(GrunnbeløpTestKonstanter.GRUNNBELØP_2018))
                 .build();
@@ -108,7 +108,7 @@ class AvklaringsbehovUtlederFaktaOmBeregningTest {
                 .medHjemmel(Hjemmel.F_14_7)
                 .build(beregningsgrunnlag);
 
-        BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode1 = BeregningsgrunnlagPeriodeDto.ny()
+	    var beregningsgrunnlagPeriode1 = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_OPPTJENING, graderingStart.minusDays(1))
                 .build(beregningsgrunnlag);
 
@@ -116,7 +116,7 @@ class AvklaringsbehovUtlederFaktaOmBeregningTest {
         leggTilAndel(beregningsgrunnlagPeriode1, AktivitetStatus.ARBEIDSTAKER, orgnr, 0);
         leggTilAndel(beregningsgrunnlagPeriode1, AktivitetStatus.ARBEIDSTAKER, orgnr2, refusjonskravAndel2 * 12);
 
-        BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode2 = BeregningsgrunnlagPeriodeDto.ny()
+	    var beregningsgrunnlagPeriode2 = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(graderingStart, null)
                 .leggTilPeriodeÅrsak(PeriodeÅrsak.GRADERING)
                 .build(beregningsgrunnlag);
@@ -132,7 +132,7 @@ class AvklaringsbehovUtlederFaktaOmBeregningTest {
         leggTilAktivitet(arbId2, orgnr2, SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(2), SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(1));
 
         // Act
-        BeregningsgrunnlagGrunnlagDto grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
+	    var grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medBeregningsgrunnlag(beregningsgrunnlag)
                 .medRegisterAktiviteter(beregningAktivitetBuilder.build())
                 .build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER);
@@ -142,7 +142,7 @@ class AvklaringsbehovUtlederFaktaOmBeregningTest {
         // Assert
         assertThat(resultat.getBeregningAvklaringsbehovResultatList()).hasSize(1);
         assertThat(resultat.getBeregningAvklaringsbehovResultatList().get(0).getBeregningAvklaringsbehovDefinisjon()).isEqualTo(AvklaringsbehovDefinisjon.VURDER_FAKTA_ATFL_SN);
-        List<FaktaOmBeregningTilfelle> tilfeller = resultat.getFaktaOmBeregningTilfeller();
+	    var tilfeller = resultat.getFaktaOmBeregningTilfeller();
         assertThat(tilfeller).containsExactlyInAnyOrder(FaktaOmBeregningTilfelle.VURDER_SN_NY_I_ARBEIDSLIVET);
     }
 
@@ -150,13 +150,13 @@ class AvklaringsbehovUtlederFaktaOmBeregningTest {
     void skalUtledeAvklaringsbehovATFLSammeOrgLønnsendringNyoppstartetFL() {
         // Arrange
         var arbId3 = InternArbeidsforholdRefDto.namedRef("3");
-        Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(orgnr);
-        final String orgnr3 = "567755757";
-        HashMap<String, Periode> opptjeningMap = new HashMap<>();
-        Periode periode = Periode.månederFør(SKJÆRINGSTIDSPUNKT_OPPTJENING, 12);
+	    var arbeidsgiver = Arbeidsgiver.virksomhet(orgnr);
+        final var orgnr3 = "567755757";
+	    var opptjeningMap = new HashMap<String, Periode>();
+	    var periode = Periode.månederFør(SKJÆRINGSTIDSPUNKT_OPPTJENING, 12);
         opptjeningMap.put(orgnr, periode);
         opptjeningMap.put(orgnr3, periode);
-        InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
+	    var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
         iayGrunnlag.medOppgittOpptjening(BeregningIAYTestUtil.leggTilOppgittOpptjeningForFL(true, SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(2)));
         BeregningIAYTestUtil.byggArbeidForBehandling(SKJÆRINGSTIDSPUNKT_OPPTJENING, SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(10),
                 SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(10), arbId, arbeidsgiver, Optional.of(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(1L)), iayGrunnlag);
@@ -165,10 +165,10 @@ class AvklaringsbehovUtlederFaktaOmBeregningTest {
         BeregningIAYTestUtil.byggArbeidForBehandling(SKJÆRINGSTIDSPUNKT_OPPTJENING, SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(1),
                 SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(5).minusDays(2), null, arbeidsgiver,
                 ArbeidType.FRILANSER_OPPDRAGSTAKER, singletonList(Beløp.fra(10)), false, Optional.empty(), iayGrunnlag);
-        BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlagMedATFL(periode);
+	    var beregningsgrunnlag = lagBeregningsgrunnlagMedATFL(periode);
 
         // Act
-        BeregningsgrunnlagGrunnlagDtoBuilder grunnlagBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
+	    var grunnlagBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medRegisterAktiviteter(BeregningAktivitetAggregatDto.builder()
                         .medSkjæringstidspunktOpptjening(SKJÆRINGSTIDSPUNKT_OPPTJENING)
                         .leggTilAktivitet(lagBeregningAktivitetArbeid(periode, arbeidsgiver, arbId))
@@ -176,14 +176,14 @@ class AvklaringsbehovUtlederFaktaOmBeregningTest {
                         .leggTilAktivitet(lagBeregningAktivitetFL(periode))
                         .build())
                 .medBeregningsgrunnlag(beregningsgrunnlag);
-        BeregningsgrunnlagGrunnlagDto grunnlag = grunnlagBuilder.build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER);
+	    var grunnlag = grunnlagBuilder.build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER);
         var input = lagInput(iayGrunnlag);
         var resultat = avklaringsbehovUtlederFaktaOmBeregning.utledAvklaringsbehovFor(input, grunnlag, false);
 
         // Assert
         assertThat(resultat.getBeregningAvklaringsbehovResultatList()).hasSize(1);
         assertThat(resultat.getBeregningAvklaringsbehovResultatList().get(0).getBeregningAvklaringsbehovDefinisjon()).isEqualTo(AvklaringsbehovDefinisjon.VURDER_FAKTA_ATFL_SN);
-        List<FaktaOmBeregningTilfelle> tilfeller = resultat.getFaktaOmBeregningTilfeller();
+	    var tilfeller = resultat.getFaktaOmBeregningTilfeller();
         assertThat(tilfeller).containsExactlyInAnyOrder(
                 FaktaOmBeregningTilfelle.VURDER_AT_OG_FL_I_SAMME_ORGANISASJON,
                 FaktaOmBeregningTilfelle.VURDER_LØNNSENDRING,
@@ -197,18 +197,18 @@ class AvklaringsbehovUtlederFaktaOmBeregningTest {
     @Test
     void skalUtledeAvklaringsbehovKortvarigeArbeidsforhold() {
         // Arrange
-        LocalDate graderingStart = SKJÆRINGSTIDSPUNKT_OPPTJENING.plusWeeks(9);
-        int refusjonskravAndel2 = 50000;
+	    var graderingStart = SKJÆRINGSTIDSPUNKT_OPPTJENING.plusWeeks(9);
+	    var refusjonskravAndel2 = 50000;
 
-        HashMap<String, Periode> opptjeningMap = new HashMap<>();
+	    var opptjeningMap = new HashMap<String, Periode>();
         opptjeningMap.put(orgnr, Periode.månederFør(SKJÆRINGSTIDSPUNKT_OPPTJENING, 12));
         opptjeningMap.put(orgnr2, Periode.månederFør(SKJÆRINGSTIDSPUNKT_OPPTJENING, 12));
-        InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
+	    var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
         BeregningIAYTestUtil.byggArbeidForBehandling(SKJÆRINGSTIDSPUNKT_OPPTJENING, SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(10),
                 SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(10), arbId, Arbeidsgiver.virksomhet(orgnr), iayGrunnlag);
         BeregningIAYTestUtil.byggArbeidForBehandling(SKJÆRINGSTIDSPUNKT_OPPTJENING, SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(2),
                 SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(1), arbId2, Arbeidsgiver.virksomhet(orgnr2), iayGrunnlag);
-        BeregningsgrunnlagDto beregningsgrunnlag = BeregningsgrunnlagDto.builder()
+	    var beregningsgrunnlag = BeregningsgrunnlagDto.builder()
                 .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING)
                 .medGrunnbeløp(Beløp.fra(GrunnbeløpTestKonstanter.GRUNNBELØP_2018))
                 .build();
@@ -217,14 +217,14 @@ class AvklaringsbehovUtlederFaktaOmBeregningTest {
                 .medHjemmel(Hjemmel.F_14_7)
                 .build(beregningsgrunnlag);
 
-        BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode1 = BeregningsgrunnlagPeriodeDto.ny()
+	    var beregningsgrunnlagPeriode1 = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_OPPTJENING, graderingStart.minusDays(1))
                 .build(beregningsgrunnlag);
 
         leggTilAndel(beregningsgrunnlagPeriode1, AktivitetStatus.ARBEIDSTAKER, orgnr, 0);
         leggTilAndel(beregningsgrunnlagPeriode1, AktivitetStatus.ARBEIDSTAKER, orgnr2, refusjonskravAndel2 * 12);
 
-        BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode2 = BeregningsgrunnlagPeriodeDto.ny()
+	    var beregningsgrunnlagPeriode2 = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(graderingStart, null)
                 .leggTilPeriodeÅrsak(PeriodeÅrsak.GRADERING)
                 .build(beregningsgrunnlag);
@@ -237,7 +237,7 @@ class AvklaringsbehovUtlederFaktaOmBeregningTest {
         leggTilAktivitet(arbId2, orgnr2, SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(2), SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(1));
 
         // Act
-        BeregningsgrunnlagGrunnlagDto grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
+	    var grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medBeregningsgrunnlag(beregningsgrunnlag)
                 .medRegisterAktiviteter(beregningAktivitetBuilder.build())
                 .build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER);
@@ -247,16 +247,16 @@ class AvklaringsbehovUtlederFaktaOmBeregningTest {
         // Assert
         assertThat(resultat.getBeregningAvklaringsbehovResultatList()).hasSize(1);
         assertThat(resultat.getBeregningAvklaringsbehovResultatList().get(0).getBeregningAvklaringsbehovDefinisjon()).isEqualTo(AvklaringsbehovDefinisjon.VURDER_FAKTA_ATFL_SN);
-        List<FaktaOmBeregningTilfelle> tilfeller = resultat.getFaktaOmBeregningTilfeller();
+	    var tilfeller = resultat.getFaktaOmBeregningTilfeller();
         assertThat(tilfeller).containsExactlyInAnyOrder(
                 FaktaOmBeregningTilfelle.VURDER_TIDSBEGRENSET_ARBEIDSFORHOLD);
     }
 
     private void leggTilAndel(BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode, AktivitetStatus aktivitetStatus, String orgnr, int refusjonskravPrÅr) {
-        BeregningsgrunnlagPrStatusOgAndelDto.Builder andelBuilder = BeregningsgrunnlagPrStatusOgAndelDto.ny()
+	    var andelBuilder = BeregningsgrunnlagPrStatusOgAndelDto.ny()
                 .medAktivitetStatus(aktivitetStatus);
         if (orgnr != null) {
-            BGAndelArbeidsforholdDto.Builder bgAndelArbeidsforholdBuilder = BGAndelArbeidsforholdDto.builder()
+	        var bgAndelArbeidsforholdBuilder = BGAndelArbeidsforholdDto.builder()
                     .medArbeidsgiver(Arbeidsgiver.virksomhet(orgnr))
                     .medRefusjonskravPrÅr(Beløp.fra(refusjonskravPrÅr), Utfall.GODKJENT);
             andelBuilder
@@ -276,26 +276,26 @@ class AvklaringsbehovUtlederFaktaOmBeregningTest {
     @Test
     void skalUtledeAvklaringsbehovForFellesTilfeller() {
         // Act
-        InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlagBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
+	    var iayGrunnlagBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
         BeregningIAYTestUtil.lagOppgittOpptjeningForSN(SKJÆRINGSTIDSPUNKT_OPPTJENING, true, iayGrunnlagBuilder);
-        HashMap<String, Periode> opptjeningMap = new HashMap<>();
-        Periode periode = Periode.månederFør(SKJÆRINGSTIDSPUNKT_OPPTJENING, 12);
+	    var opptjeningMap = new HashMap<String, Periode>();
+	    var periode = Periode.månederFør(SKJÆRINGSTIDSPUNKT_OPPTJENING, 12);
         opptjeningMap.put(orgnr, periode);
 
         BeregningIAYTestUtil.byggArbeidForBehandling(SKJÆRINGSTIDSPUNKT_OPPTJENING, SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(1),
                 SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(3), arbId, Arbeidsgiver.virksomhet(orgnr), iayGrunnlagBuilder);
-        BeregningsgrunnlagDto bg = lagBeregningsgrunnlagMedATSN(periode);
+	    var bg = lagBeregningsgrunnlagMedATSN(periode);
 
 
         // Act
-        BeregningsgrunnlagGrunnlagDtoBuilder grunnlagBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
+	    var grunnlagBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medRegisterAktiviteter(BeregningAktivitetAggregatDto.builder()
                         .medSkjæringstidspunktOpptjening(SKJÆRINGSTIDSPUNKT_OPPTJENING)
                         .leggTilAktivitet(lagBeregningAktivitetArbeid(periode, arbeidsgiver, arbId))
                         .leggTilAktivitet(lagBeregningAktivitetSN(periode))
                         .build())
                 .medBeregningsgrunnlag(bg);
-        BeregningsgrunnlagGrunnlagDto grunnlag = grunnlagBuilder.build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER);
+	    var grunnlag = grunnlagBuilder.build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER);
         var input = lagInput(iayGrunnlagBuilder);
         var resultater = avklaringsbehovUtlederFaktaOmBeregning.utledAvklaringsbehovFor(input, grunnlag, false);
 
@@ -308,24 +308,24 @@ class AvklaringsbehovUtlederFaktaOmBeregningTest {
     @Test
     void skalUtledeAvklaringsbehovForFellesTilfellerOgReturnereOverstyring() {
         // Act
-        InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlagBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
+	    var iayGrunnlagBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
         BeregningIAYTestUtil.lagOppgittOpptjeningForSN(SKJÆRINGSTIDSPUNKT_OPPTJENING, true, iayGrunnlagBuilder);
-        HashMap<String, Periode> opptjeningMap = new HashMap<>();
-        Periode periode = Periode.månederFør(SKJÆRINGSTIDSPUNKT_OPPTJENING, 12);
+	    var opptjeningMap = new HashMap<String, Periode>();
+	    var periode = Periode.månederFør(SKJÆRINGSTIDSPUNKT_OPPTJENING, 12);
         opptjeningMap.put(orgnr, periode);
         BeregningIAYTestUtil.byggArbeidForBehandling(SKJÆRINGSTIDSPUNKT_OPPTJENING, SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(1),
                 SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(3), arbId, Arbeidsgiver.virksomhet(orgnr), iayGrunnlagBuilder);
-        BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlagMedATSN(periode);
+	    var beregningsgrunnlag = lagBeregningsgrunnlagMedATSN(periode);
 
         // Act
-        BeregningsgrunnlagGrunnlagDtoBuilder grunnlagBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
+	    var grunnlagBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medRegisterAktiviteter(BeregningAktivitetAggregatDto.builder()
                         .medSkjæringstidspunktOpptjening(SKJÆRINGSTIDSPUNKT_OPPTJENING)
                         .leggTilAktivitet(lagBeregningAktivitetArbeid(periode, arbeidsgiver, arbId))
                         .leggTilAktivitet(lagBeregningAktivitetSN(periode))
                         .build())
                 .medBeregningsgrunnlag(beregningsgrunnlag);
-        BeregningsgrunnlagGrunnlagDto grunnlag = grunnlagBuilder.build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER);
+	    var grunnlag = grunnlagBuilder.build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER);
         var input = lagInput(iayGrunnlagBuilder);
         var resultater = avklaringsbehovUtlederFaktaOmBeregning.utledAvklaringsbehovFor(input, grunnlag, true);
 
@@ -360,10 +360,10 @@ class AvklaringsbehovUtlederFaktaOmBeregningTest {
     @Test
     void skalReturnereIngenAvklaringsbehov() {
         // Arrange
-        BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlagMedAT(Periode.of(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusYears(1), SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(2)));
+	    var beregningsgrunnlag = lagBeregningsgrunnlagMedAT(Periode.of(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusYears(1), SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(2)));
 
         // Act
-        BeregningsgrunnlagGrunnlagDto grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty()).medBeregningsgrunnlag(beregningsgrunnlag)
+	    var grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty()).medBeregningsgrunnlag(beregningsgrunnlag)
                 .medRegisterAktiviteter(BeregningAktivitetAggregatDto.builder().medSkjæringstidspunktOpptjening(SKJÆRINGSTIDSPUNKT_OPPTJENING).build())
                 .build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER);
 
@@ -380,11 +380,11 @@ class AvklaringsbehovUtlederFaktaOmBeregningTest {
     }
 
     private BeregningsgrunnlagDto lagBeregningsgrunnlagMedATSN(Periode periode) {
-        BeregningsgrunnlagDto bg = BeregningsgrunnlagDto.builder()
+	    var bg = BeregningsgrunnlagDto.builder()
                 .leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.KOMBINERT_AT_SN))
                 .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING)
                 .build();
-        BeregningsgrunnlagPeriodeDto bgPeriode = BeregningsgrunnlagPeriodeDto.ny()
+	    var bgPeriode = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_OPPTJENING, null)
                 .build(bg);
         BeregningsgrunnlagPrStatusOgAndelDto.ny()
@@ -401,11 +401,11 @@ class AvklaringsbehovUtlederFaktaOmBeregningTest {
     }
 
     private BeregningsgrunnlagDto lagBeregningsgrunnlagMedATFL(Periode periode) {
-        BeregningsgrunnlagDto bg = BeregningsgrunnlagDto.builder()
+	    var bg = BeregningsgrunnlagDto.builder()
                 .leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.KOMBINERT_AT_FL))
                 .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING)
                 .build();
-        BeregningsgrunnlagPeriodeDto bgPeriode = BeregningsgrunnlagPeriodeDto.ny()
+	    var bgPeriode = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_OPPTJENING, null)
                 .build(bg);
         BeregningsgrunnlagPrStatusOgAndelDto.ny()
@@ -425,11 +425,11 @@ class AvklaringsbehovUtlederFaktaOmBeregningTest {
 
 
     private BeregningsgrunnlagDto lagBeregningsgrunnlagMedAT(Periode periode) {
-        BeregningsgrunnlagDto bg = BeregningsgrunnlagDto.builder()
+	    var bg = BeregningsgrunnlagDto.builder()
                 .leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.KOMBINERT_AT_FL))
                 .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING)
                 .build();
-        BeregningsgrunnlagPeriodeDto bgPeriode = BeregningsgrunnlagPeriodeDto.ny()
+	    var bgPeriode = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_OPPTJENING, null)
                 .build(bg);
         BeregningsgrunnlagPrStatusOgAndelDto.ny()

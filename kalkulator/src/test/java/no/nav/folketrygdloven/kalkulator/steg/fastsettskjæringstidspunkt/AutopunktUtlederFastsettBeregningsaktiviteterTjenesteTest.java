@@ -22,17 +22,17 @@ class AutopunktUtlederFastsettBeregningsaktiviteterTjenesteTest {
     @Test
     void skal_vente_på_meldekort_når_har_AAP_og_meldekort_uten_AAP_status() {
         // Arrange
-        LocalDate dagensdato = LocalDate.of(2019, 1, 4);
-        LocalDate skjæringstidspunktOpptjening = LocalDate.of(2019, 2, 1);
-        BeregningsgrunnlagDto bg = BeregningsgrunnlagTestUtil.lagGjeldendeBeregningsgrunnlag(skjæringstidspunktOpptjening, Optional.empty(), AktivitetStatus.ARBEIDSTAKER);
-        LocalDate fom = LocalDate.of(2018, 9, 1);
-        LocalDate tom = LocalDate.of(2019, 5, 1);
-        LocalDate meldekortFom = LocalDate.of(2018, 12, 1);
-        AktørYtelseDto aktørYtelse = BeregningIAYTestUtil.leggTilAktørytelse(InntektArbeidYtelseGrunnlagDtoBuilder.nytt(), fom, tom, YtelseType.ARBEIDSAVKLARINGSPENGER,
+	    var dagensdato = LocalDate.of(2019, 1, 4);
+	    var skjæringstidspunktOpptjening = LocalDate.of(2019, 2, 1);
+	    var bg = BeregningsgrunnlagTestUtil.lagGjeldendeBeregningsgrunnlag(skjæringstidspunktOpptjening, Optional.empty(), AktivitetStatus.ARBEIDSTAKER);
+	    var fom = LocalDate.of(2018, 9, 1);
+	    var tom = LocalDate.of(2019, 5, 1);
+	    var meldekortFom = LocalDate.of(2018, 12, 1);
+	    var aktørYtelse = BeregningIAYTestUtil.leggTilAktørytelse(InntektArbeidYtelseGrunnlagDtoBuilder.nytt(), fom, tom, YtelseType.ARBEIDSAVKLARINGSPENGER,
                 lagMeldekortPeriode(meldekortFom));
 
         // Act
-        Optional<LocalDate> resultat = AutopunktUtlederFastsettBeregningsaktiviteterMeldekortTjeneste.skalVenteTilDatoPåMeldekortAAPellerDP(Optional.of(aktørYtelse), dagensdato, bg.getSkjæringstidspunkt(), Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER, YtelseType.DAGPENGER));
+	    var resultat = AutopunktUtlederFastsettBeregningsaktiviteterMeldekortTjeneste.skalVenteTilDatoPåMeldekortAAPellerDP(Optional.of(aktørYtelse), dagensdato, bg.getSkjæringstidspunkt(), Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER, YtelseType.DAGPENGER));
 
         //Assert
         assertThat(resultat).isPresent();
@@ -42,17 +42,17 @@ class AutopunktUtlederFastsettBeregningsaktiviteterTjenesteTest {
     @Test
     void skal_vente_på_meldekort_når_har_AAP_og_meldekort_uten_AAP_status_grenseverdi() {
         // Arrange
-        LocalDate dagensdato = LocalDate.of(2019, 1, 4);
-        LocalDate skjæringstidspunktOpptjening = LocalDate.of(2019, 2, 1);
-        BeregningsgrunnlagDto bg = BeregningsgrunnlagTestUtil.lagGjeldendeBeregningsgrunnlag(skjæringstidspunktOpptjening, Optional.empty(), AktivitetStatus.ARBEIDSTAKER);
-        LocalDate fom = LocalDate.of(2018, 9, 1);
-        LocalDate tom = skjæringstidspunktOpptjening.minusDays(1);
-        LocalDate meldekortFom = LocalDate.of(2018, 10, 1);
-        AktørYtelseDto aktørYtelse = BeregningIAYTestUtil.leggTilAktørytelse(InntektArbeidYtelseGrunnlagDtoBuilder.nytt(), fom, tom, YtelseType.ARBEIDSAVKLARINGSPENGER,
+	    var dagensdato = LocalDate.of(2019, 1, 4);
+	    var skjæringstidspunktOpptjening = LocalDate.of(2019, 2, 1);
+	    var bg = BeregningsgrunnlagTestUtil.lagGjeldendeBeregningsgrunnlag(skjæringstidspunktOpptjening, Optional.empty(), AktivitetStatus.ARBEIDSTAKER);
+	    var fom = LocalDate.of(2018, 9, 1);
+	    var tom = skjæringstidspunktOpptjening.minusDays(1);
+	    var meldekortFom = LocalDate.of(2018, 10, 1);
+	    var aktørYtelse = BeregningIAYTestUtil.leggTilAktørytelse(InntektArbeidYtelseGrunnlagDtoBuilder.nytt(), fom, tom, YtelseType.ARBEIDSAVKLARINGSPENGER,
                 lagMeldekortPeriode(meldekortFom));
 
         // Act
-        Optional<LocalDate> resultat = AutopunktUtlederFastsettBeregningsaktiviteterMeldekortTjeneste.skalVenteTilDatoPåMeldekortAAPellerDP(Optional.of(aktørYtelse), dagensdato, bg.getSkjæringstidspunkt(), Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER, YtelseType.DAGPENGER));
+	    var resultat = AutopunktUtlederFastsettBeregningsaktiviteterMeldekortTjeneste.skalVenteTilDatoPåMeldekortAAPellerDP(Optional.of(aktørYtelse), dagensdato, bg.getSkjæringstidspunkt(), Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER, YtelseType.DAGPENGER));
 
         //Assert
         assertThat(resultat).isPresent();
@@ -62,18 +62,18 @@ class AutopunktUtlederFastsettBeregningsaktiviteterTjenesteTest {
     @Test
     void skal_vente_på_meldekort_når_har_AAP_og_meldekort_uten_AAP_status_etter_første_utta() {
         // Arrange
-        LocalDate dagensdato = LocalDate.of(2019, 2, 2);
-        LocalDate skjæringstidspunktOpptjening = LocalDate.of(2019, 2, 1);
-        LocalDate fom = LocalDate.of(2018, 9, 1);
-        LocalDate tom = LocalDate.of(2019, 5, 1);
-        LocalDate meldekortFom = LocalDate.of(2018, 12, 1);
-        LocalDate meldekortFom2 = LocalDate.of(2019, 1, 12);
-        BeregningsgrunnlagDto bg = BeregningsgrunnlagTestUtil.lagGjeldendeBeregningsgrunnlag(skjæringstidspunktOpptjening, Optional.empty(), AktivitetStatus.ARBEIDSTAKER);
-        AktørYtelseDto aktørYtelse = BeregningIAYTestUtil.leggTilAktørytelse(InntektArbeidYtelseGrunnlagDtoBuilder.nytt(), fom, tom, YtelseType.ARBEIDSAVKLARINGSPENGER,
+	    var dagensdato = LocalDate.of(2019, 2, 2);
+	    var skjæringstidspunktOpptjening = LocalDate.of(2019, 2, 1);
+	    var fom = LocalDate.of(2018, 9, 1);
+	    var tom = LocalDate.of(2019, 5, 1);
+	    var meldekortFom = LocalDate.of(2018, 12, 1);
+	    var meldekortFom2 = LocalDate.of(2019, 1, 12);
+	    var bg = BeregningsgrunnlagTestUtil.lagGjeldendeBeregningsgrunnlag(skjæringstidspunktOpptjening, Optional.empty(), AktivitetStatus.ARBEIDSTAKER);
+	    var aktørYtelse = BeregningIAYTestUtil.leggTilAktørytelse(InntektArbeidYtelseGrunnlagDtoBuilder.nytt(), fom, tom, YtelseType.ARBEIDSAVKLARINGSPENGER,
                 lagMeldekortPeriode(meldekortFom), lagMeldekortPeriode(meldekortFom2));
 
         // Act
-        Optional<LocalDate> resultat = AutopunktUtlederFastsettBeregningsaktiviteterMeldekortTjeneste.skalVenteTilDatoPåMeldekortAAPellerDP(Optional.of(aktørYtelse), dagensdato, bg.getSkjæringstidspunkt(), Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER, YtelseType.DAGPENGER));
+	    var resultat = AutopunktUtlederFastsettBeregningsaktiviteterMeldekortTjeneste.skalVenteTilDatoPåMeldekortAAPellerDP(Optional.of(aktørYtelse), dagensdato, bg.getSkjæringstidspunkt(), Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER, YtelseType.DAGPENGER));
 
         //Assert
         assertThat(resultat).isPresent();
@@ -83,19 +83,19 @@ class AutopunktUtlederFastsettBeregningsaktiviteterTjenesteTest {
     @Test
     void skal_vente_på_meldekort_også_når_har_AAP_status() {
         // Arrange
-        LocalDate dagensdato = LocalDate.of(2019, 2, 9);
-        LocalDate skjæringstidspunktOpptjening = LocalDate.of(2019, 2, 1);
-        LocalDate fom = LocalDate.of(2018, 9, 1);
-        LocalDate tom = LocalDate.of(2019, 5, 1);
-        LocalDate meldekortFom = LocalDate.of(2018, 12, 1);
-        LocalDate meldekortFom2 = LocalDate.of(2019, 1, 12);
-        InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlagBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
-        AktørYtelseDto aktørYtelse = BeregningIAYTestUtil.leggTilAktørytelse(iayGrunnlagBuilder, fom, tom, YtelseType.ARBEIDSAVKLARINGSPENGER,
+	    var dagensdato = LocalDate.of(2019, 2, 9);
+	    var skjæringstidspunktOpptjening = LocalDate.of(2019, 2, 1);
+	    var fom = LocalDate.of(2018, 9, 1);
+	    var tom = LocalDate.of(2019, 5, 1);
+	    var meldekortFom = LocalDate.of(2018, 12, 1);
+	    var meldekortFom2 = LocalDate.of(2019, 1, 12);
+	    var iayGrunnlagBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
+	    var aktørYtelse = BeregningIAYTestUtil.leggTilAktørytelse(iayGrunnlagBuilder, fom, tom, YtelseType.ARBEIDSAVKLARINGSPENGER,
                 lagMeldekortPeriode(meldekortFom), lagMeldekortPeriode(meldekortFom2));
-        BeregningsgrunnlagDto bg = BeregningsgrunnlagTestUtil.lagGjeldendeBeregningsgrunnlag(skjæringstidspunktOpptjening, Optional.of(iayGrunnlagBuilder.build()), AktivitetStatus.ARBEIDSAVKLARINGSPENGER);
+	    var bg = BeregningsgrunnlagTestUtil.lagGjeldendeBeregningsgrunnlag(skjæringstidspunktOpptjening, Optional.of(iayGrunnlagBuilder.build()), AktivitetStatus.ARBEIDSAVKLARINGSPENGER);
 
         // Act
-        Optional<LocalDate> resultat = AutopunktUtlederFastsettBeregningsaktiviteterMeldekortTjeneste.skalVenteTilDatoPåMeldekortAAPellerDP(Optional.of(aktørYtelse), dagensdato, bg.getSkjæringstidspunkt(), Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER, YtelseType.DAGPENGER));
+	    var resultat = AutopunktUtlederFastsettBeregningsaktiviteterMeldekortTjeneste.skalVenteTilDatoPåMeldekortAAPellerDP(Optional.of(aktørYtelse), dagensdato, bg.getSkjæringstidspunkt(), Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER, YtelseType.DAGPENGER));
 
         //Assert
         assertThat(resultat).isPresent();
@@ -105,18 +105,18 @@ class AutopunktUtlederFastsettBeregningsaktiviteterTjenesteTest {
     @Test
     void skal_ikke_vente_på_meldekort_når_14_dager_etter_første_uttaksdag() {
         // Arrange
-        LocalDate dagensdato = LocalDate.of(2019, 2, 16);
-        LocalDate skjæringstidspunktOpptjening = LocalDate.of(2019, 2, 1);
-        BeregningsgrunnlagDto bg = BeregningsgrunnlagTestUtil.lagGjeldendeBeregningsgrunnlag(skjæringstidspunktOpptjening, Optional.empty(), AktivitetStatus.ARBEIDSTAKER);
-        LocalDate fom = LocalDate.of(2018, 9, 1);
-        LocalDate tom = LocalDate.of(2019, 5, 1);
-        LocalDate meldekortFom = LocalDate.of(2018, 12, 1);
-        LocalDate meldekortFom2 = LocalDate.of(2019, 1, 12);
-        AktørYtelseDto aktørYtelse = BeregningIAYTestUtil.leggTilAktørytelse(InntektArbeidYtelseGrunnlagDtoBuilder.nytt(), fom, tom, YtelseType.ARBEIDSAVKLARINGSPENGER,
+	    var dagensdato = LocalDate.of(2019, 2, 16);
+	    var skjæringstidspunktOpptjening = LocalDate.of(2019, 2, 1);
+	    var bg = BeregningsgrunnlagTestUtil.lagGjeldendeBeregningsgrunnlag(skjæringstidspunktOpptjening, Optional.empty(), AktivitetStatus.ARBEIDSTAKER);
+	    var fom = LocalDate.of(2018, 9, 1);
+	    var tom = LocalDate.of(2019, 5, 1);
+	    var meldekortFom = LocalDate.of(2018, 12, 1);
+	    var meldekortFom2 = LocalDate.of(2019, 1, 12);
+	    var aktørYtelse = BeregningIAYTestUtil.leggTilAktørytelse(InntektArbeidYtelseGrunnlagDtoBuilder.nytt(), fom, tom, YtelseType.ARBEIDSAVKLARINGSPENGER,
                 lagMeldekortPeriode(meldekortFom), lagMeldekortPeriode(meldekortFom2));
 
         // Act
-        Optional<LocalDate> resultat = AutopunktUtlederFastsettBeregningsaktiviteterMeldekortTjeneste.skalVenteTilDatoPåMeldekortAAPellerDP(Optional.of(aktørYtelse), dagensdato, bg.getSkjæringstidspunkt(), Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER, YtelseType.DAGPENGER));
+	    var resultat = AutopunktUtlederFastsettBeregningsaktiviteterMeldekortTjeneste.skalVenteTilDatoPåMeldekortAAPellerDP(Optional.of(aktørYtelse), dagensdato, bg.getSkjæringstidspunkt(), Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER, YtelseType.DAGPENGER));
 
         //Assert
         assertThat(resultat).isNotPresent();
@@ -125,17 +125,17 @@ class AutopunktUtlederFastsettBeregningsaktiviteterTjenesteTest {
     @Test
     void skal_ikke_vente_på_meldekort_når_ikke_har_meldekort_siste_4_måneder() {
         // Arrange
-        LocalDate dagensdato = LocalDate.of(2019, 1, 4);
-        LocalDate skjæringstidspunktOpptjening = LocalDate.of(2019, 2, 1);
-        BeregningsgrunnlagDto bg = BeregningsgrunnlagTestUtil.lagGjeldendeBeregningsgrunnlag(skjæringstidspunktOpptjening, Optional.empty(), AktivitetStatus.ARBEIDSTAKER);
-        LocalDate fom = LocalDate.of(2018, 9, 1);
-        LocalDate tom = LocalDate.of(2019, 5, 1);
-        LocalDate meldekortFom = LocalDate.of(2018, 9, 17);
-        AktørYtelseDto aktørYtelse = BeregningIAYTestUtil.leggTilAktørytelse(InntektArbeidYtelseGrunnlagDtoBuilder.nytt(), fom, tom,
+	    var dagensdato = LocalDate.of(2019, 1, 4);
+	    var skjæringstidspunktOpptjening = LocalDate.of(2019, 2, 1);
+	    var bg = BeregningsgrunnlagTestUtil.lagGjeldendeBeregningsgrunnlag(skjæringstidspunktOpptjening, Optional.empty(), AktivitetStatus.ARBEIDSTAKER);
+	    var fom = LocalDate.of(2018, 9, 1);
+	    var tom = LocalDate.of(2019, 5, 1);
+	    var meldekortFom = LocalDate.of(2018, 9, 17);
+	    var aktørYtelse = BeregningIAYTestUtil.leggTilAktørytelse(InntektArbeidYtelseGrunnlagDtoBuilder.nytt(), fom, tom,
                 YtelseType.ARBEIDSAVKLARINGSPENGER, lagMeldekortPeriode(meldekortFom));
 
         // Act
-        Optional<LocalDate> resultat = AutopunktUtlederFastsettBeregningsaktiviteterMeldekortTjeneste.skalVenteTilDatoPåMeldekortAAPellerDP(Optional.of(aktørYtelse), dagensdato, bg.getSkjæringstidspunkt(), Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER, YtelseType.DAGPENGER));
+	    var resultat = AutopunktUtlederFastsettBeregningsaktiviteterMeldekortTjeneste.skalVenteTilDatoPåMeldekortAAPellerDP(Optional.of(aktørYtelse), dagensdato, bg.getSkjæringstidspunkt(), Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER, YtelseType.DAGPENGER));
 
         //Assert
         assertThat(resultat).isNotPresent();
@@ -144,17 +144,17 @@ class AutopunktUtlederFastsettBeregningsaktiviteterTjenesteTest {
     @Test
     void skal_ikke_vente_på_meldekort_når_ikke_har_løpende_vedtak() {
         // Arrange
-        LocalDate dagensdato = LocalDate.of(2019, 1, 4);
-        LocalDate skjæringstidspunktOpptjening = LocalDate.of(2019, 2, 1);
-        BeregningsgrunnlagDto bg = BeregningsgrunnlagTestUtil.lagGjeldendeBeregningsgrunnlag(skjæringstidspunktOpptjening, Optional.empty(), AktivitetStatus.ARBEIDSTAKER);
-        LocalDate fom = LocalDate.of(2018, 9, 1);
-        LocalDate tom = LocalDate.of(2018, 12, 31);
-        LocalDate meldekortFom = LocalDate.of(2018, 12, 1);
-        AktørYtelseDto aktørYtelse = BeregningIAYTestUtil.leggTilAktørytelse(InntektArbeidYtelseGrunnlagDtoBuilder.nytt(), fom, tom,
+	    var dagensdato = LocalDate.of(2019, 1, 4);
+	    var skjæringstidspunktOpptjening = LocalDate.of(2019, 2, 1);
+	    var bg = BeregningsgrunnlagTestUtil.lagGjeldendeBeregningsgrunnlag(skjæringstidspunktOpptjening, Optional.empty(), AktivitetStatus.ARBEIDSTAKER);
+	    var fom = LocalDate.of(2018, 9, 1);
+	    var tom = LocalDate.of(2018, 12, 31);
+	    var meldekortFom = LocalDate.of(2018, 12, 1);
+	    var aktørYtelse = BeregningIAYTestUtil.leggTilAktørytelse(InntektArbeidYtelseGrunnlagDtoBuilder.nytt(), fom, tom,
                 YtelseType.ARBEIDSAVKLARINGSPENGER, lagMeldekortPeriode(meldekortFom));
 
         // Act
-        Optional<LocalDate> resultat = AutopunktUtlederFastsettBeregningsaktiviteterMeldekortTjeneste.skalVenteTilDatoPåMeldekortAAPellerDP(Optional.of(aktørYtelse), dagensdato, bg.getSkjæringstidspunkt(), Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER, YtelseType.DAGPENGER));
+	    var resultat = AutopunktUtlederFastsettBeregningsaktiviteterMeldekortTjeneste.skalVenteTilDatoPåMeldekortAAPellerDP(Optional.of(aktørYtelse), dagensdato, bg.getSkjæringstidspunkt(), Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER, YtelseType.DAGPENGER));
 
         //Assert
         assertThat(resultat).isNotPresent();
@@ -163,12 +163,12 @@ class AutopunktUtlederFastsettBeregningsaktiviteterTjenesteTest {
     @Test
     void skal_ikke_vente_på_meldekort_når_er_vanlig_arbeidstaker() {
         // Arrange
-        LocalDate dagensdato = LocalDate.of(2019, 1, 4);
-        LocalDate skjæringstidspunktOpptjening = LocalDate.of(2019, 2, 1);
-        BeregningsgrunnlagDto bg = BeregningsgrunnlagTestUtil.lagGjeldendeBeregningsgrunnlag(skjæringstidspunktOpptjening, Optional.empty(), AktivitetStatus.ARBEIDSTAKER);
+	    var dagensdato = LocalDate.of(2019, 1, 4);
+	    var skjæringstidspunktOpptjening = LocalDate.of(2019, 2, 1);
+	    var bg = BeregningsgrunnlagTestUtil.lagGjeldendeBeregningsgrunnlag(skjæringstidspunktOpptjening, Optional.empty(), AktivitetStatus.ARBEIDSTAKER);
 
         // Act
-        Optional<LocalDate> resultat = AutopunktUtlederFastsettBeregningsaktiviteterMeldekortTjeneste.skalVenteTilDatoPåMeldekortAAPellerDP(Optional.empty(), dagensdato, bg.getSkjæringstidspunkt(), Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER, YtelseType.DAGPENGER));
+	    var resultat = AutopunktUtlederFastsettBeregningsaktiviteterMeldekortTjeneste.skalVenteTilDatoPåMeldekortAAPellerDP(Optional.empty(), dagensdato, bg.getSkjæringstidspunkt(), Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER, YtelseType.DAGPENGER));
 
         //Assert
         assertThat(resultat).isNotPresent();
@@ -177,17 +177,17 @@ class AutopunktUtlederFastsettBeregningsaktiviteterTjenesteTest {
     @Test
     void skal_vente_på_meldekort_når_har_DP_og_meldekort_uten_DP_status() {
         // Arrange
-        LocalDate dagensdato = LocalDate.of(2019, 1, 4);
-        LocalDate skjæringstidspunktOpptjening = LocalDate.of(2019, 2, 1);
-        BeregningsgrunnlagDto bg = BeregningsgrunnlagTestUtil.lagGjeldendeBeregningsgrunnlag(skjæringstidspunktOpptjening, Optional.empty(), AktivitetStatus.ARBEIDSTAKER);
-        LocalDate fom = LocalDate.of(2018, 9, 1);
-        LocalDate tom = LocalDate.of(2019, 5, 1);
-        LocalDate meldekortFom = LocalDate.of(2018, 5, 1);
-        AktørYtelseDto aktørYtelse = BeregningIAYTestUtil.leggTilAktørytelse(InntektArbeidYtelseGrunnlagDtoBuilder.nytt(), fom, tom, YtelseType.DAGPENGER,
+	    var dagensdato = LocalDate.of(2019, 1, 4);
+	    var skjæringstidspunktOpptjening = LocalDate.of(2019, 2, 1);
+	    var bg = BeregningsgrunnlagTestUtil.lagGjeldendeBeregningsgrunnlag(skjæringstidspunktOpptjening, Optional.empty(), AktivitetStatus.ARBEIDSTAKER);
+	    var fom = LocalDate.of(2018, 9, 1);
+	    var tom = LocalDate.of(2019, 5, 1);
+	    var meldekortFom = LocalDate.of(2018, 5, 1);
+	    var aktørYtelse = BeregningIAYTestUtil.leggTilAktørytelse(InntektArbeidYtelseGrunnlagDtoBuilder.nytt(), fom, tom, YtelseType.DAGPENGER,
                 lagMeldekortPeriode(meldekortFom));
 
         // Act
-        Optional<LocalDate> resultat = AutopunktUtlederFastsettBeregningsaktiviteterMeldekortTjeneste.skalVenteTilDatoPåMeldekortAAPellerDP(Optional.of(aktørYtelse), dagensdato, bg.getSkjæringstidspunkt(), Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER, YtelseType.DAGPENGER));
+	    var resultat = AutopunktUtlederFastsettBeregningsaktiviteterMeldekortTjeneste.skalVenteTilDatoPåMeldekortAAPellerDP(Optional.of(aktørYtelse), dagensdato, bg.getSkjæringstidspunkt(), Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER, YtelseType.DAGPENGER));
 
         //Assert
         assertThat(resultat).isPresent();
@@ -197,18 +197,18 @@ class AutopunktUtlederFastsettBeregningsaktiviteterTjenesteTest {
     @Test
     void skal_vente_på_meldekort_når_har_DP_status() {
         // Arrange
-        LocalDate dagensdato = LocalDate.of(2019, 2, 9);
-        LocalDate skjæringstidspunktOpptjening = LocalDate.of(2019, 2, 1);
-        LocalDate fom = LocalDate.of(2018, 9, 1);
-        LocalDate tom = LocalDate.of(2019, 5, 1);
-        LocalDate meldekortFom = LocalDate.of(2018, 12, 1);
-        LocalDate meldekortFom2 = LocalDate.of(2019, 1, 12);
-        BeregningsgrunnlagDto bg = BeregningsgrunnlagTestUtil.lagGjeldendeBeregningsgrunnlag(skjæringstidspunktOpptjening, Optional.empty(), AktivitetStatus.DAGPENGER);
-        AktørYtelseDto aktørYtelse = BeregningIAYTestUtil.leggTilAktørytelse(InntektArbeidYtelseGrunnlagDtoBuilder.nytt(), fom, tom, YtelseType.DAGPENGER,
+	    var dagensdato = LocalDate.of(2019, 2, 9);
+	    var skjæringstidspunktOpptjening = LocalDate.of(2019, 2, 1);
+	    var fom = LocalDate.of(2018, 9, 1);
+	    var tom = LocalDate.of(2019, 5, 1);
+	    var meldekortFom = LocalDate.of(2018, 12, 1);
+	    var meldekortFom2 = LocalDate.of(2019, 1, 12);
+	    var bg = BeregningsgrunnlagTestUtil.lagGjeldendeBeregningsgrunnlag(skjæringstidspunktOpptjening, Optional.empty(), AktivitetStatus.DAGPENGER);
+	    var aktørYtelse = BeregningIAYTestUtil.leggTilAktørytelse(InntektArbeidYtelseGrunnlagDtoBuilder.nytt(), fom, tom, YtelseType.DAGPENGER,
                 lagMeldekortPeriode(meldekortFom), lagMeldekortPeriode(meldekortFom2));
 
         // Act
-        Optional<LocalDate> resultat = AutopunktUtlederFastsettBeregningsaktiviteterMeldekortTjeneste.skalVenteTilDatoPåMeldekortAAPellerDP(Optional.of(aktørYtelse), dagensdato, bg.getSkjæringstidspunkt(), Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER, YtelseType.DAGPENGER));
+	    var resultat = AutopunktUtlederFastsettBeregningsaktiviteterMeldekortTjeneste.skalVenteTilDatoPåMeldekortAAPellerDP(Optional.of(aktørYtelse), dagensdato, bg.getSkjæringstidspunkt(), Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER, YtelseType.DAGPENGER));
 
         //Assert
         assertThat(resultat).isPresent();
@@ -218,17 +218,17 @@ class AutopunktUtlederFastsettBeregningsaktiviteterTjenesteTest {
     @Test
     void skal_vente_på_meldekort_når_ikke_har_løpende_vedtak_men_var_løpende_til_skjæringstidspunkt() {
         // Arrange
-        LocalDate dagensdato = LocalDate.of(2019, 2, 12);
-        LocalDate skjæringstidspunktOpptjening = LocalDate.of(2019, 2, 11);
-        BeregningsgrunnlagDto bg = BeregningsgrunnlagTestUtil.lagGjeldendeBeregningsgrunnlag(skjæringstidspunktOpptjening, Optional.empty(), AktivitetStatus.ARBEIDSTAKER);
-        LocalDate fom = LocalDate.of(2018, 9, 3);
-        LocalDate tom = LocalDate.of(2019, 2, 11);
-        LocalDate meldekortFom = LocalDate.of(2019, 1, 21);
-        AktørYtelseDto aktørYtelse = BeregningIAYTestUtil.leggTilAktørytelse(InntektArbeidYtelseGrunnlagDtoBuilder.nytt(), fom, tom, YtelseType.ARBEIDSAVKLARINGSPENGER,
+	    var dagensdato = LocalDate.of(2019, 2, 12);
+	    var skjæringstidspunktOpptjening = LocalDate.of(2019, 2, 11);
+	    var bg = BeregningsgrunnlagTestUtil.lagGjeldendeBeregningsgrunnlag(skjæringstidspunktOpptjening, Optional.empty(), AktivitetStatus.ARBEIDSTAKER);
+	    var fom = LocalDate.of(2018, 9, 3);
+	    var tom = LocalDate.of(2019, 2, 11);
+	    var meldekortFom = LocalDate.of(2019, 1, 21);
+	    var aktørYtelse = BeregningIAYTestUtil.leggTilAktørytelse(InntektArbeidYtelseGrunnlagDtoBuilder.nytt(), fom, tom, YtelseType.ARBEIDSAVKLARINGSPENGER,
                 lagMeldekortPeriode(meldekortFom));
 
         // Act
-        Optional<LocalDate> resultat = AutopunktUtlederFastsettBeregningsaktiviteterMeldekortTjeneste.skalVenteTilDatoPåMeldekortAAPellerDP(Optional.of(aktørYtelse), dagensdato, bg.getSkjæringstidspunkt(), Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER, YtelseType.DAGPENGER));
+	    var resultat = AutopunktUtlederFastsettBeregningsaktiviteterMeldekortTjeneste.skalVenteTilDatoPåMeldekortAAPellerDP(Optional.of(aktørYtelse), dagensdato, bg.getSkjæringstidspunkt(), Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER, YtelseType.DAGPENGER));
 
         //Assert
         assertThat(resultat).isPresent();
@@ -238,17 +238,17 @@ class AutopunktUtlederFastsettBeregningsaktiviteterTjenesteTest {
     @Test
     void skalIkkeVentePåMeldekortNårMeldekortErMottatt() {
         // Arrange
-        LocalDate dagensdato = LocalDate.of(2019, 2, 12);
-        LocalDate skjæringstidspunktOpptjening = LocalDate.of(2019, 2, 11);
-        BeregningsgrunnlagDto bg = BeregningsgrunnlagTestUtil.lagGjeldendeBeregningsgrunnlag(skjæringstidspunktOpptjening, Optional.empty(), AktivitetStatus.ARBEIDSTAKER);
-        LocalDate fom = LocalDate.of(2018, 9, 3);
-        LocalDate tom = LocalDate.of(2019, 2, 11);
-        LocalDate meldekortFom = skjæringstidspunktOpptjening.minusDays(5);
-        AktørYtelseDto aktørYtelse = BeregningIAYTestUtil.leggTilAktørytelse(InntektArbeidYtelseGrunnlagDtoBuilder.nytt(), fom, tom, YtelseType.ARBEIDSAVKLARINGSPENGER,
+	    var dagensdato = LocalDate.of(2019, 2, 12);
+	    var skjæringstidspunktOpptjening = LocalDate.of(2019, 2, 11);
+	    var bg = BeregningsgrunnlagTestUtil.lagGjeldendeBeregningsgrunnlag(skjæringstidspunktOpptjening, Optional.empty(), AktivitetStatus.ARBEIDSTAKER);
+	    var fom = LocalDate.of(2018, 9, 3);
+	    var tom = LocalDate.of(2019, 2, 11);
+	    var meldekortFom = skjæringstidspunktOpptjening.minusDays(5);
+	    var aktørYtelse = BeregningIAYTestUtil.leggTilAktørytelse(InntektArbeidYtelseGrunnlagDtoBuilder.nytt(), fom, tom, YtelseType.ARBEIDSAVKLARINGSPENGER,
                 lagMeldekortPeriode(meldekortFom));
 
         // Act
-        Optional<LocalDate> resultat = AutopunktUtlederFastsettBeregningsaktiviteterMeldekortTjeneste.skalVenteTilDatoPåMeldekortAAPellerDP(Optional.of(aktørYtelse), dagensdato, bg.getSkjæringstidspunkt(), Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER, YtelseType.DAGPENGER));
+	    var resultat = AutopunktUtlederFastsettBeregningsaktiviteterMeldekortTjeneste.skalVenteTilDatoPåMeldekortAAPellerDP(Optional.of(aktørYtelse), dagensdato, bg.getSkjæringstidspunkt(), Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER, YtelseType.DAGPENGER));
 
         //Assert
         assertThat(resultat).isNotPresent();

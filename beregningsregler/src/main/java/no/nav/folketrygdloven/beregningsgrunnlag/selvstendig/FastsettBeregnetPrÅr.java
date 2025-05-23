@@ -25,7 +25,7 @@ public class FastsettBeregnetPrÅr extends LeafSpecification<BeregningsgrunnlagP
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        BeregningsgrunnlagPrStatus bgps = grunnlag.getBeregningsgrunnlagPrStatus(aktivitetStatus);
+        var bgps = grunnlag.getBeregningsgrunnlagPrStatus(aktivitetStatus);
         Map<String, Object> resultater = new HashMap<>();
         resultater.put("skjæringstidspunkt", grunnlag.getSkjæringstidspunkt());
         resultater.put("grunnbeløp", grunnlag.getBeregningsgrunnlag().verdiAvG(grunnlag.getSkjæringstidspunkt()));

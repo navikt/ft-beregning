@@ -25,10 +25,10 @@ class FastsettBrukersAndelFraArbeidsforholdSomIkkeErFordelt extends LeafSpecific
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
         Map<String, Object> resultater = new HashMap<>();
-        SingleEvaluation resultat = ja();
+        var resultat = ja();
         resultat.setEvaluationProperties(resultater);
 
-        List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforholdene = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
+        var arbeidsforholdene = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
         arbeidsforholdene.stream()
                 .filter(af -> af.getMaksimalRefusjonPrÅr() != null)
                 .filter(af -> af.getAvkortetRefusjonPrÅr() != null)

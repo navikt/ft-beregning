@@ -53,7 +53,7 @@ public class FastsettIkkeSøktForTil0 extends LeafSpecification<Beregningsgrunnl
             });
 
 
-        SingleEvaluation resultat = ja();
+        var resultat = ja();
         resultat.setEvaluationProperties(resultater);
         return resultat;
     }

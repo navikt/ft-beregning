@@ -74,7 +74,7 @@ public class ArbeidsforholdOgInntektsmelding {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof ArbeidsforholdOgInntektsmelding)) return false;
-        ArbeidsforholdOgInntektsmelding that = (ArbeidsforholdOgInntektsmelding) o;
+	    var that = (ArbeidsforholdOgInntektsmelding) o;
         return Objects.equals(arbeidsforhold, that.arbeidsforhold);
     }
 

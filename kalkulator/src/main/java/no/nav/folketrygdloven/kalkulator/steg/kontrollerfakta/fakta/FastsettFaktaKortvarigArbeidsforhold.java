@@ -20,7 +20,7 @@ class FastsettFaktaKortvarigArbeidsforhold {
     static List<FaktaArbeidsforholdDto> fastsettFaktaForKortvarigeArbeidsforhold(BeregningsgrunnlagDto beregningsgrunnlag,
                                                                                  InntektArbeidYtelseGrunnlagDto iayGrunnlag) {
         if (beregningsgrunnlag.getAktivitetStatuser().stream().noneMatch(a -> a.getAktivitetStatus().erSelvstendigNæringsdrivende())) {
-            Map<BeregningsgrunnlagPrStatusOgAndelDto, YrkesaktivitetDto> kortvarigeArbeidsforhold = KortvarigArbeidsforholdTjeneste.hentAndelerForKortvarigeArbeidsforhold(beregningsgrunnlag, iayGrunnlag);
+            var kortvarigeArbeidsforhold = KortvarigArbeidsforholdTjeneste.hentAndelerForKortvarigeArbeidsforhold(beregningsgrunnlag, iayGrunnlag);
             return kortvarigeArbeidsforhold.values().stream().map(v ->
                     FaktaArbeidsforholdDto.builder(v.getArbeidsgiver(), v.getArbeidsforholdRef())
                             .medErTidsbegrenset(new FaktaVurdering(true, FaktaVurderingKilde.KALKULATOR))

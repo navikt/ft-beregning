@@ -25,7 +25,7 @@ public class FastsettBeregningsperiodeSNFRISINN extends LeafSpecification<Beregn
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        BeregningsgrunnlagPrStatus bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
+        var bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
         Map<String, Object> resultater = new HashMap<>();
         if (grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL) == null) {
             grunnlag.getBeregningsgrunnlag().getAktivitetStatus(AktivitetStatus.SN).setHjemmel(HJEMMEL);

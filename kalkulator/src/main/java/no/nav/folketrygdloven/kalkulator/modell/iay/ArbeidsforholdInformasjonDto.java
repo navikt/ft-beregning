@@ -21,12 +21,12 @@ public class ArbeidsforholdInformasjonDto {
     }
 
     public ArbeidsforholdInformasjonDto(ArbeidsforholdInformasjonDto arbeidsforholdInformasjon) {
-        for (ArbeidsforholdReferanseDto arbeidsforholdReferanse : arbeidsforholdInformasjon.referanser) {
-            final ArbeidsforholdReferanseDto referanseEntitet = new ArbeidsforholdReferanseDto(arbeidsforholdReferanse);
+        for (var arbeidsforholdReferanse : arbeidsforholdInformasjon.referanser) {
+            final var referanseEntitet = new ArbeidsforholdReferanseDto(arbeidsforholdReferanse);
             this.referanser.add(referanseEntitet);
         }
-        for (ArbeidsforholdOverstyringDto arbeidsforholdOverstyringEntitet : arbeidsforholdInformasjon.overstyringer) {
-            final ArbeidsforholdOverstyringDto overstyringEntitet = new ArbeidsforholdOverstyringDto(arbeidsforholdOverstyringEntitet);
+        for (var arbeidsforholdOverstyringEntitet : arbeidsforholdInformasjon.overstyringer) {
+            final var overstyringEntitet = new ArbeidsforholdOverstyringDto(arbeidsforholdOverstyringEntitet);
             this.overstyringer.add(overstyringEntitet);
         }
     }
@@ -77,7 +77,7 @@ public class ArbeidsforholdInformasjonDto {
             return true;
         if (o == null || !(o instanceof ArbeidsforholdInformasjonDto))
             return false;
-        ArbeidsforholdInformasjonDto that = (ArbeidsforholdInformasjonDto) o;
+	    var that = (ArbeidsforholdInformasjonDto) o;
         return Objects.equals(referanser, that.referanser) &&
             Objects.equals(overstyringer, that.overstyringer);
     }

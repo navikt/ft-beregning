@@ -34,7 +34,7 @@ public class FastsettDagsatsPrAndel extends LeafSpecification<Beregningsgrunnlag
             }
 
         });
-        SingleEvaluation resultat = ja();
+        var resultat = ja();
         resultat.setEvaluationProperties(resultater);
         return resultat;
 

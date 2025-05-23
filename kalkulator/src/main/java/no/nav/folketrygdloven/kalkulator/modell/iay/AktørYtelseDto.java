@@ -45,7 +45,7 @@ public class AktørYtelseDto {
         } else if (!(obj instanceof AktørYtelseDto)) {
             return false;
         }
-        AktørYtelseDto other = (AktørYtelseDto) obj;
+	    var other = (AktørYtelseDto) obj;
         return Objects.equals(this.ytelser, other.ytelser);
     }
 

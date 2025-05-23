@@ -29,7 +29,7 @@ class ErHøyerePrioriterteAndelerBruttoMinst6GTest {
     @Test
     void gradert_SN_selvstendigErLaverePrioritertEnnFL() {
         // Arrange
-        PeriodisertBruttoBeregningsgrunnlag periodisertBg = PeriodisertBruttoBeregningsgrunnlag.builder()
+        var periodisertBg = PeriodisertBruttoBeregningsgrunnlag.builder()
             .medPeriode(Periode.of(SKJÆRINGSTIDSPUNKT, DateUtil.TIDENES_ENDE))
             .leggTilBruttoBeregningsgrunnlag(BruttoBeregningsgrunnlag.builder()
                 .medAktivitetStatus(AktivitetStatusV2.SN)
@@ -42,13 +42,13 @@ class ErHøyerePrioriterteAndelerBruttoMinst6GTest {
             .build();
 
         var gradering = new Gradering(new Periode(LocalDate.of(2019, Month.MARCH, 1), DateUtil.TIDENES_ENDE));
-        AndelGradering andelGradering = AndelGradering.builder()
+        var andelGradering = AndelGradering.builder()
             .medAktivitetStatus(AktivitetStatusV2.SN)
             .medGraderinger(List.of(gradering))
             .build();
 
         // Act
-        boolean resultat = ErHøyerePrioriterteAndelerBruttoMinst6G.vurder(GRUNNBELØP, periodisertBg, andelGradering);
+        var resultat = ErHøyerePrioriterteAndelerBruttoMinst6G.vurder(GRUNNBELØP, periodisertBg, andelGradering);
 
         // Assert
         assertThat(resultat).isTrue();
@@ -57,7 +57,7 @@ class ErHøyerePrioriterteAndelerBruttoMinst6GTest {
     @Test
     void gradert_frilans_frilansErHøyerePrioritertEnnSN() {
         // Arrange
-        PeriodisertBruttoBeregningsgrunnlag periodisertBg = PeriodisertBruttoBeregningsgrunnlag.builder()
+        var periodisertBg = PeriodisertBruttoBeregningsgrunnlag.builder()
             .medPeriode(Periode.of(SKJÆRINGSTIDSPUNKT, DateUtil.TIDENES_ENDE))
             .leggTilBruttoBeregningsgrunnlag(BruttoBeregningsgrunnlag.builder()
                 .medAktivitetStatus(AktivitetStatusV2.SN)
@@ -70,13 +70,13 @@ class ErHøyerePrioriterteAndelerBruttoMinst6GTest {
             .build();
 
         var gradering = new Gradering(new Periode(LocalDate.of(2019, Month.MARCH, 1), DateUtil.TIDENES_ENDE));
-        AndelGradering andelGradering = AndelGradering.builder()
+        var andelGradering = AndelGradering.builder()
             .medAktivitetStatus(AktivitetStatusV2.FL)
             .medGraderinger(List.of(gradering))
             .build();
 
         // Act
-        boolean resultat = ErHøyerePrioriterteAndelerBruttoMinst6G.vurder(GRUNNBELØP, periodisertBg, andelGradering);
+        var resultat = ErHøyerePrioriterteAndelerBruttoMinst6G.vurder(GRUNNBELØP, periodisertBg, andelGradering);
 
         // Assert
         assertThat(resultat).isFalse();
@@ -85,7 +85,7 @@ class ErHøyerePrioriterteAndelerBruttoMinst6GTest {
     @Test
     void gradert_frilans_frilansErLaverePrioritertEnnAT() {
         // Arrange
-        PeriodisertBruttoBeregningsgrunnlag periodisertBg = PeriodisertBruttoBeregningsgrunnlag.builder()
+        var periodisertBg = PeriodisertBruttoBeregningsgrunnlag.builder()
             .medPeriode(Periode.of(SKJÆRINGSTIDSPUNKT, DateUtil.TIDENES_ENDE))
             .leggTilBruttoBeregningsgrunnlag(BruttoBeregningsgrunnlag.builder()
                 .medAktivitetStatus(AktivitetStatusV2.AT)
@@ -99,13 +99,13 @@ class ErHøyerePrioriterteAndelerBruttoMinst6GTest {
             .build();
 
         var gradering = new Gradering(new Periode(LocalDate.of(2019, Month.MARCH, 1), DateUtil.TIDENES_ENDE));
-        AndelGradering andelGradering = AndelGradering.builder()
+        var andelGradering = AndelGradering.builder()
             .medAktivitetStatus(AktivitetStatusV2.FL)
             .medGraderinger(List.of(gradering))
             .build();
 
         // Act
-        boolean resultat = ErHøyerePrioriterteAndelerBruttoMinst6G.vurder(GRUNNBELØP, periodisertBg, andelGradering);
+        var resultat = ErHøyerePrioriterteAndelerBruttoMinst6G.vurder(GRUNNBELØP, periodisertBg, andelGradering);
 
         // Assert
         assertThat(resultat).isTrue();
@@ -114,7 +114,7 @@ class ErHøyerePrioriterteAndelerBruttoMinst6GTest {
     @Test
     void gradert_frilans_BGUnder6G() {
         // Arrange
-        PeriodisertBruttoBeregningsgrunnlag periodisertBg = PeriodisertBruttoBeregningsgrunnlag.builder()
+        var periodisertBg = PeriodisertBruttoBeregningsgrunnlag.builder()
             .medPeriode(Periode.of(SKJÆRINGSTIDSPUNKT, DateUtil.TIDENES_ENDE))
             .leggTilBruttoBeregningsgrunnlag(BruttoBeregningsgrunnlag.builder()
                 .medAktivitetStatus(AktivitetStatusV2.AT)
@@ -128,13 +128,13 @@ class ErHøyerePrioriterteAndelerBruttoMinst6GTest {
             .build();
 
         var gradering = new Gradering(new Periode(LocalDate.of(2019, Month.MARCH, 1), DateUtil.TIDENES_ENDE));
-        AndelGradering andelGradering = AndelGradering.builder()
+        var andelGradering = AndelGradering.builder()
             .medAktivitetStatus(AktivitetStatusV2.FL)
             .medGraderinger(List.of(gradering))
             .build();
 
         // Act
-        boolean resultat = ErHøyerePrioriterteAndelerBruttoMinst6G.vurder(GRUNNBELØP, periodisertBg, andelGradering);
+        var resultat = ErHøyerePrioriterteAndelerBruttoMinst6G.vurder(GRUNNBELØP, periodisertBg, andelGradering);
 
         // Assert
         assertThat(resultat).isFalse();

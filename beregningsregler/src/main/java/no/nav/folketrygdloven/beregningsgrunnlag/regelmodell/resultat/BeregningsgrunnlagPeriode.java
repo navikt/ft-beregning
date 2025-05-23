@@ -155,7 +155,7 @@ public class BeregningsgrunnlagPeriode {
 
 
 	public boolean skalSjekkeUtbetalingTilBrukerFørAvviksvurdering() {
-		YtelsesSpesifiktGrunnlag ytelsesSpesifiktGrunnlag = beregningsgrunnlag.getYtelsesSpesifiktGrunnlag();
+		var ytelsesSpesifiktGrunnlag = beregningsgrunnlag.getYtelsesSpesifiktGrunnlag();
 		return ytelsesSpesifiktGrunnlag instanceof OmsorgspengerGrunnlag;
 	}
 

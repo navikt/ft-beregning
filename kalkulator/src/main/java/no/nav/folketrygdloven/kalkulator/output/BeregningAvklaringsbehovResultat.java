@@ -74,7 +74,7 @@ public class BeregningAvklaringsbehovResultat {
         if (!(o instanceof BeregningAvklaringsbehovResultat))
             return false;
 
-        BeregningAvklaringsbehovResultat that = (BeregningAvklaringsbehovResultat) o;
+	    var that = (BeregningAvklaringsbehovResultat) o;
 
         return beregningAvklaringsbehovDefinisjon.getKode().equals(that.beregningAvklaringsbehovDefinisjon.getKode());
     }

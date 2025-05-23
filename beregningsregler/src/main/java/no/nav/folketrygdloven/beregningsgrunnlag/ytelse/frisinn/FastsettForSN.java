@@ -29,18 +29,18 @@ public class FastsettForSN extends LeafSpecification<BeregningsgrunnlagPeriode> 
         Map<String, Object> resultater = new HashMap<>();
 
 
-        BeregningsgrunnlagPrStatus atflAndel = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
-        BigDecimal fastsattTilFrilans = atflAndel == null ? BigDecimal.ZERO : atflAndel
+        var atflAndel = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+        var fastsattTilFrilans = atflAndel == null ? BigDecimal.ZERO : atflAndel
             .getFrilansArbeidsforhold()
             .map(BeregningsgrunnlagPrArbeidsforhold::getAvkortetPrÅr)
             .orElse(BigDecimal.ZERO);
 
-        BigDecimal totalTilFastsetting = grunnlag.getGrenseverdi().subtract(fastsattTilFrilans).max(BigDecimal.ZERO);
+        var totalTilFastsetting = grunnlag.getGrenseverdi().subtract(fastsattTilFrilans).max(BigDecimal.ZERO);
 
-        BeregningsgrunnlagPrStatus snStatus = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
+        var snStatus = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
 
         if (snStatus != null) {
-            BigDecimal bortfaltSN = snStatus.getGradertBruttoInkludertNaturalytelsePrÅr();
+            var bortfaltSN = snStatus.getGradertBruttoInkludertNaturalytelsePrÅr();
             if (bortfaltSN.compareTo(totalTilFastsetting) >= 0) {
                 BeregningsgrunnlagPrStatus.builder(snStatus)
                     .medAvkortetPrÅr(totalTilFastsetting)
@@ -50,7 +50,7 @@ public class FastsettForSN extends LeafSpecification<BeregningsgrunnlagPeriode> 
             }
             resultater.put("avkortetSN", snStatus.getAvkortetPrÅr());
         }
-        SingleEvaluation resultat = ja();
+        var resultat = ja();
         resultat.setEvaluationProperties(resultater);
         return resultat;
 

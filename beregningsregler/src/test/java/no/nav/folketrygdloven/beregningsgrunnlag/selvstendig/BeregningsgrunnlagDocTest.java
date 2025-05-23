@@ -45,9 +45,9 @@ class BeregningsgrunnlagDocTest {
 
     @Test
     void test_documentation_beregningsgrunnlagSN() { // NOSONAR
-        Specification<BeregningsgrunnlagPeriode> beregning = new RegelBeregningsgrunnlagSN().getSpecification();
+	    var beregning = new RegelBeregningsgrunnlagSN().getSpecification();
 
-        String json = EvaluationSerializer.asJson(beregning);
+	    var json = EvaluationSerializer.asJson(beregning);
 	    assertThat(json).isNotEmpty();
 
     }

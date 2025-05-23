@@ -30,7 +30,7 @@ public class BeregningsgrunnlagFaktaOmBeregningTilfelleDto implements IndexKey {
         if (!(o instanceof BeregningsgrunnlagFaktaOmBeregningTilfelleDto)) {
             return false;
         }
-        BeregningsgrunnlagFaktaOmBeregningTilfelleDto that = (BeregningsgrunnlagFaktaOmBeregningTilfelleDto) o;
+	    var that = (BeregningsgrunnlagFaktaOmBeregningTilfelleDto) o;
         return Objects.equals(beregningsgrunnlag, that.beregningsgrunnlag) &&
                 Objects.equals(faktaOmBeregningTilfelle, that.faktaOmBeregningTilfelle);
     }

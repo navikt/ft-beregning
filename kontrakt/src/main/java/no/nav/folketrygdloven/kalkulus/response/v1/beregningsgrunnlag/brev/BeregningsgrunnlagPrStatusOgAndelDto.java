@@ -201,7 +201,7 @@ public class BeregningsgrunnlagPrStatusOgAndelDto {
 
 
     public Arbeidsgiver getArbeidsgiver() {
-        BGAndelArbeidsforhold beregningArbeidsforhold = getBgAndelArbeidsforhold();
+        var beregningArbeidsforhold = getBgAndelArbeidsforhold();
         return beregningArbeidsforhold == null ? null : beregningArbeidsforhold.getArbeidsgiver();
     }
 

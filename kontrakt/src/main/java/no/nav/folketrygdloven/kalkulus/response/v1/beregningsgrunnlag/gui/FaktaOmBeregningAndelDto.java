@@ -91,7 +91,7 @@ public class FaktaOmBeregningAndelDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        FaktaOmBeregningAndelDto that = (FaktaOmBeregningAndelDto) o;
+        var that = (FaktaOmBeregningAndelDto) o;
         return Objects.equals(arbeidsforhold, that.arbeidsforhold) &&
             Objects.equals(inntektskategori, that.inntektskategori) &&
             Objects.equals(aktivitetStatus, that.aktivitetStatus);

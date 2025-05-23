@@ -33,18 +33,18 @@ public class BeregnOppjustertInntektForAktivitetstatus extends LeafSpecification
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-	    BeregningsgrunnlagPrStatus bgps = grunnlag.getBeregningsgrunnlagPrStatus(aktivitetStatus);
-        LocalDate beregningsperiodeTom = bgps.getBeregningsperiode().getTom();
-        BigDecimal gjeldendeG = grunnlag.getGrunnbeløp();
+        var bgps = grunnlag.getBeregningsgrunnlagPrStatus(aktivitetStatus);
+        var beregningsperiodeTom = bgps.getBeregningsperiode().getTom();
+        var gjeldendeG = grunnlag.getGrunnbeløp();
         Map<String, Object> resultater = new HashMap<>();
         List<BigDecimal> pgiListe = new ArrayList<>();
 
-        for (int årSiden = 0; årSiden <= 2; årSiden++) {
-            int årstall = beregningsperiodeTom.getYear() - årSiden;
-            BigDecimal gSnitt = BigDecimal.valueOf(grunnlag.getBeregningsgrunnlag().snittverdiAvG(årstall));
-            BigDecimal pgiÅr = grunnlag.getInntektsgrunnlag().getÅrsinntektSigrun(årstall);
-            BigDecimal pgiPrG = pgiÅr.compareTo(BigDecimal.ZERO) != 0 ? pgiÅr.divide(gSnitt, 10, RoundingMode.HALF_EVEN) : BigDecimal.ZERO;
-            BigDecimal pgiJustert = pgiÅr.compareTo(BigDecimal.ZERO) != 0 ? gjeldendeG.multiply(pgiPrG) : BigDecimal.ZERO;
+        for (var årSiden = 0; årSiden <= 2; årSiden++) {
+            var årstall = beregningsperiodeTom.getYear() - årSiden;
+            var gSnitt = BigDecimal.valueOf(grunnlag.getBeregningsgrunnlag().snittverdiAvG(årstall));
+            var pgiÅr = grunnlag.getInntektsgrunnlag().getÅrsinntektSigrun(årstall);
+            var pgiPrG = pgiÅr.compareTo(BigDecimal.ZERO) != 0 ? pgiÅr.divide(gSnitt, 10, RoundingMode.HALF_EVEN) : BigDecimal.ZERO;
+            var pgiJustert = pgiÅr.compareTo(BigDecimal.ZERO) != 0 ? gjeldendeG.multiply(pgiPrG) : BigDecimal.ZERO;
             resultater.put("PGI/G." + årstall, pgiPrG);
             resultater.put("PGIjustert." + årstall, pgiJustert);
             pgiListe.add(pgiJustert);

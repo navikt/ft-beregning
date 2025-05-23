@@ -71,7 +71,7 @@ public class AktivitetNøkkel {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		AktivitetNøkkel that = (AktivitetNøkkel) o;
+		var that = (AktivitetNøkkel) o;
 		return Objects.equals(orgnr, that.orgnr) &&
 				Objects.equals(aktørId, that.aktørId) &&
 				Objects.equals(ytelseGrunnlagType, that.ytelseGrunnlagType) &&

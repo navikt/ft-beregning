@@ -28,21 +28,21 @@ class AvkortBGAndelerSomIkkeGjelderArbeidsforholdAndelsmessigUtenFordeling exten
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
         Map<String, Object> resultater = new HashMap<>();
-        BeregningsgrunnlagPrStatus atfl = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
-        BigDecimal sumBeregningsgrunnlagArbeidsforhold = atfl == null ? BigDecimal.ZERO : atfl.getArbeidsforholdIkkeFrilans()
+	    var atfl = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+	    var sumBeregningsgrunnlagArbeidsforhold = atfl == null ? BigDecimal.ZERO : atfl.getArbeidsforholdIkkeFrilans()
             .stream()
             .map(BeregningsgrunnlagPrArbeidsforhold::getInntektsgrunnlagInkludertNaturalytelsePrÅr)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal grenseverdi = grunnlag.getGrenseverdi();
+	    var grenseverdi = grunnlag.getGrenseverdi();
         resultater.put("grenseverdi", grenseverdi);
-        BigDecimal bGUtenArbeidsforholdTilFordeling = grenseverdi.subtract(sumBeregningsgrunnlagArbeidsforhold);
+	    var bGUtenArbeidsforholdTilFordeling = grenseverdi.subtract(sumBeregningsgrunnlagArbeidsforhold);
 
         // inntekt knyttet til frilans må fordeles først
         if (atfl != null) {
-            Optional<BeregningsgrunnlagPrArbeidsforhold> frilansArbeidsforholdOpt = atfl.getFrilansArbeidsforhold();
+	        var frilansArbeidsforholdOpt = atfl.getFrilansArbeidsforhold();
             if (frilansArbeidsforholdOpt.isPresent()) {
-                BeregningsgrunnlagPrArbeidsforhold af = frilansArbeidsforholdOpt.get();
-                BigDecimal bruttoBeregningsgrunnlagForAndelen = af.getInntektsgrunnlagInkludertNaturalytelsePrÅr();
+	            var af = frilansArbeidsforholdOpt.get();
+	            var bruttoBeregningsgrunnlagForAndelen = af.getInntektsgrunnlagInkludertNaturalytelsePrÅr();
                 BigDecimal avkortetBrukersAndel;
                 if (bruttoBeregningsgrunnlagForAndelen.compareTo(bGUtenArbeidsforholdTilFordeling) >= 0) {
                     avkortetBrukersAndel = bGUtenArbeidsforholdTilFordeling;
@@ -60,11 +60,11 @@ class AvkortBGAndelerSomIkkeGjelderArbeidsforholdAndelsmessigUtenFordeling exten
         }
 
         // sortere etter avkorting prioritet for beregningsgrunnlag uten arbeidsforhold
-        List<BeregningsgrunnlagPrStatus> bgpsSorted = finnAlleBGUtenArbeidsForholdSorterte(grunnlag);
-        Iterator<BeregningsgrunnlagPrStatus> bgpsIter = bgpsSorted.iterator();
+	    var bgpsSorted = finnAlleBGUtenArbeidsForholdSorterte(grunnlag);
+	    var bgpsIter = bgpsSorted.iterator();
         while (bgpsIter.hasNext()) {
-            BeregningsgrunnlagPrStatus bgps = bgpsIter.next();
-            BigDecimal bruttoBeregningsgrunnlagForAndelen = bgps.getInntektsgrunnlagPrÅr();
+	        var bgps = bgpsIter.next();
+	        var bruttoBeregningsgrunnlagForAndelen = bgps.getInntektsgrunnlagPrÅr();
             BigDecimal avkortetBrukersAndel;
             if (bruttoBeregningsgrunnlagForAndelen.compareTo(bGUtenArbeidsforholdTilFordeling) >= 0) {
                 avkortetBrukersAndel = bGUtenArbeidsforholdTilFordeling;

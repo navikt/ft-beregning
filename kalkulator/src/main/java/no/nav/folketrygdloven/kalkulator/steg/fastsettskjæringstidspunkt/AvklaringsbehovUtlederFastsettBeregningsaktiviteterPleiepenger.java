@@ -27,14 +27,14 @@ public class AvklaringsbehovUtlederFastsettBeregningsaktiviteterPleiepenger impl
     private static List<BeregningAvklaringsbehovResultat> utledAvklaringsbehovForPleiepenger(BeregningAktivitetAggregatDto beregningAktivitetAggregat,
                                                                                              BeregningsgrunnlagInput input,
                                                                                              LocalDate skjæringstidspunktForBeregning) {
-        Optional<AktørYtelseDto> aktørYtelse = input.getIayGrunnlag().getAktørYtelseFraRegister();
-        Collection<InntektsmeldingDto> inntektsmeldinger = input.getInntektsmeldinger();
-        List<Arbeidsgiver> arbeidsgivere = inntektsmeldinger.stream().map(InntektsmeldingDto::getArbeidsgiver).collect(Collectors.toList());
-        Optional<LocalDate> ventPåRapporteringAvInntektFrist = AutopunktUtlederFastsettBeregningsaktiviteterInntektrapporteringTjeneste.skalVentePåInnrapporteringAvInntektATFL(input, arbeidsgivere, LocalDate.now(), beregningAktivitetAggregat, skjæringstidspunktForBeregning);
+	    var aktørYtelse = input.getIayGrunnlag().getAktørYtelseFraRegister();
+	    var inntektsmeldinger = input.getInntektsmeldinger();
+	    var arbeidsgivere = inntektsmeldinger.stream().map(InntektsmeldingDto::getArbeidsgiver).collect(Collectors.toList());
+	    var ventPåRapporteringAvInntektFrist = AutopunktUtlederFastsettBeregningsaktiviteterInntektrapporteringTjeneste.skalVentePåInnrapporteringAvInntektATFL(input, arbeidsgivere, LocalDate.now(), beregningAktivitetAggregat, skjæringstidspunktForBeregning);
         if (ventPåRapporteringAvInntektFrist.isPresent()) {
             return List.of(autopunkt(AvklaringsbehovDefinisjon.AUTO_VENT_PÅ_INNTKT_RAP_FRST, BeregningVenteårsak.VENT_INNTEKT_RAPPORTERINGSFRIST, ventPåRapporteringAvInntektFrist.get()));
         }
-        Optional<LocalDate> ventPåMeldekortFrist = AutopunktUtlederFastsettBeregningsaktiviteterMeldekortTjeneste.skalVenteTilDatoPåMeldekortAAPellerDP(aktørYtelse, LocalDate.now(), beregningAktivitetAggregat.getSkjæringstidspunktOpptjening(), Set.of(YtelseType.DAGPENGER));
+	    var ventPåMeldekortFrist = AutopunktUtlederFastsettBeregningsaktiviteterMeldekortTjeneste.skalVenteTilDatoPåMeldekortAAPellerDP(aktørYtelse, LocalDate.now(), beregningAktivitetAggregat.getSkjæringstidspunktOpptjening(), Set.of(YtelseType.DAGPENGER));
         if (ventPåMeldekortFrist.isPresent()) {
             return List.of(autopunkt(AvklaringsbehovDefinisjon.AUTO_VENT_PÅ_SISTE_AAP_DP_MELDKRT, BeregningVenteårsak.VENT_PÅ_SISTE_AAP_MELDEKORT, ventPåMeldekortFrist.get()));
         }
@@ -47,8 +47,8 @@ public class AvklaringsbehovUtlederFastsettBeregningsaktiviteterPleiepenger impl
 
     @Override
     public List<BeregningAvklaringsbehovResultat> utledAvklaringsbehov(BeregningsgrunnlagRegelResultat regelResultat, BeregningsgrunnlagInput input, boolean erOverstyrt) {
-        BeregningAktivitetAggregatDto registerAktiviteter = regelResultat.getRegisterAktiviteter();
-        LocalDate skjæringstidspunkt = regelResultat.getBeregningsgrunnlag().getSkjæringstidspunkt();
+	    var registerAktiviteter = regelResultat.getRegisterAktiviteter();
+	    var skjæringstidspunkt = regelResultat.getBeregningsgrunnlag().getSkjæringstidspunkt();
         return utledAvklaringsbehovForPleiepenger(registerAktiviteter, input, skjæringstidspunkt);
     }
 }

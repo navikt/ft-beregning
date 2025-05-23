@@ -80,10 +80,10 @@ public class FastsettInntektskategoriTjeneste {
     }
 
     private static boolean erSjøfolk(BeregningsgrunnlagPrStatusOgAndelDto andel, InntektArbeidYtelseGrunnlagDto grunnlag) {
-        Collection<InntektDto> alleInntekter = grunnlag.getAktørInntektFraRegister()
+        var alleInntekter = grunnlag.getAktørInntektFraRegister()
                 .map(AktørInntektDto::getInntekt)
                 .orElse(Collections.emptyList());
-        List<Arbeidsgiver> arbeidsgivereSjøfolk = alleInntekter.stream()
+        var arbeidsgivereSjøfolk = alleInntekter.stream()
                 .filter(innt -> innt.getInntektsKilde().equals(InntektskildeType.INNTEKT_BEREGNING))
                 .filter(innt -> innt.getArbeidsgiver() != null)
                 .filter(innt -> finnesInntektspostMedSkatteregelSjømann(innt.getAlleInntektsposter(), andel.getBeregningsperiode()))
@@ -100,13 +100,13 @@ public class FastsettInntektskategoriTjeneste {
     }
 
     private static Inntektskategori finnInntektskategoriForSelvstendigNæringsdrivende(InntektArbeidYtelseGrunnlagDto grunnlag) {
-        Optional<OppgittOpptjeningDto> oppgittOpptjening = grunnlag.getOppgittOpptjening();
+        var oppgittOpptjening = grunnlag.getOppgittOpptjening();
         if (oppgittOpptjening.isPresent() && !oppgittOpptjening.get().getEgenNæring().isEmpty()) {
-            Set<VirksomhetType> virksomhetTypeSet = oppgittOpptjening.get().getEgenNæring().stream()
+            var virksomhetTypeSet = oppgittOpptjening.get().getEgenNæring().stream()
                     .map(OppgittEgenNæringDto::getVirksomhetType)
                     .collect(Collectors.toSet());
 
-            List<Inntektskategori> inntektskategorier = virksomhetTypeSet.stream()
+            var inntektskategorier = virksomhetTypeSet.stream()
                     .map(FastsettInntektskategoriTjeneste::finnInntektskategoriFraNæringstype)
                     .collect(Collectors.toList());
 
