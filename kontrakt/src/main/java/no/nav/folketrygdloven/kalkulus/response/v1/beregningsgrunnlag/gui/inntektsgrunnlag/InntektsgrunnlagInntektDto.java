@@ -32,6 +32,10 @@ public class InntektsgrunnlagInntektDto {
 	@Pattern(regexp = "^[\\p{Graph}\\p{Space}\\p{Sc}\\p{L}\\p{M}\\p{N}]+$", message="'${validatedValue}' matcher ikke tillatt pattern '{regexp}'")
 	private String arbeidsgiverIdent;
 
+	public InntektsgrunnlagInntektDto() {
+		// For jackson
+	}
+
     public InntektsgrunnlagInntektDto(@Valid @NotNull InntektAktivitetType inntektAktivitetType,
                                       @Valid Beløp beløp,
                                       @Valid String arbeidsgiverIdent) {
