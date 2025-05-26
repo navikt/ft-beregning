@@ -54,7 +54,7 @@ class MapInntektsgrunnlagVLTilRegelTest {
         BeregningsgrunnlagInput input = BeregningsgrunnlagInputTestUtil.lagInputMedIAYOgOpptjeningsaktiviteter(koblingReferanse, null, iayGrunnlag, Dekningsgrad.DEKNINGSGRAD_100);
 
         // Act
-        Inntektsgrunnlag map = mapInntektsgrunnlagVLTilRegel.map(input, SKJÆRINGSTIDSPUNKT_BEREGNING);
+        Inntektsgrunnlag map = mapInntektsgrunnlagVLTilRegel.mapInntektsgrunnlagFørStpBeregning(input, SKJÆRINGSTIDSPUNKT_BEREGNING);
 
         assertThat(map.getPeriodeinntekter()).hasSize(1);
     }
@@ -75,7 +75,7 @@ class MapInntektsgrunnlagVLTilRegelTest {
         BeregningsgrunnlagInput input = BeregningsgrunnlagInputTestUtil.lagInputMedIAYOgOpptjeningsaktiviteter(koblingReferanse, null, iayGrunnlag, Dekningsgrad.DEKNINGSGRAD_100);
 
         // Act
-        Inntektsgrunnlag map = mapInntektsgrunnlagVLTilRegel.map(input, SKJÆRINGSTIDSPUNKT_BEREGNING);
+        Inntektsgrunnlag map = mapInntektsgrunnlagVLTilRegel.mapInntektsgrunnlagFørStpBeregning(input, SKJÆRINGSTIDSPUNKT_BEREGNING);
 
         assertThat(map.getPeriodeinntekter()).isEmpty();
     }
@@ -95,7 +95,7 @@ class MapInntektsgrunnlagVLTilRegelTest {
 
 
         // Act
-        Inntektsgrunnlag map = mapInntektsgrunnlagVLTilRegel.map(input, SKJÆRINGSTIDSPUNKT_BEREGNING);
+        Inntektsgrunnlag map = mapInntektsgrunnlagVLTilRegel.mapInntektsgrunnlagFørStpBeregning(input, SKJÆRINGSTIDSPUNKT_BEREGNING);
 
         assertThat(map.getPeriodeinntekter()).hasSize(1);
     }
@@ -114,7 +114,7 @@ class MapInntektsgrunnlagVLTilRegelTest {
         BeregningsgrunnlagInput input = BeregningsgrunnlagInputTestUtil.lagInputMedIAYOgOpptjeningsaktiviteter(koblingReferanse, null, iayGrunnlag, Dekningsgrad.DEKNINGSGRAD_100);
 
         // Act
-        Inntektsgrunnlag map = mapInntektsgrunnlagVLTilRegel.map(input, SKJÆRINGSTIDSPUNKT_BEREGNING);
+        Inntektsgrunnlag map = mapInntektsgrunnlagVLTilRegel.mapInntektsgrunnlagFørStpBeregning(input, SKJÆRINGSTIDSPUNKT_BEREGNING);
 
         assertThat(map.getPeriodeinntekter()).hasSize(1);
     }

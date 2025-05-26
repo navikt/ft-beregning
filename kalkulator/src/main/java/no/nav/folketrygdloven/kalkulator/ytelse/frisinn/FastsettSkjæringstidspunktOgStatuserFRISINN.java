@@ -46,7 +46,7 @@ public class FastsettSkjæringstidspunktOgStatuserFRISINN {
     private static RegelResultat fastsettSkjæringstidspunkt(BeregningsgrunnlagInput input, AktivitetStatusModell regelmodell) {
         // Tar sporingssnapshot av regelmodell, deretter oppdateres modell med fastsatt skjæringstidspunkt for Beregning
         var inntektsgrunnlagMapper = new MapInntektsgrunnlagVLTilRegelFRISINN();
-        var inntektsgrunnlag = inntektsgrunnlagMapper.map(input, regelmodell.getSkjæringstidspunktForOpptjening());
+        var inntektsgrunnlag = inntektsgrunnlagMapper.mapInntektsgrunnlagFørStpBeregning(input, regelmodell.getSkjæringstidspunktForOpptjening());
         var aktivitetStatusModellFRISINN = new AktivitetStatusModellFRISINN(inntektsgrunnlag,
                 regelmodell,
                 FrisinnGrunnlagMapper.mapFrisinnPerioder(input));
@@ -59,7 +59,7 @@ public class FastsettSkjæringstidspunktOgStatuserFRISINN {
     private static RegelResultat fastsettStatus(BeregningsgrunnlagInput input, AktivitetStatusModell regelmodell) {
         // Tar sporingssnapshot av regelmodell, deretter oppdateres modell med status per beregningsgrunnlag
         var inntektsgrunnlagMapper = new MapInntektsgrunnlagVLTilRegelFRISINN();
-        var inntektsgrunnlag = inntektsgrunnlagMapper.map(input, regelmodell.getSkjæringstidspunktForOpptjening());
+        var inntektsgrunnlag = inntektsgrunnlagMapper.mapInntektsgrunnlagFørStpBeregning(input, regelmodell.getSkjæringstidspunktForOpptjening());
         var aktivitetStatusModellFRISINN = new AktivitetStatusModellFRISINN(inntektsgrunnlag,
                 regelmodell,
                 FrisinnGrunnlagMapper.mapFrisinnPerioder(input));

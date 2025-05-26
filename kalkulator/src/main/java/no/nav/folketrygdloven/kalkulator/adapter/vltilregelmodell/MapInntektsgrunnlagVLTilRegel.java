@@ -6,5 +6,5 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.In
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagInput;
 
 public interface MapInntektsgrunnlagVLTilRegel {
-    Inntektsgrunnlag map(BeregningsgrunnlagInput input, LocalDate skjæringstidspunkt);
+    Inntektsgrunnlag mapInntektsgrunnlagFørStpBeregning(BeregningsgrunnlagInput input, LocalDate skjæringstidspunkt);
 }

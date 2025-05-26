@@ -69,7 +69,7 @@ public class MapBeregningsgrunnlagFraVLTilRegel {
                 .sorted()
                 .collect(Collectors.toList());
 
-        var inntektsgrunnlag = finnMapper(ref.getFagsakYtelseType()).map(input, beregningsgrunnlag.getSkjæringstidspunkt());
+        var inntektsgrunnlag = finnMapper(ref.getFagsakYtelseType()).mapInntektsgrunnlagFørStpBeregning(input, beregningsgrunnlag.getSkjæringstidspunkt());
         List<BeregningsgrunnlagPeriode> perioder = mapBeregningsgrunnlagPerioder(beregningsgrunnlag, input);
         LocalDate skjæringstidspunkt = beregningsgrunnlag.getSkjæringstidspunkt();
 

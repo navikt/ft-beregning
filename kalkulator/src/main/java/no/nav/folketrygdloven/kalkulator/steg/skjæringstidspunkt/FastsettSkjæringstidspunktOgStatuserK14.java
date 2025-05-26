@@ -44,7 +44,7 @@ public class FastsettSkjæringstidspunktOgStatuserK14 {
 	private static Inntektsgrunnlag getInntektsgrunnlag(BeregningsgrunnlagInput input) {
 		if (input.isEnabled("aap.praksisendring", false)) {
 			var inntektsgrunnlagMapper = new MapInntektsgrunnlagVLTilRegelFelles();
-			return inntektsgrunnlagMapper.map(input, input.getSkjæringstidspunktForBeregning());
+			return inntektsgrunnlagMapper.mapForenkletGrunnlagFørStpOpptjening(input);
 		}
 		return null;
 	}
