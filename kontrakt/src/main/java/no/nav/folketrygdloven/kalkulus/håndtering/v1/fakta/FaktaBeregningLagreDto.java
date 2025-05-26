@@ -103,7 +103,7 @@ public class FaktaBeregningLagreDto {
                                   @Valid MottarYtelseDto mottarYtelse,
                                   @Valid VurderMilitærDto vurderMilitaer,
                                   @Valid List<RefusjonskravPrArbeidsgiverVurderingDto> refusjonskravGyldighet,
-                                  @Valid FastsettInntektForArbeidUnderAAPDto fastsettInntektForArbeidUnderAAPDto) {
+                                  @Valid FastsettInntektForArbeidUnderAAPDto fastsettInntektForArbeidUnderAAP) {
         this.vurderNyoppstartetFL = vurderNyoppstartetFL;
         this.vurderTidsbegrensetArbeidsforhold = vurderTidsbegrensetArbeidsforhold;
         this.vurderNyIArbeidslivet = vurderNyIArbeidslivet;
