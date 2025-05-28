@@ -1,6 +1,7 @@
 package no.nav.folketrygdloven.kalkulus.beregning.v1;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 import jakarta.validation.Valid;
@@ -43,6 +44,10 @@ public class ForeldrepengerGrunnlag extends YtelsespesifiktGrunnlagDto {
     @NotNull
     private Boolean kvalifisererTilBesteberegning = false;
 
+    @JsonProperty(value = "førsteUttaksdato")
+    @Valid
+    private LocalDate førsteUttaksdato;
+
     protected ForeldrepengerGrunnlag() {
         // default ctor
     }
@@ -55,6 +60,18 @@ public class ForeldrepengerGrunnlag extends YtelsespesifiktGrunnlagDto {
         this.kvalifisererTilBesteberegning = kvalifisererTilBesteberegning;
         this.aktivitetGradering = aktivitetGradering;
         this.ytelsegrunnlagForBesteberegning = ytelsegrunnlagForBesteberegning;
+    }
+
+    public ForeldrepengerGrunnlag(@Valid @DecimalMin(value = "0.00", message = "verdien ${validatedValue} må være >= {value}") @DecimalMax(value = "100.00", message = "verdien ${validatedValue} må være <= {value}") @Digits(integer = 3, fraction = 2) BigDecimal dekningsgrad,
+                                  @Valid @NotNull Boolean kvalifisererTilBesteberegning,
+                                  @Valid AktivitetGraderingDto aktivitetGradering,
+                                  @Valid List<Ytelsegrunnlag> ytelsegrunnlagForBesteberegning,
+                                  @Valid LocalDate førsteUttaksdato) {
+        this.dekningsgrad = dekningsgrad;
+        this.kvalifisererTilBesteberegning = kvalifisererTilBesteberegning;
+        this.aktivitetGradering = aktivitetGradering;
+        this.ytelsegrunnlagForBesteberegning = ytelsegrunnlagForBesteberegning;
+        this.førsteUttaksdato = førsteUttaksdato;
     }
 
     public AktivitetGraderingDto getAktivitetGradering() {
@@ -71,5 +88,9 @@ public class ForeldrepengerGrunnlag extends YtelsespesifiktGrunnlagDto {
 
     public List<Ytelsegrunnlag> getYtelsegrunnlagForBesteberegning() {
         return ytelsegrunnlagForBesteberegning;
+    }
+
+    public LocalDate getFørsteUttaksdato() {
+        return førsteUttaksdato;
     }
 }
