@@ -15,12 +15,12 @@ public class VurderBesteberegningTilfelleDtoTjeneste {
         if (!harBgTilfelle(input.getBeregningsgrunnlag())) {
             return;
         }
-        BeregningsgrunnlagTilstand aktivTilstand = input.getBeregningsgrunnlagGrunnlag().getBeregningsgrunnlagTilstand();
+        var aktivTilstand = input.getBeregningsgrunnlagGrunnlag().getBeregningsgrunnlagTilstand();
         settVerdier(input.getBeregningsgrunnlag(), aktivTilstand, faktaOmBeregningDto);
     }
 
     private void settVerdier(BeregningsgrunnlagDto bg, BeregningsgrunnlagTilstand aktivTilstand, FaktaOmBeregningDto faktaOmBeregningDto) {
-        VurderBesteberegningDto vurderBesteberegning = new VurderBesteberegningDto();
+        var vurderBesteberegning = new VurderBesteberegningDto();
 	    harBesteberegning(bg, aktivTilstand).ifPresent(vurderBesteberegning::setSkalHaBesteberegning);
         faktaOmBeregningDto.setVurderBesteberegning(vurderBesteberegning);
     }

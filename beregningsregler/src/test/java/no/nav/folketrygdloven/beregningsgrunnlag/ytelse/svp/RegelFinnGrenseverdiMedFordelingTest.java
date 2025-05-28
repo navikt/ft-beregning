@@ -33,7 +33,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		//Arrange
 		double beregnetPrÅr = 400_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -54,7 +54,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		//Arrange
 		double beregnetPrÅr = 400_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -79,7 +79,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		//Arrange
 		double beregnetPrÅr = 400_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -100,7 +100,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		//Arrange
 		double beregnetPrÅr = 800_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -122,7 +122,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		double beregnetPrÅr = 250_000;
 		double beregnetPrÅr2 = 300_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -145,7 +145,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		double beregnetPrÅr = 350_000;
 		double beregnetPrÅr2 = 300_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -168,7 +168,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		double beregnetPrÅr = 250_000;
 		double beregnetPrÅr2 = 300_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -193,7 +193,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		double beregnetPrÅr = 500_000;
 		double beregnetPrÅr2 = 500_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -216,7 +216,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		double beregnetPrÅr = 800_000;
 		double beregnetPrÅr2 = 200_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -239,7 +239,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		double beregnetPrÅr = 250_000;
 		double beregnetPrÅr2 = 300_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -262,7 +262,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		double beregnetPrÅr = 600_000;
 		double beregnetPrÅr2 = 600_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -285,7 +285,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		double beregnetPrÅr = 800_000;
 		double beregnetPrÅr2 = 200_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -308,7 +308,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		double beregnetPrÅr = 600_000;
 		double beregnetPrÅr2 = 300_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -332,7 +332,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		double beregnetPrÅr = 250_000;
 		double beregnetPrÅr2 = 300_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -355,7 +355,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		double beregnetPrÅr = 600_000;
 		double beregnetPrÅr2 = 600_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -378,7 +378,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		double beregnetPrÅr = 600_000;
 		double beregnetPrÅr2 = 300_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -401,7 +401,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		double beregnetPrÅr = 250_000;
 		double beregnetPrÅr2 = 300_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -426,7 +426,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		double beregnetPrÅr2 = 300_000;
 		double beregnetPrÅr3 = 300_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -452,7 +452,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		double beregnetPrÅr2 = 300_000;
 		double beregnetPrÅr3 = 300_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -477,7 +477,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		double beregnetPrÅr2 = 300_000;
 		double beregnetPrÅr3 = 300_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -503,7 +503,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		double beregnetPrÅr2 = 300_000;
 		double beregnetPrÅr3 = 300_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -527,7 +527,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		//Arrange
 		double beregnetPrÅr = 300_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -548,7 +548,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		//Arrange
 		double beregnetPrÅr = 300_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -569,7 +569,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		//Arrange
 		double beregnetPrÅr = 800_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -590,7 +590,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		//Arrange
 		double beregnetPrÅr = 300_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -611,7 +611,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		//Arrange
 		double beregnetPrÅr = 800_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -634,7 +634,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		double beregnetPrÅr = 300_000;
 		double beregnetPrÅr2 = 200_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -657,7 +657,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		double beregnetPrÅr = 800_000;
 		double beregnetPrÅr2 = 200_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -681,7 +681,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		double beregnetPrÅr = 200_000;
 		double beregnetPrÅr2 = 300_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -704,7 +704,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		double beregnetPrÅr = 200_000;
 		double beregnetPrÅr2 = 300_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -727,7 +727,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		double beregnetPrÅr = 500_000;
 		double beregnetPrÅr2 = 500_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -750,7 +750,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		double beregnetPrÅr = 500_000;
 		double beregnetPrÅr2 = 500_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -773,7 +773,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		double beregnetPrÅr = 200_000;
 		double beregnetPrÅr2 = 800_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -796,7 +796,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		double beregnetPrÅr = 200_000;
 		double beregnetPrÅr2 = 800_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -819,7 +819,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		double beregnetPrÅr = 200_000;
 		double beregnetPrÅr2 = 800_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -842,7 +842,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		//Arrange
 		double beregnetPrÅr = 200_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -863,7 +863,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		//Arrange
 		double beregnetPrÅr = 200_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -884,7 +884,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		//Arrange
 		double beregnetPrÅr = 200_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -905,7 +905,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		//Arrange
 		double beregnetPrÅr = 200_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -927,7 +927,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		//Arrange
 		double beregnetPrÅr = 500_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -950,7 +950,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		double beregnetPrÅr = 800_000;
 		double beregnetPrÅr2 = 200_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -973,7 +973,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		double beregnetPrÅr = 200_000;
 		double beregnetPrÅr2 = 800_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -996,7 +996,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		double beregnetPrÅr = 200_000;
 		double beregnetPrÅr2 = 800_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -1018,7 +1018,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		//Arrange
 		double beregnetPrÅr = 100_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -1041,7 +1041,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		//Arrange
 		double beregnetPrÅr = 100_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -1064,7 +1064,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		//Arrange
 		double beregnetPrÅr = 100_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -1089,7 +1089,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		double beregnetPrÅr2 = 100_000;
 		double beregnetPrÅr3 = 100_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -1114,7 +1114,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		double beregnetPrÅr2 = 100_000;
 		double beregnetPrÅr3 = 100_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -1139,7 +1139,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		double beregnetPrÅr2 = 100_000;
 		double beregnetPrÅr3 = 100_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -1163,7 +1163,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		double beregnetPrÅr = 500_000;
 		double beregnetPrÅr2 = 200_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -1186,7 +1186,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 		double beregnetPrÅr = 500_000;
 		double beregnetPrÅr2 = 400_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -1213,7 +1213,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 	                                   Double fordeltPrÅr,
 	                                   Double utbetalingsgrad,
 	                                   Double aktivitetsgrad) {
-		BeregningsgrunnlagPrStatus atfl = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+        var atfl = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
 		if (atfl == null) {
 			BeregningsgrunnlagPeriode.oppdater(periode)
 					.medBeregningsgrunnlagPrStatus(BeregningsgrunnlagPrStatus
@@ -1235,8 +1235,8 @@ class RegelFinnGrenseverdiMedFordelingTest {
 	                           Double aktivitetsgrad) {
 		finnHøyestLedigeAndelsnr(periode);
 		if (status.equals(AktivitetStatus.FL)) {
-			Arbeidsforhold arbeidsforhold = Arbeidsforhold.frilansArbeidsforhold();
-			BeregningsgrunnlagPrStatus atfl = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+            var arbeidsforhold = Arbeidsforhold.frilansArbeidsforhold();
+            var atfl = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
 			if (atfl == null) {
 				BeregningsgrunnlagPeriode.oppdater(periode)
 						.medBeregningsgrunnlagPrStatus(BeregningsgrunnlagPrStatus
@@ -1251,7 +1251,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 			}
 		} else if (status.equals(AktivitetStatus.SN)) {
 			var bruttoPrÅr = beregnetPrÅr != null ? BigDecimal.valueOf(beregnetPrÅr) : null;
-			BeregningsgrunnlagPrStatus prStatus = BeregningsgrunnlagPrStatus
+            var prStatus = BeregningsgrunnlagPrStatus
 					.builder()
 					.medAndelNr(finnHøyestLedigeAndelsnr(periode))
 					.medAktivitetStatus(AktivitetStatus.SN)
@@ -1276,7 +1276,7 @@ class RegelFinnGrenseverdiMedFordelingTest {
 	                                                                                 Double aktivitetsgrad,
 	                                                                                 Arbeidsforhold arbeidsforhold) {
 		var bruttoPrÅr = finnBrutto(beregnetPrÅr, fordeltPrÅr);
-		BeregningsgrunnlagPrArbeidsforhold arb = BeregningsgrunnlagPrArbeidsforhold.builder()
+        var arb = BeregningsgrunnlagPrArbeidsforhold.builder()
 				.medAndelNr(andelsnr)
 				.medArbeidsforhold(arbeidsforhold)
 				.medInntektsgrunnlagPrÅr(beregnetPrÅr != null ? BigDecimal.valueOf(beregnetPrÅr) : null)

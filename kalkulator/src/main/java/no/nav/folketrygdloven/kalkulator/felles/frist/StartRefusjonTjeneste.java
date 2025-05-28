@@ -27,12 +27,12 @@ class StartRefusjonTjeneste {
     static LocalDate finnFørsteMuligeDagRefusjon(BeregningAktivitetAggregatDto gjeldendeAktiviteter,
                                                          LocalDate skjæringstidspunktBeregning,
                                                          YrkesaktivitetDto yrkesaktivitet) {
-        boolean erNyttArbeidsforhold = erTilkommetEtterBeregningstidspunkt(
+        var erNyttArbeidsforhold = erTilkommetEtterBeregningstidspunkt(
                 yrkesaktivitet.getArbeidsgiver(),
                 yrkesaktivitet.getArbeidsforholdRef(),
                 gjeldendeAktiviteter, skjæringstidspunktBeregning);
         if (erNyttArbeidsforhold) {
-            LocalDate førsteAnsattdato = yrkesaktivitet.getAlleAnsettelsesperioder().stream()
+            var førsteAnsattdato = yrkesaktivitet.getAlleAnsettelsesperioder().stream()
                     .filter(aa -> aa.getPeriode().inkluderer(skjæringstidspunktBeregning)
                             || aa.getPeriode().getFomDato().isAfter(BeregningstidspunktTjeneste.finnBeregningstidspunkt(skjæringstidspunktBeregning)))
                     .map(AktivitetsAvtaleDto::getPeriode)
@@ -66,7 +66,7 @@ class StartRefusjonTjeneste {
     }
 
     private static boolean erAktivPåBeregningstidspunkt(LocalDate skjæringstidspunkt, BeregningAktivitetDto beregningAktivitet) {
-        LocalDate beregningstidspunkt = BeregningstidspunktTjeneste.finnBeregningstidspunkt(skjæringstidspunkt);
+        var beregningstidspunkt = BeregningstidspunktTjeneste.finnBeregningstidspunkt(skjæringstidspunkt);
         return beregningAktivitet.getPeriode().inkluderer(beregningstidspunkt);
     }
 

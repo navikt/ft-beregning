@@ -10,7 +10,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.vurder.FinnGrunnbeløpForVilkårsvurdering;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
-import no.nav.fpsak.nare.evaluation.node.SingleEvaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(SjekkBeregningsgrunnlagFLSNMindreEnnFRISINN.ID)
@@ -27,12 +26,12 @@ class SjekkBeregningsgrunnlagFLSNMindreEnnFRISINN extends LeafSpecification<Bere
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        BigDecimal grunnbeløpForVilkårsvurdering = FinnGrunnbeløpForVilkårsvurdering.finnGrunnbeløpForVilkårsvurdering(grunnlag);
-        BigDecimal minstekrav = grunnbeløpForVilkårsvurdering.multiply(FRISINN_MINSTEKRAV_BEREGNINGSGRUNNLAG_ANTALL_G);
-        BigDecimal bruttoForSøkteAndeler = BigDecimal.ZERO;
+        var grunnbeløpForVilkårsvurdering = FinnGrunnbeløpForVilkårsvurdering.finnGrunnbeløpForVilkårsvurdering(grunnlag);
+        var minstekrav = grunnbeløpForVilkårsvurdering.multiply(FRISINN_MINSTEKRAV_BEREGNINGSGRUNNLAG_ANTALL_G);
+        var bruttoForSøkteAndeler = BigDecimal.ZERO;
 
         var frilansandel = finnFrilansAndel(grunnlag);
-        BeregningsgrunnlagPeriode førstePeriode = finnFørstePeriode(grunnlag);
+        var førstePeriode = finnFørstePeriode(grunnlag);
         if (frilansandel.isPresent() && frilansandel.get().getErSøktYtelseFor()) {
             var frilansAndelFørstePeriode = finnFrilansAndel(førstePeriode);
             bruttoForSøkteAndeler = bruttoForSøkteAndeler.add(frilansAndelFørstePeriode.flatMap(BeregningsgrunnlagPrArbeidsforhold::getBruttoInkludertNaturalytelsePrÅr).orElse(BigDecimal.ZERO));
@@ -43,8 +42,8 @@ class SjekkBeregningsgrunnlagFLSNMindreEnnFRISINN extends LeafSpecification<Bere
             bruttoForSøkteAndeler = bruttoForSøkteAndeler.add(snFørstePeriode.map(BeregningsgrunnlagPrStatus::getBruttoInkludertNaturalytelsePrÅr).orElse(BigDecimal.ZERO));
         }
 
-        boolean erSøktIPeriode = (snStatus.isPresent() && snStatus.get().erSøktYtelseFor()) || (frilansandel.isPresent() && frilansandel.get().getErSøktYtelseFor());
-        SingleEvaluation resultat = erSøktIPeriode && bruttoForSøkteAndeler.compareTo(minstekrav) < 0 ? ja() : nei();
+        var erSøktIPeriode = (snStatus.isPresent() && snStatus.get().erSøktYtelseFor()) || (frilansandel.isPresent() && frilansandel.get().getErSøktYtelseFor());
+        var resultat = erSøktIPeriode && bruttoForSøkteAndeler.compareTo(minstekrav) < 0 ? ja() : nei();
         resultat.setEvaluationProperty("grunnbeløpForVilkårsvurdering", grunnbeløpForVilkårsvurdering);
         resultat.setEvaluationProperty("treKvartGrunnbeløp", minstekrav);
         resultat.setEvaluationProperty("faktiskGrunnbeløp", grunnlag.getGrunnbeløp());
@@ -57,7 +56,7 @@ class SjekkBeregningsgrunnlagFLSNMindreEnnFRISINN extends LeafSpecification<Bere
     }
 
     private Optional<BeregningsgrunnlagPrArbeidsforhold> finnFrilansAndel(BeregningsgrunnlagPeriode grunnlag) {
-        BeregningsgrunnlagPrStatus atflStatus = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+        var atflStatus = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
         return atflStatus == null ? Optional.empty() : atflStatus.getFrilansArbeidsforhold();
     }
 

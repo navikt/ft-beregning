@@ -25,7 +25,7 @@ public class FinnStartdatoPermisjon {
 
 
     private static LocalDate utledStartdato(Optional<InntektsmeldingDto> inntektsmelding, LocalDate startdato) {
-        Optional<LocalDate> startDatoFraIM = inntektsmelding.flatMap(InntektsmeldingDto::getStartDatoPermisjon);
+        var startDatoFraIM = inntektsmelding.flatMap(InntektsmeldingDto::getStartDatoPermisjon);
         return startDatoFraIM.filter(dato -> dato.isAfter(startdato)).orElse(startdato);
     }
 }

@@ -39,7 +39,7 @@ import no.nav.fpsak.tidsserie.LocalDateTimeline;
 public class VurderTilkommetInntektTjeneste {
 
     public static BeregningsgrunnlagGrunnlagDto løsAvklaringsbehov(VurderTilkommetInntektHåndteringDto vurderDto, HåndterBeregningsgrunnlagInput input) {
-        BeregningsgrunnlagGrunnlagDtoBuilder grunnlagBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
+        var grunnlagBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
         var vurderteInntektsforholdPerioder = vurderDto.getTilkomneInntektsforholdPerioder();
         var segmenter = vurderteInntektsforholdPerioder.stream().map(p -> new LocalDateSegment<>(p.getFom(), p.getTom(), p.getTilkomneInntektsforhold())).toList();
         var tidslinje = new LocalDateTimeline<>(segmenter);

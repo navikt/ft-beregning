@@ -32,7 +32,7 @@ public class InntektDtoBuilder {
     }
 
     public InntektDtoBuilder leggTilInntektspost(InntektspostDtoBuilder builder) {
-        InntektspostDto inntektspost = builder.build();
+        var inntektspost = builder.build();
         inntekt.leggTilInntektspost(inntektspost);
         return this;
     }

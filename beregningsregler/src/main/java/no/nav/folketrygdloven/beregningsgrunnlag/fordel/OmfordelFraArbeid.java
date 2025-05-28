@@ -23,14 +23,14 @@ class OmfordelFraArbeid extends OmfordelFraATFL {
 
     @Override
     public Evaluation evaluate(FordelModell modell) {
-        Map<String, Object> resultater = omfordelFraAktivitetOmMulig(modell);
-        Map<String, Object> resultater2 = omfordelNaturalytelseFraAktivitetOmMulig(modell);
+        var resultater = omfordelFraAktivitetOmMulig(modell);
+        var resultater2 = omfordelNaturalytelseFraAktivitetOmMulig(modell);
         resultater.putAll(resultater2);
         return beregnet(resultater);
     }
 
     protected Map<String, Object> omfordelNaturalytelseFraAktivitetOmMulig(FordelModell modell) {
-        boolean harAktivitetMedOmfordelbartGrunnlag = finnAktivitetMedOmfordelbarNaturalYtelse(modell.getInput()).isPresent();
+        var harAktivitetMedOmfordelbartGrunnlag = finnAktivitetMedOmfordelbarNaturalYtelse(modell.getInput()).isPresent();
         if (!harAktivitetMedOmfordelbartGrunnlag) {
             return new HashMap<>();
         }
@@ -62,7 +62,7 @@ class OmfordelFraArbeid extends OmfordelFraATFL {
     }
 
     private boolean harRefusjonskravLavereEnnBg(FordelAndelModell arbeidsforhold) {
-        BigDecimal refusjonskrav = arbeidsforhold.getGradertRefusjonPrÅr().orElse(BigDecimal.ZERO);
+        var refusjonskrav = arbeidsforhold.getGradertRefusjonPrÅr().orElse(BigDecimal.ZERO);
         return refusjonskrav.compareTo(arbeidsforhold.getGradertBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO)) < 0;
     }
 

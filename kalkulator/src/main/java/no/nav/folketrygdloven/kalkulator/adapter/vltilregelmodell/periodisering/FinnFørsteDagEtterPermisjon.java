@@ -43,7 +43,7 @@ public class FinnFørsteDagEtterPermisjon {
         if (sisteDagMedPermisjon.equals(TIDENES_ENDE)) {
             return Optional.empty();
         }
-        LocalDate dagenEtterBekreftetPermisjon = sisteDagMedPermisjon.plusDays(1);
+        var dagenEtterBekreftetPermisjon = sisteDagMedPermisjon.plusDays(1);
         return Optional.of(dagenEtterBekreftetPermisjon);
     }
 }

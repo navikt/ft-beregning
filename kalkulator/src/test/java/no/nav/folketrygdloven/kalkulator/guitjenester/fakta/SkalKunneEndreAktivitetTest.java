@@ -32,35 +32,35 @@ class SkalKunneEndreAktivitetTest {
 
     @Test
     void skalIkkjeKunneEndreAktivitetOmLagtTilAvSaksbehandlerOgDagpenger() {
-        BeregningsgrunnlagPrStatusOgAndelDto dagpengeAndel = BeregningsgrunnlagPrStatusOgAndelDto.ny()
+        var dagpengeAndel = BeregningsgrunnlagPrStatusOgAndelDto.ny()
                 .medAktivitetStatus(AktivitetStatus.DAGPENGER)
                 .medKilde(AndelKilde.SAKSBEHANDLER_KOFAKBER)
                 .build(periode);
 
-        Boolean skalKunneEndreAktivitet = SkalKunneEndreAktivitet.skalKunneEndreAktivitet(dagpengeAndel, false);
+        var skalKunneEndreAktivitet = SkalKunneEndreAktivitet.skalKunneEndreAktivitet(dagpengeAndel, false);
 
         assertThat(skalKunneEndreAktivitet).isFalse();
     }
 
     @Test
     void skalIkkjeKunneEndreAktivitetOmIkkjeLagtTilAvSaksbehandler() {
-        BeregningsgrunnlagPrStatusOgAndelDto frilans = BeregningsgrunnlagPrStatusOgAndelDto.ny()
+        var frilans = BeregningsgrunnlagPrStatusOgAndelDto.ny()
                 .medAktivitetStatus(AktivitetStatus.FRILANSER)
                 .build(periode);
 
-        Boolean skalKunneEndreAktivitet = SkalKunneEndreAktivitet.skalKunneEndreAktivitet(frilans, false);
+        var skalKunneEndreAktivitet = SkalKunneEndreAktivitet.skalKunneEndreAktivitet(frilans, false);
 
         assertThat(skalKunneEndreAktivitet).isFalse();
     }
 
     @Test
     void skalKunneEndreAktivitetOmLagtTilAvSaksbehandler() {
-        BeregningsgrunnlagPrStatusOgAndelDto frilans = BeregningsgrunnlagPrStatusOgAndelDto.ny()
+        var frilans = BeregningsgrunnlagPrStatusOgAndelDto.ny()
                 .medAktivitetStatus(AktivitetStatus.FRILANSER)
                 .medKilde(AndelKilde.SAKSBEHANDLER_KOFAKBER)
                 .build(periode);
 
-        Boolean skalKunneEndreAktivitet = SkalKunneEndreAktivitet.skalKunneEndreAktivitet(frilans, false);
+        var skalKunneEndreAktivitet = SkalKunneEndreAktivitet.skalKunneEndreAktivitet(frilans, false);
 
         assertThat(skalKunneEndreAktivitet).isTrue();
     }

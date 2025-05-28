@@ -1,8 +1,5 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.selvstendig;
 
-import java.util.Optional;
-
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
@@ -20,7 +17,7 @@ public class SjekkOmVarigEndringIVirksomhetEllerNyoppstartetNæring extends Leaf
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        Optional<Periodeinntekt> månedsinntekt = grunnlag.getInntektsgrunnlag().getSistePeriodeinntektMedTypeSøknad();
+        var månedsinntekt = grunnlag.getInntektsgrunnlag().getSistePeriodeinntektMedTypeSøknad();
         return (månedsinntekt.isPresent() ? ja() : nei());
     }
 }

@@ -22,7 +22,7 @@ class SjekkOmTotaltBGForArbeidsforholdStørreEnnGrenseverdiUtenFordelingTest {
 
 	@Test
 	void skal_gi_resultat_JA_for_inntektsgrunnlag_over_grenseverdi() {
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.medBeregningsgrunnlagPrStatus(BeregningsgrunnlagPrStatus
 						.builder()
@@ -47,7 +47,7 @@ class SjekkOmTotaltBGForArbeidsforholdStørreEnnGrenseverdiUtenFordelingTest {
 
 	@Test
 	void skal_gi_resultat_NEI_for_inntektsgrunnlag_under_grenseverdi() {
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.medBeregningsgrunnlagPrStatus(BeregningsgrunnlagPrStatus
 						.builder()
@@ -72,7 +72,7 @@ class SjekkOmTotaltBGForArbeidsforholdStørreEnnGrenseverdiUtenFordelingTest {
 
 	@Test
 	void skal_gi_resultat_NEI_for_inntektsgrunnlag_ikke_satt() {
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.medBeregningsgrunnlagPrStatus(BeregningsgrunnlagPrStatus
 						.builder()
@@ -96,7 +96,7 @@ class SjekkOmTotaltBGForArbeidsforholdStørreEnnGrenseverdiUtenFordelingTest {
 
 	@Test
 	void skal_gi_resultat_NEI_for_inntektsgrunnlag_lik_grenseverdi() {
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.medBeregningsgrunnlagPrStatus(BeregningsgrunnlagPrStatus
 						.builder()

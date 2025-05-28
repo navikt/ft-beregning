@@ -14,7 +14,7 @@ class OmfordelNaturalytelseForArbeidsforhold extends OmfordelForArbeidsforhold {
 
     @Override
     protected void flyttFraAktivitet(FordelAndelModell arbeidMedFlyttbartGrunnlag, BigDecimal beløpSomSkalFlyttes) {
-        BigDecimal bortfaltPrÅr = arbeidMedFlyttbartGrunnlag.getGradertNaturalytelseBortfaltPrÅr().orElse(BigDecimal.ZERO);
+        var bortfaltPrÅr = arbeidMedFlyttbartGrunnlag.getGradertNaturalytelseBortfaltPrÅr().orElse(BigDecimal.ZERO);
         FordelAndelModell.oppdater(arbeidMedFlyttbartGrunnlag).medNaturalytelseBortfaltPrÅr(
 				skalerOpp(bortfaltPrÅr.subtract(beløpSomSkalFlyttes), arbeidMedFlyttbartGrunnlag.getUtbetalingsgrad()));
     }
@@ -25,8 +25,8 @@ class OmfordelNaturalytelseForArbeidsforhold extends OmfordelForArbeidsforhold {
 
     @Override
     protected BigDecimal finnFlyttbartBeløp(FordelAndelModell arbeidMedOmfordelbartBg) {
-        BigDecimal naturalytelseBortfaltPrÅr = arbeidMedOmfordelbartBg.getGradertNaturalytelseBortfaltPrÅr().orElse(BigDecimal.ZERO);
-        BigDecimal refusjonskrav = arbeidMedOmfordelbartBg.getGradertRefusjonPrÅr().orElse(BigDecimal.ZERO);
+        var naturalytelseBortfaltPrÅr = arbeidMedOmfordelbartBg.getGradertNaturalytelseBortfaltPrÅr().orElse(BigDecimal.ZERO);
+        var refusjonskrav = arbeidMedOmfordelbartBg.getGradertRefusjonPrÅr().orElse(BigDecimal.ZERO);
         return naturalytelseBortfaltPrÅr.subtract(refusjonskrav).max(BigDecimal.ZERO);
     }
 

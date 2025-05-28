@@ -12,7 +12,7 @@ public record StatusOgArbeidsgiver(AktivitetStatus aktivitetStatus, Arbeidsgiver
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        StatusOgArbeidsgiver that = (StatusOgArbeidsgiver) o;
+        var that = (StatusOgArbeidsgiver) o;
         return aktivitetStatus == that.aktivitetStatus && Objects.equals(arbeidsgiver, that.arbeidsgiver);
     }
 

@@ -17,7 +17,7 @@ public class MapBeregningAktiviteterFraRegelTilVL {
     }
 
     public static BeregningAktivitetAggregatDto map(AktivitetStatusModell regelmodell) {
-        BeregningAktivitetAggregatDto.Builder builder = BeregningAktivitetAggregatDto.builder();
+        var builder = BeregningAktivitetAggregatDto.builder();
         builder.medSkjæringstidspunktOpptjening(regelmodell.getSkjæringstidspunktForOpptjening());
         regelmodell.getAktivePerioder().forEach(aktivPeriode -> builder.leggTilAktivitet(
             mapAktivPeriode(aktivPeriode)

@@ -1,5 +1,9 @@
 package no.nav.folketrygdloven.kalkulator.avklaringsbehov;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import no.nav.folketrygdloven.kalkulator.avklaringsbehov.dto.FaktaBeregningLagreDto;
 import no.nav.folketrygdloven.kalkulator.avklaringsbehov.dto.FastsettBeregningsgrunnlagAndelDto;
 import no.nav.folketrygdloven.kalkulator.avklaringsbehov.dto.OverstyrBeregningsgrunnlagDto;
@@ -11,10 +15,6 @@ import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.Beregningsgru
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDtoBuilder;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 public class BeregningFaktaOgOverstyringHåndterer {
 

@@ -37,8 +37,8 @@ public final class FordelBeregningsgrunnlagTilfelleTjeneste {
     public static Map<BeregningsgrunnlagPrStatusOgAndelDto, FordelingTilfelle> vurderManuellBehandlingForPeriode(BeregningsgrunnlagPeriodeDto periode,
                                                                                                                  FordelBeregningsgrunnlagTilfelleInput input) {
         Map<BeregningsgrunnlagPrStatusOgAndelDto, FordelingTilfelle> andelTilfelleMap = new HashMap<>();
-        for (BeregningsgrunnlagPrStatusOgAndelDto andel : periode.getBeregningsgrunnlagPrStatusOgAndelList()) {
-            Optional<FordelingTilfelle> tilfelle = utledTilfelleForAndel(periode, input, andel);
+        for (var andel : periode.getBeregningsgrunnlagPrStatusOgAndelList()) {
+            var tilfelle = utledTilfelleForAndel(periode, input, andel);
             tilfelle.ifPresent(fordelingTilfelle -> andelTilfelleMap.put(andel, fordelingTilfelle));
         }
         return andelTilfelleMap;
@@ -50,7 +50,7 @@ public final class FordelBeregningsgrunnlagTilfelleTjeneste {
         }
 
         boolean andelHarRefusjonIPerioden = harInnvilgetRefusjon(andel);
-        boolean harGraderingIBGPeriode = FordelingGraderingTjeneste.harGraderingForAndelIPeriode(andel, input.getAktivitetGradering(), periode.getPeriode());
+        var harGraderingIBGPeriode = FordelingGraderingTjeneste.harGraderingForAndelIPeriode(andel, input.getAktivitetGradering(), periode.getPeriode());
         if (!harGraderingIBGPeriode && !andelHarRefusjonIPerioden) {
             return Optional.empty();
         }
@@ -60,11 +60,11 @@ public final class FordelBeregningsgrunnlagTilfelleTjeneste {
         }
 
         if (harGraderingIBGPeriode && !andelHarRefusjonIPerioden) {
-            Beløp grunnbeløp = input.getBeregningsgrunnlag().getGrunnbeløp();
+            var grunnbeløp = input.getBeregningsgrunnlag().getGrunnbeløp();
             if (FordelingGraderingTjeneste.gradertAndelVilleBlittAvkortet(andel, grunnbeløp, periode)) {
                 return Optional.of(FordelingTilfelle.GRADERT_ANDEL_SOM_VILLE_HA_BLITT_AVKORTET_TIL_0);
             }
-            boolean refusjonForPeriodeOverstiger6G = grunnbeløp.multipliser(KonfigTjeneste.getAntallGØvreGrenseverdi()).compareTo(finnTotalRefusjonPrÅr(periode)) <= 0;
+            var refusjonForPeriodeOverstiger6G = grunnbeløp.multipliser(KonfigTjeneste.getAntallGØvreGrenseverdi()).compareTo(finnTotalRefusjonPrÅr(periode)) <= 0;
             if (refusjonForPeriodeOverstiger6G) {
                 return Optional.of(FordelingTilfelle.TOTALT_REFUSJONSKRAV_STØRRE_ENN_6G);
             }

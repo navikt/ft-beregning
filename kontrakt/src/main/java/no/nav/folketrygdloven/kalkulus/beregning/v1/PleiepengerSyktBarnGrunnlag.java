@@ -63,7 +63,7 @@ public class PleiepengerSyktBarnGrunnlag extends YtelsespesifiktGrunnlagDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        PleiepengerSyktBarnGrunnlag that = (PleiepengerSyktBarnGrunnlag) o;
+        var that = (PleiepengerSyktBarnGrunnlag) o;
         return Objects.equals(utbetalingsgradPrAktivitet, that.utbetalingsgradPrAktivitet)
                 && (Objects.equals(tilkommetInntektHensyntasFom, that.tilkommetInntektHensyntasFom));
     }

@@ -10,8 +10,8 @@ import no.nav.folketrygdloven.kalkulator.steg.refusjon.ForlengelsePeriodeTjenest
 public class VurderRefusjonBeregningsgrunnlagPleiepenger {
 
     public BeregningsgrunnlagRegelResultat vurderRefusjon(BeregningsgrunnlagInput input) {
-        BeregningsgrunnlagRegelResultat resultatFraRefusjonPeriodisering = new FordelPerioderTjeneste().fastsettPerioderForRefusjon(input);
-        BeregningsgrunnlagRegelResultat resultatFraPeriodisering = new FordelPerioderTjeneste().fastsettPerioderForUtbetalingsgradEllerGradering(input, resultatFraRefusjonPeriodisering.getBeregningsgrunnlag());
+        var resultatFraRefusjonPeriodisering = new FordelPerioderTjeneste().fastsettPerioderForRefusjon(input);
+        var resultatFraPeriodisering = new FordelPerioderTjeneste().fastsettPerioderForUtbetalingsgradEllerGradering(input, resultatFraRefusjonPeriodisering.getBeregningsgrunnlag());
         var splittetVedForlengelse = ForlengelsePeriodeTjeneste.splittVedStartAvForlengelse(input, resultatFraPeriodisering.getBeregningsgrunnlag());
         // Kjører splitt pga aktivitetsgrad her i tillegg til vurder tilkommet inntekt siden det ikke er alle som kjører det steget
         var splittForAktivitetsgrad = PeriodiserForAktivitetsgradTjeneste.splittVedEndringIAktivitetsgrad(splittetVedForlengelse, input.getYtelsespesifiktGrunnlag());

@@ -28,7 +28,7 @@ public class VurderRefusjonBeregningsgrunnlagInput extends StegProsesseringInput
         super.stegTilstand = BeregningsgrunnlagTilstand.VURDERT_REFUSJON;
         super.stegUtTilstand = BeregningsgrunnlagTilstand.VURDERT_REFUSJON_UT;
         if (input instanceof VurderRefusjonBeregningsgrunnlagInput) {
-            VurderRefusjonBeregningsgrunnlagInput vurderRefInput = (VurderRefusjonBeregningsgrunnlagInput) input;
+            var vurderRefInput = (VurderRefusjonBeregningsgrunnlagInput) input;
             beregningsgrunnlagGrunnlagFraForrigeBehandling = vurderRefInput.getBeregningsgrunnlagGrunnlagFraForrigeBehandling();
         }
     }

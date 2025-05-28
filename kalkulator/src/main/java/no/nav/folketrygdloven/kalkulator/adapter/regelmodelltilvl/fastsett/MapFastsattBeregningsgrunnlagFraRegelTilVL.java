@@ -22,7 +22,7 @@ public class MapFastsattBeregningsgrunnlagFraRegelTilVL {
     }
 
     private BeregningsgrunnlagDto map(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.Beregningsgrunnlag resultatGrunnlag, BeregningsgrunnlagDto eksisterendeVLGrunnlag) {
-        BeregningsgrunnlagDto nyttBeregningsgrunnlag = BeregningsgrunnlagDto.builder(eksisterendeVLGrunnlag).build();
+        var nyttBeregningsgrunnlag = BeregningsgrunnlagDto.builder(eksisterendeVLGrunnlag).build();
         Objects.requireNonNull(resultatGrunnlag, "resultatGrunnlag");
         mapPerioder(nyttBeregningsgrunnlag, resultatGrunnlag.getBeregningsgrunnlagPerioder());
         return nyttBeregningsgrunnlag;
@@ -32,8 +32,8 @@ public class MapFastsattBeregningsgrunnlagFraRegelTilVL {
                              List<no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode> beregningsgrunnlagPerioder) {
 
         for (var resultatBGPeriode : beregningsgrunnlagPerioder) {
-            BeregningsgrunnlagPeriodeDto eksisterendePeriode = eksisterendeVLGrunnlag.getBeregningsgrunnlagPerioder().stream().filter(p -> p.getPeriode().getFomDato().equals(resultatBGPeriode.getPeriodeFom())).findFirst().orElseThrow();
-            for (BeregningsgrunnlagPrStatus regelAndel : resultatBGPeriode.getBeregningsgrunnlagPrStatus()) {
+            var eksisterendePeriode = eksisterendeVLGrunnlag.getBeregningsgrunnlagPerioder().stream().filter(p -> p.getPeriode().getFomDato().equals(resultatBGPeriode.getPeriodeFom())).findFirst().orElseThrow();
+            for (var regelAndel : resultatBGPeriode.getBeregningsgrunnlagPrStatus()) {
                 if (regelAndel.getAndelNr() == null) {
                     mapAndelMedArbeidsforhold(eksisterendePeriode, regelAndel);
                 } else {
@@ -56,18 +56,18 @@ public class MapFastsattBeregningsgrunnlagFraRegelTilVL {
     }
 
     private void mapAndelMedArbeidsforhold(BeregningsgrunnlagPeriodeDto mappetPeriode, BeregningsgrunnlagPrStatus regelAndel) {
-        for (BeregningsgrunnlagPrArbeidsforhold regelAndelForArbeidsforhold : regelAndel.getArbeidsforhold()) {
+        for (var regelAndelForArbeidsforhold : regelAndel.getArbeidsforhold()) {
             mapEksisterendeAndelForArbeidsforhold(mappetPeriode, regelAndelForArbeidsforhold);
         }
     }
 
     private void mapEksisterendeAndelForArbeidsforhold(BeregningsgrunnlagPeriodeDto mappetPeriode,
                                                        BeregningsgrunnlagPrArbeidsforhold regelAndelForArbeidsforhold) {
-        Optional<BeregningsgrunnlagPrStatusOgAndelDto> andelOpt = mappetPeriode.getBeregningsgrunnlagPrStatusOgAndelList().stream()
+        var andelOpt = mappetPeriode.getBeregningsgrunnlagPrStatusOgAndelList().stream()
                 .filter(bgpsa -> regelAndelForArbeidsforhold.getAndelNr().equals(bgpsa.getAndelsnr()))
                 .findFirst();
         if (andelOpt.isPresent()) {
-            BeregningsgrunnlagPrStatusOgAndelDto kalkulatorAndel = andelOpt.get();
+            var kalkulatorAndel = andelOpt.get();
             mapBeregningsgrunnlagPrStatusForATKombinert(mappetPeriode, kalkulatorAndel, regelAndelForArbeidsforhold);
         } else {
             throw new IllegalStateException("Forventer ikke ny andel fra fastsett beregning steg.");
@@ -97,7 +97,7 @@ public class MapFastsattBeregningsgrunnlagFraRegelTilVL {
     private void mapBeregningsgrunnlagPrStatusForATKombinert(BeregningsgrunnlagPeriodeDto vlBGPeriode,
                                                              BeregningsgrunnlagPrStatusOgAndelDto vlBGPAndel,
                                                              BeregningsgrunnlagPrArbeidsforhold regelArbeidsforhold) {
-        BeregningsgrunnlagPrStatusOgAndelDto.Builder andelBuilder = BeregningsgrunnlagPrStatusOgAndelDto.Builder.oppdatere(Optional.of(vlBGPAndel));
+        var andelBuilder = BeregningsgrunnlagPrStatusOgAndelDto.Builder.oppdatere(Optional.of(vlBGPAndel));
         settVerdierFraFastsettRegel(andelBuilder, regelArbeidsforhold);
         andelBuilder.build(vlBGPeriode);
     }
@@ -117,7 +117,7 @@ public class MapFastsattBeregningsgrunnlagFraRegelTilVL {
     private static void mapBeregningsgrunnlagPrStatus(BeregningsgrunnlagPeriodeDto vlBGPeriode,
                                                       BeregningsgrunnlagPrStatus resultatBGPStatus,
                                                       BeregningsgrunnlagPrStatusOgAndelDto vlBGPStatusOgAndel) {
-        BeregningsgrunnlagPrStatusOgAndelDto.Builder builder = BeregningsgrunnlagPrStatusOgAndelDto.Builder.oppdatere(Optional.of(vlBGPStatusOgAndel));
+        var builder = BeregningsgrunnlagPrStatusOgAndelDto.Builder.oppdatere(Optional.of(vlBGPStatusOgAndel));
         settVerdierFraFastsettRegel(builder, resultatBGPStatus);
         builder.build(vlBGPeriode);
     }

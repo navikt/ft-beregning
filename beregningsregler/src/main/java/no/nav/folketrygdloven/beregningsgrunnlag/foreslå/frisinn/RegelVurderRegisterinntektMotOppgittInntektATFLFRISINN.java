@@ -27,10 +27,10 @@ class RegelVurderRegisterinntektMotOppgittInntektATFLFRISINN extends LeafSpecifi
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        BeregningsgrunnlagPrStatus bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+        var bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
 
-        BigDecimal oppgittArbeidsinntekt = finnOppgittArbeidsinntekt(grunnlag);
-        BigDecimal samletATInntekt = finnSamletATInntekt(bgps);
+        var oppgittArbeidsinntekt = finnOppgittArbeidsinntekt(grunnlag);
+        var samletATInntekt = finnSamletATInntekt(bgps);
 
         if (samletATInntekt.compareTo(oppgittArbeidsinntekt) < 0) {
             fordelOppgittArbeidstakerInntekt(bgps, oppgittArbeidsinntekt, samletATInntekt);
@@ -50,22 +50,22 @@ class RegelVurderRegisterinntektMotOppgittInntektATFLFRISINN extends LeafSpecifi
     }
 
     private void fordelOppgittArbeidstakerInntekt(BeregningsgrunnlagPrStatus andel, BigDecimal oppgittArbeidsinntekt, BigDecimal totalATInntekt) {
-        List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = andel.getArbeidsforholdIkkeFrilans();
+        var arbeidsforhold = andel.getArbeidsforholdIkkeFrilans();
         if (totalATInntekt.compareTo(BigDecimal.ZERO) <= 0) {
             fordelLiktMellomAlleArbfor(arbeidsforhold, oppgittArbeidsinntekt);
         } else {
-            for (BeregningsgrunnlagPrArbeidsforhold arbfor : arbeidsforhold) {
-                BigDecimal andelAvTotalInntekt = finnAndelAvTotaltGrunnlag(arbfor, totalATInntekt);
-                BigDecimal nyArbeidsinntekt = andelAvTotalInntekt.multiply(oppgittArbeidsinntekt);
+            for (var arbfor : arbeidsforhold) {
+                var andelAvTotalInntekt = finnAndelAvTotaltGrunnlag(arbfor, totalATInntekt);
+                var nyArbeidsinntekt = andelAvTotalInntekt.multiply(oppgittArbeidsinntekt);
                 endreEksisterendeAndel(arbfor, nyArbeidsinntekt);
             }
         }
     }
 
     private void fordelLiktMellomAlleArbfor(List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold, BigDecimal oppgittArbeidsinntekt) {
-        int antallArbfor = arbeidsforhold.size();
+        var antallArbfor = arbeidsforhold.size();
         arbeidsforhold.forEach(arbfor -> {
-            BigDecimal nyArbeidsinntekt = oppgittArbeidsinntekt.divide(BigDecimal.valueOf(antallArbfor), 10, RoundingMode.HALF_EVEN);
+            var nyArbeidsinntekt = oppgittArbeidsinntekt.divide(BigDecimal.valueOf(antallArbfor), 10, RoundingMode.HALF_EVEN);
             endreEksisterendeAndel(arbfor, nyArbeidsinntekt);
         });
     }

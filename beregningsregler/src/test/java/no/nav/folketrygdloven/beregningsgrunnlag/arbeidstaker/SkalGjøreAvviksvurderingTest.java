@@ -23,7 +23,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.omp.OmsorgspengerGrunnlag;
-import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.Resultat;
 
 class SkalGjøreAvviksvurderingTest {
@@ -33,13 +32,13 @@ class SkalGjøreAvviksvurderingTest {
 	@Test
 	void skalIkkeSetteAksjonspunktNårBrukerIkkeHarSøkt() {
 		//Arrange
-		BigDecimal beregnetPrÅr = BigDecimal.valueOf(450_000);
+        var beregnetPrÅr = BigDecimal.valueOf(450_000);
 
-		Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlag(beregnetPrÅr, false);
-		BeregningsgrunnlagPeriode periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var beregningsgrunnlag = opprettBeregningsgrunnlag(beregnetPrÅr, false);
+        var periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
 		//Act
-		Evaluation resultat = new SkalGjøreAvviksvurdering().evaluate(periode);
+        var resultat = new SkalGjøreAvviksvurdering().evaluate(periode);
 		//Assert
 		assertThat(resultat.result()).isEqualTo(Resultat.NEI);
 	}
@@ -47,27 +46,27 @@ class SkalGjøreAvviksvurderingTest {
 	@Test
 	void skalSetteAksjonspunktNårBrukerHarSøkt() {
 		//Arrange
-		BigDecimal beregnetPrÅr = BigDecimal.valueOf(450_000);
+        var beregnetPrÅr = BigDecimal.valueOf(450_000);
 
-		Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlag(beregnetPrÅr, true);
-		BeregningsgrunnlagPeriode periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var beregningsgrunnlag = opprettBeregningsgrunnlag(beregnetPrÅr, true);
+        var periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
 		//Act
-		Evaluation resultat = new SkalGjøreAvviksvurdering().evaluate(periode);
+        var resultat = new SkalGjøreAvviksvurdering().evaluate(periode);
 		//Assert
 		assertThat(resultat.result()).isEqualTo(Resultat.JA);
 	}
 
 
 	private Beregningsgrunnlag opprettBeregningsgrunnlag(BigDecimal beregnetPrÅr, boolean avviksVurdere) {
-		BeregningsgrunnlagPrStatus beregningsgrunnlagPrStatus = BeregningsgrunnlagPrStatus.builder()
+        var beregningsgrunnlagPrStatus = BeregningsgrunnlagPrStatus.builder()
 				.medAktivitetStatus(AktivitetStatus.ATFL)
 				.medArbeidsforhold(BeregningsgrunnlagPrArbeidsforhold.builder()
 						.medBeregnetPrÅr(beregnetPrÅr)
 						.medArbeidsforhold(arbeidsforhold)
 						.medAndelNr(1L).build())
 				.build();
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(now(), null))
 				.medBeregningsgrunnlagPrStatus(beregningsgrunnlagPrStatus)
 				.build();

@@ -11,7 +11,6 @@ import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.Beregningsgru
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.FaktaArbeidsforholdDto;
 
 public class VurderLønnsendringOppdaterer {
 
@@ -33,7 +32,7 @@ public class VurderLønnsendringOppdaterer {
                 .filter(arb -> aktiviteterMedLønnsendring.stream().anyMatch(ya -> ya.getArbeidsgiver().equals(arb.getArbeidsgiver()) &&
                         ya.getArbeidsforholdRef().gjelderFor(arb.getArbeidsforholdRef())))
                 .forEach(arb -> {
-                    FaktaArbeidsforholdDto.Builder faktaArbBuilder = faktaAggregatBuilder.getFaktaArbeidsforholdBuilderFor(arb.getArbeidsgiver(), arb.getArbeidsforholdRef())
+                    var faktaArbBuilder = faktaAggregatBuilder.getFaktaArbeidsforholdBuilderFor(arb.getArbeidsgiver(), arb.getArbeidsforholdRef())
                             .medHarLønnsendringIBeregningsperiodenFastsattAvSaksbehandler(lønnsendringDto.erLønnsendringIBeregningsperioden());
                     faktaAggregatBuilder.erstattEksisterendeEllerLeggTil(faktaArbBuilder.build());
                 });
@@ -42,7 +41,7 @@ public class VurderLønnsendringOppdaterer {
             grunnlagBuilder.medFaktaAggregat(faktaAggregat);
         } catch (Exception e) {
             var iayArbeid = input.getIayGrunnlag().getAktørArbeidFraRegister().orElse(null);
-            String feilmelding = String.format("Klarte ikke bygge faktaaggregat. Input fra frontend: %s. Forrige bg: %s. iayArbeid: %s. Beregningsgrunnlag %s", dto.getVurdertLonnsendring(), forrigeBg, iayArbeid, beregningsgrunnlag);
+            var feilmelding = String.format("Klarte ikke bygge faktaaggregat. Input fra frontend: %s. Forrige bg: %s. iayArbeid: %s. Beregningsgrunnlag %s", dto.getVurdertLonnsendring(), forrigeBg, iayArbeid, beregningsgrunnlag);
             throw new IllegalStateException(feilmelding + e);
         }
 

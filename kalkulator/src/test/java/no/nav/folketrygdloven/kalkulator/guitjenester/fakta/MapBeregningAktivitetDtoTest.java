@@ -21,11 +21,11 @@ class MapBeregningAktivitetDtoTest {
     @Test
     void nyAktivitetIDetteGrunnlaget() {
         // Arrange
-        BeregningAktivitetDto beregningAktivitet = lagAktivitet(AKTØRID_1);
+        var beregningAktivitet = lagAktivitet(AKTØRID_1);
         List<BeregningAktivitetDto> saksbehandledeAktiviteter = List.of();
 
         // Act
-        no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.BeregningAktivitetDto dto = MapBeregningAktivitetDto.mapBeregningAktivitet(beregningAktivitet, saksbehandledeAktiviteter,
+        var dto = MapBeregningAktivitetDto.mapBeregningAktivitet(beregningAktivitet, saksbehandledeAktiviteter,
             Optional.empty());
 
         // Assert
@@ -35,11 +35,11 @@ class MapBeregningAktivitetDtoTest {
     @Test
     void aldriSaksbehandletEllerIngenAktiviteterIForrigeSaksbehandlet() {
         // Arrange
-        BeregningAktivitetDto beregningAktivitet = lagAktivitet(AKTØRID_1);
+        var beregningAktivitet = lagAktivitet(AKTØRID_1);
         List<BeregningAktivitetDto> saksbehandledeAktiviteter = List.of();
 
         // Act
-        no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.BeregningAktivitetDto dto = MapBeregningAktivitetDto.mapBeregningAktivitet(beregningAktivitet, saksbehandledeAktiviteter,
+        var dto = MapBeregningAktivitetDto.mapBeregningAktivitet(beregningAktivitet, saksbehandledeAktiviteter,
             Optional.empty());
 
         // Assert
@@ -49,11 +49,11 @@ class MapBeregningAktivitetDtoTest {
     @Test
     void saksbehandletIDetteGrunnlagetSattTilBenytt() {
         // Arrange
-        BeregningAktivitetDto beregningAktivitet = lagAktivitet(AKTØRID_1);
-        List<BeregningAktivitetDto> saksbehandledeAktiviteter = List.of(lagAktivitet(AKTØRID_1));
+        var beregningAktivitet = lagAktivitet(AKTØRID_1);
+        var saksbehandledeAktiviteter = List.of(lagAktivitet(AKTØRID_1));
 
         // Act
-        no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.BeregningAktivitetDto dto = MapBeregningAktivitetDto.mapBeregningAktivitet(beregningAktivitet, saksbehandledeAktiviteter,
+        var dto = MapBeregningAktivitetDto.mapBeregningAktivitet(beregningAktivitet, saksbehandledeAktiviteter,
             Optional.empty());
 
         // Assert
@@ -64,7 +64,7 @@ class MapBeregningAktivitetDtoTest {
     void saksbehandletIDetteGrunnlagetSattTilIkkeBenytt() {
         // Arrange
         var beregningAktivitet = lagAktivitet(AKTØRID_1);
-        List<BeregningAktivitetDto> saksbehandledeAktiviteter = List.of(lagAktivitet(AKTØRID_2));
+        var saksbehandledeAktiviteter = List.of(lagAktivitet(AKTØRID_2));
 
         // Act
         var dto = MapBeregningAktivitetDto.mapBeregningAktivitet(beregningAktivitet, saksbehandledeAktiviteter, Optional.empty());

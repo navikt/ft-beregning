@@ -3,7 +3,6 @@ package no.nav.folketrygdloven.beregningsgrunnlag.ytelse;
 import static no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel.F_14_7;
 import static no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel.F_9_9;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,7 +28,7 @@ class ForeslåBeregningsgrunnlagTY extends LeafSpecification<BeregningsgrunnlagP
 		var hjemmel = grunnlag.getBeregningsgrunnlag().getYtelsesSpesifiktGrunnlag().erKap9Ytelse() ? F_9_9 : F_14_7;
 		grunnlag.getBeregningsgrunnlag().getAktivitetStatus(AktivitetStatus.KUN_YTELSE)
 				.setHjemmel(hjemmel);
-		BigDecimal brutto = grunnlag.getBruttoPrÅr();
+        var brutto = grunnlag.getBruttoPrÅr();
 		resultater.put("beregnetPrÅr", brutto);
 		resultater.put("hjemmel", hjemmel);
 		return beregnet(resultater);

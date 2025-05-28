@@ -48,7 +48,7 @@ public class OppgittArbeidsforholdDto implements OppgittPeriodeInntekt {
         if (this == o) return true;
         if (o == null || !(o instanceof OppgittArbeidsforholdDto)) return false;
 
-        OppgittArbeidsforholdDto that = (OppgittArbeidsforholdDto) o;
+        var that = (OppgittArbeidsforholdDto) o;
 
         return
             Objects.equals(periode, that.periode) &&

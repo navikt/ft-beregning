@@ -22,10 +22,10 @@ class FinnMålbeløpForFordelingenPrAndel extends LeafSpecification<FordelModell
     @Override
     public Evaluation evaluate(FordelModell modell) {
 	    Map<String, Object> resultater = new HashMap<>();
-	    BigDecimal totalBruttoSomSkalFordeles = finnTotalBrutto(modell.getInput());
+        var totalBruttoSomSkalFordeles = finnTotalBrutto(modell.getInput());
 	    resultater.put("totalBruttoSomSkalFordeles", totalBruttoSomSkalFordeles);
 		modell.getMellomregninger().forEach(mellomregning -> {
-			BigDecimal målbeløp = finnMålbeløp(totalBruttoSomSkalFordeles, mellomregning);
+            var målbeløp = finnMålbeløp(totalBruttoSomSkalFordeles, mellomregning);
 			mellomregning.setMålbeløp(målbeløp);
 			resultater.put("andel", mellomregning.getInputAndel().getBeskrivelse());
 			resultater.put("beløpSomSkalFordelesTilAndel", målbeløp);

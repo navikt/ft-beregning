@@ -3,7 +3,6 @@ package no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.periodisering
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -51,7 +50,7 @@ public final class FinnAnsettelsesPeriode {
      * @return Periode {@link Periode}
      */
     public static Periode getMinMaksPeriode(Collection<AktivitetsAvtaleDto> ansettelsesPerioder, LocalDate skjæringstidspunkt) {
-        List<AktivitetsAvtaleDto> perioderSomSlutterEtterStp = ansettelsesPerioder
+        var perioderSomSlutterEtterStp = ansettelsesPerioder
                 .stream()
                 .filter(ap -> !ap.getPeriode().getTomDato().isBefore(BeregningstidspunktTjeneste.finnBeregningstidspunkt(skjæringstidspunkt)))
                 .collect(Collectors.toList());

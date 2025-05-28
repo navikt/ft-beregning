@@ -16,7 +16,6 @@ import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningAkti
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningAktivitetDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatusDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
@@ -70,17 +69,17 @@ class ManuellBehandlingRefusjonGraderingDtoTjenesteTest {
     @Test
     void skalKunneEndreInntektEtterRedusertRefusjonTilUnder6G() {
         // Arrange
-        AndelGradering graderinger = lagGradering();
-        BeregningsgrunnlagDto bgFørFordeling = lagBeregningsgrunnlagFørFordeling();
+        var graderinger = lagGradering();
+        var bgFørFordeling = lagBeregningsgrunnlagFørFordeling();
 
-        List<InntektsmeldingDto> inntektsmeldinger = lagInntektsmeldingOver6GRefusjon();
+        var inntektsmeldinger = lagInntektsmeldingOver6GRefusjon();
 
-        BeregningsgrunnlagGrunnlagDto grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
+        var grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medRegisterAktiviteter(aktivitetAggregatEntitet)
                 .medBeregningsgrunnlag(bgFørFordeling).build(BeregningsgrunnlagTilstand.OPPDATERT_MED_REFUSJON_OG_GRADERING);
 
         // Act
-        boolean kreverManuellBehandling = ManuellBehandlingRefusjonGraderingDtoTjeneste.skalSaksbehandlerRedigereInntekt(grunnlag,
+        var kreverManuellBehandling = ManuellBehandlingRefusjonGraderingDtoTjeneste.skalSaksbehandlerRedigereInntekt(grunnlag,
                 new AktivitetGradering(graderinger), bgFørFordeling.getBeregningsgrunnlagPerioder().get(0), bgFørFordeling.getBeregningsgrunnlagPerioder(), inntektsmeldinger, Collections.emptyList());
 
         // Assert
@@ -91,32 +90,32 @@ class ManuellBehandlingRefusjonGraderingDtoTjenesteTest {
     @Test
     void skalKunneEndreInntektOmTidligerePeriodeHarGraderingForAndelSomVilBliAvkortetTil0() {
         // Arrange
-        LocalDate graderingTom = SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(1);
-        AndelGradering graderingNæring = lagGraderingForNæringFraSTP(graderingTom);
-        BeregningsgrunnlagDto bg = BeregningsgrunnlagDto.builder()
+        var graderingTom = SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(1);
+        var graderingNæring = lagGraderingForNæringFraSTP(graderingTom);
+        var bg = BeregningsgrunnlagDto.builder()
                 .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING)
                 .medGrunnbeløp(Beløp.fra(GRUNNBELØP))
                 .leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
                 .leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE))
                 .build();
-        BeregningsgrunnlagPeriodeDto periode = lagPeriode(bg, SKJÆRINGSTIDSPUNKT_OPPTJENING, graderingTom);
+        var periode = lagPeriode(bg, SKJÆRINGSTIDSPUNKT_OPPTJENING, graderingTom);
         leggTilArbeidstakerOver6GOgNæring(periode);
-        BeregningsgrunnlagPeriodeDto periode2 = lagPeriode(bg, graderingTom.plusDays(1), null);
+        var periode2 = lagPeriode(bg, graderingTom.plusDays(1), null);
         leggTilArbeidstakerOver6GOgNæring(periode2);
 
-        BeregningsgrunnlagGrunnlagDto grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
+        var grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medRegisterAktiviteter(aktivitetAggregatEntitet)
                 .medBeregningsgrunnlag(bg).build(BeregningsgrunnlagTilstand.OPPDATERT_MED_REFUSJON_OG_GRADERING);
 
         // Act
-        boolean kreverManuellBehandling1 = ManuellBehandlingRefusjonGraderingDtoTjeneste.skalSaksbehandlerRedigereInntekt(
+        var kreverManuellBehandling1 = ManuellBehandlingRefusjonGraderingDtoTjeneste.skalSaksbehandlerRedigereInntekt(
                 grunnlag,
                 new AktivitetGradering(graderingNæring),
                 periode,
                 bg.getBeregningsgrunnlagPerioder(),
                 List.of(), Collections.emptyList());
 
-        boolean kreverManuellBehandling2 = ManuellBehandlingRefusjonGraderingDtoTjeneste.skalSaksbehandlerRedigereInntekt(
+        var kreverManuellBehandling2 = ManuellBehandlingRefusjonGraderingDtoTjeneste.skalSaksbehandlerRedigereInntekt(
                 grunnlag,
                 new AktivitetGradering(graderingNæring),
                 periode2,
@@ -132,16 +131,16 @@ class ManuellBehandlingRefusjonGraderingDtoTjenesteTest {
     @Test
     void skalKunneEndreRefusjonEtterRedusertRefusjonTilUnder6G() {
         // Arrange
-        AndelGradering graderinger = lagGradering();
-        BeregningsgrunnlagDto bgFørFordeling = lagBeregningsgrunnlagFørFordeling();
-        List<InntektsmeldingDto> inntektsmeldinger = lagInntektsmeldingOver6GRefusjon();
+        var graderinger = lagGradering();
+        var bgFørFordeling = lagBeregningsgrunnlagFørFordeling();
+        var inntektsmeldinger = lagInntektsmeldingOver6GRefusjon();
 
-        BeregningsgrunnlagGrunnlagDto grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
+        var grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medRegisterAktiviteter(aktivitetAggregatEntitet)
                 .medBeregningsgrunnlag(bgFørFordeling).build(BeregningsgrunnlagTilstand.OPPDATERT_MED_REFUSJON_OG_GRADERING);
 
         // Act
-        boolean kreverManuellBehandlingAvRefusjon = ManuellBehandlingRefusjonGraderingDtoTjeneste.skalSaksbehandlerRedigereRefusjon(
+        var kreverManuellBehandlingAvRefusjon = ManuellBehandlingRefusjonGraderingDtoTjeneste.skalSaksbehandlerRedigereRefusjon(
                 grunnlag,
             new AktivitetGradering(graderinger),
             bgFørFordeling.getBeregningsgrunnlagPerioder().get(0), inntektsmeldinger, Beløp.fra(GRUNNBELØP), Collections.emptyList());
@@ -192,12 +191,12 @@ class ManuellBehandlingRefusjonGraderingDtoTjenesteTest {
     }
 
     private BeregningsgrunnlagDto lagBeregningsgrunnlagFørFordeling() {
-        BeregningsgrunnlagDto bg = BeregningsgrunnlagDto.builder()
+        var bg = BeregningsgrunnlagDto.builder()
                 .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING)
                 .medGrunnbeløp(Beløp.fra(GRUNNBELØP))
                 .leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
                 .build();
-        BeregningsgrunnlagPeriodeDto periode = lagPeriode(bg, SKJÆRINGSTIDSPUNKT_OPPTJENING, null);
+        var periode = lagPeriode(bg, SKJÆRINGSTIDSPUNKT_OPPTJENING, null);
         BeregningsgrunnlagPrStatusOgAndelDto.ny()
                 .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder().medArbeidsgiver(ARBEIDSGIVER).medRefusjonskravPrÅr(Beløp.fra(GRUNNBELØP * 7), Utfall.GODKJENT))
                 .medInntektskategori(Inntektskategori.ARBEIDSTAKER)

@@ -6,7 +6,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseGrunnlagDto;
@@ -23,7 +22,7 @@ import no.nav.fpsak.tidsserie.LocalDateTimeline;
 public class OpprettKravPerioderFraInntektsmeldinger {
 
     public static List<KravperioderPrArbeidsforholdDto> opprett(InntektArbeidYtelseGrunnlagDto iayGrunnlag, LocalDate skjæringstidspunktBeregning) {
-        List<KravperioderPrArbeidsforholdDto> perioderPrArbeidsgiver = lagKravperioderPrArbeidsforhold(iayGrunnlag, skjæringstidspunktBeregning);
+        var perioderPrArbeidsgiver = lagKravperioderPrArbeidsforhold(iayGrunnlag, skjæringstidspunktBeregning);
         return perioderPrArbeidsgiver;
     }
 
@@ -33,14 +32,14 @@ public class OpprettKravPerioderFraInntektsmeldinger {
                 .stream()
                 .flatMap(im -> im.getAlleInntektsmeldinger().stream())
                 .forEach(im -> {
-                    PerioderForKravDto perioderForKravDto = lagPerioderForKrav(im, skjæringstidspunktBeregning, skjæringstidspunktBeregning);
+                    var perioderForKravDto = lagPerioderForKrav(im, skjæringstidspunktBeregning, skjæringstidspunktBeregning);
                     lagNyEllerLeggTilEksisterende(perioderPrArbeidsgiver, im, perioderForKravDto);
                 });
         return perioderPrArbeidsgiver;
     }
 
     private static void lagNyEllerLeggTilEksisterende(List<KravperioderPrArbeidsforholdDto> perioderPrArbeidsgiver, InntektsmeldingDto im, PerioderForKravDto perioderForKravDto) {
-        Optional<KravperioderPrArbeidsforholdDto> eksisterende = perioderPrArbeidsgiver.stream().filter(k -> k.getArbeidsgiver().getIdentifikator().equals(im.getArbeidsgiver().getIdentifikator()) &&
+        var eksisterende = perioderPrArbeidsgiver.stream().filter(k -> k.getArbeidsgiver().getIdentifikator().equals(im.getArbeidsgiver().getIdentifikator()) &&
                         k.getArbeidsforholdRef().gjelderFor(im.getArbeidsforholdRef()))
                 .findFirst();
         eksisterende.ifPresentOrElse(e -> e.getPerioder().add(perioderForKravDto),
@@ -51,12 +50,12 @@ public class OpprettKravPerioderFraInntektsmeldinger {
     }
 
     private static PerioderForKravDto lagPerioderForKrav(InntektsmeldingDto im, LocalDate innsendingsdato, LocalDate skjæringstidspunktBeregning) {
-        PerioderForKravDto perioderForKravDto = new PerioderForKravDto(innsendingsdato, lagPerioder(im, skjæringstidspunktBeregning));
+        var perioderForKravDto = new PerioderForKravDto(innsendingsdato, lagPerioder(im, skjæringstidspunktBeregning));
         return perioderForKravDto;
     }
 
     private static List<RefusjonsperiodeDto> lagPerioder(InntektsmeldingDto im, LocalDate skjæringstidspunktBeregning) {
-        ArrayList<LocalDateSegment<Beløp>> alleSegmenter = new ArrayList<>();
+        var alleSegmenter = new ArrayList<LocalDateSegment<Beløp>>();
         if (!(im.getRefusjonBeløpPerMnd() == null || im.getRefusjonBeløpPerMnd().erNullEller0())) {
             alleSegmenter.add(new LocalDateSegment<>(skjæringstidspunktBeregning,
                     TIDENES_ENDE, im.getRefusjonBeløpPerMnd()));
@@ -92,7 +91,7 @@ public class OpprettKravPerioderFraInntektsmeldinger {
                 .stream()
                 .flatMap(im -> im.getAlleInntektsmeldinger().stream())
                 .forEach(im -> {
-                    PerioderForKravDto perioderForKravDto = lagPerioderForKrav(im, førsteInnsendingsdatoMap.get(im.getArbeidsgiver()), skjæringstidspunktBeregning);
+                    var perioderForKravDto = lagPerioderForKrav(im, førsteInnsendingsdatoMap.get(im.getArbeidsgiver()), skjæringstidspunktBeregning);
                     lagNyEllerLeggTilEksisterende(perioderPrArbeidsgiver, im, perioderForKravDto);
                 });
         return perioderPrArbeidsgiver;

@@ -86,7 +86,7 @@ public class KravperioderPrArbeidsforhold {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        KravperioderPrArbeidsforhold that = (KravperioderPrArbeidsforhold) o;
+        var that = (KravperioderPrArbeidsforhold) o;
         return Objects.equals(arbeidsgiver, that.arbeidsgiver) &&
                 Objects.equals(internreferanse, that.internreferanse) &&
                 Objects.equals(alleSøktePerioder, that.alleSøktePerioder) &&

@@ -28,8 +28,8 @@ import no.nav.folketrygdloven.kalkulator.steg.refusjon.modell.RefusjonAndel;
 public class FinnAndelerMedØktRefusjonTjeneste {
 
     public static List<RefusjonAndel> finnAndelerPåSammeNøkkelMedØktRefusjon (List<RefusjonAndel> alleRevurderingAndeler, List<RefusjonAndel> alleOriginaleAndeler) {
-        boolean finnesSpesifikkReferanse = alleRevurderingAndeler.stream().anyMatch(andel -> andel.getArbeidsforholdRef().gjelderForSpesifiktArbeidsforhold());
-        boolean finnesGenerellReferanse = alleRevurderingAndeler.stream().anyMatch(andel -> !andel.getArbeidsforholdRef().gjelderForSpesifiktArbeidsforhold());
+        var finnesSpesifikkReferanse = alleRevurderingAndeler.stream().anyMatch(andel -> andel.getArbeidsforholdRef().gjelderForSpesifiktArbeidsforhold());
+        var finnesGenerellReferanse = alleRevurderingAndeler.stream().anyMatch(andel -> !andel.getArbeidsforholdRef().gjelderForSpesifiktArbeidsforhold());
 
         if (finnesGenerellReferanse && finnesSpesifikkReferanse) {
             return håndterBlandingstilfelle(alleRevurderingAndeler, alleOriginaleAndeler);
@@ -50,14 +50,14 @@ public class FinnAndelerMedØktRefusjonTjeneste {
     private static List<RefusjonAndel> håndterKunAndelerHarReferanse(List<RefusjonAndel> alleRevurderingAndeler, List<RefusjonAndel> alleOriginaleAndeler) {
         List<RefusjonAndel> andelerMedØktRefusjon = new ArrayList<>();
 
-        List<RefusjonAndel> revurderingAndelerUtenOriginalMatch = finnForskjellIReferanseMellomLister(alleRevurderingAndeler, alleOriginaleAndeler);
+        var revurderingAndelerUtenOriginalMatch = finnForskjellIReferanseMellomLister(alleRevurderingAndeler, alleOriginaleAndeler);
 
-        List<RefusjonAndel> revurderingAndelerMedOriginalMatch = alleRevurderingAndeler.stream()
+        var revurderingAndelerMedOriginalMatch = alleRevurderingAndeler.stream()
                 .filter(ra -> !revurderingAndelerUtenOriginalMatch.contains(ra))
                 .collect(Collectors.toList());
         andelerMedØktRefusjon.addAll(matchSpesifikkeAndeler(revurderingAndelerMedOriginalMatch, alleOriginaleAndeler));
 
-        List<RefusjonAndel> originaleAggregatandeler = alleOriginaleAndeler.stream()
+        var originaleAggregatandeler = alleOriginaleAndeler.stream()
                 .filter(oa -> !oa.getArbeidsforholdRef().gjelderForSpesifiktArbeidsforhold())
                 .collect(Collectors.toList());
         if (harAndelerØktRefusjon(originaleAggregatandeler, revurderingAndelerUtenOriginalMatch)) {
@@ -69,7 +69,7 @@ public class FinnAndelerMedØktRefusjonTjeneste {
     private static List<RefusjonAndel> matchSpesifikkeAndeler(List<RefusjonAndel> alleSpesifikkeRevurderingAndeler, List<RefusjonAndel> alleOriginaleAndeler) {
         List<RefusjonAndel> andelerMedØktRefusjon = new ArrayList<>();
         alleSpesifikkeRevurderingAndeler.forEach(ra -> {
-            List<RefusjonAndel> matchendeSpesifikkeOriginaleAndeler = alleOriginaleAndeler.stream()
+            var matchendeSpesifikkeOriginaleAndeler = alleOriginaleAndeler.stream()
                     .filter(oa -> oa.getArbeidsforholdRef().gjelderForSpesifiktArbeidsforhold()
                             && oa.getArbeidsforholdRef().gjelderFor(ra.getArbeidsforholdRef()))
                     .collect(Collectors.toList());
@@ -81,7 +81,7 @@ public class FinnAndelerMedØktRefusjonTjeneste {
     }
 
     private static List<RefusjonAndel> håndterKunAggregatandeler(List<RefusjonAndel> alleRevurderingAndeler, List<RefusjonAndel> alleOriginaleAndeler) {
-        List<RefusjonAndel> revurderingAggregatAndel = alleRevurderingAndeler.stream()
+        var revurderingAggregatAndel = alleRevurderingAndeler.stream()
                 .filter(revurdering -> !revurdering.getArbeidsforholdRef().gjelderForSpesifiktArbeidsforhold())
                 .collect(Collectors.toList());
         return harAndelerØktRefusjon(alleOriginaleAndeler, revurderingAggregatAndel) ? revurderingAggregatAndel : Collections.emptyList();
@@ -91,9 +91,9 @@ public class FinnAndelerMedØktRefusjonTjeneste {
         List<RefusjonAndel> andelerSomMåVurderes = new ArrayList<>();
 
         // Lager liste med revurderingandeler som ikke har match eller er aggregatandeler
-        List<RefusjonAndel> revurderingAggregatOgAndelerUtenMatchIOriginal = finnForskjellIReferanseMellomLister(alleRevurderingAndeler, alleOriginaleAndeler);
+        var revurderingAggregatOgAndelerUtenMatchIOriginal = finnForskjellIReferanseMellomLister(alleRevurderingAndeler, alleOriginaleAndeler);
         revurderingAggregatOgAndelerUtenMatchIOriginal.addAll(finnAggregatAndeler(alleRevurderingAndeler));
-        List<RefusjonAndel> originalAggregatOgAndelerUtenMatchIRevurdering = finnForskjellIReferanseMellomLister(alleOriginaleAndeler, alleRevurderingAndeler);
+        var originalAggregatOgAndelerUtenMatchIRevurdering = finnForskjellIReferanseMellomLister(alleOriginaleAndeler, alleRevurderingAndeler);
         originalAggregatOgAndelerUtenMatchIRevurdering.addAll(finnAggregatAndeler(alleOriginaleAndeler));
 
         if (harAndelerØktRefusjon(originalAggregatOgAndelerUtenMatchIRevurdering, revurderingAggregatOgAndelerUtenMatchIOriginal)) {
@@ -101,7 +101,7 @@ public class FinnAndelerMedØktRefusjonTjeneste {
         }
 
         // Alle andre andeler kan matches mot original liste
-        List<RefusjonAndel> revurderingAndelerMedOriginalMatch = alleRevurderingAndeler.stream()
+        var revurderingAndelerMedOriginalMatch = alleRevurderingAndeler.stream()
                 .filter(ra -> !revurderingAggregatOgAndelerUtenMatchIOriginal.contains(ra))
                 .collect(Collectors.toList());
         andelerSomMåVurderes.addAll(matchSpesifikkeAndeler(revurderingAndelerMedOriginalMatch, alleOriginaleAndeler));
@@ -122,7 +122,7 @@ public class FinnAndelerMedØktRefusjonTjeneste {
     }
 
     private static List<RefusjonAndel> finnForskjellIReferanseMellomLister(List<RefusjonAndel> listeSomSkalSjekkes, List<RefusjonAndel> listeÅSjekkeMot) {
-        List<InternArbeidsforholdRefDto> referanserISjekkliste = listeÅSjekkeMot.stream()
+        var referanserISjekkliste = listeÅSjekkeMot.stream()
                 .map(RefusjonAndel::getArbeidsforholdRef)
                 .filter(InternArbeidsforholdRefDto::gjelderForSpesifiktArbeidsforhold)
                 .collect(Collectors.toList());

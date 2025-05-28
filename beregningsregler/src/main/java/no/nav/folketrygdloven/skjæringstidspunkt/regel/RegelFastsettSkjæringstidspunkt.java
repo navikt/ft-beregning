@@ -26,7 +26,7 @@ public class RegelFastsettSkjæringstidspunkt implements EksportRegel<AktivitetS
     @Override
     public Specification<AktivitetStatusModell> getSpecification() {
 
-        Ruleset<AktivitetStatusModell> rs = new Ruleset<>();
+        var rs = new Ruleset<AktivitetStatusModell>();
 
 //      FP_BR 21.5 Skjæringstidspunkt for beregning = første dag etter siste aktivitetsdag før skjæringstidspunkt for opptjening
 
@@ -42,12 +42,12 @@ public class RegelFastsettSkjæringstidspunkt implements EksportRegel<AktivitetS
 
 //      FP_BR 21.1 Er tom-dato for siste aktivitet dagen før skjæringstidspunkt for opptjening?
 
-        Specification<AktivitetStatusModell> erDetAktivitetFremTilStpForOpptjening =
+        var erDetAktivitetFremTilStpForOpptjening =
                 rs.beregningHvisRegel(new SjekkOmAktivitetRettFørOpptjening(), likSkjæringstidspunktForOpptjening, førsteDagEtterAktivitet);
 
 //      FP_BR 21.8 Er siste aktivitet før skjæringstidspunkt for opptjening, militær eller obligatorisk sivilforvarstjeneste og er dette brukers eneste aktivitet på dette tidspunktet Og har bruker andre aktiviteter i opptjeningsperioden
 
-        Specification<AktivitetStatusModell> startFastsettSkjæringstidspunktForBeregning =
+        var startFastsettSkjæringstidspunktForBeregning =
             rs.beregningHvisRegel(new SjekkOmMilitærErSisteOgEnesteAktivitet(), førsteDagEtterAktivitetSomIkkeErMilitær, erDetAktivitetFremTilStpForOpptjening);
 
         return startFastsettSkjæringstidspunktForBeregning;

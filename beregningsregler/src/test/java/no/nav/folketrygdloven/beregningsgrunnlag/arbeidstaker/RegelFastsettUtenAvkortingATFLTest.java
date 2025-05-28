@@ -7,7 +7,6 @@ import static org.assertj.core.api.Assertions.within;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
@@ -18,7 +17,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
-import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 
 class RegelFastsettUtenAvkortingATFLTest {
@@ -31,17 +29,16 @@ class RegelFastsettUtenAvkortingATFLTest {
     @Test
     void skalFastsetteNårBruttoBGLikRefusjon() {
         //Arrange
-        BigDecimal bruttoBG = BigDecimal.valueOf(448000d);
-        BigDecimal refusjonsKrav = BigDecimal.valueOf(448000d);
+        var bruttoBG = BigDecimal.valueOf(448000d);
+        var refusjonsKrav = BigDecimal.valueOf(448000d);
 
-        BeregningsgrunnlagPeriode grunnlag = lagBeregningsgrunnlagPeriode(1, bruttoBG, null, refusjonsKrav, null);
+        var grunnlag = lagBeregningsgrunnlagPeriode(1, bruttoBG, null, refusjonsKrav, null);
 
         //Act
-        Evaluation evaluation = new RegelFastsettUtenAvkortingATFL().evaluer(grunnlag);
+        var evaluation = new RegelFastsettUtenAvkortingATFL().evaluer(grunnlag);
 
         //Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
+        @SuppressWarnings("unused") var sporing = EvaluationSerializer.asJson(evaluation);
         verifiserBrukersAndel(grunnlag, 0d, null);
         verifiserArbeidsgiversAndel(grunnlag,448000d, null);
         verifiserBeregningsgrunnlagAvkortetPrÅr(grunnlag, null, AktivitetStatus.ATFL, 448000d);
@@ -51,17 +48,16 @@ class RegelFastsettUtenAvkortingATFLTest {
     @Test
     void skalFastsetteNårRefusjonErDelerAvInntekten() {
         //Arrange
-        BigDecimal bruttoBG = BigDecimal.valueOf(448000d);
-        BigDecimal refusjonsKrav = BigDecimal.valueOf(300000d);
+        var bruttoBG = BigDecimal.valueOf(448000d);
+        var refusjonsKrav = BigDecimal.valueOf(300000d);
 
-        BeregningsgrunnlagPeriode grunnlag = lagBeregningsgrunnlagPeriode(1, bruttoBG, null, refusjonsKrav, null);
+        var grunnlag = lagBeregningsgrunnlagPeriode(1, bruttoBG, null, refusjonsKrav, null);
 
         //Act
-        Evaluation evaluation = new RegelFastsettUtenAvkortingATFL().evaluer(grunnlag);
+        var evaluation = new RegelFastsettUtenAvkortingATFL().evaluer(grunnlag);
 
         //Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
+        @SuppressWarnings("unused") var sporing = EvaluationSerializer.asJson(evaluation);
         verifiserBrukersAndel(grunnlag, 148000d, null);
         verifiserArbeidsgiversAndel(grunnlag,300000d, null);
         verifiserBeregningsgrunnlagAvkortetPrÅr(grunnlag, null, AktivitetStatus.ATFL, 448000d);
@@ -70,18 +66,17 @@ class RegelFastsettUtenAvkortingATFLTest {
     @Test
     void skalFastsetteNårRefusjonKravErNull() {
         //Arrange
-        BigDecimal bruttoBG1 = BigDecimal.valueOf(168000d);
-        BigDecimal bruttoBG2 = BigDecimal.valueOf(336000d);
-        BigDecimal refusjonsKrav = BigDecimal.valueOf(0d);
+        var bruttoBG1 = BigDecimal.valueOf(168000d);
+        var bruttoBG2 = BigDecimal.valueOf(336000d);
+        var refusjonsKrav = BigDecimal.valueOf(0d);
 
-        BeregningsgrunnlagPeriode grunnlag = lagBeregningsgrunnlagPeriode(2, bruttoBG1, bruttoBG2, refusjonsKrav, refusjonsKrav);
+        var grunnlag = lagBeregningsgrunnlagPeriode(2, bruttoBG1, bruttoBG2, refusjonsKrav, refusjonsKrav);
 
         //Act
-        Evaluation evaluation = new RegelFastsettUtenAvkortingATFL().evaluer(grunnlag);
+        var evaluation = new RegelFastsettUtenAvkortingATFL().evaluer(grunnlag);
 
         //Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
+        @SuppressWarnings("unused") var sporing = EvaluationSerializer.asJson(evaluation);
         verifiserBrukersAndel(grunnlag, 168000d, 336000d);
         verifiserArbeidsgiversAndel(grunnlag,0d, 0d);
         verifiserBeregningsgrunnlagAvkortetPrÅr(grunnlag, null, AktivitetStatus.ATFL, 504000d);
@@ -90,19 +85,18 @@ class RegelFastsettUtenAvkortingATFLTest {
     @Test
     void skalFastsetteNårRefusjonErDelerAvInntektenMedFlereArbeidsforhold() {
         //Arrange
-        BigDecimal bruttoBG1 = BigDecimal.valueOf(168000d);
-        BigDecimal bruttoBG2 = BigDecimal.valueOf(336000d);
-        BigDecimal refusjonsKrav1 = BigDecimal.valueOf(100000d);
-        BigDecimal refusjonsKrav2 = BigDecimal.valueOf(300000d);
+        var bruttoBG1 = BigDecimal.valueOf(168000d);
+        var bruttoBG2 = BigDecimal.valueOf(336000d);
+        var refusjonsKrav1 = BigDecimal.valueOf(100000d);
+        var refusjonsKrav2 = BigDecimal.valueOf(300000d);
 
-        BeregningsgrunnlagPeriode grunnlag = lagBeregningsgrunnlagPeriode(2, bruttoBG1, bruttoBG2, refusjonsKrav1, refusjonsKrav2);
+        var grunnlag = lagBeregningsgrunnlagPeriode(2, bruttoBG1, bruttoBG2, refusjonsKrav1, refusjonsKrav2);
 
         //Act
-        Evaluation evaluation = new RegelFastsettUtenAvkortingATFL().evaluer(grunnlag);
+        var evaluation = new RegelFastsettUtenAvkortingATFL().evaluer(grunnlag);
 
         //Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
+        @SuppressWarnings("unused") var sporing = EvaluationSerializer.asJson(evaluation);
         verifiserBrukersAndel(grunnlag, 68000d, 36000d);
         verifiserArbeidsgiversAndel(grunnlag,100000d, 300000d);
         verifiserBeregningsgrunnlagAvkortetPrÅr(grunnlag, null, AktivitetStatus.ATFL, 504000d);
@@ -111,18 +105,18 @@ class RegelFastsettUtenAvkortingATFLTest {
     private BeregningsgrunnlagPeriode lagBeregningsgrunnlagPeriode(int antallArbeidsgiver, BigDecimal bruttoBG1, BigDecimal bruttoBG2,
                                                                    BigDecimal refusjonsKrav1, BigDecimal refusjonsKrav2) {
 
-        BeregningsgrunnlagPeriode.Builder bgBuilder = BeregningsgrunnlagPeriode.builder()
+        var bgBuilder = BeregningsgrunnlagPeriode.builder()
             .medPeriode(Periode.of(skjæringstidspunkt, null));
 
 
-        BeregningsgrunnlagPrArbeidsforhold afBuilder1 = BeregningsgrunnlagPrArbeidsforhold.builder()
+        var afBuilder1 = BeregningsgrunnlagPrArbeidsforhold.builder()
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ARBEIDSFORHOLDID1))
             .medAndelNr(1)
             .medBruttoPrÅr(bruttoBG1)
             .medMaksimalRefusjonPrÅr(refusjonsKrav1)
             .build();
 
-        BeregningsgrunnlagPrStatus bgpsATFL = BeregningsgrunnlagPrStatus.builder()
+        var bgpsATFL = BeregningsgrunnlagPrStatus.builder()
             .medAktivitetStatus(AktivitetStatus.ATFL)
             .medArbeidsforhold(afBuilder1)
             .build();
@@ -131,7 +125,7 @@ class RegelFastsettUtenAvkortingATFLTest {
             return bgBuilder.medBeregningsgrunnlagPrStatus(bgpsATFL).build();
         }
 
-        BeregningsgrunnlagPrArbeidsforhold afBuilder2 = BeregningsgrunnlagPrArbeidsforhold.builder()
+        var afBuilder2 = BeregningsgrunnlagPrArbeidsforhold.builder()
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ARBEIDSFORHOLDID2))
             .medAndelNr(2)
             .medBruttoPrÅr(bruttoBG2)
@@ -148,7 +142,7 @@ class RegelFastsettUtenAvkortingATFLTest {
 
 
     private void verifiserBrukersAndel(BeregningsgrunnlagPeriode grunnlag, Double beløp1, Double beløp2) {
-        List<BigDecimal> brukersAndel = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().stream().
+        var brukersAndel = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().stream().
             map(BeregningsgrunnlagPrArbeidsforhold::getAvkortetBrukersAndelPrÅr).collect(Collectors.toList());
 
         if(brukersAndel.size() == 1) {
@@ -161,7 +155,7 @@ class RegelFastsettUtenAvkortingATFLTest {
     }
 
     private void verifiserArbeidsgiversAndel(BeregningsgrunnlagPeriode grunnlag, Double beløp1, Double beløp2) {
-        List<BigDecimal> arbeidsgiversAndel = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().stream().
+        var arbeidsgiversAndel = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().stream().
             map(BeregningsgrunnlagPrArbeidsforhold::getMaksimalRefusjonPrÅr).collect(Collectors.toList());
 
         if(arbeidsgiversAndel.size() == 1) {

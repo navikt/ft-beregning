@@ -64,12 +64,12 @@ abstract class OmfordelForArbeidsforhold {
             throw new IllegalStateException("Skal ikke flytte mer av refusjonskravet.");
         }
 
-	    BigDecimal nyRefusjon = eksisterende.getGradertRefusjonPrÅr().get().subtract(beløpSomSkalOmfordelesTilArbeidsforhold); // NOSONAR
+        var nyRefusjon = eksisterende.getGradertRefusjonPrÅr().get().subtract(beløpSomSkalOmfordelesTilArbeidsforhold); // NOSONAR
 	    FordelAndelModell.oppdater(eksisterende)
 			    .medFordeltRefusjonPrÅr(skalerOpp(nyRefusjon, eksisterende.getUtbetalingsgrad()))
 			    .medGjeldendeRefusjonPrÅr(skalerOpp(nyRefusjon, eksisterende.getUtbetalingsgrad()));
 
-	    BigDecimal fordeltRefusjon = aktivitet.getGradertRefusjonPrÅr().isPresent() ? aktivitet.getGradertRefusjonPrÅr().get().add(beløpSomSkalOmfordelesTilArbeidsforhold) : beløpSomSkalOmfordelesTilArbeidsforhold; // NOSONAR
+        var fordeltRefusjon = aktivitet.getGradertRefusjonPrÅr().isPresent() ? aktivitet.getGradertRefusjonPrÅr().get().add(beløpSomSkalOmfordelesTilArbeidsforhold) : beløpSomSkalOmfordelesTilArbeidsforhold; // NOSONAR
 	    FordelAndelModell.oppdater(aktivitet)
             .medFordeltRefusjonPrÅr(skalerOpp(fordeltRefusjon, aktivitet.getUtbetalingsgrad()))
 		    .medGjeldendeRefusjonPrÅr(skalerOpp(fordeltRefusjon, aktivitet.getUtbetalingsgrad()));

@@ -12,7 +12,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.kalkulator.konfig.KonfigTjeneste;
@@ -37,7 +36,7 @@ public class MapTilAvslagsårsakerFRISINN {
                                              OppgittOpptjeningDto oppgittOpptjening,
                                              Beløp grunnbeløp,
                                              LocalDate skjæringstidspunkt) {
-        LocalDate fomDato = andel.getBeregningsgrunnlagPeriode().getBeregningsgrunnlagPeriodeFom();
+        var fomDato = andel.getBeregningsgrunnlagPeriode().getBeregningsgrunnlagPeriodeFom();
         if (andel.getAktivitetStatus().equals(AktivitetStatus.FRILANSER) && frisinnGrunnlag.getSøkerYtelseForFrilans(fomDato)) {
             return finnAvslagsårsakForFrilans(andel, andelerISammePeriode, oppgittOpptjening, grunnbeløp);
         }
@@ -51,7 +50,7 @@ public class MapTilAvslagsårsakerFRISINN {
                                                                      List<BeregningsgrunnlagPrStatusOgAndelDto> andelerISammePeriode,
                                                                      OppgittOpptjeningDto oppgittOpptjening,
                                                                      Beløp grunnbeløp) {
-        LocalDate fomDato = andel.getBeregningsgrunnlagPeriode().getBeregningsgrunnlagPeriodeFom();
+        var fomDato = andel.getBeregningsgrunnlagPeriode().getBeregningsgrunnlagPeriodeFom();
         var førsteSøknadsdato = finnPeriodeinntekterFrilans(oppgittOpptjening).stream()
                 .map(OppgittPeriodeInntekt::getPeriode)
                 .map(Intervall::getFomDato)
@@ -86,8 +85,8 @@ public class MapTilAvslagsårsakerFRISINN {
                                                                     FrisinnGrunnlag frisinnGrunnlag,
                                                                     Beløp grunnbeløp,
                                                                     LocalDate skjæringstidspunkt) {
-        BeregningsgrunnlagPeriodeDto bgPeriode = andel.getBeregningsgrunnlagPeriode();
-        Intervall periode = bgPeriode.getPeriode();
+        var bgPeriode = andel.getBeregningsgrunnlagPeriode();
+        var periode = bgPeriode.getPeriode();
         var førsteSøknadsdato = finnPeriodeinntekterNæring(oppgittOpptjening).stream()
                 .map(OppgittPeriodeInntekt::getPeriode)
                 .map(Intervall::getFomDato)
@@ -149,7 +148,7 @@ public class MapTilAvslagsårsakerFRISINN {
 
     private static Beløp finnLøpendeFrilansInntekt(BeregningsgrunnlagPrStatusOgAndelDto andel,
                                                         OppgittOpptjeningDto oppgittOpptjening) {
-        List<OppgittPeriodeInntekt> oppgittInntektFrilans = finnPeriodeinntekterFrilans(oppgittOpptjening);
+        var oppgittInntektFrilans = finnPeriodeinntekterFrilans(oppgittOpptjening);
         return finnInntektIPeriode(oppgittInntektFrilans, andel.getBeregningsgrunnlagPeriode().getPeriode());
     }
 
@@ -185,15 +184,15 @@ public class MapTilAvslagsårsakerFRISINN {
             return Optional.empty();
         }
 
-        LocalDate fom = beregningsgrunnlagPeriode.getBeregningsgrunnlagPeriodeFom();
+        var fom = beregningsgrunnlagPeriode.getBeregningsgrunnlagPeriodeFom();
         if (!frisinnGrunnlag.getSøkerYtelseForNæring(fom) && !frisinnGrunnlag.getSøkerYtelseForFrilans(fom)) {
             return Optional.empty();
         }
 
         if (oppgittOpptjening.isPresent()) {
 
-            List<BeregningsgrunnlagPrStatusOgAndelDto> andeler = beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndelList();
-            Set<Avslagsårsak> avslagsårsaker = andeler.stream()
+            var andeler = beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndelList();
+            var avslagsårsaker = andeler.stream()
                     .flatMap(a -> map(a, andeler, frisinnGrunnlag, oppgittOpptjening.get(), gbeløp, skjæringstidspunkt).stream())
                     .collect(Collectors.toSet());
             if (harForLavtBeregningsgrunnlag(frisinnGrunnlag, gbeløp, fom, andeler)) {

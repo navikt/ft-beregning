@@ -21,7 +21,7 @@ public class IdentifiserteNaturalytelsePeriodeÅrsaker {
     }
 
     public void leggTilPeriodeÅrsak(PeriodeSplittDataNaturalytelse splittData) {
-        LocalDate dato = splittData.getFom();
+        var dato = splittData.getFom();
         if (periodeMap.containsKey(dato)) {
             var data = periodeMap.get(dato);
             data.add(splittData);

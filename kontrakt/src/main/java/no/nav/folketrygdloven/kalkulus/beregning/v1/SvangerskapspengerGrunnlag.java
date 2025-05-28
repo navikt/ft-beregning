@@ -61,7 +61,7 @@ public class SvangerskapspengerGrunnlag extends YtelsespesifiktGrunnlagDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        SvangerskapspengerGrunnlag that = (SvangerskapspengerGrunnlag) o;
+        var that = (SvangerskapspengerGrunnlag) o;
         return Objects.equals(utbetalingsgradPrAktivitet, that.utbetalingsgradPrAktivitet) && Objects.equals(tilkommetInntektHensyntasFom, that.tilkommetInntektHensyntasFom);
     }
 

@@ -66,7 +66,7 @@ public class YrkesaktivitetFilterDto {
     }
 
     public Collection<AktivitetsAvtaleDto> getAktivitetsAvtalerForArbeid(YrkesaktivitetDto ya) {
-        Collection<AktivitetsAvtaleDto> aktivitetsAvtaler = filterAktivitetsAvtaleOverstyring(ya, internGetAktivitetsAvtalerForArbeid(ya));
+        var aktivitetsAvtaler = filterAktivitetsAvtaleOverstyring(ya, internGetAktivitetsAvtalerForArbeid(ya));
         return aktivitetsAvtaler;
     }
 
@@ -135,7 +135,7 @@ public class YrkesaktivitetFilterDto {
     }
 
     private boolean erArbeidsforholdOgStarterPåRettSideAvSkjæringstidspunkt(YrkesaktivitetDto it) {
-        boolean retval = it.erArbeidsforhold()
+        var retval = it.erArbeidsforhold()
                 && getAnsettelsesPerioder(it).stream().anyMatch(ap -> skalMedEtterSkjæringstidspunktVurdering(ap));
         return retval;
     }
@@ -201,7 +201,7 @@ public class YrkesaktivitetFilterDto {
 
     private Collection<AktivitetsAvtaleDto> filterAktivitetsAvtaleOverstyring(YrkesaktivitetDto ya, Collection<AktivitetsAvtaleDto> yaAvtaler) {
 
-        Optional<ArbeidsforholdOverstyringDto> overstyringOpt = finnMatchendeOverstyring(ya);
+        var overstyringOpt = finnMatchendeOverstyring(ya);
 
         if (overstyringOpt.isPresent()) {
             return overstyrYrkesaktivitet(overstyringOpt.get(), yaAvtaler);
@@ -211,9 +211,9 @@ public class YrkesaktivitetFilterDto {
     }
 
     Collection<AktivitetsAvtaleDto> overstyrYrkesaktivitet(ArbeidsforholdOverstyringDto overstyring, Collection<AktivitetsAvtaleDto> yaAvtaler) {
-        ArbeidsforholdHandlingType handling = overstyring.getHandling();
+        var handling = overstyring.getHandling();
 
-        List<ArbeidsforholdOverstyrtePerioderDto> overstyrtePerioder = overstyring.getArbeidsforholdOverstyrtePerioder();
+        var overstyrtePerioder = overstyring.getArbeidsforholdOverstyrtePerioder();
         if (handling.erPeriodeOverstyrt() && !overstyrtePerioder.isEmpty()) {
             Set<AktivitetsAvtaleDto> avtaler = new LinkedHashSet<>();
             overstyrtePerioder.forEach(overstyrtPeriode -> yaAvtaler.stream()
@@ -236,7 +236,7 @@ public class YrkesaktivitetFilterDto {
         if (arbeidsforholdOverstyringer == null) {
             return Optional.empty(); // ikke initialisert, så kan ikke ha overstyringer
         }
-        List<ArbeidsforholdOverstyringDto> overstyringer = arbeidsforholdOverstyringer.getOverstyringer();
+        var overstyringer = arbeidsforholdOverstyringer.getOverstyringer();
         if (overstyringer.isEmpty()) {
             return Optional.empty();
         }
@@ -254,10 +254,10 @@ public class YrkesaktivitetFilterDto {
      */
     public List<AktivitetsAvtaleDto> getAnsettelsesPerioder(YrkesaktivitetDto ya) {
         if (ya.erArbeidsforhold()) {
-            List<AktivitetsAvtaleDto> ansettelsesAvtaler = ya.getAlleAktivitetsAvtaler().stream()
+            var ansettelsesAvtaler = ya.getAlleAktivitetsAvtaler().stream()
                     .filter(AktivitetsAvtaleDto::erAnsettelsesPeriode)
                     .collect(Collectors.toList());
-            List<AktivitetsAvtaleDto> filtrert = List.copyOf(filterAktivitetsAvtaleOverstyring(ya, ansettelsesAvtaler));
+            var filtrert = List.copyOf(filterAktivitetsAvtaleOverstyring(ya, ansettelsesAvtaler));
             return filtrert;
         }
         return Collections.emptyList();

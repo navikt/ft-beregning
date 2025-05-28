@@ -34,22 +34,22 @@ class MapAndelGraderingTest {
     @Test
     void skalMappeAndelGraderingSN() {
         // Arrange
-        LocalDate fom1 = LocalDate.now();
-        LocalDate tom1 = fom1.plusWeeks(6);
-        Intervall p1 = Intervall.fraOgMedTilOgMed(fom1, tom1);
-        LocalDate fom2 = fom1.plusMonths(3);
-        LocalDate tom2 = tom1.plusMonths(3);
-        Intervall p2 = Intervall.fraOgMedTilOgMed(fom2, tom2);
+        var fom1 = LocalDate.now();
+        var tom1 = fom1.plusWeeks(6);
+        var p1 = Intervall.fraOgMedTilOgMed(fom1, tom1);
+        var fom2 = fom1.plusMonths(3);
+        var tom2 = tom1.plusMonths(3);
+        var p2 = Intervall.fraOgMedTilOgMed(fom2, tom2);
         var vlAndelGradering = AndelGradering.builder()
             .medStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE)
             .leggTilGradering(new AndelGradering.Gradering(p1, Aktivitetsgrad.fra(50)))
             .leggTilGradering(new AndelGradering.Gradering(p2, Aktivitetsgrad.fra(25)))
             .build();
-        YrkesaktivitetFilterDto filter = new YrkesaktivitetFilterDto(Optional.empty(), Optional.empty());
-        BeregningsgrunnlagDto bg = BeregningsgrunnlagDto.builder()
+        var filter = new YrkesaktivitetFilterDto(Optional.empty(), Optional.empty());
+        var bg = BeregningsgrunnlagDto.builder()
                 .medSkjæringstidspunkt(fom1)
                 .build();
-        BeregningsgrunnlagPeriodeDto bgperiode = BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(fom1, TIDENES_ENDE)
+        var bgperiode = BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(fom1, TIDENES_ENDE)
                 .build(bg);
         BeregningsgrunnlagPrStatusOgAndelDto.ny()
                 .medAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE)
@@ -74,22 +74,22 @@ class MapAndelGraderingTest {
     @Test
     void skalMappeAndelGraderingFL() {
 // Arrange
-        LocalDate fom1 = LocalDate.now();
-        LocalDate tom1 = fom1.plusWeeks(6);
-        Intervall p1 = Intervall.fraOgMedTilOgMed(fom1, tom1);
-        LocalDate fom2 = fom1.plusMonths(3);
-        LocalDate tom2 = tom1.plusMonths(3);
-        Intervall p2 = Intervall.fraOgMedTilOgMed(fom2, tom2);
+        var fom1 = LocalDate.now();
+        var tom1 = fom1.plusWeeks(6);
+        var p1 = Intervall.fraOgMedTilOgMed(fom1, tom1);
+        var fom2 = fom1.plusMonths(3);
+        var tom2 = tom1.plusMonths(3);
+        var p2 = Intervall.fraOgMedTilOgMed(fom2, tom2);
         var vlAndelGradering = AndelGradering.builder()
             .medStatus(AktivitetStatus.FRILANSER)
             .leggTilGradering(new AndelGradering.Gradering(p1, Aktivitetsgrad.fra(50)))
             .leggTilGradering(new AndelGradering.Gradering(p2, Aktivitetsgrad.fra(25)))
                 .build();
-        YrkesaktivitetFilterDto filter = new YrkesaktivitetFilterDto(Optional.empty(), Optional.empty());
-        BeregningsgrunnlagDto bg = BeregningsgrunnlagDto.builder()
+        var filter = new YrkesaktivitetFilterDto(Optional.empty(), Optional.empty());
+        var bg = BeregningsgrunnlagDto.builder()
                 .medSkjæringstidspunkt(fom1)
                 .build();
-        BeregningsgrunnlagPeriodeDto bgperiode = BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(fom1, TIDENES_ENDE)
+        var bgperiode = BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(fom1, TIDENES_ENDE)
                 .build(bg);
         BeregningsgrunnlagPrStatusOgAndelDto.ny()
                 .medAktivitetStatus(AktivitetStatus.FRILANSER)

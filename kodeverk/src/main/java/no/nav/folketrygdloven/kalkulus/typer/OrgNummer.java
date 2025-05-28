@@ -51,7 +51,7 @@ public class OrgNummer implements Comparable<OrgNummer> {
         } else if (!(obj instanceof OrgNummer)) {
             return false;
         }
-        OrgNummer other = (OrgNummer) obj;
+        var other = (OrgNummer) obj;
         return Objects.equals(orgNummer, other.orgNummer);
     }
 

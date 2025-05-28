@@ -13,7 +13,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.TilkommetInntekt;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
-import no.nav.fpsak.nare.evaluation.node.SingleEvaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(FinnGrenseverdiUtenFordeling.ID)
@@ -31,10 +30,10 @@ class FinnGrenseverdiUtenFordeling extends LeafSpecification<BeregningsgrunnlagP
 		Map<String, Object> resultater = new HashMap<>();
 
 		//gradering mot uttak
-		BigDecimal summerAvkortetGradertMotUttak = summerAvkortetGradertMotUttak(grunnlag);
+        var summerAvkortetGradertMotUttak = summerAvkortetGradertMotUttak(grunnlag);
 		var grenseverdi = summerAvkortetGradertMotUttak;
-		BigDecimal sumAvkortet = summerAvkortet(grunnlag);
-		BigDecimal totalUtbetalingsgradFraUttak = sumAvkortet.signum() != 0 ? summerAvkortetGradertMotUttak.divide(sumAvkortet, 4, RoundingMode.HALF_UP) : BigDecimal.ZERO;
+        var sumAvkortet = summerAvkortet(grunnlag);
+        var totalUtbetalingsgradFraUttak = sumAvkortet.signum() != 0 ? summerAvkortetGradertMotUttak.divide(sumAvkortet, 4, RoundingMode.HALF_UP) : BigDecimal.ZERO;
 		grunnlag.setTotalUtbetalingsgradFraUttak(totalUtbetalingsgradFraUttak);
 		resultater.put("totalUtbetalingsgradFraUttak", totalUtbetalingsgradFraUttak);
 
@@ -42,7 +41,7 @@ class FinnGrenseverdiUtenFordeling extends LeafSpecification<BeregningsgrunnlagP
 		//juster ned med tilkommet inntekt hvis det gir lavere utbetaling enn overstående
 		BigDecimal totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt = null;
 		if (!grunnlag.getTilkommetInntektsforholdListe().isEmpty()) {
-			BigDecimal graderingPåToppenAvUttakgraderingPgaTilkommetInntekt = andelBeholdtEtterGradertMotTilkommetInntekt(grunnlag);
+            var graderingPåToppenAvUttakgraderingPgaTilkommetInntekt = andelBeholdtEtterGradertMotTilkommetInntekt(grunnlag);
 			resultater.put("graderingPåToppenAvUttakgraderingPgaTilkommetInntekt", min(BigDecimal.ONE, graderingPåToppenAvUttakgraderingPgaTilkommetInntekt));
 			totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt = min(BigDecimal.ONE, totalUtbetalingsgradFraUttak.multiply(graderingPåToppenAvUttakgraderingPgaTilkommetInntekt));
 			resultater.put("totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt", totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt);
@@ -58,17 +57,17 @@ class FinnGrenseverdiUtenFordeling extends LeafSpecification<BeregningsgrunnlagP
 		//hvis §8-47a, skaler med fast faktor
 		var erInaktivTypeA = MidlertidigInaktivType.A.equals(grunnlag.getBeregningsgrunnlag().getMidlertidigInaktivType());
 		if (erInaktivTypeA) {
-			BigDecimal reduksjonsfaktor = grunnlag.getBeregningsgrunnlag().getMidlertidigInaktivTypeAReduksjonsfaktor();
+            var reduksjonsfaktor = grunnlag.getBeregningsgrunnlag().getMidlertidigInaktivTypeAReduksjonsfaktor();
 			grenseverdi = grenseverdi.multiply(reduksjonsfaktor);
 			resultater.put("grad847a", reduksjonsfaktor);
 			grunnlag.setReduksjonsfaktorInaktivTypeA(reduksjonsfaktor);
 
-			BigDecimal justertTotalUtbetalingsgradFraUttak = totalUtbetalingsgradFraUttak.multiply(reduksjonsfaktor);
+            var justertTotalUtbetalingsgradFraUttak = totalUtbetalingsgradFraUttak.multiply(reduksjonsfaktor);
 			grunnlag.setTotalUtbetalingsgradFraUttak(justertTotalUtbetalingsgradFraUttak);
 			resultater.put("totalUtbetalingsgradFraUttak", justertTotalUtbetalingsgradFraUttak);
 
 			if (totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt != null) {
-				BigDecimal justertTotalUtbetalingsgradEtterReduksjonVedTilkommetInntekt = totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt.multiply(reduksjonsfaktor);
+                var justertTotalUtbetalingsgradEtterReduksjonVedTilkommetInntekt = totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt.multiply(reduksjonsfaktor);
 				grunnlag.setTotalUtbetalingsgradEtterReduksjonVedTilkommetInntekt(justertTotalUtbetalingsgradEtterReduksjonVedTilkommetInntekt);
 				resultater.put("totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt", justertTotalUtbetalingsgradEtterReduksjonVedTilkommetInntekt);
 			}
@@ -76,7 +75,7 @@ class FinnGrenseverdiUtenFordeling extends LeafSpecification<BeregningsgrunnlagP
 
 		resultater.put("grenseverdi", grenseverdi);
 		grunnlag.setGrenseverdi(grenseverdi);
-		SingleEvaluation resultat = ja();
+        var resultat = ja();
 		resultat.setEvaluationProperties(resultater);
 		return resultat;
 	}
@@ -86,8 +85,8 @@ class FinnGrenseverdiUtenFordeling extends LeafSpecification<BeregningsgrunnlagP
 	}
 
 	private static BigDecimal summerAvkortetGradertMotUttak(BeregningsgrunnlagPeriode grunnlag) {
-		BigDecimal sum = BigDecimal.ZERO;
-		for (BeregningsgrunnlagPrStatus bps : grunnlag.getBeregningsgrunnlagPrStatus()) {
+        var sum = BigDecimal.ZERO;
+		for (var bps : grunnlag.getBeregningsgrunnlagPrStatus()) {
 			if (bps.erArbeidstakerEllerFrilanser()) {
 				sum = sum.add(bps.getArbeidsforhold().stream()
 						.map(arb -> arb.getAndelsmessigFørGraderingPrAar().multiply(arb.getUtbetalingsprosent().scaleByPowerOfTen(-2)))
@@ -100,8 +99,8 @@ class FinnGrenseverdiUtenFordeling extends LeafSpecification<BeregningsgrunnlagP
 	}
 
 	private static BigDecimal summerAvkortet(BeregningsgrunnlagPeriode grunnlag) {
-		BigDecimal sum = BigDecimal.ZERO;
-		for (BeregningsgrunnlagPrStatus bps : grunnlag.getBeregningsgrunnlagPrStatus()) {
+        var sum = BigDecimal.ZERO;
+		for (var bps : grunnlag.getBeregningsgrunnlagPrStatus()) {
 			if (bps.erArbeidstakerEllerFrilanser()) {
 				sum = sum.add(bps.getArbeidsforhold().stream()
 						.map(BeregningsgrunnlagPrArbeidsforhold::getAndelsmessigFørGraderingPrAar)
@@ -114,7 +113,7 @@ class FinnGrenseverdiUtenFordeling extends LeafSpecification<BeregningsgrunnlagP
 	}
 
 	private BigDecimal andelBeholdtEtterGradertMotTilkommetInntekt(BeregningsgrunnlagPeriode grunnlag) {
-		BigDecimal bortfalt = finnBortfaltInntekt(grunnlag);
+        var bortfalt = finnBortfaltInntekt(grunnlag);
 		var totaltGradertGrunnlag = grunnlag.getBeregningsgrunnlagPrStatus().stream()
 				.map(BeregningsgrunnlagPrStatus::getGradertInntektsgrunnlagInkludertNaturalytelsePrÅr)
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -133,7 +132,7 @@ class FinnGrenseverdiUtenFordeling extends LeafSpecification<BeregningsgrunnlagP
 
 	private BigDecimal finnBortfaltInntekt(BeregningsgrunnlagPeriode grunnlag) {
 		var bortfalt = BigDecimal.ZERO;
-		for (BeregningsgrunnlagPrStatus bps : grunnlag.getBeregningsgrunnlagPrStatus()) {
+		for (var bps : grunnlag.getBeregningsgrunnlagPrStatus()) {
 			if (bps.erArbeidstakerEllerFrilanser()) {
 				bortfalt = bortfalt.add(finnBortfaltFraATFL(bps.getArbeidsforhold()));
 			} else {

@@ -75,9 +75,9 @@ class VurderTilkommetInntektTjenesteTest {
 
         var vudertPeride = new VurderTilkomneInntektsforholdPeriodeDto(vurderteInntektsforhold, periode.getFomDato(), periode.getTomDato());
 
-        VurderTilkommetInntektHåndteringDto dto = new VurderTilkommetInntektHåndteringDto(List.of(vudertPeride));
+        var dto = new VurderTilkommetInntektHåndteringDto(List.of(vudertPeride));
 
-        BeregningsgrunnlagInput input = lagInput(periode, yrkesaktiviteter, utbetalingsgrader, andeler, vurderteInntektsforhold);
+        var input = lagInput(periode, yrkesaktiviteter, utbetalingsgrader, andeler, vurderteInntektsforhold);
 
         // Act
         var nyttGr = VurderTilkommetInntektTjeneste.løsAvklaringsbehov(dto, new HåndterBeregningsgrunnlagInput(input, BeregningsgrunnlagTilstand.FASTSATT_INN));
@@ -123,9 +123,9 @@ class VurderTilkommetInntektTjenesteTest {
 
         var vurdertPeriode2 = new VurderTilkomneInntektsforholdPeriodeDto(vurderteInntektsforhold2, periode.getTomDato().minusDays(2), periode.getTomDato());
 
-        VurderTilkommetInntektHåndteringDto dto = new VurderTilkommetInntektHåndteringDto(List.of(vurdertPeriode1, vurdertPeriode2));
+        var dto = new VurderTilkommetInntektHåndteringDto(List.of(vurdertPeriode1, vurdertPeriode2));
 
-        BeregningsgrunnlagInput input = lagInput(periode, yrkesaktiviteter, utbetalingsgrader, andeler, vurderteInntektsforhold);
+        var input = lagInput(periode, yrkesaktiviteter, utbetalingsgrader, andeler, vurderteInntektsforhold);
 
         // Act
         var nyttGr = VurderTilkommetInntektTjeneste.løsAvklaringsbehov(dto, new HåndterBeregningsgrunnlagInput(input, BeregningsgrunnlagTilstand.FASTSATT_INN));
@@ -180,9 +180,9 @@ class VurderTilkommetInntektTjenesteTest {
 
         var vurdertPeriode2 = new VurderTilkomneInntektsforholdPeriodeDto(vurderteInntektsforhold, periode.getTomDato().minusDays(2), periode.getTomDato());
 
-        VurderTilkommetInntektHåndteringDto dto = new VurderTilkommetInntektHåndteringDto(List.of(vurdertPeriode1, vurdertPeriode2));
+        var dto = new VurderTilkommetInntektHåndteringDto(List.of(vurdertPeriode1, vurdertPeriode2));
 
-        BeregningsgrunnlagInput input = lagInput(periode, yrkesaktiviteter, utbetalingsgrader, andeler, vurderteInntektsforhold);
+        var input = lagInput(periode, yrkesaktiviteter, utbetalingsgrader, andeler, vurderteInntektsforhold);
 
         // Act
         var nyttGr = VurderTilkommetInntektTjeneste.løsAvklaringsbehov(dto, new HåndterBeregningsgrunnlagInput(input, BeregningsgrunnlagTilstand.FASTSATT_INN));
@@ -232,9 +232,9 @@ class VurderTilkommetInntektTjenesteTest {
 
         var vudertPeride = new VurderTilkomneInntektsforholdPeriodeDto(vurderteInntektsforhold, periode.getFomDato(), periode.getTomDato());
 
-        VurderTilkommetInntektHåndteringDto dto = new VurderTilkommetInntektHåndteringDto(List.of(vudertPeride));
+        var dto = new VurderTilkommetInntektHåndteringDto(List.of(vudertPeride));
 
-        BeregningsgrunnlagInput input = lagInput(periode, yrkesaktiviteter, utbetalingsgrader, andeler, vurderteInntektsforhold);
+        var input = lagInput(periode, yrkesaktiviteter, utbetalingsgrader, andeler, vurderteInntektsforhold);
 
         // Act
         var nyttGr = VurderTilkommetInntektTjeneste.løsAvklaringsbehov(dto, new HåndterBeregningsgrunnlagInput(input, BeregningsgrunnlagTilstand.FASTSATT_INN));

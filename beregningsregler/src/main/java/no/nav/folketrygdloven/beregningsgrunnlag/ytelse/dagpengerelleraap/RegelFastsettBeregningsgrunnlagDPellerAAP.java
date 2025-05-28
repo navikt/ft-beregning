@@ -25,18 +25,18 @@ public class RegelFastsettBeregningsgrunnlagDPellerAAP implements RuleService<Be
     @SuppressWarnings("unchecked")
     @Override
     public Specification<BeregningsgrunnlagPeriode> getSpecification() {
-        Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
+        var rs = new Ruleset<BeregningsgrunnlagPeriode>();
 
         //FP_BR_ 10.3 Har bruker kun status Dagpenger/AAP? -> 10.1 eller 10.2
-        Specification<BeregningsgrunnlagPeriode> foreslåBeregningsgrunnlag = rs.beregningHvisRegel(new SjekkOmBrukerKunHarStatusDPellerAAP(),
+        var foreslåBeregningsgrunnlag = rs.beregningHvisRegel(new SjekkOmBrukerKunHarStatusDPellerAAP(),
             new ForeslåBeregningsgrunnlagDPellerAAP(), new ForeslåBeregningsgrunnlagDPellerAAPKombinasjonMedAnnenStatus());
 
         //FP_BR 10.4 Er beregnngsgrunnlag for dagpenger fastsatt manuelt?
-        Specification<BeregningsgrunnlagPeriode> dagpengerFastsattManuelt = rs.beregningHvisRegel(new SjekkOmBGForDagpengerFastsattManuelt(),
+        var dagpengerFastsattManuelt = rs.beregningHvisRegel(new SjekkOmBGForDagpengerFastsattManuelt(),
             new FastsettDagpengerManueltEtterBesteberegning(), foreslåBeregningsgrunnlag);
 
         //FP_BR 10.5 Er beregnngsgrunnlag for AAP fastsatt manuelt?
-        Specification<BeregningsgrunnlagPeriode> aapFastsattManuelt = rs.beregningHvisRegel(new SjekkOmBGForAAPFastsattManuelt(),
+        var aapFastsattManuelt = rs.beregningHvisRegel(new SjekkOmBGForAAPFastsattManuelt(),
             new FastsettAAPManuelt(), dagpengerFastsattManuelt);
 
         return aapFastsattManuelt;

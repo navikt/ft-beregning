@@ -85,7 +85,7 @@ public class RefusjonskravDatoDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RefusjonskravDatoDto that = (RefusjonskravDatoDto) o;
+        var that = (RefusjonskravDatoDto) o;
         return Objects.equals(arbeidsgiver, that.arbeidsgiver) &&
                 Objects.equals(førsteDagMedRefusjonskrav, that.førsteDagMedRefusjonskrav) &&
                 Objects.equals(førsteInnsendingAvRefusjonskrav, that.førsteInnsendingAvRefusjonskrav) &&

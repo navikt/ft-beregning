@@ -25,7 +25,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.FinnGjennomsnittlig
 import no.nav.folketrygdloven.beregningsgrunnlag.util.Virkedager;
 import no.nav.folketrygdloven.besteberegning.modell.BesteberegningRegelmodell;
 import no.nav.folketrygdloven.besteberegning.modell.input.Ytelsegrunnlag;
-import no.nav.folketrygdloven.besteberegning.modell.input.YtelsegrunnlagPeriode;
 import no.nav.folketrygdloven.besteberegning.modell.output.AktivitetNøkkel;
 import no.nav.folketrygdloven.besteberegning.modell.output.BeregnetMånedsgrunnlag;
 import no.nav.folketrygdloven.besteberegning.modell.output.Inntekt;
@@ -49,9 +48,9 @@ class FinnBesteMåneder extends LeafSpecification<BesteberegningRegelmodell> {
 	@Override
 	public Evaluation evaluate(BesteberegningRegelmodell regelmodell) {
 		Map<String, Object> resultater = new HashMap<>();
-		List<BeregnetMånedsgrunnlag> månedsgrunnlagListe = lagInntekterPrMåned(regelmodell, resultater);
+        var månedsgrunnlagListe = lagInntekterPrMåned(regelmodell, resultater);
 		månedsgrunnlagListe.sort(BeregnetMånedsgrunnlag::compareTo);
-		List<BeregnetMånedsgrunnlag> besteMåneder = månedsgrunnlagListe.subList(0, ANTALL_MÅNEDER_I_BESTEBERGNING);
+        var besteMåneder = månedsgrunnlagListe.subList(0, ANTALL_MÅNEDER_I_BESTEBERGNING);
 
 		regelmodell.getOutput().setBesteMåneder(besteMåneder);
 		resultater.put("AlleInntekter", månedsgrunnlagListe);
@@ -65,7 +64,7 @@ class FinnBesteMåneder extends LeafSpecification<BesteberegningRegelmodell> {
 		var inntekter = inntektsgrunnlag.getPeriodeinntekter();
 		var perioderMedNæringsvirksomhet = regelmodell.getInput().getPerioderMedNæringsvirksomhet();
 		var skjæringstidspunktOpptjening = besteberegningInput.getSkjæringstidspunktOpptjening();
-		LocalDate sisteTilgjengeligeGSnittÅr = besteberegningInput.getGrunnbeløpSatser().stream()
+        var sisteTilgjengeligeGSnittÅr = besteberegningInput.getGrunnbeløpSatser().stream()
 				.map(Grunnbeløp::getFom)
 				.max(Comparator.naturalOrder())
 				.orElseThrow();
@@ -127,7 +126,7 @@ class FinnBesteMåneder extends LeafSpecification<BesteberegningRegelmodell> {
 	                                               Periode periode,
 	                                               BigDecimal totalUtenNæring) {
 		if (perioderMedNæringsvirksomhet.stream().anyMatch(p -> p.overlapper(periode))) {
-			BigDecimal beregnetNæring = gjenommsnittligPGI.subtract(totalUtenNæring).max(BigDecimal.ZERO);
+            var beregnetNæring = gjenommsnittligPGI.subtract(totalUtenNæring).max(BigDecimal.ZERO);
 			return Optional.of(new Inntekt(AktivitetNøkkel.forType(Aktivitet.NÆRINGSINNTEKT), beregnetNæring));
 		}
 		return Optional.empty();
@@ -162,7 +161,7 @@ class FinnBesteMåneder extends LeafSpecification<BesteberegningRegelmodell> {
 		if (!erFeriepengeMåned(periodeinntekt)) {
 			return false;
 		}
-		List<YtelsegrunnlagPeriode> alleYtelseperioderForYtelse = alleYtelsegrunnlag.stream()
+        var alleYtelseperioderForYtelse = alleYtelsegrunnlag.stream()
 				.filter(yg -> yg.getYtelse().equals(periodeinntekt.getYtelse()))
 				.findFirst()
 				.map(Ytelsegrunnlag::getPerioder)
@@ -182,9 +181,9 @@ class FinnBesteMåneder extends LeafSpecification<BesteberegningRegelmodell> {
 		var inntekt = periodeinntekt.getInntekt();
 		var overlappendePeriode = finnOverlappMellomPerioder(periodeinntekt.getPeriode(), periode)
 				.orElseThrow(() -> new IllegalStateException("Forventer overlapp"));
-		int antallVirkedager = Virkedager.beregnAntallVirkedager(overlappendePeriode);
-		int totaltAntallVirkedagerForMeldekort = Virkedager.beregnAntallVirkedager(periodeinntekt.getPeriode());
-		BigDecimal andelAvVirkedager = totaltAntallVirkedagerForMeldekort == 0 ? BigDecimal.ZERO : BigDecimal.valueOf(antallVirkedager)
+        var antallVirkedager = Virkedager.beregnAntallVirkedager(overlappendePeriode);
+        var totaltAntallVirkedagerForMeldekort = Virkedager.beregnAntallVirkedager(periodeinntekt.getPeriode());
+        var andelAvVirkedager = totaltAntallVirkedagerForMeldekort == 0 ? BigDecimal.ZERO : BigDecimal.valueOf(antallVirkedager)
 				.divide(BigDecimal.valueOf(totaltAntallVirkedagerForMeldekort), 10, RoundingMode.HALF_EVEN);
 		return new Inntekt(aktivitetNøkkel, inntekt.multiply(andelAvVirkedager));
 	}
@@ -193,8 +192,8 @@ class FinnBesteMåneder extends LeafSpecification<BesteberegningRegelmodell> {
 		if (!periode1.overlapper(periode2)) {
 			return Optional.empty();
 		}
-		LocalDate fom = periode1.getFom().isBefore(periode2.getFom()) ? periode2.getFom() : periode1.getFom();
-		LocalDate tom = periode1.getTom().isBefore(periode2.getTom()) ? periode1.getTom() : periode2.getTom();
+        var fom = periode1.getFom().isBefore(periode2.getFom()) ? periode2.getFom() : periode1.getFom();
+        var tom = periode1.getTom().isBefore(periode2.getTom()) ? periode1.getTom() : periode2.getTom();
 		return Optional.of(Periode.of(fom, tom));
 	}
 

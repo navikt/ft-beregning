@@ -54,7 +54,7 @@ public class MapRefusjonskravFraVLTilRegel {
         if (gyldigeRefusjonPerioder.isEmpty()) {
             return Collections.emptyList();
         } else {
-            LocalDateTimeline<BigDecimal> timeline = lagInntektsmeldingTidslinje(inntektsmelding, startdatoPermisjon, refusjonOverstyringer, gyldigeRefusjonPerioder);
+            var timeline = lagInntektsmeldingTidslinje(inntektsmelding, startdatoPermisjon, refusjonOverstyringer, gyldigeRefusjonPerioder);
             timeline = velgGyldigePerioder(gyldigeRefusjonPerioder, timeline);
             timeline = fyllMellomromMedNull(startdatoPermisjon, timeline);
             return timeline.compress()
@@ -74,16 +74,16 @@ public class MapRefusjonskravFraVLTilRegel {
     }
 
     private static LocalDateTimeline<BigDecimal> lagInntektsmeldingTidslinje(InntektsmeldingDto inntektsmelding, LocalDate startdatoPermisjon, Optional<BeregningRefusjonOverstyringerDto> refusjonOverstyringer, List<Intervall> gyldigeRefusjonPerioder) {
-        Map<LocalDate, Beløp> refusjonFraInntektsmelding = finnRefusjonendringFraInntektsmelding(inntektsmelding, startdatoPermisjon, refusjonOverstyringer, gyldigeRefusjonPerioder);
-        List<Refusjonskrav> refusjonskravListeFraInntektsmelding = lagForenkletRefusjonListe(refusjonFraInntektsmelding);
-        List<LocalDateSegment<BigDecimal>> kravFraInntektsmelding = refusjonskravListeFraInntektsmelding.stream()
+        var refusjonFraInntektsmelding = finnRefusjonendringFraInntektsmelding(inntektsmelding, startdatoPermisjon, refusjonOverstyringer, gyldigeRefusjonPerioder);
+        var refusjonskravListeFraInntektsmelding = lagForenkletRefusjonListe(refusjonFraInntektsmelding);
+        var kravFraInntektsmelding = refusjonskravListeFraInntektsmelding.stream()
                 .map(krav -> new LocalDateSegment<>(krav.getPeriode().getFom(), krav.getPeriode().getTom(), krav.getMånedsbeløp()))
                 .collect(Collectors.toList());
         return new LocalDateTimeline<>(kravFraInntektsmelding);
     }
 
     private static LocalDateTimeline<Object> lagGyldigTidslinje(List<Intervall> gyldigeRefusjonPerioder) {
-        List<LocalDateSegment<Object>> gyldigeSegmenter = gyldigeRefusjonPerioder.stream()
+        var gyldigeSegmenter = gyldigeRefusjonPerioder.stream()
                 .map(p -> LocalDateSegment.emptySegment(p.getFomDato(), p.getTomDato()))
                 .collect(Collectors.toList());
         return new LocalDateTimeline<>(gyldigeSegmenter);
@@ -106,7 +106,7 @@ public class MapRefusjonskravFraVLTilRegel {
                 .stream()
                 .sorted(Comparator.comparing(RefusjonDto::getFom))
                 .forEach(endring -> {
-                    LocalDate fom = finnRefusjonFomDato(gyldigeRefusjonPerioder, endring);
+                    var fom = finnRefusjonFomDato(gyldigeRefusjonPerioder, endring);
                     if (fom.isBefore(gjeldendeStartdato)) {
                         refusjoner.put(gjeldendeStartdato, endring.getRefusjonsbeløp());
                     } else if (fom.isBefore(TIDENES_ENDE)) {
@@ -134,7 +134,7 @@ public class MapRefusjonskravFraVLTilRegel {
     }
 
     private static Optional<BeregningRefusjonPeriodeDto> finnOverstyringForInntektsmelding(InntektsmeldingDto inntektsmelding, List<BeregningRefusjonOverstyringDto> refusjonOverstyringer) {
-        List<BeregningRefusjonPeriodeDto> overstyringerForAG = refusjonOverstyringer.stream()
+        var overstyringerForAG = refusjonOverstyringer.stream()
                 .filter(ro -> ro.getArbeidsgiver().equals(inntektsmelding.getArbeidsgiver()))
                 .findFirst()
                 .map(BeregningRefusjonOverstyringDto::getRefusjonPerioder)
@@ -145,8 +145,8 @@ public class MapRefusjonskravFraVLTilRegel {
     }
 
     private static boolean matcherReferanse(InternArbeidsforholdRefDto refFraOverstyring, InternArbeidsforholdRefDto refFraIM) {
-        String ref1 = refFraOverstyring.getReferanse();
-        String ref2 = refFraIM.getReferanse();
+        var ref1 = refFraOverstyring.getReferanse();
+        var ref2 = refFraIM.getReferanse();
         return Objects.equals(ref1, ref2);
     }
 
@@ -154,11 +154,11 @@ public class MapRefusjonskravFraVLTilRegel {
                                                                List<PeriodeMedUtbetalingsgradDto> utbetalingsgrader,
                                                                LocalDate stp) {
         Map<LocalDate, Beløp> refusjoner = new TreeMap<>();
-        Beløp refusjonBeløpPerMnd = Optional.ofNullable(inntektsmelding.getRefusjonBeløpPerMnd()).orElse(Beløp.ZERO);
-        Optional<PeriodeMedUtbetalingsgradDto> førsteUtbetalingsperiode = finnFørsteUtbetalingsgradPeriode(utbetalingsgrader, stp);
-        BigDecimal utbetalingsgradVedStart = førsteUtbetalingsperiode.map(PeriodeMedUtbetalingsgradDto::getUtbetalingsgrad)
+        var refusjonBeløpPerMnd = Optional.ofNullable(inntektsmelding.getRefusjonBeløpPerMnd()).orElse(Beløp.ZERO);
+        var førsteUtbetalingsperiode = finnFørsteUtbetalingsgradPeriode(utbetalingsgrader, stp);
+        var utbetalingsgradVedStart = førsteUtbetalingsperiode.map(PeriodeMedUtbetalingsgradDto::getUtbetalingsgrad)
                 .map(g -> g.verdi().divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_EVEN)).orElse(BigDecimal.ZERO);
-        LocalDate startdatoPermisjon = førsteUtbetalingsperiode.map(PeriodeMedUtbetalingsgradDto::getPeriode).map(Intervall::getFomDato).orElse(TIDENES_ENDE);
+        var startdatoPermisjon = førsteUtbetalingsperiode.map(PeriodeMedUtbetalingsgradDto::getPeriode).map(Intervall::getFomDato).orElse(TIDENES_ENDE);
         refusjoner.put(startdatoPermisjon, refusjonBeløpPerMnd.multipliser(utbetalingsgradVedStart));
         inntektsmelding.getEndringerRefusjon()
                 .stream()
@@ -167,7 +167,7 @@ public class MapRefusjonskravFraVLTilRegel {
                     if (endring.getFom().isBefore(startdatoPermisjon)) {
                         refusjoner.put(startdatoPermisjon, endring.getRefusjonsbeløp().multipliser(utbetalingsgradVedStart));
                     } else {
-                        BigDecimal utbetalingsgrad = finnUtbetalingsgradForDato(utbetalingsgrader, startdatoPermisjon);
+                        var utbetalingsgrad = finnUtbetalingsgradForDato(utbetalingsgrader, startdatoPermisjon);
                         refusjoner.put(endring.getFom(), endring.getRefusjonsbeløp().multipliser(utbetalingsgrad));
                     }
                 });
@@ -196,13 +196,13 @@ public class MapRefusjonskravFraVLTilRegel {
     private static List<Refusjonskrav> lagForenkletRefusjonListe(Map<LocalDate, Beløp> refusjoner) {
         List<Refusjonskrav> refusjonskravListe = new ArrayList<>();
         List<Map.Entry<LocalDate, Beløp>> entryList = new ArrayList<>(refusjoner.entrySet());
-        ListIterator<Map.Entry<LocalDate, Beløp>> listIterator = entryList.listIterator();
+        var listIterator = entryList.listIterator();
 
         while (listIterator.hasNext()) {
-            Map.Entry<LocalDate, Beløp> entry = listIterator.next();
-            LocalDate fom = entry.getKey();
-            LocalDate tom = utledTom(entryList, listIterator);
-            BigDecimal refusjonPrMåned = entry.getValue().verdi();
+            var entry = listIterator.next();
+            var fom = entry.getKey();
+            var tom = utledTom(entryList, listIterator);
+            var refusjonPrMåned = entry.getValue().verdi();
             // Mapper kun refusjonskrav som fører til utbetaling
             if (refusjonPrMåned.compareTo(MINSTE_UTBETALTE_REFUSJONSKRAV_PR_MÅNED) > 0) {
                 refusjonskravListe.add(new Refusjonskrav(refusjonPrMåned, fom, tom));
@@ -214,14 +214,14 @@ public class MapRefusjonskravFraVLTilRegel {
     }
 
     private static LocalDate utledTom(List<Map.Entry<LocalDate, Beløp>> entryList, ListIterator<Map.Entry<LocalDate, Beløp>> listIterator) {
-        Optional<LocalDate> nesteFomOpt = hentNesteFom(entryList, listIterator);
+        var nesteFomOpt = hentNesteFom(entryList, listIterator);
         return nesteFomOpt.map(nesteFom -> nesteFom.minusDays(1)).orElse(null);
     }
 
     private static Optional<LocalDate> hentNesteFom(List<Map.Entry<LocalDate, Beløp>> entryList,
                                                     ListIterator<Map.Entry<LocalDate, Beløp>> listIterator) {
         if (listIterator.hasNext()) {
-            Map.Entry<LocalDate, Beløp> nesteEntry = entryList.get(listIterator.nextIndex());
+            var nesteEntry = entryList.get(listIterator.nextIndex());
             return Optional.of(nesteEntry.getKey());
         }
         return Optional.empty();
@@ -231,16 +231,16 @@ public class MapRefusjonskravFraVLTilRegel {
                                                                             LocalDate stp,
                                                                             YtelsespesifiktGrunnlag ytelsespesifiktGrunnlag) {
         List<Refusjonskrav> refusjonskravs = new ArrayList<>();
-        for (InntektsmeldingDto inntektsmeldingerSomSkalBruke : inntektsmeldingerSomSkalBrukes) {
+        for (var inntektsmeldingerSomSkalBruke : inntektsmeldingerSomSkalBrukes) {
             if (ytelsespesifiktGrunnlag instanceof UtbetalingsgradGrunnlag) {
-                UtbetalingsgradGrunnlag utbetalingsgradGrunnlag = (UtbetalingsgradGrunnlag) ytelsespesifiktGrunnlag;
+                var utbetalingsgradGrunnlag = (UtbetalingsgradGrunnlag) ytelsespesifiktGrunnlag;
                 var utbetalingsgrader = utbetalingsgradGrunnlag.finnUtbetalingsgraderForArbeid(inntektsmeldingerSomSkalBruke.getArbeidsgiver(), inntektsmeldingerSomSkalBruke.getArbeidsforholdRef());
                 refusjonskravs.addAll(MapRefusjonskravFraVLTilRegel.periodiserGradertRefusjonsbeløp(inntektsmeldingerSomSkalBruke, utbetalingsgrader, stp));
             } else {
                 throw new IllegalStateException("Må ha utbetalingsgradgrunnlag for å beregne gradert refusjonskrav");
             }
         }
-        List<Refusjonskrav> relevanteRefusjonskrav = refusjonskravs.stream()
+        var relevanteRefusjonskrav = refusjonskravs.stream()
                 .filter(p -> p.getPeriode().inneholder(stp))
                 .collect(Collectors.toList());
         var fraRegel = relevanteRefusjonskrav.stream()

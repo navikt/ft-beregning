@@ -25,9 +25,9 @@ public class VurderMottarYtelseTjeneste {
     public static boolean skalVurdereMottattYtelse(BeregningsgrunnlagDto beregningsgrunnlag,
                                                    InntektArbeidYtelseGrunnlagDto iayGrunnlag,
                                                    Collection<InntektsmeldingDto> inntektsmeldinger) {
-        boolean erFrilanser = erFrilanser(beregningsgrunnlag);
+        var erFrilanser = erFrilanser(beregningsgrunnlag);
 
-        InntektFilterDto filter = new InntektFilterDto(iayGrunnlag.getAktørInntektFraRegister());
+        var filter = new InntektFilterDto(iayGrunnlag.getAktørInntektFraRegister());
         var ytelsefilter = new YtelseFilterDto(iayGrunnlag.getAktørYtelseFraRegister());
         filter = filter.filterSammenligningsgrunnlag();
 
@@ -47,9 +47,9 @@ public class VurderMottarYtelseTjeneste {
     }
 
     private static boolean mottarYtelseIBeregningsperiode(BeregningsgrunnlagDto beregningsgrunnlag, InntektFilterDto filter, AktivitetStatus aktivitetsStatus) {
-        Intervall beregningsPeriodeForStatus = finnBeregningsperiodeForAktivitetStatus(beregningsgrunnlag, aktivitetsStatus);
+        var beregningsPeriodeForStatus = finnBeregningsperiodeForAktivitetStatus(beregningsgrunnlag, aktivitetsStatus);
         return filter.getFiltrertInntektsposter().stream().anyMatch(inntektspostDto -> {
-            boolean overlapperYtelseMedBeregningsgrunnlaget = beregningsPeriodeForStatus.overlapper(inntektspostDto.getPeriode());
+            var overlapperYtelseMedBeregningsgrunnlaget = beregningsPeriodeForStatus.overlapper(inntektspostDto.getPeriode());
             return InntektspostType.YTELSE.equals(inntektspostDto.getInntektspostType()) && overlapperYtelseMedBeregningsgrunnlaget;
         });
     }
@@ -59,7 +59,7 @@ public class VurderMottarYtelseTjeneste {
         if (!KonfigurasjonVerdi.instance().get("VURDER_MOTTAR_YTELSE_FL_FILTRERING", false)) {
             return true;
         }
-        Intervall beregningsPeriodeForStatus = finnBeregningsperiodeForAktivitetStatus(beregningsgrunnlag, AktivitetStatus.FRILANSER);
+        var beregningsPeriodeForStatus = finnBeregningsperiodeForAktivitetStatus(beregningsgrunnlag, AktivitetStatus.FRILANSER);
         return ytelseFilterDto.getFiltrertYtelser().stream()
                 .flatMap(y -> y.getYtelseAnvist().stream())
                 .filter(ya -> ya.getAnvistPeriode().overlapper(beregningsPeriodeForStatus))
@@ -71,7 +71,7 @@ public class VurderMottarYtelseTjeneste {
         if (!KonfigurasjonVerdi.instance().get("VURDER_MOTTAR_YTELSE_AT_FILTRERING", false)) {
             return true;
         }
-        Intervall beregningsPeriodeForStatus = finnBeregningsperiodeForAktivitetStatus(beregningsgrunnlag, AktivitetStatus.ARBEIDSTAKER);
+        var beregningsPeriodeForStatus = finnBeregningsperiodeForAktivitetStatus(beregningsgrunnlag, AktivitetStatus.ARBEIDSTAKER);
         return DirekteOvergangTjeneste.harDirekteMottattYtelseForArbeidsgiver(beregningsPeriodeForStatus, arbeidsgiver, ytelseFilterDto.getFiltrertYtelser());
     }
 

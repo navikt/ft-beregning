@@ -64,7 +64,7 @@ public class VurderRefusjonAndelBeregningsgrunnlagDto {
         if (arbeidsgiverOrgnr == null) {
             return null;
         }
-        int length = arbeidsgiverOrgnr.length();
+        var length = arbeidsgiverOrgnr.length();
         if (length <= 3) {
             return "*".repeat(length);
         }

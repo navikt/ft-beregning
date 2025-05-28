@@ -33,51 +33,51 @@ public class RegelBeregningsgrunnlagSN implements RuleService<Beregningsgrunnlag
     @SuppressWarnings("unchecked")
     @Override
     public Specification<BeregningsgrunnlagPeriode> getSpecification() {
-        Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
+        var rs = new Ruleset<BeregningsgrunnlagPeriode>();
 
 //      FP_BR 2.7 Fastsette beregnet pr år
         Specification<BeregningsgrunnlagPeriode> fastsettBeregnetPrÅr = new FastsettBeregnetPrÅr(AktivitetStatus.SN);
 
 //      FP_BR 2.6 Opprette regelmerknad for å fastsette brutto_pr_aar manuelt
-        Specification<BeregningsgrunnlagPeriode> opprettRegelmerknad =
+        var opprettRegelmerknad =
             rs.beregningsRegel("FP_BR 2.6", "Opprett regelmerknad", fastsettBeregnetPrÅr,
                 new IkkeBeregnet(new BeregningUtfallMerknad(BeregningUtfallÅrsak.VARIG_ENDRING_OG_AVVIK_STØRRE_ENN_25_PROSENT)));
 
 //      FP_BR 2.5 Er avvik > 25 %
-        Specification<BeregningsgrunnlagPeriode> sjekkOmDifferanseStørreEnn25Prosent =
+        var sjekkOmDifferanseStørreEnn25Prosent =
             rs.beregningHvisRegel(new SjekkOmDifferanseStørreEnn25Prosent(AktivitetStatus.SN), opprettRegelmerknad, fastsettBeregnetPrÅr);
 
 //      FP_BR 2.4 Fastsett sammenligningsgrunnlag og beregn avvik
-        Specification<BeregningsgrunnlagPeriode> beregnAvvik =
+        var beregnAvvik =
             rs.beregningsRegel("FP_BR 2.4", "Fastsett sammenligningsgrunnlag og beregn avvik",
                 new FastsettSammenligningsgrunnlagForAktivitetstatus(AktivitetStatus.SN), sjekkOmDifferanseStørreEnn25Prosent);
 
 	    // Første beregningsgrunnlagsperiode? Sammenligninggrunnlag skal fastsettes og sjekkes mot bare om det er første periode
-	    Specification<BeregningsgrunnlagPeriode> sjekkOmFørstePeriode =
+        var sjekkOmFørstePeriode =
 			    rs.beregningHvisRegel(new SjekkOmFørsteBeregningsgrunnlagsperiode(), beregnAvvik, fastsettBeregnetPrÅr);
 
 //      FP_BR 2.3/2.3.3 Har bruker oppgitt varig endring eller nyoppstartet virksomhet?
-        Specification<BeregningsgrunnlagPeriode> sjekkOmVarigEndringIVirksomhet =
+        var sjekkOmVarigEndringIVirksomhet =
             rs.beregningHvisRegel(new SjekkOmVarigEndringIVirksomhetEllerNyoppstartetNæring(), sjekkOmFørstePeriode, fastsettBeregnetPrÅr);
 
 //      FP_BR 2.8 Beregn beregningsgrunnlag SN
-        Specification<BeregningsgrunnlagPeriode> beregnBruttoSN =
+        var beregnBruttoSN =
             rs.beregningsRegel("FP_BR 2.8", "Beregn brutto beregningsgrunnlag selvstendig næringsdrivende",
                 new BeregnBruttoBeregningsgrunnlagFraPGI(AktivitetStatus.SN), sjekkOmVarigEndringIVirksomhet);
 
 //      FP_BR 2.19 Har saksbehandler fastsatt beregningsgrunnlaget manuelt?
-        Specification<BeregningsgrunnlagPeriode> sjekkOmManueltFastsattInntekt =
+        var sjekkOmManueltFastsattInntekt =
             rs.beregningHvisRegel(new SjekkOmManueltFastsattBeregningsgrunnlagForAktivitetstatus(AktivitetStatus.SN), sjekkOmVarigEndringIVirksomhet,
                 beregnBruttoSN);
 
 //      FP_BR 2.18 Er bruker SN som er ny i arbeidslivet?
-        Specification<BeregningsgrunnlagPeriode> sjekkOmNyIArbeidslivetSN =
+        var sjekkOmNyIArbeidslivetSN =
             rs.beregningHvisRegel(new SjekkOmBrukerErNyIArbeidslivet(), new IkkeBeregnet(SjekkOmBrukerErNyIArbeidslivet.FASTSETT_BG_FOR_SN_NY_I_ARBEIDSLIVET),
                 sjekkOmManueltFastsattInntekt);
 
 
         // FP_BR 2.20 Er beregningsgrunnlaget besteberegnet?
-        Specification<BeregningsgrunnlagPeriode> erBeregningsgrunnlagetBesteberegnet =
+        var erBeregningsgrunnlagetBesteberegnet =
             rs.beregningHvisRegel(new SjekkOmBeregninsgrunnlagErBesteberegnet(), new Beregnet(),
                 sjekkOmNyIArbeidslivetSN);
 
@@ -85,7 +85,7 @@ public class RegelBeregningsgrunnlagSN implements RuleService<Beregningsgrunnlag
 //      FP_BR 2.2 Beregn gjennomsnittlig PGI
 //      FP_BR 2.9 Beregn oppjustert inntekt for årene i beregningsperioden
 //      FP_BR 2.1 Fastsett beregningsperiode
-        Specification<BeregningsgrunnlagPeriode> foreslåBeregningsgrunnlagForSelvstendigNæringsdrivende =
+        var foreslåBeregningsgrunnlagForSelvstendigNæringsdrivende =
             rs.beregningsRegel("FP_BR 2", "Foreslå beregningsgrunnlag for selvstendig næringsdrivende",
                 Arrays.asList(new FastsettBeregningsperiodeForAktivitetstatus(AktivitetStatus.SN), new SettHjemmelSN(), new BeregnOppjustertInntektForAktivitetstatus(AktivitetStatus.SN), new BeregnGjennomsnittligPGIForAktivitetstatus(AktivitetStatus.SN)), erBeregningsgrunnlagetBesteberegnet);
 

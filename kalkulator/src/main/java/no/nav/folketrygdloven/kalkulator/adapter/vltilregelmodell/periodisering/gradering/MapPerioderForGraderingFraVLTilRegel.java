@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.PeriodisertBruttoBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.gradering.AndelGradering;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.gradering.PeriodeModellGradering;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SplittetPeriode;
@@ -24,7 +23,7 @@ public class MapPerioderForGraderingFraVLTilRegel {
                                              BeregningsgrunnlagDto beregningsgrunnlag) {
         var iayGrunnlag = input.getIayGrunnlag();
         var filter = new YrkesaktivitetFilterDto(iayGrunnlag.getArbeidsforholdInformasjon(), iayGrunnlag.getAktørArbeidFraRegister());
-        LocalDate skjæringstidspunkt = beregningsgrunnlag.getSkjæringstidspunkt();
+        var skjæringstidspunkt = beregningsgrunnlag.getSkjæringstidspunkt();
         var eksisterendePerioder = beregningsgrunnlag.getBeregningsgrunnlagPerioder().stream()
                 .map(MapSplittetPeriodeFraVLTilRegel::map).collect(Collectors.toList());
         var regelAndelGraderinger = finnGraderinger(input).stream()
@@ -46,7 +45,7 @@ public class MapPerioderForGraderingFraVLTilRegel {
                                                   LocalDate skjæringstidspunkt,
                                                   List<SplittetPeriode> eksisterendePerioder,
                                                   List<AndelGradering> regelAndelGraderinger) {
-        List<PeriodisertBruttoBeregningsgrunnlag> periodiseringBruttoBg = MapPeriodisertBruttoBeregningsgrunnlag.map(vlBeregningsgrunnlag);
+        var periodiseringBruttoBg = MapPeriodisertBruttoBeregningsgrunnlag.map(vlBeregningsgrunnlag);
 
         return PeriodeModellGradering.builder()
                 .medSkjæringstidspunkt(skjæringstidspunkt)

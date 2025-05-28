@@ -63,7 +63,7 @@ public class PleiepengerNærståendeGrunnlag extends YtelsespesifiktGrunnlagDto 
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        PleiepengerNærståendeGrunnlag that = (PleiepengerNærståendeGrunnlag) o;
+        var that = (PleiepengerNærståendeGrunnlag) o;
         return Objects.equals(utbetalingsgradPrAktivitet, that.utbetalingsgradPrAktivitet)
                 && (Objects.equals(tilkommetInntektHensyntasFom, that.tilkommetInntektHensyntasFom));
     }

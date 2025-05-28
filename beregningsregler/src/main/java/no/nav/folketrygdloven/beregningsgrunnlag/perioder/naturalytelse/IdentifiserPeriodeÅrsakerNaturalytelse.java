@@ -1,6 +1,5 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.perioder.naturalytelse;
 
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,7 +10,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.natur
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.naturalytelse.PeriodiseringNaturalytelseProsesstruktur;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
-import no.nav.fpsak.nare.evaluation.node.SingleEvaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(IdentifiserPeriodeÅrsakerNaturalytelse.ID)
@@ -27,16 +25,16 @@ public class IdentifiserPeriodeÅrsakerNaturalytelse extends LeafSpecification<P
     @Override
     public Evaluation evaluate(PeriodiseringNaturalytelseProsesstruktur prosseseringStruktur) {
         Map<String, Object> resultater = new HashMap<>();
-	    IdentifiserteNaturalytelsePeriodeÅrsaker årsaker = identifiser(prosseseringStruktur.getInput(), resultater);
+        var årsaker = identifiser(prosseseringStruktur.getInput(), resultater);
         prosseseringStruktur.setIdentifisertePeriodeÅrsaker(årsaker);
-        SingleEvaluation resultat = ja();
+        var resultat = ja();
         resultat.setEvaluationProperties(resultater);
         return resultat;
     }
 
     static IdentifiserteNaturalytelsePeriodeÅrsaker identifiser(PeriodeModellNaturalytelse input, Map<String, Object> resultater) {
-        LocalDate skjæringstidspunkt = input.getSkjæringstidspunkt();
-        IdentifiserteNaturalytelsePeriodeÅrsaker map = new IdentifiserteNaturalytelsePeriodeÅrsaker();
+        var skjæringstidspunkt = input.getSkjæringstidspunkt();
+        var map = new IdentifiserteNaturalytelsePeriodeÅrsaker();
         leggTilPeriodesplitterForEksisterendePerioder(input, map);
         resultater.put("eksisterendePerioder", map.getPeriodeMap());
 

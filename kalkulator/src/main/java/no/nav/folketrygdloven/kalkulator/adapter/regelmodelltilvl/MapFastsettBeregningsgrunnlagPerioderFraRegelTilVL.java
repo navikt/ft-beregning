@@ -18,7 +18,7 @@ abstract class MapFastsettBeregningsgrunnlagPerioderFraRegelTilVL {
     public BeregningsgrunnlagDto mapFraRegel(List<SplittetPeriode> splittedePerioder,
                                              BeregningsgrunnlagDto vlBeregningsgrunnlag) {
 
-        BeregningsgrunnlagDto nytt = BeregningsgrunnlagDto.builder(vlBeregningsgrunnlag)
+        var nytt = BeregningsgrunnlagDto.builder(vlBeregningsgrunnlag)
                 .fjernAllePerioder().build();
 
         splittedePerioder.forEach(splittetPeriode -> mapSplittetPeriode(nytt, splittetPeriode, vlBeregningsgrunnlag));
@@ -28,7 +28,7 @@ abstract class MapFastsettBeregningsgrunnlagPerioderFraRegelTilVL {
     protected void mapSplittetPeriode(BeregningsgrunnlagDto nyttBeregningsgrunnlag,
                                       SplittetPeriode splittetPeriode,
                                       BeregningsgrunnlagDto beregningsgrunnlag) {
-        LocalDate periodeTom = utledPeriodeTom(splittetPeriode);
+        var periodeTom = utledPeriodeTom(splittetPeriode);
 
         var originalPeriode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().stream()
                 .filter(p -> p.getPeriode().inkluderer(splittetPeriode.getPeriode().getFom()))
@@ -48,7 +48,7 @@ abstract class MapFastsettBeregningsgrunnlagPerioderFraRegelTilVL {
     protected abstract void mapAndeler(SplittetPeriode splittetPeriode, List<BeregningsgrunnlagPrStatusOgAndelDto> andelListe, BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode);
 
     LocalDate utledPeriodeTom(SplittetPeriode splittetPeriode) {
-        LocalDate tom = splittetPeriode.getPeriode().getTom();
+        var tom = splittetPeriode.getPeriode().getTom();
         if (TIDENES_ENDE.equals(tom)) {
             return null;
         }

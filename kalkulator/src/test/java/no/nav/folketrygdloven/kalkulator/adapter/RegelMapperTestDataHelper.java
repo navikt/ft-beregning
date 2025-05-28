@@ -104,7 +104,7 @@ public class RegelMapperTestDataHelper {
                                         Arbeidsgiver arbeidsgiver,
                                         OpptjeningAktivitetType arbforholdType) {
 
-        BeregningsgrunnlagPrStatusOgAndelDto.Builder builder = BeregningsgrunnlagPrStatusOgAndelDto.ny()
+        var builder = BeregningsgrunnlagPrStatusOgAndelDto.ny()
             .medAktivitetStatus(aktivitetStatus)
             .medInntektskategori(inntektskategori)
             .medBeregningsperiode(fom, tom)
@@ -117,7 +117,7 @@ public class RegelMapperTestDataHelper {
             .medRedusertBrukersAndelPrÅr(Beløp.fra(BigDecimal.valueOf(26000.0)));
 
         if (AktivitetStatus.ARBEIDSTAKER.equals(aktivitetStatus)) {
-            BGAndelArbeidsforholdDto.Builder bga = BGAndelArbeidsforholdDto
+            var bga = BGAndelArbeidsforholdDto
                 .builder()
                 .medArbeidsgiver(arbeidsgiver)
                 .medRefusjonskravPrÅr(Beløp.fra(BigDecimal.valueOf(42.00)), Utfall.GODKJENT)
@@ -150,12 +150,12 @@ public class RegelMapperTestDataHelper {
 
     public static BeregningsgrunnlagPrStatus buildRegelBGPeriode(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode regelBGP, no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus status, Periode periode) {
         if (no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus.erArbeidstakerEllerFrilanser(status)) {
-            final BeregningsgrunnlagPrStatus regelBGPStatus = BeregningsgrunnlagPrStatus.builder(regelBGP.getBeregningsgrunnlagPrStatus(status))
+            final var regelBGPStatus = BeregningsgrunnlagPrStatus.builder(regelBGP.getBeregningsgrunnlagPrStatus(status))
                 .medBeregningsperiode(periode)
                 .build();
             return regelBGPStatus;
         } else {
-            final BeregningsgrunnlagPrStatus regelBGPStatus = BeregningsgrunnlagPrStatus.builder(regelBGP.getBeregningsgrunnlagPrStatus(status))
+            final var regelBGPStatus = BeregningsgrunnlagPrStatus.builder(regelBGP.getBeregningsgrunnlagPrStatus(status))
                 .medFordeltPrÅr(BigDecimal.valueOf(400000.42))
                 .medBeregnetPrÅr(BigDecimal.valueOf(400000.42))
                 .medAvkortetPrÅr(BigDecimal.valueOf(789.789))
@@ -169,7 +169,7 @@ public class RegelMapperTestDataHelper {
     public static no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag buildRegelBeregningsgrunnlag(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus aktivitetStatus,
                                                                                                                          no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori inntektskategori,
                                                                                                                          BeregningsgrunnlagHjemmel hjemmel) {
-        no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode periode = buildRegelBGPeriode(aktivitetStatus, inntektskategori);
+        var periode = buildRegelBGPeriode(aktivitetStatus, inntektskategori);
         return no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag.builder()
             .medInntektsgrunnlag(new Inntektsgrunnlag())
             .medSkjæringstidspunkt(NOW)
@@ -180,13 +180,13 @@ public class RegelMapperTestDataHelper {
     }
 
     private static no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode buildRegelBGPeriode(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus aktivitetStatus, no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori inntektskategori) {
-        no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode.Builder periodeBuilder =
+        var periodeBuilder =
             no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode.builder()
                 .medPeriode(Periode.of(NOW, null));
         long andelNr = 1;
         if (no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus.erKombinasjonMedSelvstendig(aktivitetStatus)) {
-            BeregningsgrunnlagPrStatus prStatusATFL = buildPrStatus(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus.ATFL, inntektskategori, null);
-            BeregningsgrunnlagPrStatus prStatusSN = buildPrStatus(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus.SN, no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE, andelNr);
+            var prStatusATFL = buildPrStatus(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus.ATFL, inntektskategori, null);
+            var prStatusSN = buildPrStatus(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus.SN, no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE, andelNr);
             return periodeBuilder
                 .medBeregningsgrunnlagPrStatus(prStatusATFL)
                 .medBeregningsgrunnlagPrStatus(prStatusSN)

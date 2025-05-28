@@ -19,7 +19,6 @@ import no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.kodeverk.MapAk
 import no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.periodisering.FinnAnsettelsesPeriode;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektsmeldingDto;
-import no.nav.folketrygdloven.kalkulator.modell.iay.YrkesaktivitetDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YrkesaktivitetFilterDto;
 import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
 import no.nav.folketrygdloven.kalkulus.kodeverk.UttakArbeidType;
@@ -54,14 +53,14 @@ public final class MapAndelGradering {
                                                         Collection<InntektsmeldingDto> inntektsmeldinger,
                                                         YrkesaktivitetFilterDto filter,
                                                         LocalDate skjæringstidspunktBeregning) {
-        AndelGradering.Builder builder = AndelGradering.builder();
+        var builder = AndelGradering.builder();
         builder.medNyAktivitetTidslinje(finnTidslinjeForNyAktivitet(
                 beregningsgrunnlag,
                 UttakArbeidType.ORDINÆRT_ARBEID,
                 finnArbeidsforholdReferanse(inntektsmeldinger, andelGradering),
                 Optional.of(andelGradering.getArbeidsgiver())
         ));
-        Arbeidsforhold arbeidsforhold = lagArbeidsforhold(inntektsmeldinger, andelGradering, filter, skjæringstidspunktBeregning);
+        var arbeidsforhold = lagArbeidsforhold(inntektsmeldinger, andelGradering, filter, skjæringstidspunktBeregning);
         return builder.medAktivitetStatus(AktivitetStatusV2.AT)
                 .medGraderinger(mapGraderingPerioder(andelGradering.getGraderinger()))
                 .medArbeidsforhold(arbeidsforhold)
@@ -73,11 +72,11 @@ public final class MapAndelGradering {
                                                     no.nav.folketrygdloven.kalkulator.modell.gradering.AndelGradering andelGradering,
                                                     YrkesaktivitetFilterDto filter,
                                                     LocalDate skjæringstidspunktBeregning) {
-        Optional<YrkesaktivitetDto> yrkesaktivitet = finnAlleYrkesaktiviteterInkludertFjernetIOverstyring(filter, skjæringstidspunktBeregning)
+        var yrkesaktivitet = finnAlleYrkesaktiviteterInkludertFjernetIOverstyring(filter, skjæringstidspunktBeregning)
                 .stream()
                 .filter(ya -> ya.gjelderFor(andelGradering.getArbeidsgiver(), andelGradering.getArbeidsforholdRef()))
                 .findFirst();
-        Arbeidsforhold arbeidsforhold = MapArbeidsforholdFraVLTilRegel.mapArbeidsforhold(
+        var arbeidsforhold = MapArbeidsforholdFraVLTilRegel.mapArbeidsforhold(
                 andelGradering.getArbeidsgiver(),
                 finnArbeidsforholdReferanse(inntektsmeldinger, andelGradering));
             yrkesaktivitet.ifPresent(ya -> Arbeidsforhold.builder(arbeidsforhold)
@@ -86,7 +85,7 @@ public final class MapAndelGradering {
     }
 
     private static InternArbeidsforholdRefDto finnArbeidsforholdReferanse(Collection<InntektsmeldingDto> inntektsmeldinger, no.nav.folketrygdloven.kalkulator.modell.gradering.AndelGradering andelGradering) {
-        Optional<InntektsmeldingDto> matchendeInntektsmelding = inntektsmeldinger.stream()
+        var matchendeInntektsmelding = inntektsmeldinger.stream()
                 .filter(im -> andelGradering.gjelderFor(im.getArbeidsgiver(), im.getArbeidsforholdRef()))
                 .filter(im -> im.getArbeidsforholdRef().gjelderForSpesifiktArbeidsforhold())
                 .findFirst();
@@ -102,8 +101,8 @@ public final class MapAndelGradering {
             throw new IllegalArgumentException("Gradering for arbeidstaker skal ikke mappes her");
         }
         var regelAktivitetStatus = MapAktivitetStatusV2FraVLTilRegel.map(andelGradering.getAktivitetStatus(), null);
-        List<no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.gradering.Gradering> graderinger = mapGraderingPerioder(andelGradering.getGraderinger());
-        AndelGradering.Builder builder = AndelGradering.builder()
+        var graderinger = mapGraderingPerioder(andelGradering.getGraderinger());
+        var builder = AndelGradering.builder()
             .medAktivitetStatus(regelAktivitetStatus)
             .medGraderinger(graderinger);
 
@@ -113,13 +112,13 @@ public final class MapAndelGradering {
         }
 
         // Finner yrkesaktiviteter inkludert fjernet i overstyring siden vi kun er interessert i å lage nye arbeidsforhold for nye aktiviteter (Disse kan ikke fjernes)
-        Optional<YrkesaktivitetDto> yrkesaktivitet = finnAlleYrkesaktiviteterInkludertFjernetIOverstyring(filter, skjæringstidspunktBeregning)
+        var yrkesaktivitet = finnAlleYrkesaktiviteterInkludertFjernetIOverstyring(filter, skjæringstidspunktBeregning)
             .stream()
             .filter(ya -> ya.gjelderFor(andelGradering.getArbeidsgiver(), andelGradering.getArbeidsforholdRef()))
             .findFirst();
 
         if (andelGradering.getArbeidsgiver() != null) {
-            Arbeidsforhold arbeidsforhold = MapArbeidsforholdFraVLTilRegel.mapArbeidsforhold(
+            var arbeidsforhold = MapArbeidsforholdFraVLTilRegel.mapArbeidsforhold(
                 andelGradering.getArbeidsgiver(),
                 andelGradering.getArbeidsforholdRef());
             yrkesaktivitet.ifPresent(ya -> Arbeidsforhold.builder(arbeidsforhold)
@@ -149,7 +148,7 @@ public final class MapAndelGradering {
                         .stream().anyMatch(andel -> andel.getAktivitetStatus().equals(aktivitetstatus)))
                 .map(p -> new LocalDateSegment<>(p.getBeregningsgrunnlagPeriodeFom(), p.getBeregningsgrunnlagPeriodeTom(), false))
                 .collect(Collectors.toList());
-        LocalDateTimeline<Boolean> eksisterendeAndelTidslinje = new LocalDateTimeline<>(eksisterendeAndelSegmenter);
+        var eksisterendeAndelTidslinje = new LocalDateTimeline<Boolean>(eksisterendeAndelSegmenter);
         return new LocalDateTimeline<>(beregningsgrunnlag.getSkjæringstidspunkt(), TIDENES_ENDE, true)
                 .crossJoin(eksisterendeAndelTidslinje, StandardCombinators::coalesceRightHandSide);
     }

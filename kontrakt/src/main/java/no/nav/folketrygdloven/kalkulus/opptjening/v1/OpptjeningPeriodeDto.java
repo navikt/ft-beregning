@@ -82,7 +82,7 @@ public class OpptjeningPeriodeDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        OpptjeningPeriodeDto that = (OpptjeningPeriodeDto) o;
+        var that = (OpptjeningPeriodeDto) o;
         return opptjeningAktivitetType.equals(that.opptjeningAktivitetType) &&
                 periode.equals(that.periode) &&
                 arbeidsgiver.equals(that.arbeidsgiver) &&

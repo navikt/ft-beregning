@@ -25,7 +25,7 @@ class SkalFinneGrenseverdiUtenFordelingTest {
 	@Test
 	void skal_finne_grenseverdi_med_fordeling_dersom_toggle_er_på_og_ikke_pleiepenger() {
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.medBeregningsgrunnlagPrStatus(BeregningsgrunnlagPrStatus
 						.builder()
@@ -54,7 +54,7 @@ class SkalFinneGrenseverdiUtenFordelingTest {
 	@Test
 	void skal_finne_grenseverdi_med_fordeling_dersom_toggle_er_på_og_fom_dato_før_dato_for_nye_regler() {
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), LocalDate.now().plusDays(9)))
 				.medBeregningsgrunnlagPrStatus(BeregningsgrunnlagPrStatus
 						.builder()
@@ -85,7 +85,7 @@ class SkalFinneGrenseverdiUtenFordelingTest {
 	@Test
 	void skal_finne_grenseverdi_uten_fordeling_dersom_toggle_er_på_og_fom_dato_lik_dato_for_nye_regler() {
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), LocalDate.now().plusDays(9)))
 				.medBeregningsgrunnlagPrStatus(BeregningsgrunnlagPrStatus
 						.builder()
@@ -116,7 +116,7 @@ class SkalFinneGrenseverdiUtenFordelingTest {
 	@Test
 	void skal_finne_grenseverdi_uten_fordeling_dersom_toggle_er_på_og_fom_dato_etter_dato_for_nye_regler() {
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), LocalDate.now().plusDays(9)))
 				.medBeregningsgrunnlagPrStatus(BeregningsgrunnlagPrStatus
 						.builder()

@@ -20,18 +20,18 @@ public class PeriodiserBeregningsgrunnlag {
 
 	public static List<SplittetPeriode> periodiserBeregningsgrunnlag(FinnNyeAndelerTjeneste nyeAndelerTjeneste, IdentifisertePeriodeÅrsaker identifisertePeriodeÅrsaker, LocalDate skjæringstidspunkt) {
 		// lag alle periodene, med riktige andeler
-		Map<LocalDate, Set<PeriodeSplittData>> periodeMap = identifisertePeriodeÅrsaker.getPeriodeMap();
+        var periodeMap = identifisertePeriodeÅrsaker.getPeriodeMap();
 		List<Map.Entry<LocalDate, Set<PeriodeSplittData>>> entries = new ArrayList<>(periodeMap.entrySet());
-		ListIterator<Map.Entry<LocalDate, Set<PeriodeSplittData>>> listIterator = entries.listIterator();
+        var listIterator = entries.listIterator();
 		List<SplittetPeriode> list = new ArrayList<>();
 		while (listIterator.hasNext()) {
-			Map.Entry<LocalDate, Set<PeriodeSplittData>> entry = listIterator.next();
-			LocalDate periodeFom = entry.getKey();
-			LocalDate periodeTom = utledPeriodeTom(entries, listIterator);
-			Set<PeriodeSplittData> periodeSplittData = entry.getValue();
-			List<SplittetAndel> nyeAndeler = nyeAndelerTjeneste.finnNyeAndeler(periodeFom, periodeTom);
-			Periode periode = new Periode(periodeFom, periodeTom);
-			SplittetPeriode splittetPeriode = SplittetPeriode.builder()
+            var entry = listIterator.next();
+            var periodeFom = entry.getKey();
+            var periodeTom = utledPeriodeTom(entries, listIterator);
+            var periodeSplittData = entry.getValue();
+            var nyeAndeler = nyeAndelerTjeneste.finnNyeAndeler(periodeFom, periodeTom);
+            var periode = new Periode(periodeFom, periodeTom);
+            var splittetPeriode = SplittetPeriode.builder()
 					.medPeriode(periode)
 					.medPeriodeÅrsaker(getPeriodeÅrsaker(periodeSplittData, skjæringstidspunkt, periodeFom))
 					.medNyeAndeler(nyeAndeler)

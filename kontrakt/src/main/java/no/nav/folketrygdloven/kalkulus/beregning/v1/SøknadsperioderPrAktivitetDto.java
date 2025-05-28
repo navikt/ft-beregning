@@ -64,7 +64,7 @@ public class SøknadsperioderPrAktivitetDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        SøknadsperioderPrAktivitetDto that = (SøknadsperioderPrAktivitetDto) o;
+        var that = (SøknadsperioderPrAktivitetDto) o;
         return Objects.equals(aktivitetDto, that.aktivitetDto) &&
                 Objects.equals(perioder, that.perioder);
     }

@@ -25,7 +25,7 @@ public class RegelFastsettStatusVedSkjæringstidspunktFRISINN implements Eksport
     @Override
     public Specification<AktivitetStatusModell> getSpecification() {
 
-        Ruleset<AktivitetStatusModell> rs = new Ruleset<>();
+        var rs = new Ruleset<AktivitetStatusModell>();
 
 //      FP_BR_19_5 Fastsett status for beregningsrunnlag (liste)
 
@@ -37,13 +37,13 @@ public class RegelFastsettStatusVedSkjæringstidspunktFRISINN implements Eksport
 
 //      FP_BR_19_3 Aktuelle kombinasjoner?
 
-        Specification<AktivitetStatusModell> sjekkAktuelleKombinasjoner =
+        var sjekkAktuelleKombinasjoner =
             rs.beregningHvisRegel(new SjekkAktuelleKombinasjoner(), fastsettKombinasjoner, fastsettStatusUtenKombinasjonerForBG);
 
 //      FP_BR_19_1 Hent aktiviteter på skjæringstidspunkt
 //      FP_BR_19_2 Fastsett status per andel og periode
 
-        Specification<AktivitetStatusModell> startFastsettStatusVedSkjæringtidspunktForBeregning =
+        var startFastsettStatusVedSkjæringtidspunktForBeregning =
             rs.beregningsRegel(FastsettStatusOgAndelPrPeriodeFRISINN.ID, FastsettStatusOgAndelPrPeriodeFRISINN.BESKRIVELSE,
                 new FastsettStatusOgAndelPrPeriodeFRISINN(), sjekkAktuelleKombinasjoner);
 

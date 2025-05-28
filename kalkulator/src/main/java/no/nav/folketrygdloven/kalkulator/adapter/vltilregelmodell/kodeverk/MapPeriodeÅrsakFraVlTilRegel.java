@@ -35,7 +35,7 @@ public class MapPeriodeÅrsakFraVlTilRegel {
     }
 
     public static no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.PeriodeÅrsak map(PeriodeÅrsak periodeÅrsak) {
-        no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.PeriodeÅrsak regelmodellPeriodeÅrsak = PERIODE_ÅRSAK_MAP.getOrDefault(periodeÅrsak, no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.PeriodeÅrsak.UDEFINERT);
+        var regelmodellPeriodeÅrsak = PERIODE_ÅRSAK_MAP.getOrDefault(periodeÅrsak, no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.PeriodeÅrsak.UDEFINERT);
         if (regelmodellPeriodeÅrsak == null) {
             throw new IllegalStateException("Ukjent PeriodeÅrsak: (" + periodeÅrsak + ").");
         }

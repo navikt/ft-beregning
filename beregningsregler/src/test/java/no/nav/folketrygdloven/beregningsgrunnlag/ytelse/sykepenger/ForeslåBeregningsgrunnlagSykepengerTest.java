@@ -20,7 +20,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.RegelMerknad;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.RegelResultat;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.SammenligningGrunnlagType;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
@@ -38,20 +37,20 @@ class ForeslåBeregningsgrunnlagSykepengerTest {
     @Test
     void skalBeregneSykepengerGrunnlagMedInntektsmeldingMedNaturalYtelserIArbeidsgiverperioden() {
         // Arrange
-        BigDecimal månedsinntekt = BigDecimal.valueOf(40000);
-        BigDecimal refusjonskrav = BigDecimal.valueOf(10000);
-        BigDecimal naturalytelse = BigDecimal.valueOf(2000);
-        LocalDate naturalytelseOpphørFom = skjæringstidspunkt.plusDays(7);
-        List<Periode> arbeidsgiversPeriode = List.of(Periode.of(skjæringstidspunkt, skjæringstidspunkt.plusDays(14)));
-        Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektsmelding(skjæringstidspunkt, månedsinntekt,
+        var månedsinntekt = BigDecimal.valueOf(40000);
+        var refusjonskrav = BigDecimal.valueOf(10000);
+        var naturalytelse = BigDecimal.valueOf(2000);
+        var naturalytelseOpphørFom = skjæringstidspunkt.plusDays(7);
+        var arbeidsgiversPeriode = List.of(Periode.of(skjæringstidspunkt, skjæringstidspunkt.plusDays(14)));
+        var beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektsmelding(skjæringstidspunkt, månedsinntekt,
             refusjonskrav, naturalytelse, naturalytelseOpphørFom);
         Beregningsgrunnlag.builder(beregningsgrunnlag).medBeregningForSykepenger(true);
         opprettSammenligningsgrunnlag(beregningsgrunnlag.getInntektsgrunnlag(), skjæringstidspunkt, BigDecimal.valueOf(42000));
-        BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        BeregningsgrunnlagPrArbeidsforhold bgArbeidsforhold = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var bgArbeidsforhold = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
         BeregningsgrunnlagPrArbeidsforhold.builder(bgArbeidsforhold).medArbeidsgiverperioder(arbeidsgiversPeriode).build();
         // Act
-	    RegelResultat resultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
+        var resultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
         // Assert
         assertThat(resultat.merknader().stream().map(RegelMerknad::utfallÅrsak).collect(Collectors.toList())).isEmpty();
         assertThat(bgArbeidsforhold.getNaturalytelseBortfaltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.valueOf(24000)); //NOSONAR
@@ -61,21 +60,21 @@ class ForeslåBeregningsgrunnlagSykepengerTest {
     @Test
     void skalBeregneSykepengerGrunnlagMedInntektsmeldingMedNaturalYtelserUtenforArbeidsgiverperioden() {
         // Arrange
-        BigDecimal månedsinntekt = BigDecimal.valueOf(40000);
-        BigDecimal refusjonskrav = BigDecimal.valueOf(10000);
-        BigDecimal naturalytelse = BigDecimal.valueOf(2000);
-        LocalDate naturalytelseOpphørFom = skjæringstidspunkt.plusDays(7);
-        List<Periode> arbeidsgiversPeriode = List.of(Periode.of(skjæringstidspunkt, skjæringstidspunkt.plusDays(6)),
+        var månedsinntekt = BigDecimal.valueOf(40000);
+        var refusjonskrav = BigDecimal.valueOf(10000);
+        var naturalytelse = BigDecimal.valueOf(2000);
+        var naturalytelseOpphørFom = skjæringstidspunkt.plusDays(7);
+        var arbeidsgiversPeriode = List.of(Periode.of(skjæringstidspunkt, skjæringstidspunkt.plusDays(6)),
             Periode.of(skjæringstidspunkt.plusDays(10), skjæringstidspunkt.plusDays(18)));
-        Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektsmelding(skjæringstidspunkt, månedsinntekt,
+        var beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektsmelding(skjæringstidspunkt, månedsinntekt,
             refusjonskrav, naturalytelse, naturalytelseOpphørFom);
         Beregningsgrunnlag.builder(beregningsgrunnlag).medBeregningForSykepenger(true);
         opprettSammenligningsgrunnlag(beregningsgrunnlag.getInntektsgrunnlag(), skjæringstidspunkt, BigDecimal.valueOf(40000));
-        BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        BeregningsgrunnlagPrArbeidsforhold bgArbeidsforhold = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var bgArbeidsforhold = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
         BeregningsgrunnlagPrArbeidsforhold.builder(bgArbeidsforhold).medArbeidsgiverperioder(arbeidsgiversPeriode).build();
         // Act
-	    RegelResultat resultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
+        var resultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
         // Assert
         assertThat(resultat.merknader().stream().map(RegelMerknad::utfallÅrsak).collect(Collectors.toList())).isEmpty();
         assertThat(bgArbeidsforhold.getNaturalytelseBortfaltPrÅr()).isEmpty();
@@ -85,16 +84,16 @@ class ForeslåBeregningsgrunnlagSykepengerTest {
     @Test
     void skalIkkeBeregneSykepengerGrunnlagMedInntektsmeldingMedNaturalYtelserIArbeidsgiverperiodenNårIFPSAK() {
         // Arrange
-        BigDecimal månedsinntekt = BigDecimal.valueOf(40000);
-        BigDecimal refusjonskrav = BigDecimal.valueOf(10000);
-        BigDecimal naturalytelse = BigDecimal.valueOf(2000);
-        LocalDate naturalytelseOpphørFom = skjæringstidspunkt.plusDays(7);
-        List<Periode> arbeidsgiversPeriode = List.of(Periode.of(skjæringstidspunkt, skjæringstidspunkt.plusDays(14)));
-        Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektsmelding(skjæringstidspunkt, månedsinntekt,
+        var månedsinntekt = BigDecimal.valueOf(40000);
+        var refusjonskrav = BigDecimal.valueOf(10000);
+        var naturalytelse = BigDecimal.valueOf(2000);
+        var naturalytelseOpphørFom = skjæringstidspunkt.plusDays(7);
+        var arbeidsgiversPeriode = List.of(Periode.of(skjæringstidspunkt, skjæringstidspunkt.plusDays(14)));
+        var beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektsmelding(skjæringstidspunkt, månedsinntekt,
             refusjonskrav, naturalytelse, naturalytelseOpphørFom);
         opprettSammenligningsgrunnlag(beregningsgrunnlag.getInntektsgrunnlag(), skjæringstidspunkt, BigDecimal.valueOf(40000));
-        BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        BeregningsgrunnlagPrArbeidsforhold bgArbeidsforhold = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var bgArbeidsforhold = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
         BeregningsgrunnlagPrArbeidsforhold.builder(bgArbeidsforhold).medArbeidsgiverperioder(arbeidsgiversPeriode).build();
         // Act
         new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);

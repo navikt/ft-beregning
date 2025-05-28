@@ -1,6 +1,5 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.ytelse.dagpengerelleraap;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -28,17 +27,17 @@ class ForeslåBeregningsgrunnlagDPellerAAPKombinasjonMedAnnenStatus extends Leaf
 
 	@Override
 	public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-		BeregningsgrunnlagPrStatus bgPerStatus = grunnlag.getBeregningsgrunnlagPrStatus().stream()
+        var bgPerStatus = grunnlag.getBeregningsgrunnlagPrStatus().stream()
 				.filter(bgps -> bgps.getAktivitetStatus().erAAPellerDP())
 				.findFirst()
 				.orElseThrow(() -> new IllegalStateException("Ingen aktivitetstatus av type DP eller AAP funnet."));
 
-		Periodeinntekt inntekt = finnPeriodeInntektForDPEllerAAP(grunnlag, bgPerStatus.getAktivitetStatus());
-		BigDecimal utbetalingsFaktor = inntekt.getUtbetalingsfaktor()
+        var inntekt = finnPeriodeInntektForDPEllerAAP(grunnlag, bgPerStatus.getAktivitetStatus());
+        var utbetalingsFaktor = inntekt.getUtbetalingsfaktor()
 				.orElseThrow(() -> new IllegalStateException("Utbetalingsgrad for DP/AAP mangler."));
 
-		BigDecimal antallPerioderPrÅr = inntekt.getInntektPeriodeType().getAntallPrÅr();
-		BigDecimal beregnetPrÅr = inntekt.getInntekt().multiply(antallPerioderPrÅr).multiply(utbetalingsFaktor);
+        var antallPerioderPrÅr = inntekt.getInntektPeriodeType().getAntallPrÅr();
+        var beregnetPrÅr = inntekt.getInntekt().multiply(antallPerioderPrÅr).multiply(utbetalingsFaktor);
 		Long originalDagsats = inntekt.getInntekt().longValue();
 
 		BeregningsgrunnlagPrStatus.builder(bgPerStatus)
@@ -47,7 +46,7 @@ class ForeslåBeregningsgrunnlagDPellerAAPKombinasjonMedAnnenStatus extends Leaf
 				.medOrginalDagsatsFraTilstøtendeYtelse(originalDagsats)
 				.build();
 
-		BeregningsgrunnlagHjemmel hjemmel = AktivitetStatus.AAP.equals(bgPerStatus.getAktivitetStatus()) ?
+        var hjemmel = AktivitetStatus.AAP.equals(bgPerStatus.getAktivitetStatus()) ?
 				BeregningsgrunnlagHjemmel.F_14_7 : BeregningsgrunnlagHjemmel.F_14_7_8_49;
 		grunnlag.getBeregningsgrunnlag().getAktivitetStatus(bgPerStatus.getAktivitetStatus()).setHjemmel(hjemmel);
 

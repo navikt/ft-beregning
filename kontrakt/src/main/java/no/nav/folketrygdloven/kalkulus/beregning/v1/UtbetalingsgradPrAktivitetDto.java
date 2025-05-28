@@ -59,7 +59,7 @@ public class UtbetalingsgradPrAktivitetDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UtbetalingsgradPrAktivitetDto that = (UtbetalingsgradPrAktivitetDto) o;
+        var that = (UtbetalingsgradPrAktivitetDto) o;
         return Objects.equals(utbetalingsgradArbeidsforholdDto, that.utbetalingsgradArbeidsforholdDto) &&
                 Objects.equals(periodeMedUtbetalingsgrad, that.periodeMedUtbetalingsgrad);
     }

@@ -55,7 +55,7 @@ public class FordelBeregningsgrunnlagArbeidsforholdDto extends Beregningsgrunnla
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        FordelBeregningsgrunnlagArbeidsforholdDto that = (FordelBeregningsgrunnlagArbeidsforholdDto) o;
+        var that = (FordelBeregningsgrunnlagArbeidsforholdDto) o;
         return Objects.equals(perioderMedGraderingEllerRefusjon, that.perioderMedGraderingEllerRefusjon)
             && Objects.equals(permisjon, that.permisjon);
     }

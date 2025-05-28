@@ -37,9 +37,9 @@ class MatchBeregningsgrunnlagTjenesteTest {
         var arbId = InternArbeidsforholdRefDto.nullRef();
         Long andelsnr = 1L;
 
-        BeregningsgrunnlagDto beregningsgrunnlag = BeregningsgrunnlagDto.builder().medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT).build();
-        BeregningsgrunnlagPeriodeDto periode = lagPeriode(beregningsgrunnlag);
-        BeregningsgrunnlagPrStatusOgAndelDto andel = BeregningsgrunnlagPrStatusOgAndelDto.ny()
+        var beregningsgrunnlag = BeregningsgrunnlagDto.builder().medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT).build();
+        var periode = lagPeriode(beregningsgrunnlag);
+        var andel = BeregningsgrunnlagPrStatusOgAndelDto.ny()
                 .medAndelsnr(andelsnr)
                 .medKilde(AndelKilde.SAKSBEHANDLER_KOFAKBER)
                 .medInntektskategori(Inntektskategori.SJØMANN)
@@ -48,7 +48,7 @@ class MatchBeregningsgrunnlagTjenesteTest {
                 .build(periode);
 
         // Act
-        BeregningsgrunnlagPrStatusOgAndelDto korrektAndel = MatchBeregningsgrunnlagTjeneste.matchMedAndelFraPeriode(periode, andelsnr, arbId);
+        var korrektAndel = MatchBeregningsgrunnlagTjeneste.matchMedAndelFraPeriode(periode, andelsnr, arbId);
 
         // Assert
         assertThat(korrektAndel).isEqualTo(andel);
@@ -60,9 +60,9 @@ class MatchBeregningsgrunnlagTjenesteTest {
         var arbId = InternArbeidsforholdRefDto.nyRef();
         Long andelsnr = 1L;
 
-        BeregningsgrunnlagDto beregningsgrunnlag = BeregningsgrunnlagDto.builder().medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT).build();
-        BeregningsgrunnlagPeriodeDto periode = lagPeriode(beregningsgrunnlag);
-        BeregningsgrunnlagPrStatusOgAndelDto andel = BeregningsgrunnlagPrStatusOgAndelDto.ny()
+        var beregningsgrunnlag = BeregningsgrunnlagDto.builder().medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT).build();
+        var periode = lagPeriode(beregningsgrunnlag);
+        var andel = BeregningsgrunnlagPrStatusOgAndelDto.ny()
                 .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder().medArbeidsgiver(arbeidsgiverEn).medArbeidsforholdRef(arbId))
                 .medAndelsnr(andelsnr)
                 .medKilde(AndelKilde.SAKSBEHANDLER_KOFAKBER)
@@ -71,7 +71,7 @@ class MatchBeregningsgrunnlagTjenesteTest {
                 .build(periode);
 
         // Act
-        BeregningsgrunnlagPrStatusOgAndelDto korrektAndel = MatchBeregningsgrunnlagTjeneste.matchMedAndelFraPeriode(periode, null, arbId);
+        var korrektAndel = MatchBeregningsgrunnlagTjeneste.matchMedAndelFraPeriode(periode, null, arbId);
 
         // Assert
         assertThat(korrektAndel).isEqualTo(andel);
@@ -83,8 +83,8 @@ class MatchBeregningsgrunnlagTjenesteTest {
         var arbId = InternArbeidsforholdRefDto.nyRef();
         Long andelsnr = 1L;
 
-        BeregningsgrunnlagDto beregningsgrunnlag = BeregningsgrunnlagDto.builder().medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT).build();
-        BeregningsgrunnlagPeriodeDto periode = lagPeriode(beregningsgrunnlag);
+        var beregningsgrunnlag = BeregningsgrunnlagDto.builder().medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT).build();
+        var periode = lagPeriode(beregningsgrunnlag);
         BeregningsgrunnlagPrStatusOgAndelDto.ny()
                 .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder().medArbeidsgiver(arbeidsgiverEn).medArbeidsforholdRef(arbId))
                 .medAndelsnr(andelsnr)

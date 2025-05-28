@@ -27,7 +27,7 @@ public class IdentifiserPerioderForEndringISøktYtelse {
     }
 
     public static Set<PeriodeSplittData> identifiser(AndelUtbetalingsgrad endringISøktYtelse) {
-        List<Utbetalingsgrad> graderinger = endringISøktYtelse.getUbetalingsgrader();
+        var graderinger = endringISøktYtelse.getUbetalingsgrader();
 	    var graderingTidslinje = lagGraderingTidslinje(graderinger);
 	    if (graderingTidslinje.isEmpty()) {
 		    return Collections.emptySet();

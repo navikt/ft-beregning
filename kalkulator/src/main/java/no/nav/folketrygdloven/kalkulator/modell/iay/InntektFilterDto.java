@@ -13,7 +13,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
-import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.InntektskildeType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.InntektspostType;
 
@@ -158,7 +157,7 @@ public class InntektFilterDto {
             return false;
         }
         if (skjæringstidspunkt != null) {
-            Intervall periode = inntektspost.getPeriode();
+            var periode = inntektspost.getPeriode();
             if (venstreSideASkjæringstidspunkt) {
                 return periode.getFomDato().isBefore(skjæringstidspunkt.plusDays(1));
             } else {

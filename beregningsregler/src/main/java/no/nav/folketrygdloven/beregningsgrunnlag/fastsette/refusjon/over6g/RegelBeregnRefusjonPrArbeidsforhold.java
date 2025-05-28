@@ -28,9 +28,9 @@ public class RegelBeregnRefusjonPrArbeidsforhold implements RuleService<Beregnin
     @SuppressWarnings("unchecked")
     @Override
     public Specification<BeregningsgrunnlagPeriode> getSpecification() {
-        Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
+        var rs = new Ruleset<BeregningsgrunnlagPeriode>();
 
-        Specification<BeregningsgrunnlagPeriode> beregnRefusjonPrArbeidsforhold = rs.beregningsRegel(ID, BESKRIVELSE,
+        var beregnRefusjonPrArbeidsforhold = rs.beregningsRegel(ID, BESKRIVELSE,
                 Arrays.asList(new BeregnArbeidsgiversAndeler(), new BeregnAvkortetRefusjon()),
                 new VurderOmAlleFerdig());
 

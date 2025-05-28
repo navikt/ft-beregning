@@ -31,7 +31,6 @@ import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseAggregatB
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseGrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseGrunnlagDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.iay.VersjonTypeDto;
-import no.nav.folketrygdloven.kalkulator.modell.iay.YrkesaktivitetDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.modell.typer.EksternArbeidsforholdRef;
@@ -44,9 +43,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.ArbeidsforholdHandlingType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FaktaOmBeregningTilfelle;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.ArbeidstakerUtenInntektsmeldingAndelDto;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.FaktaOmBeregningDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.VurderMottarYtelseDto;
 
 
 class VurderMottarYtelseDtoTjenesteTest {
@@ -88,9 +85,9 @@ class VurderMottarYtelseDtoTjenesteTest {
     @Test
     void skal_lage_dto_for_mottar_ytelse_uten_mottar_ytelse_satt() {
         // Arrange
-        FaktaOmBeregningDto dto = new FaktaOmBeregningDto();
+        var dto = new FaktaOmBeregningDto();
         byggFrilansAndel();
-        BeregningsgrunnlagPrStatusOgAndelDto arbeidsforholdAndel = byggArbeidsforholdMedBgAndel();
+        var arbeidsforholdAndel = byggArbeidsforholdMedBgAndel();
 
         // Act
         var input = new BeregningsgrunnlagGUIInput(koblingReferanse, inntektArbeidYtelseGrunnlag, List.of(), null)
@@ -99,12 +96,12 @@ class VurderMottarYtelseDtoTjenesteTest {
         dtoTjeneste.lagDto(input, dto);
 
         // Assert
-        VurderMottarYtelseDto mottarYtelseDto = dto.getVurderMottarYtelse();
+        var mottarYtelseDto = dto.getVurderMottarYtelse();
         assertThat(mottarYtelseDto.getErFrilans()).isTrue();
         assertThat(mottarYtelseDto.getFrilansMottarYtelse()).isNull();
         assertThat(mottarYtelseDto.getFrilansInntektPrMnd()).isEqualByComparingTo(ModellTyperMapper.beløpTilDto(INNTEKT_SNITT));
         assertThat(mottarYtelseDto.getArbeidstakerAndelerUtenIM()).hasSize(1);
-        ArbeidstakerUtenInntektsmeldingAndelDto andelUtenIM = mottarYtelseDto.getArbeidstakerAndelerUtenIM().get(0);
+        var andelUtenIM = mottarYtelseDto.getArbeidstakerAndelerUtenIM().get(0);
         assertThat(andelUtenIM.getMottarYtelse()).isNull();
         assertThat(andelUtenIM.getArbeidsforhold().getArbeidsgiverIdent()).isEqualTo(ORGNR);
         assertThat(andelUtenIM.getAndelsnr()).isEqualTo(arbeidsforholdAndel.getAndelsnr());
@@ -114,12 +111,12 @@ class VurderMottarYtelseDtoTjenesteTest {
     @Test
     void skal_lage_dto_for_mottar_ytelse_med_mottar_ytelse_satt() {
         // Arrange
-        FaktaOmBeregningDto dto = new FaktaOmBeregningDto();
+        var dto = new FaktaOmBeregningDto();
         byggFrilansAndel();
-        BeregningsgrunnlagPrStatusOgAndelDto arbeidsforholdAndel = byggArbeidsforholdMedBgAndel();
+        var arbeidsforholdAndel = byggArbeidsforholdMedBgAndel();
 
         // Act
-        FaktaAggregatDto fakta = FaktaAggregatDto.builder()
+        var fakta = FaktaAggregatDto.builder()
                 .medFaktaAktør(FaktaAktørDto.builder().medHarFLMottattYtelseFastsattAvSaksbehandler(false).build())
                 .erstattEksisterendeEllerLeggTil(FaktaArbeidsforholdDto.builder(arbeidsgiver, InternArbeidsforholdRefDto.nullRef())
                         .medHarMottattYtelseFastsattAvSaksbehandler(true)
@@ -131,12 +128,12 @@ class VurderMottarYtelseDtoTjenesteTest {
         dtoTjeneste.lagDto(input, dto);
 
         // Assert
-        VurderMottarYtelseDto mottarYtelseDto = dto.getVurderMottarYtelse();
+        var mottarYtelseDto = dto.getVurderMottarYtelse();
         assertThat(mottarYtelseDto.getErFrilans()).isTrue();
         assertThat(mottarYtelseDto.getFrilansMottarYtelse()).isFalse();
         assertThat(mottarYtelseDto.getFrilansInntektPrMnd()).isEqualByComparingTo(ModellTyperMapper.beløpTilDto(INNTEKT_SNITT));
         assertThat(mottarYtelseDto.getArbeidstakerAndelerUtenIM()).hasSize(1);
-        ArbeidstakerUtenInntektsmeldingAndelDto andelUtenIM = mottarYtelseDto.getArbeidstakerAndelerUtenIM().get(0);
+        var andelUtenIM = mottarYtelseDto.getArbeidstakerAndelerUtenIM().get(0);
         assertThat(andelUtenIM.getMottarYtelse()).isTrue();
         assertThat(andelUtenIM.getArbeidsforhold().getArbeidsgiverIdent()).isEqualTo(ORGNR);
         assertThat(andelUtenIM.getAndelsnr()).isEqualTo(arbeidsforholdAndel.getAndelsnr());
@@ -144,11 +141,11 @@ class VurderMottarYtelseDtoTjenesteTest {
     }
 
     private void byggFrilansAndel() {
-        Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(FRILANS_ORGNR);
-        InntektArbeidYtelseAggregatBuilder oppdatere = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
-        Intervall frilansPeriode = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(10), SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(10));
-        InntektArbeidYtelseAggregatBuilder.AktørArbeidBuilder aktørArbeidBuilder = oppdatere.getAktørArbeidBuilder();
-        YrkesaktivitetDtoBuilder yrkesaktivitetBuilderForType = aktørArbeidBuilder
+        var arbeidsgiver = Arbeidsgiver.virksomhet(FRILANS_ORGNR);
+        var oppdatere = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
+        var frilansPeriode = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(10), SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(10));
+        var aktørArbeidBuilder = oppdatere.getAktørArbeidBuilder();
+        var yrkesaktivitetBuilderForType = aktørArbeidBuilder
                 .getYrkesaktivitetBuilderForType(ArbeidType.FRILANSER_OPPDRAGSTAKER);
         yrkesaktivitetBuilderForType
                 .leggTilAktivitetsAvtale(AktivitetsAvtaleDtoBuilder.ny().medPeriode(frilansPeriode))
@@ -171,10 +168,10 @@ class VurderMottarYtelseDtoTjenesteTest {
     }
 
     private BeregningsgrunnlagPrStatusOgAndelDto byggArbeidsforholdMedBgAndel() {
-        InntektArbeidYtelseAggregatBuilder oppdatere = InntektArbeidYtelseAggregatBuilder.oppdatere(inntektArbeidYtelseGrunnlag.getRegisterVersjon(), VersjonTypeDto.REGISTER);
-        Intervall ansettelsesPeriode = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(10), SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(10));
-        InntektArbeidYtelseAggregatBuilder.AktørArbeidBuilder aktørArbeidBuilder = oppdatere.getAktørArbeidBuilder();
-        YrkesaktivitetDtoBuilder yrkesaktivitetBuilderForType = aktørArbeidBuilder
+        var oppdatere = InntektArbeidYtelseAggregatBuilder.oppdatere(inntektArbeidYtelseGrunnlag.getRegisterVersjon(), VersjonTypeDto.REGISTER);
+        var ansettelsesPeriode = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(10), SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(10));
+        var aktørArbeidBuilder = oppdatere.getAktørArbeidBuilder();
+        var yrkesaktivitetBuilderForType = aktørArbeidBuilder
                 .getYrkesaktivitetBuilderForType(ArbeidType.ORDINÆRT_ARBEIDSFORHOLD);
         yrkesaktivitetBuilderForType
                 .medArbeidsgiver(arbeidsgiver)
@@ -186,7 +183,7 @@ class VurderMottarYtelseDtoTjenesteTest {
         oppdatere.leggTilAktørArbeid(aktørArbeidBuilder);
         oppdatere.medNyInternArbeidsforholdRef(arbeidsgiver, EKSTERN_ARB_ID);
 
-        ArbeidsforholdOverstyringDtoBuilder arbeidsforholdOverstyringDtoBuilder = ArbeidsforholdOverstyringDtoBuilder.oppdatere(Optional.empty())
+        var arbeidsforholdOverstyringDtoBuilder = ArbeidsforholdOverstyringDtoBuilder.oppdatere(Optional.empty())
                 .medArbeidsgiver(arbeidsgiver)
                 .medHandling(ArbeidsforholdHandlingType.BRUK_UTEN_INNTEKTSMELDING);
 

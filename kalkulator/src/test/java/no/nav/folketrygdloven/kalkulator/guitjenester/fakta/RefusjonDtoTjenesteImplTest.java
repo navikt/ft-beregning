@@ -45,14 +45,14 @@ class RefusjonDtoTjenesteImplTest {
     @Test
     void skal_ikkje_kunne_endre_refusjon_for_andel_uten_gradering_og_uten_refusjon() {
         //Arrange
-        BeregningsgrunnlagDto bg = BeregningsgrunnlagDto.builder()
+        var bg = BeregningsgrunnlagDto.builder()
             .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING)
             .medGrunnbeløp(GRUNNBELØP)
             .build();
-        BeregningsgrunnlagPeriodeDto periode = BeregningsgrunnlagPeriodeDto.ny()
+        var periode = BeregningsgrunnlagPeriodeDto.ny()
             .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_OPPTJENING, null)
             .build(bg);
-        BeregningsgrunnlagPrStatusOgAndelDto andel = BeregningsgrunnlagPrStatusOgAndelDto.ny()
+        var andel = BeregningsgrunnlagPrStatusOgAndelDto.ny()
             .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
             .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder().medArbeidsgiver(ARBEIDSGIVER))
             .build(periode);
@@ -63,7 +63,7 @@ class RefusjonDtoTjenesteImplTest {
         .build(periode);
 
         // Act
-        boolean skalKunneEndreRefusjon = RefusjonDtoTjeneste.skalKunneEndreRefusjon(andel, periode, AktivitetGradering.INGEN_GRADERING, GRUNNBELØP);
+        var skalKunneEndreRefusjon = RefusjonDtoTjeneste.skalKunneEndreRefusjon(andel, periode, AktivitetGradering.INGEN_GRADERING, GRUNNBELØP);
 
         // Assert
         assertThat(skalKunneEndreRefusjon).isFalse();
@@ -72,15 +72,15 @@ class RefusjonDtoTjenesteImplTest {
     @Test
     void skal_ikkje_kunne_endre_refusjon_for_andel_med_gradering_og_med_refusjon() {
         //Arrange
-        BeregningsgrunnlagDto bg = BeregningsgrunnlagDto.builder()
+        var bg = BeregningsgrunnlagDto.builder()
             .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING)
             .medGrunnbeløp(GRUNNBELØP)
             .build();
-        BeregningsgrunnlagPeriodeDto periode = BeregningsgrunnlagPeriodeDto.ny()
+        var periode = BeregningsgrunnlagPeriodeDto.ny()
             .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_OPPTJENING, null)
             .build(bg);
         var refPrMnd = Beløp.fra(100);
-        BeregningsgrunnlagPrStatusOgAndelDto andel = BeregningsgrunnlagPrStatusOgAndelDto.ny()
+        var andel = BeregningsgrunnlagPrStatusOgAndelDto.ny()
             .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
             .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder().medArbeidsgiver(ARBEIDSGIVER)
                 .medRefusjonskravPrÅr(refPrMnd.multipliser(KonfigTjeneste.getMånederIÅr()), Utfall.GODKJENT))
@@ -91,7 +91,7 @@ class RefusjonDtoTjenesteImplTest {
                 .medRefusjonskravPrÅr(SEKS_G.adder(Beløp.fra(100)), Utfall.GODKJENT))
             .build(periode);
         // Act
-        boolean skalKunneEndreRefusjon = RefusjonDtoTjeneste.skalKunneEndreRefusjon(andel, periode, AktivitetGradering.INGEN_GRADERING, GRUNNBELØP);
+        var skalKunneEndreRefusjon = RefusjonDtoTjeneste.skalKunneEndreRefusjon(andel, periode, AktivitetGradering.INGEN_GRADERING, GRUNNBELØP);
 
         // Assert
         assertThat(skalKunneEndreRefusjon).isFalse();
@@ -100,14 +100,14 @@ class RefusjonDtoTjenesteImplTest {
     @Test
     void skal_ikkje_kunne_endre_refusjon_for_andel_med_gradering_og_uten_refusjon_totalrefusjon_under_6G() {
         //Arrange
-        BeregningsgrunnlagDto bg = BeregningsgrunnlagDto.builder()
+        var bg = BeregningsgrunnlagDto.builder()
             .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING)
             .medGrunnbeløp(GRUNNBELØP)
             .build();
-        BeregningsgrunnlagPeriodeDto periode = BeregningsgrunnlagPeriodeDto.ny()
+        var periode = BeregningsgrunnlagPeriodeDto.ny()
             .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_OPPTJENING, null)
             .build(bg);
-        BeregningsgrunnlagPrStatusOgAndelDto andel = BeregningsgrunnlagPrStatusOgAndelDto.ny()
+        var andel = BeregningsgrunnlagPrStatusOgAndelDto.ny()
             .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
             .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder().medArbeidsgiver(ARBEIDSGIVER)
                 .medRefusjonskravPrÅr(Beløp.ZERO, Utfall.GODKJENT))
@@ -119,7 +119,7 @@ class RefusjonDtoTjenesteImplTest {
             .build(periode);
 
         // Act
-        boolean skalKunneEndreRefusjon = RefusjonDtoTjeneste.skalKunneEndreRefusjon(andel, periode, AktivitetGradering.INGEN_GRADERING, GRUNNBELØP);
+        var skalKunneEndreRefusjon = RefusjonDtoTjeneste.skalKunneEndreRefusjon(andel, periode, AktivitetGradering.INGEN_GRADERING, GRUNNBELØP);
 
         // Assert
         assertThat(skalKunneEndreRefusjon).isFalse();
@@ -128,14 +128,14 @@ class RefusjonDtoTjenesteImplTest {
     @Test
     void skal_kunne_endre_refusjon_for_andel_med_gradering_og_uten_refusjon_totalrefusjon_lik_6G() {
         //Arrange
-        BeregningsgrunnlagDto bg = BeregningsgrunnlagDto.builder()
+        var bg = BeregningsgrunnlagDto.builder()
             .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING)
             .medGrunnbeløp(GRUNNBELØP)
             .build();
-        BeregningsgrunnlagPeriodeDto periode = BeregningsgrunnlagPeriodeDto.ny()
+        var periode = BeregningsgrunnlagPeriodeDto.ny()
             .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_OPPTJENING, null)
             .build(bg);
-        BeregningsgrunnlagPrStatusOgAndelDto andel = BeregningsgrunnlagPrStatusOgAndelDto.ny()
+        var andel = BeregningsgrunnlagPrStatusOgAndelDto.ny()
             .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
             .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder().medArbeidsgiver(ARBEIDSGIVER)
                 .medRefusjonskravPrÅr(Beløp.ZERO, Utfall.GODKJENT))
@@ -146,7 +146,7 @@ class RefusjonDtoTjenesteImplTest {
                 .medRefusjonskravPrÅr(SEKS_G, Utfall.GODKJENT))
             .build(periode);
 
-        AndelGradering andelGradering = AndelGradering.builder()
+        var andelGradering = AndelGradering.builder()
             .medArbeidsgiver(ARBEIDSGIVER)
             .medArbeidsforholdRef(ARB_ID)
             .medStatus(AktivitetStatus.ARBEIDSTAKER)
@@ -155,7 +155,7 @@ class RefusjonDtoTjenesteImplTest {
 
 
         // Act
-        boolean skalKunneEndreRefusjon = RefusjonDtoTjeneste.skalKunneEndreRefusjon(andel,
+        var skalKunneEndreRefusjon = RefusjonDtoTjeneste.skalKunneEndreRefusjon(andel,
                 periode, new AktivitetGradering(andelGradering), GRUNNBELØP);
 
         // Assert
@@ -165,14 +165,14 @@ class RefusjonDtoTjenesteImplTest {
     @Test
     void skal_kunne_endre_refusjon_for_andel_med_gradering_og_uten_refusjon_totalrefusjon_over_6G() {
         //Arrange
-        BeregningsgrunnlagDto bg = BeregningsgrunnlagDto.builder()
+        var bg = BeregningsgrunnlagDto.builder()
             .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING)
             .medGrunnbeløp(GRUNNBELØP)
             .build();
-        BeregningsgrunnlagPeriodeDto periode = BeregningsgrunnlagPeriodeDto.ny()
+        var periode = BeregningsgrunnlagPeriodeDto.ny()
             .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_OPPTJENING, null)
             .build(bg);
-        BeregningsgrunnlagPrStatusOgAndelDto andel = BeregningsgrunnlagPrStatusOgAndelDto.ny()
+        var andel = BeregningsgrunnlagPrStatusOgAndelDto.ny()
             .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
             .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder().medArbeidsgiver(ARBEIDSGIVER)
                 .medRefusjonskravPrÅr(Beløp.ZERO, Utfall.GODKJENT))
@@ -183,7 +183,7 @@ class RefusjonDtoTjenesteImplTest {
                 .medRefusjonskravPrÅr(SEKS_G.adder(Beløp.fra(100)), Utfall.GODKJENT))
             .build(periode);
 
-        AndelGradering andelGradering = AndelGradering.builder()
+        var andelGradering = AndelGradering.builder()
             .medArbeidsgiver(ARBEIDSGIVER)
             .medArbeidsforholdRef(ARB_ID)
             .medStatus(AktivitetStatus.ARBEIDSTAKER)
@@ -192,7 +192,7 @@ class RefusjonDtoTjenesteImplTest {
 
 
         // Act
-        boolean skalKunneEndreRefusjon = RefusjonDtoTjeneste.skalKunneEndreRefusjon(andel,
+        var skalKunneEndreRefusjon = RefusjonDtoTjeneste.skalKunneEndreRefusjon(andel,
                 periode, new AktivitetGradering(andelGradering), GRUNNBELØP);
 
         // Assert
@@ -204,21 +204,21 @@ class RefusjonDtoTjenesteImplTest {
         Integer refusjonskrav1 = 10000;
         Integer refusjonskrav2 = 15000;
         Integer refusjonskrav3 = 20000;
-        List<Tuple<Boolean, Integer>> refusjon = List.of(new Tuple<>(true, refusjonskrav1), new Tuple<>(false, refusjonskrav2), new Tuple<>(false, refusjonskrav3));
-        List<FordelBeregningsgrunnlagAndelDto> andeler = lagAndeler(refusjon, 50000);
+        var refusjon = List.of(new Tuple<>(true, refusjonskrav1), new Tuple<>(false, refusjonskrav2), new Tuple<>(false, refusjonskrav3));
+        var andeler = lagAndeler(refusjon, 50000);
         RefusjonDtoTjeneste.slåSammenRefusjonForAndelerISammeArbeidsforhold(andeler);
 
-        FordelBeregningsgrunnlagAndelDto andelSomIkkjeErLagtTilManuelt = andeler.stream().filter(a -> !a.getLagtTilAvSaksbehandler()).findFirst().get();
+        var andelSomIkkjeErLagtTilManuelt = andeler.stream().filter(a -> !a.getLagtTilAvSaksbehandler()).findFirst().get();
         assertThat(andelSomIkkjeErLagtTilManuelt.getRefusjonskravPrAar()).isEqualByComparingTo(ModellTyperMapper.beløpTilDto(Beløp.fra(refusjonskrav1+refusjonskrav2+refusjonskrav3)));
-        FordelBeregningsgrunnlagAndelDto andelSomErLagtTilManuelt = andeler.stream().filter(FaktaOmBeregningAndelDto::getLagtTilAvSaksbehandler).findFirst().get();
+        var andelSomErLagtTilManuelt = andeler.stream().filter(FaktaOmBeregningAndelDto::getLagtTilAvSaksbehandler).findFirst().get();
         assertThat(andelSomErLagtTilManuelt.getRefusjonskravPrAar()).isNull();
     }
 
     private List<FordelBeregningsgrunnlagAndelDto> lagAndeler(List<Tuple<Boolean, Integer>> refusjonskrav, Integer refusjonFraInntektsmelding) {
-        BeregningsgrunnlagArbeidsforholdDto arbeidsforholdDto = new BeregningsgrunnlagArbeidsforholdDto();
+        var arbeidsforholdDto = new BeregningsgrunnlagArbeidsforholdDto();
         arbeidsforholdDto.setArbeidsgiverIdent("432423423");
         return refusjonskrav.stream().map(tuple -> {
-            FordelBeregningsgrunnlagAndelDto andel = new FordelBeregningsgrunnlagAndelDto(new FaktaOmBeregningAndelDto());
+            var andel = new FordelBeregningsgrunnlagAndelDto(new FaktaOmBeregningAndelDto());
             andel.setArbeidsforhold(arbeidsforholdDto);
             andel.setLagtTilAvSaksbehandler(tuple.getElement1());
             andel.setRefusjonskravPrAar(ModellTyperMapper.beløpTilDto(Beløp.fra(tuple.getElement2())));

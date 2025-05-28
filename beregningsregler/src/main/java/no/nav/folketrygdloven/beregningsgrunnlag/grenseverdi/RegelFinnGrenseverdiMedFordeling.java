@@ -26,28 +26,28 @@ public class RegelFinnGrenseverdiMedFordeling implements EksportRegel<Beregnings
 	@SuppressWarnings("unchecked")
     @Override
     public Specification<BeregningsgrunnlagPeriode> getSpecification() {
-        Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
+        var rs = new Ruleset<BeregningsgrunnlagPeriode>();
 
         // Fastsett grenseverdi for fastsetting av beregningsgrunnlag
-        Specification<BeregningsgrunnlagPeriode> fastsettGrenseverdi = rs.beregningsRegel(FinnGrenseverdi.ID, FinnGrenseverdi.BESKRIVELSE,
+        var fastsettGrenseverdi = rs.beregningsRegel(FinnGrenseverdi.ID, FinnGrenseverdi.BESKRIVELSE,
             new FinnGrenseverdi(), new Fastsatt());
 
         // Fastsett avkortet BG
-        Specification<BeregningsgrunnlagPeriode> fastsettAvkortet = rs.beregningsRegel(
+        var fastsettAvkortet = rs.beregningsRegel(
             RegelFastsettAndelBGOver6G.ID,
             RegelFastsettAndelBGOver6G.BESKRIVELSE,
             new RegelFastsettAndelBGOver6G(regelmodell).getSpecification(),
             fastsettGrenseverdi);
 
         // Fastsett uten avkorting
-        Specification<BeregningsgrunnlagPeriode> fastsettUtenAvkorting = rs.beregningsRegel(
+        var fastsettUtenAvkorting = rs.beregningsRegel(
             "FP_BR_29.6_med_fordeling",
             "Fastsett BG uten avkorting",
             new FastsettAndelLikBruttoBG(),
             fastsettGrenseverdi);
 
         // FP_BR_29.4 4. Brutto beregnings-grunnlag totalt > 6G?
-        Specification<BeregningsgrunnlagPeriode> beregnEventuellAvkorting = rs.beregningHvisRegel(
+        var beregnEventuellAvkorting = rs.beregningHvisRegel(
             new SjekkBeregningsgrunnlagStørreEnnGrenseverdi(),
             fastsettAvkortet,
             fastsettUtenAvkorting);

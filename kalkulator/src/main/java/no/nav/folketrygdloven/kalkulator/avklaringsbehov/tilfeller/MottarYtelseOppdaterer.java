@@ -6,12 +6,9 @@ import no.nav.folketrygdloven.kalkulator.avklaringsbehov.dto.ArbeidstakerandelUt
 import no.nav.folketrygdloven.kalkulator.avklaringsbehov.dto.FaktaBeregningLagreDto;
 import no.nav.folketrygdloven.kalkulator.avklaringsbehov.dto.MottarYtelseDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BGAndelArbeidsforholdDto;
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.FaktaAggregatDto;
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.FaktaAktørDto;
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.FaktaArbeidsforholdDto;
 
 public class MottarYtelseOppdaterer {
 
@@ -20,10 +17,10 @@ public class MottarYtelseOppdaterer {
 
     public static void oppdater(FaktaBeregningLagreDto dto,
                                 BeregningsgrunnlagGrunnlagDtoBuilder grunnlagBuilder) {
-        MottarYtelseDto mottarYtelseDto = dto.getMottarYtelse();
-        BeregningsgrunnlagDto beregningsgrunnlag = grunnlagBuilder.getBeregningsgrunnlagBuilder().getBeregningsgrunnlag();
+        var mottarYtelseDto = dto.getMottarYtelse();
+        var beregningsgrunnlag = grunnlagBuilder.getBeregningsgrunnlagBuilder().getBeregningsgrunnlag();
         var andelListe = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList();
-        FaktaAggregatDto.Builder faktaBuilder = grunnlagBuilder.getFaktaAggregatBuilder();
+        var faktaBuilder = grunnlagBuilder.getFaktaAggregatBuilder();
         if  (mottarYtelseDto.getFrilansMottarYtelse() != null) {
             settMottarYtelseForFrilans(mottarYtelseDto, faktaBuilder);
         }
@@ -33,7 +30,7 @@ public class MottarYtelseOppdaterer {
     }
 
     private static void settMottarYtelseForFrilans(MottarYtelseDto mottarYtelseDto, FaktaAggregatDto.Builder faktaBuilder) {
-        FaktaAktørDto.Builder faktaAktørBuilder = faktaBuilder.getFaktaAktørBuilder();
+        var faktaAktørBuilder = faktaBuilder.getFaktaAktørBuilder();
         faktaAktørBuilder.medHarFLMottattYtelseFastsattAvSaksbehandler(mottarYtelseDto.getFrilansMottarYtelse());
         faktaBuilder.medFaktaAktør(faktaAktørBuilder.build());
     }
@@ -47,7 +44,7 @@ public class MottarYtelseOppdaterer {
     }
 
     private static void settMottarYtelseForArbeidsforhold(FaktaAggregatDto.Builder faktaBuilder, ArbeidstakerandelUtenIMMottarYtelseDto arbMottarYtelse, BGAndelArbeidsforholdDto arb) {
-        FaktaArbeidsforholdDto.Builder faktaArbBuilder = faktaBuilder.getFaktaArbeidsforholdBuilderFor(arb.getArbeidsgiver(), arb.getArbeidsforholdRef())
+        var faktaArbBuilder = faktaBuilder.getFaktaArbeidsforholdBuilderFor(arb.getArbeidsgiver(), arb.getArbeidsforholdRef())
                 .medHarMottattYtelseFastsattAvSaksbehandler(arbMottarYtelse.getMottarYtelse());
         faktaBuilder.erstattEksisterendeEllerLeggTil(faktaArbBuilder.build());
     }

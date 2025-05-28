@@ -1,7 +1,6 @@
 package no.nav.folketrygdloven.kalkulator.guitjenester.fakta;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -29,23 +28,23 @@ class FinnInntektFraYtelse {
 	static Optional<Beløp> finnÅrbeløpFraMeldekortForAndel(KoblingReferanse ref,
 	                                                       BeregningsgrunnlagPrStatusOgAndelDto andel,
 	                                                       YtelseFilterDto ytelseFilter) {
-		LocalDate skjæringstidspunkt = ref.getSkjæringstidspunktBeregning();
+        var skjæringstidspunkt = ref.getSkjæringstidspunktBeregning();
 		if (ytelseFilter.isEmpty()) {
 			return Optional.empty();
 		}
 
-		Optional<YtelseDto> nyesteVedtak = MeldekortUtils.sisteVedtakFørStpForType(ytelseFilter, skjæringstidspunkt, Set.of(mapTilYtelseType(andel.getAktivitetStatus())));
+        var nyesteVedtak = MeldekortUtils.sisteVedtakFørStpForType(ytelseFilter, skjæringstidspunkt, Set.of(mapTilYtelseType(andel.getAktivitetStatus())));
 		if (nyesteVedtak.isEmpty()) {
 			return Optional.empty();
 		}
 
-		Optional<YtelseAnvistDto> nyesteMeldekort = MeldekortUtils.sisteHeleMeldekortFørStp(ytelseFilter, nyesteVedtak.get(),
+        var nyesteMeldekort = MeldekortUtils.sisteHeleMeldekortFørStp(ytelseFilter, nyesteVedtak.get(),
 				skjæringstidspunkt,
 				Set.of(mapTilYtelseType(andel.getAktivitetStatus()))
 		);
 
 		// Hvis søker kun har status DP / AAP tar ikke beregning hensyn til utbetalingsfaktor
-		int antallUnikeStatuserIPeriode = andel.getBeregningsgrunnlagPeriode().getBeregningsgrunnlagPrStatusOgAndelList().stream()
+        var antallUnikeStatuserIPeriode = andel.getBeregningsgrunnlagPeriode().getBeregningsgrunnlagPrStatusOgAndelList().stream()
 				.map(BeregningsgrunnlagPrStatusOgAndelDto::getAktivitetStatus)
 				.collect(Collectors.toSet())
 				.size();

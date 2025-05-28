@@ -76,7 +76,7 @@ public class PeriodeMedUtbetalingsgradDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PeriodeMedUtbetalingsgradDto that = (PeriodeMedUtbetalingsgradDto) o;
+        var that = (PeriodeMedUtbetalingsgradDto) o;
         return Objects.equals(periode, that.periode) &&
                 Objects.equals(utbetalingsgrad, that.utbetalingsgrad);
     }

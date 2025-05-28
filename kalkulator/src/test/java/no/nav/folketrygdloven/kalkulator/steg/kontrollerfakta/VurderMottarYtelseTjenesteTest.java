@@ -87,7 +87,7 @@ class VurderMottarYtelseTjenesteTest {
                 .build(periode);
 
         // Act
-        boolean erFrilanser = VurderMottarYtelseTjeneste.erFrilanser(beregningsgrunnlag);
+        var erFrilanser = VurderMottarYtelseTjeneste.erFrilanser(beregningsgrunnlag);
 
         // Assert
         assertThat(erFrilanser).isTrue();
@@ -102,7 +102,7 @@ class VurderMottarYtelseTjenesteTest {
                 .build(periode);
 
         // Act
-        boolean erFrilanser = VurderMottarYtelseTjeneste.erFrilanser(beregningsgrunnlag);
+        var erFrilanser = VurderMottarYtelseTjeneste.erFrilanser(beregningsgrunnlag);
 
         // Assert
         assertThat(erFrilanser).isFalse();
@@ -118,7 +118,7 @@ class VurderMottarYtelseTjenesteTest {
                 .build(periode);
 
         // Act
-        boolean skalVurdereMottarYtelse = VurderMottarYtelseTjeneste.skalVurdereMottattYtelse(beregningsgrunnlag, InntektArbeidYtelseGrunnlagDtoBuilder.nytt().build(), Collections.emptyList());
+        var skalVurdereMottarYtelse = VurderMottarYtelseTjeneste.skalVurdereMottattYtelse(beregningsgrunnlag, InntektArbeidYtelseGrunnlagDtoBuilder.nytt().build(), Collections.emptyList());
 
         // Assert
         assertThat(skalVurdereMottarYtelse).isFalse();
@@ -134,8 +134,8 @@ class VurderMottarYtelseTjenesteTest {
                 .build(periode);
 
         // Act
-        InntektArbeidYtelseGrunnlagDto inntektArbeidYtelseGrunnlagDto = lagIAYMedYtelseMedFrilansAnvisning();
-        boolean skalVurdereMottarYtelse = VurderMottarYtelseTjeneste.skalVurdereMottattYtelse(beregningsgrunnlag, inntektArbeidYtelseGrunnlagDto, Collections.emptyList());
+        var inntektArbeidYtelseGrunnlagDto = lagIAYMedYtelseMedFrilansAnvisning();
+        var skalVurdereMottarYtelse = VurderMottarYtelseTjeneste.skalVurdereMottattYtelse(beregningsgrunnlag, inntektArbeidYtelseGrunnlagDto, Collections.emptyList());
 
         // Assert
         assertThat(skalVurdereMottarYtelse).isTrue();
@@ -153,8 +153,8 @@ class VurderMottarYtelseTjenesteTest {
                 .build(periode);
 
         // Act
-        InntektArbeidYtelseGrunnlagDto inntektArbeidYtelseGrunnlagDto = lagIAYMedYtelse(Arbeidsgiver.virksomhet(ORGNR), true);
-        boolean skalVurdereMottarYtelse = VurderMottarYtelseTjeneste.skalVurdereMottattYtelse(beregningsgrunnlag, inntektArbeidYtelseGrunnlagDto, Collections.emptyList());
+        var inntektArbeidYtelseGrunnlagDto = lagIAYMedYtelse(Arbeidsgiver.virksomhet(ORGNR), true);
+        var skalVurdereMottarYtelse = VurderMottarYtelseTjeneste.skalVurdereMottattYtelse(beregningsgrunnlag, inntektArbeidYtelseGrunnlagDto, Collections.emptyList());
 
         // Assert
         assertThat(skalVurdereMottarYtelse).isFalse();
@@ -172,8 +172,8 @@ class VurderMottarYtelseTjenesteTest {
                 .build(periode);
 
         // Act
-        InntektArbeidYtelseGrunnlagDto inntektArbeidYtelseGrunnlagDto = lagIAYMedYtelseMedFrilansAnvisning();
-        boolean skalVurdereMottarYtelse = VurderMottarYtelseTjeneste.skalVurdereMottattYtelse(beregningsgrunnlag, inntektArbeidYtelseGrunnlagDto, Collections.emptyList());
+        var inntektArbeidYtelseGrunnlagDto = lagIAYMedYtelseMedFrilansAnvisning();
+        var skalVurdereMottarYtelse = VurderMottarYtelseTjeneste.skalVurdereMottattYtelse(beregningsgrunnlag, inntektArbeidYtelseGrunnlagDto, Collections.emptyList());
 
         // Assert
         assertThat(skalVurdereMottarYtelse).isTrue();
@@ -182,7 +182,7 @@ class VurderMottarYtelseTjenesteTest {
     @Test
     void skal_vurdere_mottary_ytelse_for_frilans_og_arbeidstaker_uten_inntektsmelding_med_ytelse() {
         // Arrange
-        Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
+        var arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         BeregningsgrunnlagPrStatusOgAndelDto.ny()
                 .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                 .medInntektskategori(Inntektskategori.ARBEIDSTAKER)
@@ -195,16 +195,16 @@ class VurderMottarYtelseTjenesteTest {
                 .medBeregningsperiode(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(4).withDayOfMonth(1), SKJÆRINGSTIDSPUNKT_OPPTJENING.withDayOfMonth(1).minusDays(1))
                 .build(periode);
 
-        InntektArbeidYtelseAggregatBuilder oppdatere = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
-        InntektArbeidYtelseAggregatBuilder.AktørArbeidBuilder aktørArbeidBuilder = oppdatere.getAktørArbeidBuilder();
+        var oppdatere = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
+        var aktørArbeidBuilder = oppdatere.getAktørArbeidBuilder();
         leggTilAktivitet(ARB_ID, ORGNR, Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(10), SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(10)), aktørArbeidBuilder, Optional.of(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(2L)));
         oppdatere.leggTilAktørInntekt(lagAktørInntektMedYtelse());
-        InntektArbeidYtelseGrunnlagDto iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.oppdatere(Optional.empty())
+        var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medData(oppdatere)
                 .build();
 
         // Act
-        boolean skalVurdereMottarYtelse = VurderMottarYtelseTjeneste.skalVurdereMottattYtelse(beregningsgrunnlag, iayGrunnlag, Collections.emptyList());
+        var skalVurdereMottarYtelse = VurderMottarYtelseTjeneste.skalVurdereMottattYtelse(beregningsgrunnlag, iayGrunnlag, Collections.emptyList());
 
         // Assert
         assertThat(skalVurdereMottarYtelse).isTrue();
@@ -216,7 +216,7 @@ class VurderMottarYtelseTjenesteTest {
         TEST_KONFIG.put("VURDER_MOTTAR_YTELSE_AT_FILTRERING", "true");
 
         // Arrange
-        Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
+        var arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         BeregningsgrunnlagPrStatusOgAndelDto.ny()
                 .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                 .medInntektskategori(Inntektskategori.ARBEIDSTAKER)
@@ -224,17 +224,17 @@ class VurderMottarYtelseTjenesteTest {
                 .medBeregningsperiode(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(4).withDayOfMonth(1), SKJÆRINGSTIDSPUNKT_OPPTJENING.withDayOfMonth(1).minusDays(1))
                 .build(periode);
 
-        InntektArbeidYtelseAggregatBuilder oppdatere = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
-        InntektArbeidYtelseAggregatBuilder.AktørArbeidBuilder aktørArbeidBuilder = oppdatere.getAktørArbeidBuilder();
+        var oppdatere = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
+        var aktørArbeidBuilder = oppdatere.getAktørArbeidBuilder();
         leggTilAktivitet(ARB_ID, ORGNR, Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(10), SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(10)), aktørArbeidBuilder, Optional.of(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(2L)));
         oppdatere.leggTilAktørInntekt(lagAktørInntektMedYtelse());
         oppdatere.leggTilAktørYtelse(lagAktørYtelseForArbeidsgiver(Arbeidsgiver.virksomhet(ORGNR), false));
-        InntektArbeidYtelseGrunnlagDto iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.oppdatere(Optional.empty())
+        var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medData(oppdatere)
                 .build();
 
         // Act
-        boolean skalVurdereMottarYtelse = VurderMottarYtelseTjeneste.skalVurdereMottattYtelse(beregningsgrunnlag, iayGrunnlag, Collections.emptyList());
+        var skalVurdereMottarYtelse = VurderMottarYtelseTjeneste.skalVurdereMottattYtelse(beregningsgrunnlag, iayGrunnlag, Collections.emptyList());
 
         // Assert
         assertThat(skalVurdereMottarYtelse).isTrue();
@@ -245,7 +245,7 @@ class VurderMottarYtelseTjenesteTest {
         TEST_KONFIG.put("VURDER_MOTTAR_YTELSE_AT_FILTRERING", "true");
 
         // Arrange
-        Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
+        var arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         BeregningsgrunnlagPrStatusOgAndelDto.ny()
                 .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                 .medInntektskategori(Inntektskategori.ARBEIDSTAKER)
@@ -253,17 +253,17 @@ class VurderMottarYtelseTjenesteTest {
                 .medBeregningsperiode(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(4).withDayOfMonth(1), SKJÆRINGSTIDSPUNKT_OPPTJENING.withDayOfMonth(1).minusDays(1))
                 .build(periode);
 
-        InntektArbeidYtelseAggregatBuilder oppdatere = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
-        InntektArbeidYtelseAggregatBuilder.AktørArbeidBuilder aktørArbeidBuilder = oppdatere.getAktørArbeidBuilder();
+        var oppdatere = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
+        var aktørArbeidBuilder = oppdatere.getAktørArbeidBuilder();
         leggTilAktivitet(ARB_ID, ORGNR, Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(10), SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(10)), aktørArbeidBuilder, Optional.of(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(2L)));
         oppdatere.leggTilAktørInntekt(lagAktørInntektMedYtelse());
         oppdatere.leggTilAktørYtelse(lagAktørYtelseForArbeidsgiver(Arbeidsgiver.virksomhet(ORGNR), true));
-        InntektArbeidYtelseGrunnlagDto iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.oppdatere(Optional.empty())
+        var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medData(oppdatere)
                 .build();
 
         // Act
-        boolean skalVurdereMottarYtelse = VurderMottarYtelseTjeneste.skalVurdereMottattYtelse(beregningsgrunnlag, iayGrunnlag, Collections.emptyList());
+        var skalVurdereMottarYtelse = VurderMottarYtelseTjeneste.skalVurdereMottattYtelse(beregningsgrunnlag, iayGrunnlag, Collections.emptyList());
 
         // Assert
         assertThat(skalVurdereMottarYtelse).isFalse();
@@ -271,20 +271,20 @@ class VurderMottarYtelseTjenesteTest {
 
 
     private InntektArbeidYtelseGrunnlagDto lagIAYMedYtelseMedFrilansAnvisning() {
-        InntektArbeidYtelseAggregatBuilder register = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
+        var register = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
         register.leggTilAktørInntekt(lagAktørInntektMedYtelse()).build();
         register.leggTilAktørYtelse(lagAktørYtelseForFrilans());
-        InntektArbeidYtelseGrunnlagDto inntektArbeidYtelseGrunnlagDto = InntektArbeidYtelseGrunnlagDtoBuilder.nytt()
+        var inntektArbeidYtelseGrunnlagDto = InntektArbeidYtelseGrunnlagDtoBuilder.nytt()
                 .medData(register)
                 .build();
         return inntektArbeidYtelseGrunnlagDto;
     }
 
     private InntektArbeidYtelseGrunnlagDto lagIAYMedYtelse(Arbeidsgiver arbeidsgiver, boolean fullRefusjon) {
-        InntektArbeidYtelseAggregatBuilder register = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
+        var register = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
         register.leggTilAktørInntekt(lagAktørInntektMedYtelse()).build();
         register.leggTilAktørYtelse(lagAktørYtelseForArbeidsgiver(arbeidsgiver, fullRefusjon));
-        InntektArbeidYtelseGrunnlagDto inntektArbeidYtelseGrunnlagDto = InntektArbeidYtelseGrunnlagDtoBuilder.nytt()
+        var inntektArbeidYtelseGrunnlagDto = InntektArbeidYtelseGrunnlagDtoBuilder.nytt()
                 .medData(register)
                 .build();
         return inntektArbeidYtelseGrunnlagDto;
@@ -344,7 +344,7 @@ class VurderMottarYtelseTjenesteTest {
 
 
     private void leggTilAktivitet(InternArbeidsforholdRefDto arbId, String orgnr, Intervall periode, InntektArbeidYtelseAggregatBuilder.AktørArbeidBuilder aktørArbeidBuilder, Optional<LocalDate> sisteLønnsendringsdato) {
-        YrkesaktivitetDtoBuilder yrkesaktivitetBuilder = YrkesaktivitetDtoBuilder.oppdatere(Optional.empty())
+        var yrkesaktivitetBuilder = YrkesaktivitetDtoBuilder.oppdatere(Optional.empty())
                 .medArbeidType(ArbeidType.ORDINÆRT_ARBEIDSFORHOLD)
                 .medArbeidsforholdId(arbId)
                 .medArbeidsgiver(Arbeidsgiver.virksomhet(orgnr));

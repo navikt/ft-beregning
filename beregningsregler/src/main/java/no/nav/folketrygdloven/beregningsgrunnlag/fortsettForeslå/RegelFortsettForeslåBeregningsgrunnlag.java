@@ -45,12 +45,12 @@ public class RegelFortsettForeslåBeregningsgrunnlag implements EksportRegel<Ber
 	@SuppressWarnings("unchecked")
     @Override
     public Specification<BeregningsgrunnlagPeriode> getSpecification() {
-		Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
+        var rs = new Ruleset<BeregningsgrunnlagPeriode>();
 		var speclist = regelmodell.getAktivitetStatuser().stream()
 				.map(AktivitetStatusMedHjemmel::getAktivitetStatus)
 				.map(this::velgSpecification)
 				.toList();
-		Specification<BeregningsgrunnlagPeriode> foreslåBeregningsgrunnlag =
+        var foreslåBeregningsgrunnlag =
 				rs.beregningsRegel("FP_BR fortsett pr status", "Fastsett beregningsgrunnlag fortsett pr status", speclist, new Beregnet());
 
 		return rs.beregningHvisRegel(new SkalKjøreFortsettForeslå(), foreslåBeregningsgrunnlag, new Beregnet());

@@ -70,7 +70,7 @@ public class MapArbeidsforholdFraVLTilRegel {
     }
 
     private static Arbeidsforhold lagArbeidsforholdHosArbeidsgiverMedStartdato(Arbeidsgiver arbeidsgiver, String arbeidsforholdRef, InntektArbeidYtelseGrunnlagDto iayGrunnlag, LocalDate stp) {
-        LocalDate startdato = UtledStartdato.utledStartdato(arbeidsgiver, arbeidsforholdRef, iayGrunnlag, stp);
+        var startdato = UtledStartdato.utledStartdato(arbeidsgiver, arbeidsforholdRef, iayGrunnlag, stp);
         if (arbeidsgiver.getErVirksomhet()) {
             return Arbeidsforhold.builder()
                     .medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT)
@@ -91,7 +91,7 @@ public class MapArbeidsforholdFraVLTilRegel {
     }
 
     private static Arbeidsforhold lagArbeidsforholdHosArbeidsgiver(Arbeidsgiver arbeidsgiver, String arbeidsforholdRef) {
-        String arbRef = arbeidsforholdRef;
+        var arbRef = arbeidsforholdRef;
         if (arbeidsgiver.getErVirksomhet()) {
             return Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(arbeidsgiver.getOrgnr(), arbRef);
         }

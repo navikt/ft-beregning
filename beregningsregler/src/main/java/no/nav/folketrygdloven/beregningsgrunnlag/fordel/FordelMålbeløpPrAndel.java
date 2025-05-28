@@ -160,13 +160,13 @@ class FordelMålbeløpPrAndel extends LeafSpecification<FordelModell> {
 	}
 
 	private PottTilFordeling lagPottTilFordlingFraModell(FordelModell modell) {
-		EnumMap<Inntektskategori, BigDecimal> totalPott = new EnumMap<>(Inntektskategori.class);
+        var totalPott = new EnumMap<Inntektskategori, BigDecimal>(Inntektskategori.class);
 		modell.getMellomregninger().stream()
 				.filter(a -> a.getInputAndel().getGradertForeslåttPrÅr().isPresent())
 				.forEach(mellomregning -> {
 					var andel = mellomregning.getInputAndel();
 					var kategori = andel.getInntektskategori();
-					BigDecimal eksisterendeBeløp = totalPott.get(kategori);
+                    var eksisterendeBeløp = totalPott.get(kategori);
 					if (eksisterendeBeløp == null) {
 						totalPott.put(kategori, andel.getGradertForeslåttPrÅr().get());
 					} else {

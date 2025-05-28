@@ -20,7 +20,7 @@ public class RegelFinnGrenseverdiFRISINN implements EksportRegel<Beregningsgrunn
 	@SuppressWarnings("unchecked")
     @Override
     public Specification<BeregningsgrunnlagPeriode> getSpecification() {
-        Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
+        var rs = new Ruleset<BeregningsgrunnlagPeriode>();
 
         // Fastsett avkortet BG
         Specification<BeregningsgrunnlagPeriode> fastsettUavkortetGrenseverdi = new FinnGrenseverdiForTotalUnder6G();
@@ -29,7 +29,7 @@ public class RegelFinnGrenseverdiFRISINN implements EksportRegel<Beregningsgrunn
         Specification<BeregningsgrunnlagPeriode> fastsettAvkortetGrenseverdi = new FinnGrenseverdiForTotalOver6G();
 
         // FP_BR_29.4 4. Brutto beregnings-grunnlag totalt > 6G?
-        Specification<BeregningsgrunnlagPeriode> beregnEventuellAvkorting = rs.beregningHvisRegel(
+        var beregnEventuellAvkorting = rs.beregningHvisRegel(
             new SjekkBeregningsgrunnlagStørreEnnGrenseverdi(),
             fastsettAvkortetGrenseverdi,
             fastsettUavkortetGrenseverdi);
@@ -37,7 +37,7 @@ public class RegelFinnGrenseverdiFRISINN implements EksportRegel<Beregningsgrunn
         Specification<BeregningsgrunnlagPeriode> settGrenseverdiTilNull = new SettGrenseverdiTilNull();
 
         // FRISINN 6.10: Er vilkår oppfylt?
-        Specification<BeregningsgrunnlagPeriode> erVilkårOppfylt = rs.beregningHvisRegel(
+        var erVilkårOppfylt = rs.beregningHvisRegel(
             new ErVilkårOppfylt(),
             beregnEventuellAvkorting,
             settGrenseverdiTilNull);

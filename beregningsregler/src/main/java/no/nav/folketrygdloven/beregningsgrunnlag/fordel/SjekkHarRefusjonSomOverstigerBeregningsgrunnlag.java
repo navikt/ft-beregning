@@ -25,7 +25,7 @@ class SjekkHarRefusjonSomOverstigerBeregningsgrunnlag extends LeafSpecification<
 	    var arbeidsforholdSomHarRefusjonStørreEnnBG = arbeidsandeler.stream()
             .filter(this::harRefusjonskravStørreEnnBg).toList();
 	    var resultat = arbeidsforholdSomHarRefusjonStørreEnnBG.isEmpty() ? nei() : ja();
-	    for (FordelAndelModell arbeidsforhold : arbeidsforholdSomHarRefusjonStørreEnnBG) {
+	    for (var arbeidsforhold : arbeidsforholdSomHarRefusjonStørreEnnBG) {
             resultat.setEvaluationProperty("refusjonPrÅr." + arbeidsforhold.getArbeidsgiverId().orElseThrow(), arbeidsforhold.getGjeldendeRefusjonPrÅr().orElse(BigDecimal.ZERO));
             resultat.setEvaluationProperty("bruttoPrÅr." + arbeidsforhold.getArbeidsgiverId().orElseThrow(), arbeidsforhold.getBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO));
         }
@@ -33,7 +33,7 @@ class SjekkHarRefusjonSomOverstigerBeregningsgrunnlag extends LeafSpecification<
     }
 
     private boolean harRefusjonskravStørreEnnBg(FordelAndelModell andel) {
-        BigDecimal refusjonskrav = andel.getGjeldendeRefusjonPrÅr().orElse(BigDecimal.ZERO);
+        var refusjonskrav = andel.getGjeldendeRefusjonPrÅr().orElse(BigDecimal.ZERO);
         return refusjonskrav.compareTo(andel.getBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO)) > 0;
     }
 }

@@ -65,7 +65,7 @@ public class RefusjonAndel {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RefusjonAndel that = (RefusjonAndel) o;
+        var that = (RefusjonAndel) o;
         return aktivitetStatus == that.aktivitetStatus && Objects.equals(arbeidsgiver, that.arbeidsgiver) && Objects.equals(arbeidsforholdRef, that.arbeidsforholdRef) && Objects.equals(brutto, that.brutto) && Objects.equals(refusjon, that.refusjon);
     }
 

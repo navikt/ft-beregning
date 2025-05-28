@@ -6,7 +6,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -17,7 +16,6 @@ import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.Beregningsgru
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.AktivitetsAvtaleDto;
-import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseGrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseGrunnlagDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YrkesaktivitetDto;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
@@ -37,17 +35,17 @@ class KortvarigArbeidsforholdTjenesteTest {
     void skalIkkjeGiKortvarigForArbeidsforholdPå6Mnd() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
-        String orgnr = "123456780";
-        Intervall periode = Intervall.fraOgMedTilOgMed(
+        var orgnr = "123456780";
+        var periode = Intervall.fraOgMedTilOgMed(
             LocalDate.of(2018, 8, 5),
             LocalDate.of(2019, 2, 4));
-        InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlaBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
+        var iayGrunnlaBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
         BeregningIAYTestUtil.byggArbeidForBehandling(SKJÆRINGSTIDSPUNKT_OPPTJENING, LocalDate.of(2018, 8, 5),
             LocalDate.of(2019, 2, 4), arbId, Arbeidsgiver.virksomhet(orgnr), iayGrunnlaBuilder);
-        BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlagMedArbeid(arbId, orgnr, periode, SKJÆRINGSTIDSPUNKT_OPPTJENING);
+        var beregningsgrunnlag = lagBeregningsgrunnlagMedArbeid(arbId, orgnr, periode, SKJÆRINGSTIDSPUNKT_OPPTJENING);
 
         // Act
-        Map<BeregningsgrunnlagPrStatusOgAndelDto, YrkesaktivitetDto> kortvarige = KortvarigArbeidsforholdTjeneste.hentAndelerForKortvarigeArbeidsforhold(beregningsgrunnlag, iayGrunnlaBuilder.build());
+        var kortvarige = KortvarigArbeidsforholdTjeneste.hentAndelerForKortvarigeArbeidsforhold(beregningsgrunnlag, iayGrunnlaBuilder.build());
 
         // Assert
         assertThat(kortvarige).isEmpty();
@@ -57,17 +55,17 @@ class KortvarigArbeidsforholdTjenesteTest {
     void skalIkkjeGiKortvarigForArbeidsforholdPå6MndIMånederMedUlikDato1() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
-        String orgnr = "123456780";
-        Intervall periode = Intervall.fraOgMedTilOgMed(
+        var orgnr = "123456780";
+        var periode = Intervall.fraOgMedTilOgMed(
             LocalDate.of(2018, 8, 29),
             LocalDate.of(2019, 2, 28));
-        InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlaBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
+        var iayGrunnlaBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
         BeregningIAYTestUtil.byggArbeidForBehandling(SKJÆRINGSTIDSPUNKT_OPPTJENING, LocalDate.of(2018, 8, 29),
             LocalDate.of(2019, 2, 28), arbId, Arbeidsgiver.virksomhet(orgnr), iayGrunnlaBuilder);
-        BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlagMedArbeid(arbId, orgnr, periode, SKJÆRINGSTIDSPUNKT_OPPTJENING);
+        var beregningsgrunnlag = lagBeregningsgrunnlagMedArbeid(arbId, orgnr, periode, SKJÆRINGSTIDSPUNKT_OPPTJENING);
 
         // Act
-        Map<BeregningsgrunnlagPrStatusOgAndelDto, YrkesaktivitetDto> kortvarige = KortvarigArbeidsforholdTjeneste.hentAndelerForKortvarigeArbeidsforhold(beregningsgrunnlag, iayGrunnlaBuilder.build());
+        var kortvarige = KortvarigArbeidsforholdTjeneste.hentAndelerForKortvarigeArbeidsforhold(beregningsgrunnlag, iayGrunnlaBuilder.build());
 
         // Assert
         assertThat(kortvarige).isEmpty();
@@ -77,17 +75,17 @@ class KortvarigArbeidsforholdTjenesteTest {
     void skalIkkjeGiKortvarigForArbeidsforholdPå6MndIMånederMedUlikDato2() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
-        String orgnr = "123456780";
-        Intervall periode = Intervall.fraOgMedTilOgMed(
+        var orgnr = "123456780";
+        var periode = Intervall.fraOgMedTilOgMed(
             LocalDate.of(2018, 8, 31),
             LocalDate.of(2019, 2, 28));
-        InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlaBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
+        var iayGrunnlaBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
         BeregningIAYTestUtil.byggArbeidForBehandling(SKJÆRINGSTIDSPUNKT_OPPTJENING, LocalDate.of(2018, 8, 31),
             LocalDate.of(2019, 2, 28), arbId, Arbeidsgiver.virksomhet(orgnr), iayGrunnlaBuilder);
-        BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlagMedArbeid(arbId, orgnr, periode, SKJÆRINGSTIDSPUNKT_OPPTJENING);
+        var beregningsgrunnlag = lagBeregningsgrunnlagMedArbeid(arbId, orgnr, periode, SKJÆRINGSTIDSPUNKT_OPPTJENING);
 
         // Act
-        Map<BeregningsgrunnlagPrStatusOgAndelDto, YrkesaktivitetDto> kortvarige = KortvarigArbeidsforholdTjeneste.hentAndelerForKortvarigeArbeidsforhold(beregningsgrunnlag, iayGrunnlaBuilder.build());
+        var kortvarige = KortvarigArbeidsforholdTjeneste.hentAndelerForKortvarigeArbeidsforhold(beregningsgrunnlag, iayGrunnlaBuilder.build());
 
         // Assert
         assertThat(kortvarige).isEmpty();
@@ -97,17 +95,17 @@ class KortvarigArbeidsforholdTjenesteTest {
     void skalIkkjeGiKortvarigForArbeidsforholdPå6MndIMånederMedUlikDato3() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
-        String orgnr = "123456780";
-        Intervall periode = Intervall.fraOgMedTilOgMed(
+        var orgnr = "123456780";
+        var periode = Intervall.fraOgMedTilOgMed(
             LocalDate.of(2018, 9, 1),
             LocalDate.of(2019, 2, 28));
-        InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlaBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
+        var iayGrunnlaBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
         BeregningIAYTestUtil.byggArbeidForBehandling(SKJÆRINGSTIDSPUNKT_OPPTJENING, LocalDate.of(2018, 9, 1),
             LocalDate.of(2019, 2, 28), arbId, Arbeidsgiver.virksomhet(orgnr), iayGrunnlaBuilder);
-        BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlagMedArbeid(arbId, orgnr, periode, SKJÆRINGSTIDSPUNKT_OPPTJENING);
+        var beregningsgrunnlag = lagBeregningsgrunnlagMedArbeid(arbId, orgnr, periode, SKJÆRINGSTIDSPUNKT_OPPTJENING);
 
         // Act
-        Map<BeregningsgrunnlagPrStatusOgAndelDto, YrkesaktivitetDto> kortvarige = KortvarigArbeidsforholdTjeneste.hentAndelerForKortvarigeArbeidsforhold(beregningsgrunnlag, iayGrunnlaBuilder.build());
+        var kortvarige = KortvarigArbeidsforholdTjeneste.hentAndelerForKortvarigeArbeidsforhold(beregningsgrunnlag, iayGrunnlaBuilder.build());
         // Assert
         assertThat(kortvarige).isEmpty();
     }
@@ -116,20 +114,20 @@ class KortvarigArbeidsforholdTjenesteTest {
     void skalIkkjeGiKortvarigForArbeidsforholdPå6MndIMånederMedUlikDato4() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
-        String orgnr = "123456780";
-        Intervall periode = Intervall.fraOgMedTilOgMed(
+        var orgnr = "123456780";
+        var periode = Intervall.fraOgMedTilOgMed(
             LocalDate.of(2018, 8, 30),
             LocalDate.of(2019, 2, 28));
-        InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlaBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
+        var iayGrunnlaBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
         BeregningIAYTestUtil.byggArbeidForBehandling(
                 LocalDate.of(2018, 9, 30),
             LocalDate.of(2018, 8, 30),
             LocalDate.of(2019, 2, 28),
             arbId, Arbeidsgiver.virksomhet(orgnr), iayGrunnlaBuilder);
-        BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlagMedArbeid(arbId, orgnr, periode, LocalDate.of(2018, 9, 30));
+        var beregningsgrunnlag = lagBeregningsgrunnlagMedArbeid(arbId, orgnr, periode, LocalDate.of(2018, 9, 30));
 
         // Act
-        Map<BeregningsgrunnlagPrStatusOgAndelDto, YrkesaktivitetDto> kortvarige = KortvarigArbeidsforholdTjeneste.hentAndelerForKortvarigeArbeidsforhold(beregningsgrunnlag, iayGrunnlaBuilder.build());
+        var kortvarige = KortvarigArbeidsforholdTjeneste.hentAndelerForKortvarigeArbeidsforhold(beregningsgrunnlag, iayGrunnlaBuilder.build());
 
         // Assert
         assertThat(kortvarige).isEmpty();
@@ -139,19 +137,19 @@ class KortvarigArbeidsforholdTjenesteTest {
     void skalIkkjeGiKortvarigForArbeidsforholdSomStarterPåSkjæringstidspunktet() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
-        String orgnr = "123456780";
-        Intervall periode = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_OPPTJENING, SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(5).minusDays(1));
-        InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlaBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
+        var orgnr = "123456780";
+        var periode = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_OPPTJENING, SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(5).minusDays(1));
+        var iayGrunnlaBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
         BeregningIAYTestUtil.byggArbeidForBehandling(
                 SKJÆRINGSTIDSPUNKT_OPPTJENING,
             SKJÆRINGSTIDSPUNKT_OPPTJENING,
             SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(5).minusDays(1),
             arbId, Arbeidsgiver.virksomhet(orgnr),
             iayGrunnlaBuilder);
-        BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlagMedArbeid(arbId, orgnr, periode, SKJÆRINGSTIDSPUNKT_OPPTJENING);
+        var beregningsgrunnlag = lagBeregningsgrunnlagMedArbeid(arbId, orgnr, periode, SKJÆRINGSTIDSPUNKT_OPPTJENING);
 
         // Act
-        Map<BeregningsgrunnlagPrStatusOgAndelDto, YrkesaktivitetDto> kortvarige = KortvarigArbeidsforholdTjeneste.hentAndelerForKortvarigeArbeidsforhold(beregningsgrunnlag, iayGrunnlaBuilder.build());
+        var kortvarige = KortvarigArbeidsforholdTjeneste.hentAndelerForKortvarigeArbeidsforhold(beregningsgrunnlag, iayGrunnlaBuilder.build());
 
         // Assert
         assertThat(kortvarige).isEmpty();
@@ -161,19 +159,19 @@ class KortvarigArbeidsforholdTjenesteTest {
     void skalIkkjeGiKortvarigForArbeidsforholdSomStarterEtterSkjæringstidspunktet() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
-        String orgnr = "123456780";
-        Intervall periode = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_OPPTJENING.plusDays(1), SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(5).minusDays(1));
-        InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlaBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
+        var orgnr = "123456780";
+        var periode = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_OPPTJENING.plusDays(1), SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(5).minusDays(1));
+        var iayGrunnlaBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
         BeregningIAYTestUtil.byggArbeidForBehandling(
                 SKJÆRINGSTIDSPUNKT_OPPTJENING,
             SKJÆRINGSTIDSPUNKT_OPPTJENING.plusDays(1),
             SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(5).minusDays(1),
             arbId, Arbeidsgiver.virksomhet(orgnr),
             iayGrunnlaBuilder);
-        BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlagMedArbeid(arbId, orgnr, periode, SKJÆRINGSTIDSPUNKT_OPPTJENING);
+        var beregningsgrunnlag = lagBeregningsgrunnlagMedArbeid(arbId, orgnr, periode, SKJÆRINGSTIDSPUNKT_OPPTJENING);
 
         // Act
-        Map<BeregningsgrunnlagPrStatusOgAndelDto, YrkesaktivitetDto> kortvarige = KortvarigArbeidsforholdTjeneste.hentAndelerForKortvarigeArbeidsforhold(beregningsgrunnlag, iayGrunnlaBuilder.build());
+        var kortvarige = KortvarigArbeidsforholdTjeneste.hentAndelerForKortvarigeArbeidsforhold(beregningsgrunnlag, iayGrunnlaBuilder.build());
 
         // Assert
         assertThat(kortvarige).isEmpty();
@@ -184,18 +182,18 @@ class KortvarigArbeidsforholdTjenesteTest {
     void skalGiKortvarigForArbeidsforholdPå6MndMinusEinDag() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
-        String orgnr = "123456780";
-        Intervall periode = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(1), SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(5).minusDays(2));
-        InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlaBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
+        var orgnr = "123456780";
+        var periode = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(1), SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(5).minusDays(2));
+        var iayGrunnlaBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
         BeregningIAYTestUtil.byggArbeidForBehandling(
                 SKJÆRINGSTIDSPUNKT_OPPTJENING,
             SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(1),
             SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(5).minusDays(2),
             arbId, Arbeidsgiver.virksomhet(orgnr), iayGrunnlaBuilder);
-        BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlagMedArbeid(arbId, orgnr, periode, SKJÆRINGSTIDSPUNKT_OPPTJENING);
+        var beregningsgrunnlag = lagBeregningsgrunnlagMedArbeid(arbId, orgnr, periode, SKJÆRINGSTIDSPUNKT_OPPTJENING);
 
         // Act
-        Map<BeregningsgrunnlagPrStatusOgAndelDto, YrkesaktivitetDto> kortvarige = KortvarigArbeidsforholdTjeneste.hentAndelerForKortvarigeArbeidsforhold(
+        var kortvarige = KortvarigArbeidsforholdTjeneste.hentAndelerForKortvarigeArbeidsforhold(
                 beregningsgrunnlag, iayGrunnlaBuilder.build());
 
         // Assert
@@ -207,18 +205,18 @@ class KortvarigArbeidsforholdTjenesteTest {
     void skalGiKortvarigForArbeidsforholdSomStarterDagenFørSkjæringstidspunktet() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
-        String orgnr = "123456780";
-        InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlaBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
+        var orgnr = "123456780";
+        var iayGrunnlaBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
         BeregningIAYTestUtil.byggArbeidForBehandling(
                 SKJÆRINGSTIDSPUNKT_OPPTJENING,
             SKJÆRINGSTIDSPUNKT_OPPTJENING.minusDays(1),
             SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(5).minusDays(2),
             arbId, Arbeidsgiver.virksomhet(orgnr), iayGrunnlaBuilder);
-        Intervall periode = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusDays(1), SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(5).minusDays(2));
-        BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlagMedArbeid(arbId, orgnr, periode, SKJÆRINGSTIDSPUNKT_OPPTJENING);
+        var periode = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusDays(1), SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(5).minusDays(2));
+        var beregningsgrunnlag = lagBeregningsgrunnlagMedArbeid(arbId, orgnr, periode, SKJÆRINGSTIDSPUNKT_OPPTJENING);
 
         // Act
-        Map<BeregningsgrunnlagPrStatusOgAndelDto, YrkesaktivitetDto> kortvarige = KortvarigArbeidsforholdTjeneste.hentAndelerForKortvarigeArbeidsforhold(
+        var kortvarige = KortvarigArbeidsforholdTjeneste.hentAndelerForKortvarigeArbeidsforhold(
                 beregningsgrunnlag, iayGrunnlaBuilder.build());
 
         // Assert
@@ -230,18 +228,18 @@ class KortvarigArbeidsforholdTjenesteTest {
     void skalGiKortvarigVedKombinasjonMedDagpenger() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
-        String orgnr = "123456780";
-        Intervall periode = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusDays(1), SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(5).minusDays(2));
-        InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlaBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
+        var orgnr = "123456780";
+        var periode = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusDays(1), SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(5).minusDays(2));
+        var iayGrunnlaBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
         BeregningIAYTestUtil.byggArbeidForBehandling(
                 SKJÆRINGSTIDSPUNKT_OPPTJENING,
             SKJÆRINGSTIDSPUNKT_OPPTJENING.minusDays(1),
             SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(5).minusDays(2),
             arbId, Arbeidsgiver.virksomhet(orgnr), iayGrunnlaBuilder);
-        BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlagMedArbeidOgDagpenger(arbId, orgnr, periode, SKJÆRINGSTIDSPUNKT_OPPTJENING);
+        var beregningsgrunnlag = lagBeregningsgrunnlagMedArbeidOgDagpenger(arbId, orgnr, periode, SKJÆRINGSTIDSPUNKT_OPPTJENING);
 
         // Act
-        Map<BeregningsgrunnlagPrStatusOgAndelDto, YrkesaktivitetDto> kortvarige = KortvarigArbeidsforholdTjeneste.hentAndelerForKortvarigeArbeidsforhold(
+        var kortvarige = KortvarigArbeidsforholdTjeneste.hentAndelerForKortvarigeArbeidsforhold(
                 beregningsgrunnlag, iayGrunnlaBuilder.build());
 
         // Assert
@@ -254,9 +252,9 @@ class KortvarigArbeidsforholdTjenesteTest {
         // Arrange
         var arbId1 = InternArbeidsforholdRefDto.nyRef();
         var arbId2 = InternArbeidsforholdRefDto.nyRef();
-        String orgnr1 = "123456780";
-        String orgnr2 = "123456644";
-        InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlaBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
+        var orgnr1 = "123456780";
+        var orgnr2 = "123456644";
+        var iayGrunnlaBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
         BeregningIAYTestUtil.byggArbeidForBehandling(
                 SKJÆRINGSTIDSPUNKT_OPPTJENING,
             SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(1),
@@ -267,11 +265,11 @@ class KortvarigArbeidsforholdTjenesteTest {
             SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(2),
             SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(2).minusDays(2),
             arbId2, Arbeidsgiver.virksomhet(orgnr2), iayGrunnlaBuilder);
-        InntektArbeidYtelseGrunnlagDto iayGrunnlag = iayGrunnlaBuilder.build();
-        BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlagMedArbeid(iayGrunnlag.getAktørArbeidFraRegister().orElseThrow().hentAlleYrkesaktiviteter(), SKJÆRINGSTIDSPUNKT_OPPTJENING);
+        var iayGrunnlag = iayGrunnlaBuilder.build();
+        var beregningsgrunnlag = lagBeregningsgrunnlagMedArbeid(iayGrunnlag.getAktørArbeidFraRegister().orElseThrow().hentAlleYrkesaktiviteter(), SKJÆRINGSTIDSPUNKT_OPPTJENING);
 
         // Act
-        Map<BeregningsgrunnlagPrStatusOgAndelDto, YrkesaktivitetDto> kortvarige = KortvarigArbeidsforholdTjeneste.hentAndelerForKortvarigeArbeidsforhold(beregningsgrunnlag, iayGrunnlag);
+        var kortvarige = KortvarigArbeidsforholdTjeneste.hentAndelerForKortvarigeArbeidsforhold(beregningsgrunnlag, iayGrunnlag);
 
         // Assert
         List<YrkesaktivitetDto> kortvarigeYrkesaktiviteter = new ArrayList<>(kortvarige.values());
@@ -282,18 +280,18 @@ class KortvarigArbeidsforholdTjenesteTest {
     void skalIkkeGiKortvarigArbeidsforholdDersomBrukerErSN() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
-        String orgnr = "123456780";
+        var orgnr = "123456780";
         // Lager et kortvarig arbeidsforhold
-        InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlaBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
+        var iayGrunnlaBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
         BeregningIAYTestUtil.byggArbeidForBehandling(SKJÆRINGSTIDSPUNKT_OPPTJENING,
             SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(1), SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(5).minusDays(2),
             arbId, Arbeidsgiver.virksomhet(orgnr), iayGrunnlaBuilder);
         BeregningIAYTestUtil.lagOppgittOpptjeningForSN(SKJÆRINGSTIDSPUNKT_OPPTJENING, false, iayGrunnlaBuilder);
-        InntektArbeidYtelseGrunnlagDto iayGrunnlag = iayGrunnlaBuilder.build();
-        BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlagMedArbeidOgSN(iayGrunnlag.getAktørArbeidFraRegister().orElseThrow().hentAlleYrkesaktiviteter(), SKJÆRINGSTIDSPUNKT_OPPTJENING);
+        var iayGrunnlag = iayGrunnlaBuilder.build();
+        var beregningsgrunnlag = lagBeregningsgrunnlagMedArbeidOgSN(iayGrunnlag.getAktørArbeidFraRegister().orElseThrow().hentAlleYrkesaktiviteter(), SKJÆRINGSTIDSPUNKT_OPPTJENING);
 
         // Act
-        boolean resultat = KortvarigArbeidsforholdTjeneste.harKortvarigeArbeidsforholdOgErIkkeSN(beregningsgrunnlag, iayGrunnlag);
+        var resultat = KortvarigArbeidsforholdTjeneste.harKortvarigeArbeidsforholdOgErIkkeSN(beregningsgrunnlag, iayGrunnlag);
 
         // Assert
         assertThat(resultat).isFalse();
@@ -303,29 +301,29 @@ class KortvarigArbeidsforholdTjenesteTest {
     void skalGiKortvarigArbeidsforholdDersomBrukerIkkeErSN() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
-        String orgnr = "123456780";
+        var orgnr = "123456780";
         // Lager et kortvarig arbeidsforhold
-        Intervall periode = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(1), SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(5).minusDays(2));
-        InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlaBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
+        var periode = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(1), SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(5).minusDays(2));
+        var iayGrunnlaBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
         BeregningIAYTestUtil.byggArbeidForBehandling(SKJÆRINGSTIDSPUNKT_OPPTJENING,
             SKJÆRINGSTIDSPUNKT_OPPTJENING.minusDays(1),
             SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(5).minusDays(2),
             arbId, Arbeidsgiver.virksomhet(orgnr), iayGrunnlaBuilder);
-        BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlagMedArbeid(arbId, orgnr, periode, SKJÆRINGSTIDSPUNKT_OPPTJENING);
+        var beregningsgrunnlag = lagBeregningsgrunnlagMedArbeid(arbId, orgnr, periode, SKJÆRINGSTIDSPUNKT_OPPTJENING);
 
         // Act
-        boolean resultat = KortvarigArbeidsforholdTjeneste.harKortvarigeArbeidsforholdOgErIkkeSN(beregningsgrunnlag, iayGrunnlaBuilder.build());
+        var resultat = KortvarigArbeidsforholdTjeneste.harKortvarigeArbeidsforholdOgErIkkeSN(beregningsgrunnlag, iayGrunnlaBuilder.build());
 
         // Assert
         assertThat(resultat).isTrue();
     }
 
     private BeregningsgrunnlagDto lagBeregningsgrunnlagMedArbeid(InternArbeidsforholdRefDto arbId, String orgnr, Intervall periode, LocalDate skjæringstidspunktOpptjening) {
-        BeregningsgrunnlagDto beregningsgrunnlag = BeregningsgrunnlagDto.Builder.oppdater(Optional.empty())
+        var beregningsgrunnlag = BeregningsgrunnlagDto.Builder.oppdater(Optional.empty())
             .leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
             .medSkjæringstidspunkt(skjæringstidspunktOpptjening)
             .build();
-        BeregningsgrunnlagPeriodeDto bgPeriode = BeregningsgrunnlagPeriodeDto.ny()
+        var bgPeriode = BeregningsgrunnlagPeriodeDto.ny()
             .medBeregningsgrunnlagPeriode(skjæringstidspunktOpptjening, null)
             .build(beregningsgrunnlag);
         BeregningsgrunnlagPrStatusOgAndelDto.ny()
@@ -340,12 +338,12 @@ class KortvarigArbeidsforholdTjenesteTest {
     }
 
     private BeregningsgrunnlagDto lagBeregningsgrunnlagMedArbeidOgDagpenger(InternArbeidsforholdRefDto arbId, String orgnr, Intervall periode, LocalDate skjæringstidspunktOpptjening) {
-        BeregningsgrunnlagDto beregningsgrunnlag = BeregningsgrunnlagDto.Builder.oppdater(Optional.empty())
+        var beregningsgrunnlag = BeregningsgrunnlagDto.Builder.oppdater(Optional.empty())
             .leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
             .leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.DAGPENGER))
             .medSkjæringstidspunkt(skjæringstidspunktOpptjening)
             .build();
-        BeregningsgrunnlagPeriodeDto bgPeriode = BeregningsgrunnlagPeriodeDto.ny()
+        var bgPeriode = BeregningsgrunnlagPeriodeDto.ny()
             .medBeregningsgrunnlagPeriode(skjæringstidspunktOpptjening, null)
             .build(beregningsgrunnlag);
         BeregningsgrunnlagPrStatusOgAndelDto.ny()
@@ -364,11 +362,11 @@ class KortvarigArbeidsforholdTjenesteTest {
     }
 
     private BeregningsgrunnlagDto lagBeregningsgrunnlagMedArbeid(Collection<YrkesaktivitetDto> yrkesaktivitetList, LocalDate skjæringstidspunktOpptjening) {
-        BeregningsgrunnlagDto beregningsgrunnlag = BeregningsgrunnlagDto.Builder.oppdater(Optional.empty())
+        var beregningsgrunnlag = BeregningsgrunnlagDto.Builder.oppdater(Optional.empty())
             .leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
             .medSkjæringstidspunkt(skjæringstidspunktOpptjening)
             .build();
-        BeregningsgrunnlagPeriodeDto bgPeriode = BeregningsgrunnlagPeriodeDto.ny()
+        var bgPeriode = BeregningsgrunnlagPeriodeDto.ny()
             .medBeregningsgrunnlagPeriode(skjæringstidspunktOpptjening, null)
             .build(beregningsgrunnlag);
         yrkesaktivitetList.forEach(ya ->
@@ -385,11 +383,11 @@ class KortvarigArbeidsforholdTjenesteTest {
     }
 
     private BeregningsgrunnlagDto lagBeregningsgrunnlagMedArbeidOgSN(Collection<YrkesaktivitetDto> yrkesaktivitetList, LocalDate skjæringstidspunktOpptjening) {
-        BeregningsgrunnlagDto beregningsgrunnlag = BeregningsgrunnlagDto.Builder.oppdater(Optional.empty())
+        var beregningsgrunnlag = BeregningsgrunnlagDto.Builder.oppdater(Optional.empty())
             .leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.KOMBINERT_AT_SN))
             .medSkjæringstidspunkt(skjæringstidspunktOpptjening)
             .build();
-        BeregningsgrunnlagPeriodeDto bgPeriode = BeregningsgrunnlagPeriodeDto.ny()
+        var bgPeriode = BeregningsgrunnlagPeriodeDto.ny()
             .medBeregningsgrunnlagPeriode(skjæringstidspunktOpptjening, null)
             .build(beregningsgrunnlag);
         yrkesaktivitetList.stream().filter(a -> a.getArbeidType().equals(ArbeidType.ORDINÆRT_ARBEIDSFORHOLD)).forEach(ya ->
@@ -409,7 +407,7 @@ class KortvarigArbeidsforholdTjenesteTest {
     }
 
     private Intervall getPeriode(YrkesaktivitetDto ya) {
-        Intervall periode = ya.getAlleAktivitetsAvtaler().stream().filter(AktivitetsAvtaleDto::erAnsettelsesPeriode).findFirst().orElseThrow().getPeriode();
+        var periode = ya.getAlleAktivitetsAvtaler().stream().filter(AktivitetsAvtaleDto::erAnsettelsesPeriode).findFirst().orElseThrow().getPeriode();
         return Intervall.fraOgMedTilOgMed(periode.getFomDato(), periode.getTomDato());
     }
 

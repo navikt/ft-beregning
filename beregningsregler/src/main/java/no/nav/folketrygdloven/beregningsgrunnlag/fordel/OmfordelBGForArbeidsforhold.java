@@ -14,7 +14,7 @@ class OmfordelBGForArbeidsforhold extends OmfordelForArbeidsforhold {
 
 	@Override
 	protected void flyttFraAktivitet(FordelAndelModell arbeidMedFlyttbartGrunnlag, BigDecimal beløpSomSkalFlyttes) {
-		BigDecimal brutto = arbeidMedFlyttbartGrunnlag.getGradertBruttoPrÅr().orElse(BigDecimal.ZERO);
+        var brutto = arbeidMedFlyttbartGrunnlag.getGradertBruttoPrÅr().orElse(BigDecimal.ZERO);
 		FordelAndelModell.oppdater(arbeidMedFlyttbartGrunnlag).medFordeltPrÅr(skalerOpp(brutto.subtract(beløpSomSkalFlyttes), arbeidMedFlyttbartGrunnlag.getUtbetalingsgrad()));
 	}
 
@@ -28,8 +28,8 @@ class OmfordelBGForArbeidsforhold extends OmfordelForArbeidsforhold {
 
 	@Override
 	protected BigDecimal finnFlyttbartBeløp(FordelAndelModell arbeidMedOmfordelbartBg) {
-		BigDecimal bgForArbeidFratrektNaturalytelse = finnBgFratrektTilkommetNaturalytelse(arbeidMedOmfordelbartBg);
-		BigDecimal refusjonskrav = arbeidMedOmfordelbartBg.getGradertRefusjonPrÅr().orElse(BigDecimal.ZERO);
+        var bgForArbeidFratrektNaturalytelse = finnBgFratrektTilkommetNaturalytelse(arbeidMedOmfordelbartBg);
+        var refusjonskrav = arbeidMedOmfordelbartBg.getGradertRefusjonPrÅr().orElse(BigDecimal.ZERO);
 		return bgForArbeidFratrektNaturalytelse.subtract(refusjonskrav);
 	}
 

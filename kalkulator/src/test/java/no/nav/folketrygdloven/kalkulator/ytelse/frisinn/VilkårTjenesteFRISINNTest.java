@@ -34,10 +34,10 @@ class VilkårTjenesteFRISINNTest {
     @Test
     void skal_gi_avslag_om_søkt_fl_uten_flandel_og_søkt_avkortet_næring() {
         // Arrange
-        BeregningsgrunnlagDto bg = lagBgMedAvkortetNæring();
-        KoblingReferanseMock behandlingReferanse = new KoblingReferanseMock(LocalDate.now());
-        InntektArbeidYtelseGrunnlagDto iayGrunnlag = lagIayMedNæringOgFrilans();
-        BeregningsgrunnlagInput input = new BeregningsgrunnlagInput(
+        var bg = lagBgMedAvkortetNæring();
+        var behandlingReferanse = new KoblingReferanseMock(LocalDate.now());
+        var iayGrunnlag = lagIayMedNæringOgFrilans();
+        var input = new BeregningsgrunnlagInput(
                 behandlingReferanse,
                 iayGrunnlag, null,
                 List.of(),
@@ -50,17 +50,17 @@ class VilkårTjenesteFRISINNTest {
         var beregningVilkårResultat = new VilkårTjenesteFRISINN().lagVilkårResultatFullføre(input, bg);
 
         // Assert
-        boolean finnesAvslåttVilkår = beregningVilkårResultat.stream().anyMatch(vr -> !vr.getErVilkårOppfylt());
+        var finnesAvslåttVilkår = beregningVilkårResultat.stream().anyMatch(vr -> !vr.getErVilkårOppfylt());
         assertThat(finnesAvslåttVilkår).isTrue();
     }
 
     private BeregningsgrunnlagDto lagBgMedAvkortetNæring() {
-        BeregningsgrunnlagDto bg = BeregningsgrunnlagDto.builder()
+        var bg = BeregningsgrunnlagDto.builder()
                 .medSkjæringstidspunkt(NOW)
                 .medGrunnbeløp(Beløp.fra(10))
                 .leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE))
                 .build();
-        BeregningsgrunnlagPeriodeDto periode = BeregningsgrunnlagPeriodeDto.ny()
+        var periode = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SØKNAD_FOM, SØKNAD_FOM.plusMonths(1))
                 .build(bg);
         BeregningsgrunnlagPrStatusOgAndelDto.Builder.ny()
@@ -76,7 +76,7 @@ class VilkårTjenesteFRISINNTest {
     }
 
     private InntektArbeidYtelseGrunnlagDto lagIayMedNæringOgFrilans() {
-        Intervall søknadsperiode = Intervall.fraOgMedTilOgMed(SØKNAD_FOM, SØKNAD_FOM.plusMonths(1));
+        var søknadsperiode = Intervall.fraOgMedTilOgMed(SØKNAD_FOM, SØKNAD_FOM.plusMonths(1));
         return InntektArbeidYtelseGrunnlagDtoBuilder.nytt()
                 .medOppgittOpptjening(OppgittOpptjeningDtoBuilder.ny()
                         .leggTilEgneNæring(OppgittOpptjeningDtoBuilder.EgenNæringBuilder.ny()

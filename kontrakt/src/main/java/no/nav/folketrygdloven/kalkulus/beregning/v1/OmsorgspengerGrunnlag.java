@@ -61,7 +61,7 @@ public class OmsorgspengerGrunnlag extends YtelsespesifiktGrunnlagDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        OmsorgspengerGrunnlag that = (OmsorgspengerGrunnlag) o;
+        var that = (OmsorgspengerGrunnlag) o;
         return Objects.equals(utbetalingsgradPrAktivitet, that.utbetalingsgradPrAktivitet) && Objects.equals(søktePerioder, that.søktePerioder);
     }
 
@@ -72,10 +72,10 @@ public class OmsorgspengerGrunnlag extends YtelsespesifiktGrunnlagDto {
 
     @AssertTrue(message = "Liste med utbetalingsgrader skal ikke ha duplikate arbeidsforhold")
     public boolean isIngenDuplikateArbeidsforhold() {
-        long antallUnike = utbetalingsgradPrAktivitet.stream().map(UtbetalingsgradPrAktivitetDto::getUtbetalingsgradArbeidsforholdDto)
+        var antallUnike = utbetalingsgradPrAktivitet.stream().map(UtbetalingsgradPrAktivitetDto::getUtbetalingsgradArbeidsforholdDto)
                 .distinct()
                 .count();
-        long antall = utbetalingsgradPrAktivitet.stream().map(UtbetalingsgradPrAktivitetDto::getUtbetalingsgradArbeidsforholdDto)
+        var antall = utbetalingsgradPrAktivitet.stream().map(UtbetalingsgradPrAktivitetDto::getUtbetalingsgradArbeidsforholdDto)
                 .count();
         return antall == antallUnike;
     }

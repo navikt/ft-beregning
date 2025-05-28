@@ -2,7 +2,6 @@ package no.nav.folketrygdloven.beregningsgrunnlag.ytelse.dagpengerelleraap;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
@@ -19,8 +18,8 @@ class SjekkOmBGForAAPFastsattManuelt extends LeafSpecification<Beregningsgrunnla
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        BeregningsgrunnlagPrStatus aapStatus = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.AAP);
-        boolean manueltFastsattAAP = aapStatus != null && aapStatus.erFastsattAvSaksbehandler();
+        var aapStatus = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.AAP);
+        var manueltFastsattAAP = aapStatus != null && aapStatus.erFastsattAvSaksbehandler();
         return manueltFastsattAAP ? ja() : nei();
     }
 

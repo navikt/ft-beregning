@@ -37,7 +37,7 @@ public class Tuple<X, Y> {
     }
 
     public int hashCode() {
-        int result = this.element1.hashCode();
+        var result = this.element1.hashCode();
         result = 31 * result + this.element2.hashCode();
         return result;
     }

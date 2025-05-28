@@ -34,7 +34,7 @@ public class SplittetPeriode {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        SplittetPeriode that = (SplittetPeriode) o;
+        var that = (SplittetPeriode) o;
         return periode.equals(that.periode);
     }
 

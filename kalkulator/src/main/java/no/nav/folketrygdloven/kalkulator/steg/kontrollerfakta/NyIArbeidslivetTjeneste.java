@@ -14,7 +14,7 @@ public class NyIArbeidslivetTjeneste {
     }
 
     public static boolean erNyIArbeidslivetMedAktivitetStatusSN(BeregningsgrunnlagDto beregningsgrunnlag, InntektArbeidYtelseGrunnlagDto iayGrunnlag) {
-        boolean erSN = beregningsgrunnlag.getBeregningsgrunnlagPerioder().stream()
+        var erSN = beregningsgrunnlag.getBeregningsgrunnlagPerioder().stream()
             .flatMap(periode -> periode.getBeregningsgrunnlagPrStatusOgAndelList().stream())
             .anyMatch(andel -> andel.getAktivitetStatus().erSelvstendigNæringsdrivende());
         return erSN

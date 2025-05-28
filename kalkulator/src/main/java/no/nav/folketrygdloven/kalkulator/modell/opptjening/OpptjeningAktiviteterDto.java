@@ -136,7 +136,7 @@ public class OpptjeningAktiviteterDto {
             if (obj == null || !obj.getClass().equals(this.getClass())) {
                 return false;
             }
-            OpptjeningPeriodeDto other = (OpptjeningPeriodeDto) obj;
+            var other = (OpptjeningPeriodeDto) obj;
             return Objects.equals(this.arbeidsgiverOrgNummer, other.arbeidsgiverOrgNummer)
                 && Objects.equals(this.arbeidsgiverAktørId, other.arbeidsgiverAktørId)
                 && Objects.equals(this.periode, other.periode)

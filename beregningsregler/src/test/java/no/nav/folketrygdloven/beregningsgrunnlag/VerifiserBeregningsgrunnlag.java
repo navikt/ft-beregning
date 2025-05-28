@@ -15,7 +15,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 public class VerifiserBeregningsgrunnlag {
 
     public static void verifiserBeregningsgrunnlagBruttoPrPeriodeType(BeregningsgrunnlagPeriode grunnlag, BeregningsgrunnlagHjemmel hjemmel, AktivitetStatus aktivitetStatus, double beløp, double gjennomsnittligPGI) {
-        BeregningsgrunnlagPrStatus bgpsa = verifiserGrunnlag(aktivitetStatus, hjemmel, grunnlag);
+        var bgpsa = verifiserGrunnlag(aktivitetStatus, hjemmel, grunnlag);
         assertThat(bgpsa.getBeregnetPrÅr().doubleValue()).isCloseTo(beløp, within(0.01));
         if (aktivitetStatus.erSelvstendigNæringsdrivende()) {
             assertThat(bgpsa.getGjennomsnittligPGI().doubleValue()).isCloseTo(gjennomsnittligPGI, within(0.01));
@@ -29,7 +29,7 @@ public class VerifiserBeregningsgrunnlag {
     }
 
     public static void verifiserBeregningsperiode(AktivitetStatus aktivitetStatus, BeregningsgrunnlagHjemmel hjemmel, BeregningsgrunnlagPeriode grunnlag, Periode periode) {
-        BeregningsgrunnlagPrStatus bgpsa = verifiserGrunnlag(aktivitetStatus, hjemmel, grunnlag);
+        var bgpsa = verifiserGrunnlag(aktivitetStatus, hjemmel, grunnlag);
         assertThat(bgpsa.getBeregningsperiode()).isNotNull();
         assertThat(bgpsa.getBeregningsperiode()).isEqualTo(periode);
     }
@@ -40,7 +40,7 @@ public class VerifiserBeregningsgrunnlag {
     }
 
     private static BeregningsgrunnlagPrStatus verifiserGrunnlag(AktivitetStatus aktivitetStatus, BeregningsgrunnlagHjemmel hjemmel, BeregningsgrunnlagPeriode grunnlag) {
-        BeregningsgrunnlagPrStatus bgpsa = grunnlag.getBeregningsgrunnlagPrStatus(aktivitetStatus);
+        var bgpsa = grunnlag.getBeregningsgrunnlagPrStatus(aktivitetStatus);
         assertThat(bgpsa).isNotNull();
         if (hjemmel != null) {
             assertThat(grunnlag.getBeregningsgrunnlag().getAktivitetStatus(bgpsa.getAktivitetStatus()).getHjemmel()).isEqualTo(hjemmel);

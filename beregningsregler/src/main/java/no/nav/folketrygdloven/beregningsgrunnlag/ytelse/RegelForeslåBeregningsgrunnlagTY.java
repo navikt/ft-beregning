@@ -1,11 +1,8 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.ytelse;
 
-import java.util.List;
-
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Beregnet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
 import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.ServiceArgument;
@@ -37,13 +34,13 @@ public class RegelForeslåBeregningsgrunnlagTY implements RuleService<Beregnings
 	@SuppressWarnings("unchecked")
     @Override
     public Specification<BeregningsgrunnlagPeriode> getSpecification() {
-        Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
+        var rs = new Ruleset<BeregningsgrunnlagPeriode>();
 
         // FP_BR 30 Foreslå beregningsgrunnlag for status tilstøtende ytelse
-        Specification<BeregningsgrunnlagPeriode> foreslåBeregningsgrunnlagTY = rs.beregningsRegel(ForeslåBeregningsgrunnlagTY.ID, ForeslåBeregningsgrunnlagTY.BESKRIVELSE,
+        var foreslåBeregningsgrunnlagTY = rs.beregningsRegel(ForeslåBeregningsgrunnlagTY.ID, ForeslåBeregningsgrunnlagTY.BESKRIVELSE,
             new ForeslåBeregningsgrunnlagTY(), new Beregnet());
 
-	    List<BeregningsgrunnlagPrStatus> brukersAndeler = regelmodell.getBeregningsgrunnlagPrStatuser(AktivitetStatus.BA);
+        var brukersAndeler = regelmodell.getBeregningsgrunnlagPrStatuser(AktivitetStatus.BA);
 		var speclist = brukersAndeler.stream()
 				.map(ba -> new RegelBeregnBruttoYtelseAndel(ba).getSpecification()
 						.medEvaluationProperty(new ServiceArgument("statusAndel", ba.getAktivitetStatus()))) // TODO (PE) - bruke inntektskategori eller noe annet?

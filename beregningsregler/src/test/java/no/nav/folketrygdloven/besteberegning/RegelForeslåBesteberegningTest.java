@@ -23,7 +23,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Pe
 import no.nav.folketrygdloven.besteberegning.modell.BesteberegningRegelmodell;
 import no.nav.folketrygdloven.besteberegning.modell.input.BesteberegningInput;
 import no.nav.folketrygdloven.besteberegning.modell.output.BesteberegnetAndel;
-import no.nav.folketrygdloven.besteberegning.modell.output.BesteberegnetGrunnlag;
 
 class RegelForeslåBesteberegningTest {
 
@@ -37,17 +36,17 @@ class RegelForeslåBesteberegningTest {
 	void skal_finne_besteberegnet_grunnlag_for_eit_arbeidsforhold_like_inntekter() {
 		// Arrange
 		List<Periodeinntekt> periodeinntekter = new ArrayList<>();
-		for (int i = 0; i < 12; i++) {
+		for (var i = 0; i < 12; i++) {
 			periodeinntekter.add(lagPeriodeInntektArbeidstaker(i, BigDecimal.valueOf(10000), ORGNR));
 		}
-		BesteberegningRegelmodell regelmodell = lagRegelmodell(List.of(), periodeinntekter);
+        var regelmodell = lagRegelmodell(List.of(), periodeinntekter);
 
 		// Act
 		evaluer(regelmodell);
 
 		// Assert
-		BesteberegnetGrunnlag besteberegnetGrunnlag = regelmodell.getOutput().getBesteberegnetGrunnlag();
-		List<BesteberegnetAndel> andeler = besteberegnetGrunnlag.getBesteberegnetAndelList();
+        var besteberegnetGrunnlag = regelmodell.getOutput().getBesteberegnetGrunnlag();
+        var andeler = besteberegnetGrunnlag.getBesteberegnetAndelList();
 		assertThat(andeler).hasSize(1);
 		assertThat(andeler.get(0).getBesteberegnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(120_000));
 	}
@@ -56,20 +55,20 @@ class RegelForeslåBesteberegningTest {
 	void skal_finne_6_siste_måneder_med_to_arbeidsforhold() {
 		// Arrange
 		List<Periodeinntekt> periodeinntekter = new ArrayList<>();
-		for (int i = 0; i < 12; i++) {
+		for (var i = 0; i < 12; i++) {
 			periodeinntekter.add(lagPeriodeInntektArbeidstaker(i, BigDecimal.valueOf(10000), ORGNR));
 		}
-		for (int i = 1; i < 12; i++) {
+		for (var i = 1; i < 12; i++) {
 			periodeinntekter.add(lagPeriodeInntektArbeidstaker(i, BigDecimal.valueOf(20000), ORGNR2));
 		}
-		BesteberegningRegelmodell regelmodell = lagRegelmodell(List.of(), periodeinntekter);
+        var regelmodell = lagRegelmodell(List.of(), periodeinntekter);
 
 		// Act
 		evaluer(regelmodell);
 
 		// Assert
-		BesteberegnetGrunnlag besteberegnetGrunnlag = regelmodell.getOutput().getBesteberegnetGrunnlag();
-		List<BesteberegnetAndel> andeler = besteberegnetGrunnlag.getBesteberegnetAndelList().stream().sorted(Comparator.comparing(BesteberegnetAndel::getBesteberegnetPrÅr)).toList();
+        var besteberegnetGrunnlag = regelmodell.getOutput().getBesteberegnetGrunnlag();
+        var andeler = besteberegnetGrunnlag.getBesteberegnetAndelList().stream().sorted(Comparator.comparing(BesteberegnetAndel::getBesteberegnetPrÅr)).toList();
 		assertThat(andeler).hasSize(2);
 		assertThat(andeler.get(0).getBesteberegnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(120_000));
 		assertThat(andeler.get(1).getBesteberegnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(240_000));
@@ -92,7 +91,7 @@ class RegelForeslåBesteberegningTest {
 	}
 
 	private BesteberegningRegelmodell lagRegelmodell(List<Periode> perioderMedNæring, List<Periodeinntekt> periodeinntekter) {
-		BesteberegningInput bbInput = BesteberegningInput.builder()
+        var bbInput = BesteberegningInput.builder()
 				.medInntektsgrunnlag(lagInntektsgrunnlag(periodeinntekter))
 				.medGrunnbeløpSatser(GRUNNBELØP_SATSER)
 				.medGjeldendeGVerdi(G_VERDI)
@@ -104,7 +103,7 @@ class RegelForeslåBesteberegningTest {
 	}
 
 	private Inntektsgrunnlag lagInntektsgrunnlag(List<Periodeinntekt> inntekter) {
-		Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
+        var inntektsgrunnlag = new Inntektsgrunnlag();
 		inntekter.forEach(inntektsgrunnlag::leggTilPeriodeinntekt);
 		return inntektsgrunnlag;
 	}

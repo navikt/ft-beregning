@@ -14,7 +14,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SplittetAn
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SplittetPeriode;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
-import no.nav.fpsak.nare.evaluation.node.SingleEvaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(PeriodiserForGradering.ID)
@@ -29,9 +28,9 @@ public class PeriodiserForGradering extends LeafSpecification<PeriodiseringGrade
 
 	@Override
 	public Evaluation evaluate(PeriodiseringGraderingProsesstruktur prosesstruktur) {
-		List<SplittetPeriode> splittetPerioder = periodiserBeregningsgrunnlagForGradering(prosesstruktur.getInput(), prosesstruktur.getIdentifisertePeriodeÅrsaker());
+        var splittetPerioder = periodiserBeregningsgrunnlagForGradering(prosesstruktur.getInput(), prosesstruktur.getIdentifisertePeriodeÅrsaker());
 		prosesstruktur.setSplittetPerioder(splittetPerioder);
-		SingleEvaluation resultat = ja();
+        var resultat = ja();
 		resultat.setEvaluationProperty("splittetPerioder", splittetPerioder);
 		return resultat;
 	}
@@ -73,8 +72,8 @@ public class PeriodiserForGradering extends LeafSpecification<PeriodiseringGrade
 			if (AktivitetStatusV2.FL.equals(gradering.getAktivitetStatus()) || AktivitetStatusV2.SN.equals(gradering.getAktivitetStatus())) {
 				return mapSplittetAndelFLSN(gradering);
 			}
-			Periode ansettelsesPeriode = gradering.getArbeidsforhold() == null ? null : gradering.getArbeidsforhold().getAnsettelsesPeriode().orElse(null);
-			SplittetAndel.Builder builder = SplittetAndel.builder()
+            var ansettelsesPeriode = gradering.getArbeidsforhold() == null ? null : gradering.getArbeidsforhold().getAnsettelsesPeriode().orElse(null);
+            var builder = SplittetAndel.builder()
 					.medAktivitetstatus(gradering.getAktivitetStatus())
 					.medArbeidsforhold(gradering.getArbeidsforhold());
 			settAnsettelsesPeriodeHvisFinnes(ansettelsesPeriode, builder);

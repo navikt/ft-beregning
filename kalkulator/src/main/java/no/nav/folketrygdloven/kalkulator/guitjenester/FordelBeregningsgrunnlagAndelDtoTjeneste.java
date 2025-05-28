@@ -12,7 +12,6 @@ import no.nav.folketrygdloven.kalkulator.guitjenester.fakta.RefusjonDtoTjeneste;
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagGUIInput;
 import no.nav.folketrygdloven.kalkulator.konfig.KonfigTjeneste;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BGAndelArbeidsforholdDto;
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
@@ -33,7 +32,7 @@ class FordelBeregningsgrunnlagAndelDtoTjeneste {
         List<FordelBeregningsgrunnlagAndelDto> endringAndeler = new ArrayList<>();
         for (var andel : periode.getBeregningsgrunnlagPrStatusOgAndelList()) {
             var inntektsmelding = FinnInntektsmeldingForAndel.finnInntektsmelding(andel, input.getInntektsmeldinger());
-            FordelBeregningsgrunnlagAndelDto endringAndel = lagEndretBGAndel(input, andel, inntektsmelding, periode);
+            var endringAndel = lagEndretBGAndel(input, andel, inntektsmelding, periode);
             RefusjonDtoTjeneste.settRefusjonskrav(andel, endringAndel);
             endringAndel.setNyttArbeidsforhold(FordelTilkommetArbeidsforholdTjeneste.erAktivitetLagtTilIPeriodisering(andel));
             endringAndel.setArbeidsforholdType(andel.getArbeidsforholdType());
@@ -46,7 +45,7 @@ class FordelBeregningsgrunnlagAndelDtoTjeneste {
                                                                      BeregningsgrunnlagPrStatusOgAndelDto andel,
                                                                      Optional<InntektsmeldingDto> inntektsmelding,
                                                                      BeregningsgrunnlagPeriodeDto periode) {
-        FordelBeregningsgrunnlagAndelDto endringAndel = new FordelBeregningsgrunnlagAndelDto(BeregningsgrunnlagDtoUtil.lagFaktaOmBeregningAndel(
+        var endringAndel = new FordelBeregningsgrunnlagAndelDto(BeregningsgrunnlagDtoUtil.lagFaktaOmBeregningAndel(
                 andel,
                 input.getYtelsespesifiktGrunnlag(),
                 input.getIayGrunnlag(),
@@ -69,13 +68,13 @@ class FordelBeregningsgrunnlagAndelDtoTjeneste {
             endringAndel.setFordelingForrigeBehandlingPrÅr(null);
             return;
         }
-        Optional<BeregningsgrunnlagDto> bgForrigeBehandling = input.getBeregningsgrunnlagGrunnlagFraForrigeBehandling()
+        var bgForrigeBehandling = input.getBeregningsgrunnlagGrunnlagFraForrigeBehandling()
                 .stream().findFirst()
                 .flatMap(BeregningsgrunnlagGrunnlagDto::getBeregningsgrunnlagHvisFinnes);
         if (bgForrigeBehandling.isEmpty()) {
             return;
         }
-        BeregningsgrunnlagPeriodeDto periodeIOriginaltGrunnlag = MatchBeregningsgrunnlagTjeneste.finnPeriodeIBeregningsgrunnlag(andel.getBeregningsgrunnlagPeriode(), bgForrigeBehandling.get());
+        var periodeIOriginaltGrunnlag = MatchBeregningsgrunnlagTjeneste.finnPeriodeIBeregningsgrunnlag(andel.getBeregningsgrunnlagPeriode(), bgForrigeBehandling.get());
         var fastsattForrigeBehandling = periodeIOriginaltGrunnlag.getBeregningsgrunnlagPrStatusOgAndelList().stream()
                 .filter(a -> a.matchUtenInntektskategori(andel.getAktivitetStatus(),
                         andel.getArbeidsgiver().orElse(null),

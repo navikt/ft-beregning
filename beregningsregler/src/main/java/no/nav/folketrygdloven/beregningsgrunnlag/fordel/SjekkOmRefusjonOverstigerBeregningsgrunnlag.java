@@ -12,7 +12,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelPeriodeMode
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.fpsak.nare.evaluation.Evaluation;
-import no.nav.fpsak.nare.evaluation.node.SingleEvaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 class SjekkOmRefusjonOverstigerBeregningsgrunnlag extends LeafSpecification<FordelModell> {
@@ -28,10 +27,10 @@ class SjekkOmRefusjonOverstigerBeregningsgrunnlag extends LeafSpecification<Ford
 
     @Override
     public Evaluation evaluate(FordelModell modell) {
-        BigDecimal refusjonskravPrÅr = finnSamletBeløpFraArbeidsforhold(modell.getInput(), FordelAndelModell::getGradertRefusjonPrÅr);
-        BigDecimal bruttoInkludertNaturalytelsePrÅr = finnSamletBeløpFraArbeidsforhold(modell.getInput(), FordelAndelModell::getGradertBruttoInkludertNaturalytelsePrÅr);
-        BigDecimal refusjonBruttoBgDiff = refusjonskravPrÅr.subtract(bruttoInkludertNaturalytelsePrÅr);
-        SingleEvaluation resultat = refusjonBruttoBgDiff.compareTo(BigDecimal.ZERO) > 0 ? ja() : nei();
+        var refusjonskravPrÅr = finnSamletBeløpFraArbeidsforhold(modell.getInput(), FordelAndelModell::getGradertRefusjonPrÅr);
+        var bruttoInkludertNaturalytelsePrÅr = finnSamletBeløpFraArbeidsforhold(modell.getInput(), FordelAndelModell::getGradertBruttoInkludertNaturalytelsePrÅr);
+        var refusjonBruttoBgDiff = refusjonskravPrÅr.subtract(bruttoInkludertNaturalytelsePrÅr);
+        var resultat = refusjonBruttoBgDiff.compareTo(BigDecimal.ZERO) > 0 ? ja() : nei();
         resultat.setEvaluationProperty("refusjonskravPrÅr." + arbeidsforhold.getArbeidsgiverId(), refusjonskravPrÅr);
         resultat.setEvaluationProperty("bruttoInklNaturalytelsePrÅr." + arbeidsforhold.getArbeidsgiverId(), bruttoInkludertNaturalytelsePrÅr);
         return resultat;

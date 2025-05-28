@@ -31,8 +31,8 @@ public class PerioderForKravDto {
     }
 
     public Optional<PerioderForKravDto> finnKravMedOverlappMedSisteSøkte(LocalDateTimeline<Boolean> søktePerioderTimeline) {
-        LocalDateTimeline<Beløp> periodeTimeline = finnKravperioderTidslinje();
-        LocalDateTimeline<Beløp> overlapp = søktePerioderTimeline.intersection(periodeTimeline, StandardCombinators::rightOnly);
+        var periodeTimeline = finnKravperioderTidslinje();
+        var overlapp = søktePerioderTimeline.intersection(periodeTimeline, StandardCombinators::rightOnly);
         if (overlapp.isEmpty()) {
             return Optional.empty();
         }
@@ -41,10 +41,10 @@ public class PerioderForKravDto {
     }
 
     private LocalDateTimeline<Beløp> finnKravperioderTidslinje() {
-        List<LocalDateSegment<Beløp>> periodeSegmenter = perioder.stream()
+        var periodeSegmenter = perioder.stream()
                 .map(p -> new LocalDateSegment<>(p.periode().getFomDato(), p.periode().getTomDato(), p.beløp()))
                 .collect(Collectors.toList());
-        LocalDateTimeline<Beløp> periodeTimeline = new LocalDateTimeline<>(periodeSegmenter);
+        var periodeTimeline = new LocalDateTimeline<Beløp>(periodeSegmenter);
         return periodeTimeline;
     }
 

@@ -32,7 +32,7 @@ public class OppgittAnnenAktivitetDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || !(o instanceof OppgittAnnenAktivitetDto)) return false;
-        OppgittAnnenAktivitetDto that = (OppgittAnnenAktivitetDto) o;
+        var that = (OppgittAnnenAktivitetDto) o;
         return Objects.equals(periode, that.periode) &&
                 Objects.equals(arbeidType, that.arbeidType);
     }

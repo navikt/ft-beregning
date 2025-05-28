@@ -37,10 +37,10 @@ class RegelVurderRegisterinntektMotOppgittInntektATFLFRISINNTest {
 
     @Test
     void skal_bare_returnere_beregnet_om_oppgitt_inntekt_ikke_finnes() {
-        BigDecimal beregnetPrÅr = BigDecimal.valueOf(100_000);
-        BeregningsgrunnlagPrArbeidsforhold arbfor = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_MED_REF).medBeregnetPrÅr(beregnetPrÅr).medAndelNr(1L).build();
-        BeregningsgrunnlagPrStatus andel = BeregningsgrunnlagPrStatus.builder().medArbeidsforhold(arbfor).medAktivitetStatus(AktivitetStatus.ATFL).build();
-        Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(inntektsgrunnlag, andel);
+        var beregnetPrÅr = BigDecimal.valueOf(100_000);
+        var arbfor = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_MED_REF).medBeregnetPrÅr(beregnetPrÅr).medAndelNr(1L).build();
+        var andel = BeregningsgrunnlagPrStatus.builder().medArbeidsforhold(arbfor).medAktivitetStatus(AktivitetStatus.ATFL).build();
+        var beregningsgrunnlag = lagBeregningsgrunnlag(inntektsgrunnlag, andel);
 
         // Act
         kjørRegel(Beregningsgrunnlag.builder(beregningsgrunnlag).build());
@@ -51,11 +51,11 @@ class RegelVurderRegisterinntektMotOppgittInntektATFLFRISINNTest {
 
     @Test
     void skal_ikke_endre_inntekt_om_oppgitt_inntekt_er_lavere() {
-        BigDecimal beregnetPrÅr = BigDecimal.valueOf(100_000);
-        BeregningsgrunnlagPrArbeidsforhold arbfor = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_MED_REF).medBeregnetPrÅr(beregnetPrÅr).medAndelNr(1L).build();
-        BeregningsgrunnlagPrStatus andel = BeregningsgrunnlagPrStatus.builder().medArbeidsforhold(arbfor).medAktivitetStatus(AktivitetStatus.ATFL).build();
+        var beregnetPrÅr = BigDecimal.valueOf(100_000);
+        var arbfor = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_MED_REF).medBeregnetPrÅr(beregnetPrÅr).medAndelNr(1L).build();
+        var andel = BeregningsgrunnlagPrStatus.builder().medArbeidsforhold(arbfor).medAktivitetStatus(AktivitetStatus.ATFL).build();
         inntektsgrunnlag.leggTilPeriodeinntekt(byggSøknadsinntekt(Periode.of(STP, LocalDate.of(2020,4,30)), BigDecimal.valueOf(5000)));
-        Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(inntektsgrunnlag, andel);
+        var beregningsgrunnlag = lagBeregningsgrunnlag(inntektsgrunnlag, andel);
 
         // Act
         kjørRegel(Beregningsgrunnlag.builder(beregningsgrunnlag).build());
@@ -66,51 +66,51 @@ class RegelVurderRegisterinntektMotOppgittInntektATFLFRISINNTest {
 
     @Test
     void skal_endre_inntekt_dersom_oppgitt_inntekt_er_høyere_enn_beregnet() {
-        BigDecimal beregnetPrÅr = BigDecimal.valueOf(100_000);
-        BigDecimal oppgitt = BigDecimal.valueOf(20000);
-        BeregningsgrunnlagPrArbeidsforhold arbfor = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_MED_REF).medBeregnetPrÅr(beregnetPrÅr).medAndelNr(1L).build();
-        BeregningsgrunnlagPrStatus andel = BeregningsgrunnlagPrStatus.builder().medArbeidsforhold(arbfor).medAktivitetStatus(AktivitetStatus.ATFL).build();
+        var beregnetPrÅr = BigDecimal.valueOf(100_000);
+        var oppgitt = BigDecimal.valueOf(20000);
+        var arbfor = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_MED_REF).medBeregnetPrÅr(beregnetPrÅr).medAndelNr(1L).build();
+        var andel = BeregningsgrunnlagPrStatus.builder().medArbeidsforhold(arbfor).medAktivitetStatus(AktivitetStatus.ATFL).build();
         inntektsgrunnlag.leggTilPeriodeinntekt(byggSøknadsinntekt(Periode.of(STP, LocalDate.of(2020,4,30)), oppgitt));
-        Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(inntektsgrunnlag, andel);
+        var beregningsgrunnlag = lagBeregningsgrunnlag(inntektsgrunnlag, andel);
 
         // Act
         kjørRegel(Beregningsgrunnlag.builder(beregningsgrunnlag).build());
 
         // Assert
-        BigDecimal overstyrt = BigDecimal.valueOf(236363.64);
+        var overstyrt = BigDecimal.valueOf(236363.64);
         assertArbfor(arbfor, overstyrt, beregnetPrÅr, overstyrt);
     }
 
     @Test
     void skal_summere_grunnlag_for_at_ved_flere_arbfor() {
-        BigDecimal beregnetPrÅr = BigDecimal.valueOf(100_000);
-        BigDecimal oppgitt = BigDecimal.valueOf(20000);
-        BeregningsgrunnlagPrArbeidsforhold arbfor = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_MED_REF).medBeregnetPrÅr(beregnetPrÅr).medAndelNr(1L).build();
-        BeregningsgrunnlagPrArbeidsforhold arbfor2 = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_UTEN_REF).medBeregnetPrÅr(beregnetPrÅr).medAndelNr(2L).build();
-        BeregningsgrunnlagPrStatus andel = BeregningsgrunnlagPrStatus.builder().medArbeidsforhold(arbfor).medArbeidsforhold(arbfor2).medAktivitetStatus(AktivitetStatus.ATFL).build();
+        var beregnetPrÅr = BigDecimal.valueOf(100_000);
+        var oppgitt = BigDecimal.valueOf(20000);
+        var arbfor = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_MED_REF).medBeregnetPrÅr(beregnetPrÅr).medAndelNr(1L).build();
+        var arbfor2 = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_UTEN_REF).medBeregnetPrÅr(beregnetPrÅr).medAndelNr(2L).build();
+        var andel = BeregningsgrunnlagPrStatus.builder().medArbeidsforhold(arbfor).medArbeidsforhold(arbfor2).medAktivitetStatus(AktivitetStatus.ATFL).build();
         inntektsgrunnlag.leggTilPeriodeinntekt(byggSøknadsinntekt(Periode.of(STP, LocalDate.of(2020,4,30)), oppgitt));
-        Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(inntektsgrunnlag, andel);
+        var beregningsgrunnlag = lagBeregningsgrunnlag(inntektsgrunnlag, andel);
 
         // Act
         kjørRegel(Beregningsgrunnlag.builder(beregningsgrunnlag).build());
 
         // Assert
-        BigDecimal overstyrt = BigDecimal.valueOf(236363.64);
-        BigDecimal prAndel = overstyrt.divide(BigDecimal.valueOf(2), 10, RoundingMode.HALF_EVEN);
+        var overstyrt = BigDecimal.valueOf(236363.64);
+        var prAndel = overstyrt.divide(BigDecimal.valueOf(2), 10, RoundingMode.HALF_EVEN);
         assertArbfor(arbfor, prAndel, beregnetPrÅr, prAndel);
         assertArbfor(arbfor2, prAndel, beregnetPrÅr, prAndel);
     }
 
     @Test
     void flere_andeler_overstiger_oppgitt_skal_ikke_bruke_oppgitt() {
-        BigDecimal beregnetPrÅr1 = BigDecimal.valueOf(100_000);
-        BigDecimal beregnetPrÅr2 = BigDecimal.valueOf(200_000);
-        BigDecimal oppgitt = BigDecimal.valueOf(20000);
-        BeregningsgrunnlagPrArbeidsforhold arbfor = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_MED_REF).medBeregnetPrÅr(beregnetPrÅr1).medAndelNr(1L).build();
-        BeregningsgrunnlagPrArbeidsforhold arbfor2 = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_UTEN_REF).medBeregnetPrÅr(beregnetPrÅr2).medAndelNr(2L).build();
-        BeregningsgrunnlagPrStatus andel = BeregningsgrunnlagPrStatus.builder().medArbeidsforhold(arbfor).medArbeidsforhold(arbfor2).medAktivitetStatus(AktivitetStatus.ATFL).build();
+        var beregnetPrÅr1 = BigDecimal.valueOf(100_000);
+        var beregnetPrÅr2 = BigDecimal.valueOf(200_000);
+        var oppgitt = BigDecimal.valueOf(20000);
+        var arbfor = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_MED_REF).medBeregnetPrÅr(beregnetPrÅr1).medAndelNr(1L).build();
+        var arbfor2 = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_UTEN_REF).medBeregnetPrÅr(beregnetPrÅr2).medAndelNr(2L).build();
+        var andel = BeregningsgrunnlagPrStatus.builder().medArbeidsforhold(arbfor).medArbeidsforhold(arbfor2).medAktivitetStatus(AktivitetStatus.ATFL).build();
         inntektsgrunnlag.leggTilPeriodeinntekt(byggSøknadsinntekt(Periode.of(STP, LocalDate.of(2020,4,30)), oppgitt));
-        Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(inntektsgrunnlag, andel);
+        var beregningsgrunnlag = lagBeregningsgrunnlag(inntektsgrunnlag, andel);
 
         // Act
         kjørRegel(Beregningsgrunnlag.builder(beregningsgrunnlag).build());
@@ -122,43 +122,43 @@ class RegelVurderRegisterinntektMotOppgittInntektATFLFRISINNTest {
 
     @Test
     void flere_andeler_overstiger_ikke_oppgitt_skal_fordele_oppgitt_riktig() {
-        BigDecimal beregnetPrÅr1 = BigDecimal.valueOf(40_000);
-        BigDecimal beregnetPrÅr2 = BigDecimal.valueOf(60_000);
-        BigDecimal oppgitt = BigDecimal.valueOf(20000);
-        BeregningsgrunnlagPrArbeidsforhold arbfor = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_MED_REF).medBeregnetPrÅr(beregnetPrÅr1).medAndelNr(1L).build();
-        BeregningsgrunnlagPrArbeidsforhold arbfor2 = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_UTEN_REF).medBeregnetPrÅr(beregnetPrÅr2).medAndelNr(2L).build();
-        BeregningsgrunnlagPrStatus andel = BeregningsgrunnlagPrStatus.builder().medArbeidsforhold(arbfor).medArbeidsforhold(arbfor2).medAktivitetStatus(AktivitetStatus.ATFL).build();
+        var beregnetPrÅr1 = BigDecimal.valueOf(40_000);
+        var beregnetPrÅr2 = BigDecimal.valueOf(60_000);
+        var oppgitt = BigDecimal.valueOf(20000);
+        var arbfor = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_MED_REF).medBeregnetPrÅr(beregnetPrÅr1).medAndelNr(1L).build();
+        var arbfor2 = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_UTEN_REF).medBeregnetPrÅr(beregnetPrÅr2).medAndelNr(2L).build();
+        var andel = BeregningsgrunnlagPrStatus.builder().medArbeidsforhold(arbfor).medArbeidsforhold(arbfor2).medAktivitetStatus(AktivitetStatus.ATFL).build();
         inntektsgrunnlag.leggTilPeriodeinntekt(byggSøknadsinntekt(Periode.of(STP, LocalDate.of(2020,4,30)), oppgitt));
-        Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(inntektsgrunnlag, andel);
+        var beregningsgrunnlag = lagBeregningsgrunnlag(inntektsgrunnlag, andel);
 
         // Act
         kjørRegel(Beregningsgrunnlag.builder(beregningsgrunnlag).build());
 
         // Assert
-        BigDecimal overstyrtTotal = BigDecimal.valueOf(236363.64);
-        BigDecimal overstyrt1 = overstyrtTotal.multiply(BigDecimal.valueOf(0.4));
-        BigDecimal overstyrt2 = overstyrtTotal.multiply(BigDecimal.valueOf(0.6));
+        var overstyrtTotal = BigDecimal.valueOf(236363.64);
+        var overstyrt1 = overstyrtTotal.multiply(BigDecimal.valueOf(0.4));
+        var overstyrt2 = overstyrtTotal.multiply(BigDecimal.valueOf(0.6));
         assertArbfor(arbfor, overstyrt1, beregnetPrÅr1, overstyrt1);
         assertArbfor(arbfor2, overstyrt2, beregnetPrÅr2, overstyrt2);
     }
 
     @Test
     void flere_andeler_med_samlet_inntekt_0_skal_fordele_oppgitt_likt() {
-        BigDecimal beregnetPrÅr1 = BigDecimal.valueOf(0);
-        BigDecimal beregnetPrÅr2 = BigDecimal.valueOf(0);
-        BigDecimal oppgitt = BigDecimal.valueOf(20000);
-        BeregningsgrunnlagPrArbeidsforhold arbfor = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_MED_REF).medBeregnetPrÅr(beregnetPrÅr1).medAndelNr(1L).build();
-        BeregningsgrunnlagPrArbeidsforhold arbfor2 = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_UTEN_REF).medBeregnetPrÅr(beregnetPrÅr2).medAndelNr(2L).build();
-        BeregningsgrunnlagPrStatus andel = BeregningsgrunnlagPrStatus.builder().medArbeidsforhold(arbfor).medArbeidsforhold(arbfor2).medAktivitetStatus(AktivitetStatus.ATFL).build();
+        var beregnetPrÅr1 = BigDecimal.valueOf(0);
+        var beregnetPrÅr2 = BigDecimal.valueOf(0);
+        var oppgitt = BigDecimal.valueOf(20000);
+        var arbfor = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_MED_REF).medBeregnetPrÅr(beregnetPrÅr1).medAndelNr(1L).build();
+        var arbfor2 = BeregningsgrunnlagPrArbeidsforhold.builder().medArbeidsforhold(ARBFOR_UTEN_REF).medBeregnetPrÅr(beregnetPrÅr2).medAndelNr(2L).build();
+        var andel = BeregningsgrunnlagPrStatus.builder().medArbeidsforhold(arbfor).medArbeidsforhold(arbfor2).medAktivitetStatus(AktivitetStatus.ATFL).build();
         inntektsgrunnlag.leggTilPeriodeinntekt(byggSøknadsinntekt(Periode.of(STP, LocalDate.of(2020,4,30)), oppgitt));
-        Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(inntektsgrunnlag, andel);
+        var beregningsgrunnlag = lagBeregningsgrunnlag(inntektsgrunnlag, andel);
 
         // Act
         kjørRegel(Beregningsgrunnlag.builder(beregningsgrunnlag).build());
 
         // Assert
-        BigDecimal overstyrtTotal = BigDecimal.valueOf(236363.64);
-        BigDecimal overstyrtPr = overstyrtTotal.divide(BigDecimal.valueOf(2), 10, RoundingMode.HALF_EVEN);
+        var overstyrtTotal = BigDecimal.valueOf(236363.64);
+        var overstyrtPr = overstyrtTotal.divide(BigDecimal.valueOf(2), 10, RoundingMode.HALF_EVEN);
         assertArbfor(arbfor, overstyrtPr, beregnetPrÅr1, overstyrtPr);
         assertArbfor(arbfor2, overstyrtPr, beregnetPrÅr2, overstyrtPr);
     }
@@ -184,18 +184,18 @@ class RegelVurderRegisterinntektMotOppgittInntektATFLFRISINNTest {
     }
 
     private void kjørRegel(Beregningsgrunnlag beregningsgrunnlag) {
-        BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         new RegelVurderRegisterinntektMotOppgittInntektATFLFRISINN().evaluate(grunnlag);
     }
 
     private Beregningsgrunnlag lagBeregningsgrunnlag(Inntektsgrunnlag ig, BeregningsgrunnlagPrStatus... andeler) {
-        BeregningsgrunnlagPeriode.Builder periodeBuilder = BeregningsgrunnlagPeriode.builder()
+        var periodeBuilder = BeregningsgrunnlagPeriode.builder()
             .medPeriode(new Periode(STP, null));
-        List<BeregningsgrunnlagPrStatus> andelsliste = Arrays.asList(andeler);
+        var andelsliste = Arrays.asList(andeler);
         andelsliste.forEach(periodeBuilder::medBeregningsgrunnlagPrStatus);
-        BeregningsgrunnlagPeriode periode = periodeBuilder.build();
-        List<FrisinnPeriode> frisinnPerioder = Collections.singletonList(new FrisinnPeriode(periode.getBeregningsgrunnlagPeriode(), true, false));
-        FrisinnGrunnlag frisinnGrunnlag = new FrisinnGrunnlag(frisinnPerioder, List.of(periode.getBeregningsgrunnlagPeriode()), STP);
+        var periode = periodeBuilder.build();
+        var frisinnPerioder = Collections.singletonList(new FrisinnPeriode(periode.getBeregningsgrunnlagPeriode(), true, false));
+        var frisinnGrunnlag = new FrisinnGrunnlag(frisinnPerioder, List.of(periode.getBeregningsgrunnlagPeriode()), STP);
         return Beregningsgrunnlag.builder()
             .medInntektsgrunnlag(ig)
             .medGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2019))

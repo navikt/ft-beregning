@@ -33,12 +33,12 @@ class NyIArbeidslivetTjenesteTest {
     @Test
     void skalGiTilfelleDeromBrukerErSNOgNyIArbeidslivet() {
         // Arrange
-        InntektArbeidYtelseGrunnlagDto iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.oppdatere(Optional.empty())
+        var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.oppdatere(Optional.empty())
             .medOppgittOpptjening(lagEgenNæring(true)).build();
-        BeregningsgrunnlagDto bg = lagBeregningsgrunnlagMedArbeidOgNæring();
+        var bg = lagBeregningsgrunnlagMedArbeidOgNæring();
 
         // Act
-        boolean resultat = NyIArbeidslivetTjeneste.erNyIArbeidslivetMedAktivitetStatusSN(bg, iayGrunnlag);
+        var resultat = NyIArbeidslivetTjeneste.erNyIArbeidslivetMedAktivitetStatusSN(bg, iayGrunnlag);
 
         // Assert
         assertThat(resultat).isTrue();
@@ -47,12 +47,12 @@ class NyIArbeidslivetTjenesteTest {
     @Test
     void skalIkkeGiTilfelleDeromBrukerIkkeErNyIArbeidslivet() {
         // Arrange
-        InntektArbeidYtelseGrunnlagDto iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.oppdatere(Optional.empty())
+        var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.oppdatere(Optional.empty())
             .medOppgittOpptjening(lagEgenNæring(false)).build();
-        BeregningsgrunnlagDto bg = lagBeregningsgrunnlagMedArbeidOgNæring();
+        var bg = lagBeregningsgrunnlagMedArbeidOgNæring();
 
         // Act
-        boolean resultat = NyIArbeidslivetTjeneste.erNyIArbeidslivetMedAktivitetStatusSN(bg, iayGrunnlag);
+        var resultat = NyIArbeidslivetTjeneste.erNyIArbeidslivetMedAktivitetStatusSN(bg, iayGrunnlag);
 
         // Assert
         assertThat(resultat).isFalse();
@@ -61,11 +61,11 @@ class NyIArbeidslivetTjenesteTest {
     @Test
     void skalIkkeGiTilfelleForNyIArbeidslivetSNDeromBrukerIkkeErSN() {
         // Arrange
-        InntektArbeidYtelseGrunnlagDto inntektArbeidYtelseGrunnlag = lagAktørArbeid();
-        BeregningsgrunnlagDto bg = lagBeregningsgrunnlagMedArbeid();
+        var inntektArbeidYtelseGrunnlag = lagAktørArbeid();
+        var bg = lagBeregningsgrunnlagMedArbeid();
 
         // Act
-        boolean resultat = NyIArbeidslivetTjeneste.erNyIArbeidslivetMedAktivitetStatusSN(bg, inntektArbeidYtelseGrunnlag);
+        var resultat = NyIArbeidslivetTjeneste.erNyIArbeidslivetMedAktivitetStatusSN(bg, inntektArbeidYtelseGrunnlag);
 
         // Assert
         assertThat(resultat).isFalse();
@@ -79,11 +79,11 @@ class NyIArbeidslivetTjenesteTest {
 
 
     private BeregningsgrunnlagDto lagBeregningsgrunnlagMedArbeidOgNæring() {
-        BeregningsgrunnlagDto beregningsgrunnlag = BeregningsgrunnlagDto.Builder.oppdater(Optional.empty())
+        var beregningsgrunnlag = BeregningsgrunnlagDto.Builder.oppdater(Optional.empty())
             .leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.KOMBINERT_AT_SN))
             .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING)
             .build();
-        BeregningsgrunnlagPeriodeDto bgPeriode = BeregningsgrunnlagPeriodeDto.ny()
+        var bgPeriode = BeregningsgrunnlagPeriodeDto.ny()
             .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_OPPTJENING, null)
             .build(beregningsgrunnlag);
         BeregningsgrunnlagPrStatusOgAndelDto.ny()
@@ -102,11 +102,11 @@ class NyIArbeidslivetTjenesteTest {
     }
 
     private BeregningsgrunnlagDto lagBeregningsgrunnlagMedArbeid() {
-        BeregningsgrunnlagDto beregningsgrunnlag = BeregningsgrunnlagDto.Builder.oppdater(Optional.empty())
+        var beregningsgrunnlag = BeregningsgrunnlagDto.Builder.oppdater(Optional.empty())
             .leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
             .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING)
             .build();
-        BeregningsgrunnlagPeriodeDto bgPeriode = BeregningsgrunnlagPeriodeDto.ny()
+        var bgPeriode = BeregningsgrunnlagPeriodeDto.ny()
             .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_OPPTJENING, null)
             .build(beregningsgrunnlag);
         BeregningsgrunnlagPrStatusOgAndelDto.ny()
@@ -123,14 +123,14 @@ class NyIArbeidslivetTjenesteTest {
 
 
     private InntektArbeidYtelseGrunnlagDto lagAktørArbeid() {
-        InntektArbeidYtelseAggregatBuilder oppdatere = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
-        InntektArbeidYtelseAggregatBuilder.AktørArbeidBuilder aktørArbeidBuilder = oppdatere.getAktørArbeidBuilder();
+        var oppdatere = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
+        var aktørArbeidBuilder = oppdatere.getAktørArbeidBuilder();
         leggTilAktivitet(InternArbeidsforholdRefDto.nullRef(), ORGNR, Intervall.fraOgMed(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusYears(1)), aktørArbeidBuilder);
         return InntektArbeidYtelseGrunnlagDtoBuilder.oppdatere(Optional.empty()).medData(oppdatere).build();
     }
 
     private void leggTilAktivitet(InternArbeidsforholdRefDto arbId, String orgnr, Intervall periode, InntektArbeidYtelseAggregatBuilder.AktørArbeidBuilder aktørArbeidBuilder) {
-        YrkesaktivitetDtoBuilder yrkesaktivitetBuilder = YrkesaktivitetDtoBuilder.oppdatere(Optional.empty())
+        var yrkesaktivitetBuilder = YrkesaktivitetDtoBuilder.oppdatere(Optional.empty())
             .medArbeidType(ArbeidType.ORDINÆRT_ARBEIDSFORHOLD)
             .medArbeidsforholdId(arbId)
             .medArbeidsgiver(Arbeidsgiver.virksomhet(orgnr));

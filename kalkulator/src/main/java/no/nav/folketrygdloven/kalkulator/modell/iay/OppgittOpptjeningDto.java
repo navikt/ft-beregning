@@ -98,7 +98,7 @@ public class OppgittOpptjeningDto {
             return true;
         if (o == null || !(o instanceof OppgittOpptjeningDto))
             return false;
-        OppgittOpptjeningDto that = (OppgittOpptjeningDto) o;
+        var that = (OppgittOpptjeningDto) o;
         return Objects.equals(oppgittArbeidsforhold, that.oppgittArbeidsforhold) &&
             Objects.equals(egenNæring, that.egenNæring) &&
             Objects.equals(annenAktivitet, that.annenAktivitet);

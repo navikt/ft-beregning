@@ -28,7 +28,7 @@ class PeriodiserForAktivitetsgradTjenesteTest {
     void skal_ikke_splitte_grunnlag_uten_aktivitetsgrad() {
         // Arrange
         var stp = LocalDate.now();
-        BeregningsgrunnlagDto bg = lagBeregningsgrunnlagMedEnPeriode(stp);
+        var bg = lagBeregningsgrunnlagMedEnPeriode(stp);
         var ytelsespesifiktGrunnlag = new PleiepengerSyktBarnGrunnlag(List.of(new UtbetalingsgradPrAktivitetDto(
                 new AktivitetDto(Arbeidsgiver.virksomhet("123456789"), InternArbeidsforholdRefDto.nullRef(), UttakArbeidType.ORDINÆRT_ARBEID),
                 List.of(new PeriodeMedUtbetalingsgradDto(Intervall.fraOgMedTilOgMed(stp, stp.plusMonths(1)), Utbetalingsgrad.valueOf(10), null))
@@ -49,7 +49,7 @@ class PeriodiserForAktivitetsgradTjenesteTest {
     void skal_splitte_grunnlag_med_endring_i_aktivitetsgrad_for_en_arbeidsgiver() {
         // Arrange
         var stp = LocalDate.now();
-        BeregningsgrunnlagDto bg = lagBeregningsgrunnlagMedEnPeriode(stp);
+        var bg = lagBeregningsgrunnlagMedEnPeriode(stp);
         var ytelsespesifiktGrunnlag = new PleiepengerSyktBarnGrunnlag(List.of(new UtbetalingsgradPrAktivitetDto(
                 new AktivitetDto(Arbeidsgiver.virksomhet("123456789"), InternArbeidsforholdRefDto.nullRef(), UttakArbeidType.ORDINÆRT_ARBEID),
                 List.of(new PeriodeMedUtbetalingsgradDto(Intervall.fraOgMedTilOgMed(stp, stp.plusMonths(1)), Utbetalingsgrad.valueOf(10), Aktivitetsgrad.fra(BigDecimal.TEN)))
@@ -73,7 +73,7 @@ class PeriodiserForAktivitetsgradTjenesteTest {
     void skal_splitte_grunnlag_med_endring_i_aktivitetsgrad_for_en_arbeidsgiver_også_når_det_ikke_er_endring_hos_en_annen_arbeidsgiver() {
         // Arrange
         var stp = LocalDate.now();
-        BeregningsgrunnlagDto bg = lagBeregningsgrunnlagMedEnPeriode(stp);
+        var bg = lagBeregningsgrunnlagMedEnPeriode(stp);
         var ytelsespesifiktGrunnlag = new PleiepengerSyktBarnGrunnlag(List.of(
                 new UtbetalingsgradPrAktivitetDto(new AktivitetDto(Arbeidsgiver.virksomhet("111111111"), InternArbeidsforholdRefDto.nullRef(), UttakArbeidType.ORDINÆRT_ARBEID), List.of(new PeriodeMedUtbetalingsgradDto(Intervall.fraOgMedTilOgMed(stp, TIDENES_ENDE), Utbetalingsgrad.valueOf(0), Aktivitetsgrad.ZERO))),
                 new UtbetalingsgradPrAktivitetDto(new AktivitetDto(Arbeidsgiver.virksomhet("123456789"), InternArbeidsforholdRefDto.nullRef(), UttakArbeidType.ORDINÆRT_ARBEID), List.of(new PeriodeMedUtbetalingsgradDto(Intervall.fraOgMedTilOgMed(stp, stp.plusMonths(1)), Utbetalingsgrad.valueOf(10), Aktivitetsgrad.fra(10))))
@@ -97,7 +97,7 @@ class PeriodiserForAktivitetsgradTjenesteTest {
     void skal_splitte_grunnlag_med_to_endringer_i_aktivitetsgrad_for_en_arbeidsgiver() {
         // Arrange
         var stp = LocalDate.now();
-        BeregningsgrunnlagDto bg = lagBeregningsgrunnlagMedEnPeriode(stp);
+        var bg = lagBeregningsgrunnlagMedEnPeriode(stp);
         var ytelsespesifiktGrunnlag = new PleiepengerSyktBarnGrunnlag(List.of(new UtbetalingsgradPrAktivitetDto(
                 new AktivitetDto(Arbeidsgiver.virksomhet("123456789"), InternArbeidsforholdRefDto.nullRef(), UttakArbeidType.ORDINÆRT_ARBEID),
                 List.of(new PeriodeMedUtbetalingsgradDto(Intervall.fraOgMedTilOgMed(stp, stp.plusMonths(1)), Utbetalingsgrad.valueOf(10), Aktivitetsgrad.fra(10)),
@@ -127,7 +127,7 @@ class PeriodiserForAktivitetsgradTjenesteTest {
     void skal_splitte_grunnlag_med_endring_i_aktivitetsgrad_for_to_arbeidsgivere() {
         // Arrange
         var stp = LocalDate.now();
-        BeregningsgrunnlagDto bg = lagBeregningsgrunnlagMedEnPeriode(stp);
+        var bg = lagBeregningsgrunnlagMedEnPeriode(stp);
         var ytelsespesifiktGrunnlag = new PleiepengerSyktBarnGrunnlag(List.of(new UtbetalingsgradPrAktivitetDto(
                         new AktivitetDto(Arbeidsgiver.virksomhet("123456789"), InternArbeidsforholdRefDto.nullRef(), UttakArbeidType.ORDINÆRT_ARBEID),
                         List.of(new PeriodeMedUtbetalingsgradDto(Intervall.fraOgMedTilOgMed(stp, stp.plusMonths(1)), Utbetalingsgrad.valueOf(10), Aktivitetsgrad.fra(10)))
@@ -160,7 +160,7 @@ class PeriodiserForAktivitetsgradTjenesteTest {
     void skal_splitte_grunnlag_med_endring_i_aktivitetsgrad_for_to_arbeidsgivere_med_hull() {
         // Arrange
         var stp = LocalDate.now();
-        BeregningsgrunnlagDto bg = lagBeregningsgrunnlagMedEnPeriode(stp);
+        var bg = lagBeregningsgrunnlagMedEnPeriode(stp);
         var ytelsespesifiktGrunnlag = new PleiepengerSyktBarnGrunnlag(List.of(new UtbetalingsgradPrAktivitetDto(
                         new AktivitetDto(Arbeidsgiver.virksomhet("123456789"), InternArbeidsforholdRefDto.nullRef(), UttakArbeidType.ORDINÆRT_ARBEID),
                         List.of(new PeriodeMedUtbetalingsgradDto(Intervall.fraOgMedTilOgMed(stp, stp.plusMonths(1)), Utbetalingsgrad.valueOf(10), Aktivitetsgrad.fra(10)))
@@ -201,7 +201,7 @@ class PeriodiserForAktivitetsgradTjenesteTest {
     void skal_splitte_grunnlag_med_to_perioder_uten_endringer_i_aktivitetsgrad_for_en_arbeidsgiver() {
         // Arrange
         var stp = LocalDate.now();
-        BeregningsgrunnlagDto bg = lagBeregningsgrunnlagMedEnPeriode(stp);
+        var bg = lagBeregningsgrunnlagMedEnPeriode(stp);
         var ytelsespesifiktGrunnlag = new PleiepengerSyktBarnGrunnlag(List.of(new UtbetalingsgradPrAktivitetDto(
                 new AktivitetDto(Arbeidsgiver.virksomhet("123456789"), InternArbeidsforholdRefDto.nullRef(), UttakArbeidType.ORDINÆRT_ARBEID),
                 List.of(new PeriodeMedUtbetalingsgradDto(Intervall.fraOgMedTilOgMed(stp, stp.plusMonths(1)), Utbetalingsgrad.valueOf(10), Aktivitetsgrad.fra(10)),

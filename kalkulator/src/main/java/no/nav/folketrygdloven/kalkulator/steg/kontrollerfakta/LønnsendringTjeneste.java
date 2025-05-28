@@ -13,7 +13,6 @@ import no.nav.folketrygdloven.kalkulator.felles.BeregningstidspunktTjeneste;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.AktivitetsAvtaleDto;
-import no.nav.folketrygdloven.kalkulator.modell.iay.AktørArbeidDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseGrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektsmeldingDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YrkesaktivitetDto;
@@ -40,8 +39,8 @@ public class LønnsendringTjeneste {
                                                                                                                        Collection<InntektsmeldingDto> inntektsmeldinger) {
         BiPredicate<BeregningsgrunnlagPrStatusOgAndelDto, LocalDate> datoErInkludertIRelevantPeriode = (andel, dato) -> {
             var stp = beregningsgrunnlag.getSkjæringstidspunkt();
-            LocalDate førsteRelevanteDato = andel.getBeregningsperiodeFom().plusDays(1);  //lønnsendring første dag i bergningsperioden er OK, ser derfor fra og med dag 2
-            Intervall relevantPeriode = Intervall.fraOgMedTilOgMed(førsteRelevanteDato, BeregningstidspunktTjeneste.finnBeregningstidspunkt(stp));
+            var førsteRelevanteDato = andel.getBeregningsperiodeFom().plusDays(1);  //lønnsendring første dag i bergningsperioden er OK, ser derfor fra og med dag 2
+            var relevantPeriode = Intervall.fraOgMedTilOgMed(førsteRelevanteDato, BeregningstidspunktTjeneste.finnBeregningstidspunkt(stp));
             return relevantPeriode.inkluderer(dato);
         };
         return finnYrkesaktiviteterMedLønnsendringUtenInnteksmeldingIBeregningsperiode(beregningsgrunnlag, iayGrunnlag, inntektsmeldinger, datoErInkludertIRelevantPeriode);
@@ -59,8 +58,8 @@ public class LønnsendringTjeneste {
                                                                                                                        Collection<InntektsmeldingDto> inntektsmeldinger) {
         BiPredicate<BeregningsgrunnlagPrStatusOgAndelDto, LocalDate> datoErInkludertIRelevantPeriode = (andel, dato) -> {
             var stp = beregningsgrunnlag.getSkjæringstidspunkt();
-            LocalDate førsteRelevanteDato = stp.minusMonths(3).withDayOfMonth(2); //lønnsendring første dag i bergningsperioden er OK, ser derfor fra og med dag 2
-            Intervall relevantPeriode = Intervall.fraOgMedTilOgMed(førsteRelevanteDato, BeregningstidspunktTjeneste.finnBeregningstidspunkt(stp));
+            var førsteRelevanteDato = stp.minusMonths(3).withDayOfMonth(2); //lønnsendring første dag i bergningsperioden er OK, ser derfor fra og med dag 2
+            var relevantPeriode = Intervall.fraOgMedTilOgMed(førsteRelevanteDato, BeregningstidspunktTjeneste.finnBeregningstidspunkt(stp));
             return relevantPeriode.inkluderer(dato);
         };
         return finnYrkesaktiviteterMedLønnsendringUtenInnteksmeldingIBeregningsperiode(beregningsgrunnlag, iayGrunnlag, inntektsmeldinger, datoErInkludertIRelevantPeriode);
@@ -71,18 +70,18 @@ public class LønnsendringTjeneste {
                                                                                             InntektArbeidYtelseGrunnlagDto iayGrunnlag,
                                                                                             Intervall periode,
                                                                                             Collection<InntektsmeldingDto> inntektsmeldinger) {
-        LocalDate skjæringstidspunkt = beregningsgrunnlag.getSkjæringstidspunkt();
+        var skjæringstidspunkt = beregningsgrunnlag.getSkjæringstidspunkt();
 
-        Optional<AktørArbeidDto> aktørArbeid = iayGrunnlag.getAktørArbeidFraRegister();
+        var aktørArbeid = iayGrunnlag.getAktørArbeidFraRegister();
 
-        List<BeregningsgrunnlagPrStatusOgAndelDto> arbeidstakerAndeler = alleArbeidstakerandelerMedBeregningsperiode(beregningsgrunnlag);
+        var arbeidstakerAndeler = alleArbeidstakerandelerMedBeregningsperiode(beregningsgrunnlag);
 
         if (aktørArbeid.isEmpty() || arbeidstakerAndeler.isEmpty()) {
             return Collections.emptyList();
         }
 
         var filter = new YrkesaktivitetFilterDto(iayGrunnlag.getArbeidsforholdInformasjon(), aktørArbeid).før(skjæringstidspunkt);
-        Collection<YrkesaktivitetDto> aktiviteterMedLønnsendring = finnAktiviteterMedLønnsendringIPerioden(filter, periode, skjæringstidspunkt);
+        var aktiviteterMedLønnsendring = finnAktiviteterMedLønnsendringIPerioden(filter, periode, skjæringstidspunkt);
         if (aktiviteterMedLønnsendring.isEmpty()) {
             return Collections.emptyList();
         }
@@ -99,11 +98,11 @@ public class LønnsendringTjeneste {
                                                                                                                    BiPredicate<BeregningsgrunnlagPrStatusOgAndelDto, LocalDate> harBeregningsperiodeSomOverlapperDato) {
         List<YrkesaktivitetDto> aktiviteterMedLønnsendring = new ArrayList<>();
         alleArbeidstakerandelerMedBeregningsperiode(beregningsgrunnlag).forEach(andel -> {
-            Optional<AktørArbeidDto> aktørArbeid = iayGrunnlag.getAktørArbeidFraRegister();
+            var aktørArbeid = iayGrunnlag.getAktørArbeidFraRegister();
             var filter = new YrkesaktivitetFilterDto(iayGrunnlag.getArbeidsforholdInformasjon(), aktørArbeid);
-            Optional<YrkesaktivitetDto> yrkesaktivitetMedLønnsendringIBeregningsperiode = finnMatchendeYrkesaktivitetMedLønnsendring(andel, filter, harBeregningsperiodeSomOverlapperDato);
+            var yrkesaktivitetMedLønnsendringIBeregningsperiode = finnMatchendeYrkesaktivitetMedLønnsendring(andel, filter, harBeregningsperiodeSomOverlapperDato);
             yrkesaktivitetMedLønnsendringIBeregningsperiode.ifPresent(ya -> {
-                boolean manglerIM = manglerInntektsmelding(inntektsmeldinger, andel);
+                var manglerIM = manglerInntektsmelding(inntektsmeldinger, andel);
                 if (manglerIM) {
                     aktiviteterMedLønnsendring.add(ya);
                 }

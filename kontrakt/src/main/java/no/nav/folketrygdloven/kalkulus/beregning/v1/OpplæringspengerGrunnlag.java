@@ -48,7 +48,7 @@ public class OpplæringspengerGrunnlag extends YtelsespesifiktGrunnlagDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        OpplæringspengerGrunnlag that = (OpplæringspengerGrunnlag) o;
+        var that = (OpplæringspengerGrunnlag) o;
         return Objects.equals(utbetalingsgradPrAktivitet, that.utbetalingsgradPrAktivitet);
     }
 

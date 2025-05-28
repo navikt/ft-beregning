@@ -34,12 +34,12 @@ public class InntektsmeldingFilter {
      * @return Liste med inntektsmeldinger {@link InntektsmeldingDto}
      */
     public List<InntektsmeldingDto> hentInntektsmeldingerBeregning(LocalDate skjæringstidspunktForOpptjening) {
-        LocalDate sistedagForInkluderteAktiviteter = BeregningstidspunktTjeneste.finnBeregningstidspunkt(skjæringstidspunktForOpptjening);
-        List<InntektsmeldingDto> inntektsmeldinger = iayGrunnlag.getInntektsmeldinger().map(InntektsmeldingAggregatDto::getInntektsmeldingerSomSkalBrukes)
+        var sistedagForInkluderteAktiviteter = BeregningstidspunktTjeneste.finnBeregningstidspunkt(skjæringstidspunktForOpptjening);
+        var inntektsmeldinger = iayGrunnlag.getInntektsmeldinger().map(InntektsmeldingAggregatDto::getInntektsmeldingerSomSkalBrukes)
             .orElse(emptyList());
 
         var filter = new YrkesaktivitetFilterDto(iayGrunnlag.getArbeidsforholdInformasjon(), iayGrunnlag.getAktørArbeidFraRegister());
-        Collection<YrkesaktivitetDto> yrkesaktiviteter = filter.getYrkesaktiviteter();
+        var yrkesaktiviteter = filter.getYrkesaktiviteter();
 
         // kan ikke filtrere når det ikke finnes yrkesaktiviteter
         if (yrkesaktiviteter.isEmpty()) {
@@ -57,9 +57,9 @@ public class InntektsmeldingFilter {
         List<InntektsmeldingDto> resultat = new ArrayList<>();
 
         inntektsmeldinger.forEach(im -> {
-            boolean skalLeggeTil = yrkesaktiviteter.stream()
+            var skalLeggeTil = yrkesaktiviteter.stream()
                 .anyMatch(y -> {
-                    boolean gjelderFor = y.gjelderFor(im);
+                    var gjelderFor = y.gjelderFor(im);
                     var ansettelsesPerioder = filter.getAnsettelsesPerioder(y);
                     return gjelderFor && ansettelsesPerioder.stream()
                         .anyMatch(ap -> ap.getPeriode().inkluderer(skjæringstidspunktet) || ap.getPeriode().getFomDato().isAfter(skjæringstidspunktet));

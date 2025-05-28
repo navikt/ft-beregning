@@ -30,7 +30,7 @@ public class FordelPeriodeModell {
 
 	// Utility metode som gir optional når man forventer at det aldri finnes mer enn 1 andel for enm status
 	public Optional<FordelAndelModell> getEnesteAndelForStatus(AktivitetStatus status) {
-		List<FordelAndelModell> andelerForStatus = getAlleAndelerForStatus(status);
+        var andelerForStatus = getAlleAndelerForStatus(status);
 		if (andelerForStatus.size() > 1) {
 			throw new IllegalStateException("Fant " + andelerForStatus.size() + " andeler for status " + status + ". Forventet maks 1");
 		}

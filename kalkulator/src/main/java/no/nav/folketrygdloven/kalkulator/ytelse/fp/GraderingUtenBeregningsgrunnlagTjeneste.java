@@ -23,7 +23,7 @@ public class GraderingUtenBeregningsgrunnlagTjeneste {
     public static List<BeregningsgrunnlagPrStatusOgAndelDto> finnAndelerMedGraderingUtenBG(BeregningsgrunnlagDto beregningsgrunnlag, AktivitetGradering aktivitetGradering) {
         List<BeregningsgrunnlagPrStatusOgAndelDto> graderingsandelerUtenBG = new ArrayList<>();
         aktivitetGradering.getAndelGradering().forEach(andelGradering -> {
-            List<BeregningsgrunnlagPrStatusOgAndelDto> andeler = finnTilsvarendeAndelITilsvarendePeriode(andelGradering, beregningsgrunnlag);
+            var andeler = finnTilsvarendeAndelITilsvarendePeriode(andelGradering, beregningsgrunnlag);
             graderingsandelerUtenBG.addAll(andeler);
         });
         return graderingsandelerUtenBG;
@@ -32,8 +32,8 @@ public class GraderingUtenBeregningsgrunnlagTjeneste {
     private static List<BeregningsgrunnlagPrStatusOgAndelDto> finnTilsvarendeAndelITilsvarendePeriode(AndelGradering andelGradering, BeregningsgrunnlagDto beregningsgrunnlag) {
         List<BeregningsgrunnlagPrStatusOgAndelDto> andeler = new ArrayList<>();
         andelGradering.getGraderinger().forEach(gradering ->{
-            Optional<BeregningsgrunnlagPeriodeDto> korrektBGPeriode = finnTilsvarendeBGPeriode(gradering, beregningsgrunnlag.getBeregningsgrunnlagPerioder());
-            Optional<BeregningsgrunnlagPrStatusOgAndelDto> korrektBGAndel = korrektBGPeriode.flatMap(p -> finnTilsvarendeAndelIPeriode(andelGradering, p));
+            var korrektBGPeriode = finnTilsvarendeBGPeriode(gradering, beregningsgrunnlag.getBeregningsgrunnlagPerioder());
+            var korrektBGAndel = korrektBGPeriode.flatMap(p -> finnTilsvarendeAndelIPeriode(andelGradering, p));
             if (korrektBGAndel.isPresent() && harIkkeTilkjentBGEtterRedusering(korrektBGAndel.get())) {
                 andeler.add(korrektBGAndel.get());
             }

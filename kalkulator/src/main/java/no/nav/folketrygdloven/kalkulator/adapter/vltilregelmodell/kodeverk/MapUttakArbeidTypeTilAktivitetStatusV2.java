@@ -9,7 +9,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.UttakArbeidType;
 public class MapUttakArbeidTypeTilAktivitetStatusV2 {
 
     public static AktivitetStatusV2 mapAktivitetStatus(AktivitetDto utbetalingsgradAktivitet) {
-        UttakArbeidType uttakArbeidType = utbetalingsgradAktivitet.getUttakArbeidType();
+        var uttakArbeidType = utbetalingsgradAktivitet.getUttakArbeidType();
         if (UttakArbeidType.ORDINÆRT_ARBEID.equals(uttakArbeidType)) {
             return AktivitetStatusV2.AT;
         }

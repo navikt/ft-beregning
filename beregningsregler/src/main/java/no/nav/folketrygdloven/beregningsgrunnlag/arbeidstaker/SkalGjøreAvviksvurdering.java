@@ -1,7 +1,6 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.YtelsesSpesifiktGrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.omp.OmsorgspengerGrunnlag;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
@@ -21,12 +20,12 @@ class SkalGjøreAvviksvurdering extends LeafSpecification<BeregningsgrunnlagPeri
         if(skalAlltidSetteAksjonspunktOmAvvik(grunnlag)){
             return ja();
         }
-        OmsorgspengerGrunnlag ompGrunnlag = (OmsorgspengerGrunnlag) grunnlag.getBeregningsgrunnlag().getYtelsesSpesifiktGrunnlag();
+        var ompGrunnlag = (OmsorgspengerGrunnlag) grunnlag.getBeregningsgrunnlag().getYtelsesSpesifiktGrunnlag();
         return ompGrunnlag.omfattesAvKap9Paragraf9() ? ja() : nei();
     }
 
     private boolean skalAlltidSetteAksjonspunktOmAvvik(BeregningsgrunnlagPeriode grunnlag){
-	    YtelsesSpesifiktGrunnlag ytelsesSpesifiktGrunnlag = grunnlag.getBeregningsgrunnlag().getYtelsesSpesifiktGrunnlag();
+        var ytelsesSpesifiktGrunnlag = grunnlag.getBeregningsgrunnlag().getYtelsesSpesifiktGrunnlag();
 	    return !(ytelsesSpesifiktGrunnlag instanceof OmsorgspengerGrunnlag);
     }
 

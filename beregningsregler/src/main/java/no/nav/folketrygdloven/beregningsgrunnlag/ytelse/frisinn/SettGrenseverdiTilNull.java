@@ -6,7 +6,6 @@ import java.util.Map;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode;
 import no.nav.fpsak.nare.evaluation.Evaluation;
-import no.nav.fpsak.nare.evaluation.node.SingleEvaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 public class SettGrenseverdiTilNull extends LeafSpecification<BeregningsgrunnlagPeriode> {
@@ -21,11 +20,11 @@ public class SettGrenseverdiTilNull extends LeafSpecification<Beregningsgrunnlag
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
         Map<String, Object> resultater = new HashMap<>();
-        BigDecimal grenseverdi = BigDecimal.ZERO;
+        var grenseverdi = BigDecimal.ZERO;
         grunnlag.setGrenseverdi(grenseverdi);
         resultater.put("grenseverdi", grenseverdi);
         grunnlag.setGrenseverdi(grenseverdi);
-        SingleEvaluation resultat = ja();
+        var resultat = ja();
         resultat.setEvaluationProperties(resultater);
         return resultat;
 

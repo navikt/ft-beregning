@@ -32,7 +32,7 @@ public class MapBesteberegningFraRegelTilVL {
 
     public static BeregningsgrunnlagDto mapTilBeregningsgrunnlag(BeregningsgrunnlagGrunnlagDto beregningsgrunnlagGrunnlag,
                                                            BesteberegningOutput output) {
-        BeregningsgrunnlagDto gammeltGrunnlag = beregningsgrunnlagGrunnlag.getBeregningsgrunnlagHvisFinnes().orElseThrow();
+        var gammeltGrunnlag = beregningsgrunnlagGrunnlag.getBeregningsgrunnlagHvisFinnes().orElseThrow();
         var nyttGrunnlag = new BeregningsgrunnlagDto(gammeltGrunnlag);
         validerIngenBesteberegningSatt(nyttGrunnlag);
         if  (output.getSkalBeregnesEtterSeksBesteMåneder()) {
@@ -44,7 +44,7 @@ public class MapBesteberegningFraRegelTilVL {
 
 
     private static void validerIngenBesteberegningSatt(BeregningsgrunnlagDto nyttGrunnlag) {
-        List<BeregningsgrunnlagPrStatusOgAndelDto> andelerMedBesteberegningSatt = nyttGrunnlag.getBeregningsgrunnlagPerioder().stream()
+        var andelerMedBesteberegningSatt = nyttGrunnlag.getBeregningsgrunnlagPerioder().stream()
                 .flatMap(p -> p.getBeregningsgrunnlagPrStatusOgAndelList().stream())
                 .filter(a -> a.getBesteberegningPrÅr() != null)
                 .collect(Collectors.toList());
@@ -55,7 +55,7 @@ public class MapBesteberegningFraRegelTilVL {
     }
 
     private static void oppdaterBeregningForAndelerIBesteberegnetGrunnlag(BeregningsgrunnlagDto nyttGrunnlag, BesteberegningOutput output) {
-        List<BesteberegnetAndel> andelListe = output.getBesteberegnetGrunnlag().getBesteberegnetAndelList();
+        var andelListe = output.getBesteberegnetGrunnlag().getBesteberegnetAndelList();
         nyttGrunnlag.getBeregningsgrunnlagPerioder()
                 .forEach(p -> andelListe
                         .forEach(a -> oppdaterAndelerMedBesteberegnetInntekt(p, a)));
@@ -70,11 +70,11 @@ public class MapBesteberegningFraRegelTilVL {
     }
 
     private static void oppdaterAndelerMedBesteberegnetInntekt(BeregningsgrunnlagPeriodeDto periode, BesteberegnetAndel a) {
-        AktivitetNøkkel aktivitetNøkkel = a.getAktivitetNøkkel();
+        var aktivitetNøkkel = a.getAktivitetNøkkel();
         if (harArbeidsgiver(a.getAktivitetNøkkel())) {
             fordelTilArbeidsandeler(periode, a);
         } else {
-            Optional<BeregningsgrunnlagPrStatusOgAndelDto> matchendeAndel = finnEnesteMatchendeAndelIPeriode(periode, aktivitetNøkkel);
+            var matchendeAndel = finnEnesteMatchendeAndelIPeriode(periode, aktivitetNøkkel);
             if (matchendeAndel.isPresent()) {
                 oppdaterBesteberegningForAndel(a.getBesteberegnetPrÅr(), matchendeAndel.get());
             } else {
@@ -84,7 +84,7 @@ public class MapBesteberegningFraRegelTilVL {
     }
 
     private static void fordelTilArbeidsandeler(BeregningsgrunnlagPeriodeDto periode, BesteberegnetAndel a) {
-        List<BeregningsgrunnlagPrStatusOgAndelDto> matchendeAndeler = finnArbeidstakerAndel(periode, a.getAktivitetNøkkel());
+        var matchendeAndeler = finnArbeidstakerAndel(periode, a.getAktivitetNøkkel());
         if (matchendeAndeler.isEmpty()) {
             leggPåDagpenger(periode, a);
         } else {
@@ -126,7 +126,7 @@ public class MapBesteberegningFraRegelTilVL {
     }
 
     private static List<BeregningsgrunnlagPrStatusOgAndelDto> finnArbeidstakerAndel(BeregningsgrunnlagPeriodeDto periode, AktivitetNøkkel aktivitetNøkkel) {
-        String identifikator = aktivitetNøkkel.getOrgnr() != null ? aktivitetNøkkel.getOrgnr() : aktivitetNøkkel.getAktørId();
+        var identifikator = aktivitetNøkkel.getOrgnr() != null ? aktivitetNøkkel.getOrgnr() : aktivitetNøkkel.getAktørId();
         return periode.getBeregningsgrunnlagPrStatusOgAndelList().stream().filter(bgAndel -> bgAndel.getArbeidsgiver().isPresent())
                 .filter(bgAndel -> bgAndel.getArbeidsgiver().get().getIdentifikator().equals(identifikator))
                 .filter(bgAndel -> bgAndel.getBgAndelArbeidsforhold().get().getArbeidsforholdRef().gjelderFor(InternArbeidsforholdRefDto.ref(aktivitetNøkkel.getArbeidsforholdId())))

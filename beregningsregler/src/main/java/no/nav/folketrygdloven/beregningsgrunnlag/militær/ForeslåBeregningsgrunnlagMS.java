@@ -25,11 +25,11 @@ class ForeslåBeregningsgrunnlagMS extends LeafSpecification<BeregningsgrunnlagP
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        BeregningsgrunnlagPrStatus andel = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.MS);
+        var andel = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.MS);
 
-        BigDecimal bruttoPåAndelenFørRegel = Optional.ofNullable(andel.getBruttoPrÅr()).orElse(BigDecimal.ZERO);
-        BigDecimal diffMellomBruttoOgMilitærkrav = grunnlag.getMinsteinntektMilitærHarKravPå().subtract(grunnlag.getBruttoPrÅr());
-        BigDecimal nyBeregnet = diffMellomBruttoOgMilitærkrav.compareTo(BigDecimal.ZERO) > 0 ? diffMellomBruttoOgMilitærkrav.add(bruttoPåAndelenFørRegel): bruttoPåAndelenFørRegel;
+        var bruttoPåAndelenFørRegel = Optional.ofNullable(andel.getBruttoPrÅr()).orElse(BigDecimal.ZERO);
+        var diffMellomBruttoOgMilitærkrav = grunnlag.getMinsteinntektMilitærHarKravPå().subtract(grunnlag.getBruttoPrÅr());
+        var nyBeregnet = diffMellomBruttoOgMilitærkrav.compareTo(BigDecimal.ZERO) > 0 ? diffMellomBruttoOgMilitærkrav.add(bruttoPåAndelenFørRegel): bruttoPåAndelenFørRegel;
         BeregningsgrunnlagPrStatus.builder(andel).medBeregnetPrÅr(nyBeregnet).build();
 
         // Sett hjemmel

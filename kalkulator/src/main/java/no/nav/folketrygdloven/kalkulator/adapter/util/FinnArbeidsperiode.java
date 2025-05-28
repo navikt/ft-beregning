@@ -40,8 +40,8 @@ public class FinnArbeidsperiode {
                 .flatMap(Collection::stream)
                 .filter(a -> !a.getPeriode().getFomDato().isAfter(skjæringstidspunkt))
                 .collect(Collectors.toList());
-        LocalDate arbeidsperiodeFom = ansettelsesPerioder.stream().map(a -> a.getPeriode().getFomDato()).min(LocalDate::compareTo).orElse(null);
-        LocalDate arbeidsperiodeTom = ansettelsesPerioder.stream().map(a -> a.getPeriode().getTomDato()).max(LocalDate::compareTo).orElse(null);
+        var arbeidsperiodeFom = ansettelsesPerioder.stream().map(a -> a.getPeriode().getFomDato()).min(LocalDate::compareTo).orElse(null);
+        var arbeidsperiodeTom = ansettelsesPerioder.stream().map(a -> a.getPeriode().getTomDato()).max(LocalDate::compareTo).orElse(null);
 
         if (erKunstig(arbeidsgiver)) {
             if (arbeidsperiodeFom == null) {
@@ -68,8 +68,8 @@ public class FinnArbeidsperiode {
     public static LocalDateTimeline<Boolean> finnAnsettelseTidslinje(Arbeidsgiver arbeidsgiver,
                                                                      InternArbeidsforholdRefDto arbeidsforholdRefDto,
                                                                      InntektArbeidYtelseGrunnlagDto iayGrunnlag, LocalDate skjæringstidspunktBeregning) {
-        YrkesaktivitetFilterDto filter = new YrkesaktivitetFilterDto(iayGrunnlag.getArbeidsforholdInformasjon(), iayGrunnlag.getAktørArbeidFraRegister());
-        Collection<YrkesaktivitetDto> yrkesaktiviteterForBeregning = filter.getYrkesaktiviteterForBeregning();
+        var filter = new YrkesaktivitetFilterDto(iayGrunnlag.getArbeidsforholdInformasjon(), iayGrunnlag.getAktørArbeidFraRegister());
+        var yrkesaktiviteterForBeregning = filter.getYrkesaktiviteterForBeregning();
         var yrkesaktiviteter = yrkesaktiviteterForBeregning.stream().filter(ya -> ya.gjelderFor(arbeidsgiver, arbeidsforholdRefDto))
                 .toList();
         var ansattTidslinje = finnAnsettelseTidslinje(yrkesaktiviteter);
@@ -94,7 +94,7 @@ public class FinnArbeidsperiode {
 
         var timeline = new LocalDateTimeline<Boolean>(List.of());
 
-        for (LocalDateTimeline<Boolean> localDateSegments : segmenterMedAnsettelse) {
+        for (var localDateSegments : segmenterMedAnsettelse) {
             timeline = timeline.combine(localDateSegments, StandardCombinators::coalesceRightHandSide, LocalDateTimeline.JoinStyle.CROSS_JOIN);
         }
 

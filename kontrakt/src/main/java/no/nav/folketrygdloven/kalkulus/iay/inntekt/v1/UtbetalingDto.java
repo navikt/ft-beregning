@@ -104,7 +104,7 @@ public class UtbetalingDto {
     public boolean isYtelseIngenArbeidsgiver() {
         var utbetalingspostList = poster.stream().filter(utbetalingsPostDto -> InntektspostType.YTELSE.equals(utbetalingsPostDto.getInntektspostType())).collect(Collectors.toList());
 
-        boolean erEnYtelse = !utbetalingspostList.isEmpty();
+        var erEnYtelse = !utbetalingspostList.isEmpty();
         return !erEnYtelse || arbeidsgiver == null;
     }
 

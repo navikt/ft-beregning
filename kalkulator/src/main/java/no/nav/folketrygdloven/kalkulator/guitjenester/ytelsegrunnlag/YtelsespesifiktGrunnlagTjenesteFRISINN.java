@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.kalkulator.guitjenester.ModellTyperMapper;
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagGUIInput;
-import no.nav.folketrygdloven.kalkulator.input.YtelsespesifiktGrunnlag;
 import no.nav.folketrygdloven.kalkulator.modell.iay.OppgittEgenNæringDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.OppgittFrilansDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.OppgittFrilansInntektDto;
@@ -34,11 +33,11 @@ public class YtelsespesifiktGrunnlagTjenesteFRISINN implements YtelsespesifiktGr
     }
 
     private FrisinnGrunnlagDto mapFrisinngrunnlag(BeregningsgrunnlagGUIInput input) {
-        YtelsespesifiktGrunnlag ytelsespesifiktGrunnlag = input.getYtelsespesifiktGrunnlag();
+        var ytelsespesifiktGrunnlag = input.getYtelsespesifiktGrunnlag();
 
-        FrisinnGrunnlag frisinngrunnlag = (FrisinnGrunnlag) ytelsespesifiktGrunnlag;
+        var frisinngrunnlag = (FrisinnGrunnlag) ytelsespesifiktGrunnlag;
 
-        FrisinnGrunnlagDto frisinnGrunnlagDto = new FrisinnGrunnlagDto();
+        var frisinnGrunnlagDto = new FrisinnGrunnlagDto();
 
         if (frisinngrunnlag.getSøkerYtelseForFrilans()) {
             frisinnGrunnlagDto.setOpplysningerFL(mapFrilansopplysninger(input));
@@ -48,11 +47,11 @@ public class YtelsespesifiktGrunnlagTjenesteFRISINN implements YtelsespesifiktGr
             frisinnGrunnlagDto.setOpplysningerSN(mapNæringsopplysninger(input));
         }
 
-        List<OpplystPeriodeDto> søktePerioder = mapSøktePerider(input);
+        var søktePerioder = mapSøktePerider(input);
         frisinnGrunnlagDto.setPerioderSøktFor(søktePerioder);
 
         FrisinnGrunnlag frisinnGrunnlag = input.getYtelsespesifiktGrunnlag();
-        Optional<OppgittOpptjeningDto> oppgitOpptjening = input.getIayGrunnlag().getOppgittOpptjening();
+        var oppgitOpptjening = input.getIayGrunnlag().getOppgittOpptjening();
         oppgitOpptjening.ifPresent(oppgittOpptjeningDto -> frisinnGrunnlagDto.setFrisinnPerioder(MapTilPerioderFRISINN.map(frisinnGrunnlag.getFrisinnPerioder(), oppgittOpptjeningDto)));
 
         frisinnGrunnlagDto.setAvslagsårsakPrPeriode(mapAvslagsårsakPerioder(input, frisinnGrunnlag, oppgitOpptjening));
@@ -74,9 +73,9 @@ public class YtelsespesifiktGrunnlagTjenesteFRISINN implements YtelsespesifiktGr
 
     private List<OpplystPeriodeDto> mapSøktePerider(BeregningsgrunnlagGUIInput input) {
         List<OpplystPeriodeDto> søktePerioder = new ArrayList<>();
-        YtelsespesifiktGrunnlag ytelsespesifiktGrunnlag = input.getYtelsespesifiktGrunnlag();
-        FrisinnGrunnlag frisinnGrunnlag = (FrisinnGrunnlag) ytelsespesifiktGrunnlag;
-        LocalDate stpBG = input.getBeregningsgrunnlag().getSkjæringstidspunkt();
+        var ytelsespesifiktGrunnlag = input.getYtelsespesifiktGrunnlag();
+        var frisinnGrunnlag = (FrisinnGrunnlag) ytelsespesifiktGrunnlag;
+        var stpBG = input.getBeregningsgrunnlag().getSkjæringstidspunkt();
         if (frisinnGrunnlag.getSøkerYtelseForNæring()) {
             søktePerioder.addAll(mapSøktePerioderForNæring(input, stpBG));
         }
@@ -87,7 +86,7 @@ public class YtelsespesifiktGrunnlagTjenesteFRISINN implements YtelsespesifiktGr
     }
 
     private List<OpplystPeriodeDto> mapSøktePerioderForFrilans(BeregningsgrunnlagGUIInput input, LocalDate stpBG) {
-        Optional<OppgittFrilansDto> oppgittFL = input.getIayGrunnlag().getOppgittOpptjening()
+        var oppgittFL = input.getIayGrunnlag().getOppgittOpptjening()
                 .flatMap(OppgittOpptjeningDto::getFrilans);
         if (oppgittFL.isEmpty()) {
             return Collections.emptyList();
@@ -99,10 +98,10 @@ public class YtelsespesifiktGrunnlagTjenesteFRISINN implements YtelsespesifiktGr
     }
 
     private List<OpplystPeriodeDto> mapSøktePerioderForNæring(BeregningsgrunnlagGUIInput input, LocalDate stpBG) {
-        List<OppgittEgenNæringDto> oppgitteNæringer = input.getIayGrunnlag().getOppgittOpptjening()
+        var oppgitteNæringer = input.getIayGrunnlag().getOppgittOpptjening()
                 .map(OppgittOpptjeningDto::getEgenNæring)
                 .orElse(Collections.emptyList());
-        List<OppgittEgenNæringDto> næringerSøktFor = oppgitteNæringer.stream()
+        var næringerSøktFor = oppgitteNæringer.stream()
                 .filter(næring -> !næring.getPeriode().getFomDato().isBefore(stpBG))
                 .collect(Collectors.toList());
         return næringerSøktFor.stream()
@@ -111,7 +110,7 @@ public class YtelsespesifiktGrunnlagTjenesteFRISINN implements YtelsespesifiktGr
     }
 
     private OpplystPeriodeDto lagSøktPeriodeDtoForFrilans(OppgittFrilansInntektDto fl) {
-        OpplystPeriodeDto dto = new OpplystPeriodeDto();
+        var dto = new OpplystPeriodeDto();
         dto.setFom(fl.getPeriode().getFomDato());
         dto.setTom(fl.getPeriode().getTomDato());
         dto.setStatusSøktFor(AktivitetStatus.FRILANSER);
@@ -119,7 +118,7 @@ public class YtelsespesifiktGrunnlagTjenesteFRISINN implements YtelsespesifiktGr
     }
 
     private OpplystPeriodeDto lagSøktPeriodeDtoForNæring(OppgittEgenNæringDto næring) {
-        OpplystPeriodeDto dto = new OpplystPeriodeDto();
+        var dto = new OpplystPeriodeDto();
         dto.setFom(næring.getPeriode().getFomDato());
         dto.setTom(næring.getPeriode().getTomDato());
         dto.setStatusSøktFor(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE);
@@ -127,12 +126,12 @@ public class YtelsespesifiktGrunnlagTjenesteFRISINN implements YtelsespesifiktGr
     }
 
     private SøknadsopplysningerDto mapNæringsopplysninger(BeregningsgrunnlagGUIInput input) {
-        LocalDate stpBg = input.getSkjæringstidspunktForBeregning();
-        List<OppgittEgenNæringDto> næringer = input.getIayGrunnlag().getOppgittOpptjening()
+        var stpBg = input.getSkjæringstidspunktForBeregning();
+        var næringer = input.getIayGrunnlag().getOppgittOpptjening()
                 .map(OppgittOpptjeningDto::getEgenNæring)
                 .orElse(Collections.emptyList());
 
-        boolean erNyoppstartetNæringsdrivende = næringer.stream().anyMatch(OppgittEgenNæringDto::getNyoppstartet);
+        var erNyoppstartetNæringsdrivende = næringer.stream().anyMatch(OppgittEgenNæringDto::getNyoppstartet);
         var oppgittLøpendeÅrsinntekt = næringer.stream()
                 .filter(en -> !stpBg.isAfter(en.getTilOgMed()))
                 .filter(en -> en.getBruttoInntekt() != null)
@@ -150,7 +149,7 @@ public class YtelsespesifiktGrunnlagTjenesteFRISINN implements YtelsespesifiktGr
                 .map(Beløp::fra)
                 .orElse(Beløp.ZERO);
 
-        SøknadsopplysningerDto dto = new SøknadsopplysningerDto();
+        var dto = new SøknadsopplysningerDto();
         dto.setErNyoppstartet(erNyoppstartetNæringsdrivende);
         dto.setOppgittÅrsinntekt(oppgittLøpendeÅrsinntekt);
         dto.setOppgittInntekt(oppgittLøpendeInntekt);
@@ -158,13 +157,13 @@ public class YtelsespesifiktGrunnlagTjenesteFRISINN implements YtelsespesifiktGr
     }
 
     private SøknadsopplysningerDto mapFrilansopplysninger(BeregningsgrunnlagGUIInput input) {
-        LocalDate stpBg = input.getSkjæringstidspunktForBeregning();
-        Boolean erNyoppstartetFrilans = input.getIayGrunnlag().getOppgittOpptjening()
+        var stpBg = input.getSkjæringstidspunktForBeregning();
+        var erNyoppstartetFrilans = input.getIayGrunnlag().getOppgittOpptjening()
                 .flatMap(OppgittOpptjeningDto::getFrilans)
                 .map(OppgittFrilansDto::getErNyoppstartet)
                 .orElse(false);
 
-        List<OppgittFrilansInntektDto> oppgittFLInntekt = input.getIayGrunnlag().getOppgittOpptjening()
+        var oppgittFLInntekt = input.getIayGrunnlag().getOppgittOpptjening()
                 .flatMap(OppgittOpptjeningDto::getFrilans)
                 .map(OppgittFrilansDto::getOppgittFrilansInntekt)
                 .orElse(Collections.emptyList());
@@ -184,7 +183,7 @@ public class YtelsespesifiktGrunnlagTjenesteFRISINN implements YtelsespesifiktGr
                 .reduce(BigDecimal::add)
                 .map(Beløp::fra)
                 .orElse(Beløp.ZERO);
-        SøknadsopplysningerDto dto = new SøknadsopplysningerDto();
+        var dto = new SøknadsopplysningerDto();
         dto.setOppgittInntekt(oppgittLøpendeInntekt);
         dto.setOppgittÅrsinntekt(oppgittLøpendeÅrsinntekt);
         dto.setErNyoppstartet(erNyoppstartetFrilans);

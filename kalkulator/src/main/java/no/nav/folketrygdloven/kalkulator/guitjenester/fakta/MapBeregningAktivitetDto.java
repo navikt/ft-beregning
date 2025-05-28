@@ -33,7 +33,7 @@ class MapBeregningAktivitetDto {
         dto.setFom(beregningAktivitet.getPeriode().getFomDato());
         dto.setTom(beregningAktivitet.getPeriode().getTomDato());
         if (!saksbehandletAktiviteter.isEmpty()) {
-            Optional<BeregningAktivitetDto> matchetAktivitet = saksbehandletAktiviteter.stream()
+            var matchetAktivitet = saksbehandletAktiviteter.stream()
                 .filter(a -> a.getNøkkel().equals(beregningAktivitet.getNøkkel())).findFirst();
             matchetAktivitet.ifPresentOrElse(aktivitet -> {
                 dto.setSkalBrukes(true);

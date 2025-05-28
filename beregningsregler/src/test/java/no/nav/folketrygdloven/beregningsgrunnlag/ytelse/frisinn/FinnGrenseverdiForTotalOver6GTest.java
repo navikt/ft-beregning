@@ -85,7 +85,7 @@ class FinnGrenseverdiForTotalOver6GTest {
 	@Test
 	void frilans_med_rest_fra_avkorting_endring_i_grenseverdi_for_neste_periode() {
 		// Arrange
-		int virkedagerFørstePeriode = 19;
+        var virkedagerFørstePeriode = 19;
 		var p1 = lagBeregningsgrunnlagPeriode(
 				0d,
 				260_000d,
@@ -93,7 +93,7 @@ class FinnGrenseverdiForTotalOver6GTest {
 				0d,
 				50d,
 				new Periode(skjæringstidspunkt, Virkedager.plusVirkedager(skjæringstidspunkt, virkedagerFørstePeriode)));
-		int antallVirkerdagerTestPeriode = 9;
+        var antallVirkerdagerTestPeriode = 9;
 		var test_periode = lagTestPeriode(p1, antallVirkerdagerTestPeriode, AktivitetStatus.ATFL);
 		lagBeregningsgrunnlag(List.of(p1, test_periode), true, true);
 
@@ -107,7 +107,7 @@ class FinnGrenseverdiForTotalOver6GTest {
 	@Test
 	void frilans_med_rest_fra_avkorting_ikke_søkt_fl_ingen_endring_i_grenseverdi_for_neste_periode() {
 		// Arrange
-		int virkedagerFørstePeriode = 19;
+        var virkedagerFørstePeriode = 19;
 		var p1 = lagBeregningsgrunnlagPeriode(
 				0d,
 				260_000d,
@@ -115,7 +115,7 @@ class FinnGrenseverdiForTotalOver6GTest {
 				0d,
 				50d,
 				new Periode(skjæringstidspunkt, Virkedager.plusVirkedager(skjæringstidspunkt, virkedagerFørstePeriode)));
-		int antallVirkerdagerTestPeriode = 9;
+        var antallVirkerdagerTestPeriode = 9;
 		var test_periode = lagTestPeriode(p1, antallVirkerdagerTestPeriode, AktivitetStatus.ATFL);
 		lagBeregningsgrunnlag(List.of(p1, test_periode), false, true);
 
@@ -129,7 +129,7 @@ class FinnGrenseverdiForTotalOver6GTest {
 	@Test
 	void næring_med_rest_fra_avkorting_endring_i_grenseverdi_for_neste_periode() {
 		// Arrange
-		int virkedagerFørstePeriode = 19;
+        var virkedagerFørstePeriode = 19;
 		var p1 = lagBeregningsgrunnlagPeriode(
 				260_000d,
 				0d,
@@ -137,7 +137,7 @@ class FinnGrenseverdiForTotalOver6GTest {
 				50d,
 				0d,
 				new Periode(skjæringstidspunkt, Virkedager.plusVirkedager(skjæringstidspunkt, virkedagerFørstePeriode)));
-		int antallVirkerdagerTestPeriode = 9;
+        var antallVirkerdagerTestPeriode = 9;
 		var test_periode = lagTestPeriode(p1, antallVirkerdagerTestPeriode, AktivitetStatus.SN);
 		lagBeregningsgrunnlag(List.of(p1, test_periode), true, true);
 
@@ -151,7 +151,7 @@ class FinnGrenseverdiForTotalOver6GTest {
 	@Test
 	void næring_med_rest_fra_avkorting_ikke_søkt_næring_ingen_endring_i_grenseverdi_for_neste_periode() {
 		// Arrange
-		int virkedagerFørstePeriode = 19;
+        var virkedagerFørstePeriode = 19;
 		var p1 = lagBeregningsgrunnlagPeriode(
 				260_000d,
 				0d,
@@ -159,7 +159,7 @@ class FinnGrenseverdiForTotalOver6GTest {
 				50d,
 				0d,
 				new Periode(skjæringstidspunkt, Virkedager.plusVirkedager(skjæringstidspunkt, virkedagerFørstePeriode)));
-		int antallVirkerdagerTestPeriode = 9;
+        var antallVirkerdagerTestPeriode = 9;
 		var test_periode = lagTestPeriode(p1, antallVirkerdagerTestPeriode, AktivitetStatus.SN);
 		lagBeregningsgrunnlag(List.of(p1, test_periode), true, false);
 
@@ -173,7 +173,7 @@ class FinnGrenseverdiForTotalOver6GTest {
 	@Test
 	void tester_at_fl_sn_uttak_på_sn_rest_overføres_til_neste_periode() {
 		// Arrange
-		int virkedagerFørstePeriode = 12;
+        var virkedagerFørstePeriode = 12;
 		var p1 = lagBeregningsgrunnlagPeriode(
 				200_000d,
 				300_000d,
@@ -181,7 +181,7 @@ class FinnGrenseverdiForTotalOver6GTest {
 				40.9d,
 				0d,
 				new Periode(skjæringstidspunkt, Virkedager.plusVirkedager(skjæringstidspunkt, virkedagerFørstePeriode)));
-		int antallVirkerdagerTestPeriode = 10;
+        var antallVirkerdagerTestPeriode = 10;
 		var test_periode = lagTestPeriode(p1, antallVirkerdagerTestPeriode, AktivitetStatus.SN);
 		lagBeregningsgrunnlag(List.of(p1, test_periode), true, true);
 
@@ -202,7 +202,7 @@ class FinnGrenseverdiForTotalOver6GTest {
 				40.9d,
 				0d,
 				new Periode(skjæringstidspunkt, LocalDate.of(2020, 4, 30)));
-		int antallVirkerdagerTestPeriode = 10;
+        var antallVirkerdagerTestPeriode = 10;
 		var test_periode = lagTestPeriode(p1, antallVirkerdagerTestPeriode, AktivitetStatus.SN);
 		lagBeregningsgrunnlag(List.of(p1, test_periode), true, true);
 
@@ -215,7 +215,7 @@ class FinnGrenseverdiForTotalOver6GTest {
 
 
 	private void kjørRegel(BeregningsgrunnlagPeriode grunnlag) {
-		FinnGrenseverdiForTotalOver6G grenseregel = new FinnGrenseverdiForTotalOver6G();
+        var grenseregel = new FinnGrenseverdiForTotalOver6G();
 		grenseregel.evaluate(grunnlag);
 	}
 
@@ -225,7 +225,7 @@ class FinnGrenseverdiForTotalOver6GTest {
 	                                                               Double snUtbetalingsgrad,
 	                                                               Double flUtbetalingsgrad,
 	                                                               Periode periode) {
-		BeregningsgrunnlagPeriode.Builder periodeBuilder = BeregningsgrunnlagPeriode.builder()
+        var periodeBuilder = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(periode);
 		byggSN(snInntektPrÅr, periodeBuilder, snUtbetalingsgrad);
 		byggATFL(frilansInntektPrÅr, arbeidsinntektPrÅr, periodeBuilder, flUtbetalingsgrad);
@@ -233,9 +233,9 @@ class FinnGrenseverdiForTotalOver6GTest {
 	}
 
 	private BeregningsgrunnlagPeriode lagTestPeriode(BeregningsgrunnlagPeriode periode, int virkedager, AktivitetStatus statusSøktFor) {
-		LocalDate tom = periode.getBeregningsgrunnlagPeriode().getTom();
-		Periode p = new Periode(tom.plusDays(1), Virkedager.plusVirkedager(tom.plusDays(1), virkedager));
-		BeregningsgrunnlagPeriode.Builder periodeBuilder = BeregningsgrunnlagPeriode.builder().medPeriode(p);
+        var tom = periode.getBeregningsgrunnlagPeriode().getTom();
+        var p = new Periode(tom.plusDays(1), Virkedager.plusVirkedager(tom.plusDays(1), virkedager));
+        var periodeBuilder = BeregningsgrunnlagPeriode.builder().medPeriode(p);
 		if (AktivitetStatus.ATFL.equals(statusSøktFor)) {
 			byggATFL(0d, 0d, periodeBuilder, 50d);
 		} else if (AktivitetStatus.SN.equals(statusSøktFor)) {
@@ -270,10 +270,10 @@ class FinnGrenseverdiForTotalOver6GTest {
 
 	private void byggATFL(Double frilansInntektPrÅr, Double arbeidsinntektPrÅr, BeregningsgrunnlagPeriode.Builder periodeBuilder, Double flUtbetalingsgrad) {
 		if (frilansInntektPrÅr != null || arbeidsinntektPrÅr != null) {
-			BeregningsgrunnlagPrStatus.Builder atflStatusBuilder = BeregningsgrunnlagPrStatus.builder()
+            var atflStatusBuilder = BeregningsgrunnlagPrStatus.builder()
 					.medAktivitetStatus(AktivitetStatus.ATFL);
 			if (frilansInntektPrÅr != null) {
-				BeregningsgrunnlagPrArbeidsforhold flAndel = BeregningsgrunnlagPrArbeidsforhold.builder()
+                var flAndel = BeregningsgrunnlagPrArbeidsforhold.builder()
 						.medArbeidsforhold(Arbeidsforhold.frilansArbeidsforhold())
 						.medBruttoPrÅr(BigDecimal.valueOf(frilansInntektPrÅr))
 						.medAndelNr(2L)
@@ -283,7 +283,7 @@ class FinnGrenseverdiForTotalOver6GTest {
 				atflStatusBuilder.medArbeidsforhold(flAndel);
 			}
 			if (arbeidsinntektPrÅr != null) {
-				BeregningsgrunnlagPrArbeidsforhold arbfor = BeregningsgrunnlagPrArbeidsforhold.builder()
+                var arbfor = BeregningsgrunnlagPrArbeidsforhold.builder()
 						.medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR))
 						.medBruttoPrÅr(BigDecimal.valueOf(arbeidsinntektPrÅr))
 						.medAndelNr(3L)

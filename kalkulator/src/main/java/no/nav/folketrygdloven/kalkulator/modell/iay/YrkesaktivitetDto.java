@@ -89,8 +89,8 @@ public class YrkesaktivitetDto {
      * @return true hvis arbeidsgiver og arbeidsforholdRef macther
      */
     public boolean gjelderFor(Arbeidsgiver arbeidsgiver, InternArbeidsforholdRefDto arbeidsforholdRef) {
-        boolean gjelderForArbeidsgiver = Objects.equals(getArbeidsgiver(), arbeidsgiver);
-        boolean gjelderFor = gjelderForArbeidsgiver && getArbeidsforholdRef().gjelderFor(arbeidsforholdRef);
+        var gjelderForArbeidsgiver = Objects.equals(getArbeidsgiver(), arbeidsgiver);
+        var gjelderFor = gjelderForArbeidsgiver && getArbeidsforholdRef().gjelderFor(arbeidsforholdRef);
         return gjelderFor;
     }
 
@@ -153,7 +153,7 @@ public class YrkesaktivitetDto {
         } else if (!(obj instanceof YrkesaktivitetDto)) {
             return false;
         }
-        YrkesaktivitetDto other = (YrkesaktivitetDto) obj;
+        var other = (YrkesaktivitetDto) obj;
         return Objects.equals(this.getArbeidsforholdRef(), other.getArbeidsforholdRef()) &&
                 Objects.equals(this.getArbeidType(), other.getArbeidType()) &&
                 Objects.equals(this.getArbeidsgiver(), other.getArbeidsgiver());

@@ -33,7 +33,7 @@ public class Virkedager {
             throw new IllegalArgumentException("Utviklerfeil: fom " + fom + " kan ikke være før tom " + tom);
         }
 
-        int varighetDager = (int) Periode.of(fom, tom).getVarighetDager();
+        var varighetDager = (int) Periode.of(fom, tom).getVarighetDager();
         if (varighetDager <= 2 && erHelg(fom) && erHelg(tom)) {
             return varighetDager;
         }
@@ -55,13 +55,13 @@ public class Virkedager {
     private static int beregnVirkedager(LocalDate fom, LocalDate tom) {
         try {
             // Utvid til nærmeste mandag tilbake i tid fra og med begynnelse (fom) (0-6 dager)
-            int padBefore = fom.getDayOfWeek().getValue() - DayOfWeek.MONDAY.getValue();
+            var padBefore = fom.getDayOfWeek().getValue() - DayOfWeek.MONDAY.getValue();
             // Utvid til nærmeste søndag fram i tid fra og med slutt (tom) (0-6 dager)
-            int padAfter = DayOfWeek.SUNDAY.getValue() - tom.getDayOfWeek().getValue();
+            var padAfter = DayOfWeek.SUNDAY.getValue() - tom.getDayOfWeek().getValue();
             // Antall virkedager i perioden utvidet til hele uker
-            int virkedagerPadded = toIntExact(ChronoUnit.WEEKS.between(fom.minusDays(padBefore), tom.plusDays(padAfter).plusDays(1)) * VIRKEDAGER_PR_UKE);
+            var virkedagerPadded = toIntExact(ChronoUnit.WEEKS.between(fom.minusDays(padBefore), tom.plusDays(padAfter).plusDays(1)) * VIRKEDAGER_PR_UKE);
             // Antall virkedager i utvidelse
-            int virkedagerPadding = Math.min(padBefore, VIRKEDAGER_PR_UKE) + Math.max(padAfter - HELGEDAGER_PR_UKE, 0);
+            var virkedagerPadding = Math.min(padBefore, VIRKEDAGER_PR_UKE) + Math.max(padAfter - HELGEDAGER_PR_UKE, 0);
             // Virkedager i perioden uten virkedagene fra utvidelse
             return virkedagerPadded - virkedagerPadding;
         } catch (ArithmeticException e) {
@@ -70,10 +70,10 @@ public class Virkedager {
     }
 
     public static LocalDate plusVirkedager(LocalDate fom, int virkedager) {
-        int uker = virkedager / VIRKEDAGER_PR_UKE;
-        int dager = virkedager % VIRKEDAGER_PR_UKE;
+        var uker = virkedager / VIRKEDAGER_PR_UKE;
+        var dager = virkedager % VIRKEDAGER_PR_UKE;
 
-        LocalDate resultat = fom.plusWeeks(uker);
+        var resultat = fom.plusWeeks(uker);
 
         while (dager > 0 || erHelg(resultat)) {
             if (!erHelg(resultat)) {

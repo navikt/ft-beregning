@@ -36,12 +36,12 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
     @Test
     void skalOppretteRegelmerknadForAvslagNårSNErUnderTreKvartG() {
         //Arrange
-        double beregnetPrÅr = GRUNNBELØP_2019 * 0.74;
-        Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(beregnetPrÅr, null, null);
-        BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var beregnetPrÅr = GRUNNBELØP_2019 * 0.74;
+        var beregningsgrunnlag = lagBeregningsgrunnlag(beregnetPrÅr, null, null);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         //Act
-        RegelResultat resultat = kjørRegel(grunnlag);
+        var resultat = kjørRegel(grunnlag);
 
         //Assert
         assertThat(resultat.merknader().stream().map(RegelMerknad::utfallÅrsak)).containsOnly(BeregningUtfallÅrsak.AVSLAG_UNDER_TREKVART_G);
@@ -51,12 +51,12 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
     @Test
     void skalIkkeOppretteRegelmerknadForAvslagNårSNErLikTreKvartG() {
         //Arrange
-        double beregnetPrÅr = GRUNNBELØP_2019 * 0.75;
-        Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(beregnetPrÅr, null, null);
-        BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var beregnetPrÅr = GRUNNBELØP_2019 * 0.75;
+        var beregningsgrunnlag = lagBeregningsgrunnlag(beregnetPrÅr, null, null);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         //Act
-        RegelResultat resultat = kjørRegel(grunnlag);
+        var resultat = kjørRegel(grunnlag);
 
         //Assert
         assertThat(resultat.merknader()).isEmpty();
@@ -66,12 +66,12 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
     @Test
     void skalIkkeOppretteRegelmerknadForAvslagNårSNErOverTreKvartG() {
         //Arrange
-        double beregnetPrÅr = GRUNNBELØP_2019 * 0.76;
-        Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(beregnetPrÅr, null, null);
-        BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var beregnetPrÅr = GRUNNBELØP_2019 * 0.76;
+        var beregningsgrunnlag = lagBeregningsgrunnlag(beregnetPrÅr, null, null);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         //Act
-        RegelResultat resultat = kjørRegel(grunnlag);
+        var resultat = kjørRegel(grunnlag);
 
         //Assert
         assertThat(resultat.merknader()).isEmpty();
@@ -81,12 +81,12 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
     @Test
     void skalOppretteRegelmerknadForAvslagNårFLErUnderTreKvartG() {
         //Arrange
-        double beregnetPrÅr = GRUNNBELØP_2019 * 0.74;
-        Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(null, beregnetPrÅr, null);
-        BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var beregnetPrÅr = GRUNNBELØP_2019 * 0.74;
+        var beregningsgrunnlag = lagBeregningsgrunnlag(null, beregnetPrÅr, null);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         //Act
-        RegelResultat resultat = kjørRegel(grunnlag);
+        var resultat = kjørRegel(grunnlag);
 
         //Assert
 	    assertThat(resultat.merknader().stream().map(RegelMerknad::utfallÅrsak)).containsOnly(BeregningUtfallÅrsak.AVSLAG_UNDER_TREKVART_G);
@@ -96,12 +96,12 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
     @Test
     void skalIkkeOppretteRegelmerknadForAvslagNårFLErLikTreKvartG() {
         //Arrange
-        double beregnetPrÅr = GRUNNBELØP_2019 * 0.75;
-        Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(null, beregnetPrÅr, null);
-        BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var beregnetPrÅr = GRUNNBELØP_2019 * 0.75;
+        var beregningsgrunnlag = lagBeregningsgrunnlag(null, beregnetPrÅr, null);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         //Act
-        RegelResultat resultat = kjørRegel(grunnlag);
+        var resultat = kjørRegel(grunnlag);
 
         //Assert
         assertThat(resultat.merknader()).isEmpty();
@@ -111,12 +111,12 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
     @Test
     void skalIkkeOppretteRegelmerknadForAvslagNårFLErOverTreKvartG() {
         //Arrange
-        double beregnetPrÅr = GRUNNBELØP_2019 * 0.76;
-        Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(null, beregnetPrÅr, null);
-        BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var beregnetPrÅr = GRUNNBELØP_2019 * 0.76;
+        var beregningsgrunnlag = lagBeregningsgrunnlag(null, beregnetPrÅr, null);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         //Act
-        RegelResultat resultat = kjørRegel(grunnlag);
+        var resultat = kjørRegel(grunnlag);
 
         //Assert
         assertThat(resultat.merknader()).isEmpty();
@@ -126,14 +126,14 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
     @Test
     void skalOppretteRegelmerknadForAvslagNårFLOgSNErUnderTreKvartG() {
         //Arrange
-        double beregnetPrÅrFL = GRUNNBELØP_2019 * 0.5;
-        double beregnetPrÅrSN = GRUNNBELØP_2019 * 0.15;
+        var beregnetPrÅrFL = GRUNNBELØP_2019 * 0.5;
+        var beregnetPrÅrSN = GRUNNBELØP_2019 * 0.15;
 
-        Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(beregnetPrÅrSN, beregnetPrÅrFL, null);
-        BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var beregningsgrunnlag = lagBeregningsgrunnlag(beregnetPrÅrSN, beregnetPrÅrFL, null);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         //Act
-        RegelResultat resultat = kjørRegel(grunnlag);
+        var resultat = kjørRegel(grunnlag);
 
         //Assert
 	    assertThat(resultat.merknader().stream().map(RegelMerknad::utfallÅrsak)).containsOnly(BeregningUtfallÅrsak.AVSLAG_UNDER_TREKVART_G);
@@ -143,14 +143,14 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
     @Test
     void skalIkkeOppretteRegelmerknadForAvslagNårFLOgSNErLikTreKvartG() {
         //Arrange
-        double beregnetPrÅrFL = GRUNNBELØP_2019 * 0.5;
-        double beregnetPrÅrSN = GRUNNBELØP_2019 * 0.25;
+        var beregnetPrÅrFL = GRUNNBELØP_2019 * 0.5;
+        var beregnetPrÅrSN = GRUNNBELØP_2019 * 0.25;
 
-        Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(beregnetPrÅrSN, beregnetPrÅrFL, null);
-        BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var beregningsgrunnlag = lagBeregningsgrunnlag(beregnetPrÅrSN, beregnetPrÅrFL, null);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         //Act
-        RegelResultat resultat = kjørRegel(grunnlag);
+        var resultat = kjørRegel(grunnlag);
 
         //Assert
         assertThat(resultat.merknader()).isEmpty();
@@ -160,13 +160,13 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
     @Test
     void skalIkkeOppretteRegelmerknadForAvslagNårFLOgSNErOverTreKvartGFLErUnder() {
         //Arrange
-        double beregnetPrÅrFL = GRUNNBELØP_2019 * 0.5;
+        var beregnetPrÅrFL = GRUNNBELØP_2019 * 0.5;
         double beregnetPrÅrSN = GRUNNBELØP_2019;
-        Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(beregnetPrÅrSN, beregnetPrÅrFL, null);
-        BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var beregningsgrunnlag = lagBeregningsgrunnlag(beregnetPrÅrSN, beregnetPrÅrFL, null);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         //Act
-        RegelResultat resultat = kjørRegel(grunnlag);
+        var resultat = kjørRegel(grunnlag);
 
         //Assert
         assertThat(resultat.merknader()).isEmpty();
@@ -178,11 +178,11 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
         //Arrange
         double beregnetPrÅrFL = GRUNNBELØP_2019;
         double beregnetPrÅrSN = GRUNNBELØP_2019;
-        Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(beregnetPrÅrSN, beregnetPrÅrFL, null);
-        BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var beregningsgrunnlag = lagBeregningsgrunnlag(beregnetPrÅrSN, beregnetPrÅrFL, null);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         //Act
-        RegelResultat resultat = kjørRegel(grunnlag);
+        var resultat = kjørRegel(grunnlag);
 
         //Assert
         assertThat(resultat.merknader()).isEmpty();
@@ -192,13 +192,13 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
     @Test
     void skalOppretteRegelmerknadForAvslagNårSNErUnderTreKvartGTotalsumErOver() {
         //Arrange
-        double beregnetPrÅrSN = GRUNNBELØP_2019 * 0.74;
-        double beregnetPrÅrAT = GRUNNBELØP_2019 * 0.5;
-        Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(beregnetPrÅrSN, null, beregnetPrÅrAT);
-        BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var beregnetPrÅrSN = GRUNNBELØP_2019 * 0.74;
+        var beregnetPrÅrAT = GRUNNBELØP_2019 * 0.5;
+        var beregningsgrunnlag = lagBeregningsgrunnlag(beregnetPrÅrSN, null, beregnetPrÅrAT);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         //Act
-        RegelResultat resultat = kjørRegel(grunnlag);
+        var resultat = kjørRegel(grunnlag);
 
         //Assert
 	    assertThat(resultat.merknader().stream().map(RegelMerknad::utfallÅrsak)).containsOnly(BeregningUtfallÅrsak.AVSLAG_UNDER_TREKVART_G);
@@ -208,13 +208,13 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
     @Test
     void skalOppretteRegelmerknadForAvslagNårFLErUnderTreKvartGTotalsumErOver() {
         //Arrange
-        double beregnetPrÅrFL = GRUNNBELØP_2019 * 0.74;
-        double beregnetPrÅrAT = GRUNNBELØP_2019 * 0.5;
-        Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(null, beregnetPrÅrFL, beregnetPrÅrAT);
-        BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var beregnetPrÅrFL = GRUNNBELØP_2019 * 0.74;
+        var beregnetPrÅrAT = GRUNNBELØP_2019 * 0.5;
+        var beregningsgrunnlag = lagBeregningsgrunnlag(null, beregnetPrÅrFL, beregnetPrÅrAT);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         //Act
-        RegelResultat resultat = kjørRegel(grunnlag);
+        var resultat = kjørRegel(grunnlag);
 
         //Assert
 	    assertThat(resultat.merknader().stream().map(RegelMerknad::utfallÅrsak)).containsOnly(BeregningUtfallÅrsak.AVSLAG_UNDER_TREKVART_G);
@@ -224,13 +224,13 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
     @Test
     void skalOppretteRegelmerknadForAvslagNårFLErUnderTreKvartGTATErOver() {
         //Arrange
-        double beregnetPrÅrFL = GRUNNBELØP_2019 * 0.74;
+        var beregnetPrÅrFL = GRUNNBELØP_2019 * 0.74;
         double beregnetPrÅrAT = GRUNNBELØP_2019;
-        Beregningsgrunnlag beregningsgrunnlag = lagBeregningsgrunnlag(null, beregnetPrÅrFL, beregnetPrÅrAT);
-        BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var beregningsgrunnlag = lagBeregningsgrunnlag(null, beregnetPrÅrFL, beregnetPrÅrAT);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         //Act
-        RegelResultat resultat = kjørRegel(grunnlag);
+        var resultat = kjørRegel(grunnlag);
 
         //Assert
 	    assertThat(resultat.merknader().stream().map(RegelMerknad::utfallÅrsak)).containsOnly(BeregningUtfallÅrsak.AVSLAG_UNDER_TREKVART_G);
@@ -242,11 +242,11 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
     }
 
     private Beregningsgrunnlag lagBeregningsgrunnlag(Double snInntektPrÅr, Double frilansInntektPrÅr, Double arbeidsinntektPrÅr) {
-        BeregningsgrunnlagPeriode.Builder periodeBuilder = BeregningsgrunnlagPeriode.builder()
+        var periodeBuilder = BeregningsgrunnlagPeriode.builder()
             .medPeriode(new Periode(skjæringstidspunkt, null));
         byggSN(snInntektPrÅr, periodeBuilder);
         byggATFL(frilansInntektPrÅr, arbeidsinntektPrÅr, periodeBuilder);
-        BeregningsgrunnlagPeriode periode = periodeBuilder.build();
+        var periode = periodeBuilder.build();
         return Beregningsgrunnlag.builder()
             .medInntektsgrunnlag(new Inntektsgrunnlag())
             .medGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2019))
@@ -270,7 +270,7 @@ class RegelVurderBeregningsgrunnlagFRISINNTest {
 
     private void byggATFL(Double frilansInntektPrÅr, Double arbeidsinntektPrÅr, BeregningsgrunnlagPeriode.Builder periodeBuilder) {
         if (frilansInntektPrÅr != null || arbeidsinntektPrÅr != null) {
-            BeregningsgrunnlagPrStatus.Builder atflStatusBuilder = BeregningsgrunnlagPrStatus.builder()
+            var atflStatusBuilder = BeregningsgrunnlagPrStatus.builder()
                 .medAktivitetStatus(AktivitetStatus.ATFL);
             if (frilansInntektPrÅr != null) {
                 atflStatusBuilder.medArbeidsforhold(BeregningsgrunnlagPrArbeidsforhold.builder()

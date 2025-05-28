@@ -64,7 +64,7 @@ public class InntektsmeldingAggregatDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || !(o instanceof InntektsmeldingAggregatDto)) return false;
-        InntektsmeldingAggregatDto that = (InntektsmeldingAggregatDto) o;
+        var that = (InntektsmeldingAggregatDto) o;
         return Objects.equals(inntektsmeldinger, that.inntektsmeldinger);
     }
 

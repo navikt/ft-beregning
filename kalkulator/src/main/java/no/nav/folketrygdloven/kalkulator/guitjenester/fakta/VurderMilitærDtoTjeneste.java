@@ -1,9 +1,6 @@
 package no.nav.folketrygdloven.kalkulator.guitjenester.fakta;
 
-import java.util.List;
-
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagGUIInput;
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatusDto;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.FaktaOmBeregningDto;
@@ -12,8 +9,8 @@ import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.Vurder
 public class VurderMilitærDtoTjeneste {
 
     public void lagDto(BeregningsgrunnlagGUIInput input, FaktaOmBeregningDto faktaOmBeregningDto) {
-        List<BeregningsgrunnlagAktivitetStatusDto> aktivitetStatuser = input.getBeregningsgrunnlag().getAktivitetStatuser();
-        BeregningsgrunnlagTilstand aktivTilstand = input.getBeregningsgrunnlagGrunnlag().getBeregningsgrunnlagTilstand();
+        var aktivitetStatuser = input.getBeregningsgrunnlag().getAktivitetStatuser();
+        var aktivTilstand = input.getBeregningsgrunnlagGrunnlag().getBeregningsgrunnlagTilstand();
         VurderMilitærDto dto;
         if (aktivTilstand.erFør(BeregningsgrunnlagTilstand.KOFAKBER_UT)) {
             dto = new VurderMilitærDto(null);

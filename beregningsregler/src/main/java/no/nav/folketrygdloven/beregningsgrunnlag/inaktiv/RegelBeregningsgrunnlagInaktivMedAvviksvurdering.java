@@ -42,47 +42,47 @@ public class RegelBeregningsgrunnlagInaktivMedAvviksvurdering implements RuleSer
 	@SuppressWarnings("unchecked")
 	@Override
 	public Specification<BeregningsgrunnlagPeriode> getSpecification() {
-		Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
+        var rs = new Ruleset<BeregningsgrunnlagPeriode>();
 
 //      FP_BR 2.7 Fastsette beregnet pr år
 		Specification<BeregningsgrunnlagPeriode> fastsettBeregnetPrÅr = new FastsettBeregnetPrÅr(AktivitetStatus.BA);
 
 //      FP_BR 2.6 Opprette regelmerknad for å fastsette brutto_pr_aar manuelt
-		Specification<BeregningsgrunnlagPeriode> opprettRegelmerknad =
+        var opprettRegelmerknad =
 				rs.beregningsRegel("BR_8_47_4", "Opprett regelmerknad", fastsettBeregnetPrÅr,
 						new IkkeBeregnet(new BeregningUtfallMerknad(BeregningUtfallÅrsak.VARIG_ENDRING_OG_AVVIK_STØRRE_ENN_25_PROSENT_MIDLERTIDIG_INAKTIV)));
 
 //      FP_BR 2.5 Er avvik > 25 %
-		Specification<BeregningsgrunnlagPeriode> sjekkOmDifferanseStørreEnn25Prosent =
+        var sjekkOmDifferanseStørreEnn25Prosent =
 				rs.beregningHvisRegel(new SjekkOmDifferanseStørreEnn25Prosent(AktivitetStatus.BA), opprettRegelmerknad, fastsettBeregnetPrÅr);
 
 //      FP_BR 2.4 Fastsett sammenligningsgrunnlag og beregn avvik
-		Specification<BeregningsgrunnlagPeriode> beregnAvvik =
+        var beregnAvvik =
 				rs.beregningsRegel("BR_8_47_3", "Fastsett sammenligningsgrunnlag og beregn avvik",
 						new FastsettSammenligningsgrunnlagForAktivitetstatus(AktivitetStatus.BA), sjekkOmDifferanseStørreEnn25Prosent);
 
 		// Første beregningsgrunnlagsperiode? Sammenligninggrunnlag skal fastsettes og sjekkes mot bare om det er første periode
-		Specification<BeregningsgrunnlagPeriode> sjekkOmFørstePeriode =
+        var sjekkOmFørstePeriode =
 				rs.beregningHvisRegel(new SjekkOmFørsteBeregningsgrunnlagsperiode(), beregnAvvik, fastsettBeregnetPrÅr);
 
 //      FP_BR 2.3/2.3.3 Har bruker oppgitt varig endring eller nyoppstartet virksomhet?
-		Specification<BeregningsgrunnlagPeriode> sjekkOmInnrapportertInntektVedSkjæringstidspunkt =
+        var sjekkOmInnrapportertInntektVedSkjæringstidspunkt =
 				rs.beregningHvisRegel(new SjekkOmBrukerHarRapporterteInntekterVedSkjæringstidspunkt(), sjekkOmFørstePeriode, fastsettBeregnetPrÅr);
 
 		//      Beregn beregningsgrunnlag
-		Specification<BeregningsgrunnlagPeriode> beregnBrutto =
+        var beregnBrutto =
 				rs.beregningsRegel("BR_8_47_2", "Beregn brutto beregningsgrunnlag brukers andel",
 						new BeregnBruttoBeregningsgrunnlagFraPGI(AktivitetStatus.BA), sjekkOmInnrapportertInntektVedSkjæringstidspunkt);
 
 //      Har saksbehandler fastsatt beregningsgrunnlaget manuelt?
-		Specification<BeregningsgrunnlagPeriode> sjekkOmManueltFastsattInntekt =
+        var sjekkOmManueltFastsattInntekt =
 				rs.beregningHvisRegel(new SjekkOmManueltFastsattBeregningsgrunnlagForAktivitetstatus(AktivitetStatus.BA), sjekkOmInnrapportertInntektVedSkjæringstidspunkt,
 						beregnBrutto);
 
 //      Beregn gjennomsnittlig PGI
 //      Beregn oppjustert inntekt for årene i beregningsperioden
 //      Fastsett beregningsperiode
-		Specification<BeregningsgrunnlagPeriode> foreslåBeregningsgrunnlagForBrukersAndel =
+        var foreslåBeregningsgrunnlagForBrukersAndel =
 				rs.beregningsRegel("BR_8_47_1", "Foreslå beregningsgrunnlag for brukers andel",
 						Arrays.asList(new FastsettBeregningsperiodeForAktivitetstatus(AktivitetStatus.BA),
 								new SettHjemmelInaktiv(),

@@ -37,11 +37,11 @@ public class InntektsmeldingDto {
         this.refusjonBeløpPerMnd = inntektsmelding.getRefusjonBeløpPerMnd();
         this.refusjonOpphører = inntektsmelding.getRefusjonOpphører();
         this.naturalYtelser = inntektsmelding.getNaturalYtelser().stream().map(n -> {
-            final NaturalYtelseDto naturalYtelse = new NaturalYtelseDto(n);
+            final var naturalYtelse = new NaturalYtelseDto(n);
             return naturalYtelse;
         }).collect(Collectors.toList());
         this.endringerRefusjon = inntektsmelding.getEndringerRefusjon().stream().map(r -> {
-            final RefusjonDto refusjon = new RefusjonDto(r);
+            final var refusjon = new RefusjonDto(r);
             return refusjon;
         }).collect(Collectors.toList());
         this.journalpostId = inntektsmelding.getJournalpostId();
@@ -188,7 +188,7 @@ public class InntektsmeldingDto {
         if (o == null || !(o instanceof InntektsmeldingDto)) {
             return false;
         }
-        InntektsmeldingDto entitet = (InntektsmeldingDto) o;
+        var entitet = (InntektsmeldingDto) o;
         return Objects.equals(getArbeidsgiver(), entitet.getArbeidsgiver())
             && Objects.equals(getArbeidsforholdRef(), entitet.getArbeidsforholdRef());
     }

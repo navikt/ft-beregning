@@ -30,8 +30,8 @@ public final class FinnAlleredeUtbetaltTom {
     }
 
     private static LocalDate finnSisteMuligeUtbetalingsdag() {
-        LocalDate idag = LocalDate.now();
-        int utbetalingsdagIMåned = finnUtbetalingsdagForMåned(idag.getMonth());
+        var idag = LocalDate.now();
+        var utbetalingsdagIMåned = finnUtbetalingsdagForMåned(idag.getMonth());
         if (idag.getDayOfMonth() > utbetalingsdagIMåned) {
             return idag.with(TemporalAdjusters.lastDayOfMonth());
         } else {

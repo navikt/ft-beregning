@@ -9,7 +9,6 @@ import java.time.Month;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
@@ -40,7 +39,7 @@ class IdentifiserPerioderForRefusjonTest {
 				.build();
 
 		// Act
-		Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(
+        var periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(
 				im,
 				new LocalDateTimeline<>(Collections.emptyList()), new HashMap<>());
 
@@ -57,11 +56,11 @@ class IdentifiserPerioderForRefusjonTest {
 				.build();
 
 		// Act
-		Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im, godkjentFra(SKJÆRINGSTIDSPUNKT), new HashMap<>());
+        var periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im, godkjentFra(SKJÆRINGSTIDSPUNKT), new HashMap<>());
 
 		// Assert
 		assertThat(periodesplitter).hasSize(1);
-		PeriodeSplittData periodeSplitt = periodesplitter.iterator().next();
+        var periodeSplitt = periodesplitter.iterator().next();
 		assertPeriodeSplitt(periodeSplitt, im, SKJÆRINGSTIDSPUNKT, PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV, 10);
 	}
 
@@ -81,8 +80,8 @@ class IdentifiserPerioderForRefusjonTest {
 	@Test
 	void refusjonFraSenereDato() {
 		// Arrange
-		LocalDate endringFom = LocalDate.of(2019, Month.JANUARY, 26);
-		ArbeidsforholdOgInntektsmelding im = ArbeidsforholdOgInntektsmelding.builder()
+        var endringFom = LocalDate.of(2019, Month.JANUARY, 26);
+        var im = ArbeidsforholdOgInntektsmelding.builder()
 				.medStartdatoPermisjon(SKJÆRINGSTIDSPUNKT)
 				.medRefusjonskrav(List.of(
 						new Refusjonskrav(BigDecimal.ZERO, SKJÆRINGSTIDSPUNKT, endringFom.minusDays(1)),
@@ -91,7 +90,7 @@ class IdentifiserPerioderForRefusjonTest {
 				.build();
 
 		// Act
-		Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im,
+        var periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im,
 				godkjennIAllePerioder(im.getRefusjoner()),
 				new HashMap<>());
 
@@ -110,8 +109,8 @@ class IdentifiserPerioderForRefusjonTest {
 	}
 
 	private LocalDateTimeline<Utfall> tidslinjeMedAvslåttOgGodkjent(List<Periode> godkjentPerioder, List<Periode> avslåttPerioder) {
-		LocalDateTimeline<Utfall> godkjentTimeline = godkjennIPerioder(godkjentPerioder);
-		LocalDateTimeline<Utfall> avslåttTimeline = avslåIPerioder(avslåttPerioder);
+        var godkjentTimeline = godkjennIPerioder(godkjentPerioder);
+        var avslåttTimeline = avslåIPerioder(avslåttPerioder);
 		return godkjentTimeline.combine(avslåttTimeline, StandardCombinators::coalesceLeftHandSide, LocalDateTimeline.JoinStyle.CROSS_JOIN);
 	}
 
@@ -128,8 +127,8 @@ class IdentifiserPerioderForRefusjonTest {
 	@Test
 	void refusjonFraStartOgOpphør() {
 		// Arrange
-		LocalDate opphørFom = LocalDate.of(2019, Month.JANUARY, 26);
-		ArbeidsforholdOgInntektsmelding im = ArbeidsforholdOgInntektsmelding.builder()
+        var opphørFom = LocalDate.of(2019, Month.JANUARY, 26);
+        var im = ArbeidsforholdOgInntektsmelding.builder()
 				.medStartdatoPermisjon(SKJÆRINGSTIDSPUNKT)
 				.medRefusjonskrav(List.of(
 						new Refusjonskrav(BigDecimal.TEN, SKJÆRINGSTIDSPUNKT, LocalDate.of(2019, Month.JANUARY, 25)),
@@ -138,7 +137,7 @@ class IdentifiserPerioderForRefusjonTest {
 				.build();
 
 		// Act
-		Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im,
+        var periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im,
 				godkjennIAllePerioder(im.getRefusjoner()), new HashMap<>());
 
 		// Assert
@@ -151,8 +150,8 @@ class IdentifiserPerioderForRefusjonTest {
 	@Test
 	void refusjonFraStartOgEndring() {
 		// Arrange
-		LocalDate endringFom = LocalDate.of(2019, Month.JANUARY, 26);
-		ArbeidsforholdOgInntektsmelding im = ArbeidsforholdOgInntektsmelding.builder()
+        var endringFom = LocalDate.of(2019, Month.JANUARY, 26);
+        var im = ArbeidsforholdOgInntektsmelding.builder()
 				.medStartdatoPermisjon(SKJÆRINGSTIDSPUNKT)
 				.medRefusjonskrav(List.of(
 						new Refusjonskrav(BigDecimal.valueOf(20000), SKJÆRINGSTIDSPUNKT, LocalDate.of(2019, Month.JANUARY, 25)),
@@ -161,7 +160,7 @@ class IdentifiserPerioderForRefusjonTest {
 				.build();
 
 		// Act
-		Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im, godkjennIAllePerioder(im.getRefusjoner()), new HashMap<>());
+        var periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im, godkjennIAllePerioder(im.getRefusjoner()), new HashMap<>());
 
 		// Assert
 		assertThat(periodesplitter).hasSize(2)
@@ -173,9 +172,9 @@ class IdentifiserPerioderForRefusjonTest {
 	@Test
 	void refusjonFraStartEndringOgOpphør() {
 		// Arrange
-		LocalDate endringFom = LocalDate.of(2019, Month.JANUARY, 26);
-		LocalDate opphørFom = LocalDate.of(2019, Month.FEBRUARY, 17);
-		ArbeidsforholdOgInntektsmelding im = ArbeidsforholdOgInntektsmelding.builder()
+        var endringFom = LocalDate.of(2019, Month.JANUARY, 26);
+        var opphørFom = LocalDate.of(2019, Month.FEBRUARY, 17);
+        var im = ArbeidsforholdOgInntektsmelding.builder()
 				.medStartdatoPermisjon(SKJÆRINGSTIDSPUNKT)
 				.medRefusjonskrav(List.of(
 						new Refusjonskrav(BigDecimal.valueOf(20000), SKJÆRINGSTIDSPUNKT, LocalDate.of(2019, Month.JANUARY, 25)),
@@ -185,7 +184,7 @@ class IdentifiserPerioderForRefusjonTest {
 				.build();
 
 		// Act
-		Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im, godkjennIAllePerioder(im.getRefusjoner()), new HashMap<>());
+        var periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im, godkjennIAllePerioder(im.getRefusjoner()), new HashMap<>());
 
 		// Assert
 		assertThat(periodesplitter).hasSize(3)
@@ -202,10 +201,10 @@ class IdentifiserPerioderForRefusjonTest {
 				.medRefusjonskravFrist(new RefusjonskravFrist(3, BeregningsgrunnlagHjemmel.REFUSJONSKRAV_FRIST))
 				.medRefusjonskrav(List.of(new Refusjonskrav(BigDecimal.TEN, SKJÆRINGSTIDSPUNKT, TIDENES_ENDE)))
 				.build();
-		LocalDate godkjentRefusjonFom = LocalDate.of(2019, Month.FEBRUARY, 1);
+        var godkjentRefusjonFom = LocalDate.of(2019, Month.FEBRUARY, 1);
 
 		// Act
-		Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im,
+        var periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im,
 				tidslinjeMedAvslåttOgGodkjent(List.of(Periode.of(godkjentRefusjonFom, TIDENES_ENDE)),
 						List.of(Periode.of(SKJÆRINGSTIDSPUNKT, godkjentRefusjonFom.minusDays(1)))), new HashMap<>());
 
@@ -218,8 +217,8 @@ class IdentifiserPerioderForRefusjonTest {
 	@Test
 	void refusjonFraStartOgOpphørArbeidsgiverSøkerForSent() {
 		// Arrange
-		LocalDate opphørFom = LocalDate.of(2019, Month.JANUARY, 26);
-		ArbeidsforholdOgInntektsmelding im = ArbeidsforholdOgInntektsmelding.builder()
+        var opphørFom = LocalDate.of(2019, Month.JANUARY, 26);
+        var im = ArbeidsforholdOgInntektsmelding.builder()
 				.medStartdatoPermisjon(SKJÆRINGSTIDSPUNKT)
 				.medRefusjonskravFrist(new RefusjonskravFrist(3, BeregningsgrunnlagHjemmel.REFUSJONSKRAV_FRIST))
 				.medRefusjonskrav(List.of(
@@ -229,7 +228,7 @@ class IdentifiserPerioderForRefusjonTest {
 				.build();
 
 		// Act
-		Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im,
+        var periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im,
 				avslåttIAllePerioder(im.getRefusjoner()), new HashMap<>());
 
 		// Assert
@@ -245,8 +244,8 @@ class IdentifiserPerioderForRefusjonTest {
 	@Test
 	void refusjonFraStartOgOpphørEtterFørsteDagIMånedenFørsteIMMottattMinus3MånederArbeidsgiverSøkerForSent() {
 		// Arrange
-		LocalDate opphørFom = LocalDate.of(2019, Month.MARCH, 15);
-		ArbeidsforholdOgInntektsmelding im = ArbeidsforholdOgInntektsmelding.builder()
+        var opphørFom = LocalDate.of(2019, Month.MARCH, 15);
+        var im = ArbeidsforholdOgInntektsmelding.builder()
 				.medStartdatoPermisjon(SKJÆRINGSTIDSPUNKT)
 				.medRefusjonskravFrist(new RefusjonskravFrist(3, BeregningsgrunnlagHjemmel.REFUSJONSKRAV_FRIST))
 				.medRefusjonskrav(List.of(
@@ -254,10 +253,10 @@ class IdentifiserPerioderForRefusjonTest {
 						new Refusjonskrav(BigDecimal.ZERO, opphørFom, TIDENES_ENDE)
 				))
 				.build();
-		LocalDate refusjonGodkjentFom = LocalDate.of(2019, Month.FEBRUARY, 1);
+        var refusjonGodkjentFom = LocalDate.of(2019, Month.FEBRUARY, 1);
 
 		// Act
-		Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im,
+        var periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im,
 				tidslinjeMedAvslåttOgGodkjent(
 						List.of(Periode.of(refusjonGodkjentFom, TIDENES_ENDE)),
 						List.of(Periode.of(SKJÆRINGSTIDSPUNKT, refusjonGodkjentFom.minusDays(1)))),
@@ -274,8 +273,8 @@ class IdentifiserPerioderForRefusjonTest {
 	@Test
 	void refusjonFraStartOgEndringArbeidsgiverSøkerForSent() {
 		// Arrange
-		LocalDate endringFom = LocalDate.of(2019, Month.JANUARY, 26);
-		ArbeidsforholdOgInntektsmelding im = ArbeidsforholdOgInntektsmelding.builder()
+        var endringFom = LocalDate.of(2019, Month.JANUARY, 26);
+        var im = ArbeidsforholdOgInntektsmelding.builder()
 				.medStartdatoPermisjon(SKJÆRINGSTIDSPUNKT)
 				.medRefusjonskravFrist(new RefusjonskravFrist(3, BeregningsgrunnlagHjemmel.REFUSJONSKRAV_FRIST))
 				.medRefusjonskrav(List.of(
@@ -283,10 +282,10 @@ class IdentifiserPerioderForRefusjonTest {
 						new Refusjonskrav(BigDecimal.valueOf(10000), endringFom, TIDENES_ENDE)
 				))
 				.build();
-		LocalDate refusjonGodkjentFom = LocalDate.of(2019, Month.FEBRUARY, 1);
+        var refusjonGodkjentFom = LocalDate.of(2019, Month.FEBRUARY, 1);
 
 		// Act
-		Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im,
+        var periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im,
 				tidslinjeMedAvslåttOgGodkjent(
 						List.of(Periode.of(refusjonGodkjentFom, TIDENES_ENDE)),
 						List.of(Periode.of(SKJÆRINGSTIDSPUNKT, refusjonGodkjentFom.minusDays(1)))),
@@ -302,8 +301,8 @@ class IdentifiserPerioderForRefusjonTest {
 	@Test
 	void refusjonFraStartOgEndringEtter1FebruarArbeidsgiverSøkerForSent() {
 		// Arrange
-		LocalDate endringFom = LocalDate.of(2019, Month.FEBRUARY, 26);
-		ArbeidsforholdOgInntektsmelding im = ArbeidsforholdOgInntektsmelding.builder()
+        var endringFom = LocalDate.of(2019, Month.FEBRUARY, 26);
+        var im = ArbeidsforholdOgInntektsmelding.builder()
 				.medStartdatoPermisjon(SKJÆRINGSTIDSPUNKT)
 				.medRefusjonskravFrist(new RefusjonskravFrist(3, BeregningsgrunnlagHjemmel.REFUSJONSKRAV_FRIST))
 				.medRefusjonskrav(List.of(
@@ -311,10 +310,10 @@ class IdentifiserPerioderForRefusjonTest {
 						new Refusjonskrav(BigDecimal.valueOf(10000), endringFom, TIDENES_ENDE)
 				))
 				.build();
-		LocalDate refusjonGodkjentFom = LocalDate.of(2019, Month.FEBRUARY, 1);
+        var refusjonGodkjentFom = LocalDate.of(2019, Month.FEBRUARY, 1);
 
 		// Act
-		Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im,
+        var periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im,
 				tidslinjeMedAvslåttOgGodkjent(
 						List.of(Periode.of(refusjonGodkjentFom, TIDENES_ENDE)),
 						List.of(Periode.of(SKJÆRINGSTIDSPUNKT, refusjonGodkjentFom.minusDays(1)))),
@@ -330,9 +329,9 @@ class IdentifiserPerioderForRefusjonTest {
 	@Test
 	void refusjonFraStartEndringOgOpphørArbeidsgiverSøkerForSent() {
 		// Arrange
-		LocalDate endringFom = LocalDate.of(2019, Month.JANUARY, 26);
-		LocalDate opphørFom = LocalDate.of(2019, Month.FEBRUARY, 17);
-		ArbeidsforholdOgInntektsmelding im = ArbeidsforholdOgInntektsmelding.builder()
+        var endringFom = LocalDate.of(2019, Month.JANUARY, 26);
+        var opphørFom = LocalDate.of(2019, Month.FEBRUARY, 17);
+        var im = ArbeidsforholdOgInntektsmelding.builder()
 				.medStartdatoPermisjon(SKJÆRINGSTIDSPUNKT)
 				.medRefusjonskravFrist(new RefusjonskravFrist(3, BeregningsgrunnlagHjemmel.REFUSJONSKRAV_FRIST))
 				.medRefusjonskrav(List.of(
@@ -341,10 +340,10 @@ class IdentifiserPerioderForRefusjonTest {
 						new Refusjonskrav(BigDecimal.ZERO, opphørFom, TIDENES_ENDE)
 				))
 				.build();
-		LocalDate godkjentRefusjonFom = LocalDate.of(2019, Month.FEBRUARY, 1);
+        var godkjentRefusjonFom = LocalDate.of(2019, Month.FEBRUARY, 1);
 
 		// Act
-		Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im,
+        var periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im,
 				tidslinjeMedAvslåttOgGodkjent(
 						List.of(Periode.of(godkjentRefusjonFom, TIDENES_ENDE)),
 						List.of(Periode.of(SKJÆRINGSTIDSPUNKT, godkjentRefusjonFom.minusDays(1)))),
@@ -361,9 +360,9 @@ class IdentifiserPerioderForRefusjonTest {
 	@Test
 	void refusjonFraStartEndringEtter1FebruarOgOpphørArbeidsgiverSøkerForSent() {
 		// Arrange
-		LocalDate endringFom = LocalDate.of(2019, Month.FEBRUARY, 26);
-		LocalDate opphørFom = LocalDate.of(2019, Month.MARCH, 17);
-		ArbeidsforholdOgInntektsmelding im = ArbeidsforholdOgInntektsmelding.builder()
+        var endringFom = LocalDate.of(2019, Month.FEBRUARY, 26);
+        var opphørFom = LocalDate.of(2019, Month.MARCH, 17);
+        var im = ArbeidsforholdOgInntektsmelding.builder()
 				.medStartdatoPermisjon(SKJÆRINGSTIDSPUNKT)
 				.medRefusjonskravFrist(new RefusjonskravFrist(3, BeregningsgrunnlagHjemmel.REFUSJONSKRAV_FRIST))
 				.medRefusjonskrav(List.of(
@@ -372,10 +371,10 @@ class IdentifiserPerioderForRefusjonTest {
 						new Refusjonskrav(BigDecimal.ZERO, opphørFom, TIDENES_ENDE)
 				))
 				.build();
-		LocalDate godkjentRefusjonFom = LocalDate.of(2019, Month.FEBRUARY, 1);
+        var godkjentRefusjonFom = LocalDate.of(2019, Month.FEBRUARY, 1);
 
 		// Act
-		Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im,
+        var periodesplitter = IdentifiserPerioderForRefusjon.identifiserPerioderForRefusjon(im,
 				tidslinjeMedAvslåttOgGodkjent(
 				List.of(Periode.of(godkjentRefusjonFom, TIDENES_ENDE)),
 				List.of(Periode.of(SKJÆRINGSTIDSPUNKT, godkjentRefusjonFom.minusDays(1)))),

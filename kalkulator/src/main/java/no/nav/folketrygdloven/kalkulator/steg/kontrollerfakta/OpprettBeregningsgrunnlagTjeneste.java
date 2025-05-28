@@ -9,7 +9,6 @@ import no.nav.folketrygdloven.kalkulator.avklaringsbehov.PerioderTilVurderingTje
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagInput;
 import no.nav.folketrygdloven.kalkulator.input.FaktaOmBeregningInput;
 import no.nav.folketrygdloven.kalkulator.input.GrunnbeløpMapper;
-import no.nav.folketrygdloven.kalkulator.modell.behandling.KoblingReferanse;
 import no.nav.folketrygdloven.kalkulator.modell.behandling.Skjæringstidspunkt;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningAktivitetAggregatDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
@@ -45,16 +44,16 @@ public class OpprettBeregningsgrunnlagTjeneste {
                                                                             BeregningsperiodeFastsetter beregningsperiodeFastsetter) {
         var ref = input.getKoblingReferanse();
         var grunnlag = input.getBeregningsgrunnlagGrunnlag();
-        BeregningAktivitetAggregatDto beregningAktiviteter = grunnlag.getGjeldendeAktiviteter();
+        var beregningAktiviteter = grunnlag.getGjeldendeAktiviteter();
 
         // Fastsetter andeler, status og endelig skjæringstidpsunkt
         var resultatMedAndeler = skjæringstidspunktFastsetter
                 .fastsettSkjæringstidspunktOgStatuser(input, beregningAktiviteter, GrunnbeløpMapper.mapGrunnbeløpInput(input.getGrunnbeløpInput()));
 
         // Oppdaterer koblinginformasjon for videre prosessering
-        KoblingReferanse refMedSkjæringstidspunkt = ref
+        var refMedSkjæringstidspunkt = ref
                 .medSkjæringstidspunkt(oppdaterSkjæringstidspunktForBeregning(beregningAktiviteter, resultatMedAndeler.getBeregningsgrunnlag()));
-        BeregningsgrunnlagInput newInput = input.medBehandlingReferanse(refMedSkjæringstidspunkt);
+        var newInput = input.medBehandlingReferanse(refMedSkjæringstidspunkt);
 
         // Fastsett inntektskategorier
         var medFastsattInntektskategori = fastsettInntektskategori(resultatMedAndeler.getBeregningsgrunnlag(), input.getIayGrunnlag());
@@ -64,7 +63,7 @@ public class OpprettBeregningsgrunnlagTjeneste {
                 .fastsettBeregningsperiode(medFastsattInntektskategori, input.getIayGrunnlag(), input.getInntektsmeldinger());
 
         // Fastsett fakta
-        Optional<FaktaAggregatDto> faktaAggregatDto = lagFaktaAggregat(input, medFastsattBeregningsperiode);
+        var faktaAggregatDto = lagFaktaAggregat(input, medFastsattBeregningsperiode);
 
         // Oppretter perioder for endring i naturalytelse (tilkommet/bortfalt)
         var resultatMedNaturalytelse = fastsettNaturalytelsePerioderTjeneste.fastsettPerioderForNaturalytelse(newInput, medFastsattBeregningsperiode);

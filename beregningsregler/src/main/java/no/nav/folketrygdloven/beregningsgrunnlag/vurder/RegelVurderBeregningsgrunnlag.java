@@ -32,10 +32,10 @@ public class RegelVurderBeregningsgrunnlag implements EksportRegel<Beregningsgru
 		for midlertidig inaktiv (vurderes kun for k9-ytelsene) Folketrygdloven §8-47 5.ledd
 		 */
 
-		Specification<BeregningsgrunnlagPeriode> sjekkMotHalvG = RS.beregningHvisRegel(new BeregningsgrunnlagUnderHalvG(), new AvslagUnderEnHalvG(), new Innvilget());
-		Specification<BeregningsgrunnlagPeriode> sjekkMotEnG = RS.beregningHvisRegel(new BeregningsgrunnlagUnderEnG(), new AvslagUnderEnG(), new Innvilget());
-		Specification<BeregningsgrunnlagPeriode> k9Regel = RS.beregningHvisRegel(new ErMidlertidigInaktiv(), sjekkMotEnG, sjekkMotHalvG);
-		Specification<BeregningsgrunnlagPeriode> ompRegel = RS.beregningHvisRegel(new SjekkErOmsorgspengerTilArbeidsgiver(), new Innvilget(), k9Regel);
+        var sjekkMotHalvG = RS.beregningHvisRegel(new BeregningsgrunnlagUnderHalvG(), new AvslagUnderEnHalvG(), new Innvilget());
+        var sjekkMotEnG = RS.beregningHvisRegel(new BeregningsgrunnlagUnderEnG(), new AvslagUnderEnG(), new Innvilget());
+        var k9Regel = RS.beregningHvisRegel(new ErMidlertidigInaktiv(), sjekkMotEnG, sjekkMotHalvG);
+        var ompRegel = RS.beregningHvisRegel(new SjekkErOmsorgspengerTilArbeidsgiver(), new Innvilget(), k9Regel);
 
 		return new ConditionalOrSpecification.Builder<BeregningsgrunnlagPeriode>(ID, "Velg regel for ytelse")
 				.hvis(new GjelderForeldrepenger(), sjekkMotHalvG)

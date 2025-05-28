@@ -40,7 +40,7 @@ public class RefusjonTilVurderingDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RefusjonTilVurderingDto that = (RefusjonTilVurderingDto) o;
+        var that = (RefusjonTilVurderingDto) o;
         return Objects.equals(andeler, that.andeler);
     }
 

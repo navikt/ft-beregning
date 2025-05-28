@@ -83,7 +83,7 @@ public class YtelseAnvistDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || !(o instanceof YtelseAnvistDto)) return false;
-        YtelseAnvistDto that = (YtelseAnvistDto) o;
+        var that = (YtelseAnvistDto) o;
         return Objects.equals(anvistPeriode, that.anvistPeriode) &&
                 Objects.equals(beløp, that.beløp) &&
                 Objects.equals(dagsats, that.dagsats) &&

@@ -11,8 +11,8 @@ import no.nav.folketrygdloven.kalkulator.steg.refusjon.ForlengelsePeriodeTjenest
 public class VurderRefusjonBeregningsgrunnlagFRISINN {
 
     public BeregningsgrunnlagRegelResultat vurderRefusjon(BeregningsgrunnlagInput input) {
-        BeregningsgrunnlagRegelResultat resultatFraRefusjonPeriodisering = new FordelPerioderTjeneste().fastsettPerioderForRefusjon(input);
-        BeregningsgrunnlagRegelResultat resultatFraPeriodisering = new FordelPerioderTjeneste().fastsettPerioderForUtbetalingsgradEllerGradering(input, resultatFraRefusjonPeriodisering.getBeregningsgrunnlag());
+        var resultatFraRefusjonPeriodisering = new FordelPerioderTjeneste().fastsettPerioderForRefusjon(input);
+        var resultatFraPeriodisering = new FordelPerioderTjeneste().fastsettPerioderForUtbetalingsgradEllerGradering(input, resultatFraRefusjonPeriodisering.getBeregningsgrunnlag());
         var splittetVedForlengelse = ForlengelsePeriodeTjeneste.splittVedStartAvForlengelse(input, resultatFraPeriodisering.getBeregningsgrunnlag());
         return new BeregningsgrunnlagRegelResultat(splittetVedForlengelse,
                 List.of(),

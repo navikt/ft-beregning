@@ -8,7 +8,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.FaktaOmBeregningTilfelle;
 public class ForeldrepengerGrunnlagMapper {
 
     public YtelsesSpesifiktGrunnlag map(BeregningsgrunnlagDto beregningsgrunnlag) {
-        boolean harVærtBesteberegnet = beregningsgrunnlag.getFaktaOmBeregningTilfeller().stream()
+        var harVærtBesteberegnet = beregningsgrunnlag.getFaktaOmBeregningTilfeller().stream()
                 .anyMatch(FaktaOmBeregningTilfelle.FASTSETT_BESTEBEREGNING_FØDENDE_KVINNE::equals);
         return new ForeldrepengerGrunnlag(harVærtBesteberegnet);
     }

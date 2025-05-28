@@ -51,7 +51,7 @@ public class InntektArbeidYtelseAggregatDto {
         } else if (!(obj instanceof InntektArbeidYtelseAggregatDto)) {
             return false;
         }
-        InntektArbeidYtelseAggregatDto other = (InntektArbeidYtelseAggregatDto) obj;
+        var other = (InntektArbeidYtelseAggregatDto) obj;
         return Objects.equals(this.getAktørInntekt(), other.getAktørInntekt())
             && Objects.equals(this.getAktørArbeid(), other.getAktørArbeid())
             && Objects.equals(this.getAktørYtelse(), other.getAktørYtelse());

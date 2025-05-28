@@ -25,12 +25,12 @@ abstract class OmfordelFraATFL extends LeafSpecification<FordelModell> {
 
     @Override
     public Evaluation evaluate(FordelModell modell) {
-        Map<String, Object> resultater = omfordelFraAktivitetOmMulig(modell);
+        var resultater = omfordelFraAktivitetOmMulig(modell);
         return beregnet(resultater);
     }
 
     protected Map<String, Object> omfordelFraAktivitetOmMulig(FordelModell modell) {
-        boolean harAktivitetMedOmfordelbartGrunnlag = finnAktivitetMedOmfordelbartBg(modell.getInput()).isPresent();
+        var harAktivitetMedOmfordelbartGrunnlag = finnAktivitetMedOmfordelbartBg(modell.getInput()).isPresent();
         if (!harAktivitetMedOmfordelbartGrunnlag) {
             return new HashMap<>();
         }
@@ -39,7 +39,7 @@ abstract class OmfordelFraATFL extends LeafSpecification<FordelModell> {
     }
 
     protected FordelAndelModell finnArbeidsforholdMedRiktigInntektskategori(FordelPeriodeModell beregningsgrunnlagPeriode) {
-        Optional<FordelAndelModell> andelForArbeidsforholdOpt = beregningsgrunnlagPeriode.getAlleAndelerForStatus(AktivitetStatus.AT)
+        var andelForArbeidsforholdOpt = beregningsgrunnlagPeriode.getAlleAndelerForStatus(AktivitetStatus.AT)
             .stream()
             .filter(a -> Objects.equals(a.getArbeidsforhold().orElse(null), arbeidsforhold)
                 && (a.getInntektskategori() == null || a.getInntektskategori().equals(Inntektskategori.UDEFINERT) || a.getInntektskategori().equals(finnInntektskategori())))
@@ -57,7 +57,7 @@ abstract class OmfordelFraATFL extends LeafSpecification<FordelModell> {
     protected abstract Inntektskategori finnInntektskategori();
 
     private FordelAndelModell opprettNyAndel(FordelPeriodeModell beregningsgrunnlagPeriode) {
-        FordelAndelModell aktivitet = FordelAndelModell.builder()
+        var aktivitet = FordelAndelModell.builder()
             .medArbeidsforhold(arbeidsforhold)
 	        .medAktivitetStatus(AktivitetStatus.AT)
             .erNytt(true)

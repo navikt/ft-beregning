@@ -22,16 +22,16 @@ public class RegelBeregnBruttoYtelseAndel implements RuleService<Beregningsgrunn
 	@Override
 	public Specification<BeregningsgrunnlagPeriode> getSpecification() {
 
-		Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
+        var rs = new Ruleset<BeregningsgrunnlagPeriode>();
 
 		// FP_BR 15.6 Rapportert inntekt = manuelt fastsatt månedsinntekt * 12
-		Specification<BeregningsgrunnlagPeriode> fastsettFraYtelsevedtak =
+        var fastsettFraYtelsevedtak =
 				rs.beregningsRegel(BeregnFraYtelsevedtak.ID,
 						BeregnFraYtelsevedtak.BESKRIVELSE,
 						new BeregnFraYtelsevedtak(statusAndel), new Beregnet());
 		// FP_BR 14.1 Er bruker arbeidstaker?
 
-		Specification<BeregningsgrunnlagPeriode> fastsettBruttoBeregningsgrunnlag =
+        var fastsettBruttoBeregningsgrunnlag =
 				rs.beregningHvisRegel(new SjekkHarSaksbehandlerSattInntektFraYtelseManuelt(statusAndel),
 						new Beregnet(),
 						fastsettFraYtelsevedtak);

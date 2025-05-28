@@ -37,8 +37,8 @@ public class RefusjonSplittAndel {
     }
 
     public boolean gjelderFor(BeregningsgrunnlagPrStatusOgAndelDto andel) {
-        Arbeidsgiver andelAG = andel.getArbeidsgiver().orElse(null);
-        InternArbeidsforholdRefDto andelRef = andel.getArbeidsforholdRef().orElse(InternArbeidsforholdRefDto.nullRef());
+        var andelAG = andel.getArbeidsgiver().orElse(null);
+        var andelRef = andel.getArbeidsforholdRef().orElse(InternArbeidsforholdRefDto.nullRef());
         // Av og til fastsettes andeler med og uten referanse, må derfor sjekke eksakt match på referanse
         return Objects.equals(andelAG, arbeidsgiver) && Objects.equals(getInternArbeidsforholdRefDto().getReferanse(), andelRef.getReferanse());
     }
@@ -51,7 +51,7 @@ public class RefusjonSplittAndel {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RefusjonSplittAndel that = (RefusjonSplittAndel) o;
+        var that = (RefusjonSplittAndel) o;
         return Objects.equals(arbeidsgiver, that.arbeidsgiver) &&
                 Objects.equals(internArbeidsforholdRefDto, that.internArbeidsforholdRefDto) &&
                 Objects.equals(delvisRefusjonBeløpPrÅr, that.delvisRefusjonBeløpPrÅr) &&

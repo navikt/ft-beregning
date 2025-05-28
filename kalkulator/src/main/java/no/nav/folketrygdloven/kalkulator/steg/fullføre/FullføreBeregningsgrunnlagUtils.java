@@ -50,7 +50,7 @@ public class FullføreBeregningsgrunnlagUtils {
         List<RegelSporingPeriode> regelsporingPerioder = new ArrayList<>();
         var resultatIterator = regelResultater.iterator();
         for (var periode : perioder) {
-            RegelResultat resultat = resultatIterator.next();
+            var resultat = resultatIterator.next();
             var hovedRegelResultat = resultat.sporing();
             regelsporingPerioder.add(new RegelSporingPeriode(hovedRegelResultat.sporing(), hovedRegelResultat.input(), periode, BeregningsgrunnlagPeriodeRegelType.FASTSETT, hovedRegelResultat.versjon()));
             Optional.ofNullable(resultat.sporingFinnGrenseverdi())
@@ -71,8 +71,8 @@ public class FullføreBeregningsgrunnlagUtils {
     public static List<RegelResultat> leggTilSporingerForFinnGrenseverdi(String input, List<String> sporingerFinnGrenseverdi, List<RegelResultat> regelResultater) {
         List<RegelResultat> medSporingFinnGrenseverdi = new ArrayList<>();
         if (regelResultater.size() == sporingerFinnGrenseverdi.size()) {
-            for (int i = 0; i < regelResultater.size(); i++) {
-                RegelResultat res = regelResultater.get(i);
+            for (var i = 0; i < regelResultater.size(); i++) {
+                var res = regelResultater.get(i);
                 medSporingFinnGrenseverdi.add(RegelResultat.medRegelsporingFinnGrenseverdi(res, input, sporingerFinnGrenseverdi.get(i)));
             }
             return medSporingFinnGrenseverdi;

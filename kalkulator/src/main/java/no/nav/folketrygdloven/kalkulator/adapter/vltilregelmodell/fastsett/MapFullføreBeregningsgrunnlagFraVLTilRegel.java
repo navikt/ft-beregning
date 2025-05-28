@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Dekningsgrad;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.MidlertidigInaktivType;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode;
@@ -45,12 +44,12 @@ public class MapFullføreBeregningsgrunnlagFraVLTilRegel {
         Objects.requireNonNull(ref, "BehandlingReferanse kan ikke være null!");
         Objects.requireNonNull(beregningsgrunnlag, "Beregningsgrunnlag kan ikke være null!");
 
-        List<AktivitetStatusMedHjemmel> aktivitetStatuser = beregningsgrunnlag.getAktivitetStatuser().stream()
+        var aktivitetStatuser = beregningsgrunnlag.getAktivitetStatuser().stream()
                 .map(MapFullføreBeregningsgrunnlagFraVLTilRegel::mapVLAktivitetStatusMedHjemmel)
                 .sorted()
                 .collect(Collectors.toList());
 
-        List<BeregningsgrunnlagPeriode> perioder = mapBeregningsgrunnlagPerioder(beregningsgrunnlag, input);
+        var perioder = mapBeregningsgrunnlagPerioder(beregningsgrunnlag, input);
 
         var builder = no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.Beregningsgrunnlag.builder();
 
@@ -92,7 +91,7 @@ public class MapFullføreBeregningsgrunnlagFraVLTilRegel {
                 throw new IllegalArgumentException("Ukjent Hjemmel: (" + vlBGAktivitetStatus.getHjemmel().getKode() + ").", e);
             }
         }
-        AktivitetStatus as = mapVLAktivitetStatus(vlBGAktivitetStatus.getAktivitetStatus());
+        var as = mapVLAktivitetStatus(vlBGAktivitetStatus.getAktivitetStatus());
         return new AktivitetStatusMedHjemmel(as, hjemmel);
     }
 
@@ -122,13 +121,13 @@ public class MapFullføreBeregningsgrunnlagFraVLTilRegel {
     }
 
     private static BeregningsgrunnlagPeriode mapPeriode(BeregningsgrunnlagPeriodeDto vlBGPeriode, BeregningsgrunnlagInput input) {
-        Dekningsgrad dekningsgradPeriode = input.getYtelsespesifiktGrunnlag() == null ? null : Dekningsgradtjeneste.mapTilDekningsgradRegel(input.getYtelsespesifiktGrunnlag(), Optional.of(vlBGPeriode.getBeregningsgrunnlagPeriodeFom()));
-        final BeregningsgrunnlagPeriode.Builder regelBGPeriode = BeregningsgrunnlagPeriode.builder()
+        var dekningsgradPeriode = input.getYtelsespesifiktGrunnlag() == null ? null : Dekningsgradtjeneste.mapTilDekningsgradRegel(input.getYtelsespesifiktGrunnlag(), Optional.of(vlBGPeriode.getBeregningsgrunnlagPeriodeFom()));
+        final var regelBGPeriode = BeregningsgrunnlagPeriode.builder()
                 .medPeriode(Periode.of(vlBGPeriode.getBeregningsgrunnlagPeriodeFom(), vlBGPeriode.getBeregningsgrunnlagPeriodeTom()))
                 .medDekningsgrad(dekningsgradPeriode)
                 .leggTilTilkommetInntektsforhold(mapTilkomneInntekter(vlBGPeriode));
 
-        List<BeregningsgrunnlagPrStatus> beregningsgrunnlagPrStatus = mapVLBGPrStatus(vlBGPeriode, input);
+        var beregningsgrunnlagPrStatus = mapVLBGPrStatus(vlBGPeriode, input);
         beregningsgrunnlagPrStatus.forEach(regelBGPeriode::medBeregningsgrunnlagPrStatus);
         return regelBGPeriode.build();
     }
@@ -146,15 +145,15 @@ public class MapFullføreBeregningsgrunnlagFraVLTilRegel {
     private static List<BeregningsgrunnlagPrStatus> mapVLBGPrStatus(BeregningsgrunnlagPeriodeDto vlBGPeriode, BeregningsgrunnlagInput input) {
         List<BeregningsgrunnlagPrStatus> liste = new ArrayList<>();
         BeregningsgrunnlagPrStatus bgpsATFL = null;
-        for (BeregningsgrunnlagPrStatusOgAndelDto vlBGPStatus : vlBGPeriode.getBeregningsgrunnlagPrStatusOgAndelList()) {
-            final AktivitetStatus regelAktivitetStatus = mapVLAktivitetStatus(vlBGPStatus.getAktivitetStatus());
+        for (var vlBGPStatus : vlBGPeriode.getBeregningsgrunnlagPrStatusOgAndelList()) {
+            final var regelAktivitetStatus = mapVLAktivitetStatus(vlBGPStatus.getAktivitetStatus());
             if (AktivitetStatus.ATFL.equals(regelAktivitetStatus) || AktivitetStatus.AT.equals(regelAktivitetStatus)) {
                 if (bgpsATFL == null) {  // Alle ATFL håndteres samtidig her
                     bgpsATFL = mapVLBGPStatusForATFL(vlBGPeriode, regelAktivitetStatus, input);
                     liste.add(bgpsATFL);
                 }
             } else {
-                BeregningsgrunnlagPrStatus bgps = mapVLBGPStatusForAlleAktivietetStatuser(vlBGPStatus, input);
+                var bgps = mapVLBGPStatusForAlleAktivietetStatuser(vlBGPStatus, input);
                 liste.add(bgps);
             }
         }
@@ -164,7 +163,7 @@ public class MapFullføreBeregningsgrunnlagFraVLTilRegel {
 
     // Ikke ATFL, de har separat mapping
     private static BeregningsgrunnlagPrStatus mapVLBGPStatusForAlleAktivietetStatuser(BeregningsgrunnlagPrStatusOgAndelDto vlBGPStatus, BeregningsgrunnlagInput input) {
-        final AktivitetStatus regelAktivitetStatus = mapVLAktivitetStatus(vlBGPStatus.getAktivitetStatus());
+        final var regelAktivitetStatus = mapVLAktivitetStatus(vlBGPStatus.getAktivitetStatus());
         var aktivitetsgrad = finnAktivitetsgradForAndel(vlBGPStatus, vlBGPStatus.getBeregningsgrunnlagPeriode().getPeriode(), input.getYtelsespesifiktGrunnlag(), false);
         var utbetalingsgrad = finnUtbetalingsgradForAndel(vlBGPStatus, vlBGPStatus.getBeregningsgrunnlagPeriode().getPeriode(), input.getYtelsespesifiktGrunnlag(), false);
         var builder = BeregningsgrunnlagPrStatus.builder()
@@ -181,11 +180,11 @@ public class MapFullføreBeregningsgrunnlagFraVLTilRegel {
     private static BeregningsgrunnlagPrStatus mapVLBGPStatusForATFL(BeregningsgrunnlagPeriodeDto vlBGPeriode,
                                                                     AktivitetStatus regelAktivitetStatus, BeregningsgrunnlagInput input) {
 
-        BeregningsgrunnlagPrStatus.Builder regelBGPStatusATFL = BeregningsgrunnlagPrStatus.builder().medAktivitetStatus(regelAktivitetStatus);
+        var regelBGPStatusATFL = BeregningsgrunnlagPrStatus.builder().medAktivitetStatus(regelAktivitetStatus);
 
-        for (BeregningsgrunnlagPrStatusOgAndelDto vlBGPStatus : vlBGPeriode.getBeregningsgrunnlagPrStatusOgAndelList()) {
+        for (var vlBGPStatus : vlBGPeriode.getBeregningsgrunnlagPrStatusOgAndelList()) {
             if (regelAktivitetStatus.equals(mapVLAktivitetStatus(vlBGPStatus.getAktivitetStatus()))) {
-                BeregningsgrunnlagPrArbeidsforhold regelArbeidsforhold = byggAndel(vlBGPStatus, input);
+                var regelArbeidsforhold = byggAndel(vlBGPStatus, input);
                 regelBGPStatusATFL.medArbeidsforhold(regelArbeidsforhold);
             }
         }
@@ -193,7 +192,7 @@ public class MapFullføreBeregningsgrunnlagFraVLTilRegel {
     }
 
     private static BeregningsgrunnlagPrArbeidsforhold byggAndel(BeregningsgrunnlagPrStatusOgAndelDto vlBGPStatus, BeregningsgrunnlagInput input) {
-        BeregningsgrunnlagPrArbeidsforhold.Builder builder = BeregningsgrunnlagPrArbeidsforhold.builder();
+        var builder = BeregningsgrunnlagPrArbeidsforhold.builder();
         var aktivitetsgrad = finnAktivitetsgradForAndel(vlBGPStatus, vlBGPStatus.getBeregningsgrunnlagPeriode().getPeriode(), input.getYtelsespesifiktGrunnlag(), false);
         var utbetalingsgrad = finnUtbetalingsgradForAndel(vlBGPStatus, vlBGPStatus.getBeregningsgrunnlagPeriode().getPeriode(), input.getYtelsespesifiktGrunnlag(), false);
         builder

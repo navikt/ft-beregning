@@ -76,11 +76,11 @@ class FordelPerioderTjenesteSVPTest {
     }
 
     private InntektArbeidYtelseAggregatBuilder leggTilYrkesaktiviteterOgBeregningAktiviteter(List<String> orgnrs) {
-        Intervall arbeidsperiode1 = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT.minusYears(2), TIDENES_ENDE);
+        var arbeidsperiode1 = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT.minusYears(2), TIDENES_ENDE);
 
         var aktørArbeidBuilder = InntektArbeidYtelseAggregatBuilder.AktørArbeidBuilder.oppdatere(Optional.empty());
-        for (String orgnr : orgnrs) {
-            Arbeidsgiver arbeidsgiver = leggTilYrkesaktivitet(arbeidsperiode1, aktørArbeidBuilder, orgnr);
+        for (var orgnr : orgnrs) {
+            var arbeidsgiver = leggTilYrkesaktivitet(arbeidsperiode1, aktørArbeidBuilder, orgnr);
             fjernOgLeggTilNyBeregningAktivitet(arbeidsperiode1.getFomDato(), arbeidsperiode1.getTomDato(), arbeidsgiver, InternArbeidsforholdRefDto.nullRef());
         }
 
@@ -90,10 +90,10 @@ class FordelPerioderTjenesteSVPTest {
 
     private Arbeidsgiver leggTilYrkesaktivitet(Intervall arbeidsperiode, InntektArbeidYtelseAggregatBuilder.AktørArbeidBuilder aktørArbeidBuilder,
                                                String orgnr) {
-        Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(orgnr);
-        AktivitetsAvtaleDtoBuilder aaBuilder1 = AktivitetsAvtaleDtoBuilder.ny()
+        var arbeidsgiver = Arbeidsgiver.virksomhet(orgnr);
+        var aaBuilder1 = AktivitetsAvtaleDtoBuilder.ny()
             .medPeriode(arbeidsperiode);
-        YrkesaktivitetDtoBuilder yaBuilder = YrkesaktivitetDtoBuilder.oppdatere(Optional.empty())
+        var yaBuilder = YrkesaktivitetDtoBuilder.oppdatere(Optional.empty())
             .medArbeidsgiver(arbeidsgiver)
             .medArbeidType(ArbeidType.ORDINÆRT_ARBEIDSFORHOLD)
             .leggTilAktivitetsAvtale(aaBuilder1);
@@ -127,41 +127,41 @@ class FordelPerioderTjenesteSVPTest {
     @Test
     void lagPeriodeForEndringISøktYtelseForSVP() {
         // Arrange
-        PeriodeMedUtbetalingsgradDto periode1 = lagPeriodeMedUtbetaling(SKJÆRINGSTIDSPUNKT.minusMonths(1), SKJÆRINGSTIDSPUNKT.minusDays(1), BigDecimal.ZERO);
-        PeriodeMedUtbetalingsgradDto periode2 = lagPeriodeMedUtbetaling(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(1), BigDecimal.valueOf(100));
-        PeriodeMedUtbetalingsgradDto periode3 = lagPeriodeMedUtbetaling(SKJÆRINGSTIDSPUNKT.plusMonths(1).plusDays(1), SKJÆRINGSTIDSPUNKT.plusMonths(3),
+        var periode1 = lagPeriodeMedUtbetaling(SKJÆRINGSTIDSPUNKT.minusMonths(1), SKJÆRINGSTIDSPUNKT.minusDays(1), BigDecimal.ZERO);
+        var periode2 = lagPeriodeMedUtbetaling(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(1), BigDecimal.valueOf(100));
+        var periode3 = lagPeriodeMedUtbetaling(SKJÆRINGSTIDSPUNKT.plusMonths(1).plusDays(1), SKJÆRINGSTIDSPUNKT.plusMonths(3),
             BigDecimal.ZERO);
 
-        UtbetalingsgradPrAktivitetDto tilrette1 = lagUtbetalingsgradPrAktivitet(UttakArbeidType.ORDINÆRT_ARBEID, Arbeidsgiver.virksomhet(ORG_NUMMER),
+        var tilrette1 = lagUtbetalingsgradPrAktivitet(UttakArbeidType.ORDINÆRT_ARBEID, Arbeidsgiver.virksomhet(ORG_NUMMER),
             periode1, periode2, periode3);
 
-        PeriodeMedUtbetalingsgradDto periode4 = lagPeriodeMedUtbetaling(SKJÆRINGSTIDSPUNKT.plusDays(14), SKJÆRINGSTIDSPUNKT.plusMonths(1),
+        var periode4 = lagPeriodeMedUtbetaling(SKJÆRINGSTIDSPUNKT.plusDays(14), SKJÆRINGSTIDSPUNKT.plusMonths(1),
             BigDecimal.valueOf(100));
-        PeriodeMedUtbetalingsgradDto periode5 = lagPeriodeMedUtbetaling(SKJÆRINGSTIDSPUNKT.plusMonths(1).plusDays(1), SKJÆRINGSTIDSPUNKT.plusMonths(2),
+        var periode5 = lagPeriodeMedUtbetaling(SKJÆRINGSTIDSPUNKT.plusMonths(1).plusDays(1), SKJÆRINGSTIDSPUNKT.plusMonths(2),
             BigDecimal.valueOf(40));
 
-        UtbetalingsgradPrAktivitetDto tilrette2 = lagUtbetalingsgradPrAktivitet(UttakArbeidType.ORDINÆRT_ARBEID, Arbeidsgiver.virksomhet(ORG_NUMMER_2),
+        var tilrette2 = lagUtbetalingsgradPrAktivitet(UttakArbeidType.ORDINÆRT_ARBEID, Arbeidsgiver.virksomhet(ORG_NUMMER_2),
             periode4, periode5);
 
-        InntektArbeidYtelseAggregatBuilder iayAggregatBuilder = leggTilYrkesaktiviteterOgBeregningAktiviteter(List.of(ORG_NUMMER, ORG_NUMMER_2));
+        var iayAggregatBuilder = leggTilYrkesaktiviteterOgBeregningAktiviteter(List.of(ORG_NUMMER, ORG_NUMMER_2));
 
-        BeregningsgrunnlagGrunnlagDto grunnlag = lagBeregningsgrunnlag(List.of(ORG_NUMMER, ORG_NUMMER_2), beregningAktivitetAggregat);
-        BeregningsgrunnlagDto beregningsgrunnlag = grunnlag.getBeregningsgrunnlagHvisFinnes().get();
+        var grunnlag = lagBeregningsgrunnlag(List.of(ORG_NUMMER, ORG_NUMMER_2), beregningAktivitetAggregat);
+        var beregningsgrunnlag = grunnlag.getBeregningsgrunnlagHvisFinnes().get();
 
         var inntekt = Beløp.fra(40000);
         var im1 = BeregningInntektsmeldingTestUtil.opprettInntektsmelding(ORG_NUMMER, SKJÆRINGSTIDSPUNKT, Beløp.ZERO, inntekt);
         var im2 = BeregningInntektsmeldingTestUtil.opprettInntektsmelding(ORG_NUMMER_2, SKJÆRINGSTIDSPUNKT, Beløp.ZERO, inntekt);
 
-        SvangerskapspengerGrunnlag svangerskapspengerGrunnlag = new SvangerskapspengerGrunnlag(List.of(tilrette1, tilrette2));
+        var svangerskapspengerGrunnlag = new SvangerskapspengerGrunnlag(List.of(tilrette1, tilrette2));
 
         // Act
         var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.oppdatere(Optional.empty())
             .medData(iayAggregatBuilder)
             .medInntektsmeldinger(im1, im2).build();
-        BeregningsgrunnlagDto nyttBeregningsgrunnlag = fastsettPerioderForRefusjonOgGradering(koblingReferanse, grunnlag, beregningsgrunnlag, iayGrunnlag, skjæringstidspunkt, svangerskapspengerGrunnlag);
+        var nyttBeregningsgrunnlag = fastsettPerioderForRefusjonOgGradering(koblingReferanse, grunnlag, beregningsgrunnlag, iayGrunnlag, skjæringstidspunkt, svangerskapspengerGrunnlag);
 
         // Assert
-        List<BeregningsgrunnlagPeriodeDto> perioder = nyttBeregningsgrunnlag.getBeregningsgrunnlagPerioder();
+        var perioder = nyttBeregningsgrunnlag.getBeregningsgrunnlagPerioder();
         assertThat(perioder).hasSize(4);
         assertBeregningsgrunnlagPeriode(perioder.get(0), SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusDays(13));
         assertBeregningsgrunnlagPeriode(perioder.get(1), SKJÆRINGSTIDSPUNKT.plusDays(14), SKJÆRINGSTIDSPUNKT.plusMonths(1),
@@ -175,31 +175,31 @@ class FordelPerioderTjenesteSVPTest {
     @Test
     void lagPeriodeForEndringISøktYtelseFraSkjæringstidspunktet() {
         // Arrange
-        PeriodeMedUtbetalingsgradDto periode = lagPeriodeMedUtbetaling(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(1), BigDecimal.valueOf(50));
+        var periode = lagPeriodeMedUtbetaling(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(1), BigDecimal.valueOf(50));
 
-        UtbetalingsgradPrAktivitetDto tilrette1 = lagUtbetalingsgradPrAktivitet(UttakArbeidType.ORDINÆRT_ARBEID, Arbeidsgiver.virksomhet(ORG_NUMMER), periode);
+        var tilrette1 = lagUtbetalingsgradPrAktivitet(UttakArbeidType.ORDINÆRT_ARBEID, Arbeidsgiver.virksomhet(ORG_NUMMER), periode);
 
-        InntektArbeidYtelseAggregatBuilder iayAggregatBuilder = leggTilYrkesaktiviteterOgBeregningAktiviteter(List.of(ORG_NUMMER, ORG_NUMMER_2)
+        var iayAggregatBuilder = leggTilYrkesaktiviteterOgBeregningAktiviteter(List.of(ORG_NUMMER, ORG_NUMMER_2)
         );
 
-        BeregningsgrunnlagGrunnlagDto grunnlag = lagBeregningsgrunnlag(List.of(ORG_NUMMER_2), beregningAktivitetAggregat);
-        BeregningsgrunnlagDto beregningsgrunnlag = grunnlag.getBeregningsgrunnlagHvisFinnes().get();
+        var grunnlag = lagBeregningsgrunnlag(List.of(ORG_NUMMER_2), beregningAktivitetAggregat);
+        var beregningsgrunnlag = grunnlag.getBeregningsgrunnlagHvisFinnes().get();
 
         var inntekt = Beløp.fra(40000);
         var im2 = BeregningInntektsmeldingTestUtil.opprettInntektsmelding(ORG_NUMMER_2, SKJÆRINGSTIDSPUNKT, Beløp.ZERO, inntekt);
 
-        SvangerskapspengerGrunnlag svangerskapspengerGrunnlag = new SvangerskapspengerGrunnlag(List.of(tilrette1));
+        var svangerskapspengerGrunnlag = new SvangerskapspengerGrunnlag(List.of(tilrette1));
 
 
         // Act
         var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.oppdatere(Optional.empty())
             .medData(iayAggregatBuilder)
             .medInntektsmeldinger(im2).build();
-        BeregningsgrunnlagDto nyttBeregningsgrunnlag = fastsettPerioderForRefusjonOgGradering(koblingReferanse,
+        var nyttBeregningsgrunnlag = fastsettPerioderForRefusjonOgGradering(koblingReferanse,
             grunnlag, beregningsgrunnlag, iayGrunnlag, skjæringstidspunkt, svangerskapspengerGrunnlag);
 
         // Assert
-        List<BeregningsgrunnlagPeriodeDto> perioder = nyttBeregningsgrunnlag.getBeregningsgrunnlagPerioder();
+        var perioder = nyttBeregningsgrunnlag.getBeregningsgrunnlagPerioder();
         assertThat(perioder).hasSize(2);
         assertThat(perioder.get(0).getBeregningsgrunnlagPrStatusOgAndelList()).hasSize(2);
         assertBeregningsgrunnlagPeriode(perioder.get(0), SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(1));
@@ -215,7 +215,7 @@ class FordelPerioderTjenesteSVPTest {
                                                                          InntektArbeidYtelseGrunnlagDto iayGrunnlag,
                                                                          Skjæringstidspunkt skjæringstidspunkt,
                                                                          SvangerskapspengerGrunnlag svangerskapspengerGrunnlag) {
-        KoblingReferanse refMeStp = koblingReferanse.medSkjæringstidspunkt(skjæringstidspunkt);
+        var refMeStp = koblingReferanse.medSkjæringstidspunkt(skjæringstidspunkt);
         var input = new BeregningsgrunnlagInput(refMeStp, iayGrunnlag, null, List.of(), svangerskapspengerGrunnlag)
                 .medBeregningsgrunnlagGrunnlag(grunnlag);
         return tjeneste.fastsettPerioderForUtbetalingsgradEllerGradering(input, beregningsgrunnlag).getBeregningsgrunnlag();
@@ -230,13 +230,13 @@ class FordelPerioderTjenesteSVPTest {
 
     private BeregningsgrunnlagGrunnlagDto lagBeregningsgrunnlag(List<String> orgnrs,
                                                                 BeregningAktivitetAggregatDto beregningAktivitetAggregat) {
-        BeregningsgrunnlagPeriodeDto.Builder beregningsgrunnlagPeriodeBuilder = lagBeregningsgrunnlagPerioderBuilder(SKJÆRINGSTIDSPUNKT, null, orgnrs);
-        BeregningsgrunnlagDto.Builder beregningsgrunnlagBuilder = BeregningsgrunnlagDto.builder()
+        var beregningsgrunnlagPeriodeBuilder = lagBeregningsgrunnlagPerioderBuilder(SKJÆRINGSTIDSPUNKT, null, orgnrs);
+        var beregningsgrunnlagBuilder = BeregningsgrunnlagDto.builder()
             .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT)
             .medGrunnbeløp(GRUNNBELØP)
             .leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER).medHjemmel(Hjemmel.F_14_7));
         beregningsgrunnlagBuilder.leggTilBeregningsgrunnlagPeriode(beregningsgrunnlagPeriodeBuilder);
-        BeregningsgrunnlagDto bg = beregningsgrunnlagBuilder.build();
+        var bg = beregningsgrunnlagBuilder.build();
         return BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
             .medBeregningsgrunnlag(bg)
             .medRegisterAktiviteter(beregningAktivitetAggregat)
@@ -244,10 +244,10 @@ class FordelPerioderTjenesteSVPTest {
     }
 
     private BeregningsgrunnlagPeriodeDto.Builder lagBeregningsgrunnlagPerioderBuilder(LocalDate fom, LocalDate tom, List<String> orgnrs) {
-        BeregningsgrunnlagPeriodeDto.Builder builder = BeregningsgrunnlagPeriodeDto.ny();
-        for (String orgnr : orgnrs) {
-            Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(orgnr);
-            BeregningsgrunnlagPrStatusOgAndelDto.Builder andelBuilder = BeregningsgrunnlagPrStatusOgAndelDto.ny()
+        var builder = BeregningsgrunnlagPeriodeDto.ny();
+        for (var orgnr : orgnrs) {
+            var arbeidsgiver = Arbeidsgiver.virksomhet(orgnr);
+            var andelBuilder = BeregningsgrunnlagPrStatusOgAndelDto.ny()
                 .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                 .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder()
                     .medArbeidsgiver(arbeidsgiver)

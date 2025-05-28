@@ -27,7 +27,7 @@ public class InntektDto {
         this.inntektsKilde = inntektMal.getInntektsKilde();
         this.arbeidsgiver = inntektMal.getArbeidsgiver();
         this.inntektspost = inntektMal.getAlleInntektsposter().stream().map(ip -> {
-            InntektspostDto inntektspost = new InntektspostDto(ip);
+            var inntektspost = new InntektspostDto(ip);
             inntektspost.setInntekt(this);
             return inntektspost;
         }).collect(Collectors.toCollection(ArrayList::new));
@@ -40,7 +40,7 @@ public class InntektDto {
         } else if (obj == null || !(obj instanceof InntektDto)) {
             return false;
         }
-        InntektDto other = (InntektDto) obj;
+        var other = (InntektDto) obj;
         return Objects.equals(this.getInntektsKilde(), other.getInntektsKilde())
             && Objects.equals(this.getArbeidsgiver(), other.getArbeidsgiver());
     }

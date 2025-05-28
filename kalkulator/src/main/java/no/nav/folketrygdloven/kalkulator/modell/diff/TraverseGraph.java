@@ -1,6 +1,5 @@
 package no.nav.folketrygdloven.kalkulator.modell.diff;
 
-import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.IdentityHashMap;
@@ -28,8 +27,8 @@ public class TraverseGraph {
     }
 
     public TraverseResult traverse(Object target, String rootName) {
-        Node rootNode = new Node(rootName, null, target);
-        TraverseResult result = new TraverseResult();
+        var rootNode = new Node(rootName, null, target);
+        var result = new TraverseResult();
         result.roots.put(rootNode, target);
         traverseDispatch(rootNode, target, result);
 
@@ -81,18 +80,18 @@ public class TraverseGraph {
             return;
         }
 
-        Class<?> targetClass = obj.getClass();
+        var targetClass = obj.getClass();
         graphConfig.valider(currentPath, targetClass);
 
-        Class<?> currentClass = targetClass;
+        var currentClass = targetClass;
 
         while (!graphConfig.isRoot(currentClass)) {
-            for (final Field field : currentClass.getDeclaredFields()) {
+            for (final var field : currentClass.getDeclaredFields()) {
                 if (graphConfig.isTraverseField(field)) {
-                    Node newPath = new Node(field.getName(), currentPath, obj);
+                    var newPath = new Node(field.getName(), currentPath, obj);
                     try {
                         field.setAccessible(true);
-                        Object value = field.get(obj);
+                        var value = field.get(obj);
                         traverseDispatch(newPath, value, result);
                     } catch (IllegalAccessException e) {
                         throw new IllegalArgumentException(String.valueOf(newPath), e);
@@ -122,14 +121,14 @@ public class TraverseGraph {
     }
 
     private void traverseMap(Node newPath, Map<?, ?> map, TraverseResult result) {
-        for (Map.Entry<?, ?> entry : map.entrySet()) {
-            Node collNode = new Node("{" + (entry.getKey()) + "}", newPath, map); //$NON-NLS-1$ //$NON-NLS-2$
+        for (var entry : map.entrySet()) {
+            var collNode = new Node("{" + (entry.getKey()) + "}", newPath, map); //$NON-NLS-1$ //$NON-NLS-2$
             traverseRecursiveInternal(entry.getValue(), collNode, result);
         }
     }
 
     private void traverseCollection(Node newPath, Collection<?> value, TraverseResult result) {
-        for (Object v : value) {
+        for (var v : value) {
             String collectionKey;
             if (v instanceof IndexKey) {
                 collectionKey = ((IndexKey) v).getIndexKey();
@@ -137,7 +136,7 @@ public class TraverseGraph {
                 collectionKey = String.valueOf(listPositionEq.getKey(newPath, v));
             }
 
-            Node collNode = new Node("[" + (collectionKey) + "]", newPath, v); //$NON-NLS-1$ //$NON-NLS-2$
+            var collNode = new Node("[" + (collectionKey) + "]", newPath, v); //$NON-NLS-1$ //$NON-NLS-2$
             traverseRecursiveInternal(v, collNode, result);
         }
     }

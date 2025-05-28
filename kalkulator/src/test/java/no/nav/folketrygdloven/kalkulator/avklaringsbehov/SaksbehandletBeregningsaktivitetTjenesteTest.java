@@ -23,10 +23,10 @@ class SaksbehandletBeregningsaktivitetTjenesteTest {
     @Test
     void lagSaksbehandletVersjon_fjerner_ingen_aktiviteter() {
         // Arrange
-        Intervall periode = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT.minusYears(2), SKJÆRINGSTIDSPUNKT);
-        BeregningAktivitetAggregatDto.Builder builder = BeregningAktivitetAggregatDto.builder()
+        var periode = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT.minusYears(2), SKJÆRINGSTIDSPUNKT);
+        var builder = BeregningAktivitetAggregatDto.builder()
             .medSkjæringstidspunktOpptjening(SKJÆRINGSTIDSPUNKT);
-        BeregningAktivitetDto arbeid = BeregningAktivitetDto.builder()
+        var arbeid = BeregningAktivitetDto.builder()
             .medPeriode(periode)
             .medOpptjeningAktivitetType(OpptjeningAktivitetType.ARBEID)
             .medArbeidsgiver(Arbeidsgiver.person(AktørId.dummy()))
@@ -34,16 +34,16 @@ class SaksbehandletBeregningsaktivitetTjenesteTest {
             .build();
         builder.leggTilAktivitet(arbeid);
 
-        BeregningAktivitetDto næring = BeregningAktivitetDto.builder()
+        var næring = BeregningAktivitetDto.builder()
             .medPeriode(periode)
             .medOpptjeningAktivitetType(OpptjeningAktivitetType.NÆRING)
             .build();
         builder.leggTilAktivitet(næring);
-        BeregningAktivitetAggregatDto register = builder.build();
-        BeregningsaktivitetLagreDto næringDto = mapTilDto(næring, true);
+        var register = builder.build();
+        var næringDto = mapTilDto(næring, true);
 
         // Act
-        BeregningAktivitetAggregatDto saksbehandlet = SaksbehandletBeregningsaktivitetTjeneste.lagSaksbehandletVersjon(register, List.of(næringDto));
+        var saksbehandlet = SaksbehandletBeregningsaktivitetTjeneste.lagSaksbehandletVersjon(register, List.of(næringDto));
 
         // Assert
         assertThat(saksbehandlet.getBeregningAktiviteter()).hasSize(2);
@@ -52,10 +52,10 @@ class SaksbehandletBeregningsaktivitetTjenesteTest {
     @Test
     void lagSaksbehandletVersjon_fjerner_en_aktivitet() {
         // Arrange
-        Intervall periode = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT.minusYears(2), SKJÆRINGSTIDSPUNKT);
-        BeregningAktivitetAggregatDto.Builder builder = BeregningAktivitetAggregatDto.builder()
+        var periode = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT.minusYears(2), SKJÆRINGSTIDSPUNKT);
+        var builder = BeregningAktivitetAggregatDto.builder()
             .medSkjæringstidspunktOpptjening(SKJÆRINGSTIDSPUNKT);
-        BeregningAktivitetDto arbeid = BeregningAktivitetDto.builder()
+        var arbeid = BeregningAktivitetDto.builder()
             .medPeriode(periode)
             .medOpptjeningAktivitetType(OpptjeningAktivitetType.ARBEID)
             .medArbeidsgiver(Arbeidsgiver.person(AktørId.dummy()))
@@ -63,16 +63,16 @@ class SaksbehandletBeregningsaktivitetTjenesteTest {
             .build();
         builder.leggTilAktivitet(arbeid);
 
-        BeregningAktivitetDto næring = BeregningAktivitetDto.builder()
+        var næring = BeregningAktivitetDto.builder()
             .medPeriode(periode)
             .medOpptjeningAktivitetType(OpptjeningAktivitetType.NÆRING)
             .build();
         builder.leggTilAktivitet(næring);
-        BeregningAktivitetAggregatDto register = builder.build();
-        BeregningsaktivitetLagreDto næringDto = mapTilDto(næring, false);
+        var register = builder.build();
+        var næringDto = mapTilDto(næring, false);
 
         // Act
-        BeregningAktivitetAggregatDto saksbehandlet = SaksbehandletBeregningsaktivitetTjeneste.lagSaksbehandletVersjon(register, List.of(næringDto));
+        var saksbehandlet = SaksbehandletBeregningsaktivitetTjeneste.lagSaksbehandletVersjon(register, List.of(næringDto));
 
         // Assert
         assertThat(saksbehandlet.getBeregningAktiviteter()).hasSize(1);
@@ -81,13 +81,13 @@ class SaksbehandletBeregningsaktivitetTjenesteTest {
     }
 
     private BeregningsaktivitetLagreDto mapTilDto(BeregningAktivitetDto beregningAktivitet, boolean skalBrukes) {
-        BeregningsaktivitetLagreDto.Builder builder = BeregningsaktivitetLagreDto.builder()
+        var builder = BeregningsaktivitetLagreDto.builder()
             .medOpptjeningAktivitetType(beregningAktivitet.getOpptjeningAktivitetType())
             .medFom(beregningAktivitet.getPeriode().getFomDato())
             .medTom(beregningAktivitet.getPeriode().getTomDato())
             .medArbeidsforholdRef(beregningAktivitet.getArbeidsforholdRef().getReferanse())
             .medSkalBrukes(skalBrukes);
-        Arbeidsgiver arbeidsgiver = beregningAktivitet.getArbeidsgiver();
+        var arbeidsgiver = beregningAktivitet.getArbeidsgiver();
         if (arbeidsgiver != null) {
             if (arbeidsgiver.getErVirksomhet()) {
                 builder.medOppdragsgiverOrg(arbeidsgiver.getOrgnr());

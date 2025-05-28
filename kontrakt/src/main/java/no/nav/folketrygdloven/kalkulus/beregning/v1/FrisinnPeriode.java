@@ -70,7 +70,7 @@ public class FrisinnPeriode {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        FrisinnPeriode that = (FrisinnPeriode) o;
+        var that = (FrisinnPeriode) o;
         return Objects.equals(periode, that.periode) &&
                 Objects.equals(søkerYtelseForFrilans, that.søkerYtelseForFrilans) &&
                 Objects.equals(søkerYtelseForNæring, that.søkerYtelseForNæring);

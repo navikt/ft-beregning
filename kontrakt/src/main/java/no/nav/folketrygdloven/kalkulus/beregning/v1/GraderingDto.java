@@ -59,7 +59,7 @@ public class GraderingDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        GraderingDto that = (GraderingDto) o;
+        var that = (GraderingDto) o;
         return Objects.equals(periode, that.periode) &&
                 Objects.equals(arbeidstidProsent, that.arbeidstidProsent);
     }

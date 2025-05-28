@@ -12,7 +12,7 @@ public class SaksopplysningerTjeneste {
     }
 
     public static Saksopplysninger lagSaksopplysninger(BeregningsgrunnlagGUIInput input) {
-        Saksopplysninger saksopplysninger = new Saksopplysninger();
+        var saksopplysninger = new Saksopplysninger();
         saksopplysninger.setLønnsendringSaksopplysning(LønnsendringSaksopplysningTjeneste.lagDto(input));
         saksopplysninger.setArbeidsforholdMedLønnsendring(lagArbeidsforholdMedLønnsendring(input));
         saksopplysninger.setKortvarigeArbeidsforhold(lagKortvarigeArbeidsforhold(input));

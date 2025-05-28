@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.assertj.core.api.Assertions;
@@ -28,11 +27,11 @@ class FordelMålbeløpPrAndelTest {
 	@Test
 	void skal_teste_fordeling_mellom_arbeidsforhold_med_refusjon_med_samme_inntektskategori() {
 		// Arrange
-		FordelteAndelerModell andel1 = lagArbeidsandel(arbeid("999", "abc"), 200_000, 150_000);
-		FordelteAndelerModell andel2 = lagArbeidsandel(arbeid("888", "abc"), null, 50_000);
+        var andel1 = lagArbeidsandel(arbeid("999", "abc"), 200_000, 150_000);
+        var andel2 = lagArbeidsandel(arbeid("888", "abc"), null, 50_000);
 
 		// Act
-		FordelModell regelModell = kjørRegel(andel1, andel2);
+        var regelModell = kjørRegel(andel1, andel2);
 
 		// Assert
 		assertThat(regelModell.getMellomregninger()).hasSize(2);
@@ -47,12 +46,12 @@ class FordelMålbeløpPrAndelTest {
 	@Test
 	void skal_teste_fordeling_fra_en_eksisterende_med_ref_til_to_tilkomne() {
 		// Arrange
-		FordelteAndelerModell andel1 = lagArbeidsandel(arbeid("999", "abc"), 200_000, 150_000);
-		FordelteAndelerModell andel2 = lagArbeidsandel(arbeid("888", "abc"), null, 20_000);
-		FordelteAndelerModell andel3 = lagArbeidsandel(arbeid("777", "abc"), null, 30_000);
+        var andel1 = lagArbeidsandel(arbeid("999", "abc"), 200_000, 150_000);
+        var andel2 = lagArbeidsandel(arbeid("888", "abc"), null, 20_000);
+        var andel3 = lagArbeidsandel(arbeid("777", "abc"), null, 30_000);
 
 		// Act
-		FordelModell regelModell = kjørRegel(andel1, andel2, andel3);
+        var regelModell = kjørRegel(andel1, andel2, andel3);
 
 		// Assert
 		assertThat(regelModell.getMellomregninger()).hasSize(3);
@@ -70,11 +69,11 @@ class FordelMålbeløpPrAndelTest {
 	@Test
 	void skal_overskrive_andel_med_inntektskategori_udefinert() {
 		// Arrange
-		FordelteAndelerModell andel1 = lagArbeidsandel(arbeid("999", "abc"), 400_000, 150_000);
-		FordelteAndelerModell andel2 = lagArbeidsandelUdefinertIK(arbeid("888", "abc"), null, 250_000);
+        var andel1 = lagArbeidsandel(arbeid("999", "abc"), 400_000, 150_000);
+        var andel2 = lagArbeidsandelUdefinertIK(arbeid("888", "abc"), null, 250_000);
 
 		// Act
-		FordelModell regelModell = kjørRegel(andel1, andel2);
+        var regelModell = kjørRegel(andel1, andel2);
 
 		// Assert
 		assertThat(regelModell.getMellomregninger()).hasSize(2);
@@ -89,13 +88,13 @@ class FordelMålbeløpPrAndelTest {
 	@Test
 	void skal_teste_fordeling_fra_næring_og_arbeid_til_to_tilkomne_likt_fordelt() {
 		// Arrange
-		FordelteAndelerModell atAndel = lagArbeidsandel(arbeid("999", "abc"), 60_000, 60_000);
-		FordelteAndelerModell snAndel = lagSNAndel(100_000, 0);
-		FordelteAndelerModell tilkommetAT1 = lagArbeidsandel(arbeid("888", "abc"), null, 45_000);
-		FordelteAndelerModell tilkommetAT2 = lagArbeidsandel(arbeid("777", "abc"), null, 55_000);
+        var atAndel = lagArbeidsandel(arbeid("999", "abc"), 60_000, 60_000);
+        var snAndel = lagSNAndel(100_000, 0);
+        var tilkommetAT1 = lagArbeidsandel(arbeid("888", "abc"), null, 45_000);
+        var tilkommetAT2 = lagArbeidsandel(arbeid("777", "abc"), null, 55_000);
 
 		// Act
-		FordelModell regelModell = kjørRegel(atAndel, snAndel, tilkommetAT1, tilkommetAT2);
+        var regelModell = kjørRegel(atAndel, snAndel, tilkommetAT1, tilkommetAT2);
 
 		// Assert
 		assertThat(regelModell.getMellomregninger()).hasSize(4);
@@ -116,13 +115,13 @@ class FordelMålbeløpPrAndelTest {
 	@Test
 	void skal_fordele_fra_tre_eksisterende_til_et_tilkommet_arbeidsforhold() {
 		// Arrange
-		FordelteAndelerModell andel1 = lagArbeidsandel(arbeid("999", "abc"), 200_000, 50_000);
-		FordelteAndelerModell andel2 = lagArbeidsandel(arbeid("888", "abc"), 100_000, 100_000);
-		FordelteAndelerModell andel3 = lagArbeidsandel(arbeid("777", "abc"), 50_000, 0);
-		FordelteAndelerModell andel4 = lagArbeidsandel(arbeid("666", "abc"), null, 200_000);
+        var andel1 = lagArbeidsandel(arbeid("999", "abc"), 200_000, 50_000);
+        var andel2 = lagArbeidsandel(arbeid("888", "abc"), 100_000, 100_000);
+        var andel3 = lagArbeidsandel(arbeid("777", "abc"), 50_000, 0);
+        var andel4 = lagArbeidsandel(arbeid("666", "abc"), null, 200_000);
 
 		// Act
-		FordelModell regelModell = kjørRegel(andel1, andel2, andel3, andel4);
+        var regelModell = kjørRegel(andel1, andel2, andel3, andel4);
 
 		// Assert
 		assertThat(regelModell.getMellomregninger()).hasSize(4);
@@ -143,13 +142,13 @@ class FordelMålbeløpPrAndelTest {
 	@Test
 	void skal_fordele_fra_frilans_og_næring_og_arbeid_til_tilkommet_arbeid() {
 		// Arrange
-		FordelteAndelerModell arbeid = lagArbeidsandel(arbeid("999", "abc"), 200_000, 150_000);
-		FordelteAndelerModell frilans = lagFLAndel(100_000, 0);
-		FordelteAndelerModell næring = lagSNAndel(300_000, 0);
-		FordelteAndelerModell tilkommetArbeid = lagArbeidsandel(arbeid("888", "abc"), null, 450_000);
+        var arbeid = lagArbeidsandel(arbeid("999", "abc"), 200_000, 150_000);
+        var frilans = lagFLAndel(100_000, 0);
+        var næring = lagSNAndel(300_000, 0);
+        var tilkommetArbeid = lagArbeidsandel(arbeid("888", "abc"), null, 450_000);
 
 		// Act
-		FordelModell regelModell = kjørRegel(arbeid, frilans, næring, tilkommetArbeid);
+        var regelModell = kjørRegel(arbeid, frilans, næring, tilkommetArbeid);
 
 		// Assert
 		assertThat(regelModell.getMellomregninger()).hasSize(4);
@@ -171,8 +170,8 @@ class FordelMålbeløpPrAndelTest {
 
 
 	private void assertFordeltAndel(FordelModell regelModell, FordelteAndelerModell andel, int forventetFordelt, Inntektskategori forventetKategori) {
-		FordelteAndelerModell resultat = getResultat(regelModell.getMellomregninger(), andel);
-		Optional<FordelAndelModell> matchendeAndel = resultat.getFordelteAndeler().stream()
+        var resultat = getResultat(regelModell.getMellomregninger(), andel);
+        var matchendeAndel = resultat.getFordelteAndeler().stream()
 				.filter(res -> res.getInntektskategori().equals(forventetKategori))
 				.findFirst();
 		assertThat(matchendeAndel).isPresent();
@@ -180,8 +179,8 @@ class FordelMålbeløpPrAndelTest {
 	}
 
 	private void assertFordeltAndel(FordelModell regelModell, FordelteAndelerModell andel, int forventetFordelt, Inntektskategori forventetKategori, boolean erNytt) {
-		FordelteAndelerModell resultat = getResultat(regelModell.getMellomregninger(), andel);
-		Optional<FordelAndelModell> matchendeAndel = resultat.getFordelteAndeler().stream()
+        var resultat = getResultat(regelModell.getMellomregninger(), andel);
+        var matchendeAndel = resultat.getFordelteAndeler().stream()
 				.filter(res -> res.getInntektskategori().equals(forventetKategori))
 				.findFirst();
 		assertThat(matchendeAndel).isPresent();
@@ -190,49 +189,49 @@ class FordelMålbeløpPrAndelTest {
 	}
 
 	private void assertAntallFordelteAndelerResultat(FordelModell regelModell, FordelteAndelerModell andel, int forventetAntallResultatAndeler) {
-		FordelteAndelerModell resultat = getResultat(regelModell.getMellomregninger(), andel);
+        var resultat = getResultat(regelModell.getMellomregninger(), andel);
 		Assertions.assertThat(resultat.getFordelteAndeler()).hasSize(forventetAntallResultatAndeler);
 	}
 
 
 
 	private FordelteAndelerModell lagArbeidsandel(Arbeidsforhold ag, Integer brutto, int ønsketBeløpEtterFordeling) {
-		FordelAndelModell inputandel = lagFordelAndel(AktivitetStatus.AT, Inntektskategori.ARBEIDSTAKER, ag, brutto);
-		FordelteAndelerModell mellomregning = new FordelteAndelerModell(inputandel);
+        var inputandel = lagFordelAndel(AktivitetStatus.AT, Inntektskategori.ARBEIDSTAKER, ag, brutto);
+        var mellomregning = new FordelteAndelerModell(inputandel);
 		mellomregning.setMålbeløp(BigDecimal.valueOf(ønsketBeløpEtterFordeling));
 		return mellomregning;
 	}
 
 	private FordelteAndelerModell lagArbeidsandelUdefinertIK(Arbeidsforhold ag, Integer brutto, int ønsketBeløpEtterFordeling) {
-		FordelAndelModell inputandel = lagFordelAndel(AktivitetStatus.AT, Inntektskategori.UDEFINERT, ag, brutto);
-		FordelteAndelerModell mellomregning = new FordelteAndelerModell(inputandel);
+        var inputandel = lagFordelAndel(AktivitetStatus.AT, Inntektskategori.UDEFINERT, ag, brutto);
+        var mellomregning = new FordelteAndelerModell(inputandel);
 		mellomregning.setMålbeløp(BigDecimal.valueOf(ønsketBeløpEtterFordeling));
 		return mellomregning;
 	}
 
 	private FordelteAndelerModell lagSNAndel(Integer brutto, int ønsketBeløpEtterFordeling) {
-		FordelAndelModell inputandel = lagFordelAndelUtenArbeidsforhold(AktivitetStatus.SN, Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE, brutto);
-		FordelteAndelerModell mellomregning = new FordelteAndelerModell(inputandel);
+        var inputandel = lagFordelAndelUtenArbeidsforhold(AktivitetStatus.SN, Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE, brutto);
+        var mellomregning = new FordelteAndelerModell(inputandel);
 		mellomregning.setMålbeløp(BigDecimal.valueOf(ønsketBeløpEtterFordeling));
 		return mellomregning;
 	}
 
 	private FordelteAndelerModell lagFLAndel(Integer brutto, int ønsketBeløpEtterFordeling) {
-		FordelAndelModell inputandel = lagFordelAndel(AktivitetStatus.FL, Inntektskategori.FRILANSER, frilans(), brutto);
-		FordelteAndelerModell mellomregning = new FordelteAndelerModell(inputandel);
+        var inputandel = lagFordelAndel(AktivitetStatus.FL, Inntektskategori.FRILANSER, frilans(), brutto);
+        var mellomregning = new FordelteAndelerModell(inputandel);
 		mellomregning.setMålbeløp(BigDecimal.valueOf(ønsketBeløpEtterFordeling));
 		return mellomregning;
 	}
 
 	private FordelteAndelerModell getResultat(List<FordelteAndelerModell> mellomregninger, FordelteAndelerModell andel) {
-		Arbeidsforhold forventetAG = andel.getInputAndel().getArbeidsforhold().orElse(null);
+        var forventetAG = andel.getInputAndel().getArbeidsforhold().orElse(null);
 		return mellomregninger.stream()
 				.filter(mr -> Objects.equals(mr.getInputAndel().getArbeidsforhold().orElse(null), forventetAG))
 				.findFirst().orElseThrow();
 	}
 
 	private FordelAndelModell lagFordelAndel(AktivitetStatus status, Inntektskategori ik, Arbeidsforhold ag, Integer brutto) {
-		FordelAndelModell.Builder fordelAndel = FordelAndelModell.builder()
+        var fordelAndel = FordelAndelModell.builder()
 				.medAktivitetStatus(status)
 				.medArbeidsforhold(ag)
 				.medInntektskategori(ik);
@@ -240,7 +239,7 @@ class FordelMålbeløpPrAndelTest {
 	}
 
 	private FordelAndelModell lagFordelAndelUtenArbeidsforhold(AktivitetStatus status, Inntektskategori ik, Integer brutto) {
-		FordelAndelModell.Builder fordelAndel = FordelAndelModell.builder()
+        var fordelAndel = FordelAndelModell.builder()
 				.medAktivitetStatus(status)
 				.medInntektskategori(ik);
 		return brutto == null ? fordelAndel.build() : fordelAndel.medForeslåttPrÅr(BigDecimal.valueOf(brutto)).build();
@@ -255,10 +254,10 @@ class FordelMålbeløpPrAndelTest {
 	}
 
 	private FordelModell kjørRegel(FordelteAndelerModell... regelobjekter) {
-		List<FordelteAndelerModell> mellomregninger = Arrays.asList(regelobjekter);
-		List<FordelAndelModell> input = mellomregninger.stream().map(FordelteAndelerModell::getInputAndel).collect(Collectors.toList());
-		FordelPeriodeModell periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), LocalDateInterval.TIDENES_ENDE), input);
-		FordelModell modell = new FordelModell(periode);
+        var mellomregninger = Arrays.asList(regelobjekter);
+        var input = mellomregninger.stream().map(FordelteAndelerModell::getInputAndel).collect(Collectors.toList());
+        var periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), LocalDateInterval.TIDENES_ENDE), input);
+        var modell = new FordelModell(periode);
 		mellomregninger.forEach(modell::leggTilMellomregningAndel);
 		new FordelMålbeløpPrAndel().evaluate(modell);
 		return modell;

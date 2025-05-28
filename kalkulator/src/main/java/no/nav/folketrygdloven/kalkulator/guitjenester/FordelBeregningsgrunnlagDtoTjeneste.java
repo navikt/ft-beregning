@@ -11,7 +11,6 @@ import no.nav.folketrygdloven.kalkulator.guitjenester.fakta.RefusjonDtoTjeneste;
 import no.nav.folketrygdloven.kalkulator.guitjenester.fakta.RefusjonEllerGraderingArbeidsforholdDtoTjeneste;
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagGUIInput;
 import no.nav.folketrygdloven.kalkulator.input.ForeldrepengerGrunnlag;
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.folketrygdloven.kalkulator.modell.gradering.AktivitetGradering;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
@@ -29,20 +28,20 @@ public class FordelBeregningsgrunnlagDtoTjeneste {
 
     public static void lagDto(BeregningsgrunnlagGUIInput input,
                               FordelingDto dto) {
-        boolean harUtførtSteg = !input.getBeregningsgrunnlagGrunnlag().getBeregningsgrunnlagTilstand().erFør(BeregningsgrunnlagTilstand.OPPDATERT_MED_REFUSJON_OG_GRADERING);
+        var harUtførtSteg = !input.getBeregningsgrunnlagGrunnlag().getBeregningsgrunnlagTilstand().erFør(BeregningsgrunnlagTilstand.OPPDATERT_MED_REFUSJON_OG_GRADERING);
         if (!harUtførtSteg) {
             return;
         }
-        FordelBeregningsgrunnlagDto bgDto = new FordelBeregningsgrunnlagDto();
+        var bgDto = new FordelBeregningsgrunnlagDto();
         settEndretArbeidsforholdDto(input, bgDto);
         bgDto.setFordelBeregningsgrunnlagPerioder(lagPerioder(input));
         dto.setFordelBeregningsgrunnlag(bgDto);
     }
 
     private static List<FordelBeregningsgrunnlagPeriodeDto> lagPerioder(BeregningsgrunnlagGUIInput input) {
-        BeregningsgrunnlagDto beregningsgrunnlag = input.getBeregningsgrunnlag();
-        List<BeregningsgrunnlagPeriodeDto> bgPerioder = beregningsgrunnlag.getBeregningsgrunnlagPerioder();
-        List<FordelBeregningsgrunnlagPeriodeDto> fordelPerioder = bgPerioder.stream()
+        var beregningsgrunnlag = input.getBeregningsgrunnlag();
+        var bgPerioder = beregningsgrunnlag.getBeregningsgrunnlagPerioder();
+        var fordelPerioder = bgPerioder.stream()
                 .map(periode -> mapTilPeriodeDto(input, periode, beregningsgrunnlag.getGrunnbeløp()))
                 .sorted(Comparator.comparing(FordelBeregningsgrunnlagPeriodeDto::getFom)).collect(toList());
         return fordelPerioder;
@@ -51,10 +50,10 @@ public class FordelBeregningsgrunnlagDtoTjeneste {
     private static FordelBeregningsgrunnlagPeriodeDto mapTilPeriodeDto(BeregningsgrunnlagGUIInput input,
                                                                        BeregningsgrunnlagPeriodeDto periode,
                                                                        Beløp grunnbeløp) {
-        FordelBeregningsgrunnlagPeriodeDto fordelBGPeriode = new FordelBeregningsgrunnlagPeriodeDto();
+        var fordelBGPeriode = new FordelBeregningsgrunnlagPeriodeDto();
         fordelBGPeriode.setFom(periode.getBeregningsgrunnlagPeriodeFom());
         fordelBGPeriode.setTom(periode.getBeregningsgrunnlagPeriodeTom() == TIDENES_ENDE ? null : periode.getBeregningsgrunnlagPeriodeTom());
-        List<FordelBeregningsgrunnlagAndelDto> fordelAndeler = lagFordelBGAndeler(fordelBGPeriode, input, periode, grunnbeløp);
+        var fordelAndeler = lagFordelBGAndeler(fordelBGPeriode, input, periode, grunnbeløp);
         fordelBGPeriode.setFordelBeregningsgrunnlagAndeler(fordelAndeler);
         return fordelBGPeriode;
     }
@@ -71,7 +70,7 @@ public class FordelBeregningsgrunnlagDtoTjeneste {
                                                                              Beløp grunnbeløp) {
         var aktivitetGradering = input.getYtelsespesifiktGrunnlag() instanceof ForeldrepengerGrunnlag ?
                 ((ForeldrepengerGrunnlag) input.getYtelsespesifiktGrunnlag()).getAktivitetGradering() : AktivitetGradering.INGEN_GRADERING;
-        List<FordelBeregningsgrunnlagAndelDto> fordelAndeler = FordelBeregningsgrunnlagAndelDtoTjeneste.lagEndretBgAndelListe(input, periode);
+        var fordelAndeler = FordelBeregningsgrunnlagAndelDtoTjeneste.lagEndretBgAndelListe(input, periode);
 
         fordelBGPeriode.setHarPeriodeAarsakGraderingEllerRefusjon(ManuellBehandlingRefusjonGraderingDtoTjeneste
                 .skalSaksbehandlerRedigereInntekt(

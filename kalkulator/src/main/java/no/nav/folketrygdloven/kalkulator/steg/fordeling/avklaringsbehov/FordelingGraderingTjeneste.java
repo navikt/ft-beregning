@@ -26,9 +26,9 @@ public final class FordelingGraderingTjeneste {
     }
 
     public static List<AndelGradering.Gradering> hentGraderingerForAndel(BeregningsgrunnlagPrStatusOgAndelDto andel, AktivitetGradering aktivitetGradering) {
-        Optional<AndelGradering> graderingOpt = finnGraderingForAndel(andel, aktivitetGradering);
+        var graderingOpt = finnGraderingForAndel(andel, aktivitetGradering);
         if (graderingOpt.isPresent()) {
-            AndelGradering gradering = graderingOpt.get();
+            var gradering = graderingOpt.get();
             return gradering.getGraderinger();
         }
         return Collections.emptyList();
@@ -39,9 +39,9 @@ public final class FordelingGraderingTjeneste {
     }
 
     public static List<AndelGradering.Gradering> hentGraderingerForAndelIPeriode(BeregningsgrunnlagPrStatusOgAndelDto andel, AktivitetGradering aktivitetGradering, Intervall periode) {
-        Optional<AndelGradering> graderingOpt = finnGraderingForAndel(andel, aktivitetGradering);
+        var graderingOpt = finnGraderingForAndel(andel, aktivitetGradering);
         if (graderingOpt.isPresent()) {
-            AndelGradering andelGradering = graderingOpt.get();
+            var andelGradering = graderingOpt.get();
             return andelGradering.getGraderinger().stream()
                     .filter(gradering -> gradering.getPeriode().overlapper(periode))
                     .collect(Collectors.toList());
@@ -59,7 +59,7 @@ public final class FordelingGraderingTjeneste {
     }
 
     public static boolean skalGraderePåAndelUtenBeregningsgrunnlag(BeregningsgrunnlagPrStatusOgAndelDto andel, boolean harGraderingIBGPeriode) {
-        boolean harIkkjeBeregningsgrunnlag = andel.getBruttoUtenManueltFordelt() == null || andel.getBruttoUtenManueltFordelt().compareTo(Beløp.ZERO) == 0;
+        var harIkkjeBeregningsgrunnlag = andel.getBruttoUtenManueltFordelt() == null || andel.getBruttoUtenManueltFordelt().compareTo(Beløp.ZERO) == 0;
         return harGraderingIBGPeriode && harIkkjeBeregningsgrunnlag;
     }
 

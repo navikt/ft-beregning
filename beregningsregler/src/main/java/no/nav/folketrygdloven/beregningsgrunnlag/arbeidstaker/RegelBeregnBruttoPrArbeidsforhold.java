@@ -25,41 +25,41 @@ public class RegelBeregnBruttoPrArbeidsforhold implements RuleService<Beregnings
     @Override
     public Specification<BeregningsgrunnlagPeriode> getSpecification() {
 
-        Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
+        var rs = new Ruleset<BeregningsgrunnlagPeriode>();
 
         //FP_BR 15.6 Beregn naturalytelse -= (verdi x 12)
         //FP_BR 15.5 Naturalytelse som tilkommer ved start av perioden eller i tidligere perioder?
-        Specification<BeregningsgrunnlagPeriode> tilkommetNaturalYtelse =
+        var tilkommetNaturalYtelse =
             rs.beregningHvisRegel(new SjekkOmTilkommetNaturalytelse(arbeidsforhold),
                 new BeregnPrArbeidsforholdNaturalytelseTilkommet(arbeidsforhold), new Beregnet());
 
         //FP_BR 15.4 Beregn naturalytelse
-        Specification<BeregningsgrunnlagPeriode> beregnBortfallNaturalYtelse =
+        var beregnBortfallNaturalYtelse =
             rs.beregningsRegel(BeregnPrArbeidsforholdNaturalytelseBortfalt.ID, BeregnPrArbeidsforholdNaturalytelseBortfalt.BESKRIVELSE,
                 new BeregnPrArbeidsforholdNaturalytelseBortfalt(arbeidsforhold), tilkommetNaturalYtelse);
 
         //FP_BR 15.3 Bortfall av naturalytelse ved start av perioden eller i tidligere periode?
-        Specification<BeregningsgrunnlagPeriode> erDetBortfallAvNaturalYtelse =
+        var erDetBortfallAvNaturalYtelse =
             rs.beregningHvisRegel(new SjekkOmBortfallAvNaturalytelse(arbeidsforhold), beregnBortfallNaturalYtelse, tilkommetNaturalYtelse);
 
         //FP_BR 15.9 Beregn bortfalt naturalytelse i arbeidsgiverperioden for sykepenger -> naturalytelseverdi * 12
-        Specification<BeregningsgrunnlagPeriode> beregnBortfallAvNaturalYtelseIArbeidsgiverperiodenSykepenger =
+        var beregnBortfallAvNaturalYtelseIArbeidsgiverperiodenSykepenger =
             rs.beregningsRegel(BeregnPrArbeidsforholdNaturalytelseBortfalt.ID, BeregnPrArbeidsforholdNaturalytelseBortfalt.BESKRIVELSE,
                 new BeregnPrArbeidsforholdNaturalytelseBortfaltForSykepenger(arbeidsforhold), new Beregnet());
 
         // FP_BR 15.8 Er det bortfall av naturalytelse i arbeidsgiverperioden (gjelder sykepenger spesifikt)?
-        Specification<BeregningsgrunnlagPeriode> sjekkOmBortfallNaturalytelseIArbeidsgiverperioden =
+        var sjekkOmBortfallNaturalytelseIArbeidsgiverperioden =
             rs.beregningHvisRegel(new SjekkOmBortfallAvNaturalYtelseIArbeidsgiverperiodenSykepenger(arbeidsforhold),
                 beregnBortfallAvNaturalYtelseIArbeidsgiverperiodenSykepenger, new Beregnet())
 		            .medEvaluationProperty(new ServiceArgument("arbeidsforhold", arbeidsforhold.getArbeidsforhold()));
 
         //FP_BR 15.7 Gjelder beregningen ytelsen foreldrepenger eller sykepenger?
-        Specification<BeregningsgrunnlagPeriode> gjelderBeregningenYtelsenSykepenger =
+        var gjelderBeregningenYtelsenSykepenger =
             rs.beregningHvisRegel(new SjekkOmBeregningenGjelderSykepenger(),
                 sjekkOmBortfallNaturalytelseIArbeidsgiverperioden, erDetBortfallAvNaturalYtelse);
 
         // FP_BR 15.2 Brutto pr periode_type = inntektsmelding sats * 12
-        Specification<BeregningsgrunnlagPeriode> beregnPrArbeidsforholdFraInntektsmelding =
+        var beregnPrArbeidsforholdFraInntektsmelding =
             rs.beregningsRegel(BeregnPrArbeidsforholdFraInntektsmelding.ID, BeregnPrArbeidsforholdFraInntektsmelding.BESKRIVELSE,
                 new BeregnPrArbeidsforholdFraInntektsmelding(arbeidsforhold), gjelderBeregningenYtelsenSykepenger);
 
@@ -68,28 +68,28 @@ public class RegelBeregnBruttoPrArbeidsforhold implements RuleService<Beregnings
 
 
         // FP_BR 15.6 Rapportert inntekt = manuelt fastsatt månedsinntekt * 12
-        Specification<BeregningsgrunnlagPeriode> beregnÅrsinntektVedManuellFastsettelse =
+        var beregnÅrsinntektVedManuellFastsettelse =
             rs.beregningsRegel(BeregnRapportertInntektVedManuellFastsettelse.ID, BeregnRapportertInntektVedManuellFastsettelse.BESKRIVELSE,
                 new BeregnRapportertInntektVedManuellFastsettelse(arbeidsforhold), new Beregnet());
 
         // FP_BR 15.1 Foreligger inntektsmelding?
-        Specification<BeregningsgrunnlagPeriode> sjekkOmInntektsmeldingForeligger =
+        var sjekkOmInntektsmeldingForeligger =
             rs.beregningHvisRegel(new SjekkOmInntektsmeldingForeligger(arbeidsforhold),
                 beregnPrArbeidsforholdFraInntektsmelding, beregnPrArbeidsforholdFraAOrdningen)
 		            .medEvaluationProperty(new ServiceArgument("arbeidsforhold", arbeidsforhold.getArbeidsforhold()));
 
         // FP_BR 15.5 Har saksbehandler fastsatt månedsinntekt manuelt?
-        Specification<BeregningsgrunnlagPeriode> manueltFastsattInntekt = rs.beregningHvisRegel(
+        var manueltFastsattInntekt = rs.beregningHvisRegel(
             new SjekkHarSaksbehandlerSattInntektManuelt(arbeidsforhold), beregnÅrsinntektVedManuellFastsettelse, sjekkOmInntektsmeldingForeligger);
 
         // FP_BR 14.9 Er bruker nyoppstartet frilanser?
-        Specification<BeregningsgrunnlagPeriode> sjekkOmNyoppstartetFrilanser =
+        var sjekkOmNyoppstartetFrilanser =
             rs.beregningHvisRegel(new SjekkOmFrilansInntektErFastsattAvSaksbehandler(arbeidsforhold),
                 new BeregnGrunnlagNyoppstartetFrilanser(arbeidsforhold), beregnPrArbeidsforholdFraAOrdningen);
 
         // FP_BR 14.1 Er bruker arbeidstaker?
 
-        Specification<BeregningsgrunnlagPeriode> fastsettBruttoBeregningsgrunnlag =
+        var fastsettBruttoBeregningsgrunnlag =
             rs.beregningHvisRegel(new SjekkOmBrukerErArbeidstaker(arbeidsforhold), manueltFastsattInntekt, sjekkOmNyoppstartetFrilanser);
 
         return fastsettBruttoBeregningsgrunnlag;
