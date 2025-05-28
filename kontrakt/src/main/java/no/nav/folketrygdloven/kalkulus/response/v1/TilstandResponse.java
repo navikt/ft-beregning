@@ -3,14 +3,15 @@ package no.nav.folketrygdloven.kalkulus.response.v1;
 import java.util.List;
 import java.util.UUID;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.AssertTrue;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.AssertTrue;
 import no.nav.folketrygdloven.kalkulus.beregning.v1.AvklaringsbehovMedTilstandDto;
 import no.nav.folketrygdloven.kalkulus.kodeverk.KalkulusResultatKode;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Vilkårsavslagsårsak;

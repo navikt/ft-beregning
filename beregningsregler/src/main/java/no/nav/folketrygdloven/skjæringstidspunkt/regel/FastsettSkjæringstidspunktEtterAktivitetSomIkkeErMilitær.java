@@ -1,6 +1,5 @@
 package no.nav.folketrygdloven.skjæringstidspunkt.regel;
 
-import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,13 +22,13 @@ class FastsettSkjæringstidspunktEtterAktivitetSomIkkeErMilitær extends LeafSpe
 
     @Override
     public Evaluation evaluate(AktivitetStatusModell regelmodell) {
-        LocalDate sisteAktivitetDato = regelmodell.getAktivePerioder().stream()
+        var sisteAktivitetDato = regelmodell.getAktivePerioder().stream()
             .filter(ap -> !Aktivitet.MILITÆR_ELLER_SIVILTJENESTE.equals(ap.getAktivitet()))
             .map(ap -> ap.getPeriode().getTom())
             .max(Comparator.naturalOrder())
             .orElseThrow(() -> new IllegalStateException("Utviklerfeil: Skal ikke være mulig å havne her uten en aktivitet som ikke er militær"));
 
-        LocalDate skjæringstidspunkt = sisteAktivitetDato.isBefore(regelmodell.getSkjæringstidspunktForOpptjening())
+        var skjæringstidspunkt = sisteAktivitetDato.isBefore(regelmodell.getSkjæringstidspunktForOpptjening())
             ? sisteAktivitetDato.plusDays(1)
             : regelmodell.getSkjæringstidspunktForOpptjening();
 

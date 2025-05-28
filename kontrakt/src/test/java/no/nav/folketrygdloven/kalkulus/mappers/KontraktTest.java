@@ -1,10 +1,10 @@
 package no.nav.folketrygdloven.kalkulus.mappers;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 class KontraktTest {
 

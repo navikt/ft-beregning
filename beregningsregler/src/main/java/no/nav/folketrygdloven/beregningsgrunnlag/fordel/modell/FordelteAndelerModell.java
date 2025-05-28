@@ -1,12 +1,12 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
 
 public class FordelteAndelerModell {
 	private final FordelAndelModell inputAndel;

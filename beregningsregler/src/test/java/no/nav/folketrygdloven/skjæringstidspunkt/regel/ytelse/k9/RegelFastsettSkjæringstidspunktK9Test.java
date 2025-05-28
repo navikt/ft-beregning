@@ -1,12 +1,12 @@
 package no.nav.folketrygdloven.skjæringstidspunkt.regel.ytelse.k9;
 
-import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModell;
-
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
+
+import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModell;
 
 class RegelFastsettSkjæringstidspunktK9Test {
 

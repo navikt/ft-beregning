@@ -13,10 +13,10 @@ public class FaktaOmFordelingDtoTjeneste {
     }
 
     public static Optional<FordelingDto> lagDto(BeregningsgrunnlagGUIInput input) {
-        BeregningsgrunnlagTilstand tilstandForAktivtGrunnlag = input.getBeregningsgrunnlagGrunnlag().getBeregningsgrunnlagTilstand();
+        var tilstandForAktivtGrunnlag = input.getBeregningsgrunnlagGrunnlag().getBeregningsgrunnlagTilstand();
 
         if (tilstandForAktivtGrunnlag.erEtter(BeregningsgrunnlagTilstand.VURDERT_VILKÅR)) {
-            FordelingDto dto = new FordelingDto();
+            var dto = new FordelingDto();
             FordelBeregningsgrunnlagDtoTjeneste.lagDto(input, dto);
             dto.setVurderNyttInntektsforholdDto(VurderNyeInntektsforholdDtoTjeneste.lagDto(input));
             VurderStortingsperiodeDtoTjeneste.lagDto(input).ifPresent(dto::setVurderRepresentererStortinget);

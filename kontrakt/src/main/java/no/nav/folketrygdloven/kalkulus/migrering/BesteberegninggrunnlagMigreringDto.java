@@ -1,12 +1,13 @@
 package no.nav.folketrygdloven.kalkulus.migrering;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import no.nav.folketrygdloven.kalkulus.felles.v1.Beløp;
 
-import java.util.HashSet;
-import java.util.Set;
+import no.nav.folketrygdloven.kalkulus.felles.v1.Beløp;
 
 
 public class BesteberegninggrunnlagMigreringDto extends BaseMigreringDto {

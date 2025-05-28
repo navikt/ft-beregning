@@ -11,53 +11,48 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
-import no.nav.fpsak.nare.evaluation.node.SingleEvaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(FastsettAndelForArbeidsforholdUtenFordeling.ID)
 class FastsettAndelForArbeidsforholdUtenFordeling extends LeafSpecification<BeregningsgrunnlagPeriode> {
-	static final String ID = "FP_BR 29.8.6_uten_fordeling";
-	static final String BESKRIVELSE = "Fastsett andeleler pr Arbeidsforhold";
+    static final String ID = "FP_BR 29.8.6_uten_fordeling";
+    static final String BESKRIVELSE = "Fastsett andeleler pr Arbeidsforhold";
 
-	FastsettAndelForArbeidsforholdUtenFordeling() {
-		super(ID, BESKRIVELSE);
-	}
+    FastsettAndelForArbeidsforholdUtenFordeling() {
+        super(ID, BESKRIVELSE);
+    }
 
-	@Override
-	public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-		SingleEvaluation resultat = ja();
-		List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforholdene = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforholdIkkeFrilans();
-		Map<String, Object> resultater = new HashMap<>();
-		resultat.setEvaluationProperties(resultater);
-		BigDecimal grenseverdi = grunnlag.getGrenseverdi();
-		resultater.put("grenseverdi", grenseverdi);
-		fastsettAndelerPrArbeidsforhold(arbeidsforholdene, resultater, grenseverdi);
-		return resultat;
-	}
+    @Override
+    public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
+        var resultat = ja();
+        var arbeidsforholdene = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforholdIkkeFrilans();
+        Map<String, Object> resultater = new HashMap<>();
+        resultat.setEvaluationProperties(resultater);
+        var grenseverdi = grunnlag.getGrenseverdi();
+        resultater.put("grenseverdi", grenseverdi);
+        fastsettAndelerPrArbeidsforhold(arbeidsforholdene, resultater, grenseverdi);
+        return resultat;
+    }
 
-	private void fastsettAndelerPrArbeidsforhold(List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforholdList, Map<String, Object> resultater,
-	                                             BigDecimal ikkeFordelt) {
-		BigDecimal sumBruttoBG = arbeidsforholdList.stream()
-				.map(BeregningsgrunnlagPrArbeidsforhold::getInntektsgrunnlagInkludertNaturalytelsePrÅr)
-				.reduce(BigDecimal.ZERO, BigDecimal::add);
+    private void fastsettAndelerPrArbeidsforhold(List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforholdList,
+                                                 Map<String, Object> resultater,
+                                                 BigDecimal ikkeFordelt) {
+        var sumBruttoBG = arbeidsforholdList.stream()
+            .map(BeregningsgrunnlagPrArbeidsforhold::getInntektsgrunnlagInkludertNaturalytelsePrÅr)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-		if (sumBruttoBG.compareTo(BigDecimal.ZERO) == 0) {
-			arbeidsforholdList.forEach(a -> BeregningsgrunnlagPrArbeidsforhold.builder(a)
-					.medAndelsmessigFørGraderingPrAar(BigDecimal.ZERO)
-					.build());
-		} else {
-			arbeidsforholdList.forEach(af -> {
-				BigDecimal prosentandel = BigDecimal.valueOf(100)
-						.multiply(af.getInntektsgrunnlagInkludertNaturalytelsePrÅr())
-						.divide(sumBruttoBG, 10, RoundingMode.HALF_EVEN);
-				resultater.put("gjenstårÅFastsetteRefusjon.prosentandel." + af.getArbeidsgiverId(), prosentandel);
-				BigDecimal andel = ikkeFordelt.multiply(af.getInntektsgrunnlagInkludertNaturalytelsePrÅr())
-						.divide(sumBruttoBG, 10, RoundingMode.HALF_EVEN);
-				BeregningsgrunnlagPrArbeidsforhold.builder(af)
-						.medAndelsmessigFørGraderingPrAar(andel)
-						.build();
-				resultater.put("brukersAndel." + af.getArbeidsgiverId(), af.getAvkortetBrukersAndelPrÅr());
-			});
-		}
-	}
+        if (sumBruttoBG.compareTo(BigDecimal.ZERO) == 0) {
+            arbeidsforholdList.forEach(a -> BeregningsgrunnlagPrArbeidsforhold.builder(a).medAndelsmessigFørGraderingPrAar(BigDecimal.ZERO).build());
+        } else {
+            arbeidsforholdList.forEach(af -> {
+                var prosentandel = BigDecimal.valueOf(100)
+                    .multiply(af.getInntektsgrunnlagInkludertNaturalytelsePrÅr())
+                    .divide(sumBruttoBG, 10, RoundingMode.HALF_EVEN);
+                resultater.put("gjenstårÅFastsetteRefusjon.prosentandel." + af.getArbeidsgiverId(), prosentandel);
+                var andel = ikkeFordelt.multiply(af.getInntektsgrunnlagInkludertNaturalytelsePrÅr()).divide(sumBruttoBG, 10, RoundingMode.HALF_EVEN);
+                BeregningsgrunnlagPrArbeidsforhold.builder(af).medAndelsmessigFørGraderingPrAar(andel).build();
+                resultater.put("brukersAndel." + af.getArbeidsgiverId(), af.getAvkortetBrukersAndelPrÅr());
+            });
+        }
+    }
 }

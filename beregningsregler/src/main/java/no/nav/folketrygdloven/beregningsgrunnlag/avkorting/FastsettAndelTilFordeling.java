@@ -5,7 +5,6 @@ import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode;
@@ -26,13 +25,13 @@ class FastsettAndelTilFordeling extends LeafSpecification<BeregningsgrunnlagPeri
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        SingleEvaluation resultat = ja();
+        var resultat = ja();
         //TODO(OMR-61): Sporing
 
-        List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforholdene = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforholdIkkeFrilans();
+        var arbeidsforholdene = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforholdIkkeFrilans();
 
 // Er det arbeidsforhold som ikke er fastsatt i tidligere runder?
-        List<BeregningsgrunnlagPrArbeidsforhold> ikkeFastsattAf = arbeidsforholdene.stream()
+        var ikkeFastsattAf = arbeidsforholdene.stream()
             .filter(af -> af.getMaksimalRefusjonPrÅr() != null)
             .filter(af -> af.getAvkortetRefusjonPrÅr() == null)
             .toList();
@@ -42,20 +41,20 @@ class FastsettAndelTilFordeling extends LeafSpecification<BeregningsgrunnlagPeri
         Map<String, Object> resultater = new HashMap<>();
         resultat.setEvaluationProperties(resultater);
 // Beregn refusjonsbeløp som gjenstår å fastsette
-        BigDecimal sumFastsattAvkortetRefusjon = arbeidsforholdene.stream()
+        var sumFastsattAvkortetRefusjon = arbeidsforholdene.stream()
             .filter(af -> af.getAvkortetRefusjonPrÅr() != null)
             .map(BeregningsgrunnlagPrArbeidsforhold::getAvkortetRefusjonPrÅr)
             .reduce(BigDecimal::add)
             .orElse(BigDecimal.ZERO);
-        BigDecimal grenseverdi = grunnlag.getGrenseverdi();
+        var grenseverdi = grunnlag.getGrenseverdi();
         resultater.put("grenseverdi", grenseverdi);
-        BigDecimal ikkeFordelt = grenseverdi.subtract(sumFastsattAvkortetRefusjon);
+        var ikkeFordelt = grenseverdi.subtract(sumFastsattAvkortetRefusjon);
 
 // Forsøk å fastsette andelsmessig brukers andel for de arbeidsforholdene som ikke er fastsatt
         forsøkÅFastsetteBrukersAndeler(ikkeFastsattAf, resultater, sumFastsattAvkortetRefusjon, ikkeFordelt);
 
 // Er noen brukerandeler negative - i så fall sett disse til 0 og fjern beregning for de andre slik at de beregnes i neste runde
-        Optional<BeregningsgrunnlagPrArbeidsforhold> negativBrukerAndel = ikkeFastsattAf.stream()
+        var negativBrukerAndel = ikkeFastsattAf.stream()
             .filter(af -> af.getAvkortetBrukersAndelPrÅr().compareTo(BigDecimal.ZERO) < 0)
             .findAny();
 
@@ -89,17 +88,17 @@ class FastsettAndelTilFordeling extends LeafSpecification<BeregningsgrunnlagPeri
 
     private void forsøkÅFastsetteBrukersAndeler(List<BeregningsgrunnlagPrArbeidsforhold> ikkeFastsattAf, Map<String, Object> resultater,
             BigDecimal sumFastsattAvkortetRefusjon, BigDecimal ikkeFordelt) {
-        BigDecimal sumBruttoBG = ikkeFastsattAf.stream()
+        var sumBruttoBG = ikkeFastsattAf.stream()
                 .map(af -> af.getAktivitetsgradertBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         resultater.put("tidligereFastsattRefusjon", sumFastsattAvkortetRefusjon);
         resultater.put("gjenstårÅFastsetteRefusjon", ikkeFordelt);
         ikkeFastsattAf.forEach(af -> {
-            BigDecimal prosentandel = BigDecimal.valueOf(100)
+            var prosentandel = BigDecimal.valueOf(100)
                 .multiply(af.getAktivitetsgradertBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO))
                 .divide(sumBruttoBG, 10, RoundingMode.HALF_EVEN);
             resultater.put("gjenstårÅFastsetteRefusjon.prosentandel." + af.getArbeidsgiverId(), prosentandel);
-            BigDecimal andel = ikkeFordelt.multiply(af.getAktivitetsgradertBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO))
+            var andel = ikkeFordelt.multiply(af.getAktivitetsgradertBruttoInkludertNaturalytelsePrÅr().orElse(BigDecimal.ZERO))
                 .divide(sumBruttoBG, 10, RoundingMode.HALF_EVEN)
                 .subtract(af.getMaksimalRefusjonPrÅr());
             BeregningsgrunnlagPrArbeidsforhold.builder(af)

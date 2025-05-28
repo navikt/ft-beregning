@@ -9,10 +9,8 @@ import no.nav.folketrygdloven.beregningsgrunnlag.reduksjon.ReduserBeregningsgrun
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrArbeidsforhold;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrStatus;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
-import no.nav.fpsak.nare.evaluation.node.SingleEvaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(ReduserBeregningsgrunnlag.ID)
@@ -29,17 +27,17 @@ public class FastsettForFrilans extends LeafSpecification<BeregningsgrunnlagPeri
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
         Map<String, Object> resultater = new HashMap<>();
 
-        BigDecimal totalTilFastsetting = grunnlag.getGrenseverdi();
+        var totalTilFastsetting = grunnlag.getGrenseverdi();
 
-        BeregningsgrunnlagPrStatus atflAndel = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+        var atflAndel = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
         Optional<BeregningsgrunnlagPrArbeidsforhold> frilansArbeidsforhold = atflAndel == null ? Optional.empty() : atflAndel
             .getFrilansArbeidsforhold();
 
         if (frilansArbeidsforhold.isPresent()) {
-            BigDecimal bortfaltFL = frilansArbeidsforhold
+            var bortfaltFL = frilansArbeidsforhold
                 .flatMap(BeregningsgrunnlagPrArbeidsforhold::getGradertBruttoInkludertNaturalytelsePrÅr)
                 .orElse(BigDecimal.ZERO);
-            BeregningsgrunnlagPrArbeidsforhold beregningsgrunnlagPrArbeidsforhold = frilansArbeidsforhold.get();
+            var beregningsgrunnlagPrArbeidsforhold = frilansArbeidsforhold.get();
             if (bortfaltFL.compareTo(totalTilFastsetting) > 0) {
                 BeregningsgrunnlagPrArbeidsforhold.builder(beregningsgrunnlagPrArbeidsforhold)
                     .medAvkortetPrÅr(totalTilFastsetting)
@@ -57,7 +55,7 @@ public class FastsettForFrilans extends LeafSpecification<BeregningsgrunnlagPeri
             }
             resultater.put("avkortetFrilans", beregningsgrunnlagPrArbeidsforhold.getAvkortetPrÅr());
         }
-        SingleEvaluation resultat = ja();
+        var resultat = ja();
         resultat.setEvaluationProperties(resultater);
         return resultat;
 

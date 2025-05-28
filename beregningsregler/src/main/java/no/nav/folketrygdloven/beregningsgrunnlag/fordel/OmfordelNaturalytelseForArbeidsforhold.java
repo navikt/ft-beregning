@@ -1,10 +1,10 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.fordel;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelAndelModell;
-import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelModell;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelAndelModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelModell;
 
 class OmfordelNaturalytelseForArbeidsforhold extends OmfordelForArbeidsforhold {
 

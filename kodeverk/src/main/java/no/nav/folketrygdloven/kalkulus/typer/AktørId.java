@@ -50,7 +50,7 @@ public class AktørId implements Comparable<AktørId>{
         } else if (obj == null || !getClass().equals(obj.getClass())) {
             return false;
         }
-        AktørId other = (AktørId) obj;
+	    var other = (AktørId) obj;
         return Objects.equals(aktørId, other.aktørId);
     }
 

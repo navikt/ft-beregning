@@ -15,7 +15,6 @@ import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagGUIInput;
 import no.nav.folketrygdloven.kalkulator.modell.behandling.KoblingReferanse;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningAktivitetAggregatDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningAktivitetDto;
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
@@ -30,7 +29,6 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FaktaOmBeregningTilfelle;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.FaktaOmBeregningDto;
 
 class FaktaOmBeregningDtoTjenesteImplTest {
 
@@ -42,7 +40,7 @@ class FaktaOmBeregningDtoTjenesteImplTest {
     @Test
     void skal_kalle_dto_tjenester() {
         // Arrange
-        List<FaktaOmBeregningTilfelle> tilfeller = List.of(
+        var tilfeller = List.of(
             FaktaOmBeregningTilfelle.VURDER_NYOPPSTARTET_FL,
             FaktaOmBeregningTilfelle.VURDER_AT_OG_FL_I_SAMME_ORGANISASJON,
             FaktaOmBeregningTilfelle.FASTSETT_BG_KUN_YTELSE,
@@ -53,8 +51,8 @@ class FaktaOmBeregningDtoTjenesteImplTest {
         Collection<InntektsmeldingDto> inntektsmeldinger = List.of();
         var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.nytt().medInntektsmeldinger(inntektsmeldinger).build();
 
-        BeregningsgrunnlagGrunnlagDto grunnlag = lagBeregningsgrunnlag(tilfeller);
-        BeregningAktivitetAggregatDto.Builder builder = BeregningAktivitetAggregatDto.builder();
+        var grunnlag = lagBeregningsgrunnlag(tilfeller);
+        var builder = BeregningAktivitetAggregatDto.builder();
         builder.medSkjæringstidspunktOpptjening(SKJÆRINGSTIDSPUNKT_OPPTJENING);
         builder.leggTilAktivitet(BeregningAktivitetDto.builder()
             .medArbeidsgiver(Arbeidsgiver.virksomhet("test"))
@@ -62,14 +60,14 @@ class FaktaOmBeregningDtoTjenesteImplTest {
             .medPeriode(Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusDays(10), SKJÆRINGSTIDSPUNKT_OPPTJENING.plusDays(10)))
             .build());
 
-        BeregningsgrunnlagGrunnlagDtoBuilder oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(grunnlag);
+        var oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(grunnlag);
         oppdatere.medRegisterAktiviteter(builder.build());
 
         var input = new BeregningsgrunnlagGUIInput(koblingReferanse, iayGrunnlag, List.of(), null)
             .medBeregningsgrunnlagGrunnlag(oppdatere.build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER));
 
         // Act
-        Optional<FaktaOmBeregningDto> dto = faktaOmBeregningDtoTjeneste.lagDto(input);
+        var dto = faktaOmBeregningDtoTjeneste.lagDto(input);
 
         // Assert
         assertThat(dto.get().getFrilansAndel().getAndelsnr()).isEqualTo(1);
@@ -81,11 +79,11 @@ class FaktaOmBeregningDtoTjenesteImplTest {
 
     @Test
     void skal_lage_fakta_om_beregning_dto_når_man_har_tilfeller_i_fakta_om_beregning() {
-        List<FaktaOmBeregningTilfelle> tilfeller = Collections.singletonList(FaktaOmBeregningTilfelle.FASTSETT_BESTEBEREGNING_FØDENDE_KVINNE);
+        var tilfeller = Collections.singletonList(FaktaOmBeregningTilfelle.FASTSETT_BESTEBEREGNING_FØDENDE_KVINNE);
         Collection<InntektsmeldingDto> inntektsmeldinger = List.of();
         var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.nytt().medInntektsmeldinger(inntektsmeldinger).build();
-        BeregningsgrunnlagGrunnlagDto grunnlag = lagBeregningsgrunnlag(tilfeller);
-        BeregningAktivitetAggregatDto.Builder builder = BeregningAktivitetAggregatDto.builder();
+        var grunnlag = lagBeregningsgrunnlag(tilfeller);
+        var builder = BeregningAktivitetAggregatDto.builder();
         builder.medSkjæringstidspunktOpptjening(SKJÆRINGSTIDSPUNKT_OPPTJENING);
         builder.leggTilAktivitet(BeregningAktivitetDto.builder()
             .medArbeidsgiver(Arbeidsgiver.virksomhet("test"))
@@ -93,13 +91,13 @@ class FaktaOmBeregningDtoTjenesteImplTest {
             .medPeriode(Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusDays(10), SKJÆRINGSTIDSPUNKT_OPPTJENING.plusDays(10)))
             .build());
 
-        BeregningsgrunnlagGrunnlagDtoBuilder oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(grunnlag);
+        var oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(grunnlag);
         oppdatere.medRegisterAktiviteter(builder.build());
 
         var input = new BeregningsgrunnlagGUIInput(koblingReferanse, iayGrunnlag, List.of(), null)
                 .medBeregningsgrunnlagGrunnlag(oppdatere.build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER));
 
-        Optional<FaktaOmBeregningDto> dto = faktaOmBeregningDtoTjeneste.lagDto(input);
+        var dto = faktaOmBeregningDtoTjeneste.lagDto(input);
         assertThat(dto.isPresent()).isTrue();
     }
 
@@ -107,9 +105,9 @@ class FaktaOmBeregningDtoTjenesteImplTest {
     void skal_lage_fakta_om_beregning_dto_med_avklar_aktiviterer() {
         Collection<InntektsmeldingDto> inntektsmeldinger = List.of();
         var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.nytt().medInntektsmeldinger(inntektsmeldinger).build();
-        BeregningsgrunnlagGrunnlagDto grunnlag = lagBeregningsgrunnlag(List.of(FaktaOmBeregningTilfelle.VURDER_MOTTAR_YTELSE));
+        var grunnlag = lagBeregningsgrunnlag(List.of(FaktaOmBeregningTilfelle.VURDER_MOTTAR_YTELSE));
 
-        BeregningAktivitetAggregatDto.Builder builder = BeregningAktivitetAggregatDto.builder();
+        var builder = BeregningAktivitetAggregatDto.builder();
         builder.medSkjæringstidspunktOpptjening(SKJÆRINGSTIDSPUNKT_OPPTJENING);
         builder.leggTilAktivitet(BeregningAktivitetDto.builder()
             .medArbeidsgiver(Arbeidsgiver.virksomhet("test"))
@@ -117,13 +115,13 @@ class FaktaOmBeregningDtoTjenesteImplTest {
             .medPeriode(Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusDays(10), SKJÆRINGSTIDSPUNKT_OPPTJENING.plusDays(10)))
             .build());
 
-        BeregningsgrunnlagGrunnlagDtoBuilder oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(grunnlag);
+        var oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(grunnlag);
         oppdatere.medRegisterAktiviteter(builder.build());
 
         var input = new BeregningsgrunnlagGUIInput(koblingReferanse, iayGrunnlag, List.of(), null)
                 .medBeregningsgrunnlagGrunnlag(oppdatere.build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER));
 
-        Optional<FaktaOmBeregningDto> dto = faktaOmBeregningDtoTjeneste
+        var dto = faktaOmBeregningDtoTjeneste
             .lagDto(input);
         assertThat(dto).isPresent();
         assertThat(dto.orElseThrow().getAvklarAktiviteter().getAktiviteterTomDatoMapping()).isNotNull();
@@ -131,15 +129,15 @@ class FaktaOmBeregningDtoTjenesteImplTest {
 
 
     private BeregningsgrunnlagGrunnlagDto lagBeregningsgrunnlag(List<FaktaOmBeregningTilfelle> tilfeller) {
-        BeregningsgrunnlagGrunnlagDtoBuilder oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty());
-        BeregningsgrunnlagDto beregningsgrunnlagDto = oppdatere
+        var oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty());
+        var beregningsgrunnlagDto = oppdatere
             .getBeregningsgrunnlagBuilder()
             .medSkjæringstidspunkt(LocalDate.now().minusDays(5))
             .medGrunnbeløp(Beløp.fra(90000))
             .leggTilFaktaOmBeregningTilfeller(tilfeller)
             .build();
 
-        BeregningsgrunnlagPeriodeDto periode = BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_OPPTJENING, null)
+        var periode = BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_OPPTJENING, null)
                 .build(beregningsgrunnlagDto);
 
         BeregningsgrunnlagPrStatusOgAndelDto.Builder.ny()

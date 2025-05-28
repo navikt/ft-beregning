@@ -1,15 +1,16 @@
 package no.nav.folketrygdloven.kalkulus.migrering;
 
+import java.math.BigDecimal;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
+
 import no.nav.folketrygdloven.kalkulus.felles.v1.Beløp;
 import no.nav.folketrygdloven.kalkulus.felles.v1.Periode;
 import no.nav.folketrygdloven.kalkulus.kodeverk.SammenligningsgrunnlagType;
-
-import java.math.BigDecimal;
 
 public class SammenligningsgrunnlagPrStatusMigreringDto extends BaseMigreringDto {
 

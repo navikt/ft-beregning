@@ -25,25 +25,25 @@ public class FastsettBGTidsbegrensetArbeidsforholdHåndterer {
     }
 
     public static BeregningsgrunnlagGrunnlagDto håndter(BeregningsgrunnlagInput input, FastsettBGTidsbegrensetArbeidsforholdDto dto) {
-        BeregningsgrunnlagGrunnlagDtoBuilder grunnlagBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
-        List<BeregningsgrunnlagPeriodeDto> perioder = grunnlagBuilder.getBeregningsgrunnlagBuilder().getBeregningsgrunnlag().getBeregningsgrunnlagPerioder();
-        List<FastsattePerioderTidsbegrensetDto> fastsattePerioder = dto.getFastsatteTidsbegrensedePerioder()
+        var grunnlagBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
+        var perioder = grunnlagBuilder.getBeregningsgrunnlagBuilder().getBeregningsgrunnlag().getBeregningsgrunnlagPerioder();
+        var fastsattePerioder = dto.getFastsatteTidsbegrensedePerioder()
                 .stream()
                 .sorted(Comparator.comparing(FastsattePerioderTidsbegrensetDto::getPeriodeFom))
                 .toList();
         if (dto.getFrilansInntekt() != null) {
-            for (BeregningsgrunnlagPeriodeDto periode : perioder) {
-                BeregningsgrunnlagPrStatusOgAndelDto frilansAndel = finnFrilansAndel(periode)
+            for (var periode : perioder) {
+                var frilansAndel = finnFrilansAndel(periode)
                     .orElseThrow(() -> new IllegalStateException("Mangler frilansandel for behandling " + input.getKoblingReferanse().getKoblingId()));
                 BeregningsgrunnlagPrStatusOgAndelDto.Builder.oppdatere(frilansAndel).medOverstyrtPrÅr(Beløp.fra(dto.getFrilansInntekt()));
             }
         }
-        for (FastsattePerioderTidsbegrensetDto periode: fastsattePerioder) {
-            List<BeregningsgrunnlagPeriodeDto> bgPerioderSomSkalFastsettesAvDennePerioden = perioder
+        for (var periode: fastsattePerioder) {
+            var bgPerioderSomSkalFastsettesAvDennePerioden = perioder
                 .stream()
                 .filter(p -> !p.getBeregningsgrunnlagPeriodeFom().isBefore(periode.getPeriodeFom()))
                 .collect(Collectors.toList());
-            List<FastsatteAndelerTidsbegrensetDto> fastatteAndeler = periode.getFastsatteTidsbegrensedeAndeler();
+            var fastatteAndeler = periode.getFastsatteTidsbegrensedeAndeler();
             fastatteAndeler.forEach(andel ->
                 fastsettAndelerIPeriode(bgPerioderSomSkalFastsettesAvDennePerioden, andel));
         }
@@ -59,7 +59,7 @@ public class FastsettBGTidsbegrensetArbeidsforholdHåndterer {
 
     private static void fastsettAndelerIPeriode(List<BeregningsgrunnlagPeriodeDto> bgPerioderSomSkalFastsettesAvDennePerioden, FastsatteAndelerTidsbegrensetDto andel) {
         bgPerioderSomSkalFastsettesAvDennePerioden.forEach(p -> {
-            Optional<BeregningsgrunnlagPrStatusOgAndelDto> korrektAndel = p.getBeregningsgrunnlagPrStatusOgAndelList().stream().filter(a -> a.getAndelsnr().equals(andel.getAndelsnr())).findFirst();
+            var korrektAndel = p.getBeregningsgrunnlagPrStatusOgAndelList().stream().filter(a -> a.getAndelsnr().equals(andel.getAndelsnr())).findFirst();
             korrektAndel.ifPresent(beregningsgrunnlagPrStatusOgAndel -> BeregningsgrunnlagPrStatusOgAndelDto.Builder.oppdatere(beregningsgrunnlagPrStatusOgAndel)
                 .medOverstyrtPrÅr(Beløp.fra(andel.getBruttoFastsattInntekt())));
         });

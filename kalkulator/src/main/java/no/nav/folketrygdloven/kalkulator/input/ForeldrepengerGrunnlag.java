@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import no.nav.folketrygdloven.kalkulator.modell.besteberegning.Ytelsegrunnlag;
 import no.nav.folketrygdloven.kalkulator.modell.gradering.AktivitetGradering;
 import no.nav.folketrygdloven.kalkulator.steg.besteberegning.BesteberegningVurderingGrunnlag;
-import no.nav.folketrygdloven.kalkulator.modell.besteberegning.Ytelsegrunnlag;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Dekningsgrad;
 
 public class ForeldrepengerGrunnlag implements YtelsespesifiktGrunnlag {

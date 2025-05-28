@@ -4,7 +4,6 @@ import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -54,10 +53,10 @@ class FastsettMånedsinntektUtenInntektsmeldingOppdatererTest {
             .medGrunnbeløp(Beløp.fra(91425))
             .leggTilFaktaOmBeregningTilfeller(singletonList(FaktaOmBeregningTilfelle.VURDER_MOTTAR_YTELSE))
             .build();
-        BeregningsgrunnlagPeriodeDto periode1 = BeregningsgrunnlagPeriodeDto.ny()
+        var periode1 = BeregningsgrunnlagPeriodeDto.ny()
             .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_OPPTJENING, SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(2))
             .build(beregningsgrunnlag);
-        BeregningsgrunnlagPeriodeDto periode2 = BeregningsgrunnlagPeriodeDto.ny()
+        var periode2 = BeregningsgrunnlagPeriodeDto.ny()
             .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(2).plusDays(1), null)
             .build(beregningsgrunnlag);
         BeregningsgrunnlagPrStatusOgAndelDto.ny().medAndelsnr(1L)
@@ -75,24 +74,24 @@ class FastsettMånedsinntektUtenInntektsmeldingOppdatererTest {
     @Test
     void skal_sette_inntekt_på_riktige_andeler_i_alle_perioder(){
         // Arrange
-        FastsettMånedsinntektUtenInntektsmeldingDto dto = new FastsettMånedsinntektUtenInntektsmeldingDto();
-        FastsettMånedsinntektUtenInntektsmeldingAndelDto andelDto = new FastsettMånedsinntektUtenInntektsmeldingAndelDto(1L,
+        var dto = new FastsettMånedsinntektUtenInntektsmeldingDto();
+        var andelDto = new FastsettMånedsinntektUtenInntektsmeldingAndelDto(1L,
             FastsatteVerdierDto.Builder.ny().medFastsattBeløpPrMnd(ARBEIDSINNTEKT/12).build());
-        List<FastsettMånedsinntektUtenInntektsmeldingAndelDto> andelListe = singletonList(andelDto);
+        var andelListe = singletonList(andelDto);
         dto.setAndelListe(andelListe);
-        FaktaBeregningLagreDto faktaLagreDto = new FaktaBeregningLagreDto(singletonList(FaktaOmBeregningTilfelle.FASTSETT_MÅNEDSLØNN_ARBEIDSTAKER_UTEN_INNTEKTSMELDING));
+        var faktaLagreDto = new FaktaBeregningLagreDto(singletonList(FaktaOmBeregningTilfelle.FASTSETT_MÅNEDSLØNN_ARBEIDSTAKER_UTEN_INNTEKTSMELDING));
         faktaLagreDto.setFastsattUtenInntektsmelding(dto);
 
         // Act
-        BeregningsgrunnlagGrunnlagDtoBuilder oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
+        var oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
         FastsettMånedsinntektUtenInntektsmeldingOppdaterer.oppdater(faktaLagreDto, Optional.empty(), oppdatere);
 
         // Assert
-        List<BeregningsgrunnlagPrStatusOgAndelDto> andelerMedFastsattInntekt = beregningsgrunnlag.getBeregningsgrunnlagPerioder().stream().flatMap(periode -> periode.getBeregningsgrunnlagPrStatusOgAndelList().stream())
+        var andelerMedFastsattInntekt = beregningsgrunnlag.getBeregningsgrunnlagPerioder().stream().flatMap(periode -> periode.getBeregningsgrunnlagPrStatusOgAndelList().stream())
             .filter(andel -> andel.getBgAndelArbeidsforhold().isPresent() && andel.getBgAndelArbeidsforhold().get().getArbeidsgiver().equals(arbeidsgiver))
             .collect(Collectors.toList());
         andelerMedFastsattInntekt.forEach(andel -> assertThat(andel.getBeregnetPrÅr()).isEqualByComparingTo(Beløp.fra(ARBEIDSINNTEKT)));
-        List<BeregningsgrunnlagPrStatusOgAndelDto> andelerUtenFastsattInntekt = beregningsgrunnlag.getBeregningsgrunnlagPerioder().stream().flatMap(periode -> periode.getBeregningsgrunnlagPrStatusOgAndelList().stream())
+        var andelerUtenFastsattInntekt = beregningsgrunnlag.getBeregningsgrunnlagPerioder().stream().flatMap(periode -> periode.getBeregningsgrunnlagPrStatusOgAndelList().stream())
             .filter(andel -> andel.getBgAndelArbeidsforhold().isPresent() && andel.getBgAndelArbeidsforhold().get().getArbeidsgiver().equals(arbeidsgiver2))
             .collect(Collectors.toList());
         andelerUtenFastsattInntekt.forEach(andel -> assertThat(andel.getBeregnetPrÅr()).isNull());

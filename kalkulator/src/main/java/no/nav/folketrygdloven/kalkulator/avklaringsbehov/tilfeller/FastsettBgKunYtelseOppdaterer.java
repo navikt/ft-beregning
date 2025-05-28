@@ -8,15 +8,12 @@ import java.util.stream.Collectors;
 import no.nav.folketrygdloven.kalkulator.KalkulatorException;
 import no.nav.folketrygdloven.kalkulator.avklaringsbehov.dto.FaktaBeregningLagreDto;
 import no.nav.folketrygdloven.kalkulator.avklaringsbehov.dto.FastsattBrukersAndel;
-import no.nav.folketrygdloven.kalkulator.avklaringsbehov.dto.FastsettBgKunYtelseDto;
 import no.nav.folketrygdloven.kalkulator.felles.MatchBeregningsgrunnlagTjeneste;
 import no.nav.folketrygdloven.kalkulator.konfig.KonfigTjeneste;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.FaktaAggregatDto;
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.FaktaAktørDto;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AndelKilde;
@@ -31,24 +28,24 @@ public class FastsettBgKunYtelseOppdaterer {
     public static void oppdater(FaktaBeregningLagreDto dto,
                                 Optional<BeregningsgrunnlagDto> forrigeBg,
                                 BeregningsgrunnlagGrunnlagDtoBuilder grunnlagBuilder) {
-        FastsettBgKunYtelseDto kunYtelseDto = dto.getKunYtelseFordeling();
-        BeregningsgrunnlagPeriodeDto periode = grunnlagBuilder.getBeregningsgrunnlagBuilder().getBeregningsgrunnlag().getBeregningsgrunnlagPerioder().get(0);
-        List<FastsattBrukersAndel> andeler = kunYtelseDto.getAndeler();
+        var kunYtelseDto = dto.getKunYtelseFordeling();
+        var periode = grunnlagBuilder.getBeregningsgrunnlagBuilder().getBeregningsgrunnlag().getBeregningsgrunnlagPerioder().get(0);
+        var andeler = kunYtelseDto.getAndeler();
         fjernAndeler(periode, andeler.stream().map(FastsattBrukersAndel::getAndelsnr).collect(Collectors.toList()));
-        Boolean skalBrukeBesteberegning = kunYtelseDto.getSkalBrukeBesteberegning();
-        for (FastsattBrukersAndel andel : andeler) {
+        var skalBrukeBesteberegning = kunYtelseDto.getSkalBrukeBesteberegning();
+        for (var andel : andeler) {
             if (andel.getNyAndel()) {
                 fastsettBeløpForNyAndel(periode, andel, kunYtelseDto.getSkalBrukeBesteberegning());
             } else {
-                BeregningsgrunnlagPrStatusOgAndelDto korrektAndel = getKorrektAndel(periode, andel, forrigeBg);
+                var korrektAndel = getKorrektAndel(periode, andel, forrigeBg);
                 settInntektskategoriOgFastsattBeløp(andel, korrektAndel, periode, skalBrukeBesteberegning);
             }
         }
 
         // Setter fakta aggregat
         if (skalBrukeBesteberegning != null) {
-            FaktaAggregatDto.Builder faktaBuilder = grunnlagBuilder.getFaktaAggregatBuilder();
-            FaktaAktørDto.Builder faktaAktørBuilder = faktaBuilder.getFaktaAktørBuilder();
+            var faktaBuilder = grunnlagBuilder.getFaktaAggregatBuilder();
+            var faktaAktørBuilder = faktaBuilder.getFaktaAktørBuilder();
             faktaAktørBuilder.medSkalBesteberegnesFastsattAvSaksbehandler(skalBrukeBesteberegning);
             faktaBuilder.medFaktaAktør(faktaAktørBuilder.build());
             grunnlagBuilder.medFaktaAggregat(faktaBuilder.build());
@@ -63,7 +60,7 @@ public class FastsettBgKunYtelseOppdaterer {
 
     private static void settInntektskategoriOgFastsattBeløp(FastsattBrukersAndel andel, BeregningsgrunnlagPrStatusOgAndelDto korrektAndel,
                                                      BeregningsgrunnlagPeriodeDto periode, Boolean skalBrukeBesteberegning) {
-        Inntektskategori inntektskategori = andel.getInntektskategori();
+        var inntektskategori = andel.getInntektskategori();
         var fastsattBeløp = Beløp.fra(andel.getFastsattBeløp()).multipliser(KonfigTjeneste.getMånederIÅr());
         if (andel.getNyAndel()) {
             BeregningsgrunnlagPrStatusOgAndelDto.Builder.oppdatere(korrektAndel)
@@ -74,7 +71,7 @@ public class FastsettBgKunYtelseOppdaterer {
                     .nyttAndelsnr(periode)
                     .medKilde(AndelKilde.SAKSBEHANDLER_KOFAKBER).build(periode);
         } else {
-            Optional<BeregningsgrunnlagPrStatusOgAndelDto> matchetAndel = periode.getBeregningsgrunnlagPrStatusOgAndelList()
+            var matchetAndel = periode.getBeregningsgrunnlagPrStatusOgAndelList()
                     .stream().filter(bgAndel -> bgAndel.equals(korrektAndel)).findFirst();
             matchetAndel.ifPresentOrElse(endreEksisterende(skalBrukeBesteberegning, inntektskategori, fastsattBeløp),
                     leggTilFraForrige(korrektAndel, periode, skalBrukeBesteberegning, inntektskategori, fastsattBeløp)
@@ -124,13 +121,13 @@ public class FastsettBgKunYtelseOppdaterer {
     }
 
     private static BeregningsgrunnlagPrStatusOgAndelDto finnAndelFraForrigeGrunnlag(BeregningsgrunnlagPeriodeDto periode, FastsattBrukersAndel andel, Optional<BeregningsgrunnlagDto> forrigeBg) {
-        List<BeregningsgrunnlagPeriodeDto> matchendePerioder = forrigeBg.stream()
+        var matchendePerioder = forrigeBg.stream()
                 .flatMap(bg -> bg.getBeregningsgrunnlagPerioder().stream())
                 .filter(periodeIGjeldendeGrunnlag -> periodeIGjeldendeGrunnlag.getPeriode().overlapper(periode.getPeriode())).collect(Collectors.toList());
         if (matchendePerioder.size() != 1) {
             throw MatchBeregningsgrunnlagTjeneste.fantFlereEnn1Periode();
         }
-        Optional<BeregningsgrunnlagPrStatusOgAndelDto> andelIForrigeGrunnlag = matchendePerioder.get(0).getBeregningsgrunnlagPrStatusOgAndelList().stream()
+        var andelIForrigeGrunnlag = matchendePerioder.get(0).getBeregningsgrunnlagPrStatusOgAndelList().stream()
                 .filter(a -> a.getAndelsnr().equals(andel.getAndelsnr()))
                 .findFirst();
         return andelIForrigeGrunnlag

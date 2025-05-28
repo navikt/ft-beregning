@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -41,12 +40,12 @@ public class AktørInntektDto {
     }
 
     InntektDtoBuilder getInntektBuilder(InntektskildeType inntektsKilde, OpptjeningsnøkkelDto nøkkel) {
-        Optional<InntektDto> inntektOptional = getInntekt()
+	    var inntektOptional = getInntekt()
             .stream()
             .filter(i -> inntektsKilde.equals(i.getInntektsKilde()))
             .filter(i -> i.getArbeidsgiver() != null && new OpptjeningsnøkkelDto(i.getArbeidsgiver()).matcher(nøkkel)
                 || inntektsKilde.equals(InntektskildeType.SIGRUN)).findFirst();
-        InntektDtoBuilder oppdatere = InntektDtoBuilder.oppdatere(inntektOptional);
+	    var oppdatere = InntektDtoBuilder.oppdatere(inntektOptional);
         if (!oppdatere.getErOppdatering()) {
             oppdatere.medInntektsKilde(inntektsKilde);
         }
@@ -64,7 +63,7 @@ public class AktørInntektDto {
         } else if (!(obj instanceof AktørInntektDto)) {
             return false;
         }
-        AktørInntektDto other = (AktørInntektDto) obj;
+	    var other = (AktørInntektDto) obj;
         return Objects.equals(this.getInntekt(), other.getInntekt());
     }
 

@@ -28,10 +28,10 @@ class BeregningsgrunnlagPeriodeTest {
     @Test
     void skal_teste_at_aktivitetstatuser_MS_og_SN_og_ATFLSN_returneres_sist() {
         //Arrange
-        List<AktivitetStatusMedHjemmel> alleStatuser = Stream.of(AktivitetStatus.values())
+        var alleStatuser = Stream.of(AktivitetStatus.values())
                 .map(as -> new AktivitetStatusMedHjemmel(as, null))
                 .collect(Collectors.toList());
-        BeregningsgrunnlagPeriode bgPeriode = BeregningsgrunnlagPeriode.builder()
+        var bgPeriode = BeregningsgrunnlagPeriode.builder()
             .medPeriode(Periode.of(skjæringstidspunkt, null))
             .build();
         Beregningsgrunnlag.builder()
@@ -42,9 +42,9 @@ class BeregningsgrunnlagPeriodeTest {
             .medGrunnbeløpSatser(List.of(new Grunnbeløp(LocalDate.of(2000, Month.JANUARY, 1), LocalDate.of(2099,  Month.DECEMBER,  31), 90000L, 90000L)))
             .build();
         //Act
-        List<AktivitetStatusMedHjemmel> aktivitetStatuser = bgPeriode.getAktivitetStatuser();
+        var aktivitetStatuser = bgPeriode.getAktivitetStatuser();
         //Assert
-        List<AktivitetStatus> treSisteStatuser = aktivitetStatuser.stream()
+        var treSisteStatuser = aktivitetStatuser.stream()
             .skip(aktivitetStatuser.size()-3)
             .map(AktivitetStatusMedHjemmel::getAktivitetStatus)
             .collect(Collectors.toList());

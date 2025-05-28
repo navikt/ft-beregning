@@ -88,7 +88,7 @@ public class AktivitetsAvtaleDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || !(o instanceof AktivitetsAvtaleDto)) return false;
-        AktivitetsAvtaleDto that = (AktivitetsAvtaleDto) o;
+	    var that = (AktivitetsAvtaleDto) o;
         return Objects.equals(periode, that.periode) &&
             Objects.equals(sisteLønnsendringsdato, that.sisteLønnsendringsdato) &&
             Objects.equals(erAnsettelsesPeriode, that.erAnsettelsesPeriode);

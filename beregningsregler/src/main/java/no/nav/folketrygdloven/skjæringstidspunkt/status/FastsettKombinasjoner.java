@@ -2,7 +2,6 @@ package no.nav.folketrygdloven.skjæringstidspunkt.status;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
@@ -23,8 +22,8 @@ public class FastsettKombinasjoner extends LeafSpecification<AktivitetStatusMode
 
     @Override
     public Evaluation evaluate(AktivitetStatusModell regelmodell) {
-        List<AktivitetStatus> aktivitetStatuser = regelmodell.getAktivitetStatuser();
-        List<AktivitetStatus> kombinasjonStatus = Arrays.asList(AktivitetStatus.ATFL, AktivitetStatus.SN);
+        var aktivitetStatuser = regelmodell.getAktivitetStatuser();
+        var kombinasjonStatus = Arrays.asList(AktivitetStatus.ATFL, AktivitetStatus.SN);
         Map<String, Object> resultater = new HashMap<>();
         if(aktivitetStatuser.containsAll(kombinasjonStatus)){
             regelmodell.leggTilAktivitetStatus(AktivitetStatus.ATFL_SN);

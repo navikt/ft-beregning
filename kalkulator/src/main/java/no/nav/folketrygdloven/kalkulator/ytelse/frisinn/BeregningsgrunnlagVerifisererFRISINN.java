@@ -1,8 +1,6 @@
 package no.nav.folketrygdloven.kalkulator.ytelse.frisinn;
 
-import java.time.LocalDate;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -28,9 +26,9 @@ public final class BeregningsgrunnlagVerifisererFRISINN {
     }
 
     private static void verfiserBeregningsgrunnlagPerioder(BeregningsgrunnlagDto beregningsgrunnlag) {
-        List<BeregningsgrunnlagPeriodeDto> beregningsgrunnlagPerioder = beregningsgrunnlag.getBeregningsgrunnlagPerioder();
-        for (int i = 0; i < beregningsgrunnlagPerioder.size(); i++) {
-            BeregningsgrunnlagPeriodeDto periode = beregningsgrunnlagPerioder.get(i);
+        var beregningsgrunnlagPerioder = beregningsgrunnlag.getBeregningsgrunnlagPerioder();
+        for (var i = 0; i < beregningsgrunnlagPerioder.size(); i++) {
+            var periode = beregningsgrunnlagPerioder.get(i);
             Objects.requireNonNull(periode.getBeregningsgrunnlagPeriodeFom(), "BeregningsgrunnlagperiodeFom");
             verifiserIkkeTomListe(periode.getBeregningsgrunnlagPrStatusOgAndelList(), "BeregningsgrunnlagPrStatusOgAndelList");
             if (i > 0) {
@@ -72,8 +70,8 @@ public final class BeregningsgrunnlagVerifisererFRISINN {
     private static Consumer<BeregningsgrunnlagPrStatusOgAndelDto> lagVerifiserForeslåttAndelConsumer(BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode) {
         return (BeregningsgrunnlagPrStatusOgAndelDto andel) -> {
             Objects.requireNonNull(andel.getGjeldendeInntektskategori(), "Inntektskategori");
-            LocalDate bgPeriodeFom = beregningsgrunnlagPeriode.getBeregningsgrunnlagPeriodeFom();
-            String andelBeskrivelse = "andel" + andel.getAktivitetStatus() + " i perioden fom " + bgPeriodeFom;
+            var bgPeriodeFom = beregningsgrunnlagPeriode.getBeregningsgrunnlagPeriodeFom();
+            var andelBeskrivelse = "andel" + andel.getAktivitetStatus() + " i perioden fom " + bgPeriodeFom;
             Objects.requireNonNull(andel.getBruttoPrÅr(), "BruttoPrÅr er null for " + andelBeskrivelse);
             Objects.requireNonNull(andel.getBeregnetPrÅr(), "beregnetPrÅr er null for " + andelBeskrivelse);
             if (andel.getAktivitetStatus().equals(AktivitetStatus.DAGPENGER) || andel.getAktivitetStatus().equals(AktivitetStatus.ARBEIDSAVKLARINGSPENGER)) {

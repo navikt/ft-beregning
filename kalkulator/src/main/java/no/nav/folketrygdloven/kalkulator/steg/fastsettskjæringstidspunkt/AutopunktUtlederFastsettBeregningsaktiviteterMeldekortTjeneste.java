@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 import no.nav.folketrygdloven.kalkulator.felles.BeregningstidspunktTjeneste;
 import no.nav.folketrygdloven.kalkulator.felles.MeldekortUtils;
 import no.nav.folketrygdloven.kalkulator.modell.iay.AktørYtelseDto;
-import no.nav.folketrygdloven.kalkulator.modell.iay.YtelseAnvistDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YtelseDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YtelseFilterDto;
 import no.nav.folketrygdloven.kalkulus.kodeverk.YtelseType;
@@ -48,29 +47,29 @@ public class AutopunktUtlederFastsettBeregningsaktiviteterMeldekortTjeneste {
 
     private static boolean erSisteMeldekortMottatt(Optional<AktørYtelseDto> aktørYtelse, LocalDate skjæringstidspunkt, Set<YtelseType> arenaytelser) {
         var ytelseFilterVedtak = new YtelseFilterDto(aktørYtelse).før(skjæringstidspunkt);
-        Optional<YtelseDto> nyligsteVedtak = MeldekortUtils.sisteVedtakFørStpForType(ytelseFilterVedtak, skjæringstidspunkt, arenaytelser);
+	    var nyligsteVedtak = MeldekortUtils.sisteVedtakFørStpForType(ytelseFilterVedtak, skjæringstidspunkt, arenaytelser);
 
         var ytelseFilterMeldekort = new YtelseFilterDto(aktørYtelse);
 
 
         if(BeregningstidspunktTjeneste.finnBeregningstidspunkt(skjæringstidspunkt).isBefore(skjæringstidspunkt) && opphørerYtelseDagenFørStp(nyligsteVedtak.get(), skjæringstidspunkt)){
-            Optional<YtelseAnvistDto> meldekortOpphørtYtelse = MeldekortUtils.finnMeldekortSomInkludererGittDato(ytelseFilterMeldekort, nyligsteVedtak.get(),
+	        var meldekortOpphørtYtelse = MeldekortUtils.finnMeldekortSomInkludererGittDato(ytelseFilterMeldekort, nyligsteVedtak.get(),
                     Set.of(nyligsteVedtak.get().getYtelseType()), skjæringstidspunkt.minusDays(1));
             return meldekortOpphørtYtelse.isPresent();
         }
 
-        Optional<YtelseAnvistDto> meldekortLøpendeYtelse = MeldekortUtils.finnMeldekortSomInkludererGittDato(ytelseFilterMeldekort, nyligsteVedtak.get(),
+	    var meldekortLøpendeYtelse = MeldekortUtils.finnMeldekortSomInkludererGittDato(ytelseFilterMeldekort, nyligsteVedtak.get(),
                 Set.of(nyligsteVedtak.get().getYtelseType()), skjæringstidspunkt);
         return meldekortLøpendeYtelse.isPresent();
     }
 
     private static boolean harLøpendeVedtakOgSendtInnMeldekortNylig(Optional<AktørYtelseDto> aktørYtelse, LocalDate skjæringstidspunkt, Set<YtelseType> arenaytelseTyper) {
-        List<YtelseDto> ytelser = getArenaytelserYtelser(aktørYtelse, skjæringstidspunkt, arenaytelseTyper);
+	    var ytelser = getArenaytelserYtelser(aktørYtelse, skjæringstidspunkt, arenaytelseTyper);
 
         var skalSjekkeAAP = arenaytelseTyper.stream().anyMatch(y -> y.equals(YtelseType.ARBEIDSAVKLARINGSPENGER));
         var skalSjekkeDP = arenaytelseTyper.stream().anyMatch(y -> y.equals(YtelseType.DAGPENGER));
 
-        boolean hattAAPSiste4Mnd = hattGittYtelseIGittPeriode(ytelser, skjæringstidspunkt.minusMonths(4).withDayOfMonth(1),
+	    var hattAAPSiste4Mnd = hattGittYtelseIGittPeriode(ytelser, skjæringstidspunkt.minusMonths(4).withDayOfMonth(1),
                 YtelseType.ARBEIDSAVKLARINGSPENGER);
         Predicate<List<YtelseDto>> hattDPSiste10Mnd = it -> hattGittYtelseIGittPeriode(it, skjæringstidspunkt.minusMonths(10), YtelseType.DAGPENGER);
 

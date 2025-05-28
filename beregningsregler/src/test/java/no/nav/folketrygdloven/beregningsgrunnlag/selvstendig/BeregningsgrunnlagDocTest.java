@@ -18,7 +18,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
 import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
-import no.nav.fpsak.nare.specification.Specification;
 
 class BeregningsgrunnlagDocTest {
 
@@ -45,9 +44,9 @@ class BeregningsgrunnlagDocTest {
 
     @Test
     void test_documentation_beregningsgrunnlagSN() { // NOSONAR
-        Specification<BeregningsgrunnlagPeriode> beregning = new RegelBeregningsgrunnlagSN().getSpecification();
+	    var beregning = new RegelBeregningsgrunnlagSN().getSpecification();
 
-        String json = EvaluationSerializer.asJson(beregning);
+	    var json = EvaluationSerializer.asJson(beregning);
 	    assertThat(json).isNotEmpty();
 
     }

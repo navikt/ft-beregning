@@ -17,14 +17,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.RelatertYtelseType;
-
-import no.nav.folketrygdloven.besteberegning.modell.input.YtelseAktivitetType;
-import no.nav.folketrygdloven.besteberegning.modell.input.Ytelsegrunnlag;
-
-import no.nav.folketrygdloven.besteberegning.modell.input.YtelsegrunnlagAndel;
-import no.nav.folketrygdloven.besteberegning.modell.input.YtelsegrunnlagPeriode;
-
 import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.Grunnbeløp;
@@ -34,8 +26,13 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Ar
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.RelatertYtelseType;
 import no.nav.folketrygdloven.besteberegning.modell.BesteberegningRegelmodell;
 import no.nav.folketrygdloven.besteberegning.modell.input.BesteberegningInput;
+import no.nav.folketrygdloven.besteberegning.modell.input.YtelseAktivitetType;
+import no.nav.folketrygdloven.besteberegning.modell.input.Ytelsegrunnlag;
+import no.nav.folketrygdloven.besteberegning.modell.input.YtelsegrunnlagAndel;
+import no.nav.folketrygdloven.besteberegning.modell.input.YtelsegrunnlagPeriode;
 import no.nav.folketrygdloven.besteberegning.modell.output.BeregnetMånedsgrunnlag;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 

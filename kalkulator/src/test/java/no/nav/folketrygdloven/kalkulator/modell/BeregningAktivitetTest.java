@@ -29,8 +29,8 @@ class BeregningAktivitetTest {
     @Test
     void skal_bruke_aktivitet_om_ingen_overstyringer_for_aktivitet() {
         // Arrange
-        BeregningAktivitetOverstyringerDto overstyringer = lagOverstyring(1);
-        BeregningAktivitetDto aktivitet = BeregningAktivitetDto.builder()
+	    var overstyringer = lagOverstyring(1);
+	    var aktivitet = BeregningAktivitetDto.builder()
             .medPeriode(PERIODE)
             .medArbeidsforholdRef(InternArbeidsforholdRefDto.nyRef())
             .medArbeidsgiver(ARBEIDSGIVER)
@@ -38,7 +38,7 @@ class BeregningAktivitetTest {
             .build();
 
         // Act
-        boolean skalBrukes = aktivitet.skalBrukes(overstyringer);
+	    var skalBrukes = aktivitet.skalBrukes(overstyringer);
 
         // Assert
         assertThat(skalBrukes).isTrue();
@@ -47,8 +47,8 @@ class BeregningAktivitetTest {
     @Test
     void skal_ikkje_bruke_aktivitet_om__det_finnes_overstyringer_for_aktivitet() {
         // Arrange
-        BeregningAktivitetOverstyringerDto overstyringer = lagOverstyring(1);
-        BeregningAktivitetDto aktivitet = BeregningAktivitetDto.builder()
+	    var overstyringer = lagOverstyring(1);
+	    var aktivitet = BeregningAktivitetDto.builder()
             .medPeriode(PERIODE)
             .medArbeidsforholdRef(ARBEIDSFORHOLD_REF)
             .medArbeidsgiver(ARBEIDSGIVER)
@@ -56,7 +56,7 @@ class BeregningAktivitetTest {
             .build();
 
         // Act
-        boolean skalBrukes = aktivitet.skalBrukes(overstyringer);
+	    var skalBrukes = aktivitet.skalBrukes(overstyringer);
 
         // Assert
         assertThat(skalBrukes).isFalse();
@@ -65,8 +65,8 @@ class BeregningAktivitetTest {
     @Test
     void skal_kaste_exception_om_det_finnes_flere_overstyringer_for_aktivitet() {
         // Arrange
-        BeregningAktivitetOverstyringerDto overstyringer = lagOverstyring(2);
-        BeregningAktivitetDto aktivitet = BeregningAktivitetDto.builder()
+	    var overstyringer = lagOverstyring(2);
+	    var aktivitet = BeregningAktivitetDto.builder()
             .medPeriode(PERIODE)
             .medArbeidsforholdRef(ARBEIDSFORHOLD_REF)
             .medArbeidsgiver(ARBEIDSGIVER)
@@ -81,9 +81,9 @@ class BeregningAktivitetTest {
     }
 
     private BeregningAktivitetOverstyringerDto lagOverstyring(int antallOverstyringer) {
-        BeregningAktivitetOverstyringerDto.Builder builder = BeregningAktivitetOverstyringerDto.builder();
-        for (int i = 0; i < antallOverstyringer; i++) {
-            BeregningAktivitetOverstyringDto overstyring = BeregningAktivitetOverstyringDto.builder()
+	    var builder = BeregningAktivitetOverstyringerDto.builder();
+        for (var i = 0; i < antallOverstyringer; i++) {
+	        var overstyring = BeregningAktivitetOverstyringDto.builder()
                 .medHandling(BeregningAktivitetHandlingType.IKKE_BENYTT)
                 .medArbeidsforholdRef(ARBEIDSFORHOLD_REF)
                 .medArbeidsgiver(ARBEIDSGIVER)

@@ -10,21 +10,21 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 public class BeregningAktivitetTestUtil {
 
     public static BeregningAktivitetAggregatDto opprettBeregningAktiviteter(LocalDate skjæringstidspunkt, OpptjeningAktivitetType... opptjeningAktivitetTypes) {
-        Intervall periode = Intervall.fraOgMedTilOgMed(skjæringstidspunkt.minusYears(2), skjæringstidspunkt);
+	    var periode = Intervall.fraOgMedTilOgMed(skjæringstidspunkt.minusYears(2), skjæringstidspunkt);
         return opprettBeregningAktiviteter(skjæringstidspunkt, periode, opptjeningAktivitetTypes);
     }
 
     public static BeregningAktivitetAggregatDto opprettBeregningAktiviteter(LocalDate skjæringstidspunkt, Intervall periode, OpptjeningAktivitetType... opptjeningAktivitetTypes) {
-        BeregningAktivitetAggregatDto.Builder builder = BeregningAktivitetAggregatDto.builder()
+	    var builder = BeregningAktivitetAggregatDto.builder()
             .medSkjæringstidspunktOpptjening(skjæringstidspunkt);
-        for (OpptjeningAktivitetType aktivitet : opptjeningAktivitetTypes) {
-            BeregningAktivitetDto beregningAktivitet = BeregningAktivitetDto.builder()
+        for (var aktivitet : opptjeningAktivitetTypes) {
+	        var beregningAktivitet = BeregningAktivitetDto.builder()
                 .medPeriode(periode)
                 .medOpptjeningAktivitetType(aktivitet)
                 .build();
             builder.leggTilAktivitet(beregningAktivitet);
         }
-        BeregningAktivitetAggregatDto aggregat = builder.build();
+	    var aggregat = builder.build();
         return aggregat;
     }
 

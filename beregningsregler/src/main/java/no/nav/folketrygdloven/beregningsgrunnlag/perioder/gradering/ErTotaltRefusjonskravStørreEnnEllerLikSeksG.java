@@ -15,9 +15,9 @@ class ErTotaltRefusjonskravStørreEnnEllerLikSeksG {
     }
 
     public static boolean vurder(PeriodeModellGradering input, LocalDate dato) {
-        BigDecimal grunnbeløp = input.getGrunnbeløp();
-        BigDecimal seksG = grunnbeløp.multiply(BigDecimal.valueOf(6));
-        BigDecimal totaltRefusjonskravPrÅr = beregnTotaltRefusjonskravPrÅrPåDato(input.getPeriodisertBruttoBeregningsgrunnlagList(), dato);
+        var grunnbeløp = input.getGrunnbeløp();
+        var seksG = grunnbeløp.multiply(BigDecimal.valueOf(6));
+        var totaltRefusjonskravPrÅr = beregnTotaltRefusjonskravPrÅrPåDato(input.getPeriodisertBruttoBeregningsgrunnlagList(), dato);
         return totaltRefusjonskravPrÅr.compareTo(seksG) >= 0;
     }
 

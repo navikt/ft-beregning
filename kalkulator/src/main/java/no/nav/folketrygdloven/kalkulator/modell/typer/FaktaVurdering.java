@@ -28,7 +28,7 @@ public class FaktaVurdering {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        FaktaVurdering that = (FaktaVurdering) o;
+        var that = (FaktaVurdering) o;
         return vurdering.equals(that.vurdering) && kilde == that.kilde;
     }
 

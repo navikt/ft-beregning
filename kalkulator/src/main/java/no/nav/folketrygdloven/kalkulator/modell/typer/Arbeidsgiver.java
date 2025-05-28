@@ -86,7 +86,7 @@ public class Arbeidsgiver implements IndexKey {
             return true;
         if (o == null || !(o instanceof Arbeidsgiver))
             return false;
-        Arbeidsgiver that = (Arbeidsgiver) o;
+	    var that = (Arbeidsgiver) o;
         return Objects.equals(getOrgnr(), that.getOrgnr()) &&
             Objects.equals(getAktørId(), that.getAktørId());
     }
@@ -112,7 +112,7 @@ public class Arbeidsgiver implements IndexKey {
         if (arbeidsgiverOrgnr == null) {
             return null;
         }
-        int length = arbeidsgiverOrgnr.length();
+	    var length = arbeidsgiverOrgnr.length();
         if (length <= 3) {
             return "*".repeat(length);
         }

@@ -81,7 +81,7 @@ public class BeregningInntektsmeldingTestUtil {
                                                              Beløp refusjon, Beløp inntekt, LocalDate opphørsdatoRefusjon, List<NaturalYtelseDto> naturalYtelser,
                                                              List<RefusjonDto> endringRefusjon) {
 
-        Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(orgnr);
+	    var arbeidsgiver = Arbeidsgiver.virksomhet(orgnr);
         return opprettInntektsmelding(arbeidsgiver, internReferanse, skjæringstidspunktOpptjening, refusjon, inntekt,
             opphørsdatoRefusjon, naturalYtelser, endringRefusjon);
     }
@@ -93,7 +93,7 @@ public class BeregningInntektsmeldingTestUtil {
                                                             List<NaturalYtelseDto> naturalYtelser,
                                                             List<RefusjonDto> endringRefusjon) {
 
-        InntektsmeldingDtoBuilder inntektsmeldingBuilder = InntektsmeldingDtoBuilder.builder();
+	    var inntektsmeldingBuilder = InntektsmeldingDtoBuilder.builder();
         inntektsmeldingBuilder.medStartDatoPermisjon(skjæringstidspunktOpptjening);
         inntektsmeldingBuilder.medBeløp(inntekt);
         if (refusjon != null) {

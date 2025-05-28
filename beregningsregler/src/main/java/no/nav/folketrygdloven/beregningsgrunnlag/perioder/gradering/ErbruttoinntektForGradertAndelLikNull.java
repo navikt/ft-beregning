@@ -8,7 +8,6 @@ import java.util.Optional;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AktivitetStatusV2;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.BruttoBeregningsgrunnlag;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.PeriodisertBruttoBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.gradering.AndelGradering;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.gradering.PeriodeModellGradering;
 
@@ -18,9 +17,9 @@ class ErbruttoinntektForGradertAndelLikNull {
     }
 
     public static boolean vurder(PeriodeModellGradering input, AndelGradering andelGradering, LocalDate dato){
-        for(PeriodisertBruttoBeregningsgrunnlag periodisertGrunnlag : input.getPeriodisertBruttoBeregningsgrunnlagList()){
+        for(var periodisertGrunnlag : input.getPeriodisertBruttoBeregningsgrunnlagList()){
             if(periodisertGrunnlag.getPeriode().inneholder(dato)){
-                Optional<BruttoBeregningsgrunnlag> grunnlag = finnBruttoBeregningsgrunnlagForGradering(periodisertGrunnlag.getBruttoBeregningsgrunnlag(), andelGradering);
+                var grunnlag = finnBruttoBeregningsgrunnlagForGradering(periodisertGrunnlag.getBruttoBeregningsgrunnlag(), andelGradering);
                 if(grunnlag.isPresent()){
                     return grunnlag.get().getBruttoPrÅr().equals(BigDecimal.ZERO);
                 } else{

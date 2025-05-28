@@ -165,7 +165,7 @@ public class BGAndelArbeidsforholdDto {
         } else if (!(obj instanceof BGAndelArbeidsforholdDto)) {
             return false;
         }
-        BGAndelArbeidsforholdDto other = (BGAndelArbeidsforholdDto) obj;
+        var other = (BGAndelArbeidsforholdDto) obj;
         return Objects.equals(this.getArbeidsgiver(), other.getArbeidsgiver())
                 && Objects.equals(this.arbeidsforholdRef, other.arbeidsforholdRef);
     }

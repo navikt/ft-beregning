@@ -3,7 +3,6 @@ package no.nav.folketrygdloven.beregningsgrunnlag.grenseverdi;
 import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -28,23 +27,23 @@ public class AvkortBGAndelerSomIkkeGjelderArbeidsforholdAndelsmessig extends Lea
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
         Map<String, Object> resultater = new HashMap<>();
-        BeregningsgrunnlagPrStatus atfl = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
-        BigDecimal sumBeregningsgrunnlagArbeidsforhold = atfl == null ? BigDecimal.ZERO : atfl.getArbeidsforholdIkkeFrilans()
+	    var atfl = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+	    var sumBeregningsgrunnlagArbeidsforhold = atfl == null ? BigDecimal.ZERO : atfl.getArbeidsforholdIkkeFrilans()
             .stream()
             .map(BeregningsgrunnlagPrArbeidsforhold::getBruttoInkludertNaturalytelsePrÅr)
             .filter(Optional::isPresent)
             .map(Optional::get)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal grenseverdi = grunnlag.getGrenseverdi();
+	    var grenseverdi = grunnlag.getGrenseverdi();
         resultater.put("grenseverdi", grenseverdi);
-        BigDecimal bGUtenArbeidsforholdTilFordeling = grenseverdi.subtract(sumBeregningsgrunnlagArbeidsforhold);
+	    var bGUtenArbeidsforholdTilFordeling = grenseverdi.subtract(sumBeregningsgrunnlagArbeidsforhold);
 
         // inntekt knyttet til frilans må fordeles først
         if (atfl != null) {
-            Optional<BeregningsgrunnlagPrArbeidsforhold> frilansArbeidsforholdOpt = atfl.getFrilansArbeidsforhold();
+	        var frilansArbeidsforholdOpt = atfl.getFrilansArbeidsforhold();
             if (frilansArbeidsforholdOpt.isPresent()) {
-                BeregningsgrunnlagPrArbeidsforhold af = frilansArbeidsforholdOpt.get();
-                BigDecimal bruttoBeregningsgrunnlagForAndelen = af.getBruttoInkludertNaturalytelsePrÅr()
+	            var af = frilansArbeidsforholdOpt.get();
+	            var bruttoBeregningsgrunnlagForAndelen = af.getBruttoInkludertNaturalytelsePrÅr()
                     .orElseThrow(() -> new IllegalStateException("Brutto er ikke satt for arbeidsforhold " + af.toString()));
                 BigDecimal avkortetBrukersAndel;
                 if (bruttoBeregningsgrunnlagForAndelen.compareTo(bGUtenArbeidsforholdTilFordeling) >= 0) {
@@ -63,11 +62,11 @@ public class AvkortBGAndelerSomIkkeGjelderArbeidsforholdAndelsmessig extends Lea
         }
 
         // sortere etter avkorting prioritet for beregningsgrunnlag uten arbeidsforhold
-        List<BeregningsgrunnlagPrStatus> bgpsSorted = finnAlleBGUtenArbeidsForholdSorterte(grunnlag);
-        Iterator<BeregningsgrunnlagPrStatus> bgpsIter = bgpsSorted.iterator();
+	    var bgpsSorted = finnAlleBGUtenArbeidsForholdSorterte(grunnlag);
+	    var bgpsIter = bgpsSorted.iterator();
         while (bgpsIter.hasNext()) {
-            BeregningsgrunnlagPrStatus bgps = bgpsIter.next();
-            BigDecimal bruttoBeregningsgrunnlagForAndelen = bgps.getBruttoInkludertNaturalytelsePrÅr();
+	        var bgps = bgpsIter.next();
+	        var bruttoBeregningsgrunnlagForAndelen = bgps.getBruttoInkludertNaturalytelsePrÅr();
             BigDecimal avkortetBrukersAndel;
             if (bruttoBeregningsgrunnlagForAndelen.compareTo(bGUtenArbeidsforholdTilFordeling) >= 0) {
                 avkortetBrukersAndel = bGUtenArbeidsforholdTilFordeling;

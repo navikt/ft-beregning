@@ -1,9 +1,5 @@
 package no.nav.folketrygdloven.kalkulator.avklaringsbehov;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import no.nav.folketrygdloven.kalkulator.avklaringsbehov.dto.FaktaBeregningLagreDto;
 import no.nav.folketrygdloven.kalkulator.avklaringsbehov.dto.FastsettBeregningsgrunnlagAndelDto;
 import no.nav.folketrygdloven.kalkulator.avklaringsbehov.dto.OverstyrBeregningsgrunnlagDto;
@@ -14,8 +10,11 @@ import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.Beregningsgru
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDtoBuilder;
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class BeregningFaktaOgOverstyringHåndterer {
 
@@ -24,9 +23,9 @@ public class BeregningFaktaOgOverstyringHåndterer {
     }
 
     public static BeregningsgrunnlagGrunnlagDto håndter(HåndterBeregningsgrunnlagInput input, FaktaBeregningLagreDto faktaDto) {
-        BeregningsgrunnlagGrunnlagDtoBuilder grunnlagBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
+	    var grunnlagBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
 
-        Optional<BeregningsgrunnlagDto> forrigeBg = input.getForrigeGrunnlagFraHåndteringTilstand().flatMap(BeregningsgrunnlagGrunnlagDto::getBeregningsgrunnlagHvisFinnes);
+	    var forrigeBg = input.getForrigeGrunnlagFraHåndteringTilstand().flatMap(BeregningsgrunnlagGrunnlagDto::getBeregningsgrunnlagHvisFinnes);
 
         FaktaOmBeregningTilfellerOppdaterer.oppdater(faktaDto, forrigeBg, input, grunnlagBuilder);
         return grunnlagBuilder.build(input.getHåndteringTilstand());
@@ -35,16 +34,16 @@ public class BeregningFaktaOgOverstyringHåndterer {
 
     public static BeregningsgrunnlagGrunnlagDto håndterMedOverstyring(HåndterBeregningsgrunnlagInput input, OverstyrBeregningsgrunnlagDto dto) {
         // Overstyring kan kun gjøres på grunnlaget fra 98-steget
-        BeregningsgrunnlagGrunnlagDto aktivtGrunnlag = input.getBeregningsgrunnlagGrunnlag();
-        BeregningsgrunnlagGrunnlagDtoBuilder grunnlagBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(aktivtGrunnlag);
+	    var aktivtGrunnlag = input.getBeregningsgrunnlagGrunnlag();
+	    var grunnlagBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(aktivtGrunnlag);
 
-        Optional<BeregningsgrunnlagDto> forrigeBg = input.getForrigeGrunnlagFraHåndteringTilstand().flatMap(BeregningsgrunnlagGrunnlagDto::getBeregningsgrunnlagHvisFinnes);
+	    var forrigeBg = input.getForrigeGrunnlagFraHåndteringTilstand().flatMap(BeregningsgrunnlagGrunnlagDto::getBeregningsgrunnlagHvisFinnes);
 
-        FaktaBeregningLagreDto fakta = dto.getFakta();
+	    var fakta = dto.getFakta();
         if (fakta != null) {
             FaktaOmBeregningTilfellerOppdaterer.oppdater(fakta, forrigeBg, input, grunnlagBuilder);
         }
-        BeregningsgrunnlagDto.Builder beregningsgrunnlagBuilder = grunnlagBuilder.getBeregningsgrunnlagBuilder().medOverstyring(true);
+	    var beregningsgrunnlagBuilder = grunnlagBuilder.getBeregningsgrunnlagBuilder().medOverstyring(true);
         overstyrInntekterPrPeriode(beregningsgrunnlagBuilder.getBeregningsgrunnlag(), forrigeBg, dto.getOverstyrteAndeler());
         finnManglendeAktivitetstatuser(beregningsgrunnlagBuilder.getBeregningsgrunnlag(), dto.getOverstyrteAndeler())
                 .forEach(as -> BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(as).build(beregningsgrunnlagBuilder.getBeregningsgrunnlag()));
@@ -77,9 +76,9 @@ public class BeregningFaktaOgOverstyringHåndterer {
     private static void overstyrInntekterPrPeriode(BeregningsgrunnlagDto nyttGrunnlag,
                                             Optional<BeregningsgrunnlagDto> forrigeBg,
                                             List<FastsettBeregningsgrunnlagAndelDto> overstyrteAndeler) {
-        List<BeregningsgrunnlagPeriodeDto> bgPerioder = nyttGrunnlag.getBeregningsgrunnlagPerioder();
-        for (BeregningsgrunnlagPeriodeDto bgPeriode : bgPerioder) {
-            Optional<BeregningsgrunnlagPeriodeDto> forrigeBgPeriode = MatchBeregningsgrunnlagTjeneste
+	    var bgPerioder = nyttGrunnlag.getBeregningsgrunnlagPerioder();
+        for (var bgPeriode : bgPerioder) {
+	        var forrigeBgPeriode = MatchBeregningsgrunnlagTjeneste
                     .finnOverlappendePeriodeOmKunEnFinnes(bgPeriode, forrigeBg);
             overstyrteAndeler
                     .forEach(andelDto ->

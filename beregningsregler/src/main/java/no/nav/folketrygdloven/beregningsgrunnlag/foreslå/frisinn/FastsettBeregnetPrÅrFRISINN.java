@@ -4,11 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
@@ -25,9 +23,9 @@ class FastsettBeregnetPrÅrFRISINN extends LeafSpecification<BeregningsgrunnlagP
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        BeregningsgrunnlagPrStatus bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+        var bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
 
-        BeregningsgrunnlagHjemmel hjemmel = settHjemmelForATFL(grunnlag.getBeregningsgrunnlag());
+        var hjemmel = settHjemmelForATFL(grunnlag.getBeregningsgrunnlag());
 
         Map<String, Object> resultater = new HashMap<>();
         resultater.put("beregnetPrÅr", bgps.getBeregnetPrÅr());
@@ -37,8 +35,8 @@ class FastsettBeregnetPrÅrFRISINN extends LeafSpecification<BeregningsgrunnlagP
     }
 
     private BeregningsgrunnlagHjemmel settHjemmelForATFL(Beregningsgrunnlag grunnlag) {
-        AktivitetStatusMedHjemmel status = grunnlag.getAktivitetStatus(AktivitetStatus.ATFL);
-        BeregningsgrunnlagHjemmel hjemmel = BeregningsgrunnlagHjemmel.KORONALOVEN_3;
+        var status = grunnlag.getAktivitetStatus(AktivitetStatus.ATFL);
+        var hjemmel = BeregningsgrunnlagHjemmel.KORONALOVEN_3;
         status.setHjemmel(hjemmel);
         return hjemmel;
     }

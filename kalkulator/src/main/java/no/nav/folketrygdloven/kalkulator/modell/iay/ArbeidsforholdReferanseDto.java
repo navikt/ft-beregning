@@ -40,7 +40,7 @@ public class ArbeidsforholdReferanseDto {
             return true;
         if (o == null || !(o instanceof ArbeidsforholdReferanseDto))
             return false;
-        ArbeidsforholdReferanseDto that = (ArbeidsforholdReferanseDto) o;
+	    var that = (ArbeidsforholdReferanseDto) o;
         return Objects.equals(arbeidsgiver, that.arbeidsgiver) &&
                 Objects.equals(internReferanse, that.internReferanse) &&
                 Objects.equals(eksternReferanse, that.eksternReferanse);

@@ -45,7 +45,7 @@ public class FastsettGrunnlagOmsorgspenger extends FastsettGrunnlagGenerell {
 
 	public static boolean finnesKunFullRefusjon(BeregningsgrunnlagGUIInput input) {
         OmsorgspengerGrunnlag yg = input.getYtelsespesifiktGrunnlag();
-        boolean finnesAtAndelIkkeSøktOm = input.getBeregningsgrunnlag().getBeregningsgrunnlagPerioder().get(0)
+        var finnesAtAndelIkkeSøktOm = input.getBeregningsgrunnlag().getBeregningsgrunnlagPerioder().get(0)
                 .getBeregningsgrunnlagPrStatusOgAndelList().stream()
                 .filter(a -> AktivitetStatus.ARBEIDSTAKER.equals(a.getAktivitetStatus()))
                 .anyMatch(a -> !erSøktOm(a, yg.getUtbetalingsgradPrAktivitet()));

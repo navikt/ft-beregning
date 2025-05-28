@@ -6,10 +6,8 @@ import java.util.Optional;
 import no.nav.folketrygdloven.kalkulator.avklaringsbehov.dto.AvklarteAktiviteterDto;
 import no.nav.folketrygdloven.kalkulator.avklaringsbehov.dto.BeregningsaktivitetLagreDto;
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagInput;
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningAktivitetAggregatDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningAktivitetDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningAktivitetOverstyringDto;
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningAktivitetOverstyringDto.Builder;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningAktivitetOverstyringerDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDtoBuilder;
@@ -26,21 +24,21 @@ public class AvklarAktiviteterHåndterer {
     }
 
     public static BeregningsgrunnlagGrunnlagDto håndter(AvklarteAktiviteterDto dto, BeregningsgrunnlagInput input) {
-        BeregningsgrunnlagGrunnlagDtoBuilder grunnlagBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
+	    var grunnlagBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
 
-        List<BeregningsaktivitetLagreDto> handlingListe = dto.getBeregningsaktivitetLagreDtoList();
-        BeregningAktivitetAggregatDto registerAktiviteter = input.getBeregningsgrunnlagGrunnlag().getRegisterAktiviteter();
-        BeregningAktivitetAggregatDto saksbehandledeAktiviteter = SaksbehandletBeregningsaktivitetTjeneste.lagSaksbehandletVersjon(registerAktiviteter, handlingListe);
+	    var handlingListe = dto.getBeregningsaktivitetLagreDtoList();
+	    var registerAktiviteter = input.getBeregningsgrunnlagGrunnlag().getRegisterAktiviteter();
+	    var saksbehandledeAktiviteter = SaksbehandletBeregningsaktivitetTjeneste.lagSaksbehandletVersjon(registerAktiviteter, handlingListe);
         grunnlagBuilder.medSaksbehandletAktiviteter(saksbehandledeAktiviteter);
         return grunnlagBuilder.build(BeregningsgrunnlagTilstand.FASTSATT_BEREGNINGSAKTIVITETER);
     }
 
     public static BeregningsgrunnlagGrunnlagDto håndterOverstyring(List<BeregningsaktivitetLagreDto> aktiviteter, BeregningsgrunnlagInput input) {
-        BeregningsgrunnlagGrunnlagDtoBuilder grunnlagBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
+	    var grunnlagBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
 
-        BeregningAktivitetOverstyringerDto.Builder overstyringAggregatBuilder = BeregningAktivitetOverstyringerDto.builder();
+	    var overstyringAggregatBuilder = BeregningAktivitetOverstyringerDto.builder();
         aktiviteter.forEach(overstyrtDto -> {
-                BeregningAktivitetOverstyringDto overstyring = lagOverstyring(overstyrtDto, getArbeidsgiver(input, overstyrtDto));
+	        var overstyring = lagOverstyring(overstyrtDto, getArbeidsgiver(input, overstyrtDto));
                 overstyringAggregatBuilder.leggTilOverstyring(overstyring);
             });
         return grunnlagBuilder.medOverstyring(overstyringAggregatBuilder.build()).build(BeregningsgrunnlagTilstand.FASTSATT_BEREGNINGSAKTIVITETER);
@@ -55,7 +53,7 @@ public class AvklarAktiviteterHåndterer {
     }
 
     private static BeregningAktivitetOverstyringDto lagOverstyring(BeregningsaktivitetLagreDto overstyrtDto, Optional<Arbeidsgiver> arbeidsgiver) {
-        Builder builder = BeregningAktivitetOverstyringDto.builder();
+	    var builder = BeregningAktivitetOverstyringDto.builder();
         arbeidsgiver.ifPresent(builder::medArbeidsgiver);
 
         return builder

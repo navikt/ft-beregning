@@ -63,7 +63,7 @@ public class Arbeidsforhold {
 		if (!(annet instanceof Arbeidsforhold)) {
 			return false;
 		}
-		Arbeidsforhold annetAF = (Arbeidsforhold) annet;
+		var annetAF = (Arbeidsforhold) annet;
 		return Objects.equals(aktivitet, annetAF.aktivitet)
 				&& Objects.equals(orgnr, annetAF.orgnr)
 				&& Objects.equals(aktørId, annetAF.aktørId)

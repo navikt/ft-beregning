@@ -1,6 +1,5 @@
 package no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -58,7 +57,7 @@ public class BeregningAktivitetDto implements IndexKey {
     }
 
     public BeregningAktivitetNøkkel getNøkkel() {
-        BeregningAktivitetNøkkel.Builder builder = BeregningAktivitetNøkkel.builder()
+	    var builder = BeregningAktivitetNøkkel.builder()
                 .medOpptjeningAktivitetType(opptjeningAktivitetType)
                 .medFom(periode.getFomDato())
                 .medArbeidsforholdRef(getArbeidsforholdRef().getReferanse());
@@ -74,7 +73,7 @@ public class BeregningAktivitetDto implements IndexKey {
     }
 
     public boolean skalBrukes(BeregningAktivitetOverstyringerDto overstyringer) {
-        List<BeregningAktivitetOverstyringDto> overstyringerForAktivitet = overstyringer.getOverstyringer().stream()
+	    var overstyringerForAktivitet = overstyringer.getOverstyringer().stream()
                 .filter(overstyring -> overstyring.getNøkkel().equals(this.getNøkkel())).collect(Collectors.toList());
         if (overstyringerForAktivitet.isEmpty()) {
             return true;
@@ -93,7 +92,7 @@ public class BeregningAktivitetDto implements IndexKey {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        BeregningAktivitetDto that = (BeregningAktivitetDto) o;
+	    var that = (BeregningAktivitetDto) o;
         return Objects.equals(periode, that.periode) &&
                 Objects.equals(arbeidsgiver, that.arbeidsgiver) &&
                 Objects.equals(arbeidsforholdRef, that.arbeidsforholdRef) &&

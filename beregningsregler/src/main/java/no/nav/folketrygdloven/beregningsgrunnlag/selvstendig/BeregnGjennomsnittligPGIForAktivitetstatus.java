@@ -2,7 +2,6 @@ package no.nav.folketrygdloven.beregningsgrunnlag.selvstendig;
 
 import static no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.FinnGjennomsnittligPGI.finnGjennomsnittligPGI;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,9 +30,9 @@ public class BeregnGjennomsnittligPGIForAktivitetstatus extends LeafSpecificatio
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-	    BeregningsgrunnlagPrStatus bgps = grunnlag.getBeregningsgrunnlagPrStatus(aktivitetStatus);
+	    var bgps = grunnlag.getBeregningsgrunnlagPrStatus(aktivitetStatus);
 	    Map<String, Object> resultater = new HashMap<>();
-	    BigDecimal gjennomsnittligPGI = finnGjennomsnittligPGI(bgps.getBeregningsperiode().getTom(), grunnlag.getBeregningsgrunnlag().getGrunnbeløpsatser(), grunnlag.getInntektsgrunnlag(), grunnlag.getGrunnbeløp(), resultater);
+	    var gjennomsnittligPGI = finnGjennomsnittligPGI(bgps.getBeregningsperiode().getTom(), grunnlag.getBeregningsgrunnlag().getGrunnbeløpsatser(), grunnlag.getInntektsgrunnlag(), grunnlag.getGrunnbeløp(), resultater);
 	    resultater.put("GjennomsnittligPGI", gjennomsnittligPGI);
         BeregningsgrunnlagPrStatus.builder(bgps)
             .medGjennomsnittligPGI(gjennomsnittligPGI)

@@ -3,8 +3,8 @@ package no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.kodeverk;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AktivitetStatusV2;
 import no.nav.folketrygdloven.kalkulator.modell.svp.AktivitetDto;
-import no.nav.folketrygdloven.kalkulus.kodeverk.UttakArbeidType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
+import no.nav.folketrygdloven.kalkulus.kodeverk.UttakArbeidType;
 
 public class MapUttakArbeidTypeTilAktivitetStatusV2 {
 

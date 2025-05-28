@@ -5,13 +5,14 @@ import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Pattern;
 import no.nav.folketrygdloven.kalkulus.felles.v1.Beløp;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Organisasjonstype;
@@ -153,7 +154,7 @@ public class BeregningsgrunnlagArbeidsforholdDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        BeregningsgrunnlagArbeidsforholdDto that = (BeregningsgrunnlagArbeidsforholdDto) o;
+	    var that = (BeregningsgrunnlagArbeidsforholdDto) o;
         return Objects.equals(startdato, that.startdato) &&
                 Objects.equals(opphoersdato, that.opphoersdato) &&
                 Objects.equals(arbeidsforholdId, that.arbeidsforholdId) &&

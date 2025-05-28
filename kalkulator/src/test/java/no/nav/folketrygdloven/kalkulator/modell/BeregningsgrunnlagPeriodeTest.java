@@ -62,14 +62,14 @@ class BeregningsgrunnlagPeriodeTest {
 
     @Test
     void skal_ha_refleksiv_equalsOgHashCode() {
-        BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode2 = lagMedPaakrevdeFelter(beregningsgrunnlag);
+        var beregningsgrunnlagPeriode2 = lagMedPaakrevdeFelter(beregningsgrunnlag);
 
         assertThat(beregningsgrunnlagPeriode).isEqualTo(beregningsgrunnlagPeriode2);
         assertThat(beregningsgrunnlagPeriode2).isEqualTo(beregningsgrunnlagPeriode);
         assertThat(beregningsgrunnlagPeriode.hashCode()).isEqualTo(beregningsgrunnlagPeriode2.hashCode());
         assertThat(beregningsgrunnlagPeriode2.hashCode()).isEqualTo(beregningsgrunnlagPeriode.hashCode());
 
-        BeregningsgrunnlagPeriodeDto.Builder beregningsgrunnlagPeriodeBuilder = lagBuilderMedPaakrevdeFelter();
+        var beregningsgrunnlagPeriodeBuilder = lagBuilderMedPaakrevdeFelter();
         beregningsgrunnlagPeriodeBuilder.medBeregningsgrunnlagPeriode(LocalDate.now().minusDays(1), null);
         beregningsgrunnlagPeriode2 = beregningsgrunnlagPeriodeBuilder.build(beregningsgrunnlag);
         assertThat(beregningsgrunnlagPeriode).isNotEqualTo(beregningsgrunnlagPeriode2);
@@ -80,12 +80,12 @@ class BeregningsgrunnlagPeriodeTest {
 
     @Test
     void skal_bruke_beregningsgrunnlagPeriodeFom_i_equalsOgHashCode() {
-        BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode2 = lagMedPaakrevdeFelter(beregningsgrunnlag);
+        var beregningsgrunnlagPeriode2 = lagMedPaakrevdeFelter(beregningsgrunnlag);
 
         assertThat(beregningsgrunnlagPeriode).isEqualTo(beregningsgrunnlagPeriode2);
         assertThat(beregningsgrunnlagPeriode.hashCode()).isEqualTo(beregningsgrunnlagPeriode2.hashCode());
 
-        BeregningsgrunnlagPeriodeDto.Builder beregningsgrunnlagPeriodeBuilder = lagBuilderMedPaakrevdeFelter();
+        var beregningsgrunnlagPeriodeBuilder = lagBuilderMedPaakrevdeFelter();
         beregningsgrunnlagPeriodeBuilder.medBeregningsgrunnlagPeriode(LocalDate.now().minusDays(1), null);
         beregningsgrunnlagPeriode2 = beregningsgrunnlagPeriodeBuilder.build(beregningsgrunnlag);
 
@@ -96,7 +96,7 @@ class BeregningsgrunnlagPeriodeTest {
     @Test
     void skal_bruke_beregningsgrunnlag_i_equalsOgHashCode() {
         var builder = lagBuilderMedPaakrevdeFelter();
-        BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode2 = builder.build(beregningsgrunnlag);
+        var beregningsgrunnlagPeriode2 = builder.build(beregningsgrunnlag);
 
         assertThat(beregningsgrunnlagPeriode).isEqualTo(beregningsgrunnlagPeriode2);
         assertThat(beregningsgrunnlagPeriode.hashCode()).isEqualTo(beregningsgrunnlagPeriode2.hashCode());

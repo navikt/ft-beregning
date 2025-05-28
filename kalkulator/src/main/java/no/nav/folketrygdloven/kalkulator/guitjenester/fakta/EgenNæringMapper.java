@@ -11,7 +11,7 @@ public final class EgenNæringMapper {
     }
 
     public static EgenNæringDto map(OppgittEgenNæringDto egenNæring) {
-        EgenNæringDto dto = new EgenNæringDto();
+        var dto = new EgenNæringDto();
         dto.setOrgnr(egenNæring.getOrgnr());
         dto.setVirksomhetType(egenNæring.getVirksomhetType());
         dto.setBegrunnelse(egenNæring.getBegrunnelse());

@@ -1,8 +1,8 @@
 package no.nav.folketrygdloven.besteberegning.modell.input;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
-
 import java.util.List;
+
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 
 public class YtelsegrunnlagPeriode {
 	private Periode periode;

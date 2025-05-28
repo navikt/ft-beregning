@@ -5,7 +5,6 @@ import java.math.RoundingMode;
 import no.nav.folketrygdloven.kalkulator.konfig.KonfigTjeneste;
 import no.nav.folketrygdloven.kalkulator.modell.iay.OppgittPeriodeInntekt;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
-import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulator.tid.Virkedager;
 
 public final class EffektivÅrsinntektTjenesteFRISINN {
@@ -32,7 +31,7 @@ public final class EffektivÅrsinntektTjenesteFRISINN {
      * @return dagsats i periode
      */
     private static Beløp finnEffektivDagsatsIPeriode(OppgittPeriodeInntekt oppgittInntekt) {
-        Intervall periode = oppgittInntekt.getPeriode();
+        var periode = oppgittInntekt.getPeriode();
         var dagerIRapportertPeriode = Virkedager.beregnAntallVirkedagerEllerKunHelg(periode.getFomDato(), periode.getTomDato());
         if (Beløp.safeVerdi(oppgittInntekt.getInntekt()) == null) {
             return Beløp.ZERO;

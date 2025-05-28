@@ -8,7 +8,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
-import no.nav.fpsak.nare.evaluation.node.SingleEvaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(BeregnAvkortetRefusjon.ID)
@@ -33,7 +32,7 @@ class BeregnAvkortetRefusjon extends LeafSpecification<BeregningsgrunnlagPeriode
                 BeregningsgrunnlagPrArbeidsforhold.builder(af).medAvkortetPrÅr(af.getAvkortetRefusjonPrÅr()).build();
                 resultater.put("avkortetPrÅr." + af.getArbeidsgiverId(), af.getAvkortetPrÅr());
             });
-        SingleEvaluation resultat = ja();
+	    var resultat = ja();
         resultat.setEvaluationProperties(resultater);
         return resultat;
     }

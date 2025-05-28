@@ -1,7 +1,6 @@
 package no.nav.folketrygdloven.kalkulator.steg;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -45,9 +44,9 @@ public final class BeregningsgrunnlagVerifiserer {
     }
 
     private static void verfiserBeregningsgrunnlagPerioder(BeregningsgrunnlagDto beregningsgrunnlag, PerioderTilVurderingTjeneste perioderTilVurderingTjeneste) {
-        List<BeregningsgrunnlagPeriodeDto> beregningsgrunnlagPerioder = beregningsgrunnlag.getBeregningsgrunnlagPerioder();
-        for (int i = 0; i < beregningsgrunnlagPerioder.size(); i++) {
-            BeregningsgrunnlagPeriodeDto periode = beregningsgrunnlagPerioder.get(i);
+        var beregningsgrunnlagPerioder = beregningsgrunnlag.getBeregningsgrunnlagPerioder();
+        for (var i = 0; i < beregningsgrunnlagPerioder.size(); i++) {
+            var periode = beregningsgrunnlagPerioder.get(i);
             if (perioderTilVurderingTjeneste.erTilVurdering(periode.getPeriode())) {
                 Objects.requireNonNull(periode.getBeregningsgrunnlagPeriodeFom(), "BeregningsgrunnlagperiodeFom");
                 verifiserIkkeTomListe(periode.getBeregningsgrunnlagPrStatusOgAndelList(), "BeregningsgrunnlagPrStatusOgAndelList");
@@ -147,7 +146,7 @@ public final class BeregningsgrunnlagVerifiserer {
     }
 
     private static void verifiserAtAndelerSomGraderesHarGrunnlag(BeregningsgrunnlagDto beregningsgrunnlag, AktivitetGradering aktivitetGradering) {
-        List<BeregningsgrunnlagPrStatusOgAndelDto> andelerMedGraderingUtenBG = GraderingUtenBeregningsgrunnlagTjeneste.finnAndelerMedGraderingUtenBG(beregningsgrunnlag, aktivitetGradering);
+        var andelerMedGraderingUtenBG = GraderingUtenBeregningsgrunnlagTjeneste.finnAndelerMedGraderingUtenBG(beregningsgrunnlag, aktivitetGradering);
         if (!andelerMedGraderingUtenBG.isEmpty()) {
             throw new KalkulatorException("FT-370746", String.format("Det mangler beregningsgrunnlag på en andel som skal graderes, ugyldig tilstand. Gjelder andel med status %s", andelerMedGraderingUtenBG.get(0).getAktivitetStatus().getKode()));
         }
@@ -162,9 +161,9 @@ public final class BeregningsgrunnlagVerifiserer {
             }
             Objects.requireNonNull(andel.getGjeldendeInntektskategori(), "Inntektskategori");
             if (!andel.getArbeidsforholdType().equals(OpptjeningAktivitetType.ETTERLØNN_SLUTTPAKKE)) {
-                LocalDate bgPeriodeFom = beregningsgrunnlagPeriode.getBeregningsgrunnlagPeriodeFom();
-                String andelBeskrivelse = lagAndelBeskrivelse(andel);
-                String feilBeskrivelse = "andel " + andelBeskrivelse + " i perioden fom " + bgPeriodeFom;
+                var bgPeriodeFom = beregningsgrunnlagPeriode.getBeregningsgrunnlagPeriodeFom();
+                var andelBeskrivelse = lagAndelBeskrivelse(andel);
+                var feilBeskrivelse = "andel " + andelBeskrivelse + " i perioden fom " + bgPeriodeFom;
                 Objects.requireNonNull(andel.getBruttoPrÅr(), "BruttoPrÅr er null for " + feilBeskrivelse);
                 Objects.requireNonNull(andel.getBeregnetPrÅr(), "beregnetPrÅr er null for " + feilBeskrivelse);
             }
@@ -185,9 +184,9 @@ public final class BeregningsgrunnlagVerifiserer {
             }
 
             if (andel.getAktivitetStatus().equals(AktivitetStatus.BRUKERS_ANDEL)) {
-                LocalDate bgPeriodeFom = beregningsgrunnlagPeriode.getBeregningsgrunnlagPeriodeFom();
-                String andelBeskrivelse = lagAndelBeskrivelse(andel);
-                String feilBeskrivelse = "andel " + andelBeskrivelse + " i perioden fom " + bgPeriodeFom;
+                var bgPeriodeFom = beregningsgrunnlagPeriode.getBeregningsgrunnlagPeriodeFom();
+                var andelBeskrivelse = lagAndelBeskrivelse(andel);
+                var feilBeskrivelse = "andel " + andelBeskrivelse + " i perioden fom " + bgPeriodeFom;
                 Objects.requireNonNull(andel.getBruttoPrÅr(), "BruttoPrÅr er null for " + feilBeskrivelse);
                 Objects.requireNonNull(andel.getBeregnetPrÅr(), "beregnetPrÅr er null for " + feilBeskrivelse);
             }
@@ -203,7 +202,7 @@ public final class BeregningsgrunnlagVerifiserer {
 
     private static String lagAndelBeskrivelse(BeregningsgrunnlagPrStatusOgAndelDto andel) {
         if (andel.getArbeidsgiver().isPresent()) {
-            InternArbeidsforholdRefDto ref = andel.getArbeidsforholdRef().orElse(InternArbeidsforholdRefDto.nullRef());
+            var ref = andel.getArbeidsforholdRef().orElse(InternArbeidsforholdRefDto.nullRef());
             return andel.getAktivitetStatus().toString() + andel.getArbeidsgiver().toString() + ref.toString();
         }
         return andel.getAktivitetStatus().toString();

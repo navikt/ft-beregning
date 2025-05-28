@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
@@ -27,9 +26,9 @@ class FastsettBeregnetPrÅr extends LeafSpecification<BeregningsgrunnlagPeriode>
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        BeregningsgrunnlagPrStatus bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+        var bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
 
-        BeregningsgrunnlagHjemmel hjemmel = settHjemmelForATFL(grunnlag.getBeregningsgrunnlag(), bgps);
+        var hjemmel = settHjemmelForATFL(grunnlag.getBeregningsgrunnlag(), bgps);
 
         Map<String, Object> resultater = new HashMap<>();
         resultater.put("beregnetPrÅr", bgps.getBeregnetPrÅr());
@@ -39,10 +38,10 @@ class FastsettBeregnetPrÅr extends LeafSpecification<BeregningsgrunnlagPeriode>
     }
 
     private BeregningsgrunnlagHjemmel settHjemmelForATFL(Beregningsgrunnlag grunnlag, BeregningsgrunnlagPrStatus bgps) {
-        AktivitetStatusMedHjemmel status = grunnlag.getAktivitetStatus(AktivitetStatus.ATFL);
-        boolean kombinasjon = status.getAktivitetStatus().equals(AktivitetStatus.ATFL_SN);
-        boolean arbeidstaker = !bgps.getArbeidsforholdIkkeFrilans().isEmpty();
-        boolean frilans = bgps.getFrilansArbeidsforhold().isPresent();
+        var status = grunnlag.getAktivitetStatus(AktivitetStatus.ATFL);
+        var kombinasjon = status.getAktivitetStatus().equals(AktivitetStatus.ATFL_SN);
+        var arbeidstaker = !bgps.getArbeidsforholdIkkeFrilans().isEmpty();
+        var frilans = bgps.getFrilansArbeidsforhold().isPresent();
         BeregningsgrunnlagHjemmel hjemmel;
         if (arbeidstaker) {
             hjemmel = finnHjemmelForArbeidstaker(grunnlag.getYtelsesSpesifiktGrunnlag(), kombinasjon, frilans);

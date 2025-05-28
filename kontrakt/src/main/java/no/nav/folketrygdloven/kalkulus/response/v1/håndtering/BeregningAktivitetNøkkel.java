@@ -5,14 +5,15 @@ import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import no.nav.folketrygdloven.kalkulus.felles.v1.Aktør;
 import no.nav.folketrygdloven.kalkulus.felles.v1.InternArbeidsforholdRefDto;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
@@ -80,7 +81,7 @@ public class BeregningAktivitetNøkkel {
         if (!(o instanceof BeregningAktivitetNøkkel)) {
             return false;
         }
-        BeregningAktivitetNøkkel that = (BeregningAktivitetNøkkel) o;
+	    var that = (BeregningAktivitetNøkkel) o;
         return Objects.equals(opptjeningAktivitetType, that.opptjeningAktivitetType)
                 && Objects.equals(fom, that.fom)
                 && Objects.equals(arbeidsgiver, that.arbeidsgiver)

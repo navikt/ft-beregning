@@ -1,6 +1,5 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.HashMap;
@@ -34,11 +33,11 @@ class FastsettSammenligningsgrunnlag extends LeafSpecification<Beregningsgrunnla
 
 	public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag, LocalDate behandlingsdato) {
         if (grunnlag.getBeregningsgrunnlag().getSammenligningsgrunnlagForStatus(SammenligningGrunnlagType.AT_FL).isEmpty()) {
-            Periode sammenligningsPeriode = lagSammenligningsPeriode(grunnlag.getInntektsgrunnlag(), behandlingsdato, grunnlag.getSkjæringstidspunkt());
-            BigDecimal sammenligningsgrunnlagInntekt = grunnlag.getInntektsgrunnlag().getSamletInntektISammenligningsperiode(sammenligningsPeriode);
+            var sammenligningsPeriode = lagSammenligningsPeriode(grunnlag.getInntektsgrunnlag(), behandlingsdato, grunnlag.getSkjæringstidspunkt());
+            var sammenligningsgrunnlagInntekt = grunnlag.getInntektsgrunnlag().getSamletInntektISammenligningsperiode(sammenligningsPeriode);
 
 			// Setter sammenligningsgrunnlag pr status
-	        SammenligningsGrunnlag sgPrStatus = SammenligningsGrunnlag.builder()
+            var sgPrStatus = SammenligningsGrunnlag.builder()
 			        .medSammenligningsperiode(sammenligningsPeriode)
 			        .medRapportertPrÅr(sammenligningsgrunnlagInntekt)
 			        .medSammenligningstype(SammenligningGrunnlagType.AT_FL)
@@ -47,15 +46,15 @@ class FastsettSammenligningsgrunnlag extends LeafSpecification<Beregningsgrunnla
         }
 
         Map<String, Object> resultater = new HashMap<>();
-        SammenligningsGrunnlag sammenligningsGrunnlag = grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.AT_FL);
+        var sammenligningsGrunnlag = grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.AT_FL);
         resultater.put("sammenligningsperiode", sammenligningsGrunnlag.getSammenligningsperiode());
         resultater.put("sammenligningsgrunnlagPrÅr", sammenligningsGrunnlag.getRapportertPrÅr());
         return beregnet(resultater);
     }
 
     private Periode lagSammenligningsPeriode(Inntektsgrunnlag inntektsgrunnlag, LocalDate behandlingsdato, LocalDate skjæringstidspunkt) {
-        LocalDate gjeldendeTidspunkt = behandlingsdato.isBefore(skjæringstidspunkt) ? behandlingsdato : skjæringstidspunkt;
-        LocalDate sisteØnskedeInntektMåned = gjeldendeTidspunkt.minusMonths(1).withDayOfMonth(1);
+        var gjeldendeTidspunkt = behandlingsdato.isBefore(skjæringstidspunkt) ? behandlingsdato : skjæringstidspunkt;
+        var sisteØnskedeInntektMåned = gjeldendeTidspunkt.minusMonths(1).withDayOfMonth(1);
         if (erEtterRapporteringsFrist(inntektsgrunnlag.getInntektRapporteringFristDag(), gjeldendeTidspunkt, behandlingsdato)) {
             return lag12MånedersPeriodeTilOgMed(sisteØnskedeInntektMåned);
         }
@@ -63,14 +62,14 @@ class FastsettSammenligningsgrunnlag extends LeafSpecification<Beregningsgrunnla
     }
 
     private static boolean erEtterRapporteringsFrist(int inntektRapporteringFristDag, LocalDate gjeldendeTidspunkt, LocalDate nåtid) {
-        LocalDate fristUtenHelligdager = gjeldendeTidspunkt.withDayOfMonth(1).minusDays(1).plusDays(inntektRapporteringFristDag);
-        LocalDate fristMedHelligdager = BevegeligeHelligdagerUtil.hentFørsteVirkedagFraOgMed(fristUtenHelligdager);
+        var fristUtenHelligdager = gjeldendeTidspunkt.withDayOfMonth(1).minusDays(1).plusDays(inntektRapporteringFristDag);
+        var fristMedHelligdager = BevegeligeHelligdagerUtil.hentFørsteVirkedagFraOgMed(fristUtenHelligdager);
         return nåtid.isAfter(fristMedHelligdager);
     }
 
     private static Periode lag12MånedersPeriodeTilOgMed(LocalDate periodeTom) {
-        LocalDate tom = periodeTom.with(TemporalAdjusters.lastDayOfMonth());
-        LocalDate fom = tom.minusYears(1).plusMonths(1).withDayOfMonth(1);
+        var tom = periodeTom.with(TemporalAdjusters.lastDayOfMonth());
+        var fom = tom.minusYears(1).plusMonths(1).withDayOfMonth(1);
         return Periode.of(fom, tom);
     }
 }
