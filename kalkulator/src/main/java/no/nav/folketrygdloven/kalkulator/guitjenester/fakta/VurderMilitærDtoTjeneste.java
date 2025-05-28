@@ -1,9 +1,6 @@
 package no.nav.folketrygdloven.kalkulator.guitjenester.fakta;
 
-import java.util.List;
-
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagGUIInput;
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatusDto;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.FaktaOmBeregningDto;

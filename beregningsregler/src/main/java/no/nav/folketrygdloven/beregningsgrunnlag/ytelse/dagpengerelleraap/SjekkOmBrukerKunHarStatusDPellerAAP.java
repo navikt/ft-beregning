@@ -1,7 +1,5 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.ytelse.dagpengerelleraap;
 
-import java.util.List;
-
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;

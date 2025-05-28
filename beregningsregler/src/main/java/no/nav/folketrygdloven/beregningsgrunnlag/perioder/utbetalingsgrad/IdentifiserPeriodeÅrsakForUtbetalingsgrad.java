@@ -2,7 +2,6 @@ package no.nav.folketrygdloven.beregningsgrunnlag.perioder.utbetalingsgrad;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.PeriodeÅrsak;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.utbetalingsgrad.PeriodeModellUtbetalingsgrad;
@@ -11,7 +10,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Identifise
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.PeriodeSplittData;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
-import no.nav.fpsak.nare.evaluation.node.SingleEvaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(IdentifiserPeriodeÅrsakForUtbetalingsgrad.ID)

@@ -1,10 +1,8 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.perioder.refusjon;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;

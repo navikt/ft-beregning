@@ -6,8 +6,6 @@ import java.util.Optional;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BGAndelArbeidsforholdDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseGrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YrkesaktivitetFilterDto;
-import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
-import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.PermisjonDto;
 
 class UtledPermisjonTilDto {

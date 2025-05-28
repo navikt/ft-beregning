@@ -1,7 +1,6 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.perioder.gradering;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.gradering.AndelGradering;

@@ -1,7 +1,6 @@
 package no.nav.folketrygdloven.skjæringstidspunkt.status;
 
 import java.util.Arrays;
-import java.util.List;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModell;

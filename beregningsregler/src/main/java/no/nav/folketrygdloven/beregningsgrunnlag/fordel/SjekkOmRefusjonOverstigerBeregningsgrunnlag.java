@@ -12,7 +12,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelPeriodeMode
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.fpsak.nare.evaluation.Evaluation;
-import no.nav.fpsak.nare.evaluation.node.SingleEvaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 class SjekkOmRefusjonOverstigerBeregningsgrunnlag extends LeafSpecification<FordelModell> {

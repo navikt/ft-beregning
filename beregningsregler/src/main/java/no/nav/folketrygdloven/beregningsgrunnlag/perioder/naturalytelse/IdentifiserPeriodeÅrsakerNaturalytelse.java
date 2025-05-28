@@ -1,6 +1,5 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.perioder.naturalytelse;
 
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,7 +10,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.natur
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.naturalytelse.PeriodiseringNaturalytelseProsesstruktur;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
-import no.nav.fpsak.nare.evaluation.node.SingleEvaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(IdentifiserPeriodeÅrsakerNaturalytelse.ID)

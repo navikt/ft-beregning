@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
@@ -22,7 +21,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SplittetPe
 import no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
-import no.nav.fpsak.nare.evaluation.node.SingleEvaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(PeriodiserForNaturalytelse.ID)

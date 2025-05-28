@@ -2,7 +2,6 @@ package no.nav.folketrygdloven.kalkulator.ytelse.frisinn;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.RegelResultat;

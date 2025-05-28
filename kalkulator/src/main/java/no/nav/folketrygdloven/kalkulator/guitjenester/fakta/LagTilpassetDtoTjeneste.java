@@ -16,7 +16,6 @@ import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BGAndelArbeid
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.FaktaAggregatDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.FaktaAktørDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseGrunnlagDto;
-import no.nav.folketrygdloven.kalkulator.modell.iay.OppgittEgenNæringDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.OppgittOpptjeningDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YtelseFilterDto;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
@@ -27,7 +26,6 @@ import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.Beregn
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.BeregningsgrunnlagPrStatusOgAndelFLDto;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.BeregningsgrunnlagPrStatusOgAndelSNDto;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.BeregningsgrunnlagPrStatusOgAndelYtelseDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.EgenNæringDto;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.PgiDto;
 
 class LagTilpassetDtoTjeneste {

@@ -25,7 +25,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.FinnGjennomsnittlig
 import no.nav.folketrygdloven.beregningsgrunnlag.util.Virkedager;
 import no.nav.folketrygdloven.besteberegning.modell.BesteberegningRegelmodell;
 import no.nav.folketrygdloven.besteberegning.modell.input.Ytelsegrunnlag;
-import no.nav.folketrygdloven.besteberegning.modell.input.YtelsegrunnlagPeriode;
 import no.nav.folketrygdloven.besteberegning.modell.output.AktivitetNøkkel;
 import no.nav.folketrygdloven.besteberegning.modell.output.BeregnetMånedsgrunnlag;
 import no.nav.folketrygdloven.besteberegning.modell.output.Inntekt;

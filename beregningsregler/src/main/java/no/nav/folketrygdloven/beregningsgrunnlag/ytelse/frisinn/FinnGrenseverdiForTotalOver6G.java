@@ -8,7 +8,6 @@ import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode;
@@ -18,7 +17,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.FrisinnGru
 import no.nav.folketrygdloven.beregningsgrunnlag.util.Virkedager;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
-import no.nav.fpsak.nare.evaluation.node.SingleEvaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(FinnGrenseverdiForTotalOver6G.ID)

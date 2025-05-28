@@ -16,7 +16,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SplittetAn
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SplittetPeriode;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
-import no.nav.fpsak.nare.evaluation.node.SingleEvaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(PeriodiserForUtbetalingsgrad.ID)

@@ -7,7 +7,6 @@ import static org.assertj.core.api.Assertions.within;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
@@ -18,7 +17,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
-import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 
 class RegelFastsettUtenAvkortingATFLTest {

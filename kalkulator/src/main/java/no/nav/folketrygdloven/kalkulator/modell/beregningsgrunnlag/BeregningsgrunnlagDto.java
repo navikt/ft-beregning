@@ -1,5 +1,13 @@
 package no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag;
 
+import no.nav.folketrygdloven.kalkulator.modell.diff.SjekkVedKopiering;
+import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
+import no.nav.folketrygdloven.kalkulator.tid.Intervall;
+import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
+import no.nav.folketrygdloven.kalkulus.kodeverk.FaktaOmBeregningTilfelle;
+import no.nav.folketrygdloven.kalkulus.kodeverk.Hjemmel;
+import no.nav.folketrygdloven.kalkulus.kodeverk.SammenligningsgrunnlagType;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,14 +16,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import no.nav.folketrygdloven.kalkulator.modell.diff.SjekkVedKopiering;
-import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
-import no.nav.folketrygdloven.kalkulator.tid.Intervall;
-import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
-import no.nav.folketrygdloven.kalkulus.kodeverk.FaktaOmBeregningTilfelle;
-import no.nav.folketrygdloven.kalkulus.kodeverk.Hjemmel;
-import no.nav.folketrygdloven.kalkulus.kodeverk.SammenligningsgrunnlagType;
 
 public class BeregningsgrunnlagDto {
 

@@ -1,12 +1,5 @@
 package no.nav.folketrygdloven.kalkulator.steg;
 
-import static no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand.VURDERT_TILKOMMET_INNTEKT;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import no.nav.folketrygdloven.kalkulator.input.FaktaOmBeregningInput;
 import no.nav.folketrygdloven.kalkulator.input.FastsettBeregningsaktiviteterInput;
 import no.nav.folketrygdloven.kalkulator.input.ForeslåBeregningsgrunnlagInput;
@@ -44,6 +37,13 @@ import no.nav.folketrygdloven.kalkulator.steg.tilkommetInntekt.TilkommetInntektT
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.UttakArbeidType;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand.VURDERT_TILKOMMET_INNTEKT;
 
 /**
  * Fasadetjeneste for å delegere alle kall fra steg

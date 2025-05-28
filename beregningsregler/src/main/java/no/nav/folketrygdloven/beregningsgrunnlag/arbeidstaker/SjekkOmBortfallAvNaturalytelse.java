@@ -1,9 +1,5 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.Optional;
-
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.fpsak.nare.doc.RuleDocumentation;

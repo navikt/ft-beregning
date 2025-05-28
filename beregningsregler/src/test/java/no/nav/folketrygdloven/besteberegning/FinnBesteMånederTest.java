@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
@@ -33,7 +32,6 @@ import no.nav.folketrygdloven.besteberegning.modell.input.YtelseAktivitetType;
 import no.nav.folketrygdloven.besteberegning.modell.input.Ytelsegrunnlag;
 import no.nav.folketrygdloven.besteberegning.modell.input.YtelsegrunnlagAndel;
 import no.nav.folketrygdloven.besteberegning.modell.input.YtelsegrunnlagPeriode;
-import no.nav.folketrygdloven.besteberegning.modell.output.BeregnetMånedsgrunnlag;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 
 class FinnBesteMånederTest {

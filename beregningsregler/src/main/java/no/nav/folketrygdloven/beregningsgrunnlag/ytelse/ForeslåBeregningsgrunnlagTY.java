@@ -3,7 +3,6 @@ package no.nav.folketrygdloven.beregningsgrunnlag.ytelse;
 import static no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel.F_14_7;
 import static no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel.F_9_9;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 

@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Optional;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;

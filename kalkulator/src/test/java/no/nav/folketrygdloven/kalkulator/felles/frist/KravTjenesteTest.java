@@ -3,7 +3,6 @@ package no.nav.folketrygdloven.kalkulator.felles.frist;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import java.time.LocalDate;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,8 +23,6 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.ArbeidType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Utfall;
-import no.nav.fpsak.tidsserie.LocalDateSegment;
-import no.nav.fpsak.tidsserie.LocalDateTimeline;
 
 class KravTjenesteTest {
 

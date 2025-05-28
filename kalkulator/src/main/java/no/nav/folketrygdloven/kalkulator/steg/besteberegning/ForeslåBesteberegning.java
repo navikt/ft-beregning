@@ -3,9 +3,7 @@ package no.nav.folketrygdloven.kalkulator.steg.besteberegning;
 import static no.nav.folketrygdloven.kalkulator.adapter.regelmodelltilvl.MapRegelSporingFraRegelTilVL.mapRegelSporingGrunnlag;
 import static no.nav.folketrygdloven.kalkulator.steg.besteberegning.MapBesteberegningFraRegelTilVL.mapTilBeregningsgrunnlag;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.RegelResultat;
 import no.nav.folketrygdloven.besteberegning.modell.BesteberegningRegelmodell;
-import no.nav.folketrygdloven.besteberegning.modell.output.BesteberegningOutput;
 import no.nav.folketrygdloven.kalkulator.input.ForeslåBesteberegningInput;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;

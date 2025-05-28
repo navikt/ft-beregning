@@ -23,7 +23,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Pe
 import no.nav.folketrygdloven.besteberegning.modell.BesteberegningRegelmodell;
 import no.nav.folketrygdloven.besteberegning.modell.input.BesteberegningInput;
 import no.nav.folketrygdloven.besteberegning.modell.output.BesteberegnetAndel;
-import no.nav.folketrygdloven.besteberegning.modell.output.BesteberegnetGrunnlag;
 
 class RegelForeslåBesteberegningTest {
 

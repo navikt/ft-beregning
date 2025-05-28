@@ -5,7 +5,6 @@ import static no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil.TIDENES_EN
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.PeriodeÅrsak;

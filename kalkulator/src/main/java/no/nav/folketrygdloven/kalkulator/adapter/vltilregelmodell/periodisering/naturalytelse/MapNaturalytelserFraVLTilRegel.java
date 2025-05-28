@@ -1,10 +1,8 @@
 package no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.periodisering.naturalytelse;
 
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;

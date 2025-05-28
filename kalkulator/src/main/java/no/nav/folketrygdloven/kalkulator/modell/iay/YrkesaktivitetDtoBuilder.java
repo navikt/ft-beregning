@@ -2,7 +2,6 @@ package no.nav.folketrygdloven.kalkulator.modell.iay;
 
 import java.util.Optional;
 
-import no.nav.folketrygdloven.kalkulator.modell.iay.permisjon.PermisjonDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.permisjon.PermisjonDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
 import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;

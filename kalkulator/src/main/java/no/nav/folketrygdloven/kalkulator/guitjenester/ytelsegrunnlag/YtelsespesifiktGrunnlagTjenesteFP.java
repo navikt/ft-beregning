@@ -1,7 +1,5 @@
 package no.nav.folketrygdloven.kalkulator.guitjenester.ytelsegrunnlag;
 
-import java.time.YearMonth;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 

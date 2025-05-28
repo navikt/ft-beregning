@@ -1,9 +1,7 @@
 package no.nav.folketrygdloven.kalkulator.adapter.regelmodelltilvl.kodeverk;
 
 import java.util.EnumMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;

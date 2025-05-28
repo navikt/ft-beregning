@@ -1,9 +1,7 @@
 package no.nav.folketrygdloven.kalkulator.ytelse.frisinn;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -28,7 +26,6 @@ import no.nav.folketrygdloven.kalkulator.output.BeregningAvklaringsbehovResultat
 import no.nav.folketrygdloven.kalkulator.output.BeregningVilkårResultat;
 import no.nav.folketrygdloven.kalkulator.output.BeregningsgrunnlagRegelResultat;
 import no.nav.folketrygdloven.kalkulator.output.RegelSporingAggregat;
-import no.nav.folketrygdloven.kalkulator.output.RegelSporingPeriode;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagPeriodeRegelType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Vilkårsavslagsårsak;

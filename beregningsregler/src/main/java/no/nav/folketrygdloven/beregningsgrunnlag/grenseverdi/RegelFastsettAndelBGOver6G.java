@@ -2,7 +2,6 @@ package no.nav.folketrygdloven.beregningsgrunnlag.grenseverdi;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.Fastsatt;
 import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;

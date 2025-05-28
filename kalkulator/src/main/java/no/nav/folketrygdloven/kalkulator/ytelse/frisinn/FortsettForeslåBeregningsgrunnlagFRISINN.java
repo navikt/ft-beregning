@@ -3,7 +3,6 @@ package no.nav.folketrygdloven.kalkulator.ytelse.frisinn;
 import java.util.Collections;
 
 import no.nav.folketrygdloven.kalkulator.input.FortsettForeslåBeregningsgrunnlagInput;
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.output.BeregningsgrunnlagRegelResultat;
 
 /**

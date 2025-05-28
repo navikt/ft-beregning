@@ -1,8 +1,5 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.ytelse.sykepenger;
 
-import java.math.BigDecimal;
-import java.util.Optional;
-
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;

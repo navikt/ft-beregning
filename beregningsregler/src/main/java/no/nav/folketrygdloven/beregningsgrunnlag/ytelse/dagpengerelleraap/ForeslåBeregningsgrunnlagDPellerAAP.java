@@ -1,6 +1,5 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.ytelse.dagpengerelleraap;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;

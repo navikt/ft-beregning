@@ -1,7 +1,5 @@
 package no.nav.folketrygdloven.kalkulator.modell.iay;
 
-import java.util.Optional;
-
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Stillingsprosent;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;

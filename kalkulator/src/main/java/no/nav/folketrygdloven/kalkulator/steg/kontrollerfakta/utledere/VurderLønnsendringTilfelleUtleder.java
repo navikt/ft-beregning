@@ -1,12 +1,9 @@
 package no.nav.folketrygdloven.kalkulator.steg.kontrollerfakta.utledere;
 
-import java.util.List;
 import java.util.Optional;
 
 import no.nav.folketrygdloven.kalkulator.input.FaktaOmBeregningInput;
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDto;
-import no.nav.folketrygdloven.kalkulator.modell.iay.YrkesaktivitetDto;
 import no.nav.folketrygdloven.kalkulator.steg.kontrollerfakta.LønnsendringTjeneste;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FaktaOmBeregningTilfelle;
 

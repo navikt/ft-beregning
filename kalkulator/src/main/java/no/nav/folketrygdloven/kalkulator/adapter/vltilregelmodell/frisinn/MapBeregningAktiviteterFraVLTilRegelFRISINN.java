@@ -3,7 +3,6 @@ package no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.frisinn;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -14,7 +13,6 @@ import no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.MapBeregningAk
 import no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.kodeverk.MapOpptjeningAktivitetTypeFraVLTilRegel;
 import no.nav.folketrygdloven.kalkulator.input.FastsettBeregningsaktiviteterInput;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektsmeldingDto;
-import no.nav.folketrygdloven.kalkulator.modell.iay.OppgittArbeidsforholdDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.OppgittOpptjeningDto;
 import no.nav.folketrygdloven.kalkulator.modell.opptjening.OpptjeningAktiviteterDto;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;

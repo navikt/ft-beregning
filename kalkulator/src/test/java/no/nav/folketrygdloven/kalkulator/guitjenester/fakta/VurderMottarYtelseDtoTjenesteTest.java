@@ -31,7 +31,6 @@ import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseAggregatB
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseGrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseGrunnlagDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.iay.VersjonTypeDto;
-import no.nav.folketrygdloven.kalkulator.modell.iay.YrkesaktivitetDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.modell.typer.EksternArbeidsforholdRef;
@@ -44,9 +43,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.ArbeidsforholdHandlingType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FaktaOmBeregningTilfelle;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.ArbeidstakerUtenInntektsmeldingAndelDto;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.FaktaOmBeregningDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.VurderMottarYtelseDto;
 
 
 class VurderMottarYtelseDtoTjenesteTest {

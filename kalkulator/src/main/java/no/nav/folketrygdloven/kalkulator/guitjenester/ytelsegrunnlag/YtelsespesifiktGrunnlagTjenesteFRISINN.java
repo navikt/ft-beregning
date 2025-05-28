@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.kalkulator.guitjenester.ModellTyperMapper;
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagGUIInput;
-import no.nav.folketrygdloven.kalkulator.input.YtelsespesifiktGrunnlag;
 import no.nav.folketrygdloven.kalkulator.modell.iay.OppgittEgenNæringDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.OppgittFrilansDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.OppgittFrilansInntektDto;

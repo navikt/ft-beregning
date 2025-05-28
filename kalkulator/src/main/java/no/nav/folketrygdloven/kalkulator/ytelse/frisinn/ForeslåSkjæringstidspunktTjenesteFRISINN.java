@@ -11,7 +11,6 @@ import no.nav.folketrygdloven.kalkulator.output.BeregningVilkårResultat;
 import no.nav.folketrygdloven.kalkulator.output.BeregningsgrunnlagRegelResultat;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Vilkårsavslagsårsak;
-import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModell;
 
 public class ForeslåSkjæringstidspunktTjenesteFRISINN {
 

@@ -28,7 +28,6 @@ import no.nav.folketrygdloven.kalkulator.input.ForeldrepengerGrunnlag;
 import no.nav.folketrygdloven.kalkulator.input.ForeslåBesteberegningInput;
 import no.nav.folketrygdloven.kalkulator.input.GrunnbeløpMapper;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.folketrygdloven.kalkulator.modell.besteberegning.Ytelseandel;
 import no.nav.folketrygdloven.kalkulator.modell.besteberegning.Ytelseperiode;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektDto;

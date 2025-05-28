@@ -8,8 +8,6 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import no.nav.folketrygdloven.kalkulator.tid.Intervall;
-
 /**
  * Filter for å hente ytelser fra grunnlag. Tilbyr håndtering av skjæringstidspunkt og filtereing på ytelser slik
  * at en ikke trenger å implementere selv navigering av modellen.

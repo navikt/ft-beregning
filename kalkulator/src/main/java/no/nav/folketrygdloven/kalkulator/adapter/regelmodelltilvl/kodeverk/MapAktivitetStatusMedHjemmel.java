@@ -3,11 +3,9 @@ package no.nav.folketrygdloven.kalkulator.adapter.regelmodelltilvl.kodeverk;
 import java.util.List;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatusDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
-import no.nav.folketrygdloven.kalkulus.kodeverk.Hjemmel;
 
 public class MapAktivitetStatusMedHjemmel {
     private MapAktivitetStatusMedHjemmel() {

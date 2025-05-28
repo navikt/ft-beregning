@@ -8,7 +8,6 @@ import java.util.Optional;
 import no.nav.folketrygdloven.kalkulator.guitjenester.ModellTyperMapper;
 import no.nav.folketrygdloven.kalkulator.modell.iay.OppgittArbeidsforholdDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.OppgittEgenNæringDto;
-import no.nav.folketrygdloven.kalkulator.modell.iay.OppgittFrilansDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.OppgittFrilansInntektDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.OppgittOpptjeningDto;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
