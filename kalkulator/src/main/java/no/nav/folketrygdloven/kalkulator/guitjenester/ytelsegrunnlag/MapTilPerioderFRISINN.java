@@ -27,7 +27,7 @@ public final class MapTilPerioderFRISINN {
     public static List<FrisinnPeriodeDto> map(List<FrisinnPeriode> frisinnPerioder, OppgittOpptjeningDto oppgittOpptjening) {
         List<FrisinnPeriodeDto> dtoer = new ArrayList<>();
         frisinnPerioder.forEach(periode -> {
-            FrisinnPeriodeDto periodeDto = new FrisinnPeriodeDto();
+            var periodeDto = new FrisinnPeriodeDto();
             periodeDto.setFom(periode.getPeriode().getFomDato());
             periodeDto.setTom(periode.getPeriode().getTomDato());
             List<FrisinnAndelDto> andeler = new ArrayList<>();
@@ -54,7 +54,7 @@ public final class MapTilPerioderFRISINN {
     }
 
     private static Optional<FrisinnAndelDto> finnOppgittNæringsinntekt(Intervall periode, OppgittOpptjeningDto oppgittOpptjening) {
-        List<OppgittEgenNæringDto> næringer  = oppgittOpptjening.getEgenNæring();
+        var næringer  = oppgittOpptjening.getEgenNæring();
         if (næringer.isEmpty()) {
             return Optional.empty();
         }
@@ -69,7 +69,7 @@ public final class MapTilPerioderFRISINN {
     }
 
     private static Optional<FrisinnAndelDto> finnOppgittFrilansInntekt(Intervall periode, OppgittOpptjeningDto oppgittOpptjening) {
-        Optional<OppgittFrilansDto> oppgittFL = oppgittOpptjening.getFrilans();
+        var oppgittFL = oppgittOpptjening.getFrilans();
         if (oppgittFL.isEmpty()) {
             return Optional.empty();
         }

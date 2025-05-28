@@ -28,15 +28,15 @@ public final class VurderRefusjonDtoTjeneste {
     }
 
     public static Optional<RefusjonTilVurderingDto> lagDto(BeregningsgrunnlagGUIInput input) {
-        Optional<BeregningsgrunnlagDto> beregningsgrunnlag = input.getBeregningsgrunnlagGrunnlag().getBeregningsgrunnlagHvisFinnes();
-        List<BeregningsgrunnlagDto> originaleGrunnlag = input.getBeregningsgrunnlagGrunnlagFraForrigeBehandling().stream()
+        var beregningsgrunnlag = input.getBeregningsgrunnlagGrunnlag().getBeregningsgrunnlagHvisFinnes();
+        var originaleGrunnlag = input.getBeregningsgrunnlagGrunnlagFraForrigeBehandling().stream()
                 .flatMap(gr -> gr.getBeregningsgrunnlagHvisFinnes().stream()).toList();
         if (originaleGrunnlag.isEmpty() || beregningsgrunnlag.isEmpty() || beregningsgrunnlag.get().getGrunnbeløp() == null) {
             return Optional.empty();
         }
         var grenseverdi = beregningsgrunnlag.get().getGrunnbeløp().multipliser(KonfigTjeneste.getAntallGØvreGrenseverdi());
 
-        Map<Intervall, List<RefusjonAndel>> andelerMedØktRefusjon = originaleGrunnlag.stream()
+        var andelerMedØktRefusjon = originaleGrunnlag.stream()
                 .flatMap(originaltBg -> AndelerMedØktRefusjonTjeneste.finnAndelerMedØktRefusjon(beregningsgrunnlag.get(), originaltBg, grenseverdi, input.getYtelsespesifiktGrunnlag()).entrySet().stream())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, unikeElementer()));
         if (!andelerMedØktRefusjon.isEmpty()) {
@@ -57,16 +57,16 @@ public final class VurderRefusjonDtoTjeneste {
 
     // Metode for å støtte visning av saker som tidligere er løst men som av ulike grunner ikke lenger gir samme resultat i avklaringsbehovutledning
     private static Optional<RefusjonTilVurderingDto> lagDtoBasertPåTidligereAvklaringer(BeregningsgrunnlagGUIInput input) {
-        Intervall hardkodetIntervall = Intervall.fraOgMed(input.getSkjæringstidspunktForBeregning()); // Bruker hele perioden det kan kreves refusjon for
+        var hardkodetIntervall = Intervall.fraOgMed(input.getSkjæringstidspunktForBeregning()); // Bruker hele perioden det kan kreves refusjon for
         List<RefusjonAndel> andeler = new ArrayList<>();
-        List<BeregningRefusjonOverstyringDto> refusjonOverstyringer = input.getBeregningsgrunnlagGrunnlag().getRefusjonOverstyringer()
+        var refusjonOverstyringer = input.getBeregningsgrunnlagGrunnlag().getRefusjonOverstyringer()
                 .map(BeregningRefusjonOverstyringerDto::getRefusjonOverstyringer)
                 .orElse(Collections.emptyList())
                 .stream()
                 .filter(pa -> !pa.getRefusjonPerioder().isEmpty())
                 .toList();
         refusjonOverstyringer.forEach(avkalring -> {
-            List<RefusjonAndel> tidligereAvklaringerPåAG = avkalring.getRefusjonPerioder().stream()
+            var tidligereAvklaringerPåAG = avkalring.getRefusjonPerioder().stream()
                     .map(refusjonPeriode -> new RefusjonAndel(AktivitetStatus.ARBEIDSTAKER, avkalring.getArbeidsgiver(), refusjonPeriode.getArbeidsforholdRef(),
                             Beløp.ZERO, Beløp.ZERO)) // De to siste parameterne brukes ikke for å lage dto så kan settes til dummy-verdier
                     .toList();

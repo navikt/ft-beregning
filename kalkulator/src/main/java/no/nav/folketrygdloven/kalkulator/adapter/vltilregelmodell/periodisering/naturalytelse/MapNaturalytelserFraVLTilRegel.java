@@ -30,7 +30,7 @@ public class MapNaturalytelserFraVLTilRegel {
     public static PeriodeModellNaturalytelse map(BeregningsgrunnlagInput input,
                                                  BeregningsgrunnlagDto beregningsgrunnlag) {
         precondition(beregningsgrunnlag);
-        LocalDate skjæringstidspunkt = beregningsgrunnlag.getSkjæringstidspunkt();
+        var skjæringstidspunkt = beregningsgrunnlag.getSkjæringstidspunkt();
         var beregningsgrunnlagPeriode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         var andeler = beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndelList();
         var eksisterendePerioder = beregningsgrunnlag.getBeregningsgrunnlagPerioder().stream()
@@ -45,7 +45,7 @@ public class MapNaturalytelserFraVLTilRegel {
     }
 
     private static void precondition(BeregningsgrunnlagDto beregningsgrunnlag) {
-        int antallPerioder = beregningsgrunnlag.getBeregningsgrunnlagPerioder().size();
+        var antallPerioder = beregningsgrunnlag.getBeregningsgrunnlagPerioder().size();
         if (antallPerioder > 1) {
             throw new IllegalStateException("Forventer kun en periode ved periodisering fra naturalytelse");
         }
@@ -64,7 +64,7 @@ public class MapNaturalytelserFraVLTilRegel {
     }
 
     private static Arbeidsforhold lagArbeidsforhold(Collection<InntektsmeldingDto> inntektsmeldinger, BeregningsgrunnlagPrStatusOgAndelDto andel) {
-        Optional<InntektsmeldingDto> matchendeInntektsmelding = inntektsmeldinger.stream()
+        var matchendeInntektsmelding = inntektsmeldinger.stream()
                 .filter(im -> andel.gjelderInntektsmeldingFor(im.getArbeidsgiver(), im.getArbeidsforholdRef()))
                 .filter(im -> im.getArbeidsforholdRef().gjelderForSpesifiktArbeidsforhold())
                 .findFirst();
@@ -74,8 +74,8 @@ public class MapNaturalytelserFraVLTilRegel {
     }
 
     private static NaturalytelserPrArbeidsforhold lagArbeidsforholdOgInntektsmelding(BeregningsgrunnlagPrStatusOgAndelDto andel, Collection<InntektsmeldingDto> inntektsmeldinger) {
-        List<NaturalYtelse> naturalytelser = mapNaturalytelseFraInntektsmelding(andel, inntektsmeldinger);
-        Arbeidsforhold arbeidsforhold = lagArbeidsforhold(inntektsmeldinger, andel);
+        var naturalytelser = mapNaturalytelseFraInntektsmelding(andel, inntektsmeldinger);
+        var arbeidsforhold = lagArbeidsforhold(inntektsmeldinger, andel);
         return NaturalytelserPrArbeidsforhold.builder()
                 .medAndelsnr(andel.getAndelsnr())
                 .medNaturalytelser(naturalytelser)
@@ -84,7 +84,7 @@ public class MapNaturalytelserFraVLTilRegel {
     }
 
     private static List<NaturalYtelse> mapNaturalytelseFraInntektsmelding(BeregningsgrunnlagPrStatusOgAndelDto andel, Collection<InntektsmeldingDto> inntektsmeldinger) {
-        Optional<InntektsmeldingDto> matchendeInntektsmelding = inntektsmeldinger.stream()
+        var matchendeInntektsmelding = inntektsmeldinger.stream()
                 .filter(im -> andel.gjelderInntektsmeldingFor(im.getArbeidsgiver(), im.getArbeidsforholdRef()))
                 .findFirst();
         return matchendeInntektsmelding.map(MapNaturalytelser::mapNaturalytelser).orElse(Collections.emptyList());

@@ -158,7 +158,7 @@ public class InntektFilterDto {
             return false;
         }
         if (skjæringstidspunkt != null) {
-            Intervall periode = inntektspost.getPeriode();
+            var periode = inntektspost.getPeriode();
             if (venstreSideASkjæringstidspunkt) {
                 return periode.getFomDato().isBefore(skjæringstidspunkt.plusDays(1));
             } else {

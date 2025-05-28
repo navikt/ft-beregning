@@ -19,7 +19,7 @@ class RegelFastsettStatusVedSkjæringstidspunktTest {
     @Test
     void skal_inkludere_aktivitet_som_slutter_dagen_før_stp() {
         //
-        AktivitetStatusModell regelModell = new AktivitetStatusModell();
+        var regelModell = new AktivitetStatusModell();
         regelModell.setSkjæringstidspunktForBeregning(STP_BEREGNING);
         regelModell.leggTilEllerOppdaterAktivPeriode(AktivPeriode.forArbeidstakerHosVirksomhet(
             Periode.of(STP_BEREGNING.minusMonths(12), STP_BEREGNING.minusDays(1)),
@@ -32,7 +32,7 @@ class RegelFastsettStatusVedSkjæringstidspunktTest {
     @Test
     void skal_inkludere_aktivitet_som_slutter_på_stp() {
         //
-        AktivitetStatusModell regelModell = new AktivitetStatusModell();
+        var regelModell = new AktivitetStatusModell();
         regelModell.setSkjæringstidspunktForBeregning(STP_BEREGNING);
         regelModell.leggTilEllerOppdaterAktivPeriode(AktivPeriode.forArbeidstakerHosVirksomhet(
             Periode.of(STP_BEREGNING.minusMonths(12), STP_BEREGNING),

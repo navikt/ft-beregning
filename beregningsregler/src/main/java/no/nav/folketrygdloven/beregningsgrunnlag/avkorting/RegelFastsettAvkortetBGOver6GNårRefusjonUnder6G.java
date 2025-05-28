@@ -24,13 +24,13 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6G implements RuleSer
     @SuppressWarnings("unchecked")
     @Override
     public Specification<BeregningsgrunnlagPeriode> getSpecification() {
-        BeregningsgrunnlagPrStatus bgpsa = regelmodell.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+        var bgpsa = regelmodell.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
 
-        Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
+        var rs = new Ruleset<BeregningsgrunnlagPeriode>();
 
         //FP_BR_29.8.10 For alle beregningsgrunnlagsandeler som gjelder arbeidsforhold, fastsett Brukers Andel
         //FP_BR_29.8.4 Avkort alle beregningsgrunnlagsander som ikke gjelder arbeidsforhold andelsmessig
-        Specification<BeregningsgrunnlagPeriode> avkortAndelerAndelsmessigOgFastsettBrukersAndel = rs.beregningsRegel(AvkortBGAndelerSomIkkeGjelderArbeidsforholdAndelsmessig.ID,
+        var avkortAndelerAndelsmessigOgFastsettBrukersAndel = rs.beregningsRegel(AvkortBGAndelerSomIkkeGjelderArbeidsforholdAndelsmessig.ID,
                 AvkortBGAndelerSomIkkeGjelderArbeidsforholdAndelsmessig.BESKRIVELSE,
 		        new FastsettBrukersAndelForBGAndelerSomGjelderArbeidsforhold(),
                 new AvkortBGAndelerSomIkkeGjelderArbeidsforholdAndelsmessig());
@@ -40,11 +40,11 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6G implements RuleSer
         if (bgpsa != null) {
 
         //FP_BR_29.8.6-9 Fastsett andel til fordeling - Itereres over like mange ganger som antall arbeidsforhold.
-            int antallKjøringer = bgpsa.getArbeidsforhold().size();
+            var antallKjøringer = bgpsa.getArbeidsforhold().size();
             if (antallKjøringer > 0) {
                 List<Specification<BeregningsgrunnlagPeriode>> prArbeidsforhold = new ArrayList<>();
                 bgpsa.getArbeidsforhold().forEach(af -> prArbeidsforhold.add(opprettRegelFastsettUtbetalingsbeløpTilBruker()));
-                Specification<BeregningsgrunnlagPeriode> fastsettUtbetalingsbeløpTilBrukerChain = rs.beregningsRegel(ID, BESKRIVELSE, prArbeidsforhold, new Fastsatt());
+                var fastsettUtbetalingsbeløpTilBrukerChain = rs.beregningsRegel(ID, BESKRIVELSE, prArbeidsforhold, new Fastsatt());
 
                 //FP_BR_29.8.3 Avkort alle beregningsgrunnlagsandeler som ikke gjelder arbeidsforhold til 0
                 avkortAndelerSomIkkegjelderAFtil0 = rs.beregningsRegel(AvkortBGAndelerSomIkkeGjelderArbeidsforholdTil0.ID, AvkortBGAndelerSomIkkeGjelderArbeidsforholdTil0.BESKRIVELSE,
@@ -53,11 +53,11 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6G implements RuleSer
         }
 
         //FP_BR_29.8.2 Er totalt BG for beregningsgrunnlagsandeler fra arbeidsforhold > 6G?
-        Specification<BeregningsgrunnlagPeriode> erTotaltBGFraArbeidforholdStørreEnn6G = rs.beregningHvisRegel(new SjekkOmTotaltBGForArbeidsforholdStørreEnnGrenseverdi(),
+        var erTotaltBGFraArbeidforholdStørreEnn6G = rs.beregningHvisRegel(new SjekkOmTotaltBGForArbeidsforholdStørreEnnGrenseverdi(),
             avkortAndelerSomIkkegjelderAFtil0, avkortAndelerAndelsmessigOgFastsettBrukersAndel);
 
         //FP_BR_29.8.1 For alle beregningsgrunnlagsandeler som gjelder arbeidsforhold, fastsett avkortet refusjon pr andel
-        Specification<BeregningsgrunnlagPeriode> fastsettAvkortetBGOver6GNårRefusjonUnder6G =
+        var fastsettAvkortetBGOver6GNårRefusjonUnder6G =
             rs.beregningsRegel(ID, BESKRIVELSE, new FastsettAvkortetRefusjonPrAndel(), erTotaltBGFraArbeidforholdStørreEnn6G);
 
 

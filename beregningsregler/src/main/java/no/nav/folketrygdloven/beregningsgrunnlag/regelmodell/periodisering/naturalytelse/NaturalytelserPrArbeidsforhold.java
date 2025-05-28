@@ -33,7 +33,7 @@ public class NaturalytelserPrArbeidsforhold {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof NaturalytelserPrArbeidsforhold)) return false;
-        NaturalytelserPrArbeidsforhold that = (NaturalytelserPrArbeidsforhold) o;
+        var that = (NaturalytelserPrArbeidsforhold) o;
         return Objects.equals(arbeidsforhold, that.arbeidsforhold);
     }
 

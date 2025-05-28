@@ -66,7 +66,7 @@ class SjekkOmRefusjonOverstigerBeregningsgrunnlagTest {
     }
 
     private Evaluation kjørRegel(FordelAndelModell arbeidsforhold, FordelPeriodeModell periode) {
-        SjekkOmRefusjonOverstigerBeregningsgrunnlag regel = new SjekkOmRefusjonOverstigerBeregningsgrunnlag(arbeidsforhold);
+        var regel = new SjekkOmRefusjonOverstigerBeregningsgrunnlag(arbeidsforhold);
         return regel.evaluate(new FordelModell(periode));
     }
 

@@ -21,13 +21,13 @@ public abstract class FullføreBeregningsgrunnlag {
         var beregningsgrunnlagRegel = new MapFullføreBeregningsgrunnlagFraVLTilRegel().map(input, grunnlag.getBeregningsgrunnlagHvisFinnes().orElse(null));
 
         // Evaluerer hver BeregningsgrunnlagPeriode fra foreslått Beregningsgrunnlag
-        List<RegelResultat> regelResultater = evaluerRegelmodell(beregningsgrunnlagRegel, input);
+        var regelResultater = evaluerRegelmodell(beregningsgrunnlagRegel, input);
 
         // Oversett endelig resultat av regelmodell til fastsatt Beregningsgrunnlag  (+ spore input -> evaluation)
-        BeregningsgrunnlagDto beregningsgrunnlag = grunnlag.getBeregningsgrunnlagHvisFinnes().orElse(null);
-        BeregningsgrunnlagDto fastsattBeregningsgrunnlag = FullføreBeregningsgrunnlagUtils.mapBeregningsgrunnlagFraRegelTilVL(beregningsgrunnlagRegel, beregningsgrunnlag);
+        var beregningsgrunnlag = grunnlag.getBeregningsgrunnlagHvisFinnes().orElse(null);
+        var fastsattBeregningsgrunnlag = FullføreBeregningsgrunnlagUtils.mapBeregningsgrunnlagFraRegelTilVL(beregningsgrunnlagRegel, beregningsgrunnlag);
 
-        List<RegelSporingPeriode> regelsporinger = FullføreBeregningsgrunnlagUtils.mapRegelSporinger(regelResultater, fastsattBeregningsgrunnlag, input.getForlengelseperioder());
+        var regelsporinger = FullføreBeregningsgrunnlagUtils.mapRegelSporinger(regelResultater, fastsattBeregningsgrunnlag, input.getForlengelseperioder());
         BeregningsgrunnlagVerifiserer.verifiserFastsattBeregningsgrunnlag(fastsattBeregningsgrunnlag, input.getYtelsespesifiktGrunnlag(), input.getForlengelseperioder());
         return new BeregningsgrunnlagRegelResultat(fastsattBeregningsgrunnlag, new RegelSporingAggregat(regelsporinger));
     }

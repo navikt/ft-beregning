@@ -90,7 +90,7 @@ public class FordelRefusjonTjeneste {
     private static void settEllerOppdaterFastsattBeløp(Map<ArbeidsforholdNøkkel, RefusjonOgFastsattBeløp> arbeidsforholdRefusjonMap,
                                                        ArbeidsforholdNøkkel arbeidsforhold, Beløp fastsattBeløpPrÅr) {
         if (arbeidsforholdRefusjonMap.containsKey(arbeidsforhold)) {
-            RefusjonOgFastsattBeløp nyttBeløp = arbeidsforholdRefusjonMap.get(arbeidsforhold)
+            var nyttBeløp = arbeidsforholdRefusjonMap.get(arbeidsforhold)
                     .leggTilFastsattBeløp(fastsattBeløpPrÅr);
             arbeidsforholdRefusjonMap.put(arbeidsforhold, nyttBeløp);
         } else {
@@ -119,7 +119,7 @@ public class FordelRefusjonTjeneste {
                                                      Map<ArbeidsforholdNøkkel, RefusjonOgFastsattBeløp> arbeidsforholdRefusjonMap,
                                                      FordelBeregningsgrunnlagAndelDto fordeltAndel) {
         if (!fordeltAndel.erLagtTilAvSaksbehandler()) {
-            Optional<BeregningsgrunnlagPrStatusOgAndelDto> korrektAndelOpt = korrektPeriode.getBeregningsgrunnlagPrStatusOgAndelList().stream()
+            var korrektAndelOpt = korrektPeriode.getBeregningsgrunnlagPrStatusOgAndelList().stream()
                     .filter(andel -> andel.getAndelsnr().equals(fordeltAndel.getAndelsnr())).findFirst();
             korrektAndelOpt.ifPresent(korrektAndel ->
                     leggTilRefusjonForAndelIGrunnlag(arbeidsforholdRefusjonMap, korrektAndel)

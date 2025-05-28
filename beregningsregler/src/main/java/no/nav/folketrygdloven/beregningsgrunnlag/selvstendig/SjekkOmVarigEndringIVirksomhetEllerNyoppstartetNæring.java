@@ -20,7 +20,7 @@ public class SjekkOmVarigEndringIVirksomhetEllerNyoppstartetNæring extends Leaf
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        Optional<Periodeinntekt> månedsinntekt = grunnlag.getInntektsgrunnlag().getSistePeriodeinntektMedTypeSøknad();
+        var månedsinntekt = grunnlag.getInntektsgrunnlag().getSistePeriodeinntektMedTypeSøknad();
         return (månedsinntekt.isPresent() ? ja() : nei());
     }
 }

@@ -20,20 +20,20 @@ class IdentifiserPerioderForNaturalytelse {
         Set<PeriodeSplittDataNaturalytelse> set = new HashSet<>();
 
         inntektsmelding.getNaturalYtelser().forEach(naturalYtelse -> {
-            LocalDate naturalYtelseFom = naturalYtelse.getFom();
+            var naturalYtelseFom = naturalYtelse.getFom();
 	        var builder = PeriodeSplittDataNaturalytelse.builder().medNaturalytelserPrArbeidsforhold(inntektsmelding);
-            boolean starterEtterSkjæringstidspunkt = naturalYtelseFom.isAfter(skjæringstidspunkt);
+            var starterEtterSkjæringstidspunkt = naturalYtelseFom.isAfter(skjæringstidspunkt);
             if (starterEtterSkjæringstidspunkt) {
-	            PeriodeSplittDataNaturalytelse splittData = builder.medPeriodeÅrsak(PeriodeÅrsak.NATURALYTELSE_TILKOMMER)
+                var splittData = builder.medPeriodeÅrsak(PeriodeÅrsak.NATURALYTELSE_TILKOMMER)
                     .medFom(naturalYtelseFom)
                     .build();
                 set.add(splittData);
             }
-            LocalDate naturalYtelseTom = naturalYtelse.getTom();
-            LocalDate opphørsdato = naturalYtelseTom.plusDays(1);
-            boolean oppHørerEtterSkjæringstidspunkt = opphørsdato.isAfter(skjæringstidspunkt);
+            var naturalYtelseTom = naturalYtelse.getTom();
+            var opphørsdato = naturalYtelseTom.plusDays(1);
+            var oppHørerEtterSkjæringstidspunkt = opphørsdato.isAfter(skjæringstidspunkt);
             if (!naturalYtelseTom.equals(DateUtil.TIDENES_ENDE) && oppHørerEtterSkjæringstidspunkt) {
-	            PeriodeSplittDataNaturalytelse splittData = builder.medPeriodeÅrsak(PeriodeÅrsak.NATURALYTELSE_BORTFALT)
+                var splittData = builder.medPeriodeÅrsak(PeriodeÅrsak.NATURALYTELSE_BORTFALT)
                     .medFom(opphørsdato)
                     .build();
                 set.add(splittData);

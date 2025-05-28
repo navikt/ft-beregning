@@ -32,7 +32,7 @@ public class TestHjelper {
     private static InntektsmeldingDto lagInntektsmelding(Beløp beløp,
                                                   Arbeidsgiver arbeidsgiver,
                                                   Beløp refusjonskrav, NaturalYtelseDto naturalYtelse) {
-        InntektsmeldingDtoBuilder inntektsmeldingBuilder = InntektsmeldingDtoBuilder.builder();
+        var inntektsmeldingBuilder = InntektsmeldingDtoBuilder.builder();
         inntektsmeldingBuilder.medStartDatoPermisjon(SKJÆRINGSTIDSPUNKT_OPPTJENING);
         inntektsmeldingBuilder.medBeløp(beløp);
         if (naturalYtelse != null) {
@@ -50,16 +50,16 @@ public class TestHjelper {
                                                                       Beløp inntektSammenligningsgrunnlag,
                                                                       Beløp inntektBeregningsgrunnlag,
                                                                       InntektArbeidYtelseGrunnlagDtoBuilder inntektArbeidYtelseBuilder) {
-        InntektArbeidYtelseAggregatBuilder register = InntektArbeidYtelseAggregatBuilder.oppdatere(inntektArbeidYtelseBuilder.getKladd().getRegisterVersjon(), VersjonTypeDto.REGISTER);
-        for (LocalDate året = LocalDate.of(førsteÅr, Month.JANUARY, 1); året.getYear() < førsteÅr + 3; året = året.plusYears(1)) {
+        var register = InntektArbeidYtelseAggregatBuilder.oppdatere(inntektArbeidYtelseBuilder.getKladd().getRegisterVersjon(), VersjonTypeDto.REGISTER);
+        for (var året = LocalDate.of(førsteÅr, Month.JANUARY, 1); året.getYear() < førsteÅr + 3; året = året.plusYears(1)) {
             lagInntektForSN(register, året, skattbarInntekt);
         }
-        LocalDate fraOgMed = skjæringstidspunkt.minusYears(1).withDayOfMonth(1);
-        LocalDate tilOgMed = fraOgMed.plusYears(1);
-        Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(virksomhetOrgnr);
+        var fraOgMed = skjæringstidspunkt.minusYears(1).withDayOfMonth(1);
+        var tilOgMed = fraOgMed.plusYears(1);
+        var arbeidsgiver = Arbeidsgiver.virksomhet(virksomhetOrgnr);
         lagAktørArbeid(register, arbeidsgiver, fraOgMed, ArbeidType.ORDINÆRT_ARBEIDSFORHOLD);
 
-        for (LocalDate dt = fraOgMed; dt.isBefore(tilOgMed); dt = dt.plusMonths(1)) {
+        for (var dt = fraOgMed; dt.isBefore(tilOgMed); dt = dt.plusMonths(1)) {
             lagInntektForSammenligning(register, dt, dt.plusMonths(1), inntektSammenligningsgrunnlag,
                     arbeidsgiver);
             lagInntektForArbeidsforhold(register, dt, dt.plusMonths(1), inntektBeregningsgrunnlag,
@@ -72,16 +72,16 @@ public class TestHjelper {
 
     public static void lagBehandlingForSN(Beløp skattbarInntekt,
                                    int førsteÅr, InntektArbeidYtelseAggregatBuilder inntektArbeidYtelseAggregatBuilder) {
-        for (LocalDate året = LocalDate.of(førsteÅr, Month.JANUARY, 1); året.getYear() < førsteÅr + 3; året = året.plusYears(1)) {
+        for (var året = LocalDate.of(førsteÅr, Month.JANUARY, 1); året.getYear() < førsteÅr + 3; året = året.plusYears(1)) {
             lagInntektForSN(inntektArbeidYtelseAggregatBuilder, året, skattbarInntekt);
         }
     }
 
     private static void lagInntektForSN(InntektArbeidYtelseAggregatBuilder inntektArbeidYtelseAggregatBuilder,
                                  LocalDate år, Beløp årsinntekt) {
-        InntektArbeidYtelseAggregatBuilder.AktørInntektBuilder aktørInntektBuilder = inntektArbeidYtelseAggregatBuilder.getAktørInntektBuilder();
-        InntektDtoBuilder inntektBuilder = aktørInntektBuilder.getInntektBuilder(InntektskildeType.SIGRUN, null);
-        InntektspostDtoBuilder inntektspost = InntektspostDtoBuilder.ny()
+        var aktørInntektBuilder = inntektArbeidYtelseAggregatBuilder.getAktørInntektBuilder();
+        var inntektBuilder = aktørInntektBuilder.getInntektBuilder(InntektskildeType.SIGRUN, null);
+        var inntektspost = InntektspostDtoBuilder.ny()
                 .medBeløp(årsinntekt)
                 .medPeriode(år.withMonth(1).withDayOfMonth(1), år.withMonth(12).withDayOfMonth(31))
                 .medInntektspostType(InntektspostType.SELVSTENDIG_NÆRINGSDRIVENDE);
@@ -94,9 +94,9 @@ public class TestHjelper {
                                                                Beløp inntektFrilans,
                                                                String virksomhetOrgnr, LocalDate fraOgMed, LocalDate tilOgMed, InntektArbeidYtelseAggregatBuilder inntektArbeidYtelseAggregatBuilder) {
 
-        Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(virksomhetOrgnr);
+        var arbeidsgiver = Arbeidsgiver.virksomhet(virksomhetOrgnr);
         lagAktørArbeid(inntektArbeidYtelseAggregatBuilder, arbeidsgiver, fraOgMed, ArbeidType.FRILANSER_OPPDRAGSTAKER);
-        for (LocalDate dt = fraOgMed; dt.isBefore(tilOgMed); dt = dt.plusMonths(1)) {
+        for (var dt = fraOgMed; dt.isBefore(tilOgMed); dt = dt.plusMonths(1)) {
             lagInntektForArbeidsforhold(inntektArbeidYtelseAggregatBuilder, dt, dt.plusMonths(1), inntektFrilans,
                     arbeidsgiver);
             lagInntektForSammenligning(inntektArbeidYtelseAggregatBuilder, dt, dt.plusMonths(1), inntektSammenligningsgrunnlag,
@@ -110,16 +110,16 @@ public class TestHjelper {
     public static YrkesaktivitetDtoBuilder lagAktørArbeid(InntektArbeidYtelseAggregatBuilder inntektArbeidYtelseAggregatBuilder,
                                                    Arbeidsgiver arbeidsgiver,
                                                    LocalDate fom, ArbeidType arbeidType) {
-        InntektArbeidYtelseAggregatBuilder.AktørArbeidBuilder aktørArbeidBuilder = inntektArbeidYtelseAggregatBuilder
+        var aktørArbeidBuilder = inntektArbeidYtelseAggregatBuilder
                 .getAktørArbeidBuilder();
 
-        OpptjeningsnøkkelDto opptjeningsnøkkel = OpptjeningsnøkkelDto.forArbeidsgiver(arbeidsgiver);
+        var opptjeningsnøkkel = OpptjeningsnøkkelDto.forArbeidsgiver(arbeidsgiver);
 
-        YrkesaktivitetDtoBuilder yrkesaktivitetBuilder = aktørArbeidBuilder
+        var yrkesaktivitetBuilder = aktørArbeidBuilder
                 .getYrkesaktivitetBuilderForNøkkelAvType(opptjeningsnøkkel, arbeidType);
-        AktivitetsAvtaleDtoBuilder aktivitetsAvtaleBuilder = yrkesaktivitetBuilder.getAktivitetsAvtaleBuilder();
+        var aktivitetsAvtaleBuilder = yrkesaktivitetBuilder.getAktivitetsAvtaleBuilder();
 
-        AktivitetsAvtaleDtoBuilder aktivitetsAvtale = aktivitetsAvtaleBuilder.medPeriode(Intervall.fraOgMed(fom));
+        var aktivitetsAvtale = aktivitetsAvtaleBuilder.medPeriode(Intervall.fraOgMed(fom));
         yrkesaktivitetBuilder.leggTilAktivitetsAvtale(aktivitetsAvtale)
                 .medArbeidType(arbeidType)
                 .medArbeidsgiver(arbeidsgiver);
@@ -133,13 +133,13 @@ public class TestHjelper {
     public static void lagInntektForSammenligning(InntektArbeidYtelseAggregatBuilder inntektArbeidYtelseAggregatBuilder,
                                            LocalDate fom,
                                            LocalDate tom, Beløp månedsbeløp, Arbeidsgiver arbeidsgiver) {
-        OpptjeningsnøkkelDto opptjeningsnøkkel = OpptjeningsnøkkelDto.forArbeidsgiver(arbeidsgiver);
+        var opptjeningsnøkkel = OpptjeningsnøkkelDto.forArbeidsgiver(arbeidsgiver);
 
-        InntektArbeidYtelseAggregatBuilder.AktørInntektBuilder aktørInntektBuilder = inntektArbeidYtelseAggregatBuilder.getAktørInntektBuilder();
+        var aktørInntektBuilder = inntektArbeidYtelseAggregatBuilder.getAktørInntektBuilder();
 
-        InntektskildeType kilde = InntektskildeType.INNTEKT_SAMMENLIGNING;
-        InntektDtoBuilder inntektBuilder = aktørInntektBuilder.getInntektBuilder(kilde, opptjeningsnøkkel);
-        InntektspostDtoBuilder inntektspost = InntektspostDtoBuilder.ny()
+        var kilde = InntektskildeType.INNTEKT_SAMMENLIGNING;
+        var inntektBuilder = aktørInntektBuilder.getInntektBuilder(kilde, opptjeningsnøkkel);
+        var inntektspost = InntektspostDtoBuilder.ny()
                 .medBeløp(månedsbeløp)
                 .medPeriode(fom, tom)
                 .medInntektspostType(InntektspostType.LØNN);
@@ -151,13 +151,13 @@ public class TestHjelper {
     public static void lagInntektForArbeidsforhold(InntektArbeidYtelseAggregatBuilder inntektArbeidYtelseAggregatBuilder,
                                             LocalDate fom,
                                             LocalDate tom, Beløp månedsbeløp, Arbeidsgiver arbeidsgiver) {
-        OpptjeningsnøkkelDto opptjeningsnøkkel = OpptjeningsnøkkelDto.forArbeidsgiver(arbeidsgiver);
+        var opptjeningsnøkkel = OpptjeningsnøkkelDto.forArbeidsgiver(arbeidsgiver);
 
-        InntektArbeidYtelseAggregatBuilder.AktørInntektBuilder aktørInntektBuilder = inntektArbeidYtelseAggregatBuilder.getAktørInntektBuilder();
+        var aktørInntektBuilder = inntektArbeidYtelseAggregatBuilder.getAktørInntektBuilder();
 
-        InntektskildeType kilde = InntektskildeType.INNTEKT_BEREGNING;
-        InntektDtoBuilder inntektBuilder = aktørInntektBuilder.getInntektBuilder(kilde, opptjeningsnøkkel);
-        InntektspostDtoBuilder inntektspost = InntektspostDtoBuilder.ny()
+        var kilde = InntektskildeType.INNTEKT_BEREGNING;
+        var inntektBuilder = aktørInntektBuilder.getInntektBuilder(kilde, opptjeningsnøkkel);
+        var inntektspost = InntektspostDtoBuilder.ny()
                 .medBeløp(månedsbeløp)
                 .medPeriode(fom, tom)
                 .medInntektspostType(InntektspostType.LØNN);
@@ -169,13 +169,13 @@ public class TestHjelper {
     static void lagInntektForOpptjening(InntektArbeidYtelseAggregatBuilder inntektArbeidYtelseAggregatBuilder,
                                  LocalDate fom,
                                  LocalDate tom, Beløp månedsbeløp, String virksomhetOrgnr) {
-        OpptjeningsnøkkelDto opptjeningsnøkkel = OpptjeningsnøkkelDto.forOrgnummer(virksomhetOrgnr);
+        var opptjeningsnøkkel = OpptjeningsnøkkelDto.forOrgnummer(virksomhetOrgnr);
 
-        InntektArbeidYtelseAggregatBuilder.AktørInntektBuilder aktørInntektBuilder = inntektArbeidYtelseAggregatBuilder.getAktørInntektBuilder();
+        var aktørInntektBuilder = inntektArbeidYtelseAggregatBuilder.getAktørInntektBuilder();
 
-        InntektskildeType kilde = InntektskildeType.INNTEKT_OPPTJENING;
-        InntektDtoBuilder inntektBuilder = aktørInntektBuilder.getInntektBuilder(kilde, opptjeningsnøkkel);
-        InntektspostDtoBuilder inntektspost = InntektspostDtoBuilder.ny()
+        var kilde = InntektskildeType.INNTEKT_OPPTJENING;
+        var inntektBuilder = aktørInntektBuilder.getInntektBuilder(kilde, opptjeningsnøkkel);
+        var inntektspost = InntektspostDtoBuilder.ny()
                 .medBeløp(månedsbeløp)
                 .medPeriode(fom, tom)
                 .medInntektspostType(InntektspostType.LØNN);

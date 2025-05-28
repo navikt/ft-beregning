@@ -27,9 +27,9 @@ import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.Vurder
 public class VurderMottarYtelseDtoTjeneste {
 
     public void lagDto(BeregningsgrunnlagGUIInput input, FaktaOmBeregningDto faktaOmBeregningDto) {
-        BeregningsgrunnlagDto beregningsgrunnlag = input.getBeregningsgrunnlag();
+        var beregningsgrunnlag = input.getBeregningsgrunnlag();
         if (beregningsgrunnlag.getFaktaOmBeregningTilfeller().contains(FaktaOmBeregningTilfelle.VURDER_MOTTAR_YTELSE)) {
-            LocalDate skjæringstidspunkt = beregningsgrunnlag.getSkjæringstidspunkt();
+            var skjæringstidspunkt = beregningsgrunnlag.getSkjæringstidspunkt();
             var iayGrunnlag = input.getIayGrunnlag();
             byggVerdier(iayGrunnlag, beregningsgrunnlag, faktaOmBeregningDto, skjæringstidspunkt, input.getBeregningsgrunnlagGrunnlag().getFaktaAggregat(),
                     input.getInntektsmeldinger());
@@ -39,7 +39,7 @@ public class VurderMottarYtelseDtoTjeneste {
     private void byggVerdier(InntektArbeidYtelseGrunnlagDto inntektArbeidYtelseGrunnlag, BeregningsgrunnlagDto beregningsgrunnlag,
                              FaktaOmBeregningDto faktaOmBeregningDto, LocalDate skjæringstidspunkt,
                              Optional<FaktaAggregatDto> faktaAggregat, Collection<InntektsmeldingDto> inntektsmeldinger) {
-        VurderMottarYtelseDto vurderMottarYtelseDto = new VurderMottarYtelseDto();
+        var vurderMottarYtelseDto = new VurderMottarYtelseDto();
         if (VurderMottarYtelseTjeneste.erFrilanser(beregningsgrunnlag)) {
             lagFrilansDel(beregningsgrunnlag, inntektArbeidYtelseGrunnlag, vurderMottarYtelseDto, skjæringstidspunkt, faktaAggregat.flatMap(FaktaAggregatDto::getFaktaAktør));
             if (faktaOmBeregningDto.getFrilansAndel() == null) {
@@ -64,12 +64,12 @@ public class VurderMottarYtelseDtoTjeneste {
                 inntektsmeldinger);
         andeler.forEach(andelUtenIM -> {
             var dto = new ArbeidstakerUtenInntektsmeldingAndelDto();
-            BeregningsgrunnlagPrStatusOgAndelDto andel = finnRestAndel(andelUtenIM, beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList());
+            var andel = finnRestAndel(andelUtenIM, beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList());
             beregnOgSettInntektPrMnd(filter, andel, dto);
             dto.setAndelsnr(andelUtenIM.getAndelsnr());
             dto.setInntektskategori(andelUtenIM.getGjeldendeInntektskategori());
             BeregningsgrunnlagDtoUtil.lagArbeidsforholdDto(andel, Optional.empty(), inntektArbeidYtelseGrunnlag).ifPresent(dto::setArbeidsforhold);
-            Optional<FaktaArbeidsforholdDto> faktaArbeidsforholdDto = andelUtenIM.getBgAndelArbeidsforhold()
+            var faktaArbeidsforholdDto = andelUtenIM.getBgAndelArbeidsforhold()
                     .flatMap(arb -> faktaAggregat.flatMap(fa -> fa.getFaktaArbeidsforhold(arb)));
             faktaArbeidsforholdDto.map(FaktaArbeidsforholdDto::getHarMottattYtelseVurdering).ifPresent(dto::setMottarYtelse);
             vurderMottarYtelseDto.leggTilArbeidstakerAndelUtenInntektsmelding(dto);

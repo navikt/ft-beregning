@@ -21,15 +21,15 @@ class MapSplittetPeriodeFraVLTilRegelTest {
     @Test
     void ingenPeriodeårsak() {
         // Arrange
-        LocalDate fom = LocalDate.now();
-        LocalDate tom = fom.plusWeeks(6);
-        BeregningsgrunnlagDto beregningsgrunnlag = new BeregningsgrunnlagDto();
-        BeregningsgrunnlagPeriodeDto bgPeriode = BeregningsgrunnlagPeriodeDto.ny()
+        var fom = LocalDate.now();
+        var tom = fom.plusWeeks(6);
+        var beregningsgrunnlag = new BeregningsgrunnlagDto();
+        var bgPeriode = BeregningsgrunnlagPeriodeDto.ny()
             .medBeregningsgrunnlagPeriode(fom, tom)
             .build(beregningsgrunnlag);
 
-        Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet("abc");
-        InternArbeidsforholdRefDto arbeidsforholdRef = InternArbeidsforholdRefDto.nyRef();
+        var arbeidsgiver = Arbeidsgiver.virksomhet("abc");
+        var arbeidsforholdRef = InternArbeidsforholdRefDto.nyRef();
         BeregningsgrunnlagPrStatusOgAndelDto.ny()
             .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
             .medAndelsnr(1L)
@@ -39,14 +39,14 @@ class MapSplittetPeriodeFraVLTilRegelTest {
             .build(bgPeriode);
 
         // Act
-        SplittetPeriode splittetPeriode = MapSplittetPeriodeFraVLTilRegel.map(bgPeriode);
+        var splittetPeriode = MapSplittetPeriodeFraVLTilRegel.map(bgPeriode);
 
         // Assert
         assertThat(splittetPeriode.getPeriode().getFom()).isEqualTo(fom);
         assertThat(splittetPeriode.getPeriode().getTom()).isEqualTo(tom);
         assertThat(splittetPeriode.getPeriodeÅrsaker()).isEmpty();
         assertThat(splittetPeriode.getEksisterendePeriodeAndeler()).hasSize(1);
-        EksisterendeAndel bgPrArbeidsforhold = splittetPeriode.getEksisterendePeriodeAndeler().get(0);
+        var bgPrArbeidsforhold = splittetPeriode.getEksisterendePeriodeAndeler().get(0);
         assertThat(bgPrArbeidsforhold.getAndelNr()).isEqualTo(1L);
         assertThat(bgPrArbeidsforhold.getArbeidsforhold().getOrgnr()).isEqualTo("abc");
         assertThat(bgPrArbeidsforhold.getArbeidsforhold().getArbeidsforholdId()).isNotNull();
@@ -57,16 +57,16 @@ class MapSplittetPeriodeFraVLTilRegelTest {
     @Test
     void enPeriodeårsak() {
         // Arrange
-        LocalDate fom = LocalDate.now();
-        LocalDate tom = fom.plusWeeks(6);
-        BeregningsgrunnlagDto beregningsgrunnlag = new BeregningsgrunnlagDto();
-        BeregningsgrunnlagPeriodeDto bgPeriode = BeregningsgrunnlagPeriodeDto.ny()
+        var fom = LocalDate.now();
+        var tom = fom.plusWeeks(6);
+        var beregningsgrunnlag = new BeregningsgrunnlagDto();
+        var bgPeriode = BeregningsgrunnlagPeriodeDto.ny()
             .medBeregningsgrunnlagPeriode(fom, tom)
             .leggTilPeriodeÅrsak(PeriodeÅrsak.REFUSJON_OPPHØRER)
             .build(beregningsgrunnlag);
 
         // Act
-        SplittetPeriode splittetPeriode = MapSplittetPeriodeFraVLTilRegel.map(bgPeriode);
+        var splittetPeriode = MapSplittetPeriodeFraVLTilRegel.map(bgPeriode);
 
         // Assert
         assertThat(splittetPeriode.getPeriode().getFom()).isEqualTo(fom);
@@ -78,17 +78,17 @@ class MapSplittetPeriodeFraVLTilRegelTest {
     @Test
     void toPeriodeårsaker() {
         // Arrange
-        LocalDate fom = LocalDate.now();
-        LocalDate tom = fom.plusWeeks(6);
-        BeregningsgrunnlagDto beregningsgrunnlag = new BeregningsgrunnlagDto();
-        BeregningsgrunnlagPeriodeDto bgPeriode = BeregningsgrunnlagPeriodeDto.ny()
+        var fom = LocalDate.now();
+        var tom = fom.plusWeeks(6);
+        var beregningsgrunnlag = new BeregningsgrunnlagDto();
+        var bgPeriode = BeregningsgrunnlagPeriodeDto.ny()
             .medBeregningsgrunnlagPeriode(fom, tom)
             .leggTilPeriodeÅrsak(PeriodeÅrsak.GRADERING)
             .leggTilPeriodeÅrsak(PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV)
             .build(beregningsgrunnlag);
 
         // Act
-        SplittetPeriode splittetPeriode = MapSplittetPeriodeFraVLTilRegel.map(bgPeriode);
+        var splittetPeriode = MapSplittetPeriodeFraVLTilRegel.map(bgPeriode);
 
         // Assert
         assertThat(splittetPeriode.getPeriode().getFom()).isEqualTo(fom);

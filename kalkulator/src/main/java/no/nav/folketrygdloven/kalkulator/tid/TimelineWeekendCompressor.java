@@ -31,7 +31,7 @@ public class TimelineWeekendCompressor<V> implements Consumer<LocalDateSegment<V
             segmenter.add(t);
         } else {
             var descIter = segmenter.descendingIterator();
-            LocalDateSegment<V> last = descIter.next();
+            var last = descIter.next();
             LocalDateSegment<V> elementBeforeLast;
 
             if (canBeCompressed(t, last)) {
@@ -54,7 +54,7 @@ public class TimelineWeekendCompressor<V> implements Consumer<LocalDateSegment<V
     private LocalDateSegment<V> exchangeAndExpand(LocalDateSegment<V> t, LocalDateSegment<V> elementInSegments) {
         segmenter.remove(elementInSegments);
         segmenter.remove(t);
-        LocalDateInterval expandedInterval = utvid(t, elementInSegments);
+        var expandedInterval = utvid(t, elementInSegments);
         var expandedSegment = new LocalDateSegment<V>(expandedInterval, combinator.combine(expandedInterval, elementInSegments, t).getValue());
         segmenter.add(expandedSegment);
         return expandedSegment;

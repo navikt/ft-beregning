@@ -28,24 +28,24 @@ public class FortsettForeslåBeregningsgrunnlag {
     private final MapBeregningsgrunnlagFraRegelTilVL mapBeregningsgrunnlagFraRegelTilVL = new MapBeregningsgrunnlagFraRegelTilVL();
 
     public BeregningsgrunnlagRegelResultat fortsettForeslåBeregningsgrunnlag(FortsettForeslåBeregningsgrunnlagInput input) {
-        BeregningsgrunnlagGrunnlagDto grunnlag = input.getBeregningsgrunnlagGrunnlag();
-        BeregningsgrunnlagDto beregningsgrunnlag = grunnlag.getBeregningsgrunnlagHvisFinnes()
+        var grunnlag = input.getBeregningsgrunnlagGrunnlag();
+        var beregningsgrunnlag = grunnlag.getBeregningsgrunnlagHvisFinnes()
                 .orElseThrow(() -> new IllegalStateException("Skal ha beregningsgrunnlag her"));
 
         // Oversetter initielt Beregningsgrunnlag -> regelmodell
-        Beregningsgrunnlag regelmodellBeregningsgrunnlag = mapBeregningsgrunnlagFraVLTilRegel.map(input, grunnlag);
+        var regelmodellBeregningsgrunnlag = mapBeregningsgrunnlagFraVLTilRegel.map(input, grunnlag);
         List<RegelResultat> regelResultater = new ArrayList<>();
-        for (BeregningsgrunnlagPeriode periode : regelmodellBeregningsgrunnlag.getBeregningsgrunnlagPerioder()) {
+        for (var periode : regelmodellBeregningsgrunnlag.getBeregningsgrunnlagPerioder()) {
             regelResultater.add(KalkulusRegler.fortsettForeslåBeregningsgrunnlag(periode));
         }
 
         // Oversett endelig resultat av regelmodell til foreslått Beregningsgrunnlag  (+ spore input -> evaluation)
-        BeregningsgrunnlagDto foreslåttBeregningsgrunnlag = mapBeregningsgrunnlagFraRegelTilVL.mapForeslåBeregningsgrunnlag(regelmodellBeregningsgrunnlag, beregningsgrunnlag);
+        var foreslåttBeregningsgrunnlag = mapBeregningsgrunnlagFraRegelTilVL.mapForeslåBeregningsgrunnlag(regelmodellBeregningsgrunnlag, beregningsgrunnlag);
 
         verifiserBeregningsgrunnlag(foreslåttBeregningsgrunnlag);
 
-        List<BeregningAvklaringsbehovResultat> avklaringsbehov = AvklaringsbehovUtlederForeslåBeregning.utledAvklaringsbehov(input, regelResultater);
-        List<RegelSporingPeriode> regelsporinger = MapRegelSporingFraRegelTilVL.mapRegelsporingPerioder(
+        var avklaringsbehov = AvklaringsbehovUtlederForeslåBeregning.utledAvklaringsbehov(input, regelResultater);
+        var regelsporinger = MapRegelSporingFraRegelTilVL.mapRegelsporingPerioder(
                 regelResultater,
                 foreslåttBeregningsgrunnlag.getBeregningsgrunnlagPerioder().stream().map(BeregningsgrunnlagPeriodeDto::getPeriode).collect(Collectors.toList()),
                 BeregningsgrunnlagPeriodeRegelType.FORESLÅ_2);

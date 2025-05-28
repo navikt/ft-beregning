@@ -20,15 +20,15 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.UttakArbeidType;
 public class OmsorgspengerGrunnlagMapper {
 
     public YtelsesSpesifiktGrunnlag map(BeregningsgrunnlagDto beregningsgrunnlagDto, BeregningsgrunnlagInput input) {
-        YtelsespesifiktGrunnlag ytelsespesifiktGrunnlag = input.getYtelsespesifiktGrunnlag();
+        var ytelsespesifiktGrunnlag = input.getYtelsespesifiktGrunnlag();
         if (ytelsespesifiktGrunnlag instanceof no.nav.folketrygdloven.kalkulator.input.OmsorgspengerGrunnlag omsorspengegrunnlag) {
-            List<UtbetalingsgradPrAktivitetDto> utbetalingsgradPrAktivitet = omsorspengegrunnlag.getUtbetalingsgradPrAktivitet();
+            var utbetalingsgradPrAktivitet = omsorspengegrunnlag.getUtbetalingsgradPrAktivitet();
             var finnesArbeidsandelIkkeSøktOm = finnesArbeidsandelIkkeSøktOm(utbetalingsgradPrAktivitet, beregningsgrunnlagDto);
 	        var brukerSøkerPerioder = omsorspengegrunnlag.getBrukerSøkerPerioder();
             if (brukerSøkerPerioder.isPresent()) {
                 return new OmsorgspengerGrunnlag(finnesArbeidsandelIkkeSøktOm, !brukerSøkerPerioder.get().isEmpty());
             } else {
-                boolean harSøktFLEllerSN = utbetalingsgradPrAktivitet.stream()
+                var harSøktFLEllerSN = utbetalingsgradPrAktivitet.stream()
                         .filter(this::erFrilansEllerNæring)
                         .anyMatch(this::harUtbetaling);
                 return new OmsorgspengerGrunnlag(finnesArbeidsandelIkkeSøktOm,
@@ -56,7 +56,7 @@ public class OmsorgspengerGrunnlagMapper {
     }
 
     private boolean finnesArbeidsandelIkkeSøktOm(List<UtbetalingsgradPrAktivitetDto> utbetalingsgrader, BeregningsgrunnlagDto beregningsgrunnlagDto) {
-        List<BeregningsgrunnlagPrStatusOgAndelDto> andeler = beregningsgrunnlagDto.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList();
+        var andeler = beregningsgrunnlagDto.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList();
         return andeler.stream()
                 .filter(andel -> andel.getAktivitetStatus().equals(AktivitetStatus.ARBEIDSTAKER))
                 .anyMatch(andel -> !erSøktOm(utbetalingsgrader, andel));

@@ -55,9 +55,9 @@ public class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
 	@Test
 	public void aktivitetsgrad_skal_mappes_riktig_for_forskjellig_sn_status() {
 		// Arrange
-		BeregningsgrunnlagInput input = lagBeregningsgrunnlagInput(delvisAktivPeriode, aktivitetBortfaltPeriode, aktivitetEtterSøknadPeriode)
+        var input = lagBeregningsgrunnlagInput(delvisAktivPeriode, aktivitetBortfaltPeriode, aktivitetEtterSøknadPeriode)
 				.medBeregningsgrunnlagGrunnlag(lagBeregningsgrunnlagDto());
-		BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlagMedSelvstendigNæringsdrivende();
+        var beregningsgrunnlag = lagBeregningsgrunnlagMedSelvstendigNæringsdrivende();
 
 		// Act
 		var samletBeregningsgrunnlag = mapFullføreBeregningsgrunnlagFraVLTilRegel.map(input, beregningsgrunnlag);
@@ -75,7 +75,7 @@ public class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
 				.medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT)
 				.leggTilFaktaOmBeregningTilfeller(FAKTA_OM_BEREGNING_TILFELLER)
 				.build();
-		BeregningsgrunnlagPeriodeDto periode1 = BeregningsgrunnlagPeriodeDto.ny()
+        var periode1 = BeregningsgrunnlagPeriodeDto.ny()
 				.medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT, tom)
 				.build(beregningsgrunnlag);
 		@SuppressWarnings("unused")
@@ -94,7 +94,7 @@ public class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
 				List.of(new PeriodeMedUtbetalingsgradDto(aktivitetBortfaltPeriode, null, Aktivitetsgrad.fra(0))));
 		var utbetalingsgrad3 = new UtbetalingsgradPrAktivitetDto(new AktivitetDto(null, InternArbeidsforholdRefDto.nullRef(), UttakArbeidType.SELVSTENDIG_NÆRINGSDRIVENDE_IKKE_AKTIV),
 				List.of(new PeriodeMedUtbetalingsgradDto(aktivitetEtterSøknadPeriode, null, Aktivitetsgrad.fra(100))));
-		PleiepengerSyktBarnGrunnlag ytelsesspesifiktGrunnlag = new PleiepengerSyktBarnGrunnlag(List.of(utbetalingsgrad1, utbetalingsgrad2, utbetalingsgrad3));
+        var ytelsesspesifiktGrunnlag = new PleiepengerSyktBarnGrunnlag(List.of(utbetalingsgrad1, utbetalingsgrad2, utbetalingsgrad3));
 		return new BeregningsgrunnlagInput(new KoblingReferanseMock(SKJÆRINGSTIDSPUNKT), null, null, List.of(), ytelsesspesifiktGrunnlag);
 	}
 
@@ -104,7 +104,7 @@ public class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
 	}
 
 	private BeregningsgrunnlagDto lagBeregningsgrunnlagMedSelvstendigNæringsdrivende() {
-		BeregningsgrunnlagDto bg = BeregningsgrunnlagDto.builder()
+        var bg = BeregningsgrunnlagDto.builder()
 				.medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT)
 				.medGrunnbeløp(GRUNNBELØP)
 				.leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE))

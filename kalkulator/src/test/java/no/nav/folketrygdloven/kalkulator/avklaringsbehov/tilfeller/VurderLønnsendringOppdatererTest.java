@@ -56,14 +56,14 @@ class VurderLønnsendringOppdatererTest {
 
     @BeforeEach
     void setup() {
-        Arbeidsgiver virksomheten = Arbeidsgiver.virksomhet(ORGNR);
+        var virksomheten = Arbeidsgiver.virksomhet(ORGNR);
         beregningsgrunnlag = BeregningsgrunnlagDto.builder()
 
                 .medGrunnbeløp(GRUNNBELØP)
                 .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT)
                 .leggTilFaktaOmBeregningTilfeller(FAKTA_OM_BEREGNING_TILFELLER)
                 .build();
-        BeregningsgrunnlagPeriodeDto periode1 = BeregningsgrunnlagPeriodeDto.ny()
+        var periode1 = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(2).minusDays(1))
                 .build(beregningsgrunnlag);
         frilansAndel = BeregningsgrunnlagPrStatusOgAndelDto.ny()
@@ -78,7 +78,7 @@ class VurderLønnsendringOppdatererTest {
                 .medInntektskategori(Inntektskategori.ARBEIDSTAKER)
                 .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                 .build(periode1);
-        InntektArbeidYtelseGrunnlagDto iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.nytt()
+        var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.nytt()
                 .medData(InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER)
                         .leggTilAktørArbeid(InntektArbeidYtelseAggregatBuilder.AktørArbeidBuilder.oppdatere(Optional.empty())
                                 .leggTilYrkesaktivitet(YrkesaktivitetDtoBuilder.oppdatere(Optional.empty())
@@ -102,14 +102,14 @@ class VurderLønnsendringOppdatererTest {
     @Test
     void skal_sette_lønnsendring_til_true_på_arbeidstakerandel() {
         // Arrange
-        VurderLønnsendringDto lønnsendringDto = new VurderLønnsendringDto(true);
-        FaktaBeregningLagreDto dto = new FaktaBeregningLagreDto(FAKTA_OM_BEREGNING_TILFELLER);
+        var lønnsendringDto = new VurderLønnsendringDto(true);
+        var dto = new FaktaBeregningLagreDto(FAKTA_OM_BEREGNING_TILFELLER);
         dto.setVurdertLonnsendring(lønnsendringDto);
 
         // Act
-        BeregningsgrunnlagGrunnlagDtoBuilder oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
+        var oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
         VurderLønnsendringOppdaterer.oppdater(dto, Optional.empty(), input, oppdatere);
-        Optional<FaktaAggregatDto> faktaAggregat = oppdatere.build(BeregningsgrunnlagTilstand.KOFAKBER_UT).getFaktaAggregat();
+        var faktaAggregat = oppdatere.build(BeregningsgrunnlagTilstand.KOFAKBER_UT).getFaktaAggregat();
 
         // Assert
         assertThat(faktaAggregat).isPresent();
@@ -121,14 +121,14 @@ class VurderLønnsendringOppdatererTest {
     @Test
     void skal_ikkje_sette_lønnsendring_til_true_på_arbeidstakerandel() {
         // Arrange
-        VurderLønnsendringDto lønnsendringDto = new VurderLønnsendringDto(false);
-        FaktaBeregningLagreDto dto = new FaktaBeregningLagreDto(FAKTA_OM_BEREGNING_TILFELLER);
+        var lønnsendringDto = new VurderLønnsendringDto(false);
+        var dto = new FaktaBeregningLagreDto(FAKTA_OM_BEREGNING_TILFELLER);
         dto.setVurdertLonnsendring(lønnsendringDto);
 
         // Act
-        BeregningsgrunnlagGrunnlagDtoBuilder oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
+        var oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
         VurderLønnsendringOppdaterer.oppdater(dto, Optional.empty(), input, oppdatere);
-        Optional<FaktaAggregatDto> faktaAggregat = oppdatere.build(BeregningsgrunnlagTilstand.KOFAKBER_UT).getFaktaAggregat();
+        var faktaAggregat = oppdatere.build(BeregningsgrunnlagTilstand.KOFAKBER_UT).getFaktaAggregat();
 
         // Assert
         assertThat(faktaAggregat).isPresent();
@@ -162,14 +162,14 @@ class VurderLønnsendringOppdatererTest {
         var aa = InntektArbeidYtelseAggregatBuilder.AktørArbeidBuilder.oppdatere(Optional.empty());
         aa.leggTilYrkesaktivitet(builder1).leggTilYrkesaktivitet(builder2).leggTilYrkesaktivitet(builder3);
 
-        Arbeidsgiver virksomheten = Arbeidsgiver.virksomhet("999999999");
+        var virksomheten = Arbeidsgiver.virksomhet("999999999");
         beregningsgrunnlag = BeregningsgrunnlagDto.builder()
 
                 .medGrunnbeløp(GRUNNBELØP)
                 .medSkjæringstidspunkt(LocalDate.of(2024,2,29))
                 .leggTilFaktaOmBeregningTilfeller(FAKTA_OM_BEREGNING_TILFELLER)
                 .build();
-        BeregningsgrunnlagPeriodeDto periode1 = BeregningsgrunnlagPeriodeDto.ny()
+        var periode1 = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(LocalDate.of(2024,2,29), LocalDate.of(9999,12,31))
                 .build(beregningsgrunnlag);
         arbeidstakerAndel = BeregningsgrunnlagPrStatusOgAndelDto.ny()
@@ -180,7 +180,7 @@ class VurderLønnsendringOppdatererTest {
                 .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                 .build(periode1);
 
-        InntektArbeidYtelseGrunnlagDto iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.nytt()
+        var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.nytt()
                 .medData(InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER)
                         .leggTilAktørArbeid(aa))
                 .build();
@@ -188,14 +188,14 @@ class VurderLønnsendringOppdatererTest {
                         .medBeregningsgrunnlag(beregningsgrunnlag),
                 BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER, iayGrunnlag);
 
-        VurderLønnsendringDto lønnsendringDto = new VurderLønnsendringDto(false);
-        FaktaBeregningLagreDto dto = new FaktaBeregningLagreDto(FAKTA_OM_BEREGNING_TILFELLER);
+        var lønnsendringDto = new VurderLønnsendringDto(false);
+        var dto = new FaktaBeregningLagreDto(FAKTA_OM_BEREGNING_TILFELLER);
         dto.setVurdertLonnsendring(lønnsendringDto);
 
         // Act
-        BeregningsgrunnlagGrunnlagDtoBuilder oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
+        var oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
         VurderLønnsendringOppdaterer.oppdater(dto, Optional.empty(), input, oppdatere);
-        Optional<FaktaAggregatDto> faktaAggregat = oppdatere.build(BeregningsgrunnlagTilstand.KOFAKBER_UT).getFaktaAggregat();
+        var faktaAggregat = oppdatere.build(BeregningsgrunnlagTilstand.KOFAKBER_UT).getFaktaAggregat();
 
         // Assert
         assertThat(faktaAggregat).isPresent();

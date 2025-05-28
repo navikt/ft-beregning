@@ -49,26 +49,26 @@ class RegelFullføreBeregningsgrunnlagTest {
 	// Ingen naturalytelse bortfaller
 	void totaltBruttoBGUnder6GMedRefusjonUtenNaturalYtelseBortfallerForToArbeidsgivere() {
 		//Arrange
-		double bruttoBG1 = 200000d;
-		double refusjonskrav1 = 200000d;
-		double bortfaltYtelse1 = 0d;
+        var bruttoBG1 = 200000d;
+        var refusjonskrav1 = 200000d;
+        var bortfaltYtelse1 = 0d;
 
-		double bruttoBG2 = 250000d;
-		double refusjonskrav2 = 150000d;
-		double bortfaltYtelse2 = 0d;
+        var bruttoBG2 = 250000d;
+        var refusjonskrav2 = 150000d;
+        var bortfaltYtelse2 = 0d;
 
-		double totaltBeregningsgrunnlag = bruttoBG1 + bruttoBG2 + bortfaltYtelse1 + bortfaltYtelse2;
-		double forventetRedusertBrukersAndel1 = bruttoBG1 + bortfaltYtelse1 - refusjonskrav1;
-		double forventetRedusertBrukersAndel2 = bruttoBG2 + bortfaltYtelse2 - refusjonskrav2;
-		double forventetRedusertArbeidsgiver1 = refusjonskrav1;
-		double forventetRedusertArbeidsgiver2 = refusjonskrav2;
+        var totaltBeregningsgrunnlag = bruttoBG1 + bruttoBG2 + bortfaltYtelse1 + bortfaltYtelse2;
+        var forventetRedusertBrukersAndel1 = bruttoBG1 + bortfaltYtelse1 - refusjonskrav1;
+        var forventetRedusertBrukersAndel2 = bruttoBG2 + bortfaltYtelse2 - refusjonskrav2;
+        var forventetRedusertArbeidsgiver1 = refusjonskrav1;
+        var forventetRedusertArbeidsgiver2 = refusjonskrav2;
 
-		BeregningsgrunnlagPeriode grunnlag = lagBeregningsgrunnlagMedBortfaltNaturalytelse(2, List.of(bruttoBG1, bruttoBG2), List.of(refusjonskrav1 / 12, refusjonskrav2 / 12),
+        var grunnlag = lagBeregningsgrunnlagMedBortfaltNaturalytelse(2, List.of(bruttoBG1, bruttoBG2), List.of(refusjonskrav1 / 12, refusjonskrav2 / 12),
 				List.of(bortfaltYtelse1, bortfaltYtelse2))
 				.getBeregningsgrunnlagPerioder().get(0);
 
 		kjørRegel(grunnlag);
-		List<BeregningsgrunnlagPrArbeidsforhold> arbeidsForhold = grunnlag.getBeregningsgrunnlagPrStatus().iterator().next().getArbeidsforhold();
+        var arbeidsForhold = grunnlag.getBeregningsgrunnlagPrStatus().iterator().next().getArbeidsforhold();
 
 		//Assert
 		assertThat(grunnlag.getBruttoPrÅrInkludertNaturalytelser().doubleValue()).isEqualTo(totaltBeregningsgrunnlag, offset);
@@ -85,26 +85,26 @@ class RegelFullføreBeregningsgrunnlagTest {
 	// Naturalytelse for ein av arbeidsgiverane bortfaller
 	void totaltBruttoBGUnder6GMedRefusjonMedNaturalYtelseBortfallerForEnAvToArbeidsgivere() {
 		//Arrange
-		double bruttoBG1 = 200000d;
-		double refusjonskrav1 = 200000d;
-		double bortfaltYtelse1 = 12000d;
+        var bruttoBG1 = 200000d;
+        var refusjonskrav1 = 200000d;
+        var bortfaltYtelse1 = 12000d;
 
-		double bruttoBG2 = 250000d;
-		double refusjonskrav2 = 150000d;
-		double bortfaltYtelse2 = 0d;
+        var bruttoBG2 = 250000d;
+        var refusjonskrav2 = 150000d;
+        var bortfaltYtelse2 = 0d;
 
-		double totaltBeregningsgrunnlag = bruttoBG1 + bruttoBG2 + bortfaltYtelse1 + bortfaltYtelse2;
-		double forventetRedusertBrukersAndel1 = bruttoBG1 + bortfaltYtelse1 - refusjonskrav1;
-		double forventetRedusertBrukersAndel2 = bruttoBG2 + bortfaltYtelse2 - refusjonskrav2;
-		double forventetRedusertArbeidsgiver1 = refusjonskrav1;
-		double forventetRedusertArbeidsgiver2 = refusjonskrav2;
+        var totaltBeregningsgrunnlag = bruttoBG1 + bruttoBG2 + bortfaltYtelse1 + bortfaltYtelse2;
+        var forventetRedusertBrukersAndel1 = bruttoBG1 + bortfaltYtelse1 - refusjonskrav1;
+        var forventetRedusertBrukersAndel2 = bruttoBG2 + bortfaltYtelse2 - refusjonskrav2;
+        var forventetRedusertArbeidsgiver1 = refusjonskrav1;
+        var forventetRedusertArbeidsgiver2 = refusjonskrav2;
 
-		BeregningsgrunnlagPeriode grunnlag = lagBeregningsgrunnlagMedBortfaltNaturalytelse(2, List.of(bruttoBG1, bruttoBG2), List.of(refusjonskrav1 / 12, refusjonskrav2 / 12),
+        var grunnlag = lagBeregningsgrunnlagMedBortfaltNaturalytelse(2, List.of(bruttoBG1, bruttoBG2), List.of(refusjonskrav1 / 12, refusjonskrav2 / 12),
 				List.of(bortfaltYtelse1, bortfaltYtelse2))
 				.getBeregningsgrunnlagPerioder().get(0);
 
 		kjørRegel(grunnlag);
-		List<BeregningsgrunnlagPrArbeidsforhold> arbeidsForhold = grunnlag.getBeregningsgrunnlagPrStatus().iterator().next().getArbeidsforhold();
+        var arbeidsForhold = grunnlag.getBeregningsgrunnlagPrStatus().iterator().next().getArbeidsforhold();
 
 		//Assert
 		assertThat(grunnlag.getBruttoPrÅrInkludertNaturalytelser().doubleValue()).isEqualTo(totaltBeregningsgrunnlag, offset);
@@ -121,25 +121,25 @@ class RegelFullføreBeregningsgrunnlagTest {
 	// Naturalytelse for begge arbeidsgiverane bortfaller
 	void totaltBruttoBGUnder6GMedRefusjonMedNaturalYtelseBortfallerForBeggeArbeidsgivere() {
 		//Arrange
-		double bruttoBG1 = 200000d;
-		double refusjonskrav1 = 200000d;
-		double bortfaltYtelse1 = 12000d;
+        var bruttoBG1 = 200000d;
+        var refusjonskrav1 = 200000d;
+        var bortfaltYtelse1 = 12000d;
 
-		double bruttoBG2 = 250000d;
-		double refusjonskrav2 = 150000d;
-		double bortfaltYtelse2 = 25000d;
+        var bruttoBG2 = 250000d;
+        var refusjonskrav2 = 150000d;
+        var bortfaltYtelse2 = 25000d;
 
-		double totaltBeregningsgrunnlag = bruttoBG1 + bruttoBG2 + bortfaltYtelse1 + bortfaltYtelse2;
-		double forventetRedusertBrukersAndel1 = bruttoBG1 + bortfaltYtelse1 - refusjonskrav1;
-		double forventetRedusertBrukersAndel2 = bruttoBG2 + bortfaltYtelse2 - refusjonskrav2;
-		double forventetRedusertArbeidsgiver1 = refusjonskrav1;
-		double forventetRedusertArbeidsgiver2 = refusjonskrav2;
+        var totaltBeregningsgrunnlag = bruttoBG1 + bruttoBG2 + bortfaltYtelse1 + bortfaltYtelse2;
+        var forventetRedusertBrukersAndel1 = bruttoBG1 + bortfaltYtelse1 - refusjonskrav1;
+        var forventetRedusertBrukersAndel2 = bruttoBG2 + bortfaltYtelse2 - refusjonskrav2;
+        var forventetRedusertArbeidsgiver1 = refusjonskrav1;
+        var forventetRedusertArbeidsgiver2 = refusjonskrav2;
 
-		BeregningsgrunnlagPeriode grunnlag = lagBeregningsgrunnlagMedBortfaltNaturalytelse(2, List.of(bruttoBG1, bruttoBG2), List.of(refusjonskrav1 / 12, refusjonskrav2 / 12),
+        var grunnlag = lagBeregningsgrunnlagMedBortfaltNaturalytelse(2, List.of(bruttoBG1, bruttoBG2), List.of(refusjonskrav1 / 12, refusjonskrav2 / 12),
 				List.of(bortfaltYtelse1, bortfaltYtelse2))
 				.getBeregningsgrunnlagPerioder().get(0);
 		kjørRegel(grunnlag);
-		List<BeregningsgrunnlagPrArbeidsforhold> arbeidsForhold = grunnlag.getBeregningsgrunnlagPrStatus().iterator().next().getArbeidsforhold();
+        var arbeidsForhold = grunnlag.getBeregningsgrunnlagPrStatus().iterator().next().getArbeidsforhold();
 
 		//Assert
 		assertThat(grunnlag.getBruttoPrÅrInkludertNaturalytelser().doubleValue()).isEqualTo(totaltBeregningsgrunnlag, offset);
@@ -159,28 +159,28 @@ class RegelFullføreBeregningsgrunnlagTest {
 		//Arrange
 		double bruttoBG1 = GRUNNBELØP_2017 * 3; //Totalt under 6G
 		double refusjonskrav1 = GRUNNBELØP_2017 * 3;
-		double bortfaltYtelse1 = GRUNNBELØP_2017 * 0.3;
+        var bortfaltYtelse1 = GRUNNBELØP_2017 * 0.3;
 
-		double bruttoBG2 = GRUNNBELØP_2017 * 2.5; //Totalt under 6G
-		double refusjonskrav2 = GRUNNBELØP_2017 * 1.5;
-		double bortfaltYtelse2 = GRUNNBELØP_2017 * 0.3;
+        var bruttoBG2 = GRUNNBELØP_2017 * 2.5; //Totalt under 6G
+        var refusjonskrav2 = GRUNNBELØP_2017 * 1.5;
+        var bortfaltYtelse2 = GRUNNBELØP_2017 * 0.3;
 
-		double totaltBeregningsgrunnlag = bruttoBG1 + bruttoBG2 + bortfaltYtelse1 + bortfaltYtelse2; // Overstiger 6G
-		double fraksjonBrukersAndel1 = (bruttoBG1 + bortfaltYtelse1) / totaltBeregningsgrunnlag;
-		double fraksjonBrukersAndel2 = (bruttoBG2 + bortfaltYtelse2) / totaltBeregningsgrunnlag;
-		double fordelingArbeidsforhold1 = GRUNNBELØP_2017 * 6 * fraksjonBrukersAndel1;
-		double fordelingArbeidsforhold2 = GRUNNBELØP_2017 * 6 * fraksjonBrukersAndel2;
-		double forventetRedusertArbeidsgiver1 = refusjonskrav1;
-		double forventetRedusertArbeidsgiver2 = refusjonskrav2;
-		double forventetRedusertBrukersAndel1 = fordelingArbeidsforhold1 - forventetRedusertArbeidsgiver1;
-		double forventetRedusertBrukersAndel2 = fordelingArbeidsforhold2 - forventetRedusertArbeidsgiver2;
+        var totaltBeregningsgrunnlag = bruttoBG1 + bruttoBG2 + bortfaltYtelse1 + bortfaltYtelse2; // Overstiger 6G
+        var fraksjonBrukersAndel1 = (bruttoBG1 + bortfaltYtelse1) / totaltBeregningsgrunnlag;
+        var fraksjonBrukersAndel2 = (bruttoBG2 + bortfaltYtelse2) / totaltBeregningsgrunnlag;
+        var fordelingArbeidsforhold1 = GRUNNBELØP_2017 * 6 * fraksjonBrukersAndel1;
+        var fordelingArbeidsforhold2 = GRUNNBELØP_2017 * 6 * fraksjonBrukersAndel2;
+        var forventetRedusertArbeidsgiver1 = refusjonskrav1;
+        var forventetRedusertArbeidsgiver2 = refusjonskrav2;
+        var forventetRedusertBrukersAndel1 = fordelingArbeidsforhold1 - forventetRedusertArbeidsgiver1;
+        var forventetRedusertBrukersAndel2 = fordelingArbeidsforhold2 - forventetRedusertArbeidsgiver2;
 
-		BeregningsgrunnlagPeriode grunnlag = lagBeregningsgrunnlagMedBortfaltNaturalytelse(2, List.of(bruttoBG1, bruttoBG2), List.of(refusjonskrav1 / 12, refusjonskrav2 / 12),
+        var grunnlag = lagBeregningsgrunnlagMedBortfaltNaturalytelse(2, List.of(bruttoBG1, bruttoBG2), List.of(refusjonskrav1 / 12, refusjonskrav2 / 12),
 				List.of(bortfaltYtelse1, bortfaltYtelse2))
 				.getBeregningsgrunnlagPerioder().get(0);
 
 		kjørRegel(grunnlag);
-		List<BeregningsgrunnlagPrArbeidsforhold> arbeidsForhold = grunnlag.getBeregningsgrunnlagPrStatus().iterator().next().getArbeidsforhold();
+        var arbeidsForhold = grunnlag.getBeregningsgrunnlagPrStatus().iterator().next().getArbeidsforhold();
 
 		//Assert
 		assertThat(grunnlag.getBruttoPrÅrInkludertNaturalytelser().doubleValue()).isEqualTo(totaltBeregningsgrunnlag, offset);
@@ -204,57 +204,57 @@ class RegelFullføreBeregningsgrunnlagTest {
 		//Arrange
 		double bruttoBG1 = GRUNNBELØP_2017 * 4; //Totalt over 6G
 		double refusjonskrav1 = GRUNNBELØP_2017 * 3;
-		double bortfaltYtelse1 = GRUNNBELØP_2017 * 0.24;
+        var bortfaltYtelse1 = GRUNNBELØP_2017 * 0.24;
 
 		double bruttoBG2 = GRUNNBELØP_2017 * 5; //Totalt over 6G
-		double refusjonskrav2 = GRUNNBELØP_2017 * 1.5;
-		double bortfaltYtelse2 = GRUNNBELØP_2017 * 0.5;
+        var refusjonskrav2 = GRUNNBELØP_2017 * 1.5;
+        var bortfaltYtelse2 = GRUNNBELØP_2017 * 0.5;
 
-		double bruttoBG3 = GRUNNBELØP_2017 * 2.5; //Totalt over 6G
+        var bruttoBG3 = GRUNNBELØP_2017 * 2.5; //Totalt over 6G
 		double refusjonskrav3 = 0L;
-		double bortfaltYtelse3 = GRUNNBELØP_2017 * 0.24;
+        var bortfaltYtelse3 = GRUNNBELØP_2017 * 0.24;
 
-		List<Double> refusjonsKrav = List.of(refusjonskrav1, refusjonskrav2, refusjonskrav3);
-		List<Double> bruttoBG = List.of(bruttoBG1, bruttoBG2, bruttoBG3);
+        var refusjonsKrav = List.of(refusjonskrav1, refusjonskrav2, refusjonskrav3);
+        var bruttoBG = List.of(bruttoBG1, bruttoBG2, bruttoBG3);
 
-		double totaltBeregningsgrunnlagPeriode1 = bruttoBG1 + bruttoBG2 + bruttoBG3;
+        var totaltBeregningsgrunnlagPeriode1 = bruttoBG1 + bruttoBG2 + bruttoBG3;
 		// Andel for arbeidsforhold1 er mindre enn refusjon. Settes til 0.
-		List<Double> foreventetBrukersAndelerPeriode1 = getForventetBrukersAndeler(bruttoBG,
+        var foreventetBrukersAndelerPeriode1 = getForventetBrukersAndeler(bruttoBG,
 				List.of(0d, 0d, 0d), refusjonsKrav, GRUNNBELØP_2017 * 6.0);
 
-		double totaltBeregningsgrunnlagPeriode2 = bruttoBG1 + bortfaltYtelse1 + bruttoBG2 + bruttoBG3;
+        var totaltBeregningsgrunnlagPeriode2 = bruttoBG1 + bortfaltYtelse1 + bruttoBG2 + bruttoBG3;
 		// Andel for arbeidsforhold1 er mindre enn refusjon. Settes til 0.
-		List<Double> foreventetBrukersAndelerPeriode2 = getForventetBrukersAndeler(bruttoBG,
+        var foreventetBrukersAndelerPeriode2 = getForventetBrukersAndeler(bruttoBG,
 				List.of(bortfaltYtelse1, 0d, 0d), refusjonsKrav, GRUNNBELØP_2017 * 6.0);
 
-		double totaltBeregningsgrunnlagPeriode3 = bruttoBG1 + bortfaltYtelse1 + bruttoBG2 + bortfaltYtelse2 + bruttoBG3;
+        var totaltBeregningsgrunnlagPeriode3 = bruttoBG1 + bortfaltYtelse1 + bruttoBG2 + bortfaltYtelse2 + bruttoBG3;
 		// Andel for arbeidsforhold1 er mindre enn refusjon. Settes til 0.
-		List<Double> foreventetBrukersAndelerPeriode3 = getForventetBrukersAndeler(bruttoBG,
+        var foreventetBrukersAndelerPeriode3 = getForventetBrukersAndeler(bruttoBG,
 				List.of(bortfaltYtelse1, bortfaltYtelse2, 0d), refusjonsKrav, GRUNNBELØP_2017 * 6.0);
 
-		double totaltBeregningsgrunnlagPeriode4 = bruttoBG1 + bortfaltYtelse1 + bruttoBG2 + bortfaltYtelse2 + bruttoBG3 + bortfaltYtelse3;
+        var totaltBeregningsgrunnlagPeriode4 = bruttoBG1 + bortfaltYtelse1 + bruttoBG2 + bortfaltYtelse2 + bruttoBG3 + bortfaltYtelse3;
 		// Andel for arbeidsforhold1 er mindre enn refusjon. Settes til 0.
-		List<Double> foreventetBrukersAndelerPeriode4 = getForventetBrukersAndeler(bruttoBG,
+        var foreventetBrukersAndelerPeriode4 = getForventetBrukersAndeler(bruttoBG,
 				List.of(bortfaltYtelse1, bortfaltYtelse2, bortfaltYtelse3), refusjonsKrav, GRUNNBELØP_2017 * 6.0);
 
 
 		// 1. periode: Ingen bortfalt ytelse for nokon av arbeidsgiverane
-		BeregningsgrunnlagPeriode grunnlag1 = lagBeregningsgrunnlagMedBortfaltNaturalytelse(3, bruttoBG,
+        var grunnlag1 = lagBeregningsgrunnlagMedBortfaltNaturalytelse(3, bruttoBG,
 				List.of(refusjonskrav1 / 12, refusjonskrav2 / 12, refusjonskrav3 / 12), List.of(0.0, 0.0, 0.0))
 				.getBeregningsgrunnlagPerioder().get(0);
 
 		// 2. periode: Bortfalt ytelse for arbeidsgiver1
-		BeregningsgrunnlagPeriode grunnlag2 = lagBeregningsgrunnlagMedBortfaltNaturalytelse(3, bruttoBG,
+        var grunnlag2 = lagBeregningsgrunnlagMedBortfaltNaturalytelse(3, bruttoBG,
 				List.of(refusjonskrav1 / 12, refusjonskrav2 / 12, refusjonskrav3 / 12), List.of(bortfaltYtelse1, 0.0, 0.0))
 				.getBeregningsgrunnlagPerioder().get(0);
 
 		// 3. periode: Bortfalt ytelse for arbeidsgiver1 og arbeidsgiver2
-		BeregningsgrunnlagPeriode grunnlag3 = lagBeregningsgrunnlagMedBortfaltNaturalytelse(3, bruttoBG,
+        var grunnlag3 = lagBeregningsgrunnlagMedBortfaltNaturalytelse(3, bruttoBG,
 				List.of(refusjonskrav1 / 12, refusjonskrav2 / 12, refusjonskrav3 / 12), List.of(bortfaltYtelse1, bortfaltYtelse2, 0.0))
 				.getBeregningsgrunnlagPerioder().get(0);
 
 		// 4. periode: Bortfalt ytelse alle arbeidsgivere
-		BeregningsgrunnlagPeriode grunnlag4 = lagBeregningsgrunnlagMedBortfaltNaturalytelse(3, bruttoBG,
+        var grunnlag4 = lagBeregningsgrunnlagMedBortfaltNaturalytelse(3, bruttoBG,
 				List.of(refusjonskrav1 / 12, refusjonskrav2 / 12, refusjonskrav3 / 12), List.of(bortfaltYtelse1, bortfaltYtelse2, bortfaltYtelse3))
 				.getBeregningsgrunnlagPerioder().get(0);
 
@@ -279,10 +279,10 @@ class RegelFullføreBeregningsgrunnlagTest {
 	}
 
 	private void assertPeriode(List<Double> refusjonskrav, double totaltBeregningsgrunnlagPeriode, List<Double> foreventetBrukersAndelerPeriode, BeregningsgrunnlagPeriode grunnlag) {
-		List<BeregningsgrunnlagPrArbeidsforhold> arbeidsForholdEtterPeriode = grunnlag.getBeregningsgrunnlagPrStatus().iterator().next().getArbeidsforhold();
+        var arbeidsForholdEtterPeriode = grunnlag.getBeregningsgrunnlagPrStatus().iterator().next().getArbeidsforhold();
 		assertThat(grunnlag.getBruttoPrÅrInkludertNaturalytelser().doubleValue()).isEqualTo(totaltBeregningsgrunnlagPeriode, offset);
 		Double belopTilBetalingPeriode = 0d;
-		for (int i = 0; i < arbeidsForholdEtterPeriode.size(); i++) {
+		for (var i = 0; i < arbeidsForholdEtterPeriode.size(); i++) {
 			assertThat(arbeidsForholdEtterPeriode.get(i).getRedusertBrukersAndelPrÅr().doubleValue()).isEqualTo(foreventetBrukersAndelerPeriode.get(i), offset);
 			assertThat(arbeidsForholdEtterPeriode.get(i).getRedusertRefusjonPrÅr().doubleValue()).isEqualTo(refusjonskrav.get(i), offset);
 			belopTilBetalingPeriode += foreventetBrukersAndelerPeriode.get(i) + refusjonskrav.get(i);
@@ -292,16 +292,16 @@ class RegelFullføreBeregningsgrunnlagTest {
 
 
 	private List<Double> getForventetBrukersAndeler(List<Double> brutto, List<Double> bortfalteYtelser, List<Double> refusjonsBelop, Double belopTilFordeling) {
-		double forventetBG = brutto.stream().reduce(0d, (a, b) -> a + b) + bortfalteYtelser.stream().reduce(0d, (v1, v2) -> v1 + v2);
-		Iterator<Double> byIterator = bortfalteYtelser.iterator();
-		List<Double> fraksjonBrukersAndeler = brutto.stream().map(v -> (v + byIterator.next()) / forventetBG).collect(Collectors.toList());
+        var forventetBG = brutto.stream().reduce(0d, (a, b) -> a + b) + bortfalteYtelser.stream().reduce(0d, (v1, v2) -> v1 + v2);
+        var byIterator = bortfalteYtelser.iterator();
+        var fraksjonBrukersAndeler = brutto.stream().map(v -> (v + byIterator.next()) / forventetBG).collect(Collectors.toList());
 		assertThat(fraksjonBrukersAndeler.stream().reduce(0d, (v1, v2) -> v1 + v2)).isEqualTo(1, offset);
-		List<Double> fordelingArbeidsforhold = fraksjonBrukersAndeler.stream().map(v -> belopTilFordeling * v).collect(Collectors.toList());
-		Iterator<Double> refusjonIterator = refusjonsBelop.iterator();
-		List<Double> forventetBrukersAndeler = fordelingArbeidsforhold.stream().map(v -> (v - refusjonIterator.next())).collect(Collectors.toList());
+        var fordelingArbeidsforhold = fraksjonBrukersAndeler.stream().map(v -> belopTilFordeling * v).collect(Collectors.toList());
+        var refusjonIterator = refusjonsBelop.iterator();
+        var forventetBrukersAndeler = fordelingArbeidsforhold.stream().map(v -> (v - refusjonIterator.next())).collect(Collectors.toList());
 		if (forventetBrukersAndeler.get(0) < 0) {
 			if (brutto.size() > 1) {
-				List<Double> restListe = getForventetBrukersAndeler(brutto.subList(1, brutto.size()), bortfalteYtelser.subList(1, brutto.size()),
+                var restListe = getForventetBrukersAndeler(brutto.subList(1, brutto.size()), bortfalteYtelser.subList(1, brutto.size()),
 						refusjonsBelop.subList(1, brutto.size()), belopTilFordeling - refusjonsBelop.get(0));
 				restListe.add(0, 0d);
 				return restListe;
@@ -314,50 +314,50 @@ class RegelFullføreBeregningsgrunnlagTest {
 	@Test
 	void totaltBruttoBGUnder6GUtenRefusjonSkalIkkeAvkortesØvreGrenseScenario() {
 		//Arrange
-		double beregnetPrÅr = GRUNNBELØP_2017 * 5.99;
+        var beregnetPrÅr = GRUNNBELØP_2017 * 5.99;
 		totaltBruttoBGUnder6GUtenRefusjonSkalIkkeAvkortesScenario(beregnetPrÅr);
 	}
 
 	@Test
 	void totaltBruttoBGUnder6GUtenRefusjonSkalIkkeAvkortesNedreGrenseScenario() {
 		//Arrange
-		double beregnetPrÅr = GRUNNBELØP_2017 * 0.50;
+        var beregnetPrÅr = GRUNNBELØP_2017 * 0.50;
 		totaltBruttoBGUnder6GUtenRefusjonSkalIkkeAvkortesScenario(beregnetPrÅr);
 	}
 
 	private void totaltBruttoBGUnder6GUtenRefusjonSkalIkkeAvkortesScenario(double beregnetPrÅr) {
-		Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlag(skjæringstidspunkt, beregnetPrÅr, 0);
-		BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var beregningsgrunnlag = opprettBeregningsgrunnlag(skjæringstidspunkt, beregnetPrÅr, 0);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
 		//Act
-		RegelResultat resultat = kjørRegel(grunnlag);
+        var resultat = kjørRegel(grunnlag);
 
 		//Assert
 		verifiserBeregningsgrunnlag(resultat, grunnlag, beregnetPrÅr, beregnetPrÅr, beregnetPrÅr); //beregnetPrår = brutto = avkortet = redusert
 
-		BeregningsgrunnlagPrArbeidsforhold arbeidsforhold = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
+        var arbeidsforhold = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
 		verifiserBgPrAfMedbruttoBGUnder6GUtenRefusjonUtenRedusering(arbeidsforhold, beregnetPrÅr);
 	}
 
 	@Test
 	void totaltBruttoBGUnder6GUtenRefusjonSkalIkkeAvkortesNedreGrenseMedFlereArbeidsforholdScenario() {
 		//Arrange
-		double beregnetPrÅr = GRUNNBELØP_2017 * 0.25;
-		double beregnetPrÅr2 = GRUNNBELØP_2017 * 0.15;
-		double beregnetPrÅr3 = GRUNNBELØP_2017 * 0.11;
-		double beregnetSum = beregnetPrÅr + beregnetPrÅr2 + beregnetPrÅr3; //Totalt rett over 0,5G
-		Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlag(skjæringstidspunkt, beregnetPrÅr, 0);
+        var beregnetPrÅr = GRUNNBELØP_2017 * 0.25;
+        var beregnetPrÅr2 = GRUNNBELØP_2017 * 0.15;
+        var beregnetPrÅr3 = GRUNNBELØP_2017 * 0.11;
+        var beregnetSum = beregnetPrÅr + beregnetPrÅr2 + beregnetPrÅr3; //Totalt rett over 0,5G
+        var beregningsgrunnlag = opprettBeregningsgrunnlag(skjæringstidspunkt, beregnetPrÅr, 0);
 		leggTilArbeidsforhold(beregningsgrunnlag, beregnetPrÅr2, 0);
 		leggTilArbeidsforhold(beregningsgrunnlag, beregnetPrÅr3, 0);
-		BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
 		//Act
-		RegelResultat resultat = kjørRegel(grunnlag);
+        var resultat = kjørRegel(grunnlag);
 
 		//Assert
 		verifiserBeregningsgrunnlag(resultat, grunnlag, beregnetSum, beregnetSum, beregnetSum); //beregnetPrår = brutto = avkortet = redusert
 
-		List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
+        var arbeidsforhold = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
 		verifiserBgPrAfMedbruttoBGUnder6GUtenRefusjonUtenRedusering(arbeidsforhold.get(0), beregnetPrÅr);
 		verifiserBgPrAfMedbruttoBGUnder6GUtenRefusjonUtenRedusering(arbeidsforhold.get(1), beregnetPrÅr2);
 		verifiserBgPrAfMedbruttoBGUnder6GUtenRefusjonUtenRedusering(arbeidsforhold.get(2), beregnetPrÅr3);
@@ -366,22 +366,22 @@ class RegelFullføreBeregningsgrunnlagTest {
 	@Test
 	void totaltBruttoBGUnder6GUtenRefusjonSkalIkkeAvkortesØvreGrenseMedFlereArbeidsforholdScenario() {
 		//Arrange
-		double beregnetPrÅr = GRUNNBELØP_2017 * 3.0;
-		double beregnetPrÅr2 = GRUNNBELØP_2017 * 2.0;
-		double beregnetPrÅr3 = GRUNNBELØP_2017 * 0.99;
-		double beregnetSum = beregnetPrÅr + beregnetPrÅr2 + beregnetPrÅr3; //Totalt rett under 6G
-		Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlag(skjæringstidspunkt, beregnetPrÅr, 0);
+        var beregnetPrÅr = GRUNNBELØP_2017 * 3.0;
+        var beregnetPrÅr2 = GRUNNBELØP_2017 * 2.0;
+        var beregnetPrÅr3 = GRUNNBELØP_2017 * 0.99;
+        var beregnetSum = beregnetPrÅr + beregnetPrÅr2 + beregnetPrÅr3; //Totalt rett under 6G
+        var beregningsgrunnlag = opprettBeregningsgrunnlag(skjæringstidspunkt, beregnetPrÅr, 0);
 		leggTilArbeidsforhold(beregningsgrunnlag, beregnetPrÅr2, 0);
 		leggTilArbeidsforhold(beregningsgrunnlag, beregnetPrÅr3, 0);
-		BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
 		//Act
-		RegelResultat resultat = kjørRegel(grunnlag);
+        var resultat = kjørRegel(grunnlag);
 
 		//Assert
 		verifiserBeregningsgrunnlag(resultat, grunnlag, beregnetSum, beregnetSum, beregnetSum); //beregnetPrår = brutto = avkortet = redusert
 
-		List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
+        var arbeidsforhold = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
 		verifiserBgPrAfMedbruttoBGUnder6GUtenRefusjonUtenRedusering(arbeidsforhold.get(0), beregnetPrÅr);
 		verifiserBgPrAfMedbruttoBGUnder6GUtenRefusjonUtenRedusering(arbeidsforhold.get(1), beregnetPrÅr2);
 		verifiserBgPrAfMedbruttoBGUnder6GUtenRefusjonUtenRedusering(arbeidsforhold.get(2), beregnetPrÅr3);
@@ -390,18 +390,18 @@ class RegelFullføreBeregningsgrunnlagTest {
 	@Test
 	void totaltBruttoBGUnder6GMedRefusjonØvreGrenseScenario() {
 		//Arrange
-		double beregnetPrÅr = GRUNNBELØP_2017 * 5.99;
-		double refusjonskrav = GRUNNBELØP_2017 * 3.0;
-		Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlag(skjæringstidspunkt, beregnetPrÅr, refusjonskrav);
-		BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var beregnetPrÅr = GRUNNBELØP_2017 * 5.99;
+        var refusjonskrav = GRUNNBELØP_2017 * 3.0;
+        var beregningsgrunnlag = opprettBeregningsgrunnlag(skjæringstidspunkt, beregnetPrÅr, refusjonskrav);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
 		//Act
-		RegelResultat resultat = kjørRegel(grunnlag);
+        var resultat = kjørRegel(grunnlag);
 
 		//Assert
 		verifiserBeregningsgrunnlag(resultat, grunnlag, beregnetPrÅr, beregnetPrÅr, beregnetPrÅr);
 
-		BeregningsgrunnlagPrArbeidsforhold arbeidsforhold = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
+        var arbeidsforhold = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
 		verifiserBeregningsgrunnlagPrArbeidsforhold(arbeidsforhold, refusjonskrav, beregnetPrÅr, beregnetPrÅr,
 				beregnetPrÅr, refusjonskrav,
 				refusjonskrav, beregnetPrÅr - refusjonskrav, beregnetPrÅr - refusjonskrav);
@@ -411,18 +411,18 @@ class RegelFullføreBeregningsgrunnlagTest {
 	@Test
 	void totaltBruttoBGUnder6GMedRefusjonStørreEnnBruttoBGScenario() {
 		//Arrange
-		double beregnetPrÅr = GRUNNBELØP_2017 * 4.0;
-		double refusjonskrav = GRUNNBELØP_2017 * 5.0;
-		Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlag(skjæringstidspunkt, beregnetPrÅr, refusjonskrav);
-		BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var beregnetPrÅr = GRUNNBELØP_2017 * 4.0;
+        var refusjonskrav = GRUNNBELØP_2017 * 5.0;
+        var beregningsgrunnlag = opprettBeregningsgrunnlag(skjæringstidspunkt, beregnetPrÅr, refusjonskrav);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
 		//Act
-		RegelResultat resultat = kjørRegel(grunnlag);
+        var resultat = kjørRegel(grunnlag);
 
 		//Assert
 		verifiserBeregningsgrunnlag(resultat, grunnlag, beregnetPrÅr, beregnetPrÅr, beregnetPrÅr);
 
-		BeregningsgrunnlagPrArbeidsforhold arbeidsforhold = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
+        var arbeidsforhold = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
 		verifiserBeregningsgrunnlagPrArbeidsforhold(arbeidsforhold, beregnetPrÅr, beregnetPrÅr, beregnetPrÅr,
 				beregnetPrÅr, beregnetPrÅr, beregnetPrÅr, 0.0, 0.0);
 	}
@@ -430,48 +430,48 @@ class RegelFullføreBeregningsgrunnlagTest {
 	@Test
 	void totaltBruttoBGUnder6GUtenRefusjonMedReduksjonScenario() {
 		//Arrange
-		double beregnetPrÅr = GRUNNBELØP_2017 * 4.0;
-		double redusertPrÅr = 0.80 * beregnetPrÅr;
-		Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlag(skjæringstidspunkt, beregnetPrÅr, 0.0, Dekningsgrad.DEKNINGSGRAD_80);
-		BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var beregnetPrÅr = GRUNNBELØP_2017 * 4.0;
+        var redusertPrÅr = 0.80 * beregnetPrÅr;
+        var beregningsgrunnlag = opprettBeregningsgrunnlag(skjæringstidspunkt, beregnetPrÅr, 0.0, Dekningsgrad.DEKNINGSGRAD_80);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
 		//Act
-		RegelResultat resultat = kjørRegel(grunnlag);
+        var resultat = kjørRegel(grunnlag);
 
 		//Assert
 		verifiserBeregningsgrunnlag(resultat, grunnlag, beregnetPrÅr, beregnetPrÅr, redusertPrÅr);
 
-		BeregningsgrunnlagPrArbeidsforhold arbeidsforhold = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
+        var arbeidsforhold = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
 		verifiserBeregningsgrunnlagPrArbeidsforhold(arbeidsforhold, 0.0, beregnetPrÅr, beregnetPrÅr,
 				redusertPrÅr, 0.0, 0.0, beregnetPrÅr, redusertPrÅr);
 	}
 
 	@Test
 	void totalBruttoOver6GRefusjonKravUnder6GTotalBGForArbeidsforholdUnder6G() {
-		double bruttoATFL = 300000d;
-		double refusjonsKrav = 20000d;
-		double bruttoDP = 130000d;
-		double bruttoAAP = 110000d;
+        var bruttoATFL = 300000d;
+        var refusjonsKrav = 20000d;
+        var bruttoDP = 130000d;
+        var bruttoAAP = 110000d;
 		double bruttoSN = 100000;
 
-		BeregningsgrunnlagPeriode.Builder bgBuilder = BeregningsgrunnlagPeriode.builder()
+        var bgBuilder = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(skjæringstidspunkt, null));
-		BeregningsgrunnlagPrStatus bgpsATFL = lagBeregningsgrunnlagPrStatus(ORGNR1, bruttoATFL, 1, AktivitetStatus.ATFL, refusjonsKrav * 12);
-		BeregningsgrunnlagPrStatus bgpsDP = lagBeregningsgrunnlagPrStatus(ORGNR2, bruttoDP, 2, AktivitetStatus.DP, refusjonsKrav * 12);
-		BeregningsgrunnlagPrStatus bgpsAAP = lagBeregningsgrunnlagPrStatus(ORGNR3, bruttoAAP, 3, AktivitetStatus.AAP, refusjonsKrav * 12);
-		BeregningsgrunnlagPrStatus bgpsSN = lagBeregningsgrunnlagPrStatus("112", bruttoSN, 4, AktivitetStatus.SN, refusjonsKrav * 12);
-		BeregningsgrunnlagPeriode periode = bgBuilder
+        var bgpsATFL = lagBeregningsgrunnlagPrStatus(ORGNR1, bruttoATFL, 1, AktivitetStatus.ATFL, refusjonsKrav * 12);
+        var bgpsDP = lagBeregningsgrunnlagPrStatus(ORGNR2, bruttoDP, 2, AktivitetStatus.DP, refusjonsKrav * 12);
+        var bgpsAAP = lagBeregningsgrunnlagPrStatus(ORGNR3, bruttoAAP, 3, AktivitetStatus.AAP, refusjonsKrav * 12);
+        var bgpsSN = lagBeregningsgrunnlagPrStatus("112", bruttoSN, 4, AktivitetStatus.SN, refusjonsKrav * 12);
+        var periode = bgBuilder
 				.medBeregningsgrunnlagPrStatus(bgpsATFL)
 				.medBeregningsgrunnlagPrStatus(bgpsDP)
 				.medBeregningsgrunnlagPrStatus(bgpsAAP)
 				.medBeregningsgrunnlagPrStatus(bgpsSN)
 				.build();
-		Beregningsgrunnlag beregningsgrunnlag = opprettGrunnlag(periode);
-		BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var beregningsgrunnlag = opprettGrunnlag(periode);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
-		double forventetAvkortet = 130000d;
-		double forventetAvkortet2 = 110000d;
-		double forventetAvkortet3 = GRUNNBELØP_2017 * 6 - bruttoATFL - bruttoDP - bruttoAAP;
+        var forventetAvkortet = 130000d;
+        var forventetAvkortet2 = 110000d;
+        var forventetAvkortet3 = GRUNNBELØP_2017 * 6 - bruttoATFL - bruttoDP - bruttoAAP;
 
 		kjørRegel(grunnlag);
 
@@ -483,19 +483,18 @@ class RegelFullføreBeregningsgrunnlagTest {
 	@Test
 	void maksimalRefusjonSkalIkkeOverskrives() {
 		//Arrange
-		double beregnetPrÅr = GRUNNBELØP_2017 * 4.0;
+        var beregnetPrÅr = GRUNNBELØP_2017 * 4.0;
 		double maksimalRefusjonPrÅr = 238000;
-		Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlag(skjæringstidspunkt, beregnetPrÅr, 0.0, Dekningsgrad.DEKNINGSGRAD_80);
-		BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-		BeregningsgrunnlagPrArbeidsforhold bgPrArbeidsforhold = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
+        var beregningsgrunnlag = opprettBeregningsgrunnlag(skjæringstidspunkt, beregnetPrÅr, 0.0, Dekningsgrad.DEKNINGSGRAD_80);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var bgPrArbeidsforhold = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
 		BeregningsgrunnlagPrArbeidsforhold.builder(bgPrArbeidsforhold).medMaksimalRefusjonPrÅr(BigDecimal.valueOf(maksimalRefusjonPrÅr));
 
 		//Act
-		@SuppressWarnings("unused")
-		RegelResultat resultat = kjørRegel(grunnlag);
+		@SuppressWarnings("unused") var resultat = kjørRegel(grunnlag);
 
 		//Assert
-		BeregningsgrunnlagPrArbeidsforhold arbeidsforhold = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
+        var arbeidsforhold = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
 		assertThat(arbeidsforhold.getMaksimalRefusjonPrÅr()).isEqualTo(BigDecimal.valueOf(maksimalRefusjonPrÅr));
 	}
 
@@ -527,8 +526,8 @@ class RegelFullføreBeregningsgrunnlagTest {
 		assertThat(arbeidsforhold.getRedusertRefusjonPrÅr().doubleValue()).isEqualTo(redusertRefusjonPrÅr, offset);
 		assertThat(arbeidsforhold.getAvkortetBrukersAndelPrÅr().doubleValue()).isEqualTo(avkortetBrukersAndelPrÅr, offset);
 		assertThat(arbeidsforhold.getRedusertBrukersAndelPrÅr().doubleValue()).isEqualTo(redusertBrukersAndelPrÅr, offset);
-		long dagsatsBruker = Math.round(redusertBrukersAndelPrÅr / 260);
-		long dagsatsArbeidsgiver = Math.round(redusertRefusjonPrÅr / 260);
+        var dagsatsBruker = Math.round(redusertBrukersAndelPrÅr / 260);
+        var dagsatsArbeidsgiver = Math.round(redusertRefusjonPrÅr / 260);
 		assertThat(arbeidsforhold.getDagsatsBruker()).isEqualTo(dagsatsBruker);
 		assertThat(arbeidsforhold.getDagsatsArbeidsgiver()).isEqualTo(dagsatsArbeidsgiver);
 		assertThat(arbeidsforhold.getDagsats()).isEqualTo(dagsatsBruker + dagsatsArbeidsgiver);
@@ -540,8 +539,8 @@ class RegelFullføreBeregningsgrunnlagTest {
 	}
 
 	private Beregningsgrunnlag opprettBeregningsgrunnlag(LocalDate skjæringstidspunkt, double beregnetPrÅr, double refusjonskravPrÅr, Dekningsgrad dekningsgrad) {
-		Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektsmelding(skjæringstidspunkt, BigDecimal.valueOf(refusjonskravPrÅr / 12));
-		BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektsmelding(skjæringstidspunkt, BigDecimal.valueOf(refusjonskravPrÅr / 12));
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 		BeregningsgrunnlagPeriode.oppdater(grunnlag).medDekningsgrad(dekningsgrad);
 
 		BeregningsgrunnlagPrArbeidsforhold.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0))
@@ -550,12 +549,12 @@ class RegelFullføreBeregningsgrunnlagTest {
 	}
 
 	private void leggTilArbeidsforhold(Beregningsgrunnlag grunnlag, double beregnetPrÅr, double refusjonskrav) {
-		BeregningsgrunnlagPeriode bgPeriode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
-		String nyttOrgnr = generateId().toString();
-		Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(nyttOrgnr);
+        var bgPeriode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var nyttOrgnr = generateId().toString();
+        var arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(nyttOrgnr);
 		leggTilArbeidsforholdMedInntektsmelding(bgPeriode, BigDecimal.valueOf(refusjonskrav / 12), arbeidsforhold);
-		BeregningsgrunnlagPrStatus atfl = bgPeriode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
-		BeregningsgrunnlagPrArbeidsforhold bgpaf = atfl.getArbeidsforhold().stream()
+        var atfl = bgPeriode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+        var bgpaf = atfl.getArbeidsforhold().stream()
 				.filter(af -> af.getArbeidsforhold().getOrgnr().equals(nyttOrgnr)).findFirst().get();
 		BeregningsgrunnlagPrArbeidsforhold.builder(bgpaf)
 				.medBruttoPrÅr(BigDecimal.valueOf(beregnetPrÅr))
@@ -564,11 +563,11 @@ class RegelFullføreBeregningsgrunnlagTest {
 
 
 	private Beregningsgrunnlag opprettGrunnlag(BeregningsgrunnlagPeriode periode) {
-		Beregningsgrunnlag.Builder grunnlagsBuilder = Beregningsgrunnlag.builder()
+        var grunnlagsBuilder = Beregningsgrunnlag.builder()
 				.medAktivitetStatuser(List.of(new AktivitetStatusMedHjemmel(AktivitetStatus.ATFL, null)))
 				.medGrunnbeløp(BigDecimal.valueOf(GRUNNBELØP_2017));
-		List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
-		Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
+        var arbeidsforhold = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
+        var inntektsgrunnlag = new Inntektsgrunnlag();
 		arbeidsforhold.forEach(af -> inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
 				.medInntektskildeOgPeriodeType(Inntektskilde.INNTEKTSMELDING)
 				.medArbeidsgiver(af.getArbeidsforhold())
@@ -583,13 +582,13 @@ class RegelFullføreBeregningsgrunnlagTest {
 		assertThat(bruttoBG).hasSize(antallArbeidsforhold);
 		assertThat(refusjonsKrav).hasSize(antallArbeidsforhold);
 		assertThat(bortfalteYtelserPerArbeidsforhold).hasSize(antallArbeidsforhold);
-		BeregningsgrunnlagPeriode.Builder bgBuilder = BeregningsgrunnlagPeriode.builder()
+        var bgBuilder = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(skjæringstidspunkt, null));
 
-		BeregningsgrunnlagPrStatus.Builder prStatusBuilder = BeregningsgrunnlagPrStatus.builder()
+        var prStatusBuilder = BeregningsgrunnlagPrStatus.builder()
 				.medAktivitetStatus(AktivitetStatus.ATFL);
-		for (int i = 0; i < antallArbeidsforhold; i++) {
-			BeregningsgrunnlagPrArbeidsforhold afBuilder = BeregningsgrunnlagPrArbeidsforhold.builder()
+		for (var i = 0; i < antallArbeidsforhold; i++) {
+            var afBuilder = BeregningsgrunnlagPrArbeidsforhold.builder()
 					.medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNRS[i]))
 					.medAndelNr(i + 1)
 					.medBruttoPrÅr(BigDecimal.valueOf(bruttoBG.get(i)))
@@ -599,8 +598,8 @@ class RegelFullføreBeregningsgrunnlagTest {
 			prStatusBuilder.medArbeidsforhold(afBuilder);
 		}
 
-		BeregningsgrunnlagPrStatus bgpsATFL1 = prStatusBuilder.build();
-		BeregningsgrunnlagPeriode periode = bgBuilder
+        var bgpsATFL1 = prStatusBuilder.build();
+        var periode = bgBuilder
 				.medBeregningsgrunnlagPrStatus(bgpsATFL1)
 				.build();
 
@@ -609,7 +608,7 @@ class RegelFullføreBeregningsgrunnlagTest {
 
 	private BeregningsgrunnlagPrStatus lagBeregningsgrunnlagPrStatus(String orgNr, double brutto, int andelNr,
 	                                                                 AktivitetStatus aktivitetStatus, double refusjonsKrav) {
-		BeregningsgrunnlagPrArbeidsforhold afBuilder1 = BeregningsgrunnlagPrArbeidsforhold.builder()
+        var afBuilder1 = BeregningsgrunnlagPrArbeidsforhold.builder()
 				.medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgNr))
 				.medBruttoPrÅr(BigDecimal.valueOf(brutto))
 				.medRefusjonPrÅr(BigDecimal.valueOf(refusjonsKrav))

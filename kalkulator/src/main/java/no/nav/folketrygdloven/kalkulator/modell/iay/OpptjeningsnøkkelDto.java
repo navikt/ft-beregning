@@ -112,7 +112,7 @@ public class OpptjeningsnøkkelDto {
     }
 
     private boolean matchArbeidsforholdId(OpptjeningsnøkkelDto other) {
-        boolean likArbeidsforholdsId = other.getVerdi().equals(this.getVerdi());
+        var likArbeidsforholdsId = other.getVerdi().equals(this.getVerdi());
         boolean likArbeidsgiver;
         if ((other.orgNummer != null) || this.orgNummer != null) {
             likArbeidsgiver = other.orgNummer != null && other.orgNummer.equals(this.orgNummer);
@@ -129,7 +129,7 @@ public class OpptjeningsnøkkelDto {
         } else if (obj == null || !(obj.getClass().equals(this.getClass()))) {
             return false;
         }
-        OpptjeningsnøkkelDto other = (OpptjeningsnøkkelDto) obj;
+        var other = (OpptjeningsnøkkelDto) obj;
         return Objects.equals(aktørId, other.aktørId)
             && Objects.equals(orgNummer, other.orgNummer)
             && Objects.equals(arbeidsforholdId, other.arbeidsforholdId);

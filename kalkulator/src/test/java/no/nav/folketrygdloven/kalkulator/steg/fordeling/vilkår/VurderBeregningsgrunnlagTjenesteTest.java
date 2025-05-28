@@ -61,24 +61,24 @@ class VurderBeregningsgrunnlagTjenesteTest {
     @Test
     void testVilkårsvurderingArbeidstakerMedBGOverHalvG() {
         // Arrange
-        BeregningAktivitetAggregatDto beregningAktiviteter = BeregningAktivitetTestUtil.opprettBeregningAktiviteter(SKJÆRINGSTIDSPUNKT_OPPTJENING,
+        var beregningAktiviteter = BeregningAktivitetTestUtil.opprettBeregningAktiviteter(SKJÆRINGSTIDSPUNKT_OPPTJENING,
                 OpptjeningAktivitetType.ARBEID);
-        BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlag(400_000);
-        BeregningsgrunnlagGrunnlagDtoBuilder grunnlagDtoBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
+        var beregningsgrunnlag = lagBeregningsgrunnlag(400_000);
+        var grunnlagDtoBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medRegisterAktiviteter(beregningAktiviteter)
                 .medBeregningsgrunnlag(beregningsgrunnlag);
-        BeregningsgrunnlagGrunnlagDto grunnlag = grunnlagDtoBuilder
+        var grunnlag = grunnlagDtoBuilder
                 .build(BeregningsgrunnlagTilstand.FORESLÅTT);
-        InntektArbeidYtelseAggregatBuilder registerBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
+        var registerBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
         testHjelper.lagBehandlingForSN(MÅNEDSINNTEKT1.multipliser(12), 2015, registerBuilder);
-        KoblingReferanse ref = lagReferanseMedSkjæringstidspunkt(koblingReferanse);
-        InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlagBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
+        var ref = lagReferanseMedSkjæringstidspunkt(koblingReferanse);
+        var iayGrunnlagBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
         var iayGrunnlag = iayGrunnlagBuilder.medData(registerBuilder).medInntektsmeldinger(inntektsmeldinger).build();
-        BeregningsgrunnlagInput input = BeregningsgrunnlagInputTestUtil.lagInputMedBeregningsgrunnlagOgIAY(ref, grunnlagDtoBuilder, BeregningsgrunnlagTilstand.FORESLÅTT, iayGrunnlag);
-        FordelBeregningsgrunnlagInput fordelBeregningsgrunnlagInput = new FordelBeregningsgrunnlagInput(new StegProsesseringInput(input, BeregningsgrunnlagTilstand.OPPDATERT_MED_REFUSJON_OG_GRADERING));
+        var input = BeregningsgrunnlagInputTestUtil.lagInputMedBeregningsgrunnlagOgIAY(ref, grunnlagDtoBuilder, BeregningsgrunnlagTilstand.FORESLÅTT, iayGrunnlag);
+        var fordelBeregningsgrunnlagInput = new FordelBeregningsgrunnlagInput(new StegProsesseringInput(input, BeregningsgrunnlagTilstand.OPPDATERT_MED_REFUSJON_OG_GRADERING));
 
         // Act
-        BeregningsgrunnlagRegelResultat resultat = vurderBeregningsgrunnlagTjeneste.vurderBeregningsgrunnlag(fordelBeregningsgrunnlagInput, grunnlag);
+        var resultat = vurderBeregningsgrunnlagTjeneste.vurderBeregningsgrunnlag(fordelBeregningsgrunnlagInput, grunnlag);
 
         // Assert
         assertThat(resultat.getBeregningsgrunnlag()).isNotNull();
@@ -96,26 +96,26 @@ class VurderBeregningsgrunnlagTjenesteTest {
     @Test
     void testVilkårsvurderingArbeidstakerMedBGUnderHalvG() {
         // Arrange
-        BeregningAktivitetAggregatDto beregningAktiviteter = BeregningAktivitetTestUtil.opprettBeregningAktiviteter(SKJÆRINGSTIDSPUNKT_OPPTJENING,
+        var beregningAktiviteter = BeregningAktivitetTestUtil.opprettBeregningAktiviteter(SKJÆRINGSTIDSPUNKT_OPPTJENING,
                 OpptjeningAktivitetType.ARBEID);
-        BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlag(40_000);
-        BeregningsgrunnlagGrunnlagDtoBuilder grunnlagDtoBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
+        var beregningsgrunnlag = lagBeregningsgrunnlag(40_000);
+        var grunnlagDtoBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medRegisterAktiviteter(beregningAktiviteter)
                 .medBeregningsgrunnlag(beregningsgrunnlag);
-        BeregningsgrunnlagGrunnlagDto grunnlag = grunnlagDtoBuilder
+        var grunnlag = grunnlagDtoBuilder
                 .build(BeregningsgrunnlagTilstand.FORESLÅTT);
-        InntektArbeidYtelseAggregatBuilder registerBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
+        var registerBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
         testHjelper.lagBehandlingForSN(MÅNEDSINNTEKT1.multipliser(12), 2015, registerBuilder);
 
-        KoblingReferanse ref = lagReferanseMedSkjæringstidspunkt(koblingReferanse);
-        InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlagBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
+        var ref = lagReferanseMedSkjæringstidspunkt(koblingReferanse);
+        var iayGrunnlagBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
         var iayGrunnlag = iayGrunnlagBuilder.medData(registerBuilder).medInntektsmeldinger(inntektsmeldinger).build();
-        BeregningsgrunnlagInput input = BeregningsgrunnlagInputTestUtil.lagInputMedBeregningsgrunnlagOgIAY(ref, grunnlagDtoBuilder, BeregningsgrunnlagTilstand.FORESLÅTT, iayGrunnlag);
+        var input = BeregningsgrunnlagInputTestUtil.lagInputMedBeregningsgrunnlagOgIAY(ref, grunnlagDtoBuilder, BeregningsgrunnlagTilstand.FORESLÅTT, iayGrunnlag);
 
-        FordelBeregningsgrunnlagInput fordelBeregningsgrunnlagInput = new FordelBeregningsgrunnlagInput(new StegProsesseringInput(input, BeregningsgrunnlagTilstand.OPPDATERT_MED_REFUSJON_OG_GRADERING));
+        var fordelBeregningsgrunnlagInput = new FordelBeregningsgrunnlagInput(new StegProsesseringInput(input, BeregningsgrunnlagTilstand.OPPDATERT_MED_REFUSJON_OG_GRADERING));
 
         // Act
-        BeregningsgrunnlagRegelResultat resultat = vurderBeregningsgrunnlagTjeneste.vurderBeregningsgrunnlag(fordelBeregningsgrunnlagInput, grunnlag);
+        var resultat = vurderBeregningsgrunnlagTjeneste.vurderBeregningsgrunnlag(fordelBeregningsgrunnlagInput, grunnlag);
 
         // Assert
         assertThat(resultat.getBeregningsgrunnlag()).isNotNull();
@@ -137,13 +137,13 @@ class VurderBeregningsgrunnlagTjenesteTest {
                 .medAvvikPromilleNy(BigDecimal.ZERO)
                 .medSammenligningsgrunnlagType(SammenligningsgrunnlagType.SAMMENLIGNING_AT_FL)
                 .build();
-        BeregningsgrunnlagDto bg = BeregningsgrunnlagDto.builder()
+        var bg = BeregningsgrunnlagDto.builder()
                 .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_BEREGNING)
                 .medGrunnbeløp(Beløp.fra(600_000))
                 .leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
                 .leggTilSammenligningsgrunnlag(sg)
                 .build();
-        BeregningsgrunnlagPeriodeDto periode = BeregningsgrunnlagPeriodeDto.ny()
+        var periode = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_BEREGNING, null)
                 .build(bg);
         BeregningsgrunnlagPrStatusOgAndelDto.ny()

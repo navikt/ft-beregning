@@ -66,7 +66,7 @@ public class YtelseDtoBuilder {
 
     private void validerUtbetalingsgrader() {
         if (ytelse.getYtelseType().erArenaytelse()) {
-            Optional<YtelseAnvistDto> ulovligMeldekort = ytelse.getYtelseAnvist().stream()
+            var ulovligMeldekort = ytelse.getYtelseAnvist().stream()
                     .filter(this::harUtbetalingsgradOver200)
                     .findFirst();
             if (ulovligMeldekort.isPresent()) {

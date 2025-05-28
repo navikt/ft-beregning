@@ -31,10 +31,10 @@ public class FordelBeregningsgrunnlagHåndterer {
     }
 
     public static BeregningsgrunnlagGrunnlagDto håndter(FordelBeregningsgrunnlagDto dto, HåndterBeregningsgrunnlagInput input) {
-        BeregningsgrunnlagGrunnlagDtoBuilder grunnlagBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
-        BeregningsgrunnlagDto beregningsgrunnlag = grunnlagBuilder.getBeregningsgrunnlagBuilder().getBeregningsgrunnlag();
-        List<BeregningsgrunnlagPeriodeDto> perioder = beregningsgrunnlag.getBeregningsgrunnlagPerioder();
-        for (FordelBeregningsgrunnlagPeriodeDto endretPeriode : dto.getEndretBeregningsgrunnlagPerioder()) {
+        var grunnlagBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
+        var beregningsgrunnlag = grunnlagBuilder.getBeregningsgrunnlagBuilder().getBeregningsgrunnlag();
+        var perioder = beregningsgrunnlag.getBeregningsgrunnlagPerioder();
+        for (var endretPeriode : dto.getEndretBeregningsgrunnlagPerioder()) {
             fastsettVerdierForPeriode(input, perioder, endretPeriode);
         }
 
@@ -47,18 +47,18 @@ public class FordelBeregningsgrunnlagHåndterer {
     private static void fastsettVerdierForPeriode(HåndterBeregningsgrunnlagInput input,
                                                   List<BeregningsgrunnlagPeriodeDto> perioder,
                                                   FordelBeregningsgrunnlagPeriodeDto endretPeriode) {
-        BeregningsgrunnlagPeriodeDto korrektPeriode = getKorrektPeriode(input, perioder, endretPeriode);
+        var korrektPeriode = getKorrektPeriode(input, perioder, endretPeriode);
         var refusjonMap = FordelRefusjonTjeneste.getRefusjonPrÅrMap(endretPeriode, korrektPeriode);
-        BeregningsgrunnlagPeriodeDto.Builder perioderBuilder = BeregningsgrunnlagPeriodeDto.oppdater(korrektPeriode);
+        var perioderBuilder = BeregningsgrunnlagPeriodeDto.oppdater(korrektPeriode);
         // Må sortere med eksisterende først for å sette andelsnr på disse først
-        List<FordelBeregningsgrunnlagAndelDto> sorted = sorterMedNyesteSist(endretPeriode);
+        var sorted = sorterMedNyesteSist(endretPeriode);
 
         var andelerSomErLagtTilTidligere = korrektPeriode.getBeregningsgrunnlagPrStatusOgAndelList().stream()
                 .filter(a -> a.getKilde().equals(AndelKilde.SAKSBEHANDLER_FORDELING))
                 .collect(Collectors.toList());
 
         var fordelteAndelsnr = new HashSet<Long>();
-        for (FordelBeregningsgrunnlagAndelDto endretAndel : sorted) {
+        for (var endretAndel : sorted) {
             var builderFraAktivtGrunnlag = perioderBuilder.getBuilderForAndel(endretAndel.getAndelsnr(), !endretAndel.erNyAndel());
             if (builderFraAktivtGrunnlag.isPresent()) {
                 fordel(refusjonMap, perioderBuilder, endretAndel, builderFraAktivtGrunnlag.get(), endretAndel.erNyAndel());
@@ -112,8 +112,8 @@ public class FordelBeregningsgrunnlagHåndterer {
     private static void fastsettVerdierForAndel(BeregningsgrunnlagPrStatusOgAndelDto.Builder builderForAndel,
                                                 Map<FordelBeregningsgrunnlagAndelDto, Beløp> refusjonMap,
                                                 FordelBeregningsgrunnlagAndelDto endretAndel) {
-        FordelFastsatteVerdierDto fastsatteVerdier = endretAndel.getFastsatteVerdier();
-        FordelFastsatteVerdierDto verdierMedJustertRefusjon = lagVerdierMedFordeltRefusjon(refusjonMap, endretAndel, fastsatteVerdier);
+        var fastsatteVerdier = endretAndel.getFastsatteVerdier();
+        var verdierMedJustertRefusjon = lagVerdierMedFordeltRefusjon(refusjonMap, endretAndel, fastsatteVerdier);
         settVerdierPåBuilder(builderForAndel, verdierMedJustertRefusjon);
     }
 

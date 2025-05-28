@@ -18,7 +18,7 @@ public class FortsettForeslåBeregningsgrunnlagFRISINN {
     }
 
     public BeregningsgrunnlagRegelResultat fortsettForeslåBeregningsgrunnlag(FortsettForeslåBeregningsgrunnlagInput input) {
-        BeregningsgrunnlagDto beregningsgrunnlag = input.getBeregningsgrunnlagGrunnlag().getBeregningsgrunnlagHvisFinnes()
+        var beregningsgrunnlag = input.getBeregningsgrunnlagGrunnlag().getBeregningsgrunnlagHvisFinnes()
                 .orElseThrow(() -> new IllegalStateException("Skal ha beregningsgrunnlag her"));
         return new BeregningsgrunnlagRegelResultat(beregningsgrunnlag, Collections.emptyList());
     }

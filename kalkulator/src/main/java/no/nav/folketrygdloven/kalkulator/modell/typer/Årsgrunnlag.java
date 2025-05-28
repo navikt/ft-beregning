@@ -125,7 +125,7 @@ public class Årsgrunnlag implements Comparable<Årsgrunnlag> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Årsgrunnlag that = (Årsgrunnlag) o;
+        var that = (Årsgrunnlag) o;
         return Objects.equals(beregnetPrÅr, that.beregnetPrÅr) && Objects.equals(fordeltPrÅr, that.fordeltPrÅr) && Objects.equals(manueltFordeltPrÅr, that.manueltFordeltPrÅr) && Objects.equals(overstyrtPrÅr, that.overstyrtPrÅr) && Objects.equals(bruttoPrÅr, that.bruttoPrÅr);
     }
 

@@ -155,7 +155,7 @@ class OmfordelFraFrilansTest {
     }
 
     private void kjørRegel(FordelAndelModell arbeidsforhold, FordelPeriodeModell periode) {
-        OmfordelFraFrilans regel = new OmfordelFraFrilans(arbeidsforhold);
+        var regel = new OmfordelFraFrilans(arbeidsforhold);
         regel.evaluate(new FordelModell(periode));
     }
 

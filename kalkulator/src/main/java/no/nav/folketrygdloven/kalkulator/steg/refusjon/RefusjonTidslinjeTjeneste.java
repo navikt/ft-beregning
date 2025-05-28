@@ -29,7 +29,7 @@ public class RefusjonTidslinjeTjeneste {
     }
 
     private static RefusjonPeriode lagRefusjonsperiode(BeregningsgrunnlagPeriodeDto periode, boolean utbetalt, YtelsespesifiktGrunnlag ytelsespesifiktGrunnlag) {
-        List<RefusjonAndel> andeler = lagAndelsliste(periode.getBeregningsgrunnlagPrStatusOgAndelList(), utbetalt, periode.getPeriode(), ytelsespesifiktGrunnlag);
+        var andeler = lagAndelsliste(periode.getBeregningsgrunnlagPrStatusOgAndelList(), utbetalt, periode.getPeriode(), ytelsespesifiktGrunnlag);
         return new RefusjonPeriode(periode.getBeregningsgrunnlagPeriodeFom(), periode.getBeregningsgrunnlagPeriodeTom(), andeler);
     }
 
@@ -70,9 +70,9 @@ public class RefusjonTidslinjeTjeneste {
     public static LocalDateTimeline<RefusjonPeriodeEndring> kombinerTidslinjer(LocalDateTimeline<RefusjonPeriode> originalePerioder, LocalDateTimeline<RefusjonPeriode> revurderingPerioder) {
         return originalePerioder.intersection(revurderingPerioder, (dateInterval, segment1, segment2) ->
         {
-            RefusjonPeriode orignalPeriode = segment1.getValue();
-            RefusjonPeriode revurderingPeriode = segment2.getValue();
-            RefusjonPeriodeEndring refusjonPeriodeEndring = new RefusjonPeriodeEndring(orignalPeriode.getAndeler(), revurderingPeriode.getAndeler());
+            var orignalPeriode = segment1.getValue();
+            var revurderingPeriode = segment2.getValue();
+            var refusjonPeriodeEndring = new RefusjonPeriodeEndring(orignalPeriode.getAndeler(), revurderingPeriode.getAndeler());
             return new LocalDateSegment<>(dateInterval, refusjonPeriodeEndring);
         });
     }

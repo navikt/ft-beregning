@@ -21,10 +21,10 @@ public class VurderVarigEndretEllerNyoppstartetHåndterer {
 
     public static BeregningsgrunnlagGrunnlagDto håndter(BeregningsgrunnlagInput input, Integer bruttoBeregningsgrunnlag, AktivitetStatus aktivitetstatus) {
         if (bruttoBeregningsgrunnlag != null) {
-            BeregningsgrunnlagGrunnlagDtoBuilder grunnlagBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
-            List<BeregningsgrunnlagPeriodeDto> bgPerioder = grunnlagBuilder.getBeregningsgrunnlagBuilder().getBeregningsgrunnlag().getBeregningsgrunnlagPerioder();
-            for (BeregningsgrunnlagPeriodeDto bgPeriode : bgPerioder) {
-                BeregningsgrunnlagPrStatusOgAndelDto bgAndel = bgPeriode.getBeregningsgrunnlagPrStatusOgAndelList().stream()
+            var grunnlagBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
+            var bgPerioder = grunnlagBuilder.getBeregningsgrunnlagBuilder().getBeregningsgrunnlag().getBeregningsgrunnlagPerioder();
+            for (var bgPeriode : bgPerioder) {
+                var bgAndel = bgPeriode.getBeregningsgrunnlagPrStatusOgAndelList().stream()
                     .filter(bpsa -> aktivitetstatus.equals(bpsa.getAktivitetStatus()))
                     .findFirst()
                     .orElseThrow(() -> new IllegalStateException("Mangler BeregningsgrunnlagPrStatusOgAndel + " + aktivitetstatus + " for kobling " + input.getKoblingReferanse().getKoblingId()));
@@ -35,7 +35,7 @@ public class VurderVarigEndretEllerNyoppstartetHåndterer {
             return grunnlagBuilder.build(BeregningsgrunnlagTilstand.FORESLÅTT_DEL_2_UT);
         } else {
             // Ingen endring
-            BeregningsgrunnlagGrunnlagDtoBuilder grunnlagBuilder = BeregningsgrunnlagGrunnlagDtoBuilder
+            var grunnlagBuilder = BeregningsgrunnlagGrunnlagDtoBuilder
                     .oppdatere(input.getBeregningsgrunnlagGrunnlag());
             return grunnlagBuilder.build(BeregningsgrunnlagTilstand.FORESLÅTT_DEL_2_UT);
         }

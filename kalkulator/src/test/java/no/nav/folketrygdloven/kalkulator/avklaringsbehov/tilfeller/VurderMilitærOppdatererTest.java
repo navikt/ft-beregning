@@ -42,20 +42,20 @@ class VurderMilitærOppdatererTest {
     @Test
     void skal_legge_til_militærandel_om_vurdert_til_true_og_andel_ikke_finnes() {
         // Arrange
-        BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlag(Collections.singletonList(AktivitetStatus.ARBEIDSTAKER));
-        VurderMilitærDto militærDto = new VurderMilitærDto(true);
-        FaktaBeregningLagreDto dto = new FaktaBeregningLagreDto(Collections.singletonList(FaktaOmBeregningTilfelle.VURDER_MILITÆR_SIVILTJENESTE));
+        var beregningsgrunnlag = lagBeregningsgrunnlag(Collections.singletonList(AktivitetStatus.ARBEIDSTAKER));
+        var militærDto = new VurderMilitærDto(true);
+        var dto = new FaktaBeregningLagreDto(Collections.singletonList(FaktaOmBeregningTilfelle.VURDER_MILITÆR_SIVILTJENESTE));
         dto.setVurderMilitaer(militærDto);
-        BeregningsgrunnlagInput input = BeregningsgrunnlagInputTestUtil.lagInputMedBeregningsgrunnlag(koblingReferanse, beregningsgrunnlag, BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER);
+        var input = BeregningsgrunnlagInputTestUtil.lagInputMedBeregningsgrunnlag(koblingReferanse, beregningsgrunnlag, BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER);
 
         // Act
-        BeregningsgrunnlagGrunnlagDtoBuilder oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
+        var oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
         VurderMilitærOppdaterer.oppdater(dto, oppdatere);
 
         // Assert
-        BeregningsgrunnlagDto nyttBg = oppdatere.getBeregningsgrunnlagBuilder().getBeregningsgrunnlag();
-        Optional<BeregningsgrunnlagAktivitetStatusDto> militærStatus = nyttBg.getAktivitetStatuser().stream().filter(a -> AktivitetStatus.MILITÆR_ELLER_SIVIL.equals(a.getAktivitetStatus())).findFirst();
-        Optional<BeregningsgrunnlagPrStatusOgAndelDto> militærAndel = nyttBg.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().stream()
+        var nyttBg = oppdatere.getBeregningsgrunnlagBuilder().getBeregningsgrunnlag();
+        var militærStatus = nyttBg.getAktivitetStatuser().stream().filter(a -> AktivitetStatus.MILITÆR_ELLER_SIVIL.equals(a.getAktivitetStatus())).findFirst();
+        var militærAndel = nyttBg.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().stream()
             .filter(a -> AktivitetStatus.MILITÆR_ELLER_SIVIL.equals(a.getAktivitetStatus())).findAny();
         Assertions.assertThat(militærAndel).isPresent();
         Assertions.assertThat(militærStatus).isPresent();
@@ -67,20 +67,20 @@ class VurderMilitærOppdatererTest {
     @Test
     void skal_ikke_legge_til_militærandel_om_vurdert_til_true_og_andel_finnes_fra_før() {
         // Arrange
-        BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlag(Arrays.asList(AktivitetStatus.ARBEIDSTAKER, AktivitetStatus.MILITÆR_ELLER_SIVIL));
-        VurderMilitærDto militærDto = new VurderMilitærDto(true);
-        FaktaBeregningLagreDto dto = new FaktaBeregningLagreDto(Collections.singletonList(FaktaOmBeregningTilfelle.VURDER_MILITÆR_SIVILTJENESTE));
+        var beregningsgrunnlag = lagBeregningsgrunnlag(Arrays.asList(AktivitetStatus.ARBEIDSTAKER, AktivitetStatus.MILITÆR_ELLER_SIVIL));
+        var militærDto = new VurderMilitærDto(true);
+        var dto = new FaktaBeregningLagreDto(Collections.singletonList(FaktaOmBeregningTilfelle.VURDER_MILITÆR_SIVILTJENESTE));
         dto.setVurderMilitaer(militærDto);
-        BeregningsgrunnlagInput input = BeregningsgrunnlagInputTestUtil.lagInputMedBeregningsgrunnlag(koblingReferanse, beregningsgrunnlag, BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER);
+        var input = BeregningsgrunnlagInputTestUtil.lagInputMedBeregningsgrunnlag(koblingReferanse, beregningsgrunnlag, BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER);
 
         // Act
-        BeregningsgrunnlagGrunnlagDtoBuilder oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
+        var oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
         VurderMilitærOppdaterer.oppdater(dto, oppdatere);
 
         // Assert
-        BeregningsgrunnlagDto nyttBg = oppdatere.getBeregningsgrunnlagBuilder().getBeregningsgrunnlag();
-        List<BeregningsgrunnlagAktivitetStatusDto> militærStatus = nyttBg.getAktivitetStatuser().stream().filter(a -> AktivitetStatus.MILITÆR_ELLER_SIVIL.equals(a.getAktivitetStatus())).collect(Collectors.toList());
-        List<BeregningsgrunnlagPrStatusOgAndelDto> militærAndeler = nyttBg.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().stream()
+        var nyttBg = oppdatere.getBeregningsgrunnlagBuilder().getBeregningsgrunnlag();
+        var militærStatus = nyttBg.getAktivitetStatuser().stream().filter(a -> AktivitetStatus.MILITÆR_ELLER_SIVIL.equals(a.getAktivitetStatus())).collect(Collectors.toList());
+        var militærAndeler = nyttBg.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().stream()
             .filter(a -> AktivitetStatus.MILITÆR_ELLER_SIVIL.equals(a.getAktivitetStatus())).collect(Collectors.toList());
         Assertions.assertThat(militærAndeler).hasSize(1);
         Assertions.assertThat(militærStatus).hasSize(1);
@@ -89,20 +89,20 @@ class VurderMilitærOppdatererTest {
     @Test
     void skal_ikke_gjøre_noe_dersom_militær_er_false_men_det_ikke_ligger_militær_på_grunnlaget() {
         // Arrange
-        BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlag(Collections.singletonList(AktivitetStatus.ARBEIDSTAKER));
-        VurderMilitærDto militærDto = new VurderMilitærDto(false);
-        FaktaBeregningLagreDto dto = new FaktaBeregningLagreDto(Collections.singletonList(FaktaOmBeregningTilfelle.VURDER_MILITÆR_SIVILTJENESTE));
+        var beregningsgrunnlag = lagBeregningsgrunnlag(Collections.singletonList(AktivitetStatus.ARBEIDSTAKER));
+        var militærDto = new VurderMilitærDto(false);
+        var dto = new FaktaBeregningLagreDto(Collections.singletonList(FaktaOmBeregningTilfelle.VURDER_MILITÆR_SIVILTJENESTE));
         dto.setVurderMilitaer(militærDto);
-        BeregningsgrunnlagInput input = BeregningsgrunnlagInputTestUtil.lagInputMedBeregningsgrunnlag(koblingReferanse, beregningsgrunnlag, BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER);
+        var input = BeregningsgrunnlagInputTestUtil.lagInputMedBeregningsgrunnlag(koblingReferanse, beregningsgrunnlag, BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER);
 
         // Act
-        BeregningsgrunnlagGrunnlagDtoBuilder oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
+        var oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
         VurderMilitærOppdaterer.oppdater(dto, oppdatere);
 
         // Assert
-        BeregningsgrunnlagDto nyttBg = oppdatere.getBeregningsgrunnlagBuilder().getBeregningsgrunnlag();
-        List<BeregningsgrunnlagAktivitetStatusDto> militærStatus = nyttBg.getAktivitetStatuser().stream().filter(a -> AktivitetStatus.MILITÆR_ELLER_SIVIL.equals(a.getAktivitetStatus())).collect(Collectors.toList());
-        List<BeregningsgrunnlagPrStatusOgAndelDto> militærAndeler = nyttBg.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().stream()
+        var nyttBg = oppdatere.getBeregningsgrunnlagBuilder().getBeregningsgrunnlag();
+        var militærStatus = nyttBg.getAktivitetStatuser().stream().filter(a -> AktivitetStatus.MILITÆR_ELLER_SIVIL.equals(a.getAktivitetStatus())).collect(Collectors.toList());
+        var militærAndeler = nyttBg.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().stream()
             .filter(a -> AktivitetStatus.MILITÆR_ELLER_SIVIL.equals(a.getAktivitetStatus())).collect(Collectors.toList());
         Assertions.assertThat(militærAndeler).hasSize(0);
         Assertions.assertThat(militærStatus).hasSize(0);
@@ -112,20 +112,20 @@ class VurderMilitærOppdatererTest {
     @Test
     void skal_fjerne_andel_dersom_militær_er_false_og_det_ligger_militær_på_grunnlaget() {
         // Arrange
-        BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlag(Arrays.asList(AktivitetStatus.ARBEIDSTAKER, AktivitetStatus.MILITÆR_ELLER_SIVIL));
-        VurderMilitærDto militærDto = new VurderMilitærDto(false);
-        FaktaBeregningLagreDto dto = new FaktaBeregningLagreDto(Collections.singletonList(FaktaOmBeregningTilfelle.VURDER_MILITÆR_SIVILTJENESTE));
+        var beregningsgrunnlag = lagBeregningsgrunnlag(Arrays.asList(AktivitetStatus.ARBEIDSTAKER, AktivitetStatus.MILITÆR_ELLER_SIVIL));
+        var militærDto = new VurderMilitærDto(false);
+        var dto = new FaktaBeregningLagreDto(Collections.singletonList(FaktaOmBeregningTilfelle.VURDER_MILITÆR_SIVILTJENESTE));
         dto.setVurderMilitaer(militærDto);
-        BeregningsgrunnlagInput input = BeregningsgrunnlagInputTestUtil.lagInputMedBeregningsgrunnlag(koblingReferanse, beregningsgrunnlag, BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER);
+        var input = BeregningsgrunnlagInputTestUtil.lagInputMedBeregningsgrunnlag(koblingReferanse, beregningsgrunnlag, BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER);
 
         // Act
-        BeregningsgrunnlagGrunnlagDtoBuilder oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
+        var oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
         VurderMilitærOppdaterer.oppdater(dto, oppdatere);
 
         // Assert
-        BeregningsgrunnlagDto nyttBg = oppdatere.getBeregningsgrunnlagBuilder().getBeregningsgrunnlag();
-        List<BeregningsgrunnlagAktivitetStatusDto> militærStatus = nyttBg.getAktivitetStatuser().stream().filter(a -> AktivitetStatus.MILITÆR_ELLER_SIVIL.equals(a.getAktivitetStatus())).collect(Collectors.toList());
-        List<BeregningsgrunnlagPrStatusOgAndelDto> militærAndeler = nyttBg.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().stream()
+        var nyttBg = oppdatere.getBeregningsgrunnlagBuilder().getBeregningsgrunnlag();
+        var militærStatus = nyttBg.getAktivitetStatuser().stream().filter(a -> AktivitetStatus.MILITÆR_ELLER_SIVIL.equals(a.getAktivitetStatus())).collect(Collectors.toList());
+        var militærAndeler = nyttBg.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().stream()
             .filter(a -> AktivitetStatus.MILITÆR_ELLER_SIVIL.equals(a.getAktivitetStatus())).collect(Collectors.toList());
         Assertions.assertThat(militærAndeler).hasSize(0);
         Assertions.assertThat(militærStatus).hasSize(0);
@@ -133,12 +133,12 @@ class VurderMilitærOppdatererTest {
     }
 
     private BeregningsgrunnlagDto lagBeregningsgrunnlag(List<AktivitetStatus> statuser) {
-        BeregningsgrunnlagDto bg = BeregningsgrunnlagDto.builder()
+        var bg = BeregningsgrunnlagDto.builder()
             .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT)
             .medGrunnbeløp(GRUNNBELØP)
             .build();
 
-        BeregningsgrunnlagPeriodeDto periode = buildBeregningsgrunnlagPeriode(bg,
+        var periode = buildBeregningsgrunnlagPeriode(bg,
             SKJÆRINGSTIDSPUNKT, null);
 
         statuser.forEach(status -> {
@@ -152,7 +152,7 @@ class VurderMilitærOppdatererTest {
     }
 
     private void buildBgPrStatusOgAndel(BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode, AktivitetStatus aktivitetStatus) {
-        BeregningsgrunnlagPrStatusOgAndelDto.Builder builder = BeregningsgrunnlagPrStatusOgAndelDto.ny()
+        var builder = BeregningsgrunnlagPrStatusOgAndelDto.ny()
             .medAktivitetStatus(aktivitetStatus)
             .medArbforholdType(OpptjeningAktivitetType.ARBEID);
         if (aktivitetStatus.erArbeidstaker()) {

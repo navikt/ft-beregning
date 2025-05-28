@@ -27,29 +27,29 @@ public class IdentifiserPeriodeÅrsakerGradering extends LeafSpecification<Perio
     @Override
     public Evaluation evaluate(PeriodiseringGraderingProsesstruktur prosseseringStruktur) {
         Map<String, Object> resultater = new HashMap<>();
-        IdentifisertePeriodeÅrsaker årsaker = identifiser(prosseseringStruktur.getInput(), resultater);
+        var årsaker = identifiser(prosseseringStruktur.getInput(), resultater);
         prosseseringStruktur.setIdentifisertePeriodeÅrsaker(årsaker);
-        SingleEvaluation resultat = ja();
+        var resultat = ja();
         resultat.setEvaluationProperties(resultater);
         return resultat;
     }
 
     static IdentifisertePeriodeÅrsaker identifiser(PeriodeModellGradering input, Map<String, Object> resultater) {
-        IdentifisertePeriodeÅrsaker map = new IdentifisertePeriodeÅrsaker();
+        var map = new IdentifisertePeriodeÅrsaker();
         leggTilPeriodesplitterForEksisterendePerioder(input, map);
         resultater.put("eksisterendePerioder", map.getPeriodeMap());
 
         // Gradering FP
         input.getAndelGraderinger().forEach(andelGradering -> {
             resultater.put("graderingForAktivitetstatus", andelGradering.getAktivitetStatus());
-            Set<PeriodeSplittData> graderingPerioder = IdentifiserPerioderForGradering.identifiser(input, andelGradering);
+            var graderingPerioder = IdentifiserPerioderForGradering.identifiser(input, andelGradering);
             graderingPerioder.forEach(map::leggTilPeriodeÅrsak);
             resultater.put("graderingPerioder", graderingPerioder);
         });
 
         // må alltid ha en første periode, også når ingen gradering/refusjon/naturalytelse fra start
         if (!map.getPeriodeMap().containsKey(input.getSkjæringstidspunkt())) {
-            PeriodeSplittData førstePeriode = PeriodeSplittData.builder()
+            var førstePeriode = PeriodeSplittData.builder()
                 .medFom(input.getSkjæringstidspunkt())
                 .medPeriodeÅrsak(PeriodeÅrsak.UDEFINERT)
                 .build();
@@ -62,7 +62,7 @@ public class IdentifiserPeriodeÅrsakerGradering extends LeafSpecification<Perio
         input.getEksisterendePerioder().forEach(eksisterendePeriode -> {
             if (!eksisterendePeriode.getPeriodeÅrsaker().isEmpty()) {
                 eksisterendePeriode.getPeriodeÅrsaker().forEach(periodeÅrsak -> {
-                    PeriodeSplittData periodeSplittData = PeriodeSplittData.builder()
+                    var periodeSplittData = PeriodeSplittData.builder()
                         .medFom(eksisterendePeriode.getPeriode().getFom())
                         .medPeriodeÅrsak(periodeÅrsak).build();
                     map.leggTilPeriodeÅrsak(periodeSplittData);

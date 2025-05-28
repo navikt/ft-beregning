@@ -24,8 +24,8 @@ public class VurderMilitærOppdaterer {
     }
 
     public static void oppdater(FaktaBeregningLagreDto dto, BeregningsgrunnlagGrunnlagDtoBuilder grunnlagBuilder) {
-        VurderMilitærDto militærDto = dto.getVurderMilitaer();
-        BeregningsgrunnlagDto beregningsgrunnlag = grunnlagBuilder.getBeregningsgrunnlagBuilder().getBeregningsgrunnlag();
+        var militærDto = dto.getVurderMilitaer();
+        var beregningsgrunnlag = grunnlagBuilder.getBeregningsgrunnlagBuilder().getBeregningsgrunnlag();
         if (militærDto.getHarMilitaer()) {
             leggTilMilitærstatusOgAndelHvisIkkeFinnes(beregningsgrunnlag);
         } else {
@@ -33,19 +33,19 @@ public class VurderMilitærOppdaterer {
         }
 
         // Setter fakta aggregat
-        FaktaAggregatDto.Builder faktaAggregatBuilder = grunnlagBuilder.getFaktaAggregatBuilder();
-        FaktaAktørDto.Builder faktaAktørBuilder = faktaAggregatBuilder.getFaktaAktørBuilder();
+        var faktaAggregatBuilder = grunnlagBuilder.getFaktaAggregatBuilder();
+        var faktaAktørBuilder = faktaAggregatBuilder.getFaktaAktørBuilder();
         faktaAktørBuilder.medErMilitærSiviltjenesteFastsattAvSaksbehandler(militærDto.getHarMilitaer());
         faktaAggregatBuilder.medFaktaAktør(faktaAktørBuilder.build());
         grunnlagBuilder.medFaktaAggregat(faktaAggregatBuilder.build());
     }
 
     private static void slettMilitærStatusOgAndelHvisFinnes(BeregningsgrunnlagDto nyttBeregningsgrunnlag) {
-        BeregningsgrunnlagDto.Builder grunnlagUtenMilitærBuilder = BeregningsgrunnlagDto.Builder.oppdater(Optional.of(nyttBeregningsgrunnlag));
+        var grunnlagUtenMilitærBuilder = BeregningsgrunnlagDto.Builder.oppdater(Optional.of(nyttBeregningsgrunnlag));
         if (harMilitærstatus(nyttBeregningsgrunnlag)) {
             grunnlagUtenMilitærBuilder.fjernAktivitetstatus(AktivitetStatus.MILITÆR_ELLER_SIVIL);
         }
-        BeregningsgrunnlagDto grunnlagUtenMilitær = grunnlagUtenMilitærBuilder.build();
+        var grunnlagUtenMilitær = grunnlagUtenMilitærBuilder.build();
         grunnlagUtenMilitær.getBeregningsgrunnlagPerioder().forEach(periode -> {
             if (harMilitærandel(periode)) {
                 fjernMilitærFraPeriode(grunnlagUtenMilitær, periode);
@@ -54,10 +54,10 @@ public class VurderMilitærOppdaterer {
     }
 
     private static void fjernMilitærFraPeriode(BeregningsgrunnlagDto grunnlagUtenMilitær, BeregningsgrunnlagPeriodeDto periode) {
-        List<BeregningsgrunnlagPrStatusOgAndelDto> alleMilitærandeler = periode.getBeregningsgrunnlagPrStatusOgAndelList().stream()
+        var alleMilitærandeler = periode.getBeregningsgrunnlagPrStatusOgAndelList().stream()
             .filter(andel -> andel.getAktivitetStatus().equals(AktivitetStatus.MILITÆR_ELLER_SIVIL))
             .collect(Collectors.toList());
-        BeregningsgrunnlagPeriodeDto.Builder periodeBuilder = BeregningsgrunnlagPeriodeDto.oppdater(periode);
+        var periodeBuilder = BeregningsgrunnlagPeriodeDto.oppdater(periode);
         alleMilitærandeler.forEach(periodeBuilder::fjernBeregningsgrunnlagPrStatusOgAndel);
         periodeBuilder.build(grunnlagUtenMilitær);
     }
@@ -65,7 +65,7 @@ public class VurderMilitærOppdaterer {
     private static void leggTilMilitærstatusOgAndelHvisIkkeFinnes(BeregningsgrunnlagDto nyttBeregningsgrunnlag) {
         nyttBeregningsgrunnlag.getBeregningsgrunnlagPerioder().forEach(VurderMilitærOppdaterer::leggTilMilitærAndelOmDenIkkeFinnes);
         if (!harMilitærstatus(nyttBeregningsgrunnlag)) {
-            BeregningsgrunnlagAktivitetStatusDto.Builder aktivitetBuilder = BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.MILITÆR_ELLER_SIVIL).medHjemmel(Hjemmel.F_14_7);
+            var aktivitetBuilder = BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.MILITÆR_ELLER_SIVIL).medHjemmel(Hjemmel.F_14_7);
             BeregningsgrunnlagDto.Builder.oppdater(Optional.of(nyttBeregningsgrunnlag)).leggTilAktivitetStatus(aktivitetBuilder);
         }
     }

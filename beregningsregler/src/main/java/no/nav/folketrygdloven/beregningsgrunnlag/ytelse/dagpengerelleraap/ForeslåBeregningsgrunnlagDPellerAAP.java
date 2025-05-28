@@ -28,13 +28,13 @@ class ForeslåBeregningsgrunnlagDPellerAAP extends LeafSpecification<Beregningsg
 
 	@Override
 	public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-		BeregningsgrunnlagPrStatus bgPerStatus = grunnlag.getBeregningsgrunnlagPrStatus().stream()
+        var bgPerStatus = grunnlag.getBeregningsgrunnlagPrStatus().stream()
 				.filter(bgps -> bgps.getAktivitetStatus().erAAPellerDP())
 				.findFirst()
 				.orElseThrow(() -> new IllegalStateException("Ingen aktivitetstatus av type DP eller AAP funnet."));
-		Periodeinntekt inntekt = finnPeriodeInntektForDPEllerAAP(grunnlag, bgPerStatus.getAktivitetStatus());
-		BigDecimal antallPerioderPrÅr = inntekt.getInntektPeriodeType().getAntallPrÅr();
-		BigDecimal beregnetPrÅr = inntekt.getInntekt().multiply(antallPerioderPrÅr);
+        var inntekt = finnPeriodeInntektForDPEllerAAP(grunnlag, bgPerStatus.getAktivitetStatus());
+        var antallPerioderPrÅr = inntekt.getInntektPeriodeType().getAntallPrÅr();
+        var beregnetPrÅr = inntekt.getInntekt().multiply(antallPerioderPrÅr);
 		Long originalDagsats = inntekt.getInntekt().longValue();
 		BeregningsgrunnlagPrStatus.builder(bgPerStatus)
 				.medBeregnetPrÅr(beregnetPrÅr)
@@ -42,7 +42,7 @@ class ForeslåBeregningsgrunnlagDPellerAAP extends LeafSpecification<Beregningsg
 				.medOrginalDagsatsFraTilstøtendeYtelse(originalDagsats)
 				.build();
 
-		BeregningsgrunnlagHjemmel hjemmel = AktivitetStatus.AAP.equals(bgPerStatus.getAktivitetStatus()) ? BeregningsgrunnlagHjemmel.F_14_7
+        var hjemmel = AktivitetStatus.AAP.equals(bgPerStatus.getAktivitetStatus()) ? BeregningsgrunnlagHjemmel.F_14_7
 				: BeregningsgrunnlagHjemmel.F_14_7_8_49;
 		grunnlag.getBeregningsgrunnlag().getAktivitetStatus(bgPerStatus.getAktivitetStatus()).setHjemmel(hjemmel);
 

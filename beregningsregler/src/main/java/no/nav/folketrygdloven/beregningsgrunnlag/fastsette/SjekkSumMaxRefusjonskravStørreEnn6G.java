@@ -23,17 +23,17 @@ class SjekkSumMaxRefusjonskravStørreEnn6G extends LeafSpecification<Beregningsg
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        BeregningsgrunnlagPrStatus atfl = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+        var atfl = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
         if (atfl == null) {
             return nei();
         }
-        BigDecimal grenseverdi = grunnlag.getGrenseverdi();
-        BigDecimal sum = atfl.getArbeidsforhold().stream()
+        var grenseverdi = grunnlag.getGrenseverdi();
+        var sum = atfl.getArbeidsforhold().stream()
             .filter(bpaf -> bpaf.getMaksimalRefusjonPrÅr() != null)
             .map(BeregningsgrunnlagPrArbeidsforhold::getMaksimalRefusjonPrÅr)
             .reduce(BigDecimal::add)
             .orElse(BigDecimal.ZERO);
-        SingleEvaluation resultat = sum.compareTo(grenseverdi) > 0 ? ja() : nei();
+        var resultat = sum.compareTo(grenseverdi) > 0 ? ja() : nei();
         resultat.setEvaluationProperty("totaltRefusjonskravPrÅr", sum);
         resultat.setEvaluationProperty("grunnbeløp", grunnlag.getGrunnbeløp());
         resultat.setEvaluationProperty("grenseverdi", grenseverdi);

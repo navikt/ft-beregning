@@ -70,7 +70,7 @@ public class RefusjonPeriodeEndring {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RefusjonPeriodeEndring that = (RefusjonPeriodeEndring) o;
+        var that = (RefusjonPeriodeEndring) o;
         return Objects.equals(originaleAndeler, that.originaleAndeler) && Objects.equals(revurderingAndeler, that.revurderingAndeler);
     }
 

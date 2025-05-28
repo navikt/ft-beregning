@@ -45,12 +45,12 @@ public class RegelFordelBeregningsgrunnlag implements EksportRegel<FordelPeriode
 	}
 
 	private void validerAtBruttoErUendret(FordelModell modell) {
-		BigDecimal bruttoInn = modell.getInput().getAndeler().stream()
+        var bruttoInn = modell.getInput().getAndeler().stream()
 				.filter(a -> a.getUtbetalingsgrad().compareTo(BigDecimal.ZERO) > 0)
 				.map(a -> a.getForeslåttPrÅr().orElse(BigDecimal.ZERO))
 				.reduce(BigDecimal::add)
 				.orElse(BigDecimal.ZERO);
-		BigDecimal bruttoUt = modell.getMellomregninger().stream()
+        var bruttoUt = modell.getMellomregninger().stream()
 				.map(FordelteAndelerModell::getFordelteAndeler)
 				.flatMap(Collection::stream)
 				.map(a -> a.getFordeltPrÅr().orElseThrow())
@@ -65,18 +65,18 @@ public class RegelFordelBeregningsgrunnlag implements EksportRegel<FordelPeriode
 	@SuppressWarnings("unchecked")
 	@Override
 	public Specification<FordelModell> getSpecification() {
-		Ruleset<FordelModell> rs = new Ruleset<>();
+        var rs = new Ruleset<FordelModell>();
 
-		Specification<FordelModell> fastsettFordelingAvBeregningsgrunnlag = new FastsettNyFordeling(modell).getSpecification();
+        var fastsettFordelingAvBeregningsgrunnlag = new FastsettNyFordeling(modell).getSpecification();
 
-		Specification<FordelModell> sjekkRefusjonMotBeregningsgrunnlag = rs.beregningHvisRegel(new SjekkHarRefusjonSomOverstigerBeregningsgrunnlag(),
+        var sjekkRefusjonMotBeregningsgrunnlag = rs.beregningHvisRegel(new SjekkHarRefusjonSomOverstigerBeregningsgrunnlag(),
 				fastsettFordelingAvBeregningsgrunnlag, new SettAndelerUtenSøktYtelseTilNull());
 
-		Specification<FordelModell> fordelBruttoAndelsmessig = rs.beregningsRegel(RegelFordelBeregningsgrunnlagAndelsmessig.ID, RegelFordelBeregningsgrunnlagAndelsmessig.BESKRIVELSE, new RegelFordelBeregningsgrunnlagAndelsmessig().getSpecification(), new Fordelt());
+        var fordelBruttoAndelsmessig = rs.beregningsRegel(RegelFordelBeregningsgrunnlagAndelsmessig.ID, RegelFordelBeregningsgrunnlagAndelsmessig.BESKRIVELSE, new RegelFordelBeregningsgrunnlagAndelsmessig().getSpecification(), new Fordelt());
 
-		Specification<FordelModell> sjekkOmBruttoKanDekkeAllRefusjon = rs.beregningHvisRegel(new FinnesMerRefusjonEnnBruttoTilgjengeligOgFlereAndelerKreverRefusjon(), fordelBruttoAndelsmessig, sjekkRefusjonMotBeregningsgrunnlag);
+        var sjekkOmBruttoKanDekkeAllRefusjon = rs.beregningHvisRegel(new FinnesMerRefusjonEnnBruttoTilgjengeligOgFlereAndelerKreverRefusjon(), fordelBruttoAndelsmessig, sjekkRefusjonMotBeregningsgrunnlag);
 
-		Specification<FordelModell> sjekkOmDetFinnesTilkommetRefkrav = rs.beregningHvisRegel(new FinnesTilkommetArbeidsandelMedRefusjonskrav(), sjekkOmBruttoKanDekkeAllRefusjon, sjekkRefusjonMotBeregningsgrunnlag);
+        var sjekkOmDetFinnesTilkommetRefkrav = rs.beregningHvisRegel(new FinnesTilkommetArbeidsandelMedRefusjonskrav(), sjekkOmBruttoKanDekkeAllRefusjon, sjekkRefusjonMotBeregningsgrunnlag);
 
 		return sjekkOmDetFinnesTilkommetRefkrav;
 	}

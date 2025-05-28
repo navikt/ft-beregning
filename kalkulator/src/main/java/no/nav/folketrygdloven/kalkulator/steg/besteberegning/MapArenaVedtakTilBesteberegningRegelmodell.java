@@ -25,7 +25,7 @@ public class MapArenaVedtakTilBesteberegningRegelmodell {
     }
 
     public static List<Periodeinntekt> lagInntektFraArenaYtelser(YtelseFilterDto ytelseFilter) {
-        Collection<YtelseDto> arenaytelser = ytelseFilter.filter(ytelse -> ytelse.getYtelseType().erArenaytelse())
+        var arenaytelser = ytelseFilter.filter(ytelse -> ytelse.getYtelseType().erArenaytelse())
                 .getFiltrertYtelser();
         List<Periodeinntekt> inntekter = new ArrayList<>();
         arenaytelser.forEach(vedtak -> inntekter.addAll(vedtak.getYtelseAnvist().stream()

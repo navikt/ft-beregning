@@ -42,11 +42,11 @@ public class KortvarigArbeidsforholdTjeneste {
     public static Map<BeregningsgrunnlagPrStatusOgAndelDto, YrkesaktivitetDto> hentAndelerForKortvarigeArbeidsforhold(BeregningsgrunnlagDto beregningsgrunnlag,
                                                                                                                       InntektArbeidYtelseGrunnlagDto iayGrunnlag) {
 
-        List<BeregningsgrunnlagPeriodeDto> beregningsgrunnlagPerioder = beregningsgrunnlag.getBeregningsgrunnlagPerioder();
+        var beregningsgrunnlagPerioder = beregningsgrunnlag.getBeregningsgrunnlagPerioder();
         if (!beregningsgrunnlagPerioder.isEmpty()) {
             // beregningsgrunnlagPerioder er sortert, tar utgangspunkt i første
-            BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode = beregningsgrunnlagPerioder.get(0);
-            Collection<YrkesaktivitetDto> kortvarigeArbeidsforhold = hentKortvarigeYrkesaktiviteter(beregningsgrunnlag, iayGrunnlag);
+            var beregningsgrunnlagPeriode = beregningsgrunnlagPerioder.get(0);
+            var kortvarigeArbeidsforhold = hentKortvarigeYrkesaktiviteter(beregningsgrunnlag, iayGrunnlag);
 
             return beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndelList().stream()
                     .filter(prStatus -> prStatus.getAktivitetStatus().equals(AktivitetStatus.ARBEIDSTAKER))
@@ -66,14 +66,14 @@ public class KortvarigArbeidsforholdTjeneste {
 
     public static boolean erKortvarigYrkesaktivitetSomAvsluttesEtterSkjæringstidspunkt(YrkesaktivitetFilterDto filter, BeregningsgrunnlagDto beregningsgrunnlag,
                                                                                        YrkesaktivitetDto yrkesaktivitet) {
-        List<AktivitetsAvtaleDto> ansettelsesPerioder = filter.getAnsettelsesPerioder(yrkesaktivitet);
-        List<LocalDateSegment<Boolean>> periodeSegmenter = ansettelsesPerioder
+        var ansettelsesPerioder = filter.getAnsettelsesPerioder(yrkesaktivitet);
+        var periodeSegmenter = ansettelsesPerioder
             .stream()
             .map(AktivitetsAvtaleDto::getPeriode)
             .map(a -> new LocalDateSegment<>(a.getFomDato(), a.getTomDato(), true))
             .collect(Collectors.toList());
 
-        LocalDateTimeline<Boolean> ansettelsesTidslinje = new LocalDateTimeline<>(periodeSegmenter, håndterOverlapp()).compress();
+        var ansettelsesTidslinje = new LocalDateTimeline<>(periodeSegmenter, håndterOverlapp()).compress();
 
         return ansettelsesTidslinje.getLocalDateIntervals()
             .stream()
@@ -125,7 +125,7 @@ public class KortvarigArbeidsforholdTjeneste {
     }
 
     private static boolean isDurationLessThan6Months(LocalDateInterval aa) {
-        Period duration = aa.getFomDato().until(aa.getTomDato().plusDays(1));
+        var duration = aa.getFomDato().until(aa.getTomDato().plusDays(1));
         return duration.getYears() < 1 && duration.getMonths() < 6;
     }
 }

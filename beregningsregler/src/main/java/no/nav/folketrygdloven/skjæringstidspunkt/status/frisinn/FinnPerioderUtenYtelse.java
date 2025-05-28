@@ -22,12 +22,12 @@ public class FinnPerioderUtenYtelse {
     }
 
     public static List<Periode> finnPerioder(Inntektsgrunnlag inntektsgrunnlag, LocalDate skjæringstidspunktForOpptjening) {
-        List<YtelsePeriode> ytelseperioder = finnPerioderMedYtelseFørDato(inntektsgrunnlag, skjæringstidspunktForOpptjening);
+        var ytelseperioder = finnPerioderMedYtelseFørDato(inntektsgrunnlag, skjæringstidspunktForOpptjening);
         return finnPerioderUtenYtelse(skjæringstidspunktForOpptjening, ytelseperioder);
     }
 
     public static List<Periode> finnPerioder(Inntektsgrunnlag inntektsgrunnlag, LocalDate skjæringstidspunktForOpptjening, Map<String, Object> resultater) {
-        List<YtelsePeriode> ytelseperioder = finnPerioderMedYtelseFørDato(inntektsgrunnlag, skjæringstidspunktForOpptjening);
+        var ytelseperioder = finnPerioderMedYtelseFørDato(inntektsgrunnlag, skjæringstidspunktForOpptjening);
         ytelseperioder.forEach(p -> resultater.put("Periode: " + p.periode().getFom() + " - " + p.periode().getTom(), "Ytelseperiode"));
         return finnPerioderUtenYtelse(skjæringstidspunktForOpptjening, ytelseperioder);
     }
@@ -40,18 +40,18 @@ public class FinnPerioderUtenYtelse {
             return beregningsperioder;
         }
 
-        List<Periode> beregningsperioder = finnPerioderUtenYtelseFra36MndFørStp(skjæringstidspunktForOpptjening, ytelseperioder);
+        var beregningsperioder = finnPerioderUtenYtelseFra36MndFørStp(skjæringstidspunktForOpptjening, ytelseperioder);
         verifiserPerioder(beregningsperioder);
         if (harKunInntektFra2017OgDPEllerAAPPåStp(skjæringstidspunktForOpptjening, ytelseperioder, beregningsperioder)) {
             return Collections.emptyList();
         }
-        List<Periode> perioderEtter12MndFørStp = finnPerioderUtenYtelse12MndFørStp(skjæringstidspunktForOpptjening, beregningsperioder);
+        var perioderEtter12MndFørStp = finnPerioderUtenYtelse12MndFørStp(skjæringstidspunktForOpptjening, beregningsperioder);
         return finnMinst6MndUtenYtelse(beregningsperioder, perioderEtter12MndFørStp);
     }
 
     private static boolean harKunInntektFra2017OgDPEllerAAPPåStp(LocalDate skjæringstidspunktForOpptjening, List<YtelsePeriode> ytelseperioder, List<Periode> beregningsperioder) {
-        boolean harKunInntektFra2017 = beregningsperioder.stream().allMatch(p -> p.overlapper(ÅRET_2017));
-        boolean harAAPEllerDPVedSTPOpptjening = ytelseperioder.stream()
+        var harKunInntektFra2017 = beregningsperioder.stream().allMatch(p -> p.overlapper(ÅRET_2017));
+        var harAAPEllerDPVedSTPOpptjening = ytelseperioder.stream()
             .filter(p -> p.periode().overlapper(Periode.of(skjæringstidspunktForOpptjening.minusMonths(1), skjæringstidspunktForOpptjening.minusDays(1))))
             .anyMatch(p -> p.inntektskilde().equals(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP));
         return harKunInntektFra2017 && harAAPEllerDPVedSTPOpptjening;
@@ -66,7 +66,7 @@ public class FinnPerioderUtenYtelse {
     }
 
     private static List<Periode> finn6MndUtenYtelse36MndFørStp(List<Periode> beregningsperioder) {
-        List<Periode> perioderSortertOmvendtKronologisk = beregningsperioder.stream()
+        var perioderSortertOmvendtKronologisk = beregningsperioder.stream()
             .sorted(Comparator.comparing(Periode::getFom).reversed())
             .toList();
         if (perioderSortertOmvendtKronologisk.size() <= 6) {
@@ -85,10 +85,10 @@ public class FinnPerioderUtenYtelse {
     private static List<Periode> finnPerioderUtenYtelseFra36MndFørStp(LocalDate skjæringstidspunktForBeregning, List<YtelsePeriode> ytelseperioder) {
         List<Periode> beregningsperioder = new ArrayList<>();
         // Må starte på måneden før opplysningsperioden startet for 3 år siden
-        LocalDate gjeldendeTom = skjæringstidspunktForBeregning.minusMonths(37);
-        int i = 0;
+        var gjeldendeTom = skjæringstidspunktForBeregning.minusMonths(37);
+        var i = 0;
         while (gjeldendeTom.isBefore(skjæringstidspunktForBeregning)) {
-            Periode periode = ytelseperioder.get(i).periode();
+            var periode = ytelseperioder.get(i).periode();
             if (erMinstEnMånedMellom(gjeldendeTom, periode.getFom())) {
                 leggTilMånederMellom(beregningsperioder, gjeldendeTom, periode.getFom());
             }
@@ -115,9 +115,9 @@ public class FinnPerioderUtenYtelse {
     }
 
     private static void leggTilMånederMellom(List<Periode> beregningsperioder, LocalDate førsteDato, LocalDate sisteDato) {
-        long månederMellom = finnHeleMånederMellom(førsteDato, sisteDato);
+        var månederMellom = finnHeleMånederMellom(førsteDato, sisteDato);
         for (long k = 1; k <= månederMellom; k++) {
-            LocalDate måned = førsteDato.plusMonths(k);
+            var måned = førsteDato.plusMonths(k);
             beregningsperioder.add(Periode.of(måned.withDayOfMonth(1), måned.withDayOfMonth(måned.lengthOfMonth())));
         }
     }
@@ -127,8 +127,8 @@ public class FinnPerioderUtenYtelse {
     }
 
     private static long finnHeleMånederMellom(LocalDate dato1, LocalDate dato2) {
-        int årMellom = dato2.getYear() - dato1.getYear();
-        int månederMellom = dato2.getMonthValue() - dato1.getMonthValue();
+        var årMellom = dato2.getYear() - dato1.getYear();
+        var månederMellom = dato2.getMonthValue() - dato1.getMonthValue();
 
         // Hvis start og slutt er i samme måned
         if (månederMellom == 0 && årMellom == 0) {
@@ -142,8 +142,8 @@ public class FinnPerioderUtenYtelse {
     private static void verifiserPerioder(List<Periode> perioder) {
         // Alle perioder skal vare nøyaktig en hel måned, fra første dag i måneden til siste dag i måneden.
         perioder.forEach(periode -> {
-            YearMonth fomÅrMåned = YearMonth.of(periode.getFom().getYear(), periode.getFom().getMonth());
-            YearMonth tomÅrMåned = YearMonth.of(periode.getTom().getYear(), periode.getTom().getMonth());
+            var fomÅrMåned = YearMonth.of(periode.getFom().getYear(), periode.getFom().getMonth());
+            var tomÅrMåned = YearMonth.of(periode.getTom().getYear(), periode.getTom().getMonth());
             if (!fomÅrMåned.equals(tomÅrMåned)) {
                 throw new IllegalStateException("Periode har ikke start og slutt i samme måned / år. Periode var: " + periode.toString());
             }

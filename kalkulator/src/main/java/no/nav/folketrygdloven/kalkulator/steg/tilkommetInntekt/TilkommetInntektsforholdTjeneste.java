@@ -97,7 +97,7 @@ public class TilkommetInntektsforholdTjeneste {
 
 	private static <T> LocalDateTimeline<T> slåSammenOverHelgDersomLike(LocalDateTimeline<T> tidslinje) {
 		var factory = new TimelineWeekendCompressor.CompressorFactory<T>(Objects::equals, (i, lhs, rhs) -> new LocalDateSegment<>(i, lhs.getValue()));
-		TimelineWeekendCompressor<T> compressor = tidslinje.toSegments().stream()
+        var compressor = tidslinje.toSegments().stream()
 				.collect(factory::get, TimelineWeekendCompressor::accept, TimelineWeekendCompressor::combine);
 		return new LocalDateTimeline<>(compressor.getSegmenter());
 	}
@@ -294,7 +294,7 @@ public class TilkommetInntektsforholdTjeneste {
 		public boolean equals(Object o) {
 			if (this == o) return true;
 			if (o == null || getClass() != o.getClass()) return false;
-			Inntektsforhold that = (Inntektsforhold) o;
+            var that = (Inntektsforhold) o;
 			return aktivitetStatus == that.aktivitetStatus && Objects.equals(arbeidsgiver, that.arbeidsgiver) && Objects.equals(arbeidsforholdRef, that.arbeidsforholdRef);
 		}
 

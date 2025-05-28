@@ -79,7 +79,7 @@ public class TraverseGraphConfig {
     }
 
     protected boolean isExpectedField(Field fld) {
-        int mods = fld.getModifiers();
+        var mods = fld.getModifiers();
         // her kan final felter skippes, da disse må være i løvnøder
         return !Modifier.isFinal(mods) && !Modifier.isStatic(mods) && !Modifier.isTransient(mods) && !Modifier.isVolatile(mods);
     }
@@ -109,11 +109,11 @@ public class TraverseGraphConfig {
     }
 
     public boolean isLeaf(Object obj) {
-        Class<?> targetClass = obj.getClass();
+        var targetClass = obj.getClass();
         if (leafFinalClasses.contains(targetClass)) {
             return true;
         } else {
-            for (Class<?> leaf : leafExtendableClasses) {
+            for (var leaf : leafExtendableClasses) {
                 if (leaf.isAssignableFrom(targetClass)) {
                     return true;
                 }
@@ -132,7 +132,7 @@ public class TraverseGraphConfig {
 
     @SafeVarargs
     public final void addLeafClasses(Class<?>... leafClasses) {
-        List<Class<?>> newLeafClasses = asList(leafClasses);
+        var newLeafClasses = asList(leafClasses);
 
         this.leafExtendableClasses = new HashSet<>(this.leafExtendableClasses);
         this.leafExtendableClasses.addAll(newLeafClasses);

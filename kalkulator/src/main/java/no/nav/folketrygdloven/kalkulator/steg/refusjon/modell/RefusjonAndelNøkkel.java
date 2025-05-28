@@ -27,7 +27,7 @@ public class RefusjonAndelNøkkel {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RefusjonAndelNøkkel that = (RefusjonAndelNøkkel) o;
+        var that = (RefusjonAndelNøkkel) o;
         return aktivitetStatus == that.aktivitetStatus &&
                 Objects.equals(arbeidsgiver, that.arbeidsgiver);
     }

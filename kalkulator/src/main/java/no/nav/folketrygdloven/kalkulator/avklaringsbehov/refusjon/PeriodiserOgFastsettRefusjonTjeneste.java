@@ -43,7 +43,7 @@ public final class PeriodiserOgFastsettRefusjonTjeneste {
     public static BeregningsgrunnlagDto periodiserOgFastsett(BeregningsgrunnlagDto beregningsgrunnlagDto,
                                                              List<VurderRefusjonAndelBeregningsgrunnlagDto> andeler) {
         // Lag refusjonsplittandeler som holder på data relatert til fastsetting av refusjon
-        List<RefusjonSplittAndel> splittAndeler = lagSplittAndeler(andeler).stream()
+        var splittAndeler = lagSplittAndeler(andeler).stream()
                 .sorted(Comparator.comparing(RefusjonSplittAndel::getStartdatoRefusjon))
                 .collect(Collectors.toList());
 
@@ -52,10 +52,10 @@ public final class PeriodiserOgFastsettRefusjonTjeneste {
         }
 
         // Splitt beregningsgrunnlaget basert på refusjonsplittandeler
-        BeregningsgrunnlagDto periodisertBeregningsgrunnlag = periodiserBeregningsgrunnlag(beregningsgrunnlagDto, splittAndeler);
+        var periodisertBeregningsgrunnlag = periodiserBeregningsgrunnlag(beregningsgrunnlagDto, splittAndeler);
 
         // Fjern refusjon for gitt arbeidsforhold i perioder før fastsatt dato
-        BeregningsgrunnlagDto periodisertBeregningsgrunnlagMedFastsattRefusjon = oppdaterRefusjonIRelevantePerioder(periodisertBeregningsgrunnlag, splittAndeler);
+        var periodisertBeregningsgrunnlagMedFastsattRefusjon = oppdaterRefusjonIRelevantePerioder(periodisertBeregningsgrunnlag, splittAndeler);
 
         // Valider resultatet
         validerGrunnlag(beregningsgrunnlagDto, periodisertBeregningsgrunnlagMedFastsattRefusjon, andeler);
@@ -64,21 +64,21 @@ public final class PeriodiserOgFastsettRefusjonTjeneste {
     }
 
     private static BeregningsgrunnlagDto oppdaterRefusjonIRelevantePerioder(BeregningsgrunnlagDto periodisertBeregningsgrunnlag, List<RefusjonSplittAndel> splittAndeler) {
-        BeregningsgrunnlagDto nyttGrunnlag = BeregningsgrunnlagDto.builder(periodisertBeregningsgrunnlag).build();
+        var nyttGrunnlag = BeregningsgrunnlagDto.builder(periodisertBeregningsgrunnlag).build();
         nyttGrunnlag.getBeregningsgrunnlagPerioder()
                 .forEach(eksisterendePeriode -> eksisterendePeriode.getBeregningsgrunnlagPrStatusOgAndelList()
                         .stream()
                         .filter(PeriodiserOgFastsettRefusjonTjeneste::harInnvilgetRefusjonEllerSattRefusjonFraSaksbehandler)
                         .forEach(eksisterendeAndel -> {
-                            Optional<RefusjonSplittAndel> matchetSplittAndel = finnFastsattAndelForBGAndel(eksisterendeAndel, splittAndeler);
+                            var matchetSplittAndel = finnFastsattAndelForBGAndel(eksisterendeAndel, splittAndeler);
                             // Hvis saksbehandlet andel er tom er ikke andelens refusjon vurdert og den skal ha refusjon fra start
                             if (matchetSplittAndel.isPresent() && refusjonSkalEndres(eksisterendePeriode, matchetSplittAndel.get().getStartdatoRefusjon())) {
-                                BGAndelArbeidsforholdDto.Builder bgAndelArbforBuilder = BGAndelArbeidsforholdDto.Builder.oppdater(eksisterendeAndel.getBgAndelArbeidsforhold());
+                                var bgAndelArbforBuilder = BGAndelArbeidsforholdDto.Builder.oppdater(eksisterendeAndel.getBgAndelArbeidsforhold());
                                 bgAndelArbforBuilder.medSaksbehandletRefusjonPrÅr(matchetSplittAndel.get().getDelvisRefusjonBeløpPrÅr());
                             } else if (matchetSplittAndel.isPresent()) {
 								// Dersom refusjonen ikkje skal settes manuelt må vi sørge for at det ikkje ligger verdi i saksbehandletRefusjonPrÅr
 	                            // Dette kan skje ved kopiering/spoling av grunnlag til steg-ut grunnlaget i kopieringslogikken som kjører før lagring i kalkulus
-	                            BGAndelArbeidsforholdDto.Builder bgAndelArbforBuilder = BGAndelArbeidsforholdDto.Builder.oppdater(eksisterendeAndel.getBgAndelArbeidsforhold());
+                                var bgAndelArbforBuilder = BGAndelArbeidsforholdDto.Builder.oppdater(eksisterendeAndel.getBgAndelArbeidsforhold());
 	                            bgAndelArbforBuilder.medSaksbehandletRefusjonPrÅr(null);
                             }
                         }));
@@ -101,26 +101,26 @@ public final class PeriodiserOgFastsettRefusjonTjeneste {
     }
 
     private static BeregningsgrunnlagDto periodiserBeregningsgrunnlag(BeregningsgrunnlagDto eksisterendeGrunnlag, List<RefusjonSplittAndel> splittAndeler) {
-        List<BeregningsgrunnlagPeriodeDto> eksisterendePerioder = eksisterendeGrunnlag.getBeregningsgrunnlagPerioder();
-        LocalDate stp = eksisterendeGrunnlag.getSkjæringstidspunkt();
-        List<LocalDate> refusjonstartDatoer = splittAndeler.stream().map(RefusjonSplittAndel::getStartdatoRefusjon).collect(Collectors.toList());
-        List<LocalDate> eksisterendeStartdatoer = eksisterendePerioder.stream().map(BeregningsgrunnlagPeriodeDto::getBeregningsgrunnlagPeriodeFom).collect(Collectors.toList());
+        var eksisterendePerioder = eksisterendeGrunnlag.getBeregningsgrunnlagPerioder();
+        var stp = eksisterendeGrunnlag.getSkjæringstidspunkt();
+        var refusjonstartDatoer = splittAndeler.stream().map(RefusjonSplittAndel::getStartdatoRefusjon).collect(Collectors.toList());
+        var eksisterendeStartdatoer = eksisterendePerioder.stream().map(BeregningsgrunnlagPeriodeDto::getBeregningsgrunnlagPeriodeFom).collect(Collectors.toList());
 
-        List<Intervall> perioderINyttGrunnlag = lagNyeIntervaller(eksisterendeStartdatoer, refusjonstartDatoer);
-        BeregningsgrunnlagDto.Builder nyttGrunlagBuilder = BeregningsgrunnlagDto.builder(eksisterendeGrunnlag);
+        var perioderINyttGrunnlag = lagNyeIntervaller(eksisterendeStartdatoer, refusjonstartDatoer);
+        var nyttGrunlagBuilder = BeregningsgrunnlagDto.builder(eksisterendeGrunnlag);
         nyttGrunlagBuilder.fjernAllePerioder();
         perioderINyttGrunnlag.forEach(nyttIntervall -> {
-            LocalDate nyFom = nyttIntervall.getFomDato();
-            BeregningsgrunnlagPeriodeDto eksisterendeBGPeriode = finnGammelPeriodePåStartdato(nyFom, eksisterendePerioder);
-            BeregningsgrunnlagPeriodeDto.Builder nyBGPeriode = BeregningsgrunnlagPeriodeDto.kopier(eksisterendeBGPeriode)
+            var nyFom = nyttIntervall.getFomDato();
+            var eksisterendeBGPeriode = finnGammelPeriodePåStartdato(nyFom, eksisterendePerioder);
+            var nyBGPeriode = BeregningsgrunnlagPeriodeDto.kopier(eksisterendeBGPeriode)
                     .medBeregningsgrunnlagPeriode(nyFom, nyttIntervall.getTomDato());
 
-            boolean erNyStartdato = !eksisterendeStartdatoer.contains(nyFom);
+            var erNyStartdato = !eksisterendeStartdatoer.contains(nyFom);
             if (erNyStartdato) {
                 nyBGPeriode.fjernPeriodeårsaker();
             }
 
-            boolean skalHaPeriodeÅrsakForRefusjon = refusjonstartDatoer.contains(nyFom) && !nyFom.equals(stp);
+            var skalHaPeriodeÅrsakForRefusjon = refusjonstartDatoer.contains(nyFom) && !nyFom.equals(stp);
             if (skalHaPeriodeÅrsakForRefusjon) {
                 nyBGPeriode.leggTilPeriodeÅrsak(PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV);
             }
@@ -143,16 +143,16 @@ public final class PeriodiserOgFastsettRefusjonTjeneste {
 
         alleStartdatoer.addAll(splittDatoer);
 
-        ArrayList<LocalDate> datoliste = new ArrayList<>(alleStartdatoer);
+        var datoliste = new ArrayList<LocalDate>(alleStartdatoer);
         Collections.sort(datoliste);
 
-        ListIterator<LocalDate> iterator = datoliste.listIterator();
+        var iterator = datoliste.listIterator();
 
         List<Intervall> intervaller = new ArrayList<>();
 
         while (iterator.hasNext()) {
-            LocalDate fom = iterator.next();
-            LocalDate tom = iterator.hasNext() ? datoliste.get(iterator.nextIndex()).minusDays(1) : TIDENES_ENDE;
+            var fom = iterator.next();
+            var tom = iterator.hasNext() ? datoliste.get(iterator.nextIndex()).minusDays(1) : TIDENES_ENDE;
             intervaller.add(Intervall.fraOgMedTilOgMed(fom, tom));
         }
         return intervaller;
@@ -186,13 +186,13 @@ public final class PeriodiserOgFastsettRefusjonTjeneste {
         nyttGrunnlag.getBeregningsgrunnlagPerioder().forEach(bgp -> startdatoer.add(bgp.getPeriode().getFomDato()));
 
         startdatoer.forEach(dato -> {
-            List<BeregningsgrunnlagPrStatusOgAndelDto> gamleAndeler = finnAndelerPåDatoIGrunnlag(dato, gammeltGrunnlag);
-            List<BeregningsgrunnlagPrStatusOgAndelDto> nyeAndeler = finnAndelerPåDatoIGrunnlag(dato, nyttGrunnlag);
+            var gamleAndeler = finnAndelerPåDatoIGrunnlag(dato, gammeltGrunnlag);
+            var nyeAndeler = finnAndelerPåDatoIGrunnlag(dato, nyttGrunnlag);
             if (gamleAndeler.size() != nyeAndeler.size()) {
                 throw new IllegalStateException("Forskjellig mengde andeler før og etter splitting av beregningsgrunnlag, gammelt grunnlag :" + gammeltGrunnlag + " nytt grunnlag: " + nyttGrunnlag);
             }
             gamleAndeler.forEach(andel -> {
-                boolean finnesAndelIListe = nyeAndeler.stream().anyMatch(a -> a.equals(andel));
+                var finnesAndelIListe = nyeAndeler.stream().anyMatch(a -> a.equals(andel));
                 if (!finnesAndelIListe) {
                     throw new IllegalStateException("Andel finnes ikke i begge grunnlag etter splitt. Andel: " + andel + " finnes ikke i liste: " + nyeAndeler);
                 }

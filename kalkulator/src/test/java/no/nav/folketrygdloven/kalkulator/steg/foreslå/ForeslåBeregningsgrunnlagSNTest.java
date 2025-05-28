@@ -55,35 +55,35 @@ class ForeslåBeregningsgrunnlagSNTest {
     @Test
     void testBeregningsgrunnlagSelvstendigNæringsdrivende() {
         // Arrange
-        BeregningAktivitetAggregatDto beregningAktiviteter = BeregningAktivitetTestUtil.opprettBeregningAktiviteter(SKJÆRINGSTIDSPUNKT_OPPTJENING,
+        var beregningAktiviteter = BeregningAktivitetTestUtil.opprettBeregningAktiviteter(SKJÆRINGSTIDSPUNKT_OPPTJENING,
             OpptjeningAktivitetType.NÆRING);
-        BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlag();
-        BeregningsgrunnlagGrunnlagDtoBuilder grunnlagDtoBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
+        var beregningsgrunnlag = lagBeregningsgrunnlag();
+        var grunnlagDtoBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
             .medRegisterAktiviteter(beregningAktiviteter)
             .medBeregningsgrunnlag(beregningsgrunnlag);
-        InntektArbeidYtelseAggregatBuilder registerBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
+        var registerBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
         testHjelper.lagBehandlingForSN(MÅNEDSINNTEKT1.multipliser(12), 2014, registerBuilder);
         Collection<InntektsmeldingDto> inntektsmeldinger = List.of();
         var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.oppdatere(Optional.empty())
             .medData(registerBuilder)
             .medInntektsmeldinger(inntektsmeldinger).build();
-        KoblingReferanse ref = lagReferanseMedStp(koblingReferanse);
+        var ref = lagReferanseMedStp(koblingReferanse);
         var input = BeregningsgrunnlagInputTestUtil.lagFortsettForeslåttBeregningsgrunnlagInput(ref, grunnlagDtoBuilder, BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER, iayGrunnlag);
 
         // Act
-        BeregningsgrunnlagRegelResultat resultat = fortsettForeslåBeregningsgrunnlag.fortsettForeslåBeregningsgrunnlag(input);
+        var resultat = fortsettForeslåBeregningsgrunnlag.fortsettForeslåBeregningsgrunnlag(input);
 
         // Assert
         assertThat(resultat.getBeregningsgrunnlag()).isNotNull();
         assertThat(resultat.getAvklaringsbehov()).isEmpty();
         assertThat(resultat.getBeregningsgrunnlag().getBeregningsgrunnlagPerioder()).hasSize(1);
-        BeregningsgrunnlagPeriodeDto periode = resultat.getBeregningsgrunnlag().getBeregningsgrunnlagPerioder().get(0);
+        var periode = resultat.getBeregningsgrunnlag().getBeregningsgrunnlagPerioder().get(0);
         verifiserPeriode(periode, SKJÆRINGSTIDSPUNKT_BEREGNING, TIDENES_ENDE, 1);
         verifiserBGSN(periode.getBeregningsgrunnlagPrStatusOgAndelList().get(0));
     }
 
     private BeregningsgrunnlagDto lagBeregningsgrunnlag() {
-        BeregningsgrunnlagDto.Builder beregningsgrunnlagBuilder = BeregningsgrunnlagDto.builder();
+        var beregningsgrunnlagBuilder = BeregningsgrunnlagDto.builder();
         beregningsgrunnlagBuilder.medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_BEREGNING)
             .medGrunnbeløp(GRUNNBELØP);
         beregningsgrunnlagBuilder.leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatusDto.builder()

@@ -27,9 +27,9 @@ public class MapSplittetPeriodeFraVLTilRegel {
     }
 
     private static EksisterendeAndel mapToBeregningsgrunnlagPrArbeidsforhold(BeregningsgrunnlagPrStatusOgAndelDto bgAndel) {
-        BGAndelArbeidsforholdDto bgAndelArbeidsforhold = bgAndel.getBgAndelArbeidsforhold()
+        var bgAndelArbeidsforhold = bgAndel.getBgAndelArbeidsforhold()
             .orElseThrow(() -> new IllegalStateException("Må ha arbeidsforhold"));
-        EksisterendeAndel.Builder builder = EksisterendeAndel.builder()
+        var builder = EksisterendeAndel.builder()
             .medAndelNr(bgAndel.getAndelsnr());
         builder.medArbeidsforhold(MapArbeidsforholdFraVLTilRegel.mapArbeidsforhold(bgAndelArbeidsforhold.getArbeidsgiver(), bgAndelArbeidsforhold.getArbeidsforholdRef()));
         return builder.build();

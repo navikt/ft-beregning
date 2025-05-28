@@ -22,14 +22,14 @@ public class RegelBeregningsgrunnlagSNFRISINN implements RuleService<Beregningsg
     @SuppressWarnings("unchecked")
     @Override
     public Specification<BeregningsgrunnlagPeriode> getSpecification() {
-        Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
+        var rs = new Ruleset<BeregningsgrunnlagPeriode>();
 
-        Specification<BeregningsgrunnlagPeriode> beregnBruttoSN =
+        var beregnBruttoSN =
             rs.beregningsRegel(BeregnBruttoBeregningsgrunnlagSNFRISINN.ID, "Beregn brutto beregningsgrunnlag selvstendig næringsdrivende",
                 new BeregnBruttoBeregningsgrunnlagSNFRISINN(), new FastsettBeregnetPrÅr(AktivitetStatus.SN));
 
 
-        Specification<BeregningsgrunnlagPeriode> foreslåBeregningsgrunnlagForSelvstendigNæringsdrivende =
+        var foreslåBeregningsgrunnlagForSelvstendigNæringsdrivende =
             rs.beregningsRegel(FastsettBeregningsperiodeSNFRISINN.ID, "Foreslå beregningsgrunnlag for selvstendig næringsdrivende",
                 new FastsettBeregningsperiodeSNFRISINN(), beregnBruttoSN);
 

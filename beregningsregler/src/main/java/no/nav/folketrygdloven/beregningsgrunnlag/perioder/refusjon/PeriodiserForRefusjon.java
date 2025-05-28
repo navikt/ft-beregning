@@ -40,42 +40,42 @@ public class PeriodiserForRefusjon extends LeafSpecification<PeriodiseringRefusj
 
 	@Override
 	public Evaluation evaluate(PeriodiseringRefusjonProsesstruktur prosesstruktur) {
-		List<SplittetPeriode> splittetPerioder = periodiserBeregningsgrunnlag(prosesstruktur.getInput(), prosesstruktur.getIdentifisertePeriodeÅrsaker());
+        var splittetPerioder = periodiserBeregningsgrunnlag(prosesstruktur.getInput(), prosesstruktur.getIdentifisertePeriodeÅrsaker());
 		prosesstruktur.setSplittetPerioder(splittetPerioder);
-		SingleEvaluation resultat = ja();
+        var resultat = ja();
 		resultat.setEvaluationProperty("splittetPerioder", splittetPerioder);
 		return resultat;
 	}
 
 	private static List<SplittetPeriode> periodiserBeregningsgrunnlag(PeriodeModellRefusjon input, IdentifisertePeriodeÅrsaker identifisertePeriodeÅrsaker) {
 		// lag alle periodene, med riktige andeler
-		Map<LocalDate, Set<PeriodeSplittData>> periodeMap = identifisertePeriodeÅrsaker.getPeriodeMap();
+        var periodeMap = identifisertePeriodeÅrsaker.getPeriodeMap();
 
 		List<Map.Entry<LocalDate, Set<PeriodeSplittData>>> entries = new ArrayList<>(periodeMap.entrySet());
 
-		ListIterator<Map.Entry<LocalDate, Set<PeriodeSplittData>>> listIterator = entries.listIterator();
+        var listIterator = entries.listIterator();
 
 		List<SplittetPeriode> list = new ArrayList<>();
 		while (listIterator.hasNext()) {
-			Map.Entry<LocalDate, Set<PeriodeSplittData>> entry = listIterator.next();
-			LocalDate periodeFom = entry.getKey();
-			LocalDate periodeTom = utledPeriodeTom(entries, listIterator);
-			Set<PeriodeSplittData> periodeSplittData = entry.getValue();
+            var entry = listIterator.next();
+            var periodeFom = entry.getKey();
+            var periodeTom = utledPeriodeTom(entries, listIterator);
+            var periodeSplittData = entry.getValue();
 
-			List<EksisterendeAndel> førstePeriodeAndeler = input.getArbeidsforholdOgInntektsmeldinger().stream()
+            var førstePeriodeAndeler = input.getArbeidsforholdOgInntektsmeldinger().stream()
 					.filter(im -> !im.erNyAktivitet())
 					.map(im -> mapToArbeidsforhold(im, periodeFom))
 					.toList();
 
-			List<SplittetAndel> nyeAndeler = input.getArbeidsforholdOgInntektsmeldinger().stream()
+            var nyeAndeler = input.getArbeidsforholdOgInntektsmeldinger().stream()
 					.filter(ArbeidsforholdOgInntektsmelding::erNyAktivitet)
 					.filter(im -> !im.slutterFørSkjæringstidspunkt(input.getSkjæringstidspunkt()))
 					.filter(im -> harRefusjonskravIPeriode(im, periodeFom))
 					.map(im -> mapSplittetAndel(im, periodeFom))
 					.toList();
 
-			Periode periode = new Periode(periodeFom, periodeTom);
-			SplittetPeriode splittetPeriode = SplittetPeriode.builder()
+            var periode = new Periode(periodeFom, periodeTom);
+            var splittetPeriode = SplittetPeriode.builder()
 					.medPeriode(periode)
 					.medPeriodeÅrsaker(getPeriodeÅrsaker(periodeSplittData, input.getSkjæringstidspunkt(), periodeFom))
 					.medFørstePeriodeAndeler(førstePeriodeAndeler)
@@ -102,19 +102,19 @@ public class PeriodiserForRefusjon extends LeafSpecification<PeriodiseringRefusj
 
 
 	private static SplittetAndel mapSplittetAndel(ArbeidsforholdOgInntektsmelding im, LocalDate periodeFom) {
-		Optional<Refusjonskrav> kravForPeriode = im.getGyldigeRefusjonskrav().stream()
+        var kravForPeriode = im.getGyldigeRefusjonskrav().stream()
 				.filter(refusjonskrav -> refusjonskrav.getPeriode().inneholder(periodeFom))
 				.findFirst();
-		BigDecimal innvilgetRefusjonPrÅr = kravForPeriode
+        var innvilgetRefusjonPrÅr = kravForPeriode
 				.map(refusjonskrav -> refusjonskrav.getInnvilgetBeløp().multiply(BigDecimal.valueOf(12)))
 				.orElse(BigDecimal.ZERO);
-		BigDecimal kravPrÅr = kravForPeriode
+        var kravPrÅr = kravForPeriode
 				.map(refusjonskrav -> refusjonskrav.getMånedsbeløp().multiply(BigDecimal.valueOf(12)))
 				.orElse(BigDecimal.ZERO);
 
-		Periode ansettelsesPeriode = im.getAnsettelsesperiode();
+        var ansettelsesPeriode = im.getAnsettelsesperiode();
 
-		SplittetAndel.Builder builder = SplittetAndel.builder()
+        var builder = SplittetAndel.builder()
 				.medAktivitetstatus(im.getAktivitetStatus())
 				.medArbeidsforhold(im.getArbeidsforhold())
 				.medRefusjonskravPrÅr(kravPrÅr)
@@ -135,19 +135,19 @@ public class PeriodiserForRefusjon extends LeafSpecification<PeriodiseringRefusj
 
 
 	private static EksisterendeAndel mapToArbeidsforhold(ArbeidsforholdOgInntektsmelding im, LocalDate fom) {
-		Optional<Refusjonskrav> kravForPeriode = im.getGyldigeRefusjonskrav().stream()
+        var kravForPeriode = im.getGyldigeRefusjonskrav().stream()
 				.filter(refusjon -> refusjon.getPeriode().inneholder(fom))
 				.findFirst();
-		Optional<BigDecimal> refusjonskravPrÅr = kravForPeriode
+        var refusjonskravPrÅr = kravForPeriode
 				.map(refusjonskrav -> refusjonskrav.getMånedsbeløp().multiply(BigDecimal.valueOf(12)));
-		Optional<BigDecimal> innvilgetRefusjonPrÅr = kravForPeriode
+        var innvilgetRefusjonPrÅr = kravForPeriode
 				.map(refusjonskrav -> refusjonskrav.getInnvilgetBeløp().multiply(BigDecimal.valueOf(12)));
-		Optional<BigDecimal> naturalytelseBortfaltPrÅr = im.getNaturalYtelser().stream()
+        var naturalytelseBortfaltPrÅr = im.getNaturalYtelser().stream()
 				.filter(naturalYtelse -> naturalYtelse.getFom().isEqual(DateUtil.TIDENES_BEGYNNELSE))
 				.filter(naturalYtelse -> naturalYtelse.getTom().isBefore(fom))
 				.map(NaturalYtelse::getBeløp)
 				.reduce(BigDecimal::add);
-		Optional<BigDecimal> naturalytelseTilkommer = im.getNaturalYtelser().stream()
+        var naturalytelseTilkommer = im.getNaturalYtelser().stream()
 				.filter(naturalYtelse -> naturalYtelse.getTom().isEqual(DateUtil.TIDENES_ENDE))
 				.filter(naturalYtelse -> naturalYtelse.getFom().isBefore(fom))
 				.map(NaturalYtelse::getBeløp)

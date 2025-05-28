@@ -24,12 +24,12 @@ class SjekkOmTotaltBGForArbeidsforholdStørreEnnGrenseverdiUtenFordeling extends
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        BigDecimal grenseverdi = grunnlag.getGrenseverdi();
-        BeregningsgrunnlagPrStatus atfl = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
-	    BigDecimal totaltBG = atfl == null ? BigDecimal.ZERO : atfl.getArbeidsforholdIkkeFrilans().stream()
+        var grenseverdi = grunnlag.getGrenseverdi();
+        var atfl = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+        var totaltBG = atfl == null ? BigDecimal.ZERO : atfl.getArbeidsforholdIkkeFrilans().stream()
             .map(BeregningsgrunnlagPrArbeidsforhold::getInntektsgrunnlagInkludertNaturalytelsePrÅr)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
-        SingleEvaluation resultat = totaltBG.compareTo(grenseverdi) > 0 ? ja() : nei();
+        var resultat = totaltBG.compareTo(grenseverdi) > 0 ? ja() : nei();
         resultat.setEvaluationProperty("totaltBeregningsgrunnlagFraArbeidsforhold", totaltBG);
         resultat.setEvaluationProperty("grunnbeløp", grunnlag.getGrunnbeløp());
         resultat.setEvaluationProperty("grenseverdi", grenseverdi);

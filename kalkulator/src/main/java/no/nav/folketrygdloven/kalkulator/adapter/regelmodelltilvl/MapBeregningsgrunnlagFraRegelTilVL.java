@@ -44,7 +44,7 @@ public class MapBeregningsgrunnlagFraRegelTilVL {
                 .filter(sg -> eksisterendeVLGrunnlag.getSammenligningsgrunnlagForStatus(sg.getSammenligningsgrunnlagType()).isEmpty())
                 .toList();
         sgPrStatus.forEach(builder::leggTilSammenligningsgrunnlag);
-        BeregningsgrunnlagDto nyttBeregningsgrunnlag = builder.build();
+        var nyttBeregningsgrunnlag = builder.build();
 
         Objects.requireNonNull(resultatGrunnlag, "resultatGrunnlag");
         MapAktivitetStatusMedHjemmel.mapAktivitetStatusMedHjemmel(resultatGrunnlag.getAktivitetStatuser(), nyttBeregningsgrunnlag, resultatGrunnlag.getBeregningsgrunnlagPerioder().getFirst());
@@ -74,14 +74,14 @@ public class MapBeregningsgrunnlagFraRegelTilVL {
     private void mapPerioder(BeregningsgrunnlagDto eksisterendeVLGrunnlag,
                              List<BeregningsgrunnlagPeriode> beregningsgrunnlagPerioder) {
 
-        int vlBGnummer = 0;
+        var vlBGnummer = 0;
         for (var resultatBGPeriode : beregningsgrunnlagPerioder) {
 
-            BeregningsgrunnlagPeriodeDto eksisterendePeriode = (vlBGnummer < eksisterendeVLGrunnlag.getBeregningsgrunnlagPerioder().size())
+            var eksisterendePeriode = (vlBGnummer < eksisterendeVLGrunnlag.getBeregningsgrunnlagPerioder().size())
                     ? eksisterendeVLGrunnlag.getBeregningsgrunnlagPerioder().get(vlBGnummer)
                     : null;
-            BeregningsgrunnlagPeriodeDto mappetPeriode = mapBeregningsgrunnlagPeriode(resultatBGPeriode, eksisterendePeriode, eksisterendeVLGrunnlag);
-            for (BeregningsgrunnlagPrStatus regelAndel : resultatBGPeriode.getBeregningsgrunnlagPrStatus()) {
+            var mappetPeriode = mapBeregningsgrunnlagPeriode(resultatBGPeriode, eksisterendePeriode, eksisterendeVLGrunnlag);
+            for (var regelAndel : resultatBGPeriode.getBeregningsgrunnlagPrStatus()) {
                 if (regelAndel.getAndelNr() == null) {
                     mapAndelMedArbeidsforhold(mappetPeriode, regelAndel);
                 } else {
@@ -100,17 +100,17 @@ public class MapBeregningsgrunnlagFraRegelTilVL {
     }
 
     private void mapAndelMedArbeidsforhold(BeregningsgrunnlagPeriodeDto mappetPeriode, BeregningsgrunnlagPrStatus regelAndel) {
-        for (BeregningsgrunnlagPrArbeidsforhold regelAndelForArbeidsforhold : regelAndel.getArbeidsforhold()) {
+        for (var regelAndelForArbeidsforhold : regelAndel.getArbeidsforhold()) {
             mapEksisterendeAndelForArbeidsforhold(mappetPeriode, regelAndel, regelAndelForArbeidsforhold);
         }
     }
 
     private void mapEksisterendeAndelForArbeidsforhold(BeregningsgrunnlagPeriodeDto mappetPeriode, BeregningsgrunnlagPrStatus regelAndel, BeregningsgrunnlagPrArbeidsforhold regelAndelForArbeidsforhold) {
-        Optional<BeregningsgrunnlagPrStatusOgAndelDto> andelOpt = mappetPeriode.getBeregningsgrunnlagPrStatusOgAndelList().stream()
+        var andelOpt = mappetPeriode.getBeregningsgrunnlagPrStatusOgAndelList().stream()
                 .filter(bgpsa -> regelAndelForArbeidsforhold.getAndelNr().equals(bgpsa.getAndelsnr()))
                 .findFirst();
         if (andelOpt.isPresent()) {
-            BeregningsgrunnlagPrStatusOgAndelDto resultatAndel = andelOpt.get();
+            var resultatAndel = andelOpt.get();
             mapBeregningsgrunnlagPrStatusForATKombinert(mappetPeriode, regelAndel, resultatAndel);
         }
     }
@@ -138,12 +138,12 @@ public class MapBeregningsgrunnlagFraRegelTilVL {
     private void mapBeregningsgrunnlagPrStatusForATKombinert(BeregningsgrunnlagPeriodeDto vlBGPeriode,
                                                                     BeregningsgrunnlagPrStatus resultatBGPStatus,
                                                                     BeregningsgrunnlagPrStatusOgAndelDto vlBGPAndel) {
-        for (BeregningsgrunnlagPrArbeidsforhold arbeidsforhold : resultatBGPStatus.getArbeidsforhold()) {
+        for (var arbeidsforhold : resultatBGPStatus.getArbeidsforhold()) {
             if (gjelderSammeAndel(vlBGPAndel, arbeidsforhold)) {
-                BeregningsgrunnlagPrStatusOgAndelDto.Builder andelBuilder = BeregningsgrunnlagPrStatusOgAndelDto.Builder.oppdatere(Optional.of(vlBGPAndel));
+                var andelBuilder = BeregningsgrunnlagPrStatusOgAndelDto.Builder.oppdatere(Optional.of(vlBGPAndel));
                 andelBuilder = settFasteVerdier(andelBuilder, arbeidsforhold, Optional.of(vlBGPAndel));
                 if (skalByggeBGArbeidsforhold(arbeidsforhold, vlBGPAndel)) {
-                    BGAndelArbeidsforholdDto.Builder bgAndelArbeidsforhold = mapArbeidsforhold(vlBGPAndel, arbeidsforhold);
+                    var bgAndelArbeidsforhold = mapArbeidsforhold(vlBGPAndel, arbeidsforhold);
                     andelBuilder.medBGAndelArbeidsforhold(bgAndelArbeidsforhold);
                 }
                 andelBuilder
@@ -185,7 +185,7 @@ public class MapBeregningsgrunnlagFraRegelTilVL {
     }
 
     private static void mapInntektskategoriOmEndret(BeregningsgrunnlagPrStatusOgAndelDto.Builder builder, BeregningsgrunnlagPrArbeidsforhold arbeidsforhold, Optional<BeregningsgrunnlagPrStatusOgAndelDto> eksisterendeAndel) {
-        Inntektskategori inntektskategoriFraRegel = MapInntektskategoriRegelTilVL.map(arbeidsforhold.getInntektskategori());
+        var inntektskategoriFraRegel = MapInntektskategoriRegelTilVL.map(arbeidsforhold.getInntektskategori());
         if (eksisterendeAndel.map(BeregningsgrunnlagPrStatusOgAndelDto::getGjeldendeInntektskategori).map(i -> !i.equals(inntektskategoriFraRegel)).orElse(true)) {
             builder.medInntektskategoriAutomatiskFordeling(inntektskategoriFraRegel);
         }
@@ -236,7 +236,7 @@ public class MapBeregningsgrunnlagFraRegelTilVL {
     }
 
     private static boolean matcherArbeidsgivere(BeregningsgrunnlagPrStatusOgAndelDto andel, BeregningsgrunnlagPrArbeidsforhold forhold) {
-        Arbeidsgiver arbeidsgiver = andel.getBgAndelArbeidsforhold().map(BGAndelArbeidsforholdDto::getArbeidsgiver).orElse(null);
+        var arbeidsgiver = andel.getBgAndelArbeidsforhold().map(BGAndelArbeidsforholdDto::getArbeidsgiver).orElse(null);
         if (forhold.getArbeidsgiverId() == null) {
             return arbeidsgiver == null;
         } else
@@ -246,7 +246,7 @@ public class MapBeregningsgrunnlagFraRegelTilVL {
     private static void mapBeregningsgrunnlagPrStatus(BeregningsgrunnlagPeriodeDto vlBGPeriode,
                                                       BeregningsgrunnlagPrStatus resultatBGPStatus,
                                                       BeregningsgrunnlagPrStatusOgAndelDto vlBGPStatusOgAndel) {
-        BeregningsgrunnlagPrStatusOgAndelDto.Builder builder = BeregningsgrunnlagPrStatusOgAndelDto.Builder.oppdatere(Optional.of(vlBGPStatusOgAndel));
+        var builder = BeregningsgrunnlagPrStatusOgAndelDto.Builder.oppdatere(Optional.of(vlBGPStatusOgAndel));
         if (resultatBGPStatus.getBeregningsperiode() != null && resultatBGPStatus.getBeregningsperiode().getFom() != null) {
             builder.medBeregningsperiode(resultatBGPStatus.getBeregningsperiode().getFom(), resultatBGPStatus.getBeregningsperiode().getTom());
         }
@@ -270,20 +270,20 @@ public class MapBeregningsgrunnlagFraRegelTilVL {
                                                                              final BeregningsgrunnlagPeriodeDto vlBGPeriode,
                                                                              BeregningsgrunnlagDto eksisterendeVLGrunnlag) {
         if (vlBGPeriode == null) {
-            BeregningsgrunnlagPeriodeDto.Builder builder = BeregningsgrunnlagPeriodeDto.ny()
+            var builder = BeregningsgrunnlagPeriodeDto.ny()
                     .medBeregningsgrunnlagPeriode(
                             resultatGrunnlagPeriode.getBeregningsgrunnlagPeriode().getFom(),
                             resultatGrunnlagPeriode.getBeregningsgrunnlagPeriode().getTomOrNull()
                     )
                     .leggTilPeriodeÅrsaker(mapPeriodeÅrsaker(resultatGrunnlagPeriode.getPeriodeÅrsaker()));
-            BeregningsgrunnlagPeriodeDto periode = builder
+            var periode = builder
                     .build(eksisterendeVLGrunnlag);
             // Vi kopierer alle andeler fra første periode (med tilhørende andelsnr)
             var førstePeriode = eksisterendeVLGrunnlag.getBeregningsgrunnlagPerioder().get(0);
             opprettBeregningsgrunnlagPrStatusOgAndel(førstePeriode, periode);
             return periode;
         }
-        BeregningsgrunnlagPeriodeDto.Builder periodeBuilder = BeregningsgrunnlagPeriodeDto.oppdater(vlBGPeriode)
+        var periodeBuilder = BeregningsgrunnlagPeriodeDto.oppdater(vlBGPeriode)
                 .medBeregningsgrunnlagPeriode(
                         resultatGrunnlagPeriode.getBeregningsgrunnlagPeriode().getFom(),
                         resultatGrunnlagPeriode.getBeregningsgrunnlagPeriode().getTomOrNull()
@@ -297,16 +297,16 @@ public class MapBeregningsgrunnlagFraRegelTilVL {
 
     private static void opprettBeregningsgrunnlagPrStatusOgAndel(BeregningsgrunnlagPeriodeDto kopierFra, BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode) {
         kopierFra.getBeregningsgrunnlagPrStatusOgAndelList().forEach(bgpsa -> {
-            BeregningsgrunnlagPrStatusOgAndelDto.Builder andelBuilder = BeregningsgrunnlagPrStatusOgAndelDto.ny()
+            var andelBuilder = BeregningsgrunnlagPrStatusOgAndelDto.ny()
                     .medAndelsnr(bgpsa.getAndelsnr())
                     .medArbforholdType(bgpsa.getArbeidsforholdType())
                     .medAktivitetStatus(bgpsa.getAktivitetStatus())
                     .medInntektskategori(bgpsa.getGjeldendeInntektskategori());
-            Optional<Arbeidsgiver> arbeidsgiver = bgpsa.getBgAndelArbeidsforhold().map(BGAndelArbeidsforholdDto::getArbeidsgiver);
-            Optional<InternArbeidsforholdRefDto> arbeidsforholdRef = bgpsa.getBgAndelArbeidsforhold().map(BGAndelArbeidsforholdDto::getArbeidsforholdRef);
+            var arbeidsgiver = bgpsa.getBgAndelArbeidsforhold().map(BGAndelArbeidsforholdDto::getArbeidsgiver);
+            var arbeidsforholdRef = bgpsa.getBgAndelArbeidsforhold().map(BGAndelArbeidsforholdDto::getArbeidsforholdRef);
             if (arbeidsgiver.isPresent() || arbeidsforholdRef.isPresent()) {
-                BGAndelArbeidsforholdDto arbeidsforhold = bgpsa.getBgAndelArbeidsforhold().get();
-                BGAndelArbeidsforholdDto.Builder bgAndelArbeidsforhold = BGAndelArbeidsforholdDto.builder()
+                var arbeidsforhold = bgpsa.getBgAndelArbeidsforhold().get();
+                var bgAndelArbeidsforhold = BGAndelArbeidsforholdDto.builder()
                         .medArbeidsgiver(arbeidsgiver.orElse(null))
                         .medArbeidsforholdRef(arbeidsforholdRef.orElse(null))
                         .medArbeidsperiodeFom(arbeidsforhold.getArbeidsperiodeFom())

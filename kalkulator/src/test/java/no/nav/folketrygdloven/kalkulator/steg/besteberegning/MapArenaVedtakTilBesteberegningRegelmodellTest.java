@@ -25,10 +25,10 @@ class MapArenaVedtakTilBesteberegningRegelmodellTest {
 
     @Test
     void skal_mappe_et_meldekort_dagpenger() {
-        List<YtelseDto> vedtak = Collections.singletonList(lagVedtak(STP, stpPluss(30), YtelseType.DAGPENGER,
+        var vedtak = Collections.singletonList(lagVedtak(STP, stpPluss(30), YtelseType.DAGPENGER,
                 lagMeldekort(STP, stpPluss(14), 500)));
 
-        List<Periodeinntekt> inntekter = kjørMapping(vedtak);
+        var inntekter = kjørMapping(vedtak);
 
         assertThat(inntekter).hasSize(1);
         assertInntekt(inntekter, STP, stpPluss(14), 500);
@@ -36,10 +36,10 @@ class MapArenaVedtakTilBesteberegningRegelmodellTest {
 
     @Test
     void meldekort_skal_ikke_starte_før_vedtak() {
-        List<YtelseDto> vedtak = Collections.singletonList(lagVedtak(STP, stpPluss(30), YtelseType.DAGPENGER,
+        var vedtak = Collections.singletonList(lagVedtak(STP, stpPluss(30), YtelseType.DAGPENGER,
                 lagMeldekort(STP.plusDays(10), stpPluss(14), 500)));
 
-        List<Periodeinntekt> inntekter = kjørMapping(vedtak);
+        var inntekter = kjørMapping(vedtak);
 
         assertThat(inntekter).hasSize(1);
         assertInntekt(inntekter, STP.plusDays(10), stpPluss(14), 500);
@@ -47,13 +47,13 @@ class MapArenaVedtakTilBesteberegningRegelmodellTest {
 
     @Test
     void skal_mappe_flere_meldekort_ulike_vedtak_aap() {
-        List<YtelseDto> vedtak = Arrays.asList(lagVedtak(STP, stpPluss(30), YtelseType.ARBEIDSAVKLARINGSPENGER,
+        var vedtak = Arrays.asList(lagVedtak(STP, stpPluss(30), YtelseType.ARBEIDSAVKLARINGSPENGER,
                 lagMeldekort(STP, stpPluss(14), 500),
                 lagMeldekort(stpPluss(15), stpPluss(35), 600)),
         lagVedtak(stpPluss(40), stpPluss(60), YtelseType.ARBEIDSAVKLARINGSPENGER,
                 lagMeldekort(stpPluss(40), stpPluss(54), 700)));
 
-        List<Periodeinntekt> inntekter = kjørMapping(vedtak);
+        var inntekter = kjørMapping(vedtak);
 
         assertThat(inntekter).hasSize(3);
         assertInntekt(inntekter, STP, stpPluss(14), 500);
@@ -62,7 +62,7 @@ class MapArenaVedtakTilBesteberegningRegelmodellTest {
     }
 
     private void assertInntekt(List<Periodeinntekt> inntekter, LocalDate fom, LocalDate tom, int inntekt) {
-        Periodeinntekt matchendeInntekt = inntekter.stream()
+        var matchendeInntekt = inntekter.stream()
                 .filter(it -> it.getPeriode().getFom().equals(fom))
                 .filter(it -> it.getPeriode().getTom().equals(tom))
                 .filter(it -> it.getInntekt().compareTo(BigDecimal.valueOf(inntekt)) == 0)
@@ -87,7 +87,7 @@ class MapArenaVedtakTilBesteberegningRegelmodellTest {
     }
 
     private YtelseDto lagVedtak(LocalDate fom, LocalDate tom, YtelseType ytelse, YtelseAnvistDto... meldekort) {
-        YtelseDtoBuilder builder = YtelseDtoBuilder.ny()
+        var builder = YtelseDtoBuilder.ny()
                 .medPeriode(Intervall.fraOgMedTilOgMed(fom, tom))
                 .medYtelseType(ytelse);
         Arrays.asList(meldekort).forEach(builder::leggTilYtelseAnvist);

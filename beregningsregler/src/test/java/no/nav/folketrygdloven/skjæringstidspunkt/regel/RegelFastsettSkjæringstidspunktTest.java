@@ -29,15 +29,15 @@ class RegelFastsettSkjæringstidspunktTest {
     @Test
     void skalFastsetteSisteAktivitetsdag() {
         // Arrange
-        LocalDate sisteAktivitetsdag = skjæringstidspunktForOpptjening.minusWeeks(1);
-        AktivPeriode aktivPeriode = AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(skjæringstidspunktForOpptjening.minusMonths(5), sisteAktivitetsdag), ARBEIDSFORHOLD, null);
+        var sisteAktivitetsdag = skjæringstidspunktForOpptjening.minusWeeks(1);
+        var aktivPeriode = AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(skjæringstidspunktForOpptjening.minusMonths(5), sisteAktivitetsdag), ARBEIDSFORHOLD, null);
         regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode);
         aktivPeriode = AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(skjæringstidspunktForOpptjening.minusMonths(6), sisteAktivitetsdag.plusDays(10)), ARBEIDSFORHOLD, null);
         regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode);
         aktivPeriode = AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(skjæringstidspunktForOpptjening.minusMonths(7), sisteAktivitetsdag.minusDays(10)), ARBEIDSFORHOLD, null);
         regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode);
         // Act
-        LocalDate sisteDag = regelmodell.sisteAktivitetsdato();
+        var sisteDag = regelmodell.sisteAktivitetsdato();
         // Assert
         assertThat(regelmodell.getAktivePerioder()).hasSize(1);
         assertThat(sisteDag).isEqualTo(skjæringstidspunktForOpptjening);
@@ -46,13 +46,12 @@ class RegelFastsettSkjæringstidspunktTest {
     @Test
     void skalBeregneSkjæringstidspunktLikOpptjening() {
         // Arrange
-        LocalDate sisteAktivitetsdag = skjæringstidspunktForOpptjening.minusDays(1);
-        AktivPeriode aktivPeriode = AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(skjæringstidspunktForOpptjening.minusMonths(5), sisteAktivitetsdag), ARBEIDSFORHOLD, null);
+        var sisteAktivitetsdag = skjæringstidspunktForOpptjening.minusDays(1);
+        var aktivPeriode = AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(skjæringstidspunktForOpptjening.minusMonths(5), sisteAktivitetsdag), ARBEIDSFORHOLD, null);
         regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode);
 
         // Act
-	    @SuppressWarnings("unused")
-	    RegelResultat resultat = new RegelFastsettSkjæringstidspunkt().evaluerRegel(regelmodell);
+	    @SuppressWarnings("unused") var resultat = new RegelFastsettSkjæringstidspunkt().evaluerRegel(regelmodell);
 
 		// Assert
 	    assertThat(regelmodell.getSkjæringstidspunktForBeregning()).isEqualTo(skjæringstidspunktForOpptjening);
@@ -61,12 +60,11 @@ class RegelFastsettSkjæringstidspunktTest {
     @Test
     void skalBeregneSkjæringstidspunktLikOpptjeningForVedvarendeAktivitet() {
         // Arrange
-        AktivPeriode aktivPeriode = AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(skjæringstidspunktForOpptjening.minusMonths(5), null), ARBEIDSFORHOLD, null);
+        var aktivPeriode = AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(skjæringstidspunktForOpptjening.minusMonths(5), null), ARBEIDSFORHOLD, null);
         regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode);
 
         // Act
-	    @SuppressWarnings("unused")
-	    RegelResultat resultat = new RegelFastsettSkjæringstidspunkt().evaluerRegel(regelmodell);
+	    @SuppressWarnings("unused") var resultat = new RegelFastsettSkjæringstidspunkt().evaluerRegel(regelmodell);
 
 		// Assert
         assertThat(regelmodell.getSkjæringstidspunktForBeregning()).isEqualTo(skjæringstidspunktForOpptjening);
@@ -75,13 +73,12 @@ class RegelFastsettSkjæringstidspunktTest {
     @Test
     void skalBeregneSkjæringstidspunktLikDagenEtterAktivitet() {
         // Arrange
-        LocalDate sisteAktivitetsdag = LocalDate.of(2017, Month.OCTOBER, 14);
-        AktivPeriode aktivPeriode = AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(skjæringstidspunktForOpptjening.minusMonths(5), sisteAktivitetsdag), ARBEIDSFORHOLD, null);
+        var sisteAktivitetsdag = LocalDate.of(2017, Month.OCTOBER, 14);
+        var aktivPeriode = AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(skjæringstidspunktForOpptjening.minusMonths(5), sisteAktivitetsdag), ARBEIDSFORHOLD, null);
         regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode);
 
         // Act
-	    @SuppressWarnings("unused")
-	    RegelResultat resultat = new RegelFastsettSkjæringstidspunkt().evaluerRegel(regelmodell);
+	    @SuppressWarnings("unused") var resultat = new RegelFastsettSkjæringstidspunkt().evaluerRegel(regelmodell);
 
 		// Assert
         assertThat(regelmodell.getSkjæringstidspunktForBeregning()).isEqualTo(sisteAktivitetsdag.plusDays(1));
@@ -90,8 +87,8 @@ class RegelFastsettSkjæringstidspunktTest {
     @Test
     void skalFlytteSkjæringstidspunktTilDagenEtterAktivitetFørMilitær() {
         // Arrange
-        LocalDate sisteAktivitetsdag = skjæringstidspunktForOpptjening.minusMonths(1);
-        AktivPeriode aktivPeriode = AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(skjæringstidspunktForOpptjening.minusMonths(5), sisteAktivitetsdag), ARBEIDSFORHOLD, null);
+        var sisteAktivitetsdag = skjæringstidspunktForOpptjening.minusMonths(1);
+        var aktivPeriode = AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(skjæringstidspunktForOpptjening.minusMonths(5), sisteAktivitetsdag), ARBEIDSFORHOLD, null);
         regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode);
         aktivPeriode = AktivPeriode.forAndre(Aktivitet.MILITÆR_ELLER_SIVILTJENESTE, Periode.of(skjæringstidspunktForOpptjening.minusMonths(1), skjæringstidspunktForOpptjening));
         regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode);
@@ -100,8 +97,7 @@ class RegelFastsettSkjæringstidspunktTest {
         assertThat(regelmodell.getAktivePerioder()).hasSize(3);
 
         // Act
-	    @SuppressWarnings("unused")
-	    RegelResultat resultat = new RegelFastsettSkjæringstidspunkt().evaluerRegel(regelmodell);
+	    @SuppressWarnings("unused") var resultat = new RegelFastsettSkjæringstidspunkt().evaluerRegel(regelmodell);
 
 		// Assert
         assertThat(regelmodell.getSkjæringstidspunktForBeregning()).isEqualTo(sisteAktivitetsdag.plusDays(1));
@@ -113,16 +109,15 @@ class RegelFastsettSkjæringstidspunktTest {
     @Test
     void skalIkkeFlytteSkjæringstidspunktNårMilitærMedAnnenAktivitetPåStpForOpptjening() {
         // Arrange
-        LocalDate sisteArbeidsdag = skjæringstidspunktForOpptjening.minusWeeks(1);
-        AktivPeriode aktivPeriode = AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(skjæringstidspunktForOpptjening.minusMonths(5), sisteArbeidsdag), ARBEIDSFORHOLD, null);
+        var sisteArbeidsdag = skjæringstidspunktForOpptjening.minusWeeks(1);
+        var aktivPeriode = AktivPeriode.forArbeidstakerHosVirksomhet(Periode.of(skjæringstidspunktForOpptjening.minusMonths(5), sisteArbeidsdag), ARBEIDSFORHOLD, null);
         regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode);
         aktivPeriode = AktivPeriode.forAndre(Aktivitet.MILITÆR_ELLER_SIVILTJENESTE, Periode.of(skjæringstidspunktForOpptjening.minusWeeks(8), sisteArbeidsdag));
         regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode);
         assertThat(regelmodell.getAktivePerioder()).hasSize(2);
 
         // Act
-	    @SuppressWarnings("unused")
-	    RegelResultat resultat = new RegelFastsettSkjæringstidspunkt().evaluerRegel(regelmodell);
+	    @SuppressWarnings("unused") var resultat = new RegelFastsettSkjæringstidspunkt().evaluerRegel(regelmodell);
 
 		// Assert
         assertThat(regelmodell.getSkjæringstidspunktForBeregning()).isEqualTo(sisteArbeidsdag.plusDays(1));
@@ -132,13 +127,12 @@ class RegelFastsettSkjæringstidspunktTest {
     @Test
     void skalIkkeFlytteSkjæringstidspunktNårMilitærErEnesteAktivitet() {
         // Arrange
-        AktivPeriode aktivPeriode = AktivPeriode.forAndre(Aktivitet.MILITÆR_ELLER_SIVILTJENESTE, Periode.of(skjæringstidspunktForOpptjening.minusMonths(8), skjæringstidspunktForOpptjening));
+        var aktivPeriode = AktivPeriode.forAndre(Aktivitet.MILITÆR_ELLER_SIVILTJENESTE, Periode.of(skjæringstidspunktForOpptjening.minusMonths(8), skjæringstidspunktForOpptjening));
         regelmodell.leggTilEllerOppdaterAktivPeriode(aktivPeriode);
         assertThat(regelmodell.getAktivePerioder()).hasSize(1);
 
         // Act
-	    @SuppressWarnings("unused")
-	    RegelResultat resultat = new RegelFastsettSkjæringstidspunkt().evaluerRegel(regelmodell);
+	    @SuppressWarnings("unused") var resultat = new RegelFastsettSkjæringstidspunkt().evaluerRegel(regelmodell);
 
         // Assert
         assertThat(regelmodell.getSkjæringstidspunktForBeregning()).isEqualTo(skjæringstidspunktForOpptjening);

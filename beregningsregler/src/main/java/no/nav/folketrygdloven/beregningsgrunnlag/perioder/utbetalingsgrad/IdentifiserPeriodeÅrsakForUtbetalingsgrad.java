@@ -27,29 +27,29 @@ public class IdentifiserPeriodeÅrsakForUtbetalingsgrad extends LeafSpecificatio
     @Override
     public Evaluation evaluate(PeriodiseringUtbetalingsgradProsesstruktur prosseseringStruktur) {
         Map<String, Object> resultater = new HashMap<>();
-        IdentifisertePeriodeÅrsaker årsaker = identifiser(prosseseringStruktur.getInput(), resultater);
+        var årsaker = identifiser(prosseseringStruktur.getInput(), resultater);
         prosseseringStruktur.setIdentifisertePeriodeÅrsaker(årsaker);
-        SingleEvaluation resultat = ja();
+        var resultat = ja();
         resultat.setEvaluationProperties(resultater);
         return resultat;
     }
 
     static IdentifisertePeriodeÅrsaker identifiser(PeriodeModellUtbetalingsgrad input, Map<String, Object> resultater) {
-        IdentifisertePeriodeÅrsaker map = new IdentifisertePeriodeÅrsaker();
+        var map = new IdentifisertePeriodeÅrsaker();
         leggTilPeriodesplitterForEksisterendePerioder(input, map);
         resultater.put("eksisterendePerioder", map.getPeriodeMap());
 
         // Utbetalingsgrad
         input.getEndringerISøktYtelse().forEach(endringISøktYtelse -> {
             resultater.put("aktivitet", endringISøktYtelse.getArbeidsforhold());
-            Set<PeriodeSplittData> endringerISøktYtelse = IdentifiserPerioderForEndringISøktYtelse.identifiser(endringISøktYtelse);
+            var endringerISøktYtelse = IdentifiserPerioderForEndringISøktYtelse.identifiser(endringISøktYtelse);
             endringerISøktYtelse.forEach(map::leggTilPeriodeÅrsak);
             resultater.put("endringerISøktYtelse", endringerISøktYtelse);
         });
 
         // må alltid ha en første periode, også når ingen gradering/refusjon/naturalytelse fra start
         if (!map.getPeriodeMap().containsKey(input.getSkjæringstidspunkt())) {
-            PeriodeSplittData førstePeriode = PeriodeSplittData.builder()
+            var førstePeriode = PeriodeSplittData.builder()
                 .medFom(input.getSkjæringstidspunkt())
                 .medPeriodeÅrsak(PeriodeÅrsak.UDEFINERT)
                 .build();
@@ -62,7 +62,7 @@ public class IdentifiserPeriodeÅrsakForUtbetalingsgrad extends LeafSpecificatio
         input.getEksisterendePerioder().forEach(eksisterendePeriode -> {
             if (!eksisterendePeriode.getPeriodeÅrsaker().isEmpty()) {
                 eksisterendePeriode.getPeriodeÅrsaker().forEach(periodeÅrsak -> {
-                    PeriodeSplittData periodeSplittData = PeriodeSplittData.builder()
+                    var periodeSplittData = PeriodeSplittData.builder()
                         .medFom(eksisterendePeriode.getPeriode().getFom())
                         .medPeriodeÅrsak(periodeÅrsak).build();
                     map.leggTilPeriodeÅrsak(periodeSplittData);

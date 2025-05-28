@@ -24,14 +24,14 @@ public class ReduserBeregningsgrunnlag extends LeafSpecification<Beregningsgrunn
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        BigDecimal dekningsgrad = grunnlag.getDekningsgrad().getVerdi();
+        var dekningsgrad = grunnlag.getDekningsgrad().getVerdi();
         Map<String, Object> resultater = new HashMap<>();
         resultater.put("dekningsgrad", grunnlag.getDekningsgrad());
 
         grunnlag.getBeregningsgrunnlagPrStatus().forEach(bps -> {
             if (bps.erArbeidstakerEllerFrilanser()) {
                 bps.getArbeidsforhold().forEach(af -> {
-                    BigDecimal redusertAF = dekningsgrad.multiply(af.getAvkortetPrÅr());
+                    var redusertAF = dekningsgrad.multiply(af.getAvkortetPrÅr());
                     BeregningsgrunnlagPrArbeidsforhold.builder(af)
                         .medRedusertPrÅr(dekningsgrad.multiply(af.getAvkortetPrÅr()))
                         .medRedusertRefusjonPrÅr(dekningsgrad.multiply(af.getAvkortetRefusjonPrÅr()), grunnlag.getYtelsedagerPrÅr())
@@ -40,12 +40,12 @@ public class ReduserBeregningsgrunnlag extends LeafSpecification<Beregningsgrunn
                     resultater.put("redusertPrÅr.ATFL." + af.getArbeidsgiverId(), redusertAF);
                 });
             } else {
-                BigDecimal redusertPS = dekningsgrad.multiply(bps.getAvkortetPrÅr());
+                var redusertPS = dekningsgrad.multiply(bps.getAvkortetPrÅr());
                 BeregningsgrunnlagPrStatus.builder(bps).medRedusertPrÅr(redusertPS).build();
                 resultater.put("redusertPrÅr." + bps.getAktivitetStatus().name(), redusertPS);
             }
         });
-        SingleEvaluation resultat = ja();
+        var resultat = ja();
         resultat.setEvaluationProperties(resultater);
         return resultat;
 

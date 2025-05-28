@@ -45,9 +45,9 @@ class KontrollerFaktaBeregningFrilanserTjenesteImplTest {
     void skal_gi_nyoppstartet_om_oppgitt_i_søknad() {
         //Arrange
         iayGrunnlagBuilder.medOppgittOpptjening(OppgittOpptjeningDtoBuilder.ny().leggTilFrilansOpplysninger(new OppgittFrilansDto(true)));
-        InntektArbeidYtelseGrunnlagDto iayGrunnlag = iayGrunnlagBuilder.build();
-        BeregningsgrunnlagDto beregningsgrunnlagDto = BeregningsgrunnlagTestUtil.lagGjeldendeBeregningsgrunnlag(SKJÆRINGSTIDSPUNKT_OPPTJENING, Optional.of(iayGrunnlag), AktivitetStatus.FRILANSER);
-        BeregningsgrunnlagGrunnlagDto gr = BeregningsgrunnlagGrunnlagDtoBuilder.nytt().medBeregningsgrunnlag(beregningsgrunnlagDto)
+        var iayGrunnlag = iayGrunnlagBuilder.build();
+        var beregningsgrunnlagDto = BeregningsgrunnlagTestUtil.lagGjeldendeBeregningsgrunnlag(SKJÆRINGSTIDSPUNKT_OPPTJENING, Optional.of(iayGrunnlag), AktivitetStatus.FRILANSER);
+        var gr = BeregningsgrunnlagGrunnlagDtoBuilder.nytt().medBeregningsgrunnlag(beregningsgrunnlagDto)
                 .medRegisterAktiviteter(BeregningAktivitetAggregatDto.builder()
                         .medSkjæringstidspunktOpptjening(SKJÆRINGSTIDSPUNKT_OPPTJENING)
                         .build()).build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER);
@@ -63,9 +63,9 @@ class KontrollerFaktaBeregningFrilanserTjenesteImplTest {
         //Arrange
         iayGrunnlagBuilder.medOppgittOpptjening(OppgittOpptjeningDtoBuilder.ny()
                 .leggTilFrilansOpplysninger(new OppgittFrilansDto(true)));
-        InntektArbeidYtelseGrunnlagDto iayGrunnlag = iayGrunnlagBuilder.build();
-        BeregningsgrunnlagDto beregningsgrunnlagDto = BeregningsgrunnlagTestUtil.lagGjeldendeBeregningsgrunnlag(SKJÆRINGSTIDSPUNKT_OPPTJENING, Optional.of(iayGrunnlag), AktivitetStatus.FRILANSER);
-        BeregningsgrunnlagGrunnlagDto gr = BeregningsgrunnlagGrunnlagDtoBuilder.nytt().medBeregningsgrunnlag(beregningsgrunnlagDto)
+        var iayGrunnlag = iayGrunnlagBuilder.build();
+        var beregningsgrunnlagDto = BeregningsgrunnlagTestUtil.lagGjeldendeBeregningsgrunnlag(SKJÆRINGSTIDSPUNKT_OPPTJENING, Optional.of(iayGrunnlag), AktivitetStatus.FRILANSER);
+        var gr = BeregningsgrunnlagGrunnlagDtoBuilder.nytt().medBeregningsgrunnlag(beregningsgrunnlagDto)
                 .medRegisterAktiviteter(BeregningAktivitetAggregatDto.builder()
                         .medSkjæringstidspunktOpptjening(SKJÆRINGSTIDSPUNKT_OPPTJENING)
                         .leggTilAktivitet(lagFrilans(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(1)))
@@ -82,9 +82,9 @@ class KontrollerFaktaBeregningFrilanserTjenesteImplTest {
         //Arrange
         iayGrunnlagBuilder.medOppgittOpptjening(OppgittOpptjeningDtoBuilder.ny()
                 .leggTilFrilansOpplysninger(new OppgittFrilansDto(false)));
-        InntektArbeidYtelseGrunnlagDto iayGrunnlag = iayGrunnlagBuilder.build();
-        BeregningsgrunnlagDto beregningsgrunnlagDto = BeregningsgrunnlagTestUtil.lagGjeldendeBeregningsgrunnlag(SKJÆRINGSTIDSPUNKT_OPPTJENING, Optional.of(iayGrunnlag), AktivitetStatus.FRILANSER);
-        BeregningsgrunnlagGrunnlagDto gr = BeregningsgrunnlagGrunnlagDtoBuilder.nytt().medBeregningsgrunnlag(beregningsgrunnlagDto)
+        var iayGrunnlag = iayGrunnlagBuilder.build();
+        var beregningsgrunnlagDto = BeregningsgrunnlagTestUtil.lagGjeldendeBeregningsgrunnlag(SKJÆRINGSTIDSPUNKT_OPPTJENING, Optional.of(iayGrunnlag), AktivitetStatus.FRILANSER);
+        var gr = BeregningsgrunnlagGrunnlagDtoBuilder.nytt().medBeregningsgrunnlag(beregningsgrunnlagDto)
                 .medRegisterAktiviteter(BeregningAktivitetAggregatDto.builder()
                         .medSkjæringstidspunktOpptjening(SKJÆRINGSTIDSPUNKT_OPPTJENING)
                         .leggTilAktivitet(lagFrilans(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(1)))
@@ -101,9 +101,9 @@ class KontrollerFaktaBeregningFrilanserTjenesteImplTest {
         //Arrange
         iayGrunnlagBuilder.medOppgittOpptjening(OppgittOpptjeningDtoBuilder.ny()
                 .leggTilFrilansOpplysninger(new OppgittFrilansDto(false)));
-        InntektArbeidYtelseGrunnlagDto iayGrunnlag = iayGrunnlagBuilder.build();
-        BeregningsgrunnlagDto beregningsgrunnlagDto = BeregningsgrunnlagTestUtil.lagGjeldendeBeregningsgrunnlag(SKJÆRINGSTIDSPUNKT_OPPTJENING, Optional.of(iayGrunnlag), AktivitetStatus.FRILANSER);
-        BeregningsgrunnlagGrunnlagDto gr = BeregningsgrunnlagGrunnlagDtoBuilder.nytt().medBeregningsgrunnlag(beregningsgrunnlagDto)
+        var iayGrunnlag = iayGrunnlagBuilder.build();
+        var beregningsgrunnlagDto = BeregningsgrunnlagTestUtil.lagGjeldendeBeregningsgrunnlag(SKJÆRINGSTIDSPUNKT_OPPTJENING, Optional.of(iayGrunnlag), AktivitetStatus.FRILANSER);
+        var gr = BeregningsgrunnlagGrunnlagDtoBuilder.nytt().medBeregningsgrunnlag(beregningsgrunnlagDto)
                 .medRegisterAktiviteter(BeregningAktivitetAggregatDto.builder()
                         .medSkjæringstidspunktOpptjening(SKJÆRINGSTIDSPUNKT_OPPTJENING)
                         .leggTilAktivitet(lagFrilans(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(4)))
@@ -121,14 +121,14 @@ class KontrollerFaktaBeregningFrilanserTjenesteImplTest {
     void ikkeFrilansISammeArbeidsforholdHvisBareArbeidstaker() {
         //Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
-        String orgnr = "123456780";
+        var orgnr = "123456780";
         BeregningIAYTestUtil.byggArbeidForBehandling(SKJÆRINGSTIDSPUNKT_OPPTJENING, SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(1),
                 SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(5).minusDays(2), arbId, Arbeidsgiver.virksomhet(orgnr), iayGrunnlagBuilder);
-        InntektArbeidYtelseGrunnlagDto iayGrunnlag = iayGrunnlagBuilder.build();
-        BeregningsgrunnlagDto beregningsgrunnlagDto = BeregningsgrunnlagTestUtil.lagGjeldendeBeregningsgrunnlag(SKJÆRINGSTIDSPUNKT_OPPTJENING, Optional.of(iayGrunnlag));
+        var iayGrunnlag = iayGrunnlagBuilder.build();
+        var beregningsgrunnlagDto = BeregningsgrunnlagTestUtil.lagGjeldendeBeregningsgrunnlag(SKJÆRINGSTIDSPUNKT_OPPTJENING, Optional.of(iayGrunnlag));
 
         //Act
-        Set<Arbeidsgiver> brukerErArbeidstakerOgFrilanserISammeOrganisasjon = KontrollerFaktaBeregningFrilanserTjeneste.brukerErArbeidstakerOgFrilanserISammeOrganisasjon(
+        var brukerErArbeidstakerOgFrilanserISammeOrganisasjon = KontrollerFaktaBeregningFrilanserTjeneste.brukerErArbeidstakerOgFrilanserISammeOrganisasjon(
                 beregningsgrunnlagDto, iayGrunnlag);
 
         //Assert
@@ -139,17 +139,17 @@ class KontrollerFaktaBeregningFrilanserTjenesteImplTest {
     void ikkeFrilansISammeArbeidsforholdHvisFrilansHosAnnenOppdragsgiver() {
         //Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
-        String orgnr = "123456780";
+        var orgnr = "123456780";
         BeregningIAYTestUtil.byggArbeidForBehandling(SKJÆRINGSTIDSPUNKT_OPPTJENING, SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(1),
             SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(5).minusDays(2), arbId, Arbeidsgiver.virksomhet(orgnr), iayGrunnlagBuilder);
-        String orgnrFrilans = "987654320";
+        var orgnrFrilans = "987654320";
         BeregningIAYTestUtil.byggArbeidForBehandling(SKJÆRINGSTIDSPUNKT_OPPTJENING, SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(1), SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(5).minusDays(2),
                 null, Arbeidsgiver.virksomhet(orgnrFrilans), ArbeidType.FRILANSER_OPPDRAGSTAKER,
             singletonList(Beløp.fra(10)), false, Optional.empty(), iayGrunnlagBuilder);
-        BeregningsgrunnlagDto beregningsgrunnlagDto = BeregningsgrunnlagTestUtil.lagGjeldendeBeregningsgrunnlag(SKJÆRINGSTIDSPUNKT_OPPTJENING, Optional.empty(), AktivitetStatus.KOMBINERT_AT_FL);
+        var beregningsgrunnlagDto = BeregningsgrunnlagTestUtil.lagGjeldendeBeregningsgrunnlag(SKJÆRINGSTIDSPUNKT_OPPTJENING, Optional.empty(), AktivitetStatus.KOMBINERT_AT_FL);
 
         //Act
-        Set<Arbeidsgiver> brukerErArbeidstakerOgFrilanserISammeOrganisasjon = KontrollerFaktaBeregningFrilanserTjeneste.brukerErArbeidstakerOgFrilanserISammeOrganisasjon(
+        var brukerErArbeidstakerOgFrilanserISammeOrganisasjon = KontrollerFaktaBeregningFrilanserTjeneste.brukerErArbeidstakerOgFrilanserISammeOrganisasjon(
                 beregningsgrunnlagDto, iayGrunnlagBuilder.build());
 
         //Assert
@@ -160,16 +160,16 @@ class KontrollerFaktaBeregningFrilanserTjenesteImplTest {
     void frilansISammeArbeidsforhold() {
         //Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
-        String orgnr = "123456780";
+        var orgnr = "123456780";
         BeregningIAYTestUtil.byggArbeidForBehandling(SKJÆRINGSTIDSPUNKT_OPPTJENING, SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(1), SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(5).minusDays(2), arbId, Arbeidsgiver.virksomhet(orgnr), iayGrunnlagBuilder);
         BeregningIAYTestUtil.byggArbeidForBehandling(SKJÆRINGSTIDSPUNKT_OPPTJENING, SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(1),
             SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(5).minusDays(2), null, Arbeidsgiver.virksomhet(orgnr),
             ArbeidType.FRILANSER_OPPDRAGSTAKER, singletonList(Beløp.fra(10)), false, Optional.empty(), iayGrunnlagBuilder);
-        InntektArbeidYtelseGrunnlagDto iayGrunnlag = iayGrunnlagBuilder.build();
-        BeregningsgrunnlagDto beregningsgrunnlagDto = BeregningsgrunnlagTestUtil.lagGjeldendeBeregningsgrunnlag(SKJÆRINGSTIDSPUNKT_OPPTJENING, Optional.of(iayGrunnlag), AktivitetStatus.KOMBINERT_AT_FL);
+        var iayGrunnlag = iayGrunnlagBuilder.build();
+        var beregningsgrunnlagDto = BeregningsgrunnlagTestUtil.lagGjeldendeBeregningsgrunnlag(SKJÆRINGSTIDSPUNKT_OPPTJENING, Optional.of(iayGrunnlag), AktivitetStatus.KOMBINERT_AT_FL);
 
         //Act
-        Set<Arbeidsgiver> brukerErArbeidstakerOgFrilanserISammeOrganisasjon = KontrollerFaktaBeregningFrilanserTjeneste.brukerErArbeidstakerOgFrilanserISammeOrganisasjon(
+        var brukerErArbeidstakerOgFrilanserISammeOrganisasjon = KontrollerFaktaBeregningFrilanserTjeneste.brukerErArbeidstakerOgFrilanserISammeOrganisasjon(
                 beregningsgrunnlagDto,
             iayGrunnlag);
 

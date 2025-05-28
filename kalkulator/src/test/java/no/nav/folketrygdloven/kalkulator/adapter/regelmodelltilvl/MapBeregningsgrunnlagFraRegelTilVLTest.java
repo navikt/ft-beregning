@@ -62,19 +62,19 @@ class MapBeregningsgrunnlagFraRegelTilVLTest {
 
     @Test
     void testMappingBGForArbeidstaker() {
-        final BeregningsgrunnlagDto vlBG = buildVLBGForATOgFL();
+        final var vlBG = buildVLBGForATOgFL();
 
-        no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag resultatGrunnlag = buildRegelBGForAT();
-        final BeregningsgrunnlagDto mappedBG = new MapBeregningsgrunnlagFraRegelTilVL()
+        var resultatGrunnlag = buildRegelBGForAT();
+        final var mappedBG = new MapBeregningsgrunnlagFraRegelTilVL()
                 .mapForeslåBeregningsgrunnlag(resultatGrunnlag, vlBG);
 
-        final BeregningsgrunnlagPeriodeDto vlBGP = mappedBG.getBeregningsgrunnlagPerioder()
+        final var vlBGP = mappedBG.getBeregningsgrunnlagPerioder()
                 .get(0);
 
         assertThat(vlBGP.getBeregningsgrunnlagPrStatusOgAndelList()).hasSize(2);
-        final BeregningsgrunnlagPrStatusOgAndelDto vlBGPStatus1 = vlBGP.getBeregningsgrunnlagPrStatusOgAndelList().get(0);
+        final var vlBGPStatus1 = vlBGP.getBeregningsgrunnlagPrStatusOgAndelList().get(0);
         assertVLBGPStatusAT(vlBGPStatus1);
-        final BeregningsgrunnlagPrStatusOgAndelDto vlBGPStatus2 = vlBGP.getBeregningsgrunnlagPrStatusOgAndelList().get(1);
+        final var vlBGPStatus2 = vlBGP.getBeregningsgrunnlagPrStatusOgAndelList().get(1);
         assertVLBGPStatusFL(vlBGPStatus2);
         assertVLSammenligningsgrunnlagPrStatus(mappedBG.getSammenligningsgrunnlagPrStatusListe().get(0), SammenligningsgrunnlagType.SAMMENLIGNING_AT_FL);
     }
@@ -82,29 +82,29 @@ class MapBeregningsgrunnlagFraRegelTilVLTest {
     @Test
     void skal_mappe_beregningsgrunnlag_når_arbeidsgiver_er_privatperson() {
         // Arrange
-        LocalDate skjæringstidspunkt = LocalDate.of(2018, 1, 1);
-        LocalDate førsteUttaksdag = skjæringstidspunkt.plusWeeks(2);
-        AktørId aktørId = AktørId.dummy();
-        AktivitetStatusModell regelmodell = lagRegelModell(skjæringstidspunkt, Arbeidsforhold.nyttArbeidsforholdHosPrivatperson(aktørId.getId()));
-        String inputSkjæringstidspunkt = toJson(regelmodell);
-        RegelResultat regelResultat = new RegelResultat(ResultatBeregningType.BEREGNET, "1.2.3", inputSkjæringstidspunkt, "sporing");
-        InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlagBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
+        var skjæringstidspunkt = LocalDate.of(2018, 1, 1);
+        var førsteUttaksdag = skjæringstidspunkt.plusWeeks(2);
+        var aktørId = AktørId.dummy();
+        var regelmodell = lagRegelModell(skjæringstidspunkt, Arbeidsforhold.nyttArbeidsforholdHosPrivatperson(aktørId.getId()));
+        var inputSkjæringstidspunkt = toJson(regelmodell);
+        var regelResultat = new RegelResultat(ResultatBeregningType.BEREGNET, "1.2.3", inputSkjæringstidspunkt, "sporing");
+        var iayGrunnlagBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
         BeregningIAYTestUtil.byggArbeidForBehandling(skjæringstidspunkt, skjæringstidspunkt.minusYears(1), skjæringstidspunkt, null, Arbeidsgiver.person(aktørId), iayGrunnlagBuilder);
 
         // Act
-        BeregningsgrunnlagDto beregningsgrunnlag = MapBGSkjæringstidspunktOgStatuserFraRegelTilVL
+        var beregningsgrunnlag = MapBGSkjæringstidspunktOgStatuserFraRegelTilVL
                 .mapForSkjæringstidspunktOgStatuser(koblingReferanse.medSkjæringstidspunkt(Skjæringstidspunkt.builder().medFørsteUttaksdato(førsteUttaksdag).medSkjæringstidspunktOpptjening(førsteUttaksdag).build()), regelmodell,
                         List.of(regelResultat, regelResultat), iayGrunnlagBuilder.build(), GRUNNBELØPLISTE);
 
         // Assert
         assertThat(beregningsgrunnlag.getBeregningsgrunnlagPerioder()).hasSize(1);
         assertThat(beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList()).hasSize(1);
-        BeregningsgrunnlagPrStatusOgAndelDto andel = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().get(0);
+        var andel = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().get(0);
         // Andel asserts
         assertThat(andel.getAktivitetStatus()).isEqualTo(AktivitetStatus.ARBEIDSTAKER);
         // Arbeidsforhold asserts
         assertThat(andel.getBgAndelArbeidsforhold()).isPresent();
-        BGAndelArbeidsforholdDto bga = andel.getBgAndelArbeidsforhold().get();
+        var bga = andel.getBgAndelArbeidsforhold().get();
         assertThat(bga.getArbeidsgiver().getErVirksomhet()).isFalse();
         assertThat(bga.getArbeidsgiver().getIdentifikator()).isEqualTo(aktørId.getId());
     }
@@ -112,28 +112,28 @@ class MapBeregningsgrunnlagFraRegelTilVLTest {
     @Test
     void skal_mappe_beregningsgrunnlag_når_arbeidsgiver_er_virksomhet() {
         // Arrange
-        LocalDate skjæringstidspunkt = LocalDate.of(2018, 1, 1);
-        LocalDate førsteUttaksdag = skjæringstidspunkt.plusWeeks(2);
-        RegelResultat regelResultat = new RegelResultat(ResultatBeregningType.BEREGNET, "1.2.3", "input", "sporing");
-        AktivitetStatusModell regelmodell = lagRegelModell(skjæringstidspunkt, Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR));
-        InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlagBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
+        var skjæringstidspunkt = LocalDate.of(2018, 1, 1);
+        var førsteUttaksdag = skjæringstidspunkt.plusWeeks(2);
+        var regelResultat = new RegelResultat(ResultatBeregningType.BEREGNET, "1.2.3", "input", "sporing");
+        var regelmodell = lagRegelModell(skjæringstidspunkt, Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR));
+        var iayGrunnlagBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
         BeregningIAYTestUtil.byggArbeidForBehandling(skjæringstidspunkt, skjæringstidspunkt.minusYears(1), skjæringstidspunkt, null,
                 Arbeidsgiver.virksomhet(ORGNR), iayGrunnlagBuilder);
 
         // Act
-        BeregningsgrunnlagDto beregningsgrunnlag = MapBGSkjæringstidspunktOgStatuserFraRegelTilVL
+        var beregningsgrunnlag = MapBGSkjæringstidspunktOgStatuserFraRegelTilVL
                 .mapForSkjæringstidspunktOgStatuser(koblingReferanse.medSkjæringstidspunkt(Skjæringstidspunkt.builder().medFørsteUttaksdato(førsteUttaksdag).medSkjæringstidspunktOpptjening(førsteUttaksdag).build()), regelmodell,
                         List.of(regelResultat, regelResultat), iayGrunnlagBuilder.build(), GRUNNBELØPLISTE);
 
         // Assert
         assertThat(beregningsgrunnlag.getBeregningsgrunnlagPerioder()).hasSize(1);
         assertThat(beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList()).hasSize(1);
-        BeregningsgrunnlagPrStatusOgAndelDto andel = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().get(0);
+        var andel = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().get(0);
         // Andel asserts
         assertThat(andel.getAktivitetStatus()).isEqualTo(AktivitetStatus.ARBEIDSTAKER);
         // Arbeidsforhold asserts
         assertThat(andel.getBgAndelArbeidsforhold()).isPresent();
-        BGAndelArbeidsforholdDto bga = andel.getBgAndelArbeidsforhold().get();
+        var bga = andel.getBgAndelArbeidsforhold().get();
         assertThat(bga.getArbeidsgiver().getErVirksomhet()).isTrue();
         assertThat(bga.getArbeidsgiver().getIdentifikator()).isEqualTo(ORGNR);
     }
@@ -141,20 +141,20 @@ class MapBeregningsgrunnlagFraRegelTilVLTest {
     @Test
     void skal_mappe_beregningsgrunnlag_for_næring() {
         // Arrange
-        LocalDate skjæringstidspunkt = LocalDate.of(2018, 1, 1);
-        LocalDate førsteUttaksdag = skjæringstidspunkt.plusWeeks(2);
-        RegelResultat regelResultat = new RegelResultat(ResultatBeregningType.BEREGNET, "1.2.3", "input", "sporing");
-        AktivitetStatusModell regelmodell = lagRegelModellSN(skjæringstidspunkt);
+        var skjæringstidspunkt = LocalDate.of(2018, 1, 1);
+        var førsteUttaksdag = skjæringstidspunkt.plusWeeks(2);
+        var regelResultat = new RegelResultat(ResultatBeregningType.BEREGNET, "1.2.3", "input", "sporing");
+        var regelmodell = lagRegelModellSN(skjæringstidspunkt);
 
         // Act
-        BeregningsgrunnlagDto beregningsgrunnlag = MapBGSkjæringstidspunktOgStatuserFraRegelTilVL
+        var beregningsgrunnlag = MapBGSkjæringstidspunktOgStatuserFraRegelTilVL
                 .mapForSkjæringstidspunktOgStatuser(koblingReferanse.medSkjæringstidspunkt(Skjæringstidspunkt.builder().medFørsteUttaksdato(førsteUttaksdag).medSkjæringstidspunktOpptjening(førsteUttaksdag).build()), regelmodell,
                         List.of(regelResultat, regelResultat), InntektArbeidYtelseGrunnlagDtoBuilder.nytt().build(), GRUNNBELØPLISTE);
 
         // Assert
         assertThat(beregningsgrunnlag.getBeregningsgrunnlagPerioder()).hasSize(1);
         assertThat(beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList()).hasSize(1);
-        BeregningsgrunnlagPrStatusOgAndelDto andel = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().get(0);
+        var andel = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().get(0);
         assertThat(andel.getAktivitetStatus()).isEqualTo(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE);
         assertThat(andel.getArbeidsforholdType()).isEqualTo(OpptjeningAktivitetType.NÆRING);
     }
@@ -162,10 +162,10 @@ class MapBeregningsgrunnlagFraRegelTilVLTest {
 
     @Test
     void skalSetteRiktigSammenligningsgrunnlagPrStatusNårBeregningsgrunnlagInneholderSammenlingningsgrunnlagForFL() {
-        final BeregningsgrunnlagDto vlBG = buildVLBGForATOgFL();
+        final var vlBG = buildVLBGForATOgFL();
 
-        no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag resultatGrunnlag = buildRegelBGForFL();
-        final BeregningsgrunnlagDto mappedBG = new MapBeregningsgrunnlagFraRegelTilVL()
+        var resultatGrunnlag = buildRegelBGForFL();
+        final var mappedBG = new MapBeregningsgrunnlagFraRegelTilVL()
                 .mapForeslåBeregningsgrunnlag(resultatGrunnlag, vlBG);
 
         assertVLSammenligningsgrunnlagPrStatus(mappedBG.getSammenligningsgrunnlagPrStatusListe().get(0), SammenligningsgrunnlagType.SAMMENLIGNING_AT_FL);
@@ -229,7 +229,7 @@ class MapBeregningsgrunnlagFraRegelTilVLTest {
     }
 
     private BeregningsgrunnlagDto buildVLBG() {
-        final BeregningsgrunnlagDto vlBG = RegelMapperTestDataHelper
+        final var vlBG = RegelMapperTestDataHelper
                 .buildVLBeregningsgrunnlag();
         buildVLBGAktivitetStatus(vlBG, AktivitetStatus.ARBEIDSTAKER);
         buildVLBGPStatusForSN(buildVLBGPeriode(vlBG));
@@ -237,10 +237,10 @@ class MapBeregningsgrunnlagFraRegelTilVLTest {
     }
 
     private BeregningsgrunnlagDto buildVLBGForATOgFL() {
-        final BeregningsgrunnlagDto vlBG = RegelMapperTestDataHelper
+        final var vlBG = RegelMapperTestDataHelper
                 .buildVLBeregningsgrunnlag();
         buildVLBGAktivitetStatus(vlBG, AktivitetStatus.ARBEIDSTAKER);
-        final BeregningsgrunnlagPeriodeDto vlBGPeriode = buildVLBGPeriode(vlBG);
+        final var vlBGPeriode = buildVLBGPeriode(vlBG);
         buildVLBGPStatus(vlBGPeriode, AktivitetStatus.ARBEIDSTAKER,
                 Inntektskategori.ARBEIDSTAKER, MINUS_YEARS_2,
                 MINUS_YEARS_1, Arbeidsgiver.virksomhet(ORGNR), OpptjeningAktivitetType.ARBEID);
@@ -250,10 +250,10 @@ class MapBeregningsgrunnlagFraRegelTilVLTest {
     }
 
     private BeregningsgrunnlagDto buildVLBGForATFLogSN() {
-        final BeregningsgrunnlagDto vlBG = RegelMapperTestDataHelper
+        final var vlBG = RegelMapperTestDataHelper
                 .buildVLBeregningsgrunnlag();
         buildVLBGAktivitetStatus(vlBG, AktivitetStatus.ARBEIDSTAKER);
-        final BeregningsgrunnlagPeriodeDto vlBGPeriode = buildVLBGPeriode(vlBG);
+        final var vlBGPeriode = buildVLBGPeriode(vlBG);
         buildVLBGPStatusForSN(vlBGPeriode);
         buildVLBGPStatus(vlBGPeriode, AktivitetStatus.ARBEIDSTAKER,
                 Inntektskategori.ARBEIDSTAKER, MINUS_YEARS_2,
@@ -264,51 +264,51 @@ class MapBeregningsgrunnlagFraRegelTilVLTest {
     }
 
     private no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag buildRegelBGForSN() {
-        final no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag regelBG = buildRegelBeregningsgrunnlag(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus.SN,
+        final var regelBG = buildRegelBeregningsgrunnlag(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus.SN,
                 no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE,
                 BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_SELVSTENDIG);
         no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag.builder(regelBG).build();
         no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag.builder(regelBG).build();
 
-        final no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode regelBGP = regelBG.getBeregningsgrunnlagPerioder().get(0);
+        final var regelBGP = regelBG.getBeregningsgrunnlagPerioder().get(0);
 
         buildRegelBGPeriodeSN(regelBGP);
         return regelBG;
     }
 
     private no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag buildRegelBGForAT() {
-        final no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag regelBG = buildRegelBeregningsgrunnlag(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus.ATFL,
+        final var regelBG = buildRegelBeregningsgrunnlag(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus.ATFL,
                 null,
                 BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_ARBEIDSTAKER);
         no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag.builder(regelBG).build();
         no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag.builder(regelBG).leggTilSammenligningsgrunnlagPrStatus(buildRegelSammenligningsG(SammenligningGrunnlagType.AT_FL)).build();
 
-        final no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode regelBGP = regelBG.getBeregningsgrunnlagPerioder().get(0);
+        final var regelBGP = regelBG.getBeregningsgrunnlagPerioder().get(0);
 
         buildRegelBGPStatusATFL(regelBGP, 1);
         return regelBG;
     }
 
     private no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag buildRegelBGForFL() {
-        final no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag regelBG = buildRegelBeregningsgrunnlag(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus.ATFL,
+        final var regelBG = buildRegelBeregningsgrunnlag(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus.ATFL,
                 null,
                 BeregningsgrunnlagHjemmel.K14_HJEMMEL_BARE_FRILANSER);
         no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag.builder(regelBG).build();
         no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag.builder(regelBG).leggTilSammenligningsgrunnlagPrStatus(buildRegelSammenligningsG(SammenligningGrunnlagType.AT_FL)).build();
 
-        final no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode regelBGP = regelBG.getBeregningsgrunnlagPerioder().get(0);
+        final var regelBGP = regelBG.getBeregningsgrunnlagPerioder().get(0);
 
         buildRegelBGPStatusATFL(regelBGP, 1);
         return regelBG;
     }
 
     private no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag buildRegelBGForATFLogSN() {
-        final no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag regelBG = buildRegelBeregningsgrunnlag(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus.ATFL_SN,
+        final var regelBG = buildRegelBeregningsgrunnlag(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus.ATFL_SN,
                 null,
                 BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG);
         no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag.builder(regelBG).build();
 
-        final no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode regelBGP = regelBG.getBeregningsgrunnlagPerioder().get(0);
+        final var regelBGP = regelBG.getBeregningsgrunnlagPerioder().get(0);
 
         buildRegelBGPeriodeSN(regelBGP);
         buildRegelBGPStatusATFL(regelBGP, 2);
@@ -320,8 +320,8 @@ class MapBeregningsgrunnlagFraRegelTilVLTest {
     }
 
     private void buildRegelBGPStatusATFL(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode regelBGP, long andelNr) {
-        final no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus regelBGPStatus = buildRegelBGPeriode(regelBGP, no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus.ATFL, new Periode(MINUS_YEARS_2, MINUS_YEARS_1));
-        final BeregningsgrunnlagPrArbeidsforhold regelArbeidsforhold42 = BeregningsgrunnlagPrArbeidsforhold.builder()
+        final var regelBGPStatus = buildRegelBGPeriode(regelBGP, no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus.ATFL, new Periode(MINUS_YEARS_2, MINUS_YEARS_1));
+        final var regelArbeidsforhold42 = BeregningsgrunnlagPrArbeidsforhold.builder()
                 .medArbeidsforhold(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR))
                 .medInntektskategori(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori.ARBEIDSTAKER)
                 .medAndelNr(andelNr++)
@@ -334,7 +334,7 @@ class MapBeregningsgrunnlagFraRegelTilVLTest {
                 .medRedusertRefusjonPrÅr(BigDecimal.valueOf(2600.0), BigDecimal.valueOf(260))
                 .build();
 
-        final BeregningsgrunnlagPrArbeidsforhold regelArbeidsforhold66 = BeregningsgrunnlagPrArbeidsforhold.builder()
+        final var regelArbeidsforhold66 = BeregningsgrunnlagPrArbeidsforhold.builder()
                 .medArbeidsforhold(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold.frilansArbeidsforhold())
                 .medInntektskategori(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori.FRILANSER)
                 .medAndelNr(andelNr)
@@ -361,7 +361,7 @@ class MapBeregningsgrunnlagFraRegelTilVLTest {
     }
 
     private AktivitetStatusModell lagRegelModell(LocalDate skjæringstidspunkt, Arbeidsforhold arbeidsforhold) {
-        AktivitetStatusModell regelmodell = new AktivitetStatusModell();
+        var regelmodell = new AktivitetStatusModell();
         regelmodell.setSkjæringstidspunktForBeregning(skjæringstidspunkt);
         regelmodell.setSkjæringstidspunktForOpptjening(skjæringstidspunkt);
         regelmodell.leggTilAktivitetStatus(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus.ATFL);
@@ -372,11 +372,11 @@ class MapBeregningsgrunnlagFraRegelTilVLTest {
 
 
     private AktivitetStatusModell lagRegelModellSN(LocalDate skjæringstidspunkt) {
-        AktivitetStatusModell regelmodell = new AktivitetStatusModell();
+        var regelmodell = new AktivitetStatusModell();
         regelmodell.setSkjæringstidspunktForBeregning(skjæringstidspunkt);
         regelmodell.setSkjæringstidspunktForOpptjening(skjæringstidspunkt);
         regelmodell.leggTilAktivitetStatus(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus.SN);
-        no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.BeregningsgrunnlagPrStatus bgPrStatus = new no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.BeregningsgrunnlagPrStatus(
+        var bgPrStatus = new no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.BeregningsgrunnlagPrStatus(
                 no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus.SN);
         regelmodell.leggTilBeregningsgrunnlagPrStatus(bgPrStatus);
         return regelmodell;

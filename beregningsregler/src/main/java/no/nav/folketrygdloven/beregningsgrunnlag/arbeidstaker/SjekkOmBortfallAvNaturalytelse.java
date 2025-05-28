@@ -24,9 +24,9 @@ class SjekkOmBortfallAvNaturalytelse extends LeafSpecification<Beregningsgrunnla
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        LocalDate fom = grunnlag.getSkjæringstidspunkt();
-        LocalDate tom = grunnlag.getBeregningsgrunnlagPeriode().getFom();
-        Optional<BigDecimal> naturalytelse = grunnlag.getInntektsgrunnlag().finnTotaltNaturalytelseBeløpMedOpphørsdatoIPeriodeForArbeidsforhold(arbeidsforhold.getArbeidsforhold(), fom, tom);
+        var fom = grunnlag.getSkjæringstidspunkt();
+        var tom = grunnlag.getBeregningsgrunnlagPeriode().getFom();
+        var naturalytelse = grunnlag.getInntektsgrunnlag().finnTotaltNaturalytelseBeløpMedOpphørsdatoIPeriodeForArbeidsforhold(arbeidsforhold.getArbeidsforhold(), fom, tom);
         return naturalytelse.isPresent() ? ja() : nei();
     }
 }

@@ -20,10 +20,10 @@ final class IndexKeyComposer {
 
     /** Hjelpe metode for å effektivt generere keys. */
     static String createKey(Object... keyParts) {
-        StringBuilder sb = new StringBuilder(keyParts.length * 10);
-        int max = keyParts.length;
-        for (int i = 0; i < max; i++) {
-            String part = toString(keyParts[i], i);
+        var sb = new StringBuilder(keyParts.length * 10);
+        var max = keyParts.length;
+        for (var i = 0; i < max; i++) {
+            var part = toString(keyParts[i], i);
             sb.append(part);
             if (i < (max - 1)) {
                 sb.append("::");
@@ -37,23 +37,23 @@ final class IndexKeyComposer {
         if (obj == null) {
             return KodeKonstanter.UDEFINERT;
         }
-        Class<? extends Object> objClass = obj.getClass();
+        var objClass = obj.getClass();
         if (String.class.isAssignableFrom(objClass)) {
             return (String) obj;
         } else if (IndexKey.class.isAssignableFrom(objClass)) {
             return ((IndexKey) obj).getIndexKey();
         } else if (Intervall.class.isAssignableFrom(objClass)) {
-            Intervall periode = (Intervall) obj;
+            var periode = (Intervall) obj;
             return "[" + periode.getFomDato().format(DateTimeFormatter.ISO_DATE) + //$NON-NLS-1$
                 "," + periode.getTomDato().format(DateTimeFormatter.ISO_DATE) + "]"; //$NON-NLS-1$ //$NON-NLS-2$
         } else if (LocalDate.class.isAssignableFrom(objClass)) {
-            LocalDate dt = (LocalDate) obj;
+            var dt = (LocalDate) obj;
             return dt.format(DateTimeFormatter.ISO_DATE);
         } else if (LocalDateTime.class.isAssignableFrom(objClass)) {
-            LocalDateTime ldt = (LocalDateTime) obj;
+            var ldt = (LocalDateTime) obj;
             return ldt.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         } else if (BasisKodeverdi.class.isAssignableFrom(objClass)) {
-            BasisKodeverdi bkv = (BasisKodeverdi) obj;
+            var bkv = (BasisKodeverdi) obj;
             return bkv.getIndexKey();
         } else {
             throw new IllegalArgumentException("Støtter ikke å lage IndexKey for " + objClass.getName() + "[index=" + i + "], " + obj);

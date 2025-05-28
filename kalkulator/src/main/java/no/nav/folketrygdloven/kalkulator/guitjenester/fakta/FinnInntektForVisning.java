@@ -57,12 +57,12 @@ public class FinnInntektForVisning {
             return finnMånedsbeløpIBeregningsperiodenForFrilanser(ref, andel, inntektArbeidYtelseGrunnlag);
         }
         if (andel.getAktivitetStatus().erDagpenger()) {
-            YtelseFilterDto ytelseFilter = new YtelseFilterDto(inntektArbeidYtelseGrunnlag.getAktørYtelseFraRegister()).før(ref.getSkjæringstidspunktBeregning());
+            var ytelseFilter = new YtelseFilterDto(inntektArbeidYtelseGrunnlag.getAktørYtelseFraRegister()).før(ref.getSkjæringstidspunktBeregning());
             return FinnInntektFraYtelse.finnÅrbeløpForDagpenger(ref, andel, ytelseFilter)
                     .map(årsbeløp -> årsbeløp.divider(KonfigTjeneste.getMånederIÅr(), 10, RoundingMode.HALF_EVEN));
         }
         if (andel.getAktivitetStatus().equals(AktivitetStatus.ARBEIDSAVKLARINGSPENGER)) {
-            YtelseFilterDto ytelseFilter = new YtelseFilterDto(inntektArbeidYtelseGrunnlag.getAktørYtelseFraRegister()).før(ref.getSkjæringstidspunktBeregning());
+            var ytelseFilter = new YtelseFilterDto(inntektArbeidYtelseGrunnlag.getAktørYtelseFraRegister()).før(ref.getSkjæringstidspunktBeregning());
             return FinnInntektFraYtelse.finnÅrbeløpFraMeldekortForAndel(ref, andel, ytelseFilter)
                     .map(årsbeløp -> årsbeløp.divider(KonfigTjeneste.getMånederIÅr(), 10, RoundingMode.HALF_EVEN));
         }
@@ -94,8 +94,8 @@ public class FinnInntektForVisning {
             // For arbeidstakerandeler uten arbeidsgiver, som etterlønn / sluttpakke.
             return Optional.empty();
         }
-        Arbeidsgiver arbeidsgiver = andel.getArbeidsgiver().get();
-        List<InntektsmeldingDto> imFraArbeidsgiver = grunnlag.getInntektsmeldinger().stream()
+        var arbeidsgiver = andel.getArbeidsgiver().get();
+        var imFraArbeidsgiver = grunnlag.getInntektsmeldinger().stream()
                 .flatMap(i -> i.getInntektsmeldingerSomSkalBrukes().stream())
                 .filter(im -> im.getArbeidsgiver().getIdentifikator().equals(arbeidsgiver.getIdentifikator()))
                 .filter(im -> im.getArbeidsforholdRef().gjelderForSpesifiktArbeidsforhold())
@@ -105,7 +105,7 @@ public class FinnInntektForVisning {
                 .filter(Objects::nonNull)
                 .reduce(Beløp::adder)
                 .orElse(Beløp.ZERO);
-        long antallArbeidsforholdUtenIM = finnAntallArbeidsforholdUtenIM(alleAndeler, arbeidsgiver, imFraArbeidsgiver);
+        var antallArbeidsforholdUtenIM = finnAntallArbeidsforholdUtenIM(alleAndeler, arbeidsgiver, imFraArbeidsgiver);
         var snittInntektFraAOrdningen = finnSnittinntektForArbeidsgiverPrMåned(ref, andel, grunnlag);
         return snittInntektFraAOrdningen.map(inntekt -> finnAndelAvInntekt(inntektFraInntektsmedlingForAndreArbeidsforholdISammeOrg, antallArbeidsforholdUtenIM, inntekt));
     }

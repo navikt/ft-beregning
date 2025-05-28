@@ -41,15 +41,15 @@ class MapRefusjonskravFraVLTilRegelTest {
     @Test
     void refusjonFraSenereDato() {
         // Arrange
-        LocalDate skjæringstidspunkt = LocalDate.now();
-        LocalDate endringFom = skjæringstidspunkt.plusMonths(1);
-        InntektsmeldingDto inntektsmeldingEntitet = InntektsmeldingDtoBuilder.builder()
+        var skjæringstidspunkt = LocalDate.now();
+        var endringFom = skjæringstidspunkt.plusMonths(1);
+        var inntektsmeldingEntitet = InntektsmeldingDtoBuilder.builder()
                 .medRefusjon(Beløp.ZERO)
                 .leggTil(new RefusjonDto(Beløp.fra(11), endringFom))
                 .build();
 
         // Act
-        List<Refusjonskrav> resultat = MapRefusjonskravFraVLTilRegel.periodiserRefusjonsbeløp(inntektsmeldingEntitet,
+        var resultat = MapRefusjonskravFraVLTilRegel.periodiserRefusjonsbeløp(inntektsmeldingEntitet,
                 skjæringstidspunkt,
                 Optional.empty(),
                 List.of(Intervall.fraOgMed(skjæringstidspunkt.minusMonths(12))));
@@ -69,15 +69,15 @@ class MapRefusjonskravFraVLTilRegelTest {
     @Test
     void refusjonFraSenereDatoUnderGyldigGrense() {
         // Arrange
-        LocalDate skjæringstidspunkt = LocalDate.now();
-        LocalDate endringFom = skjæringstidspunkt.plusMonths(1);
-        InntektsmeldingDto inntektsmeldingEntitet = InntektsmeldingDtoBuilder.builder()
+        var skjæringstidspunkt = LocalDate.now();
+        var endringFom = skjæringstidspunkt.plusMonths(1);
+        var inntektsmeldingEntitet = InntektsmeldingDtoBuilder.builder()
                 .medRefusjon(Beløp.ZERO)
                 .leggTil(new RefusjonDto(Beløp.fra(10), endringFom))
                 .build();
 
         // Act
-        List<Refusjonskrav> resultat = MapRefusjonskravFraVLTilRegel.periodiserRefusjonsbeløp(inntektsmeldingEntitet,
+        var resultat = MapRefusjonskravFraVLTilRegel.periodiserRefusjonsbeløp(inntektsmeldingEntitet,
                 skjæringstidspunkt,
                 Optional.empty(),
                 List.of(Intervall.fraOgMed(skjæringstidspunkt.minusMonths(12))));
@@ -94,13 +94,13 @@ class MapRefusjonskravFraVLTilRegelTest {
     @Test
     void refusjonFraStpUnderGyldigGrense() {
         // Arrange
-        LocalDate skjæringstidspunkt = LocalDate.now();
-        InntektsmeldingDto inntektsmeldingEntitet = InntektsmeldingDtoBuilder.builder()
+        var skjæringstidspunkt = LocalDate.now();
+        var inntektsmeldingEntitet = InntektsmeldingDtoBuilder.builder()
                 .medRefusjon(Beløp.fra(10))
                 .build();
 
         // Act
-        List<Refusjonskrav> resultat = MapRefusjonskravFraVLTilRegel.periodiserRefusjonsbeløp(inntektsmeldingEntitet,
+        var resultat = MapRefusjonskravFraVLTilRegel.periodiserRefusjonsbeløp(inntektsmeldingEntitet,
                 skjæringstidspunkt,
                 Optional.empty(),
                 List.of(Intervall.fraOgMed(skjæringstidspunkt.minusMonths(12))));
@@ -118,14 +118,14 @@ class MapRefusjonskravFraVLTilRegelTest {
     @Test
     void skal_finne_refusjonskrav_på_stp_med_uten_refusjon_fra_start() {
         // Arrange
-        LocalDate idag = LocalDate.now();
-        InntektsmeldingAggregatDtoBuilder inntektsmeldingAggregatDtoBuilder = InntektsmeldingAggregatDtoBuilder.ny();
-        InntektsmeldingDtoBuilder inntektsmeldingDtoBuilder = InntektsmeldingDtoBuilder.builder();
+        var idag = LocalDate.now();
+        var inntektsmeldingAggregatDtoBuilder = InntektsmeldingAggregatDtoBuilder.ny();
+        var inntektsmeldingDtoBuilder = InntektsmeldingDtoBuilder.builder();
         inntektsmeldingDtoBuilder.medStartDatoPermisjon(idag)
                 .medArbeidsgiver(ARBEIDSGIVER1)
                 .medRefusjon(Beløp.ZERO)
                 .leggTil(new RefusjonDto(Beløp.fra(10000), idag.plusMonths(1)));
-        InntektsmeldingDtoBuilder inntektsmeldingDtoBuilder2 = InntektsmeldingDtoBuilder.builder();
+        var inntektsmeldingDtoBuilder2 = InntektsmeldingDtoBuilder.builder();
         inntektsmeldingDtoBuilder2.medStartDatoPermisjon(idag)
                 .medArbeidsgiver(ARBEIDSGIVER2)
                 .medRefusjon(Beløp.ZERO)
@@ -133,9 +133,9 @@ class MapRefusjonskravFraVLTilRegelTest {
 
         inntektsmeldingAggregatDtoBuilder.leggTil(inntektsmeldingDtoBuilder.build());
         inntektsmeldingAggregatDtoBuilder.leggTil(inntektsmeldingDtoBuilder2.build());
-        InntektsmeldingAggregatDto inntektsmeldingAggregatDto = inntektsmeldingAggregatDtoBuilder.build();
+        var inntektsmeldingAggregatDto = inntektsmeldingAggregatDtoBuilder.build();
 
-        OmsorgspengerGrunnlag omsorgspengerGrunnlag = new OmsorgspengerGrunnlag(List.of(
+        var omsorgspengerGrunnlag = new OmsorgspengerGrunnlag(List.of(
                 new UtbetalingsgradPrAktivitetDto(
                         new AktivitetDto(ARBEIDSGIVER1, InternArbeidsforholdRefDto.nullRef(), UttakArbeidType.ORDINÆRT_ARBEID),
                         List.of(new PeriodeMedUtbetalingsgradDto(Intervall.fraOgMed(idag), Utbetalingsgrad.valueOf(100)))),
@@ -154,14 +154,14 @@ class MapRefusjonskravFraVLTilRegelTest {
     @Test
     void skal_finne_refusjonskrav_på_stp_med_endring_i_refusjonskrav() {
         // Arrange
-        LocalDate idag = LocalDate.now();
-        InntektsmeldingAggregatDtoBuilder inntektsmeldingAggregatDtoBuilder = InntektsmeldingAggregatDtoBuilder.ny();
-        InntektsmeldingDtoBuilder inntektsmeldingDtoBuilder = InntektsmeldingDtoBuilder.builder();
+        var idag = LocalDate.now();
+        var inntektsmeldingAggregatDtoBuilder = InntektsmeldingAggregatDtoBuilder.ny();
+        var inntektsmeldingDtoBuilder = InntektsmeldingDtoBuilder.builder();
         inntektsmeldingDtoBuilder.medStartDatoPermisjon(idag)
                 .medArbeidsgiver(ARBEIDSGIVER1)
                 .medRefusjon(Beløp.fra(12000))
                 .leggTil(new RefusjonDto(Beløp.fra(10000), idag.plusMonths(1)));
-        InntektsmeldingDtoBuilder inntektsmeldingDtoBuilder2 = InntektsmeldingDtoBuilder.builder();
+        var inntektsmeldingDtoBuilder2 = InntektsmeldingDtoBuilder.builder();
         inntektsmeldingDtoBuilder2.medStartDatoPermisjon(idag)
                 .medArbeidsgiver(ARBEIDSGIVER2)
                 .medRefusjon(Beløp.fra(12000))
@@ -169,9 +169,9 @@ class MapRefusjonskravFraVLTilRegelTest {
 
         inntektsmeldingAggregatDtoBuilder.leggTil(inntektsmeldingDtoBuilder.build());
         inntektsmeldingAggregatDtoBuilder.leggTil(inntektsmeldingDtoBuilder2.build());
-        InntektsmeldingAggregatDto inntektsmeldingAggregatDto = inntektsmeldingAggregatDtoBuilder.build();
+        var inntektsmeldingAggregatDto = inntektsmeldingAggregatDtoBuilder.build();
 
-        OmsorgspengerGrunnlag omsorgspengerGrunnlag = new OmsorgspengerGrunnlag(List.of(
+        var omsorgspengerGrunnlag = new OmsorgspengerGrunnlag(List.of(
                 new UtbetalingsgradPrAktivitetDto(
                         new AktivitetDto(ARBEIDSGIVER1, InternArbeidsforholdRefDto.nullRef(), UttakArbeidType.ORDINÆRT_ARBEID),
                         List.of(new PeriodeMedUtbetalingsgradDto(Intervall.fraOgMed(idag), Utbetalingsgrad.valueOf(100)))),
@@ -189,10 +189,10 @@ class MapRefusjonskravFraVLTilRegelTest {
     @Test
     void skal_bruke_overstyrt_dato_om_denne_finnes_og_matcher_arbeidsforholdet() {
         // Arrange
-        LocalDate skjæringstidspunkt = LocalDate.now();
-        InternArbeidsforholdRefDto ref = InternArbeidsforholdRefDto.nyRef();
-        LocalDate overstyrtDato = skjæringstidspunkt.plusDays(15);
-        InntektsmeldingDto inntektsmeldingEntitet = InntektsmeldingDtoBuilder.builder()
+        var skjæringstidspunkt = LocalDate.now();
+        var ref = InternArbeidsforholdRefDto.nyRef();
+        var overstyrtDato = skjæringstidspunkt.plusDays(15);
+        var inntektsmeldingEntitet = InntektsmeldingDtoBuilder.builder()
                 .medRefusjon(Beløp.fra(11))
                 .medArbeidsgiver(ARBEIDSGIVER1)
                 .medArbeidsforholdId(ref)
@@ -200,7 +200,7 @@ class MapRefusjonskravFraVLTilRegelTest {
         lagRefusjonoverstyring(ARBEIDSGIVER1, ref, overstyrtDato);
 
         // Act
-        List<Refusjonskrav> resultat = MapRefusjonskravFraVLTilRegel.periodiserRefusjonsbeløp(inntektsmeldingEntitet,
+        var resultat = MapRefusjonskravFraVLTilRegel.periodiserRefusjonsbeløp(inntektsmeldingEntitet,
                 skjæringstidspunkt,
                 Optional.of(refusjonOverstyringer.build()),
                 List.of(Intervall.fraOgMed(skjæringstidspunkt.minusMonths(12))));
@@ -216,11 +216,11 @@ class MapRefusjonskravFraVLTilRegelTest {
     @Test
     void skal_ikke_bruke_overstyrt_dato_om_denne_finnes_og_ikke_matcher_arbeidsforholdet() {
         // Arrange
-        LocalDate skjæringstidspunkt = LocalDate.now();
-        InternArbeidsforholdRefDto refIM = InternArbeidsforholdRefDto.nyRef();
-        InternArbeidsforholdRefDto refOverstyring = InternArbeidsforholdRefDto.nyRef();
-        LocalDate overstyrtDato = skjæringstidspunkt.plusDays(15);
-        InntektsmeldingDto inntektsmeldingEntitet = InntektsmeldingDtoBuilder.builder()
+        var skjæringstidspunkt = LocalDate.now();
+        var refIM = InternArbeidsforholdRefDto.nyRef();
+        var refOverstyring = InternArbeidsforholdRefDto.nyRef();
+        var overstyrtDato = skjæringstidspunkt.plusDays(15);
+        var inntektsmeldingEntitet = InntektsmeldingDtoBuilder.builder()
                 .medRefusjon(Beløp.fra(11))
                 .medArbeidsgiver(ARBEIDSGIVER1)
                 .medArbeidsforholdId(refIM)
@@ -228,7 +228,7 @@ class MapRefusjonskravFraVLTilRegelTest {
         lagRefusjonoverstyring(ARBEIDSGIVER1, refOverstyring, overstyrtDato);
 
         // Act
-        List<Refusjonskrav> resultat = MapRefusjonskravFraVLTilRegel.periodiserRefusjonsbeløp(inntektsmeldingEntitet,
+        var resultat = MapRefusjonskravFraVLTilRegel.periodiserRefusjonsbeløp(inntektsmeldingEntitet,
                 skjæringstidspunkt, Optional.of(refusjonOverstyringer.build()),
                 List.of(Intervall.fraOgMed(skjæringstidspunkt.minusMonths(12))));
 
@@ -244,15 +244,15 @@ class MapRefusjonskravFraVLTilRegelTest {
     @Test
     void skal_finne_refusjonskrav_for_perioder_med_opphør_og_restart() {
         // Arrange
-        LocalDate skjæringstidspunkt = LocalDate.now();
-        LocalDate endringFom = skjæringstidspunkt.plusMonths(1);
-        InntektsmeldingDto inntektsmeldingEntitet = InntektsmeldingDtoBuilder.builder()
+        var skjæringstidspunkt = LocalDate.now();
+        var endringFom = skjæringstidspunkt.plusMonths(1);
+        var inntektsmeldingEntitet = InntektsmeldingDtoBuilder.builder()
                 .medRefusjon(Beløp.fra(15))
                 .leggTil(new RefusjonDto(Beløp.fra(11), endringFom))
                 .build();
 
         // Act
-        List<Refusjonskrav> resultat = MapRefusjonskravFraVLTilRegel.periodiserRefusjonsbeløp(inntektsmeldingEntitet,
+        var resultat = MapRefusjonskravFraVLTilRegel.periodiserRefusjonsbeløp(inntektsmeldingEntitet,
                 skjæringstidspunkt,
                 Optional.empty(),
                 List.of(
@@ -278,8 +278,8 @@ class MapRefusjonskravFraVLTilRegelTest {
 
 
     private void lagRefusjonoverstyring(Arbeidsgiver ag, InternArbeidsforholdRefDto ref, LocalDate dato) {
-        BeregningRefusjonPeriodeDto periodeOverstyring = new BeregningRefusjonPeriodeDto(ref, dato);
-        BeregningRefusjonOverstyringDto overstyring = new BeregningRefusjonOverstyringDto(ag, null, Collections.singletonList(periodeOverstyring), null);
+        var periodeOverstyring = new BeregningRefusjonPeriodeDto(ref, dato);
+        var overstyring = new BeregningRefusjonOverstyringDto(ag, null, Collections.singletonList(periodeOverstyring), null);
         refusjonOverstyringer.leggTilOverstyring(overstyring);
     }
 

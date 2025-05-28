@@ -34,12 +34,12 @@ class RegelVurderBeregningsgrunnlagTest {
     @Test
     void skalOppretteRegelmerknadForAvslagNårBruttoInntektPrÅrMindreEnnHalvG() {
         //Arrange
-        double beregnetPrÅr = GRUNNBELØP_2017 * 0.49;
-        Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlag(skjæringstidspunkt, beregnetPrÅr, 0);
-        BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var beregnetPrÅr = GRUNNBELØP_2017 * 0.49;
+        var beregningsgrunnlag = opprettBeregningsgrunnlag(skjæringstidspunkt, beregnetPrÅr, 0);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         //Act
-        RegelResultat resultat = kjørRegel(grunnlag);
+        var resultat = kjørRegel(grunnlag);
 
         //Assert
         assertThat(resultat.merknader().stream().map(RegelMerknad::utfallÅrsak)).containsOnly(AVSLAG_UNDER_HALV_G);
@@ -49,14 +49,14 @@ class RegelVurderBeregningsgrunnlagTest {
     @Test
     void skalOppretteRegelmerknadForAvslagForFlereArbeidsforholdNårBruttoInntektPrÅrMindreEnnHalvG() {
         //Arrange
-        double beregnetPrÅr = GRUNNBELØP_2017 * 0.25;
-        double beregnetPrÅr2 = GRUNNBELØP_2017 * 0.24; //Totalt under 0,5G
-        Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlag(skjæringstidspunkt, beregnetPrÅr, 0);
+        var beregnetPrÅr = GRUNNBELØP_2017 * 0.25;
+        var beregnetPrÅr2 = GRUNNBELØP_2017 * 0.24; //Totalt under 0,5G
+        var beregningsgrunnlag = opprettBeregningsgrunnlag(skjæringstidspunkt, beregnetPrÅr, 0);
         leggTilArbeidsforhold(beregningsgrunnlag, beregnetPrÅr2, 0);
-        BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         //Act
-        RegelResultat resultat = kjørRegel(grunnlag);
+        var resultat = kjørRegel(grunnlag);
 
         //Assert
         assertThat(resultat.merknader().stream().map(RegelMerknad::utfallÅrsak)).containsOnly(AVSLAG_UNDER_HALV_G);
@@ -66,17 +66,17 @@ class RegelVurderBeregningsgrunnlagTest {
 	@Test
 	void skalIkkeAvslåOmsorgspengerTilArbeidsgiverUndeEnHalvG() {
 		//Arrange
-		double beregnetPrÅr = GRUNNBELØP_2017 * 0.25;
-		double beregnetPrÅr2 = GRUNNBELØP_2017 * 0.24; //Totalt under 0,5G
-		Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlag(skjæringstidspunkt, beregnetPrÅr, 0);
+        var beregnetPrÅr = GRUNNBELØP_2017 * 0.25;
+        var beregnetPrÅr2 = GRUNNBELØP_2017 * 0.24; //Totalt under 0,5G
+        var beregningsgrunnlag = opprettBeregningsgrunnlag(skjæringstidspunkt, beregnetPrÅr, 0);
 
 		Beregningsgrunnlag.builder(beregningsgrunnlag)
 						.medYtelsesSpesifiktGrunnlag(new OmsorgspengerGrunnlag(false, false));
 		leggTilArbeidsforhold(beregningsgrunnlag, beregnetPrÅr2, 0);
-		BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
 		//Act
-		RegelResultat resultat = kjørRegel(grunnlag);
+        var resultat = kjørRegel(grunnlag);
 
 		//Assert
 		assertThat(resultat.merknader()).isEmpty();
@@ -87,17 +87,17 @@ class RegelVurderBeregningsgrunnlagTest {
 	@Test
 	void skalAvslåOmsorgspengerTilBrukerUndeEnHalvG() {
 		//Arrange
-		double beregnetPrÅr = GRUNNBELØP_2017 * 0.25;
-		double beregnetPrÅr2 = GRUNNBELØP_2017 * 0.24; //Totalt under 0,5G
-		Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlag(skjæringstidspunkt, beregnetPrÅr, 0);
+        var beregnetPrÅr = GRUNNBELØP_2017 * 0.25;
+        var beregnetPrÅr2 = GRUNNBELØP_2017 * 0.24; //Totalt under 0,5G
+        var beregningsgrunnlag = opprettBeregningsgrunnlag(skjæringstidspunkt, beregnetPrÅr, 0);
 
 		Beregningsgrunnlag.builder(beregningsgrunnlag)
 				.medYtelsesSpesifiktGrunnlag(new OmsorgspengerGrunnlag(false, true));
 		leggTilArbeidsforhold(beregningsgrunnlag, beregnetPrÅr2, 0);
-		BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
 		//Act
-		RegelResultat resultat = kjørRegel(grunnlag);
+        var resultat = kjørRegel(grunnlag);
 
 		//Assert
 		assertThat(resultat.merknader().stream().map(RegelMerknad::utfallÅrsak)).containsOnly(AVSLAG_UNDER_HALV_G);
@@ -109,8 +109,8 @@ class RegelVurderBeregningsgrunnlagTest {
     }
 
     private Beregningsgrunnlag opprettBeregningsgrunnlag(LocalDate skjæringstidspunkt, double beregnetPrÅr, double refusjonskravPrÅr) {
-        Beregningsgrunnlag beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektsmelding(skjæringstidspunkt, BigDecimal.valueOf(beregnetPrÅr / 12), BigDecimal.valueOf(refusjonskravPrÅr / 12));
-        BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektsmelding(skjæringstidspunkt, BigDecimal.valueOf(beregnetPrÅr / 12), BigDecimal.valueOf(refusjonskravPrÅr / 12));
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 	    BeregningsgrunnlagPeriode.builder(grunnlag);
 
         BeregningsgrunnlagPrArbeidsforhold.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0))
@@ -119,12 +119,12 @@ class RegelVurderBeregningsgrunnlagTest {
     }
 
     private void leggTilArbeidsforhold(Beregningsgrunnlag grunnlag, double beregnetPrÅr, double refusjonskrav) {
-        BeregningsgrunnlagPeriode bgPeriode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
-        String nyttOrgnr = generateId().toString();
-        Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(nyttOrgnr);
+        var bgPeriode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var nyttOrgnr = generateId().toString();
+        var arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(nyttOrgnr);
         leggTilArbeidsforholdMedInntektsmelding(bgPeriode, skjæringstidspunkt, BigDecimal.valueOf(beregnetPrÅr / 12), BigDecimal.valueOf(refusjonskrav / 12), arbeidsforhold, BigDecimal.ZERO, null);
-        BeregningsgrunnlagPrStatus atfl = bgPeriode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
-        BeregningsgrunnlagPrArbeidsforhold bgpaf = atfl.getArbeidsforhold().stream()
+        var atfl = bgPeriode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+        var bgpaf = atfl.getArbeidsforhold().stream()
             .filter(af -> af.getArbeidsforhold().getOrgnr().equals(nyttOrgnr)).findFirst().get();
         BeregningsgrunnlagPrArbeidsforhold.builder(bgpaf)
             .medBeregnetPrÅr(BigDecimal.valueOf(beregnetPrÅr))

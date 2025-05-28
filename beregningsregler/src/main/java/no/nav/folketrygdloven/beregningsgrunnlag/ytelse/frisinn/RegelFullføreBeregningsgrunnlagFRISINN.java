@@ -20,15 +20,15 @@ public class RegelFullføreBeregningsgrunnlagFRISINN implements EksportRegel<Ber
 	@SuppressWarnings("unchecked")
     @Override
     public Specification<BeregningsgrunnlagPeriode> getSpecification() {
-        Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
+        var rs = new Ruleset<BeregningsgrunnlagPeriode>();
 
-        Specification<BeregningsgrunnlagPeriode> fastsettForSN = rs.beregningsRegel(FastsettForSN.ID, FastsettForSN.BESKRIVELSE,
+        var fastsettForSN = rs.beregningsRegel(FastsettForSN.ID, FastsettForSN.BESKRIVELSE,
                 new FastsettForSN(), new ReduserBeregningsgrunnlag());
 
-        Specification<BeregningsgrunnlagPeriode> fastsettForFrilans = rs.beregningsRegel(FastsettForFrilans.ID, FastsettForFrilans.BESKRIVELSE,
+        var fastsettForFrilans = rs.beregningsRegel(FastsettForFrilans.ID, FastsettForFrilans.BESKRIVELSE,
                 new FastsettForFrilans(), fastsettForSN);
 
-        Specification<BeregningsgrunnlagPeriode> fastsettIkkeSøktForTilNull = rs.beregningsRegel(FastsettIkkeSøktForTil0.ID, FastsettIkkeSøktForTil0.BESKRIVELSE,
+        var fastsettIkkeSøktForTilNull = rs.beregningsRegel(FastsettIkkeSøktForTil0.ID, FastsettIkkeSøktForTil0.BESKRIVELSE,
                 new FastsettIkkeSøktForTil0(), fastsettForFrilans);
 
         return fastsettIkkeSøktForTilNull;

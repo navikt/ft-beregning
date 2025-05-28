@@ -29,20 +29,20 @@ public class IdentifiserPerioderForRefusjon {
 			return Collections.emptySet();
 		}
 
-		List<LocalDateSegment<BigDecimal>> kravSegmenter = inntektsmelding.getRefusjoner().stream()
+        var kravSegmenter = inntektsmelding.getRefusjoner().stream()
 				.map(r -> new LocalDateSegment<>(r.getPeriode().getFom(), r.getPeriode().getTom(), r.getMånedsbeløp()))
 				.toList();
 
-		LocalDateTimeline<BigDecimal> kravTidslinje = new LocalDateTimeline<>(kravSegmenter);
+        var kravTidslinje = new LocalDateTimeline<BigDecimal>(kravSegmenter);
 
-		LocalDateTimeline<KravOgVilkårvurdering> kravOgVurderingTidslinje = fristvurdertTidslinje.combine(kravTidslinje,
+        var kravOgVurderingTidslinje = fristvurdertTidslinje.combine(kravTidslinje,
 				IdentifiserPerioderForRefusjon::kombiner,
 				LocalDateTimeline.JoinStyle.CROSS_JOIN);
 
-		LocalDate førsteDato = kravOgVurderingTidslinje.stream()
+        var førsteDato = kravOgVurderingTidslinje.stream()
 				.map(LocalDateSegment::getFom)
 				.min(Comparator.naturalOrder()).orElse(inntektsmelding.getStartdatoPermisjon());
-		Set<PeriodeSplittData> resultatSet = kravOgVurderingTidslinje.stream()
+        var resultatSet = kravOgVurderingTidslinje.stream()
 				.filter(s -> !(s.getFom().equals(førsteDato) && s.getValue().krav().compareTo(BigDecimal.ZERO) == 0))
 				.map(segment -> PeriodeSplittData.builder()
 						.medPeriodeÅrsak(utledPeriodeÅrsak(segment.getValue()))

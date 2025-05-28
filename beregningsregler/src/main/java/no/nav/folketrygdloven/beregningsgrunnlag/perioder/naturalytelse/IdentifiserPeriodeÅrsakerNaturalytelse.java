@@ -27,16 +27,16 @@ public class IdentifiserPeriodeÅrsakerNaturalytelse extends LeafSpecification<P
     @Override
     public Evaluation evaluate(PeriodiseringNaturalytelseProsesstruktur prosseseringStruktur) {
         Map<String, Object> resultater = new HashMap<>();
-	    IdentifiserteNaturalytelsePeriodeÅrsaker årsaker = identifiser(prosseseringStruktur.getInput(), resultater);
+        var årsaker = identifiser(prosseseringStruktur.getInput(), resultater);
         prosseseringStruktur.setIdentifisertePeriodeÅrsaker(årsaker);
-        SingleEvaluation resultat = ja();
+        var resultat = ja();
         resultat.setEvaluationProperties(resultater);
         return resultat;
     }
 
     static IdentifiserteNaturalytelsePeriodeÅrsaker identifiser(PeriodeModellNaturalytelse input, Map<String, Object> resultater) {
-        LocalDate skjæringstidspunkt = input.getSkjæringstidspunkt();
-        IdentifiserteNaturalytelsePeriodeÅrsaker map = new IdentifiserteNaturalytelsePeriodeÅrsaker();
+        var skjæringstidspunkt = input.getSkjæringstidspunkt();
+        var map = new IdentifiserteNaturalytelsePeriodeÅrsaker();
         leggTilPeriodesplitterForEksisterendePerioder(input, map);
         resultater.put("eksisterendePerioder", map.getPeriodeMap());
 

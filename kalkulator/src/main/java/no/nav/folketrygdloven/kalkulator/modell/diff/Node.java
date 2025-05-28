@@ -27,7 +27,7 @@ public class Node implements Comparable<Node>{
         } else if (obj == null || !(obj instanceof Node)) {
             return false;
         }
-        Node other = (Node) obj;
+        var other = (Node) obj;
         return Objects.equals(localName, other.localName)
                 && Objects.equals(parent, other.parent);
     }

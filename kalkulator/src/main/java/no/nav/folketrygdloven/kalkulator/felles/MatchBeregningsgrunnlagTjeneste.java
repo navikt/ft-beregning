@@ -26,7 +26,7 @@ public class MatchBeregningsgrunnlagTjeneste {
 
     public static Optional<BeregningsgrunnlagPeriodeDto> finnOverlappendePeriodeOmKunEnFinnes(BeregningsgrunnlagPeriodeDto periode,
                                                                                               Optional<BeregningsgrunnlagDto> forrigeGrunnlag) {
-        List<BeregningsgrunnlagPeriodeDto> matchedePerioder = forrigeGrunnlag.map(bg ->
+        var matchedePerioder = forrigeGrunnlag.map(bg ->
                 bg.getBeregningsgrunnlagPerioder().stream()
                         .filter(periodeIGjeldendeGrunnlag -> periode.getPeriode()
                                 .overlapper(periodeIGjeldendeGrunnlag.getPeriode())).collect(Collectors.toList())).orElse(Collections.emptyList());
@@ -66,7 +66,7 @@ public class MatchBeregningsgrunnlagTjeneste {
      * @return andel som matcher oppgitt informasjon, ellers kastes exception
      */
     public static BeregningsgrunnlagPrStatusOgAndelDto matchMedAndelFraPeriode(BeregningsgrunnlagPeriodeDto periode, Long andelsnr, InternArbeidsforholdRefDto arbeidsforholdId) {
-        Optional<BeregningsgrunnlagPrStatusOgAndelDto> matchetAndel = periode.getBeregningsgrunnlagPrStatusOgAndelList().stream()
+        var matchetAndel = periode.getBeregningsgrunnlagPrStatusOgAndelList().stream()
                 .filter(a -> a.getAndelsnr().equals(andelsnr))
                 .findFirst();
         return matchetAndel.orElseGet(() -> periode.getBeregningsgrunnlagPrStatusOgAndelList().stream()

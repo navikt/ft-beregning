@@ -26,7 +26,7 @@ public class RegelFastsettUtenAvkortingATFL implements RuleService<Beregningsgru
     @SuppressWarnings("unchecked")
     @Override
     public Specification<BeregningsgrunnlagPeriode> getSpecification() {
-        Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
+        var rs = new Ruleset<BeregningsgrunnlagPeriode>();
 
         // FP_BR_29.5.1 Fastsett Brukers Andel av Brutto beregningsgrunnlag totalt
         Specification<BeregningsgrunnlagPeriode> fastsettBrukersAndel = new FastsettBrukersAndelUtenAvkorting();
@@ -34,7 +34,7 @@ public class RegelFastsettUtenAvkortingATFL implements RuleService<Beregningsgru
         // FP_BR_29.5.2 Fastsett Avkortet pr år pr beregningsgrunnlagsandel OG Fastsett Avkortet per år
         Specification<BeregningsgrunnlagPeriode> fastsettAvkortet = new FastsettAvkortetLikBruttoBG();
 
-        Specification<BeregningsgrunnlagPeriode> fastsettUtenAvkorting =
+        var fastsettUtenAvkorting =
                 rs.beregningsRegel(ID, BESKRIVELSE, fastsettBrukersAndel, fastsettAvkortet);
 
         return fastsettUtenAvkorting;

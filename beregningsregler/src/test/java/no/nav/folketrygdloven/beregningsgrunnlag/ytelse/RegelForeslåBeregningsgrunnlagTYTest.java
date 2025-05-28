@@ -129,8 +129,8 @@ class RegelForeslåBeregningsgrunnlagTYTest {
 		var builder = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(p);
 
-		int i = 1;
-		for (Inntektskategori inntektskategori : inntektskategorier) {
+        var i = 1;
+		for (var inntektskategori : inntektskategorier) {
 			builder.medBeregningsgrunnlagPrStatus(BeregningsgrunnlagPrStatus.builder()
 					.medAndelNr((long) i++)
 					.medAktivitetStatus(AktivitetStatus.BA).medInntektskategori(inntektskategori).build()
@@ -140,7 +140,7 @@ class RegelForeslåBeregningsgrunnlagTYTest {
 	}
 
 	private Inntektsgrunnlag lagInntektsgrunnlag(Periode p, Map<Inntektskategori, BigDecimal> dagsatser) {
-		Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
+        var inntektsgrunnlag = new Inntektsgrunnlag();
 		dagsatser.entrySet().stream().map(e -> lagPeriodeInntekt(p, e.getValue(), e.getKey()))
 				.forEach(inntektsgrunnlag::leggTilPeriodeinntekt);
 		return inntektsgrunnlag;

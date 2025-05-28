@@ -26,28 +26,28 @@ public class RegelFinnGrenseverdiUtenFordeling implements EksportRegel<Beregning
 	@SuppressWarnings("unchecked")
 	@Override
 	public Specification<BeregningsgrunnlagPeriode> getSpecification() {
-		Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
+        var rs = new Ruleset<BeregningsgrunnlagPeriode>();
 
 		// Fastsett grenseverdi for fastsetting av beregningsgrunnlag
-		Specification<BeregningsgrunnlagPeriode> fastsettGrenseverdi = rs.beregningsRegel(FinnGrenseverdiUtenFordeling.ID, FinnGrenseverdiUtenFordeling.BESKRIVELSE,
+        var fastsettGrenseverdi = rs.beregningsRegel(FinnGrenseverdiUtenFordeling.ID, FinnGrenseverdiUtenFordeling.BESKRIVELSE,
 				new FinnGrenseverdiUtenFordeling(), new Fastsatt());
 
 		// Fastsett avkortet BG
-		Specification<BeregningsgrunnlagPeriode> fastsettAvkortet = rs.beregningsRegel(
+        var fastsettAvkortet = rs.beregningsRegel(
 				RegelFastsettAndelBGOver6GUtenFordeling.ID,
 				RegelFastsettAndelBGOver6GUtenFordeling.BESKRIVELSE,
 				new RegelFastsettAndelBGOver6GUtenFordeling(regelmodell).getSpecification(),
 				fastsettGrenseverdi);
 
 		// Fastsett uten avkorting
-		Specification<BeregningsgrunnlagPeriode> fastsettUtenAvkorting = rs.beregningsRegel(
+        var fastsettUtenAvkorting = rs.beregningsRegel(
 				"FP_BR_29.6_uten_fordeling",
 				"Fastsett BG uten avkorting",
 				new FastsettAndelLikBruttoBGUtenFordeling(),
 				fastsettGrenseverdi);
 
 		// FP_BR_29.4 4. Brutto beregnings-grunnlag totalt > 6G?
-		Specification<BeregningsgrunnlagPeriode> beregnEventuellAvkorting = rs.beregningHvisRegel(
+        var beregnEventuellAvkorting = rs.beregningHvisRegel(
 				new SjekkBeregningsgrunnlagStørreEnnGrenseverdi(),
 				fastsettAvkortet,
 				fastsettUtenAvkorting);

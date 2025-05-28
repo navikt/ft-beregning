@@ -24,15 +24,15 @@ public final class PermisjonPerYrkesaktivitet {
 
     public static LocalDateTimeline<Boolean> utledPermisjonPerYrkesaktivitet(YrkesaktivitetDto yrkesaktivitet,
                                                                              Map<YtelseType, LocalDateTimeline<Boolean>> tidslinjePerYtelse, LocalDate skjæringstidspunkt) {
-        List<LocalDateTimeline<Boolean>> aktivPermisjonTidslinjer = yrkesaktivitet.getPermisjoner()
+        var aktivPermisjonTidslinjer = yrkesaktivitet.getPermisjoner()
                 .stream()
                 .filter(permisjon -> erStørreEllerLik100Prosent(permisjon.getProsentsats()))
                 .map(it -> justerPeriodeEtterYtelse(it, tidslinjePerYtelse, skjæringstidspunkt))
                 .flatMap(Collection::stream)
                 .map(permisjon -> new LocalDateTimeline<>(permisjon.getFomDato(), permisjon.getTomDato(), Boolean.TRUE))
                 .toList();
-        LocalDateTimeline<Boolean> aktivPermisjonTidslinje = new LocalDateTimeline<>(List.of());
-        for (LocalDateTimeline<Boolean> linje : aktivPermisjonTidslinjer) {
+        var aktivPermisjonTidslinje = new LocalDateTimeline<Boolean>(List.of());
+        for (var linje : aktivPermisjonTidslinjer) {
             aktivPermisjonTidslinje = aktivPermisjonTidslinje.combine(linje, StandardCombinators::coalesceRightHandSide, LocalDateTimeline.JoinStyle.CROSS_JOIN);
         }
         return aktivPermisjonTidslinje;

@@ -123,7 +123,7 @@ public class InntektspostDto {
         } else if (!(obj instanceof InntektspostDto)) {
             return false;
         }
-        InntektspostDto other = (InntektspostDto) obj;
+        var other = (InntektspostDto) obj;
         return Objects.equals(this.getInntektspostType(), other.getInntektspostType())
                 && Objects.equals(this.getInntektYtelseType(), other.getInntektYtelseType())
                 && Objects.equals(this.getSkatteOgAvgiftsregelType(), other.getSkatteOgAvgiftsregelType())

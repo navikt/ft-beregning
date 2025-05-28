@@ -31,8 +31,8 @@ public final class MapPeriodisertBruttoBeregningsgrunnlag {
     }
 
     private static PeriodisertBruttoBeregningsgrunnlag mapPeriode(BeregningsgrunnlagPeriodeDto bgp) {
-        Periode regelPeriode = Periode.of(bgp.getBeregningsgrunnlagPeriodeFom(), bgp.getBeregningsgrunnlagPeriodeTom());
-        PeriodisertBruttoBeregningsgrunnlag.Builder periodeBuilder = PeriodisertBruttoBeregningsgrunnlag.builder()
+        var regelPeriode = Periode.of(bgp.getBeregningsgrunnlagPeriodeFom(), bgp.getBeregningsgrunnlagPeriodeTom());
+        var periodeBuilder = PeriodisertBruttoBeregningsgrunnlag.builder()
                 .medPeriode(regelPeriode);
         bgp.getBeregningsgrunnlagPrStatusOgAndelList().forEach(a ->
                 periodeBuilder.leggTilBruttoBeregningsgrunnlag(mapBruttoBG(a))
@@ -41,11 +41,11 @@ public final class MapPeriodisertBruttoBeregningsgrunnlag {
     }
 
     private static BruttoBeregningsgrunnlag mapBruttoBG(BeregningsgrunnlagPrStatusOgAndelDto a) {
-        AktivitetStatusV2 regelAktivitetStatus = MapAktivitetStatusV2FraVLTilRegel.map(
+        var regelAktivitetStatus = MapAktivitetStatusV2FraVLTilRegel.map(
                 a.getAktivitetStatus(),
                 a.getGjeldendeInntektskategori());
 
-        Optional<Arbeidsforhold> arbeidsforhold = a.getBgAndelArbeidsforhold()
+        var arbeidsforhold = a.getBgAndelArbeidsforhold()
                 .map(bga ->
                         MapArbeidsforholdFraVLTilRegel.mapArbeidsforhold(
                                 bga.getArbeidsgiver(),

@@ -30,7 +30,7 @@ public class ForeslåSkjæringstidspunktTjenesteFRISINN {
 
     public BeregningAktivitetAggregatDto fastsettAktiviteter(FastsettBeregningsaktiviteterInput input) {
         // Oversetter Opptjening -> regelmodell, hvor også skjæringstidspunkt for Opptjening er lagret
-        AktivitetStatusModell regelmodell = new MapBeregningAktiviteterFraVLTilRegelFRISINN().mapForSkjæringstidspunkt(input);
+        var regelmodell = new MapBeregningAktiviteterFraVLTilRegelFRISINN().mapForSkjæringstidspunkt(input);
         return MapBeregningAktiviteterFraRegelTilVL.map(regelmodell);
     }
 

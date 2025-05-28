@@ -20,8 +20,8 @@ public class RegelmodellOversetter {
 	}
 
 	public static RegelResultat getRegelResultat(Evaluation evaluation, String regelInput) {
-		String sporing = getSporing(evaluation);
-		EvaluationSummary summary = new EvaluationSummary(evaluation);
+        var sporing = getSporing(evaluation);
+        var summary = new EvaluationSummary(evaluation);
 		var leafEvaluations = summary.allLeafEvaluations();
 		var outcomeCodes = summary.allOutcomes().stream().map(RuleReasonRef::getReasonCode).collect(Collectors.toSet());
 		if (outcomeCodes.size() > 1) {
@@ -44,7 +44,7 @@ public class RegelmodellOversetter {
 	}
 
 	private static RegelResultat opprettResultat(Evaluation ev, String regelInput, String sporing) {
-		Resultat res = ev.result();
+        var res = ev.result();
 		return switch (res) {
 			case JA, NEI -> opprettResultat(res, ev, regelInput, sporing);
 			case IKKE_VURDERT -> opprettResultat(ResultatBeregningType.IKKE_VURDERT, regelInput, sporing);

@@ -12,8 +12,8 @@ import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.Vurder
 public class VurderMilitærDtoTjeneste {
 
     public void lagDto(BeregningsgrunnlagGUIInput input, FaktaOmBeregningDto faktaOmBeregningDto) {
-        List<BeregningsgrunnlagAktivitetStatusDto> aktivitetStatuser = input.getBeregningsgrunnlag().getAktivitetStatuser();
-        BeregningsgrunnlagTilstand aktivTilstand = input.getBeregningsgrunnlagGrunnlag().getBeregningsgrunnlagTilstand();
+        var aktivitetStatuser = input.getBeregningsgrunnlag().getAktivitetStatuser();
+        var aktivTilstand = input.getBeregningsgrunnlagGrunnlag().getBeregningsgrunnlagTilstand();
         VurderMilitærDto dto;
         if (aktivTilstand.erFør(BeregningsgrunnlagTilstand.KOFAKBER_UT)) {
             dto = new VurderMilitærDto(null);

@@ -46,14 +46,14 @@ public class RegelForeslåBeregningsgrunnlag implements EksportRegel<Beregningsg
 	@SuppressWarnings("unchecked")
 	@Override
 	public Specification<BeregningsgrunnlagPeriode> getSpecification() {
-		Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
+        var rs = new Ruleset<BeregningsgrunnlagPeriode>();
 
 		// Fastsett alle BG per status
 		var speclist = regelmodell.getAktivitetStatuser().stream()
 				.map(AktivitetStatusMedHjemmel::getAktivitetStatus)
 				.map(this::velgSpecification)
 				.toList();
-		Specification<BeregningsgrunnlagPeriode> foreslåBeregningsgrunnlag =
+        var foreslåBeregningsgrunnlag =
 				rs.beregningsRegel("FP_BR pr status", "Fastsett beregningsgrunnlag pr status", speclist, new Beregnet());
 
 		return foreslåBeregningsgrunnlag;

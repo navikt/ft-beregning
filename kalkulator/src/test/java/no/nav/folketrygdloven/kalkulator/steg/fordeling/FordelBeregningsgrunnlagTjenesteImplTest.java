@@ -72,7 +72,7 @@ class FordelBeregningsgrunnlagTjenesteImplTest {
         fordelBeregningsgrunnlagTjeneste = new FordelBeregningsgrunnlagTjenesteImpl();
         iayGrunnlagBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
         leggTilYrkesaktiviteterOgBeregningAktiviteter(iayGrunnlagBuilder, List.of(ORGNR1, ORGNR2, ORGNR3));
-        BeregningAktivitetAggregatDto.Builder builder = BeregningAktivitetAggregatDto.builder().medSkjæringstidspunktOpptjening(SKJÆRINGSTIDSPUNKT);
+        var builder = BeregningAktivitetAggregatDto.builder().medSkjæringstidspunktOpptjening(SKJÆRINGSTIDSPUNKT);
         aktiviteter.forEach(builder::leggTilAktivitet);
         beregningAktivitetAggregat = builder.build();
     }
@@ -81,14 +81,14 @@ class FordelBeregningsgrunnlagTjenesteImplTest {
     void skal_omfordele_når_refusjon_overstiger_beregningsgrunnlag_for_ein_andel() {
         // Arrange
         // Beregningsgrunnlag fra Foreslå
-        BigDecimal beregnetPrÅr1 = BigDecimal.valueOf(120_000);
+        var beregnetPrÅr1 = BigDecimal.valueOf(120_000);
         Map<String, BigDecimal> orgnrsBeregnetMap = new HashMap<>();
         orgnrsBeregnetMap.put(ORGNR1, beregnetPrÅr1);
-        BigDecimal beregnetPrÅr2 = BigDecimal.valueOf(180_000);
+        var beregnetPrÅr2 = BigDecimal.valueOf(180_000);
         orgnrsBeregnetMap.put(ORGNR2, beregnetPrÅr2);
-        BigDecimal beregnetPrÅr3 = BigDecimal.valueOf(240_000);
+        var beregnetPrÅr3 = BigDecimal.valueOf(240_000);
         orgnrsBeregnetMap.put(ORGNR3, beregnetPrÅr3);
-        BeregningsgrunnlagGrunnlagDto grunnlag = lagBeregningsgrunnlag(orgnrsBeregnetMap, beregningAktivitetAggregat);
+        var grunnlag = lagBeregningsgrunnlag(orgnrsBeregnetMap, beregningAktivitetAggregat);
 
         // Inntektsmelding
         var inntektPrMnd1 = Beløp.fra(10_000);
@@ -107,20 +107,20 @@ class FordelBeregningsgrunnlagTjenesteImplTest {
                 .medBeregningsgrunnlagGrunnlag(grunnlag);
 
         // Act
-        BeregningsgrunnlagRegelResultat periodisertBG = fordelPerioderTjeneste.fastsettPerioderForRefusjon(input);
-        BeregningsgrunnlagGrunnlagDto periodisertGrunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(grunnlag)
+        var periodisertBG = fordelPerioderTjeneste.fastsettPerioderForRefusjon(input);
+        var periodisertGrunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(grunnlag)
                 .medBeregningsgrunnlag(periodisertBG.getBeregningsgrunnlag())
                 .build(BeregningsgrunnlagTilstand.VURDERT_REFUSJON);
-        BeregningsgrunnlagDto nyttBeregningsgrunnlag = fordelBeregningsgrunnlagTjeneste.omfordelBeregningsgrunnlag(input.medBeregningsgrunnlagGrunnlag(periodisertGrunnlag)).getBeregningsgrunnlag();
+        var nyttBeregningsgrunnlag = fordelBeregningsgrunnlagTjeneste.omfordelBeregningsgrunnlag(input.medBeregningsgrunnlagGrunnlag(periodisertGrunnlag)).getBeregningsgrunnlag();
 
         // Assert
         assertThat(nyttBeregningsgrunnlag.getBeregningsgrunnlagPerioder()).hasSize(1);
-        BeregningsgrunnlagPeriodeDto periode = nyttBeregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        List<BeregningsgrunnlagPrStatusOgAndelDto> andeler = periode.getBeregningsgrunnlagPrStatusOgAndelList();
+        var periode = nyttBeregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var andeler = periode.getBeregningsgrunnlagPrStatusOgAndelList();
         assertThat(andeler).hasSize(3);
-        BeregningsgrunnlagPrStatusOgAndelDto andel1 = andeler.stream().filter(a -> a.getBgAndelArbeidsforhold().get().getArbeidsgiver().getIdentifikator().equals(ORGNR1)).findFirst().get();
-        BeregningsgrunnlagPrStatusOgAndelDto andel2 = andeler.stream().filter(a -> a.getBgAndelArbeidsforhold().get().getArbeidsgiver().getIdentifikator().equals(ORGNR2)).findFirst().get();
-        BeregningsgrunnlagPrStatusOgAndelDto andel3 = andeler.stream().filter(a -> a.getBgAndelArbeidsforhold().get().getArbeidsgiver().getIdentifikator().equals(ORGNR3)).findFirst().get();
+        var andel1 = andeler.stream().filter(a -> a.getBgAndelArbeidsforhold().get().getArbeidsgiver().getIdentifikator().equals(ORGNR1)).findFirst().get();
+        var andel2 = andeler.stream().filter(a -> a.getBgAndelArbeidsforhold().get().getArbeidsgiver().getIdentifikator().equals(ORGNR2)).findFirst().get();
+        var andel3 = andeler.stream().filter(a -> a.getBgAndelArbeidsforhold().get().getArbeidsgiver().getIdentifikator().equals(ORGNR3)).findFirst().get();
 
         // Forventer at ORGNR1 har fått økt sitt brutto bg
         var forventetNyBruttoForArbeid1 = Beløp.fra(240_000);
@@ -138,13 +138,13 @@ class FordelBeregningsgrunnlagTjenesteImplTest {
 
     private BeregningsgrunnlagGrunnlagDto lagBeregningsgrunnlag(Map<String, BigDecimal> orgnrs,
                                                                 BeregningAktivitetAggregatDto beregningAktivitetAggregat) {
-        BeregningsgrunnlagPeriodeDto.Builder beregningsgrunnlagPeriodeBuilder = lagBeregningsgrunnlagPerioderBuilder(SKJÆRINGSTIDSPUNKT, null, orgnrs);
-        BeregningsgrunnlagDto.Builder beregningsgrunnlagBuilder = BeregningsgrunnlagDto.builder()
+        var beregningsgrunnlagPeriodeBuilder = lagBeregningsgrunnlagPerioderBuilder(SKJÆRINGSTIDSPUNKT, null, orgnrs);
+        var beregningsgrunnlagBuilder = BeregningsgrunnlagDto.builder()
                 .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT)
                 .medGrunnbeløp(GRUNNBELØP)
                 .leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER).medHjemmel(Hjemmel.F_14_7));
         beregningsgrunnlagBuilder.leggTilBeregningsgrunnlagPeriode(beregningsgrunnlagPeriodeBuilder);
-        BeregningsgrunnlagDto bg = beregningsgrunnlagBuilder.build();
+        var bg = beregningsgrunnlagBuilder.build();
         return BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medBeregningsgrunnlag(bg)
                 .medRegisterAktiviteter(beregningAktivitetAggregat)
@@ -152,10 +152,10 @@ class FordelBeregningsgrunnlagTjenesteImplTest {
     }
 
     private BeregningsgrunnlagPeriodeDto.Builder lagBeregningsgrunnlagPerioderBuilder(LocalDate fom, LocalDate tom, Map<String, BigDecimal> orgnrs) {
-        BeregningsgrunnlagPeriodeDto.Builder builder = BeregningsgrunnlagPeriodeDto.ny();
-        for (String orgnr : orgnrs.keySet()) {
-            Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(orgnr);
-            BeregningsgrunnlagPrStatusOgAndelDto.Builder andelBuilder = BeregningsgrunnlagPrStatusOgAndelDto.ny()
+        var builder = BeregningsgrunnlagPeriodeDto.ny();
+        for (var orgnr : orgnrs.keySet()) {
+            var arbeidsgiver = Arbeidsgiver.virksomhet(orgnr);
+            var andelBuilder = BeregningsgrunnlagPrStatusOgAndelDto.ny()
                     .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                     .medInntektskategori(Inntektskategori.ARBEIDSTAKER)
                     .medBeregnetPrÅr(Beløp.fra(orgnrs.get(orgnr)))
@@ -169,14 +169,14 @@ class FordelBeregningsgrunnlagTjenesteImplTest {
     }
 
     private void leggTilYrkesaktiviteterOgBeregningAktiviteter(InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlagBuilder, List<String> orgnrs) {
-        Intervall arbeidsperiode1 = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT.minusYears(2), TIDENES_ENDE);
+        var arbeidsperiode1 = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT.minusYears(2), TIDENES_ENDE);
 
         var aktørArbeidBuilder = InntektArbeidYtelseAggregatBuilder.AktørArbeidBuilder.oppdatere(Optional.empty());
-        for (String orgnr : orgnrs) {
-            Arbeidsgiver arbeidsgiver = leggTilYrkesaktivitet(arbeidsperiode1, aktørArbeidBuilder, orgnr);
+        for (var orgnr : orgnrs) {
+            var arbeidsgiver = leggTilYrkesaktivitet(arbeidsperiode1, aktørArbeidBuilder, orgnr);
             fjernOgLeggTilNyBeregningAktivitet(arbeidsperiode1.getFomDato(), arbeidsperiode1.getTomDato(), arbeidsgiver, InternArbeidsforholdRefDto.nullRef());
         }
-        InntektArbeidYtelseAggregatBuilder registerBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
+        var registerBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
         registerBuilder.leggTilAktørArbeid(aktørArbeidBuilder);
         iayGrunnlagBuilder.medData(registerBuilder);
     }
@@ -200,10 +200,10 @@ class FordelBeregningsgrunnlagTjenesteImplTest {
 
     private Arbeidsgiver leggTilYrkesaktivitet(Intervall arbeidsperiode, InntektArbeidYtelseAggregatBuilder.AktørArbeidBuilder aktørArbeidBuilder,
                                                String orgnr) {
-        Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(orgnr);
-        AktivitetsAvtaleDtoBuilder aaBuilder1 = AktivitetsAvtaleDtoBuilder.ny()
+        var arbeidsgiver = Arbeidsgiver.virksomhet(orgnr);
+        var aaBuilder1 = AktivitetsAvtaleDtoBuilder.ny()
                 .medPeriode(arbeidsperiode);
-        YrkesaktivitetDtoBuilder yaBuilder = YrkesaktivitetDtoBuilder.oppdatere(Optional.empty())
+        var yaBuilder = YrkesaktivitetDtoBuilder.oppdatere(Optional.empty())
                 .medArbeidsgiver(arbeidsgiver)
                 .medArbeidType(ArbeidType.ORDINÆRT_ARBEIDSFORHOLD)
                 .leggTilAktivitetsAvtale(aaBuilder1);

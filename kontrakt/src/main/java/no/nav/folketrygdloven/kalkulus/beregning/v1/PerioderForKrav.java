@@ -63,7 +63,7 @@ public class PerioderForKrav {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PerioderForKrav that = (PerioderForKrav) o;
+        var that = (PerioderForKrav) o;
         return Objects.equals(innsendingsdato, that.innsendingsdato) && Objects.equals(refusjonsperioder, that.refusjonsperioder);
     }
 

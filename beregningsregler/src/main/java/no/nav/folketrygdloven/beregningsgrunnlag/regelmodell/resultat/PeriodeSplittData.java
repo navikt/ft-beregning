@@ -62,7 +62,7 @@ public class PeriodeSplittData {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PeriodeSplittData that = (PeriodeSplittData) o;
+        var that = (PeriodeSplittData) o;
         return Objects.equals(fom, that.fom)
             && Objects.equals(tom, that.tom)
             && Objects.equals(periodeÅrsak, that.periodeÅrsak)

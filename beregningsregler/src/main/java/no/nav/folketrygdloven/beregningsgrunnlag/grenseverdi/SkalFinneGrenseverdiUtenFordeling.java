@@ -23,7 +23,7 @@ public class SkalFinneGrenseverdiUtenFordeling extends LeafSpecification<Beregni
 		if (ytelsesSpesifiktGrunnlag instanceof PleiepengerGrunnlagFastsettGrenseverdi pleiepengergrunnlag) {
 			var startdatoNyeGraderingsregler = pleiepengergrunnlag.getStartdatoNyeGraderingsregler();
 			var skalKjøreMedFordeling = startdatoNyeGraderingsregler == null || grunnlag.getPeriodeFom().isBefore(startdatoNyeGraderingsregler);
-			SingleEvaluation resultat = skalKjøreMedFordeling ? nei() : ja();
+            var resultat = skalKjøreMedFordeling ? nei() : ja();
 			resultat.setEvaluationProperty("startdatoNyeGraderingsregler", startdatoNyeGraderingsregler);
 			resultat.setEvaluationProperty("periodeFom", grunnlag.getPeriodeFom());
 

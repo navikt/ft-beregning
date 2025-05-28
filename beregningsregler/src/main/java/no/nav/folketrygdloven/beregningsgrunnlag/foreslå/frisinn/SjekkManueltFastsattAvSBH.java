@@ -20,11 +20,11 @@ class SjekkManueltFastsattAvSBH extends LeafSpecification<BeregningsgrunnlagPeri
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        BeregningsgrunnlagPrStatus atlfAndel = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+        var atlfAndel = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
         if (atlfAndel == null) {
             return nei();
         }
-        boolean finnesArbforSomErManueltFastsatt = atlfAndel.getArbeidsforhold().stream()
+        var finnesArbforSomErManueltFastsatt = atlfAndel.getArbeidsforhold().stream()
             .anyMatch(BeregningsgrunnlagPrArbeidsforhold::getFastsattAvSaksbehandler);
         return finnesArbforSomErManueltFastsatt ? ja() : nei();
     }

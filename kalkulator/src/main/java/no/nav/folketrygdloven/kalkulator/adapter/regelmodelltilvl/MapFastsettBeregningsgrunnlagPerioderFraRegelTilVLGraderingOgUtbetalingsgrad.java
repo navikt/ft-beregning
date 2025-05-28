@@ -45,11 +45,11 @@ public class MapFastsettBeregningsgrunnlagPerioderFraRegelTilVLGraderingOgUtbeta
     private void mapNyAndel(BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode, SplittetAndel nyAndel) {
         // Antar at vi ikkje får nye andeler for ytelse FRISINN
         if (nyAndelErSNFlDP(nyAndel)) {
-            AktivitetStatus aktivitetStatus = mapAktivitetStatus(nyAndel.getAktivitetStatus());
+            var aktivitetStatus = mapAktivitetStatus(nyAndel.getAktivitetStatus());
             if (aktivitetStatus == null) {
                 throw new IllegalStateException("Klarte ikke identifisere aktivitetstatus under periodesplitt. Status var " + nyAndel.getAktivitetStatus());
             }
-            boolean eksisterende = beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndelList().stream()
+            var eksisterende = beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndelList().stream()
                     .anyMatch(a -> a.getAktivitetStatus().equals(aktivitetStatus) && a.getArbeidsforholdType().equals(aktivitetTypeMap.get(aktivitetStatus)));
             if (!eksisterende) {
                 BeregningsgrunnlagPrStatusOgAndelDto.ny()
@@ -59,9 +59,9 @@ public class MapFastsettBeregningsgrunnlagPerioderFraRegelTilVLGraderingOgUtbeta
                         .build(beregningsgrunnlagPeriode);
             }
         } else {
-            Arbeidsgiver arbeidsgiver = MapArbeidsforholdFraRegelTilVL.map(nyAndel.getArbeidsforhold().getReferanseType(), nyAndel.getArbeidsforhold().getOrgnr(), nyAndel.getArbeidsforhold().getAktørId());
-            InternArbeidsforholdRefDto iaRef = InternArbeidsforholdRefDto.ref(nyAndel.getArbeidsforhold().getArbeidsforholdId());
-            BGAndelArbeidsforholdDto.Builder andelArbeidsforholdBuilder = BGAndelArbeidsforholdDto.builder()
+            var arbeidsgiver = MapArbeidsforholdFraRegelTilVL.map(nyAndel.getArbeidsforhold().getReferanseType(), nyAndel.getArbeidsforhold().getOrgnr(), nyAndel.getArbeidsforhold().getAktørId());
+            var iaRef = InternArbeidsforholdRefDto.ref(nyAndel.getArbeidsforhold().getArbeidsforholdId());
+            var andelArbeidsforholdBuilder = BGAndelArbeidsforholdDto.builder()
                     .medArbeidsgiver(arbeidsgiver)
                     .medArbeidsforholdRef(iaRef)
                     .medArbeidsperiodeFom(nyAndel.getArbeidsperiodeFom())
@@ -96,7 +96,7 @@ public class MapFastsettBeregningsgrunnlagPerioderFraRegelTilVLGraderingOgUtbeta
 
     private void leggTilEksisterende(BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode,
                                      BeregningsgrunnlagPrStatusOgAndelDto eksisterendeAndel) {
-        BeregningsgrunnlagPrStatusOgAndelDto.Builder andelBuilder = BeregningsgrunnlagPrStatusOgAndelDto.kopier(eksisterendeAndel);
+        var andelBuilder = BeregningsgrunnlagPrStatusOgAndelDto.kopier(eksisterendeAndel);
         andelBuilder.build(beregningsgrunnlagPeriode);
     }
 

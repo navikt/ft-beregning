@@ -13,7 +13,7 @@ public record RegelMerknad(BeregningUtfallÅrsak utfallÅrsak) {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (!(o instanceof RegelMerknad)) return false;
-		RegelMerknad that = (RegelMerknad) o;
+        var that = (RegelMerknad) o;
 		return utfallÅrsak == that.utfallÅrsak;
 	}
 

@@ -27,16 +27,16 @@ class SjekkÅrsinntektMotSammenligningsgrunnlagTest {
     @Test
     void skalReturnereJaNårSammenligningsGrunnlagEr0() {
         //Arrange
-        Beregningsgrunnlag grunnlag = settoppGrunnlagMedEnPeriode(LocalDate.now(), new Inntektsgrunnlag(),
+        var grunnlag = settoppGrunnlagMedEnPeriode(LocalDate.now(), new Inntektsgrunnlag(),
             Collections.singletonList(AktivitetStatus.ATFL), Collections.singletonList(arbeidsforhold));
-	    SammenligningsGrunnlag sgPrStatus = SammenligningsGrunnlag.builder()
+        var sgPrStatus = SammenligningsGrunnlag.builder()
 			    .medSammenligningsperiode(null)
 			    .medSammenligningstype(SammenligningGrunnlagType.AT_FL)
 			    .medRapportertPrÅr(BigDecimal.ZERO).build();
 	    Beregningsgrunnlag.builder(grunnlag).leggTilSammenligningsgrunnlagPrStatus(sgPrStatus);
-        BeregningsgrunnlagPeriode periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
         //Act
-        Evaluation resultat = new SjekkÅrsinntektMotSammenligningsgrunnlag().evaluate(periode);
+        var resultat = new SjekkÅrsinntektMotSammenligningsgrunnlag().evaluate(periode);
         //Assert
         assertThat(resultat.result()).isEqualTo(Resultat.JA);
 	    var sgPrStatusResultat = grunnlag.getSammenligningsgrunnlagForStatus(SammenligningGrunnlagType.AT_FL).orElseThrow();
@@ -47,31 +47,31 @@ class SjekkÅrsinntektMotSammenligningsgrunnlagTest {
     @Test
     void skalKasteExceptionNårSammenligningsgrunnlagErNull() {
         //Arrange
-        Beregningsgrunnlag grunnlag = settoppGrunnlagMedEnPeriode(LocalDate.now(), new Inntektsgrunnlag(),
+        var grunnlag = settoppGrunnlagMedEnPeriode(LocalDate.now(), new Inntektsgrunnlag(),
             Collections.singletonList(AktivitetStatus.ATFL), Collections.singletonList(arbeidsforhold));
-        BeregningsgrunnlagPeriode periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         //Act
-	    SjekkÅrsinntektMotSammenligningsgrunnlag sjekkÅrsinntektMotSammenligningsgrunnlag = new SjekkÅrsinntektMotSammenligningsgrunnlag();
+        var sjekkÅrsinntektMotSammenligningsgrunnlag = new SjekkÅrsinntektMotSammenligningsgrunnlag();
 	    Assertions.assertThrows(IllegalStateException.class, () -> sjekkÅrsinntektMotSammenligningsgrunnlag.evaluate(periode));
     }
 
     @Test
     void skalReturnereNeiNårAvvikErAkkurat25Prosent() {
         //Arrange
-        Beregningsgrunnlag grunnlag = settoppGrunnlagMedEnPeriode(LocalDate.now(), new Inntektsgrunnlag(),
+        var grunnlag = settoppGrunnlagMedEnPeriode(LocalDate.now(), new Inntektsgrunnlag(),
             Collections.singletonList(AktivitetStatus.ATFL), Collections.singletonList(arbeidsforhold));
-        BeregningsgrunnlagPeriode periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
-	    SammenligningsGrunnlag sgPrStatus = SammenligningsGrunnlag.builder()
+        var periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var sgPrStatus = SammenligningsGrunnlag.builder()
 			    .medSammenligningsperiode(null)
 			    .medSammenligningstype(SammenligningGrunnlagType.AT_FL)
 			    .medRapportertPrÅr(BigDecimal.valueOf(100000)).build();
 	    Beregningsgrunnlag.builder(grunnlag).leggTilSammenligningsgrunnlagPrStatus(sgPrStatus);
-        BeregningsgrunnlagPrArbeidsforhold bgAT = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
+        var bgAT = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
         BeregningsgrunnlagPrArbeidsforhold.builder(bgAT).medBeregnetPrÅr(BigDecimal.valueOf(125000));
 
         //Act
-        Evaluation resultat = new SjekkÅrsinntektMotSammenligningsgrunnlag().evaluate(periode);
+        var resultat = new SjekkÅrsinntektMotSammenligningsgrunnlag().evaluate(periode);
         //Assert
         assertThat(resultat.result()).isEqualTo(Resultat.NEI);
 
@@ -84,19 +84,19 @@ class SjekkÅrsinntektMotSammenligningsgrunnlagTest {
     @Test
     void skalReturnereJaNårAvvikErAkkuratOver25Prosent() {
         //Arrange
-        Beregningsgrunnlag grunnlag = settoppGrunnlagMedEnPeriode(LocalDate.now(), new Inntektsgrunnlag(),
+        var grunnlag = settoppGrunnlagMedEnPeriode(LocalDate.now(), new Inntektsgrunnlag(),
             Collections.singletonList(AktivitetStatus.ATFL), Collections.singletonList(arbeidsforhold));
-        BeregningsgrunnlagPeriode periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
-	    SammenligningsGrunnlag sgPrStatus = SammenligningsGrunnlag.builder()
+        var periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var sgPrStatus = SammenligningsGrunnlag.builder()
 			    .medSammenligningstype(SammenligningGrunnlagType.AT_FL)
 			    .medSammenligningsperiode(null)
 			    .medRapportertPrÅr(BigDecimal.valueOf(100000)).build();
 	    Beregningsgrunnlag.builder(grunnlag).leggTilSammenligningsgrunnlagPrStatus(sgPrStatus);
-        BeregningsgrunnlagPrArbeidsforhold bgAT = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
+        var bgAT = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
         BeregningsgrunnlagPrArbeidsforhold.builder(bgAT).medBeregnetPrÅr(BigDecimal.valueOf(125001));
 
         //Act
-        Evaluation resultat = new SjekkÅrsinntektMotSammenligningsgrunnlag().evaluate(periode);
+        var resultat = new SjekkÅrsinntektMotSammenligningsgrunnlag().evaluate(periode);
         //Assert
         assertThat(resultat.result()).isEqualTo(Resultat.JA);
 
@@ -108,19 +108,19 @@ class SjekkÅrsinntektMotSammenligningsgrunnlagTest {
     @Test
     void skalTesteAtAvvikKanReturneresMedFullNøyaktighet() {
         //Arrange
-        Beregningsgrunnlag grunnlag = settoppGrunnlagMedEnPeriode(LocalDate.now(), new Inntektsgrunnlag(),
+        var grunnlag = settoppGrunnlagMedEnPeriode(LocalDate.now(), new Inntektsgrunnlag(),
             Collections.singletonList(AktivitetStatus.ATFL), Collections.singletonList(arbeidsforhold));
-        BeregningsgrunnlagPeriode periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
-	    SammenligningsGrunnlag sgPrStatus = SammenligningsGrunnlag.builder()
+        var periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var sgPrStatus = SammenligningsGrunnlag.builder()
 			    .medSammenligningstype(SammenligningGrunnlagType.AT_FL)
 			    .medSammenligningsperiode(null)
 			    .medRapportertPrÅr(BigDecimal.valueOf(100000)).build();
 	    Beregningsgrunnlag.builder(grunnlag).leggTilSammenligningsgrunnlagPrStatus(sgPrStatus);
-        BeregningsgrunnlagPrArbeidsforhold bgAT = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
+        var bgAT = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
         BeregningsgrunnlagPrArbeidsforhold.builder(bgAT).medBeregnetPrÅr(BigDecimal.valueOf(125001));
 
         //Act
-        Evaluation resultat = new SjekkÅrsinntektMotSammenligningsgrunnlag().evaluate(periode);
+        var resultat = new SjekkÅrsinntektMotSammenligningsgrunnlag().evaluate(periode);
         //Assert
         assertThat(resultat.result()).isEqualTo(Resultat.JA);
 

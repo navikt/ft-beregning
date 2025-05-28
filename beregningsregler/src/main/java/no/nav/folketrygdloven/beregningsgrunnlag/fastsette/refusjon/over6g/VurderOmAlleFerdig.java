@@ -21,7 +21,7 @@ class VurderOmAlleFerdig extends LeafSpecification<BeregningsgrunnlagPeriode> {
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        Optional<BeregningsgrunnlagPrArbeidsforhold> ikkeFerdig = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold()
+        var ikkeFerdig = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold()
             .stream()
             .filter(af -> af.getMaksimalRefusjonPrÅr() != null)
             .filter(af -> af.getAvkortetRefusjonPrÅr() == null)

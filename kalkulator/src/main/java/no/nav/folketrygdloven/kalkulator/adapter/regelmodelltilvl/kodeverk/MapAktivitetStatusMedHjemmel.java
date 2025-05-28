@@ -16,9 +16,9 @@ public class MapAktivitetStatusMedHjemmel {
 
     public static BeregningsgrunnlagDto mapAktivitetStatusMedHjemmel(List<AktivitetStatusMedHjemmel> aktivitetStatuser,
                                                                      BeregningsgrunnlagDto eksisterendeVLGrunnlag, no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
-        for (no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel regelStatus : aktivitetStatuser) {
-            AktivitetStatus modellStatus = fraRegel(regelStatus.getAktivitetStatus(), beregningsgrunnlagPeriode);
-            Hjemmel hjemmel = MapHjemmelFraRegelTilVL.map(regelStatus.getHjemmel());
+        for (var regelStatus : aktivitetStatuser) {
+            var modellStatus = fraRegel(regelStatus.getAktivitetStatus(), beregningsgrunnlagPeriode);
+            var hjemmel = MapHjemmelFraRegelTilVL.map(regelStatus.getHjemmel());
             BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(modellStatus).medHjemmel(hjemmel).build(eksisterendeVLGrunnlag);
         }
         return eksisterendeVLGrunnlag;
@@ -28,12 +28,12 @@ public class MapAktivitetStatusMedHjemmel {
         if (MapAktivitetStatusVedSkjæringstidspunktFraRegelTilVL.contains(aktivitetStatus)) {
             return MapAktivitetStatusVedSkjæringstidspunktFraRegelTilVL.map(aktivitetStatus);
         }
-        BeregningsgrunnlagPrStatus atfl = beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatus(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus.ATFL);
+        var atfl = beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatus(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus.ATFL);
         if (atfl == null) {
             return AktivitetStatus.ARBEIDSTAKER;
         }
-        boolean frilanser = atfl.getFrilansArbeidsforhold().isPresent();
-        boolean arbeidstaker = !atfl.getArbeidsforholdIkkeFrilans().isEmpty();
+        var frilanser = atfl.getFrilansArbeidsforhold().isPresent();
+        var arbeidstaker = !atfl.getArbeidsforholdIkkeFrilans().isEmpty();
 
         if (no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus.ATFL.equals(aktivitetStatus)) {
             return mapATFL(frilanser, arbeidstaker);

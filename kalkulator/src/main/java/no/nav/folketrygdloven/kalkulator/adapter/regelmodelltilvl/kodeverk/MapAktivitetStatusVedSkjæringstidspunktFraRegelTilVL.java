@@ -66,11 +66,11 @@ public class MapAktivitetStatusVedSkjæringstidspunktFraRegelTilVL {
     }
 
     private static AktivitetStatus kombinertStatus(AktivitetStatusModell regelmodell, boolean medSN) {
-        List<Arbeidsforhold> alleArbeidsforhold = regelmodell.getBeregningsgrunnlagPrStatusListe().stream()
+        var alleArbeidsforhold = regelmodell.getBeregningsgrunnlagPrStatusListe().stream()
             .flatMap(bgps -> bgps.getArbeidsforholdList().stream())
             .collect(Collectors.toList());
-        Optional<Arbeidsforhold> frilanser = alleArbeidsforhold.stream().filter(Arbeidsforhold::erFrilanser).findAny();
-        Optional<Arbeidsforhold> arbeidstaker = alleArbeidsforhold.stream().filter(af -> !(af.erFrilanser())).findAny();
+        var frilanser = alleArbeidsforhold.stream().filter(Arbeidsforhold::erFrilanser).findAny();
+        var arbeidstaker = alleArbeidsforhold.stream().filter(af -> !(af.erFrilanser())).findAny();
         if (frilanser.isPresent()) {
             if (arbeidstaker.isPresent()) {
                 return medSN ? AktivitetStatus.KOMBINERT_AT_FL_SN : AktivitetStatus.KOMBINERT_AT_FL;

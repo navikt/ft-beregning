@@ -121,7 +121,7 @@ class UtvidetInntektsperiodeUtlederTest {
     void skal_godkjenne_periode_med_fullt_fravær() {
         var arbeidsgiver = Arbeidsgiver.virksomhet("123432");
         var juli = new LocalDateSegment<>(LocalDate.of(2022, 7, 1), LocalDate.of(2022, 7, 31), Set.of(new DagsatsPrKategoriOgArbeidsgiver(Inntektskategori.ARBEIDSTAKER, arbeidsgiver,  Beløp.fra(1))));
-        LocalDateTimeline<Set<DagsatsPrKategoriOgArbeidsgiver>> inntektTidslinje = new LocalDateTimeline<>(List.of());
+        var inntektTidslinje = new LocalDateTimeline<Set<DagsatsPrKategoriOgArbeidsgiver>>(List.of());
         var iDag = LocalDate.now();
         var fulltFravær = lagUtbetalingsgradForFulltFravær(arbeidsgiver);
         var utbetalingsgradGrunnlag = new PleiepengerSyktBarnGrunnlag(List.of(

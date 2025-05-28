@@ -27,12 +27,12 @@ class FinnRapporterteInntekterForInaktivTest {
 	@Test
 	void skal_brukes_forrige_måned_med_inntekt_dersom_tilgjengelig() {
 		// Arrange
-		BigDecimal forrigeMåned = BigDecimal.valueOf(8000);
-		BigDecimal nesteMåned = BigDecimal.valueOf(9000);
+        var forrigeMåned = BigDecimal.valueOf(8000);
+        var nesteMåned = BigDecimal.valueOf(9000);
 		var skjæringstidspunkt = LocalDate.of(2022, 11, 11);
-		Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR);
+        var arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR);
 		Arbeidsforhold.builder(arbeidsforhold).medAnsettelsesPeriode(Periode.of(LocalDate.of(2022, 10, 20), null));
-		Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
+        var inntektsgrunnlag = new Inntektsgrunnlag();
 		leggTilMånedsinntekt(nesteMåned, skjæringstidspunkt, arbeidsforhold, inntektsgrunnlag, 0);
 		leggTilMånedsinntekt(forrigeMåned, skjæringstidspunkt, arbeidsforhold, inntektsgrunnlag, 1);
 
@@ -42,7 +42,7 @@ class FinnRapporterteInntekterForInaktivTest {
 				singletonList(arbeidsforhold),
 				emptyList(),
 				emptyList());
-		BeregningsgrunnlagPeriode grunnlag = bg.getBeregningsgrunnlagPerioder().get(0);
+        var grunnlag = bg.getBeregningsgrunnlagPerioder().get(0);
 
 		// Act
 		var periodeinntekt = finnRapporterteInntekter.finnRapportertInntekt(grunnlag);
@@ -54,11 +54,11 @@ class FinnRapporterteInntekterForInaktivTest {
 	@Test
 	void skal_bruke_siste_måned_med_inntekt_dersom_ikke_forrige_er_tilgjengelig() {
 		// Arrange
-		BigDecimal nesteMåned = BigDecimal.valueOf(22_000);
+        var nesteMåned = BigDecimal.valueOf(22_000);
 		var skjæringstidspunkt = LocalDate.of(2022, 11, 11);
-		Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR);
+        var arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR);
 		Arbeidsforhold.builder(arbeidsforhold).medAnsettelsesPeriode(Periode.of(LocalDate.of(2022, 10, 20), null));
-		Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
+        var inntektsgrunnlag = new Inntektsgrunnlag();
 		leggTilMånedsinntekt(nesteMåned, skjæringstidspunkt, arbeidsforhold, inntektsgrunnlag, 0);
 
 		var bg = settoppGrunnlagMedEnPeriode(skjæringstidspunkt,
@@ -67,7 +67,7 @@ class FinnRapporterteInntekterForInaktivTest {
 				singletonList(arbeidsforhold),
 				emptyList(),
 				emptyList());
-		BeregningsgrunnlagPeriode grunnlag = bg.getBeregningsgrunnlagPerioder().get(0);
+        var grunnlag = bg.getBeregningsgrunnlagPerioder().get(0);
 
 		// Act
 		var periodeinntekt = finnRapporterteInntekter.finnRapportertInntekt(grunnlag);
@@ -80,9 +80,9 @@ class FinnRapporterteInntekterForInaktivTest {
 	void skal_returnere_empty_når_ingen_månedsinntekter() {
 		// Arrange
 		var skjæringstidspunkt = LocalDate.of(2022, 11, 11);
-		Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR);
+        var arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR);
 		Arbeidsforhold.builder(arbeidsforhold).medAnsettelsesPeriode(Periode.of(LocalDate.of(2022, 10, 20), null));
-		Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
+        var inntektsgrunnlag = new Inntektsgrunnlag();
 
 		var bg = settoppGrunnlagMedEnPeriode(skjæringstidspunkt,
 				inntektsgrunnlag,
@@ -90,7 +90,7 @@ class FinnRapporterteInntekterForInaktivTest {
 				singletonList(arbeidsforhold),
 				emptyList(),
 				emptyList());
-		BeregningsgrunnlagPeriode grunnlag = bg.getBeregningsgrunnlagPerioder().get(0);
+        var grunnlag = bg.getBeregningsgrunnlagPerioder().get(0);
 
 		// Act
 		var periodeinntekt = finnRapporterteInntekter.finnRapportertInntekt(grunnlag);
@@ -102,11 +102,11 @@ class FinnRapporterteInntekterForInaktivTest {
 	@Test
 	void skal_returnere_empty_når_inntekt_eldre_enn_4_måneder() {
 		// Arrange
-		BigDecimal nesteMåned = BigDecimal.valueOf(22_000);
+        var nesteMåned = BigDecimal.valueOf(22_000);
 		var skjæringstidspunkt = LocalDate.of(2022, 11, 11);
-		Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR);
+        var arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR);
 		Arbeidsforhold.builder(arbeidsforhold).medAnsettelsesPeriode(Periode.of(LocalDate.of(2022, 10, 20), null));
-		Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
+        var inntektsgrunnlag = new Inntektsgrunnlag();
 		leggTilMånedsinntekt(nesteMåned, skjæringstidspunkt, arbeidsforhold, inntektsgrunnlag, 5);
 
 		var bg = settoppGrunnlagMedEnPeriode(skjæringstidspunkt,
@@ -115,7 +115,7 @@ class FinnRapporterteInntekterForInaktivTest {
 				singletonList(arbeidsforhold),
 				emptyList(),
 				emptyList());
-		BeregningsgrunnlagPeriode grunnlag = bg.getBeregningsgrunnlagPerioder().get(0);
+        var grunnlag = bg.getBeregningsgrunnlagPerioder().get(0);
 
 		// Act
 		var periodeinntekt = finnRapporterteInntekter.finnRapportertInntekt(grunnlag);
@@ -127,12 +127,12 @@ class FinnRapporterteInntekterForInaktivTest {
 	@Test
 	void skal_ikke_bruke_ansettelsesperiode_som_starter_etter_inntektsperiode() {
 		// Arrange
-		BigDecimal forrigeMåned = BigDecimal.valueOf(8000);
-		BigDecimal nesteMåned = BigDecimal.valueOf(9000);
+        var forrigeMåned = BigDecimal.valueOf(8000);
+        var nesteMåned = BigDecimal.valueOf(9000);
 		var skjæringstidspunkt = LocalDate.of(2022, 11, 11);
-		Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR);
+        var arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR);
 		Arbeidsforhold.builder(arbeidsforhold).medAnsettelsesPeriode(Periode.of(LocalDate.of(2022, 11, 9), LocalDate.of(2023, 3, 11)));
-		Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
+        var inntektsgrunnlag = new Inntektsgrunnlag();
 		leggTilMånedsinntekt(nesteMåned, skjæringstidspunkt, arbeidsforhold, inntektsgrunnlag, 0);
 		leggTilMånedsinntekt(forrigeMåned, skjæringstidspunkt, arbeidsforhold, inntektsgrunnlag, 1);
 
@@ -142,7 +142,7 @@ class FinnRapporterteInntekterForInaktivTest {
 				singletonList(arbeidsforhold),
 				emptyList(),
 				emptyList());
-		BeregningsgrunnlagPeriode grunnlag = bg.getBeregningsgrunnlagPerioder().get(0);
+        var grunnlag = bg.getBeregningsgrunnlagPerioder().get(0);
 
 		// Act
 		var periodeinntekt = finnRapporterteInntekter.finnRapportertInntekt(grunnlag);

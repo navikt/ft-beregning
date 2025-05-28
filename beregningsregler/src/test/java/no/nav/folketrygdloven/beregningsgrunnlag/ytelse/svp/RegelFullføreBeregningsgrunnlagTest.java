@@ -61,7 +61,7 @@ class RegelFullføreBeregningsgrunnlagTest {
 		double refusjonTo = 480_000;
 		var utbetalingsgradTo = 100;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -78,7 +78,7 @@ class RegelFullføreBeregningsgrunnlagTest {
 		kjørRegelFullførBeregningsgrunnlag(periode);
 
 		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(443369.52));
-		List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
+        var arbeidsforhold = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
 
 		verifiserArbfor(arbeidsforhold, ORGNR1, 0, 599);
 		verifiserArbfor(arbeidsforhold, ORGNR2, 0, 1106);
@@ -93,7 +93,7 @@ class RegelFullføreBeregningsgrunnlagTest {
 		double bruttoTo = 576_000;
 		double refusjonTo = 200_000;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -109,7 +109,7 @@ class RegelFullføreBeregningsgrunnlagTest {
 		kjørRegelFullførBeregningsgrunnlag(periode);
 
 		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(443369.52));
-		List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
+        var arbeidsforhold = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
 
 		verifiserArbfor(arbeidsforhold, ORGNR1, 22, 577);
 		verifiserArbfor(arbeidsforhold, ORGNR2, 337, 769);
@@ -119,15 +119,15 @@ class RegelFullføreBeregningsgrunnlagTest {
 	void tre_arbeidsforhold_halv_og_halv_og_ingen_utbetaling_penger_til_bruker_og_refusjon() {
 		//Arrange
 		double bruttoEn = 600_000;
-		double refusjonEn = 560_000.04;
+        var refusjonEn = 560_000.04;
 
 		double bruttoTo = 750_000;
-		double refusjonTo = 333_333.36;
+        var refusjonTo = 333_333.36;
 
 		double bruttoTre = 250_000;
 		double refusjonTre = 0;
 
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(LocalDate.now(), TIDENES_ENDE))
 				.build();
 
@@ -143,7 +143,7 @@ class RegelFullføreBeregningsgrunnlagTest {
 		kjørRegelFinnGrenseverdi(periode);
 		kjørRegelFullførBeregningsgrunnlag(periode);
 		assertThat(periode.getGrenseverdi()).isEqualByComparingTo(BigDecimal.valueOf(393190.875));
-		List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
+        var arbeidsforhold = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
 
 		verifiserArbfor(arbeidsforhold, ORGNR1, 0, 864);
 		verifiserArbfor(arbeidsforhold, ORGNR2, 0, 648);
@@ -160,7 +160,7 @@ class RegelFullføreBeregningsgrunnlagTest {
 		var regelResultat = kjørRegelFullførBeregningsgrunnlag(PERIODE);
 
 		// Assert
-		List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
+        var arbeidsforhold = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
 		assertPeriode(612_000, PERIODE.getGrenseverdi(), PERIODE.getGrenseverdi());
 		assertArbeidsforhold(arbeidsforhold, ORGNR1, BigDecimal.ZERO, PERIODE.getGrenseverdi(), PERIODE.getGrenseverdi());
 		assertThat(grenseverdiRegelesultat).isNotNull();
@@ -178,7 +178,7 @@ class RegelFullføreBeregningsgrunnlagTest {
 		var regelResultat = kjørRegelFullførBeregningsgrunnlag(PERIODE);
 
 		// Assert
-		List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
+        var arbeidsforhold = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
 		assertPeriode(500_000, 350_000, 350_000);
 		assertArbeidsforhold(arbeidsforhold, ORGNR1, BigDecimal.ZERO, BigDecimal.valueOf(200_000), BigDecimal.valueOf(200_000));
 		assertArbeidsforhold(arbeidsforhold, ORGNR2, BigDecimal.ZERO, BigDecimal.valueOf(150_000), BigDecimal.valueOf(150_000));
@@ -306,7 +306,7 @@ class RegelFullføreBeregningsgrunnlagTest {
 		var regelResultat = kjørRegelFullførBeregningsgrunnlag(PERIODE);
 
 		// Assert
-		List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
+        var arbeidsforhold = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
 		assertPeriode(1_000_000, 540_000, 540_000);
 		assertArbeidsforhold(arbeidsforhold, ORGNR1, BigDecimal.valueOf(240_000), BigDecimal.valueOf(200_000), BigDecimal.valueOf(440_000));
 		assertArbeidsforhold(arbeidsforhold, ORGNR2, BigDecimal.valueOf(0), BigDecimal.valueOf(100_000), BigDecimal.valueOf(100_000));
@@ -326,7 +326,7 @@ class RegelFullføreBeregningsgrunnlagTest {
 		var regelResultat = kjørRegelFullførBeregningsgrunnlag(PERIODE);
 
 		// Assert
-		List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
+        var arbeidsforhold = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
 		assertPeriode(1_600_000, 506_250, 506_250);
 		assertArbeidsforhold(arbeidsforhold, ORGNR1, BigDecimal.ZERO, BigDecimal.valueOf(306_250), null);
 		assertArbeidsforhold(arbeidsforhold, ORGNR2, BigDecimal.ZERO, BigDecimal.valueOf(200_000), null);
@@ -347,7 +347,7 @@ class RegelFullføreBeregningsgrunnlagTest {
 		var regelResultat = kjørRegelFullførBeregningsgrunnlag(PERIODE);
 
 		// Assert
-		List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
+        var arbeidsforhold = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
 		assertPeriode(1_600_000, 506_250, 506_250);
 		assertArbeidsforhold(arbeidsforhold, ORGNR1, BigDecimal.valueOf(75_000), BigDecimal.valueOf(150_000), BigDecimal.valueOf(225_000));
 		assertArbeidsforhold(arbeidsforhold, ORGNR2, BigDecimal.valueOf(81_250), BigDecimal.valueOf(200_000), BigDecimal.valueOf(281_250));
@@ -368,7 +368,7 @@ class RegelFullføreBeregningsgrunnlagTest {
 		var regelResultat = kjørRegelFullførBeregningsgrunnlag(PERIODE);
 
 		// Assert
-		List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
+        var arbeidsforhold = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
 		assertPeriode(450_000, 350_000, 350_000);
 		assertArbeidsforhold(arbeidsforhold, ORGNR1, BigDecimal.valueOf(50_000), BigDecimal.valueOf(100_000), BigDecimal.valueOf(150_000));
 		assertArbeidsforhold(arbeidsforhold, ORGNR2, BigDecimal.ZERO, BigDecimal.valueOf(200_000), BigDecimal.valueOf(200_000));
@@ -388,7 +388,7 @@ class RegelFullføreBeregningsgrunnlagTest {
 		var regelResultat = kjørRegelFullførBeregningsgrunnlag(PERIODE);
 
 		// Assert
-		List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
+        var arbeidsforhold = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
 		assertPeriode(1_200_000, 450_000, 450_000);
 		assertArbeidsforhold(arbeidsforhold, ORGNR1, BigDecimal.ZERO, BigDecimal.valueOf(450_000), BigDecimal.valueOf(450_000));
 		assertArbeidsforhold(arbeidsforhold, ORGNR2, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
@@ -407,7 +407,7 @@ class RegelFullføreBeregningsgrunnlagTest {
 		var regelResultat = kjørRegelFullførBeregningsgrunnlag(PERIODE);
 
 		// Assert
-		List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
+        var arbeidsforhold = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
 		assertPeriode(1_200_000, 450_000, 450_000);
 		assertArbeidsforhold(arbeidsforhold, ORGNR1, BigDecimal.ZERO, BigDecimal.valueOf(300_000), BigDecimal.valueOf(300_000));
 		assertArbeidsforhold(arbeidsforhold, ORGNR2, BigDecimal.ZERO, BigDecimal.valueOf(150_000), BigDecimal.valueOf(150_000));
@@ -426,7 +426,7 @@ class RegelFullføreBeregningsgrunnlagTest {
 		var regelResultat = kjørRegelFullførBeregningsgrunnlag(PERIODE);
 
 		// Assert
-		List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
+        var arbeidsforhold = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
 		assertPeriode(1_200_000, 450_000, 450_000);
 		assertArbeidsforhold(arbeidsforhold, ORGNR1, BigDecimal.ZERO, BigDecimal.valueOf(400_000), BigDecimal.valueOf(400_000));
 		assertArbeidsforhold(arbeidsforhold, ORGNR2, BigDecimal.ZERO, BigDecimal.valueOf(50_000), BigDecimal.valueOf(50_000));
@@ -446,7 +446,7 @@ class RegelFullføreBeregningsgrunnlagTest {
 		var regelResultat = kjørRegelFullførBeregningsgrunnlag(PERIODE);
 
 		// Assert
-		List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
+        var arbeidsforhold = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
 		assertPeriode(750000, 432_000, 432_000);
 		assertArbeidsforhold(arbeidsforhold, ORGNR1, BigDecimal.valueOf(90_000), BigDecimal.valueOf(150_000), BigDecimal.valueOf(240_000));
 		assertArbeidsforhold(arbeidsforhold, ORGNR2, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
@@ -465,7 +465,7 @@ class RegelFullføreBeregningsgrunnlagTest {
 		var regelResultat = kjørRegelFullførBeregningsgrunnlag(PERIODE);
 
 		// Assert
-		List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
+        var arbeidsforhold = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
 		assertPeriode(300_000, 135_000, 135_000);
 		assertArbeidsforhold(arbeidsforhold, ORGNR1, BigDecimal.valueOf(135_000), BigDecimal.ZERO, BigDecimal.valueOf(135_000));
 		assertThat(grenseverdiRegelesultat).isNotNull();
@@ -533,7 +533,7 @@ class RegelFullføreBeregningsgrunnlagTest {
 		// Assert
 		assertPeriode(400_000, 400_000, 400_000);
 		assertFrilans(BigDecimal.valueOf(200_000), BigDecimal.valueOf(200_000), null);
-		List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
+        var arbeidsforhold = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
 		assertArbeidsforhold(arbeidsforhold, ORGNR1, BigDecimal.valueOf(200_000), BigDecimal.ZERO, BigDecimal.valueOf(200_000));
 		assertThat(grenseverdiRegelesultat).isNotNull();
 		assertThat(regelResultat).isNotNull();
@@ -552,7 +552,7 @@ class RegelFullføreBeregningsgrunnlagTest {
 		// Assert
 		assertPeriode(1_000_000, 600_000, 600_000);
 		assertFrilans(BigDecimal.ZERO, BigDecimal.ZERO, 0L);
-		List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
+        var arbeidsforhold = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
 		assertArbeidsforhold(arbeidsforhold, ORGNR1, PERIODE.getGrenseverdi(), BigDecimal.ZERO, PERIODE.getGrenseverdi());
 		assertThat(grenseverdiRegelesultat).isNotNull();
 		assertThat(regelResultat).isNotNull();
@@ -571,7 +571,7 @@ class RegelFullføreBeregningsgrunnlagTest {
 		// Assert
 		assertPeriode(1_000_000, 0, 0);
 		assertFrilans(BigDecimal.ZERO, BigDecimal.ZERO, 0L);
-		List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
+        var arbeidsforhold = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
 		assertArbeidsforhold(arbeidsforhold, ORGNR1, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
 		assertThat(grenseverdiRegelesultat).isNotNull();
 		assertThat(regelResultat).isNotNull();
@@ -590,7 +590,7 @@ class RegelFullføreBeregningsgrunnlagTest {
 		// Assert
 		assertPeriode(1_000_000, 50_000, 50_000);
 		assertFrilans(BigDecimal.valueOf(50_000), BigDecimal.valueOf(50_000), 192L);
-		List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
+        var arbeidsforhold = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
 		assertArbeidsforhold(arbeidsforhold, ORGNR1, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
 		assertThat(grenseverdiRegelesultat).isNotNull();
 		assertThat(regelResultat).isNotNull();
@@ -610,7 +610,7 @@ class RegelFullføreBeregningsgrunnlagTest {
 		// Assert
 		assertPeriode(1_500_000, 600_000, 600_000);
 		assertFrilans(BigDecimal.ZERO, BigDecimal.ZERO, 0L);
-		List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
+        var arbeidsforhold = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
 		assertArbeidsforhold(arbeidsforhold, ORGNR1, BigDecimal.ZERO, BigDecimal.valueOf(400_000), BigDecimal.valueOf(400_000));
 		assertArbeidsforhold(arbeidsforhold, ORGNR2, BigDecimal.ZERO, BigDecimal.valueOf(200_000), BigDecimal.valueOf(200_000));
 		assertThat(grenseverdiRegelesultat).isNotNull();
@@ -631,7 +631,7 @@ class RegelFullføreBeregningsgrunnlagTest {
 		// Assert
 		assertPeriode(1_500_000, 600_000, 600_000);
 		assertFrilans(BigDecimal.ZERO, BigDecimal.ZERO, 0L);
-		List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
+        var arbeidsforhold = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
 		assertArbeidsforhold(arbeidsforhold, ORGNR1, BigDecimal.ZERO, BigDecimal.valueOf(300_000), BigDecimal.valueOf(300_000));
 		assertArbeidsforhold(arbeidsforhold, ORGNR2, BigDecimal.ZERO, BigDecimal.valueOf(300_000), BigDecimal.valueOf(300_000));
 		assertThat(grenseverdiRegelesultat).isNotNull();
@@ -650,7 +650,7 @@ class RegelFullføreBeregningsgrunnlagTest {
 
 		// Assert
 		assertPeriode(700_000, 600_000, 600_000);
-		List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
+        var arbeidsforhold = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
 		assertArbeidsforhold(arbeidsforhold, ORGNR1, BigDecimal.ZERO, BigDecimal.valueOf(300_000), BigDecimal.valueOf(300_000));
 		assertArbeidsforhold(arbeidsforhold, ORGNR2, BigDecimal.ZERO, BigDecimal.valueOf(300_000), BigDecimal.valueOf(300_000));
 		assertThat(grenseverdiRegelesultat).isNotNull();
@@ -669,7 +669,7 @@ class RegelFullføreBeregningsgrunnlagTest {
 
 		// Assert
 		assertPeriode(1_200_000, 444_000, 444_000);
-		List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
+        var arbeidsforhold = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
 		assertArbeidsforhold(arbeidsforhold, ORGNR1, BigDecimal.valueOf(6_000), BigDecimal.valueOf(150_000), BigDecimal.valueOf(156_000));
 		assertArbeidsforhold(arbeidsforhold, ORGNR2, BigDecimal.valueOf(88_000), BigDecimal.valueOf(200_000), BigDecimal.valueOf(288_000));
 		assertThat(grenseverdiRegelesultat).isNotNull();
@@ -692,17 +692,17 @@ class RegelFullføreBeregningsgrunnlagTest {
 
 	private void assertAndel(BigDecimal bruker, BigDecimal avkortet) {
 		var andel = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
-		BigDecimal total = bruker.add(BigDecimal.ZERO);
+        var total = bruker.add(BigDecimal.ZERO);
 		Assertions.assertThat(andel.getAvkortetPrÅr()).isEqualByComparingTo(Objects.requireNonNullElse(avkortet, total));
 		Assertions.assertThat(andel.getRedusertPrÅr()).isEqualByComparingTo(total);
 	}
 
 	private void assertFrilans(BigDecimal bruker, BigDecimal avkortet, Long dagsats) {
 		var andel = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
-		BigDecimal total = bruker.add(BigDecimal.ZERO);
-		Optional<BeregningsgrunnlagPrArbeidsforhold> frilansOpt = andel.getArbeidsforhold().stream().filter(BeregningsgrunnlagPrArbeidsforhold::erFrilanser).findFirst();
+        var total = bruker.add(BigDecimal.ZERO);
+        var frilansOpt = andel.getArbeidsforhold().stream().filter(BeregningsgrunnlagPrArbeidsforhold::erFrilanser).findFirst();
 		assertThat(frilansOpt).isPresent();
-		BeregningsgrunnlagPrArbeidsforhold frilansAndel = frilansOpt.get();
+        var frilansAndel = frilansOpt.get();
 		assertThat(frilansAndel.getAvkortetPrÅr()).isEqualByComparingTo(Objects.requireNonNullElse(avkortet, total));
 		assertThat(frilansAndel.getRedusertPrÅr()).isEqualByComparingTo(total);
 		if (dagsats != null) {
@@ -712,26 +712,26 @@ class RegelFullføreBeregningsgrunnlagTest {
 
 	private void assertArbeidsforhold(List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold, String orgnr, BigDecimal bruker, BigDecimal refusjon, BigDecimal avkortet) {
 		Function<BigDecimal, Long> calcDagsats = a -> a.divide(BigDecimal.valueOf(260), 0, RoundingMode.HALF_UP).longValue();
-		Optional<BeregningsgrunnlagPrArbeidsforhold> arbforOpt = arbeidsforhold.stream().filter(a -> Objects.equals(a.getArbeidsgiverId(), orgnr)).findFirst();
-		BigDecimal total = bruker.add(refusjon);
+        var arbforOpt = arbeidsforhold.stream().filter(a -> Objects.equals(a.getArbeidsgiverId(), orgnr)).findFirst();
+        var total = bruker.add(refusjon);
 
 		assertThat(arbforOpt).isPresent();
-		BeregningsgrunnlagPrArbeidsforhold arbfor = arbforOpt.get();
+        var arbfor = arbforOpt.get();
 
 		Assertions.assertThat(arbfor.getAvkortetPrÅr()).isEqualByComparingTo(Objects.requireNonNullElse(avkortet, total));
 		assertThat(arbfor.getRedusertPrÅr()).isEqualByComparingTo(total);
 
-		Long dagsatsRefusjon = calcDagsats.apply(refusjon);
-		Long dagsatsBruker = calcDagsats.apply(bruker);
+        var dagsatsRefusjon = calcDagsats.apply(refusjon);
+        var dagsatsBruker = calcDagsats.apply(bruker);
 		assertThat(arbfor.getDagsatsArbeidsgiver()).isEqualTo(dagsatsRefusjon);
 		assertThat(arbfor.getDagsatsBruker()).isEqualTo(dagsatsBruker);
 		assertThat(arbfor.getDagsats()).isEqualTo(dagsatsBruker + dagsatsRefusjon);
 	}
 
 	private void verifiserArbfor(List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold, String orgnr, int forventetDagsatsBrukersAndel, int forventetDagsatsRefusjon) {
-		Optional<BeregningsgrunnlagPrArbeidsforhold> arbforOpt = arbeidsforhold.stream().filter(a -> a.getArbeidsgiverId().equals(orgnr)).findFirst();
+        var arbforOpt = arbeidsforhold.stream().filter(a -> a.getArbeidsgiverId().equals(orgnr)).findFirst();
 		assertThat(arbforOpt).isPresent();
-		BeregningsgrunnlagPrArbeidsforhold arbfor = arbforOpt.get();
+        var arbfor = arbforOpt.get();
 		assertThat(arbfor.getDagsatsArbeidsgiver()).isEqualTo(forventetDagsatsRefusjon);
 		assertThat(arbfor.getDagsatsBruker()).isEqualTo(forventetDagsatsBrukersAndel);
 		assertThat(arbfor.getDagsats()).isEqualTo(forventetDagsatsBrukersAndel + forventetDagsatsRefusjon);
@@ -760,8 +760,8 @@ class RegelFullføreBeregningsgrunnlagTest {
 	}
 
 	private void leggTilFrilans(int brutto, int utbetaingsgrad, Long andelsnr) {
-		Arbeidsforhold arbeidsforhold = Arbeidsforhold.frilansArbeidsforhold();
-		BeregningsgrunnlagPrStatus atfl = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+        var arbeidsforhold = Arbeidsforhold.frilansArbeidsforhold();
+        var atfl = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
 
 		if (atfl == null) {
 			BeregningsgrunnlagPeriode.oppdater(PERIODE)
@@ -784,8 +784,8 @@ class RegelFullføreBeregningsgrunnlagTest {
 	                                   double beregnetPrÅr,
 	                                   double refusjonPrÅr,
 	                                   double utbetalingsgrad) {
-		Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr, arbeidsforholdId);
-		BeregningsgrunnlagPrStatus atfl = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+        var arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(orgnr, arbeidsforholdId);
+        var atfl = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
 
 		if (atfl == null) {
 			BeregningsgrunnlagPeriode.oppdater(periode)
@@ -806,7 +806,7 @@ class RegelFullføreBeregningsgrunnlagTest {
 	                                                                                 double refusjonskrav,
 	                                                                                 double utbetalingsgrad,
 	                                                                                 Arbeidsforhold arbeidsforhold) {
-		BeregningsgrunnlagPrArbeidsforhold arb = BeregningsgrunnlagPrArbeidsforhold.builder()
+        var arb = BeregningsgrunnlagPrArbeidsforhold.builder()
 				.medAndelNr(andelsnr)
 				.medArbeidsforhold(arbeidsforhold)
 				.medBruttoPrÅr(BigDecimal.valueOf(beregnetPrÅr))

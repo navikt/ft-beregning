@@ -25,12 +25,12 @@ class VurderOmAndelerErFerdigFordeltOgOppdaterFordeltTilBruker extends LeafSpeci
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        SingleEvaluation resultat = ja();
+        var resultat = ja();
 
-        List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforholdene = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
+        var arbeidsforholdene = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
 
 // Er det arbeidsforhold som ikke er fastsatt i tidligere runder?
-        List<BeregningsgrunnlagPrArbeidsforhold> ikkeFastsattAf = arbeidsforholdene.stream()
+        var ikkeFastsattAf = arbeidsforholdene.stream()
             .filter(af -> af.getMaksimalRefusjonPrÅr() != null)
             .filter(af -> af.getAvkortetRefusjonPrÅr() == null)
             .toList();
@@ -42,7 +42,7 @@ class VurderOmAndelerErFerdigFordeltOgOppdaterFordeltTilBruker extends LeafSpeci
         resultat.setEvaluationProperties(resultater);
      // Alle arbeidsforhold er ferdig beregnet - fastsett avkortet BG
        arbeidsforholdene.forEach(af -> {
-           BigDecimal avkortetPrÅr = af.getAvkortetRefusjonPrÅr().add(af.getAvkortetBrukersAndelPrÅr());
+           var avkortetPrÅr = af.getAvkortetRefusjonPrÅr().add(af.getAvkortetBrukersAndelPrÅr());
            BeregningsgrunnlagPrArbeidsforhold.builder(af)
                .medAvkortetPrÅr(avkortetPrÅr)
                .build();

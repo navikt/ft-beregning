@@ -24,24 +24,24 @@ public class RegelBeregningsgrunnlagATFLFRISINN implements RuleService<Beregning
     @SuppressWarnings("unchecked")
     @Override
     public Specification<BeregningsgrunnlagPeriode> getSpecification() {
-        Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
+        var rs = new Ruleset<BeregningsgrunnlagPeriode>();
 
-        Specification<BeregningsgrunnlagPeriode> fastsettBeregnetPrÅr =
+        var fastsettBeregnetPrÅr =
             rs.beregningsRegel("FRISINN 2.10", "Fastsett beregnet pr år for ATFL",
                 new FastsettBeregnetPrÅrFRISINN(), new Beregnet());
 
-        Specification<BeregningsgrunnlagPeriode> vurderMotOppgittArbeidstakerinntekt =
+        var vurderMotOppgittArbeidstakerinntekt =
             rs.beregningsRegel("FRISINN 2.9", "Vurder brutto fra register oppmot oppgitt arbeidstakerinntekt",
                 new RegelVurderRegisterinntektMotOppgittInntektATFLFRISINN(), fastsettBeregnetPrÅr);
 
-        Specification<BeregningsgrunnlagPeriode> harInntektForATFLBlittManueltFastsatt =
+        var harInntektForATFLBlittManueltFastsatt =
             rs.beregningHvisRegel(new SjekkManueltFastsattAvSBH(), fastsettBeregnetPrÅr, vurderMotOppgittArbeidstakerinntekt);
 
-        List<BeregningsgrunnlagPrArbeidsforhold> arbeidsforhold = regelmodell.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
+        var arbeidsforhold = regelmodell.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold();
 	    var speclist = arbeidsforhold.stream()
 			    .map(a -> new RegelBeregnBruttoPrArbeidsforholdFRISINN(a).getSpecification().medEvaluationProperty(new ServiceArgument("arbeidsforhold", a.getArbeidsforhold())))
 			    .toList();
-	    Specification<BeregningsgrunnlagPeriode> beregningsgrunnlagATFL =
+        var beregningsgrunnlagATFL =
 			    rs.beregningsRegel("FRISINN 2.X", "Fastsett beregningsgrunnlag pr arbeidsforhold",
 					    speclist, harInntektForATFLBlittManueltFastsatt);
 

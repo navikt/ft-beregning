@@ -49,7 +49,7 @@ public class Skjæringstidspunkt {
         } else if (obj==null || !(obj.getClass().equals(this.getClass()))) {
             return false;
         }
-        Skjæringstidspunkt other = (Skjæringstidspunkt) obj;
+        var other = (Skjæringstidspunkt) obj;
         return Objects.equals(this.skjæringstidspunktBeregning, other.skjæringstidspunktBeregning)
                 && Objects.equals(this.førsteUttaksdato, other.førsteUttaksdato)
                 && Objects.equals(this.skjæringstidspunktOpptjening, other.skjæringstidspunktOpptjening);

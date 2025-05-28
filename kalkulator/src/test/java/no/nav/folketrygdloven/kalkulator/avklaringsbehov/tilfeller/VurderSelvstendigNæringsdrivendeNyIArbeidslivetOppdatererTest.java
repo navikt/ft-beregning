@@ -45,7 +45,7 @@ class VurderSelvstendigNæringsdrivendeNyIArbeidslivetOppdatererTest {
             .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT)
             .leggTilFaktaOmBeregningTilfeller(FAKTA_OM_BEREGNING_TILFELLER)
             .build();
-        BeregningsgrunnlagPeriodeDto periode1 = BeregningsgrunnlagPeriodeDto.ny()
+        var periode1 = BeregningsgrunnlagPeriodeDto.ny()
             .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(2).minusDays(1))
             .build(beregningsgrunnlag);
 
@@ -62,12 +62,12 @@ class VurderSelvstendigNæringsdrivendeNyIArbeidslivetOppdatererTest {
     @Test
     void skal_sette_ny_i_arbeidslivet() {
         // Arrange
-        VurderSelvstendigNæringsdrivendeNyIArbeidslivetDto nyIArbeidslivetDto = new VurderSelvstendigNæringsdrivendeNyIArbeidslivetDto(true);
-        FaktaBeregningLagreDto dto = new FaktaBeregningLagreDto(FAKTA_OM_BEREGNING_TILFELLER);
+        var nyIArbeidslivetDto = new VurderSelvstendigNæringsdrivendeNyIArbeidslivetDto(true);
+        var dto = new FaktaBeregningLagreDto(FAKTA_OM_BEREGNING_TILFELLER);
         dto.setVurderNyIArbeidslivet(nyIArbeidslivetDto);
 
         // Act
-        BeregningsgrunnlagGrunnlagDtoBuilder oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
+        var oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
         VurderSelvstendigNæringsdrivendeNyIArbeidslivetOppdaterer.oppdater(dto, oppdatere);
         var faktaAktør = oppdatere.build(BeregningsgrunnlagTilstand.KOFAKBER_UT).getFaktaAggregat().flatMap(FaktaAggregatDto::getFaktaAktør);
 
@@ -78,14 +78,14 @@ class VurderSelvstendigNæringsdrivendeNyIArbeidslivetOppdatererTest {
     @Test
     void skal_sette_ny_i_arbeidslivet_til_false() {
         // Arrange
-        VurderSelvstendigNæringsdrivendeNyIArbeidslivetDto nyIArbeidslivetDto = new VurderSelvstendigNæringsdrivendeNyIArbeidslivetDto(false);
-        FaktaBeregningLagreDto dto = new FaktaBeregningLagreDto(FAKTA_OM_BEREGNING_TILFELLER);
+        var nyIArbeidslivetDto = new VurderSelvstendigNæringsdrivendeNyIArbeidslivetDto(false);
+        var dto = new FaktaBeregningLagreDto(FAKTA_OM_BEREGNING_TILFELLER);
         dto.setVurderNyIArbeidslivet(nyIArbeidslivetDto);
 
         // Act
-        BeregningsgrunnlagGrunnlagDtoBuilder oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
+        var oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
         VurderSelvstendigNæringsdrivendeNyIArbeidslivetOppdaterer.oppdater(dto, oppdatere);
-        FaktaAktørDto faktaAktørDto = oppdatere.build(BeregningsgrunnlagTilstand.KOFAKBER_UT).getFaktaAggregat().get().getFaktaAktør().get();
+        var faktaAktørDto = oppdatere.build(BeregningsgrunnlagTilstand.KOFAKBER_UT).getFaktaAggregat().get().getFaktaAktør().get();
 
         // Assert
         assertThat(faktaAktørDto.getErNyIArbeidslivetSNVurdering()).isFalse();

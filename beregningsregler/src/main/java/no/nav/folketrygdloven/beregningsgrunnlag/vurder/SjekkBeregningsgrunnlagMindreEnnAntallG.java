@@ -19,11 +19,11 @@ class SjekkBeregningsgrunnlagMindreEnnAntallG extends LeafSpecification<Beregnin
 
 	@Override
 	public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-		BigDecimal grunnbeløpForVilkårsvurdering = finnGrunnbeløpForVilkårsvurdering(grunnlag);
+        var grunnbeløpForVilkårsvurdering = finnGrunnbeløpForVilkårsvurdering(grunnlag);
 
-		BigDecimal minstekrav = grunnbeløpForVilkårsvurdering.multiply(minimumAntallG);
+        var minstekrav = grunnbeløpForVilkårsvurdering.multiply(minimumAntallG);
 
-		SingleEvaluation resultat = (grunnlag.getBruttoPrÅr().compareTo(minstekrav) < 0) ? ja() : nei();
+        var resultat = (grunnlag.getBruttoPrÅr().compareTo(minstekrav) < 0) ? ja() : nei();
 		resultat.setEvaluationProperty("grunnbeløpForVilkårsvurdering", grunnbeløpForVilkårsvurdering);
 		resultat.setEvaluationProperty("minstegravAntallG", minimumAntallG);
 		resultat.setEvaluationProperty("minstekravBeløp", minstekrav);

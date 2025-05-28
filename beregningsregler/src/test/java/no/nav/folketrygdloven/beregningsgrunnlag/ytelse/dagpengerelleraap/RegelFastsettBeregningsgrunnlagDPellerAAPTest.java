@@ -38,26 +38,26 @@ class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
     @Test
     void skalForeslåBeregningsgrunnlagForDagpenger() {
         //Arrange
-        BigDecimal dagsats = new BigDecimal("1142");
-        Inntektsgrunnlag inntektsgrunnlag = lagInntektsgrunnlag(dagsats, skjæringstidspunkt, 0.75);
-        Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag,
+        var dagsats = new BigDecimal("1142");
+        var inntektsgrunnlag = lagInntektsgrunnlag(dagsats, skjæringstidspunkt, 0.75);
+        var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag,
             Collections.singletonList(AktivitetStatus.DP));
-        BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         //Act
-        Evaluation evaluation = new RegelFastsettBeregningsgrunnlagDPellerAAP().evaluer(grunnlag);
+        var evaluation = new RegelFastsettBeregningsgrunnlagDPellerAAP().evaluer(grunnlag);
 
         //Assert
 
-        RegelResultat regelResultat = getRegelResultat(evaluation, "input");
+        var regelResultat = getRegelResultat(evaluation, "input");
         assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
 
-        Periode periode = new Periode(skjæringstidspunkt, null);
+        var periode = new Periode(skjæringstidspunkt, null);
         assertThat(grunnlag.getBeregningsgrunnlagPeriode()).isEqualTo(periode);
 
-        BigDecimal brutto = BigDecimal.valueOf(296920).stripTrailingZeros();
+        var brutto = BigDecimal.valueOf(296920).stripTrailingZeros();
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.F_14_7_8_49, AktivitetStatus.DP, brutto.doubleValue());
-        BeregningsgrunnlagPrStatus bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP);
+        var bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP);
         assertThat(bgps.getBeregnetPrÅr()).isEqualByComparingTo(brutto);
         assertThat(bgps.getÅrsbeløpFraTilstøtendeYtelse()).isEqualByComparingTo(brutto);
         assertThat(bgps.getOrginalDagsatsFraTilstøtendeYtelse()).isEqualTo(dagsats.longValue());
@@ -66,25 +66,25 @@ class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
     @Test
     void skalForeslåBeregningsgrunnlagForAAP() {
         //Arrange
-        BigDecimal dagsats = new BigDecimal("1611");
-        Inntektsgrunnlag inntektsgrunnlag = lagInntektsgrunnlag(dagsats, skjæringstidspunkt, 0.75);
-        Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.AAP));
-        BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var dagsats = new BigDecimal("1611");
+        var inntektsgrunnlag = lagInntektsgrunnlag(dagsats, skjæringstidspunkt, 0.75);
+        var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.AAP));
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         //Act
-        Evaluation evaluation = new RegelFastsettBeregningsgrunnlagDPellerAAP().evaluer(grunnlag);
+        var evaluation = new RegelFastsettBeregningsgrunnlagDPellerAAP().evaluer(grunnlag);
 
         //Assert
 
-        RegelResultat regelResultat = getRegelResultat(evaluation, "input");
+        var regelResultat = getRegelResultat(evaluation, "input");
         assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
 
-        Periode periode = new Periode(skjæringstidspunkt, null);
+        var periode = new Periode(skjæringstidspunkt, null);
         assertThat(grunnlag.getBeregningsgrunnlagPeriode()).isEqualTo(periode);
 
-        BigDecimal brutto = BigDecimal.valueOf(418860);
+        var brutto = BigDecimal.valueOf(418860);
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.F_14_7, AktivitetStatus.AAP, brutto.doubleValue());
-        BeregningsgrunnlagPrStatus bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.AAP);
+        var bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.AAP);
         assertThat(bgps.getBeregnetPrÅr()).isEqualByComparingTo(brutto);
         assertThat(bgps.getÅrsbeløpFraTilstøtendeYtelse()).isEqualByComparingTo(brutto);
         assertThat(bgps.getOrginalDagsatsFraTilstøtendeYtelse()).isEqualTo(dagsats.longValue());
@@ -93,29 +93,29 @@ class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
     @Test
     void skalForeslåBeregningsgrunnlagForAAPMedManueltFastsattBeløp() {
         //Arrange
-        BigDecimal dagsats = new BigDecimal("1611");
-        BigDecimal beregnetPrÅr = new BigDecimal(324423);
-        Inntektsgrunnlag inntektsgrunnlag = lagInntektsgrunnlag(dagsats, skjæringstidspunkt, 0.75);
-        Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.AAP));
-        BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var dagsats = new BigDecimal("1611");
+        var beregnetPrÅr = new BigDecimal(324423);
+        var inntektsgrunnlag = lagInntektsgrunnlag(dagsats, skjæringstidspunkt, 0.75);
+        var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.AAP));
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         BeregningsgrunnlagPrStatus.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.AAP))
             .medBeregnetPrÅr(beregnetPrÅr)
             .medFastsattAvSaksbehandler(true)
             .build();
 
         //Act
-        Evaluation evaluation = new RegelFastsettBeregningsgrunnlagDPellerAAP().evaluer(grunnlag);
+        var evaluation = new RegelFastsettBeregningsgrunnlagDPellerAAP().evaluer(grunnlag);
 
         //Assert
 
-        RegelResultat regelResultat = getRegelResultat(evaluation, "input");
+        var regelResultat = getRegelResultat(evaluation, "input");
         assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
 
-        Periode periode = new Periode(skjæringstidspunkt, null);
+        var periode = new Periode(skjæringstidspunkt, null);
         assertThat(grunnlag.getBeregningsgrunnlagPeriode()).isEqualTo(periode);
 
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.F_14_7, AktivitetStatus.AAP, beregnetPrÅr.doubleValue());
-        BeregningsgrunnlagPrStatus bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.AAP);
+        var bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.AAP);
         assertThat(bgps.getBeregnetPrÅr()).isEqualByComparingTo(beregnetPrÅr);
         assertThat(bgps.getÅrsbeløpFraTilstøtendeYtelse()).isEqualByComparingTo(beregnetPrÅr);
         assertThat(bgps.getOrginalDagsatsFraTilstøtendeYtelse()).isEqualTo(dagsats.longValue());
@@ -125,27 +125,26 @@ class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
     @Test
     void skalForeslåBeregningsgrunnlagForAAPMedKombinasjonsStatus() {
         //Arrange
-        BigDecimal dagsats = new BigDecimal("1400");
-        Inntektsgrunnlag inntektsgrunnlag = lagInntektsgrunnlag(dagsats, skjæringstidspunkt, 0.75);
-        Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.AAP, AktivitetStatus.SN));
-        BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var dagsats = new BigDecimal("1400");
+        var inntektsgrunnlag = lagInntektsgrunnlag(dagsats, skjæringstidspunkt, 0.75);
+        var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.AAP, AktivitetStatus.SN));
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         //Act
-        Evaluation evaluation = new RegelFastsettBeregningsgrunnlagDPellerAAP().evaluer(grunnlag);
+        var evaluation = new RegelFastsettBeregningsgrunnlagDPellerAAP().evaluer(grunnlag);
 
         //Assert
-        @SuppressWarnings("unused")
-        String sporing = EvaluationSerializer.asJson(evaluation);
+        @SuppressWarnings("unused") var sporing = EvaluationSerializer.asJson(evaluation);
 
-        RegelResultat regelResultat = getRegelResultat(evaluation, "input");
+        var regelResultat = getRegelResultat(evaluation, "input");
         assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
 
-        Periode periode = new Periode(skjæringstidspunkt, null);
+        var periode = new Periode(skjæringstidspunkt, null);
         assertThat(grunnlag.getBeregningsgrunnlagPeriode()).isEqualTo(periode);
 
-        BigDecimal brutto = BigDecimal.valueOf(273000);
+        var brutto = BigDecimal.valueOf(273000);
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.F_14_7, AktivitetStatus.AAP, brutto.doubleValue());
-        BeregningsgrunnlagPrStatus bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.AAP);
+        var bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.AAP);
         assertThat(bgps.getBeregnetPrÅr()).isEqualByComparingTo(brutto);
         assertThat(bgps.getÅrsbeløpFraTilstøtendeYtelse()).isEqualByComparingTo(brutto);
         assertThat(bgps.getOrginalDagsatsFraTilstøtendeYtelse()).isEqualTo(dagsats.longValue());
@@ -154,21 +153,21 @@ class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
     @Test
     void skalForeslåBeregningsgrunnlagForDagpengerMedBesteberegningFødendeKvinne() {
         //Arrange
-        BigDecimal beregnetDagsats = BigDecimal.valueOf(600);
-        BigDecimal brutto = BigDecimal.valueOf(260000);
-        Inntektsgrunnlag inntektsgrunnlag = lagInntektsgrunnlag(beregnetDagsats, skjæringstidspunkt, 0.75);
-        Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.DP));
-        BeregningsgrunnlagPrStatus bgPrStatus = beregningsgrunnlag.getBeregningsgrunnlagPerioder().stream().map(p -> p.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP)).findFirst().get();//NOSONAR
+        var beregnetDagsats = BigDecimal.valueOf(600);
+        var brutto = BigDecimal.valueOf(260000);
+        var inntektsgrunnlag = lagInntektsgrunnlag(beregnetDagsats, skjæringstidspunkt, 0.75);
+        var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.DP));
+        var bgPrStatus = beregningsgrunnlag.getBeregningsgrunnlagPerioder().stream().map(p -> p.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP)).findFirst().get();//NOSONAR
         BeregningsgrunnlagPrStatus.builder(bgPrStatus).medFastsattAvSaksbehandler(true).medBesteberegningPrÅr(brutto).build();
-        BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         //Act
-        Evaluation evaluation = new RegelFastsettBeregningsgrunnlagDPellerAAP().evaluer(grunnlag);
+        var evaluation = new RegelFastsettBeregningsgrunnlagDPellerAAP().evaluer(grunnlag);
 
         //Assert
-        RegelResultat regelResultat = getRegelResultat(evaluation, "input");
+        var regelResultat = getRegelResultat(evaluation, "input");
         assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
-        BeregningsgrunnlagPrStatus bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP);
+        var bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP);
         assertThat(bgps.getBruttoPrÅr()).isEqualByComparingTo(brutto);
         assertThat(bgps.getÅrsbeløpFraTilstøtendeYtelse()).isEqualByComparingTo(brutto);
         assertThat(bgps.getOrginalDagsatsFraTilstøtendeYtelse()).isEqualTo(beregnetDagsats.longValue());
@@ -178,21 +177,21 @@ class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
     @Test
     void skalForeslåBeregningsgrunnlagForDagpengerIKombinasjonSNOgMedBesteberegningFødendeKvinne() {
         //Arrange
-        BigDecimal beregnetDagsats = BigDecimal.valueOf(720);
-        BigDecimal brutto = BigDecimal.valueOf(240000);
-        Inntektsgrunnlag inntektsgrunnlag = lagInntektsgrunnlag(beregnetDagsats, skjæringstidspunkt, 0.5);
-        Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.DP, AktivitetStatus.SN));
-        BeregningsgrunnlagPrStatus bgPrStatus = beregningsgrunnlag.getBeregningsgrunnlagPerioder().stream().map(p -> p.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP)).findFirst().get();//NOSONAR
+        var beregnetDagsats = BigDecimal.valueOf(720);
+        var brutto = BigDecimal.valueOf(240000);
+        var inntektsgrunnlag = lagInntektsgrunnlag(beregnetDagsats, skjæringstidspunkt, 0.5);
+        var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.DP, AktivitetStatus.SN));
+        var bgPrStatus = beregningsgrunnlag.getBeregningsgrunnlagPerioder().stream().map(p -> p.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP)).findFirst().get();//NOSONAR
         BeregningsgrunnlagPrStatus.builder(bgPrStatus).medFastsattAvSaksbehandler(true).medBesteberegningPrÅr(brutto).build();
-        BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         //Act
-        Evaluation evaluation = new RegelFastsettBeregningsgrunnlagDPellerAAP().evaluer(grunnlag);
+        var evaluation = new RegelFastsettBeregningsgrunnlagDPellerAAP().evaluer(grunnlag);
 
         //Assert
-        RegelResultat regelResultat = getRegelResultat(evaluation, "input");
+        var regelResultat = getRegelResultat(evaluation, "input");
         assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
-        BeregningsgrunnlagPrStatus bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP);
+        var bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP);
         assertThat(bgps.getBruttoPrÅr()).isEqualByComparingTo(brutto);
         assertThat(bgps.getÅrsbeløpFraTilstøtendeYtelse()).isEqualByComparingTo(brutto);
         assertThat(bgps.getOrginalDagsatsFraTilstøtendeYtelse()).isEqualTo(beregnetDagsats.longValue());
@@ -202,28 +201,28 @@ class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
     @Test
     void skalForeslåBeregningsgrunnlagForDagpengerIKombinasjonATOgMedBesteberegningFødendeKvinne() {
         //Arrange
-        BigDecimal fastsattPrÅr = BigDecimal.valueOf(120000);
-        BigDecimal beregnetDagsats = BigDecimal.valueOf(720);
-        BigDecimal besteberegning = BigDecimal.valueOf(240000);
-        Inntektsgrunnlag inntektsgrunnlag = lagInntektsgrunnlag(beregnetDagsats, skjæringstidspunkt, 0.5);
-        Beregningsgrunnlag beregningsgrunnlag = Beregningsgrunnlag.builder(settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag,
+        var fastsattPrÅr = BigDecimal.valueOf(120000);
+        var beregnetDagsats = BigDecimal.valueOf(720);
+        var besteberegning = BigDecimal.valueOf(240000);
+        var inntektsgrunnlag = lagInntektsgrunnlag(beregnetDagsats, skjæringstidspunkt, 0.5);
+        var beregningsgrunnlag = Beregningsgrunnlag.builder(settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag,
             List.of(AktivitetStatus.DP, AktivitetStatus.ATFL), Collections.singletonList(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(skjæringstidspunkt.minusYears(1), "12345"))))
             .medYtelsesSpesifiktGrunnlag(new ForeldrepengerGrunnlag(true)).build();
-        BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        BeregningsgrunnlagPrStatus dp = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var dp = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP);
         BeregningsgrunnlagPrStatus.builder(dp).medFastsattAvSaksbehandler(true).medBesteberegningPrÅr(besteberegning).build();
-        BeregningsgrunnlagPrStatus atfl = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+        var atfl = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
         atfl.getArbeidsforhold().forEach(af -> BeregningsgrunnlagPrArbeidsforhold.builder(af)
             .medFastsattAvSaksbehandler(true)
             .medBeregnetPrÅr(fastsattPrÅr)
             .build());
 
         //Act
-	    RegelResultat regelResultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
+        var regelResultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
 
         //Assert
         assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
-        BeregningsgrunnlagPrStatus bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP);
+        var bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP);
         assertThat(bgps.getBeregnetPrÅr()).isEqualByComparingTo(besteberegning);
         assertThat(bgps.getBruttoPrÅr()).isEqualByComparingTo(besteberegning);
         assertThat(bgps.getÅrsbeløpFraTilstøtendeYtelse()).isEqualByComparingTo(besteberegning);
@@ -239,7 +238,7 @@ class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
 
     private Inntektsgrunnlag lagInntektsgrunnlag(BigDecimal dagsats, LocalDate skjæringstidspunkt, double utbetalingsgrad) {
 
-        Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
+        var inntektsgrunnlag = new Inntektsgrunnlag();
         inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
             .medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP)
             .medMåned(skjæringstidspunkt)

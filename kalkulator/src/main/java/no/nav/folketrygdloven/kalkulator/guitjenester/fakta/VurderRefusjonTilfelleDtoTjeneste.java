@@ -20,21 +20,21 @@ import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.Refusj
 class VurderRefusjonTilfelleDtoTjeneste {
 
 	public void lagDto(BeregningsgrunnlagGUIInput input, FaktaOmBeregningDto faktaOmBeregningDto) {
-		BeregningsgrunnlagDto beregningsgrunnlag = input.getBeregningsgrunnlag();
-		List<FaktaOmBeregningTilfelle> tilfeller = beregningsgrunnlag.getFaktaOmBeregningTilfeller();
+        var beregningsgrunnlag = input.getBeregningsgrunnlag();
+        var tilfeller = beregningsgrunnlag.getFaktaOmBeregningTilfeller();
 		if (!tilfeller.contains(FaktaOmBeregningTilfelle.VURDER_REFUSJONSKRAV_SOM_HAR_KOMMET_FOR_SENT)) {
 			return;
 		}
-		List<RefusjonskravSomKommerForSentDto> refusjonskravSomKommerForSentList = lagListeMedKravSomKommerForSent(input);
+        var refusjonskravSomKommerForSentList = lagListeMedKravSomKommerForSent(input);
 		faktaOmBeregningDto.setRefusjonskravSomKommerForSentListe(refusjonskravSomKommerForSentList);
 	}
 
 	private List<RefusjonskravSomKommerForSentDto> lagListeMedKravSomKommerForSent(BeregningsgrunnlagGUIInput input) {
-		List<BeregningRefusjonOverstyringDto> refusjonOverstyringer = input.getBeregningsgrunnlagGrunnlag().getRefusjonOverstyringer()
+        var refusjonOverstyringer = input.getBeregningsgrunnlagGrunnlag().getRefusjonOverstyringer()
 				.map(BeregningRefusjonOverstyringerDto::getRefusjonOverstyringer)
 				.orElse(Collections.emptyList());
 
-		Set<Arbeidsgiver> arbeidsgivere = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgiverSomHarSøktRefusjonForSent(
+        var arbeidsgivere = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgiverSomHarSøktRefusjonForSent(
 				input.getKoblingReferanse(),
 				input.getIayGrunnlag(),
 				input.getBeregningsgrunnlagGrunnlag(),
@@ -43,7 +43,7 @@ class VurderRefusjonTilfelleDtoTjeneste {
 		return arbeidsgivere
 				.stream()
 				.map(arbeidsgiver -> {
-					RefusjonskravSomKommerForSentDto dto = new RefusjonskravSomKommerForSentDto();
+                    var dto = new RefusjonskravSomKommerForSentDto();
 					dto.setArbeidsgiverIdent(arbeidsgiver.getIdentifikator());
 					sjekkStatusPåRefusjon(arbeidsgiver.getIdentifikator(), refusjonOverstyringer, input.getSkjæringstidspunktForBeregning()).ifPresent(dto::setErRefusjonskravGyldig);
 					return dto;
@@ -52,7 +52,7 @@ class VurderRefusjonTilfelleDtoTjeneste {
 
 	private Optional<Boolean> sjekkStatusPåRefusjon(String identifikator,
 	                                                List<BeregningRefusjonOverstyringDto> refusjonOverstyringer, LocalDate skjæringstidspunktForBeregning) {
-		Optional<BeregningRefusjonOverstyringDto> statusOpt = refusjonOverstyringer
+        var statusOpt = refusjonOverstyringer
 				.stream()
 				.filter(refusjonOverstyring -> refusjonOverstyring.getArbeidsgiver().getIdentifikator().equals(identifikator))
 				.findFirst();

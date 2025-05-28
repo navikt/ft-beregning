@@ -54,7 +54,7 @@ class VurderLønnsendringDtoTjenesteTest {
         var bgGrunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.nytt()
                 .medBeregningsgrunnlag(lagBeregningsgrunnlagMedArbeid())
                 .build(BeregningsgrunnlagTilstand.FASTSATT);
-        BeregningsgrunnlagGUIInput input = lagInput(iayGrunnlag, bgGrunnlag);
+        var input = lagInput(iayGrunnlag, bgGrunnlag);
 
         tjeneste.lagDto(input, dto);
 
@@ -75,7 +75,7 @@ class VurderLønnsendringDtoTjenesteTest {
                 .medFaktaAggregat(faktaBuilder.build())
                 .medBeregningsgrunnlag(lagBeregningsgrunnlagMedArbeid())
                 .build(BeregningsgrunnlagTilstand.FASTSATT);
-        BeregningsgrunnlagGUIInput input = lagInput(iayGrunnlag, bgGrunnlag);
+        var input = lagInput(iayGrunnlag, bgGrunnlag);
 
         tjeneste.lagDto(input, dto);
 
@@ -83,7 +83,7 @@ class VurderLønnsendringDtoTjenesteTest {
     }
 
     private BeregningsgrunnlagGUIInput lagInput(InntektArbeidYtelseGrunnlagDto iayGrunnlag, BeregningsgrunnlagGrunnlagDto beregningsgrunnlagGrunnlagDto) {
-        BeregningsgrunnlagGUIInput input = new BeregningsgrunnlagGUIInput(
+        var input = new BeregningsgrunnlagGUIInput(
                 koblingReferanse,
                 iayGrunnlag,
                 List.of(),
@@ -117,12 +117,12 @@ class VurderLønnsendringDtoTjenesteTest {
     }
 
     private BeregningsgrunnlagDto lagBeregningsgrunnlagMedArbeid() {
-        BeregningsgrunnlagDto bg = BeregningsgrunnlagDto.builder()
+        var bg = BeregningsgrunnlagDto.builder()
                 .leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
                 .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING)
                 .leggTilFaktaOmBeregningTilfeller(List.of(FaktaOmBeregningTilfelle.VURDER_LØNNSENDRING))
                 .build();
-        BeregningsgrunnlagPeriodeDto bgPeriode = BeregningsgrunnlagPeriodeDto.ny()
+        var bgPeriode = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_OPPTJENING, null)
                 .build(bg);
         BeregningsgrunnlagPrStatusOgAndelDto.ny()

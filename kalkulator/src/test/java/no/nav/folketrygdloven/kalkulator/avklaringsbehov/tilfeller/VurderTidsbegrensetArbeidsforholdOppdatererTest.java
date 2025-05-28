@@ -58,17 +58,17 @@ class VurderTidsbegrensetArbeidsforholdOppdatererTest {
 
     private List<VurderteArbeidsforholdDto> lagFastsatteAndelerListe() {
 
-        VurderteArbeidsforholdDto førsteForhold = new VurderteArbeidsforholdDto(
+        var førsteForhold = new VurderteArbeidsforholdDto(
             FØRSTE_ANDELSNR,
             true
         );
 
-        VurderteArbeidsforholdDto andreForhold = new VurderteArbeidsforholdDto(
+        var andreForhold = new VurderteArbeidsforholdDto(
             ANDRE_ANDELSNR,
             false
         );
 
-        VurderteArbeidsforholdDto tredjeForhold = new VurderteArbeidsforholdDto(
+        var tredjeForhold = new VurderteArbeidsforholdDto(
             TREDJE_ANDELSNR,
             true
         );
@@ -88,20 +88,20 @@ class VurderTidsbegrensetArbeidsforholdOppdatererTest {
 
 
         // Act
-        BeregningsgrunnlagGrunnlagDtoBuilder oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
+        var oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
         FaktaOmBeregningTilfellerOppdaterer.oppdater(faktaBeregningLagreDto, Optional.empty(), input, oppdatere);
-        Optional<FaktaAggregatDto> faktaAggregat = oppdatere.build(BeregningsgrunnlagTilstand.KOFAKBER_UT).getFaktaAggregat();
+        var faktaAggregat = oppdatere.build(BeregningsgrunnlagTilstand.KOFAKBER_UT).getFaktaAggregat();
 
         //Assert
         assertThat(faktaAggregat).isPresent();
-        List<BeregningsgrunnlagPrStatusOgAndelDto> andeler = oppdatere.getBeregningsgrunnlagBuilder().getBeregningsgrunnlag().getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList();
+        var andeler = oppdatere.getBeregningsgrunnlagBuilder().getBeregningsgrunnlag().getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList();
         assertThat(faktaAggregat.get().getFaktaArbeidsforhold(andeler.get(0)).get().getErTidsbegrensetVurdering()).isTrue();
         assertThat(faktaAggregat.get().getFaktaArbeidsforhold(andeler.get(1)).get().getErTidsbegrensetVurdering()).isFalse();
         assertThat(faktaAggregat.get().getFaktaArbeidsforhold(andeler.get(2)).get().getErTidsbegrensetVurdering()).isTrue();
     }
 
     private void buildBgPrStatusOgAndel(BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode, Arbeidsgiver virksomhet) {
-        BGAndelArbeidsforholdDto.Builder bga = BGAndelArbeidsforholdDto
+        var bga = BGAndelArbeidsforholdDto
             .builder()
             .medArbeidsgiver(virksomhet)
             .medArbeidsperiodeFom(LocalDate.now().minusYears(1))
@@ -125,7 +125,7 @@ class VurderTidsbegrensetArbeidsforholdOppdatererTest {
             .medGrunnbeløp(GRUNNBELØP)
             .build();
 
-        BeregningsgrunnlagPeriodeDto periode = buildBeregningsgrunnlagPeriode(beregningsgrunnlag,
+        var periode = buildBeregningsgrunnlagPeriode(beregningsgrunnlag,
             FOM, TOM);
         buildBgPrStatusOgAndel(periode, virksomheter.get(0));
         buildBgPrStatusOgAndel(periode, virksomheter.get(1));

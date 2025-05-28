@@ -30,7 +30,7 @@ public class InntektArbeidYtelseGrunnlagDtoBuilder {
     }
 
     public InntektsmeldingAggregatDto getInntektsmeldinger() {
-        final Optional<InntektsmeldingAggregatDto> inntektsmeldinger = kladd.getInntektsmeldinger();
+        final var inntektsmeldinger = kladd.getInntektsmeldinger();
         return inntektsmeldinger.map(InntektsmeldingAggregatDto::new).orElseGet(InntektsmeldingAggregatDto::new);
     }
 
@@ -83,7 +83,7 @@ public class InntektArbeidYtelseGrunnlagDtoBuilder {
     }
 
     public InntektArbeidYtelseGrunnlagDtoBuilder medData(InntektArbeidYtelseAggregatBuilder builder) {
-        VersjonTypeDto versjon = builder.getVersjon();
+        var versjon = builder.getVersjon();
 
         if (versjon == VersjonTypeDto.REGISTER) {
             medRegister(builder);

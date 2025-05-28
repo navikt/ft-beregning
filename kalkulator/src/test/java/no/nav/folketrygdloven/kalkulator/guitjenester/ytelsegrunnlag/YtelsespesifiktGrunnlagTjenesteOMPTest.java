@@ -55,17 +55,17 @@ class YtelsespesifiktGrunnlagTjenesteOMPTest {
     @Test
     void skalSetteRiktigYtelsesspesifikkInformasjonNårOmsorgspengerOgAtOgDirekteUtbetalingTilBruker() {
         //Arrange
-        BigDecimal beregnet = BigDecimal.valueOf(20_000);
-        BigDecimal beregnetPrÅr = BigDecimal.valueOf(240_000);
-        BigDecimal refusjon = BigDecimal.valueOf(15_000);
-        Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
+        var beregnet = BigDecimal.valueOf(20_000);
+        var beregnetPrÅr = BigDecimal.valueOf(240_000);
+        var refusjon = BigDecimal.valueOf(15_000);
+        var arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         this.beregningAktiviteter = lagBeregningAktiviteter(arbeidsgiver);
         var beregningsgrunnlag = no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto.builder()
                 .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT)
                 .medGrunnbeløp(Beløp.fra(GRUNNBELØP))
                 .build();
-        BeregningsgrunnlagPeriodeDto bgPeriode = buildBeregningsgrunnlagPeriode(beregningsgrunnlag);
-        BGAndelArbeidsforholdDto.Builder bga = BGAndelArbeidsforholdDto
+        var bgPeriode = buildBeregningsgrunnlagPeriode(beregningsgrunnlag);
+        var bga = BGAndelArbeidsforholdDto
                 .builder()
                 .medArbeidsgiver(arbeidsgiver);
 
@@ -80,47 +80,47 @@ class YtelsespesifiktGrunnlagTjenesteOMPTest {
                 .medRegisterAktiviteter(beregningAktiviteter)
                 .medBeregningsgrunnlag(beregningsgrunnlag).build(BeregningsgrunnlagTilstand.FORESLÅTT);
 
-        LocalDate PeriodeFom =ANDEL_FOM;
-        PeriodeMedUtbetalingsgradDto periodeMedUtbetalingsgradDto = new PeriodeMedUtbetalingsgradDto(Intervall.fraOgMedTilOgMed(PeriodeFom,
+        var PeriodeFom =ANDEL_FOM;
+        var periodeMedUtbetalingsgradDto = new PeriodeMedUtbetalingsgradDto(Intervall.fraOgMedTilOgMed(PeriodeFom,
                 PeriodeFom.plusMonths(1)), Utbetalingsgrad.valueOf(100));
-        AktivitetDto aktivitetDto = new AktivitetDto(arbeidsgiver,
+        var aktivitetDto = new AktivitetDto(arbeidsgiver,
                 InternArbeidsforholdRefDto.nyRef(), UttakArbeidType.ORDINÆRT_ARBEID);
-        UtbetalingsgradPrAktivitetDto utbetalingsgradPrAktivitetDto = new UtbetalingsgradPrAktivitetDto(aktivitetDto, List.of(periodeMedUtbetalingsgradDto));
-        OmsorgspengerGrunnlag omsorgspengeGrunnlagDto = new OmsorgspengerGrunnlag(List.of(utbetalingsgradPrAktivitetDto), List.of());
-        InntektsmeldingDto inntektsmelding = InntektsmeldingDtoBuilder.builder()
+        var utbetalingsgradPrAktivitetDto = new UtbetalingsgradPrAktivitetDto(aktivitetDto, List.of(periodeMedUtbetalingsgradDto));
+        var omsorgspengeGrunnlagDto = new OmsorgspengerGrunnlag(List.of(utbetalingsgradPrAktivitetDto), List.of());
+        var inntektsmelding = InntektsmeldingDtoBuilder.builder()
                 .medRefusjon(Beløp.fra(refusjon))
                 .medBeløp(Beløp.fra(beregnet))
                 .medArbeidsgiver(arbeidsgiver)
                 .build();
-        Skjæringstidspunkt skjæringstidspunkt = Skjæringstidspunkt.builder().medSkjæringstidspunktBeregning(ANDEL_FOM)
+        var skjæringstidspunkt = Skjæringstidspunkt.builder().medSkjæringstidspunktBeregning(ANDEL_FOM)
                 .medSkjæringstidspunktOpptjening(ANDEL_FOM).build();
-        KoblingReferanse koblingReferanse = KoblingReferanse.fra(FagsakYtelseType.OMSORGSPENGER, AktørId.dummy(), 1L, UUID.randomUUID(), Optional.empty(), skjæringstidspunkt);
+        var koblingReferanse = KoblingReferanse.fra(FagsakYtelseType.OMSORGSPENGER, AktørId.dummy(), 1L, UUID.randomUUID(), Optional.empty(), skjæringstidspunkt);
 
         var input = new BeregningsgrunnlagGUIInput(lagReferanseMedStp(koblingReferanse),
                 InntektArbeidYtelseGrunnlagDtoBuilder.nytt().medInntektsmeldinger(List.of(inntektsmelding)).build(), List.of(),  omsorgspengeGrunnlagDto).medBeregningsgrunnlagGrunnlag(grunnlag);
-        YtelsespesifiktGrunnlagTjenesteOMP ytelsespesifiktGrunnlagTjenesteOMP = new YtelsespesifiktGrunnlagTjenesteOMP();
+        var ytelsespesifiktGrunnlagTjenesteOMP = new YtelsespesifiktGrunnlagTjenesteOMP();
         // Act
-        Optional<YtelsespesifiktGrunnlagDto> resultat = ytelsespesifiktGrunnlagTjenesteOMP.map(input);
+        var resultat = ytelsespesifiktGrunnlagTjenesteOMP.map(input);
         // Assert
         assertThat(resultat.get()).isInstanceOf(OmsorgspengeGrunnlagDto.class);
-        OmsorgspengeGrunnlagDto omsorgspengeGrunnlagDtoResultat = (OmsorgspengeGrunnlagDto) resultat.get();
+        var omsorgspengeGrunnlagDtoResultat = (OmsorgspengeGrunnlagDto) resultat.get();
         assertThat(omsorgspengeGrunnlagDtoResultat.getSkalAvviksvurdere()).isTrue();
     }
 
     @Test
     void skalSetteRiktigYtelsesspesifikkInformasjonNårOmsorgspengerOgAtOgFullRefusjon() {
         //Arrange
-        BigDecimal beregnet = BigDecimal.valueOf(20_000);
-        BigDecimal beregnetPrÅr = BigDecimal.valueOf(240_000);
-        BigDecimal refusjon = beregnet;
-        Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
+        var beregnet = BigDecimal.valueOf(20_000);
+        var beregnetPrÅr = BigDecimal.valueOf(240_000);
+        var refusjon = beregnet;
+        var arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         this.beregningAktiviteter = lagBeregningAktiviteter(arbeidsgiver);
         var beregningsgrunnlag = no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto.builder()
                 .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT)
                 .medGrunnbeløp(Beløp.fra(GRUNNBELØP))
                 .build();
-        BeregningsgrunnlagPeriodeDto bgPeriode = buildBeregningsgrunnlagPeriode(beregningsgrunnlag);
-        BGAndelArbeidsforholdDto.Builder bga = BGAndelArbeidsforholdDto
+        var bgPeriode = buildBeregningsgrunnlagPeriode(beregningsgrunnlag);
+        var bga = BGAndelArbeidsforholdDto
                 .builder()
                 .medArbeidsgiver(arbeidsgiver);
         BeregningsgrunnlagPrStatusOgAndelDto.ny()
@@ -134,43 +134,43 @@ class YtelsespesifiktGrunnlagTjenesteOMPTest {
                 .medRegisterAktiviteter(beregningAktiviteter)
                 .medBeregningsgrunnlag(beregningsgrunnlag).build(BeregningsgrunnlagTilstand.FORESLÅTT);
 
-        LocalDate periodeFom = SKJÆRINGSTIDSPUNKT;
-        PeriodeMedUtbetalingsgradDto periodeMedUtbetalingsgradDto = new PeriodeMedUtbetalingsgradDto(Intervall.fraOgMedTilOgMed(periodeFom,
+        var periodeFom = SKJÆRINGSTIDSPUNKT;
+        var periodeMedUtbetalingsgradDto = new PeriodeMedUtbetalingsgradDto(Intervall.fraOgMedTilOgMed(periodeFom,
                 periodeFom.plusMonths(1)), Utbetalingsgrad.valueOf(100));
-        AktivitetDto aktivitetDto = new AktivitetDto(arbeidsgiver,
+        var aktivitetDto = new AktivitetDto(arbeidsgiver,
                 InternArbeidsforholdRefDto.nyRef(), UttakArbeidType.ORDINÆRT_ARBEID);
-        UtbetalingsgradPrAktivitetDto utbetalingsgradPrAktivitetDto = new UtbetalingsgradPrAktivitetDto(aktivitetDto, List.of(periodeMedUtbetalingsgradDto));
-        OmsorgspengerGrunnlag omsorgspengeGrunnlagDto = new OmsorgspengerGrunnlag(List.of(utbetalingsgradPrAktivitetDto), List.of());
-        InntektsmeldingDto inntektsmelding = InntektsmeldingDtoBuilder.builder()
+        var utbetalingsgradPrAktivitetDto = new UtbetalingsgradPrAktivitetDto(aktivitetDto, List.of(periodeMedUtbetalingsgradDto));
+        var omsorgspengeGrunnlagDto = new OmsorgspengerGrunnlag(List.of(utbetalingsgradPrAktivitetDto), List.of());
+        var inntektsmelding = InntektsmeldingDtoBuilder.builder()
                 .medRefusjon(Beløp.fra(refusjon))
                 .medBeløp(Beløp.fra(beregnet))
                 .medArbeidsgiver(arbeidsgiver)
                 .build();
 
-        Skjæringstidspunkt skjæringstidspunkt = Skjæringstidspunkt.builder().medSkjæringstidspunktBeregning(SKJÆRINGSTIDSPUNKT)
+        var skjæringstidspunkt = Skjæringstidspunkt.builder().medSkjæringstidspunktBeregning(SKJÆRINGSTIDSPUNKT)
                 .medSkjæringstidspunktOpptjening(SKJÆRINGSTIDSPUNKT).build();
-        KoblingReferanse koblingReferanse = KoblingReferanse.fra(FagsakYtelseType.OMSORGSPENGER, AktørId.dummy(), 1L, UUID.randomUUID(), Optional.empty(), skjæringstidspunkt);
+        var koblingReferanse = KoblingReferanse.fra(FagsakYtelseType.OMSORGSPENGER, AktørId.dummy(), 1L, UUID.randomUUID(), Optional.empty(), skjæringstidspunkt);
         var input = new BeregningsgrunnlagGUIInput(lagReferanseMedStp(koblingReferanse),
                 InntektArbeidYtelseGrunnlagDtoBuilder.nytt().medInntektsmeldinger(List.of(inntektsmelding)).build(), List.of(),  omsorgspengeGrunnlagDto).medBeregningsgrunnlagGrunnlag(grunnlag);
-        YtelsespesifiktGrunnlagTjenesteOMP ytelsespesifiktGrunnlagTjenesteOMP = new YtelsespesifiktGrunnlagTjenesteOMP();
+        var ytelsespesifiktGrunnlagTjenesteOMP = new YtelsespesifiktGrunnlagTjenesteOMP();
         // Act
-        Optional<YtelsespesifiktGrunnlagDto> resultat = ytelsespesifiktGrunnlagTjenesteOMP.map(input);
+        var resultat = ytelsespesifiktGrunnlagTjenesteOMP.map(input);
         // Assert
         assertThat(resultat.get()).isInstanceOf(OmsorgspengeGrunnlagDto.class);
-        OmsorgspengeGrunnlagDto omsorgspengeGrunnlagDtoResultat = (OmsorgspengeGrunnlagDto) resultat.get();
+        var omsorgspengeGrunnlagDtoResultat = (OmsorgspengeGrunnlagDto) resultat.get();
         assertThat(omsorgspengeGrunnlagDtoResultat.getSkalAvviksvurdere()).isFalse();
     }
 
     @Test
     void skalSetteRiktigYtelsesspesifikkInformasjonNårOmsorgspengerOgFlOgAtOgFullRefusjon() {
         //Arrange
-        Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
+        var arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         this.beregningAktiviteter = lagBeregningAktiviteter(arbeidsgiver);
         var beregningsgrunnlag = no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto.builder()
                 .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT)
                 .build();
-        BeregningsgrunnlagPeriodeDto bgPeriode = buildBeregningsgrunnlagPeriode(beregningsgrunnlag);
-        BGAndelArbeidsforholdDto.Builder bga = BGAndelArbeidsforholdDto
+        var bgPeriode = buildBeregningsgrunnlagPeriode(beregningsgrunnlag);
+        var bga = BGAndelArbeidsforholdDto
                 .builder()
                 .medArbeidsgiver(arbeidsgiver);
         BeregningsgrunnlagPrStatusOgAndelDto.ny()
@@ -189,29 +189,29 @@ class YtelsespesifiktGrunnlagTjenesteOMPTest {
                 .medRegisterAktiviteter(beregningAktiviteter)
                 .medBeregningsgrunnlag(beregningsgrunnlag).build(BeregningsgrunnlagTilstand.FORESLÅTT);
 
-        Skjæringstidspunkt skjæringstidspunkt = Skjæringstidspunkt.builder().medSkjæringstidspunktBeregning(SKJÆRINGSTIDSPUNKT)
+        var skjæringstidspunkt = Skjæringstidspunkt.builder().medSkjæringstidspunktBeregning(SKJÆRINGSTIDSPUNKT)
                 .medSkjæringstidspunktOpptjening(SKJÆRINGSTIDSPUNKT).build();
-        KoblingReferanse koblingReferanse = KoblingReferanse.fra(FagsakYtelseType.OMSORGSPENGER, AktørId.dummy(), 1L, UUID.randomUUID(), Optional.empty(), skjæringstidspunkt);
-        BeregningsgrunnlagGUIInput input = new BeregningsgrunnlagGUIInput(koblingReferanse, null, List.of(), null).medBeregningsgrunnlagGrunnlag(grunnlag);
-        YtelsespesifiktGrunnlagTjenesteOMP ytelsespesifiktGrunnlagTjenesteOMP = new YtelsespesifiktGrunnlagTjenesteOMP();
+        var koblingReferanse = KoblingReferanse.fra(FagsakYtelseType.OMSORGSPENGER, AktørId.dummy(), 1L, UUID.randomUUID(), Optional.empty(), skjæringstidspunkt);
+        var input = new BeregningsgrunnlagGUIInput(koblingReferanse, null, List.of(), null).medBeregningsgrunnlagGrunnlag(grunnlag);
+        var ytelsespesifiktGrunnlagTjenesteOMP = new YtelsespesifiktGrunnlagTjenesteOMP();
         // Act
-        Optional<YtelsespesifiktGrunnlagDto> resultat = ytelsespesifiktGrunnlagTjenesteOMP.map(input);
+        var resultat = ytelsespesifiktGrunnlagTjenesteOMP.map(input);
         // Assert
         assertThat(resultat.get()).isInstanceOf(OmsorgspengeGrunnlagDto.class);
-        OmsorgspengeGrunnlagDto omsorgspengeGrunnlagDtoResultat = (OmsorgspengeGrunnlagDto) resultat.get();
+        var omsorgspengeGrunnlagDtoResultat = (OmsorgspengeGrunnlagDto) resultat.get();
         assertThat(omsorgspengeGrunnlagDtoResultat.getSkalAvviksvurdere()).isTrue();
     }
 
     @Test
     void skalSetteRiktigYtelsesspesifikkInformasjonNårOmsorgspengerOgSnOgAtOgFullRefusjon() {
         //Arrange
-        Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
+        var arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         this.beregningAktiviteter = lagBeregningAktiviteter(arbeidsgiver);
         var beregningsgrunnlag = no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto.builder()
                 .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT)
                 .build();
-        BeregningsgrunnlagPeriodeDto bgPeriode = buildBeregningsgrunnlagPeriode(beregningsgrunnlag);
-        BGAndelArbeidsforholdDto.Builder bga = BGAndelArbeidsforholdDto
+        var bgPeriode = buildBeregningsgrunnlagPeriode(beregningsgrunnlag);
+        var bga = BGAndelArbeidsforholdDto
                 .builder()
                 .medArbeidsgiver(arbeidsgiver);
         BeregningsgrunnlagPrStatusOgAndelDto.ny()
@@ -230,22 +230,22 @@ class YtelsespesifiktGrunnlagTjenesteOMPTest {
                 .medRegisterAktiviteter(beregningAktiviteter)
                 .medBeregningsgrunnlag(beregningsgrunnlag).build(BeregningsgrunnlagTilstand.FORESLÅTT);
 
-        Skjæringstidspunkt skjæringstidspunkt = Skjæringstidspunkt.builder().medSkjæringstidspunktBeregning(SKJÆRINGSTIDSPUNKT)
+        var skjæringstidspunkt = Skjæringstidspunkt.builder().medSkjæringstidspunktBeregning(SKJÆRINGSTIDSPUNKT)
                 .medSkjæringstidspunktOpptjening(SKJÆRINGSTIDSPUNKT).build();
-        KoblingReferanse koblingReferanse = KoblingReferanse.fra(FagsakYtelseType.OMSORGSPENGER, AktørId.dummy(), 1L, UUID.randomUUID(), Optional.empty(), skjæringstidspunkt);
-        BeregningsgrunnlagGUIInput input = new BeregningsgrunnlagGUIInput(koblingReferanse, null, List.of(), null).medBeregningsgrunnlagGrunnlag(grunnlag);
-        YtelsespesifiktGrunnlagTjenesteOMP ytelsespesifiktGrunnlagTjenesteOMP = new YtelsespesifiktGrunnlagTjenesteOMP();
+        var koblingReferanse = KoblingReferanse.fra(FagsakYtelseType.OMSORGSPENGER, AktørId.dummy(), 1L, UUID.randomUUID(), Optional.empty(), skjæringstidspunkt);
+        var input = new BeregningsgrunnlagGUIInput(koblingReferanse, null, List.of(), null).medBeregningsgrunnlagGrunnlag(grunnlag);
+        var ytelsespesifiktGrunnlagTjenesteOMP = new YtelsespesifiktGrunnlagTjenesteOMP();
         // Act
-        Optional<YtelsespesifiktGrunnlagDto> resultat = ytelsespesifiktGrunnlagTjenesteOMP.map(input);
+        var resultat = ytelsespesifiktGrunnlagTjenesteOMP.map(input);
         // Assert
         assertThat(resultat.get()).isInstanceOf(OmsorgspengeGrunnlagDto.class);
-        OmsorgspengeGrunnlagDto omsorgspengeGrunnlagDtoResultat = (OmsorgspengeGrunnlagDto) resultat.get();
+        var omsorgspengeGrunnlagDtoResultat = (OmsorgspengeGrunnlagDto) resultat.get();
         assertThat(omsorgspengeGrunnlagDtoResultat.getSkalAvviksvurdere()).isTrue();
     }
 
 
     private KoblingReferanse lagReferanseMedStp(KoblingReferanse koblingReferanse) {
-        Skjæringstidspunkt skjæringstidspunkt = Skjæringstidspunkt.builder().medSkjæringstidspunktBeregning(SKJÆRINGSTIDSPUNKT)
+        var skjæringstidspunkt = Skjæringstidspunkt.builder().medSkjæringstidspunktBeregning(SKJÆRINGSTIDSPUNKT)
                 .medSkjæringstidspunktOpptjening(SKJÆRINGSTIDSPUNKT).build();
         return koblingReferanse.medSkjæringstidspunkt(skjæringstidspunkt);
     }

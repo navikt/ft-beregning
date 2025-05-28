@@ -29,14 +29,14 @@ public class KunYtelseDtoTjeneste {
 
     public void lagDto(BeregningsgrunnlagGUIInput input,
                        FaktaOmBeregningDto faktaOmBeregningDto) {
-        BeregningsgrunnlagDto beregningsgrunnlag = input.getBeregningsgrunnlag();
+        var beregningsgrunnlag = input.getBeregningsgrunnlag();
         if (beregningsgrunnlag.getFaktaOmBeregningTilfeller().contains(FaktaOmBeregningTilfelle.FASTSETT_BG_KUN_YTELSE)) {
             faktaOmBeregningDto.setKunYtelse(lagKunYtelseDto(input));
         }
     }
 
     KunYtelseDto lagKunYtelseDto(BeregningsgrunnlagGUIInput input) {
-        KunYtelseDto dto = new KunYtelseDto();
+        var dto = new KunYtelseDto();
 	    harBesteberegning(input.getBeregningsgrunnlag(), input.getBeregningsgrunnlagGrunnlag().getBeregningsgrunnlagTilstand()).ifPresent(dto::setErBesteberegning);
         settVerdier(dto, input.getBeregningsgrunnlag(), input.getIayGrunnlag());
         if (input.getYtelsespesifiktGrunnlag() instanceof ForeldrepengerGrunnlag foreldrepengerGrunnlag) {
@@ -55,11 +55,11 @@ public class KunYtelseDtoTjeneste {
     }
 
     private void settVerdier(KunYtelseDto dto, BeregningsgrunnlagDto beregningsgrunnlag, InntektArbeidYtelseGrunnlagDto inntektArbeidYtelseGrunnlag) {
-        BeregningsgrunnlagPeriodeDto periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         periode.getBeregningsgrunnlagPrStatusOgAndelList().stream()
                 .filter(andel -> andel.getKilde().equals(AndelKilde.PROSESS_START) || andel.getKilde().equals(AndelKilde.SAKSBEHANDLER_KOFAKBER))
                 .forEach(andel -> {
-                    AndelMedBeløpDto brukersAndel = initialiserStandardAndelProperties(andel, inntektArbeidYtelseGrunnlag);
+                    var brukersAndel = initialiserStandardAndelProperties(andel, inntektArbeidYtelseGrunnlag);
                     brukersAndel.setFastsattBelopPrMnd(ModellTyperMapper.beløpTilDto(finnFastsattMånedsbeløp(andel)));
                     dto.leggTilAndel(brukersAndel);
                 });
@@ -72,7 +72,7 @@ public class KunYtelseDtoTjeneste {
     }
 
     private AndelMedBeløpDto initialiserStandardAndelProperties(BeregningsgrunnlagPrStatusOgAndelDto andel, InntektArbeidYtelseGrunnlagDto inntektArbeidYtelseGrunnlag) {
-        AndelMedBeløpDto andelDto = new AndelMedBeløpDto();
+        var andelDto = new AndelMedBeløpDto();
         andelDto.setAndelsnr(andel.getAndelsnr());
         BeregningsgrunnlagDtoUtil.lagArbeidsforholdDto(andel, Optional.empty(), inntektArbeidYtelseGrunnlag)
                 .ifPresent(andelDto::setArbeidsforhold);

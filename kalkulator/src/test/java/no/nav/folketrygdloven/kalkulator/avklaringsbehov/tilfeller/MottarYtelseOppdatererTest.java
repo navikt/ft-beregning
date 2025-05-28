@@ -58,15 +58,15 @@ class MottarYtelseOppdatererTest {
     @Test
     void skal_sette_mottar_ytelse_kun_for_frilans() {
         // Arrange
-        FaktaBeregningLagreDto dto = new FaktaBeregningLagreDto(singletonList(FaktaOmBeregningTilfelle.VURDER_MOTTAR_YTELSE));
+        var dto = new FaktaBeregningLagreDto(singletonList(FaktaOmBeregningTilfelle.VURDER_MOTTAR_YTELSE));
         dto.setMottarYtelse(new MottarYtelseDto(true, emptyList()));
         byggFrilansAndel();
-        BeregningsgrunnlagPrStatusOgAndelDto arbeidsforholdAndel = byggArbeidsforholdMedBgAndel();
+        var arbeidsforholdAndel = byggArbeidsforholdMedBgAndel();
 
         // Act
-        BeregningsgrunnlagGrunnlagDtoBuilder oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
+        var oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
         MottarYtelseOppdaterer.oppdater(dto, oppdatere);
-        Optional<FaktaAggregatDto> faktaAggregat = oppdatere.build(BeregningsgrunnlagTilstand.KOFAKBER_UT).getFaktaAggregat();
+        var faktaAggregat = oppdatere.build(BeregningsgrunnlagTilstand.KOFAKBER_UT).getFaktaAggregat();
 
         // Assert
         assertThat(faktaAggregat.get().getFaktaAktør().get().getHarFLMottattYtelseVurdering()).isTrue();
@@ -76,23 +76,23 @@ class MottarYtelseOppdatererTest {
     @Test
     void skal_sette_mottar_ytelse_kun_for_frilans_og_arbeidstakerandel() {
         // Arrange
-        FaktaBeregningLagreDto dto = new FaktaBeregningLagreDto(singletonList(FaktaOmBeregningTilfelle.VURDER_MOTTAR_YTELSE));
+        var dto = new FaktaBeregningLagreDto(singletonList(FaktaOmBeregningTilfelle.VURDER_MOTTAR_YTELSE));
         byggFrilansAndel();
-        BeregningsgrunnlagPrStatusOgAndelDto arbeidsforholdAndel = byggArbeidsforholdMedBgAndel();
+        var arbeidsforholdAndel = byggArbeidsforholdMedBgAndel();
         dto.setMottarYtelse(new MottarYtelseDto(false,
             singletonList(new ArbeidstakerandelUtenIMMottarYtelseDto(arbeidsforholdAndel.getAndelsnr(), true))));
 
         // Act
-        BeregningsgrunnlagGrunnlagDtoBuilder oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
+        var oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
         MottarYtelseOppdaterer.oppdater(dto, oppdatere);
 
-        BeregningsgrunnlagPrStatusOgAndelDto oppdatertArbeidsforholdAndel = oppdatere.getBeregningsgrunnlagBuilder().getBeregningsgrunnlag()
+        var oppdatertArbeidsforholdAndel = oppdatere.getBeregningsgrunnlagBuilder().getBeregningsgrunnlag()
             .getBeregningsgrunnlagPerioder().get(0)
             .getBeregningsgrunnlagPrStatusOgAndelList()
             .stream()
             .filter(a -> a.equals(arbeidsforholdAndel)).findFirst().get();
 
-        Optional<FaktaAggregatDto> faktaAggregat = oppdatere.build(BeregningsgrunnlagTilstand.KOFAKBER_UT).getFaktaAggregat();
+        var faktaAggregat = oppdatere.build(BeregningsgrunnlagTilstand.KOFAKBER_UT).getFaktaAggregat();
 
         // Assert
         assertThat(faktaAggregat.get().getFaktaAktør().get().getHarFLMottattYtelseVurdering()).isFalse();
@@ -107,7 +107,7 @@ class MottarYtelseOppdatererTest {
     }
 
     private BeregningsgrunnlagPrStatusOgAndelDto byggArbeidsforholdMedBgAndel() {
-        Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
+        var arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         return BeregningsgrunnlagPrStatusOgAndelDto.ny()
             .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
             .medInntektskategori(Inntektskategori.ARBEIDSTAKER)

@@ -62,7 +62,7 @@ public class ValiderKontraktDtoer {
     };
 
     public static boolean validerAlleDtoerIKontraken() throws IOException, ClassNotFoundException {
-        Class<?>[] classes = getClasses("no.nav.folketrygdloven.kalkulus");
+        var classes = getClasses("no.nav.folketrygdloven.kalkulus");
         for (var aClass : classes) {
 			// Midlertidige migreringsdtoer med regelsporing som inneholder mange uvanlige tegn vi ikke tillater i vanlige dtoer, trenger ikke validere disse
 			if (aClass.isAssignableFrom(RegelSporingGrunnlagMigreringDto.class) || aClass.isAssignableFrom(RegelSporingPeriodeMigreringDto.class)) {
@@ -90,8 +90,8 @@ public class ValiderKontraktDtoer {
             alternativer = List.of(List.of(Valid.class));
         }
         for (var alternativ : alternativer) {
-            boolean harAlleAnnoteringerForAlternativet = true;
-            for (Class<? extends Annotation> annotering : alternativ) {
+            var harAlleAnnoteringerForAlternativet = true;
+            for (var annotering : alternativ) {
                 if (field.getAnnotation(annotering) == null) {
                     harAlleAnnoteringerForAlternativet = false;
                 }
@@ -104,7 +104,7 @@ public class ValiderKontraktDtoer {
     }
 
     private static List<List<Class<? extends Annotation>>> getVurderingsalternativer(Field field) {
-        Class<?> type = field.getType();
+        var type = field.getType();
         if (field.getType().isEnum()) {
             return Collections.singletonList(Collections.singletonList(Valid.class));
         } else if (Collection.class.isAssignableFrom(type) || Map.class.isAssignableFrom(type)) {
@@ -128,17 +128,17 @@ public class ValiderKontraktDtoer {
 
     private static Class<?>[] getClasses(String packageName)
             throws ClassNotFoundException, IOException {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        var classLoader = Thread.currentThread().getContextClassLoader();
         assert classLoader != null;
-        String path = packageName.replace('.', '/');
-        Enumeration<URL> resources = classLoader.getResources(path);
+        var path = packageName.replace('.', '/');
+        var resources = classLoader.getResources(path);
         List<File> dirs = new ArrayList<File>();
         while (resources.hasMoreElements()) {
-            URL resource = resources.nextElement();
+            var resource = resources.nextElement();
             dirs.add(new File(resource.getFile()));
         }
-        ArrayList<Class<?>> classes = new ArrayList<>();
-        for (File directory : dirs) {
+        var classes = new ArrayList<Class<?>>();
+        for (var directory : dirs) {
             classes.addAll(findClasses(directory, packageName));
         }
         return classes.toArray(new Class[classes.size()]);
@@ -149,18 +149,18 @@ public class ValiderKontraktDtoer {
         if (!directory.exists()) {
             return classes;
         }
-        File[] files = directory.listFiles();
-        for (File file : files) {
+        var files = directory.listFiles();
+        for (var file : files) {
             if (file.isDirectory()) {
                 assert !file.getName().contains(".");
-                List<Class<?>> classes1 = findClasses(file, packageName + "." + file.getName());
+                var classes1 = findClasses(file, packageName + "." + file.getName());
                 for (var aClass : classes1) {
                     if (aClass.getName().endsWith("Dto")) {
                         classes.add(aClass);
                     }
                 }
             } else if (file.getName().endsWith(".class")) {
-                Class<?> clazz = Class.forName(packageName + '.' + file.getName().substring(0, file.getName().length() - 6));
+                var clazz = Class.forName(packageName + '.' + file.getName().substring(0, file.getName().length() - 6));
                 if (clazz.getName().endsWith("Dto")) {
                     classes.add(clazz);
                 }

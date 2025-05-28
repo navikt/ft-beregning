@@ -17,7 +17,7 @@ public class FinnGrunnbeløpForVilkårsvurdering {
      * @return Grunnbeløp som skal brukes i vilkårsvurdering
      */
     public static BigDecimal finnGrunnbeløpForVilkårsvurdering(BeregningsgrunnlagPeriode grunnlag) {
-        boolean erAktivtGrunnbeløpLavereEnnUregulert = grunnlag.getGrunnbeløp().compareTo(grunnlag.getUregulertGrunnbeløp()) < 0;
+        var erAktivtGrunnbeløpLavereEnnUregulert = grunnlag.getGrunnbeløp().compareTo(grunnlag.getUregulertGrunnbeløp()) < 0;
         if (erAktivtGrunnbeløpLavereEnnUregulert) {
             // Dette betyr at det aktive beregningsgrunnlaget har et skjæringstidspunkt som gir et nedsatt G-beløp
             return grunnlag.getGrunnbeløp();

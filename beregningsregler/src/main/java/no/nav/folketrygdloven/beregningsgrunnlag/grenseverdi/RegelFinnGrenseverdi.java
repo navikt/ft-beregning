@@ -25,11 +25,11 @@ public class RegelFinnGrenseverdi implements EksportRegel<BeregningsgrunnlagPeri
 	@SuppressWarnings("unchecked")
 	@Override
 	public Specification<BeregningsgrunnlagPeriode> getSpecification() {
-		Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
+        var rs = new Ruleset<BeregningsgrunnlagPeriode>();
 
 
 		// FP_BR_29.1 Skal finne grenseverdi uten å ta hensyn til fordeling?
-		Specification<BeregningsgrunnlagPeriode> skalfinneGrenseverdiUtenFordeling = rs.beregningHvisRegel(
+        var skalfinneGrenseverdiUtenFordeling = rs.beregningHvisRegel(
 				new SkalFinneGrenseverdiUtenFordeling(),
 				new RegelFinnGrenseverdiUtenFordeling(regelmodell).getSpecification(),
 				new RegelFinnGrenseverdiMedFordeling(regelmodell).getSpecification());

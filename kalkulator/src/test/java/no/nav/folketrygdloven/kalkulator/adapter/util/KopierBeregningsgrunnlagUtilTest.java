@@ -26,8 +26,8 @@ class KopierBeregningsgrunnlagUtilTest {
     @Test
     void skalKopiereBeregninggrunnlagPeriode() {
         // Arrange
-        BeregningsgrunnlagPeriode orginal = lagPeriode();
-        BeregningsgrunnlagPeriode kopi = BeregningsgrunnlagPeriode.builder()
+        var orginal = lagPeriode();
+        var kopi = BeregningsgrunnlagPeriode.builder()
             .medPeriode(Periode.of(periode.getTom().plusDays(1), null))
             .leggTilPeriodeÅrsak(PeriodeÅrsak.ARBEIDSFORHOLD_AVSLUTTET)
             .build();
@@ -62,7 +62,7 @@ class KopierBeregningsgrunnlagUtilTest {
     private void assertATFLAndel(BeregningsgrunnlagPrStatus kopi) {
         assertThat(kopi.getArbeidsforhold()).hasSize(1);
         assertThat(kopi.getAktivitetStatus()).isEqualTo(AktivitetStatus.ATFL);
-        BeregningsgrunnlagPrArbeidsforhold af = kopi.getArbeidsforhold().get(0);
+        var af = kopi.getArbeidsforhold().get(0);
 
         assertThat(af.getArbeidsforhold()).isEqualTo(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("12345"));
         assertThat(af.getAndelNr()).isEqualTo(1L);
@@ -83,7 +83,7 @@ class KopierBeregningsgrunnlagUtilTest {
     }
 
     private BeregningsgrunnlagPeriode lagPeriode() {
-        BeregningsgrunnlagPeriode bgPeriode = BeregningsgrunnlagPeriode.builder()
+        var bgPeriode = BeregningsgrunnlagPeriode.builder()
             .medPeriode(periode)
             .build();
 
@@ -94,7 +94,7 @@ class KopierBeregningsgrunnlagUtilTest {
     }
 
     private void lagATFLStatus(BeregningsgrunnlagPeriode bgPeriode) {
-        BeregningsgrunnlagPrArbeidsforhold bgArbeidsforhold = BeregningsgrunnlagPrArbeidsforhold.builder()
+        var bgArbeidsforhold = BeregningsgrunnlagPrArbeidsforhold.builder()
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("12345"))
             .medInntektskategori(Inntektskategori.ARBEIDSTAKER)
             .medAndelNr(1L)

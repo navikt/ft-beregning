@@ -61,7 +61,7 @@ public class PermisjonDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PermisjonDto that = (PermisjonDto) o;
+        var that = (PermisjonDto) o;
         return Objects.equals(periode, that.periode)
                 && Objects.equals(prosentsats, that.prosentsats)
                 && Objects.equals(permisjonsbeskrivelseType, that.permisjonsbeskrivelseType);

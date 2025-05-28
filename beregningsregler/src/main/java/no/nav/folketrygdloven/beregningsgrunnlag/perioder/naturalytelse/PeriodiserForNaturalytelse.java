@@ -37,16 +37,16 @@ public class PeriodiserForNaturalytelse extends LeafSpecification<PeriodiseringN
 
     @Override
     public Evaluation evaluate(PeriodiseringNaturalytelseProsesstruktur prosesstruktur) {
-        List<SplittetPeriode> splittetPerioder = periodiserBeregningsgrunnlag(prosesstruktur.getInput(), prosesstruktur.getIdentifisertePeriodeÅrsaker());
+        var splittetPerioder = periodiserBeregningsgrunnlag(prosesstruktur.getInput(), prosesstruktur.getIdentifisertePeriodeÅrsaker());
         prosesstruktur.setSplittetPerioder(splittetPerioder);
-        SingleEvaluation resultat = ja();
+        var resultat = ja();
         resultat.setEvaluationProperty("splittetPerioder", splittetPerioder);
         return resultat;
     }
 
     private static List<SplittetPeriode> periodiserBeregningsgrunnlag(PeriodeModellNaturalytelse input, IdentifiserteNaturalytelsePeriodeÅrsaker identifisertePeriodeÅrsaker) {
         // lag alle periodene, med riktige andeler
-        Map<LocalDate, Set<PeriodeSplittDataNaturalytelse>> periodeMap = identifisertePeriodeÅrsaker.getPeriodeMap();
+        var periodeMap = identifisertePeriodeÅrsaker.getPeriodeMap();
 
         List<Map.Entry<LocalDate, Set<PeriodeSplittDataNaturalytelse>>> entries = new ArrayList<>(periodeMap.entrySet());
 
@@ -55,18 +55,18 @@ public class PeriodiserForNaturalytelse extends LeafSpecification<PeriodiseringN
         List<SplittetPeriode> list = new ArrayList<>();
         while (listIterator.hasNext()) {
             var entry = listIterator.next();
-            LocalDate periodeFom = entry.getKey();
-	        LocalDate periodeTom = utledPeriodeTom(entries, listIterator);
+            var periodeFom = entry.getKey();
+            var periodeTom = utledPeriodeTom(entries, listIterator);
 	        var periodeSplittData = entry.getValue();
 
-            List<EksisterendeAndel> førstePeriodeAndeler = input.getNaturalytelserPrArbeidsforhold().stream()
+            var førstePeriodeAndeler = input.getNaturalytelserPrArbeidsforhold().stream()
                 .filter(im -> !im.erNyAktivitet())
                 .map(im -> mapToArbeidsforhold(im, periodeFom))
                 .toList();
 
 
-            Periode periode = new Periode(periodeFom, periodeTom);
-            SplittetPeriode splittetPeriode = SplittetPeriode.builder()
+            var periode = new Periode(periodeFom, periodeTom);
+            var splittetPeriode = SplittetPeriode.builder()
                 .medPeriode(periode)
                 .medPeriodeÅrsaker(getPeriodeÅrsaker(periodeSplittData, input.getSkjæringstidspunkt(), periodeFom))
                 .medFørstePeriodeAndeler(førstePeriodeAndeler)
@@ -83,12 +83,12 @@ public class PeriodiserForNaturalytelse extends LeafSpecification<PeriodiseringN
     }
 
     private static EksisterendeAndel mapToArbeidsforhold(NaturalytelserPrArbeidsforhold naturalytelse, LocalDate fom) {
-        Optional<BigDecimal> naturalytelseBortfaltPrÅr = naturalytelse.getNaturalYtelser().stream()
+        var naturalytelseBortfaltPrÅr = naturalytelse.getNaturalYtelser().stream()
             .filter(naturalYtelse -> naturalYtelse.getFom().isEqual(DateUtil.TIDENES_BEGYNNELSE))
             .filter(naturalYtelse -> naturalYtelse.getTom().isBefore(fom))
             .map(NaturalYtelse::getBeløp)
             .reduce(BigDecimal::add);
-        Optional<BigDecimal> naturalytelseTilkommer = naturalytelse.getNaturalYtelser().stream()
+        var naturalytelseTilkommer = naturalytelse.getNaturalYtelser().stream()
             .filter(naturalYtelse -> naturalYtelse.getTom().isEqual(DateUtil.TIDENES_ENDE))
             .filter(naturalYtelse -> naturalYtelse.getFom().isBefore(fom))
             .map(NaturalYtelse::getBeløp)

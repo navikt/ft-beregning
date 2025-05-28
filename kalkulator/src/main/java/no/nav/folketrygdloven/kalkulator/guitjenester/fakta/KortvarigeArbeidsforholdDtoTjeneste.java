@@ -24,11 +24,11 @@ public class KortvarigeArbeidsforholdDtoTjeneste {
 
     public void lagDto(BeregningsgrunnlagGUIInput input,
                        FaktaOmBeregningDto faktaOmBeregningDto) {
-        BeregningsgrunnlagDto beregningsgrunnlag = input.getBeregningsgrunnlag();
+        var beregningsgrunnlag = input.getBeregningsgrunnlag();
         if (!beregningsgrunnlag.getFaktaOmBeregningTilfeller().contains(FaktaOmBeregningTilfelle.VURDER_TIDSBEGRENSET_ARBEIDSFORHOLD)) {
             return;
         }
-        List<KortvarigeArbeidsforholdDto> arbeidsforholdDto = lagKortvarigeArbeidsforholdDto(
+        var arbeidsforholdDto = lagKortvarigeArbeidsforholdDto(
                 beregningsgrunnlag,
                 input.getIayGrunnlag(),
                 input.getBeregningsgrunnlagGrunnlag().getFaktaAggregat());
@@ -38,7 +38,7 @@ public class KortvarigeArbeidsforholdDtoTjeneste {
     private List<KortvarigeArbeidsforholdDto> lagKortvarigeArbeidsforholdDto(BeregningsgrunnlagDto beregningsgrunnlag,
                                                                              InntektArbeidYtelseGrunnlagDto inntektArbeidYtelseGrunnlag,
                                                                              Optional<FaktaAggregatDto> faktaAggregat) {
-        Map<BeregningsgrunnlagPrStatusOgAndelDto, YrkesaktivitetDto> kortvarige = KortvarigArbeidsforholdTjeneste.hentAndelerForKortvarigeArbeidsforhold(beregningsgrunnlag, inntektArbeidYtelseGrunnlag);
+        var kortvarige = KortvarigArbeidsforholdTjeneste.hentAndelerForKortvarigeArbeidsforhold(beregningsgrunnlag, inntektArbeidYtelseGrunnlag);
         return kortvarige.entrySet().stream()
             .map(entry -> mapFraYrkesaktivitet(finnRestDtoForAndel(entry, beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList()), inntektArbeidYtelseGrunnlag, faktaAggregat))
             .collect(Collectors.toList());
@@ -52,12 +52,12 @@ public class KortvarigeArbeidsforholdDtoTjeneste {
     }
 
     private KortvarigeArbeidsforholdDto mapFraYrkesaktivitet(BeregningsgrunnlagPrStatusOgAndelDto prStatusOgAndel, InntektArbeidYtelseGrunnlagDto inntektArbeidYtelseGrunnlag, Optional<FaktaAggregatDto> faktaAggregat) {
-        KortvarigeArbeidsforholdDto beregningArbeidsforhold = new KortvarigeArbeidsforholdDto();
-        Optional<BGAndelArbeidsforholdDto> bgAndelArbeidsforhold = prStatusOgAndel.getBgAndelArbeidsforhold();
+        var beregningArbeidsforhold = new KortvarigeArbeidsforholdDto();
+        var bgAndelArbeidsforhold = prStatusOgAndel.getBgAndelArbeidsforhold();
         var faktaArbeidsforholdDto = bgAndelArbeidsforhold.flatMap(arbeidsforhold -> faktaAggregat.flatMap(fa -> fa.getFaktaArbeidsforhold(arbeidsforhold)));
         beregningArbeidsforhold.setErTidsbegrensetArbeidsforhold(faktaArbeidsforholdDto.map(FaktaArbeidsforholdDto::getErTidsbegrensetVurdering).orElse(null));
         beregningArbeidsforhold.setAndelsnr(prStatusOgAndel.getAndelsnr());
-        Optional<BeregningsgrunnlagArbeidsforholdDto> arbDto = BeregningsgrunnlagDtoUtil.lagArbeidsforholdDto(prStatusOgAndel, Optional.empty(), inntektArbeidYtelseGrunnlag);
+        var arbDto = BeregningsgrunnlagDtoUtil.lagArbeidsforholdDto(prStatusOgAndel, Optional.empty(), inntektArbeidYtelseGrunnlag);
         arbDto.ifPresent(beregningArbeidsforhold::setArbeidsforhold);
         return beregningArbeidsforhold;
     }

@@ -65,9 +65,9 @@ class FordelBeregningsgrunnlagHåndtererTest {
         var arbId2 = InternArbeidsforholdRefDto.nyRef();
         Long andelsnr = 1L;
         Long andelsnr2 = 2L;
-        BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlag();
-        BeregningsgrunnlagPeriodeDto periode = lagPeriode(beregningsgrunnlag, SKJÆRINGSTIDSPUNKT, null);
-        BeregningsgrunnlagPrStatusOgAndelDto andel = buildArbeidstakerAndel(
+        var beregningsgrunnlag = lagBeregningsgrunnlag();
+        var periode = lagPeriode(beregningsgrunnlag, SKJÆRINGSTIDSPUNKT, null);
+        var andel = buildArbeidstakerAndel(
                 arbId,
                 andelsnr,
                 periode,
@@ -78,7 +78,7 @@ class FordelBeregningsgrunnlagHåndtererTest {
                 false,
                 Beløp.fra(200_000),
                 Beløp.fra(10_000));
-        BeregningsgrunnlagPrStatusOgAndelDto andel2 = buildArbeidstakerAndel(
+        var andel2 = buildArbeidstakerAndel(
                 arbId2,
                 andelsnr2,
                 periode, null,
@@ -91,22 +91,22 @@ class FordelBeregningsgrunnlagHåndtererTest {
                 Tuple.of(beregningsgrunnlag, BeregningsgrunnlagTilstand.OPPDATERT_MED_REFUSJON_OG_GRADERING),
                 BeregningsgrunnlagTilstand.FASTSATT_INN);
 
-        Inntektskategori inntektskategori = Inntektskategori.SJØMANN;
-        FordelBeregningsgrunnlagAndelDto fordeltAndel = lagFordeltAndelInklNaturalytelse(andel, arbId, andelsnr, 0, inntektskategori);
-        FordelBeregningsgrunnlagAndelDto fordeltAndel2 = lagFordeltAndelInklNaturalytelse(andel2, arbId2, andelsnr2, 210_000, inntektskategori);
+        var inntektskategori = Inntektskategori.SJØMANN;
+        var fordeltAndel = lagFordeltAndelInklNaturalytelse(andel, arbId, andelsnr, 0, inntektskategori);
+        var fordeltAndel2 = lagFordeltAndelInklNaturalytelse(andel2, arbId2, andelsnr2, 210_000, inntektskategori);
 
-        FordelBeregningsgrunnlagPeriodeDto endretPeriode = new FordelBeregningsgrunnlagPeriodeDto(List.of(fordeltAndel, fordeltAndel2), SKJÆRINGSTIDSPUNKT, null);
-        FordelBeregningsgrunnlagDto dto = new FordelBeregningsgrunnlagDto(singletonList(endretPeriode));
+        var endretPeriode = new FordelBeregningsgrunnlagPeriodeDto(List.of(fordeltAndel, fordeltAndel2), SKJÆRINGSTIDSPUNKT, null);
+        var dto = new FordelBeregningsgrunnlagDto(singletonList(endretPeriode));
 
         // Act
-        BeregningsgrunnlagGrunnlagDto grunnlag = FordelBeregningsgrunnlagHåndterer.håndter(dto, input);
+        var grunnlag = FordelBeregningsgrunnlagHåndterer.håndter(dto, input);
 
-        BeregningsgrunnlagDto grunnlagEtterOppdatering = grunnlag.getBeregningsgrunnlagHvisFinnes().orElseThrow();
+        var grunnlagEtterOppdatering = grunnlag.getBeregningsgrunnlagHvisFinnes().orElseThrow();
 
-        List<BeregningsgrunnlagPrStatusOgAndelDto> andeler = grunnlagEtterOppdatering.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList();
+        var andeler = grunnlagEtterOppdatering.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList();
 
-        BeregningsgrunnlagPrStatusOgAndelDto andelOppdatert1 = andeler.stream().filter(a -> a.matchUtenInntektskategori(andel) && a.getGjeldendeInntektskategori().equals(inntektskategori)).findFirst().get();
-        BeregningsgrunnlagPrStatusOgAndelDto andelOppdatert2 = andeler.stream().filter(a -> a.matchUtenInntektskategori(andel2) && a.getGjeldendeInntektskategori().equals(inntektskategori)).findFirst().get();
+        var andelOppdatert1 = andeler.stream().filter(a -> a.matchUtenInntektskategori(andel) && a.getGjeldendeInntektskategori().equals(inntektskategori)).findFirst().get();
+        var andelOppdatert2 = andeler.stream().filter(a -> a.matchUtenInntektskategori(andel2) && a.getGjeldendeInntektskategori().equals(inntektskategori)).findFirst().get();
 
         // Assert
         assertThat(andelOppdatert1.getAndelsnr()).isEqualByComparingTo(andelsnr);
@@ -126,37 +126,37 @@ class FordelBeregningsgrunnlagHåndtererTest {
         Long andelsnr = 1L;
         Long andelsnr2 = 2L;
         Long andelsnr3 = 12L;
-        BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlag();
-        BeregningsgrunnlagPeriodeDto periode = lagPeriode(beregningsgrunnlag, SKJÆRINGSTIDSPUNKT, null);
-        BeregningsgrunnlagPrStatusOgAndelDto andel = buildArbeidstakerAndel(arbId, andelsnr, periode, null, false, Inntektskategori.ARBEIDSTAKER, false, null, null);
-        BeregningsgrunnlagPrStatusOgAndelDto andel2 = buildArbeidstakerAndel(arbId2, andelsnr2, periode, null, false, Inntektskategori.ARBEIDSTAKER, false, null, null);
-        BeregningsgrunnlagPrStatusOgAndelDto andel3 = buildArbeidstakerAndel(arbId2, andelsnr3, periode, null, true, Inntektskategori.FISKER, false, null, null);
+        var beregningsgrunnlag = lagBeregningsgrunnlag();
+        var periode = lagPeriode(beregningsgrunnlag, SKJÆRINGSTIDSPUNKT, null);
+        var andel = buildArbeidstakerAndel(arbId, andelsnr, periode, null, false, Inntektskategori.ARBEIDSTAKER, false, null, null);
+        var andel2 = buildArbeidstakerAndel(arbId2, andelsnr2, periode, null, false, Inntektskategori.ARBEIDSTAKER, false, null, null);
+        var andel3 = buildArbeidstakerAndel(arbId2, andelsnr3, periode, null, true, Inntektskategori.FISKER, false, null, null);
         input = lagHåndteringInputMedBeregningsgrunnlag(koblingReferanse,
                 Tuple.of(beregningsgrunnlag, BeregningsgrunnlagTilstand.OPPDATERT_MED_REFUSJON_OG_GRADERING),
                 BeregningsgrunnlagTilstand.FASTSATT_INN);
 
         Integer fastsatt = 10_000;
-        Inntektskategori inntektskategori = Inntektskategori.SJØMANN;
-        Inntektskategori inntektskategori2 = Inntektskategori.DAGPENGER;
-        FordelBeregningsgrunnlagAndelDto fordeltAndel = lagFordeltAndel(andel, arbId, andelsnr, false, false, null, fastsatt, inntektskategori);
-        FordelBeregningsgrunnlagAndelDto fordeltAndel2 = lagFordeltAndel(andel2, arbId2, andelsnr2, false, false, null, fastsatt, inntektskategori);
-        FordelBeregningsgrunnlagAndelDto fordeltAndel3 = lagFordeltAndel(andel3, arbId2, andelsnr3, false, true, null, fastsatt, inntektskategori2);
-        FordelBeregningsgrunnlagAndelDto fordeltAndel4 = lagFordeltAndel(null, arbId, andelsnr, true, true, null, fastsatt, inntektskategori2);
+        var inntektskategori = Inntektskategori.SJØMANN;
+        var inntektskategori2 = Inntektskategori.DAGPENGER;
+        var fordeltAndel = lagFordeltAndel(andel, arbId, andelsnr, false, false, null, fastsatt, inntektskategori);
+        var fordeltAndel2 = lagFordeltAndel(andel2, arbId2, andelsnr2, false, false, null, fastsatt, inntektskategori);
+        var fordeltAndel3 = lagFordeltAndel(andel3, arbId2, andelsnr3, false, true, null, fastsatt, inntektskategori2);
+        var fordeltAndel4 = lagFordeltAndel(null, arbId, andelsnr, true, true, null, fastsatt, inntektskategori2);
 
-        FordelBeregningsgrunnlagPeriodeDto endretPeriode = new FordelBeregningsgrunnlagPeriodeDto(List.of(fordeltAndel4, fordeltAndel3, fordeltAndel, fordeltAndel2), SKJÆRINGSTIDSPUNKT, null);
-        FordelBeregningsgrunnlagDto dto = new FordelBeregningsgrunnlagDto(singletonList(endretPeriode));
+        var endretPeriode = new FordelBeregningsgrunnlagPeriodeDto(List.of(fordeltAndel4, fordeltAndel3, fordeltAndel, fordeltAndel2), SKJÆRINGSTIDSPUNKT, null);
+        var dto = new FordelBeregningsgrunnlagDto(singletonList(endretPeriode));
 
         // Act
-        BeregningsgrunnlagGrunnlagDto grunnlag = FordelBeregningsgrunnlagHåndterer.håndter(dto, input);
+        var grunnlag = FordelBeregningsgrunnlagHåndterer.håndter(dto, input);
 
-        BeregningsgrunnlagDto grunnlagEtterOppdatering = grunnlag.getBeregningsgrunnlagHvisFinnes().orElseThrow();
+        var grunnlagEtterOppdatering = grunnlag.getBeregningsgrunnlagHvisFinnes().orElseThrow();
 
-        List<BeregningsgrunnlagPrStatusOgAndelDto> andeler = grunnlagEtterOppdatering.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList();
+        var andeler = grunnlagEtterOppdatering.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList();
 
-        BeregningsgrunnlagPrStatusOgAndelDto andelOppdatert1 = andeler.stream().filter(a -> a.matchUtenInntektskategori(andel) && a.getGjeldendeInntektskategori().equals(inntektskategori)).findFirst().get();
-        BeregningsgrunnlagPrStatusOgAndelDto andelOppdatert2 = andeler.stream().filter(a -> a.matchUtenInntektskategori(andel2) && a.getGjeldendeInntektskategori().equals(inntektskategori)).findFirst().get();
-        BeregningsgrunnlagPrStatusOgAndelDto andelOppdatert3 = andeler.stream().filter(a -> a.matchUtenInntektskategori(andel3) && a.getGjeldendeInntektskategori().equals(inntektskategori2)).findFirst().get();
-        BeregningsgrunnlagPrStatusOgAndelDto andelOppdatert4 = andeler.stream().filter(a -> a.matchUtenInntektskategori(andel) && a.getGjeldendeInntektskategori().equals(inntektskategori2)).findFirst().get();
+        var andelOppdatert1 = andeler.stream().filter(a -> a.matchUtenInntektskategori(andel) && a.getGjeldendeInntektskategori().equals(inntektskategori)).findFirst().get();
+        var andelOppdatert2 = andeler.stream().filter(a -> a.matchUtenInntektskategori(andel2) && a.getGjeldendeInntektskategori().equals(inntektskategori)).findFirst().get();
+        var andelOppdatert3 = andeler.stream().filter(a -> a.matchUtenInntektskategori(andel3) && a.getGjeldendeInntektskategori().equals(inntektskategori2)).findFirst().get();
+        var andelOppdatert4 = andeler.stream().filter(a -> a.matchUtenInntektskategori(andel) && a.getGjeldendeInntektskategori().equals(inntektskategori2)).findFirst().get();
 
         // Assert
         assertThat(andelOppdatert1.getAndelsnr()).isEqualByComparingTo(andelsnr);
@@ -170,24 +170,24 @@ class FordelBeregningsgrunnlagHåndtererTest {
     void skal_sette_verdier_på_DP_lagt_til_av_saksbehandler() {
         // Arrange
         Long andelsnr = 1L;
-        BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlag();
-        BeregningsgrunnlagPeriodeDto periode = lagPeriode(beregningsgrunnlag, SKJÆRINGSTIDSPUNKT, null);
-        BeregningsgrunnlagPrStatusOgAndelDto andel = buildAPAndel(andelsnr, periode, true, true, Beløp.fra(100_000));
+        var beregningsgrunnlag = lagBeregningsgrunnlag();
+        var periode = lagPeriode(beregningsgrunnlag, SKJÆRINGSTIDSPUNKT, null);
+        var andel = buildAPAndel(andelsnr, periode, true, true, Beløp.fra(100_000));
         input = lagHåndteringInputMedBeregningsgrunnlag(koblingReferanse,
                 Tuple.of(beregningsgrunnlag, BeregningsgrunnlagTilstand.OPPDATERT_MED_REFUSJON_OG_GRADERING),
                 BeregningsgrunnlagTilstand.FASTSATT_INN);
 
         Integer fastsatt = 10_000;
-        Inntektskategori inntektskategori = Inntektskategori.SJØMANN;
-        FordelBeregningsgrunnlagAndelDto fordeltAndel = lagFordeltDPAndel(andel, andelsnr, fastsatt, inntektskategori);
-        FordelBeregningsgrunnlagPeriodeDto endretPeriode = new FordelBeregningsgrunnlagPeriodeDto(singletonList(fordeltAndel), SKJÆRINGSTIDSPUNKT, null);
-        FordelBeregningsgrunnlagDto dto = new FordelBeregningsgrunnlagDto(singletonList(endretPeriode));
+        var inntektskategori = Inntektskategori.SJØMANN;
+        var fordeltAndel = lagFordeltDPAndel(andel, andelsnr, fastsatt, inntektskategori);
+        var endretPeriode = new FordelBeregningsgrunnlagPeriodeDto(singletonList(fordeltAndel), SKJÆRINGSTIDSPUNKT, null);
+        var dto = new FordelBeregningsgrunnlagDto(singletonList(endretPeriode));
 
         // Act
-        BeregningsgrunnlagGrunnlagDto grunnlag = FordelBeregningsgrunnlagHåndterer.håndter(dto, input);
+        var grunnlag = FordelBeregningsgrunnlagHåndterer.håndter(dto, input);
 
-        BeregningsgrunnlagDto grunnlagEtterOppdatering = grunnlag.getBeregningsgrunnlagHvisFinnes().orElseThrow();
-        BeregningsgrunnlagPrStatusOgAndelDto andelEtterOppdatering = grunnlagEtterOppdatering.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().get(0);
+        var grunnlagEtterOppdatering = grunnlag.getBeregningsgrunnlagHvisFinnes().orElseThrow();
+        var andelEtterOppdatering = grunnlagEtterOppdatering.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().get(0);
         // Assert
         assertThat(andelEtterOppdatering.getManueltFordeltPrÅr()).isEqualByComparingTo(Beløp.fra(fastsatt * 12));
         assertThat(andelEtterOppdatering.getGjeldendeInntektskategori()).isEqualTo(inntektskategori);
@@ -199,27 +199,27 @@ class FordelBeregningsgrunnlagHåndtererTest {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
         Long andelsnr = 1L;
-        BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlag();
-        BeregningsgrunnlagPeriodeDto periode = lagPeriode(beregningsgrunnlag, SKJÆRINGSTIDSPUNKT, null);
-        BeregningsgrunnlagPrStatusOgAndelDto andel = buildArbeidstakerAndel(arbId, andelsnr, periode, null, false, Inntektskategori.ARBEIDSTAKER, false, null, null);
+        var beregningsgrunnlag = lagBeregningsgrunnlag();
+        var periode = lagPeriode(beregningsgrunnlag, SKJÆRINGSTIDSPUNKT, null);
+        var andel = buildArbeidstakerAndel(arbId, andelsnr, periode, null, false, Inntektskategori.ARBEIDSTAKER, false, null, null);
         input = lagHåndteringInputMedBeregningsgrunnlag(koblingReferanse,
                 Tuple.of(beregningsgrunnlag, BeregningsgrunnlagTilstand.OPPDATERT_MED_REFUSJON_OG_GRADERING),
                 BeregningsgrunnlagTilstand.FASTSATT_INN);
 
-        boolean nyAndel = false;
-        boolean lagtTilAvSaksbehandler = false;
+        var nyAndel = false;
+        var lagtTilAvSaksbehandler = false;
         Integer refusjon = null;
         Integer fastsatt = 10000;
-        Inntektskategori inntektskategori = Inntektskategori.SJØMANN;
-        FordelBeregningsgrunnlagAndelDto fordeltAndel = lagFordeltAndel(andel, arbId, andelsnr, nyAndel, lagtTilAvSaksbehandler, refusjon, fastsatt, inntektskategori);
-        FordelBeregningsgrunnlagPeriodeDto endretPeriode = new FordelBeregningsgrunnlagPeriodeDto(singletonList(fordeltAndel), SKJÆRINGSTIDSPUNKT, null);
-        FordelBeregningsgrunnlagDto dto = new FordelBeregningsgrunnlagDto(singletonList(endretPeriode));
+        var inntektskategori = Inntektskategori.SJØMANN;
+        var fordeltAndel = lagFordeltAndel(andel, arbId, andelsnr, nyAndel, lagtTilAvSaksbehandler, refusjon, fastsatt, inntektskategori);
+        var endretPeriode = new FordelBeregningsgrunnlagPeriodeDto(singletonList(fordeltAndel), SKJÆRINGSTIDSPUNKT, null);
+        var dto = new FordelBeregningsgrunnlagDto(singletonList(endretPeriode));
 
         // Act
-        BeregningsgrunnlagGrunnlagDto grunnlag = FordelBeregningsgrunnlagHåndterer.håndter(dto, input);
+        var grunnlag = FordelBeregningsgrunnlagHåndterer.håndter(dto, input);
 
-        BeregningsgrunnlagDto grunnlagEtterOppdatering = grunnlag.getBeregningsgrunnlagHvisFinnes().orElseThrow();
-        BeregningsgrunnlagPrStatusOgAndelDto andelEtterOppdatering = grunnlagEtterOppdatering.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().get(0);
+        var grunnlagEtterOppdatering = grunnlag.getBeregningsgrunnlagHvisFinnes().orElseThrow();
+        var andelEtterOppdatering = grunnlagEtterOppdatering.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().get(0);
         // Assert
         assertThat(andelEtterOppdatering.getBgAndelArbeidsforhold().map(BGAndelArbeidsforholdDto::getGjeldendeRefusjonPrÅr).orElse(Beløp.ZERO)).isEqualByComparingTo(Beløp.ZERO);
         assertThat(andelEtterOppdatering.getManueltFordeltPrÅr()).isEqualByComparingTo(Beløp.fra(fastsatt * 12));
@@ -234,39 +234,39 @@ class FordelBeregningsgrunnlagHåndtererTest {
         var arbId2 = InternArbeidsforholdRefDto.nyRef();
         Long andelsnr = 1L;
         Long andelsnr2 = 2L;
-        BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlag();
-        BeregningsgrunnlagPeriodeDto periode = lagPeriode(beregningsgrunnlag, SKJÆRINGSTIDSPUNKT, null);
+        var beregningsgrunnlag = lagBeregningsgrunnlag();
+        var periode = lagPeriode(beregningsgrunnlag, SKJÆRINGSTIDSPUNKT, null);
         var refusjonskravPrÅr = Beløp.fra(120000);
-        BeregningsgrunnlagPrStatusOgAndelDto eksisterendeAndel = buildArbeidstakerAndel(arbId, andelsnr, periode, refusjonskravPrÅr, false, Inntektskategori.ARBEIDSTAKER, false, null, null);
-        BeregningsgrunnlagPrStatusOgAndelDto eksisterendeAndel2 = buildArbeidstakerAndel(arbId2, andelsnr2, periode, refusjonskravPrÅr, false, Inntektskategori.ARBEIDSTAKER, false, null, null);
+        var eksisterendeAndel = buildArbeidstakerAndel(arbId, andelsnr, periode, refusjonskravPrÅr, false, Inntektskategori.ARBEIDSTAKER, false, null, null);
+        var eksisterendeAndel2 = buildArbeidstakerAndel(arbId2, andelsnr2, periode, refusjonskravPrÅr, false, Inntektskategori.ARBEIDSTAKER, false, null, null);
         input = lagHåndteringInputMedBeregningsgrunnlag(koblingReferanse,
                 Tuple.of(beregningsgrunnlag, BeregningsgrunnlagTilstand.OPPDATERT_MED_REFUSJON_OG_GRADERING),
                 BeregningsgrunnlagTilstand.FASTSATT_INN);
 
-        boolean nyAndel = false;
-        boolean lagtTilAvSaksbehandler = false;
+        var nyAndel = false;
+        var lagtTilAvSaksbehandler = false;
         Integer refusjon = null;
         Integer fastsatt = 30000;
         Integer fastsatt2 = 5000;
         Integer fastsatt3 = 5000;
-        Inntektskategori inntektskategori = Inntektskategori.SJØMANN;
-        FordelBeregningsgrunnlagAndelDto fordeltAndel = lagFordeltAndel(eksisterendeAndel, arbId, andelsnr, nyAndel, lagtTilAvSaksbehandler, refusjon, fastsatt, inntektskategori);
-        FordelBeregningsgrunnlagAndelDto fordeltAndel2 = lagFordeltAndel(eksisterendeAndel2, arbId2, andelsnr2, nyAndel, lagtTilAvSaksbehandler, refusjon, fastsatt2, inntektskategori);
-        FordelBeregningsgrunnlagAndelDto fordeltAndel3 = lagFordeltAndel(null, arbId2, andelsnr2, true, true, refusjon, fastsatt3, Inntektskategori.FRILANSER);
-        FordelBeregningsgrunnlagPeriodeDto endretPeriode = new FordelBeregningsgrunnlagPeriodeDto(List.of(fordeltAndel, fordeltAndel2, fordeltAndel3), SKJÆRINGSTIDSPUNKT, null);
-        FordelBeregningsgrunnlagDto dto = new FordelBeregningsgrunnlagDto(singletonList(endretPeriode));
+        var inntektskategori = Inntektskategori.SJØMANN;
+        var fordeltAndel = lagFordeltAndel(eksisterendeAndel, arbId, andelsnr, nyAndel, lagtTilAvSaksbehandler, refusjon, fastsatt, inntektskategori);
+        var fordeltAndel2 = lagFordeltAndel(eksisterendeAndel2, arbId2, andelsnr2, nyAndel, lagtTilAvSaksbehandler, refusjon, fastsatt2, inntektskategori);
+        var fordeltAndel3 = lagFordeltAndel(null, arbId2, andelsnr2, true, true, refusjon, fastsatt3, Inntektskategori.FRILANSER);
+        var endretPeriode = new FordelBeregningsgrunnlagPeriodeDto(List.of(fordeltAndel, fordeltAndel2, fordeltAndel3), SKJÆRINGSTIDSPUNKT, null);
+        var dto = new FordelBeregningsgrunnlagDto(singletonList(endretPeriode));
 
         // Act
-        BeregningsgrunnlagGrunnlagDto grunnlag = FordelBeregningsgrunnlagHåndterer.håndter(dto, input);
+        var grunnlag = FordelBeregningsgrunnlagHåndterer.håndter(dto, input);
 
-        BeregningsgrunnlagDto nyttBG = grunnlag.getBeregningsgrunnlagHvisFinnes().orElseThrow();
+        var nyttBG = grunnlag.getBeregningsgrunnlagHvisFinnes().orElseThrow();
 
         // Assert
-        List<BeregningsgrunnlagPeriodeDto> perioder = nyttBG.getBeregningsgrunnlagPerioder();
+        var perioder = nyttBG.getBeregningsgrunnlagPerioder();
         Assertions.assertThat(perioder).hasSize(1);
-        BeregningsgrunnlagPrStatusOgAndelDto andel = perioder.get(0).getBeregningsgrunnlagPrStatusOgAndelList().stream().filter(a -> a.getAndelsnr().equals(andelsnr)).findFirst().get();
-        BeregningsgrunnlagPrStatusOgAndelDto andel2 = perioder.get(0).getBeregningsgrunnlagPrStatusOgAndelList().stream().filter(a -> a.getAndelsnr().equals(andelsnr2)).findFirst().get();
-        BeregningsgrunnlagPrStatusOgAndelDto andel3 = perioder.get(0).getBeregningsgrunnlagPrStatusOgAndelList().stream().filter(BeregningsgrunnlagPrStatusOgAndelDto::erLagtTilAvSaksbehandler).findFirst().get();
+        var andel = perioder.get(0).getBeregningsgrunnlagPrStatusOgAndelList().stream().filter(a -> a.getAndelsnr().equals(andelsnr)).findFirst().get();
+        var andel2 = perioder.get(0).getBeregningsgrunnlagPrStatusOgAndelList().stream().filter(a -> a.getAndelsnr().equals(andelsnr2)).findFirst().get();
+        var andel3 = perioder.get(0).getBeregningsgrunnlagPrStatusOgAndelList().stream().filter(BeregningsgrunnlagPrStatusOgAndelDto::erLagtTilAvSaksbehandler).findFirst().get();
         assertThat(andel.getBgAndelArbeidsforhold().map(BGAndelArbeidsforholdDto::getGjeldendeRefusjonPrÅr).get()).isEqualByComparingTo(refusjonskravPrÅr);
         assertThat(andel.getManueltFordeltPrÅr()).isEqualByComparingTo(Beløp.fra(fastsatt * 12));
         assertThat(andel.getGjeldendeInntektskategori()).isEqualTo(inntektskategori);
@@ -284,11 +284,11 @@ class FordelBeregningsgrunnlagHåndtererTest {
                                                                               Long andelsnr,
                                                                               Integer fastsatt,
                                                                               Inntektskategori inntektskategori) {
-        FordelFastsatteVerdierDto fastsatteVerdier = FordelFastsatteVerdierDto.Builder.ny()
+        var fastsatteVerdier = FordelFastsatteVerdierDto.Builder.ny()
                 .medFastsattBeløpPrÅrInklNaturalytelse(fastsatt)
                 .medInntektskategori(inntektskategori)
                 .build();
-        RedigerbarAndelDto andelDto = new RedigerbarAndelDto(false, ORG_NUMMER, arbId, andelsnr, AktivitetStatus.ARBEIDSTAKER, OpptjeningAktivitetType.ARBEID, AndelKilde.PROSESS_START);
+        var andelDto = new RedigerbarAndelDto(false, ORG_NUMMER, arbId, andelsnr, AktivitetStatus.ARBEIDSTAKER, OpptjeningAktivitetType.ARBEID, AndelKilde.PROSESS_START);
         return new FordelBeregningsgrunnlagAndelDto(andelDto, fastsatteVerdier, Inntektskategori.ARBEIDSTAKER,
                 andel != null ? andel.getBgAndelArbeidsforhold().map(BGAndelArbeidsforholdDto::getGjeldendeRefusjonPrÅr).orElse(Beløp.ZERO).intValue() : null,
                 andel != null ? finnBrutto(andel) : null);
@@ -302,23 +302,23 @@ class FordelBeregningsgrunnlagHåndtererTest {
                                                                Integer refusjon,
                                                                Integer fastsatt,
                                                                Inntektskategori inntektskategori) {
-        FordelFastsatteVerdierDto fastsatteVerdier = FordelFastsatteVerdierDto.Builder.ny()
+        var fastsatteVerdier = FordelFastsatteVerdierDto.Builder.ny()
                 .medRefusjonPrÅr(refusjon == null ? null : refusjon * 12)
                 .medFastsattBeløpPrMnd(fastsatt)
                 .medInntektskategori(inntektskategori)
                 .build();
-        RedigerbarAndelDto andelDto = new RedigerbarAndelDto(nyAndel, ORG_NUMMER, arbId, andelsnr, AktivitetStatus.ARBEIDSTAKER, OpptjeningAktivitetType.ARBEID, lagtTilAvSaksbehandler ? AndelKilde.SAKSBEHANDLER_FORDELING : AndelKilde.PROSESS_START);
+        var andelDto = new RedigerbarAndelDto(nyAndel, ORG_NUMMER, arbId, andelsnr, AktivitetStatus.ARBEIDSTAKER, OpptjeningAktivitetType.ARBEID, lagtTilAvSaksbehandler ? AndelKilde.SAKSBEHANDLER_FORDELING : AndelKilde.PROSESS_START);
         return new FordelBeregningsgrunnlagAndelDto(andelDto, fastsatteVerdier, Inntektskategori.ARBEIDSTAKER,
                 andel != null ? andel.getBgAndelArbeidsforhold().map(BGAndelArbeidsforholdDto::getGjeldendeRefusjonPrÅr).orElse(Beløp.ZERO).intValue() : null,
                 andel != null ? finnBrutto(andel) : null);
     }
 
     private FordelBeregningsgrunnlagAndelDto lagFordeltDPAndel(BeregningsgrunnlagPrStatusOgAndelDto andel, Long andelsnr, Integer fastsatt, Inntektskategori inntektskategori) {
-        FordelFastsatteVerdierDto fastsatteVerdier = FordelFastsatteVerdierDto.Builder.ny()
+        var fastsatteVerdier = FordelFastsatteVerdierDto.Builder.ny()
                 .medFastsattBeløpPrMnd(fastsatt)
                 .medInntektskategori(inntektskategori)
                 .build();
-        RedigerbarAndelDto andelDto = new RedigerbarAndelDto(false, andelsnr, AktivitetStatus.DAGPENGER, OpptjeningAktivitetType.DAGPENGER, AndelKilde.SAKSBEHANDLER_FORDELING);
+        var andelDto = new RedigerbarAndelDto(false, andelsnr, AktivitetStatus.DAGPENGER, OpptjeningAktivitetType.DAGPENGER, AndelKilde.SAKSBEHANDLER_FORDELING);
         return new FordelBeregningsgrunnlagAndelDto(andelDto, fastsatteVerdier, Inntektskategori.DAGPENGER, null,
                 andel != null ? finnBrutto(andel) : null);
     }
@@ -372,27 +372,27 @@ class FordelBeregningsgrunnlagHåndtererTest {
         var arbId2 = InternArbeidsforholdRefDto.nyRef();
         Long andelsnr = 1L;
         Long andelsnr2 = 2L;
-        BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlag();
-        BeregningsgrunnlagPeriodeDto periode = lagPeriode(beregningsgrunnlag, SKJÆRINGSTIDSPUNKT, null);
-        BeregningsgrunnlagPrStatusOgAndelDto andel1 = buildArbeidstakerAndel(arbId, andelsnr, periode, null, false, Inntektskategori.ARBEIDSTAKER, false, null, null);
+        var beregningsgrunnlag = lagBeregningsgrunnlag();
+        var periode = lagPeriode(beregningsgrunnlag, SKJÆRINGSTIDSPUNKT, null);
+        var andel1 = buildArbeidstakerAndel(arbId, andelsnr, periode, null, false, Inntektskategori.ARBEIDSTAKER, false, null, null);
         buildArbeidstakerAndel(arbId2, andelsnr2, periode, null, false, Inntektskategori.ARBEIDSTAKER, false, null, null);
         input = lagHåndteringInputMedBeregningsgrunnlag(koblingReferanse,
                 Tuple.of(beregningsgrunnlag, BeregningsgrunnlagTilstand.OPPDATERT_MED_REFUSJON_OG_GRADERING),
                 BeregningsgrunnlagTilstand.FASTSATT_INN);
 
-        boolean nyAndel = false;
-        boolean lagtTilAvSaksbehandler = false;
+        var nyAndel = false;
+        var lagtTilAvSaksbehandler = false;
         Integer refusjon = 5000;
         Integer fastsatt = 10000;
-        Inntektskategori inntektskategori = Inntektskategori.SJØMANN;
-        FordelBeregningsgrunnlagAndelDto fordeltAndel = lagFordeltAndel(andel1, arbId, andelsnr, nyAndel, lagtTilAvSaksbehandler, refusjon, fastsatt, inntektskategori);
-        FordelBeregningsgrunnlagPeriodeDto endretPeriode = new FordelBeregningsgrunnlagPeriodeDto(singletonList(fordeltAndel), SKJÆRINGSTIDSPUNKT, null);
-        FordelBeregningsgrunnlagDto dto = new FordelBeregningsgrunnlagDto(singletonList(endretPeriode));
+        var inntektskategori = Inntektskategori.SJØMANN;
+        var fordeltAndel = lagFordeltAndel(andel1, arbId, andelsnr, nyAndel, lagtTilAvSaksbehandler, refusjon, fastsatt, inntektskategori);
+        var endretPeriode = new FordelBeregningsgrunnlagPeriodeDto(singletonList(fordeltAndel), SKJÆRINGSTIDSPUNKT, null);
+        var dto = new FordelBeregningsgrunnlagDto(singletonList(endretPeriode));
 
         // Act
-        BeregningsgrunnlagGrunnlagDto grunnlag = FordelBeregningsgrunnlagHåndterer.håndter(dto, input);
-        BeregningsgrunnlagDto nyttBG = grunnlag.getBeregningsgrunnlagHvisFinnes().orElseThrow();
-        BeregningsgrunnlagPrStatusOgAndelDto andelEtterOppdatering = nyttBG.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().get(0);
+        var grunnlag = FordelBeregningsgrunnlagHåndterer.håndter(dto, input);
+        var nyttBG = grunnlag.getBeregningsgrunnlagHvisFinnes().orElseThrow();
+        var andelEtterOppdatering = nyttBG.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().get(0);
         // Assert
         assertThat(andelEtterOppdatering.getBgAndelArbeidsforhold().map(BGAndelArbeidsforholdDto::getGjeldendeRefusjonPrÅr).orElse(null)).isEqualByComparingTo(Beløp.fra(refusjon * 12));
         assertThat(andelEtterOppdatering.getManueltFordeltPrÅr()).isEqualByComparingTo(Beløp.fra(fastsatt * 12));
@@ -405,33 +405,33 @@ class FordelBeregningsgrunnlagHåndtererTest {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.nyRef();
         Long andelsnr = 1L;
-        BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlag();
-        BeregningsgrunnlagPeriodeDto periode = lagPeriode(beregningsgrunnlag, SKJÆRINGSTIDSPUNKT, null);
-        BeregningsgrunnlagPrStatusOgAndelDto andel = buildArbeidstakerAndel(arbId, andelsnr, periode, null, false, Inntektskategori.ARBEIDSTAKER, false, null, null);
+        var beregningsgrunnlag = lagBeregningsgrunnlag();
+        var periode = lagPeriode(beregningsgrunnlag, SKJÆRINGSTIDSPUNKT, null);
+        var andel = buildArbeidstakerAndel(arbId, andelsnr, periode, null, false, Inntektskategori.ARBEIDSTAKER, false, null, null);
         input = lagHåndteringInputMedBeregningsgrunnlag(koblingReferanse,
                 Tuple.of(beregningsgrunnlag, BeregningsgrunnlagTilstand.OPPDATERT_MED_REFUSJON_OG_GRADERING),
                 BeregningsgrunnlagTilstand.FASTSATT_INN);
 
-        final boolean nyAndel = false;
-        final boolean lagtTilAvSaksbehandler = false;
+        final var nyAndel = false;
+        final var lagtTilAvSaksbehandler = false;
         Integer refusjon = 5000;
         Integer fastsatt = 10000;
-        Inntektskategori inntektskategori = Inntektskategori.SJØMANN;
-        FordelBeregningsgrunnlagAndelDto fordeltAndel = lagFordeltAndel(andel, arbId, andelsnr, nyAndel, lagtTilAvSaksbehandler, refusjon, fastsatt, inntektskategori);
+        var inntektskategori = Inntektskategori.SJØMANN;
+        var fordeltAndel = lagFordeltAndel(andel, arbId, andelsnr, nyAndel, lagtTilAvSaksbehandler, refusjon, fastsatt, inntektskategori);
 
-        final boolean nyAndel2 = true;
-        final boolean lagtTilAvSaksbehandler2 = true;
+        final var nyAndel2 = true;
+        final var lagtTilAvSaksbehandler2 = true;
         Integer refusjon2 = 3000;
         Integer fastsatt2 = 20000;
-        Inntektskategori inntektskategori2 = Inntektskategori.ARBEIDSTAKER_UTEN_FERIEPENGER;
-        FordelBeregningsgrunnlagAndelDto fordeltAndel2 = lagFordeltAndel(null, arbId, andelsnr, nyAndel2, lagtTilAvSaksbehandler2, refusjon2, fastsatt2, inntektskategori2);
+        var inntektskategori2 = Inntektskategori.ARBEIDSTAKER_UTEN_FERIEPENGER;
+        var fordeltAndel2 = lagFordeltAndel(null, arbId, andelsnr, nyAndel2, lagtTilAvSaksbehandler2, refusjon2, fastsatt2, inntektskategori2);
 
-        FordelBeregningsgrunnlagPeriodeDto endretPeriode = new FordelBeregningsgrunnlagPeriodeDto(List.of(fordeltAndel2, fordeltAndel), SKJÆRINGSTIDSPUNKT, null);
-        FordelBeregningsgrunnlagDto dto = new FordelBeregningsgrunnlagDto(singletonList(endretPeriode));
+        var endretPeriode = new FordelBeregningsgrunnlagPeriodeDto(List.of(fordeltAndel2, fordeltAndel), SKJÆRINGSTIDSPUNKT, null);
+        var dto = new FordelBeregningsgrunnlagDto(singletonList(endretPeriode));
 
         // Act
-        BeregningsgrunnlagGrunnlagDto grunnlag = FordelBeregningsgrunnlagHåndterer.håndter(dto, input);
-        BeregningsgrunnlagDto nyttBG = grunnlag.getBeregningsgrunnlagHvisFinnes().orElseThrow();
+        var grunnlag = FordelBeregningsgrunnlagHåndterer.håndter(dto, input);
+        var nyttBG = grunnlag.getBeregningsgrunnlagHvisFinnes().orElseThrow();
 
         // Assert
         double totalFastsatt = fastsatt + fastsatt2;
@@ -440,7 +440,7 @@ class FordelBeregningsgrunnlagHåndtererTest {
         assertThat(nyttBG.getBeregningsgrunnlagPerioder()).hasSize(1);
         assertThat(nyttBG.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList()).hasSize(2);
 
-        List<BeregningsgrunnlagPrStatusOgAndelDto> eksisterendeAndel = nyttBG.getBeregningsgrunnlagPerioder().get(0)
+        var eksisterendeAndel = nyttBG.getBeregningsgrunnlagPerioder().get(0)
                 .getBeregningsgrunnlagPrStatusOgAndelList().stream().filter(a -> a.matchUtenInntektskategori(andel) && a.getGjeldendeInntektskategori().equals(inntektskategori)).collect(Collectors.toList());
 
         Assertions.assertThat(eksisterendeAndel).hasSize(1);
@@ -451,7 +451,7 @@ class FordelBeregningsgrunnlagHåndtererTest {
         assertThat(eksisterendeAndel.get(0).getGjeldendeInntektskategori()).isEqualTo(inntektskategori);
 
 
-        List<BeregningsgrunnlagPrStatusOgAndelDto> andelLagtTil = nyttBG.getBeregningsgrunnlagPerioder().get(0)
+        var andelLagtTil = nyttBG.getBeregningsgrunnlagPerioder().get(0)
                 .getBeregningsgrunnlagPrStatusOgAndelList().stream().filter(BeregningsgrunnlagPrStatusOgAndelDto::erLagtTilAvSaksbehandler).collect(Collectors.toList());
 
         Assertions.assertThat(andelLagtTil).hasSize(1);
@@ -472,48 +472,48 @@ class FordelBeregningsgrunnlagHåndtererTest {
         Long andelsnr = 1L;
         Long andelsnrForAndelLagtTilAvSaksbehandler = 2L;
 
-        BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlag();
-        BeregningsgrunnlagPeriodeDto periode = lagPeriode(beregningsgrunnlag, SKJÆRINGSTIDSPUNKT, null);
-        BeregningsgrunnlagPrStatusOgAndelDto andel = buildArbeidstakerAndel(arbId, andelsnr, periode, null, false, Inntektskategori.ARBEIDSTAKER,
+        var beregningsgrunnlag = lagBeregningsgrunnlag();
+        var periode = lagPeriode(beregningsgrunnlag, SKJÆRINGSTIDSPUNKT, null);
+        var andel = buildArbeidstakerAndel(arbId, andelsnr, periode, null, false, Inntektskategori.ARBEIDSTAKER,
                 false, null, null);
-        BeregningsgrunnlagDto forrigeGrunnlag = BeregningsgrunnlagDto.builder(beregningsgrunnlag).build();
+        var forrigeGrunnlag = BeregningsgrunnlagDto.builder(beregningsgrunnlag).build();
         buildArbeidstakerAndel(arbId, andelsnrForAndelLagtTilAvSaksbehandler, forrigeGrunnlag.getBeregningsgrunnlagPerioder().get(0),
                 null, false, Inntektskategori.SJØMANN, false, null, null);
         input = BeregningsgrunnlagInputTestUtil.lagHåndteringInputMedBeregningsgrunnlag(koblingReferanse,
                 new Tuple<>(beregningsgrunnlag, BeregningsgrunnlagTilstand.FORESLÅTT),
                 new Tuple<>(forrigeGrunnlag, BeregningsgrunnlagTilstand.FASTSATT_INN));
 
-        final boolean nyAndel = false;
-        final boolean lagtTilAvSaksbehandler = false;
+        final var nyAndel = false;
+        final var lagtTilAvSaksbehandler = false;
         Integer refusjon = 5000;
         Integer fastsatt = 10000;
-        Inntektskategori inntektskategori = Inntektskategori.SJØMANN;
-        FordelBeregningsgrunnlagAndelDto fordeltAndel = lagFordeltAndel(andel, arbId, andelsnr, nyAndel, lagtTilAvSaksbehandler,
+        var inntektskategori = Inntektskategori.SJØMANN;
+        var fordeltAndel = lagFordeltAndel(andel, arbId, andelsnr, nyAndel, lagtTilAvSaksbehandler,
                 refusjon, fastsatt, inntektskategori);
 
-        final boolean nyAndel2 = false;
-        final boolean lagtTilAvSaksbehandler2 = true;
+        final var nyAndel2 = false;
+        final var lagtTilAvSaksbehandler2 = true;
         Integer refusjon2 = 3000;
         Integer fastsatt2 = 20000;
-        Inntektskategori inntektskategori2 = Inntektskategori.ARBEIDSTAKER_UTEN_FERIEPENGER;
-        FordelBeregningsgrunnlagAndelDto fordeltAndel2 = lagFordeltAndel(null, arbId, andelsnrForAndelLagtTilAvSaksbehandler, nyAndel2, lagtTilAvSaksbehandler2,
+        var inntektskategori2 = Inntektskategori.ARBEIDSTAKER_UTEN_FERIEPENGER;
+        var fordeltAndel2 = lagFordeltAndel(null, arbId, andelsnrForAndelLagtTilAvSaksbehandler, nyAndel2, lagtTilAvSaksbehandler2,
                 refusjon2, fastsatt2, inntektskategori2);
 
 
-        FordelBeregningsgrunnlagPeriodeDto endretPeriode = new FordelBeregningsgrunnlagPeriodeDto(List.of(fordeltAndel2, fordeltAndel),
+        var endretPeriode = new FordelBeregningsgrunnlagPeriodeDto(List.of(fordeltAndel2, fordeltAndel),
                 SKJÆRINGSTIDSPUNKT, null);
-        FordelBeregningsgrunnlagDto dto = new FordelBeregningsgrunnlagDto(singletonList(endretPeriode));
+        var dto = new FordelBeregningsgrunnlagDto(singletonList(endretPeriode));
 
         // Act
-        BeregningsgrunnlagGrunnlagDto grunnlag = FordelBeregningsgrunnlagHåndterer.håndter(dto, input);
-        BeregningsgrunnlagDto nyttBG = grunnlag.getBeregningsgrunnlagHvisFinnes().orElseThrow();
+        var grunnlag = FordelBeregningsgrunnlagHåndterer.håndter(dto, input);
+        var nyttBG = grunnlag.getBeregningsgrunnlagHvisFinnes().orElseThrow();
         // Assert
         double totalRefusjon = refusjon + refusjon2;
         double totalFastsatt = fastsatt + fastsatt2;
         assertThat(nyttBG.getBeregningsgrunnlagPerioder()).hasSize(1);
         assertThat(nyttBG.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList()).hasSize(2);
 
-        List<BeregningsgrunnlagPrStatusOgAndelDto> eksisterendeAndel = nyttBG.getBeregningsgrunnlagPerioder().get(0)
+        var eksisterendeAndel = nyttBG.getBeregningsgrunnlagPerioder().get(0)
                 .getBeregningsgrunnlagPrStatusOgAndelList().stream().filter(a -> a.matchUtenInntektskategori(andel) && a.getGjeldendeInntektskategori().equals(inntektskategori)).collect(Collectors.toList());
 
         Assertions.assertThat(eksisterendeAndel).hasSize(1);
@@ -523,7 +523,7 @@ class FordelBeregningsgrunnlagHåndtererTest {
         assertThat(eksisterendeAndel.get(0).getGjeldendeInntektskategori()).isEqualTo(inntektskategori);
 
 
-        List<BeregningsgrunnlagPrStatusOgAndelDto> andelLagtTil = nyttBG.getBeregningsgrunnlagPerioder().get(0)
+        var andelLagtTil = nyttBG.getBeregningsgrunnlagPerioder().get(0)
                 .getBeregningsgrunnlagPrStatusOgAndelList().stream().filter(BeregningsgrunnlagPrStatusOgAndelDto::erLagtTilAvSaksbehandler).collect(Collectors.toList());
 
         Assertions.assertThat(andelLagtTil).hasSize(1);
@@ -545,40 +545,40 @@ class FordelBeregningsgrunnlagHåndtererTest {
         Long andelsnr = 1L;
         Long andelsnr2 = 2L;
         var forrigeFastsatt = Beløp.fra(200000);
-        Inntektskategori forrigeInntektskategori = Inntektskategori.SJØMANN;
-        BeregningsgrunnlagDto forrigeBG = lagBeregningsgrunnlag();
-        BeregningsgrunnlagPeriodeDto periodeForrigeBG = lagPeriode(forrigeBG, SKJÆRINGSTIDSPUNKT, null);
+        var forrigeInntektskategori = Inntektskategori.SJØMANN;
+        var forrigeBG = lagBeregningsgrunnlag();
+        var periodeForrigeBG = lagPeriode(forrigeBG, SKJÆRINGSTIDSPUNKT, null);
         buildArbeidstakerAndel(arbId, andelsnr, periodeForrigeBG, null, false, Inntektskategori.ARBEIDSTAKER, false, null, null);
         buildArbeidstakerAndel(arbId, andelsnr2, periodeForrigeBG, null, true, forrigeInntektskategori,
                 true, forrigeFastsatt, null);
-        BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlag();
-        BeregningsgrunnlagPeriodeDto periode = lagPeriode(beregningsgrunnlag, SKJÆRINGSTIDSPUNKT, null);
-        BeregningsgrunnlagPrStatusOgAndelDto andel = buildArbeidstakerAndel(arbId, andelsnr, periode, null, false, Inntektskategori.ARBEIDSTAKER,
+        var beregningsgrunnlag = lagBeregningsgrunnlag();
+        var periode = lagPeriode(beregningsgrunnlag, SKJÆRINGSTIDSPUNKT, null);
+        var andel = buildArbeidstakerAndel(arbId, andelsnr, periode, null, false, Inntektskategori.ARBEIDSTAKER,
                 false, null, null);
 
         input = BeregningsgrunnlagInputTestUtil.lagHåndteringInputMedBeregningsgrunnlag(koblingReferanse,
                 new Tuple<>(beregningsgrunnlag, BeregningsgrunnlagTilstand.OPPDATERT_MED_REFUSJON_OG_GRADERING),
                 new Tuple<>(forrigeBG, BeregningsgrunnlagTilstand.FASTSATT_INN));
 
-        final boolean nyAndel = false;
-        final boolean lagtTilAvSaksbehandler = false;
+        final var nyAndel = false;
+        final var lagtTilAvSaksbehandler = false;
         Integer refusjon = 5000;
         Integer fastsatt = 10000;
-        Inntektskategori inntektskategori = Inntektskategori.SJØMANN;
-        FordelBeregningsgrunnlagAndelDto fordeltAndel = lagFordeltAndel(andel, arbId, andelsnr, nyAndel, lagtTilAvSaksbehandler, refusjon, fastsatt, inntektskategori);
+        var inntektskategori = Inntektskategori.SJØMANN;
+        var fordeltAndel = lagFordeltAndel(andel, arbId, andelsnr, nyAndel, lagtTilAvSaksbehandler, refusjon, fastsatt, inntektskategori);
 
-        final boolean nyAndel2 = false;
-        final boolean lagtTilAvSaksbehandler2 = true;
+        final var nyAndel2 = false;
+        final var lagtTilAvSaksbehandler2 = true;
         Integer refusjon2 = 3000;
         Integer fastsatt2 = 20000;
-        Inntektskategori inntektskategori2 = Inntektskategori.ARBEIDSTAKER_UTEN_FERIEPENGER;
-        FordelBeregningsgrunnlagAndelDto fordeltAndel2 = lagFordeltAndel(null, arbId, andelsnr2, nyAndel2, lagtTilAvSaksbehandler2, refusjon2, fastsatt2, inntektskategori2);
-        FordelBeregningsgrunnlagPeriodeDto endretPeriode = new FordelBeregningsgrunnlagPeriodeDto(List.of(fordeltAndel, fordeltAndel2), SKJÆRINGSTIDSPUNKT, null);
-        FordelBeregningsgrunnlagDto dto = new FordelBeregningsgrunnlagDto(singletonList(endretPeriode));
+        var inntektskategori2 = Inntektskategori.ARBEIDSTAKER_UTEN_FERIEPENGER;
+        var fordeltAndel2 = lagFordeltAndel(null, arbId, andelsnr2, nyAndel2, lagtTilAvSaksbehandler2, refusjon2, fastsatt2, inntektskategori2);
+        var endretPeriode = new FordelBeregningsgrunnlagPeriodeDto(List.of(fordeltAndel, fordeltAndel2), SKJÆRINGSTIDSPUNKT, null);
+        var dto = new FordelBeregningsgrunnlagDto(singletonList(endretPeriode));
 
         // Act
-        BeregningsgrunnlagGrunnlagDto grunnlag = FordelBeregningsgrunnlagHåndterer.håndter(dto, input);
-        BeregningsgrunnlagDto nyttBG = grunnlag.getBeregningsgrunnlagHvisFinnes().orElseThrow();
+        var grunnlag = FordelBeregningsgrunnlagHåndterer.håndter(dto, input);
+        var nyttBG = grunnlag.getBeregningsgrunnlagHvisFinnes().orElseThrow();
 
         // Assert
         double totalRefusjon = refusjon + refusjon2;
@@ -587,7 +587,7 @@ class FordelBeregningsgrunnlagHåndtererTest {
         assertThat(nyttBG.getBeregningsgrunnlagPerioder()).hasSize(1);
         assertThat(nyttBG.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList()).hasSize(2);
 
-        List<BeregningsgrunnlagPrStatusOgAndelDto> eksisterendeAndel = nyttBG.getBeregningsgrunnlagPerioder().get(0)
+        var eksisterendeAndel = nyttBG.getBeregningsgrunnlagPerioder().get(0)
                 .getBeregningsgrunnlagPrStatusOgAndelList().stream().filter(a -> a.getAndelsnr().equals(andelsnr)).collect(Collectors.toList());
 
         Assertions.assertThat(eksisterendeAndel).hasSize(1);
@@ -597,7 +597,7 @@ class FordelBeregningsgrunnlagHåndtererTest {
         assertThat(eksisterendeAndel.get(0).getGjeldendeInntektskategori()).isEqualTo(inntektskategori);
 
 
-        List<BeregningsgrunnlagPrStatusOgAndelDto> andelLagtTil = nyttBG.getBeregningsgrunnlagPerioder().get(0)
+        var andelLagtTil = nyttBG.getBeregningsgrunnlagPerioder().get(0)
                 .getBeregningsgrunnlagPrStatusOgAndelList().stream().filter(BeregningsgrunnlagPrStatusOgAndelDto::erLagtTilAvSaksbehandler).collect(Collectors.toList());
 
         Assertions.assertThat(andelLagtTil).hasSize(1);
@@ -618,39 +618,39 @@ class FordelBeregningsgrunnlagHåndtererTest {
         Long andelsnr = 1L;
         Long andelsnr2 = 2L;
         var forrigeFastsatt = Beløp.fra(200000);
-        Inntektskategori forrigeInntektskategori = Inntektskategori.SJØMANN;
-        BeregningsgrunnlagDto forrigeBG = lagBeregningsgrunnlag();
-        BeregningsgrunnlagPeriodeDto periodeForrigeBG = lagPeriode(forrigeBG, SKJÆRINGSTIDSPUNKT, null);
-        BeregningsgrunnlagPrStatusOgAndelDto andel = buildArbeidstakerAndel(arbId, andelsnr, periodeForrigeBG, null, false, Inntektskategori.ARBEIDSTAKER, false, null, null);
+        var forrigeInntektskategori = Inntektskategori.SJØMANN;
+        var forrigeBG = lagBeregningsgrunnlag();
+        var periodeForrigeBG = lagPeriode(forrigeBG, SKJÆRINGSTIDSPUNKT, null);
+        var andel = buildArbeidstakerAndel(arbId, andelsnr, periodeForrigeBG, null, false, Inntektskategori.ARBEIDSTAKER, false, null, null);
         buildArbeidstakerAndel(arbId, andelsnr2, periodeForrigeBG, null, true, forrigeInntektskategori,
                 true, forrigeFastsatt, null);
 
-        BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlag();
-        BeregningsgrunnlagPeriodeDto periode = lagPeriode(beregningsgrunnlag, SKJÆRINGSTIDSPUNKT, null);
+        var beregningsgrunnlag = lagBeregningsgrunnlag();
+        var periode = lagPeriode(beregningsgrunnlag, SKJÆRINGSTIDSPUNKT, null);
         buildArbeidstakerAndel(arbId, andelsnr, periode, null, false, Inntektskategori.ARBEIDSTAKER, false, null, null);
 
         input = BeregningsgrunnlagInputTestUtil.lagHåndteringInputMedBeregningsgrunnlag(koblingReferanse,
                 new Tuple<>(beregningsgrunnlag, BeregningsgrunnlagTilstand.FORESLÅTT),
                 new Tuple<>(forrigeBG, BeregningsgrunnlagTilstand.FASTSATT_INN));
 
-        boolean nyAndel = false;
-        boolean lagtTilAvSaksbehandler = false;
+        var nyAndel = false;
+        var lagtTilAvSaksbehandler = false;
         Integer refusjon = 5000;
         Integer fastsatt = 10000;
-        Inntektskategori inntektskategori = Inntektskategori.SJØMANN;
-        FordelBeregningsgrunnlagAndelDto fordeltAndel = lagFordeltAndel(andel, arbId, andelsnr, nyAndel, lagtTilAvSaksbehandler, refusjon, fastsatt, inntektskategori);
+        var inntektskategori = Inntektskategori.SJØMANN;
+        var fordeltAndel = lagFordeltAndel(andel, arbId, andelsnr, nyAndel, lagtTilAvSaksbehandler, refusjon, fastsatt, inntektskategori);
 
-        FordelBeregningsgrunnlagPeriodeDto endretPeriode = new FordelBeregningsgrunnlagPeriodeDto(List.of(fordeltAndel), SKJÆRINGSTIDSPUNKT, null);
-        FordelBeregningsgrunnlagDto dto = new FordelBeregningsgrunnlagDto(singletonList(endretPeriode));
+        var endretPeriode = new FordelBeregningsgrunnlagPeriodeDto(List.of(fordeltAndel), SKJÆRINGSTIDSPUNKT, null);
+        var dto = new FordelBeregningsgrunnlagDto(singletonList(endretPeriode));
 
         // Act
-        BeregningsgrunnlagGrunnlagDto grunnlag = FordelBeregningsgrunnlagHåndterer.håndter(dto, input);
-        BeregningsgrunnlagDto nyttBG = grunnlag.getBeregningsgrunnlagHvisFinnes().orElseThrow();
+        var grunnlag = FordelBeregningsgrunnlagHåndterer.håndter(dto, input);
+        var nyttBG = grunnlag.getBeregningsgrunnlagHvisFinnes().orElseThrow();
         // Assert
         assertThat(nyttBG.getBeregningsgrunnlagPerioder()).hasSize(1);
         assertThat(nyttBG.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList()).hasSize(1);
 
-        List<BeregningsgrunnlagPrStatusOgAndelDto> eksisterendeAndel = nyttBG.getBeregningsgrunnlagPerioder().get(0)
+        var eksisterendeAndel = nyttBG.getBeregningsgrunnlagPerioder().get(0)
                 .getBeregningsgrunnlagPrStatusOgAndelList().stream().filter(a -> a.getAndelsnr().equals(andelsnr)).collect(Collectors.toList());
 
         Assertions.assertThat(eksisterendeAndel).hasSize(1);
@@ -660,7 +660,7 @@ class FordelBeregningsgrunnlagHåndtererTest {
         assertThat(eksisterendeAndel.get(0).getGjeldendeInntektskategori()).isEqualTo(inntektskategori);
 
 
-        List<BeregningsgrunnlagPrStatusOgAndelDto> andelLagtTil = nyttBG.getBeregningsgrunnlagPerioder().get(0)
+        var andelLagtTil = nyttBG.getBeregningsgrunnlagPerioder().get(0)
                 .getBeregningsgrunnlagPrStatusOgAndelList().stream()
                 .filter(BeregningsgrunnlagPrStatusOgAndelDto::erLagtTilAvSaksbehandler)
                 .collect(Collectors.toList());
@@ -679,26 +679,26 @@ class FordelBeregningsgrunnlagHåndtererTest {
         Long andelsnr3 = 3L;
 
         var forrigeFastsatt = Beløp.fra(200000);
-        Inntektskategori forrigeInntektskategori = Inntektskategori.SJØMANN;
-        BeregningsgrunnlagDto forrigeBG = lagBeregningsgrunnlag();
-        BeregningsgrunnlagPeriodeDto periodeForrigeBG = lagPeriode(forrigeBG, SKJÆRINGSTIDSPUNKT, null);
+        var forrigeInntektskategori = Inntektskategori.SJØMANN;
+        var forrigeBG = lagBeregningsgrunnlag();
+        var periodeForrigeBG = lagPeriode(forrigeBG, SKJÆRINGSTIDSPUNKT, null);
         buildArbeidstakerAndel(arbId, andelsnr, periodeForrigeBG,
                 null, false, Inntektskategori.ARBEIDSTAKER, false, null, null);
         buildArbeidstakerAndel(arbId, andelsnr2, periodeForrigeBG,
                 null, true, forrigeInntektskategori, true, forrigeFastsatt, null);
 
-        BeregningsgrunnlagDto beregningsgrunnlag = lagBeregningsgrunnlag();
-        BeregningsgrunnlagPeriodeDto periode1 = BeregningsgrunnlagPeriodeDto.ny()
+        var beregningsgrunnlag = lagBeregningsgrunnlag();
+        var periode1 = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(2).minusDays(1))
                 .build(beregningsgrunnlag);
         buildArbeidstakerAndel(arbId, andelsnr, periode1,
                 null, false, Inntektskategori.ARBEIDSTAKER, false, null, null);
-        BeregningsgrunnlagPeriodeDto periode2 = BeregningsgrunnlagPeriodeDto.ny()
+        var periode2 = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT.plusMonths(2), null)
                 .build(beregningsgrunnlag);
-        BeregningsgrunnlagPrStatusOgAndelDto andel = buildArbeidstakerAndel(arbId, andelsnr, periode2,
+        var andel = buildArbeidstakerAndel(arbId, andelsnr, periode2,
                 null, false, Inntektskategori.ARBEIDSTAKER, false, null, null);
-        BeregningsgrunnlagPrStatusOgAndelDto andel3 = buildArbeidstakerAndel(arbId2, andelsnr3, periode2,
+        var andel3 = buildArbeidstakerAndel(arbId2, andelsnr3, periode2,
                 null, false, Inntektskategori.ARBEIDSTAKER, false, null, null);
 
         input = BeregningsgrunnlagInputTestUtil.lagHåndteringInputMedBeregningsgrunnlag(koblingReferanse,
@@ -706,41 +706,41 @@ class FordelBeregningsgrunnlagHåndtererTest {
                 new Tuple<>(forrigeBG, BeregningsgrunnlagTilstand.FASTSATT_INN));
 
 
-        final boolean nyAndel = false;
-        final boolean lagtTilAvSaksbehandler = false;
+        final var nyAndel = false;
+        final var lagtTilAvSaksbehandler = false;
         Integer refusjon = 5000;
         Integer fastsatt = 10000;
-        Inntektskategori inntektskategori = Inntektskategori.SJØMANN;
-        FordelBeregningsgrunnlagAndelDto fordeltAndel = lagFordeltAndel(andel, arbId, andelsnr, nyAndel, lagtTilAvSaksbehandler, refusjon, fastsatt, inntektskategori);
+        var inntektskategori = Inntektskategori.SJØMANN;
+        var fordeltAndel = lagFordeltAndel(andel, arbId, andelsnr, nyAndel, lagtTilAvSaksbehandler, refusjon, fastsatt, inntektskategori);
 
-        final boolean nyAndel2 = false;
-        final boolean lagtTilAvSaksbehandler2 = true;
+        final var nyAndel2 = false;
+        final var lagtTilAvSaksbehandler2 = true;
         Integer refusjon2 = 3000;
         Integer fastsatt2 = 20000;
-        Inntektskategori inntektskategori2 = Inntektskategori.ARBEIDSTAKER_UTEN_FERIEPENGER;
-        FordelBeregningsgrunnlagAndelDto fordeltAndel2 = lagFordeltAndel(null, arbId, andelsnr2, nyAndel2, lagtTilAvSaksbehandler2, refusjon2, fastsatt2, inntektskategori2);
+        var inntektskategori2 = Inntektskategori.ARBEIDSTAKER_UTEN_FERIEPENGER;
+        var fordeltAndel2 = lagFordeltAndel(null, arbId, andelsnr2, nyAndel2, lagtTilAvSaksbehandler2, refusjon2, fastsatt2, inntektskategori2);
 
-        final boolean nyAndel3 = true;
-        final boolean lagtTilAvSaksbehandler3 = true;
+        final var nyAndel3 = true;
+        final var lagtTilAvSaksbehandler3 = true;
         Integer refusjon3 = 2000;
         Integer fastsatt3 = 30000;
-        Inntektskategori inntektskategori3 = Inntektskategori.JORDBRUKER;
-        FordelBeregningsgrunnlagAndelDto fordeltAndel3 = lagFordeltAndel(null, arbId, andelsnr, nyAndel3, lagtTilAvSaksbehandler3, refusjon3, fastsatt3, inntektskategori3);
+        var inntektskategori3 = Inntektskategori.JORDBRUKER;
+        var fordeltAndel3 = lagFordeltAndel(null, arbId, andelsnr, nyAndel3, lagtTilAvSaksbehandler3, refusjon3, fastsatt3, inntektskategori3);
 
-        FordelBeregningsgrunnlagPeriodeDto endretPeriode1 = new FordelBeregningsgrunnlagPeriodeDto(List.of(fordeltAndel3, fordeltAndel, fordeltAndel2), SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(2).minusDays(1));
+        var endretPeriode1 = new FordelBeregningsgrunnlagPeriodeDto(List.of(fordeltAndel3, fordeltAndel, fordeltAndel2), SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(2).minusDays(1));
 
-        final boolean nyAndel4 = false;
-        final boolean lagtTilAvSaksbehandler4 = false;
+        final var nyAndel4 = false;
+        final var lagtTilAvSaksbehandler4 = false;
         Integer refusjon4 = 10000;
         Integer fastsatt4 = 40000;
-        Inntektskategori inntektskategori4 = Inntektskategori.SJØMANN;
-        FordelBeregningsgrunnlagAndelDto fordeltAndel4 = lagFordeltAndel(andel3, arbId2, andelsnr3, nyAndel4, lagtTilAvSaksbehandler4, refusjon4, fastsatt4, inntektskategori4);
-        FordelBeregningsgrunnlagPeriodeDto endretPeriode2 = new FordelBeregningsgrunnlagPeriodeDto(List.of(fordeltAndel3, fordeltAndel, fordeltAndel4), SKJÆRINGSTIDSPUNKT.plusMonths(2), null);
-        FordelBeregningsgrunnlagDto dto = new FordelBeregningsgrunnlagDto(List.of(endretPeriode2, endretPeriode1));
+        var inntektskategori4 = Inntektskategori.SJØMANN;
+        var fordeltAndel4 = lagFordeltAndel(andel3, arbId2, andelsnr3, nyAndel4, lagtTilAvSaksbehandler4, refusjon4, fastsatt4, inntektskategori4);
+        var endretPeriode2 = new FordelBeregningsgrunnlagPeriodeDto(List.of(fordeltAndel3, fordeltAndel, fordeltAndel4), SKJÆRINGSTIDSPUNKT.plusMonths(2), null);
+        var dto = new FordelBeregningsgrunnlagDto(List.of(endretPeriode2, endretPeriode1));
 
         // Act
-        BeregningsgrunnlagGrunnlagDto grunnlag = FordelBeregningsgrunnlagHåndterer.håndter(dto, input);
-        BeregningsgrunnlagDto nyttBG = grunnlag.getBeregningsgrunnlagHvisFinnes().orElseThrow();
+        var grunnlag = FordelBeregningsgrunnlagHåndterer.håndter(dto, input);
+        var nyttBG = grunnlag.getBeregningsgrunnlagHvisFinnes().orElseThrow();
 
         // Assert
         double totalRefusjon1 = refusjon + refusjon2 + refusjon3;
@@ -750,12 +750,12 @@ class FordelBeregningsgrunnlagHåndtererTest {
 
         assertThat(nyttBG.getBeregningsgrunnlagPerioder()).hasSize(2);
 
-        BeregningsgrunnlagPeriodeDto periode1Oppdatert = nyttBG.getBeregningsgrunnlagPerioder().get(0);
-        BeregningsgrunnlagPeriodeDto periode2Oppdatert = nyttBG.getBeregningsgrunnlagPerioder().get(1);
+        var periode1Oppdatert = nyttBG.getBeregningsgrunnlagPerioder().get(0);
+        var periode2Oppdatert = nyttBG.getBeregningsgrunnlagPerioder().get(1);
 
         assertThat(periode1Oppdatert.getBeregningsgrunnlagPrStatusOgAndelList()).hasSize(3);
 
-        List<BeregningsgrunnlagPrStatusOgAndelDto> eksisterendeAndel = periode1Oppdatert
+        var eksisterendeAndel = periode1Oppdatert
                 .getBeregningsgrunnlagPrStatusOgAndelList().stream().filter(a -> a.matchUtenInntektskategori(andel) && a.getGjeldendeInntektskategori().equals(fordeltAndel.getFastsatteVerdier().getInntektskategori())).collect(Collectors.toList());
 
         Assertions.assertThat(eksisterendeAndel).hasSize(1);
@@ -765,11 +765,11 @@ class FordelBeregningsgrunnlagHåndtererTest {
         assertThat(eksisterendeAndel.get(0).getGjeldendeInntektskategori()).isEqualTo(inntektskategori);
 
 
-        List<BeregningsgrunnlagPrStatusOgAndelDto> andelLagtTil = periode1Oppdatert
+        var andelLagtTil = periode1Oppdatert
                 .getBeregningsgrunnlagPrStatusOgAndelList().stream().filter(BeregningsgrunnlagPrStatusOgAndelDto::erLagtTilAvSaksbehandler).collect(Collectors.toList());
 
         Assertions.assertThat(andelLagtTil).hasSize(2);
-        Optional<BeregningsgrunnlagPrStatusOgAndelDto> fraForrige = andelLagtTil.stream().filter(lagtTil -> lagtTil.getGjeldendeInntektskategori().equals(inntektskategori2)).findFirst();
+        var fraForrige = andelLagtTil.stream().filter(lagtTil -> lagtTil.getGjeldendeInntektskategori().equals(inntektskategori2)).findFirst();
         Assertions.assertThat(fraForrige.isPresent()).isTrue();
         assertThat(fraForrige.get().getAndelsnr()).isNotEqualTo(eksisterendeAndel.get(0).getAndelsnr());
         assertThat(fraForrige.get().getBgAndelArbeidsforhold().map(BGAndelArbeidsforholdDto::getGjeldendeRefusjonPrÅr).map(Beløp::verdi).orElse(null))
@@ -777,7 +777,7 @@ class FordelBeregningsgrunnlagHåndtererTest {
         assertThat(fraForrige.get().getManueltFordeltPrÅr()).isEqualByComparingTo(Beløp.fra(fastsatt2 * 12));
         assertThat(fraForrige.get().getGjeldendeInntektskategori()).isEqualTo(inntektskategori2);
 
-        Optional<BeregningsgrunnlagPrStatusOgAndelDto> ny = andelLagtTil.stream().filter(lagtTil -> lagtTil.getGjeldendeInntektskategori().equals(inntektskategori3)).findFirst();
+        var ny = andelLagtTil.stream().filter(lagtTil -> lagtTil.getGjeldendeInntektskategori().equals(inntektskategori3)).findFirst();
         Assertions.assertThat(ny.isPresent()).isTrue();
         assertThat(ny.get().getAndelsnr()).isNotEqualTo(eksisterendeAndel.get(0).getAndelsnr());
         assertThat(ny.get().getBgAndelArbeidsforhold().map(BGAndelArbeidsforholdDto::getGjeldendeRefusjonPrÅr).map(Beløp::verdi).orElse(null))
@@ -787,7 +787,7 @@ class FordelBeregningsgrunnlagHåndtererTest {
 
         assertThat(periode2Oppdatert.getBeregningsgrunnlagPrStatusOgAndelList()).hasSize(3);
 
-        List<BeregningsgrunnlagPrStatusOgAndelDto> eksisterendeAndel2 = periode2Oppdatert
+        var eksisterendeAndel2 = periode2Oppdatert
                 .getBeregningsgrunnlagPrStatusOgAndelList().stream().filter(a -> a.matchUtenInntektskategori(andel) && a.getGjeldendeInntektskategori().equals(fordeltAndel.getFastsatteVerdier().getInntektskategori())).collect(Collectors.toList());
         Assertions.assertThat(eksisterendeAndel2).hasSize(1);
         assertThat(eksisterendeAndel2.get(0).getBgAndelArbeidsforhold().map(BGAndelArbeidsforholdDto::getGjeldendeRefusjonPrÅr).map(Beløp::verdi).orElse(null))
@@ -795,7 +795,7 @@ class FordelBeregningsgrunnlagHåndtererTest {
         assertThat(eksisterendeAndel2.get(0).getManueltFordeltPrÅr()).isEqualByComparingTo(Beløp.fra(fastsatt * 12));
         assertThat(eksisterendeAndel2.get(0).getGjeldendeInntektskategori()).isEqualTo(inntektskategori);
 
-        List<BeregningsgrunnlagPrStatusOgAndelDto> eksisterendeAndel3 = periode2Oppdatert
+        var eksisterendeAndel3 = periode2Oppdatert
                 .getBeregningsgrunnlagPrStatusOgAndelList().stream().filter(a -> a.matchUtenInntektskategori(andel3) && a.getGjeldendeInntektskategori().equals(fordeltAndel4.getFastsatteVerdier().getInntektskategori())).collect(Collectors.toList());
         Assertions.assertThat(eksisterendeAndel3).hasSize(1);
         assertThat(eksisterendeAndel3.get(0).getBgAndelArbeidsforhold().map(BGAndelArbeidsforholdDto::getGjeldendeRefusjonPrÅr).map(Beløp::verdi).orElse(null))
@@ -804,15 +804,15 @@ class FordelBeregningsgrunnlagHåndtererTest {
         assertThat(eksisterendeAndel3.get(0).getGjeldendeInntektskategori()).isEqualTo(inntektskategori4);
 
 
-        List<BeregningsgrunnlagPrStatusOgAndelDto> andelLagtTil2 = periode2Oppdatert
+        var andelLagtTil2 = periode2Oppdatert
                 .getBeregningsgrunnlagPrStatusOgAndelList().stream().filter(BeregningsgrunnlagPrStatusOgAndelDto::erLagtTilAvSaksbehandler).collect(Collectors.toList());
 
         Assertions.assertThat(andelLagtTil2).hasSize(1);
-        Optional<BeregningsgrunnlagPrStatusOgAndelDto> fraForrige2 = andelLagtTil2.stream()
+        var fraForrige2 = andelLagtTil2.stream()
                 .filter(lagtTil -> lagtTil.getGjeldendeInntektskategori().equals(inntektskategori2)).findFirst();
         Assertions.assertThat(fraForrige2.isPresent()).isFalse();
 
-        Optional<BeregningsgrunnlagPrStatusOgAndelDto> ny2 = andelLagtTil2.stream().filter(lagtTil -> lagtTil.getGjeldendeInntektskategori().equals(inntektskategori3)).findFirst();
+        var ny2 = andelLagtTil2.stream().filter(lagtTil -> lagtTil.getGjeldendeInntektskategori().equals(inntektskategori3)).findFirst();
         Assertions.assertThat(ny2.isPresent()).isTrue();
         assertThat(ny2.get().getAndelsnr()).isNotEqualTo(eksisterendeAndel.get(0).getAndelsnr());
         assertThat(ny2.get().getBgAndelArbeidsforhold().map(BGAndelArbeidsforholdDto::getGjeldendeRefusjonPrÅr).map(Beløp::verdi).orElse(null))

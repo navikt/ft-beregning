@@ -22,7 +22,7 @@ public class YtelsespesifiktGrunnlagTjenesteFP implements YtelsespesifiktGrunnla
     @Override
     public Optional<YtelsespesifiktGrunnlagDto> map(BeregningsgrunnlagGUIInput input) {
         ForeldrepengerGrunnlag foreldrepengerGrunnlag = input.getYtelsespesifiktGrunnlag();
-        ForeldrepengerGrunnlagDto foreldrepengerGrunnlagDto = new ForeldrepengerGrunnlagDto();
+        var foreldrepengerGrunnlagDto = new ForeldrepengerGrunnlagDto();
         foreldrepengerGrunnlagDto.setBesteberegninggrunnlag(mapBesteberenginggrunnlag(foreldrepengerGrunnlag.getBesteberegningVurderingGrunnlag()));
         return Optional.of(foreldrepengerGrunnlagDto);
     }
@@ -31,15 +31,15 @@ public class YtelsespesifiktGrunnlagTjenesteFP implements YtelsespesifiktGrunnla
         if (besteberegningVurderingGrunnlag == null) {
             return null;
         }
-        List<BesteberegningMånedGrunnlagDto> besteMåneder = besteberegningVurderingGrunnlag.getSeksBesteMåneder().stream()
+        var besteMåneder = besteberegningVurderingGrunnlag.getSeksBesteMåneder().stream()
                 .map(YtelsespesifiktGrunnlagTjenesteFP::mapMånedsgrunnlag)
                 .collect(Collectors.toList());
         return new BesteberegninggrunnlagDto(besteMåneder, ModellTyperMapper.beløpTilDto(besteberegningVurderingGrunnlag.getAvvikFraFørsteLedd()));
     }
 
     private static BesteberegningMånedGrunnlagDto mapMånedsgrunnlag(BesteberegningMånedGrunnlag besteberegningMånedGrunnlag) {
-        List<BesteberegningInntektDto> inntekter = besteberegningMånedGrunnlag.getInntekter().stream().map(YtelsespesifiktGrunnlagTjenesteFP::mapBesteberegningInntekt).collect(Collectors.toList());
-        YearMonth måned = besteberegningMånedGrunnlag.getMåned();
+        var inntekter = besteberegningMånedGrunnlag.getInntekter().stream().map(YtelsespesifiktGrunnlagTjenesteFP::mapBesteberegningInntekt).collect(Collectors.toList());
+        var måned = besteberegningMånedGrunnlag.getMåned();
         return new BesteberegningMånedGrunnlagDto(inntekter, måned.atDay(1), måned.atEndOfMonth());
     }
 

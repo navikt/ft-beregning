@@ -51,7 +51,7 @@ public final class FinnAnsettelsesPeriode {
      * @return Periode {@link Periode}
      */
     public static Periode getMinMaksPeriode(Collection<AktivitetsAvtaleDto> ansettelsesPerioder, LocalDate skjæringstidspunkt) {
-        List<AktivitetsAvtaleDto> perioderSomSlutterEtterStp = ansettelsesPerioder
+        var perioderSomSlutterEtterStp = ansettelsesPerioder
                 .stream()
                 .filter(ap -> !ap.getPeriode().getTomDato().isBefore(BeregningstidspunktTjeneste.finnBeregningstidspunkt(skjæringstidspunkt)))
                 .collect(Collectors.toList());

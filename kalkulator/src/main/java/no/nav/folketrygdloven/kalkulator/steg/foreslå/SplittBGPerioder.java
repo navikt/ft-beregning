@@ -19,12 +19,12 @@ public class SplittBGPerioder {
 
     public static void splitt(Beregningsgrunnlag regelBeregningsgrunnlag, Collection<Intervall> perioder, PeriodeÅrsak periodeårsak) {
         perioder.forEach(periode -> {
-            LocalDate periodeTomDato = periode.getTomDato();
-            List<BeregningsgrunnlagPeriode> eksisterendePerioder = regelBeregningsgrunnlag.getBeregningsgrunnlagPerioder();
-            ListIterator<BeregningsgrunnlagPeriode> periodeIterator = eksisterendePerioder.listIterator();
+            var periodeTomDato = periode.getTomDato();
+            var eksisterendePerioder = regelBeregningsgrunnlag.getBeregningsgrunnlagPerioder();
+            var periodeIterator = eksisterendePerioder.listIterator();
             while (periodeIterator.hasNext()) {
-                BeregningsgrunnlagPeriode beregningsgrunnlagPeriode = periodeIterator.next();
-                Periode bgPeriode = beregningsgrunnlagPeriode.getBeregningsgrunnlagPeriode();
+                var beregningsgrunnlagPeriode = periodeIterator.next();
+                var bgPeriode = beregningsgrunnlagPeriode.getBeregningsgrunnlagPeriode();
                 if (bgPeriode.getTom().equals(periodeTomDato)) {
                     oppdaterPeriodeÅrsakForNestePeriode(eksisterendePerioder, periodeIterator, periodeårsak);
                 } else if (bgPeriode.inneholder(periodeTomDato)) {
@@ -36,7 +36,7 @@ public class SplittBGPerioder {
 
     private static void oppdaterPeriodeÅrsakForNestePeriode(List<BeregningsgrunnlagPeriode> eksisterendePerioder, ListIterator<BeregningsgrunnlagPeriode> periodeIterator, PeriodeÅrsak nyPeriodeÅrsak) {
         if (periodeIterator.hasNext()) {
-            BeregningsgrunnlagPeriode nestePeriode = eksisterendePerioder.get(periodeIterator.nextIndex());
+            var nestePeriode = eksisterendePerioder.get(periodeIterator.nextIndex());
             BeregningsgrunnlagPeriode.builder(nestePeriode)
                 .leggTilPeriodeÅrsak(nyPeriodeÅrsak)
                 .build();
@@ -44,11 +44,11 @@ public class SplittBGPerioder {
     }
 
     public static BeregningsgrunnlagPeriode splitBeregningsgrunnlagPeriode(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode, LocalDate nyPeriodeTom, PeriodeÅrsak periodeÅrsak) {
-        LocalDate eksisterendePeriodeTom = beregningsgrunnlagPeriode.getBeregningsgrunnlagPeriode().getTom();
+        var eksisterendePeriodeTom = beregningsgrunnlagPeriode.getBeregningsgrunnlagPeriode().getTom();
         BeregningsgrunnlagPeriode.builder(beregningsgrunnlagPeriode)
             .medPeriode(Periode.of(beregningsgrunnlagPeriode.getBeregningsgrunnlagPeriode().getFom(), nyPeriodeTom))
             .build();
-        BeregningsgrunnlagPeriode nyPeriode = BeregningsgrunnlagPeriode.builder()
+        var nyPeriode = BeregningsgrunnlagPeriode.builder()
             .medPeriode(Periode.of(nyPeriodeTom.plusDays(1), eksisterendePeriodeTom))
             .leggTilPeriodeÅrsak(periodeÅrsak)
             .build();

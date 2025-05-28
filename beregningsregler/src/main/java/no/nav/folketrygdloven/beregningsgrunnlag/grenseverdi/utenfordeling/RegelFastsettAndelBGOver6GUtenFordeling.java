@@ -21,13 +21,13 @@ class RegelFastsettAndelBGOver6GUtenFordeling implements RuleService<Beregningsg
 	@SuppressWarnings("unchecked")
 	@Override
 	public Specification<BeregningsgrunnlagPeriode> getSpecification() {
-		BeregningsgrunnlagPrStatus bgpsa = regelmodell.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+        var bgpsa = regelmodell.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
 
-		Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
+        var rs = new Ruleset<BeregningsgrunnlagPeriode>();
 
 		//FP_BR_29.8.10 For alle beregningsgrunnlagsandeler som gjelder arbeidsforhold, fastsett Brukers Andel
 		//FP_BR_29.8.4 Avkort alle beregningsgrunnlagsander som ikke gjelder arbeidsforhold andelsmessig
-		Specification<BeregningsgrunnlagPeriode> avkortAndelerAndelsmessigOgFastsettBrukersAndel = rs.beregningsRegel(
+        var avkortAndelerAndelsmessigOgFastsettBrukersAndel = rs.beregningsRegel(
 				AvkortBGAndelerSomIkkeGjelderArbeidsforholdAndelsmessigUtenFordeling.ID,
 				AvkortBGAndelerSomIkkeGjelderArbeidsforholdAndelsmessigUtenFordeling.BESKRIVELSE,
 				new AvkortBGAndelerSomIkkeGjelderArbeidsforholdAndelsmessigUtenFordeling(),
@@ -36,7 +36,7 @@ class RegelFastsettAndelBGOver6GUtenFordeling implements RuleService<Beregningsg
 		Specification<BeregningsgrunnlagPeriode> avkortAndelerSomIkkegjelderAFtil0 = new Fastsatt();
 
 		if (bgpsa != null) {
-			Specification<BeregningsgrunnlagPeriode> fastsettAndelerForArbeidsforhold = rs.beregningsRegel(
+            var fastsettAndelerForArbeidsforhold = rs.beregningsRegel(
 					FastsettAndelForArbeidsforholdUtenFordeling.ID,
 					FastsettAndelForArbeidsforholdUtenFordeling.BESKRIVELSE,
 					new FastsettAndelForArbeidsforholdUtenFordeling(),
@@ -51,7 +51,7 @@ class RegelFastsettAndelBGOver6GUtenFordeling implements RuleService<Beregningsg
 		}
 
 		//FP_BR_29.8.2 Er totalt BG for beregningsgrunnlagsandeler fra arbeidsforhold > 6G?
-		Specification<BeregningsgrunnlagPeriode> erTotaltBGFraArbeidforholdStørreEnn6G = rs.beregningHvisRegel(new SjekkOmTotaltBGForArbeidsforholdStørreEnnGrenseverdiUtenFordeling(),
+        var erTotaltBGFraArbeidforholdStørreEnn6G = rs.beregningHvisRegel(new SjekkOmTotaltBGForArbeidsforholdStørreEnnGrenseverdiUtenFordeling(),
 				avkortAndelerSomIkkegjelderAFtil0, avkortAndelerAndelsmessigOgFastsettBrukersAndel);
 
 

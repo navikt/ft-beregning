@@ -179,7 +179,7 @@ public class FordelAndelModell {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		FordelAndelModell that = (FordelAndelModell) o;
+        var that = (FordelAndelModell) o;
 		return aktivitetStatus == that.aktivitetStatus && inntektskategori == that.inntektskategori && Objects.equals(arbeidsforhold, that.arbeidsforhold) && Objects.equals(andelNr, that.andelNr);
 	}
 

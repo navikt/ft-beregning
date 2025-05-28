@@ -80,36 +80,36 @@ class FordelPerioderTjenestePSBTest {
     void skal_ikke_legge_til_tilkommet_andel_siste_dag_med_utbetaling() {
 
         // Arrange
-        PeriodeMedUtbetalingsgradDto periode1 = lagPeriodeMedUtbetaling(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(1), BigDecimal.valueOf(100), null);
-        PeriodeMedUtbetalingsgradDto periodeTilkommet1 = lagPeriodeMedUtbetaling(SKJÆRINGSTIDSPUNKT.plusDays(5), SKJÆRINGSTIDSPUNKT.plusDays(9), BigDecimal.valueOf(50), Aktivitetsgrad.fra(50));
+        var periode1 = lagPeriodeMedUtbetaling(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(1), BigDecimal.valueOf(100), null);
+        var periodeTilkommet1 = lagPeriodeMedUtbetaling(SKJÆRINGSTIDSPUNKT.plusDays(5), SKJÆRINGSTIDSPUNKT.plusDays(9), BigDecimal.valueOf(50), Aktivitetsgrad.fra(50));
 
-        PeriodeMedUtbetalingsgradDto periodeTilkommet2 = lagPeriodeMedUtbetaling(SKJÆRINGSTIDSPUNKT.plusDays(10), SKJÆRINGSTIDSPUNKT.plusMonths(1), BigDecimal.ZERO, Aktivitetsgrad.fra(50));
+        var periodeTilkommet2 = lagPeriodeMedUtbetaling(SKJÆRINGSTIDSPUNKT.plusDays(10), SKJÆRINGSTIDSPUNKT.plusMonths(1), BigDecimal.ZERO, Aktivitetsgrad.fra(50));
 
-        UtbetalingsgradPrAktivitetDto utbetalingsgrader1 = lagUtbetalingsgradPrAktivitet(UttakArbeidType.ORDINÆRT_ARBEID, Arbeidsgiver.virksomhet(ORG_NUMMER),
+        var utbetalingsgrader1 = lagUtbetalingsgradPrAktivitet(UttakArbeidType.ORDINÆRT_ARBEID, Arbeidsgiver.virksomhet(ORG_NUMMER),
                 periode1);
 
 
-        UtbetalingsgradPrAktivitetDto utbetalingsgraderTilkommet = lagUtbetalingsgradPrAktivitet(UttakArbeidType.ORDINÆRT_ARBEID, Arbeidsgiver.virksomhet(ORG_NUMMER_2), periodeTilkommet1, periodeTilkommet2);
+        var utbetalingsgraderTilkommet = lagUtbetalingsgradPrAktivitet(UttakArbeidType.ORDINÆRT_ARBEID, Arbeidsgiver.virksomhet(ORG_NUMMER_2), periodeTilkommet1, periodeTilkommet2);
 
 
-        InntektArbeidYtelseAggregatBuilder iayAggregatBuilder = leggTilYrkesaktiviteterOgBeregningAktiviteter(List.of(ORG_NUMMER), ORG_NUMMER_2);
+        var iayAggregatBuilder = leggTilYrkesaktiviteterOgBeregningAktiviteter(List.of(ORG_NUMMER), ORG_NUMMER_2);
 
-        BeregningsgrunnlagGrunnlagDto grunnlag = lagBeregningsgrunnlag(List.of(ORG_NUMMER), beregningAktivitetAggregat);
-        BeregningsgrunnlagDto beregningsgrunnlag = grunnlag.getBeregningsgrunnlagHvisFinnes().get();
+        var grunnlag = lagBeregningsgrunnlag(List.of(ORG_NUMMER), beregningAktivitetAggregat);
+        var beregningsgrunnlag = grunnlag.getBeregningsgrunnlagHvisFinnes().get();
 
         var inntekt = Beløp.fra(40000);
         var im1 = BeregningInntektsmeldingTestUtil.opprettInntektsmelding(ORG_NUMMER, SKJÆRINGSTIDSPUNKT, Beløp.ZERO, inntekt);
 
-        SvangerskapspengerGrunnlag svangerskapspengerGrunnlag = new SvangerskapspengerGrunnlag(List.of(utbetalingsgrader1, utbetalingsgraderTilkommet));
+        var svangerskapspengerGrunnlag = new SvangerskapspengerGrunnlag(List.of(utbetalingsgrader1, utbetalingsgraderTilkommet));
 
         // Act
         var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medData(iayAggregatBuilder)
                 .medInntektsmeldinger(im1).build();
-        BeregningsgrunnlagDto nyttBeregningsgrunnlag = fastsettPerioderForRefusjonOgGradering(koblingReferanse, grunnlag, beregningsgrunnlag, iayGrunnlag, skjæringstidspunkt, svangerskapspengerGrunnlag);
+        var nyttBeregningsgrunnlag = fastsettPerioderForRefusjonOgGradering(koblingReferanse, grunnlag, beregningsgrunnlag, iayGrunnlag, skjæringstidspunkt, svangerskapspengerGrunnlag);
 
         // Assert
-        List<BeregningsgrunnlagPeriodeDto> perioder = nyttBeregningsgrunnlag.getBeregningsgrunnlagPerioder();
+        var perioder = nyttBeregningsgrunnlag.getBeregningsgrunnlagPerioder();
         assertThat(perioder).hasSize(4);
         var bgPeriode1 = perioder.get(0);
         assertThat(bgPeriode1.getBeregningsgrunnlagPrStatusOgAndelList().size()).isEqualTo(1);
@@ -128,17 +128,17 @@ class FordelPerioderTjenestePSBTest {
     }
 
     private InntektArbeidYtelseAggregatBuilder leggTilYrkesaktiviteterOgBeregningAktiviteter(List<String> orgnrs, String tilkommetOrgnr) {
-        Intervall arbeidsperiode1 = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT.minusYears(2), TIDENES_ENDE);
+        var arbeidsperiode1 = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT.minusYears(2), TIDENES_ENDE);
 
         var aktørArbeidBuilder = InntektArbeidYtelseAggregatBuilder.AktørArbeidBuilder.oppdatere(Optional.empty());
-        for (String orgnr : orgnrs) {
-            Arbeidsgiver arbeidsgiver = leggTilYrkesaktivitet(arbeidsperiode1, aktørArbeidBuilder, orgnr);
+        for (var orgnr : orgnrs) {
+            var arbeidsgiver = leggTilYrkesaktivitet(arbeidsperiode1, aktørArbeidBuilder, orgnr);
             fjernOgLeggTilNyBeregningAktivitet(arbeidsperiode1.getFomDato(), arbeidsperiode1.getTomDato(), arbeidsgiver, InternArbeidsforholdRefDto.nullRef());
         }
 
         if (tilkommetOrgnr != null) {
-            Intervall arbeidsperiodeTilkommet = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT.plusDays(10), TIDENES_ENDE);
-            Arbeidsgiver arbeidsgiverTilkommet = leggTilYrkesaktivitet(arbeidsperiodeTilkommet, aktørArbeidBuilder, tilkommetOrgnr);
+            var arbeidsperiodeTilkommet = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT.plusDays(10), TIDENES_ENDE);
+            var arbeidsgiverTilkommet = leggTilYrkesaktivitet(arbeidsperiodeTilkommet, aktørArbeidBuilder, tilkommetOrgnr);
             fjernAktivitet(arbeidsgiverTilkommet, InternArbeidsforholdRefDto.nullRef());
         }
 
@@ -148,10 +148,10 @@ class FordelPerioderTjenestePSBTest {
 
     private Arbeidsgiver leggTilYrkesaktivitet(Intervall arbeidsperiode, InntektArbeidYtelseAggregatBuilder.AktørArbeidBuilder aktørArbeidBuilder,
                                                String orgnr) {
-        Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(orgnr);
-        AktivitetsAvtaleDtoBuilder aaBuilder1 = AktivitetsAvtaleDtoBuilder.ny()
+        var arbeidsgiver = Arbeidsgiver.virksomhet(orgnr);
+        var aaBuilder1 = AktivitetsAvtaleDtoBuilder.ny()
                 .medPeriode(arbeidsperiode);
-        YrkesaktivitetDtoBuilder yaBuilder = YrkesaktivitetDtoBuilder.oppdatere(Optional.empty())
+        var yaBuilder = YrkesaktivitetDtoBuilder.oppdatere(Optional.empty())
                 .medArbeidsgiver(arbeidsgiver)
                 .medArbeidType(ArbeidType.ORDINÆRT_ARBEIDSFORHOLD)
                 .leggTilAktivitetsAvtale(aaBuilder1);
@@ -189,7 +189,7 @@ class FordelPerioderTjenestePSBTest {
                                                                          InntektArbeidYtelseGrunnlagDto iayGrunnlag,
                                                                          Skjæringstidspunkt skjæringstidspunkt,
                                                                          SvangerskapspengerGrunnlag svangerskapspengerGrunnlag) {
-        KoblingReferanse refMeStp = koblingReferanse.medSkjæringstidspunkt(skjæringstidspunkt);
+        var refMeStp = koblingReferanse.medSkjæringstidspunkt(skjæringstidspunkt);
         var input = new BeregningsgrunnlagInput(refMeStp, iayGrunnlag, null, List.of(), svangerskapspengerGrunnlag)
                 .medBeregningsgrunnlagGrunnlag(grunnlag);
         return tjeneste.fastsettPerioderForUtbetalingsgradEllerGradering(input, beregningsgrunnlag).getBeregningsgrunnlag();
@@ -204,13 +204,13 @@ class FordelPerioderTjenestePSBTest {
 
     private BeregningsgrunnlagGrunnlagDto lagBeregningsgrunnlag(List<String> orgnrs,
                                                                 BeregningAktivitetAggregatDto beregningAktivitetAggregat) {
-        BeregningsgrunnlagPeriodeDto.Builder beregningsgrunnlagPeriodeBuilder = lagBeregningsgrunnlagPerioderBuilder(SKJÆRINGSTIDSPUNKT, null, orgnrs);
-        BeregningsgrunnlagDto.Builder beregningsgrunnlagBuilder = BeregningsgrunnlagDto.builder()
+        var beregningsgrunnlagPeriodeBuilder = lagBeregningsgrunnlagPerioderBuilder(SKJÆRINGSTIDSPUNKT, null, orgnrs);
+        var beregningsgrunnlagBuilder = BeregningsgrunnlagDto.builder()
                 .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT)
                 .medGrunnbeløp(GRUNNBELØP)
                 .leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER).medHjemmel(Hjemmel.F_14_7));
         beregningsgrunnlagBuilder.leggTilBeregningsgrunnlagPeriode(beregningsgrunnlagPeriodeBuilder);
-        BeregningsgrunnlagDto bg = beregningsgrunnlagBuilder.build();
+        var bg = beregningsgrunnlagBuilder.build();
         return BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medBeregningsgrunnlag(bg)
                 .medRegisterAktiviteter(beregningAktivitetAggregat)
@@ -218,10 +218,10 @@ class FordelPerioderTjenestePSBTest {
     }
 
     private BeregningsgrunnlagPeriodeDto.Builder lagBeregningsgrunnlagPerioderBuilder(LocalDate fom, LocalDate tom, List<String> orgnrs) {
-        BeregningsgrunnlagPeriodeDto.Builder builder = BeregningsgrunnlagPeriodeDto.ny();
-        for (String orgnr : orgnrs) {
-            Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(orgnr);
-            BeregningsgrunnlagPrStatusOgAndelDto.Builder andelBuilder = BeregningsgrunnlagPrStatusOgAndelDto.ny()
+        var builder = BeregningsgrunnlagPeriodeDto.ny();
+        for (var orgnr : orgnrs) {
+            var arbeidsgiver = Arbeidsgiver.virksomhet(orgnr);
+            var andelBuilder = BeregningsgrunnlagPrStatusOgAndelDto.ny()
                     .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                     .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder()
                             .medArbeidsgiver(arbeidsgiver)

@@ -53,18 +53,18 @@ class KunYtelseDtoTjenesteTest {
     @Test
     void fødende_kvinne_uten_dagpenger() {
         // Arrange
-        Intervall periode = Intervall.fraOgMedTilOgMed(
+        var periode = Intervall.fraOgMedTilOgMed(
                 SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(8),
                 SKJÆRINGSTIDSPUNKT_OPPTJENING.minusDays(1));
-        BeregningAktivitetAggregatDto beregningAktivitetAggregat = BeregningAktivitetTestUtil.opprettBeregningAktiviteter(SKJÆRINGSTIDSPUNKT_OPPTJENING, periode, OpptjeningAktivitetType.SYKEPENGER);
+        var beregningAktivitetAggregat = BeregningAktivitetTestUtil.opprettBeregningAktiviteter(SKJÆRINGSTIDSPUNKT_OPPTJENING, periode, OpptjeningAktivitetType.SYKEPENGER);
         var beregningsgrunnlagGrunnlag = lagBeregningsgrunnlag(beregningAktivitetAggregat);
-        ForeldrepengerGrunnlag medBesteberegning = new ForeldrepengerGrunnlag(Dekningsgrad.DEKNINGSGRAD_100, false);
+        var medBesteberegning = new ForeldrepengerGrunnlag(Dekningsgrad.DEKNINGSGRAD_100, false);
 
         // Act
         var input = new BeregningsgrunnlagGUIInput(koblingReferanse, InntektArbeidYtelseGrunnlagDtoBuilder.nytt().build(), List.of(), medBesteberegning)
                 .medBeregningsgrunnlagGrunnlag(beregningsgrunnlagGrunnlag);
 
-        KunYtelseDto kunytelse = kunYtelseDtoTjeneste.lagKunYtelseDto(input);
+        var kunytelse = kunYtelseDtoTjeneste.lagKunYtelseDto(input);
 
         // Assert
         assertAndel(kunytelse);
@@ -74,18 +74,18 @@ class KunYtelseDtoTjenesteTest {
 
     @Test
     void skal_ikke_feile_hvis_svpgrunnlag() {
-        Intervall periode = Intervall.fraOgMedTilOgMed(
+        var periode = Intervall.fraOgMedTilOgMed(
                 SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(8),
                 SKJÆRINGSTIDSPUNKT_OPPTJENING.minusDays(1));
-        BeregningAktivitetAggregatDto beregningAktivitetAggregat = BeregningAktivitetTestUtil.opprettBeregningAktiviteter(SKJÆRINGSTIDSPUNKT_OPPTJENING, periode, OpptjeningAktivitetType.SYKEPENGER);
+        var beregningAktivitetAggregat = BeregningAktivitetTestUtil.opprettBeregningAktiviteter(SKJÆRINGSTIDSPUNKT_OPPTJENING, periode, OpptjeningAktivitetType.SYKEPENGER);
         var beregningsgrunnlagGrunnlag = lagBeregningsgrunnlag(beregningAktivitetAggregat);
-        SvangerskapspengerGrunnlag svangerskapspengerGrunnlag = new SvangerskapspengerGrunnlag(List.of());
+        var svangerskapspengerGrunnlag = new SvangerskapspengerGrunnlag(List.of());
 
         // Act
         var input = new BeregningsgrunnlagGUIInput(koblingReferanse, InntektArbeidYtelseGrunnlagDtoBuilder.nytt().build(), List.of(), svangerskapspengerGrunnlag)
                 .medBeregningsgrunnlagGrunnlag(beregningsgrunnlagGrunnlag);
 
-        KunYtelseDto kunytelse = kunYtelseDtoTjeneste.lagKunYtelseDto(input);
+        var kunytelse = kunYtelseDtoTjeneste.lagKunYtelseDto(input);
 
         // Assert
         assertAndel(kunytelse);
@@ -96,15 +96,15 @@ class KunYtelseDtoTjenesteTest {
     @Test
     void fødende_kvinne_med_dagpenger() {
         // Arrange
-        BeregningAktivitetAggregatDto beregningAktivitetAggregat = beregningAktivitetSykepengerOgDagpenger();
+        var beregningAktivitetAggregat = beregningAktivitetSykepengerOgDagpenger();
         var beregningsgrunnlagGrunnlag = lagBeregningsgrunnlag(beregningAktivitetAggregat);
-        ForeldrepengerGrunnlag medBesteberegning = new ForeldrepengerGrunnlag(Dekningsgrad.DEKNINGSGRAD_100, true);
+        var medBesteberegning = new ForeldrepengerGrunnlag(Dekningsgrad.DEKNINGSGRAD_100, true);
 
         // Act
         var input = new BeregningsgrunnlagGUIInput(koblingReferanse, InntektArbeidYtelseGrunnlagDtoBuilder.nytt().build(), List.of(), medBesteberegning)
                 .medBeregningsgrunnlagGrunnlag(beregningsgrunnlagGrunnlag);
 
-        KunYtelseDto kunytelse = kunYtelseDtoTjeneste.lagKunYtelseDto(input);
+        var kunytelse = kunYtelseDtoTjeneste.lagKunYtelseDto(input);
 
         // Assert
         assertAndel(kunytelse);
@@ -115,16 +115,16 @@ class KunYtelseDtoTjenesteTest {
     @Test
     void adopsjon_kvinne_med_dagpenger() {
         // Arrange
-        BeregningAktivitetAggregatDto beregningAktivitetAggregat = beregningAktivitetSykepengerOgDagpenger();
+        var beregningAktivitetAggregat = beregningAktivitetSykepengerOgDagpenger();
 
         var beregningsgrunnlagGrunnlag = lagBeregningsgrunnlag(beregningAktivitetAggregat);
-        ForeldrepengerGrunnlag utenBesteberegning = new ForeldrepengerGrunnlag(Dekningsgrad.DEKNINGSGRAD_100, false);
+        var utenBesteberegning = new ForeldrepengerGrunnlag(Dekningsgrad.DEKNINGSGRAD_100, false);
 
         // Act
         var input = new BeregningsgrunnlagGUIInput(koblingReferanse, InntektArbeidYtelseGrunnlagDtoBuilder.nytt().build(), List.of(), utenBesteberegning)
                 .medBeregningsgrunnlagGrunnlag(beregningsgrunnlagGrunnlag);
 
-        KunYtelseDto kunytelse = kunYtelseDtoTjeneste.lagKunYtelseDto(input);
+        var kunytelse = kunYtelseDtoTjeneste.lagKunYtelseDto(input);
 
         // Assert
         assertAndel(kunytelse);
@@ -133,7 +133,7 @@ class KunYtelseDtoTjenesteTest {
     }
 
     private BeregningAktivitetAggregatDto beregningAktivitetSykepengerOgDagpenger() {
-        BeregningAktivitetAggregatDto.Builder builder = BeregningAktivitetAggregatDto.builder()
+        var builder = BeregningAktivitetAggregatDto.builder()
                 .medSkjæringstidspunktOpptjening(SKJÆRINGSTIDSPUNKT_OPPTJENING);
         builder.leggTilAktivitet(BeregningAktivitetDto.builder()
                 .medPeriode(Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(8), SKJÆRINGSTIDSPUNKT_OPPTJENING.minusDays(1)))
@@ -149,15 +149,15 @@ class KunYtelseDtoTjenesteTest {
     @Test
     void mann_med_dagpenger() {
         // Arrange
-        BeregningAktivitetAggregatDto beregningAktivitetAggregat = beregningAktivitetSykepengerOgDagpenger();
+        var beregningAktivitetAggregat = beregningAktivitetSykepengerOgDagpenger();
         var beregningsgrunnlagGrunnlag = lagBeregningsgrunnlag(beregningAktivitetAggregat);
-        ForeldrepengerGrunnlag utenBesteberegning = new ForeldrepengerGrunnlag(Dekningsgrad.DEKNINGSGRAD_100, false);
+        var utenBesteberegning = new ForeldrepengerGrunnlag(Dekningsgrad.DEKNINGSGRAD_100, false);
 
         // Act
         var input = new BeregningsgrunnlagGUIInput(koblingReferanse, InntektArbeidYtelseGrunnlagDtoBuilder.nytt().build(), List.of(), utenBesteberegning)
                 .medBeregningsgrunnlagGrunnlag(beregningsgrunnlagGrunnlag);
 
-        KunYtelseDto kunytelse = kunYtelseDtoTjeneste.lagKunYtelseDto(input);
+        var kunytelse = kunYtelseDtoTjeneste.lagKunYtelseDto(input);
 
         // Assert
         assertAndel(kunytelse);
@@ -168,17 +168,17 @@ class KunYtelseDtoTjenesteTest {
     @Test
     void skal_sette_verdier_om_forrige_grunnlag_var_kun_ytelse() {
         // Arrange
-        BeregningAktivitetAggregatDto beregningAktivitetAggregat = beregningAktivitetSykepengerOgDagpenger();
+        var beregningAktivitetAggregat = beregningAktivitetSykepengerOgDagpenger();
         var beregningsgrunnlagGrunnlag = lagForrigeBeregningsgrunnlagMedLagtTilAndel(beregningAktivitetAggregat);
-        ForeldrepengerGrunnlag utenBesteberegning = new ForeldrepengerGrunnlag(Dekningsgrad.DEKNINGSGRAD_100, false);
+        var utenBesteberegning = new ForeldrepengerGrunnlag(Dekningsgrad.DEKNINGSGRAD_100, false);
         // Act
         var input = new BeregningsgrunnlagGUIInput(koblingReferanse, InntektArbeidYtelseGrunnlagDtoBuilder.nytt().build(), List.of(), utenBesteberegning)
                 .medBeregningsgrunnlagGrunnlag(beregningsgrunnlagGrunnlag);
 
-        KunYtelseDto kunytelse = kunYtelseDtoTjeneste.lagKunYtelseDto(input);
+        var kunytelse = kunYtelseDtoTjeneste.lagKunYtelseDto(input);
 
         // Assert
-        List<AndelMedBeløpDto> andeler = kunytelse.getAndeler();
+        var andeler = kunytelse.getAndeler();
         assertThat(andeler).hasSize(2);
         assertThat(andeler.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.BRUKERS_ANDEL);
         assertThat(andeler.get(0).getAndelsnr()).isEqualTo(1L);
@@ -192,22 +192,22 @@ class KunYtelseDtoTjenesteTest {
     @Test
     void skal_sette_verdier_fra_forrige_med_besteberegning() {
         // Arrange
-        Intervall periode = Intervall.fraOgMedTilOgMed(
+        var periode = Intervall.fraOgMedTilOgMed(
                 SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(8),
                 SKJÆRINGSTIDSPUNKT_OPPTJENING.minusDays(1));
-        BeregningAktivitetAggregatDto beregningAktivitetAggregat = BeregningAktivitetTestUtil.opprettBeregningAktiviteter(SKJÆRINGSTIDSPUNKT_OPPTJENING, periode, OpptjeningAktivitetType.SYKEPENGER);
+        var beregningAktivitetAggregat = BeregningAktivitetTestUtil.opprettBeregningAktiviteter(SKJÆRINGSTIDSPUNKT_OPPTJENING, periode, OpptjeningAktivitetType.SYKEPENGER);
         var beregningsgrunnlagGrunnlag = lagForrigeBeregningsgrunnlag(true, beregningAktivitetAggregat);
-        ForeldrepengerGrunnlag medBesteberegning = new ForeldrepengerGrunnlag(Dekningsgrad.DEKNINGSGRAD_100, true);
+        var medBesteberegning = new ForeldrepengerGrunnlag(Dekningsgrad.DEKNINGSGRAD_100, true);
 
         // Act
         var input = new BeregningsgrunnlagGUIInput(koblingReferanse, InntektArbeidYtelseGrunnlagDtoBuilder.nytt().build(), List.of(), medBesteberegning)
                 .medBeregningsgrunnlagGrunnlag(beregningsgrunnlagGrunnlag);
 
-        KunYtelseDto kunytelse = kunYtelseDtoTjeneste.lagKunYtelseDto(input);
+        var kunytelse = kunYtelseDtoTjeneste.lagKunYtelseDto(input);
 
 
         // Assert
-        List<AndelMedBeløpDto> andeler = kunytelse.getAndeler();
+        var andeler = kunytelse.getAndeler();
         assertThat(andeler).hasSize(1);
         assertThat(andeler.get(0).getFastsattBelopPrMnd()).isNotEqualByComparingTo(ModellTyperMapper.beløpTilDto(BRUTTO_PR_ÅR));
         assertThat(andeler.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.BRUKERS_ANDEL);
@@ -220,22 +220,22 @@ class KunYtelseDtoTjenesteTest {
     @Test
     void skal_sette_verdier_fra_forrige_uten_besteberegning() {
         // Arrange
-        Intervall periode = Intervall.fraOgMedTilOgMed(
+        var periode = Intervall.fraOgMedTilOgMed(
                 SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(8),
                 SKJÆRINGSTIDSPUNKT_OPPTJENING.minusDays(1));
-        BeregningAktivitetAggregatDto beregningAktivitetAggregat = BeregningAktivitetTestUtil.opprettBeregningAktiviteter(SKJÆRINGSTIDSPUNKT_OPPTJENING, periode, OpptjeningAktivitetType.SYKEPENGER);
+        var beregningAktivitetAggregat = BeregningAktivitetTestUtil.opprettBeregningAktiviteter(SKJÆRINGSTIDSPUNKT_OPPTJENING, periode, OpptjeningAktivitetType.SYKEPENGER);
         var beregningsgrunnlagGrunnlag = lagForrigeBeregningsgrunnlag(false, beregningAktivitetAggregat);
-        ForeldrepengerGrunnlag utenBesteberegning = new ForeldrepengerGrunnlag(Dekningsgrad.DEKNINGSGRAD_100, false);
+        var utenBesteberegning = new ForeldrepengerGrunnlag(Dekningsgrad.DEKNINGSGRAD_100, false);
 
         // Act
         var input = new BeregningsgrunnlagGUIInput(koblingReferanse, InntektArbeidYtelseGrunnlagDtoBuilder.nytt().build(), List.of(), utenBesteberegning)
                 .medBeregningsgrunnlagGrunnlag(beregningsgrunnlagGrunnlag);
 
-        KunYtelseDto kunytelse = kunYtelseDtoTjeneste.lagKunYtelseDto(input);
+        var kunytelse = kunYtelseDtoTjeneste.lagKunYtelseDto(input);
 
 
         // Assert
-        List<AndelMedBeløpDto> andeler = kunytelse.getAndeler();
+        var andeler = kunytelse.getAndeler();
         assertThat(andeler).hasSize(1);
         assertThat(andeler.get(0).getFastsattBelopPrMnd()).isNotEqualByComparingTo(ModellTyperMapper.beløpTilDto(BRUTTO_PR_ÅR));
         assertThat(andeler.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.BRUKERS_ANDEL);
@@ -247,7 +247,7 @@ class KunYtelseDtoTjenesteTest {
 
 
     private void assertAndel(KunYtelseDto kunytelse) {
-        List<AndelMedBeløpDto> andeler = kunytelse.getAndeler();
+        var andeler = kunytelse.getAndeler();
         assertThat(andeler).hasSize(1);
         assertThat(andeler.get(0).getFastsattBelopPrMnd()).isNull();
         assertThat(andeler.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.BRUKERS_ANDEL);
@@ -256,12 +256,12 @@ class KunYtelseDtoTjenesteTest {
     }
 
     private BeregningsgrunnlagGrunnlagDto lagForrigeBeregningsgrunnlag(boolean medBesteberegning, BeregningAktivitetAggregatDto beregningAktivitetAggregat) {
-        BeregningsgrunnlagDto bg = BeregningsgrunnlagDto.builder()
+        var bg = BeregningsgrunnlagDto.builder()
                 .medSkjæringstidspunkt(LocalDate.now().minusDays(5))
                 .medGrunnbeløp(Beløp.fra(90000))
                 .leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus.KUN_YTELSE))
                 .build();
-        BeregningsgrunnlagPeriodeDto periode1 = BeregningsgrunnlagPeriodeDto.ny()
+        var periode1 = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_OPPTJENING, null)
                 .build(bg);
         BeregningsgrunnlagPrStatusOgAndelDto.ny()
@@ -278,12 +278,12 @@ class KunYtelseDtoTjenesteTest {
     }
 
     private BeregningsgrunnlagGrunnlagDto lagBeregningsgrunnlag(BeregningAktivitetAggregatDto beregningAktivitetAggregat) {
-        BeregningsgrunnlagDto bg = BeregningsgrunnlagDto.builder()
+        var bg = BeregningsgrunnlagDto.builder()
                 .medSkjæringstidspunkt(LocalDate.now().minusDays(5))
                 .medGrunnbeløp(Beløp.fra(90000))
                 .leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus.KUN_YTELSE))
                 .build();
-        BeregningsgrunnlagPeriodeDto periode1 = BeregningsgrunnlagPeriodeDto.ny()
+        var periode1 = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_OPPTJENING, null)
                 .build(bg);
         BeregningsgrunnlagPrStatusOgAndelDto.ny()
@@ -298,12 +298,12 @@ class KunYtelseDtoTjenesteTest {
     }
 
     private BeregningsgrunnlagGrunnlagDto lagForrigeBeregningsgrunnlagMedLagtTilAndel(BeregningAktivitetAggregatDto beregningAktivitetAggregat) {
-        BeregningsgrunnlagDto bg = BeregningsgrunnlagDto.builder()
+        var bg = BeregningsgrunnlagDto.builder()
                 .medSkjæringstidspunkt(LocalDate.now().minusDays(5))
                 .medGrunnbeløp(Beløp.fra(90000))
                 .leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus.KUN_YTELSE))
                 .build();
-        BeregningsgrunnlagPeriodeDto periode1 = BeregningsgrunnlagPeriodeDto.ny()
+        var periode1 = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_OPPTJENING, null)
                 .build(bg);
         BeregningsgrunnlagPrStatusOgAndelDto.ny()

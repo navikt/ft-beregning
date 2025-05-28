@@ -20,9 +20,9 @@ public class ForeslåBesteberegning {
      * @return Beregningsresultat med nytt besteberegnet grunnlag
      */
     public BesteberegningRegelResultat foreslåBesteberegning(ForeslåBesteberegningInput input) {
-        BesteberegningRegelmodell regelmodell = MapTilBesteberegningRegelmodell.map(input);
-        RegelResultat regelResultat = KalkulusRegler.foreslåBesteberegning(regelmodell);
-        BesteberegningOutput output = regelmodell.getOutput();
+        var regelmodell = MapTilBesteberegningRegelmodell.map(input);
+        var regelResultat = KalkulusRegler.foreslåBesteberegning(regelmodell);
+        var output = regelmodell.getOutput();
         var besteberegnetGrunnlag = mapTilBeregningsgrunnlag(input.getBeregningsgrunnlagGrunnlag(), output);
         var seksBesteMåneder = MapBesteberegningFraRegelTilVL.mapSeksBesteMåneder(output);
 

@@ -39,8 +39,8 @@ public class RefusjonEllerGraderingArbeidsforholdDtoTjeneste {
     }
 
     public static List<FordelBeregningsgrunnlagArbeidsforholdDto> lagListeMedDtoForArbeidsforholdSomSøkerRefusjonEllerGradering(BeregningsgrunnlagGUIInput input, LocalDate skjæringstidspunktForBeregning) {
-        List<BeregningsgrunnlagPeriodeDto> perioder = input.getBeregningsgrunnlag().getBeregningsgrunnlagPerioder();
-        FordelBeregningsgrunnlagTilfelleInput fordelingInput = FordelBeregningsgrunnlagTilfelleInput.fraBeregningsgrunnlagRestInput(input);
+        var perioder = input.getBeregningsgrunnlag().getBeregningsgrunnlagPerioder();
+        var fordelingInput = FordelBeregningsgrunnlagTilfelleInput.fraBeregningsgrunnlagRestInput(input);
         var tilfelleMap = finnFordelingTilfelleMap(input.getBeregningsgrunnlag(), fordelingInput);
         return tilfelleMap.entrySet().stream()
                 .map(tilfelleEntry -> mapTilEndretArbeidsforholdDto(input, tilfelleEntry, skjæringstidspunktForBeregning, perioder))
@@ -66,10 +66,10 @@ public class RefusjonEllerGraderingArbeidsforholdDtoTjeneste {
     private static Optional<FordelBeregningsgrunnlagArbeidsforholdDto> mapTilEndretArbeidsforholdDto(BeregningsgrunnlagGUIInput input,
                                                                                                      Map.Entry<BeregningsgrunnlagPrStatusOgAndelDto, FordelingTilfelle> tilfelleEntry,
                                                                                                      LocalDate stp, List<BeregningsgrunnlagPeriodeDto> perioder) {
-        BeregningsgrunnlagPrStatusOgAndelDto andel = tilfelleEntry.getKey();
+        var andel = tilfelleEntry.getKey();
         return BeregningsgrunnlagDtoUtil.lagArbeidsforholdEndringDto(andel, input.getIayGrunnlag())
                 .map(af -> {
-                    FordelBeregningsgrunnlagArbeidsforholdDto endringAf = (FordelBeregningsgrunnlagArbeidsforholdDto) af;
+                    var endringAf = (FordelBeregningsgrunnlagArbeidsforholdDto) af;
                     settEndretArbeidsforholdForNyttRefusjonskrav(andel, endringAf, perioder);
                     settEndretArbeidsforholdForSøktGradering(andel, endringAf, finnGradering(input));
                     lagPerioderForNyAktivitetMedSøktYtelse(input.getYtelsespesifiktGrunnlag(), tilfelleEntry.getValue(), andel, endringAf)
@@ -88,15 +88,15 @@ public class RefusjonEllerGraderingArbeidsforholdDtoTjeneste {
 
     private static void settEndretArbeidsforholdForNyttRefusjonskrav(BeregningsgrunnlagPrStatusOgAndelDto distinctAndel,
                                                                      FordelBeregningsgrunnlagArbeidsforholdDto endretArbeidsforhold, List<BeregningsgrunnlagPeriodeDto> perioder) {
-        LocalDate sluttDatoRefusjon = TIDENES_BEGYNNELSE;
-        for (int i = 0; i < perioder.size(); i++) {
-            BeregningsgrunnlagPeriodeDto periode = perioder.get(i);
-            LocalDate tomDatoPeriode = periode.getBeregningsgrunnlagPeriodeTom() == null ?
+        var sluttDatoRefusjon = TIDENES_BEGYNNELSE;
+        for (var i = 0; i < perioder.size(); i++) {
+            var periode = perioder.get(i);
+            var tomDatoPeriode = periode.getBeregningsgrunnlagPeriodeTom() == null ?
                     TIDENES_ENDE : periode.getBeregningsgrunnlagPeriodeTom();
             if (sluttDatoRefusjon.isBefore(tomDatoPeriode)) {
                 var refusjonBeløpOpt = finnRefusjonsbeløpForAndelIPeriode(distinctAndel, periode);
                 if (refusjonBeløpOpt.isPresent()) {
-                    LocalDate startdatoRefusjon = periode.getBeregningsgrunnlagPeriodeFom();
+                    var startdatoRefusjon = periode.getBeregningsgrunnlagPeriodeFom();
                     sluttDatoRefusjon = finnSluttdato(distinctAndel, perioder, i, refusjonBeløpOpt.get());
                     endretArbeidsforhold.leggTilPeriodeMedGraderingEllerRefusjon(lagNyPeriodeDtoForRefusjon(startdatoRefusjon, sluttDatoRefusjon));
                 }
@@ -115,12 +115,12 @@ public class RefusjonEllerGraderingArbeidsforholdDtoTjeneste {
     }
 
     private static LocalDate finnSluttdato(BeregningsgrunnlagPrStatusOgAndelDto distinctAndel, List<BeregningsgrunnlagPeriodeDto> perioder, int i, Beløp refusjonBeløp) {
-        LocalDate sluttDatoRefusjon = TIDENES_ENDE;
+        var sluttDatoRefusjon = TIDENES_ENDE;
         if (i == perioder.size() - 1) {
             return sluttDatoRefusjon;
         }
-        for (int k = i + 1; k < perioder.size(); k++) {
-            BeregningsgrunnlagPeriodeDto nestePeriode = perioder.get(k);
+        for (var k = i + 1; k < perioder.size(); k++) {
+            var nestePeriode = perioder.get(k);
             var refusjonINestePeriode = finnRefusjonsbeløpForAndelIPeriode(distinctAndel, nestePeriode).orElse(Beløp.ZERO);
             if (refusjonINestePeriode.compareTo(refusjonBeløp) != 0) {
                 return perioder.get(k - 1).getBeregningsgrunnlagPeriodeTom();
@@ -131,7 +131,7 @@ public class RefusjonEllerGraderingArbeidsforholdDtoTjeneste {
 
     private static Optional<Beløp> finnRefusjonsbeløpForAndelIPeriode(BeregningsgrunnlagPrStatusOgAndelDto distinctAndel,
                                                                            BeregningsgrunnlagPeriodeDto periode) {
-        Optional<BeregningsgrunnlagPrStatusOgAndelDto> matchendeAndel = periode.getBeregningsgrunnlagPrStatusOgAndelList().stream()
+        var matchendeAndel = periode.getBeregningsgrunnlagPrStatusOgAndelList().stream()
                 .filter(andel -> !andel.erLagtTilAvSaksbehandler())
                 .filter(andel -> andel.gjelderSammeArbeidsforhold(distinctAndel))
                 .filter(andel -> andel.getBgAndelArbeidsforhold()
@@ -144,10 +144,10 @@ public class RefusjonEllerGraderingArbeidsforholdDtoTjeneste {
     private static void settEndretArbeidsforholdForSøktGradering(BeregningsgrunnlagPrStatusOgAndelDto distinctAndel,
                                                                  FordelBeregningsgrunnlagArbeidsforholdDto endretArbeidsforhold,
                                                                  AktivitetGradering aktivitetGradering) {
-        List<Gradering> graderingerForArbeidsforhold = FordelingGraderingTjeneste.hentGraderingerForAndel(distinctAndel, aktivitetGradering);
+        var graderingerForArbeidsforhold = FordelingGraderingTjeneste.hentGraderingerForAndel(distinctAndel, aktivitetGradering);
         graderingerForArbeidsforhold.forEach(gradering -> {
-            NyPeriodeDto graderingDto = new NyPeriodeDto(false, true, false);
-            Intervall periode = gradering.getPeriode();
+            var graderingDto = new NyPeriodeDto(false, true, false);
+            var periode = gradering.getPeriode();
             graderingDto.setFom(periode.getFomDato());
             graderingDto.setTom(periode.getTomDato().isBefore(TIDENES_ENDE) ? periode.getTomDato() : null);
             endretArbeidsforhold.leggTilPeriodeMedGraderingEllerRefusjon(graderingDto);

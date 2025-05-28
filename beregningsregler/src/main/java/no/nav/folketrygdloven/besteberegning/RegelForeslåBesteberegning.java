@@ -19,16 +19,16 @@ public class RegelForeslåBesteberegning implements EksportRegel<BesteberegningR
 	@SuppressWarnings("unchecked")
 	@Override
 	public Specification<BesteberegningRegelmodell> getSpecification() {
-		Ruleset<BesteberegningRegelmodell> rs = new Ruleset<>();
+        var rs = new Ruleset<BesteberegningRegelmodell>();
 
-		Specification<BesteberegningRegelmodell> fastsettBesteberegning = rs.beregningsRegel(
+        var fastsettBesteberegning = rs.beregningsRegel(
 				FastsettBesteberegningGrunnlag.ID,
 				FastsettBesteberegningGrunnlag.BESKRIVELSE,
 				new FastsettBesteberegningGrunnlag(),
 				new ErSeksBesteMånederBedre());
 
 
-		Specification<BesteberegningRegelmodell> foreslåBesteberegning = rs.beregningsRegel(
+        var foreslåBesteberegning = rs.beregningsRegel(
 				FinnBesteMåneder.ID,
 				FinnBesteMåneder.BESKRIVELSE,
 				new FinnBesteMåneder(),

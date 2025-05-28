@@ -39,22 +39,22 @@ class MapInntektsgrunnlagVLTilRegelTest {
     @Test
     void skal_mappe_inntektsmelding_for_arbeid_med_fleire_yrkesaktiviteter() {
         // Arrange
-        InntektsmeldingDto im = InntektsmeldingDtoBuilder.builder()
+        var im = InntektsmeldingDtoBuilder.builder()
                 .medBeløp(Beløp.fra(10))
                 .medArbeidsgiver(VIRKSOMHET)
                 .build();
-        Intervall p1 = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_BEREGNING.minusMonths(12),
+        var p1 = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_BEREGNING.minusMonths(12),
                 SKJÆRINGSTIDSPUNKT_BEREGNING.minusDays(1));
-        Intervall p2 = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_BEREGNING.minusMonths(12),
+        var p2 = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_BEREGNING.minusMonths(12),
                 SKJÆRINGSTIDSPUNKT_BEREGNING.plusDays(1));
-        InntektArbeidYtelseGrunnlagDto iayGrunnlag = lagIAYGrunnlagMedArbeidIPerioder(
+        var iayGrunnlag = lagIAYGrunnlagMedArbeidIPerioder(
                 List.of(p1, p2),
                 List.of(im));
 
-        BeregningsgrunnlagInput input = BeregningsgrunnlagInputTestUtil.lagInputMedIAYOgOpptjeningsaktiviteter(koblingReferanse, null, iayGrunnlag, Dekningsgrad.DEKNINGSGRAD_100);
+        var input = BeregningsgrunnlagInputTestUtil.lagInputMedIAYOgOpptjeningsaktiviteter(koblingReferanse, null, iayGrunnlag, Dekningsgrad.DEKNINGSGRAD_100);
 
         // Act
-        Inntektsgrunnlag map = mapInntektsgrunnlagVLTilRegel.mapInntektsgrunnlagFørStpBeregning(input, SKJÆRINGSTIDSPUNKT_BEREGNING);
+        var map = mapInntektsgrunnlagVLTilRegel.mapInntektsgrunnlagFørStpBeregning(input, SKJÆRINGSTIDSPUNKT_BEREGNING);
 
         assertThat(map.getPeriodeinntekter()).hasSize(1);
     }
@@ -63,19 +63,19 @@ class MapInntektsgrunnlagVLTilRegelTest {
     @Test
     void skal_ikkje_mappe_inntektsmelding_for_arbeid_som_slutter_dagen_før_skjæringstidspunktet() {
         // Arrange
-        InntektsmeldingDto im = InntektsmeldingDtoBuilder.builder()
+        var im = InntektsmeldingDtoBuilder.builder()
                 .medBeløp(Beløp.fra(10))
                 .medArbeidsgiver(VIRKSOMHET)
                 .build();
-        InntektArbeidYtelseGrunnlagDto iayGrunnlag = lagIAYGrunnlagMedArbeidIPeriode(
+        var iayGrunnlag = lagIAYGrunnlagMedArbeidIPeriode(
                 Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_BEREGNING.minusMonths(12), SKJÆRINGSTIDSPUNKT_BEREGNING.minusDays(1)),
                 List.of(im));
 
 
-        BeregningsgrunnlagInput input = BeregningsgrunnlagInputTestUtil.lagInputMedIAYOgOpptjeningsaktiviteter(koblingReferanse, null, iayGrunnlag, Dekningsgrad.DEKNINGSGRAD_100);
+        var input = BeregningsgrunnlagInputTestUtil.lagInputMedIAYOgOpptjeningsaktiviteter(koblingReferanse, null, iayGrunnlag, Dekningsgrad.DEKNINGSGRAD_100);
 
         // Act
-        Inntektsgrunnlag map = mapInntektsgrunnlagVLTilRegel.mapInntektsgrunnlagFørStpBeregning(input, SKJÆRINGSTIDSPUNKT_BEREGNING);
+        var map = mapInntektsgrunnlagVLTilRegel.mapInntektsgrunnlagFørStpBeregning(input, SKJÆRINGSTIDSPUNKT_BEREGNING);
 
         assertThat(map.getPeriodeinntekter()).isEmpty();
     }
@@ -83,19 +83,19 @@ class MapInntektsgrunnlagVLTilRegelTest {
     @Test
     void skal_mappe_inntektsmelding_for_arbeid_som_slutter_på_skjæringstidspunktet() {
         // Arrange
-        InntektsmeldingDto im = InntektsmeldingDtoBuilder.builder()
+        var im = InntektsmeldingDtoBuilder.builder()
                 .medBeløp(Beløp.fra(10))
                 .medArbeidsgiver(VIRKSOMHET)
                 .build();
-        InntektArbeidYtelseGrunnlagDto iayGrunnlag = lagIAYGrunnlagMedArbeidIPeriode(
+        var iayGrunnlag = lagIAYGrunnlagMedArbeidIPeriode(
                 Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_BEREGNING.minusMonths(12), SKJÆRINGSTIDSPUNKT_BEREGNING),
                 List.of(im));
 
-        BeregningsgrunnlagInput input = BeregningsgrunnlagInputTestUtil.lagInputMedIAYOgOpptjeningsaktiviteter(koblingReferanse, null, iayGrunnlag, Dekningsgrad.DEKNINGSGRAD_100);
+        var input = BeregningsgrunnlagInputTestUtil.lagInputMedIAYOgOpptjeningsaktiviteter(koblingReferanse, null, iayGrunnlag, Dekningsgrad.DEKNINGSGRAD_100);
 
 
         // Act
-        Inntektsgrunnlag map = mapInntektsgrunnlagVLTilRegel.mapInntektsgrunnlagFørStpBeregning(input, SKJÆRINGSTIDSPUNKT_BEREGNING);
+        var map = mapInntektsgrunnlagVLTilRegel.mapInntektsgrunnlagFørStpBeregning(input, SKJÆRINGSTIDSPUNKT_BEREGNING);
 
         assertThat(map.getPeriodeinntekter()).hasSize(1);
     }
@@ -103,26 +103,26 @@ class MapInntektsgrunnlagVLTilRegelTest {
     @Test
     void skal_mappe_inntektsmelding_for_arbeid_som_slutter_dagen_etter_skjæringstidspunktet() {
         // Arrange
-        InntektsmeldingDto im = InntektsmeldingDtoBuilder.builder()
+        var im = InntektsmeldingDtoBuilder.builder()
                 .medBeløp(Beløp.fra(10))
                 .medArbeidsgiver(VIRKSOMHET)
                 .build();
-        InntektArbeidYtelseGrunnlagDto iayGrunnlag = lagIAYGrunnlagMedArbeidIPeriode(
+        var iayGrunnlag = lagIAYGrunnlagMedArbeidIPeriode(
                 Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_BEREGNING.minusMonths(12), SKJÆRINGSTIDSPUNKT_BEREGNING.plusDays(1)),
                 List.of(im));
 
-        BeregningsgrunnlagInput input = BeregningsgrunnlagInputTestUtil.lagInputMedIAYOgOpptjeningsaktiviteter(koblingReferanse, null, iayGrunnlag, Dekningsgrad.DEKNINGSGRAD_100);
+        var input = BeregningsgrunnlagInputTestUtil.lagInputMedIAYOgOpptjeningsaktiviteter(koblingReferanse, null, iayGrunnlag, Dekningsgrad.DEKNINGSGRAD_100);
 
         // Act
-        Inntektsgrunnlag map = mapInntektsgrunnlagVLTilRegel.mapInntektsgrunnlagFørStpBeregning(input, SKJÆRINGSTIDSPUNKT_BEREGNING);
+        var map = mapInntektsgrunnlagVLTilRegel.mapInntektsgrunnlagFørStpBeregning(input, SKJÆRINGSTIDSPUNKT_BEREGNING);
 
         assertThat(map.getPeriodeinntekter()).hasSize(1);
     }
 
     private InntektArbeidYtelseGrunnlagDto lagIAYGrunnlagMedArbeidIPeriode(Intervall periode,
                                                                            List<InntektsmeldingDto> inntektsmeldinger) {
-        InntektArbeidYtelseAggregatBuilder registerBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
-        InntektArbeidYtelseAggregatBuilder.AktørArbeidBuilder aktørArbeidBuilder = registerBuilder.getAktørArbeidBuilder();
+        var registerBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
+        var aktørArbeidBuilder = registerBuilder.getAktørArbeidBuilder();
         aktørArbeidBuilder.leggTilYrkesaktivitet(YrkesaktivitetDtoBuilder.oppdatere(Optional.empty())
                 .medArbeidType(ArbeidType.ORDINÆRT_ARBEIDSFORHOLD)
                 .leggTilAktivitetsAvtale(AktivitetsAvtaleDtoBuilder.ny().medPeriode(periode))
@@ -136,8 +136,8 @@ class MapInntektsgrunnlagVLTilRegelTest {
 
     private InntektArbeidYtelseGrunnlagDto lagIAYGrunnlagMedArbeidIPerioder(List<Intervall> perioder,
                                                                             List<InntektsmeldingDto> inntektsmeldinger) {
-        InntektArbeidYtelseAggregatBuilder registerBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
-        InntektArbeidYtelseAggregatBuilder.AktørArbeidBuilder aktørArbeidBuilder = registerBuilder.getAktørArbeidBuilder();
+        var registerBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
+        var aktørArbeidBuilder = registerBuilder.getAktørArbeidBuilder();
         perioder.forEach(periode -> aktørArbeidBuilder.leggTilYrkesaktivitet(YrkesaktivitetDtoBuilder.oppdatere(Optional.empty())
                 .medArbeidType(ArbeidType.ORDINÆRT_ARBEIDSFORHOLD)
                 .leggTilAktivitetsAvtale(AktivitetsAvtaleDtoBuilder.ny().medPeriode(periode))

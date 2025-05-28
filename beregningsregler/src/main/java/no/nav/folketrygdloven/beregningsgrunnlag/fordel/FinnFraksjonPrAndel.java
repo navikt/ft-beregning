@@ -26,16 +26,16 @@ class FinnFraksjonPrAndel extends LeafSpecification<FordelModell> {
     @Override
     public Evaluation evaluate(FordelModell modell) {
 	    Map<String, Object> resultater = new HashMap<>();
-	    List<FordelteAndelerModell> mellomregninger = modell.getInput().getAndeler()
+        var mellomregninger = modell.getInput().getAndeler()
 			    .stream()
 			    .map(andelInput -> finnFraksjonsbestemmendeBeløpOgLagMellomregning(andelInput, resultater))
 			    .toList();
-	    BigDecimal totaltBeløp = finnTotaltFraksjonsbestemmendeBeløp(mellomregninger);
+        var totaltBeløp = finnTotaltFraksjonsbestemmendeBeløp(mellomregninger);
 	    resultater.put("totaltFraksjonsbestemmendeBeløp", totaltBeløp);
-		BigDecimal gjennståendeFraksjon = BigDecimal.valueOf(1);
-		for (FordelteAndelerModell mellomregning : mellomregninger) {
-			BigDecimal utregnetFraksjon = finnFraksjon(mellomregning, totaltBeløp);
-			BigDecimal bruktFraksjon = utregnetFraksjon.min(gjennståendeFraksjon);
+        var gjennståendeFraksjon = BigDecimal.valueOf(1);
+		for (var mellomregning : mellomregninger) {
+            var utregnetFraksjon = finnFraksjon(mellomregning, totaltBeløp);
+            var bruktFraksjon = utregnetFraksjon.min(gjennståendeFraksjon);
 			gjennståendeFraksjon = gjennståendeFraksjon.subtract(bruktFraksjon);
 			mellomregning.setFraksjonAvBrutto(bruktFraksjon);
 		}
@@ -46,7 +46,7 @@ class FinnFraksjonPrAndel extends LeafSpecification<FordelModell> {
 			var andelMedKravPåStørsteFraksjon = mellomregninger.stream()
 					.max(Comparator.comparing(FordelteAndelerModell::getFraksjonAvBrutto))
 					.orElseThrow();
-			BigDecimal nyFraksjon = andelMedKravPåStørsteFraksjon.getFraksjonAvBrutto().add(gjennståendeFraksjon);
+            var nyFraksjon = andelMedKravPåStørsteFraksjon.getFraksjonAvBrutto().add(gjennståendeFraksjon);
 			andelMedKravPåStørsteFraksjon.setFraksjonAvBrutto(nyFraksjon);
 		}
 

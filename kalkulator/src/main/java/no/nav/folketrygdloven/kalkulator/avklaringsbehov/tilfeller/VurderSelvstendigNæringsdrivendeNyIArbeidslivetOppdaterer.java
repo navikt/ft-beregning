@@ -12,9 +12,9 @@ public class VurderSelvstendigNæringsdrivendeNyIArbeidslivetOppdaterer {
     }
 
     public static void oppdater(FaktaBeregningLagreDto dto, BeregningsgrunnlagGrunnlagDtoBuilder grunnlagBuilder) {
-        VurderSelvstendigNæringsdrivendeNyIArbeidslivetDto nyIArbeidslivetDto = dto.getVurderNyIArbeidslivet();
-        FaktaAggregatDto.Builder faktaAggregatBuilder = grunnlagBuilder.getFaktaAggregatBuilder();
-        FaktaAktørDto.Builder faktaAktørBuilder = faktaAggregatBuilder.getFaktaAktørBuilder();
+        var nyIArbeidslivetDto = dto.getVurderNyIArbeidslivet();
+        var faktaAggregatBuilder = grunnlagBuilder.getFaktaAggregatBuilder();
+        var faktaAktørBuilder = faktaAggregatBuilder.getFaktaAktørBuilder();
         faktaAktørBuilder.medErNyIArbeidslivetSNFastsattAvSaksbehandler(nyIArbeidslivetDto.erNyIArbeidslivet());
         faktaAggregatBuilder.medFaktaAktør(faktaAktørBuilder.build());
         grunnlagBuilder.medFaktaAggregat(faktaAggregatBuilder.build());

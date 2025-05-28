@@ -31,7 +31,7 @@ class IdentifiserPeriodeDerBruttoBgPåHøyerePrioriterteAndelerErMinst6GTest {
     @Test
     void frilansOver6GSNGraderer() {
         // Arrange
-        PeriodisertBruttoBeregningsgrunnlag periodertBg = PeriodisertBruttoBeregningsgrunnlag.builder()
+        var periodertBg = PeriodisertBruttoBeregningsgrunnlag.builder()
             .medPeriode(Periode.of(SKJÆRINGSTIDSPUNKT, DateUtil.TIDENES_ENDE))
             .leggTilBruttoBeregningsgrunnlag(BruttoBeregningsgrunnlag.builder()
                 .medAktivitetStatus(AktivitetStatusV2.FL)
@@ -44,18 +44,18 @@ class IdentifiserPeriodeDerBruttoBgPåHøyerePrioriterteAndelerErMinst6GTest {
             .build();
 
         var gradering = new Gradering(new Periode(LocalDate.of(2019, Month.MARCH, 1), DateUtil.TIDENES_ENDE));
-        AndelGradering andelGradering = AndelGradering.builder()
+        var andelGradering = AndelGradering.builder()
             .medAktivitetStatus(AktivitetStatusV2.SN)
             .medGraderinger(List.of(gradering))
             .build();
-	    PeriodeModellGradering input = PeriodeModellGradering.builder()
+        var input = PeriodeModellGradering.builder()
             .medPeriodisertBruttoBeregningsgrunnlag(List.of(periodertBg))
             .medAndelGraderinger(List.of(andelGradering))
             .medGrunnbeløp(GRUNNBELØP)
             .build();
 
         // Act
-        Optional<LocalDate> resultatOpt = IdentifiserPeriodeDerBruttoBgPåHøyerePrioriterteAndelerErMinst6G.vurder(input, andelGradering, gradering.getPeriode());
+        var resultatOpt = IdentifiserPeriodeDerBruttoBgPåHøyerePrioriterteAndelerErMinst6G.vurder(input, andelGradering, gradering.getPeriode());
 
         // Assert
         assertThat(resultatOpt).hasValueSatisfying(resultat ->
@@ -65,10 +65,10 @@ class IdentifiserPeriodeDerBruttoBgPåHøyerePrioriterteAndelerErMinst6GTest {
     @Test
     void naturalytelseBortfallerEtterSNGraderes() {
         // Arrange
-        Periode p1 = Periode.of(SKJÆRINGSTIDSPUNKT, LocalDate.of(2019, Month.APRIL, 21));
-        Periode p2 = Periode.of(LocalDate.of(2019, Month.APRIL, 22), DateUtil.TIDENES_ENDE);
+        var p1 = Periode.of(SKJÆRINGSTIDSPUNKT, LocalDate.of(2019, Month.APRIL, 21));
+        var p2 = Periode.of(LocalDate.of(2019, Month.APRIL, 22), DateUtil.TIDENES_ENDE);
 
-        PeriodisertBruttoBeregningsgrunnlag bgp1 = PeriodisertBruttoBeregningsgrunnlag.builder()
+        var bgp1 = PeriodisertBruttoBeregningsgrunnlag.builder()
             .medPeriode(p1)
             .leggTilBruttoBeregningsgrunnlag(BruttoBeregningsgrunnlag.builder()
                 .medAktivitetStatus(AktivitetStatusV2.AT)
@@ -80,7 +80,7 @@ class IdentifiserPeriodeDerBruttoBgPåHøyerePrioriterteAndelerErMinst6GTest {
                 .medBruttoPrÅr(MÅNEDSBELØP_2G.multiply(BigDecimal.valueOf(12)))
                 .build())
             .build();
-        PeriodisertBruttoBeregningsgrunnlag bgp2 = PeriodisertBruttoBeregningsgrunnlag.builder()
+        var bgp2 = PeriodisertBruttoBeregningsgrunnlag.builder()
             .medPeriode(p2)
             .leggTilBruttoBeregningsgrunnlag(BruttoBeregningsgrunnlag.builder()
                 .medAktivitetStatus(AktivitetStatusV2.AT)
@@ -94,18 +94,18 @@ class IdentifiserPeriodeDerBruttoBgPåHøyerePrioriterteAndelerErMinst6GTest {
             .build();
 
         var gradering = new Gradering(new Periode(LocalDate.of(2019, Month.MARCH, 1), DateUtil.TIDENES_ENDE));
-        AndelGradering andelGradering = AndelGradering.builder()
+        var andelGradering = AndelGradering.builder()
             .medAktivitetStatus(AktivitetStatusV2.SN)
             .medGraderinger(List.of(gradering))
             .build();
-	    PeriodeModellGradering input = PeriodeModellGradering.builder()
+        var input = PeriodeModellGradering.builder()
             .medPeriodisertBruttoBeregningsgrunnlag(List.of(bgp1, bgp2))
             .medAndelGraderinger(List.of(andelGradering))
             .medGrunnbeløp(GRUNNBELØP)
             .build();
 
         // Act
-        Optional<LocalDate> resultatOpt = IdentifiserPeriodeDerBruttoBgPåHøyerePrioriterteAndelerErMinst6G.vurder(input, andelGradering, gradering.getPeriode());
+        var resultatOpt = IdentifiserPeriodeDerBruttoBgPåHøyerePrioriterteAndelerErMinst6G.vurder(input, andelGradering, gradering.getPeriode());
 
         // Assert
         assertThat(resultatOpt).hasValueSatisfying(resultat ->
@@ -115,10 +115,10 @@ class IdentifiserPeriodeDerBruttoBgPåHøyerePrioriterteAndelerErMinst6GTest {
     @Test
     void naturalytelseBortfallerEtterSNGraderingSlutter() {
         // Arrange
-        Periode p1 = Periode.of(SKJÆRINGSTIDSPUNKT, LocalDate.of(2019, Month.APRIL, 21));
-        Periode p2 = Periode.of(LocalDate.of(2019, Month.APRIL, 22), DateUtil.TIDENES_ENDE);
+        var p1 = Periode.of(SKJÆRINGSTIDSPUNKT, LocalDate.of(2019, Month.APRIL, 21));
+        var p2 = Periode.of(LocalDate.of(2019, Month.APRIL, 22), DateUtil.TIDENES_ENDE);
 
-        PeriodisertBruttoBeregningsgrunnlag bgp1 = PeriodisertBruttoBeregningsgrunnlag.builder()
+        var bgp1 = PeriodisertBruttoBeregningsgrunnlag.builder()
             .medPeriode(p1)
             .leggTilBruttoBeregningsgrunnlag(BruttoBeregningsgrunnlag.builder()
                 .medAktivitetStatus(AktivitetStatusV2.AT)
@@ -130,7 +130,7 @@ class IdentifiserPeriodeDerBruttoBgPåHøyerePrioriterteAndelerErMinst6GTest {
                 .medBruttoPrÅr(MÅNEDSBELØP_2G.multiply(BigDecimal.valueOf(12)))
                 .build())
             .build();
-        PeriodisertBruttoBeregningsgrunnlag bgp2 = PeriodisertBruttoBeregningsgrunnlag.builder()
+        var bgp2 = PeriodisertBruttoBeregningsgrunnlag.builder()
             .medPeriode(p2)
             .leggTilBruttoBeregningsgrunnlag(BruttoBeregningsgrunnlag.builder()
                 .medAktivitetStatus(AktivitetStatusV2.AT)
@@ -144,18 +144,18 @@ class IdentifiserPeriodeDerBruttoBgPåHøyerePrioriterteAndelerErMinst6GTest {
             .build();
 
         var gradering = new Gradering(new Periode(LocalDate.of(2019, Month.MARCH, 1), LocalDate.of(2019, Month.APRIL, 21)));
-        AndelGradering andelGradering = AndelGradering.builder()
+        var andelGradering = AndelGradering.builder()
             .medAktivitetStatus(AktivitetStatusV2.SN)
             .medGraderinger(List.of(gradering))
             .build();
-	    PeriodeModellGradering input = PeriodeModellGradering.builder()
+        var input = PeriodeModellGradering.builder()
             .medPeriodisertBruttoBeregningsgrunnlag(List.of(bgp1, bgp2))
             .medAndelGraderinger(List.of(andelGradering))
             .medGrunnbeløp(GRUNNBELØP)
             .build();
 
         // Act
-        Optional<LocalDate> resultatOpt = IdentifiserPeriodeDerBruttoBgPåHøyerePrioriterteAndelerErMinst6G.vurder(input, andelGradering, gradering.getPeriode());
+        var resultatOpt = IdentifiserPeriodeDerBruttoBgPåHøyerePrioriterteAndelerErMinst6G.vurder(input, andelGradering, gradering.getPeriode());
 
         // Assert
         assertThat(resultatOpt).isEmpty();

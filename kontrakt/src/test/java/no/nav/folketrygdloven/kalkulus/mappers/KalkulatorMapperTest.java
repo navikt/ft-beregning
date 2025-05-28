@@ -66,9 +66,9 @@ class KalkulatorMapperTest {
     @Test
     void skal_generere_og_validere_roundtrip_kalkulator_input_json() throws Exception {
 
-        KalkulatorInputDto grunnlag = byggKalkulatorInput();
+        var grunnlag = byggKalkulatorInput();
 
-        String json = WRITER_JSON.writeValueAsString(grunnlag);
+        var json = WRITER_JSON.writeValueAsString(grunnlag);
 
         KalkulatorInputDto roundTripped = READER_JSON.forType(KalkulatorInputDto.class).readValue(json);
 
@@ -80,17 +80,17 @@ class KalkulatorMapperTest {
     @Test
     void skal_generere_og_validere_roundtrip_av_start_beregning_request() throws Exception {
         //arrange
-        Saksnummer saksnummer = new Saksnummer("1234");
-        AktørIdPersonident dummy = AktørIdPersonident.dummy();
-        KalkulatorInputDto kalkulatorInputDto = byggKalkulatorInput();
+        var saksnummer = new Saksnummer("1234");
+        var dummy = AktørIdPersonident.dummy();
+        var kalkulatorInputDto = byggKalkulatorInput();
 
         var enUuid = UUID.randomUUID();
-        BeregnListeRequest spesifikasjon = new BeregnListeRequest(
+        var spesifikasjon = new BeregnListeRequest(
                 saksnummer, UUID.randomUUID(), dummy, FagsakYtelseType.PLEIEPENGER_SYKT_BARN,
                 BeregningSteg.FASTSETT_STP_BER,
                 List.of(new BeregnForRequest(enUuid, List.of(UUID.randomUUID()), kalkulatorInputDto, null)));
 
-        String json = WRITER_JSON.writeValueAsString(spesifikasjon);
+        var json = WRITER_JSON.writeValueAsString(spesifikasjon);
 
         BeregnListeRequest roundTripped = READER_JSON.forType(BeregnListeRequest.class).readValue(json);
 
@@ -101,15 +101,15 @@ class KalkulatorMapperTest {
     }
 
     private KalkulatorInputDto byggKalkulatorInput() {
-        GraderingDto graderingDto = new GraderingDto(periode, Aktivitetsgrad.fra(100));
-        AndelGraderingDto andelGraderingDto = new AndelGraderingDto(AktivitetStatus.ARBEIDSTAKER, organisasjon, null, List.of(graderingDto));
-        AktivitetGraderingDto aktivitetGraderingDto = new AktivitetGraderingDto(List.of(andelGraderingDto));
+        var graderingDto = new GraderingDto(periode, Aktivitetsgrad.fra(100));
+        var andelGraderingDto = new AndelGraderingDto(AktivitetStatus.ARBEIDSTAKER, organisasjon, null, List.of(graderingDto));
+        var aktivitetGraderingDto = new AktivitetGraderingDto(List.of(andelGraderingDto));
 
-        InntektArbeidYtelseGrunnlagDto iayGrunnlag = byggIAY();
-        OpptjeningAktiviteterDto opptjeningAktiviteter = new OpptjeningAktiviteterDto(List.of(new OpptjeningPeriodeDto(OpptjeningAktivitetType.ARBEID, periode, organisasjon, null)));
-        LocalDate skjæringstidspunkt = periode.getFom();
+        var iayGrunnlag = byggIAY();
+        var opptjeningAktiviteter = new OpptjeningAktiviteterDto(List.of(new OpptjeningPeriodeDto(OpptjeningAktivitetType.ARBEID, periode, organisasjon, null)));
+        var skjæringstidspunkt = periode.getFom();
 
-        KalkulatorInputDto kalkulatorInputDto = new KalkulatorInputDto(iayGrunnlag, opptjeningAktiviteter, skjæringstidspunkt);
+        var kalkulatorInputDto = new KalkulatorInputDto(iayGrunnlag, opptjeningAktiviteter, skjæringstidspunkt);
         kalkulatorInputDto.medYtelsespesifiktGrunnlag(new ForeldrepengerGrunnlag(BigDecimal.valueOf(100), false, aktivitetGraderingDto, Collections.emptyList()));
         kalkulatorInputDto.medRefusjonskravDatoer(List.of(new RefusjonskravDatoDto(organisasjon, periode.getFom(), periode.getFom().minusMonths(1), true)));
         kalkulatorInputDto.medRefusjonskravDatoer(List.of(new RefusjonskravDatoDto(organisasjon, periode.getFom(), periode.getFom().minusMonths(1), true)));
@@ -118,7 +118,7 @@ class KalkulatorMapperTest {
     }
 
     private InntektArbeidYtelseGrunnlagDto byggIAY() {
-        InntektArbeidYtelseGrunnlagDto iayGrunnlag = new InntektArbeidYtelseGrunnlagDto();
+        var iayGrunnlag = new InntektArbeidYtelseGrunnlagDto();
         iayGrunnlag.medArbeidDto(new ArbeidDto(List.of(new YrkesaktivitetDto(organisasjon, ref, ArbeidType.ORDINÆRT_ARBEIDSFORHOLD, List.of(new AktivitetsAvtaleDto(periode, null, IayProsent.fra(100)), new AktivitetsAvtaleDto(periode, null, null))))));
         iayGrunnlag.medYtelserDto(new YtelserDto(byggYtelseDto()));
         iayGrunnlag.medInntekterDto(new InntekterDto(List.of(new UtbetalingDto(InntektskildeType.INNTEKT_BEREGNING, List.of(new UtbetalingsPostDto(periode, InntektspostType.LØNN, Beløp.fra(1000)))))));
@@ -127,7 +127,7 @@ class KalkulatorMapperTest {
     }
 
     private List<YtelseDto> byggYtelseDto() {
-        YtelseAnvistDto ytelseAnvistDto = new YtelseAnvistDto(periode, BELØP, BELØP, IayProsent.fra(10), List.of(new AnvistAndel(new Organisasjon("974652269"),
+        var ytelseAnvistDto = new YtelseAnvistDto(periode, BELØP, BELØP, IayProsent.fra(10), List.of(new AnvistAndel(new Organisasjon("974652269"),
                 new InternArbeidsforholdRefDto("r8j3wr8w3"),
 		        BELØP,
                 IayProsent.fra(100),

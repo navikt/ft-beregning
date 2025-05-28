@@ -52,7 +52,7 @@ public class PeriodeSplittDataNaturalytelse {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PeriodeSplittDataNaturalytelse that = (PeriodeSplittDataNaturalytelse) o;
+        var that = (PeriodeSplittDataNaturalytelse) o;
         return Objects.equals(fom, that.fom)
             && Objects.equals(tom, that.tom)
             && Objects.equals(periodeÅrsak, that.periodeÅrsak)

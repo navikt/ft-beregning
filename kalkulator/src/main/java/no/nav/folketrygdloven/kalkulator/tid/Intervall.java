@@ -57,15 +57,15 @@ public class Intervall implements Comparable<Intervall> {
     }
 
     public boolean overlapper(Intervall other) {
-        boolean fomBeforeOrEqual = this.getFomDato().isBefore(other.getTomDato()) || this.getFomDato().isEqual(other.getTomDato());
-        boolean tomAfterOrEqual = this.getTomDato().isAfter(other.getFomDato()) || this.getTomDato().isEqual(other.getFomDato());
-        boolean overlapper = fomBeforeOrEqual && tomAfterOrEqual;
+        var fomBeforeOrEqual = this.getFomDato().isBefore(other.getTomDato()) || this.getFomDato().isEqual(other.getTomDato());
+        var tomAfterOrEqual = this.getTomDato().isAfter(other.getFomDato()) || this.getTomDato().isEqual(other.getFomDato());
+        var overlapper = fomBeforeOrEqual && tomAfterOrEqual;
         return overlapper;
     }
 
     public boolean inkluderer(Intervall other) {
-        boolean fomBeforeOrEqualFom = this.getFomDato().isBefore(other.getFomDato()) || this.getFomDato().isEqual(other.getFomDato());
-        boolean tomAfterOrEqualTom = this.getTomDato().isAfter(other.getTomDato()) || this.getTomDato().isEqual(other.getTomDato());
+        var fomBeforeOrEqualFom = this.getFomDato().isBefore(other.getFomDato()) || this.getFomDato().isEqual(other.getFomDato());
+        var tomAfterOrEqualTom = this.getTomDato().isAfter(other.getTomDato()) || this.getTomDato().isEqual(other.getTomDato());
         return fomBeforeOrEqualFom && tomAfterOrEqualTom;
     }
 
@@ -103,7 +103,7 @@ public class Intervall implements Comparable<Intervall> {
         if (!(object instanceof Intervall)) {
             return false;
         }
-        Intervall annen = (Intervall) object;
+        var annen = (Intervall) object;
         return Objects.equals(this.getFomDato(), annen.getFomDato())
                 && Objects.equals(this.getTomDato(), annen.getTomDato());
     }

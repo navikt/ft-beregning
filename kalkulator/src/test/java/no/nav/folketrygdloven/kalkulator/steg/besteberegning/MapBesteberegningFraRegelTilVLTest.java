@@ -37,7 +37,7 @@ class MapBesteberegningFraRegelTilVLTest {
     @Test
     void en_andel_bb_mappes_mot_matchende_andel_bg() {
         // Arrange
-        String arbRef = UUID.randomUUID().toString();
+        var arbRef = UUID.randomUUID().toString();
         var bgp = BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(LocalDate.now(), null);
         var andeler = Arrays.asList(byggBgAndel(AktivitetStatus.ARBEIDSTAKER, "123", arbRef));
         andeler.forEach(bgp::leggTilBeregningsgrunnlagPrStatusOgAndel);
@@ -46,7 +46,7 @@ class MapBesteberegningFraRegelTilVLTest {
         bg.leggTilBeregningsgrunnlagPeriode(bgp);
 
         // Act
-        BeregningsgrunnlagDto mappedBg = mapTilBeregningsgrunnlag(true, bg, bbAndeler);
+        var mappedBg = mapTilBeregningsgrunnlag(true, bg, bbAndeler);
 
         // Assert
         assertAntalAndeler(mappedBg, 1);
@@ -56,8 +56,8 @@ class MapBesteberegningFraRegelTilVLTest {
     @Test
     void en_andel_bb_mappes_mot_flere_arbeidsandeler() {
         // Arrange
-        String arbRef = UUID.randomUUID().toString();
-        String arbRef2 = UUID.randomUUID().toString();
+        var arbRef = UUID.randomUUID().toString();
+        var arbRef2 = UUID.randomUUID().toString();
         var bgp = BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(LocalDate.now(), null);
         var andeler = Arrays.asList(byggBgAndel(AktivitetStatus.ARBEIDSTAKER, "123", arbRef),
                 byggBgAndel(AktivitetStatus.ARBEIDSTAKER, "123", arbRef2));
@@ -67,7 +67,7 @@ class MapBesteberegningFraRegelTilVLTest {
         bg.leggTilBeregningsgrunnlagPeriode(bgp);
 
         // Act
-        BeregningsgrunnlagDto mappedBg = mapTilBeregningsgrunnlag(true, bg, bbAndeler);
+        var mappedBg = mapTilBeregningsgrunnlag(true, bg, bbAndeler);
 
         // Assert
         assertAntalAndeler(mappedBg, 2);
@@ -78,7 +78,7 @@ class MapBesteberegningFraRegelTilVLTest {
     @Test
     void to_andel_bb_mappes_mot_matchende_andel_bg() {
         // Arrange
-        String arbRef = UUID.randomUUID().toString();
+        var arbRef = UUID.randomUUID().toString();
         var bgp = BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(LocalDate.now(), null);
         var andeler = Arrays.asList(byggBgAndel(AktivitetStatus.ARBEIDSTAKER, "123", arbRef));
         andeler.forEach(bgp::leggTilBeregningsgrunnlagPrStatusOgAndel);
@@ -87,7 +87,7 @@ class MapBesteberegningFraRegelTilVLTest {
         bg.leggTilBeregningsgrunnlagPeriode(bgp);
 
         // Act
-        BeregningsgrunnlagDto mappedBg = mapTilBeregningsgrunnlag(true, bg, bbAndeler);
+        var mappedBg = mapTilBeregningsgrunnlag(true, bg, bbAndeler);
 
         // Assert
         assertAntalAndeler(mappedBg, 2);
@@ -98,7 +98,7 @@ class MapBesteberegningFraRegelTilVLTest {
     @Test
     void skal_ikke_mappe_andeler_når_det_ikke_skal_brukes_besteberegning() {
         // Arrange
-        String arbRef = UUID.randomUUID().toString();
+        var arbRef = UUID.randomUUID().toString();
         var bgp = BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(LocalDate.now(), null);
         var andeler = Arrays.asList(byggBgAndel(AktivitetStatus.ARBEIDSTAKER, "123", arbRef));
         andeler.forEach(bgp::leggTilBeregningsgrunnlagPrStatusOgAndel);
@@ -107,7 +107,7 @@ class MapBesteberegningFraRegelTilVLTest {
         bg.leggTilBeregningsgrunnlagPeriode(bgp);
 
         // Act
-        BeregningsgrunnlagDto mappedBg = mapTilBeregningsgrunnlag(false, bg, bbAndeler);
+        var mappedBg = mapTilBeregningsgrunnlag(false, bg, bbAndeler);
 
         // Assert
         assertThat(mappedBg).isEqualTo(bg.build());
@@ -116,7 +116,7 @@ class MapBesteberegningFraRegelTilVLTest {
     @Test
     void bg_andel_uten_bb_andel_skal_få_besteberegnet_lik_0() {
         // Arrange
-        String arbRef = UUID.randomUUID().toString();
+        var arbRef = UUID.randomUUID().toString();
         var bgp = BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(LocalDate.now(), null);
         var bgAndeler = Arrays.asList(byggBgAndel(AktivitetStatus.ARBEIDSTAKER, "123", arbRef));
         bgAndeler.forEach(bgp::leggTilBeregningsgrunnlagPrStatusOgAndel);
@@ -125,7 +125,7 @@ class MapBesteberegningFraRegelTilVLTest {
         bg.leggTilBeregningsgrunnlagPeriode(bgp);
 
         // Act
-        BeregningsgrunnlagDto mappedBg = mapTilBeregningsgrunnlag(true, bg, bbAndeler);
+        var mappedBg = mapTilBeregningsgrunnlag(true, bg, bbAndeler);
 
         // Assert
         assertAntalAndeler(mappedBg, 2);
@@ -164,8 +164,8 @@ class MapBesteberegningFraRegelTilVLTest {
         var inntektYtelse = new Inntekt(AktivitetNøkkel.forType(Aktivitet.DAGPENGEMOTTAKER), BigDecimal.valueOf(10000));
         var inntekter = Arrays.asList(inntektArbeid, inntektYtelse);
         List<BeregnetMånedsgrunnlag> bbMåneder = new ArrayList<>();
-        for (int i = 0; i<6; i++) {
-            YearMonth periode = startÅrMåned.plusMonths(i);
+        for (var i = 0; i<6; i++) {
+            var periode = startÅrMåned.plusMonths(i);
             var bbMåned = new BeregnetMånedsgrunnlag(periode);
             inntekter.forEach(bbMåned::leggTilInntekt);
             bbMåneder.add(bbMåned);
@@ -187,7 +187,7 @@ class MapBesteberegningFraRegelTilVLTest {
     }
 
     private void assertAndel(BeregningsgrunnlagDto mappedBg, AktivitetStatus status, int inntekt) {
-        List<BeregningsgrunnlagPrStatusOgAndelDto> andeler = hentAndeler(mappedBg);
+        var andeler = hentAndeler(mappedBg);
         var matchendeAndel = andeler.stream()
                 .filter(a -> a.getAktivitetStatus().equals(status))
                 .findFirst();
@@ -203,7 +203,7 @@ class MapBesteberegningFraRegelTilVLTest {
     }
 
     private void assertAndel(BeregningsgrunnlagDto mappedBg, AktivitetStatus status, int inntekt, String orgnr, String arbRef) {
-        List<BeregningsgrunnlagPrStatusOgAndelDto> andeler = hentAndeler(mappedBg);
+        var andeler = hentAndeler(mappedBg);
         var matchendeAndel = andeler.stream()
                 .filter(a -> a.getAktivitetStatus().equals(status))
                 .filter(a -> a.getArbeidsgiver().get().getIdentifikator().equals(orgnr))
@@ -223,10 +223,10 @@ class MapBesteberegningFraRegelTilVLTest {
 
 
     private BeregningsgrunnlagDto mapTilBeregningsgrunnlag(boolean skalBeregnesEtterBesteberegning, BeregningsgrunnlagDto.Builder bg, List<BesteberegnetAndel> bbAndeler) {
-        BeregningsgrunnlagGrunnlagDto gr = BeregningsgrunnlagGrunnlagDtoBuilder.nytt()
+        var gr = BeregningsgrunnlagGrunnlagDtoBuilder.nytt()
                 .medBeregningsgrunnlag(bg.build())
                 .build(BeregningsgrunnlagTilstand.FORESLÅTT);
-        BesteberegningOutput bbOutput = new BesteberegningOutput();
+        var bbOutput = new BesteberegningOutput();
         bbOutput.setBesteberegnetGrunnlag(new BesteberegnetGrunnlag(bbAndeler));
         bbOutput.setSkalBeregnesEtterSeksBesteMåneder(skalBeregnesEtterBesteberegning);
         return MapBesteberegningFraRegelTilVL.mapTilBeregningsgrunnlag(gr, bbOutput);

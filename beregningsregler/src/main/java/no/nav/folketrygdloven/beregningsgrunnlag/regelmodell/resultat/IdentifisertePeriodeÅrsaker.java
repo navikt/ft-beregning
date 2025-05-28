@@ -21,9 +21,9 @@ public class IdentifisertePeriodeÅrsaker {
     }
 
     public void leggTilPeriodeÅrsak(PeriodeSplittData splittData) {
-        LocalDate dato = splittData.getFom();
+        var dato = splittData.getFom();
         if (periodeMap.containsKey(dato)) {
-            Set<PeriodeSplittData> data = periodeMap.get(dato);
+            var data = periodeMap.get(dato);
             data.add(splittData);
         } else {
             Set<PeriodeSplittData> set = new HashSet<>();

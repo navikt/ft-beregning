@@ -79,7 +79,7 @@ public class FordelPerioderTjeneste {
     private BeregningsgrunnlagRegelResultat kjørRegelOgMapTilVLRefusjon(BeregningsgrunnlagDto beregningsgrunnlag,
                                                                         PeriodeModellRefusjon input) {
         List<SplittetPeriode> splittedePerioder = new ArrayList<>();
-        RegelResultat regelResultat = KalkulusRegler.fastsettPerioderRefusjon(input, splittedePerioder);
+        var regelResultat = KalkulusRegler.fastsettPerioderRefusjon(input, splittedePerioder);
         var nyttBeregningsgrunnlag = oversetterFraRegelRefusjon.mapFraRegel(splittedePerioder, beregningsgrunnlag);
         return new BeregningsgrunnlagRegelResultat(
                 nyttBeregningsgrunnlag,
@@ -90,7 +90,7 @@ public class FordelPerioderTjeneste {
     private BeregningsgrunnlagRegelResultat kjørRegelOgMapTilVLGradering(BeregningsgrunnlagDto beregningsgrunnlag,
                                                                          PeriodeModellGradering input) {
         List<SplittetPeriode> splittedePerioder = new ArrayList<>();
-        RegelResultat regelResultat = KalkulusRegler.fastsettPerioderGradering(input, splittedePerioder);
+        var regelResultat = KalkulusRegler.fastsettPerioderGradering(input, splittedePerioder);
         var nyttBeregningsgrunnlag = oversetterFraRegelGraderingOgUtbetalingsgrad.mapFraRegel(splittedePerioder, beregningsgrunnlag);
         return new BeregningsgrunnlagRegelResultat(
                 nyttBeregningsgrunnlag,
@@ -100,7 +100,7 @@ public class FordelPerioderTjeneste {
     private BeregningsgrunnlagRegelResultat kjørRegelOgMapTilVLUtbetalingsgrad(BeregningsgrunnlagDto beregningsgrunnlag,
                                                                                PeriodeModellUtbetalingsgrad input) {
         List<SplittetPeriode> splittedePerioder = new ArrayList<>();
-        RegelResultat regelResultat = KalkulusRegler.fastsettPerioderForUtbetalingsgrad(input, splittedePerioder);
+        var regelResultat = KalkulusRegler.fastsettPerioderForUtbetalingsgrad(input, splittedePerioder);
         var nyttBeregningsgrunnlag = oversetterFraRegelGraderingOgUtbetalingsgrad.mapFraRegel(splittedePerioder, beregningsgrunnlag);
         return new BeregningsgrunnlagRegelResultat(
                 nyttBeregningsgrunnlag,

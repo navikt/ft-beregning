@@ -58,7 +58,7 @@ public class SøktPeriode {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        SøktPeriode that = (SøktPeriode) o;
+        var that = (SøktPeriode) o;
         return harBrukerSøkt == that.harBrukerSøkt && periode.equals(that.periode);
     }
 

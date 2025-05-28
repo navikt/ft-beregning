@@ -28,7 +28,7 @@ public class OppgittFrilansDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || !(o instanceof OppgittFrilansDto)) return false;
-        OppgittFrilansDto that = (OppgittFrilansDto) o;
+        var that = (OppgittFrilansDto) o;
         return erNyoppstartet == that.erNyoppstartet && Objects.equals(oppgittOpptjening, that.oppgittOpptjening);
     }
 

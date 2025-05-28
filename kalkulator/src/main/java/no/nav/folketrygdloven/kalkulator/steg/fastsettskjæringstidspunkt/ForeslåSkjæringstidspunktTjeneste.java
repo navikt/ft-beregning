@@ -34,7 +34,7 @@ public class ForeslåSkjæringstidspunktTjeneste {
 
     static BeregningAktivitetAggregatDto fastsettAktiviteter(FastsettBeregningsaktiviteterInput input) {
         // Oversetter Opptjening -> regelmodell, hvor også skjæringstidspunkt for Opptjening er lagret
-        AktivitetStatusModell regelmodell = finnMapper(input.getFagsakYtelseType()).mapForSkjæringstidspunkt(input);
+        var regelmodell = finnMapper(input.getFagsakYtelseType()).mapForSkjæringstidspunkt(input);
         return MapBeregningAktiviteterFraRegelTilVL.map(regelmodell);
     }
 

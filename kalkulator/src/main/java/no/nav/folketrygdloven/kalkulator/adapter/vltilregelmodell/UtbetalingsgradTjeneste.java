@@ -25,7 +25,7 @@ public class UtbetalingsgradTjeneste {
 	public static Beløp finnGradertBruttoForAndel(BeregningsgrunnlagPrStatusOgAndelDto andel,
 	                                              Intervall periode,
 	                                              YtelsespesifiktGrunnlag ytelsesSpesifiktGrunnlag) {
-		Utbetalingsgrad utbetalingsgrad = finnUtbetalingsgradForAndel(andel, periode, ytelsesSpesifiktGrunnlag, false);
+        var utbetalingsgrad = finnUtbetalingsgradForAndel(andel, periode, ytelsesSpesifiktGrunnlag, false);
 		return andel.getBruttoInkludertNaturalYtelser()
 				.divider(100, 10, RoundingMode.HALF_EVEN)
 				.multipliser(utbetalingsgrad.verdi());

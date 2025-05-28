@@ -24,8 +24,8 @@ class SjekkOmMilitærErSisteOgEnesteAktivitet extends LeafSpecification<Aktivite
 
     @Override
     public Evaluation evaluate(AktivitetStatusModell regelmodell) {
-        List<AktivPeriode> aktivePerioder = regelmodell.getAktivePerioder();
-        List<Aktivitet> sisteAktiviteter = aktivePerioder.stream()
+        var aktivePerioder = regelmodell.getAktivePerioder();
+        var sisteAktiviteter = aktivePerioder.stream()
             .filter(ap -> !ap.getPeriode().getTom().isBefore(regelmodell.sisteAktivitetsdato()))
             .map(AktivPeriode::getAktivitet)
             .toList();

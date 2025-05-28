@@ -17,14 +17,14 @@ public class VurderRefusjonBeregningsgrunnlagHåndterer {
     public static BeregningsgrunnlagGrunnlagDto håndter(VurderRefusjonBeregningsgrunnlagDto dto, BeregningsgrunnlagInput input) {
 
         // Lag overstyringsobjekter
-        BeregningRefusjonOverstyringerDto refusjonOverstyringer = MapTilRefusjonOverstyring.map(dto, input);
+        var refusjonOverstyringer = MapTilRefusjonOverstyring.map(dto, input);
 
         // Periodiser og fastsett refusjon på eksisterende beregningsgrunnlag basert på data fra overstyringsobjekter
-        BeregningsgrunnlagDto beregningsgrunnlag = input.getBeregningsgrunnlagGrunnlag().getBeregningsgrunnlagHvisFinnes().orElseThrow();
-        BeregningsgrunnlagDto periodisertPåFastsattRefusjon = PeriodiserOgFastsettRefusjonTjeneste.periodiserOgFastsett(beregningsgrunnlag, dto.getAndeler());
+        var beregningsgrunnlag = input.getBeregningsgrunnlagGrunnlag().getBeregningsgrunnlagHvisFinnes().orElseThrow();
+        var periodisertPåFastsattRefusjon = PeriodiserOgFastsettRefusjonTjeneste.periodiserOgFastsett(beregningsgrunnlag, dto.getAndeler());
 
         // Lag nytt aggregat og sett korrekt tilstand
-        BeregningsgrunnlagGrunnlagDtoBuilder grunnlagBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
+        var grunnlagBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
         grunnlagBuilder.medRefusjonOverstyring(refusjonOverstyringer);
         grunnlagBuilder.medBeregningsgrunnlag(periodisertPåFastsattRefusjon);
         return grunnlagBuilder.build(BeregningsgrunnlagTilstand.VURDERT_REFUSJON_UT);

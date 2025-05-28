@@ -46,18 +46,18 @@ class MapFastsettBeregningsgrunnlagPerioderFraRegelTilVLTest {
     @Test
     void skalMappeBeregningsgrunnlagUtenSplittNaturalytelse() {
         // Arrange
-        BeregningsgrunnlagDto vlBeregningsgrunnlag = lagBeregningsgrunnlag();
+        var vlBeregningsgrunnlag = lagBeregningsgrunnlag();
         byggAktivitetStatus(vlBeregningsgrunnlag);
-        BeregningsgrunnlagPeriodeDto periode = lagBeregningsgrunnlagPeriode(vlBeregningsgrunnlag);
-        BeregningsgrunnlagPrStatusOgAndelDto andel = lagBeregnignsgrunnlagPrStatusOgAndel(periode);
-        List<SplittetPeriode> splittetPerioder = List.of(SplittetPeriode.builder()
+        var periode = lagBeregningsgrunnlagPeriode(vlBeregningsgrunnlag);
+        var andel = lagBeregnignsgrunnlagPrStatusOgAndel(periode);
+        var splittetPerioder = List.of(SplittetPeriode.builder()
             .medPeriodeÅrsaker(Collections.emptyList())
             .medFørstePeriodeAndeler(List.of(mapTilBeregningsgrunnlagPrArbeidsforhold(andel)))
             .medPeriode(Periode.of(SKJÆRINGSTIDSPUNKT, null))
             .build());
 
         // Act
-        BeregningsgrunnlagDto nyttBg = mapTilVlNaturalytelse.mapFraRegel(splittetPerioder, vlBeregningsgrunnlag);
+        var nyttBg = mapTilVlNaturalytelse.mapFraRegel(splittetPerioder, vlBeregningsgrunnlag);
 
         // Assert
         assertThat(nyttBg.getBeregningsgrunnlagPerioder().size()).isEqualTo(vlBeregningsgrunnlag.getBeregningsgrunnlagPerioder().size());
@@ -66,18 +66,18 @@ class MapFastsettBeregningsgrunnlagPerioderFraRegelTilVLTest {
     @Test
     void skalMappeBeregningsgrunnlagUtenSplittRefusjonOgGradering() {
         // Arrange
-        BeregningsgrunnlagDto vlBeregningsgrunnlag = lagBeregningsgrunnlag();
+        var vlBeregningsgrunnlag = lagBeregningsgrunnlag();
         byggAktivitetStatus(vlBeregningsgrunnlag);
-        BeregningsgrunnlagPeriodeDto periode = lagBeregningsgrunnlagPeriode(vlBeregningsgrunnlag);
-        BeregningsgrunnlagPrStatusOgAndelDto andel = lagBeregnignsgrunnlagPrStatusOgAndel(periode);
-        List<SplittetPeriode> splittetPerioder = List.of(SplittetPeriode.builder()
+        var periode = lagBeregningsgrunnlagPeriode(vlBeregningsgrunnlag);
+        var andel = lagBeregnignsgrunnlagPrStatusOgAndel(periode);
+        var splittetPerioder = List.of(SplittetPeriode.builder()
             .medPeriodeÅrsaker(Collections.emptyList())
             .medFørstePeriodeAndeler(List.of(mapTilBeregningsgrunnlagPrArbeidsforhold(andel)))
             .medPeriode(Periode.of(SKJÆRINGSTIDSPUNKT, null))
             .build());
 
         // Act
-        BeregningsgrunnlagDto nyttBg = mapTilVlRefusjonOgGradering.mapFraRegel(splittetPerioder, vlBeregningsgrunnlag);
+        var nyttBg = mapTilVlRefusjonOgGradering.mapFraRegel(splittetPerioder, vlBeregningsgrunnlag);
 
         // Assert
         assertThat(nyttBg.getBeregningsgrunnlagPerioder().size()).isEqualTo(vlBeregningsgrunnlag.getBeregningsgrunnlagPerioder().size());
@@ -85,7 +85,7 @@ class MapFastsettBeregningsgrunnlagPerioderFraRegelTilVLTest {
 
 
     private BeregningsgrunnlagDto lagBeregningsgrunnlag() {
-        BeregningsgrunnlagDto vlBeregningsgrunnlag = BeregningsgrunnlagDto.builder()
+        var vlBeregningsgrunnlag = BeregningsgrunnlagDto.builder()
             .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT)
             .medOverstyring(true)
             .medGrunnbeløp(GRUNNBELØP)

@@ -28,20 +28,20 @@ public class InntektsgrunnlagTjeneste {
             return Optional.empty();
         }
         var alleInntekter = input.getIayGrunnlag().getAktørInntektFraRegister().map(AktørInntektDto::getInntekt).orElse(Collections.emptyList());
-        List<Arbeidsgiver> frilansArbeidsgivere = finnFrilansArbeidsgivere(input);
-        Optional<Intervall> atflSgPeriode = input.getBeregningsgrunnlag().getSammenligningsgrunnlagForStatus(SammenligningsgrunnlagType.SAMMENLIGNING_AT_FL)
+        var frilansArbeidsgivere = finnFrilansArbeidsgivere(input);
+        var atflSgPeriode = input.getBeregningsgrunnlag().getSammenligningsgrunnlagForStatus(SammenligningsgrunnlagType.SAMMENLIGNING_AT_FL)
                 .map(sg -> Intervall.fraOgMedTilOgMed(sg.getSammenligningsperiodeFom(), sg.getSammenligningsperiodeTom()));
-		Optional<Intervall> atflBgPeriode = input.getBeregningsgrunnlag().getBeregningsgrunnlagPerioder().getFirst()
+        var atflBgPeriode = input.getBeregningsgrunnlag().getBeregningsgrunnlagPerioder().getFirst()
                 .getBeregningsgrunnlagPrStatusOgAndelList().stream()
 				.filter(bg -> bg.getBeregningsperiode() != null && (bg.getAktivitetStatus().erArbeidstaker() || bg.getAktivitetStatus().erFrilanser()))
 				.findFirst()
 				.map(bg -> Intervall.fraOgMedTilOgMed(bg.getBeregningsperiodeFom(), bg.getBeregningsperiodeTom()));
-        InntektsgrunnlagMapper mapper = new InntektsgrunnlagMapper(atflSgPeriode, atflBgPeriode, frilansArbeidsgivere);
+        var mapper = new InntektsgrunnlagMapper(atflSgPeriode, atflBgPeriode, frilansArbeidsgivere);
         return mapper.map(alleInntekter);
     }
 
     private static List<Arbeidsgiver> finnFrilansArbeidsgivere(BeregningsgrunnlagGUIInput input) {
-        Collection<YrkesaktivitetDto> alleYrkesaktiviteter = input.getIayGrunnlag().getAktørArbeidFraRegister()
+        var alleYrkesaktiviteter = input.getIayGrunnlag().getAktørArbeidFraRegister()
                 .map(AktørArbeidDto::hentAlleYrkesaktiviteter)
                 .orElse(Collections.emptyList());
         return alleYrkesaktiviteter.stream().filter(ya -> FRILANS_TYPER.contains(ya.getArbeidType()))

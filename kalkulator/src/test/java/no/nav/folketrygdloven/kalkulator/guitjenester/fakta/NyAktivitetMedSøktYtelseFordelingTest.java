@@ -32,22 +32,22 @@ class NyAktivitetMedSøktYtelseFordelingTest {
     @Test
     void skal_lage_periode_for_nytt_arbeidsforhold() {
         // Arrange
-        AktivitetDto utbetalingsgradArbeidsforhold = new AktivitetDto(VIRKSOMHET, InternArbeidsforholdRefDto.nullRef(), UttakArbeidType.ORDINÆRT_ARBEID);
-        LocalDate fom = STP;
-        LocalDate tom = STP.plusDays(10);
-        List<UtbetalingsgradPrAktivitetDto> utbetalingsgradPrAktivitetList = List.of(
+        var utbetalingsgradArbeidsforhold = new AktivitetDto(VIRKSOMHET, InternArbeidsforholdRefDto.nullRef(), UttakArbeidType.ORDINÆRT_ARBEID);
+        var fom = STP;
+        var tom = STP.plusDays(10);
+        var utbetalingsgradPrAktivitetList = List.of(
                 new UtbetalingsgradPrAktivitetDto(utbetalingsgradArbeidsforhold, List.of(lagPeriode(fom, tom, BigDecimal.TEN)))
         );
-        SvangerskapspengerGrunnlag svangerskapspengerGrunnlag = new SvangerskapspengerGrunnlag(utbetalingsgradPrAktivitetList);
+        var svangerskapspengerGrunnlag = new SvangerskapspengerGrunnlag(utbetalingsgradPrAktivitetList);
 
-        BeregningsgrunnlagPrStatusOgAndelDto andel = BeregningsgrunnlagPrStatusOgAndelDto.Builder.ny()
+        var andel = BeregningsgrunnlagPrStatusOgAndelDto.Builder.ny()
                 .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder().medArbeidsgiver(VIRKSOMHET).medArbeidsforholdRef(InternArbeidsforholdRefDto.nullRef()))
                 .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                 .medAndelsnr(1L)
                 .build();
 
         // Act
-        List<NyPeriodeDto> nyPeriodeDtos = NyAktivitetMedSøktYtelseFordeling.lagPerioderForNyAktivitetMedSøktYtelse(svangerskapspengerGrunnlag, FordelingTilfelle.NY_AKTIVITET, andel, new FordelBeregningsgrunnlagArbeidsforholdDto());
+        var nyPeriodeDtos = NyAktivitetMedSøktYtelseFordeling.lagPerioderForNyAktivitetMedSøktYtelse(svangerskapspengerGrunnlag, FordelingTilfelle.NY_AKTIVITET, andel, new FordelBeregningsgrunnlagArbeidsforholdDto());
 
         // Assert
         assertThat(nyPeriodeDtos).hasSize(1);
@@ -59,21 +59,21 @@ class NyAktivitetMedSøktYtelseFordelingTest {
     @Test
     void skal_lage_periode_for_ny_næring() {
         // Arrange
-        AktivitetDto utbetalingsgradArbeidsforhold = new AktivitetDto(null, InternArbeidsforholdRefDto.nullRef(), UttakArbeidType.SELVSTENDIG_NÆRINGSDRIVENDE);
-        LocalDate fom = STP;
-        LocalDate tom = STP.plusDays(10);
-        List<UtbetalingsgradPrAktivitetDto> utbetalingsgradPrAktivitetList = List.of(
+        var utbetalingsgradArbeidsforhold = new AktivitetDto(null, InternArbeidsforholdRefDto.nullRef(), UttakArbeidType.SELVSTENDIG_NÆRINGSDRIVENDE);
+        var fom = STP;
+        var tom = STP.plusDays(10);
+        var utbetalingsgradPrAktivitetList = List.of(
                 new UtbetalingsgradPrAktivitetDto(utbetalingsgradArbeidsforhold, List.of(lagPeriode(fom, tom, BigDecimal.TEN)))
         );
-        SvangerskapspengerGrunnlag svangerskapspengerGrunnlag = new SvangerskapspengerGrunnlag(utbetalingsgradPrAktivitetList);
+        var svangerskapspengerGrunnlag = new SvangerskapspengerGrunnlag(utbetalingsgradPrAktivitetList);
 
-        BeregningsgrunnlagPrStatusOgAndelDto andel = BeregningsgrunnlagPrStatusOgAndelDto.Builder.ny()
+        var andel = BeregningsgrunnlagPrStatusOgAndelDto.Builder.ny()
                 .medAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE)
                 .medAndelsnr(1L)
                 .build();
 
         // Act
-        List<NyPeriodeDto> nyPeriodeDtos = NyAktivitetMedSøktYtelseFordeling.lagPerioderForNyAktivitetMedSøktYtelse(svangerskapspengerGrunnlag, FordelingTilfelle.NY_AKTIVITET, andel, new FordelBeregningsgrunnlagArbeidsforholdDto());
+        var nyPeriodeDtos = NyAktivitetMedSøktYtelseFordeling.lagPerioderForNyAktivitetMedSøktYtelse(svangerskapspengerGrunnlag, FordelingTilfelle.NY_AKTIVITET, andel, new FordelBeregningsgrunnlagArbeidsforholdDto());
 
         // Assert
         assertThat(nyPeriodeDtos).hasSize(1);

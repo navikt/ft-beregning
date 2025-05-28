@@ -121,7 +121,7 @@ public class KoblingReferanse {
         if (obj == null || !getClass().equals(obj.getClass())) {
             return false;
         }
-        KoblingReferanse other = (KoblingReferanse) obj;
+        var other = (KoblingReferanse) obj;
         return Objects.equals(koblingId, other.koblingId)
             && Objects.equals(aktørId, other.aktørId)
             && Objects.equals(fagsakYtelseType, other.fagsakYtelseType)

@@ -61,9 +61,9 @@ class LagTilpassetDtoTjeneste {
                                                                      InntektArbeidYtelseGrunnlagDto inntektArbeidYtelseGrunnlag,
                                                                      LocalDate stpBG) {
         //Merk, PGI verdier ligger i kronologisk synkende rekkefølge og er pgi fra årene i beregningsperioden
-        BeregningsgrunnlagPrStatusOgAndelSNDto dtoSN = new BeregningsgrunnlagPrStatusOgAndelSNDto();
+        var dtoSN = new BeregningsgrunnlagPrStatusOgAndelSNDto();
 
-        List<OppgittEgenNæringDto> egneNæringer = inntektArbeidYtelseGrunnlag.getOppgittOpptjening()
+        var egneNæringer = inntektArbeidYtelseGrunnlag.getOppgittOpptjening()
                 .map(OppgittOpptjeningDto::getEgenNæring)
                 .orElse(Collections.emptyList());
 
@@ -71,21 +71,21 @@ class LagTilpassetDtoTjeneste {
 
 
         // Næringer som startet etter skjæringstidspunktet for beregning er ikke relevante
-        List<EgenNæringDto> næringer = egneNæringer.stream()
+        var næringer = egneNæringer.stream()
                 .filter(en -> en.getPeriode().getFomDato() != null && en.getPeriode().getFomDato().isBefore(stpBG))
                 .map(EgenNæringMapper::map)
                 .collect(Collectors.toList());
 
         dtoSN.setNæringer(næringer);
 
-        List<PgiDto> pgiDtoer = lagPgiDto(andel);
+        var pgiDtoer = lagPgiDto(andel);
         dtoSN.setPgiVerdier(pgiDtoer);
 
         return dtoSN;
     }
 
     private static List<PgiDto> lagPgiDto(no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto andel) {
-        LocalDate beregningsperiodeTom = andel.getBeregningsperiodeTom();
+        var beregningsperiodeTom = andel.getBeregningsperiodeTom();
         if (beregningsperiodeTom == null) {
             return Collections.emptyList();
         }
@@ -97,14 +97,14 @@ class LagTilpassetDtoTjeneste {
     }
 
     private static BeregningsgrunnlagPrStatusOgAndelDto opprettATDto(no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto andel) {
-        BeregningsgrunnlagPrStatusOgAndelATDto dtoAT = new BeregningsgrunnlagPrStatusOgAndelATDto();
+        var dtoAT = new BeregningsgrunnlagPrStatusOgAndelATDto();
         dtoAT.setBortfaltNaturalytelse(andel.getBgAndelArbeidsforhold().orElseThrow().getNaturalytelseBortfaltPrÅr().map(ModellTyperMapper::beløpTilDto).orElseThrow());
         return dtoAT;
     }
 
 
     private static BeregningsgrunnlagPrStatusOgAndelFLDto opprettFLDto(Optional<FaktaAktørDto> faktaAktør) {
-        BeregningsgrunnlagPrStatusOgAndelFLDto dtoFL = new BeregningsgrunnlagPrStatusOgAndelFLDto();
+        var dtoFL = new BeregningsgrunnlagPrStatusOgAndelFLDto();
         dtoFL.setErNyoppstartet(faktaAktør.map(FaktaAktørDto::getErNyoppstartetFLVurdering).orElse(null));
         return dtoFL;
     }
@@ -112,8 +112,8 @@ class LagTilpassetDtoTjeneste {
     private static BeregningsgrunnlagPrStatusOgAndelYtelseDto opprettYtelseDto(KoblingReferanse ref,
                                                                                InntektArbeidYtelseGrunnlagDto inntektArbeidYtelseGrunnlag,
                                                                                no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto andel) {
-        BeregningsgrunnlagPrStatusOgAndelYtelseDto dtoYtelse = new BeregningsgrunnlagPrStatusOgAndelYtelseDto();
-        YtelseFilterDto ytelseFilter = new YtelseFilterDto(inntektArbeidYtelseGrunnlag.getAktørYtelseFraRegister()).før(ref.getSkjæringstidspunktBeregning());
+        var dtoYtelse = new BeregningsgrunnlagPrStatusOgAndelYtelseDto();
+        var ytelseFilter = new YtelseFilterDto(inntektArbeidYtelseGrunnlag.getAktørYtelseFraRegister()).før(ref.getSkjæringstidspunktBeregning());
         var årsbeløpFraMeldekort = FinnInntektFraYtelse.finnÅrbeløpFraMeldekortForAndel(ref, andel, ytelseFilter);
         årsbeløpFraMeldekort.ifPresent(beløp -> {
             dtoYtelse.setBelopFraMeldekortPrAar(ModellTyperMapper.beløpTilDto(beløp));

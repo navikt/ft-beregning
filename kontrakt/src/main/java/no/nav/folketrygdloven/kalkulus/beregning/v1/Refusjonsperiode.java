@@ -59,7 +59,7 @@ public class Refusjonsperiode {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Refusjonsperiode that = (Refusjonsperiode) o;
+        var that = (Refusjonsperiode) o;
         return Objects.equals(periode, that.periode) && Objects.equals(beløp, that.beløp);
     }
 

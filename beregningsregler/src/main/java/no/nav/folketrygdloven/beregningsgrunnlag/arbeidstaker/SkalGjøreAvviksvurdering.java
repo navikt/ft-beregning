@@ -21,12 +21,12 @@ class SkalGjøreAvviksvurdering extends LeafSpecification<BeregningsgrunnlagPeri
         if(skalAlltidSetteAksjonspunktOmAvvik(grunnlag)){
             return ja();
         }
-        OmsorgspengerGrunnlag ompGrunnlag = (OmsorgspengerGrunnlag) grunnlag.getBeregningsgrunnlag().getYtelsesSpesifiktGrunnlag();
+        var ompGrunnlag = (OmsorgspengerGrunnlag) grunnlag.getBeregningsgrunnlag().getYtelsesSpesifiktGrunnlag();
         return ompGrunnlag.omfattesAvKap9Paragraf9() ? ja() : nei();
     }
 
     private boolean skalAlltidSetteAksjonspunktOmAvvik(BeregningsgrunnlagPeriode grunnlag){
-	    YtelsesSpesifiktGrunnlag ytelsesSpesifiktGrunnlag = grunnlag.getBeregningsgrunnlag().getYtelsesSpesifiktGrunnlag();
+        var ytelsesSpesifiktGrunnlag = grunnlag.getBeregningsgrunnlag().getYtelsesSpesifiktGrunnlag();
 	    return !(ytelsesSpesifiktGrunnlag instanceof OmsorgspengerGrunnlag);
     }
 

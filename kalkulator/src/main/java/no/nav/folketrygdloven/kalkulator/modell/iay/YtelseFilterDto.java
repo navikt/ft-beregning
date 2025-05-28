@@ -80,7 +80,7 @@ public class YtelseFilterDto {
 
     private boolean skalMedEtterSkjæringstidspunktVurdering(YtelseDto ytelse) {
         if (skjæringstidspunkt != null) {
-            Intervall periode = ytelse.getPeriode();
+            var periode = ytelse.getPeriode();
             if (venstreSideASkjæringstidspunkt) {
                 return periode.getFomDato().isBefore(skjæringstidspunkt.plusDays(1));
             } else {

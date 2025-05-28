@@ -19,9 +19,9 @@ public class RegelVurderBeregningsgrunnlagFRISINN implements EksportRegel<Beregn
 	@SuppressWarnings("unchecked")
     @Override
     public Specification<BeregningsgrunnlagPeriode> getSpecification() {
-        Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
-        Specification<BeregningsgrunnlagPeriode> sjekkMindreEnnTreKvartG = rs.beregningHvisRegel(new SjekkBeregningsgrunnlagFLSNMindreEnnFRISINN(), new AvslagUnderTreKvartG(), new Beregnet());
-        Specification<BeregningsgrunnlagPeriode> sjekkFrilansUtenInntekt = rs.beregningHvisRegel(new SjekkFrilansUtenInntekt(), new AvslagFrilansUtenInntekt(), sjekkMindreEnnTreKvartG);
+        var rs = new Ruleset<BeregningsgrunnlagPeriode>();
+        var sjekkMindreEnnTreKvartG = rs.beregningHvisRegel(new SjekkBeregningsgrunnlagFLSNMindreEnnFRISINN(), new AvslagUnderTreKvartG(), new Beregnet());
+        var sjekkFrilansUtenInntekt = rs.beregningHvisRegel(new SjekkFrilansUtenInntekt(), new AvslagFrilansUtenInntekt(), sjekkMindreEnnTreKvartG);
         return sjekkFrilansUtenInntekt;
     }
 }

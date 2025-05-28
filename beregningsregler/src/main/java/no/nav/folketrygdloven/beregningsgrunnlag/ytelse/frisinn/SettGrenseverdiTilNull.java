@@ -21,11 +21,11 @@ public class SettGrenseverdiTilNull extends LeafSpecification<Beregningsgrunnlag
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
         Map<String, Object> resultater = new HashMap<>();
-        BigDecimal grenseverdi = BigDecimal.ZERO;
+        var grenseverdi = BigDecimal.ZERO;
         grunnlag.setGrenseverdi(grenseverdi);
         resultater.put("grenseverdi", grenseverdi);
         grunnlag.setGrenseverdi(grenseverdi);
-        SingleEvaluation resultat = ja();
+        var resultat = ja();
         resultat.setEvaluationProperties(resultater);
         return resultat;
 

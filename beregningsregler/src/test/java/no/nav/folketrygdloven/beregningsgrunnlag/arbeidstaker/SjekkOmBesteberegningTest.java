@@ -27,10 +27,10 @@ class SjekkOmBesteberegningTest {
     @Test
     void skalReturnereNeiNårIkkeDagpengerStatus() {
         //Arrange
-        Beregningsgrunnlag grunnlag = settoppGrunnlagMedEnPeriode(LocalDate.now(), new Inntektsgrunnlag(), List.of(AktivitetStatus.ATFL), List.of(arbeidsforhold));
-        BeregningsgrunnlagPeriode periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var grunnlag = settoppGrunnlagMedEnPeriode(LocalDate.now(), new Inntektsgrunnlag(), List.of(AktivitetStatus.ATFL), List.of(arbeidsforhold));
+        var periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
         //Act
-        Evaluation resultat = new SjekkOmBesteberegning().evaluate(periode);
+        var resultat = new SjekkOmBesteberegning().evaluate(periode);
         //Assert
         assertThat(resultat.result()).isEqualTo(Resultat.NEI);
     }
@@ -38,10 +38,10 @@ class SjekkOmBesteberegningTest {
     @Test
     void skalReturnereNeiNårDagpengerStatusMenIkkeBesteberegning() {
         //Arrange
-        Beregningsgrunnlag grunnlag = settoppGrunnlagMedEnPeriode(LocalDate.now(), new Inntektsgrunnlag(), List.of(AktivitetStatus.ATFL, AktivitetStatus.DP), List.of(arbeidsforhold));
-        BeregningsgrunnlagPeriode periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var grunnlag = settoppGrunnlagMedEnPeriode(LocalDate.now(), new Inntektsgrunnlag(), List.of(AktivitetStatus.ATFL, AktivitetStatus.DP), List.of(arbeidsforhold));
+        var periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
         //Act
-        Evaluation resultat = new SjekkOmBesteberegning().evaluate(periode);
+        var resultat = new SjekkOmBesteberegning().evaluate(periode);
         //Assert
         assertThat(resultat.result()).isEqualTo(Resultat.NEI);
     }
@@ -49,16 +49,16 @@ class SjekkOmBesteberegningTest {
     @Test
     void skalReturnereJaNårDagpengerStatusOgBesteberegning() {
         //Arrange
-        Beregningsgrunnlag grunnlag = Beregningsgrunnlag.builder(settoppGrunnlagMedEnPeriode(LocalDate.now(), new Inntektsgrunnlag(), List.of(AktivitetStatus.ATFL, AktivitetStatus.DP), List.of(arbeidsforhold)))
+        var grunnlag = Beregningsgrunnlag.builder(settoppGrunnlagMedEnPeriode(LocalDate.now(), new Inntektsgrunnlag(), List.of(AktivitetStatus.ATFL, AktivitetStatus.DP), List.of(arbeidsforhold)))
             .medYtelsesSpesifiktGrunnlag(new ForeldrepengerGrunnlag(true)).build();
 
-        BeregningsgrunnlagPeriode periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
-        BeregningsgrunnlagPrStatus dagpengerStatus = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP);
+        var periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var dagpengerStatus = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP);
         BeregningsgrunnlagPrStatus.builder(dagpengerStatus).medFastsattAvSaksbehandler(true);
-        BeregningsgrunnlagPrArbeidsforhold arbeidstakerStatus = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
+        var arbeidstakerStatus = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
         BeregningsgrunnlagPrArbeidsforhold.builder(arbeidstakerStatus).medFastsattAvSaksbehandler(true);
         //Act
-        Evaluation resultat = new SjekkOmBesteberegning().evaluate(periode);
+        var resultat = new SjekkOmBesteberegning().evaluate(periode);
         //Assert
         assertThat(resultat.result()).isEqualTo(Resultat.JA);
         assertThat(grunnlag.getAktivitetStatus(AktivitetStatus.ATFL).getHjemmel()).isEqualTo(BeregningsgrunnlagHjemmel.F_14_7);
@@ -67,14 +67,14 @@ class SjekkOmBesteberegningTest {
     @Test
     void skalReturnereNeiNårFastsattDagpengerStatusOgIkkeFastsattATFLSTatus() { //Skal vanligvis ikke skje
         //Arrange
-        Beregningsgrunnlag grunnlag = settoppGrunnlagMedEnPeriode(LocalDate.now(), new Inntektsgrunnlag(), List.of(AktivitetStatus.ATFL, AktivitetStatus.DP), List.of(arbeidsforhold));
-        BeregningsgrunnlagPeriode periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
-        BeregningsgrunnlagPrStatus dagpengerStatus = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP);
+        var grunnlag = settoppGrunnlagMedEnPeriode(LocalDate.now(), new Inntektsgrunnlag(), List.of(AktivitetStatus.ATFL, AktivitetStatus.DP), List.of(arbeidsforhold));
+        var periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var dagpengerStatus = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP);
         BeregningsgrunnlagPrStatus.builder(dagpengerStatus).medFastsattAvSaksbehandler(true);
-        BeregningsgrunnlagPrArbeidsforhold arbeidstakerStatus = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
+        var arbeidstakerStatus = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
         BeregningsgrunnlagPrArbeidsforhold.builder(arbeidstakerStatus).medFastsattAvSaksbehandler(false);
         //Act
-        Evaluation resultat = new SjekkOmBesteberegning().evaluate(periode);
+        var resultat = new SjekkOmBesteberegning().evaluate(periode);
         //Assert
         assertThat(resultat.result()).isEqualTo(Resultat.NEI);
     }

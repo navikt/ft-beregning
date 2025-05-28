@@ -35,10 +35,10 @@ class MapTilRefusjonOverstyringTest {
     @Test
     void skal_oppdatere_en_refusjonsperiode_når_ingen_finnes_fra_før() {
         // Arrange
-        VurderRefusjonAndelBeregningsgrunnlagDto oppdatering = lagDtoForAG(Arbeidsgiver.virksomhet("999999999"), null, LocalDate.of(2020, 7, 1));
+        var oppdatering = lagDtoForAG(Arbeidsgiver.virksomhet("999999999"), null, LocalDate.of(2020, 7, 1));
 
         // Act
-        BeregningRefusjonOverstyringerDto resultat = håndter(lagDto(oppdatering));
+        var resultat = håndter(lagDto(oppdatering));
 
         // Assert
         assertResultat(resultat, oppdatering);
@@ -47,12 +47,12 @@ class MapTilRefusjonOverstyringTest {
     @Test
     void skal_oppdatere_flere_refusjonsperioder_ulik_ag_når_ingen_finnes_fra_før() {
         // Arrange
-        VurderRefusjonAndelBeregningsgrunnlagDto oppdatering = lagDtoForAG(Arbeidsgiver.virksomhet("999999999"), null, LocalDate.of(2020, 7, 1));
-        VurderRefusjonAndelBeregningsgrunnlagDto oppdatering2 = lagDtoForAG(Arbeidsgiver.virksomhet("999999998"), null, LocalDate.of(2020, 6, 1));
-        VurderRefusjonAndelBeregningsgrunnlagDto oppdatering3 = lagDtoForAG(Arbeidsgiver.virksomhet("999999997"), null, LocalDate.of(2020, 5, 1));
+        var oppdatering = lagDtoForAG(Arbeidsgiver.virksomhet("999999999"), null, LocalDate.of(2020, 7, 1));
+        var oppdatering2 = lagDtoForAG(Arbeidsgiver.virksomhet("999999998"), null, LocalDate.of(2020, 6, 1));
+        var oppdatering3 = lagDtoForAG(Arbeidsgiver.virksomhet("999999997"), null, LocalDate.of(2020, 5, 1));
 
         // Act
-        BeregningRefusjonOverstyringerDto resultat = håndter(lagDto(oppdatering, oppdatering2, oppdatering3));
+        var resultat = håndter(lagDto(oppdatering, oppdatering2, oppdatering3));
 
         // Assert
         assertResultat(resultat, oppdatering, oppdatering2, oppdatering3);
@@ -61,12 +61,12 @@ class MapTilRefusjonOverstyringTest {
     @Test
     void skal_oppdatere_flere_refusjonsperioder_samme_ag_når_ingen_finnes_fra_før() {
         // Arrange
-        VurderRefusjonAndelBeregningsgrunnlagDto oppdatering = lagDtoForAG(Arbeidsgiver.virksomhet("999999999"), UUID.randomUUID().toString(), LocalDate.of(2020, 7, 1));
-        VurderRefusjonAndelBeregningsgrunnlagDto oppdatering2 = lagDtoForAG(Arbeidsgiver.virksomhet("999999999"), UUID.randomUUID().toString(), LocalDate.of(2020, 6, 1));
-        VurderRefusjonAndelBeregningsgrunnlagDto oppdatering3 = lagDtoForAG(Arbeidsgiver.virksomhet("999999999"), UUID.randomUUID().toString(), LocalDate.of(2020, 5, 1));
+        var oppdatering = lagDtoForAG(Arbeidsgiver.virksomhet("999999999"), UUID.randomUUID().toString(), LocalDate.of(2020, 7, 1));
+        var oppdatering2 = lagDtoForAG(Arbeidsgiver.virksomhet("999999999"), UUID.randomUUID().toString(), LocalDate.of(2020, 6, 1));
+        var oppdatering3 = lagDtoForAG(Arbeidsgiver.virksomhet("999999999"), UUID.randomUUID().toString(), LocalDate.of(2020, 5, 1));
 
         // Act
-        BeregningRefusjonOverstyringerDto resultat = håndter(lagDto(oppdatering, oppdatering2, oppdatering3));
+        var resultat = håndter(lagDto(oppdatering, oppdatering2, oppdatering3));
 
         // Assert
         assertResultat(resultat, oppdatering, oppdatering2, oppdatering3);
@@ -75,13 +75,13 @@ class MapTilRefusjonOverstyringTest {
     @Test
     void skal_oppdatere_flere_refusjonsperioder_samme_ag_når_fra_dato_finnes_fra_før() {
         // Arrange
-        Arbeidsgiver ag = Arbeidsgiver.virksomhet("999999999");
-        VurderRefusjonAndelBeregningsgrunnlagDto oppdatering = lagDtoForAG(ag, UUID.randomUUID().toString(), LocalDate.of(2020, 7, 1));
-        VurderRefusjonAndelBeregningsgrunnlagDto oppdatering2 = lagDtoForAG(ag, UUID.randomUUID().toString(), LocalDate.of(2020, 6, 1));
-        VurderRefusjonAndelBeregningsgrunnlagDto oppdatering3 = lagDtoForAG(ag, UUID.randomUUID().toString(), LocalDate.of(2020, 5, 1));
+        var ag = Arbeidsgiver.virksomhet("999999999");
+        var oppdatering = lagDtoForAG(ag, UUID.randomUUID().toString(), LocalDate.of(2020, 7, 1));
+        var oppdatering2 = lagDtoForAG(ag, UUID.randomUUID().toString(), LocalDate.of(2020, 6, 1));
+        var oppdatering3 = lagDtoForAG(ag, UUID.randomUUID().toString(), LocalDate.of(2020, 5, 1));
         lagTidligereOverstyringBeregningsgrunnlag(ag);
         // Act
-        BeregningRefusjonOverstyringerDto resultat = håndter(lagDto(oppdatering, oppdatering2, oppdatering3));
+        var resultat = håndter(lagDto(oppdatering, oppdatering2, oppdatering3));
 
         // Assert
         assertResultat(resultat, oppdatering, oppdatering2, oppdatering3);
@@ -90,8 +90,8 @@ class MapTilRefusjonOverstyringTest {
 
 
     private void assertResultat(BeregningRefusjonOverstyringerDto resultat, VurderRefusjonAndelBeregningsgrunnlagDto... oppdateringDtoer) {
-        List<VurderRefusjonAndelBeregningsgrunnlagDto> oppdateringer = Arrays.asList(oppdateringDtoer);
-        List<BeregningRefusjonOverstyringDto> refusjonOverstyringer = resultat.getRefusjonOverstyringer();
+        var oppdateringer = Arrays.asList(oppdateringDtoer);
+        var refusjonOverstyringer = resultat.getRefusjonOverstyringer();
         oppdateringer.forEach(dto -> assertDto(refusjonOverstyringer, dto));
     }
 
@@ -102,11 +102,11 @@ class MapTilRefusjonOverstyringTest {
         } else {
             ag = Arbeidsgiver.person(new AktørId(dto.getArbeidsgiverAktørId()));
         }
-        InternArbeidsforholdRefDto ref = dto.getInternArbeidsforholdRef() != null ? InternArbeidsforholdRefDto.ref(dto.getInternArbeidsforholdRef()) : null;
-        BeregningRefusjonOverstyringDto refusjonOverstyringMatch = refusjonOverstyringer.stream().filter(os -> os.getArbeidsgiver().equals(ag)).findFirst().orElse(null);
+        var ref = dto.getInternArbeidsforholdRef() != null ? InternArbeidsforholdRefDto.ref(dto.getInternArbeidsforholdRef()) : null;
+        var refusjonOverstyringMatch = refusjonOverstyringer.stream().filter(os -> os.getArbeidsgiver().equals(ag)).findFirst().orElse(null);
         assertThat(refusjonOverstyringMatch).isNotNull();
         assertThat(refusjonOverstyringMatch.getArbeidsgiver()).isEqualTo(ag);
-        BeregningRefusjonPeriodeDto matchendeRefusjonPeriode = refusjonOverstyringMatch.getRefusjonPerioder().stream()
+        var matchendeRefusjonPeriode = refusjonOverstyringMatch.getRefusjonPerioder().stream()
                 .filter(os -> Objects.equals(os.getArbeidsforholdRef(), ref))
                 .findFirst().orElse(null);
         assertThat(matchendeRefusjonPeriode).isNotNull();
@@ -128,18 +128,18 @@ class MapTilRefusjonOverstyringTest {
     }
 
     private VurderRefusjonAndelBeregningsgrunnlagDto lagDtoForAG(Arbeidsgiver ag, String ref, LocalDate refusjonFra) {
-        String aktørId = ag.getAktørId() != null ? ag.getIdentifikator() : null;
-        String orgnr = ag.getOrgnr() != null ? ag.getIdentifikator() : null;
+        var aktørId = ag.getAktørId() != null ? ag.getIdentifikator() : null;
+        var orgnr = ag.getOrgnr() != null ? ag.getIdentifikator() : null;
         return new VurderRefusjonAndelBeregningsgrunnlagDto(orgnr, aktørId, ref, refusjonFra, null);
     }
 
     private void lagTidligereOverstyringBeregningsgrunnlag(Arbeidsgiver ag) {
-        BeregningRefusjonOverstyringDto refOS = new BeregningRefusjonOverstyringDto(ag, LocalDate.of(2020,4,1), false);
+        var refOS = new BeregningRefusjonOverstyringDto(ag, LocalDate.of(2020,4,1), false);
         eksisterendeOverstyringer = BeregningRefusjonOverstyringerDto.builder().leggTilOverstyring(refOS).build();
     }
 
     private void lagBehandlingMedBeregningsgrunnlag() {
-        BeregningsgrunnlagGrunnlagDtoBuilder beregningsgrunnlagGrunnlagDto = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
+        var beregningsgrunnlagGrunnlagDto = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medRefusjonOverstyring(eksisterendeOverstyringer);
         input = BeregningsgrunnlagInputTestUtil.lagInputMedBeregningsgrunnlagGrunnlag(koblingReferanse, beregningsgrunnlagGrunnlagDto, BeregningsgrunnlagTilstand.VURDERT_REFUSJON);
     }

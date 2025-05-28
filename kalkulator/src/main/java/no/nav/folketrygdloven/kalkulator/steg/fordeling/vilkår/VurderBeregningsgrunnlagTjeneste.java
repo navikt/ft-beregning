@@ -43,18 +43,18 @@ public class VurderBeregningsgrunnlagTjeneste {
     public BeregningsgrunnlagRegelResultat vurderBeregningsgrunnlag(BeregningsgrunnlagInput input, BeregningsgrunnlagGrunnlagDto oppdatertGrunnlag) {
         // Oversetter foreslått Beregningsgrunnlag -> regelmodell
         var beregningsgrunnlagRegel = mapBeregningsgrunnlagFraVLTilRegel.map(input, oppdatertGrunnlag);
-        List<RegelResultat> regelResultater = kjørRegel(input, beregningsgrunnlagRegel);
+        var regelResultater = kjørRegel(input, beregningsgrunnlagRegel);
         List<BeregningAvklaringsbehovResultat> avklaringsbehov = Collections.emptyList();
-        BeregningsgrunnlagDto beregningsgrunnlag = oppdatertGrunnlag.getBeregningsgrunnlagHvisFinnes().orElseThrow();
+        var beregningsgrunnlag = oppdatertGrunnlag.getBeregningsgrunnlagHvisFinnes().orElseThrow();
         return mapTilRegelresultat(input, regelResultater, beregningsgrunnlag, avklaringsbehov);
     }
 
     private BeregningsgrunnlagRegelResultat mapTilRegelresultat(BeregningsgrunnlagInput input, List<RegelResultat> regelResultater,
                                                                   BeregningsgrunnlagDto beregningsgrunnlag,
                                                                   List<BeregningAvklaringsbehovResultat> avklaringsbehov) {
-        List<Intervall> perioder = beregningsgrunnlag.getBeregningsgrunnlagPerioder().stream().map(BeregningsgrunnlagPeriodeDto::getPeriode).collect(Collectors.toList());
-        List<RegelSporingPeriode> regelsporinger = MapRegelSporingFraRegelTilVL.mapRegelsporingPerioder(regelResultater, perioder, BeregningsgrunnlagPeriodeRegelType.VILKÅR_VURDERING);
-        BeregningsgrunnlagRegelResultat beregningsgrunnlagRegelResultat = new BeregningsgrunnlagRegelResultat(
+        var perioder = beregningsgrunnlag.getBeregningsgrunnlagPerioder().stream().map(BeregningsgrunnlagPeriodeDto::getPeriode).collect(Collectors.toList());
+        var regelsporinger = MapRegelSporingFraRegelTilVL.mapRegelsporingPerioder(regelResultater, perioder, BeregningsgrunnlagPeriodeRegelType.VILKÅR_VURDERING);
+        var beregningsgrunnlagRegelResultat = new BeregningsgrunnlagRegelResultat(
                 beregningsgrunnlag,
                 avklaringsbehov,
                 new RegelSporingAggregat(regelsporinger));
@@ -66,21 +66,21 @@ public class VurderBeregningsgrunnlagTjeneste {
                                                                       BeregningsgrunnlagDto beregningsgrunnlag,
                                                                       YtelsespesifiktGrunnlag ytelsesSpesifiktGrunnlag) {
         List<BeregningVilkårResultat> vilkårsResultatListe = new ArrayList<>();
-        Iterator<RegelResultat> regelResultatIterator = regelResultater.iterator();
+        var regelResultatIterator = regelResultater.iterator();
         for (var periode : beregningsgrunnlag.getBeregningsgrunnlagPerioder()) {
-            BeregningVilkårResultat vilkårResultat = lagVilkårResultatForPeriode(regelResultatIterator.next(), periode.getPeriode());
+            var vilkårResultat = lagVilkårResultatForPeriode(regelResultatIterator.next(), periode.getPeriode());
             vilkårsResultatListe.add(vilkårResultat);
         }
         return vilkårsResultatListe;
     }
 
     private BeregningVilkårResultat lagVilkårResultatForPeriode(RegelResultat regelResultat, Intervall periode) {
-        Optional<BeregningUtfallÅrsak> utfallÅrsak = regelResultat.merknader().stream().map(RegelMerknad::utfallÅrsak).filter(AVSLAGSÅRSAKER::contains).findFirst();
-        boolean erVilkårOppfylt = utfallÅrsak.isEmpty();
+        var utfallÅrsak = regelResultat.merknader().stream().map(RegelMerknad::utfallÅrsak).filter(AVSLAGSÅRSAKER::contains).findFirst();
+        var erVilkårOppfylt = utfallÅrsak.isEmpty();
         if (erVilkårOppfylt){
             return new BeregningVilkårResultat(true, null, periode);
         } else {
-            Vilkårsavslagsårsak avslagsårsak = utfallÅrsak.get() == BeregningUtfallÅrsak.AVSLAG_UNDER_EN_G
+            var avslagsårsak = utfallÅrsak.get() == BeregningUtfallÅrsak.AVSLAG_UNDER_EN_G
                     ? Vilkårsavslagsårsak.FOR_LAVT_BG_8_47
                     : Vilkårsavslagsårsak.FOR_LAVT_BG;
             return new BeregningVilkårResultat(false, avslagsårsak, periode);
@@ -90,7 +90,7 @@ public class VurderBeregningsgrunnlagTjeneste {
     private List<RegelResultat> kjørRegel(BeregningsgrunnlagInput input, Beregningsgrunnlag beregningsgrunnlagRegel) {
         // Evaluerer hver BeregningsgrunnlagPeriode fra foreslått Beregningsgrunnlag
         List<RegelResultat> regelResultater = new ArrayList<>();
-        for (BeregningsgrunnlagPeriode periode : beregningsgrunnlagRegel.getBeregningsgrunnlagPerioder()) {
+        for (var periode : beregningsgrunnlagRegel.getBeregningsgrunnlagPerioder()) {
             regelResultater.add(KalkulusRegler.vurderBeregningsgrunnlag(periode));
         }
         return regelResultater;

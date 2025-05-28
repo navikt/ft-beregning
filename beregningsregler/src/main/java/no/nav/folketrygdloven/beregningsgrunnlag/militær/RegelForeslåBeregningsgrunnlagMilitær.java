@@ -22,10 +22,10 @@ public class RegelForeslåBeregningsgrunnlagMilitær implements RuleService<Bere
     @SuppressWarnings("unchecked")
     @Override
     public Specification<BeregningsgrunnlagPeriode> getSpecification() {
-        Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
+        var rs = new Ruleset<BeregningsgrunnlagPeriode>();
 
         // FP_BR 32.6 Foreslå beregningsgrunnlag for status militær og sivilforsvarstjeneste
-        Specification<BeregningsgrunnlagPeriode> foreslåBeregningsgrunnlagMS = rs.beregningsRegel(ForeslåBeregningsgrunnlagMS.ID, ForeslåBeregningsgrunnlagMS.BESKRIVELSE,
+        var foreslåBeregningsgrunnlagMS = rs.beregningsRegel(ForeslåBeregningsgrunnlagMS.ID, ForeslåBeregningsgrunnlagMS.BESKRIVELSE,
             new ForeslåBeregningsgrunnlagMS(), new Beregnet());
 
         return foreslåBeregningsgrunnlagMS;

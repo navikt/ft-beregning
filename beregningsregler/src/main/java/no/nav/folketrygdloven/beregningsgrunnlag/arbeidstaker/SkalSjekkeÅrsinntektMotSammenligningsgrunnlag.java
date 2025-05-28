@@ -25,20 +25,20 @@ class SkalSjekkeÅrsinntektMotSammenligningsgrunnlag extends LeafSpecification<B
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        boolean søkerHarMilitærstatus = grunnlag.getAktivitetStatuser().stream().anyMatch(ak -> ak.getAktivitetStatus().equals(AktivitetStatus.MS));
+        var søkerHarMilitærstatus = grunnlag.getAktivitetStatuser().stream().anyMatch(ak -> ak.getAktivitetStatus().equals(AktivitetStatus.MS));
         // Hvis søker skal ha militærberegning og har under 3G skal ikke avvik beregnes
-        BeregningsgrunnlagPrStatus bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
-        BigDecimal naturalytelseBortfaltPrÅr = bgps.samletNaturalytelseBortfaltMinusTilkommetPrÅr();
-        BigDecimal rapporertInntekt = bgps.getBeregnetPrÅr().add(naturalytelseBortfaltPrÅr);
-        BigDecimal beløpMilitærHarKravPå = grunnlag.getMinsteinntektMilitærHarKravPå();
+        var bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+        var naturalytelseBortfaltPrÅr = bgps.samletNaturalytelseBortfaltMinusTilkommetPrÅr();
+        var rapporertInntekt = bgps.getBeregnetPrÅr().add(naturalytelseBortfaltPrÅr);
+        var beløpMilitærHarKravPå = grunnlag.getMinsteinntektMilitærHarKravPå();
 
         if (søkerHarMilitærstatus && søkerSkalHaMilitærberegning(rapporertInntekt, beløpMilitærHarKravPå)) {
-            SingleEvaluation resultat = nei();
+            var resultat = nei();
             regelsporing(rapporertInntekt, beløpMilitærHarKravPå, true, resultat);
             return resultat;
         }
 
-        SingleEvaluation resultat = ja();
+        var resultat = ja();
         regelsporing(rapporertInntekt, beløpMilitærHarKravPå, false, resultat);
         return resultat;
     }

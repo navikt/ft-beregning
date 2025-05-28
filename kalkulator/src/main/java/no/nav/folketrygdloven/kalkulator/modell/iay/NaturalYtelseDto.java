@@ -54,7 +54,7 @@ public class NaturalYtelseDto {
             return true;
         if (o == null || !(o instanceof NaturalYtelseDto))
             return false;
-        NaturalYtelseDto that = (NaturalYtelseDto) o;
+        var that = (NaturalYtelseDto) o;
         return Objects.equals(periode, that.periode) &&
                 Objects.equals(type, that.type);
     }

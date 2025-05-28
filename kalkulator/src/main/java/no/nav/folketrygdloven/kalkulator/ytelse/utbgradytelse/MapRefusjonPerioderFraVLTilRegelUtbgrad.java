@@ -76,7 +76,7 @@ public class MapRefusjonPerioderFraVLTilRegelUtbgrad
     }
 
     private LocalDateTimeline<Boolean> finnUtbetalingTidslinje(UtbetalingsgradGrunnlag ytelsespesifiktGrunnlag, InntektsmeldingDto im) {
-	    final LocalDateTimeline<Boolean> tidslinjeMedFraværHosArbeidsgiver = finnTidslinjeMedFraværHosArbeidsgiver(ytelsespesifiktGrunnlag, im);
+	    final var tidslinjeMedFraværHosArbeidsgiver = finnTidslinjeMedFraværHosArbeidsgiver(ytelsespesifiktGrunnlag, im);
 	    final var tidslinjeForYtelse = finnTidslinjeForYtelse(ytelsespesifiktGrunnlag);
         return tidslinjeMedFraværHosArbeidsgiver.intersection(tidslinjeForYtelse).compress();
     }
@@ -125,7 +125,7 @@ public class MapRefusjonPerioderFraVLTilRegelUtbgrad
         var utbetalingsgrader = yrkesaktiviteter.stream().map(ya -> ytelsespesifiktGrunnlag.finnUtbetalingsgraderForArbeid(ya.getArbeidsgiver(), ya.getArbeidsforholdRef()))
                 .flatMap(Collection::stream)
                 .toList();
-        Optional<LocalDate> førsteDatoMedUtbetalingOpt = utbetalingsgrader.stream()
+        var førsteDatoMedUtbetalingOpt = utbetalingsgrader.stream()
                 .filter(periodeMedUtbetalingsgradDto -> periodeMedUtbetalingsgradDto.getUtbetalingsgrad().compareTo(Utbetalingsgrad.ZERO) != 0)
                 .map(PeriodeMedUtbetalingsgradDto::getPeriode)
                 .map(Intervall::getFomDato)
@@ -135,8 +135,8 @@ public class MapRefusjonPerioderFraVLTilRegelUtbgrad
             return Optional.empty();
         }
 
-        LocalDate førsteDagEtterPermisjon = førstedagEtterPermisjonOpt.get();
-        LocalDate førsteDatoMedUtbetaling = førsteDatoMedUtbetalingOpt.get();
+        var førsteDagEtterPermisjon = førstedagEtterPermisjonOpt.get();
+        var førsteDatoMedUtbetaling = førsteDatoMedUtbetalingOpt.get();
         return førsteDagEtterPermisjon.isAfter(førsteDatoMedUtbetaling) ? førstedagEtterPermisjonOpt : førsteDatoMedUtbetalingOpt;
     }
 

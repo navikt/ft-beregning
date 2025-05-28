@@ -31,9 +31,9 @@ public class PeriodiserForUtbetalingsgrad extends LeafSpecification<Periodiserin
 
 	@Override
 	public Evaluation evaluate(PeriodiseringUtbetalingsgradProsesstruktur prosesstruktur) {
-		List<SplittetPeriode> splittetPerioder = periodiserBeregningsgrunnlagForUtbetalingsgrad(prosesstruktur.getInput(), prosesstruktur.getIdentifisertePeriodeÅrsaker());
+        var splittetPerioder = periodiserBeregningsgrunnlagForUtbetalingsgrad(prosesstruktur.getInput(), prosesstruktur.getIdentifisertePeriodeÅrsaker());
 		prosesstruktur.setSplittetPerioder(splittetPerioder);
-		SingleEvaluation resultat = ja();
+        var resultat = ja();
 		resultat.setEvaluationProperty("splittetPerioder", splittetPerioder);
 		return resultat;
 	}
@@ -64,9 +64,9 @@ public class PeriodiserForUtbetalingsgrad extends LeafSpecification<Periodiserin
 		                                                           LocalDate periodeFom,
 		                                                           LocalDate periodeTom) {
 			// Legger til andel i periode dersom det er helg og det skal manuelt fordeles før og etter (for forenkling i gui)
-			boolean skalManueltFordelesRettFør = harSøktUtbetalingOgErNyAktivitet(andel, periodeFom.minusDays(1));
-			boolean skalManueltFordelesEtter = periodeTom != null && harSøktUtbetalingOgErNyAktivitet(andel, periodeTom.plusDays(1));
-			boolean erHelg = erKunHelgedager(periodeFom, periodeTom);
+            var skalManueltFordelesRettFør = harSøktUtbetalingOgErNyAktivitet(andel, periodeFom.minusDays(1));
+            var skalManueltFordelesEtter = periodeTom != null && harSøktUtbetalingOgErNyAktivitet(andel, periodeTom.plusDays(1));
+            var erHelg = erKunHelgedager(periodeFom, periodeTom);
 			return erHelg && (skalManueltFordelesRettFør && skalManueltFordelesEtter);
 		}
 
@@ -86,8 +86,8 @@ public class PeriodiserForUtbetalingsgrad extends LeafSpecification<Periodiserin
 
 		private static boolean harSøktUtbetalingOgErNyAktivitet(AndelUtbetalingsgrad andel,
 		                                                        LocalDate dato) {
-			boolean harSøktUtbetaling = harSøktUtbetalingPåDato(andel, dato);
-			boolean erNyAktivitet = andel.erNyAktivitetPåDato(dato);
+            var harSøktUtbetaling = harSøktUtbetalingPåDato(andel, dato);
+            var erNyAktivitet = andel.erNyAktivitetPåDato(dato);
 			return harSøktUtbetaling && erNyAktivitet;
 		}
 
@@ -101,8 +101,8 @@ public class PeriodiserForUtbetalingsgrad extends LeafSpecification<Periodiserin
 			if (AktivitetStatusV2.FL.equals(gradering.getAktivitetStatus()) || AktivitetStatusV2.SN.equals(gradering.getAktivitetStatus())) {
 				return mapSplittetAndelFLSN(gradering);
 			}
-			Periode ansettelsesPeriode = gradering.getArbeidsforhold() == null ? null : gradering.getArbeidsforhold().getAnsettelsesPeriode().orElse(null);
-			SplittetAndel.Builder builder = SplittetAndel.builder()
+            var ansettelsesPeriode = gradering.getArbeidsforhold() == null ? null : gradering.getArbeidsforhold().getAnsettelsesPeriode().orElse(null);
+            var builder = SplittetAndel.builder()
 					.medAktivitetstatus(gradering.getAktivitetStatus())
 					.medArbeidsforhold(gradering.getArbeidsforhold());
 			settAnsettelsesPeriodeHvisFinnes(ansettelsesPeriode, builder);

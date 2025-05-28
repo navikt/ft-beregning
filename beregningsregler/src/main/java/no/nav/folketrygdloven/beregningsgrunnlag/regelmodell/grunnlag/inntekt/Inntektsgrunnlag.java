@@ -74,7 +74,7 @@ public class Inntektsgrunnlag {
 
 
 	public Optional<LocalDate> sistePeriodeMedInntektFørDato(Inntektskilde inntektskilde, LocalDate dato) {
-		Optional<Periodeinntekt> perioder = getPeriodeinntektMedKilde(inntektskilde)
+        var perioder = getPeriodeinntektMedKilde(inntektskilde)
 				.filter(pi -> dato.isAfter(pi.getTom()))
 				.max(Comparator.comparing(Periodeinntekt::getFom));
 		return perioder.map(Periodeinntekt::getFom);
@@ -98,7 +98,7 @@ public class Inntektsgrunnlag {
 	}
 
 	public Optional<BigDecimal> getOppgittInntektForStatusIPeriode(AktivitetStatus status, Periode periode) {
-		List<Periodeinntekt> inntekter = getInntektspostFraSøknadForStatusIPeriode(status, periode);
+        var inntekter = getInntektspostFraSøknadForStatusIPeriode(status, periode);
 		if (inntekter.isEmpty()) {
 			return Optional.empty();
 		}
@@ -115,7 +115,7 @@ public class Inntektsgrunnlag {
 	}
 
 	private BigDecimal finnÅrsinntektForPeriode(Periodeinntekt oppgittInntekt) {
-		BigDecimal dagsats = finnEffektivDagsatsIPeriode(oppgittInntekt);
+        var dagsats = finnEffektivDagsatsIPeriode(oppgittInntekt);
 		return dagsats.multiply(BigDecimal.valueOf(VIRKEDAGER_I_ET_ÅR));
 	}
 
@@ -167,9 +167,9 @@ public class Inntektsgrunnlag {
 			return getAlleFrilansinntekterForArbeidsforhold(inntektskilde, førDato, måneder, arbeidsforhold.getArbeidsforhold());
 		}
 		List<Periodeinntekt> inntekter = new ArrayList<>();
-		for (int måned = 0; måned < måneder; måned++) {
-			final int siden = måned;
-			Optional<Periodeinntekt> beløp = getPeriodeinntektMedKilde(inntektskilde)
+		for (var måned = 0; måned < måneder; måned++) {
+			final var siden = måned;
+            var beløp = getPeriodeinntektMedKilde(inntektskilde)
 					.filter(pi -> pi.getArbeidsgiver().isPresent())
 					.filter(pi -> matchAktivitet(arbeidsforhold, pi))//NOSONAR
 					.filter(pi -> pi.inneholder(førDato.minusMonths(siden)))
@@ -183,7 +183,7 @@ public class Inntektsgrunnlag {
 		if (pi.getArbeidsgiver().isEmpty()) {
 			throw new IllegalStateException("Forventer å ha arbeidsforhold");
 		}
-		Arbeidsforhold arbeidsgiver = pi.getArbeidsgiver().get(); // NOSONAR
+        var arbeidsgiver = pi.getArbeidsgiver().get(); // NOSONAR
 		if (!arbeidsforhold.getArbeidsforhold().getAktivitet().equals(arbeidsgiver.getAktivitet())) {
 			return false;
 		}
@@ -199,7 +199,7 @@ public class Inntektsgrunnlag {
 	}
 
 	private List<Periodeinntekt> getAlleFrilansinntekterForArbeidsforhold(Inntektskilde inntektskilde, LocalDate førDato, int måneder, Arbeidsforhold arbeidsforhold) {
-		Periode periode = Periode.of(førDato.minusMonths(måneder), førDato);
+        var periode = Periode.of(førDato.minusMonths(måneder), førDato);
 		return getPeriodeinntektMedKilde(inntektskilde)
 				.filter(pi -> pi.getArbeidsgiver().isPresent())
 				.filter(pi -> pi.getArbeidsgiver().get().erFrilanser()) //NOSONAR
@@ -209,7 +209,7 @@ public class Inntektsgrunnlag {
 	}
 
 	private List<BigDecimal> getAlleFrilansinntekter(Inntektskilde inntektskilde, LocalDate førDato, int måneder) {
-		Periode periode = Periode.of(førDato.minusMonths(måneder), førDato);
+        var periode = Periode.of(førDato.minusMonths(måneder), førDato);
 		return finnAlleFrilansInntektPerioder(inntektskilde, periode)
 				.stream()
 				.map(Periodeinntekt::getInntekt)
@@ -230,7 +230,7 @@ public class Inntektsgrunnlag {
 	}
 
 	public Optional<BigDecimal> finnTotaltNaturalytelseBeløpMedOpphørsdatoIPeriodeForArbeidsforhold(Arbeidsforhold arbeidsforhold, LocalDate fom, LocalDate tom) {
-		Periode periode = Periode.of(fom, tom);
+        var periode = Periode.of(fom, tom);
 		return getNaturalYtelserForArbeidsgiver(arbeidsforhold)
 				.filter(ny -> ny.getTom() != null)
 				.filter(ny -> periode.inneholder(ny.getTom().plusDays(1)))//perioden innholder opphørsdatoen
@@ -240,7 +240,7 @@ public class Inntektsgrunnlag {
 	}
 
 	public Optional<BigDecimal> finnTotaltNaturalytelseBeløpTilkommetIPeriodeForArbeidsforhold(Arbeidsforhold arbeidsforhold, LocalDate fom, LocalDate tom) {
-		Periode periode = Periode.of(fom, tom);
+        var periode = Periode.of(fom, tom);
 		return getNaturalYtelserForArbeidsgiver(arbeidsforhold)
 				.filter(ny -> ny.getFom() != null)
 				.filter(ny -> periode.inneholder(ny.getFom()))

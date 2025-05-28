@@ -19,7 +19,7 @@ public class FullføreBeregningsgrunnlagFPImpl extends FullføreBeregningsgrunnl
     @Override
     protected List<RegelResultat> evaluerRegelmodell(Beregningsgrunnlag beregningsgrunnlagRegel, BeregningsgrunnlagInput bgInput) {
         List<RegelResultat> regelResultater = new ArrayList<>();
-        for (BeregningsgrunnlagPeriode periode : beregningsgrunnlagRegel.getBeregningsgrunnlagPerioder()) {
+        for (var periode : beregningsgrunnlagRegel.getBeregningsgrunnlagPerioder()) {
             regelResultater.add(KalkulusRegler.fullføreBeregningsgrunnlag(periode));
         }
         return regelResultater;

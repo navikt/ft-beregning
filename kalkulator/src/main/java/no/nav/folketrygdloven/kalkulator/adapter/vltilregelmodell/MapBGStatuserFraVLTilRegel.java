@@ -23,7 +23,7 @@ public class MapBGStatuserFraVLTilRegel {
     }
 
     public static AktivitetStatusModell map(BeregningAktivitetAggregatDto beregningAktivitetAggregat, Inntektsgrunnlag inntektsgrunnlag) {
-        AktivitetStatusModell regelmodell = new AktivitetStatusModell();
+        var regelmodell = new AktivitetStatusModell();
         regelmodell.setSkjæringstidspunktForOpptjening(beregningAktivitetAggregat.getSkjæringstidspunktOpptjening());
 	    regelmodell.setInntektsgrunnlag(inntektsgrunnlag);
 	    leggTilAktiviteter(beregningAktivitetAggregat, regelmodell);
@@ -32,14 +32,14 @@ public class MapBGStatuserFraVLTilRegel {
 
     private static void leggTilAktiviteter(BeregningAktivitetAggregatDto beregningAktivitetAggregat,
                                            AktivitetStatusModell modell) {
-        List<BeregningAktivitetDto> relevanteAktiviteter = beregningAktivitetAggregat.getBeregningAktiviteter();
+        var relevanteAktiviteter = beregningAktivitetAggregat.getBeregningAktiviteter();
         relevanteAktiviteter.forEach(a -> modell.leggTilEllerOppdaterAktivPeriode(lagAktivPerioder(a)));
     }
 
     private static AktivPeriode lagAktivPerioder(BeregningAktivitetDto ba) {
-        Aktivitet aktivitetType = MapOpptjeningAktivitetTypeFraVLTilRegel.map(ba.getOpptjeningAktivitetType());
-        Intervall periode = ba.getPeriode();
-        Periode regelPeriode = Periode.of(periode.getFomDato(), periode.getTomDato());
+        var aktivitetType = MapOpptjeningAktivitetTypeFraVLTilRegel.map(ba.getOpptjeningAktivitetType());
+        var periode = ba.getPeriode();
+        var regelPeriode = Periode.of(periode.getFomDato(), periode.getTomDato());
         if (Aktivitet.FRILANSINNTEKT.equals(aktivitetType)) {
             return AktivPeriode.forFrilanser(regelPeriode);
         }
@@ -62,7 +62,7 @@ public class MapBGStatuserFraVLTilRegel {
 
     private static AktivPeriode lagAktivePerioderForArbeidstakerHosPrivatperson(BeregningAktivitetDto beregningAktivitet, Periode gjeldendePeriode) {
         // Da vi ikke kan motta inntektsmeldinger ønsker vi ikke å sette arbeidsforholdId på arbeidsforholdet
-        String aktørId = beregningAktivitet.getArbeidsgiver().getAktørId().getId();
+        var aktørId = beregningAktivitet.getArbeidsgiver().getAktørId().getId();
         if (aktørId == null) {
             throw new IllegalArgumentException("Kan ikke lage periode for arbeidsforhold med arbeidsgiver som privatperson om aktørId er null");
         }
@@ -72,8 +72,8 @@ public class MapBGStatuserFraVLTilRegel {
     private static AktivPeriode lagAktivePerioderForArbeidstakerHosVirksomhet(BeregningAktivitetDto beregningAktivitet,
                                                                               Aktivitet aktivitetType,
                                                                               Periode gjeldendePeriode) {
-        String orgnr = mapTilRegelmodellForOrgnr(aktivitetType, beregningAktivitet);
-        String arbeidsforholdRef = beregningAktivitet.getArbeidsforholdRef().getReferanse();
+        var orgnr = mapTilRegelmodellForOrgnr(aktivitetType, beregningAktivitet);
+        var arbeidsforholdRef = beregningAktivitet.getArbeidsforholdRef().getReferanse();
         return AktivPeriode.forArbeidstakerHosVirksomhet(gjeldendePeriode, orgnr, arbeidsforholdRef);
     }
 

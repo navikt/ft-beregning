@@ -71,7 +71,7 @@ public class KravTjeneste {
                                                               YrkesaktivitetDto yrkesaktivitet,
                                                               BeregningAktivitetAggregatDto gjeldendeAktiviteter,
                                                               LocalDate skjæringstidspunktBeregning) {
-        LocalDate førsteMuligeRefusjonsdato = finnFørsteMuligeDagRefusjon(gjeldendeAktiviteter, skjæringstidspunktBeregning, yrkesaktivitet);
+        var førsteMuligeRefusjonsdato = finnFørsteMuligeDagRefusjon(gjeldendeAktiviteter, skjæringstidspunktBeregning, yrkesaktivitet);
         return krav.getPerioder().stream()
                 .filter(p -> !p.periode().getTomDato().isBefore(førsteMuligeRefusjonsdato))
                 .map(p -> new LocalDateSegment<>(
