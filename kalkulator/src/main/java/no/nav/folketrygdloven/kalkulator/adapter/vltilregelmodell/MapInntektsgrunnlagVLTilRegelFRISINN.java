@@ -57,7 +57,7 @@ public class MapInntektsgrunnlagVLTilRegelFRISINN implements MapInntektsgrunnlag
                 .build();
     }
 
-    public Inntektsgrunnlag map(BeregningsgrunnlagInput input, LocalDate skjæringstidspunkt) {
+    public Inntektsgrunnlag mapInntektsgrunnlagFørStpBeregning(BeregningsgrunnlagInput input, LocalDate skjæringstidspunkt) {
         Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
         hentInntektArbeidYtelse(inntektsgrunnlag, input, skjæringstidspunkt);
         return inntektsgrunnlag;

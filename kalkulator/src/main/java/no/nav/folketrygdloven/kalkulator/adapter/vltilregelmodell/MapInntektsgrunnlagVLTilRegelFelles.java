@@ -47,11 +47,19 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.YtelseType;
 public class MapInntektsgrunnlagVLTilRegelFelles implements MapInntektsgrunnlagVLTilRegel {
 	private static final String INNTEKT_RAPPORTERING_FRIST_DATO = "inntekt.rapportering.frist.dato";
 
-	public Inntektsgrunnlag map(BeregningsgrunnlagInput input, LocalDate skjæringstidspunktBeregning) {
+	public Inntektsgrunnlag mapInntektsgrunnlagFørStpBeregning(BeregningsgrunnlagInput input, LocalDate skjæringstidspunktBeregning) {
+		Objects.requireNonNull(skjæringstidspunktBeregning, "skjæringstidspunktBeregning");
 		Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
 		inntektsgrunnlag.setInntektRapporteringFristDag((Integer) input.getKonfigVerdi(INNTEKT_RAPPORTERING_FRIST_DATO));
-		hentInntektArbeidYtelse(inntektsgrunnlag, input, skjæringstidspunktBeregning);
+		mapInntektArbeidYtelse(inntektsgrunnlag, input, skjæringstidspunktBeregning);
 
+		return inntektsgrunnlag;
+	}
+
+	public Inntektsgrunnlag mapForenkletGrunnlagFørStpOpptjening(BeregningsgrunnlagInput input) {
+		Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
+		inntektsgrunnlag.setInntektRapporteringFristDag((Integer) input.getKonfigVerdi(INNTEKT_RAPPORTERING_FRIST_DATO));
+		mapRegisterinntekter(inntektsgrunnlag, input, input.getSkjæringstidspunktOpptjening());
 		return inntektsgrunnlag;
 	}
 
@@ -240,32 +248,26 @@ public class MapInntektsgrunnlagVLTilRegelFelles implements MapInntektsgrunnlagV
 						.build()));
 	}
 
-	private void hentInntektArbeidYtelse(Inntektsgrunnlag inntektsgrunnlag, BeregningsgrunnlagInput input, LocalDate skjæringstidspunktBeregning) {
+	private void mapInntektArbeidYtelse(Inntektsgrunnlag inntektsgrunnlag, BeregningsgrunnlagInput input, LocalDate skjæringstidspunktBeregning) {
 		InntektArbeidYtelseGrunnlagDto iayGrunnlag = input.getIayGrunnlag();
 		Collection<InntektsmeldingDto> inntektsmeldinger = input.getInntektsmeldinger();
+		var arbeidsfilter = lagArbeidsfilter(iayGrunnlag);
 
-		var filter = new InntektFilterDto(iayGrunnlag.getAktørInntektFraRegister()).før(skjæringstidspunktBeregning);
-		var aktørArbeid = iayGrunnlag.getAktørArbeidFraRegister();
-		var filterYaRegister = new YrkesaktivitetFilterDto(iayGrunnlag.getArbeidsforholdInformasjon(), aktørArbeid);
+		mapRegisterinntekter(inntektsgrunnlag, input, skjæringstidspunktBeregning);
 
-		if (!filter.isEmpty()) {
-			List<YrkesaktivitetDto> yrkesaktiviteter = new ArrayList<>();
-			yrkesaktiviteter.addAll(filterYaRegister.getYrkesaktiviteterForBeregning());
-			yrkesaktiviteter.addAll(filterYaRegister.getFrilansOppdrag());
+		mapInntektsmelding(inntektsgrunnlag, inntektsmeldinger, arbeidsfilter, skjæringstidspunktBeregning);
 
-			var bekreftetAnnenOpptjening = iayGrunnlag.getBekreftetAnnenOpptjening();
-			var filterYaBekreftetAnnenOpptjening = new YrkesaktivitetFilterDto(iayGrunnlag.getArbeidsforholdInformasjon(), bekreftetAnnenOpptjening)
-					.før(skjæringstidspunktBeregning);
-			yrkesaktiviteter.addAll(filterYaBekreftetAnnenOpptjening.getYrkesaktiviteterForBeregning());
+		mapYtelseinntekter(inntektsgrunnlag, input, skjæringstidspunktBeregning, iayGrunnlag);
 
-			lagInntektBeregning(inntektsgrunnlag, filter, yrkesaktiviteter);
-			lagInntektSammenligning(inntektsgrunnlag, filter);
-			lagInntekterSN(inntektsgrunnlag, filter);
+		mapOppgitteInntekter(inntektsgrunnlag, iayGrunnlag);
+	}
 
-		}
+	private void mapOppgitteInntekter(Inntektsgrunnlag inntektsgrunnlag, InntektArbeidYtelseGrunnlagDto iayGrunnlag) {
+		Optional<OppgittOpptjeningDto> oppgittOpptjeningOpt = iayGrunnlag.getOppgittOpptjening();
+		oppgittOpptjeningOpt.ifPresent(oppgittOpptjening -> mapOppgittOpptjening(inntektsgrunnlag, oppgittOpptjening));
+	}
 
-		mapInntektsmelding(inntektsgrunnlag, inntektsmeldinger, filterYaRegister, skjæringstidspunktBeregning);
-
+	private void mapYtelseinntekter(Inntektsgrunnlag inntektsgrunnlag, BeregningsgrunnlagInput input, LocalDate skjæringstidspunktBeregning, InntektArbeidYtelseGrunnlagDto iayGrunnlag) {
 		var ytelseFilter = new YtelseFilterDto(iayGrunnlag.getAktørYtelseFraRegister()).før(skjæringstidspunktBeregning);
 		if (harStatus(input, no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus.ARBEIDSAVKLARINGSPENGER)) {
 			mapTilstøtendeYtelseAAP(inntektsgrunnlag, ytelseFilter, skjæringstidspunktBeregning);
@@ -274,9 +276,32 @@ public class MapInntektsgrunnlagVLTilRegelFelles implements MapInntektsgrunnlagV
 			mapTilstøtendeYtelseDagpenger(inntektsgrunnlag, ytelseFilter, skjæringstidspunktBeregning);
 		}
 		leggTilFraYtelseVedtak(iayGrunnlag, skjæringstidspunktBeregning, inntektsgrunnlag);
-		Optional<OppgittOpptjeningDto> oppgittOpptjeningOpt = iayGrunnlag.getOppgittOpptjening();
-		oppgittOpptjeningOpt.ifPresent(oppgittOpptjening -> mapOppgittOpptjening(inntektsgrunnlag, oppgittOpptjening));
+	}
 
+	private void mapRegisterinntekter(Inntektsgrunnlag inntektsgrunnlag, BeregningsgrunnlagInput input, LocalDate skjæringstidspunkt) {
+		InntektArbeidYtelseGrunnlagDto iayGrunnlag = input.getIayGrunnlag();
+		var inntektsfilter = new InntektFilterDto(iayGrunnlag.getAktørInntektFraRegister()).før(skjæringstidspunkt);
+		var arbeidsfilter = lagArbeidsfilter(iayGrunnlag);
+
+		if (!inntektsfilter.isEmpty()) {
+			List<YrkesaktivitetDto> yrkesaktiviteter = new ArrayList<>();
+			yrkesaktiviteter.addAll(arbeidsfilter.getYrkesaktiviteterForBeregning());
+			yrkesaktiviteter.addAll(arbeidsfilter.getFrilansOppdrag());
+
+			var bekreftetAnnenOpptjening = iayGrunnlag.getBekreftetAnnenOpptjening();
+			var filterYaBekreftetAnnenOpptjening = new YrkesaktivitetFilterDto(iayGrunnlag.getArbeidsforholdInformasjon(), bekreftetAnnenOpptjening)
+					.før(skjæringstidspunkt);
+			yrkesaktiviteter.addAll(filterYaBekreftetAnnenOpptjening.getYrkesaktiviteterForBeregning());
+
+			lagInntektBeregning(inntektsgrunnlag, inntektsfilter, yrkesaktiviteter);
+			lagInntektSammenligning(inntektsgrunnlag, inntektsfilter);
+			lagInntekterSN(inntektsgrunnlag, inntektsfilter);
+		}
+	}
+
+	private YrkesaktivitetFilterDto lagArbeidsfilter(InntektArbeidYtelseGrunnlagDto iayGrunnlag) {
+		var aktørArbeid = iayGrunnlag.getAktørArbeidFraRegister();
+		return new YrkesaktivitetFilterDto(iayGrunnlag.getArbeidsforholdInformasjon(), aktørArbeid);
 	}
 
 	private void leggTilFraYtelseVedtak(InntektArbeidYtelseGrunnlagDto iayGrunnlag,
