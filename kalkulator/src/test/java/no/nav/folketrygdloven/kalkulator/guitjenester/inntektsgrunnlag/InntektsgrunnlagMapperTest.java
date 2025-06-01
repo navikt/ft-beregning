@@ -32,8 +32,9 @@ import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.inntek
 
 class InntektsgrunnlagMapperTest {
     private static final LocalDate STP = LocalDate.now();
-    private static final Intervall SG_PERIODE = Intervall.fraOgMedTilOgMed(LocalDate.now().minusMonths(12), LocalDate.now());
-    private static final Intervall BG_PERIODE = Intervall.fraOgMedTilOgMed(LocalDate.now().minusMonths(3), LocalDate.now());
+    private static final LocalDate JUSTERT = (STP.getDayOfMonth() > 5 ? STP : STP.minusMonths(1)).minusMonths(1).with(TemporalAdjusters.firstDayOfMonth());
+    private static final Intervall SG_PERIODE = Intervall.fraOgMedTilOgMed(JUSTERT.minusMonths(12), JUSTERT.with(TemporalAdjusters.lastDayOfMonth()));
+    private static final Intervall BG_PERIODE = Intervall.fraOgMedTilOgMed(JUSTERT.minusMonths(3), JUSTERT.with(TemporalAdjusters.lastDayOfMonth()));
 
 	@Test
 	void skal_teste_at_korrekte_inntekter_mappes_til_måneder() {
@@ -69,8 +70,9 @@ class InntektsgrunnlagMapperTest {
         assertThat(dto.get().getSammenligningsgrunnlagInntekter()).hasSize(2);
         assertThat(dto.get().getSammenligningsgrunnlagInntekter().get(0).getInntekter()).hasSize(1);
         assertThat(dto.get().getSammenligningsgrunnlagInntekter().get(1).getInntekter()).hasSize(1);
-		assertThat(dto.get().getBeregningsgrunnlagInntekter()).hasSize(1);
+		assertThat(dto.get().getBeregningsgrunnlagInntekter()).hasSize(2);
         assertThat(dto.get().getBeregningsgrunnlagInntekter().getFirst().getInntekter()).hasSize(1);
+        assertThat(dto.get().getBeregningsgrunnlagInntekter().getLast().getInntekter()).hasSize(1);
     }
 
     @Test
@@ -195,8 +197,9 @@ class InntektsgrunnlagMapperTest {
         assertThat(dto.get().getSammenligningsgrunnlagInntekter()).hasSize(2);
         assertThat(dto.get().getSammenligningsgrunnlagInntekter().get(0).getInntekter()).hasSize(1);
         assertThat(dto.get().getSammenligningsgrunnlagInntekter().get(1).getInntekter()).hasSize(1);
-		assertThat(dto.get().getBeregningsgrunnlagInntekter()).hasSize(1);
+		assertThat(dto.get().getBeregningsgrunnlagInntekter()).hasSize(2);
         assertThat(dto.get().getBeregningsgrunnlagInntekter().getFirst().getInntekter()).hasSize(1);
+        assertThat(dto.get().getBeregningsgrunnlagInntekter().getLast().getInntekter()).hasSize(1);
 
         assertThat(dto).isPresent();
         var pgiGrunnlag = dto.get().getPgiGrunnlag().stream().sorted(Comparator.comparing(PGIPrÅrDto::getÅr)).toList();

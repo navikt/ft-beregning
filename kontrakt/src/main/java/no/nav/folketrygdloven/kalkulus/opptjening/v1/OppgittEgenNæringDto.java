@@ -4,7 +4,6 @@ import java.time.LocalDate;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -55,7 +54,7 @@ public class OppgittEgenNæringDto {
     @JsonProperty(value = "begrunnelse")
     @Valid
     @Size(max = 4000)
-    @Pattern(regexp = "^[\\p{Graph}\\p{Space}\\p{Sc}\\p{L}\\p{M}\\p{N}§]+$", message = "[${validatedValue}] matcher ikke tillatt pattern [{regexp}]")
+    @Fritekst
     private String begrunnelse;
 
     @JsonProperty(value = "bruttoInntekt")
