@@ -9,16 +9,13 @@ import java.util.stream.Collectors;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.PeriodeÅrsak;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.RegelResultat;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.kalkulator.adapter.regelmodelltilvl.MapBeregningsgrunnlagFraRegelTilVL;
 import no.nav.folketrygdloven.kalkulator.adapter.regelmodelltilvl.MapRegelSporingFraRegelTilVL;
 import no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.MapBeregningsgrunnlagFraVLTilRegel;
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagInput;
 import no.nav.folketrygdloven.kalkulator.input.ForeslåBeregningsgrunnlagInput;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.FaktaAggregatDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.FaktaArbeidsforholdDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.AktivitetsAvtaleDto;
@@ -28,7 +25,6 @@ import no.nav.folketrygdloven.kalkulator.modell.iay.YrkesaktivitetFilterDto;
 import no.nav.folketrygdloven.kalkulator.output.BeregningAvklaringsbehovResultat;
 import no.nav.folketrygdloven.kalkulator.output.BeregningsgrunnlagRegelResultat;
 import no.nav.folketrygdloven.kalkulator.output.RegelSporingAggregat;
-import no.nav.folketrygdloven.kalkulator.output.RegelSporingPeriode;
 import no.nav.folketrygdloven.kalkulator.steg.BeregningsgrunnlagVerifiserer;
 import no.nav.folketrygdloven.kalkulator.steg.kontrollerfakta.fakta.KortvarigArbeidsforholdTjeneste;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
@@ -41,22 +37,22 @@ public class ForeslåBeregningsgrunnlag {
     private final MapBeregningsgrunnlagFraRegelTilVL mapBeregningsgrunnlagFraRegelTilVL = new MapBeregningsgrunnlagFraRegelTilVL();
 
     public BeregningsgrunnlagRegelResultat foreslåBeregningsgrunnlag(ForeslåBeregningsgrunnlagInput input) {
-        BeregningsgrunnlagGrunnlagDto grunnlag = input.getBeregningsgrunnlagGrunnlag();
+        var grunnlag = input.getBeregningsgrunnlagGrunnlag();
 
         // Oversetter initielt Beregningsgrunnlag -> regelmodell
-        Beregningsgrunnlag regelmodellBeregningsgrunnlag = mapBeregningsgrunnlagFraVLTilRegel.map(input, grunnlag);
-        BeregningsgrunnlagDto beregningsgrunnlag = grunnlag.getBeregningsgrunnlagHvisFinnes()
+        var regelmodellBeregningsgrunnlag = mapBeregningsgrunnlagFraVLTilRegel.map(input, grunnlag);
+        var beregningsgrunnlag = grunnlag.getBeregningsgrunnlagHvisFinnes()
                 .orElseThrow(() -> new IllegalStateException("Skal ha beregningsgrunnlag her"));
         splittPerioder(input, regelmodellBeregningsgrunnlag, beregningsgrunnlag, input.getBeregningsgrunnlagGrunnlag().getFaktaAggregat());
-        List<RegelResultat> regelResultater = kjørRegelForeslåBeregningsgrunnlag(regelmodellBeregningsgrunnlag);
+        var regelResultater = kjørRegelForeslåBeregningsgrunnlag(regelmodellBeregningsgrunnlag);
 
         // Oversett endelig resultat av regelmodell til foreslått Beregningsgrunnlag  (+ spore input -> evaluation)
-        BeregningsgrunnlagDto foreslåttBeregningsgrunnlag = mapBeregningsgrunnlagFraRegelTilVL.mapForeslåBeregningsgrunnlag(regelmodellBeregningsgrunnlag, beregningsgrunnlag);
-        List<BeregningAvklaringsbehovResultat> avklaringsbehov = utledAvklaringsbehov(input, regelResultater);
+        var foreslåttBeregningsgrunnlag = mapBeregningsgrunnlagFraRegelTilVL.mapForeslåBeregningsgrunnlag(regelmodellBeregningsgrunnlag, beregningsgrunnlag);
+        var avklaringsbehov = utledAvklaringsbehov(input, regelResultater);
 
         verifiserBeregningsgrunnlag(foreslåttBeregningsgrunnlag, input);
 
-        List<RegelSporingPeriode> regelsporinger = MapRegelSporingFraRegelTilVL.mapRegelsporingPerioder(
+        var regelsporinger = MapRegelSporingFraRegelTilVL.mapRegelsporingPerioder(
                 regelResultater,
                 foreslåttBeregningsgrunnlag.getBeregningsgrunnlagPerioder().stream().map(BeregningsgrunnlagPeriodeDto::getPeriode).collect(Collectors.toList()), BeregningsgrunnlagPeriodeRegelType.FORESLÅ);
         return new BeregningsgrunnlagRegelResultat(foreslåttBeregningsgrunnlag, avklaringsbehov,
@@ -82,7 +78,7 @@ public class ForeslåBeregningsgrunnlag {
     protected List<RegelResultat> kjørRegelForeslåBeregningsgrunnlag(Beregningsgrunnlag regelmodellBeregningsgrunnlag) {
         // Evaluerer hver BeregningsgrunnlagPeriode fra initielt Beregningsgrunnlag
         List<RegelResultat> regelResultater = new ArrayList<>();
-        for (BeregningsgrunnlagPeriode periode : regelmodellBeregningsgrunnlag.getBeregningsgrunnlagPerioder()) {
+        for (var periode : regelmodellBeregningsgrunnlag.getBeregningsgrunnlagPerioder()) {
             regelResultater.add(KalkulusRegler.foreslåBeregningsgrunnlag(periode));
         }
         return regelResultater;
@@ -93,7 +89,7 @@ public class ForeslåBeregningsgrunnlag {
                                                             InntektArbeidYtelseGrunnlagDto iayGrunnlag,
                                                             Optional<FaktaAggregatDto> faktaAggregat) {
         var filter = getYrkesaktivitetFilter(iayGrunnlag);
-        Map<BeregningsgrunnlagPrStatusOgAndelDto, YrkesaktivitetDto> kortvarigeAktiviteter = KortvarigArbeidsforholdTjeneste.hentAndelerForKortvarigeArbeidsforhold(vlBeregningsgrunnlag, iayGrunnlag);
+        var kortvarigeAktiviteter = KortvarigArbeidsforholdTjeneste.hentAndelerForKortvarigeArbeidsforhold(vlBeregningsgrunnlag, iayGrunnlag);
         kortvarigeAktiviteter.entrySet().stream()
                 .filter(entry -> entry.getKey().getBgAndelArbeidsforhold()
                         .filter(a -> faktaAggregat.flatMap(fa -> fa.getFaktaArbeidsforhold(a))

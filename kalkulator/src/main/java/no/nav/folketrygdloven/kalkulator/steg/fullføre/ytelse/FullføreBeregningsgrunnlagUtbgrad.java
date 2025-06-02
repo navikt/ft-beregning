@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.RegelResultat;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.Beregningsgrunnlag;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagInput;
 import no.nav.folketrygdloven.kalkulator.steg.fullføre.FullføreBeregningsgrunnlag;
 import no.nav.folketrygdloven.kalkulator.steg.fullføre.FullføreBeregningsgrunnlagUtils;
@@ -20,19 +19,19 @@ public class FullføreBeregningsgrunnlagUtbgrad extends FullføreBeregningsgrunn
 
     @Override
     protected List<RegelResultat> evaluerRegelmodell(Beregningsgrunnlag beregningsgrunnlagRegel, BeregningsgrunnlagInput bgInput) {
-        String input = FullføreBeregningsgrunnlagUtils.toJson(beregningsgrunnlagRegel);
+        var input = FullføreBeregningsgrunnlagUtils.toJson(beregningsgrunnlagRegel);
         // Regel for å finne grenseverdi for andre gjennomkjøring
-        List<String> sporingerFinnGrenseverdi = kjørRegelFinnGrenseverdi(beregningsgrunnlagRegel);
+        var sporingerFinnGrenseverdi = kjørRegelFinnGrenseverdi(beregningsgrunnlagRegel);
 
         //Andre gjennomkjøring av regel
-        List<RegelResultat> regelResultater = kjørRegelFullførberegningsgrunnlag(beregningsgrunnlagRegel);
+        var regelResultater = kjørRegelFullførberegningsgrunnlag(beregningsgrunnlagRegel);
 
         return FullføreBeregningsgrunnlagUtils.leggTilSporingerForFinnGrenseverdi(input, sporingerFinnGrenseverdi, regelResultater);
     }
 
     protected List<RegelResultat> kjørRegelFullførberegningsgrunnlag(Beregningsgrunnlag beregningsgrunnlagRegel) {
         List<RegelResultat> regelResultater = new ArrayList<>();
-        for (BeregningsgrunnlagPeriode periode : beregningsgrunnlagRegel.getBeregningsgrunnlagPerioder()) {
+        for (var periode : beregningsgrunnlagRegel.getBeregningsgrunnlagPerioder()) {
             regelResultater.add(KalkulusRegler.fullføreBeregningsgrunnlag(periode));
         }
         return regelResultater;

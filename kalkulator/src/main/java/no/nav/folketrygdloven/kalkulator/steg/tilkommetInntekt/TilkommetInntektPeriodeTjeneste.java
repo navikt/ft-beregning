@@ -60,7 +60,7 @@ public class TilkommetInntektPeriodeTjeneste {
 			throw new IllegalStateException("Hadde ikke startdato for nye regler, men fikk tilkommet inntekt");
 		}
 
-		PeriodeSplitter<Set<StatusOgArbeidsgiver>> periodeSplitter = getPeriodeSplitter(input);
+        var periodeSplitter = getPeriodeSplitter(input);
 		return periodeSplitter.splittPerioder(beregningsgrunnlag, tidlinjeMedTilkommetAktivitet);
 	}
 

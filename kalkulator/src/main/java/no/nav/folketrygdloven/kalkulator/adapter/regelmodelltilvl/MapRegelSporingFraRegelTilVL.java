@@ -36,7 +36,7 @@ public class MapRegelSporingFraRegelTilVL {
         List<RegelSporingPeriode> regelsporingPerioder = new ArrayList<>();
         var resultatIterator = regelResultater.iterator();
         for (var periode : perioder) {
-            RegelResultat resultat = resultatIterator.next();
+            var resultat = resultatIterator.next();
             var hovedRegelResultat = resultat.sporing();
             regelsporingPerioder.add(new RegelSporingPeriode(hovedRegelResultat.sporing(), hovedRegelResultat.input(), periode, regelType, hovedRegelResultat.versjon()));
         }

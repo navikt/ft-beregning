@@ -2,7 +2,6 @@ package no.nav.folketrygdloven.kalkulator.adapter.regelmodelltilvl;
 
 import static no.nav.folketrygdloven.kalkulator.adapter.regelmodelltilvl.kodeverk.MapAktivitetStatusVedSkjæringstidspunktFraRegelTilVL.mapAktivitetStatusfraRegelmodell;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -22,7 +21,6 @@ import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseGrunnlagD
 import no.nav.folketrygdloven.kalkulator.modell.iay.YrkesaktivitetFilterDto;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
-import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModell;
 
@@ -48,9 +46,9 @@ public class MapBGSkjæringstidspunktOgStatuserFraRegelTilVL {
             no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus.AAP))) {
             throw new IllegalStateException("Ugyldig kombinasjon av statuser: Kan ikke både ha status AAP og DP samtidig");
         }
-        LocalDate skjæringstidspunktForBeregning = regelModell.getSkjæringstidspunktForBeregning();
+        var skjæringstidspunktForBeregning = regelModell.getSkjæringstidspunktForBeregning();
 
-        Grunnbeløp grunnbeløp = grunnbeløpSatser.stream()
+        var grunnbeløp = grunnbeløpSatser.stream()
             .filter(g -> Periode.of(g.getFom(), g.getTom()).inneholder(ref.getFørsteUttaksdato()))
             .findFirst()
             .orElseThrow(() -> new IllegalStateException("Fant ikke grunnbeløp for gitt dato " + ref.getFørsteUttaksdato()));
@@ -67,7 +65,7 @@ public class MapBGSkjæringstidspunktOgStatuserFraRegelTilVL {
             .medBeregningsgrunnlagPeriode(skjæringstidspunktForBeregning, null)
             .build(beregningsgrunnlag);
 
-        YrkesaktivitetFilterDto filter = new YrkesaktivitetFilterDto(iayGrunnlag.getArbeidsforholdInformasjon(), iayGrunnlag.getAktørArbeidFraRegister());
+        var filter = new YrkesaktivitetFilterDto(iayGrunnlag.getArbeidsforholdInformasjon(), iayGrunnlag.getAktørArbeidFraRegister());
 
         opprettBeregningsgrunnlagPrStatusOgAndelForSkjæringstidspunkt(filter, regelModell, beregningsgrunnlagPeriode);
         return beregningsgrunnlag;
@@ -77,7 +75,7 @@ public class MapBGSkjæringstidspunktOgStatuserFraRegelTilVL {
                                                                                       AktivitetStatusModell regelmodell,
                                                                                       BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode) {
         var skjæringstidspunkt = regelmodell.getSkjæringstidspunktForBeregning();
-        FinnArbeidsperiode finnArbeidsperiodeTjeneste = new FinnArbeidsperiode(filter);
+        var finnArbeidsperiodeTjeneste = new FinnArbeidsperiode(filter);
         regelmodell.getBeregningsgrunnlagPrStatusListe().stream()
             .filter(bgps -> erATFL(bgps.getAktivitetStatus()))
             .forEach(bgps -> bgps.getArbeidsforholdList()
@@ -88,8 +86,8 @@ public class MapBGSkjæringstidspunktOgStatuserFraRegelTilVL {
                         .medArbforholdType(MapOpptjeningAktivitetFraRegelTilVL.map(af.getAktivitet()))
                         .medAktivitetStatus(af.erFrilanser() ? AktivitetStatus.FRILANSER : AktivitetStatus.ARBEIDSTAKER);
                     if (af.getReferanseType() != null || af.getArbeidsforholdId() != null) {
-                        Intervall arbeidsperiode = finnArbeidsperiodeTjeneste.finnArbeidsperiode(arbeidsgiver, iaRef, skjæringstidspunkt);
-                        BGAndelArbeidsforholdDto.Builder bgArbeidsforholdBuilder = BGAndelArbeidsforholdDto.builder()
+                        var arbeidsperiode = finnArbeidsperiodeTjeneste.finnArbeidsperiode(arbeidsgiver, iaRef, skjæringstidspunkt);
+                        var bgArbeidsforholdBuilder = BGAndelArbeidsforholdDto.builder()
                             .medArbeidsgiver(arbeidsgiver)
                             .medArbeidsforholdRef(af.getArbeidsforholdId())
                             .medArbeidsperiodeTom(arbeidsperiode.getTomDato())

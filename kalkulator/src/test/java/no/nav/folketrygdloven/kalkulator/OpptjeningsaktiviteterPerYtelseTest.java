@@ -14,7 +14,7 @@ class OpptjeningsaktiviteterPerYtelseTest {
     void aap_relevant_for_foreldrepenger() {
         // Act
         var opptjeningsaktiviteterPerYtelse =  new OpptjeningsaktiviteterPerYtelse(FagsakYtelseType.FORELDREPENGER);
-        boolean relevant = opptjeningsaktiviteterPerYtelse.erRelevantAktivitet(OpptjeningAktivitetType.AAP, null);
+        var relevant = opptjeningsaktiviteterPerYtelse.erRelevantAktivitet(OpptjeningAktivitetType.AAP, null);
 
         // Assert
         assertThat(relevant).isTrue();
@@ -24,7 +24,7 @@ class OpptjeningsaktiviteterPerYtelseTest {
     void dp_relevant_for_foreldrepenger() {
         // Act
         var opptjeningsaktiviteterPerYtelse =  new OpptjeningsaktiviteterPerYtelse(FagsakYtelseType.FORELDREPENGER);
-        boolean relevant = opptjeningsaktiviteterPerYtelse.erRelevantAktivitet(OpptjeningAktivitetType.DAGPENGER, null);
+        var relevant = opptjeningsaktiviteterPerYtelse.erRelevantAktivitet(OpptjeningAktivitetType.DAGPENGER, null);
 
         // Assert
         assertThat(relevant).isTrue();
@@ -34,7 +34,7 @@ class OpptjeningsaktiviteterPerYtelseTest {
     void aap_ikke_relevant_for_svp() {
         // Act
         var opptjeningsaktiviteterPerYtelse = new OpptjeningsaktiviteterPerYtelse(FagsakYtelseType.SVANGERSKAPSPENGER);
-        boolean relevant = opptjeningsaktiviteterPerYtelse.erRelevantAktivitet(OpptjeningAktivitetType.AAP, null);
+        var relevant = opptjeningsaktiviteterPerYtelse.erRelevantAktivitet(OpptjeningAktivitetType.AAP, null);
 
         // Assert
         assertThat(relevant).isFalse();
@@ -44,7 +44,7 @@ class OpptjeningsaktiviteterPerYtelseTest {
     void dp_ikke_relevant_for_svp() {
         // Act
         var opptjeningsaktiviteterPerYtelse = new OpptjeningsaktiviteterPerYtelse(FagsakYtelseType.SVANGERSKAPSPENGER);
-        boolean relevant = opptjeningsaktiviteterPerYtelse.erRelevantAktivitet(OpptjeningAktivitetType.DAGPENGER, null);
+        var relevant = opptjeningsaktiviteterPerYtelse.erRelevantAktivitet(OpptjeningAktivitetType.DAGPENGER, null);
 
         // Assert
         assertThat(relevant).isFalse();

@@ -67,7 +67,7 @@ public class PermisjonDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PermisjonDto that = (PermisjonDto) o;
+        var that = (PermisjonDto) o;
         return Objects.equals(permisjonFom, that.permisjonFom)
             && Objects.equals(permisjonTom, that.permisjonTom);
     }

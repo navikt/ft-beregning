@@ -51,7 +51,7 @@ class RegisterInntektTidslinjeUtleder {
     }
 
     private static LocalDateTimeline<Beløp> lagInntektTidslinje(LocalDate fomDato, List<InntektspostDto> inntektposter) {
-        List<LocalDateSegment<Beløp>> segmenter = inntektposter.stream().map(p -> new LocalDateSegment<>(
+        var segmenter = inntektposter.stream().map(p -> new LocalDateSegment<>(
                 p.getPeriode().getFomDato(),
                 p.getPeriode().getTomDato(),
                 regnOmTilDagsats(p))).toList();

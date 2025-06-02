@@ -61,17 +61,17 @@ public class MapBeregningsgrunnlagFraVLTilRegel {
         var ref = input.getKoblingReferanse();
         Objects.requireNonNull(ref, "BehandlingReferanse kan ikke være null!");
         Objects.requireNonNull(oppdatertGrunnlag, "BeregningsgrunnlagGrunnlag kan ikke være null");
-        BeregningsgrunnlagDto beregningsgrunnlag = oppdatertGrunnlag.getBeregningsgrunnlagHvisFinnes().orElse(null);
+        var beregningsgrunnlag = oppdatertGrunnlag.getBeregningsgrunnlagHvisFinnes().orElse(null);
         Objects.requireNonNull(beregningsgrunnlag, "Beregningsgrunnlag kan ikke være null!");
 
-        List<AktivitetStatusMedHjemmel> aktivitetStatuser = beregningsgrunnlag.getAktivitetStatuser().stream()
+        var aktivitetStatuser = beregningsgrunnlag.getAktivitetStatuser().stream()
                 .map(this::mapVLAktivitetStatusMedHjemmel)
                 .sorted()
                 .collect(Collectors.toList());
 
         var inntektsgrunnlag = finnMapper(ref.getFagsakYtelseType()).mapInntektsgrunnlagFørStpBeregning(input, beregningsgrunnlag.getSkjæringstidspunkt());
-        List<BeregningsgrunnlagPeriode> perioder = mapBeregningsgrunnlagPerioder(beregningsgrunnlag, input);
-        LocalDate skjæringstidspunkt = beregningsgrunnlag.getSkjæringstidspunkt();
+        var perioder = mapBeregningsgrunnlagPerioder(beregningsgrunnlag, input);
+        var skjæringstidspunkt = beregningsgrunnlag.getSkjæringstidspunkt();
 
         var builder = Beregningsgrunnlag.builder();
 
@@ -161,7 +161,7 @@ public class MapBeregningsgrunnlagFraVLTilRegel {
                 throw new IllegalArgumentException("Ukjent Hjemmel: (" + vlBGAktivitetStatus.getHjemmel().getKode() + ").", e);
             }
         }
-        AktivitetStatus as = mapVLAktivitetStatus(vlBGAktivitetStatus.getAktivitetStatus());
+        var as = mapVLAktivitetStatus(vlBGAktivitetStatus.getAktivitetStatus());
         return new AktivitetStatusMedHjemmel(as, hjemmel);
     }
 
@@ -184,11 +184,11 @@ public class MapBeregningsgrunnlagFraVLTilRegel {
                                                                           BeregningsgrunnlagInput input) {
         List<BeregningsgrunnlagPeriode> perioder = new ArrayList<>();
         vlBeregningsgrunnlag.getBeregningsgrunnlagPerioder().forEach(vlBGPeriode -> {
-            final BeregningsgrunnlagPeriode.Builder regelBGPeriode = BeregningsgrunnlagPeriode.builder()
+            final var regelBGPeriode = BeregningsgrunnlagPeriode.builder()
                     .medPeriode(Periode.of(vlBGPeriode.getBeregningsgrunnlagPeriodeFom(), vlBGPeriode.getBeregningsgrunnlagPeriodeTom()))
                     .leggTilPeriodeÅrsaker(mapPeriodeÅrsak(vlBGPeriode.getBeregningsgrunnlagPeriodeÅrsaker()));
 
-            List<BeregningsgrunnlagPrStatus> beregningsgrunnlagPrStatus = mapVLBGPrStatus(vlBGPeriode, input);
+            var beregningsgrunnlagPrStatus = mapVLBGPrStatus(vlBGPeriode, input);
             beregningsgrunnlagPrStatus.forEach(regelBGPeriode::medBeregningsgrunnlagPrStatus);
             perioder.add(regelBGPeriode.build());
         });
@@ -201,15 +201,15 @@ public class MapBeregningsgrunnlagFraVLTilRegel {
         List<BeregningsgrunnlagPrStatus> liste = new ArrayList<>();
         BeregningsgrunnlagPrStatus bgpsATFL = null;
 
-        for (BeregningsgrunnlagPrStatusOgAndelDto vlBGPStatus : vlBGPeriode.getBeregningsgrunnlagPrStatusOgAndelList()) {
-            final AktivitetStatus regelAktivitetStatus = mapVLAktivitetStatus(vlBGPStatus.getAktivitetStatus());
+        for (var vlBGPStatus : vlBGPeriode.getBeregningsgrunnlagPrStatusOgAndelList()) {
+            final var regelAktivitetStatus = mapVLAktivitetStatus(vlBGPStatus.getAktivitetStatus());
             if (AktivitetStatus.ATFL.equals(regelAktivitetStatus) || AktivitetStatus.AT.equals(regelAktivitetStatus)) {
                 if (bgpsATFL == null) {  // Alle ATFL håndteres samtidig her
                     bgpsATFL = mapVLBGPStatusForATFL(vlBGPeriode, regelAktivitetStatus, input);
                     liste.add(bgpsATFL);
                 }
             } else {
-                BeregningsgrunnlagPrStatus bgps = mapVLBGPStatusForAlleAktivietetStatuser(vlBGPStatus, input);
+                var bgps = mapVLBGPStatusForAlleAktivietetStatuser(vlBGPStatus, input);
                 liste.add(bgps);
             }
         }
@@ -219,10 +219,10 @@ public class MapBeregningsgrunnlagFraVLTilRegel {
     // Ikke ATFL og TY, de har separat mapping
     private BeregningsgrunnlagPrStatus mapVLBGPStatusForAlleAktivietetStatuser(BeregningsgrunnlagPrStatusOgAndelDto vlBGPStatus,
                                                                                BeregningsgrunnlagInput input) {
-        final AktivitetStatus regelAktivitetStatus = mapVLAktivitetStatus(vlBGPStatus.getAktivitetStatus());
+        final var regelAktivitetStatus = mapVLAktivitetStatus(vlBGPStatus.getAktivitetStatus());
         List<BigDecimal> pgi = (vlBGPStatus.getPgiSnitt() == null ? new ArrayList<>() :
                 Arrays.asList(Beløp.safeVerdi(vlBGPStatus.getPgi1()), Beløp.safeVerdi(vlBGPStatus.getPgi2()), Beløp.safeVerdi(vlBGPStatus.getPgi3())));
-        Optional<FaktaAktørDto> faktaAktørDto = input.getBeregningsgrunnlagGrunnlag().getFaktaAggregat().flatMap(FaktaAggregatDto::getFaktaAktør);
+        var faktaAktørDto = input.getBeregningsgrunnlagGrunnlag().getFaktaAggregat().flatMap(FaktaAggregatDto::getFaktaAktør);
         return BeregningsgrunnlagPrStatus.builder()
                 .medAktivitetStatus(regelAktivitetStatus)
                 .medBeregningsperiode(beregningsperiodeFor(vlBGPStatus))
@@ -256,11 +256,11 @@ public class MapBeregningsgrunnlagFraVLTilRegel {
                                                              AktivitetStatus regelAktivitetStatus,
                                                              BeregningsgrunnlagInput input) {
 
-        BeregningsgrunnlagPrStatus.Builder regelBGPStatusATFL = BeregningsgrunnlagPrStatus.builder().medAktivitetStatus(regelAktivitetStatus);
+        var regelBGPStatusATFL = BeregningsgrunnlagPrStatus.builder().medAktivitetStatus(regelAktivitetStatus);
 
-        for (BeregningsgrunnlagPrStatusOgAndelDto vlBGPStatus : vlBGPeriode.getBeregningsgrunnlagPrStatusOgAndelList()) {
+        for (var vlBGPStatus : vlBGPeriode.getBeregningsgrunnlagPrStatusOgAndelList()) {
             if (regelAktivitetStatus.equals(mapVLAktivitetStatus(vlBGPStatus.getAktivitetStatus()))) {
-                BeregningsgrunnlagPrArbeidsforhold regelArbeidsforhold = byggAndel(vlBGPStatus, input);
+                var regelArbeidsforhold = byggAndel(vlBGPStatus, input);
                 regelBGPStatusATFL.medArbeidsforhold(regelArbeidsforhold);
             }
         }
@@ -268,7 +268,7 @@ public class MapBeregningsgrunnlagFraVLTilRegel {
     }
 
     private BeregningsgrunnlagPrArbeidsforhold byggAndel(BeregningsgrunnlagPrStatusOgAndelDto vlBGPStatus, BeregningsgrunnlagInput input) {
-        BeregningsgrunnlagPrArbeidsforhold.Builder builder = BeregningsgrunnlagPrArbeidsforhold.builder();
+        var builder = BeregningsgrunnlagPrArbeidsforhold.builder();
         builder
                 .medInntektskategori(MapInntektskategoriFraVLTilRegel.map(vlBGPStatus.getGjeldendeInntektskategori()))
                 .medBeregnetPrÅr(Beløp.safeVerdi(vlBGPStatus.getBeregnetPrÅr()))
@@ -281,7 +281,7 @@ public class MapBeregningsgrunnlagFraVLTilRegel {
                 .medBesteberegningPrÅr(Beløp.safeVerdi(vlBGPStatus.getBesteberegningPrÅr()))
                 .medArbeidsforhold(MapArbeidsforholdFraVLTilRegel.arbeidsforholdForMedStartdato(vlBGPStatus, input.getIayGrunnlag(), input.getSkjæringstidspunktForBeregning()))
                 .medUtbetalingsprosentSVP(finnUtbetalingsgradForAndel(vlBGPStatus, vlBGPStatus.getBeregningsgrunnlagPeriode().getPeriode(), input.getYtelsespesifiktGrunnlag(), false).verdi());
-        Optional<Boolean> erTidsbegrenset = input.getBeregningsgrunnlagGrunnlag().getFaktaAggregat().flatMap(fa -> fa.getFaktaArbeidsforhold(vlBGPStatus))
+        var erTidsbegrenset = input.getBeregningsgrunnlagGrunnlag().getFaktaAggregat().flatMap(fa -> fa.getFaktaArbeidsforhold(vlBGPStatus))
                 .map(FaktaArbeidsforholdDto::getErTidsbegrensetVurdering);
         vlBGPStatus.getBgAndelArbeidsforhold().ifPresent(bga ->
                 builder

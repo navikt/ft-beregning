@@ -14,14 +14,14 @@ public class RegelFordelBeregningsgrunnlagAndelsmessig implements RuleService<Fo
 	@SuppressWarnings("unchecked")
     @Override
     public Specification<FordelModell> getSpecification() {
-        Ruleset<FordelModell> rs = new Ruleset<>();
+        var rs = new Ruleset<FordelModell>();
 
 
-		Specification<FordelModell> utførFordeling = rs.beregningsRegel(FordelMålbeløpPrAndel.ID, FordelMålbeløpPrAndel.BESKRIVELSE, new FordelMålbeløpPrAndel(), new Fordelt());
+        var utførFordeling = rs.beregningsRegel(FordelMålbeløpPrAndel.ID, FordelMålbeløpPrAndel.BESKRIVELSE, new FordelMålbeløpPrAndel(), new Fordelt());
 
-		Specification<FordelModell> bestemBeløpSomSkalFordeles = rs.beregningsRegel(FinnMålbeløpForFordelingenPrAndel.ID, FinnMålbeløpForFordelingenPrAndel.BESKRIVELSE, new FinnMålbeløpForFordelingenPrAndel(), utførFordeling);
+        var bestemBeløpSomSkalFordeles = rs.beregningsRegel(FinnMålbeløpForFordelingenPrAndel.ID, FinnMålbeløpForFordelingenPrAndel.BESKRIVELSE, new FinnMålbeløpForFordelingenPrAndel(), utførFordeling);
 
-		Specification<FordelModell> fastsettFraksjonPrAndel = rs.beregningsRegel(FinnFraksjonPrAndel.ID, FinnFraksjonPrAndel.BESKRIVELSE, new FinnFraksjonPrAndel(), bestemBeløpSomSkalFordeles);
+        var fastsettFraksjonPrAndel = rs.beregningsRegel(FinnFraksjonPrAndel.ID, FinnFraksjonPrAndel.BESKRIVELSE, new FinnFraksjonPrAndel(), bestemBeløpSomSkalFordeles);
 
 	    return fastsettFraksjonPrAndel;
     }

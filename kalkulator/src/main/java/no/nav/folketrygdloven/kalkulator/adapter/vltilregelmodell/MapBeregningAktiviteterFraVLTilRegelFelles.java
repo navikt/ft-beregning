@@ -70,7 +70,7 @@ public class MapBeregningAktiviteterFraVLTilRegelFelles implements MapBeregningA
                                                    Collection<OpptjeningAktiviteterDto.OpptjeningPeriodeDto> relevanteAktiviteter,
                                                    LocalDate skjæringstidspunktOpptjening,
                                                    PermisjonFilter permisjonFilter) {
-        Aktivitet aktivitetType = MapOpptjeningAktivitetTypeFraVLTilRegel.map(opptjeningsperiode.getOpptjeningAktivitetType());
+        var aktivitetType = MapOpptjeningAktivitetTypeFraVLTilRegel.map(opptjeningsperiode.getOpptjeningAktivitetType());
         var gjeldendePeriode = opptjeningsperiode.getPeriode();
         if (Aktivitet.FRILANSINNTEKT.equals(aktivitetType)) {
             return Optional.of(AktivPeriode.forFrilanser(

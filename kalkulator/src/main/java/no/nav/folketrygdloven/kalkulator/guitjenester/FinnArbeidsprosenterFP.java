@@ -21,7 +21,7 @@ public class FinnArbeidsprosenterFP implements FinnArbeidsprosenter {
     public List<BigDecimal> finnArbeidsprosenterIPeriode(BeregningsgrunnlagPrStatusOgAndelDto andel,
                                                          YtelsespesifiktGrunnlag ytelsespesifiktGrunnlag, Intervall periode) {
         var aktivitetGradering = finnGradering(ytelsespesifiktGrunnlag);
-        List<AndelGradering.Gradering> graderingForAndelIPeriode = FordelingGraderingTjeneste.hentGraderingerForAndelIPeriode(andel, aktivitetGradering, periode).stream()
+        var graderingForAndelIPeriode = FordelingGraderingTjeneste.hentGraderingerForAndelIPeriode(andel, aktivitetGradering, periode).stream()
                 .sorted().collect(Collectors.toList());
 
         List<BigDecimal> prosentAndelerIPeriode = new ArrayList<>();
@@ -29,7 +29,7 @@ public class FinnArbeidsprosenterFP implements FinnArbeidsprosenter {
             leggTilNullProsent(prosentAndelerIPeriode);
             return prosentAndelerIPeriode;
         }
-        AndelGradering.Gradering gradering = graderingForAndelIPeriode.get(0);
+        var gradering = graderingForAndelIPeriode.get(0);
         prosentAndelerIPeriode.add(gradering.getArbeidstidProsent().verdi());
         if (graderingForAndelIPeriode.size() == 1) {
             if (graderingDekkerHeilePerioden(gradering, periode)) {
@@ -39,8 +39,8 @@ public class FinnArbeidsprosenterFP implements FinnArbeidsprosenter {
             return prosentAndelerIPeriode;
         }
 
-        for (int i = 1; i < graderingForAndelIPeriode.size(); i++) {
-            AndelGradering.Gradering nesteGradering = graderingForAndelIPeriode.get(i);
+        for (var i = 1; i < graderingForAndelIPeriode.size(); i++) {
+            var nesteGradering = graderingForAndelIPeriode.get(i);
             prosentAndelerIPeriode.add(nesteGradering.getArbeidstidProsent().verdi());
             if (!gradering.getPeriode().getFomDato().isBefore(periode.getTomDato())) {
                 break;

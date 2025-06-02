@@ -53,10 +53,10 @@ public class PermisjonFilter {
     public LocalDateTimeline<Boolean> finnTidslinjeForPermisjonOver14Dager(YrkesaktivitetDto yrkesaktivitet) {
 
         // Permisjoner på yrkesaktivitet
-        LocalDateTimeline<Boolean> aktivPermisjonTidslinje = PermisjonPerYrkesaktivitet.utledPermisjonPerYrkesaktivitet(yrkesaktivitet, tidslinjePerYtelse, skjæringstidspunkt);
+        var aktivPermisjonTidslinje = PermisjonPerYrkesaktivitet.utledPermisjonPerYrkesaktivitet(yrkesaktivitet, tidslinjePerYtelse, skjæringstidspunkt);
 
         // Vurder kun permisjonsperioder over aktivitetens lengde og fra gitt dato
-        LocalDateTimeline<Boolean> tidslinjeTilVurdering = new LocalDateTimeline<>(List.of(new LocalDateSegment<>(TIDENES_BEGYNNELSE, TIDENES_ENDE, Boolean.TRUE)));
+        var tidslinjeTilVurdering = new LocalDateTimeline<Boolean>(List.of(new LocalDateSegment<>(TIDENES_BEGYNNELSE, TIDENES_ENDE, Boolean.TRUE)));
         tidslinjeTilVurdering = tidslinjeTilVurdering.intersection(aktivPermisjonTidslinje.compress());
         var aktivitetsTidslinje = new LocalDateTimeline<>(yrkesaktivitet.getAlleAnsettelsesperioder().stream()
                 .map(AktivitetsAvtaleDto::getPeriode)
@@ -95,7 +95,7 @@ public class PermisjonFilter {
 
     private static LocalDateTimeline<Boolean> komprimerForHelg(LocalDateTimeline<Boolean> tidslinje) {
         var factory = new TimelineWeekendCompressor.CompressorFactory<Boolean>(Objects::equals, (i, lhs, rhs) -> new LocalDateSegment<>(i, lhs.getValue()));
-        TimelineWeekendCompressor<Boolean> compressor = tidslinje.toSegments().stream()
+        var compressor = tidslinje.toSegments().stream()
                 .collect(factory::get, TimelineWeekendCompressor::accept, TimelineWeekendCompressor::combine);
         return new LocalDateTimeline<>(compressor.getSegmenter());
     }

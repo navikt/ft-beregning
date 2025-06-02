@@ -12,7 +12,6 @@ import no.nav.folketrygdloven.kalkulator.modell.svp.PeriodeMedUtbetalingsgradDto
 import no.nav.folketrygdloven.kalkulator.modell.svp.UtbetalingsgradPrAktivitetDto;
 import no.nav.folketrygdloven.kalkulator.steg.fordeling.avklaringsbehov.FordelingTilfelle;
 import no.nav.folketrygdloven.kalkulator.ytelse.utbgradytelse.AktivitetStatusMatcher;
-import no.nav.folketrygdloven.kalkulus.kodeverk.UttakArbeidType;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.FordelBeregningsgrunnlagArbeidsforholdDto;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.NyPeriodeDto;
 
@@ -25,11 +24,11 @@ class NyAktivitetMedSøktYtelseFordeling {
                                                                      FordelingTilfelle tilfelle,
                                                                      BeregningsgrunnlagPrStatusOgAndelDto andel,
                                                                      FordelBeregningsgrunnlagArbeidsforholdDto endringAf) {
-        boolean gjelderYtelseMedUtbetalingsgrad = ytelsespesifiktGrunnlag instanceof UtbetalingsgradGrunnlag;
-        boolean gjelderNyAktivitet = tilfelle.equals(FordelingTilfelle.NY_AKTIVITET);
-        boolean harIkkeRefusjonEllerGradering = endringAf.getPerioderMedGraderingEllerRefusjon().isEmpty();
+        var gjelderYtelseMedUtbetalingsgrad = ytelsespesifiktGrunnlag instanceof UtbetalingsgradGrunnlag;
+        var gjelderNyAktivitet = tilfelle.equals(FordelingTilfelle.NY_AKTIVITET);
+        var harIkkeRefusjonEllerGradering = endringAf.getPerioderMedGraderingEllerRefusjon().isEmpty();
         if (harIkkeRefusjonEllerGradering && gjelderNyAktivitet && gjelderYtelseMedUtbetalingsgrad) {
-            UtbetalingsgradGrunnlag utbetalingsgradGrunnlag = (UtbetalingsgradGrunnlag) ytelsespesifiktGrunnlag;
+            var utbetalingsgradGrunnlag = (UtbetalingsgradGrunnlag) ytelsespesifiktGrunnlag;
             return utbetalingsgradGrunnlag.getUtbetalingsgradPrAktivitet()
                     .stream()
                     .filter(utbAktivitet -> matcherAndelAktivitetMedUtbetalingsgrad(andel, utbAktivitet))
@@ -42,8 +41,8 @@ class NyAktivitetMedSøktYtelseFordeling {
     }
 
     private static boolean matcherAndelAktivitetMedUtbetalingsgrad(BeregningsgrunnlagPrStatusOgAndelDto andel, UtbetalingsgradPrAktivitetDto utbAktivitet) {
-        AktivitetDto arbeidsforhold = utbAktivitet.getUtbetalingsgradArbeidsforhold();
-        UttakArbeidType uttakArbeidType = arbeidsforhold.getUttakArbeidType();
+        var arbeidsforhold = utbAktivitet.getUtbetalingsgradArbeidsforhold();
+        var uttakArbeidType = arbeidsforhold.getUttakArbeidType();
         if (andel.getAktivitetStatus().erArbeidstaker()) {
             return AktivitetStatusMatcher.matcherStatus(andel.getAktivitetStatus(), uttakArbeidType) && matcherArbeidSøktYtelse(andel, arbeidsforhold);
         }
@@ -58,7 +57,7 @@ class NyAktivitetMedSøktYtelseFordeling {
     }
 
     private static NyPeriodeDto mapTilNyPeriode(PeriodeMedUtbetalingsgradDto p) {
-        NyPeriodeDto endringIYtelsePeriode = new NyPeriodeDto(false, false, true);
+        var endringIYtelsePeriode = new NyPeriodeDto(false, false, true);
         endringIYtelsePeriode.setFom(p.getPeriode().getFomDato());
         endringIYtelsePeriode.setTom(p.getPeriode().getTomDato());
         return endringIYtelsePeriode;

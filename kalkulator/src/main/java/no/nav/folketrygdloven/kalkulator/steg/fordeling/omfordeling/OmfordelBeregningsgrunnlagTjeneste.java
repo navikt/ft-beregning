@@ -29,14 +29,14 @@ public class OmfordelBeregningsgrunnlagTjeneste {
         var inputPerioder = MapTilFordelingsmodell.map(beregningsgrunnlag, input);
         List<RegelResultat> regelResultater = new ArrayList<>();
         var outputPerioder = new ArrayList<FordelPeriodeModell>();
-        for (FordelPeriodeModell inputPeriode : inputPerioder) {
+        for (var inputPeriode : inputPerioder) {
             List<FordelAndelModell> outputAndeler = new ArrayList<>();
             regelResultater.add(KalkulusRegler.fordelBeregningsgrunnlag(inputPeriode, outputAndeler));
             outputPerioder.add(new FordelPeriodeModell(inputPeriode.getBgPeriode(), outputAndeler));
 
         }
         var fordeltBG = MapFraFordelingsmodell.map(outputPerioder, regelResultater, beregningsgrunnlag);
-        List<Intervall> perioder = inputPerioder.stream()
+        var perioder = inputPerioder.stream()
                 .map(FordelPeriodeModell::getBgPeriode)
                 .map(p -> Intervall.fraOgMedTilOgMed(p.getFom(), p.getTom()))
                 .collect(Collectors.toList());

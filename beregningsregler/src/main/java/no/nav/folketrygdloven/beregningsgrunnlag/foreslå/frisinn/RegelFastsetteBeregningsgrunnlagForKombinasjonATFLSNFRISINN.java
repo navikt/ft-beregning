@@ -19,16 +19,16 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNFRISINN impleme
 	@SuppressWarnings("unchecked")
     @Override
     public Specification<BeregningsgrunnlagPeriode> getSpecification() {
-        Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
+        var rs = new Ruleset<BeregningsgrunnlagPeriode>();
 
-        Specification<BeregningsgrunnlagPeriode> beregnBruttoSN =
+        var beregnBruttoSN =
             rs.beregningsRegel("FP_BR 2.2 - 2.10", "Beregn SN-andel", new BeregnBruttoBeregningsgrunnlagSNFRISINN(), new Beregnet());
 
-        Specification<BeregningsgrunnlagPeriode> fastsettBeregningsperiode =
+        var fastsettBeregningsperiode =
             rs.beregningsRegel("FP_BR 2", "Fastsett beregningsperiode.",
                 new FastsettBeregningsperiodeSNFRISINN(), beregnBruttoSN);
 
-        Specification<BeregningsgrunnlagPeriode> beregningsgrunnlagKombinasjon =
+        var beregningsgrunnlagKombinasjon =
             rs.beregningsRegel("FP_BR_14-15-27-28", "Beregn beregningsgrunnlag for arbeidstaker/frilanser)",
                 new RegelBeregningsgrunnlagATFLFRISINN(regelmodell).getSpecification(), fastsettBeregningsperiode);
 

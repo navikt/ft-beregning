@@ -15,10 +15,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.In
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.NaturalYtelse;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
-import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.Resultat;
 
 class SjekkOmBortfallAvNaturalytelseTest {
@@ -29,8 +25,8 @@ class SjekkOmBortfallAvNaturalytelseTest {
     @Test
     void skalReturnereNeiNårNaturalytelserHarOpphørtFørSkjæringstidspunkt() {
         //Arrange
-        Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
-        List<NaturalYtelse> naturalYtelser = List.of(new NaturalYtelse(BigDecimal.TEN, SKJÆRINGSTIDSPUNKT.minusYears(1), SKJÆRINGSTIDSPUNKT.minusDays(2)));
+        var inntektsgrunnlag = new Inntektsgrunnlag();
+        var naturalYtelser = List.of(new NaturalYtelse(BigDecimal.TEN, SKJÆRINGSTIDSPUNKT.minusYears(1), SKJÆRINGSTIDSPUNKT.minusDays(2)));
         inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
             .medInntektskildeOgPeriodeType(Inntektskilde.INNTEKTSMELDING)
             .medArbeidsgiver(arbeidsforhold)
@@ -38,11 +34,11 @@ class SjekkOmBortfallAvNaturalytelseTest {
             .medMåned(SKJÆRINGSTIDSPUNKT)
             .medNaturalYtelser(naturalYtelser)
             .build());
-        Beregningsgrunnlag grunnlag = settoppGrunnlagMedEnPeriode(SKJÆRINGSTIDSPUNKT, inntektsgrunnlag, List.of(AktivitetStatus.ATFL), List.of(arbeidsforhold));
-        BeregningsgrunnlagPeriode periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
-        BeregningsgrunnlagPrArbeidsforhold andel = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
+        var grunnlag = settoppGrunnlagMedEnPeriode(SKJÆRINGSTIDSPUNKT, inntektsgrunnlag, List.of(AktivitetStatus.ATFL), List.of(arbeidsforhold));
+        var periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var andel = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
         //Act
-        Evaluation resultat = new SjekkOmBortfallAvNaturalytelse(andel).evaluate(periode);
+        var resultat = new SjekkOmBortfallAvNaturalytelse(andel).evaluate(periode);
         //Assert
         assertThat(resultat.result()).isEqualTo(Resultat.NEI);
     }
@@ -50,8 +46,8 @@ class SjekkOmBortfallAvNaturalytelseTest {
     @Test
     void skalReturnereJaNårNaturalytelserHarOpphørtPåSkjæringstidspunkt() {
         //Arrange
-        Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
-        List<NaturalYtelse> naturalYtelser = List.of(new NaturalYtelse(BigDecimal.TEN, SKJÆRINGSTIDSPUNKT.minusYears(1), SKJÆRINGSTIDSPUNKT.minusDays(1)));
+        var inntektsgrunnlag = new Inntektsgrunnlag();
+        var naturalYtelser = List.of(new NaturalYtelse(BigDecimal.TEN, SKJÆRINGSTIDSPUNKT.minusYears(1), SKJÆRINGSTIDSPUNKT.minusDays(1)));
         inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
             .medInntektskildeOgPeriodeType(Inntektskilde.INNTEKTSMELDING)
             .medArbeidsgiver(arbeidsforhold)
@@ -59,11 +55,11 @@ class SjekkOmBortfallAvNaturalytelseTest {
             .medMåned(SKJÆRINGSTIDSPUNKT)
             .medNaturalYtelser(naturalYtelser)
             .build());
-        Beregningsgrunnlag grunnlag = settoppGrunnlagMedEnPeriode(SKJÆRINGSTIDSPUNKT, inntektsgrunnlag, List.of(AktivitetStatus.ATFL), List.of(arbeidsforhold));
-        BeregningsgrunnlagPeriode periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
-        BeregningsgrunnlagPrArbeidsforhold andel = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
+        var grunnlag = settoppGrunnlagMedEnPeriode(SKJÆRINGSTIDSPUNKT, inntektsgrunnlag, List.of(AktivitetStatus.ATFL), List.of(arbeidsforhold));
+        var periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var andel = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
         //Act
-        Evaluation resultat = new SjekkOmBortfallAvNaturalytelse(andel).evaluate(periode);
+        var resultat = new SjekkOmBortfallAvNaturalytelse(andel).evaluate(periode);
         //Assert
         assertThat(resultat.result()).isEqualTo(Resultat.JA);
     }

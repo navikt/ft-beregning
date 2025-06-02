@@ -6,7 +6,6 @@ import java.util.Objects;
 import no.nav.folketrygdloven.kalkulator.avklaringsbehov.dto.BeregningsaktivitetLagreDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningAktivitetAggregatDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningAktivitetDto;
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningAktivitetNøkkel;
 
 class SaksbehandletBeregningsaktivitetTjeneste {
     private SaksbehandletBeregningsaktivitetTjeneste() {
@@ -14,7 +13,7 @@ class SaksbehandletBeregningsaktivitetTjeneste {
     }
 
     static BeregningAktivitetAggregatDto lagSaksbehandletVersjon(BeregningAktivitetAggregatDto registerAktiviteter, List<BeregningsaktivitetLagreDto> handlingListe) {
-        BeregningAktivitetAggregatDto.Builder saksbehandletBuilder = BeregningAktivitetAggregatDto.builder()
+        var saksbehandletBuilder = BeregningAktivitetAggregatDto.builder()
             .medSkjæringstidspunktOpptjening(registerAktiviteter.getSkjæringstidspunktOpptjening());
         registerAktiviteter.getBeregningAktiviteter().stream()
             .filter(ba -> !skalFjernes(handlingListe, ba))
@@ -23,7 +22,7 @@ class SaksbehandletBeregningsaktivitetTjeneste {
     }
 
     private static boolean skalFjernes(List<BeregningsaktivitetLagreDto> handlingListe, BeregningAktivitetDto beregningAktivitet) {
-        BeregningAktivitetNøkkel nøkkel = beregningAktivitet.getNøkkel();
+        var nøkkel = beregningAktivitet.getNøkkel();
         return handlingListe.stream()
             .filter(baDto -> Objects.equals(baDto.getNøkkel(), nøkkel))
             .anyMatch(baDto -> !baDto.getSkalBrukes());

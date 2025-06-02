@@ -3,7 +3,6 @@ package no.nav.folketrygdloven.kalkulator.ytelse.frisinn;
 import java.util.Collections;
 
 import no.nav.folketrygdloven.kalkulator.input.FortsettForeslåBeregningsgrunnlagInput;
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.output.BeregningsgrunnlagRegelResultat;
 
 /**
@@ -18,7 +17,7 @@ public class FortsettForeslåBeregningsgrunnlagFRISINN {
     }
 
     public BeregningsgrunnlagRegelResultat fortsettForeslåBeregningsgrunnlag(FortsettForeslåBeregningsgrunnlagInput input) {
-        BeregningsgrunnlagDto beregningsgrunnlag = input.getBeregningsgrunnlagGrunnlag().getBeregningsgrunnlagHvisFinnes()
+        var beregningsgrunnlag = input.getBeregningsgrunnlagGrunnlag().getBeregningsgrunnlagHvisFinnes()
                 .orElseThrow(() -> new IllegalStateException("Skal ha beregningsgrunnlag her"));
         return new BeregningsgrunnlagRegelResultat(beregningsgrunnlag, Collections.emptyList());
     }

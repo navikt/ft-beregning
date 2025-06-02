@@ -59,9 +59,9 @@ public class FordelBeregningsgrunnlagTilfelleInput {
     }
 
     public static FordelBeregningsgrunnlagTilfelleInput fraBeregningsgrunnlagRestInput(BeregningsgrunnlagGUIInput input) {
-        AktivitetGradering aktivitetGradering = input.getYtelsespesifiktGrunnlag() instanceof ForeldrepengerGrunnlag ?
+        var aktivitetGradering = input.getYtelsespesifiktGrunnlag() instanceof ForeldrepengerGrunnlag ?
                 ((ForeldrepengerGrunnlag) input.getYtelsespesifiktGrunnlag()).getAktivitetGradering() : AktivitetGradering.INGEN_GRADERING;
-        Collection<InntektsmeldingDto> inntektsmeldinger = input.getInntektsmeldinger();
+        var inntektsmeldinger = input.getInntektsmeldinger();
         return new FordelBeregningsgrunnlagTilfelleInput(input.getBeregningsgrunnlag(), aktivitetGradering, inntektsmeldinger, input.getForlengelseperioder());
     }
 

@@ -4,7 +4,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.psb.PleiepengerGrunnlagFastsettGrenseverdi;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
-import no.nav.fpsak.nare.evaluation.node.SingleEvaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(SkalFinneGrenseverdiUtenFordeling.ID)
@@ -23,7 +22,7 @@ public class SkalFinneGrenseverdiUtenFordeling extends LeafSpecification<Beregni
 		if (ytelsesSpesifiktGrunnlag instanceof PleiepengerGrunnlagFastsettGrenseverdi pleiepengergrunnlag) {
 			var startdatoNyeGraderingsregler = pleiepengergrunnlag.getStartdatoNyeGraderingsregler();
 			var skalKjøreMedFordeling = startdatoNyeGraderingsregler == null || grunnlag.getPeriodeFom().isBefore(startdatoNyeGraderingsregler);
-			SingleEvaluation resultat = skalKjøreMedFordeling ? nei() : ja();
+            var resultat = skalKjøreMedFordeling ? nei() : ja();
 			resultat.setEvaluationProperty("startdatoNyeGraderingsregler", startdatoNyeGraderingsregler);
 			resultat.setEvaluationProperty("periodeFom", grunnlag.getPeriodeFom());
 

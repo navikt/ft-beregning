@@ -26,10 +26,10 @@ public class RegelForeslåBeregningsgrunnlagTilNull implements RuleService<Bereg
 	@SuppressWarnings("unchecked")
     @Override
     public Specification<BeregningsgrunnlagPeriode> getSpecification() {
-        Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
+        var rs = new Ruleset<BeregningsgrunnlagPeriode>();
 
         // FP_BR NULL Sett brutto BG til 0
-        Specification<BeregningsgrunnlagPeriode> settTilNull = rs.beregningsRegel("FP_BR NULL", "Beregn brutto beregingsgrunnlag for ukjent status",
+        var settTilNull = rs.beregningsRegel("FP_BR NULL", "Beregn brutto beregingsgrunnlag for ukjent status",
             new FastsettTilNull(status), new Beregnet());
 
 

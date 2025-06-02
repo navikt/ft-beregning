@@ -119,7 +119,7 @@ public class InntektArbeidYtelseAggregatBuilder {
         if (eksternReferanse == null || eksternReferanse.getReferanse() == null) {
             return InternArbeidsforholdRefDto.nullRef();
         }
-        InternArbeidsforholdRefDto nyRef = InternArbeidsforholdRefDto.nyRef();
+        var nyRef = InternArbeidsforholdRefDto.nyRef();
         nyeInternArbeidsforholdReferanser.add(new ArbeidsforholdReferanseDto(arbeidsgiver, nyRef, eksternReferanse));
         return nyRef;
     }
@@ -154,7 +154,7 @@ public class InntektArbeidYtelseAggregatBuilder {
         }
 
         public AktørArbeidBuilder leggTilYrkesaktivitet(YrkesaktivitetDtoBuilder builder) {
-            YrkesaktivitetDto yrkesaktivitet = builder.build();
+            var yrkesaktivitet = builder.build();
             if (!builder.getErOppdatering()) {
                 kladd.leggTilYrkesaktivitet(yrkesaktivitet);
             }
@@ -249,7 +249,7 @@ public class InntektArbeidYtelseAggregatBuilder {
         }
 
         public AktørYtelseBuilder leggTilYtelse(YtelseDtoBuilder builder) {
-            YtelseDto ytelse = builder.build();
+            var ytelse = builder.build();
             if (!builder.getErOppdatering()) {
                 this.kladd.leggTilYtelse(ytelse);
             }

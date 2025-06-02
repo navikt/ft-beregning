@@ -4,9 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +14,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Ar
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AktivitetStatusV2;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.utbetalingsgrad.AndelUtbetalingsgrad;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.utbetalingsgrad.Utbetalingsgrad;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.PeriodeSplittData;
 
 class IdentifiserPerioderForEndringISøktYtelseTest {
 
@@ -24,11 +21,11 @@ class IdentifiserPerioderForEndringISøktYtelseTest {
 	@Test
 	void skal_støtte_hull_i_utbetalingsperioder() {
 		// Arrange
-		LocalDate fom = LocalDate.now();
-		LocalDate tom = fom.plusMonths(1);
+        var fom = LocalDate.now();
+        var tom = fom.plusMonths(1);
 
-		LocalDate fom2 = tom.plusDays(2);
-		LocalDate tom2 = fom2.plusMonths(1);
+        var fom2 = tom.plusDays(2);
+        var tom2 = fom2.plusMonths(1);
 		var andelGradering = AndelUtbetalingsgrad.builder()
 				.medAktivitetStatus(AktivitetStatusV2.AT)
 				.medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("123"))
@@ -38,24 +35,24 @@ class IdentifiserPerioderForEndringISøktYtelseTest {
 				.build();
 
 		// Act
-		Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForEndringISøktYtelse.identifiser(andelGradering);
+        var periodesplitter = IdentifiserPerioderForEndringISøktYtelse.identifiser(andelGradering);
 
 		// Assert
 		assertThat(periodesplitter).hasSize(4);
-		Iterator<PeriodeSplittData> iterator = periodesplitter.iterator();
-		PeriodeSplittData første = iterator.next();
+        var iterator = periodesplitter.iterator();
+        var første = iterator.next();
 		assertThat(første.getFom()).isEqualTo(fom);
 		assertThat(første.getPeriodeÅrsak()).isEqualTo(PeriodeÅrsak.ENDRING_I_AKTIVITETER_SØKT_FOR);
 
-		PeriodeSplittData andre = iterator.next();
+        var andre = iterator.next();
 		assertThat(andre.getFom()).isEqualTo(tom.plusDays(1));
 		assertThat(andre.getPeriodeÅrsak()).isEqualTo(PeriodeÅrsak.ENDRING_I_AKTIVITETER_SØKT_FOR);
 
-		PeriodeSplittData tredje = iterator.next();
+        var tredje = iterator.next();
 		assertThat(tredje.getFom()).isEqualTo(fom2);
 		assertThat(tredje.getPeriodeÅrsak()).isEqualTo(PeriodeÅrsak.ENDRING_I_AKTIVITETER_SØKT_FOR);
 
-		PeriodeSplittData fjerde = iterator.next();
+        var fjerde = iterator.next();
 		assertThat(fjerde.getFom()).isEqualTo(tom2.plusDays(1));
 		assertThat(fjerde.getPeriodeÅrsak()).isEqualTo(PeriodeÅrsak.ENDRING_I_AKTIVITETER_SØKT_FOR);
 	}
@@ -64,8 +61,8 @@ class IdentifiserPerioderForEndringISøktYtelseTest {
 	@Test
 	void fårSplittForFørstePeriode() {
 		// Arrange
-		LocalDate fom = LocalDate.now();
-		LocalDate tom = fom.plusMonths(1);
+        var fom = LocalDate.now();
+        var tom = fom.plusMonths(1);
 		var andelGradering = AndelUtbetalingsgrad.builder()
 				.medAktivitetStatus(AktivitetStatusV2.AT)
 				.medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("123"))
@@ -73,16 +70,16 @@ class IdentifiserPerioderForEndringISøktYtelseTest {
 				.build();
 
 		// Act
-		Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForEndringISøktYtelse.identifiser(andelGradering);
+        var periodesplitter = IdentifiserPerioderForEndringISøktYtelse.identifiser(andelGradering);
 
 		// Assert
 		assertThat(periodesplitter).hasSize(2);
-		Iterator<PeriodeSplittData> iterator = periodesplitter.iterator();
-		PeriodeSplittData første = iterator.next();
+        var iterator = periodesplitter.iterator();
+        var første = iterator.next();
 		assertThat(første.getFom()).isEqualTo(fom);
 		assertThat(første.getPeriodeÅrsak()).isEqualTo(PeriodeÅrsak.ENDRING_I_AKTIVITETER_SØKT_FOR);
 
-		PeriodeSplittData andre = iterator.next();
+        var andre = iterator.next();
 		assertThat(andre.getFom()).isEqualTo(tom.plusDays(1));
 		assertThat(andre.getPeriodeÅrsak()).isEqualTo(PeriodeÅrsak.ENDRING_I_AKTIVITETER_SØKT_FOR);
 	}
@@ -90,12 +87,12 @@ class IdentifiserPerioderForEndringISøktYtelseTest {
 	@Test
 	void fårSplittForPerioderMedForskjelligUtbetaling() {
 		// Arrange
-		LocalDate fom = LocalDate.now();
-		LocalDate tom1 = fom.plusMonths(1);
-		Periode p1 = Periode.of(fom, tom1);
-		LocalDate fom2 = tom1.plusDays(1);
-		LocalDate tom2 = fom.plusMonths(2);
-		Periode p2 = Periode.of(fom2, tom2);
+        var fom = LocalDate.now();
+        var tom1 = fom.plusMonths(1);
+        var p1 = Periode.of(fom, tom1);
+        var fom2 = tom1.plusDays(1);
+        var tom2 = fom.plusMonths(2);
+        var p2 = Periode.of(fom2, tom2);
 		var andelGradering = AndelUtbetalingsgrad.builder()
 				.medAktivitetStatus(AktivitetStatusV2.AT)
 				.medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("123"))
@@ -106,7 +103,7 @@ class IdentifiserPerioderForEndringISøktYtelseTest {
 				.build();
 
 		// Act
-		Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForEndringISøktYtelse.identifiser(andelGradering);
+        var periodesplitter = IdentifiserPerioderForEndringISøktYtelse.identifiser(andelGradering);
 
 		// Assert
 		assertThat(periodesplitter)
@@ -127,10 +124,10 @@ class IdentifiserPerioderForEndringISøktYtelseTest {
 	@Test
 	void fårBareSplittForFørstePeriodeMedLikUtbetaling() {
 		// Arrange
-		LocalDate fom = LocalDate.now();
-		Periode p0 = Periode.of(fom.minusDays(14), fom.minusDays(1));
-		Periode p1 = Periode.of(fom, fom.plusMonths(1));
-		Periode p2 = Periode.of(fom.plusMonths(1).plusDays(1), fom.plusMonths(2));
+        var fom = LocalDate.now();
+        var p0 = Periode.of(fom.minusDays(14), fom.minusDays(1));
+        var p1 = Periode.of(fom, fom.plusMonths(1));
+        var p2 = Periode.of(fom.plusMonths(1).plusDays(1), fom.plusMonths(2));
 		var andelGradering = AndelUtbetalingsgrad.builder()
 				.medAktivitetStatus(AktivitetStatusV2.AT)
 				.medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("123"))
@@ -142,7 +139,7 @@ class IdentifiserPerioderForEndringISøktYtelseTest {
 				.build();
 
 		// Act
-		Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForEndringISøktYtelse.identifiser(andelGradering);
+        var periodesplitter = IdentifiserPerioderForEndringISøktYtelse.identifiser(andelGradering);
 
 		// Assert
 		assertThat(periodesplitter).hasSize(2)
@@ -159,13 +156,13 @@ class IdentifiserPerioderForEndringISøktYtelseTest {
 	@Test
 	void fårSplittForFlerePerioderMedUlikUtbetaling() {
 		// Arrange
-		LocalDate fom = LocalDate.now();
-		Periode p1 = Periode.of(fom, fom.plusMonths(1));
-		Periode p2 = Periode.of(fom.plusMonths(1).plusDays(1), fom.plusMonths(2));
-		Periode p3 = Periode.of(fom.plusMonths(2).plusDays(1), fom.plusMonths(3));
-		Periode p4 = Periode.of(fom.plusMonths(3).plusDays(1), fom.plusMonths(4));
-		Periode p5 = Periode.of(fom.plusMonths(4).plusDays(1), fom.plusMonths(5));
-		Periode p6 = Periode.of(fom.plusMonths(4).plusDays(1), fom.plusMonths(5));
+        var fom = LocalDate.now();
+        var p1 = Periode.of(fom, fom.plusMonths(1));
+        var p2 = Periode.of(fom.plusMonths(1).plusDays(1), fom.plusMonths(2));
+        var p3 = Periode.of(fom.plusMonths(2).plusDays(1), fom.plusMonths(3));
+        var p4 = Periode.of(fom.plusMonths(3).plusDays(1), fom.plusMonths(4));
+        var p5 = Periode.of(fom.plusMonths(4).plusDays(1), fom.plusMonths(5));
+        var p6 = Periode.of(fom.plusMonths(4).plusDays(1), fom.plusMonths(5));
 		var andelGradering = AndelUtbetalingsgrad.builder()
 				.medAktivitetStatus(AktivitetStatusV2.AT)
 				.medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("123"))
@@ -180,7 +177,7 @@ class IdentifiserPerioderForEndringISøktYtelseTest {
 				.build();
 
 		// Act
-		Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForEndringISøktYtelse.identifiser(andelGradering);
+        var periodesplitter = IdentifiserPerioderForEndringISøktYtelse.identifiser(andelGradering);
 
 		// Assert
 		assertThat(periodesplitter).hasSize(5)
@@ -206,8 +203,8 @@ class IdentifiserPerioderForEndringISøktYtelseTest {
 	@Test
 	void ingen_splitt_med_kun_null() {
 		// Arrange
-		LocalDate fom = LocalDate.now();
-		LocalDate tom = fom.plusMonths(1);
+        var fom = LocalDate.now();
+        var tom = fom.plusMonths(1);
 		var andelGradering = AndelUtbetalingsgrad.builder()
 				.medAktivitetStatus(AktivitetStatusV2.AT)
 				.medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("123"))
@@ -215,7 +212,7 @@ class IdentifiserPerioderForEndringISøktYtelseTest {
 				.build();
 
 		// Act
-		Set<PeriodeSplittData> periodesplitter = IdentifiserPerioderForEndringISøktYtelse.identifiser(andelGradering);
+        var periodesplitter = IdentifiserPerioderForEndringISøktYtelse.identifiser(andelGradering);
 
 		// Assert
 		assertThat(periodesplitter).isEmpty();

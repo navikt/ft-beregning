@@ -18,7 +18,7 @@ import no.nav.fpsak.tidsserie.LocalDateTimeline;
 public class VurderRepresentererStortingetTjeneste {
 
     public static BeregningsgrunnlagGrunnlagDto løsAvklaringsbehov(VurderRepresentererStortingetHåndteringDto vurderDto, HåndterBeregningsgrunnlagInput input) {
-        BeregningsgrunnlagGrunnlagDtoBuilder grunnlagBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
+        var grunnlagBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
         if (vurderDto.getRepresentererStortinget()) {
             var stortingsperiodeTidslinje = new LocalDateTimeline<>(List.of(new LocalDateSegment<>(vurderDto.getFom(), vurderDto.getTom(), true)));
             var nyttBg = getPeriodeSplitter(input).splittPerioder(input.getBeregningsgrunnlag(), stortingsperiodeTidslinje);

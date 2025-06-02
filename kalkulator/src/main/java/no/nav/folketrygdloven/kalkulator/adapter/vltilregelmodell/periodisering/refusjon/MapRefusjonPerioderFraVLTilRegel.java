@@ -15,7 +15,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Refusjonskrav;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.ArbeidsforholdOgInntektsmelding;
@@ -36,13 +35,10 @@ import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagInput;
 import no.nav.folketrygdloven.kalkulator.input.YtelsespesifiktGrunnlag;
 import no.nav.folketrygdloven.kalkulator.konfig.KonfigTjeneste;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BGAndelArbeidsforholdDto;
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningAktivitetAggregatDto;
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningRefusjonOverstyringerDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.AktivitetsAvtaleDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.AktørYtelseDto;
-import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseGrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektsmeldingDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YrkesaktivitetDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YrkesaktivitetFilterDto;
@@ -61,7 +57,7 @@ public abstract class MapRefusjonPerioderFraVLTilRegel {
 
     public PeriodeModellRefusjon map(BeregningsgrunnlagInput input,
                                      BeregningsgrunnlagDto beregningsgrunnlag) {
-        LocalDate skjæringstidspunkt = beregningsgrunnlag.getSkjæringstidspunkt();
+        var skjæringstidspunkt = beregningsgrunnlag.getSkjæringstidspunkt();
         var beregningsgrunnlagPeriode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         var andeler = beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndelList();
         var eksisterendePerioder = beregningsgrunnlag.getBeregningsgrunnlagPerioder().stream()
@@ -80,7 +76,7 @@ public abstract class MapRefusjonPerioderFraVLTilRegel {
     }
 
     private void validerIngenOverlappendeReferanseOgRefusjon(List<ArbeidsforholdOgInntektsmelding> regelInntektsmeldinger) {
-        List<Map.Entry<String, List<ArbeidsforholdOgInntektsmelding>>> inntektsmeldingerMedOverlappendeRefusjonOgReferanser = regelInntektsmeldinger.stream()
+        var inntektsmeldingerMedOverlappendeRefusjonOgReferanser = regelInntektsmeldinger.stream()
                 .collect(Collectors.groupingBy(a -> a.getArbeidsforhold().getArbeidsgiverId()))
                 .entrySet()
                 .stream().filter(e -> e.getValue().size() > 1 && harMatchendeReferanserMedOverlappendeRefusjon(e.getValue()))
@@ -96,14 +92,14 @@ public abstract class MapRefusjonPerioderFraVLTilRegel {
     }
 
     private boolean harMatchendeReferanserOgOverlappendeRefusjon(List<ArbeidsforholdOgInntektsmelding> inntektsmeldinger, String referanse) {
-        List<ArbeidsforholdOgInntektsmelding> matchendeReferanser = inntektsmeldinger.stream().filter(im2 ->
+        var matchendeReferanser = inntektsmeldinger.stream().filter(im2 ->
                         referanse == null || im2.getArbeidsforhold().getArbeidsforholdId() == null || referanse.equals(im2.getArbeidsforhold().getArbeidsforholdId()))
                 .collect(Collectors.toList());
         return harInntektsmeldinglisteOverlappendeRefusjonsperioder(matchendeReferanser);
     }
 
     private boolean harInntektsmeldinglisteOverlappendeRefusjonsperioder(List<ArbeidsforholdOgInntektsmelding> matchendeReferanser) {
-        boolean harIngenOverlapp = matchendeReferanser.stream().map(im2 ->
+        var harIngenOverlapp = matchendeReferanser.stream().map(im2 ->
                         new LocalDateTimeline<>(im2.getRefusjoner().stream()
                                 .map(Refusjonskrav::getPeriode)
                                 .map(p -> LocalDateSegment.emptySegment(p.getFom(), p.getTom()))
@@ -115,9 +111,9 @@ public abstract class MapRefusjonPerioderFraVLTilRegel {
 
     protected Map<no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.refusjon.Arbeidsgiver, LocalDateTimeline<Utfall>> mapRefusjonVurderingUtfallPrArbeidsgiver(BeregningsgrunnlagInput input) {
 
-        InntektArbeidYtelseGrunnlagDto iayGrunnlag = input.getIayGrunnlag();
-        BeregningAktivitetAggregatDto gjeldendeAktiviteter = input.getBeregningsgrunnlagGrunnlag().getGjeldendeAktiviteter();
-        Optional<BeregningRefusjonOverstyringerDto> refusjonOverstyringer = input.getBeregningsgrunnlagGrunnlag().getRefusjonOverstyringer();
+        var iayGrunnlag = input.getIayGrunnlag();
+        var gjeldendeAktiviteter = input.getBeregningsgrunnlagGrunnlag().getGjeldendeAktiviteter();
+        var refusjonOverstyringer = input.getBeregningsgrunnlagGrunnlag().getRefusjonOverstyringer();
         var filter = new YrkesaktivitetFilterDto(iayGrunnlag.getArbeidsforholdInformasjon(), iayGrunnlag.getAktørArbeidFraRegister());
         var fristvurdertTidslinjePrArbeidsgiver = ArbeidsgiverRefusjonskravTjeneste.lagFristTidslinjePrArbeidsgiver(
                 filter.getYrkesaktiviteterForBeregning(),
@@ -132,7 +128,7 @@ public abstract class MapRefusjonPerioderFraVLTilRegel {
     }
 
     private LocalDateTimeline<Utfall> mapTilUtfallTidslinje(LocalDateTimeline<KravOgUtfall> kravOgUtfallTidslinje) {
-        List<LocalDateSegment<Utfall>> utfallSegmenter = kravOgUtfallTidslinje.stream().map(s -> new LocalDateSegment<>(
+        var utfallSegmenter = kravOgUtfallTidslinje.stream().map(s -> new LocalDateSegment<>(
                         s.getLocalDateInterval(),
                         mapUtfall(s)))
                 .collect(Collectors.toList());
@@ -173,22 +169,22 @@ public abstract class MapRefusjonPerioderFraVLTilRegel {
     }
 
     private ArbeidsforholdOgInntektsmelding mapRefusjonForInntektsmelding(InntektsmeldingDto im, Input inputAndeler, PermisjonFilter permisjonFilter) {
-        Optional<BeregningsgrunnlagPrStatusOgAndelDto> matchendeAndel = finnAndelForInntektsmelding(im, inputAndeler);
-        Set<YrkesaktivitetDto> yrkesaktiviteter = finnYrkesaktiviteterForInntektsmelding(im, inputAndeler);
-        BeregningsgrunnlagInput beregningsgrunnlagInput = inputAndeler.getBeregningsgrunnlagInput();
-        LocalDate skjæringstidspunktBeregning = beregningsgrunnlagInput.getBeregningsgrunnlag().getSkjæringstidspunkt();
-        List<AktivitetsAvtaleDto> alleAnsattperioderForInntektsmeldingEtterStartAvBeregning = finnAnsattperioderForYrkesaktiviteter(yrkesaktiviteter, skjæringstidspunktBeregning);
-        Periode ansettelsesPeriode = FinnAnsettelsesPeriode.getMinMaksPeriode(alleAnsattperioderForInntektsmeldingEtterStartAvBeregning, skjæringstidspunktBeregning);
-        LocalDate startdatoEtterPermisjon = utledStartdatoEtterPermisjon(
+        var matchendeAndel = finnAndelForInntektsmelding(im, inputAndeler);
+        var yrkesaktiviteter = finnYrkesaktiviteterForInntektsmelding(im, inputAndeler);
+        var beregningsgrunnlagInput = inputAndeler.getBeregningsgrunnlagInput();
+        var skjæringstidspunktBeregning = beregningsgrunnlagInput.getBeregningsgrunnlag().getSkjæringstidspunkt();
+        var alleAnsattperioderForInntektsmeldingEtterStartAvBeregning = finnAnsattperioderForYrkesaktiviteter(yrkesaktiviteter, skjæringstidspunktBeregning);
+        var ansettelsesPeriode = FinnAnsettelsesPeriode.getMinMaksPeriode(alleAnsattperioderForInntektsmeldingEtterStartAvBeregning, skjæringstidspunktBeregning);
+        var startdatoEtterPermisjon = utledStartdatoEtterPermisjon(
                 skjæringstidspunktBeregning,
                 im,
                 yrkesaktiviteter,
                 permisjonFilter, inputAndeler.getBeregningsgrunnlagInput().getYtelsespesifiktGrunnlag()).orElse(skjæringstidspunktBeregning);
 
-        ArbeidsforholdOgInntektsmelding.Builder builder = ArbeidsforholdOgInntektsmelding.builder();
+        var builder = ArbeidsforholdOgInntektsmelding.builder();
         matchendeAndel.map(BeregningsgrunnlagPrStatusOgAndelDto::getAndelsnr).ifPresent(builder::medAndelsnr);
 
-        List<Refusjonskrav> refusjoner = MapRefusjonskravFraVLTilRegel.periodiserRefusjonsbeløp(
+        var refusjoner = MapRefusjonskravFraVLTilRegel.periodiserRefusjonsbeløp(
                 im,
                 startdatoEtterPermisjon,
                 beregningsgrunnlagInput.getBeregningsgrunnlagGrunnlag().getRefusjonOverstyringer(),
@@ -201,7 +197,7 @@ public abstract class MapRefusjonPerioderFraVLTilRegel {
         builder.medRefusjonskravFrist(new RefusjonskravFrist(
                 KonfigTjeneste.getFristMånederEtterRefusjon(),
                 BeregningsgrunnlagHjemmel.REFUSJONSKRAV_FRIST));
-        Arbeidsforhold arbeidsforhold = lagArbeidsforhold(im, matchendeAndel);
+        var arbeidsforhold = lagArbeidsforhold(im, matchendeAndel);
         return builder.medAnsettelsesperiode(ansettelsesPeriode)
                 .medArbeidsforhold(arbeidsforhold)
                 .medStartdatoPermisjon(startdatoEtterPermisjon)
@@ -274,9 +270,9 @@ public abstract class MapRefusjonPerioderFraVLTilRegel {
     private Optional<LocalDate> finnFørsteSøktePermisjonsdag(Collection<YrkesaktivitetDto> yrkesaktiviteter,
                                                              PermisjonFilter permisjonFilter,
                                                              LocalDate skjæringstidspunkt) {
-        List<AktivitetsAvtaleDto> alleAnsattperioderForInntektsmeldingEtterStartAvBeregning = finnAnsattperioderForYrkesaktiviteter(yrkesaktiviteter, skjæringstidspunkt);
-        Periode ansettelsesPeriode = FinnAnsettelsesPeriode.getMinMaksPeriode(alleAnsattperioderForInntektsmeldingEtterStartAvBeregning, skjæringstidspunkt);
-        Optional<LocalDate> førstedagEtterPermisjonOpt = FinnFørsteDagEtterPermisjon.finn(yrkesaktiviteter, ansettelsesPeriode,
+        var alleAnsattperioderForInntektsmeldingEtterStartAvBeregning = finnAnsattperioderForYrkesaktiviteter(yrkesaktiviteter, skjæringstidspunkt);
+        var ansettelsesPeriode = FinnAnsettelsesPeriode.getMinMaksPeriode(alleAnsattperioderForInntektsmeldingEtterStartAvBeregning, skjæringstidspunkt);
+        var førstedagEtterPermisjonOpt = FinnFørsteDagEtterPermisjon.finn(yrkesaktiviteter, ansettelsesPeriode,
                 skjæringstidspunkt, permisjonFilter);
         if (førstedagEtterPermisjonOpt.isEmpty()) {
             return Optional.empty();

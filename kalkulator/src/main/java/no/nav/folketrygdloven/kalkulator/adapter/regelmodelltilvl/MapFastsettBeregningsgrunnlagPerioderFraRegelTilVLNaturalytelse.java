@@ -1,13 +1,9 @@
 package no.nav.folketrygdloven.kalkulator.adapter.regelmodelltilvl;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.EksisterendeAndel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SplittetPeriode;
 import no.nav.folketrygdloven.kalkulator.adapter.regelmodelltilvl.kodeverk.MapPeriodeÅrsakFraRegelTilVL;
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BGAndelArbeidsforholdDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
@@ -24,7 +20,7 @@ public class MapFastsettBeregningsgrunnlagPerioderFraRegelTilVLNaturalytelse ext
     protected void mapSplittetPeriode(BeregningsgrunnlagDto nyttBeregningsgrunnlag,
                                       SplittetPeriode splittetPeriode,
                                       BeregningsgrunnlagDto beregningsgrunnlag) {
-        LocalDate periodeTom = utledPeriodeTom(splittetPeriode);
+        var periodeTom = utledPeriodeTom(splittetPeriode);
 
         var originalPeriode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().stream()
             .filter(p -> p.getPeriode().inkluderer(splittetPeriode.getPeriode().getFom()))
@@ -41,13 +37,13 @@ public class MapFastsettBeregningsgrunnlagPerioderFraRegelTilVLNaturalytelse ext
     }
 
     private void mapEksisterendeAndel(SplittetPeriode splittetPeriode, BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode, BeregningsgrunnlagPrStatusOgAndelDto eksisterendeAndel) {
-        BeregningsgrunnlagPrStatusOgAndelDto.Builder andelBuilder = BeregningsgrunnlagPrStatusOgAndelDto.kopier(eksisterendeAndel);
+        var andelBuilder = BeregningsgrunnlagPrStatusOgAndelDto.kopier(eksisterendeAndel);
 
-        Optional<EksisterendeAndel> regelMatchOpt = splittetPeriode.getEksisterendePeriodeAndeler().stream()
+        var regelMatchOpt = splittetPeriode.getEksisterendePeriodeAndeler().stream()
             .filter(andel -> andel.getAndelNr().equals(eksisterendeAndel.getAndelsnr()))
             .findFirst();
         regelMatchOpt.ifPresent(regelAndel -> {
-            BGAndelArbeidsforholdDto.Builder andelArbeidsforholdBuilder = andelBuilder.getBgAndelArbeidsforholdDtoBuilder()
+            var andelArbeidsforholdBuilder = andelBuilder.getBgAndelArbeidsforholdDtoBuilder()
                 .medNaturalytelseBortfaltPrÅr(Beløp.fra(regelAndel.getNaturalytelseBortfaltPrÅr().orElse(null)))
                 .medNaturalytelseTilkommetPrÅr(Beløp.fra(regelAndel.getNaturalytelseTilkommetPrÅr().orElse(null)));
             andelBuilder.medBGAndelArbeidsforhold(andelArbeidsforholdBuilder);

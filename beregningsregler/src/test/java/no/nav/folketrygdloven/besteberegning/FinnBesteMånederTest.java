@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
@@ -33,7 +32,6 @@ import no.nav.folketrygdloven.besteberegning.modell.input.YtelseAktivitetType;
 import no.nav.folketrygdloven.besteberegning.modell.input.Ytelsegrunnlag;
 import no.nav.folketrygdloven.besteberegning.modell.input.YtelsegrunnlagAndel;
 import no.nav.folketrygdloven.besteberegning.modell.input.YtelsegrunnlagPeriode;
-import no.nav.folketrygdloven.besteberegning.modell.output.BeregnetMånedsgrunnlag;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 
 class FinnBesteMånederTest {
@@ -49,16 +47,16 @@ class FinnBesteMånederTest {
     void skal_finne_6_siste_måneder_med_eit_arbeidsforhold_like_inntekter() {
 		// Arrange
 		List<Periodeinntekt> periodeinntekter = new ArrayList<>();
-		for (int i = 0; i < 12; i++) {
+		for (var i = 0; i < 12; i++) {
 			periodeinntekter.add(lagPeriodeInntektArbeidstaker(i, BigDecimal.valueOf(10000), ORGNR));
 		}
-		BesteberegningRegelmodell regelmodell = lagRegelmodell(List.of(), periodeinntekter);
+        var regelmodell = lagRegelmodell(List.of(), periodeinntekter);
 
 		// Act
 	    evaluer(regelmodell);
 
 	    // Assert
-		List<BeregnetMånedsgrunnlag> besteMåneder = regelmodell.getOutput().getBesteMåneder();
+        var besteMåneder = regelmodell.getOutput().getBesteMåneder();
 		assertThat(besteMåneder).hasSize(6);
 		assertThat(besteMåneder.get(0).getMåned()).isEqualTo(YearMonth.of(2019, 10));
 		assertThat(besteMåneder.get(1).getMåned()).isEqualTo(YearMonth.of(2019, 9));
@@ -72,19 +70,19 @@ class FinnBesteMånederTest {
 	void skal_finne_6_første_måneder_med_eit_arbeidsforhold() {
 		// Arrange
 		List<Periodeinntekt> periodeinntekter = new ArrayList<>();
-		for (int i = 0; i < 5; i++) {
+		for (var i = 0; i < 5; i++) {
 			periodeinntekter.add(lagPeriodeInntektArbeidstaker(i, BigDecimal.valueOf(10000), ORGNR));
 		}
-		for (int i = 5; i < 12; i++) {
+		for (var i = 5; i < 12; i++) {
 			periodeinntekter.add(lagPeriodeInntektArbeidstaker(i, BigDecimal.valueOf(20000), ORGNR));
 		}
-		BesteberegningRegelmodell regelmodell = lagRegelmodell(List.of(), periodeinntekter);
+        var regelmodell = lagRegelmodell(List.of(), periodeinntekter);
 
 		// Act
 		evaluer(regelmodell);
 
 		// Assert
-		List<BeregnetMånedsgrunnlag> besteMåneder = regelmodell.getOutput().getBesteMåneder();
+        var besteMåneder = regelmodell.getOutput().getBesteMåneder();
 		assertThat(besteMåneder).hasSize(6);
 		assertThat(besteMåneder.get(0).getMåned()).isEqualTo(YearMonth.of(2019, 6));
 		assertThat(besteMåneder.get(1).getMåned()).isEqualTo(YearMonth.of(2019, 5));
@@ -98,19 +96,19 @@ class FinnBesteMånederTest {
 	void skal_finne_annenkvar_måneder_med_eit_arbeidsforhold() {
 		// Arrange
 		List<Periodeinntekt> periodeinntekter = new ArrayList<>();
-		for (int i = 0; i < 12; i = i + 2) {
+		for (var i = 0; i < 12; i = i + 2) {
 			periodeinntekter.add(lagPeriodeInntektArbeidstaker(i, BigDecimal.valueOf(10000), ORGNR));
 		}
-		for (int i = 1; i < 12; i = i + 2) {
+		for (var i = 1; i < 12; i = i + 2) {
 			periodeinntekter.add(lagPeriodeInntektArbeidstaker(i, BigDecimal.valueOf(20000), ORGNR));
 		}
-		BesteberegningRegelmodell regelmodell = lagRegelmodell(List.of(), periodeinntekter);
+        var regelmodell = lagRegelmodell(List.of(), periodeinntekter);
 
 		// Act
 		evaluer(regelmodell);
 
 		// Assert
-		List<BeregnetMånedsgrunnlag> besteMåneder = regelmodell.getOutput().getBesteMåneder();
+        var besteMåneder = regelmodell.getOutput().getBesteMåneder();
 		assertThat(besteMåneder).hasSize(6);
 		assertThat(besteMåneder.get(0).getMåned()).isEqualTo(YearMonth.of(2019, 10));
 		assertThat(besteMåneder.get(1).getMåned()).isEqualTo(YearMonth.of(2019, 8));
@@ -124,19 +122,19 @@ class FinnBesteMånederTest {
 	void skal_finne_6_siste_måneder_med_to_arbeidsforhold() {
 		// Arrange
 		List<Periodeinntekt> periodeinntekter = new ArrayList<>();
-		for (int i = 0; i < 12; i++) {
+		for (var i = 0; i < 12; i++) {
 			periodeinntekter.add(lagPeriodeInntektArbeidstaker(i, BigDecimal.valueOf(10000), ORGNR));
 		}
-		for (int i = 1; i < 12; i++) {
+		for (var i = 1; i < 12; i++) {
 			periodeinntekter.add(lagPeriodeInntektArbeidstaker(i, BigDecimal.valueOf(20000), ORGNR2));
 		}
-		BesteberegningRegelmodell regelmodell = lagRegelmodell(List.of(), periodeinntekter);
+        var regelmodell = lagRegelmodell(List.of(), periodeinntekter);
 
 		// Act
 		evaluer(regelmodell);
 
 		// Assert
-		List<BeregnetMånedsgrunnlag> besteMåneder = regelmodell.getOutput().getBesteMåneder();
+        var besteMåneder = regelmodell.getOutput().getBesteMåneder();
 		assertThat(besteMåneder).hasSize(6);
 		assertThat(besteMåneder.get(0).getMåned()).isEqualTo(YearMonth.of(2019, 10));
 		assertThat(besteMåneder.get(1).getMåned()).isEqualTo(YearMonth.of(2019, 9));
@@ -150,16 +148,16 @@ class FinnBesteMånederTest {
 	void skal_finne_6_siste_måneder_med_kun_dagpenger() {
 		// Arrange
 		List<Periodeinntekt> periodeinntekter = new ArrayList<>();
-		for (int i = 0; i < 12; i++) {
+		for (var i = 0; i < 12; i++) {
 			periodeinntekter.add(lagPeriodeInntektDagpenger(i, BigDecimal.valueOf(10000)));
 		}
-		BesteberegningRegelmodell regelmodell = lagRegelmodell(List.of(), periodeinntekter);
+        var regelmodell = lagRegelmodell(List.of(), periodeinntekter);
 
 		// Act
 		evaluer(regelmodell);
 
 		// Assert
-		List<BeregnetMånedsgrunnlag> besteMåneder = regelmodell.getOutput().getBesteMåneder();
+        var besteMåneder = regelmodell.getOutput().getBesteMåneder();
 		assertThat(besteMåneder).hasSize(6);
 		assertThat(besteMåneder.get(0).getMåned()).isEqualTo(YearMonth.of(2019, 10));
 		assertThat(besteMåneder.get(1).getMåned()).isEqualTo(YearMonth.of(2019, 9));
@@ -173,16 +171,16 @@ class FinnBesteMånederTest {
 	void skal_finne_6_beste_måneder_med_kun_dagpenger_med_meldekort_over_flere_måneder() {
 		// Arrange
 		List<Periodeinntekt> periodeinntekter = new ArrayList<>();
-		for (int i = 0; i < 12; i++) {
+		for (var i = 0; i < 12; i++) {
 			periodeinntekter.add(lagPeriodeInntektDagpengerStartMidtIMåned(i, BigDecimal.valueOf(13000)));
 		}
-		BesteberegningRegelmodell regelmodell = lagRegelmodell(List.of(), periodeinntekter);
+        var regelmodell = lagRegelmodell(List.of(), periodeinntekter);
 
 		// Act
 		evaluer(regelmodell);
 
 		// Assert
-		List<BeregnetMånedsgrunnlag> besteMåneder = regelmodell.getOutput().getBesteMåneder();
+        var besteMåneder = regelmodell.getOutput().getBesteMåneder();
 		assertThat(besteMåneder).hasSize(6);
 		assertThat(besteMåneder.get(0).getMåned()).isEqualTo(YearMonth.of(2019, 10));
 		assertThat(besteMåneder.get(1).getMåned()).isEqualTo(YearMonth.of(2019, 9));
@@ -196,20 +194,20 @@ class FinnBesteMånederTest {
 	void skal_finne_6_siste_måneder_med_eit_arbeidsforhold_like_inntekter_og_næring() {
 		// Arrange
 		List<Periodeinntekt> periodeinntekter = new ArrayList<>();
-		for (int i = 0; i < 12; i++) {
+		for (var i = 0; i < 12; i++) {
 			periodeinntekter.add(lagPeriodeInntektArbeidstaker(i, BigDecimal.valueOf(10000), ORGNR));
 		}
 		periodeinntekter.add(lagSigrunInntekt2018());
 		periodeinntekter.add(lagSigrunInntekt2017());
 		periodeinntekter.add(lagSigrunInntekt2016());
 
-		BesteberegningRegelmodell regelmodell = lagRegelmodell(List.of(Periode.of(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(12), SKJÆRINGSTIDSPUNKT_OPPTJENING)), periodeinntekter);
+        var regelmodell = lagRegelmodell(List.of(Periode.of(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(12), SKJÆRINGSTIDSPUNKT_OPPTJENING)), periodeinntekter);
 
 		// Act
 		evaluer(regelmodell);
 
 		// Assert
-		List<BeregnetMånedsgrunnlag> besteMåneder = regelmodell.getOutput().getBesteMåneder();
+        var besteMåneder = regelmodell.getOutput().getBesteMåneder();
 		assertThat(besteMåneder).hasSize(6);
 		assertThat(besteMåneder.get(0).getMåned()).isEqualTo(YearMonth.of(2019, 10));
 		assertThat(besteMåneder.get(0).finnSum()).isEqualByComparingTo(BigDecimal.valueOf(2*GRUNNBELØP_2019/12));
@@ -229,7 +227,7 @@ class FinnBesteMånederTest {
 	void skal_finne_6_korrekte_måneder_med_et_arbeidsforhold_og_sykepenger_i_sammenligningsgrunnlaget() {
 		// Arrange
 		List<Periodeinntekt> periodeinntekter = new ArrayList<>();
-		for (int i = 0; i < 12; i++) {
+		for (var i = 0; i < 12; i++) {
 			if (i % 2 != 0) {
 				periodeinntekter.add(lagPeriodeInntektYtelse(i, BigDecimal.valueOf(5000), RelatertYtelseType.SYKEPENGER));
 				lagSykepengeperiode(i, YtelseAktivitetType.YTELSE_FOR_ARBEID);
@@ -237,13 +235,13 @@ class FinnBesteMånederTest {
 			periodeinntekter.add(lagPeriodeInntektArbeidstaker(i, BigDecimal.valueOf(10000), ORGNR));
 		}
 
-		BesteberegningRegelmodell regelmodell = lagRegelmodell(Collections.emptyList(), periodeinntekter);
+        var regelmodell = lagRegelmodell(Collections.emptyList(), periodeinntekter);
 
 		// Act
 		evaluer(regelmodell);
 
 		// Assert
-		List<BeregnetMånedsgrunnlag> besteMåneder = regelmodell.getOutput().getBesteMåneder().stream()
+        var besteMåneder = regelmodell.getOutput().getBesteMåneder().stream()
 				.sorted(Comparator.comparing(p -> p.getMåned().getMonth()))
 				.toList();
 		assertThat(besteMåneder).hasSize(6);
@@ -268,20 +266,20 @@ class FinnBesteMånederTest {
 	void skal_ikke_ta_med_ytelseinntekt_om_vi_ikke_har_ytelsegrunnlag() {
 		// Arrange
 		List<Periodeinntekt> periodeinntekter = new ArrayList<>();
-		for (int i = 0; i < 12; i++) {
+		for (var i = 0; i < 12; i++) {
 			if (i % 2 != 0) {
 				periodeinntekter.add(lagPeriodeInntektYtelse(i, BigDecimal.valueOf(5000), RelatertYtelseType.SYKEPENGER));
 			}
 			periodeinntekter.add(lagPeriodeInntektArbeidstaker(i, BigDecimal.valueOf(10000), ORGNR));
 		}
 
-		BesteberegningRegelmodell regelmodell = lagRegelmodell(Collections.emptyList(), periodeinntekter);
+        var regelmodell = lagRegelmodell(Collections.emptyList(), periodeinntekter);
 
 		// Act
 		evaluer(regelmodell);
 
 		// Assert
-		List<BeregnetMånedsgrunnlag> besteMåneder = regelmodell.getOutput().getBesteMåneder().stream()
+        var besteMåneder = regelmodell.getOutput().getBesteMåneder().stream()
 				.sorted(Comparator.comparing(p -> p.getMåned().getMonth()))
 				.toList();
 		assertThat(besteMåneder).hasSize(6);
@@ -304,7 +302,7 @@ class FinnBesteMånederTest {
 	void skal_finne_6_korrekte_måneder_med_et_arbeidsforhold_og_sykepenger_i_sammenligningsgrunnlaget_ulike_vedtak() {
 		// Arrange
 		List<Periodeinntekt> periodeinntekter = new ArrayList<>();
-		for (int i = 0; i < 12; i++) {
+		for (var i = 0; i < 12; i++) {
 			if (i % 2 != 0) {
 				periodeinntekter.add(lagPeriodeInntektYtelse(i, BigDecimal.valueOf(5000), RelatertYtelseType.SYKEPENGER));
 				lagSykepengeperiode(i, YtelseAktivitetType.YTELSE_FOR_ARBEID);
@@ -313,13 +311,13 @@ class FinnBesteMånederTest {
 			periodeinntekter.add(lagPeriodeInntektArbeidstaker(i, BigDecimal.valueOf(10000), ORGNR));
 		}
 
-		BesteberegningRegelmodell regelmodell = lagRegelmodell(Collections.emptyList(), periodeinntekter);
+        var regelmodell = lagRegelmodell(Collections.emptyList(), periodeinntekter);
 
 		// Act
 		evaluer(regelmodell);
 
 		// Assert
-		List<BeregnetMånedsgrunnlag> besteMåneder = regelmodell.getOutput().getBesteMåneder().stream()
+        var besteMåneder = regelmodell.getOutput().getBesteMåneder().stream()
 				.sorted(Comparator.comparing(p -> p.getMåned().getMonth()))
 				.toList();
 		assertThat(besteMåneder).hasSize(6);
@@ -352,17 +350,17 @@ class FinnBesteMånederTest {
 
 		// Ekstremt høy inntekt som ikke skal bli med i grunnlaget
 		periodeinntekter.add(lagPeriodeInntektYtelse(6, BigDecimal.valueOf(900000), RelatertYtelseType.SYKEPENGER));
-		for (int i = 0; i < 12; i++) {
+		for (var i = 0; i < 12; i++) {
 			periodeinntekter.add(lagPeriodeInntektArbeidstaker(i, BigDecimal.valueOf(10000), ORGNR));
 		}
 
-		BesteberegningRegelmodell regelmodell = lagRegelmodell(Collections.emptyList(), periodeinntekter);
+        var regelmodell = lagRegelmodell(Collections.emptyList(), periodeinntekter);
 
 		// Act
 		evaluer(regelmodell);
 
 		// Assert
-		List<BeregnetMånedsgrunnlag> besteMåneder = regelmodell.getOutput().getBesteMåneder().stream()
+        var besteMåneder = regelmodell.getOutput().getBesteMåneder().stream()
 				.sorted(Comparator.comparing(p -> p.getMåned().getMonth()))
 				.toList();
 		assertThat(besteMåneder).hasSize(6);
@@ -381,15 +379,15 @@ class FinnBesteMånederTest {
 	}
 
 	private void lagSykepengeperiode(int månaderFørStpFom, YtelseAktivitetType ytelsegrunnlag) {
-		Optional<Ytelsegrunnlag> eksisterendeYG = alleYtelsegrunnlag.stream().filter(yg -> yg.getYtelse().equals(RelatertYtelseType.SYKEPENGER)).findFirst();
-		Periode periode = Periode.of(
+        var eksisterendeYG = alleYtelsegrunnlag.stream().filter(yg -> yg.getYtelse().equals(RelatertYtelseType.SYKEPENGER)).findFirst();
+        var periode = Periode.of(
 				SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(månaderFørStpFom).withDayOfMonth(1),
 				SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(månaderFørStpFom).with(TemporalAdjusters.lastDayOfMonth()));
 		if (eksisterendeYG.isPresent()) {
-			YtelsegrunnlagPeriode nyPeriode = new YtelsegrunnlagPeriode(periode, new ArrayList<>(Collections.singletonList(new YtelsegrunnlagAndel(ytelsegrunnlag))));
+            var nyPeriode = new YtelsegrunnlagPeriode(periode, new ArrayList<>(Collections.singletonList(new YtelsegrunnlagAndel(ytelsegrunnlag))));
 			eksisterendeYG.get().getPerioder().add(nyPeriode);
 		} else {
-			YtelsegrunnlagPeriode nyPeriode = new YtelsegrunnlagPeriode(periode, new ArrayList<>(Collections.singletonList(new YtelsegrunnlagAndel(ytelsegrunnlag))));
+            var nyPeriode = new YtelsegrunnlagPeriode(periode, new ArrayList<>(Collections.singletonList(new YtelsegrunnlagAndel(ytelsegrunnlag))));
 			alleYtelsegrunnlag.add(new Ytelsegrunnlag(RelatertYtelseType.SYKEPENGER, new ArrayList<>(Collections.singletonList(nyPeriode))));
 		}
 	}
@@ -465,7 +463,7 @@ class FinnBesteMånederTest {
 	}
 
 	private BesteberegningRegelmodell lagRegelmodell(List<Periode> perioderMedNæring, List<Periodeinntekt> periodeinntekter) {
-		BesteberegningInput.Builder bbInput = BesteberegningInput.builder()
+        var bbInput = BesteberegningInput.builder()
 				.medInntektsgrunnlag(lagInntektsgrunnlag(periodeinntekter))
 				.medGrunnbeløpSatser(GRUNNBELØP_SATSER)
 				.medGjeldendeGVerdi(BigDecimal.valueOf(GRUNNBELØP_2019))
@@ -477,7 +475,7 @@ class FinnBesteMånederTest {
 	}
 
 	private Inntektsgrunnlag lagInntektsgrunnlag(List<Periodeinntekt> inntekter) {
-		Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
+        var inntektsgrunnlag = new Inntektsgrunnlag();
 		inntekter.forEach(inntektsgrunnlag::leggTilPeriodeinntekt);
 		return inntektsgrunnlag;
 	}

@@ -52,7 +52,7 @@ public class InntektsmeldingForAndel {
     private static List<YrkesaktivitetDto> finnYrkesaktiviteterForAndelSomStarterFørOgSlutterPåEllerEtterStp(BGAndelArbeidsforholdDto arbeidsforhold,
                                                                                                              Collection<YrkesaktivitetDto> yrkesaktiviteter,
                                                                                                              LocalDate skjæringstidspunkt) {
-        LocalDate beregningstidspunkt = BeregningstidspunktTjeneste.finnBeregningstidspunkt(skjæringstidspunkt);
+        var beregningstidspunkt = BeregningstidspunktTjeneste.finnBeregningstidspunkt(skjæringstidspunkt);
         return yrkesaktiviteter.stream()
                 .filter(ya -> ya.getArbeidsgiver() != null &&
                         arbeidsforhold.getArbeidsgiver().getIdentifikator().equals(ya.getArbeidsgiver().getIdentifikator()) &&

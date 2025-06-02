@@ -91,7 +91,7 @@ public class TilkommetInntektDto implements IndexKey {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TilkommetInntektDto that = (TilkommetInntektDto) o;
+        var that = (TilkommetInntektDto) o;
         return skalRedusereUtbetaling == that.skalRedusereUtbetaling &&
                 aktivitetStatus == that.aktivitetStatus &&
                 Objects.equals(arbeidsgiver, that.arbeidsgiver) &&

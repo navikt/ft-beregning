@@ -29,12 +29,12 @@ class ForeslåBeregningsgrunnlagDPellerAAPFRISINNTest {
     @Test
     void ett_meldekort_med_full_utbetaling() {
         // Arrange
-        BeregningsgrunnlagPrStatus aapStatus = lagAAP();
-        Periode p = Periode.of(STP, STP.plusMonths(1));
-        BeregningsgrunnlagPeriode periode = lagPeriodeMedStatus(aapStatus, p);
-        BigDecimal dagsats = BigDecimal.valueOf(100);
-        BigDecimal utbetalingsgrad = BigDecimal.valueOf(1);
-        Inntektsgrunnlag inntektsgrunnlag = lagInntektsgrunnlag(p, dagsats, utbetalingsgrad);
+        var aapStatus = lagAAP();
+        var p = Periode.of(STP, STP.plusMonths(1));
+        var periode = lagPeriodeMedStatus(aapStatus, p);
+        var dagsats = BigDecimal.valueOf(100);
+        var utbetalingsgrad = BigDecimal.valueOf(1);
+        var inntektsgrunnlag = lagInntektsgrunnlag(p, dagsats, utbetalingsgrad);
         byggBG(periode, inntektsgrunnlag);
 
         // Act
@@ -47,34 +47,34 @@ class ForeslåBeregningsgrunnlagDPellerAAPFRISINNTest {
     @Test
     void ett_meldekort_med_full_utbetaling_deler_av_perioden() {
         // Arrange
-        BeregningsgrunnlagPrStatus aapStatus = lagAAP();
-        Periode beregnigsgrunnlagPeriode = Periode.of(STP, STP.plusMonths(1).minusDays(1));
-        BeregningsgrunnlagPeriode periode = lagPeriodeMedStatus(aapStatus, beregnigsgrunnlagPeriode);
-        BigDecimal dagsats = BigDecimal.valueOf(100);
-        BigDecimal utbetalingsgrad = BigDecimal.valueOf(1);
-        Periode p = Periode.of(STP, STP.plusDays(14));
-        Inntektsgrunnlag inntektsgrunnlag = lagInntektsgrunnlag(p, dagsats, utbetalingsgrad);
+        var aapStatus = lagAAP();
+        var beregnigsgrunnlagPeriode = Periode.of(STP, STP.plusMonths(1).minusDays(1));
+        var periode = lagPeriodeMedStatus(aapStatus, beregnigsgrunnlagPeriode);
+        var dagsats = BigDecimal.valueOf(100);
+        var utbetalingsgrad = BigDecimal.valueOf(1);
+        var p = Periode.of(STP, STP.plusDays(14));
+        var inntektsgrunnlag = lagInntektsgrunnlag(p, dagsats, utbetalingsgrad);
         byggBG(periode, inntektsgrunnlag);
 
         // Act
         kjørRegel(periode);
 
         // Assert
-        BigDecimal effektivDagsats = BigDecimal.valueOf(50);
+        var effektivDagsats = BigDecimal.valueOf(50);
         assertThat(aapStatus.getBeregnetPrÅr()).isCloseTo(effektivDagsats.multiply(DAGER_I_ET_ÅR), Percentage.withPercentage(0.00001));
     }
 
     @Test
     void to_meldekort_med_lik_dagsats_full_utbetaling_ulike_perioder() {
         // Arrange
-        BeregningsgrunnlagPrStatus aapStatus = lagAAP();
-        Periode p = Periode.of(STP, STP.plusMonths(1));
-        BeregningsgrunnlagPeriode periode = lagPeriodeMedStatus(aapStatus, p);
-        BigDecimal dagsats = BigDecimal.valueOf(100);
-        BigDecimal utbetalingsgrad = BigDecimal.valueOf(1);
-        Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
-        Periode p1 = Periode.of(STP, STP.plusDays(10));
-        Periode p2 = Periode.of(STP.plusDays(11), STP.plusMonths(2));
+        var aapStatus = lagAAP();
+        var p = Periode.of(STP, STP.plusMonths(1));
+        var periode = lagPeriodeMedStatus(aapStatus, p);
+        var dagsats = BigDecimal.valueOf(100);
+        var utbetalingsgrad = BigDecimal.valueOf(1);
+        var inntektsgrunnlag = new Inntektsgrunnlag();
+        var p1 = Periode.of(STP, STP.plusDays(10));
+        var p2 = Periode.of(STP.plusDays(11), STP.plusMonths(2));
         inntektsgrunnlag.leggTilPeriodeinntekt(lagPeriodeInntekt(p1, dagsats, utbetalingsgrad));
         inntektsgrunnlag.leggTilPeriodeinntekt(lagPeriodeInntekt(p2, dagsats, utbetalingsgrad));
 
@@ -90,15 +90,15 @@ class ForeslåBeregningsgrunnlagDPellerAAPFRISINNTest {
     @Test
     void to_meldekort_med_ulik_dagsats_full_utbetaling_lik_periode() {
         // Arrange
-        BeregningsgrunnlagPrStatus aapStatus = lagAAP();
-        Periode p = Periode.of(STP, STP.plusMonths(1).minusDays(1));
-        BeregningsgrunnlagPeriode periode = lagPeriodeMedStatus(aapStatus, p);
-        BigDecimal dagsats1 = BigDecimal.valueOf(100);
-        BigDecimal dagsats2 = BigDecimal.valueOf(300);
-        BigDecimal utbetalingsgrad = BigDecimal.valueOf(1);
-        Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
-        Periode p1 = Periode.of(STP, STP.plusDays(14));
-        Periode p2 = Periode.of(STP.plusDays(15), STP.plusMonths(2));
+        var aapStatus = lagAAP();
+        var p = Periode.of(STP, STP.plusMonths(1).minusDays(1));
+        var periode = lagPeriodeMedStatus(aapStatus, p);
+        var dagsats1 = BigDecimal.valueOf(100);
+        var dagsats2 = BigDecimal.valueOf(300);
+        var utbetalingsgrad = BigDecimal.valueOf(1);
+        var inntektsgrunnlag = new Inntektsgrunnlag();
+        var p1 = Periode.of(STP, STP.plusDays(14));
+        var p2 = Periode.of(STP.plusDays(15), STP.plusMonths(2));
         inntektsgrunnlag.leggTilPeriodeinntekt(lagPeriodeInntekt(p1, dagsats1, utbetalingsgrad));
         inntektsgrunnlag.leggTilPeriodeinntekt(lagPeriodeInntekt(p2, dagsats2, utbetalingsgrad));
         byggBG(periode, inntektsgrunnlag);
@@ -107,23 +107,23 @@ class ForeslåBeregningsgrunnlagDPellerAAPFRISINNTest {
         kjørRegel(periode);
 
         // Assert
-        BigDecimal gjennomsnittligDagsats = BigDecimal.valueOf(200);
+        var gjennomsnittligDagsats = BigDecimal.valueOf(200);
         assertThat(aapStatus.getBeregnetPrÅr()).isCloseTo(gjennomsnittligDagsats.multiply(DAGER_I_ET_ÅR), Percentage.withPercentage(0.00001));
     }
 
     @Test
     void to_meldekort_med_ulik_dagsats_delvis_og_full_utbetaling_lik_periode() {
         // Arrange
-        BeregningsgrunnlagPrStatus aapStatus = lagAAP();
-        Periode p = Periode.of(STP, STP.plusMonths(1).minusDays(1));
-        BeregningsgrunnlagPeriode periode = lagPeriodeMedStatus(aapStatus, p);
-        BigDecimal dagsats1 = BigDecimal.valueOf(100);
-        BigDecimal dagsats2 = BigDecimal.valueOf(300);
-        BigDecimal utbetalingsgrad1 = BigDecimal.valueOf(1);
-        BigDecimal utbetalingsgrad2 = BigDecimal.valueOf(0.5);
-        Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
-        Periode p1 = Periode.of(STP, STP.plusDays(14));
-        Periode p2 = Periode.of(STP.plusDays(15), STP.plusMonths(2));
+        var aapStatus = lagAAP();
+        var p = Periode.of(STP, STP.plusMonths(1).minusDays(1));
+        var periode = lagPeriodeMedStatus(aapStatus, p);
+        var dagsats1 = BigDecimal.valueOf(100);
+        var dagsats2 = BigDecimal.valueOf(300);
+        var utbetalingsgrad1 = BigDecimal.valueOf(1);
+        var utbetalingsgrad2 = BigDecimal.valueOf(0.5);
+        var inntektsgrunnlag = new Inntektsgrunnlag();
+        var p1 = Periode.of(STP, STP.plusDays(14));
+        var p2 = Periode.of(STP.plusDays(15), STP.plusMonths(2));
         inntektsgrunnlag.leggTilPeriodeinntekt(lagPeriodeInntekt(p1, dagsats1, utbetalingsgrad1));
         inntektsgrunnlag.leggTilPeriodeinntekt(lagPeriodeInntekt(p2, dagsats2, utbetalingsgrad2));
 
@@ -133,23 +133,23 @@ class ForeslåBeregningsgrunnlagDPellerAAPFRISINNTest {
         kjørRegel(periode);
 
         // Assert
-        BigDecimal gjennomsnittligDagsats = BigDecimal.valueOf(125);
+        var gjennomsnittligDagsats = BigDecimal.valueOf(125);
         assertThat(aapStatus.getBeregnetPrÅr()).isCloseTo(gjennomsnittligDagsats.multiply(DAGER_I_ET_ÅR), Percentage.withPercentage(0.00001));
     }
 
     @Test
     void to_meldekort_med_ulik_dagsats_delvis_utbetaling_lik_periode() {
         // Arrange
-        BeregningsgrunnlagPrStatus aapStatus = lagAAP();
-        Periode p = Periode.of(STP, STP.plusMonths(1).minusDays(1));
-        BeregningsgrunnlagPeriode periode = lagPeriodeMedStatus(aapStatus, p);
-        BigDecimal dagsats1 = BigDecimal.valueOf(100);
-        BigDecimal dagsats2 = BigDecimal.valueOf(300);
-        BigDecimal utbetalingsgrad1 = BigDecimal.valueOf(0.5);
-        BigDecimal utbetalingsgrad2 = BigDecimal.valueOf(0.5);
-        Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
-        Periode p1 = Periode.of(STP, STP.plusDays(14));
-        Periode p2 = Periode.of(STP.plusDays(15), STP.plusMonths(2));
+        var aapStatus = lagAAP();
+        var p = Periode.of(STP, STP.plusMonths(1).minusDays(1));
+        var periode = lagPeriodeMedStatus(aapStatus, p);
+        var dagsats1 = BigDecimal.valueOf(100);
+        var dagsats2 = BigDecimal.valueOf(300);
+        var utbetalingsgrad1 = BigDecimal.valueOf(0.5);
+        var utbetalingsgrad2 = BigDecimal.valueOf(0.5);
+        var inntektsgrunnlag = new Inntektsgrunnlag();
+        var p1 = Periode.of(STP, STP.plusDays(14));
+        var p2 = Periode.of(STP.plusDays(15), STP.plusMonths(2));
         inntektsgrunnlag.leggTilPeriodeinntekt(lagPeriodeInntekt(p1, dagsats1, utbetalingsgrad1));
         inntektsgrunnlag.leggTilPeriodeinntekt(lagPeriodeInntekt(p2, dagsats2, utbetalingsgrad2));
 
@@ -159,7 +159,7 @@ class ForeslåBeregningsgrunnlagDPellerAAPFRISINNTest {
         kjørRegel(periode);
 
         // Assert
-        BigDecimal gjennomsnittligDagsats = BigDecimal.valueOf(100);
+        var gjennomsnittligDagsats = BigDecimal.valueOf(100);
         assertThat(aapStatus.getBeregnetPrÅr()).isCloseTo(gjennomsnittligDagsats.multiply(DAGER_I_ET_ÅR), Percentage.withPercentage(0.00001));
     }
 
@@ -178,7 +178,7 @@ class ForeslåBeregningsgrunnlagDPellerAAPFRISINNTest {
     }
 
     private Inntektsgrunnlag lagInntektsgrunnlag(Periode p, BigDecimal dagsats, BigDecimal utbetalingsgrad) {
-        Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
+        var inntektsgrunnlag = new Inntektsgrunnlag();
         inntektsgrunnlag.leggTilPeriodeinntekt(lagPeriodeInntekt(p, dagsats, utbetalingsgrad));
         return inntektsgrunnlag;
     }

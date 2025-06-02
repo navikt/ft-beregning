@@ -34,11 +34,11 @@ public class MeldekortUtils {
                                                                      YtelseDto sisteVedtak,
                                                                      LocalDate skjæringstidspunkt,
                                                                      Set<YtelseType> ytelseTyper) {
-        final LocalDate sisteVedtakFom = sisteVedtak.getPeriode().getFomDato();
+        final var sisteVedtakFom = sisteVedtak.getPeriode().getFomDato();
 
-        List<YtelseAnvistDto> alleMeldekort = finnAlleMeldekort(ytelseFilter, ytelseTyper);
+        var alleMeldekort = finnAlleMeldekort(ytelseFilter, ytelseTyper);
 
-        Optional<YtelseAnvistDto> sisteMeldekort = alleMeldekort.stream()
+        var sisteMeldekort = alleMeldekort.stream()
             .filter(ytelseAnvist -> sisteVedtakFom.minus(KonfigTjeneste.getMeldekortPeriode()).isBefore(ytelseAnvist.getAnvistTOM()))
             .filter(ytelseAnvist -> skjæringstidspunkt.isAfter(ytelseAnvist.getAnvistTOM()))
             .max(Comparator.comparing(YtelseAnvistDto::getAnvistFOM));
@@ -48,7 +48,7 @@ public class MeldekortUtils {
         }
 
         // Vi er nødt til å sjekke om vi har flere meldekort med samme periode
-        List<YtelseAnvistDto> alleMeldekortMedPeriode = alleMeldekortMedPeriode(sisteMeldekort.get().getAnvistFOM(), sisteMeldekort.get().getAnvistTOM(), alleMeldekort);
+        var alleMeldekortMedPeriode = alleMeldekortMedPeriode(sisteMeldekort.get().getAnvistFOM(), sisteMeldekort.get().getAnvistTOM(), alleMeldekort);
 
         if (alleMeldekortMedPeriode.size() > 1) {
             return finnMeldekortSomGjelderForVedtak(alleMeldekortMedPeriode, sisteVedtak);
@@ -59,9 +59,9 @@ public class MeldekortUtils {
     }
 
     public static Optional<YtelseAnvistDto> finnMeldekortSomInkludererGittDato(YtelseFilterDto ytelseFilter, YtelseDto sisteVedtak, Set<YtelseType> ytelseTyper, LocalDate gittDato) {
-        List<YtelseAnvistDto> alleMeldekort = finnAlleMeldekort(ytelseFilter, ytelseTyper);
+        var alleMeldekort = finnAlleMeldekort(ytelseFilter, ytelseTyper);
 
-        Optional<YtelseAnvistDto> sisteMeldekort = alleMeldekort.stream()
+        var sisteMeldekort = alleMeldekort.stream()
                 .filter(ytelseAnvist -> !gittDato.isBefore(ytelseAnvist.getAnvistFOM()))
                 .filter(ytelseAnvist -> !gittDato.isAfter(ytelseAnvist.getAnvistTOM()))
                 .max(Comparator.comparing(YtelseAnvistDto::getAnvistFOM));
@@ -70,7 +70,7 @@ public class MeldekortUtils {
             return Optional.empty();
         }
 
-        List<YtelseAnvistDto> alleMeldekortMedPeriode = alleMeldekortMedPeriode(sisteMeldekort.get().getAnvistFOM(), sisteMeldekort.get().getAnvistTOM(), alleMeldekort);
+        var alleMeldekortMedPeriode = alleMeldekortMedPeriode(sisteMeldekort.get().getAnvistFOM(), sisteMeldekort.get().getAnvistTOM(), alleMeldekort);
         if (alleMeldekortMedPeriode.size() > 1) {
             return finnMeldekortSomGjelderForVedtak(alleMeldekortMedPeriode, sisteVedtak);
         }

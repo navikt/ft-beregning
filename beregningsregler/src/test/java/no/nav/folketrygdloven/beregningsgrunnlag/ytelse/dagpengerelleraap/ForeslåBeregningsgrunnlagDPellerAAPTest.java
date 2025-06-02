@@ -30,21 +30,21 @@ class ForeslåBeregningsgrunnlagDPellerAAPTest {
 	@Test
 	void skal_beregne_dagpenger_fra_meldekort() {
 		// Arrange
-		BeregningsgrunnlagPrStatus dpStatus = BeregningsgrunnlagPrStatus.builder()
+        var dpStatus = BeregningsgrunnlagPrStatus.builder()
 				.medAndelNr(1L)
 				.medAktivitetStatus(AktivitetStatus.DP)
 				.build();
-		Periode p = Periode.of(STP, STP.plusMonths(1));
-		BeregningsgrunnlagPeriode periode = lagPeriodeMedStatus(dpStatus, p);
-		BigDecimal dagsats = BigDecimal.valueOf(1000);
-		BigDecimal utbetalingsgrad = BigDecimal.valueOf(1);
+        var p = Periode.of(STP, STP.plusMonths(1));
+        var periode = lagPeriodeMedStatus(dpStatus, p);
+        var dagsats = BigDecimal.valueOf(1000);
+        var utbetalingsgrad = BigDecimal.valueOf(1);
 		var periodeinntektDagpenger = Periodeinntekt.builder()
 				.medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP)
 				.medPeriode(p)
 				.medInntekt(dagsats)
 				.medUtbetalingsfaktor(utbetalingsgrad)
 				.build();
-		Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
+        var inntektsgrunnlag = new Inntektsgrunnlag();
 		inntektsgrunnlag.leggTilPeriodeinntekt(periodeinntektDagpenger);
 		byggBG(periode, inntektsgrunnlag);
 
@@ -59,21 +59,21 @@ class ForeslåBeregningsgrunnlagDPellerAAPTest {
 	@Test
 	void skal_ikke_redusere_dagpenger_fra_meldekort_med_gradert_utbetaling() {
 		// Arrange
-		BeregningsgrunnlagPrStatus dpStatus = BeregningsgrunnlagPrStatus.builder()
+        var dpStatus = BeregningsgrunnlagPrStatus.builder()
 				.medAndelNr(1L)
 				.medAktivitetStatus(AktivitetStatus.DP)
 				.build();
-		Periode p = Periode.of(STP, STP.plusMonths(1));
-		BeregningsgrunnlagPeriode periode = lagPeriodeMedStatus(dpStatus, p);
-		BigDecimal dagsats = BigDecimal.valueOf(1000);
-		BigDecimal utbetalingsgrad = BigDecimal.valueOf(0.5);
+        var p = Periode.of(STP, STP.plusMonths(1));
+        var periode = lagPeriodeMedStatus(dpStatus, p);
+        var dagsats = BigDecimal.valueOf(1000);
+        var utbetalingsgrad = BigDecimal.valueOf(0.5);
 		var periodeinntektDagpenger = Periodeinntekt.builder()
 				.medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP)
 				.medPeriode(p)
 				.medInntekt(dagsats)
 				.medUtbetalingsfaktor(utbetalingsgrad)
 				.build();
-		Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
+        var inntektsgrunnlag = new Inntektsgrunnlag();
 		inntektsgrunnlag.leggTilPeriodeinntekt(periodeinntektDagpenger);
 		byggBG(periode, inntektsgrunnlag);
 
@@ -88,14 +88,14 @@ class ForeslåBeregningsgrunnlagDPellerAAPTest {
 	@Test
 	void skal_beregne_fra_ytelse_vedtak_ved_direkte_overgang() {
 		// Arrange
-		BeregningsgrunnlagPrStatus dpStatus = BeregningsgrunnlagPrStatus.builder()
+        var dpStatus = BeregningsgrunnlagPrStatus.builder()
 				.medAndelNr(1L)
 				.medAktivitetStatus(AktivitetStatus.PSB_AV_DP)
 				.build();
-		Periode p = Periode.of(STP, STP.plusMonths(1));
-		BeregningsgrunnlagPeriode periode = lagPeriodeMedStatus(dpStatus, p);
-		BigDecimal dagsats = BigDecimal.valueOf(1000);
-		BigDecimal utbetalingsgrad = BigDecimal.valueOf(1);
+        var p = Periode.of(STP, STP.plusMonths(1));
+        var periode = lagPeriodeMedStatus(dpStatus, p);
+        var dagsats = BigDecimal.valueOf(1000);
+        var utbetalingsgrad = BigDecimal.valueOf(1);
 		var periodeinntekt = Periodeinntekt.builder()
 				.medInntektskildeOgPeriodeType(Inntektskilde.YTELSE_VEDTAK)
 				.medPeriode(p)
@@ -103,7 +103,7 @@ class ForeslåBeregningsgrunnlagDPellerAAPTest {
 				.medUtbetalingsfaktor(utbetalingsgrad)
 				.medInntektskategori(Inntektskategori.DAGPENGER)
 				.build();
-		Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
+        var inntektsgrunnlag = new Inntektsgrunnlag();
 		inntektsgrunnlag.leggTilPeriodeinntekt(periodeinntekt);
 		byggBG(periode, inntektsgrunnlag);
 
@@ -117,14 +117,14 @@ class ForeslåBeregningsgrunnlagDPellerAAPTest {
 	@Test
 	void skal_beregne_fra_ytelse_vedtak_ved_direkte_overgang_i_kombinasjon_med_arbeid() {
 		// Arrange
-		BeregningsgrunnlagPrStatus dpStatus = BeregningsgrunnlagPrStatus.builder()
+        var dpStatus = BeregningsgrunnlagPrStatus.builder()
 				.medAndelNr(1L)
 				.medAktivitetStatus(AktivitetStatus.PSB_AV_DP)
 				.build();
-		Periode p = Periode.of(STP, STP.plusMonths(1));
-		BeregningsgrunnlagPeriode periode = lagPeriodeMedStatus(dpStatus, p);
-		BigDecimal dagsats = BigDecimal.valueOf(1000);
-		BigDecimal utbetalingsgrad = BigDecimal.valueOf(1);
+        var p = Periode.of(STP, STP.plusMonths(1));
+        var periode = lagPeriodeMedStatus(dpStatus, p);
+        var dagsats = BigDecimal.valueOf(1000);
+        var utbetalingsgrad = BigDecimal.valueOf(1);
 		var periodeinntektDagpenger = Periodeinntekt.builder()
 				.medInntektskildeOgPeriodeType(Inntektskilde.YTELSE_VEDTAK)
 				.medPeriode(p)
@@ -139,7 +139,7 @@ class ForeslåBeregningsgrunnlagDPellerAAPTest {
 				.medUtbetalingsfaktor(utbetalingsgrad)
 				.medInntektskategori(Inntektskategori.ARBEIDSTAKER)
 				.build();
-		Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
+        var inntektsgrunnlag = new Inntektsgrunnlag();
 		inntektsgrunnlag.leggTilPeriodeinntekt(periodeinntektDagpenger);
 		inntektsgrunnlag.leggTilPeriodeinntekt(periodeinntektArbeid);
 		byggBG(periode, inntektsgrunnlag);

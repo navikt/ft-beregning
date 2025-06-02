@@ -71,7 +71,7 @@ public class FordelteAndelerModell {
 	}
 
 	public Optional<FordelAndelModell> getFordeltAndelMedInntektskategori(Inntektskategori inntektskategori) {
-		List<FordelAndelModell> matcher = fordelteAndeler.stream().filter(fordeltAndel -> fordeltAndel.getInntektskategori().equals(inntektskategori)).toList();
+        var matcher = fordelteAndeler.stream().filter(fordeltAndel -> fordeltAndel.getInntektskategori().equals(inntektskategori)).toList();
 		if (matcher.size() > 1) {
 			throw new IllegalStateException("Forventet ikke å finne mer enn 1 fordelt andel med inntektskategori " + inntektskategori + " men fant " + matcher);
 		}

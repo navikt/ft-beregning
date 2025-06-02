@@ -53,10 +53,10 @@ public class KravperioderPrArbeidsforholdDto {
     }
 
     public List<PerioderForKravDto> finnOverlappMedSisteKrav() {
-        List<LocalDateSegment<Boolean>> sisteSøkteSegmenter = sisteSøktePerioder.stream()
+        var sisteSøkteSegmenter = sisteSøktePerioder.stream()
                 .map(p -> new LocalDateSegment<>(p.getFomDato(), p.getTomDato(), true))
                 .collect(Collectors.toList());
-        LocalDateTimeline<Boolean> søktePerioderTimeline = new LocalDateTimeline<>(sisteSøkteSegmenter);
+        var søktePerioderTimeline = new LocalDateTimeline<Boolean>(sisteSøkteSegmenter);
 
         return perioder.stream()
                 .map(p -> p.finnKravMedOverlappMedSisteSøkte(søktePerioderTimeline))

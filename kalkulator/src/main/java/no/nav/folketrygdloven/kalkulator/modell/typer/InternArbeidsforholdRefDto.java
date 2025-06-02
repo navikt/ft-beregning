@@ -78,7 +78,7 @@ public class InternArbeidsforholdRefDto implements IndexKey {
         }
         if (o == null || getClass() != o.getClass())
             return false;
-        InternArbeidsforholdRefDto that = (InternArbeidsforholdRefDto) o;
+        var that = (InternArbeidsforholdRefDto) o;
         return Objects.equals(referanse, that.referanse);
     }
 

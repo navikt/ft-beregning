@@ -20,7 +20,7 @@ class VurderStortingsperiodeDtoTjeneste {
     }
 
     public static Optional<VurderRepresentererStortingetDto> lagDto(BeregningsgrunnlagGUIInput input) {
-        boolean harUtførtSteg = !input.getBeregningsgrunnlagGrunnlag().getBeregningsgrunnlagTilstand().erFør(BeregningsgrunnlagTilstand.OPPDATERT_MED_REFUSJON_OG_GRADERING);
+        var harUtførtSteg = !input.getBeregningsgrunnlagGrunnlag().getBeregningsgrunnlagTilstand().erFør(BeregningsgrunnlagTilstand.OPPDATERT_MED_REFUSJON_OG_GRADERING);
         if (!harUtførtSteg) {
             return Optional.empty();
         }

@@ -6,7 +6,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -45,7 +44,7 @@ class OmfordelBeregningsgrunnlagTilArbeidsforholdTest {
         kjørRegel(a1, periode);
 
         // Assert
-        List<FordelAndelModell> arbeidsforhold = periode.getAlleAndelerForStatus(AktivitetStatus.AT);
+        var arbeidsforhold = periode.getAlleAndelerForStatus(AktivitetStatus.AT);
         assertThat(arbeidsforhold).hasSize(3);
         assertThat(a1.getFordeltPrÅr()).isEmpty();
         assertThat(a1.getBruttoPrÅr().orElse(BigDecimal.ZERO)).isEqualByComparingTo(BigDecimal.valueOf(100_000));
@@ -76,7 +75,7 @@ class OmfordelBeregningsgrunnlagTilArbeidsforholdTest {
         kjørRegel(a1, periode);
 
         // Assert
-        List<FordelAndelModell> arbeidsforhold = periode.getAlleAndelerForStatus(AktivitetStatus.AT);
+        var arbeidsforhold = periode.getAlleAndelerForStatus(AktivitetStatus.AT);
         assertThat(arbeidsforhold).hasSize(3);
         assertThat(a1.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.valueOf(150_000));
         var andelFraSN = arbeidsforhold.stream()
@@ -110,7 +109,7 @@ class OmfordelBeregningsgrunnlagTilArbeidsforholdTest {
         kjørRegel(a1, periode);
 
         // Assert
-        List<FordelAndelModell> arbeidsforhold = periode.getAlleAndelerForStatus(AktivitetStatus.AT);
+        var arbeidsforhold = periode.getAlleAndelerForStatus(AktivitetStatus.AT);
 		assertThat(periode.getEnesteAndelForStatus(AktivitetStatus.FL)).isPresent();
 		assertThat(periode.getEnesteAndelForStatus(AktivitetStatus.SN)).isPresent();
 		assertThat(arbeidsforhold).hasSize(4);
@@ -153,7 +152,7 @@ class OmfordelBeregningsgrunnlagTilArbeidsforholdTest {
         kjørRegel(a1, periode);
 
         // Assert
-        List<FordelAndelModell> arbeidsforhold = periode.getAlleAndelerForStatus(AktivitetStatus.AT);
+        var arbeidsforhold = periode.getAlleAndelerForStatus(AktivitetStatus.AT);
         assertThat(arbeidsforhold).hasSize(4);
         assertThat(a1.getFordeltPrÅr().orElseThrow()).isEqualByComparingTo(BigDecimal.valueOf(125_000));
         var andelFraSN = arbeidsforhold.stream()
@@ -172,7 +171,7 @@ class OmfordelBeregningsgrunnlagTilArbeidsforholdTest {
     }
 
     private void kjørRegel(FordelAndelModell arbeidsforhold, FordelPeriodeModell periode) {
-        OmfordelBeregningsgrunnlagTilArbeidsforhold regel = new OmfordelBeregningsgrunnlagTilArbeidsforhold(arbeidsforhold);
+        var regel = new OmfordelBeregningsgrunnlagTilArbeidsforhold(arbeidsforhold);
         var args = new ServiceArgument("arbeidsforhold", arbeidsforhold);
         regel.getSpecification().medEvaluationProperty(args).evaluate(new FordelModell(periode));
     }

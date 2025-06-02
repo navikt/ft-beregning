@@ -39,7 +39,7 @@ class GraderingUtenBeregningsgrunnlagTjenesteTest {
 
 
         // Act
-        boolean harAndelerMedGraderingUtenGrunnlag = harAndelerMedGraderingUtenGrunnlag(AktivitetGradering.INGEN_GRADERING);
+        var harAndelerMedGraderingUtenGrunnlag = harAndelerMedGraderingUtenGrunnlag(AktivitetGradering.INGEN_GRADERING);
 
         // Assert
         assertThat(harAndelerMedGraderingUtenGrunnlag).isFalse();
@@ -53,7 +53,7 @@ class GraderingUtenBeregningsgrunnlagTjenesteTest {
 
 
         // Act
-        boolean harAndelerMedGraderingUtenGrunnlag = harAndelerMedGraderingUtenGrunnlag(AktivitetGradering.INGEN_GRADERING);
+        var harAndelerMedGraderingUtenGrunnlag = harAndelerMedGraderingUtenGrunnlag(AktivitetGradering.INGEN_GRADERING);
 
         // Assert
         assertThat(harAndelerMedGraderingUtenGrunnlag).isFalse();
@@ -62,11 +62,11 @@ class GraderingUtenBeregningsgrunnlagTjenesteTest {
     @Test
     void skalFåAvklaringsbehovArbeidstakerNårGraderingOgHarIkkeBG() {
         // Arrange
-        LocalDate skjæringstidspunkt = SKJÆRINGSTIDSPUNKT;
-        LocalDate graderingFom = skjæringstidspunkt;
-        LocalDate graderingTom = skjæringstidspunkt.plusMonths(4);
+        var skjæringstidspunkt = SKJÆRINGSTIDSPUNKT;
+        var graderingFom = skjæringstidspunkt;
+        var graderingTom = skjæringstidspunkt.plusMonths(4);
 
-        AktivitetGradering aktivitetGradering = new AktivitetGradering(AndelGradering.builder()
+        var aktivitetGradering = new AktivitetGradering(AndelGradering.builder()
             .medArbeidsgiver(arbeidsgiver)
             .medStatus(AktivitetStatus.ARBEIDSTAKER)
             .medGradering(graderingFom, graderingTom, 50)
@@ -77,7 +77,7 @@ class GraderingUtenBeregningsgrunnlagTjenesteTest {
 
         // Act
 
-        boolean harAndelerMedGraderingUtenGrunnlag = harAndelerMedGraderingUtenGrunnlag(aktivitetGradering);
+        var harAndelerMedGraderingUtenGrunnlag = harAndelerMedGraderingUtenGrunnlag(aktivitetGradering);
 
         // Assert
         assertThat(harAndelerMedGraderingUtenGrunnlag).isTrue();
@@ -86,11 +86,11 @@ class GraderingUtenBeregningsgrunnlagTjenesteTest {
     @Test
     void skalFåAvklaringsbehovSelvstendigNårGraderingOgHarIkkeBG() {
         // Arrange
-        LocalDate skjæringstidspunkt = SKJÆRINGSTIDSPUNKT;
-        LocalDate graderingFom = skjæringstidspunkt;
-        LocalDate graderingTom = skjæringstidspunkt.plusMonths(4);
+        var skjæringstidspunkt = SKJÆRINGSTIDSPUNKT;
+        var graderingFom = skjæringstidspunkt;
+        var graderingTom = skjæringstidspunkt.plusMonths(4);
 
-        AktivitetGradering aktivitetGradering = new AktivitetGradering(AndelGradering.builder()
+        var aktivitetGradering = new AktivitetGradering(AndelGradering.builder()
             .medStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE)
             .medGradering(graderingFom, graderingTom, 50)
             .build());
@@ -99,7 +99,7 @@ class GraderingUtenBeregningsgrunnlagTjenesteTest {
         lagBeregningsgrunnlagAndel(beregningsgrunnlagPeriode, AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE, BigDecimal.ZERO);
 
         // Act
-        boolean harAndelerMedGraderingUtenGrunnlag = harAndelerMedGraderingUtenGrunnlag(aktivitetGradering);
+        var harAndelerMedGraderingUtenGrunnlag = harAndelerMedGraderingUtenGrunnlag(aktivitetGradering);
 
         // Assert
         assertThat(harAndelerMedGraderingUtenGrunnlag).isTrue();
@@ -113,7 +113,7 @@ class GraderingUtenBeregningsgrunnlagTjenesteTest {
 
 
         // Act
-        boolean harAndelerMedGraderingUtenGrunnlag = harAndelerMedGraderingUtenGrunnlag(AktivitetGradering.INGEN_GRADERING);
+        var harAndelerMedGraderingUtenGrunnlag = harAndelerMedGraderingUtenGrunnlag(AktivitetGradering.INGEN_GRADERING);
 
         // Assert
         assertThat(harAndelerMedGraderingUtenGrunnlag).isFalse();
@@ -127,7 +127,7 @@ class GraderingUtenBeregningsgrunnlagTjenesteTest {
 
 
         // Act
-        boolean harAndelerMedGraderingUtenGrunnlag = harAndelerMedGraderingUtenGrunnlag(AktivitetGradering.INGEN_GRADERING);
+        var harAndelerMedGraderingUtenGrunnlag = harAndelerMedGraderingUtenGrunnlag(AktivitetGradering.INGEN_GRADERING);
 
         // Assert
         assertThat(harAndelerMedGraderingUtenGrunnlag).isFalse();
@@ -136,11 +136,11 @@ class GraderingUtenBeregningsgrunnlagTjenesteTest {
     @Test
     void skalFåAvklaringsbehovFrilanserNårGraderingOgHarIkkeBG() {
         // Arrange
-        LocalDate skjæringstidspunkt = SKJÆRINGSTIDSPUNKT;
-        LocalDate graderingFom = skjæringstidspunkt;
-        LocalDate graderingTom = skjæringstidspunkt.plusMonths(6);
+        var skjæringstidspunkt = SKJÆRINGSTIDSPUNKT;
+        var graderingFom = skjæringstidspunkt;
+        var graderingTom = skjæringstidspunkt.plusMonths(6);
 
-        AktivitetGradering aktivitetGradering = new AktivitetGradering(AndelGradering.builder()
+        var aktivitetGradering = new AktivitetGradering(AndelGradering.builder()
             .medStatus(AktivitetStatus.FRILANSER)
             .medGradering(graderingFom, graderingTom, 50)
             .build());
@@ -149,7 +149,7 @@ class GraderingUtenBeregningsgrunnlagTjenesteTest {
         lagBeregningsgrunnlagAndel(beregningsgrunnlagPeriode, AktivitetStatus.FRILANSER, BigDecimal.ZERO);
 
         // Act
-        boolean harAndelerMedGraderingUtenGrunnlag = harAndelerMedGraderingUtenGrunnlag(aktivitetGradering);
+        var harAndelerMedGraderingUtenGrunnlag = harAndelerMedGraderingUtenGrunnlag(aktivitetGradering);
 
         // Assert
         assertThat(harAndelerMedGraderingUtenGrunnlag).isTrue();
@@ -163,7 +163,7 @@ class GraderingUtenBeregningsgrunnlagTjenesteTest {
 
 
         // Act
-        boolean harAndelerMedGraderingUtenGrunnlag = harAndelerMedGraderingUtenGrunnlag(AktivitetGradering.INGEN_GRADERING);
+        var harAndelerMedGraderingUtenGrunnlag = harAndelerMedGraderingUtenGrunnlag(AktivitetGradering.INGEN_GRADERING);
 
         // Assert
         assertThat(harAndelerMedGraderingUtenGrunnlag).isFalse();
@@ -177,7 +177,7 @@ class GraderingUtenBeregningsgrunnlagTjenesteTest {
 
 
         // Act
-        boolean harAndelerMedGraderingUtenGrunnlag = harAndelerMedGraderingUtenGrunnlag(AktivitetGradering.INGEN_GRADERING);
+        var harAndelerMedGraderingUtenGrunnlag = harAndelerMedGraderingUtenGrunnlag(AktivitetGradering.INGEN_GRADERING);
 
         // Assert
         assertThat(harAndelerMedGraderingUtenGrunnlag).isFalse();
@@ -191,7 +191,7 @@ class GraderingUtenBeregningsgrunnlagTjenesteTest {
 
 
         // Act
-        boolean harAndelerMedGraderingUtenGrunnlag = harAndelerMedGraderingUtenGrunnlag(AktivitetGradering.INGEN_GRADERING);
+        var harAndelerMedGraderingUtenGrunnlag = harAndelerMedGraderingUtenGrunnlag(AktivitetGradering.INGEN_GRADERING);
 
         // Assert
         assertThat(harAndelerMedGraderingUtenGrunnlag).isFalse();
@@ -205,7 +205,7 @@ class GraderingUtenBeregningsgrunnlagTjenesteTest {
 
 
         // Act
-        boolean harAndelerMedGraderingUtenGrunnlag = harAndelerMedGraderingUtenGrunnlag(AktivitetGradering.INGEN_GRADERING);
+        var harAndelerMedGraderingUtenGrunnlag = harAndelerMedGraderingUtenGrunnlag(AktivitetGradering.INGEN_GRADERING);
 
         // Assert
         assertThat(harAndelerMedGraderingUtenGrunnlag).isFalse();
@@ -219,7 +219,7 @@ class GraderingUtenBeregningsgrunnlagTjenesteTest {
 
 
         // Act
-        boolean harAndelerMedGraderingUtenGrunnlag = harAndelerMedGraderingUtenGrunnlag(AktivitetGradering.INGEN_GRADERING);
+        var harAndelerMedGraderingUtenGrunnlag = harAndelerMedGraderingUtenGrunnlag(AktivitetGradering.INGEN_GRADERING);
 
         // Assert
         assertThat(harAndelerMedGraderingUtenGrunnlag).isFalse();
@@ -232,7 +232,7 @@ class GraderingUtenBeregningsgrunnlagTjenesteTest {
         lagBeregningsgrunnlagAndel(beregningsgrunnlagPeriode, AktivitetStatus.ARBEIDSAVKLARINGSPENGER, BigDecimal.ZERO);
 
         // Act
-        boolean harAndelerMedGraderingUtenGrunnlag = harAndelerMedGraderingUtenGrunnlag(AktivitetGradering.INGEN_GRADERING);
+        var harAndelerMedGraderingUtenGrunnlag = harAndelerMedGraderingUtenGrunnlag(AktivitetGradering.INGEN_GRADERING);
 
         // Assert
         assertThat(harAndelerMedGraderingUtenGrunnlag).isFalse();
@@ -245,8 +245,8 @@ class GraderingUtenBeregningsgrunnlagTjenesteTest {
 
 
         // Act
-        boolean harAndelerMedGraderingUtenGrunnlag = harAndelerMedGraderingUtenGrunnlag(AktivitetGradering.INGEN_GRADERING);
-        List<BeregningsgrunnlagPrStatusOgAndelDto> andeler = finnAndelerMedGraderingUtenBG(beregningsgrunnlag, AktivitetGradering.INGEN_GRADERING);
+        var harAndelerMedGraderingUtenGrunnlag = harAndelerMedGraderingUtenGrunnlag(AktivitetGradering.INGEN_GRADERING);
+        var andeler = finnAndelerMedGraderingUtenBG(beregningsgrunnlag, AktivitetGradering.INGEN_GRADERING);
 
         // Assert
         assertThat(harAndelerMedGraderingUtenGrunnlag).isFalse();
@@ -261,8 +261,8 @@ class GraderingUtenBeregningsgrunnlagTjenesteTest {
 
 
         // Act
-        boolean harAndelerMedGraderingUtenGrunnlag = harAndelerMedGraderingUtenGrunnlag(AktivitetGradering.INGEN_GRADERING);
-        List<BeregningsgrunnlagPrStatusOgAndelDto> andeler = finnAndelerMedGraderingUtenBG(beregningsgrunnlag, AktivitetGradering.INGEN_GRADERING);
+        var harAndelerMedGraderingUtenGrunnlag = harAndelerMedGraderingUtenGrunnlag(AktivitetGradering.INGEN_GRADERING);
+        var andeler = finnAndelerMedGraderingUtenBG(beregningsgrunnlag, AktivitetGradering.INGEN_GRADERING);
 
         // Assert
         assertThat(harAndelerMedGraderingUtenGrunnlag).isFalse();
@@ -277,8 +277,8 @@ class GraderingUtenBeregningsgrunnlagTjenesteTest {
 
 
         // Act
-        boolean harAndelerMedGraderingUtenGrunnlag = harAndelerMedGraderingUtenGrunnlag(AktivitetGradering.INGEN_GRADERING);
-        List<BeregningsgrunnlagPrStatusOgAndelDto> andeler = finnAndelerMedGraderingUtenBG(beregningsgrunnlag, AktivitetGradering.INGEN_GRADERING);
+        var harAndelerMedGraderingUtenGrunnlag = harAndelerMedGraderingUtenGrunnlag(AktivitetGradering.INGEN_GRADERING);
+        var andeler = finnAndelerMedGraderingUtenBG(beregningsgrunnlag, AktivitetGradering.INGEN_GRADERING);
 
         // Assert
         assertThat(harAndelerMedGraderingUtenGrunnlag).isFalse();
@@ -288,11 +288,11 @@ class GraderingUtenBeregningsgrunnlagTjenesteTest {
     @Test
     void skal_finne_andel_når_det_er_gradering() {
         // Arrange
-        LocalDate skjæringstidspunkt = SKJÆRINGSTIDSPUNKT;
-        LocalDate graderingFom = skjæringstidspunkt;
-        LocalDate graderingTom = skjæringstidspunkt.plusMonths(4);
+        var skjæringstidspunkt = SKJÆRINGSTIDSPUNKT;
+        var graderingFom = skjæringstidspunkt;
+        var graderingTom = skjæringstidspunkt.plusMonths(4);
 
-        AktivitetGradering aktivitetGradering = new AktivitetGradering(AndelGradering.builder()
+        var aktivitetGradering = new AktivitetGradering(AndelGradering.builder()
             .medArbeidsgiver(arbeidsgiver)
             .medStatus(AktivitetStatus.ARBEIDSTAKER)
             .medGradering(graderingFom, graderingTom, 50)
@@ -302,8 +302,8 @@ class GraderingUtenBeregningsgrunnlagTjenesteTest {
         lagBeregningsgrunnlagAndel(beregningsgrunnlagPeriode, AktivitetStatus.ARBEIDSTAKER, BigDecimal.ZERO, SKJÆRINGSTIDSPUNKT.minusYears(1), TIDENES_ENDE);
 
         // Act
-        boolean harAndelerMedGraderingUtenGrunnlag = harAndelerMedGraderingUtenGrunnlag(aktivitetGradering);
-        List<BeregningsgrunnlagPrStatusOgAndelDto> andeler = finnAndelerMedGraderingUtenBG(beregningsgrunnlag, aktivitetGradering);
+        var harAndelerMedGraderingUtenGrunnlag = harAndelerMedGraderingUtenGrunnlag(aktivitetGradering);
+        var andeler = finnAndelerMedGraderingUtenBG(beregningsgrunnlag, aktivitetGradering);
 
         // Assert
         assertThat(harAndelerMedGraderingUtenGrunnlag).isTrue();
@@ -313,11 +313,11 @@ class GraderingUtenBeregningsgrunnlagTjenesteTest {
     @Test
     void skal_finne_andel_når_det_er_sn_med_gradering_uten_inntekt_på_grunnlag() {
         // Arrange
-        LocalDate skjæringstidspunkt = SKJÆRINGSTIDSPUNKT;
-        LocalDate graderingFom = skjæringstidspunkt;
-        LocalDate graderingTom = skjæringstidspunkt.plusMonths(6);
+        var skjæringstidspunkt = SKJÆRINGSTIDSPUNKT;
+        var graderingFom = skjæringstidspunkt;
+        var graderingTom = skjæringstidspunkt.plusMonths(6);
 
-        AktivitetGradering aktivitetGradering = new AktivitetGradering(AndelGradering.builder()
+        var aktivitetGradering = new AktivitetGradering(AndelGradering.builder()
             .medStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE)
             .medGradering(graderingFom, graderingTom, 50)
             .build());
@@ -326,8 +326,8 @@ class GraderingUtenBeregningsgrunnlagTjenesteTest {
         lagBeregningsgrunnlagAndel(beregningsgrunnlagPeriode, AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE, BigDecimal.ZERO);
 
         // Act
-        boolean harAndelerMedGraderingUtenGrunnlag = harAndelerMedGraderingUtenGrunnlag(aktivitetGradering);
-        List<BeregningsgrunnlagPrStatusOgAndelDto> andeler = finnAndelerMedGraderingUtenBG(beregningsgrunnlag, aktivitetGradering);
+        var harAndelerMedGraderingUtenGrunnlag = harAndelerMedGraderingUtenGrunnlag(aktivitetGradering);
+        var andeler = finnAndelerMedGraderingUtenBG(beregningsgrunnlag, aktivitetGradering);
 
         // Assert
         assertThat(harAndelerMedGraderingUtenGrunnlag).isTrue();
@@ -338,11 +338,11 @@ class GraderingUtenBeregningsgrunnlagTjenesteTest {
     @Test
     void skal_finne_riktig_andel_når_det_er_flere_med_gradering_men_kun_en_mangler_inntekt() {
         // Arrange
-        LocalDate skjæringstidspunkt = SKJÆRINGSTIDSPUNKT;
-        LocalDate graderingFom = skjæringstidspunkt;
-        LocalDate graderingTom = skjæringstidspunkt.plusMonths(4);
+        var skjæringstidspunkt = SKJÆRINGSTIDSPUNKT;
+        var graderingFom = skjæringstidspunkt;
+        var graderingTom = skjæringstidspunkt.plusMonths(4);
 
-        AktivitetGradering aktivitetGradering = new AktivitetGradering(AndelGradering.builder()
+        var aktivitetGradering = new AktivitetGradering(AndelGradering.builder()
             .medStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE)
             .medGradering(graderingFom, graderingTom, 50)
             .build());
@@ -355,8 +355,8 @@ class GraderingUtenBeregningsgrunnlagTjenesteTest {
 
 
         // Act
-        boolean harAndelerMedGraderingUtenGrunnlag = harAndelerMedGraderingUtenGrunnlag(aktivitetGradering);
-        List<BeregningsgrunnlagPrStatusOgAndelDto> andeler = finnAndelerMedGraderingUtenBG(beregningsgrunnlag, aktivitetGradering);
+        var harAndelerMedGraderingUtenGrunnlag = harAndelerMedGraderingUtenGrunnlag(aktivitetGradering);
+        var andeler = finnAndelerMedGraderingUtenBG(beregningsgrunnlag, aktivitetGradering);
 
         // Assert
         assertThat(harAndelerMedGraderingUtenGrunnlag).isTrue();
@@ -367,11 +367,11 @@ class GraderingUtenBeregningsgrunnlagTjenesteTest {
     @Test
     void skal_gi_false_når_to_andeler_i_graderingsperiode_men_ikke_0_på_andel_som_skal_graderes() {
         // Arrange
-        LocalDate skjæringstidspunkt = SKJÆRINGSTIDSPUNKT;
-        LocalDate graderingFom = skjæringstidspunkt;
-        LocalDate graderingTom = skjæringstidspunkt.plusMonths(4);
+        var skjæringstidspunkt = SKJÆRINGSTIDSPUNKT;
+        var graderingFom = skjæringstidspunkt;
+        var graderingTom = skjæringstidspunkt.plusMonths(4);
 
-        AktivitetGradering aktivitetGradering = new AktivitetGradering(AndelGradering.builder()
+        var aktivitetGradering = new AktivitetGradering(AndelGradering.builder()
             .medStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE)
             .medGradering(graderingFom, graderingTom, 50)
             .build());
@@ -384,7 +384,7 @@ class GraderingUtenBeregningsgrunnlagTjenesteTest {
 
 
         // Act
-        boolean harAndelerMedGraderingUtenGrunnlag = harAndelerMedGraderingUtenGrunnlag(aktivitetGradering);
+        var harAndelerMedGraderingUtenGrunnlag = harAndelerMedGraderingUtenGrunnlag(aktivitetGradering);
 
         // Assert
         assertThat(harAndelerMedGraderingUtenGrunnlag).isFalse();
@@ -409,11 +409,11 @@ class GraderingUtenBeregningsgrunnlagTjenesteTest {
     private void lagBeregningsgrunnlagAndel(BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode, AktivitetStatus aktivitetStatus, BigDecimal redusertPrÅr, LocalDate arbeidsperiodeFom, LocalDate arbeidsperiodeTom) {
 
         BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(aktivitetStatus).build(beregningsgrunnlag);
-        BGAndelArbeidsforholdDto.Builder bgAndelBuilder = BGAndelArbeidsforholdDto.builder()
+        var bgAndelBuilder = BGAndelArbeidsforholdDto.builder()
                 .medArbeidsgiver(arbeidsgiver)
                 .medArbeidsperiodeFom(arbeidsperiodeFom)
                 .medArbeidsperiodeTom(arbeidsperiodeTom);
-        BeregningsgrunnlagPrStatusOgAndelDto.Builder andelBuilder = BeregningsgrunnlagPrStatusOgAndelDto.ny()
+        var andelBuilder = BeregningsgrunnlagPrStatusOgAndelDto.ny()
                 .medAktivitetStatus(aktivitetStatus)
                 .medRedusertPrÅr(Beløp.fra(redusertPrÅr));
 

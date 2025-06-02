@@ -3,9 +3,7 @@ package no.nav.folketrygdloven.kalkulator.steg.besteberegning;
 import static no.nav.folketrygdloven.kalkulator.adapter.regelmodelltilvl.MapRegelSporingFraRegelTilVL.mapRegelSporingGrunnlag;
 import static no.nav.folketrygdloven.kalkulator.steg.besteberegning.MapBesteberegningFraRegelTilVL.mapTilBeregningsgrunnlag;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.RegelResultat;
 import no.nav.folketrygdloven.besteberegning.modell.BesteberegningRegelmodell;
-import no.nav.folketrygdloven.besteberegning.modell.output.BesteberegningOutput;
 import no.nav.folketrygdloven.kalkulator.input.ForeslåBesteberegningInput;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
@@ -20,9 +18,9 @@ public class ForeslåBesteberegning {
      * @return Beregningsresultat med nytt besteberegnet grunnlag
      */
     public BesteberegningRegelResultat foreslåBesteberegning(ForeslåBesteberegningInput input) {
-        BesteberegningRegelmodell regelmodell = MapTilBesteberegningRegelmodell.map(input);
-        RegelResultat regelResultat = KalkulusRegler.foreslåBesteberegning(regelmodell);
-        BesteberegningOutput output = regelmodell.getOutput();
+        var regelmodell = MapTilBesteberegningRegelmodell.map(input);
+        var regelResultat = KalkulusRegler.foreslåBesteberegning(regelmodell);
+        var output = regelmodell.getOutput();
         var besteberegnetGrunnlag = mapTilBeregningsgrunnlag(input.getBeregningsgrunnlagGrunnlag(), output);
         var seksBesteMåneder = MapBesteberegningFraRegelTilVL.mapSeksBesteMåneder(output);
 

@@ -28,7 +28,6 @@ import no.nav.folketrygdloven.kalkulator.input.ForeldrepengerGrunnlag;
 import no.nav.folketrygdloven.kalkulator.input.ForeslåBesteberegningInput;
 import no.nav.folketrygdloven.kalkulator.input.GrunnbeløpMapper;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.folketrygdloven.kalkulator.modell.besteberegning.Ytelseandel;
 import no.nav.folketrygdloven.kalkulator.modell.besteberegning.Ytelseperiode;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektDto;
@@ -46,16 +45,16 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.YtelseType;
 public class MapTilBesteberegningRegelmodell {
 
     public static BesteberegningRegelmodell map(ForeslåBesteberegningInput input) {
-        BesteberegningInput besteberegningInput = lagInput(input);
+        var besteberegningInput = lagInput(input);
         return new BesteberegningRegelmodell(besteberegningInput);
     }
 
     private static BesteberegningInput lagInput(ForeslåBesteberegningInput input) {
-        List<Periodeinntekt> inntekter = mapInntekterForBesteberegning(input);
-        Inntektsgrunnlag inntektsgrunnlag = new Inntektsgrunnlag();
+        var inntekter = mapInntekterForBesteberegning(input);
+        var inntektsgrunnlag = new Inntektsgrunnlag();
         inntekter.forEach(inntektsgrunnlag::leggTilPeriodeinntekt);
-        List<Periode> perioderMedNæringsvirksomhet = finnPerioderMedOppgittNæring(input);
-        BesteberegningInput.Builder inputBuilder = BesteberegningInput.builder()
+        var perioderMedNæringsvirksomhet = finnPerioderMedOppgittNæring(input);
+        var inputBuilder = BesteberegningInput.builder()
                 .medInntektsgrunnlag(inntektsgrunnlag)
                 .medGrunnbeløpSatser(GrunnbeløpMapper.mapGrunnbeløpInput(input.getGrunnbeløpInput()))
                 .medGjeldendeGVerdi(finnGrunnbeløp(input))
@@ -139,11 +138,11 @@ public class MapTilBesteberegningRegelmodell {
      * @return Total brutto beregningsgrunnlag uten naturalytelse
      */
     private static BigDecimal finnTotalBruttoUtenNaturalytelseFørstePeriode(ForeslåBesteberegningInput input) {
-        List<BeregningsgrunnlagPeriodeDto> perioder = input.getBeregningsgrunnlag().getBeregningsgrunnlagPerioder();
+        var perioder = input.getBeregningsgrunnlag().getBeregningsgrunnlagPerioder();
         if (perioder.isEmpty()) {
             throw new IllegalStateException("Liste med perioder skal ikke vere tom");
         }
-        BeregningsgrunnlagPeriodeDto førstePeriode = perioder.get(0);
+        var førstePeriode = perioder.get(0);
         return Beløp.safeVerdi(førstePeriode.getBruttoPrÅr());
     }
 
@@ -164,10 +163,10 @@ public class MapTilBesteberegningRegelmodell {
         var iayGrunnlag = input.getIayGrunnlag();
         var inntektFilterDto = new InntektFilterDto(iayGrunnlag.getAktørInntektFraRegister()).før(input.getSkjæringstidspunktForBeregning());
         var ytelseFilterDto = new YtelseFilterDto(iayGrunnlag.getAktørYtelseFraRegister());
-        YrkesaktivitetFilterDto yrkesaktivitetFilterDto = new YrkesaktivitetFilterDto(iayGrunnlag.getArbeidsforholdInformasjon(), iayGrunnlag.getAktørArbeidFraRegister());
-        List<Periodeinntekt> inntekterATFLSN = finnInntekterATFLSN(input.getSkjæringstidspunktForBeregning(), inntektFilterDto, yrkesaktivitetFilterDto);
-        List<Periodeinntekt> ytelserFraSammenligningsgrunnlaget = lagInntektForYtelseFraSammenligningsgrunnlag(inntektFilterDto);
-        List<Periodeinntekt> ytelserDPOgAAP = MapArenaVedtakTilBesteberegningRegelmodell.lagInntektFraArenaYtelser(ytelseFilterDto);
+        var yrkesaktivitetFilterDto = new YrkesaktivitetFilterDto(iayGrunnlag.getArbeidsforholdInformasjon(), iayGrunnlag.getAktørArbeidFraRegister());
+        var inntekterATFLSN = finnInntekterATFLSN(input.getSkjæringstidspunktForBeregning(), inntektFilterDto, yrkesaktivitetFilterDto);
+        var ytelserFraSammenligningsgrunnlaget = lagInntektForYtelseFraSammenligningsgrunnlag(inntektFilterDto);
+        var ytelserDPOgAAP = MapArenaVedtakTilBesteberegningRegelmodell.lagInntektFraArenaYtelser(ytelseFilterDto);
         List<Periodeinntekt> alleInntekter = new ArrayList<>();
         alleInntekter.addAll(inntekterATFLSN);
         alleInntekter.addAll(ytelserFraSammenligningsgrunnlaget);
@@ -219,8 +218,8 @@ public class MapTilBesteberegningRegelmodell {
             yrkesaktiviteter.addAll(filterYaRegister.getYrkesaktiviteterForBeregning());
             yrkesaktiviteter.addAll(filterYaRegister.getFrilansOppdrag());
 
-            List<Periodeinntekt> inntekterATFL = lagInntektBeregning(filter, yrkesaktiviteter);
-            List<Periodeinntekt> inntektNæring = lagInntekterSN(filter);
+            var inntekterATFL = lagInntektBeregning(filter, yrkesaktiviteter);
+            var inntektNæring = lagInntekterSN(filter);
 
             samletInntekterATFLSN = Stream.concat(inntekterATFL.stream(), inntektNæring.stream()).collect(Collectors.toList());
 
@@ -241,7 +240,7 @@ public class MapTilBesteberegningRegelmodell {
                                                    Collection<YrkesaktivitetDto> yrkesaktiviteter) {
         return inntektsposter.stream().map(inntektspost -> {
 
-            Arbeidsforhold arbeidsgiver = mapYrkesaktivitet(inntekt.getArbeidsgiver(), yrkesaktiviteter);
+            var arbeidsgiver = mapYrkesaktivitet(inntekt.getArbeidsgiver(), yrkesaktiviteter);
             if (Objects.isNull(arbeidsgiver)) {
                 throw new IllegalStateException("Arbeidsgiver må være satt.");
             } else if (Objects.isNull(inntektspost.getPeriode()) || Objects.isNull(inntektspost.getPeriode().getFomDato())) {
@@ -265,14 +264,14 @@ public class MapTilBesteberegningRegelmodell {
     }
 
     private static boolean erFrilanser(Arbeidsgiver arbeidsgiver, Collection<YrkesaktivitetDto> yrkesaktiviteter) {
-        final List<ArbeidType> arbeidType = yrkesaktiviteter
+        final var arbeidType = yrkesaktiviteter
                 .stream()
                 .filter(it -> it.getArbeidsgiver() != null)
                 .filter(it -> it.getArbeidsgiver().getIdentifikator().equals(arbeidsgiver.getIdentifikator()))
                 .map(YrkesaktivitetDto::getArbeidType)
                 .distinct()
                 .collect(Collectors.toList());
-        boolean erFrilanser = yrkesaktiviteter.stream()
+        var erFrilanser = yrkesaktiviteter.stream()
                 .map(YrkesaktivitetDto::getArbeidType)
                 .anyMatch(ArbeidType.FRILANSER::equals);
         return (arbeidType.isEmpty() && erFrilanser) || arbeidType.contains(ArbeidType.FRILANSER_OPPDRAGSTAKER);

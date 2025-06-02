@@ -25,7 +25,7 @@ public class Virkedager {
             throw new IllegalArgumentException("Utviklerfeil: fom " + fom + " kan ikke være før tom " + tom);
         }
 
-        int varighetDager = (int) (tom.toEpochDay() - fom.toEpochDay() + 1);
+        var varighetDager = (int) (tom.toEpochDay() - fom.toEpochDay() + 1);
         if (varighetDager <= 2 && erHelg(fom) && erHelg(tom)) {
             return varighetDager;
         }
@@ -36,13 +36,13 @@ public class Virkedager {
     public static int beregnVirkedager(LocalDate fom, LocalDate tom) {
         try {
             // Utvid til nærmeste mandag tilbake i tid fra og med begynnelse (fom) (0-6 dager)
-            int padBefore = fom.getDayOfWeek().getValue() - DayOfWeek.MONDAY.getValue();
+            var padBefore = fom.getDayOfWeek().getValue() - DayOfWeek.MONDAY.getValue();
             // Utvid til nærmeste søndag fram i tid fra og med slutt (tom) (0-6 dager)
-            int padAfter = DayOfWeek.SUNDAY.getValue() - tom.getDayOfWeek().getValue();
+            var padAfter = DayOfWeek.SUNDAY.getValue() - tom.getDayOfWeek().getValue();
             // Antall virkedager i perioden utvidet til hele uker
-            int virkedagerPadded = toIntExact(ChronoUnit.WEEKS.between(fom.minusDays(padBefore), tom.plusDays(padAfter).plusDays(1)) * VIRKEDAGER_PR_UKE);
+            var virkedagerPadded = toIntExact(ChronoUnit.WEEKS.between(fom.minusDays(padBefore), tom.plusDays(padAfter).plusDays(1)) * VIRKEDAGER_PR_UKE);
             // Antall virkedager i utvidelse
-            int virkedagerPadding = Math.min(padBefore, VIRKEDAGER_PR_UKE) + Math.max(padAfter - HELGEDAGER_PR_UKE, 0);
+            var virkedagerPadding = Math.min(padBefore, VIRKEDAGER_PR_UKE) + Math.max(padAfter - HELGEDAGER_PR_UKE, 0);
             // Virkedager i perioden uten virkedagene fra utvidelse
             return virkedagerPadded - virkedagerPadding;
         } catch (ArithmeticException e) {

@@ -43,7 +43,7 @@ class PeriodiserOgFastsettRefusjonTjenesteTest {
     void skal_ikke_splitte_noe_hvis_refusjon_aggregat_er_tomt() {
         lagBGPeriode(STP, null, lagBGAndel(AG1, REF1, 0));
 
-        BeregningsgrunnlagDto resultat = oppdater();
+        var resultat = oppdater();
 
         assertThat(resultat).isEqualTo(grunnlagBuilder.build());
     }
@@ -53,7 +53,7 @@ class PeriodiserOgFastsettRefusjonTjenesteTest {
         lagBGPeriode(STP, null, lagBGAndel(AG1, REF1, 0));
         lagSaksbehandlerDto(AG1, REF1, dagerEtterSTP(10));
 
-        BeregningsgrunnlagDto resultat = oppdater();
+        var resultat = oppdater();
 
         assertThat(resultat).isEqualTo(grunnlagBuilder.build());
         assertThat(resultat.getBeregningsgrunnlagPerioder()).hasSize(2);
@@ -66,7 +66,7 @@ class PeriodiserOgFastsettRefusjonTjenesteTest {
         lagBGPeriode(STP, UENDELIG, lagBGAndel(AG1, REF1, 250000));
         lagSaksbehandlerDto(AG1, REF1, STP);
 
-        BeregningsgrunnlagDto resultat = oppdater();
+        var resultat = oppdater();
 
         assertThat(resultat).isEqualTo(grunnlagBuilder.build());
         assertThat(resultat.getBeregningsgrunnlagPerioder()).hasSize(1);
@@ -78,7 +78,7 @@ class PeriodiserOgFastsettRefusjonTjenesteTest {
 		lagBGPeriode(STP, UENDELIG, lagBGAndel(AG1, REF1, 250000, 0));
 		lagSaksbehandlerDto(AG1, REF1, STP);
 
-		BeregningsgrunnlagDto resultat = oppdater();
+        var resultat = oppdater();
 
 		assertThat(resultat).isEqualTo(grunnlagBuilder.build());
 		assertThat(resultat.getBeregningsgrunnlagPerioder()).hasSize(1);
@@ -92,7 +92,7 @@ class PeriodiserOgFastsettRefusjonTjenesteTest {
         lagBGPeriode(STP, null, lagBGAndel(AG1, REF1, 150000), lagBGAndel(null, null, 0));
         lagSaksbehandlerDto(AG1, REF1, dagerEtterSTP(10));
 
-        BeregningsgrunnlagDto resultat = oppdater();
+        var resultat = oppdater();
 
         assertThat(resultat).isEqualTo(grunnlagBuilder.build());
         assertThat(resultat.getBeregningsgrunnlagPerioder()).hasSize(2);
@@ -105,7 +105,7 @@ class PeriodiserOgFastsettRefusjonTjenesteTest {
         lagBGPeriode(STP, UENDELIG, lagBGAndel(AG1, REF1, 500000));
         lagSaksbehandlerDto(AG1, REF1, dagerEtterSTP(10));
 
-        BeregningsgrunnlagDto resultat = oppdater();
+        var resultat = oppdater();
 
         assertThat(resultat).isEqualTo(grunnlagBuilder.build());
         assertThat(resultat.getBeregningsgrunnlagPerioder()).hasSize(2);
@@ -119,7 +119,7 @@ class PeriodiserOgFastsettRefusjonTjenesteTest {
         lagBGPeriode(dagerEtterSTP(11), UENDELIG, PeriodeÅrsak.NATURALYTELSE_BORTFALT, lagBGAndel(AG1, REF1, 500000));
         lagSaksbehandlerDto(AG1, REF1, dagerEtterSTP(11));
 
-        BeregningsgrunnlagDto resultat = oppdater();
+        var resultat = oppdater();
 
         assertThat(resultat).isEqualTo(grunnlagBuilder.build());
         assertThat(resultat.getBeregningsgrunnlagPerioder()).hasSize(2);
@@ -132,7 +132,7 @@ class PeriodiserOgFastsettRefusjonTjenesteTest {
         lagBGPeriode(STP, null, lagBGAndel(AG1, REF1, 500000), lagBGAndel(AG2, REF2, 100000));
         lagSaksbehandlerDto(AG2, REF2, dagerEtterSTP(15));
 
-        BeregningsgrunnlagDto resultat = oppdater();
+        var resultat = oppdater();
 
         assertThat(resultat).isEqualTo(grunnlagBuilder.build());
         assertThat(resultat.getBeregningsgrunnlagPerioder()).hasSize(2);
@@ -150,7 +150,7 @@ class PeriodiserOgFastsettRefusjonTjenesteTest {
         lagSaksbehandlerDto(AG1, REF1, dagerEtterSTP(10));
         lagSaksbehandlerDto(AG2, REF2, dagerEtterSTP(15));
 
-        BeregningsgrunnlagDto resultat = oppdater();
+        var resultat = oppdater();
 
         assertThat(resultat).isEqualTo(grunnlagBuilder.build());
         assertThat(resultat.getBeregningsgrunnlagPerioder()).hasSize(3);
@@ -174,7 +174,7 @@ class PeriodiserOgFastsettRefusjonTjenesteTest {
         lagSaksbehandlerDto(AG1, REF1, dagerEtterSTP(20));
         lagSaksbehandlerDto(AG1, REF2, dagerEtterSTP(50));
 
-        BeregningsgrunnlagDto resultat = oppdater();
+        var resultat = oppdater();
 
         assertThat(resultat).isEqualTo(grunnlagBuilder.build());
         assertThat(resultat.getBeregningsgrunnlagPerioder()).hasSize(5);
@@ -205,7 +205,7 @@ class PeriodiserOgFastsettRefusjonTjenesteTest {
         lagSaksbehandlerDto(AG1, REF1, dagerEtterSTP(45));
         lagSaksbehandlerDto(AG3, REF3, dagerEtterSTP(51));
 
-        BeregningsgrunnlagDto resultat = oppdater();
+        var resultat = oppdater();
 
         assertThat(resultat).isEqualTo(grunnlagBuilder.build());
         assertThat(resultat.getBeregningsgrunnlagPerioder()).hasSize(4);
@@ -232,7 +232,7 @@ class PeriodiserOgFastsettRefusjonTjenesteTest {
         lagBGPeriode(STP, null, lagBGAndel(AG1, REF1, 500000), lagBGAndel(AG2, REF2, 100000));
         lagSaksbehandlerDto(AG2, REF2, dagerEtterSTP(15), 1000);
 
-        BeregningsgrunnlagDto resultat = oppdater();
+        var resultat = oppdater();
 
         assertThat(resultat).isEqualTo(grunnlagBuilder.build());
         assertThat(resultat.getBeregningsgrunnlagPerioder()).hasSize(2);
@@ -250,7 +250,7 @@ class PeriodiserOgFastsettRefusjonTjenesteTest {
         lagSaksbehandlerDto(AG1, InternArbeidsforholdRefDto.nullRef(), dagerEtterSTP(15));
         lagSaksbehandlerDto(AG1, REF1, dagerEtterSTP(30));
 
-        BeregningsgrunnlagDto resultat = oppdater();
+        var resultat = oppdater();
 
         assertThat(resultat).isEqualTo(grunnlagBuilder.build());
         assertThat(resultat.getBeregningsgrunnlagPerioder()).hasSize(3);
@@ -271,7 +271,7 @@ class PeriodiserOgFastsettRefusjonTjenesteTest {
 		lagBGPeriode(dagerEtterSTP(31), UENDELIG, PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV, lagBGAndel(AG1, InternArbeidsforholdRefDto.nullRef(), 0, 12));
 		lagSaksbehandlerDto(AG1, InternArbeidsforholdRefDto.nullRef(), STP);
 
-		BeregningsgrunnlagDto resultat = oppdater();
+        var resultat = oppdater();
 
 		assertThat(resultat).isEqualTo(grunnlagBuilder.build());
 		assertThat(resultat.getBeregningsgrunnlagPerioder()).hasSize(2);
@@ -286,14 +286,14 @@ class PeriodiserOgFastsettRefusjonTjenesteTest {
     }
 
     private void assertPeriode(LocalDate fom, LocalDate tom, Arbeidsgiver ag, InternArbeidsforholdRefDto ref, int refusjon, BeregningsgrunnlagDto resultat, int antallAndelerIPerioden, PeriodeÅrsak... periodeÅrsaker) {
-        Intervall periodeUtenRef = Intervall.fraOgMedTilOgMed(fom, tom);
-        List<BeregningsgrunnlagPeriodeDto> perioderSomMatcher = resultat.getBeregningsgrunnlagPerioder().stream()
+        var periodeUtenRef = Intervall.fraOgMedTilOgMed(fom, tom);
+        var perioderSomMatcher = resultat.getBeregningsgrunnlagPerioder().stream()
                 .filter(bgp -> bgp.getPeriode().overlapper(periodeUtenRef)).collect(Collectors.toList());
         assertThat(perioderSomMatcher).isNotEmpty();
         perioderSomMatcher.forEach(bgp -> {
             assertThat(bgp.getPeriodeÅrsaker()).containsExactlyInAnyOrder(periodeÅrsaker);
             assertThat(bgp.getBeregningsgrunnlagPrStatusOgAndelList()).hasSize(antallAndelerIPerioden);
-            BeregningsgrunnlagPrStatusOgAndelDto matchetAndel = bgp.getBeregningsgrunnlagPrStatusOgAndelList().stream().filter(andel -> matcher(andel, ag, ref)).findFirst().orElse(null);
+            var matchetAndel = bgp.getBeregningsgrunnlagPrStatusOgAndelList().stream().filter(andel -> matcher(andel, ag, ref)).findFirst().orElse(null);
             assertThat(matchetAndel).isNotNull();
             assertThat(hentRefusjon(matchetAndel)).isEqualByComparingTo(Beløp.fra(refusjon));
         });
@@ -305,8 +305,8 @@ class PeriodiserOgFastsettRefusjonTjenesteTest {
     }
 
     private boolean matcher(BeregningsgrunnlagPrStatusOgAndelDto andel, Arbeidsgiver ag, InternArbeidsforholdRefDto ref) {
-        Arbeidsgiver andelAG = andel.getArbeidsgiver().orElse(null);
-        InternArbeidsforholdRefDto andelRef = andel.getArbeidsforholdRef().orElse(null);
+        var andelAG = andel.getArbeidsgiver().orElse(null);
+        var andelRef = andel.getArbeidsforholdRef().orElse(null);
         return Objects.equals(andelAG, ag) && Objects.equals(andelRef, ref);
     }
 
@@ -332,10 +332,10 @@ class PeriodiserOgFastsettRefusjonTjenesteTest {
 	}
 
     private BeregningsgrunnlagPrStatusOgAndelDto.Builder lagBGAndel(Arbeidsgiver ag, InternArbeidsforholdRefDto ref, int refusjonPrÅr, Integer saksbehandletRefusjonPrÅr) {
-        BeregningsgrunnlagPrStatusOgAndelDto.Builder andelBuilder = BeregningsgrunnlagPrStatusOgAndelDto.ny()
+        var andelBuilder = BeregningsgrunnlagPrStatusOgAndelDto.ny()
                 .medAktivitetStatus(ag == null ? AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE : AktivitetStatus.ARBEIDSTAKER);
         if (ag != null) {
-            BGAndelArbeidsforholdDto.Builder arbforBuilder = BGAndelArbeidsforholdDto.builder()
+            var arbforBuilder = BGAndelArbeidsforholdDto.builder()
                     .medRefusjonskravPrÅr(Beløp.fra(refusjonPrÅr), Utfall.GODKJENT)
                     .medArbeidsforholdRef(ref)
                     .medArbeidsgiver(ag);
@@ -352,11 +352,11 @@ class PeriodiserOgFastsettRefusjonTjenesteTest {
     }
 
     private void lagBGPeriode(LocalDate fom, LocalDate tom, PeriodeÅrsak periodeÅrsak, BeregningsgrunnlagPrStatusOgAndelDto.Builder... andeler) {
-        BeregningsgrunnlagPeriodeDto.Builder bgPeriodeBuilder = BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(fom, tom);
+        var bgPeriodeBuilder = BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(fom, tom);
         if (periodeÅrsak != null) {
             bgPeriodeBuilder.leggTilPeriodeÅrsak(periodeÅrsak);
         }
-        List<BeregningsgrunnlagPrStatusOgAndelDto.Builder> bgAndeler = Arrays.asList(andeler);
+        var bgAndeler = Arrays.asList(andeler);
         bgAndeler.forEach(bgPeriodeBuilder::leggTilBeregningsgrunnlagPrStatusOgAndel);
         grunnlagBuilder.leggTilBeregningsgrunnlagPeriode(bgPeriodeBuilder);
     }

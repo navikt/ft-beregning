@@ -3,7 +3,6 @@ package no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.frisinn;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.YtelsesSpesifiktGrunnlag;
@@ -33,13 +32,13 @@ public class FrisinnGrunnlag extends YtelsesSpesifiktGrunnlag {
     }
 
     public boolean søkerFrilansISøknadsperiode(LocalDate dato) {
-        Optional<Periode> søknadsperiode = søknadsperioder.stream().filter(s -> s.inneholder(dato)).findFirst();
+        var søknadsperiode = søknadsperioder.stream().filter(s -> s.inneholder(dato)).findFirst();
         return søknadsperiode.map(sp -> frisinnPerioder.stream().filter(fp -> sp.overlapper(fp.getPeriode()))
             .anyMatch(FrisinnPeriode::getSøkerYtelseFrilans)).orElse(false);
     }
 
     public boolean søkerNæringISøknadsperiode(LocalDate dato) {
-        Optional<Periode> søknadsperiode = søknadsperioder.stream().filter(s -> s.inneholder(dato)).findFirst();
+        var søknadsperiode = søknadsperioder.stream().filter(s -> s.inneholder(dato)).findFirst();
         return søknadsperiode.map(sp -> frisinnPerioder.stream().filter(fp -> sp.overlapper(fp.getPeriode()))
             .anyMatch(FrisinnPeriode::getSøkerYtelseNæring)).orElse(false);
     }

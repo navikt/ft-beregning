@@ -1,9 +1,7 @@
 package no.nav.folketrygdloven.kalkulator.ytelse.frisinn;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -28,7 +26,6 @@ import no.nav.folketrygdloven.kalkulator.output.BeregningAvklaringsbehovResultat
 import no.nav.folketrygdloven.kalkulator.output.BeregningVilkårResultat;
 import no.nav.folketrygdloven.kalkulator.output.BeregningsgrunnlagRegelResultat;
 import no.nav.folketrygdloven.kalkulator.output.RegelSporingAggregat;
-import no.nav.folketrygdloven.kalkulator.output.RegelSporingPeriode;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagPeriodeRegelType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Vilkårsavslagsårsak;
@@ -54,7 +51,7 @@ public class VurderBeregningsgrunnlagTjenesteFRISINN {
         if (!(input.getYtelsespesifiktGrunnlag() instanceof FrisinnGrunnlag)) {
             throw new IllegalStateException("Har ikke FRISINN grunnlag når frisinnvilkår skal vurderes");
         }
-        List<RegelResultat> regelResultater = kjørRegel(input, beregningsgrunnlagRegel);
+        var regelResultater = kjørRegel(input, beregningsgrunnlagRegel);
         List<BeregningAvklaringsbehovResultat> avklaringsbehov = Collections.emptyList();
         return mapTilRegelresultat(input, regelResultater, oppdatertGrunnlag.getBeregningsgrunnlagHvisFinnes().orElseThrow(), avklaringsbehov);
     }
@@ -63,8 +60,8 @@ public class VurderBeregningsgrunnlagTjenesteFRISINN {
         // Evaluerer hver BeregningsgrunnlagPeriode fra foreslått Beregningsgrunnlag
         List<RegelResultat> regelResultater = new ArrayList<>();
         FrisinnGrunnlag frisinnGrunnlag = input.getYtelsespesifiktGrunnlag();
-        for (BeregningsgrunnlagPeriode periode : beregningsgrunnlagRegel.getBeregningsgrunnlagPerioder()) {
-            LocalDate fom = periode.getBeregningsgrunnlagPeriode().getFom();
+        for (var periode : beregningsgrunnlagRegel.getBeregningsgrunnlagPerioder()) {
+            var fom = periode.getBeregningsgrunnlagPeriode().getFom();
             settSøktYtelseForStatus(beregningsgrunnlagRegel, AktivitetStatus.FL, frisinnGrunnlag.getSøkerYtelseForFrilans(fom));
             settSøktYtelseForStatus(beregningsgrunnlagRegel, AktivitetStatus.SN, frisinnGrunnlag.getSøkerYtelseForNæring(fom));
             regelResultater.add(KalkulusRegler.vurderBeregningsgrunnlagFRISINN(periode));
@@ -75,9 +72,9 @@ public class VurderBeregningsgrunnlagTjenesteFRISINN {
     private BeregningsgrunnlagRegelResultat mapTilRegelresultat(BeregningsgrunnlagInput input, List<RegelResultat> regelResultater,
                                                                   BeregningsgrunnlagDto beregningsgrunnlag,
                                                                   List<BeregningAvklaringsbehovResultat> avklaringsbehov) {
-        List<Intervall> perioder = beregningsgrunnlag.getBeregningsgrunnlagPerioder().stream().map(BeregningsgrunnlagPeriodeDto::getPeriode).collect(Collectors.toList());
-        List<RegelSporingPeriode> regelsporinger = MapRegelSporingFraRegelTilVL.mapRegelsporingPerioder(regelResultater, perioder, BeregningsgrunnlagPeriodeRegelType.VILKÅR_VURDERING);
-        BeregningsgrunnlagRegelResultat beregningsgrunnlagRegelResultat = new BeregningsgrunnlagRegelResultat(
+        var perioder = beregningsgrunnlag.getBeregningsgrunnlagPerioder().stream().map(BeregningsgrunnlagPeriodeDto::getPeriode).collect(Collectors.toList());
+        var regelsporinger = MapRegelSporingFraRegelTilVL.mapRegelsporingPerioder(regelResultater, perioder, BeregningsgrunnlagPeriodeRegelType.VILKÅR_VURDERING);
+        var beregningsgrunnlagRegelResultat = new BeregningsgrunnlagRegelResultat(
                 beregningsgrunnlag,
                 avklaringsbehov,
                 new RegelSporingAggregat(regelsporinger));
@@ -88,12 +85,12 @@ public class VurderBeregningsgrunnlagTjenesteFRISINN {
     protected List<BeregningVilkårResultat> mapTilVilkårResultatListe(List<RegelResultat> regelResultater,
                                                                       BeregningsgrunnlagDto beregningsgrunnlag,
                                                                       YtelsespesifiktGrunnlag ytelsesSpesifiktGrunnlag) {
-        FrisinnGrunnlag frisinnGrunnlag = (FrisinnGrunnlag) ytelsesSpesifiktGrunnlag;
+        var frisinnGrunnlag = (FrisinnGrunnlag) ytelsesSpesifiktGrunnlag;
         List<BeregningVilkårResultat> vilkårsResultatListe = new ArrayList<>();
-        Iterator<RegelResultat> regelResultatIterator = regelResultater.iterator();
+        var regelResultatIterator = regelResultater.iterator();
         for (var periode : beregningsgrunnlag.getBeregningsgrunnlagPerioder()) {
-            BeregningVilkårResultat vilkårResultat = lagVilkårResultatForPeriode(regelResultatIterator.next(), periode.getPeriode());
-            LocalDate fom = periode.getBeregningsgrunnlagPeriodeFom();
+            var vilkårResultat = lagVilkårResultatForPeriode(regelResultatIterator.next(), periode.getPeriode());
+            var fom = periode.getBeregningsgrunnlagPeriodeFom();
             if (frisinnGrunnlag.getSøkerYtelseForFrilans(fom) || frisinnGrunnlag.getSøkerYtelseForNæring(fom)) {
                 vilkårsResultatListe.add(vilkårResultat);
             }
@@ -102,18 +99,18 @@ public class VurderBeregningsgrunnlagTjenesteFRISINN {
     }
 
     private BeregningVilkårResultat lagVilkårResultatForPeriode(RegelResultat regelResultat, Intervall periode) {
-        boolean erVilkårOppfylt = regelResultat.merknader().stream().map(RegelMerknad::utfallÅrsak)
+        var erVilkårOppfylt = regelResultat.merknader().stream().map(RegelMerknad::utfallÅrsak)
                 .noneMatch(AVSLAGSÅRSAKER::contains);
         return new BeregningVilkårResultat(erVilkårOppfylt, finnAvslagsårsak(regelResultat), periode);
     }
 
     private Vilkårsavslagsårsak finnAvslagsårsak(RegelResultat regelResultat) {
-        boolean frilansUtenInntekt = regelResultat.merknader().stream().map(RegelMerknad::utfallÅrsak)
+        var frilansUtenInntekt = regelResultat.merknader().stream().map(RegelMerknad::utfallÅrsak)
                 .anyMatch(BeregningUtfallÅrsak.FRISINN_FRILANS_UTEN_INNTEKT::equals);
         if (frilansUtenInntekt) {
             return Vilkårsavslagsårsak.SØKT_FL_INGEN_FL_INNTEKT;
         }
-        boolean harForLavtBG = regelResultat.merknader().stream().map(RegelMerknad::utfallÅrsak)
+        var harForLavtBG = regelResultat.merknader().stream().map(RegelMerknad::utfallÅrsak)
                 .anyMatch(AVSLAGSÅRSAKER::contains);
         if (harForLavtBG) {
             return Vilkårsavslagsårsak.FOR_LAVT_BG;
@@ -131,7 +128,7 @@ public class VurderBeregningsgrunnlagTjenesteFRISINN {
                         .ifPresent(bgFrilans -> bgFrilans.setErSøktYtelseFor(erSøktYtelseFor));
             }
             if (AktivitetStatus.SN.equals(status)) {
-                BeregningsgrunnlagPrStatus snAndel = bgPeriode.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
+                var snAndel = bgPeriode.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
                 if (snAndel != null) {
                     snAndel.setErSøktYtelseFor(erSøktYtelseFor);
                 }

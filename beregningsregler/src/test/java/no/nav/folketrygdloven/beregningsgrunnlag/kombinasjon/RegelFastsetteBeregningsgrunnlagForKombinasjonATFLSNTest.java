@@ -30,11 +30,9 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.RegelMerknad;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.RegelResultat;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ResultatBeregningType;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.SammenligningGrunnlagType;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.NaturalYtelse;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
@@ -42,9 +40,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SammenligningsGrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.RegelBeregningsgrunnlagSN;
-import no.nav.fpsak.nare.evaluation.Evaluation;
 
 class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
 
@@ -57,7 +53,7 @@ class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
     @BeforeEach
     void setup() {
         skjæringstidspunkt = LocalDate.of(2018, Month.JANUARY, 15);
-	    LocalDate arbeidsforholStartdato = skjæringstidspunkt.minusYears(2);
+        var arbeidsforholStartdato = skjæringstidspunkt.minusYears(2);
         arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(arbeidsforholStartdato,"123");
         arbeidsforhold2 = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(arbeidsforholStartdato, "frilans");
         Gverdi = BigDecimal.valueOf(GRUNNBELØP_2017);
@@ -66,32 +62,32 @@ class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
     @Test
     void skalBeregneBeregningsgrunnlagForKombinasjonUtenVarigEndringOppgitt() {
         // Arrange
-        Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(
+        var inntektsgrunnlag = settoppÅrsinntekter(
             skjæringstidspunkt,
             årsinntekterFor3SisteÅr(5, 3, 4),
             Inntektskilde.SIGRUN);
 
-        BigDecimal inntektATFL = new BigDecimal("15000");
+        var inntektATFL = new BigDecimal("15000");
         leggTilMånedsinntekter(inntektsgrunnlag, skjæringstidspunkt,
             Collections.singletonList(inntektATFL),
             Inntektskilde.INNTEKTSMELDING, arbeidsforhold);
 
-        Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.ATFL_SN),
+        var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.ATFL_SN),
             Collections.singletonList(arbeidsforhold), Collections.singletonList(BigDecimal.valueOf(4).multiply(BigDecimal.valueOf(GSNITT_2017*12))));
-        BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         // Act
-	    Evaluation evaluation = new RegelBeregningsgrunnlagATFL(grunnlag).getSpecification().evaluate(grunnlag);
-	    Evaluation evaluation2 = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
+        var evaluation = new RegelBeregningsgrunnlagATFL(grunnlag).getSpecification().evaluate(grunnlag);
+        var evaluation2 = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
 
         // Assert
 
-        RegelResultat regelResultat = getRegelResultat(evaluation2, "input");
+        var regelResultat = getRegelResultat(evaluation2, "input");
         assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
-        Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
+        var beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, grunnlag, beregningsperiode);
 
-        BigDecimal beløp = Gverdi.multiply(new BigDecimal("4"));
+        var beløp = Gverdi.multiply(new BigDecimal("4"));
         verifiserBeregningsgrunnlagBruttoATFL_SN(grunnlag, inntektATFL.multiply(TOLV), beløp.subtract(TOLV.multiply(inntektATFL)));
     }
 
@@ -99,15 +95,15 @@ class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
     void skalBeregneBeregningsgrunnlagForKombinasjonMedVarigEndringOppgittUnder25ProsentAvvik() {
 
         // Arrange
-        BigDecimal sigrun = new BigDecimal("5").multiply(Gverdi);
-        BigDecimal inntektATFL = new BigDecimal("18000");
-        BigDecimal soknadInntekt = new BigDecimal("369120");
-        BigDecimal sammenligningsgrunnlag = inntektATFL.multiply(TOLV).add(soknadInntekt);
+        var sigrun = new BigDecimal("5").multiply(Gverdi);
+        var inntektATFL = new BigDecimal("18000");
+        var soknadInntekt = new BigDecimal("369120");
+        var sammenligningsgrunnlag = inntektATFL.multiply(TOLV).add(soknadInntekt);
         //Avvik = 24.98%
-        BigDecimal avvik = sammenligningsgrunnlag.subtract(sigrun).divide(sigrun, 20, RoundingMode.HALF_UP).multiply(new BigDecimal("100")).abs();
+        var avvik = sammenligningsgrunnlag.subtract(sigrun).divide(sigrun, 20, RoundingMode.HALF_UP).multiply(new BigDecimal("100")).abs();
 
 
-        Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(
+        var inntektsgrunnlag = settoppÅrsinntekter(
             skjæringstidspunkt,
             årsinntekterFor3SisteÅr(5, 5, 5),
             Inntektskilde.SIGRUN);
@@ -119,19 +115,19 @@ class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
             Collections.singletonList(inntektATFL),
             Inntektskilde.INNTEKTSMELDING, arbeidsforhold);
 
-        Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.ATFL_SN),
+        var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.ATFL_SN),
             Collections.singletonList(arbeidsforhold),
             Collections.singletonList(BigDecimal.valueOf(4).multiply(BigDecimal.valueOf(GSNITT_2017*12))));
-        BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         // Act
-	    Evaluation evaluation = new RegelBeregningsgrunnlagATFL(grunnlag).getSpecification().evaluate(grunnlag);
-	    Evaluation evaluation2 = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
+        var evaluation = new RegelBeregningsgrunnlagATFL(grunnlag).getSpecification().evaluate(grunnlag);
+        var evaluation2 = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
 
         // Assert
-        RegelResultat regelResultat = getRegelResultat(evaluation2, "input");
+        var regelResultat = getRegelResultat(evaluation2, "input");
         assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
-        Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
+        var beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, grunnlag, beregningsperiode);
 
         verifiserBeregningsgrunnlagBruttoATFL_SN(grunnlag, inntektATFL.multiply(TOLV), sigrun.subtract(TOLV.multiply(inntektATFL)));
@@ -143,15 +139,15 @@ class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
     void skalBeregneBeregningsgrunnlagForKombinasjonMedVarigEndringOppgittOver25ProsentAvvik() {
 
         // Arrange
-        BigDecimal sigrun = new BigDecimal("5").multiply(Gverdi);
-        BigDecimal inntektATFL = new BigDecimal("80000");
-        BigDecimal soknadInntekt = new BigDecimal("309240");
-        BigDecimal sammenligningsgrunnlag = inntektATFL.multiply(TOLV).add(soknadInntekt);
+        var sigrun = new BigDecimal("5").multiply(Gverdi);
+        var inntektATFL = new BigDecimal("80000");
+        var soknadInntekt = new BigDecimal("309240");
+        var sammenligningsgrunnlag = inntektATFL.multiply(TOLV).add(soknadInntekt);
         //Avvik = 25.01%
-        BigDecimal avvik = sammenligningsgrunnlag.subtract(sigrun).divide(sigrun, 20, RoundingMode.HALF_UP).multiply(new BigDecimal("100")).abs();
+        var avvik = sammenligningsgrunnlag.subtract(sigrun).divide(sigrun, 20, RoundingMode.HALF_UP).multiply(new BigDecimal("100")).abs();
 
 
-        Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(
+        var inntektsgrunnlag = settoppÅrsinntekter(
             skjæringstidspunkt,
             årsinntekterFor3SisteÅr(5, 5, 5),
             Inntektskilde.SIGRUN);
@@ -163,22 +159,22 @@ class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
             Collections.singletonList(inntektATFL),
             Inntektskilde.INNTEKTSMELDING, arbeidsforhold);
 
-        Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.ATFL_SN),
+        var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.ATFL_SN),
             Collections.singletonList(arbeidsforhold), Collections.singletonList(BigDecimal.ZERO));
-        BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         // Act
-	    Evaluation evaluation = new RegelBeregningsgrunnlagATFL(grunnlag).getSpecification().evaluate(grunnlag);
-	    Evaluation evaluation2 = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
+        var evaluation = new RegelBeregningsgrunnlagATFL(grunnlag).getSpecification().evaluate(grunnlag);
+        var evaluation2 = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
 
         // Assert
 
-        RegelResultat regelResultat = getRegelResultat(evaluation2, "input");
+        var regelResultat = getRegelResultat(evaluation2, "input");
         assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
         assertThat(regelResultat.merknader().stream().map(RegelMerknad::utfallÅrsak).collect(Collectors.toList())).containsExactly(VARIG_ENDRING_OG_AVVIK_STØRRE_ENN_25_PROSENT);
 
 
-        Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
+        var beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, grunnlag, beregningsperiode);
 
         assertThat(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getBeregnetPrÅr()).isCloseTo(inntektATFL.multiply(TOLV), within(BigDecimal.valueOf(0.01)));
@@ -191,15 +187,15 @@ class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
     @Test
     void skalBeregneBeregningsgrunnlagForKombinasjonMedNaturalYtelserBortfalt() {
         // Arrange
-        BigDecimal sigrun = new BigDecimal("5").multiply(Gverdi);
-        BigDecimal inntektATFL = new BigDecimal("80000");
-        BigDecimal soknadInntekt = new BigDecimal("309240");
-        BigDecimal naturalytelseBeløp = new BigDecimal("5000");
-        BigDecimal sammenligningsgrunnlag = inntektATFL.add(naturalytelseBeløp).multiply(TOLV).add(soknadInntekt);
+        var sigrun = new BigDecimal("5").multiply(Gverdi);
+        var inntektATFL = new BigDecimal("80000");
+        var soknadInntekt = new BigDecimal("309240");
+        var naturalytelseBeløp = new BigDecimal("5000");
+        var sammenligningsgrunnlag = inntektATFL.add(naturalytelseBeløp).multiply(TOLV).add(soknadInntekt);
 
-        BigDecimal avvik = sammenligningsgrunnlag.subtract(sigrun).divide(sigrun, 20, RoundingMode.HALF_UP).multiply(new BigDecimal("100")).abs();
+        var avvik = sammenligningsgrunnlag.subtract(sigrun).divide(sigrun, 20, RoundingMode.HALF_UP).multiply(new BigDecimal("100")).abs();
 
-        Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(
+        var inntektsgrunnlag = settoppÅrsinntekter(
             skjæringstidspunkt,
             årsinntekterFor3SisteÅr(5, 5, 5),
             Inntektskilde.SIGRUN);
@@ -211,7 +207,7 @@ class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
             Collections.singletonList(inntektATFL),
             Inntektskilde.INNTEKTSMELDING, arbeidsforhold);
 
-        List<NaturalYtelse> naturalYtelser = Collections.singletonList(new NaturalYtelse(naturalytelseBeløp, null, skjæringstidspunkt.minusDays(1)));
+        var naturalYtelser = Collections.singletonList(new NaturalYtelse(naturalytelseBeløp, null, skjæringstidspunkt.minusDays(1)));
         inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
             .medInntektskildeOgPeriodeType(Inntektskilde.INNTEKTSMELDING)
             .medArbeidsgiver(arbeidsforhold)
@@ -220,22 +216,22 @@ class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
             .medNaturalYtelser(naturalYtelser)
             .build());
 
-        Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.ATFL_SN),
+        var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.ATFL_SN),
             Collections.singletonList(arbeidsforhold), Collections.singletonList(BigDecimal.ZERO));
-        BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         // Act
-	    Evaluation evaluation = new RegelBeregningsgrunnlagATFL(grunnlag).getSpecification().evaluate(grunnlag);
-	    Evaluation evaluation2 = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
+        var evaluation = new RegelBeregningsgrunnlagATFL(grunnlag).getSpecification().evaluate(grunnlag);
+        var evaluation2 = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
 
         // Assert
 
-        RegelResultat regelResultat = getRegelResultat(evaluation2, "input");
+        var regelResultat = getRegelResultat(evaluation2, "input");
         assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
         assertThat(regelResultat.merknader().stream().map(RegelMerknad::utfallÅrsak).collect(Collectors.toList())).containsExactly(VARIG_ENDRING_OG_AVVIK_STØRRE_ENN_25_PROSENT);
 
 
-        Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
+        var beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, grunnlag, beregningsperiode);
 
         assertThat(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getBeregnetPrÅr()).isCloseTo(inntektATFL.multiply(TOLV), within(BigDecimal.valueOf(0.001)));
@@ -249,16 +245,16 @@ class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
     @Test
     void skalBeregneBeregningsgrunnlagForKombinasjonMedNaturalYtelserBortfaltMedFlerePerioder() {
         // Arrange
-        BigDecimal sigrun = new BigDecimal("5").multiply(Gverdi);
-        BigDecimal inntektATFL = new BigDecimal("80000");
-        BigDecimal soknadInntekt = new BigDecimal("309240");
-        BigDecimal naturalytelseBeløp = new BigDecimal("5000");
-        BigDecimal sammenligningsgrunnlag = inntektATFL.add(naturalytelseBeløp).multiply(TOLV).add(soknadInntekt);
-        LocalDate naturalytelseOpphørFom = skjæringstidspunkt.plusMonths(4);
+        var sigrun = new BigDecimal("5").multiply(Gverdi);
+        var inntektATFL = new BigDecimal("80000");
+        var soknadInntekt = new BigDecimal("309240");
+        var naturalytelseBeløp = new BigDecimal("5000");
+        var sammenligningsgrunnlag = inntektATFL.add(naturalytelseBeløp).multiply(TOLV).add(soknadInntekt);
+        var naturalytelseOpphørFom = skjæringstidspunkt.plusMonths(4);
 
-        BigDecimal avvik = sammenligningsgrunnlag.subtract(sigrun).divide(sigrun, 20, RoundingMode.HALF_UP).multiply(new BigDecimal("100")).abs();
+        var avvik = sammenligningsgrunnlag.subtract(sigrun).divide(sigrun, 20, RoundingMode.HALF_UP).multiply(new BigDecimal("100")).abs();
 
-        Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(
+        var inntektsgrunnlag = settoppÅrsinntekter(
             skjæringstidspunkt,
             årsinntekterFor3SisteÅr(5, 5, 5),
             Inntektskilde.SIGRUN);
@@ -270,7 +266,7 @@ class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
             Collections.singletonList(inntektATFL),
             Inntektskilde.INNTEKTSMELDING, arbeidsforhold);
 
-        List<NaturalYtelse> naturalYtelser = List.of(new NaturalYtelse(naturalytelseBeløp, null, skjæringstidspunkt.minusDays(1)),
+        var naturalYtelser = List.of(new NaturalYtelse(naturalytelseBeløp, null, skjæringstidspunkt.minusDays(1)),
             new NaturalYtelse(naturalytelseBeløp, null, skjæringstidspunkt.plusMonths(4).minusDays(1)));
         inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
             .medInntektskildeOgPeriodeType(Inntektskilde.INNTEKTSMELDING)
@@ -280,11 +276,11 @@ class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
             .medNaturalYtelser(naturalYtelser)
             .build());
 
-        Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.ATFL_SN),
+        var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.ATFL_SN),
             Collections.singletonList(arbeidsforhold), Collections.singletonList(BigDecimal.ZERO));
-        BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
-        BeregningsgrunnlagPeriode andrePeriode = BeregningsgrunnlagPeriode.builder()
+        var andrePeriode = BeregningsgrunnlagPeriode.builder()
             .medPeriode(Periode.of(naturalytelseOpphørFom, null))
             .build();
 
@@ -295,22 +291,22 @@ class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
             .build();
 
         // Act
-	    Evaluation evaluationp1 = new RegelBeregningsgrunnlagATFL(grunnlag).getSpecification().evaluate(grunnlag);
-	    Evaluation evaluation2p1 = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
+        var evaluationp1 = new RegelBeregningsgrunnlagATFL(grunnlag).getSpecification().evaluate(grunnlag);
+        var evaluation2p1 = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
 
-	    Evaluation evaluation1p2 = new RegelBeregningsgrunnlagATFL(andrePeriode).getSpecification().evaluate(andrePeriode);
-	    Evaluation evaluation2p2 = new RegelBeregningsgrunnlagSN().evaluer(andrePeriode);
+        var evaluation1p2 = new RegelBeregningsgrunnlagATFL(andrePeriode).getSpecification().evaluate(andrePeriode);
+        var evaluation2p2 = new RegelBeregningsgrunnlagSN().evaluer(andrePeriode);
 
 
         // Assert
 
-        RegelResultat regelResultat1 = getRegelResultat(evaluation2p1, "input");
-        RegelResultat regelResultat2 = getRegelResultat(evaluation2p2, "input");
+        var regelResultat1 = getRegelResultat(evaluation2p1, "input");
+        var regelResultat2 = getRegelResultat(evaluation2p2, "input");
         assertThat(regelResultat1.beregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
         assertThat(regelResultat1.merknader().stream().map(RegelMerknad::utfallÅrsak).collect(Collectors.toList())).containsExactly(VARIG_ENDRING_OG_AVVIK_STØRRE_ENN_25_PROSENT);
 
 
-        Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
+        var beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, grunnlag, beregningsperiode);
 
         assertThat(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getBeregnetPrÅr()).isCloseTo(inntektATFL.multiply(TOLV), within(BigDecimal.valueOf(0.001)));
@@ -329,49 +325,49 @@ class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
     @Test
     void skalBeregneBeregningsgrunnlagForKombinasjonMedDagpenger() {
         // Arrange
-        Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(
+        var inntektsgrunnlag = settoppÅrsinntekter(
             skjæringstidspunkt,
             årsinntekterFor3SisteÅr(5, 3, 4),
             Inntektskilde.SIGRUN);
-        BigDecimal inntektATFL = new BigDecimal("15000");
+        var inntektATFL = new BigDecimal("15000");
         leggTilMånedsinntekter(inntektsgrunnlag, skjæringstidspunkt,
             Collections.singletonList(inntektATFL),
             Inntektskilde.INNTEKTSMELDING, arbeidsforhold);
 
-        Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL_SN, AktivitetStatus.DP),
+        var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL_SN, AktivitetStatus.DP),
             Collections.singletonList(arbeidsforhold),
             Collections.singletonList(BigDecimal.valueOf(4).multiply(BigDecimal.valueOf(GSNITT_2017*12))));
-        BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        BigDecimal bruttoDP = BigDecimal.valueOf(100000);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var bruttoDP = BigDecimal.valueOf(100000);
         BeregningsgrunnlagPrStatus.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP)).medBeregnetPrÅr(bruttoDP).build();
 
         // Act
-	    Evaluation evaluation = new RegelBeregningsgrunnlagATFL(grunnlag).getSpecification().evaluate(grunnlag);
-	    Evaluation evaluation2 = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
+        var evaluation = new RegelBeregningsgrunnlagATFL(grunnlag).getSpecification().evaluate(grunnlag);
+        var evaluation2 = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
 
         // Assert
-        RegelResultat regelResultat = getRegelResultat(evaluation, "input");
+        var regelResultat = getRegelResultat(evaluation, "input");
         assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
-        Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
+        var beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, grunnlag, beregningsperiode);
 
-        BigDecimal gjennomsnittligPGI = Gverdi.multiply(new BigDecimal("4"));
-        BigDecimal beløpATFL = inntektATFL.multiply(TOLV);
-        BigDecimal beløpSN = gjennomsnittligPGI.subtract(beløpATFL).subtract(bruttoDP);
+        var gjennomsnittligPGI = Gverdi.multiply(new BigDecimal("4"));
+        var beløpATFL = inntektATFL.multiply(TOLV);
+        var beløpSN = gjennomsnittligPGI.subtract(beløpATFL).subtract(bruttoDP);
         verifiserBeregningsgrunnlagBruttoATFL_SN(grunnlag, beløpATFL, beløpSN);
     }
 
     @Test
     void skalBeregneBeregningsgrunnlagForKombinasjonMedVarigEndringMedAAP() {
         // Arrange
-        BigDecimal sigrun = BigDecimal.valueOf(540996.444434);
-        BigDecimal inntektATFL = new BigDecimal("18000");
-        BigDecimal soknadInntekt = new BigDecimal("600000");
-        BigDecimal bruttoAAP = BigDecimal.valueOf(49500);
-        BigDecimal sammenligningsgrunnlag = inntektATFL.multiply(TOLV).add(soknadInntekt).add(bruttoAAP);
-        BigDecimal avvik = sammenligningsgrunnlag.subtract(sigrun).divide(sigrun, 20, RoundingMode.HALF_UP).multiply(new BigDecimal("100")).abs();
+        var sigrun = BigDecimal.valueOf(540996.444434);
+        var inntektATFL = new BigDecimal("18000");
+        var soknadInntekt = new BigDecimal("600000");
+        var bruttoAAP = BigDecimal.valueOf(49500);
+        var sammenligningsgrunnlag = inntektATFL.multiply(TOLV).add(soknadInntekt).add(bruttoAAP);
+        var avvik = sammenligningsgrunnlag.subtract(sigrun).divide(sigrun, 20, RoundingMode.HALF_UP).multiply(new BigDecimal("100")).abs();
 
-        Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(
+        var inntektsgrunnlag = settoppÅrsinntekter(
             skjæringstidspunkt,
             årsinntekterFor3SisteÅr(5, 6, 7),
             Inntektskilde.SIGRUN);
@@ -381,24 +377,24 @@ class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
             Collections.singletonList(inntektATFL),
             Inntektskilde.INNTEKTSMELDING, arbeidsforhold);
 
-        Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL_SN, AktivitetStatus.AAP),
+        var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL_SN, AktivitetStatus.AAP),
             Collections.singletonList(arbeidsforhold),
             Collections.singletonList(BigDecimal.valueOf(4).multiply(BigDecimal.valueOf(GSNITT_2017).multiply(BigDecimal.valueOf(12)))));
-        BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         BeregningsgrunnlagPrStatus.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.AAP)).medBeregnetPrÅr(bruttoAAP).build();
 
         // Act
-	    Evaluation evaluation = new RegelBeregningsgrunnlagATFL(grunnlag).getSpecification().evaluate(grunnlag);
-	    Evaluation evaluation2 = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
+        var evaluation = new RegelBeregningsgrunnlagATFL(grunnlag).getSpecification().evaluate(grunnlag);
+        var evaluation2 = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
 
         // Assert
-        RegelResultat regelResultat = getRegelResultat(evaluation2, "input");
+        var regelResultat = getRegelResultat(evaluation2, "input");
         assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
-        Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
+        var beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, grunnlag, beregningsperiode);
 
-        BigDecimal beløpATFL = inntektATFL.multiply(TOLV);
-        BigDecimal beløpSN = sigrun.subtract(beløpATFL).subtract(bruttoAAP);
+        var beløpATFL = inntektATFL.multiply(TOLV);
+        var beløpSN = sigrun.subtract(beløpATFL).subtract(bruttoAAP);
         verifiserSammenligningsgrunnlag(grunnlag, sammenligningsgrunnlag, avvik);
         verifiserBeregningsgrunnlagBruttoATFL_SN(grunnlag, beløpATFL, beløpSN);
     }
@@ -406,14 +402,14 @@ class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
     @Test
     void skalBeregneBeregningsgrunnlagForKombinasjonMedVarigEndringMedDP() {
         // Arrange
-        BigDecimal sigrun = BigDecimal.valueOf(655438);
-        BigDecimal inntektATFL = new BigDecimal("18000");
-        BigDecimal soknadInntekt = new BigDecimal("420000");
-        BigDecimal bruttoDP = BigDecimal.valueOf(74880);
-        BigDecimal sammenligningsgrunnlag = inntektATFL.multiply(TOLV).add(soknadInntekt).add(bruttoDP);
-        BigDecimal avvik = sammenligningsgrunnlag.subtract(sigrun).divide(sigrun, 20, RoundingMode.HALF_UP).multiply(new BigDecimal("100")).abs();
+        var sigrun = BigDecimal.valueOf(655438);
+        var inntektATFL = new BigDecimal("18000");
+        var soknadInntekt = new BigDecimal("420000");
+        var bruttoDP = BigDecimal.valueOf(74880);
+        var sammenligningsgrunnlag = inntektATFL.multiply(TOLV).add(soknadInntekt).add(bruttoDP);
+        var avvik = sammenligningsgrunnlag.subtract(sigrun).divide(sigrun, 20, RoundingMode.HALF_UP).multiply(new BigDecimal("100")).abs();
 
-        Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(
+        var inntektsgrunnlag = settoppÅrsinntekter(
             skjæringstidspunkt,
             årsinntekterFor3SisteÅr(8, 9, 10),
             Inntektskilde.SIGRUN);
@@ -423,24 +419,24 @@ class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
             Collections.singletonList(inntektATFL),
             Inntektskilde.INNTEKTSMELDING, arbeidsforhold);
 
-        Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL_SN, AktivitetStatus.DP),
+        var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL_SN, AktivitetStatus.DP),
             Collections.singletonList(arbeidsforhold),
             Collections.singletonList(BigDecimal.valueOf(4).multiply(BigDecimal.valueOf(GSNITT_2017).multiply(BigDecimal.valueOf(12)))));
-        BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         BeregningsgrunnlagPrStatus.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP)).medBeregnetPrÅr(bruttoDP).build();
 
         // Act
-	    Evaluation evaluation = new RegelBeregningsgrunnlagATFL(grunnlag).getSpecification().evaluate(grunnlag);
-	    Evaluation evaluation2 = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
+        var evaluation = new RegelBeregningsgrunnlagATFL(grunnlag).getSpecification().evaluate(grunnlag);
+        var evaluation2 = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
 
         // Assert
-        RegelResultat regelResultat = getRegelResultat(evaluation2, "input");
+        var regelResultat = getRegelResultat(evaluation2, "input");
         assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
-        Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
+        var beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, grunnlag, beregningsperiode);
 
-        BigDecimal beløpATFL = inntektATFL.multiply(TOLV);
-        BigDecimal beløpSN = sigrun.subtract(beløpATFL).subtract(bruttoDP);
+        var beløpATFL = inntektATFL.multiply(TOLV);
+        var beløpSN = sigrun.subtract(beløpATFL).subtract(bruttoDP);
         verifiserSammenligningsgrunnlag(grunnlag, sammenligningsgrunnlag, avvik);
         verifiserBeregningsgrunnlagBruttoATFL_SN(grunnlag, beløpATFL, beløpSN);
     }
@@ -448,26 +444,26 @@ class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
     @Test
     void skalGiRegelmerknadForSNSomErNyIArbeidslivet() {
         // Arrange
-        Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(
+        var inntektsgrunnlag = settoppÅrsinntekter(
             skjæringstidspunkt,
             årsinntekterFor3SisteÅr(6, 3, 0),
             Inntektskilde.SIGRUN);
-        BigDecimal inntektATFL = new BigDecimal("15000");
+        var inntektATFL = new BigDecimal("15000");
         leggTilMånedsinntekter(inntektsgrunnlag, skjæringstidspunkt,
             Collections.singletonList(inntektATFL),
             Inntektskilde.INNTEKTSMELDING, arbeidsforhold);
-        Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag,
+        var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag,
             Collections.singletonList(AktivitetStatus.ATFL_SN), Collections.singletonList(arbeidsforhold),
             Collections.singletonList(BigDecimal.valueOf(4).multiply(BigDecimal.valueOf(GSNITT_2017).multiply(BigDecimal.valueOf(12)))));
-        BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         BeregningsgrunnlagPrStatus.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN)).medErNyIArbeidslivet(true);
 
         // Act
-	    Evaluation evaluation = new RegelBeregningsgrunnlagATFL(grunnlag).getSpecification().evaluate(grunnlag);
-	    Evaluation evaluation2 = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
+        var evaluation = new RegelBeregningsgrunnlagATFL(grunnlag).getSpecification().evaluate(grunnlag);
+        var evaluation2 = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
 
         // Assert
-        RegelResultat regelResultat = getRegelResultat(evaluation2, "input");
+        var regelResultat = getRegelResultat(evaluation2, "input");
         assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
         assertThat(regelResultat.merknader().get(0).utfallÅrsak()).isEqualTo(FASTSETT_SELVSTENDIG_NY_ARBEIDSLIVET);
         assertThat(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getBeregnetPrÅr()).isCloseTo(inntektATFL.multiply(TOLV), within(BigDecimal.valueOf(0.01)));
@@ -478,42 +474,42 @@ class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
     @Test
     void skalIkkeBeregneSNNårFastsattAvSaksbehandler() {
         // Arrange
-        Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(skjæringstidspunkt, årsinntekterFor3SisteÅr(5, 3, 4), Inntektskilde.SIGRUN);
-        BigDecimal inntektATFL = new BigDecimal("15000");
+        var inntektsgrunnlag = settoppÅrsinntekter(skjæringstidspunkt, årsinntekterFor3SisteÅr(5, 3, 4), Inntektskilde.SIGRUN);
+        var inntektATFL = new BigDecimal("15000");
         leggTilMånedsinntekter(inntektsgrunnlag, skjæringstidspunkt, Collections.singletonList(inntektATFL), Inntektskilde.INNTEKTSMELDING, arbeidsforhold);
 
-        Beregningsgrunnlag beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.ATFL_SN),
+        var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.ATFL_SN),
             Collections.singletonList(arbeidsforhold), Collections.singletonList(BigDecimal.valueOf(4).multiply(BigDecimal.valueOf(GSNITT_2017*12))));
-        BeregningsgrunnlagPeriode grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-        BeregningsgrunnlagPrArbeidsforhold statusAT = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
-        BeregningsgrunnlagPrStatus statusSN = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var statusAT = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
+        var statusSN = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
         BeregningsgrunnlagPrArbeidsforhold.builder(statusAT).medFastsattAvSaksbehandler(true).medBeregnetPrÅr(BigDecimal.valueOf(232323));
         BeregningsgrunnlagPrStatus.builder(statusSN).medFastsattAvSaksbehandler(true).medBeregnetPrÅr(BigDecimal.valueOf(323232));
 
         // Act
-        Evaluation evaluation = new RegelBeregningsgrunnlagATFL(grunnlag).getSpecification().evaluate(grunnlag);
-	    Evaluation evaluation2 = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
+        var evaluation = new RegelBeregningsgrunnlagATFL(grunnlag).getSpecification().evaluate(grunnlag);
+        var evaluation2 = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
 
         // Assert
-        RegelResultat regelResultat = getRegelResultat(evaluation, "input");
+        var regelResultat = getRegelResultat(evaluation, "input");
         assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
-        Periode beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
+        var beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
         verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, grunnlag, beregningsperiode);
         verifiserBeregningsgrunnlagBruttoATFL_SN(grunnlag, BigDecimal.valueOf(232323), BigDecimal.valueOf(323232));
     }
 
 
     private void verifiserBeregningsgrunnlagBruttoATFL_SN(BeregningsgrunnlagPeriode grunnlag, BigDecimal beløpATFL, BigDecimal beløpSN) {
-        BeregningsgrunnlagPrStatus bgpsaATFL = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+        var bgpsaATFL = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
         assertThat(bgpsaATFL).isNotNull();
         assertThat(bgpsaATFL.getBeregnetPrÅr()).isCloseTo(beløpATFL, within(BigDecimal.valueOf(0.01)));
 
-        BeregningsgrunnlagPrStatus bgpsaSN = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
+        var bgpsaSN = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
         assertThat(bgpsaSN.getBeregnetPrÅr()).isCloseTo(beløpSN, within(BigDecimal.valueOf(0.01)));
     }
 
     private void verifiserSammenligningsgrunnlag(BeregningsgrunnlagPeriode grunnlag, BigDecimal beløp, BigDecimal prosent) {
-        SammenligningsGrunnlag sg = grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.SN);
+        var sg = grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.SN);
         assertThat(sg).isNotNull();
         assertThat(sg.getRapportertPrÅr()).isCloseTo(beløp, within(BigDecimal.valueOf(0.01)));
         assertThat(sg.getAvvikProsent()).isCloseTo(prosent, within(BigDecimal.valueOf(0.01)));
@@ -522,14 +518,14 @@ class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
     }
 
     private void kopierBeregningsgrunnlagPeriode(BeregningsgrunnlagPeriode grunnlag, BeregningsgrunnlagPeriode kopi) {
-        for (BeregningsgrunnlagPrStatus forrigeStatus : grunnlag.getBeregningsgrunnlagPrStatus()) {
+        for (var forrigeStatus : grunnlag.getBeregningsgrunnlagPrStatus()) {
             if (forrigeStatus.erArbeidstakerEllerFrilanser()) {
-                BeregningsgrunnlagPrStatus ny = BeregningsgrunnlagPrStatus.builder()
+                var ny = BeregningsgrunnlagPrStatus.builder()
                     .medAktivitetStatus(forrigeStatus.getAktivitetStatus())
                     .medBeregningsgrunnlagPeriode(kopi)
                     .build();
-                for (BeregningsgrunnlagPrArbeidsforhold kopierFraArbeidsforhold : forrigeStatus.getArbeidsforhold()) {
-                    BeregningsgrunnlagPrArbeidsforhold kopiertArbeidsforhold = BeregningsgrunnlagPrArbeidsforhold.builder()
+                for (var kopierFraArbeidsforhold : forrigeStatus.getArbeidsforhold()) {
+                    var kopiertArbeidsforhold = BeregningsgrunnlagPrArbeidsforhold.builder()
                         .medArbeidsforhold(kopierFraArbeidsforhold.getArbeidsforhold())
                         .medAndelNr(kopierFraArbeidsforhold.getAndelNr())
                         .build();

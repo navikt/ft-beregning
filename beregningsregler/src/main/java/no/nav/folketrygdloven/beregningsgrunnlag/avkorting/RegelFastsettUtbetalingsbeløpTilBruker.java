@@ -29,7 +29,7 @@ public class RegelFastsettUtbetalingsbeløpTilBruker implements RuleService<Bere
     @SuppressWarnings("unchecked")
     @Override
     public Specification<BeregningsgrunnlagPeriode> getSpecification() {
-        Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
+        var rs = new Ruleset<BeregningsgrunnlagPeriode>();
 
         //FP_BR_29.8.9 For hvert arbeidsforhold der beregningsgrunnlagsandelen ikke er fordelt: Vurder om andeler er ferdig fordelt og oppdater fordelt til bruker
         Specification<BeregningsgrunnlagPeriode> vurderOmAndelerErFerdigFordelt = new VurderOmAndelerErFerdigFordeltOgOppdaterFordeltTilBruker();
@@ -38,7 +38,7 @@ public class RegelFastsettUtbetalingsbeløpTilBruker implements RuleService<Bere
         List<Specification<BeregningsgrunnlagPeriode>> liste = Arrays.asList(new FastsettAndelTilFordeling(),
                 new BeregnProsentvisAndel(),
                 new FastsettBrukersAndelFraArbeidsforholdSomIkkeErFordelt());
-        Specification<BeregningsgrunnlagPeriode> fastsattUtbetalingsbeløpTilBruker = rs.beregningsRegel(ID, BESKRIVELSE, liste, vurderOmAndelerErFerdigFordelt);
+        var fastsattUtbetalingsbeløpTilBruker = rs.beregningsRegel(ID, BESKRIVELSE, liste, vurderOmAndelerErFerdigFordelt);
 
         return fastsattUtbetalingsbeløpTilBruker;
     }

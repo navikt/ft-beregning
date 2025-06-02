@@ -139,7 +139,7 @@ public class InntektArbeidYtelseGrunnlagDto {
             return true;
         if (!(o instanceof InntektArbeidYtelseGrunnlagDto))
             return false;
-        InntektArbeidYtelseGrunnlagDto that = (InntektArbeidYtelseGrunnlagDto) o;
+        var that = (InntektArbeidYtelseGrunnlagDto) o;
         return aktiv == that.aktiv &&
             Objects.equals(register, that.register) &&
             Objects.equals(saksbehandlet, that.saksbehandlet);

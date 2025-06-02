@@ -15,8 +15,6 @@ import no.nav.folketrygdloven.kalkulator.avklaringsbehov.dto.RefusjonskravPrArbe
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagInput;
 import no.nav.folketrygdloven.kalkulator.modell.behandling.KoblingReferanse;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BGAndelArbeidsforholdDto;
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningRefusjonOverstyringDto;
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningRefusjonOverstyringerDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDtoBuilder;
@@ -45,19 +43,19 @@ class VurderRefusjonTilfelleOppdatererTest {
     @Test
     void oppdater_når_ikkje_gyldig_utvidelse() {
         // Arrange
-        LocalDate førsteInnsendingAvRefusjonskrav = SKJÆRINGSTIDSPUNKT.plusMonths(4);
-        LocalDate førsteDatoMedRefusjonskrav = SKJÆRINGSTIDSPUNKT;
+        var førsteInnsendingAvRefusjonskrav = SKJÆRINGSTIDSPUNKT.plusMonths(4);
+        var førsteDatoMedRefusjonskrav = SKJÆRINGSTIDSPUNKT;
         var refusjonskravDatoDto = lagArbeidsgiverSøktForSent(førsteDatoMedRefusjonskrav, førsteInnsendingAvRefusjonskrav);
-        BeregningsgrunnlagDto beregningsgrunnlagDto = lagBeregningsgrunnlag();
-        BeregningsgrunnlagInput input = new BeregningsgrunnlagInput(referanse, null, null, List.of(refusjonskravDatoDto), null);
-        BeregningsgrunnlagInput beregningsgrunnlagInput = input.medBeregningsgrunnlagGrunnlag(BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty()).medBeregningsgrunnlag(beregningsgrunnlagDto).build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER));
-        FaktaBeregningLagreDto dto = lagDto(false);
+        var beregningsgrunnlagDto = lagBeregningsgrunnlag();
+        var input = new BeregningsgrunnlagInput(referanse, null, null, List.of(refusjonskravDatoDto), null);
+        var beregningsgrunnlagInput = input.medBeregningsgrunnlagGrunnlag(BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty()).medBeregningsgrunnlag(beregningsgrunnlagDto).build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER));
+        var dto = lagDto(false);
 
         // Act
-        BeregningsgrunnlagGrunnlagDtoBuilder oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(beregningsgrunnlagInput.getBeregningsgrunnlagGrunnlag());
+        var oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(beregningsgrunnlagInput.getBeregningsgrunnlagGrunnlag());
         VurderRefusjonTilfelleOppdaterer.oppdater(dto, beregningsgrunnlagInput, oppdatere);
 
-        BeregningsgrunnlagGrunnlagDto nyttGrunnlag = oppdatere.build(BeregningsgrunnlagTilstand.KOFAKBER_UT);
+        var nyttGrunnlag = oppdatere.build(BeregningsgrunnlagTilstand.KOFAKBER_UT);
 
         // Assert
         assertOverstyringAvRefusjon(nyttGrunnlag, null, false);
@@ -66,19 +64,19 @@ class VurderRefusjonTilfelleOppdatererTest {
     @Test
     void oppdater_når_gyldig_utvidelse() {
         // Arrange
-        LocalDate førsteInnsendingAvRefusjonskrav = SKJÆRINGSTIDSPUNKT.plusMonths(4);
-        LocalDate førsteDatoMedRefusjonskrav = SKJÆRINGSTIDSPUNKT;
+        var førsteInnsendingAvRefusjonskrav = SKJÆRINGSTIDSPUNKT.plusMonths(4);
+        var førsteDatoMedRefusjonskrav = SKJÆRINGSTIDSPUNKT;
         var refusjonskravDatoDto = lagArbeidsgiverSøktForSent(førsteDatoMedRefusjonskrav, førsteInnsendingAvRefusjonskrav);
-        BeregningsgrunnlagDto beregningsgrunnlagDto = lagBeregningsgrunnlag();
-        BeregningsgrunnlagInput input = new BeregningsgrunnlagInput(referanse, null, null, List.of(refusjonskravDatoDto), null);
-        BeregningsgrunnlagInput beregningsgrunnlagInput = input.medBeregningsgrunnlagGrunnlag(BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty()).medBeregningsgrunnlag(beregningsgrunnlagDto).build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER));
-        FaktaBeregningLagreDto dto = lagDto(true);
+        var beregningsgrunnlagDto = lagBeregningsgrunnlag();
+        var input = new BeregningsgrunnlagInput(referanse, null, null, List.of(refusjonskravDatoDto), null);
+        var beregningsgrunnlagInput = input.medBeregningsgrunnlagGrunnlag(BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty()).medBeregningsgrunnlag(beregningsgrunnlagDto).build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER));
+        var dto = lagDto(true);
 
         // Act
-        BeregningsgrunnlagGrunnlagDtoBuilder oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(beregningsgrunnlagInput.getBeregningsgrunnlagGrunnlag());
+        var oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(beregningsgrunnlagInput.getBeregningsgrunnlagGrunnlag());
         VurderRefusjonTilfelleOppdaterer.oppdater(dto, beregningsgrunnlagInput, oppdatere);
 
-        BeregningsgrunnlagGrunnlagDto nyttGrunnlag = oppdatere.build(BeregningsgrunnlagTilstand.KOFAKBER_UT);
+        var nyttGrunnlag = oppdatere.build(BeregningsgrunnlagTilstand.KOFAKBER_UT);
 
         // Assert
         assertOverstyringAvRefusjon(nyttGrunnlag, førsteDatoMedRefusjonskrav, true);
@@ -87,8 +85,8 @@ class VurderRefusjonTilfelleOppdatererTest {
 
     private void assertOverstyringAvRefusjon(BeregningsgrunnlagGrunnlagDto nyttGrunnlag, LocalDate førsteMuligeDato, Boolean skalUtvideGydlighet) {
         assertThat(nyttGrunnlag.getRefusjonOverstyringer()).isPresent();
-        BeregningRefusjonOverstyringerDto beregningRefusjonOverstyringer = nyttGrunnlag.getRefusjonOverstyringer().get();
-        List<BeregningRefusjonOverstyringDto> overstyringer = beregningRefusjonOverstyringer.getRefusjonOverstyringer();
+        var beregningRefusjonOverstyringer = nyttGrunnlag.getRefusjonOverstyringer().get();
+        var overstyringer = beregningRefusjonOverstyringer.getRefusjonOverstyringer();
         assertThat(overstyringer).hasSize(1);
         assertThat(overstyringer.get(0).getArbeidsgiver()).isEqualTo(VIRKSOMHET);
         assertThat(overstyringer.get(0).getFørsteMuligeRefusjonFom().orElse(null)).isEqualTo(førsteMuligeDato);
@@ -97,9 +95,9 @@ class VurderRefusjonTilfelleOppdatererTest {
     }
 
     private FaktaBeregningLagreDto lagDto(boolean skalUtvideGyldighet) {
-        FaktaBeregningLagreDto dto = new FaktaBeregningLagreDto(List.of(FaktaOmBeregningTilfelle.VURDER_REFUSJONSKRAV_SOM_HAR_KOMMET_FOR_SENT));
+        var dto = new FaktaBeregningLagreDto(List.of(FaktaOmBeregningTilfelle.VURDER_REFUSJONSKRAV_SOM_HAR_KOMMET_FOR_SENT));
 
-        RefusjonskravPrArbeidsgiverVurderingDto ref1 = new RefusjonskravPrArbeidsgiverVurderingDto(VIRKSOMHET.getIdentifikator(), skalUtvideGyldighet);
+        var ref1 = new RefusjonskravPrArbeidsgiverVurderingDto(VIRKSOMHET.getIdentifikator(), skalUtvideGyldighet);
         dto.setRefusjonskravGyldighet(List.of(ref1));
         return dto;
     }
@@ -113,12 +111,12 @@ class VurderRefusjonTilfelleOppdatererTest {
     }
 
     private BeregningsgrunnlagDto lagBeregningsgrunnlag() {
-        BeregningsgrunnlagDto beregningsgrunnlag = BeregningsgrunnlagDto.builder()
+        var beregningsgrunnlag = BeregningsgrunnlagDto.builder()
             .medGrunnbeløp(GRUNNBELØP)
             .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT)
             .leggTilFaktaOmBeregningTilfeller(List.of(FaktaOmBeregningTilfelle.VURDER_REFUSJONSKRAV_SOM_HAR_KOMMET_FOR_SENT))
             .build();
-        BeregningsgrunnlagPeriodeDto periode1 = BeregningsgrunnlagPeriodeDto.ny()
+        var periode1 = BeregningsgrunnlagPeriodeDto.ny()
             .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusMonths(2).minusDays(1))
             .build(beregningsgrunnlag);
         BeregningsgrunnlagPrStatusOgAndelDto.ny()

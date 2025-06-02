@@ -34,7 +34,7 @@ public class KontrollerFaktaBeregningFrilanserTjeneste {
     public static boolean erNyoppstartetFrilanser(BeregningsgrunnlagGrunnlagDto beregningsgrunnlagGrunnlag, InntektArbeidYtelseGrunnlagDto iayGrunnlag) {
         var beregningsgrunnlag = beregningsgrunnlagGrunnlag.getBeregningsgrunnlagHvisFinnes().orElse(null);
         Objects.requireNonNull(beregningsgrunnlag, "beregningsgrunnlag");
-        boolean erFrilanser = beregningsgrunnlag.getBeregningsgrunnlagPerioder().stream().flatMap(periode -> periode.getBeregningsgrunnlagPrStatusOgAndelList().stream())
+        var erFrilanser = beregningsgrunnlag.getBeregningsgrunnlagPerioder().stream().flatMap(periode -> periode.getBeregningsgrunnlagPrStatusOgAndelList().stream())
             .anyMatch(andel -> andel.getAktivitetStatus().erFrilanser());
 
         return harOppgittNyoppstartetISøknad(iayGrunnlag, erFrilanser) || harOppgittPeriodeSomNyoppstartet(beregningsgrunnlagGrunnlag, erFrilanser);
@@ -51,7 +51,7 @@ public class KontrollerFaktaBeregningFrilanserTjeneste {
                     .findFirst()
                     .orElse(TIDENES_BEGYNNELSE);
 
-            BeregningsgrunnlagDto bg = beregningsgrunnlagGrunnlag.getBeregningsgrunnlagHvisFinnes()
+            var bg = beregningsgrunnlagGrunnlag.getBeregningsgrunnlagHvisFinnes()
                     .orElseThrow();
             var startAvBeregningsperiode = bg
                     .getBeregningsgrunnlagPerioder().stream()
@@ -96,11 +96,11 @@ public class KontrollerFaktaBeregningFrilanserTjeneste {
 
         // Sjekk om samme orgnr finnes både som arbeidsgiver og frilansoppdragsgiver
 
-        final Set<Arbeidsgiver> arbeidsforholdArbeidsgivere = finnArbeidsgivere(beregningsgrunnlag);
+        final var arbeidsforholdArbeidsgivere = finnArbeidsgivere(beregningsgrunnlag);
         if (arbeidsforholdArbeidsgivere.isEmpty()) {
             return Collections.emptySet();
         }
-        final Set<Arbeidsgiver> frilansOppdragsgivere = finnFrilansOppdragsgivere(beregningsgrunnlag, iayGrunnlag);
+        final var frilansOppdragsgivere = finnFrilansOppdragsgivere(beregningsgrunnlag, iayGrunnlag);
         if (frilansOppdragsgivere.isEmpty()) {
             return Collections.emptySet();
         }
@@ -121,7 +121,7 @@ public class KontrollerFaktaBeregningFrilanserTjeneste {
     }
 
     private static Set<Arbeidsgiver> finnFrilansOppdragsgivere(BeregningsgrunnlagDto beregningsgrunnlag, InntektArbeidYtelseGrunnlagDto iayGrunnlag) {
-        boolean erFrilanser = beregningsgrunnlag.getAktivitetStatuser().stream()
+        var erFrilanser = beregningsgrunnlag.getAktivitetStatuser().stream()
             .map(BeregningsgrunnlagAktivitetStatusDto::getAktivitetStatus)
             .anyMatch(AktivitetStatus::erFrilanser);
         if (!erFrilanser) {

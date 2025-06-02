@@ -2,7 +2,6 @@ package no.nav.folketrygdloven.beregningsgrunnlag.grenseverdi;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPeriode;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.Fastsatt;
 import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
@@ -21,13 +20,13 @@ public class RegelFastsettAndelBGOver6G implements RuleService<Beregningsgrunnla
     @SuppressWarnings("unchecked")
     @Override
     public Specification<BeregningsgrunnlagPeriode> getSpecification() {
-        BeregningsgrunnlagPrStatus bgpsa = regelmodell.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
+        var bgpsa = regelmodell.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
 
-        Ruleset<BeregningsgrunnlagPeriode> rs = new Ruleset<>();
+        var rs = new Ruleset<BeregningsgrunnlagPeriode>();
 
         //FP_BR_29.8.10 For alle beregningsgrunnlagsandeler som gjelder arbeidsforhold, fastsett Brukers Andel
         //FP_BR_29.8.4 Avkort alle beregningsgrunnlagsander som ikke gjelder arbeidsforhold andelsmessig
-        Specification<BeregningsgrunnlagPeriode> avkortAndelerAndelsmessigOgFastsettBrukersAndel = rs.beregningsRegel(
+        var avkortAndelerAndelsmessigOgFastsettBrukersAndel = rs.beregningsRegel(
             AvkortBGAndelerSomIkkeGjelderArbeidsforholdAndelsmessig.ID,
             AvkortBGAndelerSomIkkeGjelderArbeidsforholdAndelsmessig.BESKRIVELSE,
             new AvkortBGAndelerSomIkkeGjelderArbeidsforholdAndelsmessig(),
@@ -36,7 +35,7 @@ public class RegelFastsettAndelBGOver6G implements RuleService<Beregningsgrunnla
         Specification<BeregningsgrunnlagPeriode> avkortAndelerSomIkkegjelderAFtil0 = new Fastsatt();
 
         if (bgpsa != null) {
-            Specification<BeregningsgrunnlagPeriode> fastsettAndelerForArbeidsforhold = rs.beregningsRegel(
+            var fastsettAndelerForArbeidsforhold = rs.beregningsRegel(
                 FastsettAndelForArbeidsforhold.ID,
                 FastsettAndelForArbeidsforhold.BESKRIVELSE,
                 new FastsettAndelForArbeidsforhold(),
@@ -51,7 +50,7 @@ public class RegelFastsettAndelBGOver6G implements RuleService<Beregningsgrunnla
         }
 
         //FP_BR_29.8.2 Er totalt BG for beregningsgrunnlagsandeler fra arbeidsforhold > 6G?
-        Specification<BeregningsgrunnlagPeriode> erTotaltBGFraArbeidforholdStørreEnn6G = rs.beregningHvisRegel(new SjekkOmTotaltBGForArbeidsforholdStørreEnnGrenseverdi(),
+        var erTotaltBGFraArbeidforholdStørreEnn6G = rs.beregningHvisRegel(new SjekkOmTotaltBGForArbeidsforholdStørreEnnGrenseverdi(),
             avkortAndelerSomIkkegjelderAFtil0, avkortAndelerAndelsmessigOgFastsettBrukersAndel);
 
 

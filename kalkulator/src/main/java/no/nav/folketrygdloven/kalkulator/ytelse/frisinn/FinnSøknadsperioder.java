@@ -3,7 +3,6 @@ package no.nav.folketrygdloven.kalkulator.ytelse.frisinn;
 import java.time.YearMonth;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 
@@ -27,14 +26,14 @@ public class FinnSøknadsperioder {
      * @return Liste med søknadsperioder
      */
     public static List<Intervall> finnSøknadsperioder(FrisinnGrunnlag frisinnGrunnlag) {
-        Map<YearMonth, Intervall> månedTilPeriodeMap = frisinnGrunnlag.getFrisinnPerioder().stream()
+        var månedTilPeriodeMap = frisinnGrunnlag.getFrisinnPerioder().stream()
                 .collect(Collectors.toMap(p -> YearMonth.from(p.getPeriode().getTomDato()), FrisinnPeriode::getPeriode, finnStørsteIntervall()));
 
         // Må spesialbehandle dei periodene som slutter i mars fordi dei tilhører søknadsperiode for april
         if (månedTilPeriodeMap.containsKey(MARS)) {
-            Intervall marsPeriode = månedTilPeriodeMap.get(MARS);
+            var marsPeriode = månedTilPeriodeMap.get(MARS);
             månedTilPeriodeMap.remove(MARS);
-            Intervall aprilPeriode = månedTilPeriodeMap.get(APRIL);
+            var aprilPeriode = månedTilPeriodeMap.get(APRIL);
             månedTilPeriodeMap.put(APRIL, Intervall.fraOgMedTilOgMed(marsPeriode.getFomDato(), aprilPeriode.getTomDato()));
         }
 
@@ -54,7 +53,7 @@ public class FinnSøknadsperioder {
      * @return Siste søknadsperiode
      */
     public static Intervall finnSisteSøknadsperiode(FrisinnGrunnlag frisinnGrunnlag) {
-        List<Intervall> finnSøknadsperioder = finnSøknadsperioder(frisinnGrunnlag);
+        var finnSøknadsperioder = finnSøknadsperioder(frisinnGrunnlag);
         return finnSøknadsperioder.get(finnSøknadsperioder.size() - 1);
     }
 

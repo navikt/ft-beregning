@@ -32,7 +32,6 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AndelKilde;
 import no.nav.folketrygdloven.kalkulus.kodeverk.ArbeidType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.UttakArbeidType;
-import no.nav.fpsak.tidsserie.LocalDateInterval;
 import no.nav.fpsak.tidsserie.LocalDateSegment;
 import no.nav.fpsak.tidsserie.LocalDateTimeline;
 import no.nav.fpsak.tidsserie.StandardCombinators;
@@ -178,8 +177,8 @@ class TilkommetInntektsforholdTjenesteTest {
 
 	public static <T> LocalDateTimeline<T> fjernHelg(LocalDateTimeline<T> input) {
 		List<LocalDateSegment<Void>> helger = new ArrayList<>();
-		for (LocalDateInterval intervall : input.getLocalDateIntervals()) {
-			LocalDate d = intervall.getFomDato();
+		for (var intervall : input.getLocalDateIntervals()) {
+            var d = intervall.getFomDato();
 			while (!d.isAfter(intervall.getTomDato())) {
 				if (d.getDayOfWeek() == DayOfWeek.SUNDAY) {
 					helger.add(new LocalDateSegment<>(d, d, null));
@@ -192,7 +191,7 @@ class TilkommetInntektsforholdTjenesteTest {
 				}
 			}
 		}
-		LocalDateTimeline<Void> helgetidslinje = new LocalDateTimeline<>(helger, StandardCombinators::coalesceLeftHandSide);
+        var helgetidslinje = new LocalDateTimeline<Void>(helger, StandardCombinators::coalesceLeftHandSide);
 		return input.disjoint(helgetidslinje);
 	}
 

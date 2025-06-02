@@ -22,20 +22,20 @@ public class FinnRapporterteInntekterForInaktiv implements FinnRapporterteInntek
 
 	@Override
 	public Optional<Periodeinntekt> finnRapportertInntekt(BeregningsgrunnlagPeriode grunnlag) {
-		List<Periodeinntekt> inntektsmeldinger = finnInntektsmeldinger(grunnlag);
+        var inntektsmeldinger = finnInntektsmeldinger(grunnlag);
 		var innrapporterteInntekter = finnOverlappendePeriodeInntekterFraInntektskomponenten(grunnlag);
 
 		if (inntektsmeldinger.isEmpty() && innrapporterteInntekter.isEmpty()) {
 			return Optional.empty();
 		}
 
-		BigDecimal årsinntektFraInntektsmelding = finnÅrsinntektFraInntektsmeldinger(inntektsmeldinger);
+        var årsinntektFraInntektsmelding = finnÅrsinntektFraInntektsmeldinger(inntektsmeldinger);
 		var arbeidsgivereMedInntektsmelding = inntektsmeldinger.stream()
 				.map(Periodeinntekt::getArbeidsgiver)
 				.filter(Optional::isPresent)
 				.map(Optional::get)
 				.collect(Collectors.toSet());
-		BigDecimal årsinntektFraAOrdningen = finnÅrsinntektFraAOrdningen(grunnlag, innrapporterteInntekter, arbeidsgivereMedInntektsmelding);
+        var årsinntektFraAOrdningen = finnÅrsinntektFraAOrdningen(grunnlag, innrapporterteInntekter, arbeidsgivereMedInntektsmelding);
 
 		return Optional.of(Periodeinntekt.builder()
 				.medPeriode(Periode.of(grunnlag.getSkjæringstidspunkt(), grunnlag.getSkjæringstidspunkt()))
@@ -126,7 +126,7 @@ public class FinnRapporterteInntekterForInaktiv implements FinnRapporterteInntek
 	}
 
 	private BigDecimal beregnForInntekt(BeregningsgrunnlagPeriode grunnlag, Arbeidsforhold arbeidsgiver, Periodeinntekt nestNyeste) {
-		int virkedagerIPeriode = finnVirkedagerMedArbeidForInntektsperiode(nestNyeste.getPeriode(), arbeidsgiver);
+        var virkedagerIPeriode = finnVirkedagerMedArbeidForInntektsperiode(nestNyeste.getPeriode(), arbeidsgiver);
 		if (virkedagerIPeriode > 0) {
 			var inntekt = nestNyeste.getInntekt();
 			return inntekt.divide(BigDecimal.valueOf(virkedagerIPeriode), 10, RoundingMode.HALF_UP).multiply(grunnlag.getBeregningsgrunnlag().getYtelsedagerPrÅr());

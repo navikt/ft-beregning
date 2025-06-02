@@ -21,8 +21,8 @@ public class FinnYrkesaktiviteterForBeregningTjeneste {
     public static Collection<YrkesaktivitetDto> finnYrkesaktiviteter(InntektArbeidYtelseGrunnlagDto iayGrunnlag,
                                                                      BeregningsgrunnlagGrunnlagDto grunnlag,
                                                                      LocalDate skjæringstidspunktBeregning) {
-        YrkesaktivitetFilterDto filter = new YrkesaktivitetFilterDto(iayGrunnlag.getArbeidsforholdInformasjon(), iayGrunnlag.getAktørArbeidFraRegister());
-        Collection<YrkesaktivitetDto> yrkesaktiviteterForBeregning = filter.getYrkesaktiviteterForBeregning();
+        var filter = new YrkesaktivitetFilterDto(iayGrunnlag.getArbeidsforholdInformasjon(), iayGrunnlag.getAktørArbeidFraRegister());
+        var yrkesaktiviteterForBeregning = filter.getYrkesaktiviteterForBeregning();
         var aktivitetOverstyringer = grunnlag.getOverstyring();
         return yrkesaktiviteterForBeregning.stream()
             .filter(yrkesaktivitet ->
@@ -46,7 +46,7 @@ public class FinnYrkesaktiviteterForBeregningTjeneste {
      */
     public static Collection<YrkesaktivitetDto> finnAlleYrkesaktiviteterInkludertFjernetIOverstyring(YrkesaktivitetFilterDto filter,
                                                                                                      LocalDate skjæringstidspunktBeregning) {
-        Collection<YrkesaktivitetDto> yrkesaktiviteterForBeregning = filter.getYrkesaktiviteterForBeregning();
+        var yrkesaktiviteterForBeregning = filter.getYrkesaktiviteterForBeregning();
         return yrkesaktiviteterForBeregning.stream()
             .filter(ya -> FinnAnsettelsesPeriode.finnMinMaksPeriode(filter.getAnsettelsesPerioder(ya), skjæringstidspunktBeregning).isPresent())
             .collect(Collectors.toList());

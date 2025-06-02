@@ -7,7 +7,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.Eksis
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SplittetPeriode;
 import no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.MapArbeidsforholdFraVLTilRegel;
 import no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.kodeverk.MapPeriodeÅrsakFraVlTilRegel;
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BGAndelArbeidsforholdDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
 
@@ -27,9 +26,9 @@ public class MapSplittetPeriodeFraVLTilRegel {
     }
 
     private static EksisterendeAndel mapToBeregningsgrunnlagPrArbeidsforhold(BeregningsgrunnlagPrStatusOgAndelDto bgAndel) {
-        BGAndelArbeidsforholdDto bgAndelArbeidsforhold = bgAndel.getBgAndelArbeidsforhold()
+        var bgAndelArbeidsforhold = bgAndel.getBgAndelArbeidsforhold()
             .orElseThrow(() -> new IllegalStateException("Må ha arbeidsforhold"));
-        EksisterendeAndel.Builder builder = EksisterendeAndel.builder()
+        var builder = EksisterendeAndel.builder()
             .medAndelNr(bgAndel.getAndelsnr());
         builder.medArbeidsforhold(MapArbeidsforholdFraVLTilRegel.mapArbeidsforhold(bgAndelArbeidsforhold.getArbeidsgiver(), bgAndelArbeidsforhold.getArbeidsforholdRef()));
         return builder.build();

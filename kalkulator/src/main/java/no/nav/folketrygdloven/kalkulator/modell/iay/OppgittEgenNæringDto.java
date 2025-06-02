@@ -139,7 +139,7 @@ public class OppgittEgenNæringDto implements OppgittPeriodeInntekt {
             return true;
         if (o == null || !(o instanceof OppgittEgenNæringDto))
             return false;
-        OppgittEgenNæringDto that = (OppgittEgenNæringDto) o;
+        var that = (OppgittEgenNæringDto) o;
         return Objects.equals(periode, that.periode) &&
             Objects.equals(virksomhetOrgnr, that.virksomhetOrgnr) &&
             Objects.equals(nyoppstartet, that.nyoppstartet) &&

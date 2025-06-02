@@ -165,7 +165,7 @@ public class RefusjonAndelTilVurderingDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RefusjonAndelTilVurderingDto that = (RefusjonAndelTilVurderingDto) o;
+        var that = (RefusjonAndelTilVurderingDto) o;
         return Objects.equals(aktivitetStatus, that.aktivitetStatus) &&
                 Objects.equals(tidligereUtbetalinger, that.tidligereUtbetalinger) &&
                 Objects.equals(nyttRefusjonskravFom, that.nyttRefusjonskravFom) &&

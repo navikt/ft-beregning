@@ -220,7 +220,7 @@ class OmfordelFraArbeidTest {
 	}
 
 	private void kjørRegel(FordelAndelModell arbeidsforhold, FordelPeriodeModell periode) {
-		OmfordelFraArbeid regel = new OmfordelFraArbeid(arbeidsforhold);
+        var regel = new OmfordelFraArbeid(arbeidsforhold);
 		regel.evaluate(new FordelModell(periode));
 	}
 }

@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.util.Collections;
-import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,19 +40,19 @@ class VurderEtterlønnSluttpakkeOppdatererTest {
     @Test
     void skalTesteAtOppdatererSetterInntekt0DersomBrukerIkkeHarEtterlønnSluttpakke() {
         // Arrange
-        VurderEtterlønnSluttpakkeDto vurderDto = new VurderEtterlønnSluttpakkeDto(false);
-        FaktaBeregningLagreDto dto = new FaktaBeregningLagreDto(Collections.singletonList(FaktaOmBeregningTilfelle.VURDER_ETTERLØNN_SLUTTPAKKE));
+        var vurderDto = new VurderEtterlønnSluttpakkeDto(false);
+        var dto = new FaktaBeregningLagreDto(Collections.singletonList(FaktaOmBeregningTilfelle.VURDER_ETTERLØNN_SLUTTPAKKE));
         dto.setVurderEtterlønnSluttpakke(vurderDto);
 
         // Act
-        BeregningsgrunnlagGrunnlagDtoBuilder oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
+        var oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
         VurderEtterlønnSluttpakkeOppdaterer.oppdater(dto, oppdatere);
 
         // Assert
-        List<BeregningsgrunnlagPeriodeDto> bgPerioder = oppdatere.getBeregningsgrunnlagBuilder().getBeregningsgrunnlag().getBeregningsgrunnlagPerioder();
+        var bgPerioder = oppdatere.getBeregningsgrunnlagBuilder().getBeregningsgrunnlag().getBeregningsgrunnlagPerioder();
         Assertions.assertThat(bgPerioder).hasSize(1);
         assertThat(bgPerioder.get(0).getBeregningsgrunnlagPrStatusOgAndelList()).hasSize(1);
-        BeregningsgrunnlagPrStatusOgAndelDto andel = bgPerioder.get(0).getBeregningsgrunnlagPrStatusOgAndelList().get(0);
+        var andel = bgPerioder.get(0).getBeregningsgrunnlagPrStatusOgAndelList().get(0);
         Assertions.assertThat(andel.getBeregnetPrÅr().compareTo(Beløp.ZERO) == 0).isTrue();
         assertThat(andel.getArbeidsforholdType()).isEqualTo(OpptjeningAktivitetType.ETTERLØNN_SLUTTPAKKE);
     }
@@ -61,20 +60,20 @@ class VurderEtterlønnSluttpakkeOppdatererTest {
     @Test
     void skalTesteAtOppdatererIkkeSetterInntektDersomBrukerHarEtterlønnSluttpakke() {
         // Arrange
-        VurderEtterlønnSluttpakkeDto vurderDto = new VurderEtterlønnSluttpakkeDto(true);
-        FaktaBeregningLagreDto dto = new FaktaBeregningLagreDto(Collections.singletonList(FaktaOmBeregningTilfelle.VURDER_ETTERLØNN_SLUTTPAKKE));
+        var vurderDto = new VurderEtterlønnSluttpakkeDto(true);
+        var dto = new FaktaBeregningLagreDto(Collections.singletonList(FaktaOmBeregningTilfelle.VURDER_ETTERLØNN_SLUTTPAKKE));
         dto.setVurderEtterlønnSluttpakke(vurderDto);
 
         // Act
-        BeregningsgrunnlagGrunnlagDtoBuilder oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
+        var oppdatere = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
         VurderEtterlønnSluttpakkeOppdaterer.oppdater(dto, oppdatere);
 
         // Assert
-        BeregningsgrunnlagDto nyttBg = oppdatere.getBeregningsgrunnlagBuilder().getBeregningsgrunnlag();
-        List<BeregningsgrunnlagPeriodeDto> bgPerioder = nyttBg.getBeregningsgrunnlagPerioder();
+        var nyttBg = oppdatere.getBeregningsgrunnlagBuilder().getBeregningsgrunnlag();
+        var bgPerioder = nyttBg.getBeregningsgrunnlagPerioder();
         Assertions.assertThat(bgPerioder).hasSize(1);
         assertThat(bgPerioder.get(0).getBeregningsgrunnlagPrStatusOgAndelList()).hasSize(1);
-        BeregningsgrunnlagPrStatusOgAndelDto andel = bgPerioder.get(0).getBeregningsgrunnlagPrStatusOgAndelList().get(0);
+        var andel = bgPerioder.get(0).getBeregningsgrunnlagPrStatusOgAndelList().get(0);
         assertThat(andel.getBeregnetPrÅr()).isNull();
         assertThat(andel.getArbeidsforholdType()).isEqualTo(OpptjeningAktivitetType.ETTERLØNN_SLUTTPAKKE);
     }
@@ -84,7 +83,7 @@ class VurderEtterlønnSluttpakkeOppdatererTest {
             .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT)
             .medGrunnbeløp(GRUNNBELØP)
             .build();
-        BeregningsgrunnlagPeriodeDto periode = buildBeregningsgrunnlagPeriode(beregningsgrunnlag,
+        var periode = buildBeregningsgrunnlagPeriode(beregningsgrunnlag,
             SKJÆRINGSTIDSPUNKT, null);
         buildBgPrStatusOgAndel(periode);
         input = BeregningsgrunnlagInputTestUtil.lagInputMedBeregningsgrunnlag(koblingReferanse, beregningsgrunnlag, BeregningsgrunnlagTilstand.FORESLÅTT);

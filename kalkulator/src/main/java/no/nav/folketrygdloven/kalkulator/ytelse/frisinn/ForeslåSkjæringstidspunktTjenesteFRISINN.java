@@ -11,7 +11,6 @@ import no.nav.folketrygdloven.kalkulator.output.BeregningVilkårResultat;
 import no.nav.folketrygdloven.kalkulator.output.BeregningsgrunnlagRegelResultat;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Vilkårsavslagsårsak;
-import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModell;
 
 public class ForeslåSkjæringstidspunktTjenesteFRISINN {
 
@@ -30,7 +29,7 @@ public class ForeslåSkjæringstidspunktTjenesteFRISINN {
 
     public BeregningAktivitetAggregatDto fastsettAktiviteter(FastsettBeregningsaktiviteterInput input) {
         // Oversetter Opptjening -> regelmodell, hvor også skjæringstidspunkt for Opptjening er lagret
-        AktivitetStatusModell regelmodell = new MapBeregningAktiviteterFraVLTilRegelFRISINN().mapForSkjæringstidspunkt(input);
+        var regelmodell = new MapBeregningAktiviteterFraVLTilRegelFRISINN().mapForSkjæringstidspunkt(input);
         return MapBeregningAktiviteterFraRegelTilVL.map(regelmodell);
     }
 

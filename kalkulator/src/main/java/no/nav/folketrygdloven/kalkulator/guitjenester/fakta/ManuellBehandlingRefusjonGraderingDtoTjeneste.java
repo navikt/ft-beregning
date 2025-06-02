@@ -28,11 +28,11 @@ public class ManuellBehandlingRefusjonGraderingDtoTjeneste {
                                                            List<BeregningsgrunnlagPeriodeDto> perioder,
                                                            Collection<InntektsmeldingDto> inntektsmeldinger,
                                                            List<Intervall> forlengelseperioder) {
-        boolean grunnetTidligerePerioder = skalRedigereGrunnetTidligerePerioder(grunnlag, aktivitetGradering, periode, perioder, inntektsmeldinger, forlengelseperioder);
+        var grunnetTidligerePerioder = skalRedigereGrunnetTidligerePerioder(grunnlag, aktivitetGradering, periode, perioder, inntektsmeldinger, forlengelseperioder);
         if (grunnetTidligerePerioder) {
             return true;
         }
-        Map<BeregningsgrunnlagPrStatusOgAndelDto, FordelingTilfelle> periodeTilfelleMap = utledTilfellerForAndelerIPeriode(
+        var periodeTilfelleMap = utledTilfellerForAndelerIPeriode(
                 grunnlag,
                 aktivitetGradering,
                 periode, inntektsmeldinger, forlengelseperioder);
@@ -54,7 +54,7 @@ public class ManuellBehandlingRefusjonGraderingDtoTjeneste {
                                                             BeregningsgrunnlagPeriodeDto periode,
                                                             Collection<InntektsmeldingDto> inntektsmeldinger,
                                                             Beløp grunnbeløp, List<Intervall> forlengelseperioder) {
-        Map<BeregningsgrunnlagPrStatusOgAndelDto, FordelingTilfelle> periodeTilfelleMap = utledTilfellerForAndelerIPeriode(grunnlag, aktivitetGradering,
+        var periodeTilfelleMap = utledTilfellerForAndelerIPeriode(grunnlag, aktivitetGradering,
                 periode, inntektsmeldinger, forlengelseperioder);
         return periode.getBeregningsgrunnlagPrStatusOgAndelList().stream().anyMatch(andelFraSteg -> andelLiggerITilfelleMap(andelFraSteg, periodeTilfelleMap)
                 && RefusjonDtoTjeneste.skalKunneEndreRefusjon(andelFraSteg, periode, aktivitetGradering, grunnbeløp));

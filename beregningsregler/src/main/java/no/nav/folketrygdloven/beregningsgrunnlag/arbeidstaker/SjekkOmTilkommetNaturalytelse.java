@@ -1,9 +1,5 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.arbeidstaker;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.Optional;
-
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
@@ -24,9 +20,9 @@ class SjekkOmTilkommetNaturalytelse extends LeafSpecification<Beregningsgrunnlag
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        LocalDate fom = grunnlag.getSkjæringstidspunkt();
-        LocalDate tom = grunnlag.getBeregningsgrunnlagPeriode().getFom();
-        Optional<BigDecimal> naturalytelse = grunnlag.getInntektsgrunnlag().finnTotaltNaturalytelseBeløpTilkommetIPeriodeForArbeidsforhold(arbeidsforhold.getArbeidsforhold(), fom, tom);
+        var fom = grunnlag.getSkjæringstidspunkt();
+        var tom = grunnlag.getBeregningsgrunnlagPeriode().getFom();
+        var naturalytelse = grunnlag.getInntektsgrunnlag().finnTotaltNaturalytelseBeløpTilkommetIPeriodeForArbeidsforhold(arbeidsforhold.getArbeidsforhold(), fom, tom);
         return naturalytelse.isPresent() ? ja() : nei();
     }
 }

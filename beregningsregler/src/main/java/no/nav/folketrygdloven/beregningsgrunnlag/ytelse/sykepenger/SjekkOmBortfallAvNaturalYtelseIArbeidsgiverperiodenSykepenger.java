@@ -1,8 +1,5 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.ytelse.sykepenger;
 
-import java.math.BigDecimal;
-import java.util.Optional;
-
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
@@ -25,8 +22,8 @@ public class SjekkOmBortfallAvNaturalYtelseIArbeidsgiverperiodenSykepenger exten
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
-        Inntektsgrunnlag inntektsgrunnlag = grunnlag.getInntektsgrunnlag();
-        boolean erBortfaltNaturalytelseIArbeidsgiverperioden = arbeidsforhold.getArbeidsgiverperioder()
+        var inntektsgrunnlag = grunnlag.getInntektsgrunnlag();
+        var erBortfaltNaturalytelseIArbeidsgiverperioden = arbeidsforhold.getArbeidsgiverperioder()
             .stream()
             .anyMatch(periode -> erBortfaltNaturalytelseIPeriode(inntektsgrunnlag, periode));
 
@@ -34,7 +31,7 @@ public class SjekkOmBortfallAvNaturalYtelseIArbeidsgiverperiodenSykepenger exten
     }
 
     private boolean erBortfaltNaturalytelseIPeriode(Inntektsgrunnlag inntektsgrunnlag, Periode periode) {
-        Optional<BigDecimal> naturalytelseOpt =
+        var naturalytelseOpt =
             inntektsgrunnlag.finnTotaltNaturalytelseBeløpMedOpphørsdatoIPeriodeForArbeidsforhold(arbeidsforhold.getArbeidsforhold(), periode.getFom(), periode.getTom());
         return naturalytelseOpt.isPresent();
     }

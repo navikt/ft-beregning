@@ -23,11 +23,9 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatusMedHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.RegelResultat;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ResultatBeregningType;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.SammenligningGrunnlagType;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag;
@@ -44,17 +42,17 @@ class RegelBeregningsgrunnlagInaktivTest {
 	void skal_beregne_inaktiv_uten_inntektsmelding() {
 
 		// Arrange
-		Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(STP,
+        var inntektsgrunnlag = settoppÅrsinntekter(STP,
 				årsinntekterFor3SisteÅr(5.0d, 3.0d, 4.0d), Inntektskilde.SIGRUN);
-		BeregningsgrunnlagPrStatus brukers_andel = BeregningsgrunnlagPrStatus.builder()
+        var brukers_andel = BeregningsgrunnlagPrStatus.builder()
 				.medAktivitetStatus(AktivitetStatus.BA)
 				.medAndelNr(1L)
 				.build();
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(STP, TIDENES_ENDE))
 				.medBeregningsgrunnlagPrStatus(brukers_andel)
 				.build();
-		Beregningsgrunnlag bg = Beregningsgrunnlag.builder()
+        var bg = Beregningsgrunnlag.builder()
 				.medAktivitetStatuser(List.of(new AktivitetStatusMedHjemmel(AktivitetStatus.MIDL_INAKTIV, null)))
 				.medSkjæringstidspunkt(STP)
 				.medBeregningsgrunnlagPeriode(periode)
@@ -68,9 +66,9 @@ class RegelBeregningsgrunnlagInaktivTest {
 		var evaluation = kjørRegel(periode);
 
 		// Assert
-		double forventet_bg = 4.0d * GRUNNBELØP_2017;
+        var forventet_bg = 4.0d * GRUNNBELØP_2017;
 
-		RegelResultat regelResultat = getRegelResultat(evaluation, "input");
+        var regelResultat = getRegelResultat(evaluation, "input");
 		assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
 
 		assertThat(brukers_andel.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(forventet_bg));
@@ -82,9 +80,9 @@ class RegelBeregningsgrunnlagInaktivTest {
 	void skal_få_skjønnsfastsette_ved_inaktiv_med_inntektsmelding_og_25_prosent_avvik() {
 
 		// Arrange
-		Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(STP,
+        var inntektsgrunnlag = settoppÅrsinntekter(STP,
 				årsinntekterFor3SisteÅr(5.0d, 3.0d, 4.0d), Inntektskilde.SIGRUN);
-		Arbeidsforhold arbeidsforhold = Arbeidsforhold.builder()
+        var arbeidsforhold = Arbeidsforhold.builder()
 				.medOrgnr("23472342")
 				.medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT)
 				.medAnsettelsesPeriode(Periode.of(STP.minusDays(10), STP.plusDays(100)))
@@ -94,15 +92,15 @@ class RegelBeregningsgrunnlagInaktivTest {
 				.medInntektskildeOgPeriodeType(Inntektskilde.INNTEKTSMELDING)
 				.medArbeidsgiver(arbeidsforhold)
 				.build());
-		BeregningsgrunnlagPrStatus brukers_andel = BeregningsgrunnlagPrStatus.builder()
+        var brukers_andel = BeregningsgrunnlagPrStatus.builder()
 				.medAktivitetStatus(AktivitetStatus.BA)
 				.medAndelNr(1L)
 				.build();
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(STP, TIDENES_ENDE))
 				.medBeregningsgrunnlagPrStatus(brukers_andel)
 				.build();
-		Beregningsgrunnlag bg = Beregningsgrunnlag.builder()
+        var bg = Beregningsgrunnlag.builder()
 				.medAktivitetStatuser(List.of(new AktivitetStatusMedHjemmel(AktivitetStatus.MIDL_INAKTIV, null)))
 				.medSkjæringstidspunkt(STP)
 				.medBeregningsgrunnlagPeriode(periode)
@@ -116,10 +114,10 @@ class RegelBeregningsgrunnlagInaktivTest {
 		var evaluation = kjørRegel(periode);
 
 		// Assert
-		double forventet_bg = 4.0d * GRUNNBELØP_2017;
+        var forventet_bg = 4.0d * GRUNNBELØP_2017;
 
 		EvaluationSerializer.asJson(evaluation);
-		RegelResultat regelResultat = getRegelResultat(evaluation, "input");
+        var regelResultat = getRegelResultat(evaluation, "input");
 		assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
 		verifiserRegelmerknad(regelResultat, "5054");
 
@@ -134,9 +132,9 @@ class RegelBeregningsgrunnlagInaktivTest {
 	void skal_ikke_beregne_avvik_dersom_inntektsmelding_fra_arbeidsforhold_med_start_på_stp() {
 
 		// Arrange
-		Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(STP,
+        var inntektsgrunnlag = settoppÅrsinntekter(STP,
 				årsinntekterFor3SisteÅr(5.0d, 3.0d, 4.0d), Inntektskilde.SIGRUN);
-		Arbeidsforhold arbeidsforhold = Arbeidsforhold.builder()
+        var arbeidsforhold = Arbeidsforhold.builder()
 				.medOrgnr("23472342")
 				.medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT)
 				.medAnsettelsesPeriode(Periode.of(STP, STP.plusDays(100)))
@@ -146,15 +144,15 @@ class RegelBeregningsgrunnlagInaktivTest {
 				.medInntektskildeOgPeriodeType(Inntektskilde.INNTEKTSMELDING)
 				.medArbeidsgiver(arbeidsforhold)
 				.build());
-		BeregningsgrunnlagPrStatus brukers_andel = BeregningsgrunnlagPrStatus.builder()
+        var brukers_andel = BeregningsgrunnlagPrStatus.builder()
 				.medAktivitetStatus(AktivitetStatus.BA)
 				.medAndelNr(1L)
 				.build();
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(STP, TIDENES_ENDE))
 				.medBeregningsgrunnlagPrStatus(brukers_andel)
 				.build();
-		Beregningsgrunnlag bg = Beregningsgrunnlag.builder()
+        var bg = Beregningsgrunnlag.builder()
 				.medAktivitetStatuser(List.of(new AktivitetStatusMedHjemmel(AktivitetStatus.MIDL_INAKTIV, null)))
 				.medSkjæringstidspunkt(STP)
 				.medBeregningsgrunnlagPeriode(periode)
@@ -168,10 +166,10 @@ class RegelBeregningsgrunnlagInaktivTest {
 		var evaluation = kjørRegel(periode);
 
 		// Assert
-		double forventet_bg = 4.0d * GRUNNBELØP_2017;
+        var forventet_bg = 4.0d * GRUNNBELØP_2017;
 
 		EvaluationSerializer.asJson(evaluation);
-		RegelResultat regelResultat = getRegelResultat(evaluation, "input");
+        var regelResultat = getRegelResultat(evaluation, "input");
 		assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
 
 		assertThat(brukers_andel.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(forventet_bg));
@@ -184,9 +182,9 @@ class RegelBeregningsgrunnlagInaktivTest {
 	void skal_få_skjønnsfastsette_ved_inaktiv_med_inntekt_i_aordningen_og_25_prosent_avvik() {
 
 		// Arrange
-		Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(STP,
+        var inntektsgrunnlag = settoppÅrsinntekter(STP,
 				årsinntekterFor3SisteÅr(5.0d, 3.0d, 4.0d), Inntektskilde.SIGRUN);
-		Arbeidsforhold arbeidsforhold = Arbeidsforhold.builder()
+        var arbeidsforhold = Arbeidsforhold.builder()
 				.medOrgnr("23472342")
 				.medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT)
 				.medAnsettelsesPeriode(Periode.of(STP.withDayOfMonth(5), STP.plusDays(100)))
@@ -197,15 +195,15 @@ class RegelBeregningsgrunnlagInaktivTest {
 				.medPeriode(Periode.of(STP.withDayOfMonth(1), STP.with(TemporalAdjusters.lastDayOfMonth())))
 				.medArbeidsgiver(arbeidsforhold)
 				.build());
-		BeregningsgrunnlagPrStatus brukers_andel = BeregningsgrunnlagPrStatus.builder()
+        var brukers_andel = BeregningsgrunnlagPrStatus.builder()
 				.medAktivitetStatus(AktivitetStatus.BA)
 				.medAndelNr(1L)
 				.build();
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(STP, TIDENES_ENDE))
 				.medBeregningsgrunnlagPrStatus(brukers_andel)
 				.build();
-		Beregningsgrunnlag bg = Beregningsgrunnlag.builder()
+        var bg = Beregningsgrunnlag.builder()
 				.medAktivitetStatuser(List.of(new AktivitetStatusMedHjemmel(AktivitetStatus.MIDL_INAKTIV, null)))
 				.medSkjæringstidspunkt(STP)
 				.medBeregningsgrunnlagPeriode(periode)
@@ -219,10 +217,10 @@ class RegelBeregningsgrunnlagInaktivTest {
 		var evaluation = kjørRegel(periode);
 
 		// Assert
-		double forventet_bg = 4.0d * GRUNNBELØP_2017;
+        var forventet_bg = 4.0d * GRUNNBELØP_2017;
 
 		EvaluationSerializer.asJson(evaluation);
-		RegelResultat regelResultat = getRegelResultat(evaluation, "input");
+        var regelResultat = getRegelResultat(evaluation, "input");
 		assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.IKKE_BEREGNET);
 		verifiserRegelmerknad(regelResultat, "5054");
 
@@ -237,9 +235,9 @@ class RegelBeregningsgrunnlagInaktivTest {
 	void skal_ikke_få_skjønnsfastsette_ved_inaktiv_med_inntekt_i_aordningen_uten_25_prosent_avvik() {
 
 		// Arrange
-		Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(STP,
+        var inntektsgrunnlag = settoppÅrsinntekter(STP,
 				årsinntekterFor3SisteÅr(5.0d, 3.0d, 4.0d), Inntektskilde.SIGRUN);
-		Arbeidsforhold arbeidsforhold = Arbeidsforhold.builder()
+        var arbeidsforhold = Arbeidsforhold.builder()
 				.medOrgnr("23472342")
 				.medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT)
 				.medAnsettelsesPeriode(Periode.of(STP.withDayOfMonth(5), STP.plusDays(100)))
@@ -250,15 +248,15 @@ class RegelBeregningsgrunnlagInaktivTest {
 				.medPeriode(Periode.of(STP.withDayOfMonth(1), STP.with(TemporalAdjusters.lastDayOfMonth())))
 				.medArbeidsgiver(arbeidsforhold)
 				.build());
-		BeregningsgrunnlagPrStatus brukers_andel = BeregningsgrunnlagPrStatus.builder()
+        var brukers_andel = BeregningsgrunnlagPrStatus.builder()
 				.medAktivitetStatus(AktivitetStatus.BA)
 				.medAndelNr(1L)
 				.build();
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(STP, TIDENES_ENDE))
 				.medBeregningsgrunnlagPrStatus(brukers_andel)
 				.build();
-		Beregningsgrunnlag bg = Beregningsgrunnlag.builder()
+        var bg = Beregningsgrunnlag.builder()
 				.medAktivitetStatuser(List.of(new AktivitetStatusMedHjemmel(AktivitetStatus.MIDL_INAKTIV, null)))
 				.medSkjæringstidspunkt(STP)
 				.medBeregningsgrunnlagPeriode(periode)
@@ -272,12 +270,12 @@ class RegelBeregningsgrunnlagInaktivTest {
 		var evaluation = kjørRegel(periode);
 
 		// Assert
-		double forventet_bg = 4.0d * GRUNNBELØP_2017;
+        var forventet_bg = 4.0d * GRUNNBELØP_2017;
 		var antallVirkedagerMedInntekt = BigDecimal.valueOf(19);
 		var inntekt = BigDecimal.valueOf(24_000);
 		var forventet_rapportert = inntekt.divide(antallVirkedagerMedInntekt, 10, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(260));
 		EvaluationSerializer.asJson(evaluation);
-		RegelResultat regelResultat = getRegelResultat(evaluation, "input");
+        var regelResultat = getRegelResultat(evaluation, "input");
 		assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
 
 		assertThat(brukers_andel.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(forventet_bg));
@@ -291,9 +289,9 @@ class RegelBeregningsgrunnlagInaktivTest {
 	void skal_ikke_få_skjønnsfastsette_ved_inaktiv_med_inntekt_i_aordningen_arbeidsforhold_som_starter_på_stp() {
 
 		// Arrange
-		Inntektsgrunnlag inntektsgrunnlag = settoppÅrsinntekter(STP,
+        var inntektsgrunnlag = settoppÅrsinntekter(STP,
 				årsinntekterFor3SisteÅr(5.0d, 3.0d, 4.0d), Inntektskilde.SIGRUN);
-		Arbeidsforhold arbeidsforhold = Arbeidsforhold.builder()
+        var arbeidsforhold = Arbeidsforhold.builder()
 				.medOrgnr("23472342")
 				.medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT)
 				.medAnsettelsesPeriode(Periode.of(STP, STP.plusDays(100)))
@@ -304,15 +302,15 @@ class RegelBeregningsgrunnlagInaktivTest {
 				.medPeriode(Periode.of(STP.withDayOfMonth(1), STP.with(TemporalAdjusters.lastDayOfMonth())))
 				.medArbeidsgiver(arbeidsforhold)
 				.build());
-		BeregningsgrunnlagPrStatus brukers_andel = BeregningsgrunnlagPrStatus.builder()
+        var brukers_andel = BeregningsgrunnlagPrStatus.builder()
 				.medAktivitetStatus(AktivitetStatus.BA)
 				.medAndelNr(1L)
 				.build();
-		BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.builder()
+        var periode = BeregningsgrunnlagPeriode.builder()
 				.medPeriode(Periode.of(STP, TIDENES_ENDE))
 				.medBeregningsgrunnlagPrStatus(brukers_andel)
 				.build();
-		Beregningsgrunnlag bg = Beregningsgrunnlag.builder()
+        var bg = Beregningsgrunnlag.builder()
 				.medAktivitetStatuser(List.of(new AktivitetStatusMedHjemmel(AktivitetStatus.MIDL_INAKTIV, null)))
 				.medSkjæringstidspunkt(STP)
 				.medBeregningsgrunnlagPeriode(periode)
@@ -326,10 +324,10 @@ class RegelBeregningsgrunnlagInaktivTest {
 		var evaluation = kjørRegel(periode);
 
 		// Assert
-		double forventet_bg = 4.0d * GRUNNBELØP_2017;
+        var forventet_bg = 4.0d * GRUNNBELØP_2017;
 
 		EvaluationSerializer.asJson(evaluation);
-		RegelResultat regelResultat = getRegelResultat(evaluation, "input");
+        var regelResultat = getRegelResultat(evaluation, "input");
 		assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
 
 		assertThat(brukers_andel.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(forventet_bg));

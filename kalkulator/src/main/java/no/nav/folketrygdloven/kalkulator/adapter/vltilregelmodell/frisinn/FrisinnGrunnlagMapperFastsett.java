@@ -16,7 +16,7 @@ public class FrisinnGrunnlagMapperFastsett {
         if (!(input.getYtelsespesifiktGrunnlag() instanceof no.nav.folketrygdloven.kalkulator.ytelse.frisinn.FrisinnGrunnlag)) {
             throw new IllegalStateException("Mangler frisinngrunnlag for frisinnberegning");
         }
-        List<FrisinnPeriode> regelPerioder = mapFrisinnPerioder(input);
+        var regelPerioder = mapFrisinnPerioder(input);
         return new FrisinnGrunnlag(regelPerioder);
     }
 

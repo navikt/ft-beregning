@@ -13,7 +13,6 @@ import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BGAndelArbeid
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
 import no.nav.folketrygdloven.kalkulator.modell.gradering.AktivitetGradering;
-import no.nav.folketrygdloven.kalkulator.modell.gradering.AndelGradering.Gradering;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.steg.fordeling.avklaringsbehov.FordelingGraderingTjeneste;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AndelKilde;
@@ -55,12 +54,12 @@ public class RefusjonDtoTjeneste {
                 .orElse(Beløp.ZERO);
     }
     private static boolean harGraderingOgIkkeRefusjon(BeregningsgrunnlagPrStatusOgAndelDto andelFraOppdatert, BeregningsgrunnlagPeriodeDto periode, AktivitetGradering aktivitetGradering) {
-        List<Gradering> graderingForAndelIPeriode = FordelingGraderingTjeneste.hentGraderingerForAndelIPeriode(andelFraOppdatert, aktivitetGradering, periode.getPeriode());
-        boolean andelHarGradering = !graderingForAndelIPeriode.isEmpty();
+        var graderingForAndelIPeriode = FordelingGraderingTjeneste.hentGraderingerForAndelIPeriode(andelFraOppdatert, aktivitetGradering, periode.getPeriode());
+        var andelHarGradering = !graderingForAndelIPeriode.isEmpty();
         var refusjon = andelFraOppdatert.getBgAndelArbeidsforhold()
             .map(BGAndelArbeidsforholdDto::getGjeldendeRefusjonPrÅr)
             .orElse(Beløp.ZERO);
-        boolean andelHarRefusjon = refusjon.compareTo(Beløp.ZERO) > 0;
+        var andelHarRefusjon = refusjon.compareTo(Beløp.ZERO) > 0;
         return andelHarGradering && !andelHarRefusjon;
     }
 
@@ -95,11 +94,11 @@ public class RefusjonDtoTjeneste {
         var totalRefusjonMap = getTotalrefusjonPrArbeidsforhold(endringAndeler);
         endringAndeler.forEach(andel -> {
             if (harArbeidsforholdOgErIkkjeLagtTilAvSaksbehandler(andel)) {
-                BeregningsgrunnlagArbeidsforholdDto arbeidsforhold = andel.getArbeidsforhold();
+                var arbeidsforhold = andel.getArbeidsforhold();
                 var totalRefusjonForArbeidsforhold = ModellTyperMapper.beløpTilDto(totalRefusjonMap.get(arbeidsforhold));
                 andel.setRefusjonskravPrAar(totalRefusjonForArbeidsforhold != null ? totalRefusjonForArbeidsforhold : andel.getRefusjonskravPrAar());
             } else if (harArbeidsforholdOgErLagtTilManuelt(andel)) {
-                BeregningsgrunnlagArbeidsforholdDto arbeidsforhold = andel.getArbeidsforhold();
+                var arbeidsforhold = andel.getArbeidsforhold();
                 var totalRefusjonForArbeidsforhold = totalRefusjonMap.get(arbeidsforhold);
                 andel.setRefusjonskravPrAar(totalRefusjonForArbeidsforhold != null ? null : andel.getRefusjonskravPrAar());
             }
@@ -110,7 +109,7 @@ public class RefusjonDtoTjeneste {
         Map<BeregningsgrunnlagArbeidsforholdDto, Beløp> arbeidsforholdRefusjonMap = new HashMap<>();
         andeler.forEach(andel -> {
             if (andel.getArbeidsforhold() != null) {
-                BeregningsgrunnlagArbeidsforholdDto arbeidsforhold = andel.getArbeidsforhold();
+                var arbeidsforhold = andel.getArbeidsforhold();
                 var refusjonskrav = Optional.ofNullable(andel.getRefusjonskravPrAar())
                         .map(ModellTyperMapper::beløpFraDto)
                         .map(b -> b.map(v -> v.setScale(0, RoundingMode.HALF_UP)))

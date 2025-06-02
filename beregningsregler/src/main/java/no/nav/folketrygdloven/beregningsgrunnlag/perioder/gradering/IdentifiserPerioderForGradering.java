@@ -1,7 +1,6 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.perioder.gradering;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.gradering.AndelGradering;
@@ -16,7 +15,7 @@ class IdentifiserPerioderForGradering {
     static Set<PeriodeSplittData> identifiser(PeriodeModellGradering input, AndelGradering andelGradering) {
         Set<PeriodeSplittData> set = new HashSet<>();
         andelGradering.getGraderinger().forEach(gradering -> {
-            List<PeriodeSplittData> splits = VurderPeriodeForGradering.vurder(input, andelGradering, gradering.getPeriode());
+            var splits = VurderPeriodeForGradering.vurder(input, andelGradering, gradering.getPeriode());
             set.addAll(splits);
         });
         return set;

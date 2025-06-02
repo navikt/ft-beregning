@@ -5,7 +5,6 @@ import java.util.Set;
 
 import no.nav.folketrygdloven.kalkulator.input.FaktaOmBeregningInput;
 import no.nav.folketrygdloven.kalkulator.input.ForeldrepengerGrunnlag;
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningAktivitetAggregatDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.steg.kontrollerfakta.utledere.TilfelleUtleder;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
@@ -21,12 +20,12 @@ public class VurderBesteberegningTilfelleUtleder implements TilfelleUtleder {
     @Override
     public Optional<FaktaOmBeregningTilfelle> utled(FaktaOmBeregningInput input,
                                                     BeregningsgrunnlagGrunnlagDto beregningsgrunnlagGrunnlag) {
-        boolean kanAutomatiskBesteberegnes = input.getOpptjeningAktiviteterForBeregning().stream()
+        var kanAutomatiskBesteberegnes = input.getOpptjeningAktiviteterForBeregning().stream()
                 .allMatch(a -> AKTIVITETER_SOM_KAN_AUTOMATISK_BESTEBEREGNES.contains(a.getOpptjeningAktivitetType()));
         if (kanAutomatiskBesteberegnes) {
             return Optional.empty();
         }
-        boolean harKunYtelse = beregningsgrunnlagGrunnlag.getBeregningsgrunnlagHvisFinnes().orElseThrow(() -> new IllegalArgumentException("Skal ha beregningsgrunnlag"))
+        var harKunYtelse = beregningsgrunnlagGrunnlag.getBeregningsgrunnlagHvisFinnes().orElseThrow(() -> new IllegalArgumentException("Skal ha beregningsgrunnlag"))
                 .getAktivitetStatuser()
                 .stream()
                 .anyMatch(s -> AktivitetStatus.KUN_YTELSE.equals(s.getAktivitetStatus()));
@@ -35,13 +34,13 @@ public class VurderBesteberegningTilfelleUtleder implements TilfelleUtleder {
     }
 
     private boolean harFjernetDagpenger(BeregningsgrunnlagGrunnlagDto beregningsgrunnlagGrunnlag) {
-        Optional<BeregningAktivitetAggregatDto> saksbehandletAktiviteter = beregningsgrunnlagGrunnlag.getSaksbehandletAktiviteter();
+        var saksbehandletAktiviteter = beregningsgrunnlagGrunnlag.getSaksbehandletAktiviteter();
         if (saksbehandletAktiviteter.isEmpty()) {
             return false;
         }
-        boolean harDagpengerIRegister = beregningsgrunnlagGrunnlag.getRegisterAktiviteter().getBeregningAktiviteter().stream()
+        var harDagpengerIRegister = beregningsgrunnlagGrunnlag.getRegisterAktiviteter().getBeregningAktiviteter().stream()
                 .anyMatch(ba -> ba.getOpptjeningAktivitetType().equals(OpptjeningAktivitetType.DAGPENGER));
-        boolean harIkkeDagpengerISaksbehandlet = saksbehandletAktiviteter.get().getBeregningAktiviteter().stream()
+        var harIkkeDagpengerISaksbehandlet = saksbehandletAktiviteter.get().getBeregningAktiviteter().stream()
                 .noneMatch(ba -> ba.getOpptjeningAktivitetType().equals(OpptjeningAktivitetType.DAGPENGER));
         return harDagpengerIRegister && harIkkeDagpengerISaksbehandlet;
     }

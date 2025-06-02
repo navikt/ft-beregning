@@ -5,7 +5,6 @@ import java.util.Objects;
 import java.util.Optional;
 
 import no.nav.folketrygdloven.kalkulator.input.FaktaOmBeregningInput;
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.opptjening.OpptjeningAktiviteterDto;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FaktaOmBeregningTilfelle;
@@ -16,7 +15,7 @@ public class VurderMilitærTilfelleUtleder implements TilfelleUtleder {
     @Override
     public Optional<FaktaOmBeregningTilfelle> utled(FaktaOmBeregningInput input, BeregningsgrunnlagGrunnlagDto beregningsgrunnlagGrunnlag) {
 
-        BeregningsgrunnlagDto beregningsgrunnlag = beregningsgrunnlagGrunnlag.getBeregningsgrunnlagHvisFinnes().orElse(null);
+        var beregningsgrunnlag = beregningsgrunnlagGrunnlag.getBeregningsgrunnlagHvisFinnes().orElse(null);
         Objects.requireNonNull(beregningsgrunnlag, "beregningsgrunnlag");
         return harOppgittMilitærIOpptjeningsperioden(input.getOpptjeningAktiviteterForBeregning()) ?
                 Optional.of(FaktaOmBeregningTilfelle.VURDER_MILITÆR_SIVILTJENESTE) : Optional.empty();

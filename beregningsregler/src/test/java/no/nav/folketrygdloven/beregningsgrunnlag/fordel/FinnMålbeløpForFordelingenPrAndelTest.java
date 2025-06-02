@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
@@ -24,8 +23,8 @@ class FinnMålbeløpForFordelingenPrAndelTest {
 	@Test
 	void skal_sette_målbeløp_for_to_andeler_der_et_er_tilkommet() {
 		// Arrange
-		FordelteAndelerModell foreslåttAndel = new FordelteAndelerModell(lagFordelAndelMedForeslått(AktivitetStatus.AT, arbeid("999", "abc"), 500_000, 300_000));
-		FordelteAndelerModell tilkommetAndel = new FordelteAndelerModell(lagFordelAndelTilkommet(AktivitetStatus.AT, arbeid("888", "abc"), 500_000, 500_000));
+        var foreslåttAndel = new FordelteAndelerModell(lagFordelAndelMedForeslått(AktivitetStatus.AT, arbeid("999", "abc"), 500_000, 300_000));
+        var tilkommetAndel = new FordelteAndelerModell(lagFordelAndelTilkommet(AktivitetStatus.AT, arbeid("888", "abc"), 500_000, 500_000));
 		foreslåttAndel.setFraksjonAvBrutto(BigDecimal.valueOf(0.375));
 		tilkommetAndel.setFraksjonAvBrutto(BigDecimal.valueOf(0.625));
 
@@ -38,10 +37,10 @@ class FinnMålbeløpForFordelingenPrAndelTest {
 	}
 
 	private void kjørRegel(FordelteAndelerModell... mellom) {
-		List<FordelteAndelerModell> mellomregninger = Arrays.asList(mellom);
-		List<FordelAndelModell> inputAndeler = mellomregninger.stream().map(FordelteAndelerModell::getInputAndel).collect(Collectors.toList());
-		FordelPeriodeModell periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), LocalDateInterval.TIDENES_ENDE), inputAndeler);
-		FordelModell modell = new FordelModell(periode);
+        var mellomregninger = Arrays.asList(mellom);
+        var inputAndeler = mellomregninger.stream().map(FordelteAndelerModell::getInputAndel).collect(Collectors.toList());
+        var periode = new FordelPeriodeModell(Periode.of(LocalDate.now(), LocalDateInterval.TIDENES_ENDE), inputAndeler);
+        var modell = new FordelModell(periode);
 		mellomregninger.forEach(modell::leggTilMellomregningAndel);
 		new FinnMålbeløpForFordelingenPrAndel().evaluate(modell);
 	}
@@ -59,7 +58,7 @@ class FinnMålbeløpForFordelingenPrAndelTest {
 	}
 
 	private FordelAndelModell lagFordelAndelMedArbeidsforhold(AktivitetStatus status, Arbeidsforhold ag, Integer brutto, Integer inntektFraIM, Integer refusjon) {
-		FordelAndelModell.Builder fordelAndel = FordelAndelModell.builder()
+        var fordelAndel = FordelAndelModell.builder()
 				.medAktivitetStatus(status)
 				.medArbeidsforhold(ag);
 		if (inntektFraIM != null) {

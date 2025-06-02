@@ -3,7 +3,6 @@ package no.nav.folketrygdloven.kalkulator.steg.besteberegning;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,7 +10,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YtelseAnvistDto;
-import no.nav.folketrygdloven.kalkulator.modell.iay.YtelseDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YtelseFilterDto;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 
@@ -25,7 +23,7 @@ public class MapArenaVedtakTilBesteberegningRegelmodell {
     }
 
     public static List<Periodeinntekt> lagInntektFraArenaYtelser(YtelseFilterDto ytelseFilter) {
-        Collection<YtelseDto> arenaytelser = ytelseFilter.filter(ytelse -> ytelse.getYtelseType().erArenaytelse())
+        var arenaytelser = ytelseFilter.filter(ytelse -> ytelse.getYtelseType().erArenaytelse())
                 .getFiltrertYtelser();
         List<Periodeinntekt> inntekter = new ArrayList<>();
         arenaytelser.forEach(vedtak -> inntekter.addAll(vedtak.getYtelseAnvist().stream()

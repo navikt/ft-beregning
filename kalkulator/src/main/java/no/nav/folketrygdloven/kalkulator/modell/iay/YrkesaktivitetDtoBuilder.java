@@ -2,7 +2,6 @@ package no.nav.folketrygdloven.kalkulator.modell.iay;
 
 import java.util.Optional;
 
-import no.nav.folketrygdloven.kalkulator.modell.iay.permisjon.PermisjonDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.permisjon.PermisjonDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
 import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
@@ -51,14 +50,14 @@ public class YrkesaktivitetDtoBuilder {
 
     public YrkesaktivitetDtoBuilder leggTilAktivitetsAvtale(AktivitetsAvtaleDtoBuilder builder) {
         if(!builder.isOppdatering()) {
-            AktivitetsAvtaleDto aktivitetsAvtale = builder.build();
+            var aktivitetsAvtale = builder.build();
             kladd.leggTilAktivitetsAvtale(aktivitetsAvtale);
         }
         return this;
     }
 
     public YrkesaktivitetDtoBuilder leggTilPermisjon(PermisjonDtoBuilder builder) {
-        PermisjonDto permisjonDto = builder.build();
+        var permisjonDto = builder.build();
         kladd.leggTilPermisjon(permisjonDto);
         return this;
     }
@@ -76,7 +75,7 @@ public class YrkesaktivitetDtoBuilder {
     }
 
     public AktivitetsAvtaleDtoBuilder getAktivitetsAvtaleBuilder(Intervall periode, boolean erAnsettelsesperioden) {
-        AktivitetsAvtaleDtoBuilder oppdater = AktivitetsAvtaleDtoBuilder.oppdater(kladd.getAlleAktivitetsAvtaler()
+        var oppdater = AktivitetsAvtaleDtoBuilder.oppdater(kladd.getAlleAktivitetsAvtaler()
             .stream()
             .filter(aa -> aa.matcherPeriode(periode)
                 && (!kladd.erArbeidsforhold() || aa.erAnsettelsesPeriode() == erAnsettelsesperioden)).findFirst());

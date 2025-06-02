@@ -2,7 +2,6 @@ package no.nav.folketrygdloven.kalkulator.ytelse.frisinn;
 
 import static no.nav.fpsak.tidsserie.LocalDateInterval.TIDENES_ENDE;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -19,10 +18,10 @@ public class VilkårTjenesteFRISINN  {
 
     // Samme som VilkårTjeneste
     public Optional<BeregningVilkårResultat> lagVilkårResultatFastsettAktiviteter(BeregningsgrunnlagInput input, List<BeregningVilkårResultat> beregningVilkårResultatListe) {
-        boolean erAvslått = beregningVilkårResultatListe.stream().anyMatch(vp -> !vp.getErVilkårOppfylt());
-        Intervall vilkårsperiode = Intervall.fraOgMedTilOgMed(input.getSkjæringstidspunktOpptjening(), TIDENES_ENDE);
+        var erAvslått = beregningVilkårResultatListe.stream().anyMatch(vp -> !vp.getErVilkårOppfylt());
+        var vilkårsperiode = Intervall.fraOgMedTilOgMed(input.getSkjæringstidspunktOpptjening(), TIDENES_ENDE);
         if (erAvslått) {
-            Optional<BeregningVilkårResultat> avslåttVilkår = beregningVilkårResultatListe.stream().filter(vr -> !vr.getErVilkårOppfylt()).findFirst();
+            var avslåttVilkår = beregningVilkårResultatListe.stream().filter(vr -> !vr.getErVilkårOppfylt()).findFirst();
             return Optional.of(avslåttVilkår.map(beregningVilkårResultat -> lagAvslag(vilkårsperiode, beregningVilkårResultat))
                     .orElseThrow(() -> new IllegalStateException("Forventer å finne vilkår med avslag.")));
         }
@@ -31,9 +30,9 @@ public class VilkårTjenesteFRISINN  {
 
     public BeregningVilkårResultat lagVilkårResultatFordel(BeregningsgrunnlagInput input, List<BeregningVilkårResultat> beregningVilkårResultatListe) {
         boolean erAvslått = erBeregningsgrunnlagVilkåretAvslått(input, beregningVilkårResultatListe);
-        Intervall vilkårsperiode = Intervall.fraOgMedTilOgMed(input.getSkjæringstidspunktForBeregning(), TIDENES_ENDE);
+        var vilkårsperiode = Intervall.fraOgMedTilOgMed(input.getSkjæringstidspunktForBeregning(), TIDENES_ENDE);
         if (erAvslått) {
-            Optional<BeregningVilkårResultat> avslåttVilkår = beregningVilkårResultatListe.stream().filter(vr -> !vr.getErVilkårOppfylt()).findFirst();
+            var avslåttVilkår = beregningVilkårResultatListe.stream().filter(vr -> !vr.getErVilkårOppfylt()).findFirst();
             return avslåttVilkår
                     .map(beregningVilkårResultat -> new BeregningVilkårResultat(false, beregningVilkårResultat.getVilkårsavslagsårsak(), vilkårsperiode))
                     .orElseGet(() -> new BeregningVilkårResultat(true, vilkårsperiode));
@@ -43,8 +42,8 @@ public class VilkårTjenesteFRISINN  {
     }
 
     public Optional<BeregningVilkårResultat> lagVilkårResultatFullføre(BeregningsgrunnlagInput input, BeregningsgrunnlagDto beregningsgrunnlagDto) {
-        boolean harAvkortetHeleSistePeriode = harAvslagGrunnetAvkorting(beregningsgrunnlagDto, input.getYtelsespesifiktGrunnlag());
-        Intervall vilkårsperiode = Intervall.fraOgMedTilOgMed(input.getSkjæringstidspunktForBeregning(), TIDENES_ENDE);
+        var harAvkortetHeleSistePeriode = harAvslagGrunnetAvkorting(beregningsgrunnlagDto, input.getYtelsespesifiktGrunnlag());
+        var vilkårsperiode = Intervall.fraOgMedTilOgMed(input.getSkjæringstidspunktForBeregning(), TIDENES_ENDE);
         return harAvkortetHeleSistePeriode ? Optional.of(new BeregningVilkårResultat(false, Vilkårsavslagsårsak.AVKORTET_GRUNNET_ANNEN_INNTEKT, vilkårsperiode)) :
                 Optional.empty();
     }
@@ -84,25 +83,25 @@ public class VilkårTjenesteFRISINN  {
     }
 
     private boolean erSistePeriodeAvkortetTilNull(BeregningsgrunnlagDto beregningsgrunnlagDto, FrisinnGrunnlag frisinnGrunnlag) {
-        Intervall sisteSøknadsperiode = FinnSøknadsperioder.finnSisteSøknadsperiode(frisinnGrunnlag);
+        var sisteSøknadsperiode = FinnSøknadsperioder.finnSisteSøknadsperiode(frisinnGrunnlag);
         return beregningsgrunnlagDto.getBeregningsgrunnlagPerioder().stream()
                 .filter(p -> p.getPeriode().overlapper(sisteSøknadsperiode))
                 .allMatch(p -> harAvkortetGrunnetAnnenInntekt(frisinnGrunnlag, p));
     }
 
     private Boolean erSisteSøknadsperiodeAvslått(BeregningsgrunnlagInput input, List<BeregningVilkårResultat> beregningVilkårResultatListe) {
-        Intervall sisteSøknadsperiode = FinnSøknadsperioder.finnSisteSøknadsperiode(input.getYtelsespesifiktGrunnlag());
+        var sisteSøknadsperiode = FinnSøknadsperioder.finnSisteSøknadsperiode(input.getYtelsespesifiktGrunnlag());
         return beregningVilkårResultatListe.stream()
                 .filter(vp -> vp.getPeriode().overlapper(sisteSøknadsperiode))
                 .noneMatch(BeregningVilkårResultat::getErVilkårOppfylt);
     }
 
     private boolean harAvkortetGrunnetAnnenInntekt(FrisinnGrunnlag frisinnGrunnlag, BeregningsgrunnlagPeriodeDto p) {
-        LocalDate fom = p.getBeregningsgrunnlagPeriodeFom();
-        boolean harSøktFrilans = frisinnGrunnlag.getSøkerYtelseForFrilans(fom);
-        boolean harSøktNæring = frisinnGrunnlag.getSøkerYtelseForNæring(fom);
-        boolean harAvkortetSøktNæring = harAvkortetSøktNæring(p, harSøktNæring);
-        boolean harAvkortetSøktFrilans = harAvkortetSøktFrilans(harSøktFrilans, p);
+        var fom = p.getBeregningsgrunnlagPeriodeFom();
+        var harSøktFrilans = frisinnGrunnlag.getSøkerYtelseForFrilans(fom);
+        var harSøktNæring = frisinnGrunnlag.getSøkerYtelseForNæring(fom);
+        var harAvkortetSøktNæring = harAvkortetSøktNæring(p, harSøktNæring);
+        var harAvkortetSøktFrilans = harAvkortetSøktFrilans(harSøktFrilans, p);
         if ((harSøktFrilans && harAvkortetSøktFrilans) && !harSøktNæring) {
             return true;
         }

@@ -3,7 +3,6 @@ package no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.frisinn;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -14,7 +13,6 @@ import no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.MapBeregningAk
 import no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.kodeverk.MapOpptjeningAktivitetTypeFraVLTilRegel;
 import no.nav.folketrygdloven.kalkulator.input.FastsettBeregningsaktiviteterInput;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektsmeldingDto;
-import no.nav.folketrygdloven.kalkulator.modell.iay.OppgittArbeidsforholdDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.OppgittOpptjeningDto;
 import no.nav.folketrygdloven.kalkulator.modell.opptjening.OpptjeningAktiviteterDto;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
@@ -27,17 +25,17 @@ public class MapBeregningAktiviteterFraVLTilRegelFRISINN implements MapBeregning
     public static final String INGEN_AKTIVITET_MELDING = "Må ha aktiviteter for å sette status.";
 
     public AktivitetStatusModell mapForSkjæringstidspunkt(FastsettBeregningsaktiviteterInput input) {
-        LocalDate opptjeningSkjæringstidspunkt = input.getSkjæringstidspunktOpptjening();
+        var opptjeningSkjæringstidspunkt = input.getSkjæringstidspunktOpptjening();
 
-        AktivitetStatusModell modell = new AktivitetStatusModell();
+        var modell = new AktivitetStatusModell();
         modell.setSkjæringstidspunktForOpptjening(opptjeningSkjæringstidspunkt);
 
         var relevanteAktiviteter = input.getOpptjeningAktiviteterForBeregning();
 
-        Optional<OppgittOpptjeningDto> oppgittOpptjening = input.getIayGrunnlag().getOppgittOpptjening();
-        boolean harFLEtterStp = harOppgittFLEtterStpOpptjening(opptjeningSkjæringstidspunkt, oppgittOpptjening);
-        boolean harSNEtterStp = harOppgittSNEtterStpOpptjening(opptjeningSkjæringstidspunkt, oppgittOpptjening);
-        boolean harATEtterSTP = harOppgittArbeidsinntektEtterSTP(opptjeningSkjæringstidspunkt, oppgittOpptjening);
+        var oppgittOpptjening = input.getIayGrunnlag().getOppgittOpptjening();
+        var harFLEtterStp = harOppgittFLEtterStpOpptjening(opptjeningSkjæringstidspunkt, oppgittOpptjening);
+        var harSNEtterStp = harOppgittSNEtterStpOpptjening(opptjeningSkjæringstidspunkt, oppgittOpptjening);
+        var harATEtterSTP = harOppgittArbeidsinntektEtterSTP(opptjeningSkjæringstidspunkt, oppgittOpptjening);
         if (relevanteAktiviteter.isEmpty()) { // For enklere feilsøking når det mangler aktiviteter
             throw new IllegalStateException(INGEN_AKTIVITET_MELDING);
         } else {
@@ -46,7 +44,7 @@ public class MapBeregningAktiviteterFraVLTilRegelFRISINN implements MapBeregning
         }
 
         // Legger til 48 mnd med frilans og næring rundt stp om det ikkje finnes, legger også til arbeidsaktivitet om det ikke finnes fra før og er oppgitt
-        Periode hardkodetOpptjeningsperiode = Periode.of(opptjeningSkjæringstidspunkt.minusMonths(36), opptjeningSkjæringstidspunkt.plusMonths(12));
+        var hardkodetOpptjeningsperiode = Periode.of(opptjeningSkjæringstidspunkt.minusMonths(36), opptjeningSkjæringstidspunkt.plusMonths(12));
         if (relevanteAktiviteter.stream().noneMatch(a -> a.getType().equals(OpptjeningAktivitetType.FRILANS)) && harFLEtterStp) {
             modell.leggTilEllerOppdaterAktivPeriode(AktivPeriode.forFrilanser(hardkodetOpptjeningsperiode));
         }
@@ -60,14 +58,14 @@ public class MapBeregningAktiviteterFraVLTilRegelFRISINN implements MapBeregning
     }
 
     private boolean erArbeidstakerPåOpptjeningsSTP(Collection<OpptjeningAktiviteterDto.OpptjeningPeriodeDto> relevanteAktiviteter, LocalDate opptjeningSkjæringstidspunkt) {
-        List<OpptjeningAktiviteterDto.OpptjeningPeriodeDto> arbeidstakeraktiviteter = relevanteAktiviteter.stream()
+        var arbeidstakeraktiviteter = relevanteAktiviteter.stream()
                 .filter(a -> a.getType().equals(OpptjeningAktivitetType.ARBEID))
                 .collect(Collectors.toList());
         return arbeidstakeraktiviteter.stream().anyMatch(akt -> akt.getPeriode().inkluderer(opptjeningSkjæringstidspunkt));
     }
 
     private boolean harOppgittArbeidsinntektEtterSTP(LocalDate opptjeningSkjæringstidspunkt, Optional<OppgittOpptjeningDto> oppgittOpptjening) {
-        List<OppgittArbeidsforholdDto> oppgitteArbfor = oppgittOpptjening.map(OppgittOpptjeningDto::getOppgittArbeidsforhold).orElse(Collections.emptyList());
+        var oppgitteArbfor = oppgittOpptjening.map(OppgittOpptjeningDto::getOppgittArbeidsforhold).orElse(Collections.emptyList());
         return oppgitteArbfor.stream().anyMatch(oa -> !oa.getFom().isBefore(opptjeningSkjæringstidspunkt));
     }
 
@@ -91,10 +89,10 @@ public class MapBeregningAktiviteterFraVLTilRegelFRISINN implements MapBeregning
                                          boolean harFLEtterStp,
                                          boolean harSNEtterStp,
                                          LocalDate opptjeningSkjæringstidspunkt) {
-        Aktivitet aktivitetType = MapOpptjeningAktivitetTypeFraVLTilRegel.map(opptjeningsperiode.getOpptjeningAktivitetType());
+        var aktivitetType = MapOpptjeningAktivitetTypeFraVLTilRegel.map(opptjeningsperiode.getOpptjeningAktivitetType());
         var gjeldendePeriode = opptjeningsperiode.getPeriode();
         var regelPeriode = Periode.of(gjeldendePeriode.getFomDato(), gjeldendePeriode.getTomDato());
-        Periode utvidetPeriode = Periode.of(opptjeningSkjæringstidspunkt.minusMonths(36), opptjeningSkjæringstidspunkt.plusMonths(12));
+        var utvidetPeriode = Periode.of(opptjeningSkjæringstidspunkt.minusMonths(36), opptjeningSkjæringstidspunkt.plusMonths(12));
 
         if (Aktivitet.FRILANSINNTEKT.equals(aktivitetType)) {
             return AktivPeriode.forFrilanser(harFLEtterStp ? utvidetPeriode : regelPeriode);

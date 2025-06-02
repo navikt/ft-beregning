@@ -32,7 +32,7 @@ public class FinnTidslinjeForErNyAktivitet {
                                                                   UttakArbeidType uttakArbeidType,
                                                                   InternArbeidsforholdRefDto internArbeidsforholdRef,
                                                                   Optional<Arbeidsgiver> arbeidsgiver) {
-        Arbeidsgiver tilretteleggingArbeidsgiver = arbeidsgiver.orElse(null);
+        var tilretteleggingArbeidsgiver = arbeidsgiver.orElse(null);
 
         var eksisterendeAndelSegmenter = vlBeregningsgrunnlag.getBeregningsgrunnlagPerioder().stream()
                 .filter(p -> p.getBeregningsgrunnlagPrStatusOgAndelList()
@@ -47,7 +47,7 @@ public class FinnTidslinjeForErNyAktivitet {
                         }))
                 .map(p -> new LocalDateSegment<>(p.getBeregningsgrunnlagPeriodeFom(), p.getBeregningsgrunnlagPeriodeTom(), false))
                 .toList();
-        LocalDateTimeline<Boolean> eksisterendeAndelTidslinje = new LocalDateTimeline<>(eksisterendeAndelSegmenter);
+        var eksisterendeAndelTidslinje = new LocalDateTimeline<Boolean>(eksisterendeAndelSegmenter);
         return new LocalDateTimeline<>(vlBeregningsgrunnlag.getSkjæringstidspunkt(), TIDENES_ENDE, true)
                 .crossJoin(eksisterendeAndelTidslinje, StandardCombinators::coalesceRightHandSide);
     }

@@ -17,7 +17,7 @@ class IdentifiserPeriodeDerBruttoBgPåHøyerePrioriterteAndelerErMinst6G {
 			PeriodeModellGradering input,
 			AndelGradering andelGradering,
 			Periode gradering) {
-		Optional<LocalDate> høyerePrioritertAndeler6GFomOpt = input.getPeriodisertBruttoBeregningsgrunnlagList().stream()
+        var høyerePrioritertAndeler6GFomOpt = input.getPeriodisertBruttoBeregningsgrunnlagList().stream()
 				.filter(periodisertBg -> periodisertBg.getPeriode().overlapper(gradering))
 				.filter(periodisertBg -> ErHøyerePrioriterteAndelerBruttoMinst6G.vurder(input.getGrunnbeløp(), periodisertBg, andelGradering))
 				.map(PeriodisertBruttoBeregningsgrunnlag::getPeriode)
@@ -26,7 +26,7 @@ class IdentifiserPeriodeDerBruttoBgPåHøyerePrioriterteAndelerErMinst6G {
 				.findFirst();
 		return høyerePrioritertAndeler6GFomOpt.map(høyerePrioritertFom ->
 		{
-			LocalDate graderingFom = gradering.getFom();
+            var graderingFom = gradering.getFom();
 			return høyerePrioritertFom.isBefore(graderingFom) ? graderingFom : høyerePrioritertFom;
 		});
 	}

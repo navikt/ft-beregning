@@ -16,9 +16,9 @@ public final class KopierBeregningsgrunnlagUtil {
         if (!kopi.getBeregningsgrunnlagPrStatus().isEmpty()) {
             throw new IllegalStateException("Kan ikke kopiere beregningsgrunnlagperiode når beregningsgrunnlag pr status allerede finnes");
         }
-        for (BeregningsgrunnlagPrStatus forrigeStatus : grunnlag.getBeregningsgrunnlagPrStatus()) {
+        for (var forrigeStatus : grunnlag.getBeregningsgrunnlagPrStatus()) {
             if (forrigeStatus.erArbeidstakerEllerFrilanser()) {
-                BeregningsgrunnlagPrStatus ny = BeregningsgrunnlagPrStatus.builder()
+                var ny = BeregningsgrunnlagPrStatus.builder()
                     .medAktivitetStatus(forrigeStatus.getAktivitetStatus())
                     .medBeregningsgrunnlagPeriode(kopi)
                     .build();
@@ -40,14 +40,14 @@ public final class KopierBeregningsgrunnlagUtil {
 
     private static void kopierArbeidsforhold(List<BeregningsgrunnlagPrArbeidsforhold> kopierFraArbeidsforholdListe,
                                              BeregningsgrunnlagPrStatus ny, BigDecimal ytelsedagerPrÅr) {
-        for (BeregningsgrunnlagPrArbeidsforhold kopierFraArbeidsforhold : kopierFraArbeidsforholdListe) {
-            BeregningsgrunnlagPrArbeidsforhold kopiertArbeidsforhold = kopierArbeidsforhold(kopierFraArbeidsforhold, ytelsedagerPrÅr);
+        for (var kopierFraArbeidsforhold : kopierFraArbeidsforholdListe) {
+            var kopiertArbeidsforhold = kopierArbeidsforhold(kopierFraArbeidsforhold, ytelsedagerPrÅr);
             BeregningsgrunnlagPrStatus.builder(ny).medArbeidsforhold(kopiertArbeidsforhold);
         }
     }
 
     private static BeregningsgrunnlagPrArbeidsforhold kopierArbeidsforhold(BeregningsgrunnlagPrArbeidsforhold kopierFraArbeidsforhold, BigDecimal ytelsedagerPrÅr) {
-        BeregningsgrunnlagPrArbeidsforhold.Builder bgPrArbeidsforholdBuilder = BeregningsgrunnlagPrArbeidsforhold.builder()
+        var bgPrArbeidsforholdBuilder = BeregningsgrunnlagPrArbeidsforhold.builder()
             .medArbeidsforhold(kopierFraArbeidsforhold.getArbeidsforhold())
             .medInntektskategori(kopierFraArbeidsforhold.getInntektskategori())
             .medAndelNr(kopierFraArbeidsforhold.getAndelNr())

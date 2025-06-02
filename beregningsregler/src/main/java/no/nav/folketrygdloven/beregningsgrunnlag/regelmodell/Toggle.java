@@ -30,7 +30,7 @@ public class Toggle {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		Toggle toggle = (Toggle) o;
+        var toggle = (Toggle) o;
 		return feature.equals(toggle.feature);
 	}
 

@@ -2,9 +2,6 @@ package no.nav.folketrygdloven.skjæringstidspunkt.regel;
 
 import static no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet.MILITÆR_ELLER_SIVILTJENESTE;
 
-import java.util.List;
-
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivPeriode;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModell;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
@@ -24,8 +21,8 @@ class SjekkOmMilitærErSisteOgEnesteAktivitet extends LeafSpecification<Aktivite
 
     @Override
     public Evaluation evaluate(AktivitetStatusModell regelmodell) {
-        List<AktivPeriode> aktivePerioder = regelmodell.getAktivePerioder();
-        List<Aktivitet> sisteAktiviteter = aktivePerioder.stream()
+        var aktivePerioder = regelmodell.getAktivePerioder();
+        var sisteAktiviteter = aktivePerioder.stream()
             .filter(ap -> !ap.getPeriode().getTom().isBefore(regelmodell.sisteAktivitetsdato()))
             .map(AktivPeriode::getAktivitet)
             .toList();

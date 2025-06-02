@@ -1,7 +1,6 @@
 package no.nav.folketrygdloven.skjæringstidspunkt.status;
 
 import java.util.Arrays;
-import java.util.List;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModell;
@@ -21,8 +20,8 @@ public class SjekkAktuelleKombinasjoner extends LeafSpecification<AktivitetStatu
 
     @Override
     public Evaluation evaluate(AktivitetStatusModell regelmodell) {
-        List<AktivitetStatus> aktivitetStatuser = regelmodell.getAktivitetStatuser();
-        List<AktivitetStatus> kombinasjonStatus = Arrays.asList(AktivitetStatus.ATFL, AktivitetStatus.SN);
+        var aktivitetStatuser = regelmodell.getAktivitetStatuser();
+        var kombinasjonStatus = Arrays.asList(AktivitetStatus.ATFL, AktivitetStatus.SN);
         return aktivitetStatuser.containsAll(kombinasjonStatus) ? ja() : nei();
     }
 }

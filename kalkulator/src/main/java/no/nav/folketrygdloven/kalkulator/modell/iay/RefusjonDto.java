@@ -35,7 +35,7 @@ public class RefusjonDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || !(o instanceof RefusjonDto)) return false;
-        RefusjonDto that = (RefusjonDto) o;
+        var that = (RefusjonDto) o;
         return Objects.equals(refusjonsbeløpMnd, that.refusjonsbeløpMnd) &&
                 Objects.equals(fom, that.fom);
     }

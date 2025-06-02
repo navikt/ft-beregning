@@ -144,7 +144,7 @@ public class Refusjon implements Comparable<Refusjon> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Refusjon refusjon = (Refusjon) o;
+        var refusjon = (Refusjon) o;
         return Objects.equals(refusjonskravPrÅr, refusjon.refusjonskravPrÅr) &&
                 Objects.equals(saksbehandletRefusjonPrÅr, refusjon.saksbehandletRefusjonPrÅr) &&
                 Objects.equals(fordeltRefusjonPrÅr, refusjon.fordeltRefusjonPrÅr) &&
