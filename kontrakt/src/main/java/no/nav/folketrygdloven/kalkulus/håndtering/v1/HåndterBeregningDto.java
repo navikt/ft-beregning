@@ -5,7 +5,6 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -29,6 +28,7 @@ import no.nav.folketrygdloven.kalkulus.håndtering.v1.overstyring.OverstyrBeregn
 import no.nav.folketrygdloven.kalkulus.håndtering.v1.refusjon.VurderRefusjonBeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AvklaringsbehovDefinisjon;
 import no.nav.folketrygdloven.kalkulus.kodeverk.KodeKonstanter;
+import no.nav.folketrygdloven.kalkulus.opptjening.v1.Fritekst;
 
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -57,7 +57,7 @@ public abstract class HåndterBeregningDto {
 
     @JsonProperty("begrunnelse")
     @Size(max = 4000)
-    @Pattern(regexp = "^[\\p{Graph}\\p{Space}\\p{Sc}\\p{L}\\p{M}\\p{N}§]+$", message = "[${validatedValue}] matcher ikke tillatt pattern [{regexp}]")
+    @Fritekst
     private String begrunnelse;
 
     @JsonProperty(value = "avbrutt")
