@@ -22,7 +22,7 @@ public class BesteberegningFødendeKvinneDto {
     @JsonProperty("besteberegningAndelListe")
     @Valid
     @NotNull
-    @Size(min = 1)
+    @Size()
     private List<BesteberegningFødendeKvinneAndelDto> besteberegningAndelListe;
 
     @JsonProperty("nyDagpengeAndel")
