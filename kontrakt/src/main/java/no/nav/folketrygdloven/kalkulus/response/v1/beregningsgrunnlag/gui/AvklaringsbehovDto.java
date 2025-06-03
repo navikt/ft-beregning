@@ -14,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import no.nav.folketrygdloven.kalkulus.kodeverk.AvklaringsbehovDefinisjon;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AvklaringsbehovStatus;
+import no.nav.folketrygdloven.kalkulus.opptjening.v1.Fritekst;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(value = JsonInclude.Include.NON_ABSENT, content = JsonInclude.Include.NON_EMPTY)
@@ -27,7 +28,7 @@ public record AvklaringsbehovDto(@JsonProperty(value = "definisjon") @NotNull @V
                                  @JsonProperty(value = "erTrukket") @NotNull @Valid boolean erTrukket,
                                  @JsonProperty(value = "begrunnelse")
                                  @Size(max = 5000)
-                                 @Pattern(regexp = "^[\\p{Graph}\\p{Space}\\p{Sc}\\p{L}\\p{M}\\p{N}§]+$", message = "[${validatedValue}] matcher ikke tillatt pattern [{regexp}]")
+                                 @Fritekst
                                  @Valid String begrunnelse,
                                  @JsonProperty(value = "vurdertAv")
                                  @Size(max = 20)
