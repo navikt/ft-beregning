@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import no.nav.folketrygdloven.kalkulus.felles.v1.BeløpIkkeValidert;
+import no.nav.folketrygdloven.kalkulus.felles.v1.Beløp;
 import no.nav.folketrygdloven.kalkulus.felles.v1.Periode;
 import no.nav.folketrygdloven.kalkulus.kodeverk.InntektYtelseType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.InntektspostType;
@@ -48,7 +48,7 @@ public class UtbetalingsPostDto {
      */
     @JsonProperty("beløp")
     @Valid
-    private BeløpIkkeValidert beløp;
+    private Beløp beløp;
 
     /**
      * Satt dersom dette gjelder en ytelse, ellers ikke (henger sammen med {@link UtbetalingDto#getKilde()})
@@ -60,7 +60,7 @@ public class UtbetalingsPostDto {
     protected UtbetalingsPostDto() {
     }
 
-    public UtbetalingsPostDto(Periode periode, InntektspostType inntektspostType, BeløpIkkeValidert beløp) {
+    public UtbetalingsPostDto(Periode periode, InntektspostType inntektspostType, Beløp beløp) {
         Objects.requireNonNull(periode, "periode");
         Objects.requireNonNull(inntektspostType, "inntektspostType");
         this.beløp = beløp;
@@ -97,19 +97,19 @@ public class UtbetalingsPostDto {
         return periode;
     }
 
-    public BeløpIkkeValidert getBeløp() {
+    public Beløp getBeløp() {
         return beløp;
     }
 
-    public void setBeløp(BeløpIkkeValidert beløp) {
+    public void setBeløp(Beløp beløp) {
         this.beløp = beløp;
     }
 
     public void setBeløp(BigDecimal beløp) {
-        this.beløp = beløp == null ? null : BeløpIkkeValidert.fra(beløp.setScale(2, RoundingMode.HALF_UP));
+        this.beløp = beløp == null ? null : Beløp.fra(beløp.setScale(2, RoundingMode.HALF_UP));
     }
 
-    public UtbetalingsPostDto medBeløp(BeløpIkkeValidert beløp) {
+    public UtbetalingsPostDto medBeløp(Beløp beløp) {
         setBeløp(beløp);
         return this;
     }
