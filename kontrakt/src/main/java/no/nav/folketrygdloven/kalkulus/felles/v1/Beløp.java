@@ -5,9 +5,6 @@ import java.util.Map;
 import java.util.Objects;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.DecimalMax;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -15,9 +12,6 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public record Beløp(@JsonValue
                     @Valid @NotNull
-                    @DecimalMin(value = "-10000000000.00")
-                    @DecimalMax(value = "1000000000.00")
-                    @Digits(integer = 10, fraction = 2)
                     BigDecimal verdi) implements Comparable<Beløp> {
 
     public static final Beløp ZERO = Beløp.fra(BigDecimal.ZERO);
