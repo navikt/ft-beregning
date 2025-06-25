@@ -1,5 +1,6 @@
 package no.nav.folketrygdloven.kalkulus.beregning.v1;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,6 +25,10 @@ public class OpplæringspengerGrunnlag extends YtelsespesifiktGrunnlagDto {
     @Valid
     private List<UtbetalingsgradPrAktivitetDto> utbetalingsgradPrAktivitet;
 
+    @JsonProperty(value = "tilkommetInntektHensyntasFom")
+    @Valid
+    private LocalDate tilkommetInntektHensyntasFom;
+
     protected OpplæringspengerGrunnlag() {
         // default ctor
     }
@@ -32,15 +37,25 @@ public class OpplæringspengerGrunnlag extends YtelsespesifiktGrunnlagDto {
         this.utbetalingsgradPrAktivitet = utbetalingsgradPrAktivitet;
     }
 
+    public OpplæringspengerGrunnlag(@NotNull @Valid List<UtbetalingsgradPrAktivitetDto> utbetalingsgradPrAktivitet, @Valid LocalDate tilkommetInntektHensyntasFom) {
+        this.utbetalingsgradPrAktivitet = utbetalingsgradPrAktivitet;
+        this.tilkommetInntektHensyntasFom = tilkommetInntektHensyntasFom;
+    }
+
     public List<UtbetalingsgradPrAktivitetDto> getUtbetalingsgradPrAktivitet() {
         return utbetalingsgradPrAktivitet;
+    }
+
+    public LocalDate getTilkommetInntektHensyntasFom() {
+        return tilkommetInntektHensyntasFom;
     }
 
     @Override
     public String toString() {
         return "OpplæringspengerGrunnlag{" +
-                "utbetalingsgradPrAktivitet=" + utbetalingsgradPrAktivitet +
-                '}';
+            "utbetalingsgradPrAktivitet=" + utbetalingsgradPrAktivitet +
+            "tilkommetInntektHensyntasFom=" + tilkommetInntektHensyntasFom +
+            '}';
     }
 
     @Override
@@ -49,11 +64,12 @@ public class OpplæringspengerGrunnlag extends YtelsespesifiktGrunnlagDto {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         var that = (OpplæringspengerGrunnlag) o;
-        return Objects.equals(utbetalingsgradPrAktivitet, that.utbetalingsgradPrAktivitet);
+        return Objects.equals(utbetalingsgradPrAktivitet, that.utbetalingsgradPrAktivitet)
+            && (Objects.equals(tilkommetInntektHensyntasFom, that.tilkommetInntektHensyntasFom));
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), utbetalingsgradPrAktivitet);
+        return Objects.hash(super.hashCode(), utbetalingsgradPrAktivitet, tilkommetInntektHensyntasFom);
     }
 }
