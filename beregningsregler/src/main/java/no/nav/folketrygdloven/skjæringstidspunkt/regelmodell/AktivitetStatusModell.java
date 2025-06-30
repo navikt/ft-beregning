@@ -13,7 +13,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.FeatureToggles;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Toggle;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 import no.nav.fpsak.nare.doc.RuleDocumentationGrunnlag;
 
 @RuleDocumentationGrunnlag
@@ -24,7 +23,6 @@ public class AktivitetStatusModell {
 	protected List<AktivPeriode> aktivePerioder = new ArrayList<>();
 	private List<AktivitetStatus> aktivitetStatuser = new ArrayList<>();
 	private List<BeregningsgrunnlagPrStatus> beregningsgrunnlagPrStatusListe = new ArrayList<>();
-	private Inntektsgrunnlag inntektsgrunnlag;
 	private FeatureToggles toggles = new FeatureToggles();
 
 	public AktivitetStatusModell() {
@@ -36,7 +34,6 @@ public class AktivitetStatusModell {
 		this.aktivePerioder = kopi.aktivePerioder;
 		this.aktivitetStatuser = kopi.aktivitetStatuser;
 		this.beregningsgrunnlagPrStatusListe = kopi.beregningsgrunnlagPrStatusListe;
-		this.inntektsgrunnlag = kopi.inntektsgrunnlag;
 		this.toggles = new FeatureToggles(kopi.toggles);
 	}
 
@@ -66,20 +63,12 @@ public class AktivitetStatusModell {
 		return Collections.unmodifiableList(beregningsgrunnlagPrStatusListe);
 	}
 
-	public Inntektsgrunnlag getInntektsgrunnlag() {
-		return inntektsgrunnlag;
-	}
-
 	public void setSkjæringstidspunktForBeregning(LocalDate skjæringstidspunktForBeregning) {
 		this.skjæringstidspunktForBeregning = skjæringstidspunktForBeregning;
 	}
 
 	public void setSkjæringstidspunktForOpptjening(LocalDate skjæringstidspunktForOpptjening) {
 		this.skjæringstidspunktForOpptjening = skjæringstidspunktForOpptjening;
-	}
-
-	public void setInntektsgrunnlag(Inntektsgrunnlag inntektsgrunnlag) {
-		this.inntektsgrunnlag = inntektsgrunnlag;
 	}
 
 	public void leggTilEllerOppdaterAktivPeriode(AktivPeriode aktivPeriode) {

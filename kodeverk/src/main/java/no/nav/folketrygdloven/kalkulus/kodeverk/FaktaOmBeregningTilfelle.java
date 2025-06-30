@@ -28,7 +28,6 @@ public enum FaktaOmBeregningTilfelle implements Kodeverdi, DatabaseKode, Kontrak
     FASTSETT_BG_KUN_YTELSE, // Fastsett beregningsgrunnlag for kun ytelse uten arbeidsforhold
     TILSTØTENDE_YTELSE, // Avklar beregningsgrunnlag og inntektskategori for tilstøtende ytelse
     FASTSETT_ENDRET_BEREGNINGSGRUNNLAG, // Fastsette endring i beregningsgrunnlag
-	FASTSETT_INNTEKT_FOR_ARBEID_UNDER_AAP, // Fastsett inntekt for arbeid og frilans under AAP i beregningsperioden
     UDEFINERT,
     ;
 

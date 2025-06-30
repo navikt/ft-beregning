@@ -14,7 +14,6 @@ public class MapOpptjeningAktivitetTypeFraVLTilRegel {
         Map<OpptjeningAktivitetType, Aktivitet> map = new LinkedHashMap<>();
         map.put(OpptjeningAktivitetType.AAP, Aktivitet.AAP_MOTTAKER);
         map.put(OpptjeningAktivitetType.ARBEID, Aktivitet.ARBEIDSTAKERINNTEKT);
-		map.put(OpptjeningAktivitetType.ARBEID_UNDER_AAP, Aktivitet.ARBEID_UNDER_AAP);
         map.put(OpptjeningAktivitetType.DAGPENGER, Aktivitet.DAGPENGEMOTTAKER);
         map.put(OpptjeningAktivitetType.ETTERLØNN_SLUTTPAKKE, Aktivitet.ETTERLØNN_SLUTTPAKKE);
         map.put(OpptjeningAktivitetType.FORELDREPENGER, Aktivitet.FORELDREPENGER_MOTTAKER);

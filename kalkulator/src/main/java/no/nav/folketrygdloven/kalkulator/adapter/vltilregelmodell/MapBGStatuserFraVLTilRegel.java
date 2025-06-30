@@ -2,7 +2,6 @@ package no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 import no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.kodeverk.MapOpptjeningAktivitetTypeFraVLTilRegel;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningAktivitetAggregatDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningAktivitetDto;
@@ -16,13 +15,8 @@ public class MapBGStatuserFraVLTilRegel {
     }
 
     public static AktivitetStatusModell map(BeregningAktivitetAggregatDto beregningAktivitetAggregat) {
-        return map(beregningAktivitetAggregat, null);
-    }
-
-    public static AktivitetStatusModell map(BeregningAktivitetAggregatDto beregningAktivitetAggregat, Inntektsgrunnlag inntektsgrunnlag) {
         var regelmodell = new AktivitetStatusModell();
         regelmodell.setSkjæringstidspunktForOpptjening(beregningAktivitetAggregat.getSkjæringstidspunktOpptjening());
-	    regelmodell.setInntektsgrunnlag(inntektsgrunnlag);
 	    leggTilAktiviteter(beregningAktivitetAggregat, regelmodell);
         return regelmodell;
     }
