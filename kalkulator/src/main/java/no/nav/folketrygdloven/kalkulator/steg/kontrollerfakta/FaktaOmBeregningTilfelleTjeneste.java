@@ -9,7 +9,6 @@ import java.util.Set;
 
 import no.nav.folketrygdloven.kalkulator.input.FaktaOmBeregningInput;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDto;
-import no.nav.folketrygdloven.kalkulator.steg.kontrollerfakta.utledere.ArbeidUnderAAPTilfelleUtleder;
 import no.nav.folketrygdloven.kalkulator.steg.kontrollerfakta.utledere.ArbeidstakerOgFrilanserISammeOrganisasjonTilfelleUtleder;
 import no.nav.folketrygdloven.kalkulator.steg.kontrollerfakta.utledere.EtterlønnSluttpakkeTilfelleUtleder;
 import no.nav.folketrygdloven.kalkulator.steg.kontrollerfakta.utledere.FastsettMånedsinntektUtenInntektsmeldingTilfelleUtleder;
@@ -47,9 +46,7 @@ public class FaktaOmBeregningTilfelleTjeneste {
             Map.entry(FaktaOmBeregningTilfelle.VURDER_REFUSJONSKRAV_SOM_HAR_KOMMET_FOR_SENT,
                     Set.of(FagsakYtelseType.FORELDREPENGER, FagsakYtelseType.SVANGERSKAPSPENGER, FagsakYtelseType.PLEIEPENGER_SYKT_BARN,
                             FagsakYtelseType.OPPLÆRINGSPENGER, FagsakYtelseType.PLEIEPENGER_NÆRSTÅENDE)),
-            Map.entry(FaktaOmBeregningTilfelle.VURDER_BESTEBEREGNING, Set.of(FagsakYtelseType.FORELDREPENGER)),
-            Map.entry(FaktaOmBeregningTilfelle.FASTSETT_INNTEKT_FOR_ARBEID_UNDER_AAP, Set.of(FagsakYtelseType.FORELDREPENGER))
-
+            Map.entry(FaktaOmBeregningTilfelle.VURDER_BESTEBEREGNING, Set.of(FagsakYtelseType.FORELDREPENGER))
     );
 
     private FaktaOmBeregningTilfelleTjeneste() {
@@ -88,7 +85,6 @@ public class FaktaOmBeregningTilfelleTjeneste {
             case VURDER_REFUSJONSKRAV_SOM_HAR_KOMMET_FOR_SENT -> new VurderRefusjonskravTilfelleUtleder();
             case VURDER_SN_NY_I_ARBEIDSLIVET -> new NyIArbeidslivetTilfelleUtleder();
             case VURDER_TIDSBEGRENSET_ARBEIDSFORHOLD -> new KortvarigArbeidsforholdTilfelleUtleder();
-	        case FASTSETT_INNTEKT_FOR_ARBEID_UNDER_AAP -> new ArbeidUnderAAPTilfelleUtleder();
 	        case UDEFINERT, FASTSETT_BESTEBEREGNING_FØDENDE_KVINNE, FASTSETT_BG_ARBEIDSTAKER_UTEN_INNTEKTSMELDING,
 	             FASTSETT_ENDRET_BEREGNINGSGRUNNLAG, FASTSETT_ETTERLØNN_SLUTTPAKKE, FASTSETT_MAANEDSINNTEKT_FL,
 	             TILSTØTENDE_YTELSE -> throw new IllegalStateException("Utviklerfeil: Kaller kjørutleder med tilfelle " + tilfelle);

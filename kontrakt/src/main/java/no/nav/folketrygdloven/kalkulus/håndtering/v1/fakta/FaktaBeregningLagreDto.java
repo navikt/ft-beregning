@@ -80,9 +80,6 @@ public class FaktaBeregningLagreDto {
     @Valid
     @Size
     private List<RefusjonskravPrArbeidsgiverVurderingDto> refusjonskravGyldighet;
-	@JsonProperty("fastsettInntektForArbeidUnderAAP")
-	@Valid
-	private FastsettInntektForArbeidUnderAAPDto fastsettInntektForArbeidUnderAAP;
 
     public FaktaBeregningLagreDto() {
         // default ctor
@@ -102,8 +99,7 @@ public class FaktaBeregningLagreDto {
                                   @Valid FastsettEtterlønnSluttpakkeDto fastsettEtterlønnSluttpakke,
                                   @Valid MottarYtelseDto mottarYtelse,
                                   @Valid VurderMilitærDto vurderMilitaer,
-                                  @Valid List<RefusjonskravPrArbeidsgiverVurderingDto> refusjonskravGyldighet,
-                                  @Valid FastsettInntektForArbeidUnderAAPDto fastsettInntektForArbeidUnderAAP) {
+                                  @Valid List<RefusjonskravPrArbeidsgiverVurderingDto> refusjonskravGyldighet) {
         this.vurderNyoppstartetFL = vurderNyoppstartetFL;
         this.vurderTidsbegrensetArbeidsforhold = vurderTidsbegrensetArbeidsforhold;
         this.vurderNyIArbeidslivet = vurderNyIArbeidslivet;
@@ -119,7 +115,6 @@ public class FaktaBeregningLagreDto {
         this.mottarYtelse = mottarYtelse;
         this.vurderMilitaer = vurderMilitaer;
         this.refusjonskravGyldighet = refusjonskravGyldighet;
-		this.fastsettInntektForArbeidUnderAAP = fastsettInntektForArbeidUnderAAP;
     }
 
     public VurderNyoppstartetFLDto getVurderNyoppstartetFL() {
@@ -181,8 +176,4 @@ public class FaktaBeregningLagreDto {
     public List<RefusjonskravPrArbeidsgiverVurderingDto> getRefusjonskravGyldighet() {
         return refusjonskravGyldighet;
     }
-
-	public FastsettInntektForArbeidUnderAAPDto getFastsettInntektForArbeidUnderAAP() {
-		return fastsettInntektForArbeidUnderAAP;
-	}
 }
