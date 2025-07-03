@@ -46,7 +46,7 @@ public class AvklaringsbehovUtlederFastsettBeregningsaktiviteterFP implements Av
             return emptyList();
         }
 
-        if (skalAvklareAktiviteter(beregningAktivitetAggregat, aktørYtelse)) {
+        if (skalAvklareAktiviteter(beregningAktivitetAggregat, aktørYtelse, input)) {
             return List.of(BeregningAvklaringsbehovResultat.opprettFor(AvklaringsbehovDefinisjon.AVKLAR_AKTIVITETER));
         }
         return emptyList();
@@ -57,9 +57,12 @@ public class AvklaringsbehovUtlederFastsettBeregningsaktiviteterFP implements Av
     }
 
     private static boolean skalAvklareAktiviteter(BeregningAktivitetAggregatDto beregningAktivitetAggregat,
-                                                  Optional<AktørYtelseDto> aktørYtelse) {
+                                                  Optional<AktørYtelseDto> aktørYtelse, BeregningsgrunnlagInput input) {
+        if (input.isEnabled("aap.praksisendring", false)) {
+            return harVentelønnEllerVartpengerSomSisteAktivitetIOpptjeningsperioden(beregningAktivitetAggregat);
+        }
         return harVentelønnEllerVartpengerSomSisteAktivitetIOpptjeningsperioden(beregningAktivitetAggregat)
-                || (harFullAAPITilleggTilAnnenAktivitet(beregningAktivitetAggregat, aktørYtelse));
+                || harFullAAPITilleggTilAnnenAktivitet(beregningAktivitetAggregat, aktørYtelse);
     }
 
     public static boolean harVentelønnEllerVartpengerSomSisteAktivitetIOpptjeningsperioden(BeregningAktivitetAggregatDto beregningAktivitetAggregat) {
