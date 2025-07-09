@@ -31,7 +31,7 @@ public class OverstyrBeregningsgrunnlagHåndteringDto extends HåndterBeregningD
 
     @JsonProperty("overstyrteAndeler")
     @Valid
-    @Size(min = 1)
+    @Size()
     private List<FastsettBeregningsgrunnlagAndelDto> overstyrteAndeler;
 
     private OverstyrBeregningsgrunnlagHåndteringDto(boolean avbrutt) {
