@@ -8,13 +8,16 @@ import java.util.Objects;
 import java.util.Optional;
 
 import no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.UtbetalingsgradTjeneste;
+import no.nav.folketrygdloven.kalkulator.felles.inntektgradering.FinnUttaksgradInntektsgradering;
 import no.nav.folketrygdloven.kalkulator.felles.periodesplitting.PeriodeSplitter;
 import no.nav.folketrygdloven.kalkulator.felles.periodesplitting.SplittPeriodeConfig;
 import no.nav.folketrygdloven.kalkulator.felles.periodesplitting.StandardPeriodeCompressLikhetspredikat;
+import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagInput;
 import no.nav.folketrygdloven.kalkulator.input.HåndterBeregningsgrunnlagInput;
 import no.nav.folketrygdloven.kalkulator.input.UtbetalingsgradGrunnlag;
 import no.nav.folketrygdloven.kalkulator.input.YtelsespesifiktGrunnlag;
 import no.nav.folketrygdloven.kalkulator.konfig.KonfigTjeneste;
+import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
@@ -24,6 +27,8 @@ import no.nav.folketrygdloven.kalkulator.modell.iay.InntektsmeldingDto;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
+import no.nav.folketrygdloven.kalkulator.output.BeregningsgrunnlagRegelResultat;
+import no.nav.folketrygdloven.kalkulator.output.RegelSporingAggregat;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.håndtering.v1.fordeling.NyttInntektsforholdDto;
 import no.nav.folketrygdloven.kalkulus.håndtering.v1.fordeling.VurderTilkommetInntektHåndteringDto;
@@ -38,7 +43,7 @@ import no.nav.fpsak.tidsserie.LocalDateTimeline;
 
 public class VurderTilkommetInntektTjeneste {
 
-    public static BeregningsgrunnlagGrunnlagDto løsAvklaringsbehov(VurderTilkommetInntektHåndteringDto vurderDto, HåndterBeregningsgrunnlagInput input) {
+    public static VurdertTilkommetInntektResultat løsAvklaringsbehov(VurderTilkommetInntektHåndteringDto vurderDto, HåndterBeregningsgrunnlagInput input) {
         var grunnlagBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
         var vurderteInntektsforholdPerioder = vurderDto.getTilkomneInntektsforholdPerioder();
         var segmenter = vurderteInntektsforholdPerioder.stream().map(p -> new LocalDateSegment<>(p.getFom(), p.getTom(), p.getTilkomneInntektsforhold())).toList();
@@ -48,7 +53,24 @@ public class VurderTilkommetInntektTjeneste {
         var splitter = new PeriodeSplitter<>(splittPeriodeConfig);
         var splittetGrunnlag = splitter.splittPerioder(input.getBeregningsgrunnlag(), tidslinje);
         grunnlagBuilder.medBeregningsgrunnlag(splittetGrunnlag);
-        return grunnlagBuilder.build(BeregningsgrunnlagTilstand.VURDERT_TILKOMMET_INNTEKT_UT);
+
+        if (harPeriodeMedReduksjon(vurderDto)) {
+            var inputMedTilkommetInntekt = input.medBeregningsgrunnlagGrunnlag(grunnlagBuilder.buildUtenIdOgTilstand());
+            var beregningsgrunnlagMedGradering = FinnUttaksgradInntektsgradering.finnInntektsgradering(inputMedTilkommetInntekt);
+            return new VurdertTilkommetInntektResultat(
+                grunnlagBuilder.medBeregningsgrunnlag(beregningsgrunnlagMedGradering.getBeregningsgrunnlag()).build(BeregningsgrunnlagTilstand.VURDERT_TILKOMMET_INNTEKT_UT),
+                beregningsgrunnlagMedGradering.getRegelsporinger().orElseThrow());
+        } else {
+            return new VurdertTilkommetInntektResultat(grunnlagBuilder.build(BeregningsgrunnlagTilstand.VURDERT_TILKOMMET_INNTEKT_UT), null);
+        }
+
+
+    }
+
+    private static boolean harPeriodeMedReduksjon(VurderTilkommetInntektHåndteringDto vurderDto) {
+        return vurderDto.getTilkomneInntektsforholdPerioder()
+            .stream()
+            .anyMatch(p -> p.getTilkomneInntektsforhold().stream().anyMatch(NyttInntektsforholdDto::getSkalRedusereUtbetaling));
     }
 
     private static LocalDateSegmentCombinator<BeregningsgrunnlagPeriodeDto, List<NyttInntektsforholdDto>, BeregningsgrunnlagPeriodeDto> settVurderingCombinator(HåndterBeregningsgrunnlagInput input) {
@@ -139,4 +161,11 @@ public class VurderTilkommetInntektTjeneste {
         }
         throw new IllegalStateException("Kun gyldig ved utbetalingsgradgrunnlag");
     }
+
+    public record VurdertTilkommetInntektResultat(
+        BeregningsgrunnlagGrunnlagDto grunnlag,
+        RegelSporingAggregat regelSporingAggregat
+    ) {}
+
+
 }
