@@ -2,6 +2,7 @@ package no.nav.folketrygdloven.kalkulator.adapter.regelmodelltilvl.fastsett;
 
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -53,8 +54,8 @@ public class MapFastsattBeregningsgrunnlagFraRegelTilVL {
     private void validerUendretVerdiDersomAlleredeSatt(BigDecimal eksisterende,
                                                        BigDecimal ny,
                                                        String navn) {
-        if (eksisterende != null && eksisterende.compareTo(ny) != 0) {
-            throw new IllegalArgumentException("Verdi for " + navn  + " skal ikke endres");
+        if (eksisterende != null && eksisterende.compareTo(ny.setScale(eksisterende.scale(), RoundingMode.HALF_UP)) != 0) {
+            throw new IllegalStateException("Verdi for " + navn  + " skal ikke endres");
         }
     }
 
