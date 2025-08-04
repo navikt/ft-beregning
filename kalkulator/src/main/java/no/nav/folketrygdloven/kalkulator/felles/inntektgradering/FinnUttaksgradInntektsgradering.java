@@ -2,7 +2,6 @@ package no.nav.folketrygdloven.kalkulator.felles.inntektgradering;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagInput;
 import no.nav.folketrygdloven.kalkulator.output.BeregningsgrunnlagRegelResultat;
@@ -12,8 +11,6 @@ import no.nav.folketrygdloven.kalkulator.steg.fullføre.FullføreBeregningsgrunn
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagPeriodeRegelType;
 import no.nav.folketrygdloven.regelmodelloversetter.KalkulusRegler;
-import no.nav.fpsak.tidsserie.LocalDateSegment;
-import no.nav.fpsak.tidsserie.LocalDateTimeline;
 
 public class FinnUttaksgradInntektsgradering {
 
@@ -28,7 +25,7 @@ public class FinnUttaksgradInntektsgradering {
                 var regelResultat = KalkulusRegler.finnGrenseverdi(regelPeriode);
                 regelsporinger.add(new RegelSporingPeriode(regelResultat.sporing().sporing(), regelResultat.sporing().input(),
                     Intervall.fraOgMedTilOgMed(regelPeriode.getPeriodeFom(), regelPeriode.getPeriodeTom()),
-                    BeregningsgrunnlagPeriodeRegelType.FINN_GRENSEVERDI_FOR_TILKOMMET_INNTEKT, regelResultat.versjon()));
+                    BeregningsgrunnlagPeriodeRegelType.FINN_GRADERING_VED_TILKOMMET_INNTEKT, regelResultat.versjon()));
             }
 
         }
