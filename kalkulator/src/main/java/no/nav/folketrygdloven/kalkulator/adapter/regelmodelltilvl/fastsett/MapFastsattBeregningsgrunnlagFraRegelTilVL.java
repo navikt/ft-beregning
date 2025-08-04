@@ -53,7 +53,7 @@ public class MapFastsattBeregningsgrunnlagFraRegelTilVL {
     private void validerUendretVerdiDersomAlleredeSatt(BigDecimal eksisterende,
                                                        BigDecimal ny,
                                                        String navn) {
-        if (eksisterende != null && eksisterende.compareTo(ny) > 0) {
+        if (eksisterende != null && eksisterende.compareTo(ny) != 0) {
             throw new IllegalArgumentException("Verdi for " + navn  + " skal ikke endres");
         }
     }
