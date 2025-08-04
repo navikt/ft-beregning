@@ -6,6 +6,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatusDto;
+
 import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.kalkulator.KoblingReferanseMock;
@@ -80,9 +82,9 @@ class VurderTilkommetInntektTjenesteTest {
         var input = lagInput(periode, yrkesaktiviteter, utbetalingsgrader, andeler, vurderteInntektsforhold);
 
         // Act
-        var nyttGr = VurderTilkommetInntektTjeneste.løsAvklaringsbehov(dto, new HåndterBeregningsgrunnlagInput(input, BeregningsgrunnlagTilstand.FASTSATT_INN));
+        var nyttGr = løsAvklaringsbehov(dto, input);
 
-        var tilkomneInntekter = nyttGr.getBeregningsgrunnlagHvisFinnes().get().getBeregningsgrunnlagPerioder().get(0)
+        var tilkomneInntekter = nyttGr.getBeregningsgrunnlagPerioder().get(0)
                 .getTilkomneInntekter();
 
         // Assert
@@ -128,19 +130,19 @@ class VurderTilkommetInntektTjenesteTest {
         var input = lagInput(periode, yrkesaktiviteter, utbetalingsgrader, andeler, vurderteInntektsforhold);
 
         // Act
-        var nyttGr = VurderTilkommetInntektTjeneste.løsAvklaringsbehov(dto, new HåndterBeregningsgrunnlagInput(input, BeregningsgrunnlagTilstand.FASTSATT_INN));
+        var nyttGr = løsAvklaringsbehov(dto, input);
 
 
         // Assert
-        assertThat(nyttGr.getBeregningsgrunnlagHvisFinnes().get().getBeregningsgrunnlagPerioder().size()).isEqualTo(2);
-        var tilkomneInntekter1 = nyttGr.getBeregningsgrunnlagHvisFinnes().get().getBeregningsgrunnlagPerioder().get(0)
+        assertThat(nyttGr.getBeregningsgrunnlagPerioder().size()).isEqualTo(2);
+        var tilkomneInntekter1 = nyttGr.getBeregningsgrunnlagPerioder().get(0)
                 .getTilkomneInntekter();
         assertThat(tilkomneInntekter1.size()).isEqualTo(1);
         assertThat(tilkomneInntekter1.get(0).getArbeidsgiver().get()).isEqualTo(arbeidsgiver2);
         assertThat(tilkomneInntekter1.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.ARBEIDSTAKER);
         assertThat(tilkomneInntekter1.get(0).getBruttoInntektPrÅr().compareTo(Beløp.fra(100_000))).isEqualTo(0);
 
-        var periodeLagtTil = nyttGr.getBeregningsgrunnlagHvisFinnes().get().getBeregningsgrunnlagPerioder().get(1);
+        var periodeLagtTil = nyttGr.getBeregningsgrunnlagPerioder().get(1);
         var tilkomneInntekter2 = periodeLagtTil
                 .getTilkomneInntekter();
         assertThat(periodeLagtTil.getPeriodeÅrsaker().contains(PeriodeÅrsak.TILKOMMET_INNTEKT_MANUELT)).isTrue();
@@ -185,19 +187,19 @@ class VurderTilkommetInntektTjenesteTest {
         var input = lagInput(periode, yrkesaktiviteter, utbetalingsgrader, andeler, vurderteInntektsforhold);
 
         // Act
-        var nyttGr = VurderTilkommetInntektTjeneste.løsAvklaringsbehov(dto, new HåndterBeregningsgrunnlagInput(input, BeregningsgrunnlagTilstand.FASTSATT_INN));
+        var nyttGr = løsAvklaringsbehov(dto, input);
 
 
         // Assert
-        assertThat(nyttGr.getBeregningsgrunnlagHvisFinnes().get().getBeregningsgrunnlagPerioder().size()).isEqualTo(2);
-        var tilkomneInntekter1 = nyttGr.getBeregningsgrunnlagHvisFinnes().get().getBeregningsgrunnlagPerioder().get(0)
+        assertThat(nyttGr.getBeregningsgrunnlagPerioder().size()).isEqualTo(2);
+        var tilkomneInntekter1 = nyttGr.getBeregningsgrunnlagPerioder().get(0)
                 .getTilkomneInntekter();
         assertThat(tilkomneInntekter1.size()).isEqualTo(1);
         assertThat(tilkomneInntekter1.get(0).getArbeidsgiver().get()).isEqualTo(arbeidsgiver2);
         assertThat(tilkomneInntekter1.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.ARBEIDSTAKER);
         assertThat(tilkomneInntekter1.get(0).getBruttoInntektPrÅr().compareTo(Beløp.fra(100_000))).isEqualTo(0);
 
-        var periodeLagtTil = nyttGr.getBeregningsgrunnlagHvisFinnes().get().getBeregningsgrunnlagPerioder().get(1);
+        var periodeLagtTil = nyttGr.getBeregningsgrunnlagPerioder().get(1);
         var tilkomneInntekter2 = periodeLagtTil
                 .getTilkomneInntekter();
         assertThat(tilkomneInntekter2.size()).isEqualTo(1);
@@ -237,9 +239,9 @@ class VurderTilkommetInntektTjenesteTest {
         var input = lagInput(periode, yrkesaktiviteter, utbetalingsgrader, andeler, vurderteInntektsforhold);
 
         // Act
-        var nyttGr = VurderTilkommetInntektTjeneste.løsAvklaringsbehov(dto, new HåndterBeregningsgrunnlagInput(input, BeregningsgrunnlagTilstand.FASTSATT_INN));
+        var nyttGr = løsAvklaringsbehov(dto, input);
 
-        var tilkomneInntekter = nyttGr.getBeregningsgrunnlagHvisFinnes().get().getBeregningsgrunnlagPerioder().get(0)
+        var tilkomneInntekter = nyttGr.getBeregningsgrunnlagPerioder().get(0)
                 .getTilkomneInntekter();
 
         // Assert
@@ -249,6 +251,12 @@ class VurderTilkommetInntektTjenesteTest {
         assertThat(tilkomneInntekter.get(0).getBruttoInntektPrÅr().compareTo(Beløp.fra(100_000))).isEqualTo(0);
 
 
+    }
+
+    private static BeregningsgrunnlagDto løsAvklaringsbehov(VurderTilkommetInntektHåndteringDto dto,
+                                                                                                     BeregningsgrunnlagInput input) {
+        return VurderTilkommetInntektTjeneste.løsAvklaringsbehov(dto,
+            new HåndterBeregningsgrunnlagInput(input, BeregningsgrunnlagTilstand.FASTSATT_INN)).grunnlag().getBeregningsgrunnlag();
     }
 
     private BeregningsgrunnlagInput lagInput(Intervall periode, List<YrkesaktivitetDto> yrkesaktiviteter, List<UtbetalingsgradPrAktivitetDto> utbetalingsgrader, List<BeregningsgrunnlagPrStatusOgAndelDto> andeler, List<NyttInntektsforholdDto> vurderteInntektsforhold) {
@@ -290,6 +298,7 @@ class VurderTilkommetInntektTjenesteTest {
                 .forEach(periodeBuilder::leggTilTilkommetInntekt);
         return BeregningsgrunnlagGrunnlagDtoBuilder.nytt()
                 .medBeregningsgrunnlag(BeregningsgrunnlagDto.builder()
+                    .leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
                         .leggTilBeregningsgrunnlagPeriode(periodeBuilder)
                         .medSkjæringstidspunkt(fom)
                         .medGrunnbeløp(Beløp.fra(100_000))

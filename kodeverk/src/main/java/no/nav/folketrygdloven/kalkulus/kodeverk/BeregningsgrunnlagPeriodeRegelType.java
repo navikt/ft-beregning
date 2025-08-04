@@ -4,6 +4,7 @@ import static no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstan
 import static no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand.FORESLÅTT;
 import static no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand.FORESLÅTT_DEL_2;
 import static no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand.OPPDATERT_MED_REFUSJON_OG_GRADERING;
+import static no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand.VURDERT_TILKOMMET_INNTEKT_UT;
 import static no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand.VURDERT_VILKÅR;
 
 
@@ -11,6 +12,7 @@ public enum BeregningsgrunnlagPeriodeRegelType implements Kodeverdi, DatabaseKod
     FORESLÅ(FORESLÅTT), // Foreslå beregningsgrunnlag
     FORESLÅ_2(FORESLÅTT_DEL_2), // Foreslå beregningsgrunnlag del 2
     VILKÅR_VURDERING(VURDERT_VILKÅR), // Vurder beregningsvilkår
+    FINN_GRADERING_VED_TILKOMMET_INNTEKT(VURDERT_TILKOMMET_INNTEKT_UT), // Finne inntektsgradering ved tilkommet inntekt
     FORDEL(OPPDATERT_MED_REFUSJON_OG_GRADERING), // Fordel beregningsgrunnlag
     FASTSETT(FASTSATT), // Fastsett/fullføre beregningsgrunnlag
     FINN_GRENSEVERDI(FASTSATT), // Finne grenseverdi til kjøring av fastsett beregningsgrunnlag for SVP
