@@ -42,20 +42,11 @@ public class MapFastsattBeregningsgrunnlagFraRegelTilVL {
                 }
             }
             fastsettAgreggerteVerdier(eksisterendePeriode, eksisterendeVLGrunnlag);
-            validerUendretVerdiDersomAlleredeSatt(eksisterendePeriode.getTotalUtbetalingsgradEtterReduksjonVedTilkommetInntekt(), resultatBGPeriode.getTotalUtbetalingsgradEtterReduksjonVedTilkommetInntekt(), "totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt");
             BeregningsgrunnlagPeriodeDto.oppdater(eksisterendePeriode)
                     .medInntektsgraderingsprosentBrutto(resultatBGPeriode.getInntektsgraderingFraBruttoBeregningsgrunnlag())
                     .medTotalUtbetalingsgradFraUttak(resultatBGPeriode.getTotalUtbetalingsgradFraUttak())
                     .medTotalUtbetalingsgradEtterReduksjonVedTilkommetInntekt(resultatBGPeriode.getTotalUtbetalingsgradEtterReduksjonVedTilkommetInntekt())
                     .medReduksjonsfaktorInaktivTypeA(resultatBGPeriode.getReduksjonsfaktorInaktivTypeA());
-        }
-    }
-
-    private void validerUendretVerdiDersomAlleredeSatt(BigDecimal eksisterende,
-                                                       BigDecimal ny,
-                                                       String navn) {
-        if (eksisterende != null && eksisterende.compareTo(ny.setScale(eksisterende.scale(), RoundingMode.HALF_UP)) != 0) {
-            throw new IllegalStateException("Verdi for " + navn  + " skal ikke endres");
         }
     }
 
