@@ -75,7 +75,7 @@ public class BeregningsgrunnlagPeriodeDto {
     private BigDecimal totalUtbetalingsgradFraUttak;
 
     /**
-     * utbetalingsgrad dersom det kun skulle vært gradert mot tilkommetInntekt
+     * utbetalingsgrad etter eventuell reduksjon ved tilkommet inntekt. Dersom totalUtbetalingsgradFraUttak er lavere enn inntektsgradering vil denne vere lik totalUtbetalingsgradFraUttak .
      */
     @JsonProperty(value = "totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt")
     @Valid
@@ -83,6 +83,16 @@ public class BeregningsgrunnlagPeriodeDto {
     @DecimalMax(value = "1.00", message = "verdien ${validatedValue} må være <= {value}")
     @Digits(integer = 10, fraction = 4)
     private BigDecimal totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt;
+
+    /**
+     * Gradering mot bortfalt inntekt (andel bortfalt inntekt utgjør av totalt beregningsgrunnlag)
+     */
+    @JsonProperty(value = "inntektsgradering")
+    @Valid
+    @DecimalMin(value = "0.00", message = "verdien ${validatedValue} må være >= {value}")
+    @DecimalMax(value = "1.00", message = "verdien ${validatedValue} må være <= {value}")
+    @Digits(integer = 10, fraction = 4)
+    private BigDecimal inntektsgradering;
 
     /**
      * Reduksjonsfaktor benyttet ved midlertidig inaktiv type A (§8-47a)
@@ -96,28 +106,6 @@ public class BeregningsgrunnlagPeriodeDto {
 
 
     public BeregningsgrunnlagPeriodeDto() {
-    }
-
-    public BeregningsgrunnlagPeriodeDto(@NotNull @Valid List<BeregningsgrunnlagPrStatusOgAndelDto> beregningsgrunnlagPrStatusOgAndelList,
-                                        @NotNull @Valid Periode periode,
-                                        @Valid Beløp bruttoPrÅr,
-                                        @Valid Beløp avkortetPrÅr,
-                                        @Valid Beløp redusertPrÅr,
-                                        @Valid Long dagsats,
-                                        @NotNull @Valid List<PeriodeÅrsak> periodeÅrsaker,
-                                        BigDecimal totalUtbetalingsgradFraUttak,
-                                        BigDecimal totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt,
-                                        BigDecimal reduksjonsfaktorInaktivTypeA) {
-        this.beregningsgrunnlagPrStatusOgAndelList = beregningsgrunnlagPrStatusOgAndelList;
-        this.periode = periode;
-        this.bruttoPrÅr = bruttoPrÅr;
-        this.avkortetPrÅr = avkortetPrÅr;
-        this.redusertPrÅr = redusertPrÅr;
-        this.dagsats = dagsats;
-        this.periodeÅrsaker = periodeÅrsaker;
-        this.totalUtbetalingsgradFraUttak = totalUtbetalingsgradFraUttak;
-        this.totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt = totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt;
-        this.reduksjonsfaktorInaktivTypeA = reduksjonsfaktorInaktivTypeA;
     }
 
     public LocalDate getBeregningsgrunnlagPeriodeFom() {
@@ -168,4 +156,74 @@ public class BeregningsgrunnlagPeriodeDto {
     public BigDecimal getReduksjonsfaktorInaktivTypeA() {
         return reduksjonsfaktorInaktivTypeA;
     }
+
+
+    public static class Builder {
+        private BeregningsgrunnlagPeriodeDto kladd = new BeregningsgrunnlagPeriodeDto();
+
+        public static Builder ny() {
+            return new Builder();
+        }
+
+        public Builder medBeregningsgrunnlagPrStatusOgAndelList(List<BeregningsgrunnlagPrStatusOgAndelDto> beregningsgrunnlagPrStatusOgAndelList) {
+            kladd.beregningsgrunnlagPrStatusOgAndelList = beregningsgrunnlagPrStatusOgAndelList;
+            return this;
+        }
+
+        public Builder medPeriode(Periode periode) {
+            kladd.periode = periode;
+            return this;
+        }
+
+        public Builder medBruttoPrÅr(Beløp bruttoPrÅr) {
+            kladd.bruttoPrÅr = bruttoPrÅr;
+            return this;
+        }
+
+        public Builder medAvkortetPrÅr(Beløp avkortetPrÅr) {
+            kladd.avkortetPrÅr = avkortetPrÅr;
+            return this;
+        }
+
+        public Builder medRedusertPrÅr(Beløp redusertPrÅr) {
+            kladd.redusertPrÅr = redusertPrÅr;
+            return this;
+        }
+
+        public Builder medDagsats(Long dagsats) {
+            kladd.dagsats = dagsats;
+            return this;
+        }
+
+        public Builder medPeriodeÅrsaker(List<PeriodeÅrsak> periodeÅrsaker) {
+            kladd.periodeÅrsaker = periodeÅrsaker;
+            return this;
+        }
+
+        public Builder medTotalUtbetalingsgradFraUttak(BigDecimal totalUtbetalingsgradFraUttak) {
+            kladd.totalUtbetalingsgradFraUttak = totalUtbetalingsgradFraUttak;
+            return this;
+        }
+
+        public Builder medTotalUtbetalingsgradEtterReduksjonVedTilkommetInntekt(BigDecimal totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt) {
+            kladd.totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt = totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt;
+            return this;
+        }
+
+        public Builder medInntektsgradering(BigDecimal inntektsgradering) {
+            kladd.inntektsgradering = inntektsgradering;
+            return this;
+        }
+
+        public Builder medReduksjonsfaktorInaktivTypeA(BigDecimal reduksjonsfaktorInaktivTypeA) {
+            kladd.reduksjonsfaktorInaktivTypeA = reduksjonsfaktorInaktivTypeA;
+            return this;
+        }
+
+        public BeregningsgrunnlagPeriodeDto build() {
+            return kladd;
+        }
+
+    }
+
 }

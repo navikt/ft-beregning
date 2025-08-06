@@ -161,7 +161,6 @@ public class BeregningsgrunnlagPeriodeDto implements IndexKey {
         }
     }
 
-    @Deprecated
     public BigDecimal getInntektgraderingsprosentBrutto() {
         return inntektgraderingsprosentBrutto;
     }

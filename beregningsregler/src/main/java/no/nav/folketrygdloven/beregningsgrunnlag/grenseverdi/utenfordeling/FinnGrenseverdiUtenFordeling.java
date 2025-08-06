@@ -47,7 +47,6 @@ class FinnGrenseverdiUtenFordeling extends LeafSpecification<BeregningsgrunnlagP
 			resultater.put("totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt", totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt);
 			grunnlag.setTotalUtbetalingsgradEtterReduksjonVedTilkommetInntekt(totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt);
 
-			//deprecated etter totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt ble lagt til?
 			grenseverdi = graderingPåToppenAvUttakgraderingPgaTilkommetInntekt.compareTo(BigDecimal.ONE) < 0 ? grenseverdi.multiply(graderingPåToppenAvUttakgraderingPgaTilkommetInntekt) : grenseverdi;
 			if (grunnlag.getInntektsgraderingFraBruttoBeregningsgrunnlag() != null) {
 				resultater.put("inntektgraderingsprosent", grunnlag.getInntektsgraderingFraBruttoBeregningsgrunnlag());
