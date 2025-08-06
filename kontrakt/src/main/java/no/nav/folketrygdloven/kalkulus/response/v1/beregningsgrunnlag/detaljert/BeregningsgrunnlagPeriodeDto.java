@@ -75,7 +75,7 @@ public class BeregningsgrunnlagPeriodeDto {
     private BigDecimal totalUtbetalingsgradFraUttak;
 
     /**
-     * utbetalingsgrad dersom det kun skulle vært gradert mot tilkommetInntekt
+     * utbetalingsgrad etter eventuell reduksjon ved tilkommet inntekt. Dersom totalUtbetalingsgradFraUttak er lavere enn inntektsgradering vil denne vere lik totalUtbetalingsgradFraUttak .
      */
     @JsonProperty(value = "totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt")
     @Valid
@@ -83,6 +83,16 @@ public class BeregningsgrunnlagPeriodeDto {
     @DecimalMax(value = "1.00", message = "verdien ${validatedValue} må være <= {value}")
     @Digits(integer = 10, fraction = 4)
     private BigDecimal totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt;
+
+    /**
+     * Gradering mot bortfalt inntekt (andel bortfalt inntekt utgjør av totalt beregningsgrunnlag)
+     */
+    @JsonProperty(value = "inntektsgradering")
+    @Valid
+    @DecimalMin(value = "0.00", message = "verdien ${validatedValue} må være >= {value}")
+    @DecimalMax(value = "1.00", message = "verdien ${validatedValue} må være <= {value}")
+    @Digits(integer = 10, fraction = 4)
+    private BigDecimal inntektsgradering;
 
     /**
      * Reduksjonsfaktor benyttet ved midlertidig inaktiv type A (§8-47a)
@@ -107,6 +117,7 @@ public class BeregningsgrunnlagPeriodeDto {
                                         @NotNull @Valid List<PeriodeÅrsak> periodeÅrsaker,
                                         BigDecimal totalUtbetalingsgradFraUttak,
                                         BigDecimal totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt,
+                                        BigDecimal inntektsgradering,
                                         BigDecimal reduksjonsfaktorInaktivTypeA) {
         this.beregningsgrunnlagPrStatusOgAndelList = beregningsgrunnlagPrStatusOgAndelList;
         this.periode = periode;
@@ -117,6 +128,7 @@ public class BeregningsgrunnlagPeriodeDto {
         this.periodeÅrsaker = periodeÅrsaker;
         this.totalUtbetalingsgradFraUttak = totalUtbetalingsgradFraUttak;
         this.totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt = totalUtbetalingsgradEtterReduksjonVedTilkommetInntekt;
+        this.inntektsgradering = inntektsgradering;
         this.reduksjonsfaktorInaktivTypeA = reduksjonsfaktorInaktivTypeA;
     }
 
