@@ -157,6 +157,9 @@ public class BeregningsgrunnlagPeriodeDto {
         return reduksjonsfaktorInaktivTypeA;
     }
 
+    public BigDecimal getInntektsgradering() {
+        return inntektsgradering;
+    }
 
     public static class Builder {
         private BeregningsgrunnlagPeriodeDto kladd = new BeregningsgrunnlagPeriodeDto();
