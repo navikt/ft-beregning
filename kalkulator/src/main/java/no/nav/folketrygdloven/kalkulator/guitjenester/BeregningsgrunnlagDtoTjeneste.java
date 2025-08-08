@@ -257,6 +257,7 @@ public class BeregningsgrunnlagDtoTjeneste {
         dto.setAvkortetPrAar(periode.getAvkortetPrÅr() == null ? null : ModellTyperMapper.beløpTilDto(finnAvkortetUtenGraderingPrÅr(bruttoInkludertBortfaltNaturalytelsePrAar, input.getBeregningsgrunnlag().getGrunnbeløp())));
         dto.setRedusertPrAar(ModellTyperMapper.beløpTilDto(periode.getRedusertPrÅr()));
         dto.setDagsats(periode.getDagsats());
+        dto.setInntektsgradering(periode.getInntektgraderingsprosentBrutto() != null ? periode.getInntektgraderingsprosentBrutto().divide(BigDecimal.valueOf(100), 4, RoundingMode.HALF_UP) : null);
         dto.leggTilPeriodeAarsaker(periode.getPeriodeÅrsaker());
         dto.setAndeler(
                 beregningsgrunnlagPrStatusOgAndelDtoTjeneste.lagBeregningsgrunnlagPrStatusOgAndelDto(input, periode.getBeregningsgrunnlagPrStatusOgAndelList()));

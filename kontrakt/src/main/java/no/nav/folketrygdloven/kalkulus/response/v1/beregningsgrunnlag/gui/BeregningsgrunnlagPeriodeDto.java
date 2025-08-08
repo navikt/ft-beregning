@@ -2,6 +2,7 @@ package no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui;
 
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
@@ -66,6 +67,16 @@ public class BeregningsgrunnlagPeriodeDto {
     @DecimalMin("0.00")
     @DecimalMax("10000000.00")
     private Long dagsats;
+
+    /**
+     * Gradering mot bortfalt inntekt (andel bortfalt inntekt utgjør av totalt beregningsgrunnlag)
+     */
+    @JsonProperty(value = "inntektsgradering")
+    @Valid
+    @DecimalMin(value = "0.00", message = "verdien ${validatedValue} må være >= {value}")
+    @DecimalMax(value = "1.00", message = "verdien ${validatedValue} må være <= {value}")
+    @Digits(integer = 10, fraction = 4)
+    private BigDecimal inntektsgradering;
 
     @Valid
     @Size()
@@ -166,4 +177,11 @@ public class BeregningsgrunnlagPeriodeDto {
         return periodeAarsaker;
     }
 
+    public BigDecimal getInntektsgradering() {
+        return inntektsgradering;
+    }
+
+    public void setInntektsgradering(BigDecimal inntektsgradering) {
+        this.inntektsgradering = inntektsgradering;
+    }
 }
