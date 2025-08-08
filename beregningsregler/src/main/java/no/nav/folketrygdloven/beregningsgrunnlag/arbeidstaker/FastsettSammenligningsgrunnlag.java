@@ -9,6 +9,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.BevegeligeHelligdagerUtil;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.SammenligningGrunnlagType;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SammenligningsGrunnlag;
@@ -58,7 +59,14 @@ class FastsettSammenligningsgrunnlag extends LeafSpecification<Beregningsgrunnla
         if (erEtterRapporteringsFrist(inntektsgrunnlag.getInntektRapporteringFristDag(), gjeldendeTidspunkt, behandlingsdato)) {
             return lag12MånedersPeriodeTilOgMed(sisteØnskedeInntektMåned);
         }
+        if (erInntektRapportertSelvOmFristIkkeErPassert(inntektsgrunnlag, sisteØnskedeInntektMåned)) {
+            return lag12MånedersPeriodeTilOgMed(sisteØnskedeInntektMåned);
+        }
         return lag12MånedersPeriodeTilOgMed(sisteØnskedeInntektMåned.minusMonths(1));
+    }
+
+    private static boolean erInntektRapportertSelvOmFristIkkeErPassert(Inntektsgrunnlag inntektsgrunnlag, LocalDate sisteØnskedeInntektMåned) {
+        return inntektsgrunnlag.finnesPeriodeinntektFraKildePåDato(Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, sisteØnskedeInntektMåned);
     }
 
     private static boolean erEtterRapporteringsFrist(int inntektRapporteringFristDag, LocalDate gjeldendeTidspunkt, LocalDate nåtid) {
