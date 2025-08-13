@@ -47,7 +47,7 @@ class FastsettSammenligningsgrunnlagTest {
         var behandlingsdato = LocalDate.of(2019, 4, 3);
         var skjæringstidspunkt = LocalDate.of(2019, 5, 1);
         var beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektsmelding(skjæringstidspunkt, BigDecimal.ZERO, BigDecimal.ZERO);
-        var periode = Periode.of(LocalDate.of(2018, 1, 1), LocalDate.of(2019, 4, 1));
+        var periode = Periode.of(LocalDate.of(2018, 1, 1), LocalDate.of(2019, 1, 31));
         opprettSammenligningsgrunnlagIPeriode(beregningsgrunnlag.getInntektsgrunnlag(), periode, BigDecimal.valueOf(25000), AktivitetStatus.ATFL);
         var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
         //Act
@@ -173,4 +173,26 @@ class FastsettSammenligningsgrunnlagTest {
         assertThat(hentetSg.getSammenligningsperiode().getFom()).isEqualTo(periode.getFom());
         assertThat(hentetSg.getSammenligningsperiode().getTom()).isEqualTo(periode.getTom());
     }
+
+    /**
+     * Rapporteringsfrist for mai 2025 er ikke passert, men er likevel rapportert inn. Skal da bruke denne inntekten i sammenligningsgrunnlaget
+     */
+    @Test
+    void skalBrukeOpprinneligPeriodeSelvOmRapporteringsfristIkkeErPassertHvisInntektErRapportert() {
+        //Arrange
+        var behandlingsdato = LocalDate.of(2025, 6, 4);
+        var skjæringstidspunkt = LocalDate.of(2025, 6, 10);
+        var beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektsmelding(skjæringstidspunkt, BigDecimal.ZERO, BigDecimal.ZERO);
+        var periode = Periode.of(LocalDate.of(2024, 1, 1), LocalDate.of(2025, 4, 30));
+        opprettSammenligningsgrunnlagIPeriode(beregningsgrunnlag.getInntektsgrunnlag(), periode, BigDecimal.valueOf(25000), AktivitetStatus.ATFL);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        //Act
+        new FastsettSammenligningsgrunnlag().evaluate(grunnlag, behandlingsdato);
+        //Assert
+        var sg = grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.AT_FL);
+        assertThat(sg.getRapportertPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(300000));
+        assertThat(sg.getSammenligningsperiode().getFom()).isEqualTo(LocalDate.of(2024, 6, 1));
+        assertThat(sg.getSammenligningsperiode().getTom()).isEqualTo(LocalDate.of(2025, 5, 31));
+    }
+
 }

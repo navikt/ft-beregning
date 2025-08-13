@@ -84,7 +84,12 @@ public class Inntektsgrunnlag {
 		return getSistePeriodeinntektMedType(Inntektskilde.SØKNAD);
 	}
 
-	public Optional<Periodeinntekt> getSistePeriodeinntektMedType(Inntektskilde kilde) {
+    public boolean finnesPeriodeinntektFraKildePåDato(Inntektskilde kilde, LocalDate dato) {
+        return getPeriodeinntektMedKilde(kilde).anyMatch(i -> i.getPeriode().inneholder(dato));
+    }
+
+
+    public Optional<Periodeinntekt> getSistePeriodeinntektMedType(Inntektskilde kilde) {
 		return getPeriodeinntektMedKilde(kilde)
 				.max(Comparator.comparing(Periodeinntekt::getFom));
 	}
