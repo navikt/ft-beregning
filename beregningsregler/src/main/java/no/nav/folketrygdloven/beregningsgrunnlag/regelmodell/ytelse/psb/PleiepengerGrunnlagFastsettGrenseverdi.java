@@ -20,6 +20,9 @@ public class PleiepengerGrunnlagFastsettGrenseverdi extends YtelsesSpesifiktGrun
 		return new PleiepengerGrunnlagFastsettGrenseverdi("PPN");
 	}
 
+    public static PleiepengerGrunnlagFastsettGrenseverdi forOpplæringspenger() {
+        return new PleiepengerGrunnlagFastsettGrenseverdi("OLP");
+    }
 
 	public LocalDate getStartdatoNyeGraderingsregler() {
 		return startdatoNyeGraderingsregler;
