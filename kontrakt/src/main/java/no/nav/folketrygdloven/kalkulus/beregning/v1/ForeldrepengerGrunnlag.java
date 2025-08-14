@@ -46,20 +46,11 @@ public class ForeldrepengerGrunnlag extends YtelsespesifiktGrunnlagDto {
 
     @JsonProperty(value = "førsteUttaksdato")
     @Valid
+    @NotNull
     private LocalDate førsteUttaksdato;
 
     protected ForeldrepengerGrunnlag() {
         // default ctor
-    }
-
-    public ForeldrepengerGrunnlag(@Valid @DecimalMin(value = "0.00", message = "verdien ${validatedValue} må være >= {value}") @DecimalMax(value = "100.00", message = "verdien ${validatedValue} må være <= {value}") @Digits(integer = 3, fraction = 2) BigDecimal dekningsgrad,
-                                  @Valid @NotNull Boolean kvalifisererTilBesteberegning,
-                                  @Valid AktivitetGraderingDto aktivitetGradering,
-                                  @Valid List<Ytelsegrunnlag> ytelsegrunnlagForBesteberegning) {
-        this.dekningsgrad = dekningsgrad;
-        this.kvalifisererTilBesteberegning = kvalifisererTilBesteberegning;
-        this.aktivitetGradering = aktivitetGradering;
-        this.ytelsegrunnlagForBesteberegning = ytelsegrunnlagForBesteberegning;
     }
 
     public ForeldrepengerGrunnlag(@Valid @DecimalMin(value = "0.00", message = "verdien ${validatedValue} må være >= {value}") @DecimalMax(value = "100.00", message = "verdien ${validatedValue} må være <= {value}") @Digits(integer = 3, fraction = 2) BigDecimal dekningsgrad,

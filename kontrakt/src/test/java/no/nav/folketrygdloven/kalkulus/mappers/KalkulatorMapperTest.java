@@ -110,7 +110,7 @@ class KalkulatorMapperTest {
         var skjæringstidspunkt = periode.getFom();
 
         var kalkulatorInputDto = new KalkulatorInputDto(iayGrunnlag, opptjeningAktiviteter, skjæringstidspunkt);
-        kalkulatorInputDto.medYtelsespesifiktGrunnlag(new ForeldrepengerGrunnlag(BigDecimal.valueOf(100), false, aktivitetGraderingDto, Collections.emptyList()));
+        kalkulatorInputDto.medYtelsespesifiktGrunnlag(new ForeldrepengerGrunnlag(BigDecimal.valueOf(100), false, aktivitetGraderingDto, Collections.emptyList(), LocalDate.now()));
         kalkulatorInputDto.medRefusjonskravDatoer(List.of(new RefusjonskravDatoDto(organisasjon, periode.getFom(), periode.getFom().minusMonths(1), true)));
         kalkulatorInputDto.medRefusjonskravDatoer(List.of(new RefusjonskravDatoDto(organisasjon, periode.getFom(), periode.getFom().minusMonths(1), true)));
 
