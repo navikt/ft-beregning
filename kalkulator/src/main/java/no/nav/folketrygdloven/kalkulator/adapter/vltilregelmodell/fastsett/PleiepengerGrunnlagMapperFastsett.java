@@ -23,7 +23,7 @@ public class PleiepengerGrunnlagMapperFastsett {
             pleiepengerGrunnlagFastsettGrenseverdi.setStartdatoNyeGraderingsregler(opplæringspengerGrunnlag.getTilkommetInntektHensyntasFom().orElse(null));
             return pleiepengerGrunnlagFastsettGrenseverdi;
         }
-        throw new IllegalStateException("Hadde ikke sykt barn eller nærstående grunnlag");
+        throw new IllegalStateException("Hadde ikke sykt barn-, nærstående- eller opplæringspenger-grunnlag");
     }
 
 }
