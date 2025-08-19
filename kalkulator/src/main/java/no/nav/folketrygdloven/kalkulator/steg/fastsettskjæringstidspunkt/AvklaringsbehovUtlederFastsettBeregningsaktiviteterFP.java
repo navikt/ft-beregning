@@ -9,7 +9,6 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.kalkulator.felles.MeldekortUtils;
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagInput;
@@ -58,11 +57,8 @@ public class AvklaringsbehovUtlederFastsettBeregningsaktiviteterFP implements Av
 
     private static boolean skalAvklareAktiviteter(BeregningAktivitetAggregatDto beregningAktivitetAggregat,
                                                   Optional<AktørYtelseDto> aktørYtelse, BeregningsgrunnlagInput input) {
-        if (input.isEnabled("aap.praksisendring", false)) {
-            return harVentelønnEllerVartpengerSomSisteAktivitetIOpptjeningsperioden(beregningAktivitetAggregat);
-        }
         return harVentelønnEllerVartpengerSomSisteAktivitetIOpptjeningsperioden(beregningAktivitetAggregat)
-                || harFullAAPITilleggTilAnnenAktivitet(beregningAktivitetAggregat, aktørYtelse);
+                || harFullAAPITilleggTilAnnenAktivitet(beregningAktivitetAggregat, aktørYtelse, input.isEnabled("aap.praksisendring", false));
     }
 
     public static boolean harVentelønnEllerVartpengerSomSisteAktivitetIOpptjeningsperioden(BeregningAktivitetAggregatDto beregningAktivitetAggregat) {
@@ -77,11 +73,17 @@ public class AvklaringsbehovUtlederFastsettBeregningsaktiviteterFP implements Av
     }
 
     public static boolean harFullAAPITilleggTilAnnenAktivitet(BeregningAktivitetAggregatDto beregningAktivitetAggregat,
-                                                              Optional<AktørYtelseDto> aktørYtelse) {
+                                                              Optional<AktørYtelseDto> aktørYtelse,
+                                                              boolean aapPraksisendringEnabled) {
 	    var skjæringstidspunkt = beregningAktivitetAggregat.getSkjæringstidspunktOpptjening();
 	    var opptjeningsaktivitetTyper = beregningAktivitetAggregat.getAktiviteterPåDato(skjæringstidspunkt).stream()
-                .map(BeregningAktivitetDto::getOpptjeningAktivitetType).collect(Collectors.toList());
-        if (opptjeningsaktivitetTyper.stream().noneMatch(type -> type.equals(OpptjeningAktivitetType.AAP))) {
+                .map(BeregningAktivitetDto::getOpptjeningAktivitetType).toList();
+
+        if (aapPraksisendringEnabled && harIngenAktivitetMedType(opptjeningsaktivitetTyper, OpptjeningAktivitetType.NÆRING)) {
+            return false;
+        }
+
+        if (harIngenAktivitetMedType(opptjeningsaktivitetTyper, OpptjeningAktivitetType.AAP)) {
             return false;
         }
         if (beregningAktivitetAggregat.getAktiviteterPåDato(skjæringstidspunkt).size() <= 1) {
@@ -93,6 +95,10 @@ public class AvklaringsbehovUtlederFastsettBeregningsaktiviteterFP implements Av
 	    var nyligsteMeldekort = nyligsteVedtak.flatMap(nv -> MeldekortUtils.sisteHeleMeldekortFørStp(ytelseFilter, nv, skjæringstidspunkt, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER)));
 	    boolean erVedtakFraKelvin = nyligsteVedtak.map(YtelseDto::harKildeKelvin).orElse(false);
 	    return harMaksUtbetalingsprosent(nyligsteMeldekort, erVedtakFraKelvin ? MeldekortUtils.MAX_UTBETALING_PROSENT_AAP_KELVIN : MeldekortUtils.MAX_UTBETALING_PROSENT_AAP_DAG_ARENA);
+    }
+
+    private static boolean harIngenAktivitetMedType(List<OpptjeningAktivitetType> opptjeningsaktivitetTyper, OpptjeningAktivitetType aktivitetType) {
+        return opptjeningsaktivitetTyper.stream().noneMatch(type -> type.equals(aktivitetType));
     }
 
     private static boolean harMaksUtbetalingsprosent(Optional<YtelseAnvistDto> nyligsteMeldekort, BigDecimal maksGrad) {
