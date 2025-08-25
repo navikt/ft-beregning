@@ -25,8 +25,6 @@ import jakarta.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import no.nav.folketrygdloven.kalkulus.migrering.RegelSporingGrunnlagMigreringDto;
-import no.nav.folketrygdloven.kalkulus.migrering.RegelSporingPeriodeMigreringDto;
 import no.nav.folketrygdloven.kalkulus.opptjening.v1.Fritekst;
 
 public class ValiderKontraktDtoer {
