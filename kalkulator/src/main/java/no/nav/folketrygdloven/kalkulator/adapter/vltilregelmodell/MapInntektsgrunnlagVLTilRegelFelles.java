@@ -203,8 +203,8 @@ public class MapInntektsgrunnlagVLTilRegelFelles implements MapInntektsgrunnlagV
 				.map(verdi -> nyesteVedtakForDagsats.harKildeKelvin() ? verdi.divide(MeldekortUtils.MAX_UTBETALING_PROSENT_AAP_KELVIN, 10, RoundingMode.HALF_UP) : verdi.divide(MeldekortUtils.MAX_UTBETALING_PROSENT_AAP_DAG_ARENA, 10, RoundingMode.HALF_UP))
 				.orElse(BigDecimal.ONE);
 
-		dagsats = nyesteVedtakForDagsats.getVedtaksDagsats().map(Beløp::verdi)
-				.orElse(sisteUtbetalingFørStp.flatMap(YtelseAnvistDto::getBeløp).map(Beløp::verdi).orElse(BigDecimal.ZERO));
+		dagsats = nyesteVedtakForDagsats.getVedtaksDagsats().map(Beløp::verdi).orElseThrow();
+
 		return Periodeinntekt.builder()
 				.medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP)
 				.medInntekt(dagsats)
