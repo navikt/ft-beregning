@@ -55,12 +55,6 @@ public class BeregningsgrunnlagDto {
     @Valid
     private List<BeregningsgrunnlagPeriodeDto> beregningsgrunnlagPeriode;
 
-    @Deprecated//Fjernes og erstattes av sammenligningsgrunnlagPrStatus
-    @JsonProperty(value = "sammenligningsgrunnlag")
-    @NotNull
-    @Valid
-    private SammenligningsgrunnlagDto sammenligningsgrunnlag;
-
     @JsonProperty(value = "sammenligningsgrunnlagPrStatus")
     @Valid
     @Size
@@ -139,7 +133,6 @@ public class BeregningsgrunnlagDto {
         this.halvG = beregningsgrunnlagDto.halvG;
         this.hjemmel = beregningsgrunnlagDto.hjemmel;
         this.refusjonTilVurdering = beregningsgrunnlagDto.refusjonTilVurdering;
-        this.sammenligningsgrunnlag = beregningsgrunnlagDto.sammenligningsgrunnlag;
         this.sammenligningsgrunnlagPrStatus = beregningsgrunnlagDto.sammenligningsgrunnlagPrStatus;
         this.skjaeringstidspunktBeregning = beregningsgrunnlagDto.skjaeringstidspunktBeregning;
         this.skjæringstidspunkt = beregningsgrunnlagDto.skjæringstidspunkt;
@@ -160,10 +153,6 @@ public class BeregningsgrunnlagDto {
 
     public List<BeregningsgrunnlagPeriodeDto> getBeregningsgrunnlagPeriode() {
         return beregningsgrunnlagPeriode;
-    }
-
-    public SammenligningsgrunnlagDto getSammenligningsgrunnlag() {
-        return sammenligningsgrunnlag;
     }
 
     public Beløp getHalvG() {
@@ -197,11 +186,6 @@ public class BeregningsgrunnlagDto {
     public void setBeregningsgrunnlagPeriode(List<BeregningsgrunnlagPeriodeDto> perioder) {
         this.beregningsgrunnlagPeriode = perioder;
     }
-
-    public void setSammenligningsgrunnlag(SammenligningsgrunnlagDto sammenligningsgrunnlag) {
-        this.sammenligningsgrunnlag = sammenligningsgrunnlag;
-    }
-
 
     public void setHalvG(Beløp halvG) {
         this.halvG = halvG;
