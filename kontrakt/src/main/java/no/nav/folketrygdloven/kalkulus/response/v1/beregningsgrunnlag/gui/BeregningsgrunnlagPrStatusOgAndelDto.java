@@ -12,6 +12,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+import jakarta.validation.constraints.NotNull;
+
 import no.nav.folketrygdloven.kalkulus.felles.v1.Beløp;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
@@ -33,6 +35,7 @@ public abstract class BeregningsgrunnlagPrStatusOgAndelDto {
 
     @Valid
     @JsonProperty("aktivitetStatus")
+    @NotNull
     private AktivitetStatus aktivitetStatus;
 
     @Valid

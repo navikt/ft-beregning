@@ -6,6 +6,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
 import java.util.List;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -23,10 +24,12 @@ public class BesteberegninggrunnlagDto {
     @Valid
     @JsonProperty("besteMåneder")
     @Size(min = 6, max = 6)
+    @NotNull
     private List<BesteberegningMånedGrunnlagDto> besteMåneder;
 
     @Valid
     @JsonProperty("avvik")
+    @NotNull
     private Beløp avvik;
 
 
