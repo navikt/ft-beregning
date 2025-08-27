@@ -152,9 +152,7 @@ public class MapInntektsgrunnlagVLTilRegelFRISINN implements MapInntektsgrunnlag
     }
 
     private Beløp finnBeløp(YtelseAnvistDto anvist, Optional<Beløp> vedtaksDagsats) {
-        var beløpFraYtelseAnvist = anvist.getBeløp()
-                .orElse(anvist.getDagsats().orElse(Beløp.ZERO));
-        return vedtaksDagsats.orElse(beløpFraYtelseAnvist);
+        return vedtaksDagsats.or(anvist::getDagsats).orElse(Beløp.ZERO);
     }
 
     private List<Periodeinntekt> lagInntekterSN(InntektFilterDto filter) {
