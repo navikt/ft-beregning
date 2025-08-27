@@ -10,6 +10,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import jakarta.validation.constraints.NotNull;
+
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.YtelsespesifiktGrunnlagDto;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -19,6 +21,7 @@ public class ForeldrepengerGrunnlagDto extends YtelsespesifiktGrunnlagDto {
 
     @Valid
     @JsonProperty("besteberegninggrunnlag")
+    @NotNull
     private BesteberegninggrunnlagDto besteberegninggrunnlag;
 
     public ForeldrepengerGrunnlagDto() {
