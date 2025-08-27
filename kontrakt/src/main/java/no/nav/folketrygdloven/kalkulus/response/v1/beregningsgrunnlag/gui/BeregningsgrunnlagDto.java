@@ -53,6 +53,7 @@ public class BeregningsgrunnlagDto {
     @JsonProperty(value = "beregningsgrunnlagPeriode")
     @Size(min = 1)
     @Valid
+    @NotNull
     private List<BeregningsgrunnlagPeriodeDto> beregningsgrunnlagPeriode;
 
     @JsonProperty(value = "sammenligningsgrunnlagPrStatus")
