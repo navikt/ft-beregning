@@ -64,6 +64,10 @@ public class MapRefusjonPerioderFraVLTilRegelUtbgrad
             // Refusjon opphører før det utledede startpunktet, blir aldri refusjon
             return Collections.emptyList();
         }
+        if (harIngenAnsattperioderEtterStartDato(startdatoEtterPermisjon, ansattperioder)) {
+            // Dersom bruker ikke er ansatt en eneste dag etter stardato for ytelsen tar vi ikke hensyn til eventuelle refusjonskrav fra arbeidsgiver
+            return Collections.emptyList();
+        }
         if (ytelsespesifiktGrunnlag instanceof UtbetalingsgradGrunnlag) {
             var utbetalingTidslinje = finnUtbetalingTidslinje((UtbetalingsgradGrunnlag) ytelsespesifiktGrunnlag, im);
             return utbetalingTidslinje
@@ -73,6 +77,10 @@ public class MapRefusjonPerioderFraVLTilRegelUtbgrad
                     .collect(Collectors.toList());
         }
         throw new IllegalStateException("Forventet utbetalingsgrader men fant ikke UtbetalingsgradGrunnlag.");
+    }
+
+    private static boolean harIngenAnsattperioderEtterStartDato(LocalDate startdatoEtterPermisjon, List<AktivitetsAvtaleDto> ansattperioder) {
+        return !ansattperioder.isEmpty() && ansattperioder.stream().allMatch(it -> it.getPeriode().getTomDato().isBefore(startdatoEtterPermisjon));
     }
 
     private LocalDateTimeline<Boolean> finnUtbetalingTidslinje(UtbetalingsgradGrunnlag ytelsespesifiktGrunnlag, InntektsmeldingDto im) {
