@@ -238,7 +238,7 @@ class MapRefusjonPerioderFraVLTilRegelUtbgradTest {
         var avtaler = relaterteYrkesaktiviteter.iterator().next().getAlleAnsettelsesperioder().stream().toList();
         var perioder = mapper.finnGyldigeRefusjonPerioder(stp, ytelsespesifiktGrunnlag, inntektsmelding, avtaler, relaterteYrkesaktiviteter);
 
-        assertThat(perioder.isEmpty()).isTrue();
+        Assertions.assertThat(perioder).isEmpty();
     }
 
 
