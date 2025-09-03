@@ -65,9 +65,9 @@ public class MapRefusjonPerioderFraVLTilRegelUtbgrad
             return Collections.emptyList();
         }
         if (harIngenAnsattperioderEtterStartDato(startdatoEtterPermisjon, ansattperioder)) {
-            // Dersom bruker ikke er ansatt en eneste dag etter stardato for ytelsen tar vi ikke hensyn til eventuelle refusjonskrav fra arbeidsgiver
-            // Ein sjekk på at alle ansattperioder må overlappe perioder med refusjon er for streng her sidan vi ikkje lytter på endringer i aareg,
-            // men det settes om krav at arbeidsforholdet må ha hatt minst én aktiv dag etter startdato for ytelsen for å filtrere bort opphørte arbeidsforhold der vi
+            // Dersom bruker ikke er ansatt en eneste dag etter startdato for ytelsen tar vi ikke hensyn til eventuelle refusjonskrav fra arbeidsgiver
+            // En sjekk på at alle ansattperioder må overlappe perioder med refusjon er for streng her sidan vi ikke lytter på endringer i aareg,
+            // men det settes som krav at arbeidsforholdet må ha hatt minst én aktiv dag etter startdato for ytelsen for å filtrere bort opphørte arbeidsforhold der vi
             // ikke ønsker å be om inntektsmelding for opphør av refusjon
             return Collections.emptyList();
         }
