@@ -64,6 +64,13 @@ public class MapRefusjonPerioderFraVLTilRegelUtbgrad
             // Refusjon opphører før det utledede startpunktet, blir aldri refusjon
             return Collections.emptyList();
         }
+        if (harIngenAnsattperioderEtterStartDato(startdatoEtterPermisjon, ansattperioder)) {
+            // Dersom bruker ikke er ansatt en eneste dag etter startdato for ytelsen tar vi ikke hensyn til eventuelle refusjonskrav fra arbeidsgiver
+            // En sjekk på at alle ansattperioder må overlappe perioder med refusjon er for streng her sidan vi ikke lytter på endringer i aareg,
+            // men det settes som krav at arbeidsforholdet må ha hatt minst én aktiv dag etter startdato for ytelsen for å filtrere bort opphørte arbeidsforhold der vi
+            // ikke ønsker å be om inntektsmelding for opphør av refusjon
+            return Collections.emptyList();
+        }
         if (ytelsespesifiktGrunnlag instanceof UtbetalingsgradGrunnlag) {
             var utbetalingTidslinje = finnUtbetalingTidslinje((UtbetalingsgradGrunnlag) ytelsespesifiktGrunnlag, im);
             return utbetalingTidslinje
@@ -73,6 +80,10 @@ public class MapRefusjonPerioderFraVLTilRegelUtbgrad
                     .collect(Collectors.toList());
         }
         throw new IllegalStateException("Forventet utbetalingsgrader men fant ikke UtbetalingsgradGrunnlag.");
+    }
+
+    private static boolean harIngenAnsattperioderEtterStartDato(LocalDate startdatoEtterPermisjon, List<AktivitetsAvtaleDto> ansattperioder) {
+        return !ansattperioder.isEmpty() && ansattperioder.stream().allMatch(it -> it.getPeriode().getTomDato().isBefore(startdatoEtterPermisjon));
     }
 
     private LocalDateTimeline<Boolean> finnUtbetalingTidslinje(UtbetalingsgradGrunnlag ytelsespesifiktGrunnlag, InntektsmeldingDto im) {

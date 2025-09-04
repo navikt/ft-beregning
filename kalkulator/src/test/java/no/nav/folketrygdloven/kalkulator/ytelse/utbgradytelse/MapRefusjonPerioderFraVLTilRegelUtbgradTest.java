@@ -219,7 +219,32 @@ class MapRefusjonPerioderFraVLTilRegelUtbgradTest {
         Assertions.assertThat(opphør.getPeriode().getFom()).isEqualTo(LocalDate.of(2020, 1, 19).plusDays(1));
     }
 
-	@Test
+    @Test
+    void skal_ikke_returnere_refusjonsperiode_dersom_ikke_ansatt_etter_start() {
+        var stp = LocalDate.now();
+        var arbeidsgiver = Arbeidsgiver.virksomhet("123456789");
+        var utbetalingsperiode = Intervall.fraOgMedTilOgMed(stp.plusDays(20), stp.plusDays(25));
+        var gradForTilkommetArbeid = new UtbetalingsgradPrAktivitetDto(
+            new AktivitetDto(arbeidsgiver, InternArbeidsforholdRefDto.nullRef(), UttakArbeidType.ORDINÆRT_ARBEID),
+            List.of(new PeriodeMedUtbetalingsgradDto(utbetalingsperiode, new Utbetalingsgrad(BigDecimal.valueOf(100)),
+                new Aktivitetsgrad(BigDecimal.valueOf(0)))));
+        var ytelsespesifiktGrunnlag = new PleiepengerSyktBarnGrunnlag(List.of(gradForTilkommetArbeid));
+        var inntektsmelding = lagInntektsmelding(stp, arbeidsgiver);
+        var ansettelsesperiode = Intervall.fraOgMedTilOgMed(stp.minusYears(10), stp.minusDays(1));
+        var aktivitetsAvtaleDtoBuilder = AktivitetsAvtaleDtoBuilder.ny().medPeriode(ansettelsesperiode).medErAnsettelsesPeriode(true);
+        var permisjonsperiode = Intervall.fraOgMedTilOgMed(stp, stp.plusDays(15));
+        var relaterteYrkesaktiviteter = Set.of(lagYrkesaktivitet(arbeidsgiver, aktivitetsAvtaleDtoBuilder, permisjonsperiode));
+
+        var avtaler = relaterteYrkesaktiviteter.iterator().next().getAlleAnsettelsesperioder().stream().toList();
+        var perioder = mapper.finnGyldigeRefusjonPerioder(stp, ytelsespesifiktGrunnlag, inntektsmelding, avtaler, relaterteYrkesaktiviteter);
+
+        Assertions.assertThat(perioder).isEmpty();
+    }
+
+
+
+
+    @Test
 	void skal_ikke_returnere_periode_for_fravær_fra_arbeidsgiver_men_ingen_uttak() {
 		var stp = LocalDate.now();
 		var arbeidsgiver = Arbeidsgiver.virksomhet("123456789");
