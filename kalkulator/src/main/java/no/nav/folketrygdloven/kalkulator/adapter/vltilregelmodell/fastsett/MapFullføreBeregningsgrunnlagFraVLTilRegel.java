@@ -76,7 +76,7 @@ public class MapFullføreBeregningsgrunnlagFraVLTilRegel {
 
     private YtelsesSpesifiktGrunnlag mapYtelsesSpesifiktGrunnlag(BeregningsgrunnlagInput input) {
         return switch (input.getFagsakYtelseType()) {
-            case PLEIEPENGER_SYKT_BARN, PLEIEPENGER_NÆRSTÅENDE -> new PleiepengerGrunnlagMapperFastsett().map(input);
+            case PLEIEPENGER_SYKT_BARN, PLEIEPENGER_NÆRSTÅENDE, OPPLÆRINGSPENGER -> new PleiepengerGrunnlagMapperFastsett().map(input);
             case FRISINN -> new FrisinnGrunnlagMapperFastsett().map(input);
             default -> null;
         };
