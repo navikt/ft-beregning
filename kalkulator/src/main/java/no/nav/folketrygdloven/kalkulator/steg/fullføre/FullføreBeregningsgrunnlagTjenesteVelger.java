@@ -8,8 +8,8 @@ public class FullføreBeregningsgrunnlagTjenesteVelger {
 
     public static FullføreBeregningsgrunnlag utledTjeneste(FagsakYtelseType ytelseType) {
         return switch (ytelseType) {
-            case FORELDREPENGER -> new FullføreBeregningsgrunnlagFPImpl();
-            case SVANGERSKAPSPENGER, OMSORGSPENGER, PLEIEPENGER_SYKT_BARN, PLEIEPENGER_NÆRSTÅENDE, OPPLÆRINGSPENGER -> new FullføreBeregningsgrunnlagUtbgrad();
+	        case FORELDREPENGER, OPPLÆRINGSPENGER -> new FullføreBeregningsgrunnlagFPImpl();
+            case SVANGERSKAPSPENGER, OMSORGSPENGER, PLEIEPENGER_SYKT_BARN, PLEIEPENGER_NÆRSTÅENDE -> new FullføreBeregningsgrunnlagUtbgrad();
             default -> throw new IllegalStateException("Utviklerfeil: AvklaringsbehovUtlederFastsettBeregningsaktiviteter ikke implementert for ytelse " + ytelseType.getKode());
         };
     }
