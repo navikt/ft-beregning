@@ -29,7 +29,6 @@ public class BesteberegninggrunnlagDto {
 
     @Valid
     @JsonProperty("avvik")
-    @NotNull
     private Beløp avvik;
 
 

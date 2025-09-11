@@ -21,7 +21,6 @@ public class ForeldrepengerGrunnlagDto extends YtelsespesifiktGrunnlagDto {
 
     @Valid
     @JsonProperty("besteberegninggrunnlag")
-    @NotNull
     private BesteberegninggrunnlagDto besteberegninggrunnlag;
 
     public ForeldrepengerGrunnlagDto() {
