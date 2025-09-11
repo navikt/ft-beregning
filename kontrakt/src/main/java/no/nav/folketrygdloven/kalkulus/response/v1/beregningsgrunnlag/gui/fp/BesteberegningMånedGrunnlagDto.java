@@ -24,6 +24,7 @@ public class BesteberegningMånedGrunnlagDto {
     @Valid
     @JsonProperty("inntekter")
     @Size()
+    @NotNull
     private List<BesteberegningInntektDto> inntekter;
 
     @Valid
