@@ -54,7 +54,7 @@ public class FullføreBeregningsgrunnlagUtils {
             var hovedRegelResultat = resultat.sporing();
             regelsporingPerioder.add(new RegelSporingPeriode(hovedRegelResultat.sporing(), hovedRegelResultat.input(), periode, BeregningsgrunnlagPeriodeRegelType.FASTSETT, hovedRegelResultat.versjon()));
             Optional.ofNullable(resultat.sporingFinnGrenseverdi())
-                    .map(res -> new RegelSporingPeriode(hovedRegelResultat.sporing(), hovedRegelResultat.input(), periode, BeregningsgrunnlagPeriodeRegelType.FINN_GRENSEVERDI, hovedRegelResultat.versjon()))
+                    .map(res -> new RegelSporingPeriode(res.sporing(), res.input(), periode, BeregningsgrunnlagPeriodeRegelType.FINN_GRENSEVERDI, res.versjon()))
                     .ifPresent(regelsporingPerioder::add);
         }
         return regelsporingPerioder;
