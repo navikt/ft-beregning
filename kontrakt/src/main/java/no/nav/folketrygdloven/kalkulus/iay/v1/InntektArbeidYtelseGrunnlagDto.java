@@ -3,6 +3,7 @@ package no.nav.folketrygdloven.kalkulus.iay.v1;
 import java.util.Collection;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -70,6 +71,7 @@ public class InntektArbeidYtelseGrunnlagDto {
      */
     @JsonProperty(value = "alleInntektsmeldingerPåSak")
     @Valid
+    @Size()
     private Collection<InntektsmeldingDto> alleInntektsmeldingerPåSak;
 
     public InntektArbeidYtelseGrunnlagDto() {
