@@ -64,6 +64,10 @@ public class InntektsmeldingDto {
     @Valid
     private JournalpostId journalpostId;
 
+    @JsonProperty(value = "innsendingsdato")
+    @Valid
+    private LocalDate innsendingsdato;
+
     protected InntektsmeldingDto() {
         // default ctor
     }
@@ -87,6 +91,28 @@ public class InntektsmeldingDto {
         this.refusjonOpphører = refusjonOpphører;
         this.refusjonBeløpPerMnd = refusjonBeløpPerMnd;
         this.journalpostId = journalpostId;
+    }
+
+    public InntektsmeldingDto(Aktør arbeidsgiver,
+                              Beløp inntektBeløp,
+                              List<NaturalYtelseDto> naturalYtelser,
+                              List<RefusjonDto> endringerRefusjon,
+                              InternArbeidsforholdRefDto arbeidsforholdRef,
+                              LocalDate startDatoPermisjon,
+                              LocalDate refusjonOpphører,
+                              Beløp refusjonBeløpPerMnd,
+                              JournalpostId journalpostId,
+                              LocalDate innsendingsdato) {
+        this.arbeidsgiver = arbeidsgiver;
+        this.inntektBeløp = inntektBeløp;
+        this.naturalYtelser = naturalYtelser;
+        this.endringerRefusjon = endringerRefusjon;
+        this.arbeidsforholdRef = arbeidsforholdRef;
+        this.startDatoPermisjon = startDatoPermisjon;
+        this.refusjonOpphører = refusjonOpphører;
+        this.refusjonBeløpPerMnd = refusjonBeløpPerMnd;
+        this.journalpostId = journalpostId;
+        this.innsendingsdato = innsendingsdato;
     }
 
     public Aktør getArbeidsgiver() {
@@ -125,4 +151,7 @@ public class InntektsmeldingDto {
         return journalpostId;
     }
 
+    public LocalDate getInnsendingsdato() {
+        return innsendingsdato;
+    }
 }
