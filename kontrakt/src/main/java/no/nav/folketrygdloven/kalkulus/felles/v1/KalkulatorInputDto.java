@@ -12,7 +12,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import no.nav.folketrygdloven.kalkulus.beregning.v1.KravperioderPrArbeidsforhold;
-import no.nav.folketrygdloven.kalkulus.beregning.v1.RefusjonskravDatoDto;
 import no.nav.folketrygdloven.kalkulus.beregning.v1.YtelsespesifiktGrunnlagDto;
 import no.nav.folketrygdloven.kalkulus.iay.v1.InntektArbeidYtelseGrunnlagDto;
 import no.nav.folketrygdloven.kalkulus.opptjening.v1.OpptjeningAktiviteterDto;
@@ -24,15 +23,6 @@ import no.nav.folketrygdloven.kalkulus.opptjening.v1.OpptjeningAktiviteterDto;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.NONE, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, isGetterVisibility = JsonAutoDetect.Visibility.NONE, creatorVisibility = JsonAutoDetect.Visibility.NONE)
 public class KalkulatorInputDto {
-
-    /**
-     * Informasjon vedrørende datoer for refusjon pr arbeidsgiver
-     */
-    @JsonProperty(value = "refusjonskravDatoer")
-    @Valid
-    @Size()
-    @Deprecated(forRemoval = true)
-    private List<RefusjonskravDatoDto> refusjonskravDatoer;
 
     /**
      * Informasjon vedrørende refusjonskrav pr arbeidsgiver
@@ -85,10 +75,6 @@ public class KalkulatorInputDto {
         this.skjæringstidspunkt = skjæringstidspunkt;
     }
 
-    public List<RefusjonskravDatoDto> getRefusjonskravDatoer() {
-        return refusjonskravDatoer;
-    }
-
     public List<KravperioderPrArbeidsforhold> getRefusjonskravPrArbeidsforhold() {
         return refusjonskravPrArbeidsforhold;
     }
@@ -103,11 +89,6 @@ public class KalkulatorInputDto {
 
     public YtelsespesifiktGrunnlagDto getYtelsespesifiktGrunnlag() {
         return ytelsespesifiktGrunnlag;
-    }
-
-    public KalkulatorInputDto medRefusjonskravDatoer(List<RefusjonskravDatoDto> refusjonskravDatoer) {
-        this.refusjonskravDatoer = refusjonskravDatoer;
-        return this;
     }
 
     public KalkulatorInputDto medRefusjonsperioderPrInntektsmelding(List<KravperioderPrArbeidsforhold> refusjonsperioderPrInntektsmelding) {

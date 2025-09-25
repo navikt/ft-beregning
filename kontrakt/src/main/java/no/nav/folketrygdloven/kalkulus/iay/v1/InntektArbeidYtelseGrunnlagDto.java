@@ -1,5 +1,7 @@
 package no.nav.folketrygdloven.kalkulus.iay.v1;
 
+import java.util.Collection;
+
 import jakarta.validation.Valid;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -11,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import no.nav.folketrygdloven.kalkulus.iay.arbeid.v1.ArbeidDto;
 import no.nav.folketrygdloven.kalkulus.iay.arbeid.v1.ArbeidsforholdInformasjonDto;
 import no.nav.folketrygdloven.kalkulus.iay.inntekt.v1.InntekterDto;
+import no.nav.folketrygdloven.kalkulus.iay.inntekt.v1.InntektsmeldingDto;
 import no.nav.folketrygdloven.kalkulus.iay.inntekt.v1.InntektsmeldingerDto;
 import no.nav.folketrygdloven.kalkulus.iay.ytelse.v1.YtelserDto;
 import no.nav.folketrygdloven.kalkulus.opptjening.v1.OppgittOpptjeningDto;
@@ -62,6 +65,12 @@ public class InntektArbeidYtelseGrunnlagDto {
     @JsonProperty(value = "arbeidsforholdInformasjon")
     @Valid
     private ArbeidsforholdInformasjonDto arbeidsforholdInformasjon;
+    /**
+     * Alle inntektsmeldinger som er registrert på fagsaken
+     */
+    @JsonProperty(value = "alleInntektsmeldingerPåSak")
+    @Valid
+    private Collection<InntektsmeldingDto> alleInntektsmeldingerPåSak;
 
     public InntektArbeidYtelseGrunnlagDto() {
         // default ctor
@@ -97,6 +106,11 @@ public class InntektArbeidYtelseGrunnlagDto {
         return this;
     }
 
+    public InntektArbeidYtelseGrunnlagDto medAlleInntektsmeldingerPåSak(Collection<InntektsmeldingDto> alleInntektsmeldingerPåSak) {
+        this.alleInntektsmeldingerPåSak = alleInntektsmeldingerPåSak;
+        return this;
+    }
+
     public ArbeidDto getArbeidDto() {
         return arbeidDto;
     }
@@ -119,5 +133,9 @@ public class InntektArbeidYtelseGrunnlagDto {
 
     public ArbeidsforholdInformasjonDto getArbeidsforholdInformasjon() {
         return arbeidsforholdInformasjon;
+    }
+
+    public Collection<InntektsmeldingDto> getAlleInntektsmeldingerPåSak() {
+        return alleInntektsmeldingerPåSak;
     }
 }
