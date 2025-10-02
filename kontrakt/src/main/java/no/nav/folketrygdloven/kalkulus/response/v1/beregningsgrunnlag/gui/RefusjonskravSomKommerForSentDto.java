@@ -16,6 +16,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonAutoDetect(fieldVisibility = NONE, getterVisibility = NONE, setterVisibility = NONE, isGetterVisibility = NONE, creatorVisibility = NONE)
 public class RefusjonskravSomKommerForSentDto {
 
+    // TODO: Vurder å rename denne, for eksempel til forSentRefusjonskravDto eller noe slikt, slik at man unngår nåtid-ordet "kommer"
+    // TODO: Flytte denne til refusjon-mappa
+    // TODO: Når denne skal puttes inn i den andre dto-en så må vi sjekke om all annotasjonen er riktig
+
     @Valid
     @JsonProperty(value = "arbeidsgiverIdent")
     @Pattern(regexp = "^[\\p{Graph}\\p{Space}\\p{Sc}\\p{L}\\p{M}\\p{N}]+$", message="'${validatedValue}' matcher ikke tillatt pattern '{regexp}'")

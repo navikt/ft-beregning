@@ -15,6 +15,7 @@ import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.FaktaO
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.RefusjonskravSomKommerForSentDto;
 
 class VurderRefusjonTilfelleDtoTjeneste {
+    // TODO: Denne filen kan slettes når vi har flyttet aksjonspunktet og kjørt gjennom gamle saker
 
 	public void lagDto(BeregningsgrunnlagGUIInput input, FaktaOmBeregningDto faktaOmBeregningDto) {
         var beregningsgrunnlag = input.getBeregningsgrunnlag();
@@ -31,9 +32,7 @@ class VurderRefusjonTilfelleDtoTjeneste {
 				.map(BeregningRefusjonOverstyringerDto::getRefusjonOverstyringer)
 				.orElse(Collections.emptyList());
 
-        var arbeidsgivere = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgiverSomHarSøktRefusjonForSent(
-				input.getKoblingReferanse(),
-				input.getIayGrunnlag(),
+        var arbeidsgivere = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgivereSomHarSøktRefusjonForSent(input.getIayGrunnlag(),
 				input.getBeregningsgrunnlagGrunnlag(),
 				input.getKravperioderPrArbeidsgiver(),
 				input.getFagsakYtelseType());

@@ -21,6 +21,8 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.AvklaringsbehovDefinisjon;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.NONE, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, isGetterVisibility = JsonAutoDetect.Visibility.NONE, creatorVisibility = JsonAutoDetect.Visibility.NONE)
 public class VurderRefusjonBeregningsgrunnlagDto extends HåndterBeregningDto {
 
+    // TODO: Hvis vi skal ha bare ett aksjonspunkt, så må vi putte inn en liste her med den andre dto-en
+
     @JsonProperty("fastsatteAndeler")
     @Valid
     @Size(min = 1)

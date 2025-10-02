@@ -68,9 +68,7 @@ class InntektsmeldingMedRefusjonTjenesteImplTest {
                 BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER, iayGrunnlag, førsteInnsendingMap);
 
         // Act
-        var arbeidsgivereSomHarSøktForSent = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgiverSomHarSøktRefusjonForSent(
-                koblingReferanse,
-                input.getIayGrunnlag(),
+        var arbeidsgivereSomHarSøktForSent = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgivereSomHarSøktRefusjonForSent(input.getIayGrunnlag(),
                 input.getBeregningsgrunnlagGrunnlag(),
                 input.getKravPrArbeidsgiver(),
                 FagsakYtelseType.FORELDREPENGER);
@@ -100,9 +98,7 @@ class InntektsmeldingMedRefusjonTjenesteImplTest {
                 BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER, iayGrunnlag, førsteInnsendingMap);
 
         // Act
-        var arbeidsgivereSomHarSøktForSent = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgiverSomHarSøktRefusjonForSent(
-                koblingReferanse,
-                input.getIayGrunnlag(),
+        var arbeidsgivereSomHarSøktForSent = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgivereSomHarSøktRefusjonForSent(input.getIayGrunnlag(),
                 input.getBeregningsgrunnlagGrunnlag(),
                 input.getKravPrArbeidsgiver(), FagsakYtelseType.FORELDREPENGER);
 
@@ -126,9 +122,7 @@ class InntektsmeldingMedRefusjonTjenesteImplTest {
 
         // Act
         var input = BeregningsgrunnlagInputTestUtil.lagInputMedBeregningsgrunnlagOgIAY(koblingReferanse, grunnlag, BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER, iayGrunnlag);
-        var arbeidsgivereSomHarSøktForSent = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgiverSomHarSøktRefusjonForSent(
-                koblingReferanse,
-                input.getIayGrunnlag(),
+        var arbeidsgivereSomHarSøktForSent = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgivereSomHarSøktRefusjonForSent(input.getIayGrunnlag(),
                 input.getBeregningsgrunnlagGrunnlag(),
                 input.getKravPrArbeidsgiver(),
                 FagsakYtelseType.FORELDREPENGER);
@@ -157,9 +151,7 @@ class InntektsmeldingMedRefusjonTjenesteImplTest {
         // Act
         var input = BeregningsgrunnlagInputTestUtil.lagInputMedBeregningsgrunnlagOgIAY(koblingReferanse, grunnlag,
                 BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER, iayGrunnlag, førsteInnsendingMap);
-        var arbeidsgivereSomHarSøktForSent = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgiverSomHarSøktRefusjonForSent(
-                koblingReferanse,
-                input.getIayGrunnlag(),
+        var arbeidsgivereSomHarSøktForSent = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgivereSomHarSøktRefusjonForSent(input.getIayGrunnlag(),
                 input.getBeregningsgrunnlagGrunnlag(),
                 input.getKravPrArbeidsgiver(),
                 FagsakYtelseType.FORELDREPENGER);

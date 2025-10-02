@@ -1,5 +1,6 @@
 package no.nav.folketrygdloven.kalkulator.guitjenester.refusjon;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -9,14 +10,17 @@ import java.util.Optional;
 import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 
+import no.nav.folketrygdloven.kalkulator.felles.frist.InntektsmeldingMedRefusjonTjeneste;
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagGUIInput;
 import no.nav.folketrygdloven.kalkulator.konfig.KonfigTjeneste;
+import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningRefusjonOverstyringDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningRefusjonOverstyringerDto;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.steg.refusjon.AndelerMedØktRefusjonTjeneste;
 import no.nav.folketrygdloven.kalkulator.steg.refusjon.modell.RefusjonAndel;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
+import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.RefusjonskravSomKommerForSentDto;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.refusjon.RefusjonTilVurderingDto;
 
 public final class VurderRefusjonDtoTjeneste {
@@ -25,7 +29,7 @@ public final class VurderRefusjonDtoTjeneste {
         // Skjuler default
     }
 
-    public static Optional<RefusjonTilVurderingDto> lagDto(BeregningsgrunnlagGUIInput input) {
+    public static Optional<RefusjonTilVurderingDto> lagRefusjonTilVurderingDto(BeregningsgrunnlagGUIInput input) {
         var beregningsgrunnlag = input.getBeregningsgrunnlagGrunnlag().getBeregningsgrunnlagHvisFinnes();
         var originaleGrunnlag = input.getBeregningsgrunnlagGrunnlagFraForrigeBehandling().stream()
                 .flatMap(gr -> gr.getBeregningsgrunnlagHvisFinnes().stream()).toList();
@@ -42,6 +46,22 @@ public final class VurderRefusjonDtoTjeneste {
         }
 
         return lagDtoBasertPåTidligereAvklaringer(input);
+    }
+
+    public static List<RefusjonskravSomKommerForSentDto> lagRefusjonskravSomKommerForSentListe(BeregningsgrunnlagGUIInput input) {
+        var refusjonOverstyringer = input.getBeregningsgrunnlagGrunnlag()
+            .getRefusjonOverstyringer()
+            .map(BeregningRefusjonOverstyringerDto::getRefusjonOverstyringer)
+            .orElse(Collections.emptyList());
+
+        var arbeidsgivere = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgivereSomHarSøktRefusjonForSent(input.getIayGrunnlag(), input.getBeregningsgrunnlagGrunnlag(), input.getKravperioderPrArbeidsgiver(), input.getFagsakYtelseType());
+        return arbeidsgivere.stream().map(arbeidsgiver -> {
+            var dto = new RefusjonskravSomKommerForSentDto();
+            dto.setArbeidsgiverIdent(arbeidsgiver.getIdentifikator());
+            sjekkStatusPåRefusjon(arbeidsgiver.getIdentifikator(), refusjonOverstyringer, input.getSkjæringstidspunktForBeregning()).ifPresent(
+                dto::setErRefusjonskravGyldig);
+            return dto;
+        }).toList();
     }
 
     private static BinaryOperator<List<RefusjonAndel>> unikeElementer() {
@@ -78,4 +98,27 @@ public final class VurderRefusjonDtoTjeneste {
         return LagVurderRefusjonDto.lagDto(avklaringMap, input);
     }
 
+    private static Optional<Boolean> sjekkStatusPåRefusjon(String identifikator,
+                                                           List<BeregningRefusjonOverstyringDto> refusjonOverstyringer,
+                                                           LocalDate skjæringstidspunktForBeregning) {
+        var statusOpt = refusjonOverstyringer.stream()
+            .filter(refusjonOverstyring -> refusjonOverstyring.getArbeidsgiver().getIdentifikator().equals(identifikator))
+            .findFirst();
+
+        if (statusOpt.isEmpty() && refusjonOverstyringer.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return getErFristUtvidet(statusOpt, skjæringstidspunktForBeregning);
+    }
+
+    private static Optional<Boolean> getErFristUtvidet(Optional<BeregningRefusjonOverstyringDto> statusOpt,
+                                                       LocalDate skjæringstidspunktForBeregning) {
+        return statusOpt.flatMap(o -> {
+            if (o.getFørsteMuligeRefusjonFom().isPresent()) {
+                return Optional.of(skjæringstidspunktForBeregning.isEqual(o.getFørsteMuligeRefusjonFom().get()));
+            }
+            return o.getErFristUtvidet();
+        });
+    }
 }

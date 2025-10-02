@@ -13,8 +13,7 @@ public class AvklaringsbehovutledertjenesteVurderRefusjon {
 
     public static List<BeregningAvklaringsbehovResultat> utledAvklaringsbehov(BeregningsgrunnlagInput input, BeregningsgrunnlagDto periodisertMedRefusjonOgGradering) {
         return switch (input.getFagsakYtelseType()) {
-            case FORELDREPENGER -> new AvklaringsbehovutledertjenesteVurderRefusjonFP().utledAvklaringsbehov(input, periodisertMedRefusjonOgGradering);
-            case SVANGERSKAPSPENGER -> new AvklaringsbehovutledertjenesteVurderRefusjonSVP().utledAvklaringsbehov(input, periodisertMedRefusjonOgGradering);
+            case FORELDREPENGER, SVANGERSKAPSPENGER -> new AvklaringsbehovutledertjenesteVurderRefusjonFP().utledAvklaringsbehov(input, periodisertMedRefusjonOgGradering);
             case PLEIEPENGER_SYKT_BARN, OPPLÆRINGSPENGER, PLEIEPENGER_NÆRSTÅENDE, OMSORGSPENGER ->
                 new AvklaringsbehovutledertjenesteVurderRefusjonK9().utledAvklaringsbehov(input, periodisertMedRefusjonOgGradering);
             default -> throw new IllegalStateException("Fant ikke AksjonspunkutledertjenesteVurderRefusjon for ytelsetype " + input.getFagsakYtelseType().getKode());

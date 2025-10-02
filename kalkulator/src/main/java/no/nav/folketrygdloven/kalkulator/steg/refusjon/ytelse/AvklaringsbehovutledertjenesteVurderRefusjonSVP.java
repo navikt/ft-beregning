@@ -10,6 +10,7 @@ import no.nav.folketrygdloven.kalkulator.steg.refusjon.AvklaringsbehovutlederVur
 import no.nav.folketrygdloven.kalkulus.kodeverk.AvklaringsbehovDefinisjon;
 
 public class AvklaringsbehovutledertjenesteVurderRefusjonSVP {
+    // TODO: Denne filen kan slettes
 
     public List<BeregningAvklaringsbehovResultat> utledAvklaringsbehov(BeregningsgrunnlagInput input,
                                                                        BeregningsgrunnlagDto periodisertMedRefusjonOgGradering) {

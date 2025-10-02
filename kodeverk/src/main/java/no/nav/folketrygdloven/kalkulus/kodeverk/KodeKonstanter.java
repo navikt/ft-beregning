@@ -18,6 +18,7 @@ public class KodeKonstanter {
     public static final String AB_VURDER_FAKTA_ATFL_SN = "VURDER_FAKTA_ATFL_SN";
     public static final String AB_VURDER_REFUSJONSKRAV = "VURDER_REFUSJONSKRAV";
     public static final String AB_VURDER_REPRESENTERER_STORTINGET = "VURDER_REPRSNTR_STORTNGT";
+    public static final String AB_VURDER_REFUSJONSKRAV_SOM_HAR_KOMMET_FOR_SENT = "VURDER_REFUSJONSKRAV_SOM_HAR_KOMMET_FOR_SENT";
 
     // Overstyring
     public static final String OVST_BEREGNINGSAKTIVITETER = "OVST_BEREGNINGSAKTIVITETER";

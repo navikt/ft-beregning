@@ -31,6 +31,7 @@ public class ArbeidsgiverRefusjonskravTjeneste {
                                                                                                      LocalDate skjæringstidspunktBeregning,
                                                                                                      Optional<BeregningRefusjonOverstyringerDto> refusjonOverstyringer,
                                                                                                      FagsakYtelseType ytelseType) {
+        // TODO: Vurder konsekvenser av å fjerne refusjonOverstyringene
 	    var yrkesaktivitetKravperioderMap = lagMap(yrkesaktiviteter, kravperioder);
         var tidslinjeMap = new HashMap<Arbeidsgiver, LocalDateTimeline<KravOgUtfall>>();
         for (var entry : yrkesaktivitetKravperioderMap.entrySet()) {

@@ -24,6 +24,7 @@ public enum FaktaOmBeregningTilfelle implements Kodeverdi, DatabaseKode, Kontrak
     VURDER_MOTTAR_YTELSE, // Vurder om søker mottar ytelse for aktivitet
     VURDER_BESTEBEREGNING, // Vurder om søker skal ha besteberegning
     VURDER_MILITÆR_SIVILTJENESTE, // Vurder om søker har hatt militær- eller siviltjeneste i opptjeningsperioden
+    // TODO: Den neste linjen kan slettes når vi har flyttet aksjonspunktet og kjørt gjennom gamle saker, slett også steder den brukes
     VURDER_REFUSJONSKRAV_SOM_HAR_KOMMET_FOR_SENT, // Vurder refusjonskrav fremsatt for sent skal være med i beregning
     FASTSETT_BG_KUN_YTELSE, // Fastsett beregningsgrunnlag for kun ytelse uten arbeidsforhold
     TILSTØTENDE_YTELSE, // Avklar beregningsgrunnlag og inntektskategori for tilstøtende ytelse

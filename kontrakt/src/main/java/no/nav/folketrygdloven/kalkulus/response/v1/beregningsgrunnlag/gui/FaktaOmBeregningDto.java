@@ -74,6 +74,7 @@ public class FaktaOmBeregningDto {
     @JsonProperty(value = "vurderMilitaer")
     private VurderMilitærDto vurderMilitaer;
 
+    // TODO: Dette feltet kan slettes når vi har flyttet aksjonspunktet og kjørt gjennom gamle saker
     @Valid
     @JsonProperty(value = "refusjonskravSomKommerForSentListe")
     @Size

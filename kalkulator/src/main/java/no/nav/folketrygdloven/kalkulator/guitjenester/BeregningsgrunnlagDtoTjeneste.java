@@ -89,7 +89,12 @@ public class BeregningsgrunnlagDtoTjeneste {
     }
 
     private void mapFaktaOmRefusjon(BeregningsgrunnlagGUIInput input, BeregningsgrunnlagDto dto) {
-        VurderRefusjonDtoTjeneste.lagDto(input).ifPresent(dto::setRefusjonTilVurdering);
+        VurderRefusjonDtoTjeneste.lagRefusjonTilVurderingDto(input).ifPresent(dto::setRefusjonTilVurdering);
+        // TODO: Send kun med de neste linjene hvis ikke prod
+        var refusjonskravSomKommerForSentListe = VurderRefusjonDtoTjeneste.lagRefusjonskravSomKommerForSentListe(input);
+        if (!refusjonskravSomKommerForSentListe.isEmpty()) {
+            dto.setRefusjonskravSomKommerForSentListe(refusjonskravSomKommerForSentListe);
+        }
     }
 
     private void mapInntektsgrunnlag(BeregningsgrunnlagGUIInput input, BeregningsgrunnlagDto dto) {
