@@ -9,6 +9,7 @@ import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagInput;
 import no.nav.folketrygdloven.kalkulator.input.VurderRefusjonBeregningsgrunnlagInput;
 import no.nav.folketrygdloven.kalkulator.konfig.KonfigTjeneste;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
+import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
 
 public final class AvklaringsbehovutlederVurderRefusjon {
 
@@ -17,11 +18,20 @@ public final class AvklaringsbehovutlederVurderRefusjon {
     }
 
     public static boolean skalHaAvklaringsbehovVurderRefusjonskrav(BeregningsgrunnlagInput input, BeregningsgrunnlagDto periodisertMedRefusjonOgGradering) {
-        var vurderInput = mapTilVurderRefusjonBeregningsgrunnlagInput(input);
+        if (!(input instanceof VurderRefusjonBeregningsgrunnlagInput vurderInput)) {
+            throw new IllegalStateException("Har ikke korrekt input for å vurdere aksjsonspunkt i vurder_refusjon steget");
+        }
+
         var orginaltBGGrunnlag = vurderInput.getBeregningsgrunnlagGrunnlagFraForrigeBehandling();
         if (orginaltBGGrunnlag.isEmpty() || orginaltBGGrunnlag.stream().noneMatch(gr -> gr.getBeregningsgrunnlagHvisFinnes().isPresent())) {
             return false;
         }
+
+        if (erFPEllerSVP(vurderInput) && vurderInput.isEnabled("refusjonsfrist.flytting", false)
+            && skalHaAvklaringsbehovVurderRefusjonskravKommetForSent(vurderInput)) {
+            return true;
+        }
+
         var perioderTilVurderingTjeneste = new PerioderTilVurderingTjeneste(input.getForlengelseperioder(), periodisertMedRefusjonOgGradering);
         var grenseverdi = periodisertMedRefusjonOgGradering.getGrunnbeløp().multipliser(KonfigTjeneste.getAntallGØvreGrenseverdi());
         var orginaleBG = orginaltBGGrunnlag.stream().flatMap(gr -> gr.getBeregningsgrunnlagHvisFinnes().stream()).toList();
@@ -33,16 +43,13 @@ public final class AvklaringsbehovutlederVurderRefusjon {
         return !andelerMedØktRefusjonIUtbetaltPeriode.isEmpty();
     }
 
-    public static boolean skalHaAvklaringsbehovVurderRefusjonskravKommetForSent(BeregningsgrunnlagInput input) {
-        var vurderInput = mapTilVurderRefusjonBeregningsgrunnlagInput(input);
-        return !InntektsmeldingMedRefusjonTjeneste.finnArbeidsgivereSomHarSøktRefusjonForSent(vurderInput.getIayGrunnlag(), vurderInput.getBeregningsgrunnlagGrunnlag(), vurderInput.getKravPrArbeidsgiver(),
-                vurderInput.getFagsakYtelseType()).isEmpty();
+    private static boolean erFPEllerSVP(VurderRefusjonBeregningsgrunnlagInput vurderInput) {
+        return vurderInput.getFagsakYtelseType() == FagsakYtelseType.FORELDREPENGER
+            || vurderInput.getFagsakYtelseType() == FagsakYtelseType.SVANGERSKAPSPENGER;
     }
 
-    private static VurderRefusjonBeregningsgrunnlagInput mapTilVurderRefusjonBeregningsgrunnlagInput(BeregningsgrunnlagInput input) {
-        if (!(input instanceof VurderRefusjonBeregningsgrunnlagInput)) {
-            throw new IllegalStateException("Har ikke korrekt input for å vurdere aksjsonspunkt i vurder_refusjon steget");
-        }
-        return (VurderRefusjonBeregningsgrunnlagInput) input;
+    private static boolean skalHaAvklaringsbehovVurderRefusjonskravKommetForSent(BeregningsgrunnlagInput vurderInput) {
+        return !InntektsmeldingMedRefusjonTjeneste.finnArbeidsgivereSomHarSøktRefusjonForSent(vurderInput.getIayGrunnlag(), vurderInput.getBeregningsgrunnlagGrunnlag(), vurderInput.getKravPrArbeidsgiver(),
+                vurderInput.getFagsakYtelseType()).isEmpty();
     }
 }

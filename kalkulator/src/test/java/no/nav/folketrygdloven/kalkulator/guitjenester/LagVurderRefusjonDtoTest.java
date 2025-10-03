@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -83,7 +84,7 @@ class LagVurderRefusjonDtoTest {
         byggBGAndel(Arbeidsgiver.virksomhet("999999999"), internRef);
         ferdigstillInput();
 
-        var resultat = LagVurderRefusjonDto.lagDto(andelMap, input);
+        var resultat = LagVurderRefusjonDto.lagDto(input, andelMap, Collections.emptyList());
 
         assertThat(resultat).isEmpty();
     }
@@ -98,7 +99,7 @@ class LagVurderRefusjonDtoTest {
         byggRefusjonAndel(Arbeidsgiver.virksomhet(orgnr), internRef);
         byggBGAndelOrginal(Arbeidsgiver.virksomhet(orgnr), internRef, 500000, 0);
         ferdigstillInput();
-        var resultat = LagVurderRefusjonDto.lagDto(andelMap, input);
+        var resultat = LagVurderRefusjonDto.lagDto(input, andelMap, Collections.emptyList());
         var tidligereUtb = new TidligereUtbetalingDto(bgPeriodeOrginal.getBeregningsgrunnlagPeriodeFom(), bgPeriodeOrginal.getBeregningsgrunnlagPeriodeTom(), false);
         assertThat(resultat).isPresent();
         assertThat(resultat.get().getAndeler()).hasSize(1);
@@ -116,7 +117,7 @@ class LagVurderRefusjonDtoTest {
         byggBGAndelOrginal(Arbeidsgiver.virksomhet(orgnr), internRef, 0, 500000);
         ferdigstillInput();
 
-        var resultat = LagVurderRefusjonDto.lagDto(andelMap, input);
+        var resultat = LagVurderRefusjonDto.lagDto(input, andelMap, Collections.emptyList());
         var tidligereUtb = new TidligereUtbetalingDto(bgPeriodeOrginal.getBeregningsgrunnlagPeriodeFom(), bgPeriodeOrginal.getBeregningsgrunnlagPeriodeTom(), true);
         assertThat(resultat).isPresent();
         assertThat(resultat.get().getAndeler()).hasSize(1);
@@ -137,7 +138,7 @@ class LagVurderRefusjonDtoTest {
         byggBGAndelOrginal(Arbeidsgiver.virksomhet(orgnr), internRef, 0, 500000);
         ferdigstillInput();
 
-        var resultat = LagVurderRefusjonDto.lagDto(andelMap, input);
+        var resultat = LagVurderRefusjonDto.lagDto(input, andelMap, Collections.emptyList());
         assertThat(resultat).isPresent();
         assertThat(resultat.get().getAndeler()).hasSize(1);
         var matchetAndel = resultat.get().getAndeler().stream()
@@ -167,7 +168,7 @@ class LagVurderRefusjonDtoTest {
         byggTidligereRefusjonoverstyring(ag, tidligsteRefusjonFom, false);
         ferdigstillInput();
 
-        var resultat = LagVurderRefusjonDto.lagDto(andelMap, input);
+        var resultat = LagVurderRefusjonDto.lagDto(input, andelMap, Collections.emptyList());
         var tidligereUtb = new TidligereUtbetalingDto(bgPeriodeOrginal.getBeregningsgrunnlagPeriodeFom(), bgPeriodeOrginal.getBeregningsgrunnlagPeriodeTom(), true);
         assertThat(resultat).isPresent();
         assertThat(resultat.get().getAndeler()).hasSize(1);
@@ -190,7 +191,7 @@ class LagVurderRefusjonDtoTest {
         byggTidligereRefusjonoverstyring(ag, tidligsteRefusjonFom, false);
         ferdigstillInput();
 
-        var resultat = LagVurderRefusjonDto.lagDto(andelMap, input);
+        var resultat = LagVurderRefusjonDto.lagDto(input, andelMap, Collections.emptyList());
         var tidligereUtb = new TidligereUtbetalingDto(bgPeriodeOrginal.getBeregningsgrunnlagPeriodeFom(), bgPeriodeOrginal.getBeregningsgrunnlagPeriodeTom(), true);
         assertThat(resultat).isPresent();
         assertThat(resultat.get().getAndeler()).hasSize(1);
@@ -211,7 +212,7 @@ class LagVurderRefusjonDtoTest {
         byggTidligereRefusjonoverstyring(Arbeidsgiver.virksomhet("99999998"), tidligsteRefusjonFom, false);
         ferdigstillInput();
 
-        var resultat = LagVurderRefusjonDto.lagDto(andelMap, input);
+        var resultat = LagVurderRefusjonDto.lagDto(input, andelMap, Collections.emptyList());
         var tidligereUtb = new TidligereUtbetalingDto(bgPeriodeOrginal.getBeregningsgrunnlagPeriodeFom(), bgPeriodeOrginal.getBeregningsgrunnlagPeriodeTom(), true);
         assertThat(resultat).isPresent();
         assertThat(resultat.get().getAndeler()).hasSize(1);

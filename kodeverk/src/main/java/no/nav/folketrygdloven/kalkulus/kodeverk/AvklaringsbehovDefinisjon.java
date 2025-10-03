@@ -30,9 +30,6 @@ enum AvklaringsbehovDefinisjon implements Kodeverdi, DatabaseKode, KontraktKode 
     AVKLAR_AKTIVITETER(KodeKonstanter.AB_AVKLAR_AKTIVITETER, MANUELL, BeregningSteg.FASTSETT_STP_BER), // Avklar aktivitet for beregning
     VURDER_FAKTA_ATFL_SN(KodeKonstanter.AB_VURDER_FAKTA_ATFL_SN, MANUELL, BeregningSteg.KOFAKBER), // Vurder fakta for arbeidstaker, frilans og selvstendig næringsdrivende
     VURDER_REFUSJONSKRAV(KodeKonstanter.AB_VURDER_REFUSJONSKRAV, MANUELL, BeregningSteg.VURDER_REF_BERGRUNN), // Vurder refusjonskrav for beregningen
-    VURDER_REFUSJONSKRAV_SOM_HAR_KOMMET_FOR_SENT(KodeKonstanter.AB_VURDER_REFUSJONSKRAV_SOM_HAR_KOMMET_FOR_SENT, MANUELL, BeregningSteg.VURDER_REF_BERGRUNN), // Vurder refusjonskrav fremsatt for sent skal være med i beregning
-    // TODO: I stedet for å opprette dette nye aksjonspunktet, så skal vi heller inkludere det i VURDER_REFUSJONSKRAV
-
 
     // 6000 overstyring
     OVST_BEREGNINGSAKTIVITETER(KodeKonstanter.OVST_BEREGNINGSAKTIVITETER, OVERSTYRING, BeregningSteg.FASTSETT_STP_BER), // Overstyring av beregningsaktiviteter

@@ -56,7 +56,7 @@ class VurderRefusjonDtoTjenesteTest {
         førsteInnsendingAvRefusjonMap.put(ARBEIDSGIVER2, tidsnokInnsendtRefusjon);
         var input = lagInputMedBeregningsgrunnlagOgIAY(førsteInnsendingAvRefusjonMap);
 
-        var resultat = VurderRefusjonDtoTjeneste.lagRefusjonskravSomKommerForSentListe(input);
+        var resultat = VurderRefusjonDtoTjeneste.getRefusjonskravSomKommerForSentListe(input);
 
         assertThat(resultat).hasSize(1);
         assertThat(resultat.getFirst().getArbeidsgiverIdent()).isEqualTo(ARBEIDSGIVER1.getIdentifikator());

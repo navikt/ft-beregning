@@ -32,6 +32,7 @@ import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulator.tid.TimelineWeekendCompressor;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.response.v1.Arbeidsgiver;
+import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.RefusjonskravSomKommerForSentDto;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.refusjon.RefusjonAndelTilVurderingDto;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.refusjon.RefusjonTilVurderingDto;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.refusjon.TidligereUtbetalingDto;
@@ -42,13 +43,14 @@ public final class LagVurderRefusjonDto {
         // Skjuler default
     }
 
-    public static Optional<RefusjonTilVurderingDto> lagDto(Map<Intervall, List<RefusjonAndel>> andelerMedØktRefusjon,
-                                                           BeregningsgrunnlagGUIInput input) {
+    public static Optional<RefusjonTilVurderingDto> lagDto(BeregningsgrunnlagGUIInput input,
+                                                           Map<Intervall, List<RefusjonAndel>> andelerMedØktRefusjon,
+                                                           List<RefusjonskravSomKommerForSentDto> refusjonskravSomKommerForSentListe) {
         var originaleGrunnlag = input.getBeregningsgrunnlagGrunnlagFraForrigeBehandling();
         if (originaleGrunnlag.isEmpty() || originaleGrunnlag.stream().anyMatch(bg -> bg.getBeregningsgrunnlagHvisFinnes().isEmpty())) {
             return Optional.empty();
         }
-        var originaleBg = originaleGrunnlag.stream().flatMap(gr -> gr.getBeregningsgrunnlagHvisFinnes().stream()).collect(Collectors.toList());
+        var originaleBg = originaleGrunnlag.stream().flatMap(gr -> gr.getBeregningsgrunnlagHvisFinnes().stream()).toList();
 
         var gjeldendeOverstyringer = input.getBeregningsgrunnlagGrunnlag().getRefusjonOverstyringer()
                 .map(BeregningRefusjonOverstyringerDto::getRefusjonOverstyringer)
@@ -74,7 +76,7 @@ public final class LagVurderRefusjonDto {
                 dtoer.addAll(andeler);
             }
         }
-        return dtoer.isEmpty() ? Optional.empty() : Optional.of(new RefusjonTilVurderingDto(dtoer));
+        return dtoer.isEmpty() ? Optional.empty() : Optional.of(new RefusjonTilVurderingDto(dtoer, refusjonskravSomKommerForSentListe));
     }
 
     private static RefusjonAndelTilVurderingDto lagAndel(Intervall periode,

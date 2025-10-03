@@ -30,25 +30,36 @@ public final class VurderRefusjonDtoTjeneste {
     }
 
     public static Optional<RefusjonTilVurderingDto> lagRefusjonTilVurderingDto(BeregningsgrunnlagGUIInput input) {
+        /* Dto-en skal lages hvis
+            1a. Det finnes andeler med økt refusjon sammenlignet med tidligere beregningsgrunnlag
+            1b. Det finnes tidligere avklaringer på refusjon (refusjon overstyringer)
+            2. Det finnes refusjonskrav som kommer for sent
+         */
+
+        // TODO: Se om alt dette kan forenkles, spesielt mht. tidligere avklaringer
+
         var beregningsgrunnlag = input.getBeregningsgrunnlagGrunnlag().getBeregningsgrunnlagHvisFinnes();
         var originaleGrunnlag = input.getBeregningsgrunnlagGrunnlagFraForrigeBehandling().stream()
                 .flatMap(gr -> gr.getBeregningsgrunnlagHvisFinnes().stream()).toList();
         if (originaleGrunnlag.isEmpty() || beregningsgrunnlag.isEmpty() || beregningsgrunnlag.get().getGrunnbeløp() == null) {
             return Optional.empty();
         }
+        // TODO: Legg inn sjekk på ikke-prod, hvis prod => emptyList()
+        var refusjonskravSomKommerForSentListe = getRefusjonskravSomKommerForSentListe(input);
+
         var grenseverdi = beregningsgrunnlag.get().getGrunnbeløp().multipliser(KonfigTjeneste.getAntallGØvreGrenseverdi());
 
         var andelerMedØktRefusjon = originaleGrunnlag.stream()
                 .flatMap(originaltBg -> AndelerMedØktRefusjonTjeneste.finnAndelerMedØktRefusjon(beregningsgrunnlag.get(), originaltBg, grenseverdi, input.getYtelsespesifiktGrunnlag()).entrySet().stream())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, unikeElementer()));
         if (!andelerMedØktRefusjon.isEmpty()) {
-            return LagVurderRefusjonDto.lagDto(andelerMedØktRefusjon, input);
+            return LagVurderRefusjonDto.lagDto(input, andelerMedØktRefusjon, refusjonskravSomKommerForSentListe);
         }
 
-        return lagDtoBasertPåTidligereAvklaringer(input);
+        return lagDtoBasertPåTidligereAvklaringer(input,refusjonskravSomKommerForSentListe);
     }
 
-    public static List<RefusjonskravSomKommerForSentDto> lagRefusjonskravSomKommerForSentListe(BeregningsgrunnlagGUIInput input) {
+    static List<RefusjonskravSomKommerForSentDto> getRefusjonskravSomKommerForSentListe(BeregningsgrunnlagGUIInput input) {
         var refusjonOverstyringer = input.getBeregningsgrunnlagGrunnlag()
             .getRefusjonOverstyringer()
             .map(BeregningRefusjonOverstyringerDto::getRefusjonOverstyringer)
@@ -74,7 +85,7 @@ public final class VurderRefusjonDtoTjeneste {
     }
 
     // Metode for å støtte visning av saker som tidligere er løst men som av ulike grunner ikke lenger gir samme resultat i avklaringsbehovutledning
-    private static Optional<RefusjonTilVurderingDto> lagDtoBasertPåTidligereAvklaringer(BeregningsgrunnlagGUIInput input) {
+    private static Optional<RefusjonTilVurderingDto> lagDtoBasertPåTidligereAvklaringer(BeregningsgrunnlagGUIInput input, List<RefusjonskravSomKommerForSentDto> refusjonskravSomKommerForSentListe) {
         var hardkodetIntervall = Intervall.fraOgMed(input.getSkjæringstidspunktForBeregning()); // Bruker hele perioden det kan kreves refusjon for
         List<RefusjonAndel> andeler = new ArrayList<>();
         var refusjonOverstyringer = input.getBeregningsgrunnlagGrunnlag().getRefusjonOverstyringer()
@@ -95,7 +106,7 @@ public final class VurderRefusjonDtoTjeneste {
         }
         Map<Intervall, List<RefusjonAndel>> avklaringMap = new HashMap<>();
         avklaringMap.put(hardkodetIntervall, andeler);
-        return LagVurderRefusjonDto.lagDto(avklaringMap, input);
+        return LagVurderRefusjonDto.lagDto(input, avklaringMap, refusjonskravSomKommerForSentListe);
     }
 
     private static Optional<Boolean> sjekkStatusPåRefusjon(String identifikator,

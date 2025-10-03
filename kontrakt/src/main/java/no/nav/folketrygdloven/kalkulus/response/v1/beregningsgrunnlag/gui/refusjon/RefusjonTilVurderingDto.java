@@ -14,6 +14,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.RefusjonskravSomKommerForSentDto;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(value = JsonInclude.Include.NON_ABSENT, content = JsonInclude.Include.NON_EMPTY)
 @JsonAutoDetect(fieldVisibility = NONE, getterVisibility = NONE, setterVisibility = NONE, isGetterVisibility = NONE, creatorVisibility = NONE)
@@ -21,19 +23,30 @@ public class RefusjonTilVurderingDto {
 
     @Valid
     @JsonProperty("andeler")
-    @Size(min = 1)
+    @Size
     @NotNull
     private List<RefusjonAndelTilVurderingDto> andeler;
+
+    @Valid
+    @JsonProperty("refusjonskravSomKommerForSentListe")
+    @Size
+    @NotNull
+    private List<RefusjonskravSomKommerForSentDto> refusjonskravSomKommerForSentListe;
 
     public RefusjonTilVurderingDto() {
     }
 
-    public RefusjonTilVurderingDto(@Valid @Size(min = 1) @NotNull List<RefusjonAndelTilVurderingDto> andeler) {
+    public RefusjonTilVurderingDto(@Valid @NotNull List<RefusjonAndelTilVurderingDto> andeler, @Valid @NotNull List<RefusjonskravSomKommerForSentDto> refusjonskravSomKommerForSentListe) {
         this.andeler = andeler;
+        this.refusjonskravSomKommerForSentListe = refusjonskravSomKommerForSentListe;
     }
 
     public List<RefusjonAndelTilVurderingDto> getAndeler() {
         return andeler;
+    }
+
+    public List<RefusjonskravSomKommerForSentDto> getRefusjonskravSomKommerForSentListe() {
+        return refusjonskravSomKommerForSentListe;
     }
 
     @Override
