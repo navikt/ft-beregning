@@ -30,26 +30,26 @@ public class VurderRefusjonBeregningsgrunnlagDto extends HåndterBeregningDto {
     private List<VurderRefusjonAndelBeregningsgrunnlagDto> fastsatteAndeler;
 
     // TODO: Sjekk om dette er riktig dto å bruke her, eller om vi skal bruke en annen (ny?)
-    @JsonProperty("refusjonskravSomKommerForSent")
+    @JsonProperty("refusjonskravSomKomForSentListe")
     @Valid
     @Size
-    private List<RefusjonskravSomKommerForSentDto> refusjonskravSomKommerForSent;
+    private List<RefusjonskravSomKommerForSentDto> refusjonskravSomKomForSentListe;
 
     public VurderRefusjonBeregningsgrunnlagDto() {
         // For Json deserialisering
     }
 
-    public VurderRefusjonBeregningsgrunnlagDto(@Valid List<VurderRefusjonAndelBeregningsgrunnlagDto> fastsatteAndeler, @Valid List<RefusjonskravSomKommerForSentDto> refusjonskravSomKommerForSent) {
+    public VurderRefusjonBeregningsgrunnlagDto(@Valid List<VurderRefusjonAndelBeregningsgrunnlagDto> fastsatteAndeler, @Valid List<RefusjonskravSomKommerForSentDto> refusjonskravSomKomForSentListe) {
         super(AvklaringsbehovDefinisjon.VURDER_REFUSJONSKRAV);
         this.fastsatteAndeler = fastsatteAndeler;
-        this.refusjonskravSomKommerForSent = refusjonskravSomKommerForSent;
+        this.refusjonskravSomKomForSentListe = refusjonskravSomKomForSentListe;
     }
 
     public List<VurderRefusjonAndelBeregningsgrunnlagDto> getFastsatteAndeler() {
         return fastsatteAndeler;
     }
 
-    public List<RefusjonskravSomKommerForSentDto> getRefusjonskravSomKommerForSent() {
-        return refusjonskravSomKommerForSent;
+    public List<RefusjonskravSomKommerForSentDto> getRefusjonskravSomKomForSentListe() {
+        return refusjonskravSomKomForSentListe;
     }
 }

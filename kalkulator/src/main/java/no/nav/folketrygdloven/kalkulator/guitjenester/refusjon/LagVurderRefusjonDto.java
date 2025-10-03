@@ -45,7 +45,7 @@ public final class LagVurderRefusjonDto {
 
     public static Optional<RefusjonTilVurderingDto> lagDto(BeregningsgrunnlagGUIInput input,
                                                            Map<Intervall, List<RefusjonAndel>> andelerMedØktRefusjon,
-                                                           List<RefusjonskravSomKommerForSentDto> refusjonskravSomKommerForSentListe) {
+                                                           List<RefusjonskravSomKommerForSentDto> refusjonskravSomKomForSentListe) {
         var originaleGrunnlag = input.getBeregningsgrunnlagGrunnlagFraForrigeBehandling();
         if (originaleGrunnlag.isEmpty() || originaleGrunnlag.stream().anyMatch(bg -> bg.getBeregningsgrunnlagHvisFinnes().isEmpty())) {
             return Optional.empty();
@@ -76,7 +76,7 @@ public final class LagVurderRefusjonDto {
                 dtoer.addAll(andeler);
             }
         }
-        return dtoer.isEmpty() ? Optional.empty() : Optional.of(new RefusjonTilVurderingDto(dtoer, refusjonskravSomKommerForSentListe));
+        return dtoer.isEmpty() ? Optional.empty() : Optional.of(new RefusjonTilVurderingDto(dtoer, refusjonskravSomKomForSentListe));
     }
 
     private static RefusjonAndelTilVurderingDto lagAndel(Intervall periode,

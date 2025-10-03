@@ -1,14 +1,13 @@
 package no.nav.folketrygdloven.kalkulator.guitjenester.refusjon;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import no.nav.folketrygdloven.kalkulator.felles.frist.InntektsmeldingMedRefusjonTjeneste;
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagGUIInput;
@@ -37,15 +36,18 @@ public final class VurderRefusjonDtoTjeneste {
          */
 
         // TODO: Se om alt dette kan forenkles, spesielt mht. tidligere avklaringer
+        // Kan 1b og 2 eksistere samtidig?
 
         var beregningsgrunnlag = input.getBeregningsgrunnlagGrunnlag().getBeregningsgrunnlagHvisFinnes();
         var originaleGrunnlag = input.getBeregningsgrunnlagGrunnlagFraForrigeBehandling().stream()
                 .flatMap(gr -> gr.getBeregningsgrunnlagHvisFinnes().stream()).toList();
+
         if (originaleGrunnlag.isEmpty() || beregningsgrunnlag.isEmpty() || beregningsgrunnlag.get().getGrunnbeløp() == null) {
             return Optional.empty();
         }
-        // TODO: Legg inn sjekk på ikke-prod, hvis prod => emptyList()
-        var refusjonskravSomKommerForSentListe = getRefusjonskravSomKommerForSentListe(input);
+
+        List<RefusjonskravSomKommerForSentDto> refusjonskravSomKomForSentListe = input.isEnabled("refusjonsfrist.flytting",
+            false) ? getRefusjonskravSomKomForSent(input) : Collections.emptyList();
 
         var grenseverdi = beregningsgrunnlag.get().getGrunnbeløp().multipliser(KonfigTjeneste.getAntallGØvreGrenseverdi());
 
@@ -53,83 +55,77 @@ public final class VurderRefusjonDtoTjeneste {
                 .flatMap(originaltBg -> AndelerMedØktRefusjonTjeneste.finnAndelerMedØktRefusjon(beregningsgrunnlag.get(), originaltBg, grenseverdi, input.getYtelsespesifiktGrunnlag()).entrySet().stream())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, unikeElementer()));
         if (!andelerMedØktRefusjon.isEmpty()) {
-            return LagVurderRefusjonDto.lagDto(input, andelerMedØktRefusjon, refusjonskravSomKommerForSentListe);
+            return LagVurderRefusjonDto.lagDto(input, andelerMedØktRefusjon, refusjonskravSomKomForSentListe);
         }
 
-        return lagDtoBasertPåTidligereAvklaringer(input,refusjonskravSomKommerForSentListe);
+        var tidligereAndelerMedØktRefusjon = getAndelerMedØktRefusjonFraTidligereAvklaringer(input);
+        if (!tidligereAndelerMedØktRefusjon.isEmpty()) {
+            return LagVurderRefusjonDto.lagDto(input, tidligereAndelerMedØktRefusjon, refusjonskravSomKomForSentListe);
+        }
+
+        if (!refusjonskravSomKomForSentListe.isEmpty()) {
+            return LagVurderRefusjonDto.lagDto(input, Collections.emptyMap(), refusjonskravSomKomForSentListe);
+        }
+        return Optional.empty();
     }
 
-    static List<RefusjonskravSomKommerForSentDto> getRefusjonskravSomKommerForSentListe(BeregningsgrunnlagGUIInput input) {
-        var refusjonOverstyringer = input.getBeregningsgrunnlagGrunnlag()
-            .getRefusjonOverstyringer()
-            .map(BeregningRefusjonOverstyringerDto::getRefusjonOverstyringer)
-            .orElse(Collections.emptyList());
-
-        var arbeidsgivere = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgivereSomHarSøktRefusjonForSent(input.getIayGrunnlag(), input.getBeregningsgrunnlagGrunnlag(), input.getKravperioderPrArbeidsgiver(), input.getFagsakYtelseType());
+    static List<RefusjonskravSomKommerForSentDto> getRefusjonskravSomKomForSent(BeregningsgrunnlagGUIInput input) {
+        var refusjonOverstyringer = getRefusjonOverstyringer(input);
+        var arbeidsgivere = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgivereSomHarSøktRefusjonForSent(input.getIayGrunnlag(),
+            input.getBeregningsgrunnlagGrunnlag(), input.getKravperioderPrArbeidsgiver(), input.getFagsakYtelseType());
         return arbeidsgivere.stream().map(arbeidsgiver -> {
             var dto = new RefusjonskravSomKommerForSentDto();
             dto.setArbeidsgiverIdent(arbeidsgiver.getIdentifikator());
-            sjekkStatusPåRefusjon(arbeidsgiver.getIdentifikator(), refusjonOverstyringer, input.getSkjæringstidspunktForBeregning()).ifPresent(
-                dto::setErRefusjonskravGyldig);
+            sjekkOmEventueltRefusjonskravErGyldig(arbeidsgiver.getIdentifikator(), refusjonOverstyringer,
+                input.getSkjæringstidspunktForBeregning()).ifPresent(dto::setErRefusjonskravGyldig);
             return dto;
         }).toList();
     }
 
-    private static BinaryOperator<List<RefusjonAndel>> unikeElementer() {
-        return (andeler1, andeler2) -> {
-            var nyListe = new ArrayList<RefusjonAndel>();
-            nyListe.addAll(andeler1);
-            nyListe.addAll(andeler2);
-            return nyListe.stream().distinct().toList();
-        };
-    }
-
     // Metode for å støtte visning av saker som tidligere er løst men som av ulike grunner ikke lenger gir samme resultat i avklaringsbehovutledning
-    private static Optional<RefusjonTilVurderingDto> lagDtoBasertPåTidligereAvklaringer(BeregningsgrunnlagGUIInput input, List<RefusjonskravSomKommerForSentDto> refusjonskravSomKommerForSentListe) {
+    private static Map<Intervall, List<RefusjonAndel>> getAndelerMedØktRefusjonFraTidligereAvklaringer(BeregningsgrunnlagGUIInput input) {
         var hardkodetIntervall = Intervall.fraOgMed(input.getSkjæringstidspunktForBeregning()); // Bruker hele perioden det kan kreves refusjon for
-        List<RefusjonAndel> andeler = new ArrayList<>();
-        var refusjonOverstyringer = input.getBeregningsgrunnlagGrunnlag().getRefusjonOverstyringer()
-                .map(BeregningRefusjonOverstyringerDto::getRefusjonOverstyringer)
-                .orElse(Collections.emptyList())
+        var refusjonOverstyringer = getRefusjonOverstyringer(input)
                 .stream()
-                .filter(pa -> !pa.getRefusjonPerioder().isEmpty())
-                .toList();
-        refusjonOverstyringer.forEach(avkalring -> {
-            var tidligereAvklaringerPåAG = avkalring.getRefusjonPerioder().stream()
-                    .map(refusjonPeriode -> new RefusjonAndel(AktivitetStatus.ARBEIDSTAKER, avkalring.getArbeidsgiver(), refusjonPeriode.getArbeidsforholdRef(),
-                            Beløp.ZERO, Beløp.ZERO)) // De to siste parameterne brukes ikke for å lage dto så kan settes til dummy-verdier
-                    .toList();
-            andeler.addAll(tidligereAvklaringerPåAG);
-        });
-        if (andeler.isEmpty()) {
-            return Optional.empty();
-        }
-        Map<Intervall, List<RefusjonAndel>> avklaringMap = new HashMap<>();
-        avklaringMap.put(hardkodetIntervall, andeler);
-        return LagVurderRefusjonDto.lagDto(input, avklaringMap, refusjonskravSomKommerForSentListe);
+                .filter(refusjonOverstyring -> !refusjonOverstyring.getRefusjonPerioder().isEmpty());
+
+        var andeler = refusjonOverstyringer
+            .flatMap(refusjonOverstyring -> refusjonOverstyring.getRefusjonPerioder().stream()
+                .map(refusjonPeriode -> new RefusjonAndel(
+                    AktivitetStatus.ARBEIDSTAKER,
+                    refusjonOverstyring.getArbeidsgiver(),
+                    refusjonPeriode.getArbeidsforholdRef(),
+                    Beløp.ZERO,
+                    Beløp.ZERO)))
+            .toList();
+
+        return andeler.isEmpty() ? Collections.emptyMap() : Map.of(hardkodetIntervall, andeler);
     }
 
-    private static Optional<Boolean> sjekkStatusPåRefusjon(String identifikator,
-                                                           List<BeregningRefusjonOverstyringDto> refusjonOverstyringer,
-                                                           LocalDate skjæringstidspunktForBeregning) {
-        var statusOpt = refusjonOverstyringer.stream()
-            .filter(refusjonOverstyring -> refusjonOverstyring.getArbeidsgiver().getIdentifikator().equals(identifikator))
-            .findFirst();
-
-        if (statusOpt.isEmpty() && refusjonOverstyringer.isEmpty()) {
-            return Optional.empty();
-        }
-
-        return getErFristUtvidet(statusOpt, skjæringstidspunktForBeregning);
+    private static List<BeregningRefusjonOverstyringDto> getRefusjonOverstyringer(BeregningsgrunnlagGUIInput input) {
+        return input.getBeregningsgrunnlagGrunnlag()
+            .getRefusjonOverstyringer()
+            .map(BeregningRefusjonOverstyringerDto::getRefusjonOverstyringer)
+            .orElse(Collections.emptyList());
     }
 
-    private static Optional<Boolean> getErFristUtvidet(Optional<BeregningRefusjonOverstyringDto> statusOpt,
+    private static Optional<Boolean> sjekkOmEventueltRefusjonskravErGyldig(String arbeidsgiverIdentifikator,
+                                                                           List<BeregningRefusjonOverstyringDto> refusjonOverstyringer,
+                                                                           LocalDate skjæringstidspunktForBeregning) {
+        return refusjonOverstyringer.stream()
+            .filter(refusjonOverstyring -> refusjonOverstyring.getArbeidsgiver().getIdentifikator().equals(arbeidsgiverIdentifikator))
+            .findFirst()
+            .flatMap(refusjonOverstyring -> getErFristUtvidet(refusjonOverstyring, skjæringstidspunktForBeregning));
+    }
+
+    private static Optional<Boolean> getErFristUtvidet(BeregningRefusjonOverstyringDto refusjonOverstyring,
                                                        LocalDate skjæringstidspunktForBeregning) {
-        return statusOpt.flatMap(o -> {
-            if (o.getFørsteMuligeRefusjonFom().isPresent()) {
-                return Optional.of(skjæringstidspunktForBeregning.isEqual(o.getFørsteMuligeRefusjonFom().get()));
-            }
-            return o.getErFristUtvidet();
-        });
+        return refusjonOverstyring.getFørsteMuligeRefusjonFom()
+                .map(skjæringstidspunktForBeregning::isEqual)
+                .or(refusjonOverstyring::getErFristUtvidet);
+    }
+
+    private static BinaryOperator<List<RefusjonAndel>> unikeElementer() {
+        return (andeler1, andeler2) -> Stream.concat(andeler1.stream(), andeler2.stream()).distinct().toList();
     }
 }

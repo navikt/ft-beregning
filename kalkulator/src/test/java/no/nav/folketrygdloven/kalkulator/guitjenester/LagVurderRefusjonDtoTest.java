@@ -44,6 +44,9 @@ import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.refusj
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.refusjon.TidligereUtbetalingDto;
 
 class LagVurderRefusjonDtoTest {
+
+    // TODO: Denne testen må kanskje utvides til å teste den nye lista
+
     private Skjæringstidspunkt STP = Skjæringstidspunkt.builder().medSkjæringstidspunktBeregning(LocalDate.of(2020,1,1))
             .medSkjæringstidspunktOpptjening(LocalDate.of(2020,1,1)).build();
     private Intervall BG_PERIODE = Intervall.fraOgMedTilOgMed(STP.getSkjæringstidspunktBeregning(), TIDENES_ENDE);

@@ -28,25 +28,25 @@ public class RefusjonTilVurderingDto {
     private List<RefusjonAndelTilVurderingDto> andeler;
 
     @Valid
-    @JsonProperty("refusjonskravSomKommerForSentListe")
+    @JsonProperty("refusjonskravSomKomForSentListe")
     @Size
     @NotNull
-    private List<RefusjonskravSomKommerForSentDto> refusjonskravSomKommerForSentListe;
+    private List<RefusjonskravSomKommerForSentDto> refusjonskravSomKomForSentListe;
 
     public RefusjonTilVurderingDto() {
     }
 
-    public RefusjonTilVurderingDto(@Valid @NotNull List<RefusjonAndelTilVurderingDto> andeler, @Valid @NotNull List<RefusjonskravSomKommerForSentDto> refusjonskravSomKommerForSentListe) {
+    public RefusjonTilVurderingDto(@Valid @NotNull List<RefusjonAndelTilVurderingDto> andeler, @Valid @NotNull List<RefusjonskravSomKommerForSentDto> refusjonskravSomKomForSentListe) {
         this.andeler = andeler;
-        this.refusjonskravSomKommerForSentListe = refusjonskravSomKommerForSentListe;
+        this.refusjonskravSomKomForSentListe = refusjonskravSomKomForSentListe;
     }
 
     public List<RefusjonAndelTilVurderingDto> getAndeler() {
         return andeler;
     }
 
-    public List<RefusjonskravSomKommerForSentDto> getRefusjonskravSomKommerForSentListe() {
-        return refusjonskravSomKommerForSentListe;
+    public List<RefusjonskravSomKommerForSentDto> getRefusjonskravSomKomForSentListe() {
+        return refusjonskravSomKomForSentListe;
     }
 
     @Override
