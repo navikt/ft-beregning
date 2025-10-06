@@ -9,6 +9,7 @@ bin/
 *.ipr
 *.iml
 *.iws
+.tool-versions
 
 # Visual Studio Code
 .vscode
