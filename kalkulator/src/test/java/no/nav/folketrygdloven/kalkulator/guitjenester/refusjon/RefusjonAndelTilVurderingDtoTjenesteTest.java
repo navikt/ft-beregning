@@ -1,7 +1,8 @@
-package no.nav.folketrygdloven.kalkulator.guitjenester;
+package no.nav.folketrygdloven.kalkulator.guitjenester.refusjon;
 
 import static no.nav.fpsak.tidsserie.LocalDateInterval.TIDENES_ENDE;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.in;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -14,11 +15,12 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+import no.nav.folketrygdloven.kalkulator.modell.iay.ArbeidsforholdInformasjonDto;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.kalkulator.KoblingReferanseMock;
-import no.nav.folketrygdloven.kalkulator.guitjenester.refusjon.LagVurderRefusjonDto;
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagGUIInput;
 import no.nav.folketrygdloven.kalkulator.modell.behandling.KoblingReferanse;
 import no.nav.folketrygdloven.kalkulator.modell.behandling.Skjæringstidspunkt;
@@ -43,15 +45,18 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.Hjemmel;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.refusjon.RefusjonAndelTilVurderingDto;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.refusjon.TidligereUtbetalingDto;
 
-class LagVurderRefusjonDtoTest {
+class RefusjonAndelTilVurderingDtoTjenesteTest {
 
     // TODO: Denne testen må kanskje utvides til å teste den nye lista
 
-    private Skjæringstidspunkt STP = Skjæringstidspunkt.builder().medSkjæringstidspunktBeregning(LocalDate.of(2020,1,1))
+    private static final Skjæringstidspunkt STP = Skjæringstidspunkt.builder().medSkjæringstidspunktBeregning(LocalDate.of(2020,1,1))
             .medSkjæringstidspunktOpptjening(LocalDate.of(2020,1,1)).build();
-    private Intervall BG_PERIODE = Intervall.fraOgMedTilOgMed(STP.getSkjæringstidspunktBeregning(), TIDENES_ENDE);
-    private KoblingReferanse koblingReferanse = new KoblingReferanseMock().medSkjæringstidspunkt(STP);
-    private Map<Intervall, List<RefusjonAndel>> andelMap = new HashMap<>();
+    private static final Intervall BG_PERIODE = Intervall.fraOgMedTilOgMed(STP.getSkjæringstidspunktBeregning(), TIDENES_ENDE);
+    private static final String ORGNR = "999999999";
+    private static final Arbeidsgiver ARBEIDSGIVER = Arbeidsgiver.virksomhet(ORGNR);
+    private final KoblingReferanse koblingReferanse = new KoblingReferanseMock().medSkjæringstidspunkt(STP);
+    private final Map<Intervall, List<RefusjonAndel>> andelMap = new HashMap<>();
+    private String internRef;
     private BeregningsgrunnlagDto beregningsgrunnlag;
     private BeregningsgrunnlagPeriodeDto bgPeriode;
     private BeregningsgrunnlagDto beregningsgrunnlagOrginal;
@@ -62,6 +67,7 @@ class LagVurderRefusjonDtoTest {
 
     @BeforeEach
     void setup() {
+        internRef = UUID.randomUUID().toString();
         beregningsgrunnlag = no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto.builder()
                 .medSkjæringstidspunkt(STP.getSkjæringstidspunktBeregning())
                 .build();
@@ -78,73 +84,68 @@ class LagVurderRefusjonDtoTest {
                 .medHjemmel(Hjemmel.F_14_7_8_30)
                 .build(beregningsgrunnlagOrginal);
         bgPeriodeOrginal = buildBeregningsgrunnlagPeriode(beregningsgrunnlagOrginal);
+        lagIAYGrunnlag();
         }
 
     @Test
     void skal_ikke_lage_dto_når_det_ikke_finnes_andeler_med_økt_ref() {
-        var internRef = UUID.randomUUID().toString();
-        lagIAYGrunnlag();
-        byggBGAndel(Arbeidsgiver.virksomhet("999999999"), internRef);
+        byggBGAndel(ARBEIDSGIVER, internRef);
         ferdigstillInput();
 
-        var resultat = LagVurderRefusjonDto.lagDto(input, andelMap, Collections.emptyList());
+        var resultat = RefusjonAndelTilVurderingDtoTjeneste.lagDtoListe(andelMap, hentBeregningsgrunnlag(input), hentOriginaleGrunnlag(input),
+            hentRefusjonOverstyringer(input), hentArbeidsforholdInformasjon(input));
 
         assertThat(resultat).isEmpty();
     }
 
     @Test
     void skal_lage_dto_når_tilkommetIM_har_refusjonskrav_tidligere_utbetalt_bruker() {
-        var internRef = UUID.randomUUID().toString();
-        var orgnr = "999999999";
         var refusjonFom = BG_PERIODE.getFomDato();
-        lagIAYGrunnlag();
-        byggBGAndel(Arbeidsgiver.virksomhet(orgnr), internRef);
-        byggRefusjonAndel(Arbeidsgiver.virksomhet(orgnr), internRef);
-        byggBGAndelOrginal(Arbeidsgiver.virksomhet(orgnr), internRef, 500000, 0);
+        byggBGAndel(ARBEIDSGIVER, internRef);
+        byggRefusjonAndel(ARBEIDSGIVER, internRef);
+        byggBGAndelOrginal(ARBEIDSGIVER, internRef, 500000, 0);
         ferdigstillInput();
-        var resultat = LagVurderRefusjonDto.lagDto(input, andelMap, Collections.emptyList());
+
+        var resultat = RefusjonAndelTilVurderingDtoTjeneste.lagDtoListe(andelMap, hentBeregningsgrunnlag(input), hentOriginaleGrunnlag(input),
+            hentRefusjonOverstyringer(input), hentArbeidsforholdInformasjon(input));
         var tidligereUtb = new TidligereUtbetalingDto(bgPeriodeOrginal.getBeregningsgrunnlagPeriodeFom(), bgPeriodeOrginal.getBeregningsgrunnlagPeriodeTom(), false);
-        assertThat(resultat).isPresent();
-        assertThat(resultat.get().getAndeler()).hasSize(1);
-        assertAndeler(resultat.get().getAndeler(), orgnr, internRef, refusjonFom, STP.getSkjæringstidspunktBeregning(), tidligereUtb);
+
+        assertThat(resultat).hasSize(1);
+        assertAndeler(resultat, ORGNR, internRef, refusjonFom, STP.getSkjæringstidspunktBeregning(), tidligereUtb);
     }
 
     @Test
     void skal_lage_dto_når_tilkommetIM_har_refusjonskrav_tidligere_utbetalt_refusjon() {
-        var internRef = UUID.randomUUID().toString();
-        var orgnr = "999999999";
         var refusjonFom = BG_PERIODE.getFomDato();
-        lagIAYGrunnlag();
-        byggBGAndel(Arbeidsgiver.virksomhet(orgnr), internRef);
-        byggRefusjonAndel(Arbeidsgiver.virksomhet(orgnr), internRef);
-        byggBGAndelOrginal(Arbeidsgiver.virksomhet(orgnr), internRef, 0, 500000);
+        byggBGAndel(ARBEIDSGIVER, internRef);
+        byggRefusjonAndel(ARBEIDSGIVER, internRef);
+        byggBGAndelOrginal(ARBEIDSGIVER, internRef, 0, 500000);
         ferdigstillInput();
 
-        var resultat = LagVurderRefusjonDto.lagDto(input, andelMap, Collections.emptyList());
+        var resultat = RefusjonAndelTilVurderingDtoTjeneste.lagDtoListe(andelMap, hentBeregningsgrunnlag(input), hentOriginaleGrunnlag(input),
+            hentRefusjonOverstyringer(input), hentArbeidsforholdInformasjon(input));
         var tidligereUtb = new TidligereUtbetalingDto(bgPeriodeOrginal.getBeregningsgrunnlagPeriodeFom(), bgPeriodeOrginal.getBeregningsgrunnlagPeriodeTom(), true);
-        assertThat(resultat).isPresent();
-        assertThat(resultat.get().getAndeler()).hasSize(1);
-        assertAndeler(resultat.get().getAndeler(), orgnr, internRef, refusjonFom, STP.getSkjæringstidspunktBeregning(), tidligereUtb);
+
+        assertThat(resultat).hasSize(1);
+        assertAndeler(resultat, ORGNR, internRef, refusjonFom, STP.getSkjæringstidspunktBeregning(), tidligereUtb);
     }
 
     @Test
     void skal_lage_dto_når_tilkommetIM_har_refusjonskrav_tidligere_utbetalt_refusjon_for_annet_orgnr() {
-        var internRef = UUID.randomUUID().toString();
         var internRef2 = UUID.randomUUID().toString();
-        var orgnr = "999999999";
         var orgnr2 = "999999991";
         var refusjonFom = BG_PERIODE.getFomDato();
-        lagIAYGrunnlag();
         byggBGAndel(Arbeidsgiver.virksomhet(orgnr2), internRef2);
 
         byggRefusjonAndel(Arbeidsgiver.virksomhet(orgnr2), internRef2);
-        byggBGAndelOrginal(Arbeidsgiver.virksomhet(orgnr), internRef, 0, 500000);
+        byggBGAndelOrginal(ARBEIDSGIVER, internRef, 0, 500000);
         ferdigstillInput();
 
-        var resultat = LagVurderRefusjonDto.lagDto(input, andelMap, Collections.emptyList());
-        assertThat(resultat).isPresent();
-        assertThat(resultat.get().getAndeler()).hasSize(1);
-        var matchetAndel = resultat.get().getAndeler().stream()
+        var resultat = RefusjonAndelTilVurderingDtoTjeneste.lagDtoListe(andelMap, hentBeregningsgrunnlag(input), hentOriginaleGrunnlag(input),
+            hentRefusjonOverstyringer(input), hentArbeidsforholdInformasjon(input));
+
+        assertThat(resultat).hasSize(1);
+        var matchetAndel = resultat.stream()
                 .filter(a -> a.getArbeidsgiver().getArbeidsgiverOrgnr().equals(orgnr2)
                         && Objects.equals(a.getInternArbeidsforholdRef(), internRef2))
                 .findFirst()
@@ -159,67 +160,58 @@ class LagVurderRefusjonDtoTest {
 
     @Test
     void skal_sette_tidligste_refusjonsdato_lik_avklaring_fra_fakta_om_beregnign() {
-        var internRef = UUID.randomUUID().toString();
-        var orgnr = "999999999";
         var refusjonFom = BG_PERIODE.getFomDato();
-        lagIAYGrunnlag();
-        var ag = Arbeidsgiver.virksomhet(orgnr);
-        byggBGAndel(ag, internRef);
-        byggRefusjonAndel(ag, internRef);
-        byggBGAndelOrginal(ag, internRef, 0, 500000);
+        byggBGAndel(ARBEIDSGIVER, internRef);
+        byggRefusjonAndel(ARBEIDSGIVER, internRef);
+        byggBGAndelOrginal(ARBEIDSGIVER, internRef, 0, 500000);
         var tidligsteRefusjonFom = refusjonFom.plusMonths(1);
-        byggTidligereRefusjonoverstyring(ag, tidligsteRefusjonFom, false);
+        byggTidligereRefusjonoverstyring(ARBEIDSGIVER, tidligsteRefusjonFom, false);
         ferdigstillInput();
 
-        var resultat = LagVurderRefusjonDto.lagDto(input, andelMap, Collections.emptyList());
+        var resultat = RefusjonAndelTilVurderingDtoTjeneste.lagDtoListe(andelMap, hentBeregningsgrunnlag(input), hentOriginaleGrunnlag(input),
+            hentRefusjonOverstyringer(input), hentArbeidsforholdInformasjon(input));
         var tidligereUtb = new TidligereUtbetalingDto(bgPeriodeOrginal.getBeregningsgrunnlagPeriodeFom(), bgPeriodeOrginal.getBeregningsgrunnlagPeriodeTom(), true);
-        assertThat(resultat).isPresent();
-        assertThat(resultat.get().getAndeler()).hasSize(1);
-        assertAndeler(resultat.get().getAndeler(), orgnr, internRef, refusjonFom, tidligsteRefusjonFom, tidligereUtb);
+
+        assertThat(resultat).hasSize(1);
+        assertAndeler(resultat, ORGNR, internRef, refusjonFom, tidligsteRefusjonFom, tidligereUtb);
     }
 
     @Test
     void ved_flere_andeler_skal_kun_andel_i_første_periode_brukes() {
-        var internRef = UUID.randomUUID().toString();
-        var orgnr = "999999999";
-        lagIAYGrunnlag();
-        var ag = Arbeidsgiver.virksomhet(orgnr);
-        byggBGAndel(ag, internRef);
-        byggRefusjonAndel(ag, internRef);
+        byggBGAndel(ARBEIDSGIVER, internRef);
+        byggRefusjonAndel(ARBEIDSGIVER, internRef);
         var eldrePeriode = Intervall.fraOgMedTilOgMed(BG_PERIODE.getFomDato().minusYears(1), BG_PERIODE.getFomDato().minusDays(1));
-        byggRefusjonAndel(ag, internRef, eldrePeriode);
-        byggBGAndelOrginal(ag, internRef, 0, 500000);
+        byggRefusjonAndel(ARBEIDSGIVER, internRef, eldrePeriode);
+        byggBGAndelOrginal(ARBEIDSGIVER, internRef, 0, 500000);
         var refusjonFom = eldrePeriode.getFomDato();
         var tidligsteRefusjonFom = refusjonFom.plusMonths(1);
-        byggTidligereRefusjonoverstyring(ag, tidligsteRefusjonFom, false);
+        byggTidligereRefusjonoverstyring(ARBEIDSGIVER, tidligsteRefusjonFom, false);
         ferdigstillInput();
 
-        var resultat = LagVurderRefusjonDto.lagDto(input, andelMap, Collections.emptyList());
+        var resultat = RefusjonAndelTilVurderingDtoTjeneste.lagDtoListe(andelMap, hentBeregningsgrunnlag(input), hentOriginaleGrunnlag(input),
+            hentRefusjonOverstyringer(input), hentArbeidsforholdInformasjon(input));
         var tidligereUtb = new TidligereUtbetalingDto(bgPeriodeOrginal.getBeregningsgrunnlagPeriodeFom(), bgPeriodeOrginal.getBeregningsgrunnlagPeriodeTom(), true);
-        assertThat(resultat).isPresent();
-        assertThat(resultat.get().getAndeler()).hasSize(1);
-        assertAndeler(resultat.get().getAndeler(), orgnr, internRef, refusjonFom, tidligsteRefusjonFom, tidligereUtb);
+
+        assertThat(resultat).hasSize(1);
+        assertAndeler(resultat, ORGNR, internRef, refusjonFom, tidligsteRefusjonFom, tidligereUtb);
     }
 
     @Test
     void skal_ignorere_tidligere_avklaring_fra_fakta_om_beregning_når_dette_gjeder_annet_arbfor() {
-        var internRef = UUID.randomUUID().toString();
-        var orgnr = "999999999";
         var refusjonFom = BG_PERIODE.getFomDato();
-        lagIAYGrunnlag();
-        var ag = Arbeidsgiver.virksomhet(orgnr);
-        byggBGAndel(ag, internRef);
-        byggRefusjonAndel(ag, internRef);
-        byggBGAndelOrginal(ag, internRef, 0, 500000);
+        byggBGAndel(ARBEIDSGIVER, internRef);
+        byggRefusjonAndel(ARBEIDSGIVER, internRef);
+        byggBGAndelOrginal(ARBEIDSGIVER, internRef, 0, 500000);
         var tidligsteRefusjonFom = refusjonFom.plusMonths(1);
         byggTidligereRefusjonoverstyring(Arbeidsgiver.virksomhet("99999998"), tidligsteRefusjonFom, false);
         ferdigstillInput();
 
-        var resultat = LagVurderRefusjonDto.lagDto(input, andelMap, Collections.emptyList());
+        var resultat = RefusjonAndelTilVurderingDtoTjeneste.lagDtoListe(andelMap, hentBeregningsgrunnlag(input), hentOriginaleGrunnlag(input),
+            hentRefusjonOverstyringer(input), hentArbeidsforholdInformasjon(input));
         var tidligereUtb = new TidligereUtbetalingDto(bgPeriodeOrginal.getBeregningsgrunnlagPeriodeFom(), bgPeriodeOrginal.getBeregningsgrunnlagPeriodeTom(), true);
-        assertThat(resultat).isPresent();
-        assertThat(resultat.get().getAndeler()).hasSize(1);
-        assertAndeler(resultat.get().getAndeler(), orgnr, internRef, refusjonFom, STP.getSkjæringstidspunktBeregning(), tidligereUtb);
+
+        assertThat(resultat).hasSize(1);
+        assertAndeler(resultat, ORGNR, internRef, refusjonFom, STP.getSkjæringstidspunktBeregning(), tidligereUtb);
     }
 
 
@@ -320,5 +312,23 @@ class LagVurderRefusjonDtoTest {
     }
 
 
+    private static BeregningsgrunnlagDto hentBeregningsgrunnlag(BeregningsgrunnlagGUIInput guiInput) {
+        return guiInput.getBeregningsgrunnlagGrunnlag().getBeregningsgrunnlagHvisFinnes().get();
+    }
 
+    private static List<BeregningsgrunnlagDto> hentOriginaleGrunnlag(BeregningsgrunnlagGUIInput guiInput) {
+        return guiInput.getBeregningsgrunnlagGrunnlagFraForrigeBehandling().stream()
+            .flatMap(gr -> gr.getBeregningsgrunnlagHvisFinnes().stream()).toList();
+    }
+
+    private static List<BeregningRefusjonOverstyringDto> hentRefusjonOverstyringer(BeregningsgrunnlagGUIInput guiInput) {
+        return guiInput.getBeregningsgrunnlagGrunnlag()
+            .getRefusjonOverstyringer()
+            .map(BeregningRefusjonOverstyringerDto::getRefusjonOverstyringer)
+            .orElse(Collections.emptyList());
+    }
+
+    private static Optional<ArbeidsforholdInformasjonDto> hentArbeidsforholdInformasjon(BeregningsgrunnlagGUIInput guiInput) {
+        return guiInput.getIayGrunnlag().getArbeidsforholdInformasjon();
+    }
 }

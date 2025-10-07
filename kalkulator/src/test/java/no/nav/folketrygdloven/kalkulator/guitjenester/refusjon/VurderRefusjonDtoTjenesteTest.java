@@ -58,8 +58,9 @@ class VurderRefusjonDtoTjenesteTest {
         førsteInnsendingAvRefusjonMap.put(ARBEIDSGIVER1, forSentInnsendtRefusjon);
         førsteInnsendingAvRefusjonMap.put(ARBEIDSGIVER2, tidsnokInnsendtRefusjon);
         var input = lagInputMedBeregningsgrunnlagOgIAY(førsteInnsendingAvRefusjonMap);
+        input.leggTilToggle("refusjonsfrist.flytting", true);
 
-        var resultat = VurderRefusjonDtoTjeneste.getRefusjonskravSomKomForSent(input);
+        var resultat = VurderRefusjonDtoTjeneste.hentRefusjonskravSomKomForSent(input);
 
         assertThat(resultat)
             .hasSize(1)

@@ -11,11 +11,9 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.AvklaringsbehovDefinisjon;
 public class AvklaringsbehovutledertjenesteVurderRefusjon {
 
     private AvklaringsbehovutledertjenesteVurderRefusjon() {
+        // Skjuler default
     }
 
-    // TODO: Tenk på om denne klassen trengs, eller om man bare skal gjøre det direkte der den brukes
-    // Fordeler med å slå sammen: Er uansett veldig enkel logikk
-    // Ulempe: Den kalles to steder, så den må i så fall vedlikeholdes to steder
     public static List<BeregningAvklaringsbehovResultat> utledAvklaringsbehov(BeregningsgrunnlagInput input,
                                                                               BeregningsgrunnlagDto periodisertMedRefusjonOgGradering) {
         return AvklaringsbehovutlederVurderRefusjon.skalHaAvklaringsbehovVurderRefusjonskrav(input, periodisertMedRefusjonOgGradering) ? List.of(

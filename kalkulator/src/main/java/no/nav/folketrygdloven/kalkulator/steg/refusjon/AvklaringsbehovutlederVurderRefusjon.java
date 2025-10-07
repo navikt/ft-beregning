@@ -1,5 +1,6 @@
 package no.nav.folketrygdloven.kalkulator.steg.refusjon;
 
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -9,6 +10,8 @@ import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagInput;
 import no.nav.folketrygdloven.kalkulator.input.VurderRefusjonBeregningsgrunnlagInput;
 import no.nav.folketrygdloven.kalkulator.konfig.KonfigTjeneste;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
+import no.nav.folketrygdloven.kalkulator.steg.refusjon.modell.RefusjonAndel;
+import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
 
 public final class AvklaringsbehovutlederVurderRefusjon {
@@ -22,25 +25,32 @@ public final class AvklaringsbehovutlederVurderRefusjon {
             throw new IllegalStateException("Har ikke korrekt input for å vurdere aksjsonspunkt i vurder_refusjon steget");
         }
 
-        var orginaltBGGrunnlag = vurderInput.getBeregningsgrunnlagGrunnlagFraForrigeBehandling();
-        if (orginaltBGGrunnlag.isEmpty() || orginaltBGGrunnlag.stream().noneMatch(gr -> gr.getBeregningsgrunnlagHvisFinnes().isPresent())) {
-            return false;
-        }
-
         if (erFPEllerSVP(vurderInput) && vurderInput.isEnabled("refusjonsfrist.flytting", false)
             && skalHaAvklaringsbehovVurderRefusjonskravKommetForSent(vurderInput)) {
             return true;
         }
 
+        var originaleGrunnlag = vurderInput.getBeregningsgrunnlagGrunnlagFraForrigeBehandling().stream()
+            .flatMap(gr -> gr.getBeregningsgrunnlagHvisFinnes().stream())
+            .toList();
+
+        if (originaleGrunnlag.isEmpty()) {
+            return false;
+        }
+
+        return harAndelerMedØktRefusjonIUtbetaltPeriode(input, periodisertMedRefusjonOgGradering, originaleGrunnlag);
+    }
+
+    private static boolean harAndelerMedØktRefusjonIUtbetaltPeriode(BeregningsgrunnlagInput input,
+                                                                    BeregningsgrunnlagDto periodisertMedRefusjonOgGradering,
+                                                                    List<BeregningsgrunnlagDto> originaleGrunnlag) {
         var perioderTilVurderingTjeneste = new PerioderTilVurderingTjeneste(input.getForlengelseperioder(), periodisertMedRefusjonOgGradering);
         var grenseverdi = periodisertMedRefusjonOgGradering.getGrunnbeløp().multipliser(KonfigTjeneste.getAntallGØvreGrenseverdi());
-        var orginaleBG = orginaltBGGrunnlag.stream().flatMap(gr -> gr.getBeregningsgrunnlagHvisFinnes().stream()).toList();
-	    var andelerMedØktRefusjonIUtbetaltPeriode = orginaleBG.stream()
-                .flatMap(originaltBg -> AndelerMedØktRefusjonTjeneste.finnAndelerMedØktRefusjon(periodisertMedRefusjonOgGradering, originaltBg, grenseverdi, input.getYtelsespesifiktGrunnlag()).entrySet().stream())
-                .filter(e -> perioderTilVurderingTjeneste.erTilVurdering(e.getKey()))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-
-        return !andelerMedØktRefusjonIUtbetaltPeriode.isEmpty();
+        return originaleGrunnlag.stream()
+            .flatMap(
+                originaltBg -> AndelerMedØktRefusjonTjeneste.finnAndelerMedØktRefusjon(periodisertMedRefusjonOgGradering, originaltBg, grenseverdi,
+                    input.getYtelsespesifiktGrunnlag()).entrySet().stream())
+            .anyMatch(e -> perioderTilVurderingTjeneste.erTilVurdering(e.getKey()));
     }
 
     private static boolean erFPEllerSVP(VurderRefusjonBeregningsgrunnlagInput vurderInput) {
