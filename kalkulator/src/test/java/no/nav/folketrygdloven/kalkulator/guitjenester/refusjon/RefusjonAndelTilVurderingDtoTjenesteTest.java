@@ -2,7 +2,6 @@ package no.nav.folketrygdloven.kalkulator.guitjenester.refusjon;
 
 import static no.nav.fpsak.tidsserie.LocalDateInterval.TIDENES_ENDE;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.in;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
