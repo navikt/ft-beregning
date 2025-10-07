@@ -41,13 +41,11 @@ public final class VurderRefusjonDtoTjeneste {
             .noneMatch(a -> a.getDefinisjon().equals(AvklaringsbehovDefinisjon.VURDER_REFUSJONSKRAV))) {
             return Optional.empty();
         }
+
         var beregningsgrunnlag = beregningsgrunnlagOpt.get();
-
         var refusjonskravSomKomForSentListe = hentRefusjonskravSomKomForSent(input);
-
         var originaleGrunnlag = input.getBeregningsgrunnlagGrunnlagFraForrigeBehandling().stream()
             .flatMap(gr -> gr.getBeregningsgrunnlagHvisFinnes().stream()).toList();
-
 
         if (!originaleGrunnlag.isEmpty() && beregningsgrunnlag.getGrunnbeløp() != null) {
             var gjeldendeOverstyringer = hentRefusjonOverstyringer(input);
