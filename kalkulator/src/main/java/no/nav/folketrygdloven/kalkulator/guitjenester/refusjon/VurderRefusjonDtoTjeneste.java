@@ -84,7 +84,6 @@ public final class VurderRefusjonDtoTjeneste {
         return arbeidsgivere.stream().map(arbeidsgiver -> lagRefusjonskravDto(input, arbeidsgiver, refusjonOverstyringer)).toList();
     }
 
-
     private static List<RefusjonAndelTilVurderingDto> lagAndeler(BeregningsgrunnlagGUIInput input,
                                                                  Map<Intervall, List<RefusjonAndel>> andelerMedØktRefusjon,
                                                                  BeregningsgrunnlagDto beregningsgrunnlag,
