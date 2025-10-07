@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.NavigableMap;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.TreeMap;
@@ -144,10 +143,9 @@ public final class RefusjonAndelTilVurderingDtoTjeneste {
                 .filter(p -> p.getDagsats() != null && p.getDagsats() > 0)
                 .toList();
 
-        return alleOriginalePerioderMedUtbetaling.stream().filter(bgp -> bgp.getPeriode().inkluderer(fomDato)).findFirst().or(() -> {
+        return alleOriginalePerioderMedUtbetaling.stream().filter(bgp -> bgp.getPeriode().inkluderer(fomDato)).findFirst().or(() ->
             // Hvis ingen overlapper, finn siste som overlapper eller første periode
-            return Optional.of(finnSistePeriodeSomOverlapperEllerFørste(fomDato, originaleGrunnlag));
-        }).orElseThrow();
+            Optional.of(finnSistePeriodeSomOverlapperEllerFørste(fomDato, originaleGrunnlag))).orElseThrow();
     }
 
     private static BeregningsgrunnlagPeriodeDto finnSistePeriodeSomOverlapperEllerFørste(LocalDate fomDato, List<BeregningsgrunnlagDto> originaleGrunnlag) {
