@@ -72,7 +72,7 @@ public class FaktaOmBeregningDtoTjeneste {
         if (tilfeller.contains(FaktaOmBeregningTilfelle.VURDER_BESTEBEREGNING) || tilfeller.contains(FaktaOmBeregningTilfelle.FASTSETT_BESTEBEREGNING_FØDENDE_KVINNE)) {
             new VurderBesteberegningTilfelleDtoTjeneste().lagDto(input, faktaOmBeregningDto);
         }
-        // TODO: Den neste linjen kan slettes når vi har flyttet aksjonspunktet og kjørt gjennom gamle saker
+        // TODO refusjon: Den neste linjen kan slettes når vi har flyttet aksjonspunktet og kjørt gjennom gamle saker
         if (tilfeller.contains(FaktaOmBeregningTilfelle.VURDER_REFUSJONSKRAV_SOM_HAR_KOMMET_FOR_SENT)) {
             new VurderRefusjonTilfelleDtoTjeneste().lagDto(input, faktaOmBeregningDto);
         }

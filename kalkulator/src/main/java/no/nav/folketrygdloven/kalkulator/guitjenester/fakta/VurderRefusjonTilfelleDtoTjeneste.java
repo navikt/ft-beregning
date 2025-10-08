@@ -15,7 +15,7 @@ import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.FaktaO
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.RefusjonskravSomKommerForSentDto;
 
 class VurderRefusjonTilfelleDtoTjeneste {
-    // TODO: Denne filen kan slettes når vi har flyttet aksjonspunktet og kjørt gjennom gamle saker
+    // TODO refusjon: Denne filen kan slettes når vi har flyttet aksjonspunktet og kjørt gjennom gamle saker
 
 	public void lagDto(BeregningsgrunnlagGUIInput input, FaktaOmBeregningDto faktaOmBeregningDto) {
         var beregningsgrunnlag = input.getBeregningsgrunnlag();

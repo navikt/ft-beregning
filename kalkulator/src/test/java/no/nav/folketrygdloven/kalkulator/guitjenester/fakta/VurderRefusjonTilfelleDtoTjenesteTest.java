@@ -42,7 +42,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.FaktaOmBeregningDto;
 
 class VurderRefusjonTilfelleDtoTjenesteTest {
-    // TODO: Denne filen kan slettes når vi har flyttet aksjonspunktet og kjørt gjennom gamle saker
+    // TODO refusjon: Denne filen kan slettes når vi har flyttet aksjonspunktet og kjørt gjennom gamle saker
     private static final String ORGNR = "974760673";
     private static final String ORGNR2 = "915933149";
 
