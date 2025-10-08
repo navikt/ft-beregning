@@ -77,7 +77,7 @@ class VurderRefusjonDtoTjenesteTest {
         var koblingReferanse = new KoblingReferanseMock(SKJÆRINGSTIDSPUNKT);
         var input = new BeregningsgrunnlagGUIInput(koblingReferanse, iayGrunnlag,
             opprett(iayGrunnlag, koblingReferanse.getSkjæringstidspunktBeregning(), førsteInnsendingAvRefusjonMap), null);
-        return input.medBeregningsgrunnlagGrunnlag(byggGrunnlag(aktivitetAggregat, arbeidsgivere));
+        return input.medBeregningsgrunnlagGrunnlag(lagBeregningsgrunnlagGrunnlag(aktivitetAggregat, arbeidsgivere));
     }
 
     private static BeregningAktivitetAggregatDto byggBeregningAktivitetAggregat(InntektArbeidYtelseAggregatBuilder iayAggregatBuilder, Set<Arbeidsgiver> arbeidsgivere) {
@@ -114,8 +114,8 @@ class VurderRefusjonDtoTjenesteTest {
         aktørArbeidBuilder.leggTilYrkesaktivitet(yaBuilder);
     }
 
-    private static BeregningsgrunnlagGrunnlagDto byggGrunnlag(BeregningAktivitetAggregatDto aktivitetAggregat,
-                                                              Set<Arbeidsgiver> arbeidsgivere) {
+    private static BeregningsgrunnlagGrunnlagDto lagBeregningsgrunnlagGrunnlag(BeregningAktivitetAggregatDto aktivitetAggregat,
+                                                                               Set<Arbeidsgiver> arbeidsgivere) {
 
         return BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
             .medRegisterAktiviteter(aktivitetAggregat)

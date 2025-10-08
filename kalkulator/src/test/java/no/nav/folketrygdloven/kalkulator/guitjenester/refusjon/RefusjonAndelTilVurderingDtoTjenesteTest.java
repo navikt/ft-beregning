@@ -250,18 +250,18 @@ class RefusjonAndelTilVurderingDtoTjenesteTest {
     private void ferdigstillInput() {
         BeregningsgrunnlagPeriodeDto.oppdater(bgPeriodeOrginal).build();
         BeregningsgrunnlagPeriodeDto.oppdater(bgPeriode).build();
-        var grunnlagOrginal = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
-                .medBeregningsgrunnlag(beregningsgrunnlagOrginal).build(BeregningsgrunnlagTilstand.VURDERT_REFUSJON);
+        var forrigeBeregningsgrunnlagGrunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
+            .medBeregningsgrunnlag(beregningsgrunnlagOrginal)
+            .build(BeregningsgrunnlagTilstand.VURDERT_REFUSJON);
 
-        var grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
-                .medBeregningsgrunnlag(beregningsgrunnlag);
+        var beregningsgrunnlagGrunnlagBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
+            .medBeregningsgrunnlag(beregningsgrunnlag);
         if (refusjonOverstyringerBuilder != null) {
-            grunnlag.medRefusjonOverstyring(refusjonOverstyringerBuilder.build());
+            beregningsgrunnlagGrunnlagBuilder.medRefusjonOverstyring(refusjonOverstyringerBuilder.build());
         }
-        var byggetGrunnlag = grunnlag.build(BeregningsgrunnlagTilstand.VURDERT_REFUSJON);
-        input = new BeregningsgrunnlagGUIInput(koblingReferanse, iay, List.of(), null)
-                .medBeregningsgrunnlagGrunnlag(byggetGrunnlag)
-                .medBeregningsgrunnlagGrunnlagFraForrigeBehandling(List.of(grunnlagOrginal));
+        var beregningsgrunnlagGrunnlag = beregningsgrunnlagGrunnlagBuilder.build(BeregningsgrunnlagTilstand.VURDERT_REFUSJON);
+        input = new BeregningsgrunnlagGUIInput(koblingReferanse, iay, List.of(), null).medBeregningsgrunnlagGrunnlag(beregningsgrunnlagGrunnlag)
+            .medBeregningsgrunnlagGrunnlagFraForrigeBehandling(List.of(forrigeBeregningsgrunnlagGrunnlag));
     }
 
     private void lagIAYGrunnlag() {

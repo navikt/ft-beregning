@@ -23,16 +23,16 @@ public class InntektsmeldingMedRefusjonTjeneste {
     }
 
     public static Set<Arbeidsgiver> finnArbeidsgivereSomHarSøktRefusjonForSent(InntektArbeidYtelseGrunnlagDto iayGrunnlag,
-                                                                               BeregningsgrunnlagGrunnlagDto grunnlag,
+                                                                               BeregningsgrunnlagGrunnlagDto beregningsgrunnlagGrunnlag,
                                                                                List<KravperioderPrArbeidsforholdDto> kravperioder,
                                                                                FagsakYtelseType ytelseType) {
-        var skjæringstidspunktBeregning = grunnlag.getBeregningsgrunnlagHvisFinnes()
+        var skjæringstidspunktBeregning = beregningsgrunnlagGrunnlag.getBeregningsgrunnlagHvisFinnes()
                 .map(BeregningsgrunnlagDto::getSkjæringstidspunkt)
                 .orElseThrow(() -> new IllegalStateException("Utviklerfeil: Skal ha beregningsgrunnlag"));
-        var yrkesaktiviteter = FinnYrkesaktiviteterForBeregningTjeneste.finnYrkesaktiviteter(iayGrunnlag, grunnlag, skjæringstidspunktBeregning);
+        var yrkesaktiviteter = FinnYrkesaktiviteterForBeregningTjeneste.finnYrkesaktiviteter(iayGrunnlag, beregningsgrunnlagGrunnlag, skjæringstidspunktBeregning);
 
         var harSøktForSentMap = ArbeidsgiverRefusjonskravTjeneste.lagFristTidslinjePrArbeidsgiver(yrkesaktiviteter, kravperioder,
-                grunnlag.getGjeldendeAktiviteter(), skjæringstidspunktBeregning, Optional.empty(), ytelseType);
+                beregningsgrunnlagGrunnlag.getGjeldendeAktiviteter(), skjæringstidspunktBeregning, Optional.empty(), ytelseType);
         return finnArbeidsgivereMedUnderkjentPeriode(harSøktForSentMap);
     }
 

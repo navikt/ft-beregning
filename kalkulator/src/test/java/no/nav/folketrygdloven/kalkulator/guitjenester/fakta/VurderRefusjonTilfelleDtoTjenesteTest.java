@@ -64,7 +64,7 @@ class VurderRefusjonTilfelleDtoTjenesteTest {
         førsteInnsendingMap.put(arbeidsgiver, SKJÆRINGSTIDSPUNKT.plusMonths(4));
         var im2 = BeregningInntektsmeldingTestUtil.opprettInntektsmelding(ORGNR2, SKJÆRINGSTIDSPUNKT, Beløp.fra(10), Beløp.fra(10));
         førsteInnsendingMap.put(arbeidsgiver2, SKJÆRINGSTIDSPUNKT.plusMonths(2));
-        var grunnlag = byggGrunnlag(aktivitetAggregat, List.of(arbeidsgiver, arbeidsgiver2));
+        var grunnlag = lagBeregningsgrunnlagGrunnlagBuilder(aktivitetAggregat, List.of(arbeidsgiver, arbeidsgiver2));
         var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medData(registerBuilder)
                 .medInntektsmeldinger(List.of(im1, im2)).build();
@@ -79,13 +79,10 @@ class VurderRefusjonTilfelleDtoTjenesteTest {
         assertThat(faktaOmBeregningDto.getRefusjonskravSomKommerForSentListe().iterator().next().getArbeidsgiverIdent()).isEqualTo(arbeidsgiver.getIdentifikator());
     }
 
-    private BeregningsgrunnlagGrunnlagDtoBuilder byggGrunnlag(BeregningAktivitetAggregatDto aktivitetAggregat, List<Arbeidsgiver> arbeidsgivere) {
+    private BeregningsgrunnlagGrunnlagDtoBuilder lagBeregningsgrunnlagGrunnlagBuilder(BeregningAktivitetAggregatDto aktivitetAggregat, List<Arbeidsgiver> arbeidsgivere) {
         return BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medRegisterAktiviteter(aktivitetAggregat)
-                .medBeregningsgrunnlag(lagBeregningsgrunnlag(arbeidsgivere.stream().map(a -> {
-                    var virksomhet = Arbeidsgiver.virksomhet(a.getOrgnr());
-                    return virksomhet;
-                }).collect(Collectors.toList())));
+                .medBeregningsgrunnlag(lagBeregningsgrunnlag(arbeidsgivere.stream().map(a -> Arbeidsgiver.virksomhet(a.getOrgnr())).toList()));
     }
 
     private BeregningsgrunnlagDto lagBeregningsgrunnlag(List<Arbeidsgiver> ags) {
