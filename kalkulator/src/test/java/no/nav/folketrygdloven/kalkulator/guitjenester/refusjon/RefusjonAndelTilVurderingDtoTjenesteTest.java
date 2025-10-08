@@ -91,7 +91,7 @@ class RefusjonAndelTilVurderingDtoTjenesteTest {
         byggBGAndel(ARBEIDSGIVER, internRef);
         ferdigstillInput();
 
-        var resultat = RefusjonAndelTilVurderingDtoTjeneste.lagDtoListe(andelMap, hentBeregningsgrunnlag(input), hentOriginaleGrunnlag(input),
+        var resultat = RefusjonAndelTilVurderingDtoTjeneste.lagDtoListe(andelMap, hentBeregningsgrunnlag(input), hentForrigeGrunnlagListe(input),
             hentRefusjonOverstyringer(input), hentArbeidsforholdInformasjon(input));
 
         assertThat(resultat).isEmpty();
@@ -105,7 +105,7 @@ class RefusjonAndelTilVurderingDtoTjenesteTest {
         byggBGAndelOrginal(ARBEIDSGIVER, internRef, 500000, 0);
         ferdigstillInput();
 
-        var resultat = RefusjonAndelTilVurderingDtoTjeneste.lagDtoListe(andelMap, hentBeregningsgrunnlag(input), hentOriginaleGrunnlag(input),
+        var resultat = RefusjonAndelTilVurderingDtoTjeneste.lagDtoListe(andelMap, hentBeregningsgrunnlag(input), hentForrigeGrunnlagListe(input),
             hentRefusjonOverstyringer(input), hentArbeidsforholdInformasjon(input));
         var tidligereUtb = new TidligereUtbetalingDto(bgPeriodeOrginal.getBeregningsgrunnlagPeriodeFom(), bgPeriodeOrginal.getBeregningsgrunnlagPeriodeTom(), false);
 
@@ -121,7 +121,7 @@ class RefusjonAndelTilVurderingDtoTjenesteTest {
         byggBGAndelOrginal(ARBEIDSGIVER, internRef, 0, 500000);
         ferdigstillInput();
 
-        var resultat = RefusjonAndelTilVurderingDtoTjeneste.lagDtoListe(andelMap, hentBeregningsgrunnlag(input), hentOriginaleGrunnlag(input),
+        var resultat = RefusjonAndelTilVurderingDtoTjeneste.lagDtoListe(andelMap, hentBeregningsgrunnlag(input), hentForrigeGrunnlagListe(input),
             hentRefusjonOverstyringer(input), hentArbeidsforholdInformasjon(input));
         var tidligereUtb = new TidligereUtbetalingDto(bgPeriodeOrginal.getBeregningsgrunnlagPeriodeFom(), bgPeriodeOrginal.getBeregningsgrunnlagPeriodeTom(), true);
 
@@ -140,7 +140,7 @@ class RefusjonAndelTilVurderingDtoTjenesteTest {
         byggBGAndelOrginal(ARBEIDSGIVER, internRef, 0, 500000);
         ferdigstillInput();
 
-        var resultat = RefusjonAndelTilVurderingDtoTjeneste.lagDtoListe(andelMap, hentBeregningsgrunnlag(input), hentOriginaleGrunnlag(input),
+        var resultat = RefusjonAndelTilVurderingDtoTjeneste.lagDtoListe(andelMap, hentBeregningsgrunnlag(input), hentForrigeGrunnlagListe(input),
             hentRefusjonOverstyringer(input), hentArbeidsforholdInformasjon(input));
 
         assertThat(resultat).hasSize(1);
@@ -167,7 +167,7 @@ class RefusjonAndelTilVurderingDtoTjenesteTest {
         byggTidligereRefusjonoverstyring(ARBEIDSGIVER, tidligsteRefusjonFom, false);
         ferdigstillInput();
 
-        var resultat = RefusjonAndelTilVurderingDtoTjeneste.lagDtoListe(andelMap, hentBeregningsgrunnlag(input), hentOriginaleGrunnlag(input),
+        var resultat = RefusjonAndelTilVurderingDtoTjeneste.lagDtoListe(andelMap, hentBeregningsgrunnlag(input), hentForrigeGrunnlagListe(input),
             hentRefusjonOverstyringer(input), hentArbeidsforholdInformasjon(input));
         var tidligereUtb = new TidligereUtbetalingDto(bgPeriodeOrginal.getBeregningsgrunnlagPeriodeFom(), bgPeriodeOrginal.getBeregningsgrunnlagPeriodeTom(), true);
 
@@ -187,7 +187,7 @@ class RefusjonAndelTilVurderingDtoTjenesteTest {
         byggTidligereRefusjonoverstyring(ARBEIDSGIVER, tidligsteRefusjonFom, false);
         ferdigstillInput();
 
-        var resultat = RefusjonAndelTilVurderingDtoTjeneste.lagDtoListe(andelMap, hentBeregningsgrunnlag(input), hentOriginaleGrunnlag(input),
+        var resultat = RefusjonAndelTilVurderingDtoTjeneste.lagDtoListe(andelMap, hentBeregningsgrunnlag(input), hentForrigeGrunnlagListe(input),
             hentRefusjonOverstyringer(input), hentArbeidsforholdInformasjon(input));
         var tidligereUtb = new TidligereUtbetalingDto(bgPeriodeOrginal.getBeregningsgrunnlagPeriodeFom(), bgPeriodeOrginal.getBeregningsgrunnlagPeriodeTom(), true);
 
@@ -205,7 +205,7 @@ class RefusjonAndelTilVurderingDtoTjenesteTest {
         byggTidligereRefusjonoverstyring(Arbeidsgiver.virksomhet("99999998"), tidligsteRefusjonFom, false);
         ferdigstillInput();
 
-        var resultat = RefusjonAndelTilVurderingDtoTjeneste.lagDtoListe(andelMap, hentBeregningsgrunnlag(input), hentOriginaleGrunnlag(input),
+        var resultat = RefusjonAndelTilVurderingDtoTjeneste.lagDtoListe(andelMap, hentBeregningsgrunnlag(input), hentForrigeGrunnlagListe(input),
             hentRefusjonOverstyringer(input), hentArbeidsforholdInformasjon(input));
         var tidligereUtb = new TidligereUtbetalingDto(bgPeriodeOrginal.getBeregningsgrunnlagPeriodeFom(), bgPeriodeOrginal.getBeregningsgrunnlagPeriodeTom(), true);
 
@@ -312,10 +312,10 @@ class RefusjonAndelTilVurderingDtoTjenesteTest {
 
 
     private static BeregningsgrunnlagDto hentBeregningsgrunnlag(BeregningsgrunnlagGUIInput guiInput) {
-        return guiInput.getBeregningsgrunnlagGrunnlag().getBeregningsgrunnlagHvisFinnes().get();
+        return guiInput.getBeregningsgrunnlagGrunnlag().getBeregningsgrunnlag();
     }
 
-    private static List<BeregningsgrunnlagDto> hentOriginaleGrunnlag(BeregningsgrunnlagGUIInput guiInput) {
+    private static List<BeregningsgrunnlagDto> hentForrigeGrunnlagListe(BeregningsgrunnlagGUIInput guiInput) {
         return guiInput.getBeregningsgrunnlagGrunnlagFraForrigeBehandling().stream()
             .flatMap(gr -> gr.getBeregningsgrunnlagHvisFinnes().stream()).toList();
     }

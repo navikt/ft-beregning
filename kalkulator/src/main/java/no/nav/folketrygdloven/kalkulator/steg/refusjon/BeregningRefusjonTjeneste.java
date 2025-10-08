@@ -90,27 +90,27 @@ public final class BeregningRefusjonTjeneste {
 
     private static List<RefusjonAndel> finnAndelerMedØktRefusjon(RefusjonPeriodeEndring refusjonsendring) {
 	    var revurderingAndeler = refusjonsendring.getRevurderingAndelerMap();
-	    var originaleAndelMap = refusjonsendring.getForrigeAndelerMap();
+	    var forrigeAndeler = refusjonsendring.getForrigeAndelerMap();
         List<RefusjonAndel> andelerMedØktRefusjon = new ArrayList<>();
-        revurderingAndeler.forEach((nøkkel, andeler) -> andelerMedØktRefusjon.addAll(sjekkOmAndelerPåSammeNøkkelHarØktRefusjon(originaleAndelMap, nøkkel, andeler)));
+        revurderingAndeler.forEach((nøkkel, andeler) -> andelerMedØktRefusjon.addAll(sjekkOmAndelerPåSammeNøkkelHarØktRefusjon(forrigeAndeler, nøkkel, andeler)));
         return andelerMedØktRefusjon;
     }
 
-    private static List<RefusjonAndel> sjekkOmAndelerPåSammeNøkkelHarØktRefusjon(Map<RefusjonAndelNøkkel, List<RefusjonAndel>> originalAndelMap, RefusjonAndelNøkkel nøkkel, List<RefusjonAndel> revurderingAndeler) {
-	    var originaleAndelerPåNøkkel = originalAndelMap.getOrDefault(nøkkel, Collections.emptyList());
+    private static List<RefusjonAndel> sjekkOmAndelerPåSammeNøkkelHarØktRefusjon(Map<RefusjonAndelNøkkel, List<RefusjonAndel>> forrigeAndeler, RefusjonAndelNøkkel nøkkel, List<RefusjonAndel> revurderingAndeler) {
+	    var forrigeAndelerPåNøkkel = forrigeAndeler.getOrDefault(nøkkel, Collections.emptyList());
 
         // Tilkommet arbeidsgiver
         var totalRefusjonRevurdering = totalRefusjon(revurderingAndeler);
-        if (nøkkel.getAktivitetStatus().erArbeidstaker() && originaleAndelerPåNøkkel.isEmpty()) {
+        if (nøkkel.getAktivitetStatus().erArbeidstaker() && forrigeAndelerPåNøkkel.isEmpty()) {
             if (totalRefusjonRevurdering.compareTo(Beløp.ZERO) > 0) {
                 return revurderingAndeler;
             }
         }
 
-        var totalRefusjonOriginal = totalRefusjon(originaleAndelerPåNøkkel);
-	    var refusjonINøkkelHarØkt = totalRefusjonRevurdering.compareTo(totalRefusjonOriginal) > 0;
+        var totalRefusjonForrige = totalRefusjon(forrigeAndelerPåNøkkel);
+	    var refusjonINøkkelHarØkt = totalRefusjonRevurdering.compareTo(totalRefusjonForrige) > 0;
         if (refusjonINøkkelHarØkt) {
-            return FinnAndelerMedØktRefusjonTjeneste.finnAndelerPåSammeNøkkelMedØktRefusjon(revurderingAndeler, originaleAndelerPåNøkkel);
+            return FinnAndelerMedØktRefusjonTjeneste.finnAndelerPåSammeNøkkelMedØktRefusjon(revurderingAndeler, forrigeAndelerPåNøkkel);
         }
 
         return Collections.emptyList();
@@ -125,11 +125,11 @@ public final class BeregningRefusjonTjeneste {
     }
 
     private static boolean erMindreAndelTilgjengeligForBruker(RefusjonPeriodeEndring refusjonsendring, Beløp grenseverdi) {
-        var originalBrutto = refusjonsendring.getBruttoForForrigeAndeler().min(grenseverdi);
+        var forrigeBrutto = refusjonsendring.getBruttoForForrigeAndeler().min(grenseverdi);
         var revurderingBrutto = refusjonsendring.getBruttoForAndeler().min(grenseverdi);
-        var originalAndelTilBruker = originalBrutto.subtraher(refusjonsendring.getRefusjonForForrigeAndeler()).max(Beløp.ZERO);
+        var forrigeAndelTilBruker = forrigeBrutto.subtraher(refusjonsendring.getRefusjonForForrigeAndeler()).max(Beløp.ZERO);
 	    var revurderingAndelTilBruker = revurderingBrutto.subtraher(refusjonsendring.getRefusjonForAndeler()).max(Beløp.ZERO);
-        return revurderingAndelTilBruker.compareTo(originalAndelTilBruker) < 0;
+        return revurderingAndelTilBruker.compareTo(forrigeAndelTilBruker) < 0;
     }
 
 }

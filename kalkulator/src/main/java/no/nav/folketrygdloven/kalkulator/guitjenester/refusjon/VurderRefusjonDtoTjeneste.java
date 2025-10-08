@@ -47,21 +47,21 @@ public final class VurderRefusjonDtoTjeneste {
             .flatMap(gr -> gr.getBeregningsgrunnlagHvisFinnes().stream()).toList();
 
         if (!forrigeGrunnlagListe.isEmpty() && beregningsgrunnlag.getGrunnbeløp() != null) {
-            var gjeldendeOverstyringer = hentRefusjonOverstyringer(input);
+            var refusjonOverstyringer = hentRefusjonOverstyringer(input);
 
             var andelerMedØktRefusjonFraTidligereBehandlinger = hentAndelerMedØktRefusjonFraTidligereBehandlinger(input.getYtelsespesifiktGrunnlag(),
                 forrigeGrunnlagListe, beregningsgrunnlag);
             if (!andelerMedØktRefusjonFraTidligereBehandlinger.isEmpty()) {
                 return Optional.of(new RefusjonTilVurderingDto(
                     lagAndeler(input, andelerMedØktRefusjonFraTidligereBehandlinger, beregningsgrunnlag, forrigeGrunnlagListe,
-                        gjeldendeOverstyringer), refusjonskravSomKomForSentListe));
+                        refusjonOverstyringer), refusjonskravSomKomForSentListe));
             }
 
-            var andelerMedØktRefusjonFraOverstyringer = hentAndelerMedØktRefusjonFraOverstyringer(gjeldendeOverstyringer,
+            var andelerMedØktRefusjonFraOverstyringer = hentAndelerMedØktRefusjonFraOverstyringer(refusjonOverstyringer,
                 input.getSkjæringstidspunktForBeregning());
             if (!andelerMedØktRefusjonFraOverstyringer.isEmpty()) {
                 return Optional.of(new RefusjonTilVurderingDto(
-                    lagAndeler(input, andelerMedØktRefusjonFraOverstyringer, beregningsgrunnlag, forrigeGrunnlagListe, gjeldendeOverstyringer),
+                    lagAndeler(input, andelerMedØktRefusjonFraOverstyringer, beregningsgrunnlag, forrigeGrunnlagListe, refusjonOverstyringer),
                     refusjonskravSomKomForSentListe));
             }
         }
@@ -88,9 +88,9 @@ public final class VurderRefusjonDtoTjeneste {
                                                                  Map<Intervall, List<RefusjonAndel>> andelerMedØktRefusjon,
                                                                  BeregningsgrunnlagDto beregningsgrunnlag,
                                                                  List<BeregningsgrunnlagDto> forrigeGrunnlagListe,
-                                                                 List<BeregningRefusjonOverstyringDto> gjeldendeOverstyringer) {
+                                                                 List<BeregningRefusjonOverstyringDto> refusjonOverstyringer) {
         var arbeidsforholdInformasjon = input.getIayGrunnlag().getArbeidsforholdInformasjon();
-        return RefusjonAndelTilVurderingDtoTjeneste.lagDtoListe(andelerMedØktRefusjon, beregningsgrunnlag, forrigeGrunnlagListe, gjeldendeOverstyringer,
+        return RefusjonAndelTilVurderingDtoTjeneste.lagDtoListe(andelerMedØktRefusjon, beregningsgrunnlag, forrigeGrunnlagListe, refusjonOverstyringer,
             arbeidsforholdInformasjon);
     }
 

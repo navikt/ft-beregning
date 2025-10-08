@@ -37,9 +37,9 @@ public final class RefusjonAndelTilVurderingDtoTjeneste {
     }
 
     public static List<RefusjonAndelTilVurderingDto> lagDtoListe(Map<Intervall, List<RefusjonAndel>> andelerMedØktRefusjon,
-                                                                 BeregningsgrunnlagDto gjeldendeBeregningsgrunnlag,
+                                                                 BeregningsgrunnlagDto beregningsgrunnlag,
                                                                  List<BeregningsgrunnlagDto> forrigeGrunnlagListe,
-                                                                 List<BeregningRefusjonOverstyringDto> gjeldendeOverstyringer,
+                                                                 List<BeregningRefusjonOverstyringDto> refusjonOverstyringer,
                                                                  Optional<ArbeidsforholdInformasjonDto> arbeidsforholdInformasjon
                                                                  ) {
         var andelerMedØktRefusjonNavigable = new TreeMap<>(andelerMedØktRefusjon);
@@ -48,16 +48,16 @@ public final class RefusjonAndelTilVurderingDtoTjeneste {
             return entry.getValue()
                 .stream()
                 .filter(andel -> forrigeEntry == null || !forrigeEntry.getValue().contains(andel))
-                .map(andel -> lagAndel(entry.getKey(), andel, gjeldendeBeregningsgrunnlag, forrigeGrunnlagListe, gjeldendeOverstyringer,
+                .map(andel -> lagAndel(entry.getKey(), andel, beregningsgrunnlag, forrigeGrunnlagListe, refusjonOverstyringer,
                     arbeidsforholdInformasjon));
         }).toList();
     }
 
     private static RefusjonAndelTilVurderingDto lagAndel(Intervall periode,
                                                          RefusjonAndel andel,
-                                                         BeregningsgrunnlagDto gjeldendeBeregningsgrunnlag,
+                                                         BeregningsgrunnlagDto beregningsgrunnlag,
                                                          List<BeregningsgrunnlagDto> forrigeGrunnlagListe,
-                                                         List<BeregningRefusjonOverstyringDto> gjeldendeOvertyringer,
+                                                         List<BeregningRefusjonOverstyringDto> refusjonOverstyringer,
                                                          Optional<ArbeidsforholdInformasjonDto> arbeidsforholdInformasjon) {
         var dto = new RefusjonAndelTilVurderingDto();
         // Visningsfelter
@@ -74,13 +74,13 @@ public final class RefusjonAndelTilVurderingDtoTjeneste {
         dto.setSkalKunneFastsetteDelvisRefusjon(skalFastsetteDelvisRefusjon);
 
         // Valideringsfelter
-        getTidligsteMuligeRefusjonsdato(andel, gjeldendeOvertyringer)
-                .ifPresentOrElse(dto::setTidligsteMuligeRefusjonsdato, () -> dto.setTidligsteMuligeRefusjonsdato(gjeldendeBeregningsgrunnlag.getSkjæringstidspunkt()));
+        getTidligsteMuligeRefusjonsdato(andel, refusjonOverstyringer)
+                .ifPresentOrElse(dto::setTidligsteMuligeRefusjonsdato, () -> dto.setTidligsteMuligeRefusjonsdato(beregningsgrunnlag.getSkjæringstidspunkt()));
         dto.setMaksTillattDelvisRefusjonPrMnd(ModellTyperMapper.beløpTilDto(månedsbeløp(tidligereRefusjonForAndelIPeriode.orElse(andel.getRefusjon()))));
 
         // Tidligere fastsatte verdier som brukes til preutfylling av gui
-        finnFastsattDelvisRefusjon(gjeldendeBeregningsgrunnlag, andel, periode).map(ModellTyperMapper::beløpTilDto).ifPresent(dto::setFastsattDelvisRefusjonPrMnd);
-        finnOverstyringForAndel(gjeldendeOvertyringer, andel).map(BeregningRefusjonPeriodeDto::getStartdatoRefusjon).ifPresent(dto::setFastsattNyttRefusjonskravFom);
+        finnFastsattDelvisRefusjon(beregningsgrunnlag, andel, periode).map(ModellTyperMapper::beløpTilDto).ifPresent(dto::setFastsattDelvisRefusjonPrMnd);
+        finnOverstyringForAndel(refusjonOverstyringer, andel).map(BeregningRefusjonPeriodeDto::getStartdatoRefusjon).ifPresent(dto::setFastsattNyttRefusjonskravFom);
 
         return dto;
     }
@@ -89,8 +89,8 @@ public final class RefusjonAndelTilVurderingDtoTjeneste {
         return arbeidsforholdInformasjon.map(d -> d.finnEkstern(andel.getArbeidsgiver(), andel.getArbeidsforholdRef()));
     }
 
-    private static Optional<Beløp> finnFastsattDelvisRefusjon(BeregningsgrunnlagDto gjeldendeBeregningsgrunnlag, RefusjonAndel andel, Intervall periode) {
-        var bgPeriode = gjeldendeBeregningsgrunnlag.getBeregningsgrunnlagPerioder().stream()
+    private static Optional<Beløp> finnFastsattDelvisRefusjon(BeregningsgrunnlagDto beregningsgrunnlag, RefusjonAndel andel, Intervall periode) {
+        var bgPeriode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().stream()
                 .filter(bgp -> bgp.getPeriode().inkluderer(periode.getFomDato()))
                 .findFirst();
         var bgAndelerIPeriode = bgPeriode
@@ -104,8 +104,8 @@ public final class RefusjonAndelTilVurderingDtoTjeneste {
         return tidligereFastsattRefusjonPrÅr.map(RefusjonAndelTilVurderingDtoTjeneste::månedsbeløp);
     }
 
-    private static Optional<BeregningRefusjonPeriodeDto> finnOverstyringForAndel(List<BeregningRefusjonOverstyringDto> gjeldendeOvertyringer, RefusjonAndel andel) {
-        var refusjonperioderForAG = gjeldendeOvertyringer.stream()
+    private static Optional<BeregningRefusjonPeriodeDto> finnOverstyringForAndel(List<BeregningRefusjonOverstyringDto> refusjonOverstyringer, RefusjonAndel andel) {
+        var refusjonperioderForAG = refusjonOverstyringer.stream()
                 .filter(os -> os.getArbeidsgiver().getIdentifikator().equals(andel.getArbeidsgiver().getIdentifikator()))
                 .findFirst()
                 .map(BeregningRefusjonOverstyringDto::getRefusjonPerioder)
@@ -169,8 +169,8 @@ public final class RefusjonAndelTilVurderingDtoTjeneste {
         return Objects.equals(bgAndelAG, refusjonAndel.getArbeidsgiver()) && bgAndelReferanse.gjelderFor(refusjonAndel.getArbeidsforholdRef());
     }
 
-    private static Optional<LocalDate> getTidligsteMuligeRefusjonsdato(RefusjonAndel andel, List<BeregningRefusjonOverstyringDto> gjeldendeOvertyringer) {
-        return gjeldendeOvertyringer.stream()
+    private static Optional<LocalDate> getTidligsteMuligeRefusjonsdato(RefusjonAndel andel, List<BeregningRefusjonOverstyringDto> refusjonOverstyringer) {
+        return refusjonOverstyringer.stream()
                 .filter(os -> os.getArbeidsgiver().getIdentifikator().equals(andel.getArbeidsgiver().getIdentifikator()))
                 .findFirst()
                 .flatMap(BeregningRefusjonOverstyringDto::getFørsteMuligeRefusjonFom);
