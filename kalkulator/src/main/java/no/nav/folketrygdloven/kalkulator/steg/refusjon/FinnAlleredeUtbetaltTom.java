@@ -18,8 +18,8 @@ public final class FinnAlleredeUtbetaltTom {
     private FinnAlleredeUtbetaltTom() {
         // skjul public constructor
     }
-    static Optional<LocalDate> finn(BeregningsgrunnlagDto originaltGrunnlag) {
-        var sisteDagMedDagsatsOpt = originaltGrunnlag.getBeregningsgrunnlagPerioder()
+    static Optional<LocalDate> finn(BeregningsgrunnlagDto forrigeGrunnlag) {
+        var sisteDagMedDagsatsOpt = forrigeGrunnlag.getBeregningsgrunnlagPerioder()
                 .stream()
                 .filter(p -> p.getDagsats() != null && p.getDagsats() > 0)
                 .map(BeregningsgrunnlagPeriodeDto::getPeriode)

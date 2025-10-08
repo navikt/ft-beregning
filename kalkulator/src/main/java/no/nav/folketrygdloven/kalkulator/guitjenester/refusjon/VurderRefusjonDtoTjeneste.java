@@ -35,33 +35,33 @@ public final class VurderRefusjonDtoTjeneste {
     }
 
     public static Optional<RefusjonTilVurderingDto> lagRefusjonTilVurderingDto(BeregningsgrunnlagGUIInput input) {
-        var beregningsgrunnlagOpt = input.getBeregningsgrunnlagGrunnlag().getBeregningsgrunnlagHvisFinnes();
-        if (beregningsgrunnlagOpt.isEmpty() || input.getAvklaringsbehov()
+        if (input.getAvklaringsbehov()
             .stream()
             .noneMatch(a -> a.getDefinisjon().equals(AvklaringsbehovDefinisjon.VURDER_REFUSJONSKRAV))) {
             return Optional.empty();
         }
 
-        var beregningsgrunnlag = beregningsgrunnlagOpt.get();
+        var beregningsgrunnlag = input.getBeregningsgrunnlagGrunnlag().getBeregningsgrunnlag();
         var refusjonskravSomKomForSentListe = hentRefusjonskravSomKomForSent(input);
-        var originaleGrunnlag = input.getBeregningsgrunnlagGrunnlagFraForrigeBehandling().stream()
+        var forrigeGrunnlagListe = input.getBeregningsgrunnlagGrunnlagFraForrigeBehandling().stream()
             .flatMap(gr -> gr.getBeregningsgrunnlagHvisFinnes().stream()).toList();
 
-        if (!originaleGrunnlag.isEmpty() && beregningsgrunnlag.getGrunnbeløp() != null) {
+        if (!forrigeGrunnlagListe.isEmpty() && beregningsgrunnlag.getGrunnbeløp() != null) {
             var gjeldendeOverstyringer = hentRefusjonOverstyringer(input);
 
-            var andelerMedØktRefusjon = hentAndelerMedØktRefusjon(input.getYtelsespesifiktGrunnlag(), originaleGrunnlag, beregningsgrunnlag);
-            if (!andelerMedØktRefusjon.isEmpty()) {
+            var andelerMedØktRefusjonFraTidligereBehandlinger = hentAndelerMedØktRefusjonFraTidligereBehandlinger(input.getYtelsespesifiktGrunnlag(),
+                forrigeGrunnlagListe, beregningsgrunnlag);
+            if (!andelerMedØktRefusjonFraTidligereBehandlinger.isEmpty()) {
                 return Optional.of(new RefusjonTilVurderingDto(
-                    lagAndeler(input, andelerMedØktRefusjon, beregningsgrunnlag, originaleGrunnlag, gjeldendeOverstyringer),
-                    refusjonskravSomKomForSentListe));
+                    lagAndeler(input, andelerMedØktRefusjonFraTidligereBehandlinger, beregningsgrunnlag, forrigeGrunnlagListe,
+                        gjeldendeOverstyringer), refusjonskravSomKomForSentListe));
             }
 
-            var tidligereAndelerMedØktRefusjon = hentAndelerMedØktRefusjonFraTidligereAvklaringer(gjeldendeOverstyringer,
+            var andelerMedØktRefusjonFraOverstyringer = hentAndelerMedØktRefusjonFraOverstyringer(gjeldendeOverstyringer,
                 input.getSkjæringstidspunktForBeregning());
-            if (!tidligereAndelerMedØktRefusjon.isEmpty()) {
+            if (!andelerMedØktRefusjonFraOverstyringer.isEmpty()) {
                 return Optional.of(new RefusjonTilVurderingDto(
-                    lagAndeler(input, tidligereAndelerMedØktRefusjon, beregningsgrunnlag, originaleGrunnlag, gjeldendeOverstyringer),
+                    lagAndeler(input, andelerMedØktRefusjonFraOverstyringer, beregningsgrunnlag, forrigeGrunnlagListe, gjeldendeOverstyringer),
                     refusjonskravSomKomForSentListe));
             }
         }
@@ -87,25 +87,25 @@ public final class VurderRefusjonDtoTjeneste {
     private static List<RefusjonAndelTilVurderingDto> lagAndeler(BeregningsgrunnlagGUIInput input,
                                                                  Map<Intervall, List<RefusjonAndel>> andelerMedØktRefusjon,
                                                                  BeregningsgrunnlagDto beregningsgrunnlag,
-                                                                 List<BeregningsgrunnlagDto> originaleGrunnlag,
+                                                                 List<BeregningsgrunnlagDto> forrigeGrunnlagListe,
                                                                  List<BeregningRefusjonOverstyringDto> gjeldendeOverstyringer) {
         var arbeidsforholdInformasjon = input.getIayGrunnlag().getArbeidsforholdInformasjon();
-        return RefusjonAndelTilVurderingDtoTjeneste.lagDtoListe(andelerMedØktRefusjon, beregningsgrunnlag, originaleGrunnlag, gjeldendeOverstyringer,
+        return RefusjonAndelTilVurderingDtoTjeneste.lagDtoListe(andelerMedØktRefusjon, beregningsgrunnlag, forrigeGrunnlagListe, gjeldendeOverstyringer,
             arbeidsforholdInformasjon);
     }
 
-    private static Map<Intervall, List<RefusjonAndel>> hentAndelerMedØktRefusjon(YtelsespesifiktGrunnlag ytelsespesifiktGrunnlag,
-                                                                                 List<BeregningsgrunnlagDto> originaleGrunnlag,
-                                                                                 BeregningsgrunnlagDto beregningsgrunnlag) {
+    private static Map<Intervall, List<RefusjonAndel>> hentAndelerMedØktRefusjonFraTidligereBehandlinger(YtelsespesifiktGrunnlag ytelsespesifiktGrunnlag,
+                                                                                                         List<BeregningsgrunnlagDto> forrigeGrunnlagListe,
+                                                                                                         BeregningsgrunnlagDto beregningsgrunnlag) {
         var grenseverdi = beregningsgrunnlag.getGrunnbeløp().multipliser(KonfigTjeneste.getAntallGØvreGrenseverdi());
-        return originaleGrunnlag.stream()
-            .flatMap(originaltBg -> AndelerMedØktRefusjonTjeneste.finnAndelerMedØktRefusjon(beregningsgrunnlag, originaltBg, grenseverdi,
+        return forrigeGrunnlagListe.stream()
+            .flatMap(forrigeGrunnlag -> AndelerMedØktRefusjonTjeneste.finnAndelerMedØktRefusjon(beregningsgrunnlag, forrigeGrunnlag, grenseverdi,
                 ytelsespesifiktGrunnlag).entrySet().stream())
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, unikeElementer()));
     }
 
     // Metode for å støtte visning av saker som tidligere er løst men som av ulike grunner ikke lenger gir samme resultat i avklaringsbehovutledning
-    private static Map<Intervall, List<RefusjonAndel>> hentAndelerMedØktRefusjonFraTidligereAvklaringer(List<BeregningRefusjonOverstyringDto> refusjonOverstyringer, LocalDate skjæringstidspunktForBeregning) {
+    private static Map<Intervall, List<RefusjonAndel>> hentAndelerMedØktRefusjonFraOverstyringer(List<BeregningRefusjonOverstyringDto> refusjonOverstyringer, LocalDate skjæringstidspunktForBeregning) {
         var andeler = refusjonOverstyringer.stream()
             .flatMap(refusjonOverstyring -> refusjonOverstyring.getRefusjonPerioder()
                 .stream()

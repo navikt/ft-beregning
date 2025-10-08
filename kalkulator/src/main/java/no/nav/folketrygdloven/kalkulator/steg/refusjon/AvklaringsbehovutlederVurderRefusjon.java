@@ -26,25 +26,25 @@ public final class AvklaringsbehovutlederVurderRefusjon {
             return true;
         }
 
-        var originaleGrunnlag = vurderInput.getBeregningsgrunnlagGrunnlagFraForrigeBehandling().stream()
+        var forrigeGrunnlagListe = vurderInput.getBeregningsgrunnlagGrunnlagFraForrigeBehandling().stream()
             .flatMap(gr -> gr.getBeregningsgrunnlagHvisFinnes().stream())
             .toList();
 
-        if (originaleGrunnlag.isEmpty()) {
+        if (forrigeGrunnlagListe.isEmpty()) {
             return false;
         }
 
-        return harAndelerMedØktRefusjonIUtbetaltPeriode(input, periodisertMedRefusjonOgGradering, originaleGrunnlag);
+        return harAndelerMedØktRefusjonIUtbetaltPeriode(input, periodisertMedRefusjonOgGradering, forrigeGrunnlagListe);
     }
 
     private static boolean harAndelerMedØktRefusjonIUtbetaltPeriode(BeregningsgrunnlagInput input,
                                                                     BeregningsgrunnlagDto periodisertMedRefusjonOgGradering,
-                                                                    List<BeregningsgrunnlagDto> originaleGrunnlag) {
+                                                                    List<BeregningsgrunnlagDto> forrigeGrunnlagListe) {
         var perioderTilVurderingTjeneste = new PerioderTilVurderingTjeneste(input.getForlengelseperioder(), periodisertMedRefusjonOgGradering);
         var grenseverdi = periodisertMedRefusjonOgGradering.getGrunnbeløp().multipliser(KonfigTjeneste.getAntallGØvreGrenseverdi());
-        return originaleGrunnlag.stream()
+        return forrigeGrunnlagListe.stream()
             .flatMap(
-                originaltBg -> AndelerMedØktRefusjonTjeneste.finnAndelerMedØktRefusjon(periodisertMedRefusjonOgGradering, originaltBg, grenseverdi,
+                forrigeGrunnlag -> AndelerMedØktRefusjonTjeneste.finnAndelerMedØktRefusjon(periodisertMedRefusjonOgGradering, forrigeGrunnlag, grenseverdi,
                     input.getYtelsespesifiktGrunnlag()).entrySet().stream())
             .anyMatch(e -> perioderTilVurderingTjeneste.erTilVurdering(e.getKey()));
     }
