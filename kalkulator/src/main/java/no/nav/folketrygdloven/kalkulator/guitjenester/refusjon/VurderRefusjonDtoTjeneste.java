@@ -47,6 +47,7 @@ public final class VurderRefusjonDtoTjeneste {
             .flatMap(gr -> gr.getBeregningsgrunnlagHvisFinnes().stream()).toList();
 
         if (!forrigeGrunnlagListe.isEmpty() && beregningsgrunnlag.getGrunnbeløp() != null) {
+            // TODO: Må man sende med refusjonoverstyringer i første if? Er det slik at de finnes i det tilfellet og skal med? Eller kan man sende tom liste?
             var refusjonOverstyringer = hentRefusjonOverstyringer(input);
 
             var andelerMedØktRefusjonFraTidligereBehandlinger = hentAndelerMedØktRefusjonFraTidligereBehandlinger(input.getYtelsespesifiktGrunnlag(),

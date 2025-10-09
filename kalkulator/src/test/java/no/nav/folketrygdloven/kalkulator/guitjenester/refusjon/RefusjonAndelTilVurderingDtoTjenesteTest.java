@@ -46,8 +46,6 @@ import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.refusj
 
 class RefusjonAndelTilVurderingDtoTjenesteTest {
 
-    // TODO refusjon: Denne testen må kanskje utvides til å teste den nye lista
-
     private static final Skjæringstidspunkt STP = Skjæringstidspunkt.builder().medSkjæringstidspunktBeregning(LocalDate.of(2020,1,1))
             .medSkjæringstidspunktOpptjening(LocalDate.of(2020,1,1)).build();
     private static final Intervall BG_PERIODE = Intervall.fraOgMedTilOgMed(STP.getSkjæringstidspunktBeregning(), TIDENES_ENDE);

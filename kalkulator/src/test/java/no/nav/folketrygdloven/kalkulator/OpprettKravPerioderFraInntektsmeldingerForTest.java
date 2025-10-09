@@ -19,7 +19,7 @@ import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.fpsak.tidsserie.LocalDateSegment;
 import no.nav.fpsak.tidsserie.LocalDateTimeline;
 
-public class OpprettKravPerioderFraInntektsmeldinger {
+public class OpprettKravPerioderFraInntektsmeldingerForTest {
 
     public static List<KravperioderPrArbeidsforholdDto> opprett(InntektArbeidYtelseGrunnlagDto iayGrunnlag, LocalDate skjæringstidspunktBeregning) {
         var perioderPrArbeidsgiver = lagKravperioderPrArbeidsforhold(iayGrunnlag, skjæringstidspunktBeregning);

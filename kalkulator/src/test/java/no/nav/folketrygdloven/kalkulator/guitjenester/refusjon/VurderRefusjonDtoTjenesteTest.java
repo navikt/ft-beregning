@@ -1,18 +1,24 @@
 package no.nav.folketrygdloven.kalkulator.guitjenester.refusjon;
 
-import static no.nav.folketrygdloven.kalkulator.OpprettKravPerioderFraInntektsmeldinger.opprett;
+import static no.nav.folketrygdloven.kalkulator.OpprettKravPerioderFraInntektsmeldingerForTest.opprett;
 import static no.nav.fpsak.tidsserie.LocalDateInterval.TIDENES_ENDE;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import no.nav.folketrygdloven.kalkulator.input.ForeldrepengerGrunnlag;
+import no.nav.folketrygdloven.kalkulator.modell.avklaringsbehov.AvklaringsbehovDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDto;
 
+import no.nav.folketrygdloven.kalkulus.kodeverk.AvklaringsbehovDefinisjon;
+import no.nav.folketrygdloven.kalkulus.kodeverk.Dekningsgrad;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.RefusjonskravSomKommerForSentDto;
 
 import org.junit.jupiter.api.Test;
@@ -50,23 +56,41 @@ class VurderRefusjonDtoTjenesteTest {
     private static final Arbeidsgiver ARBEIDSGIVER2 = Arbeidsgiver.virksomhet(ORGNR2);
     private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.now();
 
+    /* TODO: Flere tester
+        - Både tilkommet refusjon og refusjonsfrist
+        - Både tilkommet refusjon (overstyring) og refusjonsfrist
+        - Bare tilkommet refusjon
+        - Bare refusjonsfrist
+     */
+
     @Test
-    void skal_lage_gi_liste_over_arbeidsgivere_som_har_søkt_refusjon_for_sent() {
-        var tidsnokInnsendtRefusjon = SKJÆRINGSTIDSPUNKT.plusMonths(2);
+    void skal_gi_liste_over_arbeidsgivere_som_har_søkt_refusjon_for_sent() {
         var forSentInnsendtRefusjon = SKJÆRINGSTIDSPUNKT.plusMonths(4);
+        var tidsnokInnsendtRefusjon = SKJÆRINGSTIDSPUNKT.plusMonths(2);
         Map<Arbeidsgiver, LocalDate> førsteInnsendingAvRefusjonMap = new HashMap<>();
         førsteInnsendingAvRefusjonMap.put(ARBEIDSGIVER1, forSentInnsendtRefusjon);
         førsteInnsendingAvRefusjonMap.put(ARBEIDSGIVER2, tidsnokInnsendtRefusjon);
         var input = lagInputMedBeregningsgrunnlagOgIAY(førsteInnsendingAvRefusjonMap);
         input.leggTilToggle("refusjonsfrist.flytting", true);
 
-        var resultat = VurderRefusjonDtoTjeneste.hentRefusjonskravSomKomForSent(input);
+        var resultat = VurderRefusjonDtoTjeneste.lagRefusjonTilVurderingDto(input);
 
-        assertThat(resultat)
+        assertThat(resultat).isPresent();
+        assertThat(resultat.get().getRefusjonskravSomKomForSentListe())
             .hasSize(1)
             .extracting(RefusjonskravSomKommerForSentDto::getArbeidsgiverIdent)
             .contains(ARBEIDSGIVER1.getIdentifikator())
             .doesNotContain(ARBEIDSGIVER2.getIdentifikator());
+    }
+
+    @Test
+    void skal_gi_liste_over_andeler_som_har_tilkommet_refusjon() {
+        Map<Arbeidsgiver, LocalDate> førsteInnsendingAvRefusjonMap = new HashMap<>();
+        førsteInnsendingAvRefusjonMap.put(ARBEIDSGIVER1, SKJÆRINGSTIDSPUNKT);
+        var input = lagInputMedBeregningsgrunnlagOgIAYOgForrigeGrunnlag(førsteInnsendingAvRefusjonMap);
+        input.leggTilToggle("refusjonsfrist.flytting", true);
+
+        var resultat = VurderRefusjonDtoTjeneste.lagRefusjonTilVurderingDto(input);
     }
 
     private static BeregningsgrunnlagGUIInput lagInputMedBeregningsgrunnlagOgIAY(Map<Arbeidsgiver, LocalDate> førsteInnsendingAvRefusjonMap) {
@@ -77,7 +101,26 @@ class VurderRefusjonDtoTjenesteTest {
         var koblingReferanse = new KoblingReferanseMock(SKJÆRINGSTIDSPUNKT);
         var input = new BeregningsgrunnlagGUIInput(koblingReferanse, iayGrunnlag,
             opprett(iayGrunnlag, koblingReferanse.getSkjæringstidspunktBeregning(), førsteInnsendingAvRefusjonMap), null);
-        return input.medBeregningsgrunnlagGrunnlag(lagBeregningsgrunnlagGrunnlag(aktivitetAggregat, arbeidsgivere));
+
+        var avklaringsbehov = new AvklaringsbehovDto(AvklaringsbehovDefinisjon.VURDER_REFUSJONSKRAV, null, null, null, null, null);
+        return input.medBeregningsgrunnlagGrunnlag(lagBeregningsgrunnlagGrunnlag(aktivitetAggregat, arbeidsgivere, null))
+            .medAvklaringsbehov(List.of(avklaringsbehov));
+    }
+
+    private static BeregningsgrunnlagGUIInput lagInputMedBeregningsgrunnlagOgIAYOgForrigeGrunnlag(Map<Arbeidsgiver, LocalDate> førsteInnsendingAvRefusjonMap) {
+        var arbeidsgivere = førsteInnsendingAvRefusjonMap.keySet();
+        var iayBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
+        var aktivitetAggregat = byggBeregningAktivitetAggregat(iayBuilder, arbeidsgivere);
+        var iayGrunnlag = byggIayGrunnlagMedInntektsmeldinger(iayBuilder);
+        var koblingReferanse = new KoblingReferanseMock(SKJÆRINGSTIDSPUNKT);
+        var ytelsespesifiktGrunnlag = new ForeldrepengerGrunnlag(Dekningsgrad.DEKNINGSGRAD_100, null);
+        var input = new BeregningsgrunnlagGUIInput(koblingReferanse, iayGrunnlag,
+            opprett(iayGrunnlag, koblingReferanse.getSkjæringstidspunktBeregning(), førsteInnsendingAvRefusjonMap), ytelsespesifiktGrunnlag);
+        var avklaringsbehov = new AvklaringsbehovDto(AvklaringsbehovDefinisjon.VURDER_REFUSJONSKRAV, null, null, null, null, null);
+        return input
+            .medBeregningsgrunnlagGrunnlagFraForrigeBehandling(lagBeregningsgrunnlagGrunnlag(aktivitetAggregat, arbeidsgivere, null))
+            .medBeregningsgrunnlagGrunnlag(lagBeregningsgrunnlagGrunnlag(aktivitetAggregat, arbeidsgivere, Beløp.fra(100000)))
+            .medAvklaringsbehov(List.of(avklaringsbehov));
     }
 
     private static BeregningAktivitetAggregatDto byggBeregningAktivitetAggregat(InntektArbeidYtelseAggregatBuilder iayAggregatBuilder, Set<Arbeidsgiver> arbeidsgivere) {
@@ -115,17 +158,19 @@ class VurderRefusjonDtoTjenesteTest {
     }
 
     private static BeregningsgrunnlagGrunnlagDto lagBeregningsgrunnlagGrunnlag(BeregningAktivitetAggregatDto aktivitetAggregat,
-                                                                               Set<Arbeidsgiver> arbeidsgivere) {
+                                                                               Set<Arbeidsgiver> arbeidsgivere,
+                                                                               Beløp grunnbeløp) {
 
         return BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
             .medRegisterAktiviteter(aktivitetAggregat)
-            .medBeregningsgrunnlag(lagBeregningsgrunnlag(arbeidsgivere.stream().map(a -> Arbeidsgiver.virksomhet(a.getOrgnr())).toList()))
+            .medBeregningsgrunnlag(lagBeregningsgrunnlag(arbeidsgivere.stream().map(a -> Arbeidsgiver.virksomhet(a.getOrgnr())).toList(), grunnbeløp))
             .build(BeregningsgrunnlagTilstand.VURDERT_TILKOMMET_INNTEKT_UT);
     }
 
-    private static BeregningsgrunnlagDto lagBeregningsgrunnlag(List<Arbeidsgiver> arbeidsgivere) {
+    private static BeregningsgrunnlagDto lagBeregningsgrunnlag(List<Arbeidsgiver> arbeidsgivere, Beløp grunnbeløp) {
         var beregningsgrunnlag = BeregningsgrunnlagDto.builder()
             .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT)
+            .medGrunnbeløp(grunnbeløp)
             .leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
             .build();
         var periode = BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT, null).build(beregningsgrunnlag);

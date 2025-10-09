@@ -66,6 +66,7 @@ public class BeregningsgrunnlagGUIInput {
         this.ytelsespesifiktGrunnlag = ytelsespesifiktGrunnlag;
     }
 
+    // TODO: Spør noen om hvorfor avklaringsbehov ikke legges til her. Hvis man f.eks. kaller medBeregningsgrunnlagGrunnlag() så fjernes avklaringsbehovene.
     private BeregningsgrunnlagGUIInput(BeregningsgrunnlagGUIInput input) {
         this(input.getKoblingReferanse(), input.getIayGrunnlag(),
                 input.getKravperioderPrArbeidsgiver(), input.getYtelsespesifiktGrunnlag());

@@ -21,7 +21,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.kalkulator.KoblingReferanseMock;
-import no.nav.folketrygdloven.kalkulator.OpprettKravPerioderFraInntektsmeldinger;
+import no.nav.folketrygdloven.kalkulator.OpprettKravPerioderFraInntektsmeldingerForTest;
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagInput;
 import no.nav.folketrygdloven.kalkulator.input.ForeldrepengerGrunnlag;
 import no.nav.folketrygdloven.kalkulator.konfig.KonfigTjeneste;
@@ -261,7 +261,7 @@ class FordelPerioderTjenesteTest {
                                                                          AktivitetGradering aktivitetGradering,
                                                                          InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlagBuilder) {
         var iayGrunnlag = iayGrunnlagBuilder.build();
-        var refusjonskravDatoDtos = OpprettKravPerioderFraInntektsmeldinger.opprett(iayGrunnlag, ref.getSkjæringstidspunktBeregning());
+        var refusjonskravDatoDtos = OpprettKravPerioderFraInntektsmeldingerForTest.opprett(iayGrunnlag, ref.getSkjæringstidspunktBeregning());
         var foreldrepengerGrunnlag = new ForeldrepengerGrunnlag(Dekningsgrad.DEKNINGSGRAD_100, false, aktivitetGradering);
         var input = new BeregningsgrunnlagInput(ref, iayGrunnlag, null, refusjonskravDatoDtos, foreldrepengerGrunnlag)
                 .medBeregningsgrunnlagGrunnlag(grunnlag);
@@ -289,7 +289,7 @@ class FordelPerioderTjenesteTest {
         var im1 = BeregningInntektsmeldingTestUtil.opprettInntektsmelding(ORG_NUMMER, SKJÆRINGSTIDSPUNKT, inntekt, inntekt);
         iayGrunnlagBuilder.medInntektsmeldinger(im1);
 
-        var kravPerioder = OpprettKravPerioderFraInntektsmeldinger.opprett(
+        var kravPerioder = OpprettKravPerioderFraInntektsmeldingerForTest.opprett(
                 iayGrunnlagBuilder.getKladd(),
                 SKJÆRINGSTIDSPUNKT,
                 Map.of(im1.getArbeidsgiver(), LocalDate.of(2019, Month.MAY, 2))
