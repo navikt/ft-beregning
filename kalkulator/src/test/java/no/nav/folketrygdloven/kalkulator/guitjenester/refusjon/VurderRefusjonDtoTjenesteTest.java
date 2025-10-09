@@ -19,6 +19,7 @@ import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.Beregningsgru
 
 import no.nav.folketrygdloven.kalkulus.kodeverk.AvklaringsbehovDefinisjon;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Dekningsgrad;
+import no.nav.folketrygdloven.kalkulus.kodeverk.Utfall;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.RefusjonskravSomKommerForSentDto;
 
 import org.junit.jupiter.api.Test;
@@ -168,16 +169,23 @@ class VurderRefusjonDtoTjenesteTest {
     }
 
     private static BeregningsgrunnlagDto lagBeregningsgrunnlag(List<Arbeidsgiver> arbeidsgivere, Beløp grunnbeløp) {
+        // Vi trenger å legge til dagsats. Denne utledes trolig via medRedusertRefusjonPrÅr, men vi må finne ut hvordan vi kan få denne på beregningsgrunnlag som returneres
         var beregningsgrunnlag = BeregningsgrunnlagDto.builder()
             .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT)
             .medGrunnbeløp(grunnbeløp)
             .leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
             .build();
-        var periode = BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT, null).build(beregningsgrunnlag);
+        var periode = BeregningsgrunnlagPeriodeDto.ny()
+            .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT, null)
+            .build();
         arbeidsgivere.forEach(arbeidsgiver -> BeregningsgrunnlagPrStatusOgAndelDto.ny()
             .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
             .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder().medArbeidsgiver(arbeidsgiver))
+            .medRedusertRefusjonPrÅr(Beløp.fra(700000))
             .build(periode));
+        var bgPeriode = BeregningsgrunnlagPeriodeDto.ny()
+            .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT, null)
+            .build(beregningsgrunnlag);
         return beregningsgrunnlag;
     }
 
