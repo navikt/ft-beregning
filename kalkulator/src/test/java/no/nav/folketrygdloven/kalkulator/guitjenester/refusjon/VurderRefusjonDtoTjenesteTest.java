@@ -4,33 +4,25 @@ import static no.nav.folketrygdloven.kalkulator.OpprettKravPerioderFraInntektsme
 import static no.nav.fpsak.tidsserie.LocalDateInterval.TIDENES_ENDE;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import no.nav.folketrygdloven.kalkulator.input.ForeldrepengerGrunnlag;
-import no.nav.folketrygdloven.kalkulator.modell.avklaringsbehov.AvklaringsbehovDto;
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDto;
-
-import no.nav.folketrygdloven.kalkulus.kodeverk.AvklaringsbehovDefinisjon;
-import no.nav.folketrygdloven.kalkulus.kodeverk.Dekningsgrad;
-import no.nav.folketrygdloven.kalkulus.kodeverk.Utfall;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.RefusjonskravSomKommerForSentDto;
-
 import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.kalkulator.KoblingReferanseMock;
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagGUIInput;
+import no.nav.folketrygdloven.kalkulator.input.ForeldrepengerGrunnlag;
+import no.nav.folketrygdloven.kalkulator.modell.avklaringsbehov.AvklaringsbehovDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BGAndelArbeidsforholdDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningAktivitetAggregatDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningAktivitetDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatusDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
+import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
@@ -38,16 +30,23 @@ import no.nav.folketrygdloven.kalkulator.modell.iay.AktivitetsAvtaleDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseAggregatBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseGrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseGrunnlagDtoBuilder;
+import no.nav.folketrygdloven.kalkulator.modell.iay.InntektsmeldingDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.VersjonTypeDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YrkesaktivitetDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
+import no.nav.folketrygdloven.kalkulator.modell.typer.Refusjon;
 import no.nav.folketrygdloven.kalkulator.testutilities.BeregningInntektsmeldingTestUtil;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.ArbeidType;
+import no.nav.folketrygdloven.kalkulus.kodeverk.AvklaringsbehovDefinisjon;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
+import no.nav.folketrygdloven.kalkulus.kodeverk.Dekningsgrad;
+import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
+import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.RefusjonskravSomKommerForSentDto;
+import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.refusjon.RefusjonAndelTilVurderingDto;
 
 class VurderRefusjonDtoTjenesteTest {
 
@@ -56,6 +55,7 @@ class VurderRefusjonDtoTjenesteTest {
     private static final Arbeidsgiver ARBEIDSGIVER1 = Arbeidsgiver.virksomhet(ORGNR1);
     private static final Arbeidsgiver ARBEIDSGIVER2 = Arbeidsgiver.virksomhet(ORGNR2);
     private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.now();
+    private static final LocalDate SKJÆRINGSTIDSPUNKT_TILBAKE_I_TID = LocalDate.now().minusMonths(2);
 
     /* TODO: Flere tester
         - Både tilkommet refusjon og refusjonsfrist
@@ -87,24 +87,53 @@ class VurderRefusjonDtoTjenesteTest {
     @Test
     void skal_gi_liste_over_andeler_som_har_tilkommet_refusjon() {
         Map<Arbeidsgiver, LocalDate> førsteInnsendingAvRefusjonMap = new HashMap<>();
-        førsteInnsendingAvRefusjonMap.put(ARBEIDSGIVER1, SKJÆRINGSTIDSPUNKT);
+        førsteInnsendingAvRefusjonMap.put(ARBEIDSGIVER1, SKJÆRINGSTIDSPUNKT_TILBAKE_I_TID);
         var input = lagInputMedBeregningsgrunnlagOgIAYOgForrigeGrunnlag(førsteInnsendingAvRefusjonMap);
         input.leggTilToggle("refusjonsfrist.flytting", true);
 
         var resultat = VurderRefusjonDtoTjeneste.lagRefusjonTilVurderingDto(input);
+
+        assertThat(resultat).isPresent();
+        assertThat(resultat.get().getRefusjonskravSomKomForSentListe())
+            .isEmpty();
+
+        var andeler = resultat.get().getAndeler().stream().toList();
+
+        assertThat(andeler).hasSize(1);
+        assertThat(andeler)
+            .extracting(RefusjonAndelTilVurderingDto::getArbeidsgiver)
+            .map(no.nav.folketrygdloven.kalkulus.response.v1.Arbeidsgiver::getArbeidsgiverOrgnr)
+            .contains(ARBEIDSGIVER1.getIdentifikator());
+        assertThat(andeler).hasSize(1);
+        assertThat(andeler.getFirst().getTidligereUtbetalinger()).hasSize(1);
+        assertThat(andeler.getFirst().getTidligereUtbetalinger().getFirst().getFom()).isEqualTo(SKJÆRINGSTIDSPUNKT_TILBAKE_I_TID);
+        assertThat(andeler.getFirst().getTidligereUtbetalinger().getFirst().getTom()).isEqualTo(TIDENES_ENDE);
+        assertThat(andeler.getFirst().getMaksTillattDelvisRefusjonPrMnd().verdi()).isEqualTo(Beløp.fra(33333).verdi());
+        assertThat(andeler.getFirst().getNyttRefusjonskravFom()).isEqualTo(SKJÆRINGSTIDSPUNKT_TILBAKE_I_TID);
     }
 
     private static BeregningsgrunnlagGUIInput lagInputMedBeregningsgrunnlagOgIAY(Map<Arbeidsgiver, LocalDate> førsteInnsendingAvRefusjonMap) {
         var arbeidsgivere = førsteInnsendingAvRefusjonMap.keySet();
         var iayBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
         var aktivitetAggregat = byggBeregningAktivitetAggregat(iayBuilder, arbeidsgivere);
-        var iayGrunnlag = byggIayGrunnlagMedInntektsmeldinger(iayBuilder);
+        var imForOrgnr1 = BeregningInntektsmeldingTestUtil.opprettInntektsmelding(ORGNR1, SKJÆRINGSTIDSPUNKT, Beløp.fra(10), Beløp.fra(10));
+        var imForOrgnr2 = BeregningInntektsmeldingTestUtil.opprettInntektsmelding(ORGNR2, SKJÆRINGSTIDSPUNKT, Beløp.fra(10), Beløp.fra(10));
+        var iayGrunnlag = byggIayGrunnlagMedInntektsmeldinger(iayBuilder, List.of(imForOrgnr1, imForOrgnr2));
         var koblingReferanse = new KoblingReferanseMock(SKJÆRINGSTIDSPUNKT);
         var input = new BeregningsgrunnlagGUIInput(koblingReferanse, iayGrunnlag,
             opprett(iayGrunnlag, koblingReferanse.getSkjæringstidspunktBeregning(), førsteInnsendingAvRefusjonMap), null);
-
         var avklaringsbehov = new AvklaringsbehovDto(AvklaringsbehovDefinisjon.VURDER_REFUSJONSKRAV, null, null, null, null, null);
-        return input.medBeregningsgrunnlagGrunnlag(lagBeregningsgrunnlagGrunnlag(aktivitetAggregat, arbeidsgivere, null))
+
+        //beregningsgrunnlag
+        var beregningsgrunnlag = lagBeregningsgrunnlag(null, SKJÆRINGSTIDSPUNKT);
+        var bgPeriode = lagBgPeriode(beregningsgrunnlag, SKJÆRINGSTIDSPUNKT);
+        int andelsnr = 1;
+        for (Arbeidsgiver arbeidsgiver : arbeidsgivere) {
+            lagAndel(bgPeriode, arbeidsgiver, andelsnr++, 0,0, Beløp.ZERO);
+        }
+        BeregningsgrunnlagPeriodeDto.oppdater(bgPeriode).build();
+
+        return input.medBeregningsgrunnlagGrunnlag(lagBeregningsgrunnlagGrunnlag(aktivitetAggregat, beregningsgrunnlag))
             .medAvklaringsbehov(List.of(avklaringsbehov));
     }
 
@@ -112,16 +141,77 @@ class VurderRefusjonDtoTjenesteTest {
         var arbeidsgivere = førsteInnsendingAvRefusjonMap.keySet();
         var iayBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
         var aktivitetAggregat = byggBeregningAktivitetAggregat(iayBuilder, arbeidsgivere);
-        var iayGrunnlag = byggIayGrunnlagMedInntektsmeldinger(iayBuilder);
-        var koblingReferanse = new KoblingReferanseMock(SKJÆRINGSTIDSPUNKT);
+        var imForOrgnr1 = BeregningInntektsmeldingTestUtil.opprettInntektsmelding(ORGNR1, SKJÆRINGSTIDSPUNKT_TILBAKE_I_TID, Beløp.fra(33333), Beløp.fra(41666));
+        var iayGrunnlag = byggIayGrunnlagMedInntektsmeldinger(iayBuilder, List.of(imForOrgnr1));
+        var koblingReferanse = new KoblingReferanseMock(SKJÆRINGSTIDSPUNKT_TILBAKE_I_TID);
         var ytelsespesifiktGrunnlag = new ForeldrepengerGrunnlag(Dekningsgrad.DEKNINGSGRAD_100, null);
-        var input = new BeregningsgrunnlagGUIInput(koblingReferanse, iayGrunnlag,
-            opprett(iayGrunnlag, koblingReferanse.getSkjæringstidspunktBeregning(), førsteInnsendingAvRefusjonMap), ytelsespesifiktGrunnlag);
         var avklaringsbehov = new AvklaringsbehovDto(AvklaringsbehovDefinisjon.VURDER_REFUSJONSKRAV, null, null, null, null, null);
-        return input
-            .medBeregningsgrunnlagGrunnlagFraForrigeBehandling(lagBeregningsgrunnlagGrunnlag(aktivitetAggregat, arbeidsgivere, null))
-            .medBeregningsgrunnlagGrunnlag(lagBeregningsgrunnlagGrunnlag(aktivitetAggregat, arbeidsgivere, Beløp.fra(100000)))
+
+        //beregningsgrunnlag
+        var beregningsgrunnlag = lagBeregningsgrunnlag(Beløp.fra(100000), SKJÆRINGSTIDSPUNKT_TILBAKE_I_TID);
+        var bgPeriode = lagBgPeriode(beregningsgrunnlag, SKJÆRINGSTIDSPUNKT_TILBAKE_I_TID);
+        lagAndel(bgPeriode, ARBEIDSGIVER1, 1, 0, 0, Beløp.fra(500000));
+        BeregningsgrunnlagPeriodeDto.oppdater(bgPeriode).build();
+
+        var beregningsgrunnlagGrunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
+            .medBeregningsgrunnlag(beregningsgrunnlag)
+            .medRegisterAktiviteter(aktivitetAggregat)
+            .build(BeregningsgrunnlagTilstand.VURDERT_TILKOMMET_INNTEKT_UT);
+
+        //forrige beregningsgrunnlag
+        var forrigeBeregningsgrunnlag = lagBeregningsgrunnlag(null, SKJÆRINGSTIDSPUNKT_TILBAKE_I_TID);
+        var bgPeriodeForrigeGrunnlag = lagBgPeriode(forrigeBeregningsgrunnlag, SKJÆRINGSTIDSPUNKT_TILBAKE_I_TID);
+        lagAndel(bgPeriodeForrigeGrunnlag, ARBEIDSGIVER1, 1,0, 500000, Beløp.fra(400000));
+        BeregningsgrunnlagPeriodeDto.oppdater(bgPeriodeForrigeGrunnlag).build();
+
+        var forrigeBeregningsgrunnlagGrunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
+            .medBeregningsgrunnlag(forrigeBeregningsgrunnlag)
+            .medRegisterAktiviteter(aktivitetAggregat)
+            .build(BeregningsgrunnlagTilstand.VURDERT_TILKOMMET_INNTEKT_UT);
+
+        return new BeregningsgrunnlagGUIInput(koblingReferanse, iayGrunnlag,
+            opprett(iayGrunnlag, koblingReferanse.getSkjæringstidspunktBeregning(), førsteInnsendingAvRefusjonMap), ytelsespesifiktGrunnlag)
+            .medBeregningsgrunnlagGrunnlag(beregningsgrunnlagGrunnlag)
+            .medBeregningsgrunnlagGrunnlagFraForrigeBehandling(forrigeBeregningsgrunnlagGrunnlag)
             .medAvklaringsbehov(List.of(avklaringsbehov));
+    }
+
+    private static void lagAndel(BeregningsgrunnlagPeriodeDto bgPeriode, Arbeidsgiver arbeidsgiver, int andelsnr,  int redusertBruker, int redusertAG, Beløp beløp) {
+        var bga = BGAndelArbeidsforholdDto
+            .builder()
+            .medArbeidsperiodeFom(LocalDate.now().minusYears(1))
+            .medArbeidsperiodeTom(LocalDate.now().plusYears(2))
+            .medRefusjon(new Refusjon(beløp, null, null, null, null, null))
+            .medArbeidsgiver(arbeidsgiver);
+
+        var statusOgAndelDtoBuilder = BeregningsgrunnlagPrStatusOgAndelDto.ny()
+            .medBGAndelArbeidsforhold(bga)
+            .medInntektskategori(Inntektskategori.ARBEIDSTAKER)
+            .medAndelsnr((long)andelsnr)
+            .medAktivitetStatus(no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus.ARBEIDSTAKER)
+            .medBeregningsperiode(bgPeriode.getPeriode().getFomDato(), bgPeriode.getPeriode().getTomDato())
+            .medFordeltPrÅr(Beløp.fra(500000));
+        if (redusertBruker != 0)  {
+           statusOgAndelDtoBuilder.medRedusertBrukersAndelPrÅr(Beløp.fra(redusertBruker));
+        }
+        if (redusertAG != 0)  {
+            statusOgAndelDtoBuilder.medRedusertBrukersAndelPrÅr(Beløp.fra(redusertAG));
+        }
+        statusOgAndelDtoBuilder.build(bgPeriode);
+    }
+
+    private static BeregningsgrunnlagPeriodeDto lagBgPeriode(BeregningsgrunnlagDto beregningsgrunnlag, LocalDate fraDato) {
+        return BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(fraDato, null).build(beregningsgrunnlag);
+    }
+
+    private static BeregningsgrunnlagDto lagBeregningsgrunnlag(Beløp grunnbeløp, LocalDate skjæringstidspunkt) {
+        var beregningsgrunnlagDtoBuilder = BeregningsgrunnlagDto.builder()
+            .medSkjæringstidspunkt(skjæringstidspunkt)
+            .leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER));
+        if (grunnbeløp != null) {
+            beregningsgrunnlagDtoBuilder.medGrunnbeløp(grunnbeløp);
+        }
+        return beregningsgrunnlagDtoBuilder.build();
     }
 
     private static BeregningAktivitetAggregatDto byggBeregningAktivitetAggregat(InntektArbeidYtelseAggregatBuilder iayAggregatBuilder, Set<Arbeidsgiver> arbeidsgivere) {
@@ -159,43 +249,18 @@ class VurderRefusjonDtoTjenesteTest {
     }
 
     private static BeregningsgrunnlagGrunnlagDto lagBeregningsgrunnlagGrunnlag(BeregningAktivitetAggregatDto aktivitetAggregat,
-                                                                               Set<Arbeidsgiver> arbeidsgivere,
-                                                                               Beløp grunnbeløp) {
+                                                                               BeregningsgrunnlagDto beregningsgrunnlagDto) {
 
         return BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
             .medRegisterAktiviteter(aktivitetAggregat)
-            .medBeregningsgrunnlag(lagBeregningsgrunnlag(arbeidsgivere.stream().map(a -> Arbeidsgiver.virksomhet(a.getOrgnr())).toList(), grunnbeløp))
+            .medBeregningsgrunnlag(beregningsgrunnlagDto)
             .build(BeregningsgrunnlagTilstand.VURDERT_TILKOMMET_INNTEKT_UT);
     }
 
-    private static BeregningsgrunnlagDto lagBeregningsgrunnlag(List<Arbeidsgiver> arbeidsgivere, Beløp grunnbeløp) {
-        // Vi trenger å legge til dagsats. Denne utledes trolig via medRedusertRefusjonPrÅr, men vi må finne ut hvordan vi kan få denne på beregningsgrunnlag som returneres
-        var beregningsgrunnlag = BeregningsgrunnlagDto.builder()
-            .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT)
-            .medGrunnbeløp(grunnbeløp)
-            .leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
-            .build();
-        var periode = BeregningsgrunnlagPeriodeDto.ny()
-            .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT, null)
-            .build();
-        arbeidsgivere.forEach(arbeidsgiver -> BeregningsgrunnlagPrStatusOgAndelDto.ny()
-            .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
-            .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder().medArbeidsgiver(arbeidsgiver))
-            .medRedusertRefusjonPrÅr(Beløp.fra(700000))
-            .build(periode));
-        var bgPeriode = BeregningsgrunnlagPeriodeDto.ny()
-            .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT, null)
-            .build(beregningsgrunnlag);
-        return beregningsgrunnlag;
-    }
-
-    private static InntektArbeidYtelseGrunnlagDto byggIayGrunnlagMedInntektsmeldinger(InntektArbeidYtelseAggregatBuilder iayBuilder) {
-        var startdatoPermisjon = SKJÆRINGSTIDSPUNKT;
-        var imForOrgnr1 = BeregningInntektsmeldingTestUtil.opprettInntektsmelding(ORGNR1, startdatoPermisjon, Beløp.fra(10), Beløp.fra(10));
-        var imForOrgnr2 = BeregningInntektsmeldingTestUtil.opprettInntektsmelding(ORGNR2, startdatoPermisjon, Beløp.fra(10), Beløp.fra(10));
+    private static InntektArbeidYtelseGrunnlagDto byggIayGrunnlagMedInntektsmeldinger(InntektArbeidYtelseAggregatBuilder iayBuilder, List<InntektsmeldingDto> inntektsmeldinger) {
         return InntektArbeidYtelseGrunnlagDtoBuilder.oppdatere(Optional.empty())
             .medData(iayBuilder)
-            .medInntektsmeldinger(List.of(imForOrgnr1, imForOrgnr2))
+            .medInntektsmeldinger(inntektsmeldinger)
             .build();
     }
 }
