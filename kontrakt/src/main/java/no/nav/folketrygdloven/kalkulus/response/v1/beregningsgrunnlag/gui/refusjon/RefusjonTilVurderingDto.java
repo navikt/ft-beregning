@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.RefusjonskravSomKommerForSentDto;
+import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.RefusjonskravForSentDto;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(value = JsonInclude.Include.NON_ABSENT, content = JsonInclude.Include.NON_EMPTY)
@@ -28,25 +28,25 @@ public class RefusjonTilVurderingDto {
     private List<RefusjonAndelTilVurderingDto> andeler;
 
     @Valid
-    @JsonProperty("refusjonskravSomKomForSentListe")
+    @JsonProperty("refusjonskravForSentListe")
     @Size
     @NotNull
-    private List<RefusjonskravSomKommerForSentDto> refusjonskravSomKomForSentListe;
+    private List<RefusjonskravForSentDto> refusjonskravForSentListe;
 
     public RefusjonTilVurderingDto() {
     }
 
-    public RefusjonTilVurderingDto(@Valid @NotNull List<RefusjonAndelTilVurderingDto> andeler, @Valid @NotNull List<RefusjonskravSomKommerForSentDto> refusjonskravSomKomForSentListe) {
+    public RefusjonTilVurderingDto(@Valid @NotNull List<RefusjonAndelTilVurderingDto> andeler, @Valid @NotNull List<RefusjonskravForSentDto> refusjonskravForSentListe) {
         this.andeler = andeler;
-        this.refusjonskravSomKomForSentListe = refusjonskravSomKomForSentListe;
+        this.refusjonskravForSentListe = refusjonskravForSentListe;
     }
 
     public List<RefusjonAndelTilVurderingDto> getAndeler() {
         return andeler;
     }
 
-    public List<RefusjonskravSomKommerForSentDto> getRefusjonskravSomKomForSentListe() {
-        return refusjonskravSomKomForSentListe;
+    public List<RefusjonskravForSentDto> getRefusjonskravForSentListe() {
+        return refusjonskravForSentListe;
     }
 
     @Override
@@ -54,11 +54,11 @@ public class RefusjonTilVurderingDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         var that = (RefusjonTilVurderingDto) o;
-        return Objects.equals(andeler, that.andeler);
+        return Objects.equals(andeler, that.andeler) && Objects.equals(refusjonskravForSentListe, that.refusjonskravForSentListe);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(andeler);
+        return Objects.hash(andeler, refusjonskravForSentListe);
     }
 }

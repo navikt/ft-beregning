@@ -78,17 +78,17 @@ public class FaktaOmBeregningDto {
     @Valid
     @JsonProperty(value = "refusjonskravSomKommerForSentListe")
     @Size
-    private List<RefusjonskravSomKommerForSentDto> refusjonskravSomKommerForSentListe;
+    private List<RefusjonskravForSentDto> refusjonskravSomKommerForSentListe;
 
     public FaktaOmBeregningDto() {
         // Hibernate
     }
 
-    public List<RefusjonskravSomKommerForSentDto> getRefusjonskravSomKommerForSentListe() {
+    public List<RefusjonskravForSentDto> getRefusjonskravSomKommerForSentListe() {
         return refusjonskravSomKommerForSentListe;
     }
 
-    public void setRefusjonskravSomKommerForSentListe(List<RefusjonskravSomKommerForSentDto> refusjonskravSomKommerForSentListe) {
+    public void setRefusjonskravSomKommerForSentListe(List<RefusjonskravForSentDto> refusjonskravSomKommerForSentListe) {
         this.refusjonskravSomKommerForSentListe = refusjonskravSomKommerForSentListe;
     }
 

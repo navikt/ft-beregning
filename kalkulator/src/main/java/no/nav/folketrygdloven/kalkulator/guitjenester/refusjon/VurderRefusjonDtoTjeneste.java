@@ -24,7 +24,7 @@ import no.nav.folketrygdloven.kalkulator.steg.refusjon.modell.RefusjonAndel;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AvklaringsbehovDefinisjon;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.RefusjonskravSomKommerForSentDto;
+import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.RefusjonskravForSentDto;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.refusjon.RefusjonAndelTilVurderingDto;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.refusjon.RefusjonTilVurderingDto;
 
@@ -41,13 +41,12 @@ public final class VurderRefusjonDtoTjeneste {
             return Optional.empty();
         }
 
+        var refusjonskravForSentListe = hentRefusjonskravForSent(input);
         var beregningsgrunnlag = input.getBeregningsgrunnlagGrunnlag().getBeregningsgrunnlag();
-        var refusjonskravSomKomForSentListe = hentRefusjonskravSomKomForSent(input);
         var forrigeGrunnlagListe = input.getBeregningsgrunnlagGrunnlagFraForrigeBehandling().stream()
             .flatMap(gr -> gr.getBeregningsgrunnlagHvisFinnes().stream()).toList();
 
         if (!forrigeGrunnlagListe.isEmpty() && beregningsgrunnlag.getGrunnbeløp() != null) {
-            // TODO: Må man sende med refusjonoverstyringer i første if? Er det slik at de finnes i det tilfellet og skal med? Eller kan man sende tom liste?
             var refusjonOverstyringer = hentRefusjonOverstyringer(input);
 
             var andelerMedØktRefusjonFraTidligereBehandlinger = hentAndelerMedØktRefusjonFraTidligereBehandlinger(input.getYtelsespesifiktGrunnlag(),
@@ -55,7 +54,7 @@ public final class VurderRefusjonDtoTjeneste {
             if (!andelerMedØktRefusjonFraTidligereBehandlinger.isEmpty()) {
                 return Optional.of(new RefusjonTilVurderingDto(
                     lagAndeler(input, andelerMedØktRefusjonFraTidligereBehandlinger, beregningsgrunnlag, forrigeGrunnlagListe,
-                        refusjonOverstyringer), refusjonskravSomKomForSentListe));
+                        refusjonOverstyringer), refusjonskravForSentListe));
             }
 
             var andelerMedØktRefusjonFraOverstyringer = hentAndelerMedØktRefusjonFraOverstyringer(refusjonOverstyringer,
@@ -63,18 +62,18 @@ public final class VurderRefusjonDtoTjeneste {
             if (!andelerMedØktRefusjonFraOverstyringer.isEmpty()) {
                 return Optional.of(new RefusjonTilVurderingDto(
                     lagAndeler(input, andelerMedØktRefusjonFraOverstyringer, beregningsgrunnlag, forrigeGrunnlagListe, refusjonOverstyringer),
-                    refusjonskravSomKomForSentListe));
+                    refusjonskravForSentListe));
             }
         }
 
-        if (!refusjonskravSomKomForSentListe.isEmpty()) {
-            return Optional.of(new RefusjonTilVurderingDto(Collections.emptyList(), refusjonskravSomKomForSentListe));
+        if (!refusjonskravForSentListe.isEmpty()) {
+            return Optional.of(new RefusjonTilVurderingDto(Collections.emptyList(), refusjonskravForSentListe));
         }
 
         return Optional.empty();
     }
 
-    static List<RefusjonskravSomKommerForSentDto> hentRefusjonskravSomKomForSent(BeregningsgrunnlagGUIInput input) {
+    static List<RefusjonskravForSentDto> hentRefusjonskravForSent(BeregningsgrunnlagGUIInput input) {
         if (!input.isEnabled("refusjonsfrist.flytting", false)) {
             return Collections.emptyList();
         }
@@ -82,7 +81,7 @@ public final class VurderRefusjonDtoTjeneste {
         var refusjonOverstyringer = hentRefusjonOverstyringer(input);
         var arbeidsgivere = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgivereSomHarSøktRefusjonForSent(input.getIayGrunnlag(),
             input.getBeregningsgrunnlagGrunnlag(), input.getKravperioderPrArbeidsgiver(), input.getFagsakYtelseType());
-        return arbeidsgivere.stream().map(arbeidsgiver -> lagRefusjonskravDto(input, arbeidsgiver, refusjonOverstyringer)).toList();
+        return arbeidsgivere.stream().map(arbeidsgiver -> lagRefusjonskravForSentDto(input, arbeidsgiver, refusjonOverstyringer)).toList();
     }
 
     private static List<RefusjonAndelTilVurderingDto> lagAndeler(BeregningsgrunnlagGUIInput input,
@@ -117,10 +116,10 @@ public final class VurderRefusjonDtoTjeneste {
         return andeler.isEmpty() ? Collections.emptyMap() : Map.of(Intervall.fraOgMed(skjæringstidspunktForBeregning), andeler);
     }
 
-    private static RefusjonskravSomKommerForSentDto lagRefusjonskravDto(BeregningsgrunnlagGUIInput input,
-                                                                        Arbeidsgiver arbeidsgiver,
-                                                                        List<BeregningRefusjonOverstyringDto> refusjonOverstyringer) {
-        var dto = new RefusjonskravSomKommerForSentDto();
+    private static RefusjonskravForSentDto lagRefusjonskravForSentDto(BeregningsgrunnlagGUIInput input,
+                                                                      Arbeidsgiver arbeidsgiver,
+                                                                      List<BeregningRefusjonOverstyringDto> refusjonOverstyringer) {
+        var dto = new RefusjonskravForSentDto();
         dto.setArbeidsgiverIdent(arbeidsgiver.getIdentifikator());
         dto.setErRefusjonskravGyldig(
             sjekkOmRefusjonskravErGyldig(arbeidsgiver.getIdentifikator(), refusjonOverstyringer, input.getSkjæringstidspunktForBeregning()));

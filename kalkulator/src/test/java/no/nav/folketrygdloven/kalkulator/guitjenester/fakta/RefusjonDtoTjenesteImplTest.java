@@ -43,7 +43,7 @@ class RefusjonDtoTjenesteImplTest {
 
 
     @Test
-    void skal_ikkje_kunne_endre_refusjon_for_andel_uten_gradering_og_uten_refusjon() {
+    void skal_ikke_kunne_endre_refusjon_for_andel_uten_gradering_og_uten_refusjon() {
         //Arrange
         var bg = BeregningsgrunnlagDto.builder()
             .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING)
@@ -70,7 +70,7 @@ class RefusjonDtoTjenesteImplTest {
     }
 
     @Test
-    void skal_ikkje_kunne_endre_refusjon_for_andel_med_gradering_og_med_refusjon() {
+    void skal_ikke_kunne_endre_refusjon_for_andel_med_gradering_og_med_refusjon() {
         //Arrange
         var bg = BeregningsgrunnlagDto.builder()
             .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING)
@@ -98,7 +98,7 @@ class RefusjonDtoTjenesteImplTest {
     }
 
     @Test
-    void skal_ikkje_kunne_endre_refusjon_for_andel_med_gradering_og_uten_refusjon_totalrefusjon_under_6G() {
+    void skal_ikke_kunne_endre_refusjon_for_andel_med_gradering_og_uten_refusjon_totalrefusjon_under_6G() {
         //Arrange
         var bg = BeregningsgrunnlagDto.builder()
             .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING)

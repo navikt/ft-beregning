@@ -103,7 +103,7 @@ public class BeregningsgrunnlagDto {
     @Valid
     @JsonProperty(value = "refusjonskravSomKommerForSentListe")
     @Size
-    private List<RefusjonskravSomKommerForSentDto> refusjonskravSomKommerForSentListe;
+    private List<RefusjonskravForSentDto> refusjonskravSomKommerForSentListe;
 
     @JsonProperty(value = "erOverstyrtInntekt")
     @NotNull
@@ -278,11 +278,11 @@ public class BeregningsgrunnlagDto {
         this.refusjonTilVurdering = refusjonTilVurdering;
     }
 
-    public List<RefusjonskravSomKommerForSentDto> getRefusjonskravSomKommerForSentListe() {
+    public List<RefusjonskravForSentDto> getRefusjonskravSomKommerForSentListe() {
         return refusjonskravSomKommerForSentListe;
     }
 
-    public void setRefusjonskravSomKommerForSentListe(List<RefusjonskravSomKommerForSentDto> refusjonskravSomKommerForSentListe) {
+    public void setRefusjonskravSomKommerForSentListe(List<RefusjonskravForSentDto> refusjonskravSomKommerForSentListe) {
         this.refusjonskravSomKommerForSentListe = refusjonskravSomKommerForSentListe;
     }
 

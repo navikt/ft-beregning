@@ -45,8 +45,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Dekningsgrad;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.RefusjonskravSomKommerForSentDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.refusjon.RefusjonAndelTilVurderingDto;
+import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.RefusjonskravForSentDto;
 
 class VurderRefusjonDtoTjenesteTest {
 
@@ -56,6 +55,7 @@ class VurderRefusjonDtoTjenesteTest {
     private static final Arbeidsgiver ARBEIDSGIVER2 = Arbeidsgiver.virksomhet(ORGNR2);
     private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.now();
     private static final LocalDate SKJÆRINGSTIDSPUNKT_TILBAKE_I_TID = LocalDate.now().minusMonths(2);
+    private static final Beløp REFUSJONSKRAV_BELØP = Beløp.fra(33333);
 
     /* TODO: Flere tester
         - Både tilkommet refusjon og refusjonsfrist
@@ -77,9 +77,9 @@ class VurderRefusjonDtoTjenesteTest {
         var resultat = VurderRefusjonDtoTjeneste.lagRefusjonTilVurderingDto(input);
 
         assertThat(resultat).isPresent();
-        assertThat(resultat.get().getRefusjonskravSomKomForSentListe())
+        assertThat(resultat.get().getRefusjonskravForSentListe())
             .hasSize(1)
-            .extracting(RefusjonskravSomKommerForSentDto::getArbeidsgiverIdent)
+            .extracting(RefusjonskravForSentDto::getArbeidsgiverIdent)
             .contains(ARBEIDSGIVER1.getIdentifikator())
             .doesNotContain(ARBEIDSGIVER2.getIdentifikator());
     }
@@ -94,22 +94,19 @@ class VurderRefusjonDtoTjenesteTest {
         var resultat = VurderRefusjonDtoTjeneste.lagRefusjonTilVurderingDto(input);
 
         assertThat(resultat).isPresent();
-        assertThat(resultat.get().getRefusjonskravSomKomForSentListe())
+        assertThat(resultat.get().getRefusjonskravForSentListe())
             .isEmpty();
 
         var andeler = resultat.get().getAndeler().stream().toList();
+        assertThat(andeler).hasSize(1);
 
-        assertThat(andeler).hasSize(1);
-        assertThat(andeler)
-            .extracting(RefusjonAndelTilVurderingDto::getArbeidsgiver)
-            .map(no.nav.folketrygdloven.kalkulus.response.v1.Arbeidsgiver::getArbeidsgiverOrgnr)
-            .contains(ARBEIDSGIVER1.getIdentifikator());
-        assertThat(andeler).hasSize(1);
-        assertThat(andeler.getFirst().getTidligereUtbetalinger()).hasSize(1);
-        assertThat(andeler.getFirst().getTidligereUtbetalinger().getFirst().getFom()).isEqualTo(SKJÆRINGSTIDSPUNKT_TILBAKE_I_TID);
-        assertThat(andeler.getFirst().getTidligereUtbetalinger().getFirst().getTom()).isEqualTo(TIDENES_ENDE);
-        assertThat(andeler.getFirst().getMaksTillattDelvisRefusjonPrMnd().verdi()).isEqualTo(Beløp.fra(33333).verdi());
-        assertThat(andeler.getFirst().getNyttRefusjonskravFom()).isEqualTo(SKJÆRINGSTIDSPUNKT_TILBAKE_I_TID);
+        var andel = andeler.getFirst();
+        assertThat(andel.getArbeidsgiver().getArbeidsgiverOrgnr()).isEqualTo(ARBEIDSGIVER1.getIdentifikator());
+        assertThat(andel.getTidligereUtbetalinger()).hasSize(1);
+        assertThat(andel.getTidligereUtbetalinger().getFirst().getFom()).isEqualTo(SKJÆRINGSTIDSPUNKT_TILBAKE_I_TID);
+        assertThat(andel.getTidligereUtbetalinger().getFirst().getTom()).isEqualTo(TIDENES_ENDE);
+        assertThat(andel.getMaksTillattDelvisRefusjonPrMnd().verdi()).isEqualTo(REFUSJONSKRAV_BELØP.verdi());
+        assertThat(andel.getNyttRefusjonskravFom()).isEqualTo(SKJÆRINGSTIDSPUNKT_TILBAKE_I_TID);
     }
 
     private static BeregningsgrunnlagGUIInput lagInputMedBeregningsgrunnlagOgIAY(Map<Arbeidsgiver, LocalDate> førsteInnsendingAvRefusjonMap) {
@@ -141,7 +138,7 @@ class VurderRefusjonDtoTjenesteTest {
         var arbeidsgivere = førsteInnsendingAvRefusjonMap.keySet();
         var iayBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
         var aktivitetAggregat = byggBeregningAktivitetAggregat(iayBuilder, arbeidsgivere);
-        var imForOrgnr1 = BeregningInntektsmeldingTestUtil.opprettInntektsmelding(ORGNR1, SKJÆRINGSTIDSPUNKT_TILBAKE_I_TID, Beløp.fra(33333), Beløp.fra(41666));
+        var imForOrgnr1 = BeregningInntektsmeldingTestUtil.opprettInntektsmelding(ORGNR1, SKJÆRINGSTIDSPUNKT_TILBAKE_I_TID, REFUSJONSKRAV_BELØP, Beløp.fra(41666));
         var iayGrunnlag = byggIayGrunnlagMedInntektsmeldinger(iayBuilder, List.of(imForOrgnr1));
         var koblingReferanse = new KoblingReferanseMock(SKJÆRINGSTIDSPUNKT_TILBAKE_I_TID);
         var ytelsespesifiktGrunnlag = new ForeldrepengerGrunnlag(Dekningsgrad.DEKNINGSGRAD_100, null);

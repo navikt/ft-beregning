@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import no.nav.folketrygdloven.kalkulus.håndtering.v1.HåndterBeregningDto;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AvklaringsbehovDefinisjon;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.RefusjonskravSomKommerForSentDto;
+import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.RefusjonskravForSentDto;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(value = NON_ABSENT, content = NON_EMPTY)
@@ -29,27 +29,26 @@ public class VurderRefusjonBeregningsgrunnlagDto extends HåndterBeregningDto {
     @Size
     private List<VurderRefusjonAndelBeregningsgrunnlagDto> fastsatteAndeler;
 
-    // TODO: Sjekk om dette er riktig dto å bruke her, eller om vi skal bruke en annen (ny?)
-    @JsonProperty("refusjonskravSomKomForSentListe")
+    @JsonProperty("refusjonskravForSentListe")
     @Valid
     @Size
-    private List<RefusjonskravSomKommerForSentDto> refusjonskravSomKomForSentListe;
+    private List<RefusjonskravForSentDto> refusjonskravForSentListe;
 
     public VurderRefusjonBeregningsgrunnlagDto() {
         // For Json deserialisering
     }
 
-    public VurderRefusjonBeregningsgrunnlagDto(@Valid List<VurderRefusjonAndelBeregningsgrunnlagDto> fastsatteAndeler, @Valid List<RefusjonskravSomKommerForSentDto> refusjonskravSomKomForSentListe) {
+    public VurderRefusjonBeregningsgrunnlagDto(@Valid List<VurderRefusjonAndelBeregningsgrunnlagDto> fastsatteAndeler, @Valid List<RefusjonskravForSentDto> refusjonskravForSentListe) {
         super(AvklaringsbehovDefinisjon.VURDER_REFUSJONSKRAV);
         this.fastsatteAndeler = fastsatteAndeler;
-        this.refusjonskravSomKomForSentListe = refusjonskravSomKomForSentListe;
+        this.refusjonskravForSentListe = refusjonskravForSentListe;
     }
 
     public List<VurderRefusjonAndelBeregningsgrunnlagDto> getFastsatteAndeler() {
         return fastsatteAndeler;
     }
 
-    public List<RefusjonskravSomKommerForSentDto> getRefusjonskravSomKomForSentListe() {
-        return refusjonskravSomKomForSentListe;
+    public List<RefusjonskravForSentDto> getRefusjonskravForSentListe() {
+        return refusjonskravForSentListe;
     }
 }
