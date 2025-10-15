@@ -11,6 +11,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningRefusjonOverstyringDto;
+import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningRefusjonOverstyringerDto;
+
+import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningRefusjonPeriodeDto;
+
 import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.kalkulator.KoblingReferanseMock;
@@ -57,13 +62,6 @@ class VurderRefusjonDtoTjenesteTest {
     private static final LocalDate SKJÆRINGSTIDSPUNKT_TILBAKE_I_TID = LocalDate.now().minusMonths(2);
     private static final Beløp REFUSJONSKRAV_BELØP = Beløp.fra(33333);
 
-    /* TODO: Flere tester
-        - Både tilkommet refusjon og refusjonsfrist
-        - Både tilkommet refusjon (overstyring) og refusjonsfrist
-        - Bare tilkommet refusjon
-        - Bare refusjonsfrist
-     */
-
     @Test
     void skal_gi_liste_over_arbeidsgivere_som_har_søkt_refusjon_for_sent() {
         var forSentInnsendtRefusjon = SKJÆRINGSTIDSPUNKT.plusMonths(4);
@@ -109,6 +107,30 @@ class VurderRefusjonDtoTjenesteTest {
         assertThat(andel.getNyttRefusjonskravFom()).isEqualTo(SKJÆRINGSTIDSPUNKT_TILBAKE_I_TID);
     }
 
+    @Test
+    void skal_gi_liste_over_andeler_som_har_tilkommet_refusjon_og_tidligere_overstyring() {
+        Map<Arbeidsgiver, LocalDate> førsteInnsendingAvRefusjonMap = new HashMap<>();
+        førsteInnsendingAvRefusjonMap.put(ARBEIDSGIVER1, SKJÆRINGSTIDSPUNKT_TILBAKE_I_TID);
+        var input = lagInputMedBeregningsgrunnlagOgIAYOgForrigeGrunnlag(førsteInnsendingAvRefusjonMap, Beløp.fra(500000), Beløp.fra(500000));
+        input.leggTilToggle("refusjonsfrist.flytting", true);
+
+        var resultat = VurderRefusjonDtoTjeneste.lagRefusjonTilVurderingDto(input);
+
+        assertThat(resultat).isPresent();
+        assertThat(resultat.get().getRefusjonskravForSentListe())
+            .isEmpty();
+
+        var andeler = resultat.get().getAndeler().stream().toList();
+        assertThat(andeler).hasSize(1);
+
+        var andel = andeler.getFirst();
+        assertThat(andel.getArbeidsgiver().getArbeidsgiverOrgnr()).isEqualTo(ARBEIDSGIVER1.getIdentifikator());
+        assertThat(andel.getMaksTillattDelvisRefusjonPrMnd().verdi()).isEqualTo(Beløp.fra(41667).verdi());
+        assertThat(andel.getTidligsteMuligeRefusjonsdato()).isEqualTo(SKJÆRINGSTIDSPUNKT.plusMonths(3));
+        assertThat(andel.getFastsattNyttRefusjonskravFom()).isEqualTo(SKJÆRINGSTIDSPUNKT.plusMonths(4));
+        assertThat(andel.getSkalKunneFastsetteDelvisRefusjon()).isFalse();
+    }
+
     private static BeregningsgrunnlagGUIInput lagInputMedBeregningsgrunnlagOgIAY(Map<Arbeidsgiver, LocalDate> førsteInnsendingAvRefusjonMap) {
         var arbeidsgivere = førsteInnsendingAvRefusjonMap.keySet();
         var iayBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
@@ -135,6 +157,10 @@ class VurderRefusjonDtoTjenesteTest {
     }
 
     private static BeregningsgrunnlagGUIInput lagInputMedBeregningsgrunnlagOgIAYOgForrigeGrunnlag(Map<Arbeidsgiver, LocalDate> førsteInnsendingAvRefusjonMap) {
+        return lagInputMedBeregningsgrunnlagOgIAYOgForrigeGrunnlag(førsteInnsendingAvRefusjonMap, Beløp.fra(500000), Beløp.fra(400000));
+    }
+
+    private static BeregningsgrunnlagGUIInput lagInputMedBeregningsgrunnlagOgIAYOgForrigeGrunnlag(Map<Arbeidsgiver, LocalDate> førsteInnsendingAvRefusjonMap, Beløp refusjonskrav1, Beløp refusjonskrav2) {
         var arbeidsgivere = førsteInnsendingAvRefusjonMap.keySet();
         var iayBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
         var aktivitetAggregat = byggBeregningAktivitetAggregat(iayBuilder, arbeidsgivere);
@@ -147,18 +173,19 @@ class VurderRefusjonDtoTjenesteTest {
         //beregningsgrunnlag
         var beregningsgrunnlag = lagBeregningsgrunnlag(Beløp.fra(100000), SKJÆRINGSTIDSPUNKT_TILBAKE_I_TID);
         var bgPeriode = lagBgPeriode(beregningsgrunnlag, SKJÆRINGSTIDSPUNKT_TILBAKE_I_TID);
-        lagAndel(bgPeriode, ARBEIDSGIVER1, 1, 0, 0, Beløp.fra(500000));
+        lagAndel(bgPeriode, ARBEIDSGIVER1, 1, 0, 0, refusjonskrav1);
         BeregningsgrunnlagPeriodeDto.oppdater(bgPeriode).build();
 
         var beregningsgrunnlagGrunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
             .medBeregningsgrunnlag(beregningsgrunnlag)
             .medRegisterAktiviteter(aktivitetAggregat)
+            .medRefusjonOverstyring(BeregningRefusjonOverstyringerDto.builder().leggTilOverstyring(new BeregningRefusjonOverstyringDto(ARBEIDSGIVER1, SKJÆRINGSTIDSPUNKT.plusMonths(3), List.of(lagRefusjonPeriodeDto()), false)).build())
             .build(BeregningsgrunnlagTilstand.VURDERT_TILKOMMET_INNTEKT_UT);
 
         //forrige beregningsgrunnlag
         var forrigeBeregningsgrunnlag = lagBeregningsgrunnlag(null, SKJÆRINGSTIDSPUNKT_TILBAKE_I_TID);
         var bgPeriodeForrigeGrunnlag = lagBgPeriode(forrigeBeregningsgrunnlag, SKJÆRINGSTIDSPUNKT_TILBAKE_I_TID);
-        lagAndel(bgPeriodeForrigeGrunnlag, ARBEIDSGIVER1, 1,0, 500000, Beløp.fra(400000));
+        lagAndel(bgPeriodeForrigeGrunnlag, ARBEIDSGIVER1, 1,0, 500000, refusjonskrav2);
         BeregningsgrunnlagPeriodeDto.oppdater(bgPeriodeForrigeGrunnlag).build();
 
         var forrigeBeregningsgrunnlagGrunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
@@ -171,6 +198,10 @@ class VurderRefusjonDtoTjenesteTest {
             .medBeregningsgrunnlagGrunnlag(beregningsgrunnlagGrunnlag)
             .medBeregningsgrunnlagGrunnlagFraForrigeBehandling(forrigeBeregningsgrunnlagGrunnlag)
             .medAvklaringsbehov(List.of(avklaringsbehov));
+    }
+
+    private static BeregningRefusjonPeriodeDto lagRefusjonPeriodeDto() {
+        return new BeregningRefusjonPeriodeDto(null, SKJÆRINGSTIDSPUNKT.plusMonths(4));
     }
 
     private static void lagAndel(BeregningsgrunnlagPeriodeDto bgPeriode, Arbeidsgiver arbeidsgiver, int andelsnr,  int redusertBruker, int redusertAG, Beløp beløp) {
