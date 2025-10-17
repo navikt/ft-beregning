@@ -91,7 +91,7 @@ class VurderRefusjonDtoTjenesteTest3 {
     @Test
     void skal_gi_liste_over_andeler_som_har_tilkommet_refusjon() {
         Map<Arbeidsgiver, LocalDate> førsteInnsendingAvRefusjonMap = Map.of(ARBEIDSGIVER1, SKJÆRINGSTIDSPUNKT_TILBAKE_I_TID);
-        var input = lagInputMedBeregningsgrunnlagOgIAYOgForrigeGrunnlag(førsteInnsendingAvRefusjonMap, REFUSJONSKRAV);
+        var input = lagInputMedBeregningsgrunnlagOgIAYOgForrigeGrunnlag(førsteInnsendingAvRefusjonMap);
 
         var resultat = VurderRefusjonDtoTjeneste.lagRefusjonTilVurderingDto(input);
 
@@ -113,7 +113,7 @@ class VurderRefusjonDtoTjenesteTest3 {
     @Test
     void skal_gi_liste_over_andeler_som_har_tilkommet_refusjon_og_tidligere_overstyring() {
         Map<Arbeidsgiver, LocalDate> førsteInnsendingAvRefusjonMap = Map.of(ARBEIDSGIVER1, SKJÆRINGSTIDSPUNKT_TILBAKE_I_TID);
-        var input = lagInputMedBeregningsgrunnlagOgIAYOgForrigeGrunnlag(førsteInnsendingAvRefusjonMap, REFUSJONSKRAV);
+        var input = lagInputMedBeregningsgrunnlagOgIAYOgForrigeGrunnlag(førsteInnsendingAvRefusjonMap);
 
         var resultat = VurderRefusjonDtoTjeneste.lagRefusjonTilVurderingDto(input);
 
@@ -300,8 +300,7 @@ class VurderRefusjonDtoTjenesteTest3 {
             .medAvklaringsbehov(List.of(avklaringsbehovDto));
     }
 
-    private BeregningsgrunnlagGUIInput lagInputMedBeregningsgrunnlagOgIAYOgForrigeGrunnlag(Map<Arbeidsgiver, LocalDate> førsteInnsendingAvRefusjonMap,
-                                                                                           Beløp refusjonskrav) {
+    private BeregningsgrunnlagGUIInput lagInputMedBeregningsgrunnlagOgIAYOgForrigeGrunnlag(Map<Arbeidsgiver, LocalDate> førsteInnsendingAvRefusjonMap) {
         var iayGrunnlag = lagIayGrunnlagMedInntektsmeldinger(List.of(ORGNR1), false);
         var aktivitetAggregat = lagBeregningAktivitetAggregat(førsteInnsendingAvRefusjonMap.keySet());
         var refusjonOverstyring = lagRefusjonOverstyringBuilder(ARBEIDSGIVER1, SKJÆRINGSTIDSPUNKT.plusMonths(3),
@@ -309,7 +308,7 @@ class VurderRefusjonDtoTjenesteTest3 {
         var beregningsgrunnlagGrunnlag = lagBGGrunnlagOgPerioder(aktivitetAggregat, refusjonOverstyring, Set.of(ARBEIDSGIVER1),
             SKJÆRINGSTIDSPUNKT_TILBAKE_I_TID, REFUSJONSKRAV, null);
         var forrigeBeregningsgrunnlagGrunnlag = lagBGGrunnlagOgPerioder(aktivitetAggregat, null, Set.of(ARBEIDSGIVER1),
-            SKJÆRINGSTIDSPUNKT_TILBAKE_I_TID, refusjonskrav, REFUSJONSKRAV);
+            SKJÆRINGSTIDSPUNKT_TILBAKE_I_TID, REFUSJONSKRAV, REFUSJONSKRAV);
         return new BeregningsgrunnlagGUIInput(new KoblingReferanseMock(SKJÆRINGSTIDSPUNKT_TILBAKE_I_TID), iayGrunnlag,
             opprett(iayGrunnlag, SKJÆRINGSTIDSPUNKT_TILBAKE_I_TID, førsteInnsendingAvRefusjonMap), null).medBeregningsgrunnlagGrunnlag(
                 beregningsgrunnlagGrunnlag)
