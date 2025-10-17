@@ -4,11 +4,8 @@ import static no.nav.fpsak.tidsserie.LocalDateInterval.TIDENES_ENDE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import no.nav.folketrygdloven.kalkulator.KoblingReferanseMock;
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagGUIInput;
 import no.nav.folketrygdloven.kalkulator.modell.avklaringsbehov.AvklaringsbehovDto;
-import no.nav.folketrygdloven.kalkulator.modell.behandling.KoblingReferanse;
 import no.nav.folketrygdloven.kalkulator.modell.behandling.Skjæringstidspunkt;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BGAndelArbeidsforholdDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningRefusjonOverstyringDto;
@@ -26,64 +22,54 @@ import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.Beregningsgru
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
-import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseGrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseGrunnlagDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Refusjon;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
+import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AvklaringsbehovDefinisjon;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Hjemmel;
+import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.refusjon.RefusjonAndelTilVurderingDto;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.refusjon.TidligereUtbetalingDto;
 
 class VurderRefusjonDtoTjenesteTest2 {
 
-    private static final Skjæringstidspunkt STP = Skjæringstidspunkt.builder()
-        .medSkjæringstidspunktBeregning(LocalDate.of(2020, 1, 1))
-        .medSkjæringstidspunktOpptjening(LocalDate.of(2020, 1, 1))
-        .build();
-    private static final Intervall BG_PERIODE = Intervall.fraOgMedTilOgMed(STP.getSkjæringstidspunktBeregning(), TIDENES_ENDE);
+    private static final Skjæringstidspunkt STP = Skjæringstidspunkt.builder().medSkjæringstidspunktBeregning(LocalDate.of(2020, 1, 1)).build();
+    public static final LocalDate STP_BEREGNING = STP.getSkjæringstidspunktBeregning();
+    private static final Intervall BG_PERIODE = Intervall.fraOgMedTilOgMed(STP_BEREGNING, TIDENES_ENDE);
+    private static final Intervall BG_PERIODE_FORRIGE = Intervall.fraOgMedTilOgMed(BG_PERIODE.getFomDato().minusYears(1),
+        BG_PERIODE.getFomDato().minusDays(1));
     private static final String ORGNR = "999999999";
+    private static final String ORGNR2 = "999999991";
     private static final Arbeidsgiver ARBEIDSGIVER = Arbeidsgiver.virksomhet(ORGNR);
-    private final KoblingReferanse koblingReferanse = new KoblingReferanseMock().medSkjæringstidspunkt(STP);
-    private String internRef;
+    private static final Arbeidsgiver ARBEIDSGIVER2 = Arbeidsgiver.virksomhet(ORGNR2);
+    private static final Beløp REDUSERT_REFUSJON = Beløp.fra(500000);
+    private static final Beløp BRUTTO_LAV = Beløp.fra(400000);
+    private static final Beløp BRUTTO_HØY = Beløp.fra(500000);
+    private static final Beløp REFUSJON_LAV = Beløp.fra(11111);
+    private static final Beløp REFUSJON_HØY = Beløp.fra(33333);
+
     private BeregningsgrunnlagDto beregningsgrunnlag;
     private BeregningsgrunnlagPeriodeDto bgPeriode;
-    private BeregningsgrunnlagDto beregningsgrunnlagOrginal;
-    private BeregningsgrunnlagPeriodeDto bgPeriodeOrginal;
-    private InntektArbeidYtelseGrunnlagDto iay;
-    private BeregningsgrunnlagGUIInput input;
+    private BeregningsgrunnlagDto beregningsgrunnlagForrige;
+    private BeregningsgrunnlagPeriodeDto bgPeriodeForrige;
     private BeregningRefusjonOverstyringerDto.Builder refusjonOverstyringerBuilder;
 
     @BeforeEach
     void setup() {
-        internRef = UUID.randomUUID().toString();
-        beregningsgrunnlag = no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto.builder()
-            .medSkjæringstidspunkt(STP.getSkjæringstidspunktBeregning())
-            .medGrunnbeløp(Beløp.fra(125000))
-            .build();
-        BeregningsgrunnlagAktivitetStatusDto.builder()
-            .medAktivitetStatus(no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus.ARBEIDSTAKER)
-            .medHjemmel(Hjemmel.F_14_7_8_30)
-            .build(beregningsgrunnlag);
-        bgPeriode = buildBeregningsgrunnlagPeriode(beregningsgrunnlag);
-        beregningsgrunnlagOrginal = no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto.builder()
-            .medSkjæringstidspunkt(STP.getSkjæringstidspunktBeregning())
-            .build();
-        BeregningsgrunnlagAktivitetStatusDto.builder()
-            .medAktivitetStatus(no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus.ARBEIDSTAKER)
-            .medHjemmel(Hjemmel.F_14_7_8_30)
-            .build(beregningsgrunnlagOrginal);
-        bgPeriodeOrginal = buildBeregningsgrunnlagPeriode(beregningsgrunnlagOrginal);
-        lagIAYGrunnlag();
+        beregningsgrunnlag = byggBGMedAktivitetStatusOgPeriode(Beløp.fra(125000));
+        beregningsgrunnlagForrige = byggBGMedAktivitetStatusOgPeriode(null);
+        bgPeriode = byggBGPeriode(beregningsgrunnlag);
+        bgPeriodeForrige = byggBGPeriode(beregningsgrunnlagForrige);
     }
 
     @Test
     void skal_ikke_lage_dto_når_det_ikke_finnes_andeler_med_økt_ref() {
-        byggBGAndel(ARBEIDSGIVER, internRef);
-        ferdigstillInput();
+        byggBGAndelHøyRefusjonLavBruttoPåPeriode(bgPeriode, ARBEIDSGIVER);
+        var input = ferdigstillInput();
 
         var resultat = VurderRefusjonDtoTjeneste.lagRefusjonTilVurderingDto(input);
 
@@ -92,233 +78,188 @@ class VurderRefusjonDtoTjenesteTest2 {
 
     @Test
     void skal_lage_dto_når_tilkommetIM_har_refusjonskrav_tidligere_utbetalt_bruker() {
-        var refusjonFom = BG_PERIODE.getFomDato();
-        byggBGAndel(ARBEIDSGIVER, internRef);
-        byggBGAndelOriginal(ARBEIDSGIVER, internRef, 500000, 0);
-        ferdigstillInput();
+        byggBGAndelHøyRefusjonLavBruttoPåPeriode(bgPeriode, ARBEIDSGIVER);
+        byggBGAndelPåPeriode(bgPeriodeForrige, ARBEIDSGIVER, REFUSJON_LAV, BRUTTO_HØY, REDUSERT_REFUSJON, Beløp.ZERO);
+        var input = ferdigstillInput();
 
         var resultat = VurderRefusjonDtoTjeneste.lagRefusjonTilVurderingDto(input);
-        var tidligereUtb = new TidligereUtbetalingDto(bgPeriodeOrginal.getBeregningsgrunnlagPeriodeFom(),
-            bgPeriodeOrginal.getBeregningsgrunnlagPeriodeTom(), false);
 
         assertThat(resultat).isPresent();
         assertThat(resultat.get().getAndeler()).hasSize(1);
-        assertAndeler(resultat.get().getAndeler(), ORGNR, internRef, refusjonFom, STP.getSkjæringstidspunktBeregning(), tidligereUtb);
+        assertAndeler(resultat.get().getAndeler(), BG_PERIODE.getFomDato(), STP_BEREGNING, false);
     }
 
     @Test
     void skal_lage_dto_når_tilkommetIM_har_refusjonskrav_tidligere_utbetalt_refusjon() {
-        var refusjonFom = BG_PERIODE.getFomDato();
-        byggBGAndel(ARBEIDSGIVER, internRef);
-        byggBGAndelOriginal(ARBEIDSGIVER, internRef, 0, 500000);
-        ferdigstillInput();
+        byggBGAndelHøyRefusjonLavBruttoPåPeriode(bgPeriode, ARBEIDSGIVER);
+        byggBGAndelPåPeriode(bgPeriodeForrige, ARBEIDSGIVER, REFUSJON_LAV, BRUTTO_HØY, Beløp.ZERO, REDUSERT_REFUSJON);
+        var input = ferdigstillInput();
 
         var resultat = VurderRefusjonDtoTjeneste.lagRefusjonTilVurderingDto(input);
-        var tidligereUtb = new TidligereUtbetalingDto(bgPeriodeOrginal.getBeregningsgrunnlagPeriodeFom(),
-            bgPeriodeOrginal.getBeregningsgrunnlagPeriodeTom(), true);
 
         assertThat(resultat).isPresent();
         assertThat(resultat.get().getAndeler()).hasSize(1);
-        assertAndeler(resultat.get().getAndeler(), ORGNR, internRef, refusjonFom, STP.getSkjæringstidspunktBeregning(), tidligereUtb);
+        assertAndeler(resultat.get().getAndeler(), BG_PERIODE.getFomDato(), STP_BEREGNING, true);
     }
 
     @Test
     void skal_lage_dto_når_tilkommetIM_har_refusjonskrav_tidligere_utbetalt_refusjon_for_annet_orgnr() {
-        var internRef2 = UUID.randomUUID().toString();
-        var orgnr2 = "999999991";
-        var refusjonFom = BG_PERIODE.getFomDato();
-        byggBGAndel(Arbeidsgiver.virksomhet(orgnr2), internRef2);
-
-        byggBGAndelOriginal(ARBEIDSGIVER, internRef, 0, 500000);
-        ferdigstillInput();
+        byggBGAndelHøyRefusjonLavBruttoPåPeriode(bgPeriode, ARBEIDSGIVER2);
+        byggBGAndelPåPeriode(bgPeriodeForrige, ARBEIDSGIVER, REFUSJON_LAV, BRUTTO_HØY, Beløp.ZERO, REDUSERT_REFUSJON);
+        var input = ferdigstillInput();
 
         var resultat = VurderRefusjonDtoTjeneste.lagRefusjonTilVurderingDto(input);
 
         assertThat(resultat).isPresent();
         assertThat(resultat.get().getAndeler()).hasSize(1);
-        var matchetAndel = resultat.get()
-            .getAndeler()
-            .stream()
-            .filter(a -> a.getArbeidsgiver().getArbeidsgiverOrgnr().equals(orgnr2) && Objects.equals(a.getInternArbeidsforholdRef(), internRef2))
-            .findFirst()
-            .orElse(null);
+
+        var matchetAndel = getMatchetAndel(resultat.get().getAndeler(), ORGNR2);
         assertThat(matchetAndel).isNotNull();
-        assertThat(matchetAndel.getNyttRefusjonskravFom()).isEqualTo(refusjonFom);
-        assertThat(matchetAndel.getTidligsteMuligeRefusjonsdato()).isEqualTo(refusjonFom);
+        assertThat(matchetAndel.getNyttRefusjonskravFom()).isEqualTo(BG_PERIODE.getFomDato());
+        assertThat(matchetAndel.getTidligsteMuligeRefusjonsdato()).isEqualTo(BG_PERIODE.getFomDato());
 
         assertThat(matchetAndel.getTidligereUtbetalinger()).isEmpty();
         assertThat(matchetAndel.getSkalKunneFastsetteDelvisRefusjon()).isTrue();
     }
 
     @Test
-    void skal_sette_tidligste_refusjonsdato_lik_avklaring_fra_fakta_om_beregnign() {
-        var refusjonFom = BG_PERIODE.getFomDato();
-        byggBGAndel(ARBEIDSGIVER, internRef);
-        byggBGAndelOriginal(ARBEIDSGIVER, internRef, 0, 500000);
-        var tidligsteRefusjonFom = refusjonFom.plusMonths(1);
-        byggTidligereRefusjonoverstyring(ARBEIDSGIVER, tidligsteRefusjonFom, false);
-        ferdigstillInput();
+    void skal_sette_tidligste_refusjonsdato_lik_avklaring_fra_fakta_om_beregning() {
+        var tidligsteRefusjonFom = BG_PERIODE.getFomDato().plusMonths(1);
+        byggBGAndelHøyRefusjonLavBruttoPåPeriode(bgPeriode, ARBEIDSGIVER);
+        byggBGAndelPåPeriode(bgPeriodeForrige, ARBEIDSGIVER, REFUSJON_LAV, BRUTTO_HØY, Beløp.ZERO, REDUSERT_REFUSJON);
+        byggTidligereRefusjonoverstyring(ARBEIDSGIVER, tidligsteRefusjonFom);
+        var input = ferdigstillInput();
 
         var resultat = VurderRefusjonDtoTjeneste.lagRefusjonTilVurderingDto(input);
-        var tidligereUtb = new TidligereUtbetalingDto(bgPeriodeOrginal.getBeregningsgrunnlagPeriodeFom(),
-            bgPeriodeOrginal.getBeregningsgrunnlagPeriodeTom(), true);
 
         assertThat(resultat).isPresent();
         assertThat(resultat.get().getAndeler()).hasSize(1);
-        assertAndeler(resultat.get().getAndeler(), ORGNR, internRef, refusjonFom, tidligsteRefusjonFom, tidligereUtb);
+        assertAndeler(resultat.get().getAndeler(), BG_PERIODE.getFomDato(), tidligsteRefusjonFom, true);
     }
 
     @Test
     void ved_flere_andeler_skal_kun_andel_i_første_periode_brukes() {
-        var bgPeriodeEldst = buildBeregningsgrunnlagPeriode2(beregningsgrunnlag);
-        var bgPeriodeOriginalEldst = buildBeregningsgrunnlagPeriode2(beregningsgrunnlagOrginal);
-        byggBGAndel(ARBEIDSGIVER, internRef);
-        byggBGAndel(ARBEIDSGIVER, internRef, bgPeriodeEldst);
-        var eldrePeriode = Intervall.fraOgMedTilOgMed(BG_PERIODE.getFomDato().minusYears(1), BG_PERIODE.getFomDato().minusDays(1));
-        byggBGAndelOriginal(ARBEIDSGIVER, internRef, 0, 500000);
-        byggBGAndelOriginal(ARBEIDSGIVER, internRef, 0, 500000, bgPeriodeOriginalEldst);
-        var refusjonFom = eldrePeriode.getFomDato();
-        var tidligsteRefusjonFom = refusjonFom.plusMonths(1);
-        byggTidligereRefusjonoverstyring(ARBEIDSGIVER, tidligsteRefusjonFom, false);
-        ferdigstillInput();
+        byggBGAndelHøyRefusjonLavBruttoPåPeriode(bgPeriode, ARBEIDSGIVER);
+        var bgPeriodeEldst = BeregningsgrunnlagPeriodeDto.ny()
+            .medBeregningsgrunnlagPeriode(BG_PERIODE_FORRIGE.getFomDato(), BG_PERIODE_FORRIGE.getTomDato())
+            .build(beregningsgrunnlag);
+        byggBGAndelHøyRefusjonLavBruttoPåPeriode(bgPeriodeEldst, ARBEIDSGIVER);
+
+        byggBGAndelPåPeriode(bgPeriodeForrige, ARBEIDSGIVER, REFUSJON_LAV, BRUTTO_HØY, Beløp.ZERO, REDUSERT_REFUSJON);
+        var bgPeriodeForrigeEldst = BeregningsgrunnlagPeriodeDto.ny()
+            .medBeregningsgrunnlagPeriode(BG_PERIODE_FORRIGE.getFomDato(), BG_PERIODE_FORRIGE.getTomDato())
+            .build(beregningsgrunnlagForrige);
+        byggBGAndelPåPeriode(bgPeriodeForrigeEldst, ARBEIDSGIVER, REFUSJON_LAV, BRUTTO_HØY, Beløp.ZERO, REDUSERT_REFUSJON);
+
+        var tidligsteRefusjonFom = BG_PERIODE_FORRIGE.getFomDato().plusMonths(1);
+        byggTidligereRefusjonoverstyring(ARBEIDSGIVER, tidligsteRefusjonFom);
+        var input = ferdigstillInput();
 
         var resultat = VurderRefusjonDtoTjeneste.lagRefusjonTilVurderingDto(input);
-        var tidligereUtb = new TidligereUtbetalingDto(bgPeriodeOrginal.getBeregningsgrunnlagPeriodeFom(),
-            bgPeriodeOrginal.getBeregningsgrunnlagPeriodeTom(), true);
 
         assertThat(resultat).isPresent();
         assertThat(resultat.get().getAndeler()).hasSize(1);
-        assertAndeler(resultat.get().getAndeler(), ORGNR, internRef, refusjonFom, tidligsteRefusjonFom, tidligereUtb);
+        assertAndeler(resultat.get().getAndeler(), BG_PERIODE_FORRIGE.getFomDato(), tidligsteRefusjonFom, true);
     }
 
     @Test
     void skal_ignorere_tidligere_avklaring_fra_fakta_om_beregning_når_dette_gjeder_annet_arbfor() {
-        var refusjonFom = BG_PERIODE.getFomDato();
-        byggBGAndel(ARBEIDSGIVER, internRef);
-        byggBGAndelOriginal(ARBEIDSGIVER, internRef, 0, 500000);
-        var tidligsteRefusjonFom = refusjonFom.plusMonths(1);
-        byggTidligereRefusjonoverstyring(Arbeidsgiver.virksomhet("99999998"), tidligsteRefusjonFom, false);
-        ferdigstillInput();
+        byggBGAndelHøyRefusjonLavBruttoPåPeriode(bgPeriode, ARBEIDSGIVER);
+        byggBGAndelPåPeriode(bgPeriodeForrige, ARBEIDSGIVER, REFUSJON_LAV, BRUTTO_HØY, Beløp.ZERO, REDUSERT_REFUSJON);
+        var tidligsteRefusjonFom = BG_PERIODE.getFomDato().plusMonths(1);
+        byggTidligereRefusjonoverstyring(ARBEIDSGIVER2, tidligsteRefusjonFom);
+        var input = ferdigstillInput();
 
         var resultat = VurderRefusjonDtoTjeneste.lagRefusjonTilVurderingDto(input);
-        var tidligereUtb = new TidligereUtbetalingDto(bgPeriodeOrginal.getBeregningsgrunnlagPeriodeFom(),
-            bgPeriodeOrginal.getBeregningsgrunnlagPeriodeTom(), true);
 
         assertThat(resultat).isPresent();
         assertThat(resultat.get().getAndeler()).hasSize(1);
-        assertAndeler(resultat.get().getAndeler(), ORGNR, internRef, refusjonFom, STP.getSkjæringstidspunktBeregning(), tidligereUtb);
-    }
-
-
-    private void byggTidligereRefusjonoverstyring(Arbeidsgiver arbeidsgiver, LocalDate tidligsteRefusjonsstart, boolean erFristUtvidet) {
-        var refusjonOverstyring = new BeregningRefusjonOverstyringDto(arbeidsgiver, tidligsteRefusjonsstart, erFristUtvidet);
-        if (refusjonOverstyringerBuilder == null) {
-            refusjonOverstyringerBuilder = BeregningRefusjonOverstyringerDto.builder();
-        }
-        refusjonOverstyringerBuilder.leggTilOverstyring(refusjonOverstyring);
+        assertAndeler(resultat.get().getAndeler(), BG_PERIODE.getFomDato(), STP_BEREGNING, true);
     }
 
     private void assertAndeler(List<RefusjonAndelTilVurderingDto> andeler,
-                               String orgnr,
-                               String internRef,
                                LocalDate refusjonFom,
                                LocalDate tidligsteMuligeRefusjon,
-                               TidligereUtbetalingDto... tidligereUtbetaling) {
-        var matchetAndel = andeler.stream()
-            .filter(a -> a.getArbeidsgiver().getArbeidsgiverOrgnr().equals(orgnr) && Objects.equals(a.getInternArbeidsforholdRef(), internRef))
-            .findFirst()
-            .orElse(null);
+                               boolean erTildeltRefusjon) {
+        var matchetAndel = getMatchetAndel(andeler, ORGNR);
         assertThat(matchetAndel).isNotNull();
         assertThat(matchetAndel.getNyttRefusjonskravFom()).isEqualTo(refusjonFom);
         assertThat(matchetAndel.getTidligsteMuligeRefusjonsdato()).isEqualTo(tidligsteMuligeRefusjon);
 
-        var tidligereUtb = Arrays.asList(tidligereUtbetaling);
-        assertThat(matchetAndel.getTidligereUtbetalinger()).containsAll(tidligereUtb);
+        var tidligereUtbetaling = new TidligereUtbetalingDto(bgPeriodeForrige.getBeregningsgrunnlagPeriodeFom(),
+            bgPeriodeForrige.getBeregningsgrunnlagPeriodeTom(), erTildeltRefusjon);
+        assertThat(matchetAndel.getTidligereUtbetalinger()).contains(tidligereUtbetaling);
     }
 
-    private void ferdigstillInput() {
-        BeregningsgrunnlagPeriodeDto.oppdater(bgPeriodeOrginal).build();
+    private RefusjonAndelTilVurderingDto getMatchetAndel(List<RefusjonAndelTilVurderingDto> andeler, String orgnr) {
+        return andeler.stream().filter(a -> a.getArbeidsgiver().getArbeidsgiverOrgnr().equals(orgnr)).findFirst().orElse(null);
+    }
+
+    private BeregningsgrunnlagGUIInput ferdigstillInput() {
+        BeregningsgrunnlagPeriodeDto.oppdater(bgPeriodeForrige).build();
         BeregningsgrunnlagPeriodeDto.oppdater(bgPeriode).build();
+        var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.nytt().build();
+        var avklaringsbehov = new AvklaringsbehovDto(AvklaringsbehovDefinisjon.VURDER_REFUSJONSKRAV, null, null, null, null, null);
+        var koblingReferanse = new KoblingReferanseMock().medSkjæringstidspunkt(STP);
+
         var forrigeBeregningsgrunnlagGrunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
-            .medBeregningsgrunnlag(beregningsgrunnlagOrginal)
+            .medBeregningsgrunnlag(beregningsgrunnlagForrige)
             .build(BeregningsgrunnlagTilstand.VURDERT_REFUSJON);
 
-        var beregningsgrunnlagGrunnlagBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
-            .medBeregningsgrunnlag(beregningsgrunnlag);
-        if (refusjonOverstyringerBuilder != null) {
-            beregningsgrunnlagGrunnlagBuilder.medRefusjonOverstyring(refusjonOverstyringerBuilder.build());
-        }
-        var beregningsgrunnlagGrunnlag = beregningsgrunnlagGrunnlagBuilder.build(BeregningsgrunnlagTilstand.VURDERT_REFUSJON);
-        var avklaringsbehov = new AvklaringsbehovDto(AvklaringsbehovDefinisjon.VURDER_REFUSJONSKRAV, null, null, null, null, null);
-        input = new BeregningsgrunnlagGUIInput(koblingReferanse, iay, List.of(), null).medBeregningsgrunnlagGrunnlag(beregningsgrunnlagGrunnlag)
-            .medBeregningsgrunnlagGrunnlagFraForrigeBehandling(List.of(forrigeBeregningsgrunnlagGrunnlag))
+        var beregningsgrunnlagGrunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
+            .medBeregningsgrunnlag(beregningsgrunnlag)
+            .medRefusjonOverstyring(refusjonOverstyringerBuilder != null ? refusjonOverstyringerBuilder.build() : null)
+            .build(BeregningsgrunnlagTilstand.VURDERT_REFUSJON);
+
+        return new BeregningsgrunnlagGUIInput(koblingReferanse, iayGrunnlag, List.of(), null).medBeregningsgrunnlagGrunnlagFraForrigeBehandling(
+                List.of(forrigeBeregningsgrunnlagGrunnlag))
+            .medBeregningsgrunnlagGrunnlag(beregningsgrunnlagGrunnlag)
             .medAvklaringsbehov(List.of(avklaringsbehov));
     }
 
-    private void lagIAYGrunnlag() {
-        iay = InntektArbeidYtelseGrunnlagDtoBuilder.nytt().build();
+    private void byggBGAndelHøyRefusjonLavBruttoPåPeriode(BeregningsgrunnlagPeriodeDto periode, Arbeidsgiver arbeidsgiver) {
+        byggBGAndelPåPeriode(periode, arbeidsgiver, REFUSJON_HØY, BRUTTO_LAV, null, null);
     }
 
-    private BeregningsgrunnlagPeriodeDto buildBeregningsgrunnlagPeriode(no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto beregningsgrunnlag) {
-        return BeregningsgrunnlagPeriodeDto.ny()
-            .medBeregningsgrunnlagPeriode(BG_PERIODE.getFomDato(), BG_PERIODE.getTomDato())
-            .build(beregningsgrunnlag);
-    }
-
-    private BeregningsgrunnlagPeriodeDto buildBeregningsgrunnlagPeriode2(no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto beregningsgrunnlag) {
-        return BeregningsgrunnlagPeriodeDto.ny()
-            .medBeregningsgrunnlagPeriode(BG_PERIODE.getFomDato().minusYears(1), BG_PERIODE.getFomDato().minusDays(1))
-            .build(beregningsgrunnlag);
-    }
-
-    private void byggBGAndel(Arbeidsgiver arbeidsgiver, String ref) {
-        byggBGAndel(arbeidsgiver, ref, bgPeriode);
-    }
-
-    private void byggBGAndel(Arbeidsgiver arbeidsgiver, String ref, BeregningsgrunnlagPeriodeDto bgPeriode) {
+    private void byggBGAndelPåPeriode(BeregningsgrunnlagPeriodeDto periode,
+                                      Arbeidsgiver arbeidsgiver,
+                                      Beløp refusjon,
+                                      Beløp brutto,
+                                      Beløp redusertBruker,
+                                      Beløp redusertAG) {
         var bga = BGAndelArbeidsforholdDto.builder()
-            .medArbeidsperiodeFom(LocalDate.now().minusYears(1))
-            .medArbeidsperiodeTom(LocalDate.now().plusYears(2))
-            .medArbeidsforholdRef(ref)
-            .medRefusjon(new Refusjon(Beløp.fra(33333), null, null, null, null, null))
+            .medArbeidsperiodeFom(STP_BEREGNING.minusYears(1))
+            .medArbeidsperiodeTom(STP_BEREGNING.plusYears(2))
+            .medRefusjon(new Refusjon(refusjon, null, null, null, null, null))
             .medArbeidsgiver(arbeidsgiver);
 
         BeregningsgrunnlagPrStatusOgAndelDto.ny()
             .medBGAndelArbeidsforhold(bga)
-            .medInntektskategori(no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori.ARBEIDSTAKER)
+            .medInntektskategori(Inntektskategori.ARBEIDSTAKER)
             .medAndelsnr(1L)
-            .medAktivitetStatus(no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus.ARBEIDSTAKER)
-            .medBeregningsperiode(LocalDate.now(), LocalDate.now().plusMonths(1))
-            .medFordeltPrÅr(Beløp.fra(400000)) // TODO: Endre denne verdien til riktig sum, dette er et tilfeldig tall
-            .build(bgPeriode);
+            .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
+            .medBeregningsperiode(STP_BEREGNING, STP_BEREGNING.plusMonths(1))
+            .medFordeltPrÅr(brutto)
+            .medRedusertBrukersAndelPrÅr(redusertBruker)
+            .medRedusertRefusjonPrÅr(redusertAG)
+            .build(periode);
     }
 
-    private void byggBGAndelOriginal(Arbeidsgiver arbeidsgiver, String internRef, int redusertBruker, int redusertAG) {
-        byggBGAndelOriginal(arbeidsgiver, internRef, redusertBruker, redusertAG, bgPeriodeOrginal);
-
+    private void byggTidligereRefusjonoverstyring(Arbeidsgiver arbeidsgiver, LocalDate tidligsteRefusjonsstart) {
+        var refusjonOverstyring = new BeregningRefusjonOverstyringDto(arbeidsgiver, tidligsteRefusjonsstart, false);
+        refusjonOverstyringerBuilder = BeregningRefusjonOverstyringerDto.builder().leggTilOverstyring(refusjonOverstyring);
     }
 
-    private void byggBGAndelOriginal(Arbeidsgiver arbeidsgiver,
-                                     String internRef,
-                                     int redusertBruker,
-                                     int redusertAG,
-                                     BeregningsgrunnlagPeriodeDto bgPeriodeOrginal) {
-        var bga = BGAndelArbeidsforholdDto.builder()
-            .medArbeidsperiodeFom(LocalDate.now().minusYears(1))
-            .medArbeidsperiodeTom(LocalDate.now().plusYears(2))
-            .medArbeidsforholdRef(internRef)
-            .medRefusjon(new Refusjon(Beløp.fra(11111), null, null, null, null, null))
-            .medArbeidsgiver(arbeidsgiver);
+    private BeregningsgrunnlagDto byggBGMedAktivitetStatusOgPeriode(Beløp grunnbeløp) {
+        return BeregningsgrunnlagDto.builder()
+            .medSkjæringstidspunkt(STP_BEREGNING)
+            .medGrunnbeløp(grunnbeløp)
+            .leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
+            .build();
+    }
 
-        BeregningsgrunnlagPrStatusOgAndelDto.ny()
-            .medBGAndelArbeidsforhold(bga)
-            .medInntektskategori(no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori.ARBEIDSTAKER)
-            .medAndelsnr(1L)
-            .medRedusertBrukersAndelPrÅr(Beløp.fra(redusertBruker))
-            .medRedusertRefusjonPrÅr(Beløp.fra(redusertAG))
-            .medAktivitetStatus(no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus.ARBEIDSTAKER)
-            .medBeregningsperiode(LocalDate.now(), LocalDate.now().plusMonths(1))
-            .medFordeltPrÅr(Beløp.fra(500000)) // TODO: Endre denne verdien til riktig sum, dette er et tilfeldig tall
-            .build(bgPeriodeOrginal);
+    private BeregningsgrunnlagPeriodeDto byggBGPeriode(BeregningsgrunnlagDto grunnlag) {
+        return BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(BG_PERIODE.getFomDato(), BG_PERIODE.getTomDato()).build(grunnlag);
     }
 }
+

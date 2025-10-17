@@ -70,7 +70,6 @@ class VurderRefusjonDtoTjenesteTest {
         førsteInnsendingAvRefusjonMap.put(ARBEIDSGIVER1, forSentInnsendtRefusjon);
         førsteInnsendingAvRefusjonMap.put(ARBEIDSGIVER2, tidsnokInnsendtRefusjon);
         var input = lagInputMedBeregningsgrunnlagOgIAY(førsteInnsendingAvRefusjonMap);
-        input.leggTilToggle("refusjonsfrist.flytting", true);
 
         var resultat = VurderRefusjonDtoTjeneste.lagRefusjonTilVurderingDto(input);
 
@@ -87,7 +86,6 @@ class VurderRefusjonDtoTjenesteTest {
         Map<Arbeidsgiver, LocalDate> førsteInnsendingAvRefusjonMap = new HashMap<>();
         førsteInnsendingAvRefusjonMap.put(ARBEIDSGIVER1, SKJÆRINGSTIDSPUNKT_TILBAKE_I_TID);
         var input = lagInputMedBeregningsgrunnlagOgIAYOgForrigeGrunnlag(førsteInnsendingAvRefusjonMap);
-        input.leggTilToggle("refusjonsfrist.flytting", true);
 
         var resultat = VurderRefusjonDtoTjeneste.lagRefusjonTilVurderingDto(input);
 
@@ -112,7 +110,6 @@ class VurderRefusjonDtoTjenesteTest {
         Map<Arbeidsgiver, LocalDate> førsteInnsendingAvRefusjonMap = new HashMap<>();
         førsteInnsendingAvRefusjonMap.put(ARBEIDSGIVER1, SKJÆRINGSTIDSPUNKT_TILBAKE_I_TID);
         var input = lagInputMedBeregningsgrunnlagOgIAYOgForrigeGrunnlag(førsteInnsendingAvRefusjonMap, Beløp.fra(500000), Beløp.fra(500000));
-        input.leggTilToggle("refusjonsfrist.flytting", true);
 
         var resultat = VurderRefusjonDtoTjeneste.lagRefusjonTilVurderingDto(input);
 
@@ -152,6 +149,7 @@ class VurderRefusjonDtoTjenesteTest {
         }
         BeregningsgrunnlagPeriodeDto.oppdater(bgPeriode).build();
 
+        input.leggTilToggle("refusjonsfrist.flytting", true);
         return input.medBeregningsgrunnlagGrunnlag(lagBeregningsgrunnlagGrunnlag(aktivitetAggregat, beregningsgrunnlag))
             .medAvklaringsbehov(List.of(avklaringsbehov));
     }
@@ -292,3 +290,5 @@ class VurderRefusjonDtoTjenesteTest {
             .build();
     }
 }
+
+
