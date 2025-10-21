@@ -87,7 +87,7 @@ class VurderRefusjonDtoTjenesteTest {
         }
 
         var input = ferdigstillInput(beregningsgrunnlag, null, aktivitetAggregat, iayGrunnlag,
-            opprett(iayGrunnlag, SKJÆRINGSTIDSPUNKT, førsteInnsendingAvRefusjonMap), null);
+            opprett(iayGrunnlag, SKJÆRINGSTIDSPUNKT, førsteInnsendingAvRefusjonMap), null, BeregningsgrunnlagTilstand.VURDERT_TILKOMMET_INNTEKT_UT);
         input.leggTilToggle("refusjonsfrist.flytting", true);
 
         var resultat = VurderRefusjonDtoTjeneste.lagRefusjonTilVurderingDto(input);
@@ -118,7 +118,8 @@ class VurderRefusjonDtoTjenesteTest {
         lagArbeidsgiverAndelerPåPeriode(forrigeBgPeriode, ARBEIDSGIVER1, REFUSJONSKRAV, 1, BRUTTO, Beløp.ZERO, REFUSJONSKRAV, true);
 
         var input = ferdigstillInput(beregningsgrunnlag, forrigeBeregningsgrunnlag, aktivitetAggregat, iayGrunnlag,
-            opprett(iayGrunnlag, SKJÆRINGSTIDSPUNKT, førsteInnsendingAvRefusjonMap), refusjonOverstyringBuilder);
+            opprett(iayGrunnlag, SKJÆRINGSTIDSPUNKT, førsteInnsendingAvRefusjonMap), refusjonOverstyringBuilder,
+            BeregningsgrunnlagTilstand.VURDERT_TILKOMMET_INNTEKT_UT);
 
         var resultat = VurderRefusjonDtoTjeneste.lagRefusjonTilVurderingDto(input);
 
@@ -156,7 +157,8 @@ class VurderRefusjonDtoTjenesteTest {
         lagArbeidsgiverAndelerPåPeriode(forrigeBgPeriode, ARBEIDSGIVER1, REFUSJONSKRAV, 1, BRUTTO, Beløp.ZERO, REFUSJONSKRAV, true);
 
         var input = ferdigstillInput(beregningsgrunnlag, forrigeBeregningsgrunnlag, aktivitetAggregat, iayGrunnlag,
-            opprett(iayGrunnlag, SKJÆRINGSTIDSPUNKT, førsteInnsendingAvRefusjonMap), refusjonOverstyringBuilder);
+            opprett(iayGrunnlag, SKJÆRINGSTIDSPUNKT, førsteInnsendingAvRefusjonMap), refusjonOverstyringBuilder,
+            BeregningsgrunnlagTilstand.VURDERT_TILKOMMET_INNTEKT_UT);
         var resultat = VurderRefusjonDtoTjeneste.lagRefusjonTilVurderingDto(input);
 
         assertThat(resultat).isPresent();
@@ -178,7 +180,7 @@ class VurderRefusjonDtoTjenesteTest {
         var beregningsgrunnlag = lagBeregningsgrunnlagDto();
         var bgPeriode = lagBGPeriode(beregningsgrunnlag, SKJÆRINGSTIDSPUNKT_TILBAKE_I_TID);
         lagBGAndelHøyRefusjonLavBruttoPåPeriode(bgPeriode, ARBEIDSGIVER1);
-        var input = ferdigstillInput(beregningsgrunnlag, null, null, null, null, null);
+        var input = ferdigstillInput(beregningsgrunnlag, null, null, null, null, null, BeregningsgrunnlagTilstand.VURDERT_REFUSJON);
 
         var resultat = VurderRefusjonDtoTjeneste.lagRefusjonTilVurderingDto(input);
 
@@ -194,7 +196,8 @@ class VurderRefusjonDtoTjenesteTest {
         lagBGAndelHøyRefusjonLavBruttoPåPeriode(bgPeriode, ARBEIDSGIVER1);
         lagBGAndelLavRefusjonHøyBruttoPåPeriode(bgPeriodeForrige, REFUSJONSKRAV, null);
 
-        var input = ferdigstillInput(beregningsgrunnlag, beregningsgrunnlagForrige, null, tomtGrunnlag, null, null);
+        var input = ferdigstillInput(beregningsgrunnlag, beregningsgrunnlagForrige, null, tomtGrunnlag, null, null,
+            BeregningsgrunnlagTilstand.VURDERT_REFUSJON);
 
         var resultat = VurderRefusjonDtoTjeneste.lagRefusjonTilVurderingDto(input);
 
@@ -211,7 +214,8 @@ class VurderRefusjonDtoTjenesteTest {
         var bgPeriodeForrige = lagBGPeriode(beregningsgrunnlagForrige, SKJÆRINGSTIDSPUNKT_TILBAKE_I_TID);
         lagBGAndelHøyRefusjonLavBruttoPåPeriode(bgPeriode, ARBEIDSGIVER1);
         lagBGAndelLavRefusjonHøyBruttoPåPeriode(bgPeriodeForrige, null, REFUSJONSKRAV);
-        var input = ferdigstillInput(beregningsgrunnlag, beregningsgrunnlagForrige, null, tomtGrunnlag, null, null);
+        var input = ferdigstillInput(beregningsgrunnlag, beregningsgrunnlagForrige, null, tomtGrunnlag, null, null,
+            BeregningsgrunnlagTilstand.VURDERT_REFUSJON);
 
         var resultat = VurderRefusjonDtoTjeneste.lagRefusjonTilVurderingDto(input);
 
@@ -228,7 +232,8 @@ class VurderRefusjonDtoTjenesteTest {
         var bgPeriodeForrige = lagBGPeriode(beregningsgrunnlagForrige, SKJÆRINGSTIDSPUNKT_TILBAKE_I_TID);
         lagBGAndelHøyRefusjonLavBruttoPåPeriode(bgPeriode, ARBEIDSGIVER2);
         lagBGAndelLavRefusjonHøyBruttoPåPeriode(bgPeriodeForrige, null, REFUSJONSKRAV);
-        var input = ferdigstillInput(beregningsgrunnlag, beregningsgrunnlagForrige, null, tomtGrunnlag, null, null);
+        var input = ferdigstillInput(beregningsgrunnlag, beregningsgrunnlagForrige, null, tomtGrunnlag, null, null,
+            BeregningsgrunnlagTilstand.VURDERT_REFUSJON);
 
         var resultat = VurderRefusjonDtoTjeneste.lagRefusjonTilVurderingDto(input);
 
@@ -254,7 +259,8 @@ class VurderRefusjonDtoTjenesteTest {
         lagBGAndelHøyRefusjonLavBruttoPåPeriode(bgPeriode, ARBEIDSGIVER1);
         lagBGAndelLavRefusjonHøyBruttoPåPeriode(bgPeriodeForrige, null, REFUSJONSKRAV);
         var refusjonOverstyring = lagRefusjonOverstyringBuilder(ARBEIDSGIVER1, tidligsteRefusjonFom, List.of());
-        var input = ferdigstillInput(beregningsgrunnlag, beregningsgrunnlagForrige, null, tomtGrunnlag, null, refusjonOverstyring);
+        var input = ferdigstillInput(beregningsgrunnlag, beregningsgrunnlagForrige, null, tomtGrunnlag, null, refusjonOverstyring,
+            BeregningsgrunnlagTilstand.VURDERT_REFUSJON);
 
         var resultat = VurderRefusjonDtoTjeneste.lagRefusjonTilVurderingDto(input);
 
@@ -284,7 +290,8 @@ class VurderRefusjonDtoTjenesteTest {
 
         var tidligsteRefusjonFom = BG_PERIODE_FORRIGE.getFomDato().plusMonths(1);
         var refusjonOverstyring = lagRefusjonOverstyringBuilder(ARBEIDSGIVER1, tidligsteRefusjonFom, List.of());
-        var input = ferdigstillInput(beregningsgrunnlag, beregningsgrunnlagForrige, null, tomtGrunnlag, null, refusjonOverstyring);
+        var input = ferdigstillInput(beregningsgrunnlag, beregningsgrunnlagForrige, null, tomtGrunnlag, null, refusjonOverstyring,
+            BeregningsgrunnlagTilstand.VURDERT_REFUSJON);
 
         var resultat = VurderRefusjonDtoTjeneste.lagRefusjonTilVurderingDto(input);
 
@@ -304,7 +311,8 @@ class VurderRefusjonDtoTjenesteTest {
 
         var tidligsteRefusjonFom = SKJÆRINGSTIDSPUNKT_TILBAKE_I_TID.plusMonths(1);
         var refusjonOverstyring = lagRefusjonOverstyringBuilder(ARBEIDSGIVER2, tidligsteRefusjonFom, List.of());
-        var input = ferdigstillInput(beregningsgrunnlag, beregningsgrunnlagForrige, null, tomtGrunnlag, null, refusjonOverstyring);
+        var input = ferdigstillInput(beregningsgrunnlag, beregningsgrunnlagForrige, null, tomtGrunnlag, null, refusjonOverstyring,
+            BeregningsgrunnlagTilstand.VURDERT_REFUSJON);
 
         var resultat = VurderRefusjonDtoTjeneste.lagRefusjonTilVurderingDto(input);
 
@@ -337,11 +345,12 @@ class VurderRefusjonDtoTjenesteTest {
                                                         BeregningAktivitetAggregatDto beregningsgrunnlagAktivitetAggregatDto,
                                                         InntektArbeidYtelseGrunnlagDto iayGrunnlag,
                                                         List<KravperioderPrArbeidsforholdDto> kravperioderPrArbeidsforholdDto,
-                                                        BeregningRefusjonOverstyringerDto.Builder refusjonOverstyringerBuilder) {
+                                                        BeregningRefusjonOverstyringerDto.Builder refusjonOverstyringerBuilder,
+                                                        BeregningsgrunnlagTilstand beregningsgrunnlagTilstand) {
         var beregningsgrunnlagGrunnlag = lagBGGrunnlagDto(beregningsgrunnlag, beregningsgrunnlagAktivitetAggregatDto, refusjonOverstyringerBuilder,
             BeregningsgrunnlagTilstand.VURDERT_REFUSJON);
         var forrigeBeregningsgrunnlagGrunnlag = lagBGGrunnlagDto(beregningsgrunnlagForrige, beregningsgrunnlagAktivitetAggregatDto,
-            refusjonOverstyringerBuilder, BeregningsgrunnlagTilstand.VURDERT_REFUSJON);
+            refusjonOverstyringerBuilder, beregningsgrunnlagTilstand);
 
         return new BeregningsgrunnlagGUIInput(new KoblingReferanseMock(SKJÆRINGSTIDSPUNKT), iayGrunnlag, kravperioderPrArbeidsforholdDto,
             null).medBeregningsgrunnlagGrunnlagFraForrigeBehandling(List.of(forrigeBeregningsgrunnlagGrunnlag))
