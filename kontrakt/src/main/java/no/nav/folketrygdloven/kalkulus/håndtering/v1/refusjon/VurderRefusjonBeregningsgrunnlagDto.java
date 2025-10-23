@@ -7,7 +7,6 @@ import java.util.List;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -25,12 +24,10 @@ public class VurderRefusjonBeregningsgrunnlagDto extends HåndterBeregningDto {
 
     @JsonProperty("fastsatteAndeler")
     @Valid
-    @Size
     private List<VurderRefusjonAndelBeregningsgrunnlagDto> fastsatteAndeler;
 
     @JsonProperty("refusjonskravForSentListe")
     @Valid
-    @Size
     private List<RefusjonskravForSentDto> refusjonskravForSentListe;
 
     public VurderRefusjonBeregningsgrunnlagDto() {
