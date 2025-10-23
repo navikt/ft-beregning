@@ -6,6 +6,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
 import java.util.List;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -21,8 +22,6 @@ import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.Refusj
 @JsonInclude(value = NON_ABSENT, content = NON_EMPTY)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.NONE, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, isGetterVisibility = JsonAutoDetect.Visibility.NONE, creatorVisibility = JsonAutoDetect.Visibility.NONE)
 public class VurderRefusjonBeregningsgrunnlagDto extends HåndterBeregningDto {
-
-    // TODO: Må huske å legge inn en sjekk på at minst en av listene er større enn 0, dette skal gjøres et annet sted
 
     @JsonProperty("fastsatteAndeler")
     @Valid
@@ -50,5 +49,11 @@ public class VurderRefusjonBeregningsgrunnlagDto extends HåndterBeregningDto {
 
     public List<RefusjonskravForSentDto> getRefusjonskravForSentListe() {
         return refusjonskravForSentListe;
+    }
+
+    @AssertTrue(message = "En av 'fastsatteAndeler' eller 'refusjonskravForSentListe' må ha size > 0")
+    public boolean isMinstEnAvListeneIkkeTom() {
+        return (fastsatteAndeler != null && !fastsatteAndeler.isEmpty()) || (refusjonskravForSentListe != null
+            && !refusjonskravForSentListe.isEmpty());
     }
 }

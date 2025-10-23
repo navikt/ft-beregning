@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Objects;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -60,5 +61,10 @@ public class RefusjonTilVurderingDto {
     @Override
     public int hashCode() {
         return Objects.hash(andeler, refusjonskravForSentListe);
+    }
+
+    @AssertTrue(message = "En av 'andeler' eller 'refusjonskravForSentListe' må ha size > 0")
+    public boolean isMinstEnAvListeneIkkeTom() {
+        return (andeler != null && !andeler.isEmpty()) || (refusjonskravForSentListe != null && !refusjonskravForSentListe.isEmpty());
     }
 }
