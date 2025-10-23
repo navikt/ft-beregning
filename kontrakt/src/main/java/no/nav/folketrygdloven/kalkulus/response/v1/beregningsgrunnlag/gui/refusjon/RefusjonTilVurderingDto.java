@@ -8,6 +8,7 @@ import java.util.Objects;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -23,11 +24,13 @@ public class RefusjonTilVurderingDto {
 
     @Valid
     @JsonProperty("andeler")
+    @Size
     @NotNull
     private List<RefusjonAndelTilVurderingDto> andeler;
 
     @Valid
     @JsonProperty("refusjonskravForSentListe")
+    @Size
     @NotNull
     private List<RefusjonskravForSentDto> refusjonskravForSentListe;
 
