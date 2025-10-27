@@ -2,7 +2,6 @@ package no.nav.folketrygdloven.kalkulator.felles.frist;
 
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,12 +64,9 @@ public class ArbeidsgiverRefusjonskravTjeneste {
 
     private static Function<YrkesaktivitetDto, List<PerioderForKravDto>> finnKravForAktivitet(List<KravperioderPrArbeidsforholdDto> kravlistePrArbeidsgiver) {
         return y -> kravlistePrArbeidsgiver.stream()
-                .filter(kravliste -> y.getArbeidsgiver().equals(kravliste.getArbeidsgiver()) && y.getArbeidsforholdRef().gjelderFor(kravliste.getArbeidsforholdRef()))
-                .findFirst()
+                .filter(kravliste -> y.getArbeidsgiver().equals(kravliste.getArbeidsgiver()))
                 .map(KravperioderPrArbeidsforholdDto::finnOverlappMedSisteKrav)
-                .orElse(Collections.emptyList());
+                .flatMap(Collection::stream)
+                .toList();
     }
-
-
-
 }
