@@ -2,10 +2,8 @@ package no.nav.folketrygdloven.kalkulator;
 
 import static no.nav.folketrygdloven.kalkulator.OpprettKravPerioderFraInntektsmeldingerForTest.opprett;
 
-import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagInput;
@@ -22,7 +20,6 @@ import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.Beregningsgru
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseGrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.opptjening.OpptjeningAktiviteterDto;
-import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Dekningsgrad;
 import no.nav.folketrygdloven.utils.Tuple;
@@ -175,18 +172,4 @@ public class BeregningsgrunnlagInputTestUtil {
         return new ForeslåBeregningsgrunnlagInput(new StegProsesseringInput(inputMedBeregningsgrunnlag, BeregningsgrunnlagTilstand.FORESLÅTT))
                 .medGrunnbeløpInput(GrunnbeløpMock.GRUNNBELØPINPUT);
     }
-
-    public static BeregningsgrunnlagInput lagInputMedBeregningsgrunnlagOgIAY(KoblingReferanse koblingReferanse,
-                                                                             BeregningsgrunnlagGrunnlagDtoBuilder beregningsgrunnlagGrunnlagBuilder,
-                                                                             BeregningsgrunnlagTilstand tilstand,
-                                                                             InntektArbeidYtelseGrunnlagDto iayGrunnlag,
-                                                                             Map<Arbeidsgiver, LocalDate> førsteInnsendingAvRefusjonMap) {
-	    var input = new BeregningsgrunnlagInput(koblingReferanse, iayGrunnlag, null,
-                opprett(iayGrunnlag, koblingReferanse.getSkjæringstidspunktBeregning(), førsteInnsendingAvRefusjonMap), null);
-	    var grunnlag = beregningsgrunnlagGrunnlagBuilder.build(tilstand);
-	    var inputMedBeregningsgrunnlag = input.medBeregningsgrunnlagGrunnlag(grunnlag);
-        inputMedBeregningsgrunnlag.leggTilKonfigverdi(INNTEKT_RAPPORTERING_FRIST_DATO, 5);
-        return inputMedBeregningsgrunnlag;
-    }
-
 }
