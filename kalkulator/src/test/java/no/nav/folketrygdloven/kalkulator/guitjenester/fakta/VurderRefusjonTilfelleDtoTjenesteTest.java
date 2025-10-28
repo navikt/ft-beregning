@@ -1,6 +1,6 @@
 package no.nav.folketrygdloven.kalkulator.guitjenester.fakta;
 
-import static no.nav.folketrygdloven.kalkulator.OpprettKravPerioderFraInntektsmeldinger.opprett;
+import static no.nav.folketrygdloven.kalkulator.OpprettKravPerioderFraInntektsmeldingerForTest.opprett;
 import static no.nav.fpsak.tidsserie.LocalDateInterval.TIDENES_ENDE;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 
@@ -42,6 +41,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.FaktaOmBeregningDto;
 
 class VurderRefusjonTilfelleDtoTjenesteTest {
+    // TODO refusjon: Denne filen kan slettes når vi har flyttet aksjonspunktet og kjørt gjennom gamle saker
     private static final String ORGNR = "974760673";
     private static final String ORGNR2 = "915933149";
 
@@ -63,7 +63,7 @@ class VurderRefusjonTilfelleDtoTjenesteTest {
         førsteInnsendingMap.put(arbeidsgiver, SKJÆRINGSTIDSPUNKT.plusMonths(4));
         var im2 = BeregningInntektsmeldingTestUtil.opprettInntektsmelding(ORGNR2, SKJÆRINGSTIDSPUNKT, Beløp.fra(10), Beløp.fra(10));
         førsteInnsendingMap.put(arbeidsgiver2, SKJÆRINGSTIDSPUNKT.plusMonths(2));
-        var grunnlag = byggGrunnlag(aktivitetAggregat, List.of(arbeidsgiver, arbeidsgiver2));
+        var grunnlag = lagBeregningsgrunnlagGrunnlagBuilder(aktivitetAggregat, List.of(arbeidsgiver, arbeidsgiver2));
         var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medData(registerBuilder)
                 .medInntektsmeldinger(List.of(im1, im2)).build();
@@ -78,13 +78,10 @@ class VurderRefusjonTilfelleDtoTjenesteTest {
         assertThat(faktaOmBeregningDto.getRefusjonskravSomKommerForSentListe().iterator().next().getArbeidsgiverIdent()).isEqualTo(arbeidsgiver.getIdentifikator());
     }
 
-    private BeregningsgrunnlagGrunnlagDtoBuilder byggGrunnlag(BeregningAktivitetAggregatDto aktivitetAggregat, List<Arbeidsgiver> arbeidsgivere) {
+    private BeregningsgrunnlagGrunnlagDtoBuilder lagBeregningsgrunnlagGrunnlagBuilder(BeregningAktivitetAggregatDto aktivitetAggregat, List<Arbeidsgiver> arbeidsgivere) {
         return BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medRegisterAktiviteter(aktivitetAggregat)
-                .medBeregningsgrunnlag(lagBeregningsgrunnlag(arbeidsgivere.stream().map(a -> {
-                    var virksomhet = Arbeidsgiver.virksomhet(a.getOrgnr());
-                    return virksomhet;
-                }).collect(Collectors.toList())));
+                .medBeregningsgrunnlag(lagBeregningsgrunnlag(arbeidsgivere.stream().map(a -> Arbeidsgiver.virksomhet(a.getOrgnr())).toList()));
     }
 
     private BeregningsgrunnlagDto lagBeregningsgrunnlag(List<Arbeidsgiver> ags) {

@@ -89,7 +89,7 @@ public class BeregningsgrunnlagDtoTjeneste {
     }
 
     private void mapFaktaOmRefusjon(BeregningsgrunnlagGUIInput input, BeregningsgrunnlagDto dto) {
-        VurderRefusjonDtoTjeneste.lagDto(input).ifPresent(dto::setRefusjonTilVurdering);
+        VurderRefusjonDtoTjeneste.lagRefusjonTilVurderingDto(input).ifPresent(dto::setRefusjonTilVurdering);
     }
 
     private void mapInntektsgrunnlag(BeregningsgrunnlagGUIInput input, BeregningsgrunnlagDto dto) {

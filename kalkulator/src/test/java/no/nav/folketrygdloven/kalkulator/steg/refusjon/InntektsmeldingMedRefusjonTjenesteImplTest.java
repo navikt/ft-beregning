@@ -60,7 +60,7 @@ class InntektsmeldingMedRefusjonTjenesteImplTest {
         var im2 = BeregningInntektsmeldingTestUtil.opprettInntektsmelding(ORGNR, ref2, SKJÆRINGSTIDSPUNKT.plusMonths(1), 1000, 1000);
         førsteInnsendingMap.put(arbeidsgiver, SKJÆRINGSTIDSPUNKT.plusMonths(4));
         var aktivitetAggregat = leggTilAktivitet(registerBuilder, ORGNR, List.of(ref1));
-        var grunnlag = byggGrunnlag(aktivitetAggregat, List.of(arbeidsgiver));
+        var grunnlag = lagBeregningsgrunnlagGrunnlagBuilder(aktivitetAggregat, List.of(arbeidsgiver));
         var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medData(registerBuilder)
                 .medInntektsmeldinger(List.of(im1, im2)).build();
@@ -68,9 +68,7 @@ class InntektsmeldingMedRefusjonTjenesteImplTest {
                 BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER, iayGrunnlag, førsteInnsendingMap);
 
         // Act
-        var arbeidsgivereSomHarSøktForSent = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgiverSomHarSøktRefusjonForSent(
-                koblingReferanse,
-                input.getIayGrunnlag(),
+        var arbeidsgivereSomHarSøktForSent = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgivereSomHarSøktRefusjonForSent(input.getIayGrunnlag(),
                 input.getBeregningsgrunnlagGrunnlag(),
                 input.getKravPrArbeidsgiver(),
                 FagsakYtelseType.FORELDREPENGER);
@@ -92,7 +90,7 @@ class InntektsmeldingMedRefusjonTjenesteImplTest {
         førsteInnsendingMap.put(arbeidsgiver, SKJÆRINGSTIDSPUNKT.plusMonths(4));
         var im2 = BeregningInntektsmeldingTestUtil.opprettInntektsmelding(ORGNR2, SKJÆRINGSTIDSPUNKT, Beløp.fra(10), Beløp.fra(10));
         førsteInnsendingMap.put(arbeidsgiver2, SKJÆRINGSTIDSPUNKT.plusMonths(2));
-        var grunnlag = byggGrunnlag(aktivitetAggregat, List.of(arbeidsgiver, arbeidsgiver2));
+        var grunnlag = lagBeregningsgrunnlagGrunnlagBuilder(aktivitetAggregat, List.of(arbeidsgiver, arbeidsgiver2));
         var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medData(registerBuilder)
                 .medInntektsmeldinger(List.of(im1, im2)).build();
@@ -100,9 +98,7 @@ class InntektsmeldingMedRefusjonTjenesteImplTest {
                 BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER, iayGrunnlag, førsteInnsendingMap);
 
         // Act
-        var arbeidsgivereSomHarSøktForSent = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgiverSomHarSøktRefusjonForSent(
-                koblingReferanse,
-                input.getIayGrunnlag(),
+        var arbeidsgivereSomHarSøktForSent = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgivereSomHarSøktRefusjonForSent(input.getIayGrunnlag(),
                 input.getBeregningsgrunnlagGrunnlag(),
                 input.getKravPrArbeidsgiver(), FagsakYtelseType.FORELDREPENGER);
 
@@ -119,16 +115,14 @@ class InntektsmeldingMedRefusjonTjenesteImplTest {
         var aktivitetAggregat = leggTilAktivitet(registerBuilder, List.of(ORGNR, ORGNR2));
         var arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         var arbeidsgiver2 = Arbeidsgiver.virksomhet(ORGNR2);
-        var grunnlag = byggGrunnlag(aktivitetAggregat, List.of(arbeidsgiver, arbeidsgiver2));
+        var grunnlag = lagBeregningsgrunnlagGrunnlagBuilder(aktivitetAggregat, List.of(arbeidsgiver, arbeidsgiver2));
         var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medData(registerBuilder)
                 .medInntektsmeldinger(List.of()).build();
 
         // Act
         var input = BeregningsgrunnlagInputTestUtil.lagInputMedBeregningsgrunnlagOgIAY(koblingReferanse, grunnlag, BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER, iayGrunnlag);
-        var arbeidsgivereSomHarSøktForSent = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgiverSomHarSøktRefusjonForSent(
-                koblingReferanse,
-                input.getIayGrunnlag(),
+        var arbeidsgivereSomHarSøktForSent = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgivereSomHarSøktRefusjonForSent(input.getIayGrunnlag(),
                 input.getBeregningsgrunnlagGrunnlag(),
                 input.getKravPrArbeidsgiver(),
                 FagsakYtelseType.FORELDREPENGER);
@@ -149,7 +143,7 @@ class InntektsmeldingMedRefusjonTjenesteImplTest {
         førsteInnsendingMap.put(arbeidsgiver, SKJÆRINGSTIDSPUNKT.plusMonths(1));
         var im2 = BeregningInntektsmeldingTestUtil.opprettInntektsmelding(ORGNR2, SKJÆRINGSTIDSPUNKT, Beløp.fra(10), Beløp.fra(10));
         førsteInnsendingMap.put(arbeidsgiver2, SKJÆRINGSTIDSPUNKT.plusMonths(2));
-        var grunnlag = byggGrunnlag(aktivitetAggregat, List.of(arbeidsgiver, arbeidsgiver2));
+        var grunnlag = lagBeregningsgrunnlagGrunnlagBuilder(aktivitetAggregat, List.of(arbeidsgiver, arbeidsgiver2));
         var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medData(registerBuilder)
                 .medInntektsmeldinger(List.of(im1, im2)).build();
@@ -157,9 +151,7 @@ class InntektsmeldingMedRefusjonTjenesteImplTest {
         // Act
         var input = BeregningsgrunnlagInputTestUtil.lagInputMedBeregningsgrunnlagOgIAY(koblingReferanse, grunnlag,
                 BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER, iayGrunnlag, førsteInnsendingMap);
-        var arbeidsgivereSomHarSøktForSent = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgiverSomHarSøktRefusjonForSent(
-                koblingReferanse,
-                input.getIayGrunnlag(),
+        var arbeidsgivereSomHarSøktForSent = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgivereSomHarSøktRefusjonForSent(input.getIayGrunnlag(),
                 input.getBeregningsgrunnlagGrunnlag(),
                 input.getKravPrArbeidsgiver(),
                 FagsakYtelseType.FORELDREPENGER);
@@ -169,7 +161,7 @@ class InntektsmeldingMedRefusjonTjenesteImplTest {
     }
 
 
-    private BeregningsgrunnlagGrunnlagDtoBuilder byggGrunnlag(BeregningAktivitetAggregatDto aktivitetAggregat, List<Arbeidsgiver> arbeidsgivere) {
+    private BeregningsgrunnlagGrunnlagDtoBuilder lagBeregningsgrunnlagGrunnlagBuilder(BeregningAktivitetAggregatDto aktivitetAggregat, List<Arbeidsgiver> arbeidsgivere) {
         return BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medRegisterAktiviteter(aktivitetAggregat)
                 .medBeregningsgrunnlag(lagBeregningsgrunnlag(arbeidsgivere));

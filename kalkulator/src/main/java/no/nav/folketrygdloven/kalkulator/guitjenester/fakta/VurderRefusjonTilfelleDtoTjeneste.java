@@ -12,9 +12,10 @@ import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningRefu
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningRefusjonOverstyringerDto;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FaktaOmBeregningTilfelle;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.FaktaOmBeregningDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.RefusjonskravSomKommerForSentDto;
+import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.RefusjonskravForSentDto;
 
 class VurderRefusjonTilfelleDtoTjeneste {
+    // TODO refusjon: Denne filen kan slettes når vi har flyttet aksjonspunktet og kjørt gjennom gamle saker
 
 	public void lagDto(BeregningsgrunnlagGUIInput input, FaktaOmBeregningDto faktaOmBeregningDto) {
         var beregningsgrunnlag = input.getBeregningsgrunnlag();
@@ -22,25 +23,23 @@ class VurderRefusjonTilfelleDtoTjeneste {
 		if (!tilfeller.contains(FaktaOmBeregningTilfelle.VURDER_REFUSJONSKRAV_SOM_HAR_KOMMET_FOR_SENT)) {
 			return;
 		}
-        var refusjonskravSomKommerForSentList = lagListeMedKravSomKommerForSent(input);
-		faktaOmBeregningDto.setRefusjonskravSomKommerForSentListe(refusjonskravSomKommerForSentList);
+        var refusjonskravForSentListe = lagListeMedRefusjonskravForSent(input);
+		faktaOmBeregningDto.setRefusjonskravSomKommerForSentListe(refusjonskravForSentListe);
 	}
 
-	private List<RefusjonskravSomKommerForSentDto> lagListeMedKravSomKommerForSent(BeregningsgrunnlagGUIInput input) {
+	private List<RefusjonskravForSentDto> lagListeMedRefusjonskravForSent(BeregningsgrunnlagGUIInput input) {
         var refusjonOverstyringer = input.getBeregningsgrunnlagGrunnlag().getRefusjonOverstyringer()
 				.map(BeregningRefusjonOverstyringerDto::getRefusjonOverstyringer)
 				.orElse(Collections.emptyList());
 
-        var arbeidsgivere = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgiverSomHarSøktRefusjonForSent(
-				input.getKoblingReferanse(),
-				input.getIayGrunnlag(),
+        var arbeidsgivere = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgivereSomHarSøktRefusjonForSent(input.getIayGrunnlag(),
 				input.getBeregningsgrunnlagGrunnlag(),
 				input.getKravperioderPrArbeidsgiver(),
 				input.getFagsakYtelseType());
 		return arbeidsgivere
 				.stream()
 				.map(arbeidsgiver -> {
-                    var dto = new RefusjonskravSomKommerForSentDto();
+                    var dto = new RefusjonskravForSentDto();
 					dto.setArbeidsgiverIdent(arbeidsgiver.getIdentifikator());
 					sjekkStatusPåRefusjon(arbeidsgiver.getIdentifikator(), refusjonOverstyringer, input.getSkjæringstidspunktForBeregning()).ifPresent(dto::setErRefusjonskravGyldig);
 					return dto;

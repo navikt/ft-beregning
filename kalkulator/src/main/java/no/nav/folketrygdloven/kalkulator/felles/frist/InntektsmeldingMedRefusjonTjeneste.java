@@ -7,7 +7,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.kalkulator.felles.FinnYrkesaktiviteterForBeregningTjeneste;
-import no.nav.folketrygdloven.kalkulator.modell.behandling.KoblingReferanse;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseGrunnlagDto;
@@ -20,28 +19,24 @@ import no.nav.fpsak.tidsserie.LocalDateTimeline;
 public class InntektsmeldingMedRefusjonTjeneste {
 
     private InntektsmeldingMedRefusjonTjeneste() {
+        // Skjuler default
     }
 
-    public static Set<Arbeidsgiver> finnArbeidsgiverSomHarSøktRefusjonForSent(KoblingReferanse koblingReferanse,
-                                                                       InntektArbeidYtelseGrunnlagDto iayGrunnlag,
-                                                                       BeregningsgrunnlagGrunnlagDto grunnlag,
-                                                                       List<KravperioderPrArbeidsforholdDto> kravperioder,
-                                                                       FagsakYtelseType ytelseType) {
-        var yrkesaktiviteter = FinnYrkesaktiviteterForBeregningTjeneste.finnYrkesaktiviteter(iayGrunnlag, grunnlag, koblingReferanse.getSkjæringstidspunktBeregning());
-        var skjæringstidspunktBeregning = grunnlag.getBeregningsgrunnlagHvisFinnes().map(BeregningsgrunnlagDto::getSkjæringstidspunkt)
-            .orElseThrow(() -> new IllegalStateException("Utviklerfeil: Skal ha beregningsgrunnlag"));
-        var gjeldendeAktiviteter = grunnlag.getGjeldendeAktiviteter();
-        var harSøktForSentMap = ArbeidsgiverRefusjonskravTjeneste.lagFristTidslinjePrArbeidsgiver(
-                yrkesaktiviteter,
-                kravperioder,
-                gjeldendeAktiviteter,
-                skjæringstidspunktBeregning,
-                Optional.empty(),
-                ytelseType);
-        return finnArbeidsgivereSomHarSøktForSent(harSøktForSentMap);
+    public static Set<Arbeidsgiver> finnArbeidsgivereSomHarSøktRefusjonForSent(InntektArbeidYtelseGrunnlagDto iayGrunnlag,
+                                                                               BeregningsgrunnlagGrunnlagDto beregningsgrunnlagGrunnlag,
+                                                                               List<KravperioderPrArbeidsforholdDto> kravperioder,
+                                                                               FagsakYtelseType ytelseType) {
+        var skjæringstidspunktBeregning = beregningsgrunnlagGrunnlag.getBeregningsgrunnlagHvisFinnes()
+                .map(BeregningsgrunnlagDto::getSkjæringstidspunkt)
+                .orElseThrow(() -> new IllegalStateException("Utviklerfeil: Skal ha beregningsgrunnlag"));
+        var yrkesaktiviteter = FinnYrkesaktiviteterForBeregningTjeneste.finnYrkesaktiviteter(iayGrunnlag, beregningsgrunnlagGrunnlag, skjæringstidspunktBeregning);
+
+        var harSøktForSentMap = ArbeidsgiverRefusjonskravTjeneste.lagFristTidslinjePrArbeidsgiver(yrkesaktiviteter, kravperioder,
+                beregningsgrunnlagGrunnlag.getGjeldendeAktiviteter(), skjæringstidspunktBeregning, Optional.empty(), ytelseType);
+        return finnArbeidsgivereMedUnderkjentPeriode(harSøktForSentMap);
     }
 
-    private static Set<Arbeidsgiver> finnArbeidsgivereSomHarSøktForSent(Map<Arbeidsgiver, LocalDateTimeline<KravOgUtfall>> tidslinjeMap) {
+    private static Set<Arbeidsgiver> finnArbeidsgivereMedUnderkjentPeriode(Map<Arbeidsgiver, LocalDateTimeline<KravOgUtfall>> tidslinjeMap) {
         return tidslinjeMap.entrySet().stream()
                 .filter(e -> harMinstEnUnderkjentPeriode(e.getValue()))
                 .map(Map.Entry::getKey)
@@ -51,5 +46,4 @@ public class InntektsmeldingMedRefusjonTjeneste {
     private static boolean harMinstEnUnderkjentPeriode(LocalDateTimeline<KravOgUtfall> utfallTidslinje) {
         return utfallTidslinje.stream().anyMatch(s -> s.getValue().utfall().equals(Utfall.UNDERKJENT));
     }
-
 }

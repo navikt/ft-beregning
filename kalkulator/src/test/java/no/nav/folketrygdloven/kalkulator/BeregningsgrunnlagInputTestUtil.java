@@ -1,6 +1,6 @@
 package no.nav.folketrygdloven.kalkulator;
 
-import static no.nav.folketrygdloven.kalkulator.OpprettKravPerioderFraInntektsmeldinger.opprett;
+import static no.nav.folketrygdloven.kalkulator.OpprettKravPerioderFraInntektsmeldingerForTest.opprett;
 
 import java.time.LocalDate;
 import java.util.Collections;

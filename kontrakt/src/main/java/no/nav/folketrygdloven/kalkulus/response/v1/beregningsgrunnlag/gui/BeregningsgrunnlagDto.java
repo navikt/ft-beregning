@@ -100,6 +100,11 @@ public class BeregningsgrunnlagDto {
     @Valid
     private RefusjonTilVurderingDto refusjonTilVurdering;
 
+    @Valid
+    @JsonProperty(value = "refusjonskravSomKommerForSentListe")
+    @Size
+    private List<RefusjonskravForSentDto> refusjonskravSomKommerForSentListe;
+
     @JsonProperty(value = "erOverstyrtInntekt")
     @NotNull
     @Valid
@@ -134,6 +139,7 @@ public class BeregningsgrunnlagDto {
         this.halvG = beregningsgrunnlagDto.halvG;
         this.hjemmel = beregningsgrunnlagDto.hjemmel;
         this.refusjonTilVurdering = beregningsgrunnlagDto.refusjonTilVurdering;
+        this.refusjonskravSomKommerForSentListe = beregningsgrunnlagDto.refusjonskravSomKommerForSentListe;
         this.sammenligningsgrunnlagPrStatus = beregningsgrunnlagDto.sammenligningsgrunnlagPrStatus;
         this.skjaeringstidspunktBeregning = beregningsgrunnlagDto.skjaeringstidspunktBeregning;
         this.skjæringstidspunkt = beregningsgrunnlagDto.skjæringstidspunkt;
@@ -270,6 +276,14 @@ public class BeregningsgrunnlagDto {
 
     public void setRefusjonTilVurdering(RefusjonTilVurderingDto refusjonTilVurdering) {
         this.refusjonTilVurdering = refusjonTilVurdering;
+    }
+
+    public List<RefusjonskravForSentDto> getRefusjonskravSomKommerForSentListe() {
+        return refusjonskravSomKommerForSentListe;
+    }
+
+    public void setRefusjonskravSomKommerForSentListe(List<RefusjonskravForSentDto> refusjonskravSomKommerForSentListe) {
+        this.refusjonskravSomKommerForSentListe = refusjonskravSomKommerForSentListe;
     }
 
     public InntektsgrunnlagDto getInntektsgrunnlag() {

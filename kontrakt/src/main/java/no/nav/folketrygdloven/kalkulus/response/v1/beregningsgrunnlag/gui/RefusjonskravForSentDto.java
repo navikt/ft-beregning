@@ -14,7 +14,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(value = JsonInclude.Include.NON_ABSENT, content = JsonInclude.Include.NON_EMPTY)
 @JsonAutoDetect(fieldVisibility = NONE, getterVisibility = NONE, setterVisibility = NONE, isGetterVisibility = NONE, creatorVisibility = NONE)
-public class RefusjonskravSomKommerForSentDto {
+public class RefusjonskravForSentDto {
+
+    // TODO Refusjon: Flytte denne til refusjon-mappa
+    // TODO Refusjon: Når denne skal puttes inn i den andre dto-en så må vi sjekke om all annotasjonen er riktig
 
     @Valid
     @JsonProperty(value = "arbeidsgiverIdent")

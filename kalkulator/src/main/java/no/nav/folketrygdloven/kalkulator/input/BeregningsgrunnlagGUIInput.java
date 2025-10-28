@@ -66,6 +66,7 @@ public class BeregningsgrunnlagGUIInput {
         this.ytelsespesifiktGrunnlag = ytelsespesifiktGrunnlag;
     }
 
+    // TODO: Legge til avklaringsbehov i konstruktør
     private BeregningsgrunnlagGUIInput(BeregningsgrunnlagGUIInput input) {
         this(input.getKoblingReferanse(), input.getIayGrunnlag(),
                 input.getKravperioderPrArbeidsgiver(), input.getYtelsespesifiktGrunnlag());

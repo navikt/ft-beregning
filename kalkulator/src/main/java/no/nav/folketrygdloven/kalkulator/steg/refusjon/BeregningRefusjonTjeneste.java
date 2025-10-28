@@ -35,25 +35,25 @@ public final class BeregningRefusjonTjeneste {
     }
 
     /**
-     * @param revurderingBeregningsgrunnlag - nytt beregningsgrunnlag
-     * @param originaltBeregningsgrunnlag   - beregningsgrunnlag fra forrige behandling
+     * @param beregningsgrunnlag - nytt beregningsgrunnlag
+     * @param forrigeGrunnlag   - beregningsgrunnlag fra forrige behandling
      * @param alleredeUtbetaltTOM           - datoen ytelse er utbetalt til, det er kun relevant å se på perioder frem til denne datoen
      * @param ytelsespesifiktGrunnlag
      * @return - Ser på revurderingBeregningsgrunnlag og sjekker hvilke andeler i hvilke perioder
      * frem til alleredeUtbetaltTOM som har hatt økt refusjon i forhold til originaltBeregningsgrunnlag
      */
-    public static Map<Intervall, List<RefusjonAndel>> finnUtbetaltePerioderMedAndelerMedØktRefusjon(BeregningsgrunnlagDto revurderingBeregningsgrunnlag,
-                                                                                                    BeregningsgrunnlagDto originaltBeregningsgrunnlag,
+    public static Map<Intervall, List<RefusjonAndel>> finnUtbetaltePerioderMedAndelerMedØktRefusjon(BeregningsgrunnlagDto beregningsgrunnlag,
+                                                                                                    BeregningsgrunnlagDto forrigeGrunnlag,
                                                                                                     LocalDate alleredeUtbetaltTOM,
                                                                                                     Beløp grenseverdi,
                                                                                                     YtelsespesifiktGrunnlag ytelsespesifiktGrunnlag) {
-        if (alleredeUtbetaltTOM.isBefore(revurderingBeregningsgrunnlag.getSkjæringstidspunkt())) {
+        if (alleredeUtbetaltTOM.isBefore(beregningsgrunnlag.getSkjæringstidspunkt())) {
             return Collections.emptyMap();
         }
 	    var alleredeUtbetaltPeriode = finnAlleredeUtbetaltPeriode(alleredeUtbetaltTOM);
-	    var originalUtbetaltTidslinje = RefusjonTidslinjeTjeneste.lagTidslinje(originaltBeregningsgrunnlag, true, ytelsespesifiktGrunnlag).intersection(alleredeUtbetaltPeriode);
-	    var revurderingTidslinje = RefusjonTidslinjeTjeneste.lagTidslinje(revurderingBeregningsgrunnlag, false, ytelsespesifiktGrunnlag);
-	    var endringTidslinje = RefusjonTidslinjeTjeneste.kombinerTidslinjer(originalUtbetaltTidslinje, revurderingTidslinje);
+	    var forrigeUtbetaltTidslinje = RefusjonTidslinjeTjeneste.lagTidslinje(forrigeGrunnlag, true, ytelsespesifiktGrunnlag).intersection(alleredeUtbetaltPeriode);
+	    var utbetaltTidslinje = RefusjonTidslinjeTjeneste.lagTidslinje(beregningsgrunnlag, false, ytelsespesifiktGrunnlag);
+	    var endringTidslinje = RefusjonTidslinjeTjeneste.kombinerTidslinjer(forrigeUtbetaltTidslinje, utbetaltTidslinje);
         var helgekomprimertTidslinje = komprimerForHelg(endringTidslinje);
         return vurderPerioder(helgekomprimertTidslinje, grenseverdi);
     }
@@ -90,27 +90,27 @@ public final class BeregningRefusjonTjeneste {
 
     private static List<RefusjonAndel> finnAndelerMedØktRefusjon(RefusjonPeriodeEndring refusjonsendring) {
 	    var revurderingAndeler = refusjonsendring.getRevurderingAndelerMap();
-	    var originaleAndelMap = refusjonsendring.getOriginaleAndelerMap();
+	    var forrigeAndeler = refusjonsendring.getForrigeAndelerMap();
         List<RefusjonAndel> andelerMedØktRefusjon = new ArrayList<>();
-        revurderingAndeler.forEach((nøkkel, andeler) -> andelerMedØktRefusjon.addAll(sjekkOmAndelerPåSammeNøkkelHarØktRefusjon(originaleAndelMap, nøkkel, andeler)));
+        revurderingAndeler.forEach((nøkkel, andeler) -> andelerMedØktRefusjon.addAll(sjekkOmAndelerPåSammeNøkkelHarØktRefusjon(forrigeAndeler, nøkkel, andeler)));
         return andelerMedØktRefusjon;
     }
 
-    private static List<RefusjonAndel> sjekkOmAndelerPåSammeNøkkelHarØktRefusjon(Map<RefusjonAndelNøkkel, List<RefusjonAndel>> originalAndelMap, RefusjonAndelNøkkel nøkkel, List<RefusjonAndel> revurderingAndeler) {
-	    var originaleAndelerPåNøkkel = originalAndelMap.getOrDefault(nøkkel, Collections.emptyList());
+    private static List<RefusjonAndel> sjekkOmAndelerPåSammeNøkkelHarØktRefusjon(Map<RefusjonAndelNøkkel, List<RefusjonAndel>> forrigeAndeler, RefusjonAndelNøkkel nøkkel, List<RefusjonAndel> revurderingAndeler) {
+	    var forrigeAndelerPåNøkkel = forrigeAndeler.getOrDefault(nøkkel, Collections.emptyList());
 
         // Tilkommet arbeidsgiver
         var totalRefusjonRevurdering = totalRefusjon(revurderingAndeler);
-        if (nøkkel.getAktivitetStatus().erArbeidstaker() && originaleAndelerPåNøkkel.isEmpty()) {
+        if (nøkkel.getAktivitetStatus().erArbeidstaker() && forrigeAndelerPåNøkkel.isEmpty()) {
             if (totalRefusjonRevurdering.compareTo(Beløp.ZERO) > 0) {
                 return revurderingAndeler;
             }
         }
 
-        var totalRefusjonOriginal = totalRefusjon(originaleAndelerPåNøkkel);
-	    var refusjonINøkkelHarØkt = totalRefusjonRevurdering.compareTo(totalRefusjonOriginal) > 0;
+        var totalRefusjonForrige = totalRefusjon(forrigeAndelerPåNøkkel);
+	    var refusjonINøkkelHarØkt = totalRefusjonRevurdering.compareTo(totalRefusjonForrige) > 0;
         if (refusjonINøkkelHarØkt) {
-            return FinnAndelerMedØktRefusjonTjeneste.finnAndelerPåSammeNøkkelMedØktRefusjon(revurderingAndeler, originaleAndelerPåNøkkel);
+            return FinnAndelerMedØktRefusjonTjeneste.finnAndelerPåSammeNøkkelMedØktRefusjon(revurderingAndeler, forrigeAndelerPåNøkkel);
         }
 
         return Collections.emptyList();
@@ -125,11 +125,11 @@ public final class BeregningRefusjonTjeneste {
     }
 
     private static boolean erMindreAndelTilgjengeligForBruker(RefusjonPeriodeEndring refusjonsendring, Beløp grenseverdi) {
-        var originalBrutto = refusjonsendring.getOriginalBrutto().min(grenseverdi);
-        var revurderingBrutto = refusjonsendring.getRevurderingBrutto().min(grenseverdi);
-        var originalAndelTilBruker = originalBrutto.subtraher(refusjonsendring.getOriginalRefusjon()).max(Beløp.ZERO);
-	    var revurderingAndelTilBruker = revurderingBrutto.subtraher(refusjonsendring.getRevurderingRefusjon()).max(Beløp.ZERO);
-        return revurderingAndelTilBruker.compareTo(originalAndelTilBruker) < 0;
+        var forrigeBrutto = refusjonsendring.getBruttoForForrigeAndeler().min(grenseverdi);
+        var revurderingBrutto = refusjonsendring.getBruttoForAndeler().min(grenseverdi);
+        var forrigeAndelTilBruker = forrigeBrutto.subtraher(refusjonsendring.getRefusjonForForrigeAndeler()).max(Beløp.ZERO);
+	    var revurderingAndelTilBruker = revurderingBrutto.subtraher(refusjonsendring.getRefusjonForAndeler()).max(Beløp.ZERO);
+        return revurderingAndelTilBruker.compareTo(forrigeAndelTilBruker) < 0;
     }
 
 }

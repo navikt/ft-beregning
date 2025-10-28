@@ -74,20 +74,21 @@ public class FaktaOmBeregningDto {
     @JsonProperty(value = "vurderMilitaer")
     private VurderMilitærDto vurderMilitaer;
 
+    // TODO refusjon: Dette feltet kan slettes når vi har flyttet aksjonspunktet og kjørt gjennom gamle saker
     @Valid
     @JsonProperty(value = "refusjonskravSomKommerForSentListe")
     @Size
-    private List<RefusjonskravSomKommerForSentDto> refusjonskravSomKommerForSentListe;
+    private List<RefusjonskravForSentDto> refusjonskravSomKommerForSentListe;
 
     public FaktaOmBeregningDto() {
         // Hibernate
     }
 
-    public List<RefusjonskravSomKommerForSentDto> getRefusjonskravSomKommerForSentListe() {
+    public List<RefusjonskravForSentDto> getRefusjonskravSomKommerForSentListe() {
         return refusjonskravSomKommerForSentListe;
     }
 
-    public void setRefusjonskravSomKommerForSentListe(List<RefusjonskravSomKommerForSentDto> refusjonskravSomKommerForSentListe) {
+    public void setRefusjonskravSomKommerForSentListe(List<RefusjonskravForSentDto> refusjonskravSomKommerForSentListe) {
         this.refusjonskravSomKommerForSentListe = refusjonskravSomKommerForSentListe;
     }
 
