@@ -35,8 +35,12 @@ public class OpprettKravPerioderFraInntektsmeldingerForTest {
                     .stream()
                     .map(im -> lagPerioderForKrav(im, skjæringstidspunktBeregning, skjæringstidspunktBeregning))
                     .toList();
-                var perioder = refusjonPerioder.stream().map(PerioderForKravDto::getPerioder).flatMap(Collection::stream).toList();
-                return new KravperioderPrArbeidsforholdDto(entry.getKey(), refusjonPerioder, perioder.stream().map(RefusjonsperiodeDto::periode).collect(Collectors.toList()));
+                var perioder = refusjonPerioder.stream()
+                    .map(PerioderForKravDto::getPerioder)
+                    .flatMap(Collection::stream)
+                    .map(RefusjonsperiodeDto::periode)
+                    .toList();
+                return new KravperioderPrArbeidsforholdDto(entry.getKey(), refusjonPerioder, perioder);
             }).toList();
     }
 
@@ -47,15 +51,6 @@ public class OpprettKravPerioderFraInntektsmeldingerForTest {
             .stream()
             .collect(Collectors.groupingBy(InntektsmeldingDto::getArbeidsgiver));
         return agImMap;
-    }
-
-    private static void lagNyEllerLeggTilEksisterende(List<KravperioderPrArbeidsforholdDto> perioderPrArbeidsgiver, InntektsmeldingDto im, PerioderForKravDto perioderForKravDto) {
-        var eksisterende = perioderPrArbeidsgiver.stream().filter(k -> k.getArbeidsgiver().getIdentifikator().equals(im.getArbeidsgiver().getIdentifikator()))
-                .findFirst();
-        eksisterende.ifPresentOrElse(e -> e.getPerioder().add(perioderForKravDto),
-                () -> perioderPrArbeidsgiver.add(new KravperioderPrArbeidsforholdDto(im.getArbeidsgiver(),
-                        List.of(perioderForKravDto),
-                        perioderForKravDto.getPerioder().stream().map(RefusjonsperiodeDto::periode).collect(Collectors.toList()))));
     }
 
     private static PerioderForKravDto lagPerioderForKrav(InntektsmeldingDto im, LocalDate innsendingsdato, LocalDate skjæringstidspunktBeregning) {
