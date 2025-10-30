@@ -2,7 +2,6 @@ package no.nav.folketrygdloven.kalkulator.modell.iay;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
 import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
@@ -74,6 +73,6 @@ public class KravperioderPrArbeidsforholdDto {
                 .map(p -> p.finnKravMedOverlappMedSisteSøkte(søktePerioderTimeline))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .collect(Collectors.toList());
+                .toList();
     }
 }

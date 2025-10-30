@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseGrunnlagDto;
+import no.nav.folketrygdloven.kalkulator.modell.iay.InntektsmeldingAggregatDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektsmeldingDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.KravperioderPrArbeidsforholdDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.PerioderForKravDto;
@@ -23,8 +24,7 @@ import no.nav.fpsak.tidsserie.LocalDateTimeline;
 public class OpprettKravPerioderFraInntektsmeldingerForTest {
 
     public static List<KravperioderPrArbeidsforholdDto> opprett(InntektArbeidYtelseGrunnlagDto iayGrunnlag, LocalDate skjæringstidspunktBeregning) {
-        var perioderPrArbeidsgiver = lagKravperioderPrArbeidsforhold(iayGrunnlag, skjæringstidspunktBeregning);
-        return perioderPrArbeidsgiver;
+        return lagKravperioderPrArbeidsforhold(iayGrunnlag, skjæringstidspunktBeregning);
     }
 
     private static List<KravperioderPrArbeidsforholdDto> lagKravperioderPrArbeidsforhold(InntektArbeidYtelseGrunnlagDto iayGrunnlag, LocalDate skjæringstidspunktBeregning) {
@@ -45,17 +45,15 @@ public class OpprettKravPerioderFraInntektsmeldingerForTest {
     }
 
     private static Map<Arbeidsgiver, List<InntektsmeldingDto>> getArbeidsgiverImMap(InntektArbeidYtelseGrunnlagDto iayGrunnlag) {
-        var agImMap = iayGrunnlag.getInntektsmeldinger()
-            .map(i -> i.getAlleInntektsmeldinger())
+        return iayGrunnlag.getInntektsmeldinger()
+            .map(InntektsmeldingAggregatDto::getAlleInntektsmeldinger)
             .orElse(List.of())
             .stream()
             .collect(Collectors.groupingBy(InntektsmeldingDto::getArbeidsgiver));
-        return agImMap;
     }
 
     private static PerioderForKravDto lagPerioderForKrav(InntektsmeldingDto im, LocalDate innsendingsdato, LocalDate skjæringstidspunktBeregning) {
-        var perioderForKravDto = new PerioderForKravDto(innsendingsdato, lagPerioder(im, skjæringstidspunktBeregning));
-        return perioderForKravDto;
+        return new PerioderForKravDto(innsendingsdato, lagPerioder(im, skjæringstidspunktBeregning));
     }
 
     private static List<RefusjonsperiodeDto> lagPerioder(InntektsmeldingDto im, LocalDate skjæringstidspunktBeregning) {
@@ -67,7 +65,7 @@ public class OpprettKravPerioderFraInntektsmeldingerForTest {
 
         alleSegmenter.addAll(im.getEndringerRefusjon().stream().map(e ->
                 new LocalDateSegment<>(e.getFom(), TIDENES_ENDE, e.getRefusjonsbeløp())
-        ).collect(Collectors.toList()));
+        ).toList());
 
         var refusjonTidslinje = new LocalDateTimeline<>(alleSegmenter, (interval, lhs, rhs) -> {
             if (lhs.getFom().isBefore(rhs.getFom())) {
@@ -78,7 +76,7 @@ public class OpprettKravPerioderFraInntektsmeldingerForTest {
 
         return refusjonTidslinje.stream()
                 .map(r -> new RefusjonsperiodeDto(Intervall.fraOgMedTilOgMed(r.getFom(), r.getTom()), r.getValue()))
-                .collect(Collectors.toList());
+                .toList();
 
     }
 
@@ -92,7 +90,7 @@ public class OpprettKravPerioderFraInntektsmeldingerForTest {
                     .map(im -> lagPerioderForKrav(im, førsteInnsendingsdatoMap.get(entry.getKey()), skjæringstidspunktBeregning))
                     .toList();
                 var perioder = refusjonPerioder.stream().map(PerioderForKravDto::getPerioder).flatMap(Collection::stream).toList();
-                return new KravperioderPrArbeidsforholdDto(entry.getKey(), refusjonPerioder, perioder.stream().map(RefusjonsperiodeDto::periode).collect(Collectors.toList()));
+                return new KravperioderPrArbeidsforholdDto(entry.getKey(), refusjonPerioder, perioder.stream().map(RefusjonsperiodeDto::periode).toList());
             }).toList();
     }
 }
