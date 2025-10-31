@@ -4,17 +4,14 @@ import static no.nav.fpsak.tidsserie.LocalDateInterval.TIDENES_ENDE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
-import no.nav.folketrygdloven.kalkulator.BeregningsgrunnlagInputTestUtil;
-import no.nav.folketrygdloven.kalkulator.KoblingReferanseMock;
 import no.nav.folketrygdloven.kalkulator.felles.frist.InntektsmeldingMedRefusjonTjeneste;
-import no.nav.folketrygdloven.kalkulator.modell.behandling.KoblingReferanse;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BGAndelArbeidsforholdDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningAktivitetAggregatDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningAktivitetDto;
@@ -26,18 +23,24 @@ import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.Beregningsgru
 import no.nav.folketrygdloven.kalkulator.modell.iay.AktivitetsAvtaleDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseAggregatBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseGrunnlagDtoBuilder;
+import no.nav.folketrygdloven.kalkulator.modell.iay.InntektsmeldingDto;
+import no.nav.folketrygdloven.kalkulator.modell.iay.InntektsmeldingDtoBuilder;
+import no.nav.folketrygdloven.kalkulator.modell.iay.KravperioderPrArbeidsforholdDto;
+import no.nav.folketrygdloven.kalkulator.modell.iay.PerioderForKravDto;
+import no.nav.folketrygdloven.kalkulator.modell.iay.RefusjonsperiodeDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.VersjonTypeDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YrkesaktivitetDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
-import no.nav.folketrygdloven.kalkulator.testutilities.BeregningInntektsmeldingTestUtil;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.ArbeidType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
+import no.nav.fpsak.tidsserie.LocalDateSegment;
+import no.nav.fpsak.tidsserie.LocalDateTimeline;
 
 class InntektsmeldingMedRefusjonTjenesteImplTest {
     private static final String ORGNR = "974760673";
@@ -45,32 +48,25 @@ class InntektsmeldingMedRefusjonTjenesteImplTest {
 
     private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.now();
 
-    private KoblingReferanse koblingReferanse = new KoblingReferanseMock(SKJÆRINGSTIDSPUNKT);
-
     @Test
     void skal_finne_arbeidsgiver_som_har_søkt_for_sent_med_flere_arbeidsforhold_et_som_tilkommer_etter_skjæringstidspunktet() {
         // Arrange
-        Map<Arbeidsgiver, LocalDate> førsteInnsendingMap = new HashMap<>();
         var registerBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
         var arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
-        var ref1 = InternArbeidsforholdRefDto.nyRef();
-        var im1 = BeregningInntektsmeldingTestUtil.opprettInntektsmelding(ORGNR, ref1, SKJÆRINGSTIDSPUNKT, 1000, 1000);
-        førsteInnsendingMap.put(arbeidsgiver, SKJÆRINGSTIDSPUNKT.plusMonths(4));
-        var ref2 = InternArbeidsforholdRefDto.nyRef();
-        var im2 = BeregningInntektsmeldingTestUtil.opprettInntektsmelding(ORGNR, ref2, SKJÆRINGSTIDSPUNKT.plusMonths(1), 1000, 1000);
-        førsteInnsendingMap.put(arbeidsgiver, SKJÆRINGSTIDSPUNKT.plusMonths(4));
-        var aktivitetAggregat = leggTilAktivitet(registerBuilder, ORGNR, List.of(ref1));
-        var grunnlag = lagBeregningsgrunnlagGrunnlagBuilder(aktivitetAggregat, List.of(arbeidsgiver));
+        var im1 = byggIM(arbeidsgiver, 1000, SKJÆRINGSTIDSPUNKT, 1000);
+        var im2 = byggIM(arbeidsgiver, 1000, SKJÆRINGSTIDSPUNKT.plusMonths(1), 1000);
+        var aktivitetAggregat = leggTilAktivitet(registerBuilder, ORGNR, List.of(im1.getArbeidsforholdRef()));
+        var grunnlag = byggGrunnlag(aktivitetAggregat, List.of(arbeidsgiver));
         var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medData(registerBuilder)
                 .medInntektsmeldinger(List.of(im1, im2)).build();
-        var input = BeregningsgrunnlagInputTestUtil.lagInputMedBeregningsgrunnlagOgIAY(koblingReferanse, grunnlag,
-                BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER, iayGrunnlag, førsteInnsendingMap);
+        var kravperioder = lagKravperioder(Map.of(arbeidsgiver, List.of(im1, im2)), Map.of(arbeidsgiver, SKJÆRINGSTIDSPUNKT.plusMonths(4)), SKJÆRINGSTIDSPUNKT);
 
         // Act
-        var arbeidsgivereSomHarSøktForSent = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgivereSomHarSøktRefusjonForSent(input.getIayGrunnlag(),
-                input.getBeregningsgrunnlagGrunnlag(),
-                input.getKravPrArbeidsgiver(),
+        var arbeidsgivereSomHarSøktForSent = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgivereSomHarSøktRefusjonForSent(
+                iayGrunnlag,
+                grunnlag.build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER),
+                kravperioder,
                 FagsakYtelseType.FORELDREPENGER);
 
         // Assert
@@ -81,26 +77,24 @@ class InntektsmeldingMedRefusjonTjenesteImplTest {
     @Test
     void skal_finne_arbeidsgivere_som_har_søkt_for_sent() {
         // Arrange
-        Map<Arbeidsgiver, LocalDate> førsteInnsendingMap = new HashMap<>();
         var registerBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
         var aktivitetAggregat = leggTilAktivitet(registerBuilder, List.of(ORGNR, ORGNR2));
         var arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         var arbeidsgiver2 = Arbeidsgiver.virksomhet(ORGNR2);
-        var im1 = BeregningInntektsmeldingTestUtil.opprettInntektsmelding(ORGNR, SKJÆRINGSTIDSPUNKT, Beløp.fra(10), Beløp.fra(10));
-        førsteInnsendingMap.put(arbeidsgiver, SKJÆRINGSTIDSPUNKT.plusMonths(4));
-        var im2 = BeregningInntektsmeldingTestUtil.opprettInntektsmelding(ORGNR2, SKJÆRINGSTIDSPUNKT, Beløp.fra(10), Beløp.fra(10));
-        førsteInnsendingMap.put(arbeidsgiver2, SKJÆRINGSTIDSPUNKT.plusMonths(2));
-        var grunnlag = lagBeregningsgrunnlagGrunnlagBuilder(aktivitetAggregat, List.of(arbeidsgiver, arbeidsgiver2));
+        var grunnlag = byggGrunnlag(aktivitetAggregat, List.of(arbeidsgiver, arbeidsgiver2));
+        var im1 = byggIM(arbeidsgiver, 10, SKJÆRINGSTIDSPUNKT, 10);
+        var im2 = byggIM(arbeidsgiver2, 10, SKJÆRINGSTIDSPUNKT, 10);
         var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medData(registerBuilder)
                 .medInntektsmeldinger(List.of(im1, im2)).build();
-        var input = BeregningsgrunnlagInputTestUtil.lagInputMedBeregningsgrunnlagOgIAY(koblingReferanse, grunnlag,
-                BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER, iayGrunnlag, førsteInnsendingMap);
+        var kravperioder = lagKravperioder(Map.of(arbeidsgiver, List.of(im1), arbeidsgiver2, List.of(im2)), Map.of(arbeidsgiver, SKJÆRINGSTIDSPUNKT.plusMonths(4), arbeidsgiver2, SKJÆRINGSTIDSPUNKT.plusMonths(2)), SKJÆRINGSTIDSPUNKT);
 
         // Act
-        var arbeidsgivereSomHarSøktForSent = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgivereSomHarSøktRefusjonForSent(input.getIayGrunnlag(),
-                input.getBeregningsgrunnlagGrunnlag(),
-                input.getKravPrArbeidsgiver(), FagsakYtelseType.FORELDREPENGER);
+        var arbeidsgivereSomHarSøktForSent = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgivereSomHarSøktRefusjonForSent(
+                iayGrunnlag,
+                grunnlag.build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER),
+                kravperioder,
+                FagsakYtelseType.FORELDREPENGER);
 
         // Assert
         assertThat(arbeidsgivereSomHarSøktForSent).hasSize(1);
@@ -115,16 +109,17 @@ class InntektsmeldingMedRefusjonTjenesteImplTest {
         var aktivitetAggregat = leggTilAktivitet(registerBuilder, List.of(ORGNR, ORGNR2));
         var arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         var arbeidsgiver2 = Arbeidsgiver.virksomhet(ORGNR2);
-        var grunnlag = lagBeregningsgrunnlagGrunnlagBuilder(aktivitetAggregat, List.of(arbeidsgiver, arbeidsgiver2));
+        var grunnlag = byggGrunnlag(aktivitetAggregat, List.of(arbeidsgiver, arbeidsgiver2));
         var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medData(registerBuilder)
                 .medInntektsmeldinger(List.of()).build();
+        var kravperioder = lagKravperioder(Map.of(arbeidsgiver, List.of(), arbeidsgiver2, List.of()), Map.of(), SKJÆRINGSTIDSPUNKT);
 
         // Act
-        var input = BeregningsgrunnlagInputTestUtil.lagInputMedBeregningsgrunnlagOgIAY(koblingReferanse, grunnlag, BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER, iayGrunnlag);
-        var arbeidsgivereSomHarSøktForSent = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgivereSomHarSøktRefusjonForSent(input.getIayGrunnlag(),
-                input.getBeregningsgrunnlagGrunnlag(),
-                input.getKravPrArbeidsgiver(),
+        var arbeidsgivereSomHarSøktForSent = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgivereSomHarSøktRefusjonForSent(
+                iayGrunnlag,
+                grunnlag.build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER),
+                kravperioder,
                 FagsakYtelseType.FORELDREPENGER);
 
         // Assert
@@ -134,34 +129,55 @@ class InntektsmeldingMedRefusjonTjenesteImplTest {
     @Test
     void skal_returnere_tomt_set_om_ingen_inntektsmeldinger_er_mottatt_for_sent() {
         // Arrange
-        Map<Arbeidsgiver, LocalDate> førsteInnsendingMap = new HashMap<>();
         var registerBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
         var aktivitetAggregat = leggTilAktivitet(registerBuilder, List.of(ORGNR, ORGNR2));
         var arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         var arbeidsgiver2 = Arbeidsgiver.virksomhet(ORGNR2);
-        var im1 = BeregningInntektsmeldingTestUtil.opprettInntektsmelding(ORGNR, SKJÆRINGSTIDSPUNKT, Beløp.fra(10), Beløp.fra(10));
-        førsteInnsendingMap.put(arbeidsgiver, SKJÆRINGSTIDSPUNKT.plusMonths(1));
-        var im2 = BeregningInntektsmeldingTestUtil.opprettInntektsmelding(ORGNR2, SKJÆRINGSTIDSPUNKT, Beløp.fra(10), Beløp.fra(10));
-        førsteInnsendingMap.put(arbeidsgiver2, SKJÆRINGSTIDSPUNKT.plusMonths(2));
-        var grunnlag = lagBeregningsgrunnlagGrunnlagBuilder(aktivitetAggregat, List.of(arbeidsgiver, arbeidsgiver2));
+        var im1 = byggIM(arbeidsgiver, 10, SKJÆRINGSTIDSPUNKT, 10);
+        var im2 = byggIM(arbeidsgiver2, 10, SKJÆRINGSTIDSPUNKT, 10);
+        var grunnlag = byggGrunnlag(aktivitetAggregat, List.of(arbeidsgiver, arbeidsgiver2));
         var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medData(registerBuilder)
                 .medInntektsmeldinger(List.of(im1, im2)).build();
+        var kravperioder = lagKravperioder(Map.of(arbeidsgiver, List.of(im1), arbeidsgiver2, List.of(im2)), Map.of(arbeidsgiver, SKJÆRINGSTIDSPUNKT.plusMonths(1), arbeidsgiver2, SKJÆRINGSTIDSPUNKT.plusMonths(2)), SKJÆRINGSTIDSPUNKT);
 
         // Act
-        var input = BeregningsgrunnlagInputTestUtil.lagInputMedBeregningsgrunnlagOgIAY(koblingReferanse, grunnlag,
-                BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER, iayGrunnlag, førsteInnsendingMap);
-        var arbeidsgivereSomHarSøktForSent = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgivereSomHarSøktRefusjonForSent(input.getIayGrunnlag(),
-                input.getBeregningsgrunnlagGrunnlag(),
-                input.getKravPrArbeidsgiver(),
+        var arbeidsgivereSomHarSøktForSent = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgivereSomHarSøktRefusjonForSent(
+                iayGrunnlag,
+                grunnlag.build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER),
+                kravperioder,
                 FagsakYtelseType.FORELDREPENGER);
 
         // Assert
         assertThat(arbeidsgivereSomHarSøktForSent).isEmpty();
     }
 
+    @Test
+    void skal_bruke_tidligere_im_selv_om_den_har_ulik_id() {
+        // Arrange
+        var registerBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
+        var aktivitetAggregat = leggTilAktivitet(registerBuilder, List.of(ORGNR));
+        var arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
+        var im1 = byggIM(arbeidsgiver, 10, SKJÆRINGSTIDSPUNKT, 10);
+        var im2 = byggIM(arbeidsgiver, 10, SKJÆRINGSTIDSPUNKT, 10);
+        var grunnlag = byggGrunnlag(aktivitetAggregat, List.of(arbeidsgiver, arbeidsgiver));
+        var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.oppdatere(Optional.empty())
+            .medData(registerBuilder)
+            .medInntektsmeldinger(List.of(im1, im2)).build();
+        var kravperioder = lagKravperioder(Map.of(arbeidsgiver, List.of(im1, im2)), Map.of(arbeidsgiver, SKJÆRINGSTIDSPUNKT.minusMonths(3)), SKJÆRINGSTIDSPUNKT);
 
-    private BeregningsgrunnlagGrunnlagDtoBuilder lagBeregningsgrunnlagGrunnlagBuilder(BeregningAktivitetAggregatDto aktivitetAggregat, List<Arbeidsgiver> arbeidsgivere) {
+        // Act
+        var arbeidsgivereSomHarSøktForSent = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgivereSomHarSøktRefusjonForSent(
+            iayGrunnlag,
+            grunnlag.build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER),
+            kravperioder,
+            FagsakYtelseType.FORELDREPENGER);
+
+        // Assert
+        assertThat(arbeidsgivereSomHarSøktForSent).isEmpty();
+    }
+
+    private BeregningsgrunnlagGrunnlagDtoBuilder byggGrunnlag(BeregningAktivitetAggregatDto aktivitetAggregat, List<Arbeidsgiver> arbeidsgivere) {
         return BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medRegisterAktiviteter(aktivitetAggregat)
                 .medBeregningsgrunnlag(lagBeregningsgrunnlag(arbeidsgivere));
@@ -231,4 +247,55 @@ class InntektsmeldingMedRefusjonTjenesteImplTest {
         return arbeidsgiver;
     }
 
+
+
+    private List<KravperioderPrArbeidsforholdDto> lagKravperioder(Map<Arbeidsgiver, List<InntektsmeldingDto>> agMap, Map<Arbeidsgiver, LocalDate> førsteInnsendingMap, LocalDate stp) {
+        return agMap.entrySet().stream()
+            .map(entry -> {
+                var refusjonPerioder = entry.getValue()
+                    .stream()
+                    .map(im -> lagPerioderForKrav(im, førsteInnsendingMap.get(entry.getKey()), stp))
+                    .toList();
+                var perioder = refusjonPerioder.stream().map(PerioderForKravDto::getPerioder).flatMap(List::stream).toList();
+                return new KravperioderPrArbeidsforholdDto(entry.getKey(), refusjonPerioder, perioder.stream().map(RefusjonsperiodeDto::periode).toList());
+            }).toList();
+    }
+
+    private static PerioderForKravDto lagPerioderForKrav(InntektsmeldingDto im, LocalDate innsendingsdato, LocalDate skjæringstidspunktBeregning) {
+        return new PerioderForKravDto(innsendingsdato, lagPerioder(im, skjæringstidspunktBeregning));
+    }
+
+    private static List<RefusjonsperiodeDto> lagPerioder(InntektsmeldingDto im, LocalDate skjæringstidspunktBeregning) {
+        var alleSegmenter = new ArrayList<LocalDateSegment<Beløp>>();
+        if (!(im.getRefusjonBeløpPerMnd() == null || im.getRefusjonBeløpPerMnd().erNullEller0())) {
+            alleSegmenter.add(new LocalDateSegment<>(skjæringstidspunktBeregning,
+                TIDENES_ENDE, im.getRefusjonBeløpPerMnd()));
+        }
+
+        alleSegmenter.addAll(im.getEndringerRefusjon().stream().map(e ->
+            new LocalDateSegment<>(e.getFom(), TIDENES_ENDE, e.getRefusjonsbeløp())
+        ).toList());
+
+        var refusjonTidslinje = new LocalDateTimeline<>(alleSegmenter, (interval, lhs, rhs) -> {
+            if (lhs.getFom().isBefore(rhs.getFom())) {
+                return new LocalDateSegment<>(interval, rhs.getValue());
+            }
+            return new LocalDateSegment<>(interval, lhs.getValue());
+        });
+
+        return refusjonTidslinje.stream()
+            .map(r -> new RefusjonsperiodeDto(Intervall.fraOgMedTilOgMed(r.getFom(), r.getTom()), r.getValue()))
+            .toList();
+
+    }
+
+    private InntektsmeldingDto byggIM(Arbeidsgiver ag, Integer inntekt, LocalDate startdato, Integer refusjon) {
+        return InntektsmeldingDtoBuilder.builder()
+            .medRefusjon(Beløp.fra(refusjon))
+            .medBeløp(Beløp.fra(inntekt))
+            .medStartDatoPermisjon(startdato)
+            .medArbeidsgiver(ag)
+            .medArbeidsforholdId(InternArbeidsforholdRefDto.nyRef())
+            .build();
+    }
 }

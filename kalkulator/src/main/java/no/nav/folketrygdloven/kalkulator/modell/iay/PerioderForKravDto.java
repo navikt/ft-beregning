@@ -3,7 +3,6 @@ package no.nav.folketrygdloven.kalkulator.modell.iay;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
@@ -30,7 +29,7 @@ public class PerioderForKravDto {
         return perioder;
     }
 
-    public Optional<PerioderForKravDto> finnKravMedOverlappMedSisteSøkte(LocalDateTimeline<Boolean> søktePerioderTimeline) {
+    public Optional<PerioderForKravDto> finnKravMedOverlappMedSisteSøkte(LocalDateTimeline<Object> søktePerioderTimeline) {
         var periodeTimeline = finnKravperioderTidslinje();
         var overlapp = søktePerioderTimeline.intersection(periodeTimeline, StandardCombinators::rightOnly);
         if (overlapp.isEmpty()) {
@@ -43,9 +42,8 @@ public class PerioderForKravDto {
     private LocalDateTimeline<Beløp> finnKravperioderTidslinje() {
         var periodeSegmenter = perioder.stream()
                 .map(p -> new LocalDateSegment<>(p.periode().getFomDato(), p.periode().getTomDato(), p.beløp()))
-                .collect(Collectors.toList());
-        var periodeTimeline = new LocalDateTimeline<Beløp>(periodeSegmenter);
-        return periodeTimeline;
+                .toList();
+        return new LocalDateTimeline<>(periodeSegmenter);
     }
 
     private PerioderForKravDto lagMedOverlapp(LocalDateTimeline<Beløp> overlapp) {
@@ -55,7 +53,7 @@ public class PerioderForKravDto {
     private List<RefusjonsperiodeDto> finnPerioderFraTidslinje(LocalDateTimeline<Beløp> overlapp) {
         return overlapp.stream()
                 .map(p -> new RefusjonsperiodeDto(Intervall.fraOgMedTilOgMed(p.getFom(), p.getTom()), p.getValue()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
 }

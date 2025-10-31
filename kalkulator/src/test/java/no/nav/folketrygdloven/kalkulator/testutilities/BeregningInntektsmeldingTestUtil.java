@@ -40,20 +40,16 @@ public class BeregningInntektsmeldingTestUtil {
     }
 
     public static InntektsmeldingDto opprettInntektsmelding(String orgnr, InternArbeidsforholdRefDto arbId, LocalDate skjæringstidspunktOpptjening,
-                                                            Integer refusjon) { // NOSONAR - brukes bare
-                                                                                                                                       // til test
+                                                            Integer refusjon) {
+        // NOSONAR - brukes bare til test
         var refusjonEllerNull = refusjon != null ? Beløp.fra(refusjon) : null;
         return opprettInntektsmelding(orgnr, arbId, skjæringstidspunktOpptjening, refusjonEllerNull, Beløp.fra(10), TIDENES_ENDE,
             Collections.emptyList(), Collections.emptyList());
     }
 
     public static InntektsmeldingDto opprettInntektsmelding(String orgnr, InternArbeidsforholdRefDto arbId, LocalDate skjæringstidspunktOpptjening,
-                                                            Integer refusjon, Integer inntekt) { // NOSONAR
-                                                                                                                                                        // -
-                                                                                                                                                        // brukes
-                                                                                                                                                        // bare
-                                                                                                                                                        // til
-                                                                                                                                                        // test
+                                                            Integer refusjon, Integer inntekt) {
+        // brukes bare til test
         var refusjonEllerNull = refusjon != null ? Beløp.fra(refusjon) : null;
         return opprettInntektsmelding(orgnr, arbId, skjæringstidspunktOpptjening, refusjonEllerNull, Beløp.fra(inntekt),
             TIDENES_ENDE, Collections.emptyList(), Collections.emptyList());
