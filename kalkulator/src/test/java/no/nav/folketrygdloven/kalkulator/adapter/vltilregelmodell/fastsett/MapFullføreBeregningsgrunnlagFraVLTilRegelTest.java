@@ -35,7 +35,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.FaktaOmBeregningTilfelle;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 import no.nav.folketrygdloven.kalkulus.kodeverk.UttakArbeidType;
 
-public class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
+class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
 
 	private MapFullføreBeregningsgrunnlagFraVLTilRegel mapFullføreBeregningsgrunnlagFraVLTilRegel =
 			new MapFullføreBeregningsgrunnlagFraVLTilRegel();
@@ -53,7 +53,7 @@ public class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
 
 
 	@Test
-	public void aktivitetsgrad_skal_mappes_riktig_for_forskjellig_sn_status() {
+	void aktivitetsgrad_skal_mappes_riktig_for_forskjellig_sn_status() {
 		// Arrange
         var input = lagBeregningsgrunnlagInput(delvisAktivPeriode, aktivitetBortfaltPeriode, aktivitetEtterSøknadPeriode)
 				.medBeregningsgrunnlagGrunnlag(lagBeregningsgrunnlagDto());
