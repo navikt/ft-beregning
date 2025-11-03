@@ -10,4 +10,6 @@ public enum RelatertYtelseType {
     PÅRØRENDESYKDOM,
     ARBEIDSAVKLARINGSPENGER,
     DAGPENGER,
+    OMSORGSPENGER,
+    OPPLÆRINGSPENGER,
 }
