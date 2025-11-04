@@ -21,6 +21,7 @@ public class FaktaBeregningLagreDto {
     private FastsettEtterlønnSluttpakkeDto fastsettEtterlønnSluttpakke;
     private MottarYtelseDto mottarYtelse;
     private VurderMilitærDto vurderMilitaer;
+    //Todo denne må flyttes til VurderRefusjonBeregningsgrunnlagDto
     private List<RefusjonskravPrArbeidsgiverVurderingDto> refusjonskravGyldighet;
 
     public FaktaBeregningLagreDto(VurderNyoppstartetFLDto vurderNyoppstartetFL,

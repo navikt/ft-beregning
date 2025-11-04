@@ -1,6 +1,7 @@
 package no.nav.folketrygdloven.kalkulator.avklaringsbehov.dto;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 public class VurderRefusjonAndelBeregningsgrunnlagDto {
 
@@ -9,7 +10,11 @@ public class VurderRefusjonAndelBeregningsgrunnlagDto {
     private String internArbeidsforholdRef;
     private LocalDate fastsattRefusjonFom;
     private Integer delvisRefusjonBeløpPrMnd;
+    private Boolean erFristUtvidet;
 
+    public VurderRefusjonAndelBeregningsgrunnlagDto() {
+        // for builder
+    }
 
     public VurderRefusjonAndelBeregningsgrunnlagDto(String arbeidsgiverOrgnr,
                                                     String arbeidsgiverAktørId,
@@ -49,6 +54,10 @@ public class VurderRefusjonAndelBeregningsgrunnlagDto {
         return delvisRefusjonBeløpPrMnd;
     }
 
+    public Optional<Boolean> getErFristUtvidet() {
+        return Optional.ofNullable(erFristUtvidet);
+    }
+
     @Override
     public String toString() {
         return "VurderRefusjonAndelBeregningsgrunnlagDto{" +
@@ -57,6 +66,7 @@ public class VurderRefusjonAndelBeregningsgrunnlagDto {
                 ", internArbeidsforholdRef='" + internArbeidsforholdRef + '\'' +
                 ", fastsattRefusjonFom=" + fastsattRefusjonFom +
                 ", delvisRefusjonBeløpPrMnd=" + delvisRefusjonBeløpPrMnd +
+                ", erFristUtvidet=" + erFristUtvidet +
                 '}';
     }
 
@@ -70,5 +80,4 @@ public class VurderRefusjonAndelBeregningsgrunnlagDto {
         }
         return "*".repeat(length - 3) + arbeidsgiverOrgnr.substring(length - 3);
     }
-
 }
