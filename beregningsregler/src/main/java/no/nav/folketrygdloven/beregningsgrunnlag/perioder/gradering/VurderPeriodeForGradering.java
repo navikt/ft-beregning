@@ -49,7 +49,7 @@ class VurderPeriodeForGradering {
 			return true;
 		}
 
-        if (!harRefusjonPåDato && ErTotaltRefusjonskravStørreEnnBrutto.vurder(input.getPeriodisertBruttoBeregningsgrunnlagList(), dato)) {
+        if (!harRefusjonPåDato && ErTotaltRefusjonskravStørreEnnEllerLikBrutto.vurder(input.getPeriodisertBruttoBeregningsgrunnlagList(), dato)) {
             return true;
         }
 

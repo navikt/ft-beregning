@@ -2,16 +2,15 @@ package no.nav.folketrygdloven.beregningsgrunnlag.perioder.gradering;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.BruttoBeregningsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.PeriodisertBruttoBeregningsgrunnlag;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.gradering.PeriodeModellGradering;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
-class ErTotaltRefusjonskravStørreEnnBrutto {
+class ErTotaltRefusjonskravStørreEnnEllerLikBrutto {
 
-    private ErTotaltRefusjonskravStørreEnnBrutto() {
+    private ErTotaltRefusjonskravStørreEnnEllerLikBrutto() {
         // skjul public constructor
     }
 
