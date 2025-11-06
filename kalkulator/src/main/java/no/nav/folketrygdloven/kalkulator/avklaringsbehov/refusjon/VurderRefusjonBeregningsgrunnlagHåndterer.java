@@ -24,7 +24,8 @@ public class VurderRefusjonBeregningsgrunnlagHåndterer {
 
             // Todo Utled nytt beregningsgrunnlag basert på refusjonsoverstyringene - work in progress
             //trenger vi å utlede på nytt om aksjonspunkt ikke har oppstått?
-//             var beregningsgrunnlagJustertForVurdertRefusjonsfrist = PeriodiserOgFastsettRefusjonTjenesteNy.justerBeregnigsgrunnlagForVurdertRefusjonsfrist(input, dto.getAndeler(), refusjonOverstyringer);
+            var beregningsgrunnlagJustertForVurdertRefusjonsfrist = PeriodiserOgFastsettRefusjonTjenesteNy.justerBeregnigsgrunnlagForVurdertRefusjonsfrist(
+                beregningsgrunnlag, dto.getAndeler());
 
             // Periodiser og fastsett refusjon på eksisterende beregningsgrunnlag basert på data fra overstyringsobjekter
             periodisertPåFastsattRefusjon = PeriodiserOgFastsettRefusjonTjenesteNy.periodiserOgFastsett(beregningsgrunnlag, dto.getAndeler());

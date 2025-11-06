@@ -34,6 +34,16 @@ public class VurderRefusjonAndelBeregningsgrunnlagDto {
         this.delvisRefusjonBeløpPrMnd = delvisRefusjonBeløpPrMnd;
     }
 
+    public VurderRefusjonAndelBeregningsgrunnlagDto(String arbeidsgiverOrgnr,
+                                                    String arbeidsgiverAktørId,
+                                                    String internArbeidsforholdRef,
+                                                    LocalDate fastsattRefusjonFom,
+                                                    Integer delvisRefusjonBeløpPrMnd,
+                                                    Boolean erFristUtvidet) {
+        this(arbeidsgiverOrgnr, arbeidsgiverAktørId, internArbeidsforholdRef, fastsattRefusjonFom, delvisRefusjonBeløpPrMnd);
+        this.erFristUtvidet = erFristUtvidet;
+    }
+
     public String getArbeidsgiverOrgnr() {
         return arbeidsgiverOrgnr;
     }

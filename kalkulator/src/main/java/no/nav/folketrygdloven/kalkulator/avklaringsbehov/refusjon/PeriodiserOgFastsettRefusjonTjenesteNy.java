@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -22,6 +23,7 @@ import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.Beregningsgru
 import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
+import no.nav.folketrygdloven.kalkulator.modell.typer.Refusjon;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.PeriodeÅrsak;
 import no.nav.folketrygdloven.kalkulus.typer.AktørId;
@@ -64,24 +66,47 @@ public final class PeriodiserOgFastsettRefusjonTjenesteNy {
         return periodisertBeregningsgrunnlagMedFastsattRefusjon;
     }
 
-//    public static BeregningsgrunnlagDto justerBeregnigsgrunnlagForVurdertRefusjonsfrist(BeregningsgrunnlagInput input, List<VurderRefusjonAndelBeregningsgrunnlagDto> refusjonAndeler, BeregningRefusjonOverstyringerDto refusjonOverstyringer) {
-//
-//        var iayGrunnlag = input.getIayGrunnlag();
-//        var gjeldendeAktiviteter = input.getBeregningsgrunnlagGrunnlag().getGjeldendeAktiviteter();
-//        var filter = new YrkesaktivitetFilterDto(iayGrunnlag.getArbeidsforholdInformasjon(), iayGrunnlag.getAktørArbeidFraRegister());
-//        var fristvurdertTidslinjePrArbeidsgiver = ArbeidsgiverRefusjonskravTjeneste.lagFristTidslinjePrArbeidsgiver(
-//            filter.getYrkesaktiviteterForBeregning(),
-//            input.getKravPrArbeidsgiver(),
-//            gjeldendeAktiviteter,
-//            input.getSkjæringstidspunktForBeregning(),
-//            Optional.of(refusjonOverstyringer),
-//            input.getFagsakYtelseType());
-//        var utfallMap =  fristvurdertTidslinjePrArbeidsgiver.entrySet().stream()
-//            .map(e -> new HashMap.SimpleEntry<>(mapArbeidsgiver(e.getKey()), mapTilUtfallTidslinje(e.getValue())))
-//            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-//
-//        return null;
-//    }
+    public static BeregningsgrunnlagDto justerBeregnigsgrunnlagForVurdertRefusjonsfrist(BeregningsgrunnlagDto beregningsgrunnlag,
+                                                                                        List<VurderRefusjonAndelBeregningsgrunnlagDto> refusjonAndeler) {
+
+        var refusjonAndelerMedUtvidetFrist = refusjonAndeler.stream()
+            .filter(andel -> andel.getErFristUtvidet().filter(a -> a.equals(Boolean.TRUE)).isPresent())
+            .toList();
+
+        refusjonAndelerMedUtvidetFrist.forEach(refusjonAndel -> {
+            var matchendeArbeidsforhold = beregningsgrunnlag.getBeregningsgrunnlagPerioder()
+                .stream()
+                .flatMap(periode -> periode.getBeregningsgrunnlagPrStatusOgAndelList().stream())
+                .map(BeregningsgrunnlagPrStatusOgAndelDto::getBgAndelArbeidsforhold)
+                .flatMap(Optional::stream)
+                .filter(arbeidsforhold -> Objects.equals(arbeidsforhold.getArbeidsforholdOrgnr(), refusjonAndel.getArbeidsgiverOrgnr()))
+                .toList();
+
+            if (matchendeArbeidsforhold.isEmpty()) {
+                throw new IllegalStateException("Fant ingen arbeidsforhold med orgnr: " + refusjonAndel.getArbeidsgiverOrgnr());
+            }
+
+            matchendeArbeidsforhold.stream()
+                .filter(PeriodiserOgFastsettRefusjonTjenesteNy::harUnderkjentRefusjon)
+                .forEach(PeriodiserOgFastsettRefusjonTjenesteNy::oppdaterRefusjonTilGodkjent);
+        });
+        return beregningsgrunnlag;
+    }
+
+    private static boolean harUnderkjentRefusjon(BGAndelArbeidsforholdDto arbeidsforhold) {
+        return arbeidsforhold.getRefusjon()
+            .map(Refusjon::getRefusjonskravFristUtfall)
+            .filter(no.nav.folketrygdloven.kalkulus.kodeverk.Utfall.UNDERKJENT::equals)
+            .isPresent();
+    }
+
+    private static void oppdaterRefusjonTilGodkjent(BGAndelArbeidsforholdDto arbeidsforhold) {
+        var refusjon = arbeidsforhold.getRefusjon().orElseThrow();
+        var godkjentRefusjon = new Refusjon(refusjon.getRefusjonskravPrÅr(), refusjon.getSaksbehandletRefusjonPrÅr(),
+            refusjon.getFordeltRefusjonPrÅr(), refusjon.getManueltFordeltRefusjonPrÅr(), refusjon.getHjemmelForRefusjonskravfrist(),
+            no.nav.folketrygdloven.kalkulus.kodeverk.Utfall.GODKJENT);
+        BGAndelArbeidsforholdDto.Builder.oppdater(Optional.of(arbeidsforhold)).medRefusjon(godkjentRefusjon);
+    }
 
 //    private static LocalDateTimeline<Utfall> mapTilUtfallTidslinje(LocalDateTimeline<KravOgUtfall> kravOgUtfallTidslinje) {
 //        var utfallSegmenter = kravOgUtfallTidslinje.stream().map(s -> new LocalDateSegment<>(
