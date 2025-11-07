@@ -15,23 +15,18 @@ public class VurderRefusjonBeregningsgrunnlagHåndterer {
     }
 
     public static BeregningsgrunnlagGrunnlagDto håndter(VurderRefusjonBeregningsgrunnlagDto dto, BeregningsgrunnlagInput input) {
-        // Lag overstyringsobjekter
         BeregningRefusjonOverstyringerDto refusjonOverstyringer;
         BeregningsgrunnlagDto periodisertPåFastsattRefusjon;
         var beregningsgrunnlag = input.getBeregningsgrunnlagGrunnlag().getBeregningsgrunnlagHvisFinnes().orElseThrow();
         if (input.isEnabled("refusjonsfrist.flytting", false)) {
             refusjonOverstyringer = MapTilRefusjonOverstyringNy.map(dto, input);
-
-            // Todo Utled nytt beregningsgrunnlag basert på refusjonsoverstyringene - work in progress
-            //trenger vi å utlede på nytt om aksjonspunkt ikke har oppstått?
-            var beregningsgrunnlagJustertForVurdertRefusjonsfrist = PeriodiserOgFastsettRefusjonTjenesteNy.justerBeregnigsgrunnlagForVurdertRefusjonsfrist(
-                beregningsgrunnlag, dto.getAndeler());
-
-            // Periodiser og fastsett refusjon på eksisterende beregningsgrunnlag basert på data fra overstyringsobjekter
-            periodisertPåFastsattRefusjon = PeriodiserOgFastsettRefusjonTjenesteNy.periodiserOgFastsett(beregningsgrunnlag, dto.getAndeler());
+            var justertBeregningsgrunnlag = VurderRefusjonUtfallTjeneste.justerBeregningsgrunnlagForVurdertRefusjonsfrist(beregningsgrunnlag,
+                dto.getAndeler());
+            // Periodiser og fastsett refusjon på eksisterende beregningsgrunnlag for vurderte refusjonandeler
+            periodisertPåFastsattRefusjon = PeriodiserOgFastsettRefusjonTjeneste.periodiserOgFastsett(justertBeregningsgrunnlag, dto.getAndeler());
         } else {
             refusjonOverstyringer = MapTilRefusjonOverstyring.map(dto, input);
-            // Periodiser og fastsett refusjon på eksisterende beregningsgrunnlag basert på data fra overstyringsobjekter
+            // Periodiser og fastsett refusjon på eksisterende beregningsgrunnlag for vurderte refusjonandeler
             periodisertPåFastsattRefusjon = PeriodiserOgFastsettRefusjonTjeneste.periodiserOgFastsett(beregningsgrunnlag, dto.getAndeler());
         }
         // Lag nytt aggregat og sett korrekt tilstand
