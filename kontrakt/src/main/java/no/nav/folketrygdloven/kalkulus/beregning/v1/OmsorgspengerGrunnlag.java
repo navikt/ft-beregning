@@ -21,7 +21,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class OmsorgspengerGrunnlag extends YtelsespesifiktGrunnlagDto {
 
     @JsonProperty(value = "utbetalingsgradPrAktivitet", required = true)
-    @Size(min = 1)
     @Valid
     private List<UtbetalingsgradPrAktivitetDto> utbetalingsgradPrAktivitet;
 
