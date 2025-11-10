@@ -34,15 +34,15 @@ public final class MapTilRefusjonOverstyringNy {
     }
 
     private static List<BeregningRefusjonOverstyringDto> lagListeMedRefusjonOverstyringer(Map<Arbeidsgiver, List<VurderRefusjonAndelBeregningsgrunnlagDto>> vurderingerSortertPåAG, LocalDate skjæringstidspunkt) {
-        List<BeregningRefusjonOverstyringDto> liste = new ArrayList<>();
+        List<BeregningRefusjonOverstyringDto> refusjonOverstyringer = new ArrayList<>();
 
         for (var entry : vurderingerSortertPåAG.entrySet()) {
             var ag = entry.getKey();
             var nyRefusjonOverstyring = lagNyOverstyringMedRefusjonskravVurdering(ag, entry.getValue(), skjæringstidspunkt);
             nyRefusjonOverstyring.getFørsteMuligeRefusjonFom().ifPresent(dato-> validerStartdato(dato, entry.getValue()));
-            liste.add(nyRefusjonOverstyring);
+            refusjonOverstyringer.add(nyRefusjonOverstyring);
         }
-        return liste;
+        return refusjonOverstyringer;
     }
 
     private static void validerStartdato(LocalDate tidligsteStartdato, List<VurderRefusjonAndelBeregningsgrunnlagDto> fastsatteAndeler) {

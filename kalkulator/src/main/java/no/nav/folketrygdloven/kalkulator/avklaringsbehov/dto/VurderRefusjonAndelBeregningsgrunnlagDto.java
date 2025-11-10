@@ -8,16 +8,12 @@ import java.util.Optional;
 
 public class VurderRefusjonAndelBeregningsgrunnlagDto {
 
-    private String arbeidsgiverOrgnr;
-    private String arbeidsgiverAktørId;
-    private String internArbeidsforholdRef;
-    private LocalDate fastsattRefusjonFom;
-    private Integer delvisRefusjonBeløpPrMnd;
+    private final String arbeidsgiverOrgnr;
+    private final String arbeidsgiverAktørId;
+    private final String internArbeidsforholdRef;
+    private final LocalDate fastsattRefusjonFom;
+    private final Integer delvisRefusjonBeløpPrMnd;
     private Boolean erFristUtvidet;
-
-    public VurderRefusjonAndelBeregningsgrunnlagDto() {
-        // for builder
-    }
 
     public VurderRefusjonAndelBeregningsgrunnlagDto(String arbeidsgiverOrgnr,
                                                     String arbeidsgiverAktørId,
