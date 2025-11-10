@@ -15,7 +15,6 @@ import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningRefu
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningRefusjonPeriodeDto;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
 import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
-import no.nav.folketrygdloven.kalkulus.typer.AktørId;
 
 public final class MapTilRefusjonOverstyringNy {
 
@@ -25,7 +24,6 @@ public final class MapTilRefusjonOverstyringNy {
 
     public static BeregningRefusjonOverstyringerDto map(VurderRefusjonBeregningsgrunnlagDto dto, LocalDate skjæringstidspunkt) {
         var nyttRefusjonAggregat = BeregningRefusjonOverstyringerDto.builder();
-        // TODO: Undersøk om vi trenger Map. Kan det finnes flere andeler per arbeidsgiver?
         var vurderingerSortertPåAG = dto.getAndeler().stream()
             .collect(Collectors.groupingBy(VurderRefusjonAndelBeregningsgrunnlagDto::getArbeidsgiver));
 
