@@ -12,7 +12,6 @@ public record RefusjonSplittAndel(
     Arbeidsgiver arbeidsgiver,
     InternArbeidsforholdRefDto internArbeidsforholdRefDto,
     LocalDate startdatoRefusjon,
-    //todo hvofor heter det delvisRefusjonBeløpPrÅr? Er det ikke hele det er snakk om?
     Beløp delvisRefusjonBeløpPrÅr
 ) {
     public InternArbeidsforholdRefDto getInternArbeidsforholdRefDto() {
