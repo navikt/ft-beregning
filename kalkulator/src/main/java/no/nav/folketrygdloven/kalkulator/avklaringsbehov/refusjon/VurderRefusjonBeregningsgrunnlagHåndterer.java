@@ -22,7 +22,6 @@ public class VurderRefusjonBeregningsgrunnlagHåndterer {
         BeregningsgrunnlagDto oppdatertGrunnlag;
         var beregningsgrunnlag = input.getBeregningsgrunnlagGrunnlag().getBeregningsgrunnlagHvisFinnes().orElseThrow();
         if (input.isEnabled("refusjonsfrist.flytting", false)) {
-            // TODO: Vurder å sende inn refusjonsfristAndeler til map i stedet for dto
             refusjonOverstyringer = MapTilRefusjonOverstyringNy.map(dto, input.getSkjæringstidspunktForBeregning());
             var refusjonsfristAndeler = getAndelerMedVurdertRefusjonsfrist(dto);
             var justertGrunnlag = refusjonsfristAndeler.isEmpty() ? beregningsgrunnlag : VurderRefusjonUtfallTjeneste.justerBeregningsgrunnlagForVurdertRefusjonsfrist(
