@@ -87,14 +87,13 @@ class VurderRefusjonUtfallTjenesteTest {
     }
 
     @Test
-    void skal_endre_refusjon_fra_godkjent_til_underkjent_når_erFristUtvidet_endres_fra_true_til_false() {
+    void skal_kaste_exception_ved_ingen_underkjente_perioder_når_erFristUtvidet_endres_fra_true_til_false() {
         lagArbeidsgiverAndelerPåPeriode(bgPeriode, ARBEIDSGIVER1, godkjentRefusjon, 1);
         var refusjonAndeler = List.of(lagVurderRefusjonAndel(ARBEIDSGIVER1, Boolean.FALSE));
 
-        var justertBeregningsgrunnlag = VurderRefusjonUtfallTjeneste.justerBeregningsgrunnlagForVurdertRefusjonsfrist(beregningsgrunnlag, refusjonAndeler);
-        var refusjonAg = getRefusjonForAg(justertBeregningsgrunnlag, ARBEIDSGIVER1);
-        assertThat(refusjonAg).hasSize(1);
-        assertThat(refusjonAg.getFirst().getRefusjonskravFristUtfall()).isEqualTo(Utfall.UNDERKJENT);
+        var feilmelding = assertThrows(IllegalStateException.class,
+            () -> VurderRefusjonUtfallTjeneste.justerBeregningsgrunnlagForVurdertRefusjonsfrist(beregningsgrunnlag, refusjonAndeler));
+        assertThat(feilmelding.getMessage()).contains("VurderRefusjonUtfallTjeneste: Forventet å finne arbeidsforhold med underkjent refusjon for arbeidsgiver:");
     }
 
     @Test
@@ -103,8 +102,9 @@ class VurderRefusjonUtfallTjenesteTest {
 
         List<VurderRefusjonAndelBeregningsgrunnlagDto> refusjonAndeler = new ArrayList<>();
         refusjonAndeler.add(lagVurderRefusjonAndel(ARBEIDSGIVER2, Boolean.TRUE));
-        assertThrows(IllegalStateException.class,
+        var feilmelding = assertThrows(IllegalStateException.class,
             () -> VurderRefusjonUtfallTjeneste.justerBeregningsgrunnlagForVurdertRefusjonsfrist(beregningsgrunnlag, refusjonAndeler));
+        assertThat(feilmelding.getMessage()).contains("VurderRefusjonUtfallTjeneste: Fant ingen andel med arbeidsgiver:");
     }
 
     private static List<Refusjon> getRefusjonForAg(BeregningsgrunnlagDto justertBeregningsgrunnlag, Arbeidsgiver arbeidsgiver) {

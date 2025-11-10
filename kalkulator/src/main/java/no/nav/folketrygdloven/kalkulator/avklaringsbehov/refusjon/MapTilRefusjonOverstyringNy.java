@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 import no.nav.folketrygdloven.kalkulator.KalkulatorException;
 import no.nav.folketrygdloven.kalkulator.avklaringsbehov.dto.VurderRefusjonAndelBeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.avklaringsbehov.dto.VurderRefusjonBeregningsgrunnlagDto;
-import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagInput;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningRefusjonOverstyringDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningRefusjonOverstyringerDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningRefusjonPeriodeDto;
@@ -24,12 +23,13 @@ public final class MapTilRefusjonOverstyringNy {
         // Skjuler default
     }
 
-    public static BeregningRefusjonOverstyringerDto map(VurderRefusjonBeregningsgrunnlagDto dto, BeregningsgrunnlagInput input) {
+    public static BeregningRefusjonOverstyringerDto map(VurderRefusjonBeregningsgrunnlagDto dto, LocalDate skjæringstidspunkt) {
         var nyttRefusjonAggregat = BeregningRefusjonOverstyringerDto.builder();
+        // TODO: Undersøk om vi trenger Map. Kan det finnes flere andeler per arbeidsgiver?
         var vurderingerSortertPåAG = dto.getAndeler().stream()
-            .collect(Collectors.groupingBy(MapTilRefusjonOverstyringNy::lagArbeidsgiver));
+            .collect(Collectors.groupingBy(VurderRefusjonAndelBeregningsgrunnlagDto::getArbeidsgiver));
 
-        lagListeMedRefusjonOverstyringer(vurderingerSortertPåAG, input.getSkjæringstidspunktForBeregning())
+        lagListeMedRefusjonOverstyringer(vurderingerSortertPåAG, skjæringstidspunkt)
             .forEach(nyttRefusjonAggregat::leggTilOverstyring);
 
         return nyttRefusjonAggregat.build();
@@ -40,18 +40,21 @@ public final class MapTilRefusjonOverstyringNy {
 
         for (var entry : vurderingerSortertPåAG.entrySet()) {
             var ag = entry.getKey();
-                var nyRefusjonOverstyring = lagNyOverstyringMedRefusjonskravVurdering(ag, entry.getValue(), skjæringstidspunkt);
-                nyRefusjonOverstyring.getFørsteMuligeRefusjonFom().ifPresent(dato-> validerStartdato(dato, entry.getValue()));
-                liste.add(nyRefusjonOverstyring);
+            var nyRefusjonOverstyring = lagNyOverstyringMedRefusjonskravVurdering(ag, entry.getValue(), skjæringstidspunkt);
+            nyRefusjonOverstyring.getFørsteMuligeRefusjonFom().ifPresent(dato-> validerStartdato(dato, entry.getValue()));
+            liste.add(nyRefusjonOverstyring);
         }
         return liste;
     }
 
-    private static void validerStartdato(LocalDate tidligsteStartdato, List<VurderRefusjonAndelBeregningsgrunnlagDto> avklarteStartdatoer) {
-        var ugyldigOverstyring = avklarteStartdatoer.stream().filter(os -> os.getFastsattRefusjonFom().isBefore(tidligsteStartdato)).findFirst();
+    private static void validerStartdato(LocalDate tidligsteStartdato, List<VurderRefusjonAndelBeregningsgrunnlagDto> fastsatteAndeler) {
+        var ugyldigOverstyring = fastsatteAndeler.stream()
+            .filter(andel -> andel.getFastsattRefusjonFom() != null && andel.getFastsattRefusjonFom().isBefore(tidligsteStartdato))
+            .findFirst();
         if (ugyldigOverstyring.isPresent()) {
-            throw new KalkulatorException("FT-401650",
-                    String.format("Det finnes en startdato for refusjon dato som er før tidligste tillate startdato for refusjon. Startdato var %s og tidligste tillate startdato var %s", ugyldigOverstyring.get().getFastsattRefusjonFom(), tidligsteStartdato));
+            throw new KalkulatorException("FT-401650", String.format(
+                "Det finnes en startdato for refusjon dato som er før tidligste tillate startdato for refusjon. Startdato var %s og tidligste tillate startdato var %s",
+                ugyldigOverstyring.get().getFastsattRefusjonFom(), tidligsteStartdato));
         }
     }
 
@@ -64,14 +67,15 @@ public final class MapTilRefusjonOverstyringNy {
             .findFirst()
             .orElse(null);
 
-        LocalDate førsteMuligeRefusjonFom = (Boolean.TRUE.equals(erFristUtvidet)) ? stp : null;
+        LocalDate førsteMuligeRefusjonFom = Boolean.TRUE.equals(erFristUtvidet) ? stp : null;
         return new BeregningRefusjonOverstyringDto(ag, førsteMuligeRefusjonFom, refusjonsperioder, erFristUtvidet);
     }
 
     private static List<BeregningRefusjonPeriodeDto> lagListeMedRefusjonsperioder(List<VurderRefusjonAndelBeregningsgrunnlagDto> fastsattAndel) {
         return fastsattAndel.stream()
+                .filter(andel -> andel.getFastsattRefusjonFom() != null)
                 .map(MapTilRefusjonOverstyringNy::lagRefusjonsperiode)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private static BeregningRefusjonPeriodeDto lagRefusjonsperiode(VurderRefusjonAndelBeregningsgrunnlagDto fastsattAndel) {
@@ -81,13 +85,4 @@ public final class MapTilRefusjonOverstyringNy {
     private static InternArbeidsforholdRefDto utledReferanse(VurderRefusjonAndelBeregningsgrunnlagDto fastsattAndel) {
         return fastsattAndel.getInternArbeidsforholdRef() != null ? InternArbeidsforholdRefDto.ref(fastsattAndel.getInternArbeidsforholdRef()) : null;
     }
-
-    private static Arbeidsgiver lagArbeidsgiver(VurderRefusjonAndelBeregningsgrunnlagDto fastsattAndel) {
-        if (fastsattAndel.getArbeidsgiverOrgnr() != null) {
-            return Arbeidsgiver.virksomhet(fastsattAndel.getArbeidsgiverOrgnr());
-        } else {
-            return Arbeidsgiver.person(new AktørId(fastsattAndel.getArbeidsgiverAktørId()));
-        }
-    }
-
 }

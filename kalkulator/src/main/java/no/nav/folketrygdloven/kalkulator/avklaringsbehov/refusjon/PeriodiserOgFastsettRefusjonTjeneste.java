@@ -155,7 +155,7 @@ public final class PeriodiserOgFastsettRefusjonTjeneste {
 
     private static List<RefusjonSplittAndel> lagSplittAndeler(List<VurderRefusjonAndelBeregningsgrunnlagDto> andeler) {
         return andeler.stream()
-                .map(andel -> new RefusjonSplittAndel(mapArbeidsgiver(andel), mapReferanse(andel), andel.getFastsattRefusjonFom(), mapÅrsbeløpRefusjon(andel)))
+                .map(andel -> new RefusjonSplittAndel(andel.getArbeidsgiver(), mapReferanse(andel), andel.getFastsattRefusjonFom(), mapÅrsbeløpRefusjon(andel)))
                 .collect(Collectors.toList());
     }
 
@@ -165,14 +165,6 @@ public final class PeriodiserOgFastsettRefusjonTjeneste {
 
     private static InternArbeidsforholdRefDto mapReferanse(VurderRefusjonAndelBeregningsgrunnlagDto andel) {
         return andel.getInternArbeidsforholdRef() == null ? InternArbeidsforholdRefDto.nullRef() : InternArbeidsforholdRefDto.ref(andel.getInternArbeidsforholdRef());
-    }
-
-    private static Arbeidsgiver mapArbeidsgiver(VurderRefusjonAndelBeregningsgrunnlagDto andel) {
-        if (andel.getArbeidsgiverOrgnr() != null) {
-            return Arbeidsgiver.virksomhet(andel.getArbeidsgiverOrgnr());
-        } else {
-            return Arbeidsgiver.person(new AktørId(andel.getArbeidsgiverAktørId()));
-        }
     }
 
     private static void validerGrunnlag(BeregningsgrunnlagDto gammeltGrunnlag, BeregningsgrunnlagDto nyttGrunnlag, List<VurderRefusjonAndelBeregningsgrunnlagDto> andeler) {

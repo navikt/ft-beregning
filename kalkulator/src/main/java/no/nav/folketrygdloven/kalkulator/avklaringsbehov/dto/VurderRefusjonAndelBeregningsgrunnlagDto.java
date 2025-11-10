@@ -1,5 +1,8 @@
 package no.nav.folketrygdloven.kalkulator.avklaringsbehov.dto;
 
+import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
+import no.nav.folketrygdloven.kalkulus.typer.AktørId;
+
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -89,5 +92,13 @@ public class VurderRefusjonAndelBeregningsgrunnlagDto {
             return "*".repeat(length);
         }
         return "*".repeat(length - 3) + arbeidsgiverOrgnr.substring(length - 3);
+    }
+
+    public Arbeidsgiver getArbeidsgiver() {
+        if (getArbeidsgiverOrgnr() != null) {
+            return Arbeidsgiver.virksomhet(getArbeidsgiverOrgnr());
+        } else {
+            return Arbeidsgiver.person(new AktørId(getArbeidsgiverAktørId()));
+        }
     }
 }
