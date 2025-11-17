@@ -17,7 +17,7 @@ class ErTotaltRefusjonskravStørreEnnEllerLikBrutto {
     public static boolean vurder(List<PeriodisertBruttoBeregningsgrunnlag> periodisertBeregningsgrunnlag, LocalDate dato) {
         var totaltRefusjonskravPrÅr = beregnTotaltRefusjonskravPrÅrPåDato(periodisertBeregningsgrunnlag, dato);
         var totalBruttoPrÅr = beregnTotalBruttoPrÅr(periodisertBeregningsgrunnlag, dato);
-        if (totaltRefusjonskravPrÅr.compareTo(BigDecimal.ZERO) <= 0) {
+        if (totaltRefusjonskravPrÅr.compareTo(BigDecimal.ZERO) == 0) {
             return false;
         }
         return totaltRefusjonskravPrÅr.compareTo(totalBruttoPrÅr) >= 0;
