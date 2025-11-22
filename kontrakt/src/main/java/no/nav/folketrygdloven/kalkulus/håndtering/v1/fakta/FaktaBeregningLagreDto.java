@@ -77,9 +77,8 @@ public class FaktaBeregningLagreDto {
     private VurderMilitærDto vurderMilitaer;
 
     @JsonProperty("refusjonskravGyldighet")
-    @Valid
     @Size
-    private List<RefusjonskravPrArbeidsgiverVurderingDto> refusjonskravGyldighet;
+    private List<@Valid RefusjonskravPrArbeidsgiverVurderingDto> refusjonskravGyldighet;
 
     public FaktaBeregningLagreDto() {
         // default ctor
@@ -99,7 +98,7 @@ public class FaktaBeregningLagreDto {
                                   @Valid FastsettEtterlønnSluttpakkeDto fastsettEtterlønnSluttpakke,
                                   @Valid MottarYtelseDto mottarYtelse,
                                   @Valid VurderMilitærDto vurderMilitaer,
-                                  @Valid List<RefusjonskravPrArbeidsgiverVurderingDto> refusjonskravGyldighet) {
+                                  List<@Valid RefusjonskravPrArbeidsgiverVurderingDto> refusjonskravGyldighet) {
         this.vurderNyoppstartetFL = vurderNyoppstartetFL;
         this.vurderTidsbegrensetArbeidsforhold = vurderTidsbegrensetArbeidsforhold;
         this.vurderNyIArbeidslivet = vurderNyIArbeidslivet;

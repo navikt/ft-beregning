@@ -31,11 +31,10 @@ public class VurderInntektsforholdPeriodeDto {
     @NotNull
     private LocalDate tom;
 
-    @Valid
     @JsonProperty(value = "inntektsforholdListe")
     @Size(max = 50)
     @NotNull
-    private List<InntektsforholdDto> inntektsforholdListe = new ArrayList<>();
+    private List<@Valid InntektsforholdDto> inntektsforholdListe = new ArrayList<>();
 
     public VurderInntektsforholdPeriodeDto() {
     }

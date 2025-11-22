@@ -17,4 +17,4 @@ import no.nav.folketrygdloven.kalkulus.håndtering.v1.HåndterBeregningDto;
 public record EnkelHåndterBeregningRequestDto(@Valid @NotNull UUID behandlingUuid,
                                               @Valid @NotNull Saksnummer saksnummer,
                                               @Valid @NotNull KalkulatorInputDto kalkulatorInput,
-                                              @Valid @NotNull @Size(min = 1) List<HåndterBeregningDto> håndterBeregningDtoList) {}
+                                              @NotNull @Size(min = 1) List<@Valid HåndterBeregningDto> håndterBeregningDtoList) {}

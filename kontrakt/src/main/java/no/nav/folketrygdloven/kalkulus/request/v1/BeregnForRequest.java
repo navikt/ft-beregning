@@ -29,8 +29,7 @@ public class BeregnForRequest {
 
 
     @JsonProperty(value = "originalEksternReferanser", required = true)
-    @Valid
-    private List<UUID> originalEksternReferanser;
+    private List<@Valid UUID> originalEksternReferanser;
 
     @JsonProperty(value = "kalkulatorInput")
     @Valid
@@ -39,8 +38,7 @@ public class BeregnForRequest {
 
     @JsonProperty(value = "forlengelsePerioder")
     @Size()
-    @Valid
-    private List<Periode> forlengelsePerioder;
+    private List<@Valid Periode> forlengelsePerioder;
 
     @JsonCreator
     public BeregnForRequest(@JsonProperty(value = "eksternReferanse", required = true) UUID eksternReferanse,

@@ -30,11 +30,10 @@ public class FordelBeregningsgrunnlagPeriodeDto {
     @JsonProperty(value = "tom")
     private LocalDate tom;
 
-    @Valid
     @JsonProperty(value = "fordelBeregningsgrunnlagAndeler")
     @Size(min = 1, max = 100)
     @NotNull
-    private List<FordelBeregningsgrunnlagAndelDto> fordelBeregningsgrunnlagAndeler = new ArrayList<>();
+    private List<@Valid FordelBeregningsgrunnlagAndelDto> fordelBeregningsgrunnlagAndeler = new ArrayList<>();
 
     @Valid
     @JsonProperty(value = "harPeriodeAarsakGraderingEllerRefusjon")

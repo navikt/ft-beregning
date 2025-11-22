@@ -21,8 +21,7 @@ public class BeregningAktiviteterEndring {
     @JsonProperty(value = "aktivitetEndringer")
     @NotNull
     @Size()
-    @Valid
-    private List<BeregningAktivitetEndring> aktivitetEndringer;
+    private List<@Valid BeregningAktivitetEndring> aktivitetEndringer;
 
     public BeregningAktiviteterEndring() {
     }

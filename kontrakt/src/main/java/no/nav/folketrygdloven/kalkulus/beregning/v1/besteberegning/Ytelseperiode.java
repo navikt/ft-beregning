@@ -22,16 +22,15 @@ public class Ytelseperiode {
     private Periode periode;
 
     @JsonProperty(value = "andeler")
-    @Valid
     @NotNull
-    private List<Ytelseandel> andeler = new ArrayList<>();
+    private List<@Valid Ytelseandel> andeler = new ArrayList<>();
 
 	protected Ytelseperiode() {
 		// default ctor
 	}
 
 	public Ytelseperiode(@Valid @NotNull Periode periode,
-	                     @Valid @NotNull List<Ytelseandel> andeler) {
+	                     @NotNull List<@Valid Ytelseandel> andeler) {
         this.periode = periode;
         this.andeler = andeler;
     }

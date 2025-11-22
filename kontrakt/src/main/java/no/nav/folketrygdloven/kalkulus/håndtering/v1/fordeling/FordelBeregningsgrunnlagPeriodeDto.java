@@ -21,9 +21,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class FordelBeregningsgrunnlagPeriodeDto {
 
     @JsonProperty("andeler")
-    @Valid
     @Size(min = 1)
-    private List<FordelBeregningsgrunnlagAndelDto> andeler;
+    private List<@Valid FordelBeregningsgrunnlagAndelDto> andeler;
 
     @JsonProperty("fom")
     @Valid

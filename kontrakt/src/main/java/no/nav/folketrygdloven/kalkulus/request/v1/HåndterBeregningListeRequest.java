@@ -32,13 +32,11 @@ public class HåndterBeregningListeRequest implements KalkulusRequest {
 
     @JsonProperty(value = "håndterBeregningListe")
     @NotNull
-    @Valid
-    private List<HåndterBeregningRequest> håndterBeregningListe;
+    private List<@Valid HåndterBeregningRequest> håndterBeregningListe;
 
     /** Kalkulatorinput per ekstern kobling referanse. Brukes i tilfelle der input er utdatert */
     @JsonProperty(value = "kalkulatorInput")
-    @Valid
-    private Map<UUID, KalkulatorInputDto> kalkulatorInputPerKoblingReferanse;
+    private Map<@Valid UUID, @Valid KalkulatorInputDto> kalkulatorInputPerKoblingReferanse;
 
     @JsonProperty(value = "behandlingUuid", required = true)
     @Valid
@@ -56,8 +54,8 @@ public class HåndterBeregningListeRequest implements KalkulusRequest {
     private FagsakYtelseType ytelseSomSkalBeregnes;
 
     @Deprecated
-    public HåndterBeregningListeRequest(@NotNull @Valid List<HåndterBeregningRequest> håndterBeregningListe,
-                                        @Valid Map<UUID, KalkulatorInputDto> kalkulatorInputPerKoblingReferanse,
+    public HåndterBeregningListeRequest(@NotNull List<@Valid HåndterBeregningRequest> håndterBeregningListe,
+                                        Map<@Valid UUID, @Valid KalkulatorInputDto> kalkulatorInputPerKoblingReferanse,
                                         @Valid Saksnummer saksnummer,
                                         @Valid @NotNull UUID behandlingUuid) {
         this.håndterBeregningListe = håndterBeregningListe;
@@ -66,8 +64,8 @@ public class HåndterBeregningListeRequest implements KalkulusRequest {
         this.behandlingUuid = behandlingUuid;
     }
 
-    public HåndterBeregningListeRequest(@NotNull @Valid List<HåndterBeregningRequest> håndterBeregningListe,
-                                        @Valid Map<UUID, KalkulatorInputDto> kalkulatorInputPerKoblingReferanse,
+    public HåndterBeregningListeRequest(@NotNull List<@Valid HåndterBeregningRequest> håndterBeregningListe,
+                                        Map<@Valid UUID, @Valid KalkulatorInputDto> kalkulatorInputPerKoblingReferanse,
                                         @Valid FagsakYtelseType ytelseSomSkalBeregnes,
                                         @Valid Saksnummer saksnummer,
                                         @Valid @NotNull UUID behandlingUuid) {
@@ -80,13 +78,13 @@ public class HåndterBeregningListeRequest implements KalkulusRequest {
 
 
     @Deprecated
-    public HåndterBeregningListeRequest(@NotNull @Valid List<HåndterBeregningRequest> håndterBeregningListe,
+    public HåndterBeregningListeRequest(@NotNull List<@Valid HåndterBeregningRequest> håndterBeregningListe,
                                         @Valid @NotNull UUID behandlingUuid) {
         this.håndterBeregningListe = håndterBeregningListe;
         this.behandlingUuid = behandlingUuid;
     }
 
-    public HåndterBeregningListeRequest(@NotNull @Valid List<HåndterBeregningRequest> håndterBeregningListe,
+    public HåndterBeregningListeRequest(@NotNull List<@Valid HåndterBeregningRequest> håndterBeregningListe,
                                         @Valid FagsakYtelseType ytelseSomSkalBeregnes,
                                         @Valid Saksnummer saksnummer,
                                         @Valid @NotNull UUID behandlingUuid) {

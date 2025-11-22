@@ -31,13 +31,11 @@ public class BeregningsgrunnlagPeriodeDto {
 
     @JsonProperty(value = "beregningsgrunnlagPrStatusOgAndelList")
     @Size(min = 1)
-    @Valid
-    private List<BeregningsgrunnlagPrStatusOgAndelDto> beregningsgrunnlagPrStatusOgAndelList;
+    private List<@Valid BeregningsgrunnlagPrStatusOgAndelDto> beregningsgrunnlagPrStatusOgAndelList;
 
     @JsonProperty(value = "tilkommetInntektsforholdList")
     @Size(max = 100)
-    @Valid
-    private List<TilkommetInntektsforholdDto> tilkommetInntektsforholdList;
+    private List<@Valid TilkommetInntektsforholdDto> tilkommetInntektsforholdList;
 
     @JsonProperty(value = "periode")
     @NotNull
@@ -82,7 +80,7 @@ public class BeregningsgrunnlagPeriodeDto {
     public BeregningsgrunnlagPeriodeDto() {
     }
 
-    public BeregningsgrunnlagPeriodeDto(@NotNull @Valid List<BeregningsgrunnlagPrStatusOgAndelDto> beregningsgrunnlagPrStatusOgAndelList,
+    public BeregningsgrunnlagPeriodeDto(@NotNull List<@Valid BeregningsgrunnlagPrStatusOgAndelDto> beregningsgrunnlagPrStatusOgAndelList,
                                         List<TilkommetInntektsforholdDto> tilkommetInntektsforholdList, @NotNull @Valid Periode periode,
                                         @Valid Beløp bruttoPrÅr,
                                         @Valid Beløp avkortetPrÅr,

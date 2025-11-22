@@ -35,10 +35,9 @@ public class FrisinnGrunnlag extends YtelsespesifiktGrunnlagDto {
     @Deprecated // Fjernes herfra når vi har gått over til å bruke frisinnPerioder
     private Boolean søkerYtelseForNæring;
 
-    @Valid
     @JsonProperty("perioderMedSøkerInfo")
     @Size(max = 40)
-    private List<PeriodeMedSøkerInfoDto> perioderMedSøkerInfo;
+    private List<@Valid PeriodeMedSøkerInfoDto> perioderMedSøkerInfo;
 
     @JsonProperty(value = "frisinnBehandlingType")
     @Valid
@@ -55,11 +54,11 @@ public class FrisinnGrunnlag extends YtelsespesifiktGrunnlagDto {
         this.søkerYtelseForNæring = søkerYtelseForNæring;
     }
 
-    public FrisinnGrunnlag(@Valid @Size(max = 20) List<PeriodeMedSøkerInfoDto> perioderMedSøkerInfo) {
+    public FrisinnGrunnlag(@Size(max = 20) List<@Valid PeriodeMedSøkerInfoDto> perioderMedSøkerInfo) {
         this.perioderMedSøkerInfo = perioderMedSøkerInfo;
     }
 
-    public FrisinnGrunnlag(@Valid @Size(max = 20) List<PeriodeMedSøkerInfoDto> perioderMedSøkerInfo, @Valid FrisinnBehandlingType frisinnBehandlingType) {
+    public FrisinnGrunnlag(@Size(max = 20) List<@Valid PeriodeMedSøkerInfoDto> perioderMedSøkerInfo, @Valid FrisinnBehandlingType frisinnBehandlingType) {
         this.perioderMedSøkerInfo = perioderMedSøkerInfo;
         this.frisinnBehandlingType = frisinnBehandlingType;
     }

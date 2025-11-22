@@ -16,15 +16,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class AktivitetGraderingDto {
 
     @JsonProperty(value = "andelGraderingDto")
-    @Valid
     @Size(min = 1)
-    private List<AndelGraderingDto> andelGraderingDto;
+    private List<@Valid AndelGraderingDto> andelGraderingDto;
 
     protected AktivitetGraderingDto() {
         // default ctor
     }
 
-    public AktivitetGraderingDto(@Valid @NotEmpty List<AndelGraderingDto> andelGraderingDto) {
+    public AktivitetGraderingDto(@NotEmpty List<@Valid AndelGraderingDto> andelGraderingDto) {
         this.andelGraderingDto = andelGraderingDto;
     }
 

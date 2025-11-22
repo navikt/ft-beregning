@@ -34,8 +34,7 @@ public class UtledTilkommetAktivitetListeRequest {
 
     @JsonProperty(value = "liste")
     @Size(min = 1)
-    @Valid
-    private List<UtledTilkommetAktivitetForRequest> liste;
+    private List<@Valid UtledTilkommetAktivitetForRequest> liste;
 
 
     protected UtledTilkommetAktivitetListeRequest() {

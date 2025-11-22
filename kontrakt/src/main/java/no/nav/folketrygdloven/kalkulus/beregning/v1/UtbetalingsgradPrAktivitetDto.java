@@ -26,15 +26,14 @@ public class UtbetalingsgradPrAktivitetDto {
     private AktivitetDto utbetalingsgradArbeidsforholdDto;
 
     @JsonProperty(value = "periodeMedUtbetalingsgrad", required = true)
-    @Valid
     @NotNull
     @Size(min = 1)
-    private List<PeriodeMedUtbetalingsgradDto> periodeMedUtbetalingsgrad;
+    private List<@Valid PeriodeMedUtbetalingsgradDto> periodeMedUtbetalingsgrad;
 
     public UtbetalingsgradPrAktivitetDto() {
     }
 
-    public UtbetalingsgradPrAktivitetDto(@Valid @NotNull AktivitetDto utbetalingsgradArbeidsforholdDto, @Valid @NotNull @NotEmpty List<PeriodeMedUtbetalingsgradDto> periodeMedUtbetalingsgrad) {
+    public UtbetalingsgradPrAktivitetDto(@Valid @NotNull AktivitetDto utbetalingsgradArbeidsforholdDto, @NotNull @NotEmpty List<@Valid PeriodeMedUtbetalingsgradDto> periodeMedUtbetalingsgrad) {
         this.utbetalingsgradArbeidsforholdDto = utbetalingsgradArbeidsforholdDto;
         this.periodeMedUtbetalingsgrad = periodeMedUtbetalingsgrad;
     }

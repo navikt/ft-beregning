@@ -17,9 +17,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class InntektsmeldingerDto {
 
     @JsonProperty(value = "inntektsmeldinger")
-    @Valid
     @Size(min = 1)
-    private List<InntektsmeldingDto> inntektsmeldinger;
+    private List<@Valid InntektsmeldingDto> inntektsmeldinger;
 
     public InntektsmeldingerDto() {
         // default ctor

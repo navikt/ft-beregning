@@ -1,15 +1,23 @@
 package no.nav.folketrygdloven.kalkulus.response.v1.håndtering;
 
+import jakarta.validation.Valid;
+
 /**
  * Beskriver hvilke endringer som er gjort på beregningsgrunnlaget ved løst avklaringsbehov
  */
 public class Endringer {
 
+    @Valid
     private BeregningsgrunnlagEndring beregningsgrunnlagEndring;
+    @Valid
     private BeregningAktiviteterEndring beregningAktiviteterEndring;
+    @Valid
     private FaktaOmBeregningVurderinger faktaOmBeregningVurderinger;
+    @Valid
     private VarigEndretEllerNyoppstartetNæringEndring varigEndretEllerNyoppstartetNæringEndring;
+    @Valid
     private VarigEndretArbeidssituasjonEndring varigEndretArbeidssituasjonEndring;
+    @Valid
     private RefusjonoverstyringEndring refusjonoverstyringEndring;
 
     private Endringer() {

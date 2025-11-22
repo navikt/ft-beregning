@@ -17,20 +17,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonAutoDetect(fieldVisibility = NONE, getterVisibility = NONE, setterVisibility = NONE, isGetterVisibility = NONE, creatorVisibility = NONE)
 public class Saksopplysninger {
 
-    @Valid
     @JsonProperty(value = "arbeidsforholdMedLønnsendring")
     @Size(max=100)
-    private List<ArbeidsforholdDto> arbeidsforholdMedLønnsendring;
+    private List<@Valid ArbeidsforholdDto> arbeidsforholdMedLønnsendring;
 
-    @Valid
     @JsonProperty(value = "lønnsendringSaksopplysning")
     @Size(max=100)
-    private List<LønnsendringSaksopplysningDto> lønnsendringSaksopplysning;
+    private List<@Valid LønnsendringSaksopplysningDto> lønnsendringSaksopplysning;
 
-    @Valid
     @JsonProperty(value = "kortvarigeArbeidsforhold")
     @Size(max=100)
-    private List<ArbeidsforholdDto> kortvarigeArbeidsforhold;
+    private List<@Valid ArbeidsforholdDto> kortvarigeArbeidsforhold;
 
     public List<ArbeidsforholdDto> getArbeidsforholdMedLønnsendring() {
         return arbeidsforholdMedLønnsendring;

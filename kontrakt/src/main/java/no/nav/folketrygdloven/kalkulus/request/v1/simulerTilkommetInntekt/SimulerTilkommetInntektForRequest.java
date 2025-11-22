@@ -28,8 +28,7 @@ public class SimulerTilkommetInntektForRequest {
 
     @JsonProperty(value = "simuleringsperioder")
     @Size()
-    @Valid
-    private List<Periode> simuleringsperioder;
+    private List<@Valid Periode> simuleringsperioder;
 
     @JsonCreator
     public SimulerTilkommetInntektForRequest(@JsonProperty(value = "eksternReferanse", required = true) UUID eksternReferanse,

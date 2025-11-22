@@ -32,10 +32,9 @@ public class VurderMottarYtelseDto {
     @JsonProperty(value = "frilansInntektPrMnd")
     private Beløp frilansInntektPrMnd;
 
-    @Valid
     @JsonProperty(value = "arbeidstakerAndelerUtenIM")
     @Size
-    private List<ArbeidstakerUtenInntektsmeldingAndelDto> arbeidstakerAndelerUtenIM = new ArrayList<>();
+    private List<@Valid ArbeidstakerUtenInntektsmeldingAndelDto> arbeidstakerAndelerUtenIM = new ArrayList<>();
 
     public boolean getErFrilans() {
         return erFrilans;

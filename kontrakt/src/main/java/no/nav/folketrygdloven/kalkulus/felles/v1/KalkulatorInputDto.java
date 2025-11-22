@@ -28,9 +28,8 @@ public class KalkulatorInputDto {
      * Informasjon vedrørende refusjonskrav pr arbeidsgiver
      */
     @JsonProperty(value = "refusjonskravPrArbeidsgiver")
-    @Valid
     @Size()
-    private List<KravperioderPrArbeidsforhold> refusjonskravPrArbeidsforhold;
+    private List<@Valid KravperioderPrArbeidsforhold> refusjonskravPrArbeidsforhold;
 
     /**
      * Aggregat for inntekt, arbeid og ytelser

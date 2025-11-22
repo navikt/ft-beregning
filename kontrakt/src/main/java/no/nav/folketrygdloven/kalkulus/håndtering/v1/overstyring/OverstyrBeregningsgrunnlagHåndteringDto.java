@@ -30,7 +30,6 @@ public class OverstyrBeregningsgrunnlagHåndteringDto extends HåndterBeregningD
     private FaktaBeregningLagreDto fakta;
 
     @JsonProperty("overstyrteAndeler")
-    @Valid
     @Size(max = 100)
     private List<@Valid @NotNull FastsettBeregningsgrunnlagAndelDto> overstyrteAndeler;
 
@@ -44,7 +43,7 @@ public class OverstyrBeregningsgrunnlagHåndteringDto extends HåndterBeregningD
 
     @JsonCreator
     public OverstyrBeregningsgrunnlagHåndteringDto(@JsonProperty("fakta") @Valid FaktaBeregningLagreDto fakta,
-                                                   @JsonProperty("overstyrteAndeler") @Valid @NotNull List<FastsettBeregningsgrunnlagAndelDto> overstyrteAndeler) {
+                                                   @JsonProperty("overstyrteAndeler") @NotNull List<@Valid FastsettBeregningsgrunnlagAndelDto> overstyrteAndeler) {
         super(AvklaringsbehovDefinisjon.OVST_INNTEKT, false);
         this.fakta = fakta;
         this.overstyrteAndeler = overstyrteAndeler;

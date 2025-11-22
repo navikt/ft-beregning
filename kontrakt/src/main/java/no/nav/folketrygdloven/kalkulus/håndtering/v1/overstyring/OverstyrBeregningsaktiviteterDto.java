@@ -24,10 +24,9 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.AvklaringsbehovDefinisjon;
 public class OverstyrBeregningsaktiviteterDto extends HåndterBeregningDto {
 
     @JsonProperty("beregningsaktivitetLagreDtoList")
-    @Valid
     @NotNull
     @Size(max = 1000)
-    private List<BeregningsaktivitetLagreDto> beregningsaktivitetLagreDtoList;
+    private List<@Valid BeregningsaktivitetLagreDto> beregningsaktivitetLagreDtoList;
 
     public OverstyrBeregningsaktiviteterDto() {
         super(AvklaringsbehovDefinisjon.OVST_BEREGNINGSAKTIVITETER, false);
@@ -42,7 +41,7 @@ public class OverstyrBeregningsaktiviteterDto extends HåndterBeregningDto {
         return new OverstyrBeregningsaktiviteterDto(true);
     }
 
-    public OverstyrBeregningsaktiviteterDto(@Valid @NotNull @Size(max = 1000) List<BeregningsaktivitetLagreDto> beregningsaktivitetLagreDtoList) {
+    public OverstyrBeregningsaktiviteterDto(@NotNull @Size(max = 1000) List<@Valid BeregningsaktivitetLagreDto> beregningsaktivitetLagreDtoList) {
         super(AvklaringsbehovDefinisjon.OVST_BEREGNINGSAKTIVITETER, false);
         this.beregningsaktivitetLagreDtoList = beregningsaktivitetLagreDtoList;
     }

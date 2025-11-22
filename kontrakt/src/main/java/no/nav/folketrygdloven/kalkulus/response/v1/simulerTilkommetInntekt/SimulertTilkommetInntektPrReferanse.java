@@ -27,12 +27,11 @@ public class SimulertTilkommetInntektPrReferanse {
     private UUID eksternReferanse;
 
     @JsonProperty(value = "tilkommetAktivitetPerioder")
-    @Valid
-    private List<Periode> tilkommetAktivitetPerioder;
+    private List<@Valid Periode> tilkommetAktivitetPerioder;
 
     @JsonCreator
     public SimulertTilkommetInntektPrReferanse(@JsonProperty(value = "eksternReferanse", required = true) @Valid @NotNull UUID eksternReferanse,
-                                               @JsonProperty(value = "tilkommetAktivitetPerioder") @Valid List<Periode> tilkommetAktivitetPerioder) {
+                                               @JsonProperty(value = "tilkommetAktivitetPerioder") List<@Valid Periode> tilkommetAktivitetPerioder) {
         this.eksternReferanse = eksternReferanse;
         this.tilkommetAktivitetPerioder = tilkommetAktivitetPerioder;
     }

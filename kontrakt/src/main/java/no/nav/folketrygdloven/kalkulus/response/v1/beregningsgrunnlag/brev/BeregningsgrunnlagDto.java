@@ -34,19 +34,16 @@ public class BeregningsgrunnlagDto {
     @JsonProperty(value = "aktivitetStatuser")
     @NotNull
     @Size(min = 1, max = 20)
-    @Valid
-    private List<AktivitetStatus> aktivitetStatuser;
+    private List<@Valid AktivitetStatus> aktivitetStatuser;
 
     @JsonProperty(value = "beregningsgrunnlagPerioder")
     @NotNull
     @Size(min = 1, max = 100)
-    @Valid
-    private List<BeregningsgrunnlagPeriodeDto> beregningsgrunnlagPerioder;
+    private List<@Valid BeregningsgrunnlagPeriodeDto> beregningsgrunnlagPerioder;
 
     @JsonProperty(value = "sammenligningsgrunnlagPrStatusListe")
     @Size(max = 10)
-    @Valid
-    private List<SammenligningsgrunnlagPrStatusDto> sammenligningsgrunnlagPrStatusListe;
+    private List<@Valid SammenligningsgrunnlagPrStatusDto> sammenligningsgrunnlagPrStatusListe;
 
     @JsonProperty(value = "grunnbeløp")
     @Valid
