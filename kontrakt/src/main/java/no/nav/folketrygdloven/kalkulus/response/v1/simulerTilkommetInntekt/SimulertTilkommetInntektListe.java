@@ -18,9 +18,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class SimulertTilkommetInntektListe {
 
     @JsonProperty(value = "simulertListe", required = true)
-    @Valid
     @NotNull
-    private List<SimulertTilkommetInntektPrReferanse> simulertListe;
+    private List<@Valid SimulertTilkommetInntektPrReferanse> simulertListe;
 
     public SimulertTilkommetInntektListe() {
     }

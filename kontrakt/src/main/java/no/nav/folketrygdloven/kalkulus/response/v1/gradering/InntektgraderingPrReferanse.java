@@ -25,12 +25,11 @@ public class InntektgraderingPrReferanse {
     private UUID eksternReferanse;
 
     @JsonProperty(value = "tilkommetAktivitetPerioder")
-    @Valid
-    private List<InntektGraderingPeriode> perioder;
+    private List<@Valid InntektGraderingPeriode> perioder;
 
     @JsonCreator
     public InntektgraderingPrReferanse(@JsonProperty(value = "eksternReferanse", required = true) @Valid @NotNull UUID eksternReferanse,
-                                       @JsonProperty(value = "perioder") @Valid List<InntektGraderingPeriode> perioder) {
+                                       @JsonProperty(value = "perioder") List<@Valid InntektGraderingPeriode> perioder) {
         this.eksternReferanse = eksternReferanse;
         this.perioder = perioder;
     }

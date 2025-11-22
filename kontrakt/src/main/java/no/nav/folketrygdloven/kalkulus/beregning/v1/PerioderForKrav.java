@@ -26,13 +26,12 @@ public class PerioderForKrav {
     private LocalDate innsendingsdato;
 
     @JsonProperty(value = "refusjonsperioder")
-    @Valid
     @Size(min = 1)
     @NotNull
-    private List<Refusjonsperiode> refusjonsperioder;
+    private List<@Valid Refusjonsperiode> refusjonsperioder;
 
     public PerioderForKrav(@Valid @NotNull LocalDate innsendingsdato,
-                           @Valid @NotNull List<Refusjonsperiode> perioder)  {
+                           @NotNull List<@Valid Refusjonsperiode> perioder)  {
 
         this.innsendingsdato = innsendingsdato;
         this.refusjonsperioder = perioder;

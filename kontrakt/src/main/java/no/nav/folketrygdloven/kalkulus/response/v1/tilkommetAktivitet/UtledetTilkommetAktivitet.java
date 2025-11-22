@@ -30,8 +30,7 @@ public class UtledetTilkommetAktivitet {
     private Arbeidsgiver arbeidsgiver;
 
     @JsonProperty(value = "perioder")
-    @Valid
-    private List<Periode> perioder;
+    private List<@Valid Periode> perioder;
 
     @JsonCreator
     public UtledetTilkommetAktivitet(
@@ -44,8 +43,7 @@ public class UtledetTilkommetAktivitet {
             Arbeidsgiver arbeidsgiver,
 
             @JsonProperty(value = "perioder")
-            @Valid
-            List<Periode> perioder
+            List<@Valid Periode> perioder
             ) {
         this.aktivitetStatus = aktivitetStatus;
         this.arbeidsgiver = arbeidsgiver;

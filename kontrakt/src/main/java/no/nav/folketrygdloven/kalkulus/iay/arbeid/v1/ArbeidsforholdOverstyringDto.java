@@ -41,9 +41,8 @@ public class ArbeidsforholdOverstyringDto {
 	private IayProsent stillingsprosent;
 
 	@JsonProperty("arbeidsforholdOverstyrtePerioder")
-	@Valid
-	@Size()
-	private List<Periode> arbeidsforholdOverstyrtePerioder;
+    @Size()
+	private List<@Valid Periode> arbeidsforholdOverstyrtePerioder;
 
     public ArbeidsforholdOverstyringDto() {
         // default ctor

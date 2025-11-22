@@ -28,8 +28,7 @@ public class BeregningsgrunnlagPeriodeFRISINNDto {
 
     @JsonProperty(value = "beregningsgrunnlagPrStatusOgAndelList")
     @Size(min = 1)
-    @Valid
-    private List<BeregningsgrunnlagPrStatusOgAndelFRISINNDto> beregningsgrunnlagPrStatusOgAndelList;
+    private List<@Valid BeregningsgrunnlagPrStatusOgAndelFRISINNDto> beregningsgrunnlagPrStatusOgAndelList;
 
     @JsonProperty(value = "periode")
     @NotNull
@@ -61,20 +60,19 @@ public class BeregningsgrunnlagPeriodeFRISINNDto {
 
     @JsonProperty(value = "periodeÅrsaker")
     @Size(min = 1)
-    @Valid
-    private List<PeriodeÅrsak> periodeÅrsaker;
+    private List<@Valid PeriodeÅrsak> periodeÅrsaker;
 
     public BeregningsgrunnlagPeriodeFRISINNDto() {
     }
 
-    public BeregningsgrunnlagPeriodeFRISINNDto(@JsonProperty(value = "beregningsgrunnlagPrStatusOgAndelList") @NotNull @Valid List<BeregningsgrunnlagPrStatusOgAndelFRISINNDto> beregningsgrunnlagPrStatusOgAndelList,
+    public BeregningsgrunnlagPeriodeFRISINNDto(@JsonProperty(value = "beregningsgrunnlagPrStatusOgAndelList") @NotNull List<@Valid BeregningsgrunnlagPrStatusOgAndelFRISINNDto> beregningsgrunnlagPrStatusOgAndelList,
                                                @JsonProperty(value = "periode") @NotNull @Valid Periode periode,
                                                @JsonProperty(value = "bruttoPrÅr") @Valid Beløp bruttoPrÅr,
                                                @JsonProperty(value = "avkortetPrÅr") @Valid Beløp avkortetPrÅr,
                                                @JsonProperty(value = "redusertPrÅr") @Valid Beløp redusertPrÅr,
                                                @JsonProperty(value = "bgFratrukketInntektstak") @Valid Beløp bgFratrukketInntektstak,
                                                @JsonProperty(value = "dagsats") @Valid Long dagsats,
-                                               @JsonProperty(value = "periodeÅrsaker") @NotNull @Valid List<PeriodeÅrsak> periodeÅrsaker) {
+                                               @JsonProperty(value = "periodeÅrsaker") @NotNull List<@Valid PeriodeÅrsak> periodeÅrsaker) {
 
         this.beregningsgrunnlagPrStatusOgAndelList = beregningsgrunnlagPrStatusOgAndelList;
         this.periode = periode;

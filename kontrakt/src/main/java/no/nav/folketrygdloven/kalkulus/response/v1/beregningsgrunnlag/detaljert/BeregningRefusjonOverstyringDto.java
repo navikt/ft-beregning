@@ -37,9 +37,8 @@ public class BeregningRefusjonOverstyringDto {
 
 
     @JsonProperty(value = "refusjonPerioder")
-    @Valid
     @Size(min = 1)
-    private List<BeregningRefusjonPeriodeDto> refusjonPerioder;
+    private List<@Valid BeregningRefusjonPeriodeDto> refusjonPerioder;
 
     public BeregningRefusjonOverstyringDto() {
     }
@@ -53,7 +52,7 @@ public class BeregningRefusjonOverstyringDto {
     public BeregningRefusjonOverstyringDto(@Valid @NotNull Arbeidsgiver arbeidsgiver,
                                            @Valid LocalDate førsteMuligeRefusjonFom,
                                            @Valid Boolean erFristUtvidet,
-                                           @Valid List<BeregningRefusjonPeriodeDto> refusjonPerioder) {
+                                           List<@Valid BeregningRefusjonPeriodeDto> refusjonPerioder) {
         this.arbeidsgiver = arbeidsgiver;
         this.førsteMuligeRefusjonFom = førsteMuligeRefusjonFom;
         this.refusjonPerioder = refusjonPerioder;

@@ -34,8 +34,7 @@ public class TilstandResponse implements KalkulusRespons {
     private KalkulusResultatKode resultatkode;
 
     @JsonProperty(value = "avklaringsbehovMedTilstandDto")
-    @Valid
-    private List<AvklaringsbehovMedTilstandDto> avklaringsbehovMedTilstandDto;
+    private List<@Valid AvklaringsbehovMedTilstandDto> avklaringsbehovMedTilstandDto;
 
     @JsonProperty(value = "vilkarOppfylt")
     @Valid
@@ -55,7 +54,7 @@ public class TilstandResponse implements KalkulusRespons {
 
     public TilstandResponse(@JsonProperty(value = "eksternReferanse") @Valid UUID eksternReferanse,
                             @JsonProperty(value = "resultatkode") @Valid KalkulusResultatKode resultatkode,
-                            @JsonProperty(value = "avklaringsbehovMedTilstandDto") @Valid List<AvklaringsbehovMedTilstandDto> avklaringsbehovMedTilstandDto) {
+                            @JsonProperty(value = "avklaringsbehovMedTilstandDto") List<@Valid AvklaringsbehovMedTilstandDto> avklaringsbehovMedTilstandDto) {
         this.eksternReferanse = eksternReferanse;
         this.resultatkode = resultatkode;
         this.avklaringsbehovMedTilstandDto = avklaringsbehovMedTilstandDto;
@@ -67,7 +66,7 @@ public class TilstandResponse implements KalkulusRespons {
     }
 
     public TilstandResponse(@Valid UUID eksternReferanse,
-                            @Valid List<AvklaringsbehovMedTilstandDto> avklaringsbehovMedTilstandDto,
+                            List<@Valid AvklaringsbehovMedTilstandDto> avklaringsbehovMedTilstandDto,
                             KalkulusResultatKode resultatkode, @Valid Boolean vilkarOppfylt,
                             @Valid Vilkårsavslagsårsak vilkårsavslagsårsak) {
         this.eksternReferanse = eksternReferanse;
@@ -78,7 +77,7 @@ public class TilstandResponse implements KalkulusRespons {
     }
 
 	public TilstandResponse(@Valid UUID eksternReferanse,
-	                        @Valid List<AvklaringsbehovMedTilstandDto> avklaringsbehovMedTilstandDto,
+	                        List<@Valid AvklaringsbehovMedTilstandDto> avklaringsbehovMedTilstandDto,
 	                        KalkulusResultatKode resultatkode, @Valid Boolean vilkarOppfylt,
 	                        @Valid Vilkårsavslagsårsak vilkårsavslagsårsak, VilkårResponse vilkårResultat) {
 		this.eksternReferanse = eksternReferanse;

@@ -23,15 +23,13 @@ public class BeregningsgrunnlagPrStatusOgAndelSNDto extends BeregningsgrunnlagPr
     @JsonProperty("pgiSnitt")
     private Beløp pgiSnitt;
 
-    @Valid
     @JsonProperty("pgiVerdier")
     @Size
-    private List<PgiDto> pgiVerdier;
+    private List<@Valid PgiDto> pgiVerdier;
 
-    @Valid
     @JsonProperty("næringer")
     @Size
-    private List<EgenNæringDto> næringer;
+    private List<@Valid EgenNæringDto> næringer;
 
     public BeregningsgrunnlagPrStatusOgAndelSNDto() {
         super();

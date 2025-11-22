@@ -23,8 +23,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class OppdateringListeRespons {
 
     @JsonProperty(value = "oppdateringer")
-    @Valid
-    private List<OppdateringPrRequest> oppdateringer;
+    private List<@Valid OppdateringPrRequest> oppdateringer;
 
     @JsonProperty(value = "trengerNyInput")
     @Valid
@@ -38,7 +37,7 @@ public class OppdateringListeRespons {
         this.trengerNyInput = trengerNyInput;
     }
 
-    public OppdateringListeRespons(@Valid @NotNull List<OppdateringPrRequest> oppdateringer) {
+    public OppdateringListeRespons(@NotNull List<@Valid OppdateringPrRequest> oppdateringer) {
         this.oppdateringer = oppdateringer;
     }
 

@@ -21,14 +21,13 @@ public class YtelserDto {
 
     @JsonProperty("ytelser")
     @Size(min = 1)
-    @Valid
-    private List<YtelseDto> ytelser;
+    private List<@Valid YtelseDto> ytelser;
 
     protected YtelserDto() {
         // default ctor
     }
 
-    public YtelserDto(@NotNull @Valid List<YtelseDto> ytelser) {
+    public YtelserDto(@NotNull List<@Valid YtelseDto> ytelser) {
         this.ytelser = ytelser;
     }
 

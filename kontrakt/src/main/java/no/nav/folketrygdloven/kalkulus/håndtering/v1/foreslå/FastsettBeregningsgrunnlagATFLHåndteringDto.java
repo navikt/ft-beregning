@@ -25,9 +25,8 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.AvklaringsbehovDefinisjon;
 public class FastsettBeregningsgrunnlagATFLHåndteringDto extends HåndterBeregningDto {
 
     @JsonProperty(value = "inntektPrAndelList")
-    @Valid
     @Size(max = 100)
-    private List<InntektPrAndelDto> inntektPrAndelList;
+    private List<@Valid InntektPrAndelDto> inntektPrAndelList;
 
     @JsonProperty(value = "inntektFrilanser")
     @Valid
@@ -36,18 +35,17 @@ public class FastsettBeregningsgrunnlagATFLHåndteringDto extends HåndterBeregn
     private Integer inntektFrilanser;
 
     @JsonProperty(value = "fastsatteTidsbegrensedePerioder")
-    @Valid
     @Size(max = 100)
-    private List<FastsattePerioderTidsbegrensetDto> fastsatteTidsbegrensedePerioder;
+    private List<@Valid FastsattePerioderTidsbegrensetDto> fastsatteTidsbegrensedePerioder;
 
 
     protected FastsettBeregningsgrunnlagATFLHåndteringDto() {
         super(AvklaringsbehovDefinisjon.FASTSETT_BG_AT_FL);
     }
 
-	public FastsettBeregningsgrunnlagATFLHåndteringDto(@Valid @Size(max = 100) List<InntektPrAndelDto> inntektPrAndelList,
+	public FastsettBeregningsgrunnlagATFLHåndteringDto(@Size(max = 100) List<@Valid InntektPrAndelDto> inntektPrAndelList,
                                                        @Valid @Min(0) @Max(100 * 1000 * 1000) Integer inntektFrilanser,
-                                                       @Valid @Size(max = 100) List<FastsattePerioderTidsbegrensetDto> fastsatteTidsbegrensedePerioder) {
+                                                       @Size(max = 100) List<@Valid FastsattePerioderTidsbegrensetDto> fastsatteTidsbegrensedePerioder) {
         super(AvklaringsbehovDefinisjon.FASTSETT_BG_AT_FL);
         this.inntektPrAndelList = inntektPrAndelList;
         this.inntektFrilanser = inntektFrilanser;

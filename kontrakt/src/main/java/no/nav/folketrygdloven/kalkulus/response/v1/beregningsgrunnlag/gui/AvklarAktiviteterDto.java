@@ -19,10 +19,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonAutoDetect(fieldVisibility = NONE, getterVisibility = NONE, setterVisibility = NONE, isGetterVisibility = NONE, creatorVisibility = NONE)
 public class AvklarAktiviteterDto {
 
-    @Valid
     @JsonProperty(value = "aktiviteterTomDatoMapping")
     @Size(max=100)
-    private List<AktivitetTomDatoMappingDto> aktiviteterTomDatoMapping;
+    private List<@Valid AktivitetTomDatoMappingDto> aktiviteterTomDatoMapping;
 
     @Valid
     @NotNull

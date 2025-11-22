@@ -4,6 +4,8 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
+import jakarta.validation.constraints.Pattern;
+
 /**
  * Id som genereres fra NAV Aktør Register. Denne iden benyttes til interne forhold i Nav og vil ikke endres f.eks. dersom bruker går fra
  * DNR til FNR i Folkeregisteret. Tilsvarende vil den kunne referere personer som har ident fra et utenlandsk system.
@@ -19,6 +21,7 @@ public class OrgNummer implements Comparable<OrgNummer> {
     public static final String KUNSTIG_ORG = "342352362"; // magic constant
 
     @JsonValue
+    @Pattern(regexp = "^\\d{9}+$", message = "orgnummer ${validatedValue} har ikke gyldig verdi (13 siffer)")
     private String orgNummer; // NOSONAR
 
     public OrgNummer(String orgNummer) {

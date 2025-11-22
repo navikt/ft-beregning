@@ -20,17 +20,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonAutoDetect(fieldVisibility = NONE, getterVisibility = NONE, setterVisibility = NONE, isGetterVisibility = NONE, creatorVisibility = NONE)
 public class FordelBeregningsgrunnlagDto {
 
-    @Valid
     @JsonProperty(value = "fordelBeregningsgrunnlagPerioder")
     @Size(max=5000)
     @NotNull
-    private List<FordelBeregningsgrunnlagPeriodeDto> fordelBeregningsgrunnlagPerioder = new ArrayList<>();
+    private List<@Valid FordelBeregningsgrunnlagPeriodeDto> fordelBeregningsgrunnlagPerioder = new ArrayList<>();
 
-    @Valid
     @JsonProperty(value = "arbeidsforholdTilFordeling")
     @Size(max=500)
     @NotNull
-    private List<FordelBeregningsgrunnlagArbeidsforholdDto> arbeidsforholdTilFordeling = new ArrayList<>();
+    private List<@Valid FordelBeregningsgrunnlagArbeidsforholdDto> arbeidsforholdTilFordeling = new ArrayList<>();
 
     public List<FordelBeregningsgrunnlagPeriodeDto> getFordelBeregningsgrunnlagPerioder() {
         return fordelBeregningsgrunnlagPerioder;

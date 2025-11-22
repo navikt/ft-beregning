@@ -20,9 +20,8 @@ import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.Beregnings
 public class BeregningsgrunnlagListe {
 
     @JsonProperty(value = "beregningsgrunnlagListe", required = true)
-    @Valid
     @NotNull
-    private List<BeregningsgrunnlagPrReferanse<BeregningsgrunnlagDto>> beregningsgrunnlagListe;
+    private List<@Valid BeregningsgrunnlagPrReferanse<BeregningsgrunnlagDto>> beregningsgrunnlagListe;
 
     @JsonProperty(value = "trengerNyInput")
     @Valid
@@ -32,7 +31,7 @@ public class BeregningsgrunnlagListe {
         // JSON deserialisering
     }
 
-    public BeregningsgrunnlagListe(@JsonProperty(value = "beregningsgrunnlagListe", required = true) @Valid @NotNull List<BeregningsgrunnlagPrReferanse<BeregningsgrunnlagDto>> beregningsgrunnlagListe) {
+    public BeregningsgrunnlagListe(@JsonProperty(value = "beregningsgrunnlagListe", required = true) @NotNull List<@Valid BeregningsgrunnlagPrReferanse<BeregningsgrunnlagDto>> beregningsgrunnlagListe) {
         this.beregningsgrunnlagListe = beregningsgrunnlagListe;
     }
 

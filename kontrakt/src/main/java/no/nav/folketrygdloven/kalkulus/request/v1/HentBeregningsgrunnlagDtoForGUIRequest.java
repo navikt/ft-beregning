@@ -38,8 +38,7 @@ public class HentBeregningsgrunnlagDtoForGUIRequest {
     private FagsakYtelseType ytelseSomSkalBeregnes;
 
     @JsonProperty(value = "referanser")
-    @Valid
-    private Set<ArbeidsforholdReferanseDto> referanser;
+    private Set<@Valid ArbeidsforholdReferanseDto> referanser;
 
     @JsonProperty(value = "vilkårsperiodeFom")
     @Valid
@@ -51,7 +50,7 @@ public class HentBeregningsgrunnlagDtoForGUIRequest {
 
     public HentBeregningsgrunnlagDtoForGUIRequest(@Valid @NotNull UUID eksternReferanse,
                                                   @NotNull @Valid FagsakYtelseType ytelseSomSkalBeregnes,
-                                                  @Valid Set<ArbeidsforholdReferanseDto> referanser,
+                                                  Set<@Valid ArbeidsforholdReferanseDto> referanser,
                                                   @Valid LocalDate vilkårsperiodeFom) {
         this.eksternReferanse = eksternReferanse;
         this.ytelseSomSkalBeregnes = ytelseSomSkalBeregnes;
@@ -61,7 +60,7 @@ public class HentBeregningsgrunnlagDtoForGUIRequest {
 
     public HentBeregningsgrunnlagDtoForGUIRequest(@Valid @NotNull UUID eksternReferanse,
                                                   @NotNull @Valid FagsakYtelseType ytelseSomSkalBeregnes,
-                                                  @Valid Set<ArbeidsforholdReferanseDto> referanser) {
+                                                  Set<@Valid ArbeidsforholdReferanseDto> referanser) {
         this.eksternReferanse = eksternReferanse;
         this.ytelseSomSkalBeregnes = ytelseSomSkalBeregnes;
         this.referanser = referanser;

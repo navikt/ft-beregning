@@ -22,8 +22,7 @@ public class BeregningAktivitetAggregatDto {
 
     @JsonProperty(value = "aktiviteter")
     @Size(min = 1)
-    @Valid
-    private List<BeregningAktivitetDto> aktiviteter;
+    private List<@Valid BeregningAktivitetDto> aktiviteter;
 
     @JsonProperty(value = "skjæringstidspunktOpptjening")
     @NotNull
@@ -33,7 +32,7 @@ public class BeregningAktivitetAggregatDto {
     public BeregningAktivitetAggregatDto() {
     }
 
-    public BeregningAktivitetAggregatDto(@NotNull @Valid List<BeregningAktivitetDto> aktiviteter, @NotNull @Valid LocalDate skjæringstidspunktOpptjening) {
+    public BeregningAktivitetAggregatDto(@NotNull List<@Valid BeregningAktivitetDto> aktiviteter, @NotNull @Valid LocalDate skjæringstidspunktOpptjening) {
         this.aktiviteter = aktiviteter;
         this.skjæringstidspunktOpptjening = skjæringstidspunktOpptjening;
     }

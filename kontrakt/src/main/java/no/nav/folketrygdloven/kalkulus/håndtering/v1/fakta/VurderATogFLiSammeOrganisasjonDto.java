@@ -20,14 +20,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class VurderATogFLiSammeOrganisasjonDto {
 
     @JsonProperty("vurderATogFLiSammeOrganisasjonAndelListe")
-    @Valid
     @Size(min = 1)
-    private List<VurderATogFLiSammeOrganisasjonAndelDto> vurderATogFLiSammeOrganisasjonAndelListe;
+    private List<@Valid VurderATogFLiSammeOrganisasjonAndelDto> vurderATogFLiSammeOrganisasjonAndelListe;
 
     public VurderATogFLiSammeOrganisasjonDto() {
     }
 
-    public VurderATogFLiSammeOrganisasjonDto(@Valid @NotNull List<VurderATogFLiSammeOrganisasjonAndelDto> vurderATogFLiSammeOrganisasjonAndelListe) {
+    public VurderATogFLiSammeOrganisasjonDto(@NotNull List<@Valid VurderATogFLiSammeOrganisasjonAndelDto> vurderATogFLiSammeOrganisasjonAndelListe) {
         this.vurderATogFLiSammeOrganisasjonAndelListe = vurderATogFLiSammeOrganisasjonAndelListe;
     }
 

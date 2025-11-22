@@ -14,10 +14,9 @@ import no.nav.folketrygdloven.kalkulus.felles.v1.Saksnummer;
 public class KontrollerGrunnbeløpRequest {
 
     @JsonProperty(value = "koblinger", required = true)
-    @Valid
     @NotNull
     @Size(min=1)
-    private List<UUID> koblinger;
+    private List<@Valid UUID> koblinger;
 
 
     @JsonProperty(value = "saksnummer", required = true)
@@ -30,7 +29,7 @@ public class KontrollerGrunnbeløpRequest {
         // default ctor
     }
 
-    public KontrollerGrunnbeløpRequest(@Valid @NotNull @Size(min = 1) List<UUID> koblinger,
+    public KontrollerGrunnbeløpRequest(@NotNull @Size(min = 1) List<@Valid UUID> koblinger,
                                        @JsonProperty(value = "saksnummer", required = true) @NotNull @Valid Saksnummer saksnummer) {
         this.koblinger = koblinger;
         this.saksnummer = saksnummer;

@@ -12,16 +12,15 @@ import no.nav.folketrygdloven.kalkulus.felles.v1.Saksnummer;
 public class KontrollerInputForSakerRequest {
 
     @JsonProperty(value = "saksnummer", required = true)
-    @Valid
     @NotNull
-    private List<Saksnummer> saksnummer;
+    private List<@Valid Saksnummer> saksnummer;
 
 
     protected KontrollerInputForSakerRequest() {
         // default ctor
     }
 
-    public KontrollerInputForSakerRequest(@Valid @NotNull List<Saksnummer> saksnummer) {
+    public KontrollerInputForSakerRequest(@NotNull List<@Valid Saksnummer> saksnummer) {
         this.saksnummer = saksnummer;
     }
 

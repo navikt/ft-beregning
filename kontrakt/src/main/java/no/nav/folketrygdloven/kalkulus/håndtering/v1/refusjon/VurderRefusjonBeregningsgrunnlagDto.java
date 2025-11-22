@@ -24,20 +24,18 @@ import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.Refusj
 public class VurderRefusjonBeregningsgrunnlagDto extends HåndterBeregningDto {
 
     @JsonProperty("fastsatteAndeler")
-    @Valid
     @Size
-    private List<VurderRefusjonAndelBeregningsgrunnlagDto> fastsatteAndeler;
+    private List<@Valid VurderRefusjonAndelBeregningsgrunnlagDto> fastsatteAndeler;
 
     @JsonProperty("refusjonskravForSentListe")
-    @Valid
     @Size
-    private List<RefusjonskravForSentDto> refusjonskravForSentListe;
+    private List<@Valid RefusjonskravForSentDto> refusjonskravForSentListe;
 
     public VurderRefusjonBeregningsgrunnlagDto() {
         // For Json deserialisering
     }
 
-    public VurderRefusjonBeregningsgrunnlagDto(@Valid List<VurderRefusjonAndelBeregningsgrunnlagDto> fastsatteAndeler, @Valid List<RefusjonskravForSentDto> refusjonskravForSentListe) {
+    public VurderRefusjonBeregningsgrunnlagDto(List<@Valid VurderRefusjonAndelBeregningsgrunnlagDto> fastsatteAndeler, List<@Valid RefusjonskravForSentDto> refusjonskravForSentListe) {
         super(AvklaringsbehovDefinisjon.VURDER_REFUSJONSKRAV);
         this.fastsatteAndeler = fastsatteAndeler;
         this.refusjonskravForSentListe = refusjonskravForSentListe;

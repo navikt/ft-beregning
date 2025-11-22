@@ -19,14 +19,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class AvklarteAktiviteterDto {
 
     @JsonProperty("beregningsaktivitetLagreDtoList")
-    @Valid
     @Size(min = 1)
-    private List<BeregningsaktivitetLagreDto> beregningsaktivitetLagreDtoList;
+    private List<@Valid BeregningsaktivitetLagreDto> beregningsaktivitetLagreDtoList;
 
     public AvklarteAktiviteterDto() {
     }
 
-    public AvklarteAktiviteterDto(@Valid @Size(min = 1) List<BeregningsaktivitetLagreDto> beregningsaktivitetLagreDtoList) {
+    public AvklarteAktiviteterDto(@Size(min = 1) List<@Valid BeregningsaktivitetLagreDto> beregningsaktivitetLagreDtoList) {
         this.beregningsaktivitetLagreDtoList = beregningsaktivitetLagreDtoList;
     }
 

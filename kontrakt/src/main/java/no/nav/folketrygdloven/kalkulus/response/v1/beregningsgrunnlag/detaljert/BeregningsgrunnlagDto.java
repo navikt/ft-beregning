@@ -36,30 +36,25 @@ public class BeregningsgrunnlagDto {
 	@JsonProperty(value = "aktivitetStatuser")
     @NotNull
     @Size(min = 1, max = 20)
-    @Valid
-    private List<AktivitetStatus> aktivitetStatuser;
+    private List<@Valid AktivitetStatus> aktivitetStatuser;
 
 	@JsonProperty(value = "aktivitetStatuserMedHjemmel")
 	@NotNull
 	@Size(min = 1, max = 20)
-	@Valid
-	private List<BeregningsgrunnlagAktivitetStatusDto> aktivitetStatuserMedHjemmel;
+    private List<@Valid BeregningsgrunnlagAktivitetStatusDto> aktivitetStatuserMedHjemmel;
 
     @JsonProperty(value = "beregningsgrunnlagPerioder")
     @NotNull
     @Size(min = 1, max = 100)
-    @Valid
-    private List<BeregningsgrunnlagPeriodeDto> beregningsgrunnlagPerioder;
+    private List<@Valid BeregningsgrunnlagPeriodeDto> beregningsgrunnlagPerioder;
 
     @JsonProperty(value = "sammenligningsgrunnlagPrStatusListe")
     @Size(max = 10)
-    @Valid
-    private List<SammenligningsgrunnlagPrStatusDto> sammenligningsgrunnlagPrStatusListe;
+    private List<@Valid SammenligningsgrunnlagPrStatusDto> sammenligningsgrunnlagPrStatusListe;
 
     @JsonProperty(value = "faktaOmBeregningTilfeller")
     @Size(max = 50)
-    @Valid
-    private List<FaktaOmBeregningTilfelle> faktaOmBeregningTilfeller;
+    private List<@Valid FaktaOmBeregningTilfelle> faktaOmBeregningTilfeller;
 
     @JsonProperty(value = "overstyrt")
     private boolean overstyrt;
@@ -72,13 +67,13 @@ public class BeregningsgrunnlagDto {
     }
 
     public BeregningsgrunnlagDto(@NotNull @Valid LocalDate skjæringstidspunkt,
-                                 @NotNull @Size(min = 1, max = 20) @Valid List<AktivitetStatus> aktivitetStatuser,
-                                 @NotNull @Size(min = 1, max = 100) @Valid List<BeregningsgrunnlagPeriodeDto> beregningsgrunnlagPerioder,
-                                 @Size(max = 10) @Valid List<SammenligningsgrunnlagPrStatusDto> sammenligningsgrunnlagPrStatusListe,
-                                 @Size(max = 50) @Valid List<FaktaOmBeregningTilfelle> faktaOmBeregningTilfeller,
+                                 @NotNull @Size(min = 1, max = 20) List<@Valid AktivitetStatus> aktivitetStatuser,
+                                 @NotNull @Size(min = 1, max = 100) List<@Valid BeregningsgrunnlagPeriodeDto> beregningsgrunnlagPerioder,
+                                 @Size(max = 10) List<@Valid SammenligningsgrunnlagPrStatusDto> sammenligningsgrunnlagPrStatusListe,
+                                 @Size(max = 50) List<@Valid FaktaOmBeregningTilfelle> faktaOmBeregningTilfeller,
                                  boolean overstyrt,
                                  @Valid Beløp grunnbeløp,
-                                 @NotNull @Size(min = 1, max = 20) @Valid List<BeregningsgrunnlagAktivitetStatusDto> aktivitetStatuserMedHjemmel) {
+                                 @NotNull @Size(min = 1, max = 20) List<@Valid BeregningsgrunnlagAktivitetStatusDto> aktivitetStatuserMedHjemmel) {
         this.skjæringstidspunkt = skjæringstidspunkt;
         this.aktivitetStatuser = aktivitetStatuser;
         this.beregningsgrunnlagPerioder = beregningsgrunnlagPerioder;
@@ -92,10 +87,10 @@ public class BeregningsgrunnlagDto {
 	// Kan fjernes når alle aktører sender med status med hjemmel
 	@Deprecated
 	public BeregningsgrunnlagDto(@NotNull @Valid LocalDate skjæringstidspunkt,
-	                             @NotNull @Size(min = 1, max = 20) @Valid List<AktivitetStatus> aktivitetStatuser,
-	                             @NotNull @Size(min = 1, max = 100) @Valid List<BeregningsgrunnlagPeriodeDto> beregningsgrunnlagPerioder,
-	                             @Size(max = 10) @Valid List<SammenligningsgrunnlagPrStatusDto> sammenligningsgrunnlagPrStatusListe,
-	                             @Size(max = 50) @Valid List<FaktaOmBeregningTilfelle> faktaOmBeregningTilfeller,
+	                             @NotNull @Size(min = 1, max = 20) List<@Valid AktivitetStatus> aktivitetStatuser,
+	                             @NotNull @Size(min = 1, max = 100) List<@Valid BeregningsgrunnlagPeriodeDto> beregningsgrunnlagPerioder,
+	                             @Size(max = 10) List<@Valid SammenligningsgrunnlagPrStatusDto> sammenligningsgrunnlagPrStatusListe,
+	                             @Size(max = 50) List<@Valid FaktaOmBeregningTilfelle> faktaOmBeregningTilfeller,
 	                             boolean overstyrt,
 	                             @Valid Beløp grunnbeløp) {
 		this.skjæringstidspunkt = skjæringstidspunkt;

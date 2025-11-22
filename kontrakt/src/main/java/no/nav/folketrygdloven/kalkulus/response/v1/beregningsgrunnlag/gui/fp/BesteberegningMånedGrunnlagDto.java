@@ -21,11 +21,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.NONE, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, isGetterVisibility = JsonAutoDetect.Visibility.NONE, creatorVisibility = JsonAutoDetect.Visibility.NONE)
 public class BesteberegningMånedGrunnlagDto {
 
-    @Valid
     @JsonProperty("inntekter")
     @Size()
     @NotNull
-    private List<BesteberegningInntektDto> inntekter;
+    private List<@Valid BesteberegningInntektDto> inntekter;
 
     @Valid
     @JsonProperty("fom")

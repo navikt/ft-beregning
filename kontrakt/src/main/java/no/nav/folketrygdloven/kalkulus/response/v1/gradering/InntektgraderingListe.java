@@ -18,9 +18,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class InntektgraderingListe {
 
     @JsonProperty(value = "liste", required = true)
-    @Valid
     @NotNull
-    private List<InntektgraderingPrReferanse> liste;
+    private List<@Valid InntektgraderingPrReferanse> liste;
 
     public InntektgraderingListe() {
     }

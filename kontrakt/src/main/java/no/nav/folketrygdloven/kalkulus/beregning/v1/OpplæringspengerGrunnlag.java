@@ -22,8 +22,7 @@ public class OpplæringspengerGrunnlag extends YtelsespesifiktGrunnlagDto {
 
     @JsonProperty(value = "utbetalingsgradPrAktivitet", required = true)
     @Size()
-    @Valid
-    private List<UtbetalingsgradPrAktivitetDto> utbetalingsgradPrAktivitet;
+    private List<@Valid UtbetalingsgradPrAktivitetDto> utbetalingsgradPrAktivitet;
 
     @JsonProperty(value = "tilkommetInntektHensyntasFom")
     @Valid
@@ -33,11 +32,11 @@ public class OpplæringspengerGrunnlag extends YtelsespesifiktGrunnlagDto {
         // default ctor
     }
 
-    public OpplæringspengerGrunnlag(@NotNull @Valid List<UtbetalingsgradPrAktivitetDto> utbetalingsgradPrAktivitet) {
+    public OpplæringspengerGrunnlag(@NotNull List<@Valid UtbetalingsgradPrAktivitetDto> utbetalingsgradPrAktivitet) {
         this.utbetalingsgradPrAktivitet = utbetalingsgradPrAktivitet;
     }
 
-    public OpplæringspengerGrunnlag(@NotNull @Valid List<UtbetalingsgradPrAktivitetDto> utbetalingsgradPrAktivitet, @Valid LocalDate tilkommetInntektHensyntasFom) {
+    public OpplæringspengerGrunnlag(@NotNull List<@Valid UtbetalingsgradPrAktivitetDto> utbetalingsgradPrAktivitet, @Valid LocalDate tilkommetInntektHensyntasFom) {
         this.utbetalingsgradPrAktivitet = utbetalingsgradPrAktivitet;
         this.tilkommetInntektHensyntasFom = tilkommetInntektHensyntasFom;
     }

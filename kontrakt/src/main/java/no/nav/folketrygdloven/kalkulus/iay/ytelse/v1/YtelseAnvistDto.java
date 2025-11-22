@@ -38,8 +38,7 @@ public class YtelseAnvistDto {
 
     @JsonProperty("anvisteAndeler")
     @Size()
-    @Valid
-    private List<AnvistAndel> anvisteAndeler;
+    private List<@Valid AnvistAndel> anvisteAndeler;
 
 
     public YtelseAnvistDto() {

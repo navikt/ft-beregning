@@ -26,15 +26,13 @@ public class OppgittOpptjeningDto {
     private OppgittFrilansDto frilans;
 
     @JsonProperty(value = "egenNæring")
-    @Valid
     @Size
-    private List<OppgittEgenNæringDto> egenNæring;
+    private List<@Valid OppgittEgenNæringDto> egenNæring;
 
 
     @JsonProperty(value = "oppgittArbeidsforhold")
-    @Valid
     @Size
-    private List<OppgittArbeidsforholdDto> oppgittArbeidsforhold;
+    private List<@Valid OppgittArbeidsforholdDto> oppgittArbeidsforhold;
 
 
     public OppgittOpptjeningDto() {

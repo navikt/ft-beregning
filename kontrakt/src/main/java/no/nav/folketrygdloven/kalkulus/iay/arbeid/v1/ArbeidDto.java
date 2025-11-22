@@ -19,14 +19,13 @@ public class ArbeidDto {
 
     @JsonProperty("yrkesaktiviteter")
     @Size()
-    @Valid
-    private List<YrkesaktivitetDto> yrkesaktiviteter;
+    private List<@Valid YrkesaktivitetDto> yrkesaktiviteter;
 
     protected ArbeidDto() {
         // default ctor
     }
 
-    public ArbeidDto(@NotNull @Valid List<YrkesaktivitetDto> yrkesaktiviteter) {
+    public ArbeidDto(@NotNull List<@Valid YrkesaktivitetDto> yrkesaktiviteter) {
         this.yrkesaktiviteter = yrkesaktiviteter;
     }
 

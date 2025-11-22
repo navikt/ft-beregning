@@ -17,14 +17,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class BeregningsgrunnlagEndring {
 
     @JsonProperty(value = "beregningsgrunnlagPeriodeEndringer")
-    @Valid
-    private List<BeregningsgrunnlagPeriodeEndring> beregningsgrunnlagPeriodeEndringer;
+    private List<@Valid BeregningsgrunnlagPeriodeEndring> beregningsgrunnlagPeriodeEndringer;
 
 
     public BeregningsgrunnlagEndring() {
     }
 
-    public BeregningsgrunnlagEndring(@Valid List<BeregningsgrunnlagPeriodeEndring> beregningsgrunnlagPeriodeEndringer) {
+    public BeregningsgrunnlagEndring(List<@Valid BeregningsgrunnlagPeriodeEndring> beregningsgrunnlagPeriodeEndringer) {
         this.beregningsgrunnlagPeriodeEndringer = beregningsgrunnlagPeriodeEndringer;
     }
 

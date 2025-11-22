@@ -22,8 +22,7 @@ public class SvangerskapspengerGrunnlag extends YtelsespesifiktGrunnlagDto {
 
     @JsonProperty(value = "utbetalingsgradPrAktivitet", required = true)
     @Size(min = 1)
-    @Valid
-    private List<UtbetalingsgradPrAktivitetDto> utbetalingsgradPrAktivitet;
+    private List<@Valid UtbetalingsgradPrAktivitetDto> utbetalingsgradPrAktivitet;
 
     @JsonProperty(value = "tilkommetInntektHensyntasFom")
     @Valid
@@ -34,7 +33,7 @@ public class SvangerskapspengerGrunnlag extends YtelsespesifiktGrunnlagDto {
         // default ctor
     }
 
-    public SvangerskapspengerGrunnlag(@NotNull @Valid List<UtbetalingsgradPrAktivitetDto> utbetalingsgradPrAktivitet, LocalDate tilkommetInntektHensyntasFom) {
+    public SvangerskapspengerGrunnlag(@NotNull List<@Valid UtbetalingsgradPrAktivitetDto> utbetalingsgradPrAktivitet, LocalDate tilkommetInntektHensyntasFom) {
         this.utbetalingsgradPrAktivitet = utbetalingsgradPrAktivitet;
         this.tilkommetInntektHensyntasFom = tilkommetInntektHensyntasFom;
     }

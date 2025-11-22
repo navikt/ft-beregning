@@ -27,9 +27,8 @@ import no.nav.folketrygdloven.kalkulus.felles.v1.Saksnummer;
 public class BeregningsgrunnlagListeRequest implements KalkulusRequest {
 
     @JsonProperty(value = "beregningsgrunnlagRequest", required = true)
-    @Valid
     @NotNull
-    private List<BeregningsgrunnlagRequest> beregningsgrunnlagRequest;
+    private List<@Valid BeregningsgrunnlagRequest> beregningsgrunnlagRequest;
 
     @JsonProperty(value = "saksnummer", required = true)
     @NotNull
