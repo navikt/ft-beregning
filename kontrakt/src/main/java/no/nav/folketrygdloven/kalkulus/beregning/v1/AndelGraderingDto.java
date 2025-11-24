@@ -34,9 +34,8 @@ public class AndelGraderingDto {
     private InternArbeidsforholdRefDto arbeidsforholdRef;
 
     @JsonProperty(value = "graderinger")
-    @Valid
     @Size(min = 1)
-    private List<GraderingDto> graderinger;
+    private List<@Valid GraderingDto> graderinger;
 
     protected AndelGraderingDto() {
         // default ctor
@@ -45,7 +44,7 @@ public class AndelGraderingDto {
     public AndelGraderingDto(@Valid @NotNull AktivitetStatus aktivitetStatus,
                              @Valid @NotNull Aktør arbeidsgiver,
                              @Valid InternArbeidsforholdRefDto arbeidsforholdRef,
-                             @Valid @NotEmpty List<GraderingDto> graderinger) {
+                             @NotEmpty List<@Valid GraderingDto> graderinger) {
 
         this.aktivitetStatus = aktivitetStatus;
         this.arbeidsgiver = arbeidsgiver;

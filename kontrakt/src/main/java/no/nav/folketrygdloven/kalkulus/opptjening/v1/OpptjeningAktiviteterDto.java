@@ -23,9 +23,8 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.MidlertidigInaktivType;
 public class OpptjeningAktiviteterDto {
 
     @JsonProperty(value = "perioder", required = true)
-    @Valid
     @Size()
-    private List<OpptjeningPeriodeDto> perioder;
+    private List<@Valid OpptjeningPeriodeDto> perioder;
 
     @JsonProperty(value = "midlertidigInaktivType")
     @Valid
@@ -35,12 +34,12 @@ public class OpptjeningAktiviteterDto {
         // default ctor
     }
 
-    public OpptjeningAktiviteterDto(@JsonProperty(value = "perioder",required = true) @Valid @NotEmpty List<OpptjeningPeriodeDto> perioder) {
+    public OpptjeningAktiviteterDto(@JsonProperty(value = "perioder",required = true) @NotEmpty List<@Valid OpptjeningPeriodeDto> perioder) {
         this.perioder = perioder;
     }
 
 	@JsonCreator
-    public OpptjeningAktiviteterDto(@JsonProperty(value = "perioder", required = true) @Valid @NotEmpty List<OpptjeningPeriodeDto> perioder,
+    public OpptjeningAktiviteterDto(@JsonProperty(value = "perioder", required = true) @NotEmpty List<@Valid OpptjeningPeriodeDto> perioder,
                                     @JsonProperty(value = "midlertidigInaktivType") @Valid MidlertidigInaktivType midlertidigInaktivType) {
 
         this.perioder = perioder;

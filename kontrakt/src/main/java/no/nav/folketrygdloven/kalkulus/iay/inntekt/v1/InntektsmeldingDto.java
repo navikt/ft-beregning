@@ -34,14 +34,12 @@ public class InntektsmeldingDto {
     private Beløp inntektBeløp;
 
     @JsonProperty(value = "naturalYtelser")
-    @Valid
     @Size
-    private List<NaturalYtelseDto> naturalYtelser;
+    private List<@Valid NaturalYtelseDto> naturalYtelser;
 
     @JsonProperty(value = "endringerRefusjon")
-    @Valid
     @Size
-    private List<RefusjonDto> endringerRefusjon;
+    private List<@Valid RefusjonDto> endringerRefusjon;
 
     @JsonProperty(value = "arbeidsforholdRef")
     @Valid
@@ -74,8 +72,8 @@ public class InntektsmeldingDto {
 
     public InntektsmeldingDto(@Valid @NotNull Aktør arbeidsgiver,
                               @Valid @NotNull Beløp inntektBeløp,
-                              @Valid List<NaturalYtelseDto> naturalYtelser,
-                              @Valid List<RefusjonDto> endringerRefusjon,
+                              List<@Valid NaturalYtelseDto> naturalYtelser,
+                              List<@Valid RefusjonDto> endringerRefusjon,
                               @Valid InternArbeidsforholdRefDto arbeidsforholdRef,
                               @Valid LocalDate startDatoPermisjon,
                               @Valid LocalDate refusjonOpphører,

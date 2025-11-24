@@ -21,13 +21,12 @@ public class BeregningAktivitetOverstyringerDto {
 
     @JsonProperty(value = "overstyringer")
     @Size
-    @Valid
-    private List<BeregningAktivitetOverstyringDto> overstyringer;
+    private List<@Valid BeregningAktivitetOverstyringDto> overstyringer;
 
     public BeregningAktivitetOverstyringerDto() {
     }
 
-    public BeregningAktivitetOverstyringerDto(@NotNull @Valid List<BeregningAktivitetOverstyringDto> overstyringer) {
+    public BeregningAktivitetOverstyringerDto(@NotNull List<@Valid BeregningAktivitetOverstyringDto> overstyringer) {
         this.overstyringer = overstyringer;
     }
 

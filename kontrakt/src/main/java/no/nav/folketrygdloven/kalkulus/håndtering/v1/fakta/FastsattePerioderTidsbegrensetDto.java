@@ -31,15 +31,14 @@ public class FastsattePerioderTidsbegrensetDto {
     private LocalDate periodeTom;
 
     @JsonProperty("fastsatteTidsbegrensedeAndeler")
-    @Valid
     @Size(min = 1)
-    private List<FastsatteAndelerTidsbegrensetDto> fastsatteTidsbegrensedeAndeler;
+    private List<@Valid FastsatteAndelerTidsbegrensetDto> fastsatteTidsbegrensedeAndeler;
 
     public FastsattePerioderTidsbegrensetDto() {
         // def ctc
     }
 
-    public FastsattePerioderTidsbegrensetDto(@Valid @NotNull LocalDate periodeFom, @Valid @NotNull LocalDate periodeTom, @Valid @NotNull List<FastsatteAndelerTidsbegrensetDto> fastsatteTidsbegrensedeAndeler) {
+    public FastsattePerioderTidsbegrensetDto(@Valid @NotNull LocalDate periodeFom, @Valid @NotNull LocalDate periodeTom, @NotNull List<@Valid FastsatteAndelerTidsbegrensetDto> fastsatteTidsbegrensedeAndeler) {
         this.periodeFom = periodeFom;
         this.periodeTom = periodeTom;
         this.fastsatteTidsbegrensedeAndeler = fastsatteTidsbegrensedeAndeler;

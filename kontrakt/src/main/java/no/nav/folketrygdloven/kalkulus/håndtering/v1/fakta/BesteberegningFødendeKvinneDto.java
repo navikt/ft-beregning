@@ -20,10 +20,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class BesteberegningFødendeKvinneDto {
 
     @JsonProperty("besteberegningAndelListe")
-    @Valid
     @NotNull
     @Size()
-    private List<BesteberegningFødendeKvinneAndelDto> besteberegningAndelListe;
+    private List<@Valid BesteberegningFødendeKvinneAndelDto> besteberegningAndelListe;
 
     @JsonProperty("nyDagpengeAndel")
     @Valid
@@ -33,7 +32,7 @@ public class BesteberegningFødendeKvinneDto {
         // For Json deserialisering
     }
 
-    public BesteberegningFødendeKvinneDto(@Valid @NotNull List<BesteberegningFødendeKvinneAndelDto> besteberegningAndelListe, @Valid DagpengeAndelLagtTilBesteberegningDto nyDagpengeAndel) {
+    public BesteberegningFødendeKvinneDto(@NotNull List<@Valid BesteberegningFødendeKvinneAndelDto> besteberegningAndelListe, @Valid DagpengeAndelLagtTilBesteberegningDto nyDagpengeAndel) {
         this.besteberegningAndelListe = besteberegningAndelListe;
         this.nyDagpengeAndel = nyDagpengeAndel;
     }

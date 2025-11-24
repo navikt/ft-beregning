@@ -29,8 +29,7 @@ public class ForeldrepengerGrunnlag extends YtelsespesifiktGrunnlagDto {
     private AktivitetGraderingDto aktivitetGradering;
 
     @JsonProperty(value = "ytelsegrunnlagForBesteberegning")
-    @Valid
-    private List<Ytelsegrunnlag> ytelsegrunnlagForBesteberegning;
+    private List<@Valid Ytelsegrunnlag> ytelsegrunnlagForBesteberegning;
 
     @JsonProperty(value = "dekningsgrad")
     @Valid
@@ -56,7 +55,7 @@ public class ForeldrepengerGrunnlag extends YtelsespesifiktGrunnlagDto {
     public ForeldrepengerGrunnlag(@Valid @DecimalMin(value = "0.00", message = "verdien ${validatedValue} må være >= {value}") @DecimalMax(value = "100.00", message = "verdien ${validatedValue} må være <= {value}") @Digits(integer = 3, fraction = 2) BigDecimal dekningsgrad,
                                   @Valid @NotNull Boolean kvalifisererTilBesteberegning,
                                   @Valid AktivitetGraderingDto aktivitetGradering,
-                                  @Valid List<Ytelsegrunnlag> ytelsegrunnlagForBesteberegning,
+                                  List<@Valid Ytelsegrunnlag> ytelsegrunnlagForBesteberegning,
                                   @Valid LocalDate førsteUttaksdato) {
         this.dekningsgrad = dekningsgrad;
         this.kvalifisererTilBesteberegning = kvalifisererTilBesteberegning;

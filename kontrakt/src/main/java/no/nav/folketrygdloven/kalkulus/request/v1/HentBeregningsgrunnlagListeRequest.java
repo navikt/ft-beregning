@@ -25,9 +25,8 @@ import no.nav.folketrygdloven.kalkulus.felles.v1.Saksnummer;
 public class HentBeregningsgrunnlagListeRequest implements KalkulusRequest {
 
     @JsonProperty(value = "eksternReferanse", required = true)
-    @Valid
     @NotNull
-    private List<HentBeregningsgrunnlagRequest> requestPrReferanse;
+    private List<@Valid HentBeregningsgrunnlagRequest> requestPrReferanse;
 
     @JsonProperty(value = "behandlingUuid", required = true)
     @Valid
@@ -46,7 +45,7 @@ public class HentBeregningsgrunnlagListeRequest implements KalkulusRequest {
         // default ctor
     }
 
-    public HentBeregningsgrunnlagListeRequest(@Valid @NotNull List<HentBeregningsgrunnlagRequest> requestPrReferanse,
+    public HentBeregningsgrunnlagListeRequest(@NotNull List<@Valid HentBeregningsgrunnlagRequest> requestPrReferanse,
                                               @Valid @NotNull UUID behandlingUuid,
                                               @Valid Saksnummer saksnummer,
                                               boolean inkluderRegelSporing) {

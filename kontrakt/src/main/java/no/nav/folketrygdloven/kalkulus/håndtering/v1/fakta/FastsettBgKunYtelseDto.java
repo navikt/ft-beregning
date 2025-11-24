@@ -20,9 +20,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class FastsettBgKunYtelseDto {
 
     @JsonProperty("andeler")
-    @Valid
     @Size(min = 1)
-    private List<FastsattBrukersAndel> andeler;
+    private List<@Valid FastsattBrukersAndel> andeler;
 
     @JsonProperty("kunYtelseFordeling")
     @Valid

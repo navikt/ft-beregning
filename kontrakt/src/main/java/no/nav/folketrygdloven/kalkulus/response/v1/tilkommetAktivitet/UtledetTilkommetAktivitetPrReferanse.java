@@ -25,12 +25,11 @@ public class UtledetTilkommetAktivitetPrReferanse {
     private UUID eksternReferanse;
 
     @JsonProperty(value = "tilkommetAktivitetPerioder")
-    @Valid
-    private List<UtledetTilkommetAktivitet> tilkommedeAktiviteter;
+    private List<@Valid UtledetTilkommetAktivitet> tilkommedeAktiviteter;
 
     @JsonCreator
     public UtledetTilkommetAktivitetPrReferanse(@JsonProperty(value = "eksternReferanse", required = true) @Valid @NotNull UUID eksternReferanse,
-            @JsonProperty(value = "tilkommedeAktiviteter") @Valid List<UtledetTilkommetAktivitet> tilkommedeAktiviteter) {
+            @JsonProperty(value = "tilkommedeAktiviteter") List<@Valid UtledetTilkommetAktivitet> tilkommedeAktiviteter) {
         this.eksternReferanse = eksternReferanse;
         this.tilkommedeAktiviteter = tilkommedeAktiviteter;
     }

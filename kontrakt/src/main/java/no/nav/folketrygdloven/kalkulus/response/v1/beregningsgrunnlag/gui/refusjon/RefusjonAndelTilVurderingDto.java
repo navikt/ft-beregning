@@ -30,10 +30,9 @@ public class RefusjonAndelTilVurderingDto {
     @NotNull
     private AktivitetStatus aktivitetStatus;
 
-    @Valid
     @JsonProperty("tidligereUtbetalinger")
     @Size(min = 1)
-    private List<TidligereUtbetalingDto> tidligereUtbetalinger;
+    private List<@Valid TidligereUtbetalingDto> tidligereUtbetalinger;
 
     @Valid
     @JsonProperty("nyttRefusjonskravFom")

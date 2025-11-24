@@ -39,8 +39,7 @@ public class SimulerTilkommetInntektListeRequest {
 
     @JsonProperty(value = "beregnForListe")
     @Size(min = 1)
-    @Valid
-    private List<SimulerTilkommetInntektForRequest> simulerForListe;
+    private List<@Valid SimulerTilkommetInntektForRequest> simulerForListe;
 
 
     protected SimulerTilkommetInntektListeRequest() {

@@ -28,7 +28,7 @@ import no.nav.folketrygdloven.kalkulus.håndtering.v1.overstyring.OverstyrBeregn
 import no.nav.folketrygdloven.kalkulus.håndtering.v1.refusjon.VurderRefusjonBeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AvklaringsbehovDefinisjon;
 import no.nav.folketrygdloven.kalkulus.kodeverk.KodeKonstanter;
-import no.nav.folketrygdloven.kalkulus.opptjening.v1.Fritekst;
+import no.nav.folketrygdloven.kalkulus.annoteringer.Fritekst;
 
 
 @JsonIgnoreProperties(ignoreUnknown = true)

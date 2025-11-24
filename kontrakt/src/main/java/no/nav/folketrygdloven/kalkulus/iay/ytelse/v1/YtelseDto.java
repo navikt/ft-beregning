@@ -29,9 +29,8 @@ public class YtelseDto {
     private Beløp vedtaksDagsats;
 
     @JsonProperty("ytelseAnvist")
-    @Valid
     @Size
-    private Set<YtelseAnvistDto> ytelseAnvist;
+    private Set<@Valid YtelseAnvistDto> ytelseAnvist;
 
     @JsonProperty(value = "relatertYtelseType", required = true)
     @Valid
@@ -53,7 +52,7 @@ public class YtelseDto {
     }
 
 	public YtelseDto(@Valid Beløp vedtaksDagsats,
-	                 @Valid @Size Set<YtelseAnvistDto> ytelseAnvist,
+	                 @Size Set<@Valid YtelseAnvistDto> ytelseAnvist,
 	                 @Valid @NotNull YtelseType relatertYtelseType,
 	                 @Valid @NotNull Periode periode,
 	                 @Valid @NotNull YtelseKilde ytelseKilde) {

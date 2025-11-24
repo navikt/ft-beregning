@@ -25,10 +25,9 @@ public class FaktaOmBeregningDto {
     @JsonProperty(value = "saksopplysninger")
     private Saksopplysninger saksopplysninger;
 
-    @Valid
     @JsonProperty(value = "kortvarigeArbeidsforhold")
     @Size(max=100)
-    private List<KortvarigeArbeidsforholdDto> kortvarigeArbeidsforhold;
+    private List<@Valid KortvarigeArbeidsforholdDto> kortvarigeArbeidsforhold;
 
     @Valid
     @JsonProperty(value = "frilansAndel")
@@ -38,20 +37,17 @@ public class FaktaOmBeregningDto {
     @JsonProperty(value = "kunYtelse")
     private KunYtelseDto kunYtelse;
 
-    @Valid
     @JsonProperty(value = "faktaOmBeregningTilfeller")
     @Size(max=15)
-    private List<FaktaOmBeregningTilfelle> faktaOmBeregningTilfeller;
+    private List<@Valid FaktaOmBeregningTilfelle> faktaOmBeregningTilfeller;
 
-    @Valid
     @JsonProperty(value = "arbeidstakerOgFrilanserISammeOrganisasjonListe")
     @Size(max=100)
-    private List<ATogFLISammeOrganisasjonDto> arbeidstakerOgFrilanserISammeOrganisasjonListe;
+    private List<@Valid ATogFLISammeOrganisasjonDto> arbeidstakerOgFrilanserISammeOrganisasjonListe;
 
-    @Valid
     @JsonProperty(value = "arbeidsforholdMedLønnsendringUtenIM")
     @Size(max=100)
-    private List<FaktaOmBeregningAndelDto> arbeidsforholdMedLønnsendringUtenIM;
+    private List<@Valid FaktaOmBeregningAndelDto> arbeidsforholdMedLønnsendringUtenIM;
 
     @Valid
     @JsonProperty(value = "vurderMottarYtelse")
@@ -65,20 +61,18 @@ public class FaktaOmBeregningDto {
     @JsonProperty(value = "vurderBesteberegning")
     private VurderBesteberegningDto vurderBesteberegning;
 
-    @Valid
     @JsonProperty(value = "andelerForFaktaOmBeregning")
     @Size
-    private List<AndelForFaktaOmBeregningDto> andelerForFaktaOmBeregning = new ArrayList<>();
+    private List<@Valid AndelForFaktaOmBeregningDto> andelerForFaktaOmBeregning = new ArrayList<>();
 
     @Valid
     @JsonProperty(value = "vurderMilitaer")
     private VurderMilitærDto vurderMilitaer;
 
     // TODO refusjon: Dette feltet kan slettes når vi har flyttet aksjonspunktet og kjørt gjennom gamle saker
-    @Valid
     @JsonProperty(value = "refusjonskravSomKommerForSentListe")
     @Size
-    private List<RefusjonskravForSentDto> refusjonskravSomKommerForSentListe;
+    private List<@Valid RefusjonskravForSentDto> refusjonskravSomKommerForSentListe;
 
     public FaktaOmBeregningDto() {
         // Hibernate

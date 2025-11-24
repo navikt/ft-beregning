@@ -33,22 +33,20 @@ public class BeregningsgrunnlagFRISINNDto {
     @JsonProperty(value = "aktivitetStatuser")
     @NotNull
     @Size(min = 1, max = 20)
-    @Valid
-    private List<AktivitetStatus> aktivitetStatuser;
+    private List<@Valid AktivitetStatus> aktivitetStatuser;
 
     @JsonProperty(value = "beregningsgrunnlagPerioder")
     @NotNull
     @Size(min = 1, max = 100)
-    @Valid
-    private List<BeregningsgrunnlagPeriodeFRISINNDto> beregningsgrunnlagPerioder;
+    private List<@Valid BeregningsgrunnlagPeriodeFRISINNDto> beregningsgrunnlagPerioder;
 
     public BeregningsgrunnlagFRISINNDto() {
         // jackson
     }
 
     public BeregningsgrunnlagFRISINNDto(@JsonProperty(value = "skjæringstidspunkt") @NotNull @Valid LocalDate skjæringstidspunkt,
-                                        @JsonProperty(value = "aktivitetStatuser") @NotNull @Size(min = 1, max = 20) @Valid List<AktivitetStatus> aktivitetStatuser,
-                                        @JsonProperty(value = "beregningsgrunnlagPerioder") @NotNull @Size(min = 1, max = 100) @Valid List<BeregningsgrunnlagPeriodeFRISINNDto> beregningsgrunnlagPerioder) {
+                                        @JsonProperty(value = "aktivitetStatuser") @NotNull @Size(min = 1, max = 20) List<@Valid AktivitetStatus> aktivitetStatuser,
+                                        @JsonProperty(value = "beregningsgrunnlagPerioder") @NotNull @Size(min = 1, max = 100) List<@Valid BeregningsgrunnlagPeriodeFRISINNDto> beregningsgrunnlagPerioder) {
         this.skjæringstidspunkt = skjæringstidspunkt;
         this.aktivitetStatuser = aktivitetStatuser;
         this.beregningsgrunnlagPerioder = beregningsgrunnlagPerioder;

@@ -6,6 +6,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -34,7 +37,9 @@ public class Sammenligningsgrunnlag {
 
     @JsonProperty(value = "avvikPromilleNy")
     @NotNull
-    @Valid
+    @DecimalMin(value = "0.00", message = "verdien ${validatedValue} må være >= {value}")
+    @DecimalMax(value = "1000000000.00", message = "verdien ${validatedValue} må være <= {value}")
+    @Digits(integer = 10, fraction = 2)
     private BigDecimal avvikPromilleNy;
 
     public Sammenligningsgrunnlag() {

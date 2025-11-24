@@ -17,15 +17,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class AktiveReferanser {
 
     @JsonProperty(value = "referanser")
-    @Valid
     @NotNull
     @Size(min = 0, max = 1000)
-    private List<EksternReferanseDto> referanser;
+    private List<@Valid EksternReferanseDto> referanser;
 
     public AktiveReferanser() {
     }
 
-    public AktiveReferanser(@JsonProperty(value = "referanser") @Valid List<EksternReferanseDto> referanser) {
+    public AktiveReferanser(@JsonProperty(value = "referanser") List<@Valid EksternReferanseDto> referanser) {
         this.referanser = referanser;
     }
 

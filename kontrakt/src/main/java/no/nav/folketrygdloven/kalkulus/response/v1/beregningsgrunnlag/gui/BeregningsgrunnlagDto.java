@@ -32,8 +32,7 @@ public class BeregningsgrunnlagDto {
     @JsonProperty(value = "avklaringsbehov")
     @Size(max = 10)
     @NotNull
-    @Valid
-    private List<AvklaringsbehovDto> avklaringsbehov = Collections.emptyList();
+    private List<@Valid AvklaringsbehovDto> avklaringsbehov = Collections.emptyList();
 
     @JsonProperty(value = "skjaeringstidspunktBeregning")
     @NotNull
@@ -47,19 +46,16 @@ public class BeregningsgrunnlagDto {
 
     @JsonProperty(value = "aktivitetStatus")
     @Size(min = 1)
-    @Valid
-    private List<AktivitetStatus> aktivitetStatus;
+    private List<@Valid AktivitetStatus> aktivitetStatus;
 
     @JsonProperty(value = "beregningsgrunnlagPeriode")
     @Size(min = 1)
-    @Valid
     @NotNull
-    private List<BeregningsgrunnlagPeriodeDto> beregningsgrunnlagPeriode;
+    private List<@Valid BeregningsgrunnlagPeriodeDto> beregningsgrunnlagPeriode;
 
     @JsonProperty(value = "sammenligningsgrunnlagPrStatus")
-    @Valid
     @Size
-    private List<SammenligningsgrunnlagDto> sammenligningsgrunnlagPrStatus;
+    private List<@Valid SammenligningsgrunnlagDto> sammenligningsgrunnlagPrStatus;
 
     @JsonProperty(value = "halvG")
     @Valid
@@ -74,9 +70,8 @@ public class BeregningsgrunnlagDto {
     private FaktaOmBeregningDto faktaOmBeregning;
 
     @JsonProperty(value = "andelerMedGraderingUtenBG")
-    @Valid
     @Size
-    private List<BeregningsgrunnlagPrStatusOgAndelDto> andelerMedGraderingUtenBG;
+    private List<@Valid BeregningsgrunnlagPrStatusOgAndelDto> andelerMedGraderingUtenBG;
 
     @JsonProperty(value = "hjemmel")
     @Valid
@@ -100,10 +95,9 @@ public class BeregningsgrunnlagDto {
     @Valid
     private RefusjonTilVurderingDto refusjonTilVurdering;
 
-    @Valid
     @JsonProperty(value = "refusjonskravSomKommerForSentListe")
     @Size
-    private List<RefusjonskravForSentDto> refusjonskravSomKommerForSentListe;
+    private List<@Valid RefusjonskravForSentDto> refusjonskravSomKommerForSentListe;
 
     @JsonProperty(value = "erOverstyrtInntekt")
     @NotNull
@@ -119,9 +113,8 @@ public class BeregningsgrunnlagDto {
     private InntektsgrunnlagDto inntektsgrunnlag;
 
     @JsonProperty(value = "forlengelseperioder")
-    @Valid
     @Size(max = 100)
-    private List<Periode> forlengelseperioder;
+    private List<@Valid Periode> forlengelseperioder;
 
     public BeregningsgrunnlagDto() {
         // trengs for deserialisering av JSON

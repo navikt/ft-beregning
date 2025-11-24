@@ -42,16 +42,13 @@ public class FaktaOmBeregningVurderinger {
     private ToggleEndring erNyoppstartetFLEndring;
 
     @JsonProperty(value = "erMottattYtelseEndringer")
-    @Valid
-    private List<ErMottattYtelseEndring> erMottattYtelseEndringer = new ArrayList<>();
+    private List<@Valid ErMottattYtelseEndring> erMottattYtelseEndringer = new ArrayList<>();
 
     @JsonProperty(value = "erTidsbegrensetArbeidsforholdEndringer")
-    @Valid
-    private List<ErTidsbegrensetArbeidsforholdEndring> erTidsbegrensetArbeidsforholdEndringer  = new ArrayList<>();
+    private List<@Valid ErTidsbegrensetArbeidsforholdEndring> erTidsbegrensetArbeidsforholdEndringer  = new ArrayList<>();
 
     @JsonProperty(value = "vurderRefusjonskravGyldighetEndringer")
-    @Valid
-    private List<RefusjonskravGyldighetEndring> vurderRefusjonskravGyldighetEndringer = new ArrayList<>();
+    private List<@Valid RefusjonskravGyldighetEndring> vurderRefusjonskravGyldighetEndringer = new ArrayList<>();
 
     public ToggleEndring getHarEtterlønnSluttpakkeEndring() {
         return harEtterlønnSluttpakkeEndring;

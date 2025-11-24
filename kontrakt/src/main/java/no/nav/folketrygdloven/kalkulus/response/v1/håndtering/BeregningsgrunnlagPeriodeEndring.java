@@ -21,15 +21,13 @@ import no.nav.folketrygdloven.kalkulus.felles.v1.Periode;
 public class BeregningsgrunnlagPeriodeEndring {
 
     @JsonProperty(value = "beregningsgrunnlagPrStatusOgAndelEndringer")
-    @Valid
     @Size(max = 5000)
-    private List<BeregningsgrunnlagPrStatusOgAndelEndring> beregningsgrunnlagPrStatusOgAndelEndringer;
+    private List<@Valid BeregningsgrunnlagPrStatusOgAndelEndring> beregningsgrunnlagPrStatusOgAndelEndringer;
 
 
     @JsonProperty(value = "nyttInntektsforholdEndringer")
-    @Valid
     @Size(max = 100)
-    private List<NyttInntektsforholdEndring> nyttInntektsforholdEndringer;
+    private List<@Valid NyttInntektsforholdEndring> nyttInntektsforholdEndringer;
 
 
     @JsonProperty(value = "periode")
@@ -41,8 +39,8 @@ public class BeregningsgrunnlagPeriodeEndring {
         // For json deserialisering
     }
 
-    public BeregningsgrunnlagPeriodeEndring(@Valid List<BeregningsgrunnlagPrStatusOgAndelEndring> beregningsgrunnlagPrStatusOgAndelEndringer,
-                                            @Valid List<NyttInntektsforholdEndring> nyttInntektsforholdEndringer,
+    public BeregningsgrunnlagPeriodeEndring(List<@Valid BeregningsgrunnlagPrStatusOgAndelEndring> beregningsgrunnlagPrStatusOgAndelEndringer,
+                                            List<@Valid NyttInntektsforholdEndring> nyttInntektsforholdEndringer,
                                             @NotNull @Valid Periode periode) {
         this.beregningsgrunnlagPrStatusOgAndelEndringer = beregningsgrunnlagPrStatusOgAndelEndringer;
         this.nyttInntektsforholdEndringer = nyttInntektsforholdEndringer;

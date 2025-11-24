@@ -23,9 +23,8 @@ import no.nav.folketrygdloven.kalkulus.håndtering.v1.fakta.FastsattePerioderTid
 public class FastsettBGTidsbegrensetArbeidsforholdDto {
 
     @JsonProperty("fastsatteTidsbegrensedePerioder")
-    @Valid
     @Size(max = 100)
-    private List<FastsattePerioderTidsbegrensetDto> fastsatteTidsbegrensedePerioder;
+    private List<@Valid FastsattePerioderTidsbegrensetDto> fastsatteTidsbegrensedePerioder;
 
     @JsonProperty("frilansInntekt")
     @Valid
@@ -38,7 +37,7 @@ public class FastsettBGTidsbegrensetArbeidsforholdDto {
         // For Jackson
     }
 
-    public FastsettBGTidsbegrensetArbeidsforholdDto(@Valid @Size(max = 100) List<FastsattePerioderTidsbegrensetDto> fastsatteTidsbegrensedePerioder, @Valid @Min(0) @Max(178956970) Integer frilansInntekt) {
+    public FastsettBGTidsbegrensetArbeidsforholdDto(@Size(max = 100) List<@Valid FastsattePerioderTidsbegrensetDto> fastsatteTidsbegrensedePerioder, @Valid @Min(0) @Max(178956970) Integer frilansInntekt) {
         this.fastsatteTidsbegrensedePerioder = fastsatteTidsbegrensedePerioder;
         this.frilansInntekt = frilansInntekt;
     }

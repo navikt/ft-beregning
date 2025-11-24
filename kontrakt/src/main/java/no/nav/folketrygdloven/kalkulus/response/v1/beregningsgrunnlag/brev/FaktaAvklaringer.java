@@ -46,8 +46,7 @@ public class FaktaAvklaringer {
 
 
 	@JsonProperty(value = "avklaringerForArbeidsforhold")
-	@Valid
-	private List<FaktaAvklaringerForArbeid> faktaAvklaringerForArbeidsforhold;
+	private List<@Valid FaktaAvklaringerForArbeid> faktaAvklaringerForArbeidsforhold;
 
 	public void setHarVarigEndretNæring(Boolean harVarigEndretNæring) {
 		this.harVarigEndretNæring = harVarigEndretNæring;

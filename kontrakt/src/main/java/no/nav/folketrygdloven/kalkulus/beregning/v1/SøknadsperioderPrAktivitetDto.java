@@ -31,15 +31,14 @@ public class SøknadsperioderPrAktivitetDto {
     private AktivitetDto aktivitetDto;
 
     @JsonProperty(value = "perioder", required = true)
-    @Valid
     @NotNull
     @Size(min = 1)
-    private List<Periode> perioder;
+    private List<@Valid Periode> perioder;
 
     public SøknadsperioderPrAktivitetDto() {
     }
 
-    public SøknadsperioderPrAktivitetDto(@Valid @NotNull AktivitetDto aktivitetDto, @Valid @NotNull @NotEmpty List<Periode> perioder) {
+    public SøknadsperioderPrAktivitetDto(@Valid @NotNull AktivitetDto aktivitetDto, @NotNull @NotEmpty List<@Valid Periode> perioder) {
         this.aktivitetDto = aktivitetDto;
         this.perioder = perioder;
     }

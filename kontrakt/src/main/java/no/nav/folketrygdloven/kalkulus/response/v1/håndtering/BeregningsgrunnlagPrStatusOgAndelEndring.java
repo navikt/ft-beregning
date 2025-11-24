@@ -5,6 +5,8 @@ import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
 import java.util.UUID;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -36,7 +38,8 @@ public class BeregningsgrunnlagPrStatusOgAndelEndring {
 
     @JsonProperty(value = "andelsnr")
     @NotNull
-    @Valid
+    @Min(0)
+    @Max(1000)
     private Long andelsnr;
 
     @JsonProperty(value = "aktivitetStatus")

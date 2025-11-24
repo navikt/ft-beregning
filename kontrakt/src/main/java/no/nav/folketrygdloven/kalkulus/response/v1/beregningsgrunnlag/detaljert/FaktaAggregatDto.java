@@ -20,8 +20,7 @@ public class FaktaAggregatDto {
 
     @JsonProperty(value = "faktaArbeidsforholdListe")
     @Size()
-    @Valid
-    private List<FaktaArbeidsforholdDto> faktaArbeidsforholdListe = new ArrayList<>();
+    private List<@Valid FaktaArbeidsforholdDto> faktaArbeidsforholdListe = new ArrayList<>();
 
     @JsonProperty(value = "faktaAktør")
     @Valid
@@ -29,7 +28,7 @@ public class FaktaAggregatDto {
 
     public FaktaAggregatDto() { }
 
-    public FaktaAggregatDto(@Size() @Valid List<FaktaArbeidsforholdDto> faktaArbeidsforholdListe, @Valid FaktaAktørDto faktaAktør) {
+    public FaktaAggregatDto(@Size() List<@Valid FaktaArbeidsforholdDto> faktaArbeidsforholdListe, @Valid FaktaAktørDto faktaAktør) {
         this.faktaArbeidsforholdListe = faktaArbeidsforholdListe;
         this.faktaAktør = faktaAktør;
     }

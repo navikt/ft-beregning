@@ -54,8 +54,7 @@ public class KopierOgResettBeregningListeRequest implements KalkulusRequest {
     @JsonProperty(value = "kopierBeregningListe", required = true)
     @Size(min=1)
     @NotNull
-    @Valid
-    private List<KopierBeregningRequest> kopierBeregningListe;
+    private List<@Valid KopierBeregningRequest> kopierBeregningListe;
 
 
     @JsonProperty(value = "originalBehandlingAvsluttetTid", required = true)

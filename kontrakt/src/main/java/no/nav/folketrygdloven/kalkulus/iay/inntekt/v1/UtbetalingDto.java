@@ -37,10 +37,9 @@ public class UtbetalingDto {
     @JsonProperty(value = "utbetalingsPoster", required = true)
     @NotNull
     @Size()
-    @Valid
-    private List<UtbetalingsPostDto> poster;
+    private List<@Valid UtbetalingsPostDto> poster;
 
-    public UtbetalingDto(@NotNull @Valid InntektskildeType inntektsKilde, @NotNull @Valid List<UtbetalingsPostDto> poster) {
+    public UtbetalingDto(@NotNull @Valid InntektskildeType inntektsKilde, @NotNull List<@Valid UtbetalingsPostDto> poster) {
         this.inntektsKilde = inntektsKilde;
         this.poster = poster;
     }

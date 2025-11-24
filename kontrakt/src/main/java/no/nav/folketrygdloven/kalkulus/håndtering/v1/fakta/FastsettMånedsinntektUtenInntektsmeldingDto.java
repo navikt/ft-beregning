@@ -19,9 +19,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class FastsettMånedsinntektUtenInntektsmeldingDto {
 
     @JsonProperty("andelListe")
-    @Valid
     @Size(min = 1)
-    private List<FastsettMånedsinntektUtenInntektsmeldingAndelDto> andelListe;
+    private List<@Valid FastsettMånedsinntektUtenInntektsmeldingAndelDto> andelListe;
 
     public FastsettMånedsinntektUtenInntektsmeldingDto() {
     }

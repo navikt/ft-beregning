@@ -32,8 +32,7 @@ public class BeregningsgrunnlagPeriodeDto {
 
     @JsonProperty(value = "beregningsgrunnlagPrStatusOgAndelList")
     @Size(min = 1)
-    @Valid
-    private List<BeregningsgrunnlagPrStatusOgAndelDto> beregningsgrunnlagPrStatusOgAndelList;
+    private List<@Valid BeregningsgrunnlagPrStatusOgAndelDto> beregningsgrunnlagPrStatusOgAndelList;
 
     @JsonProperty(value = "periode")
     @NotNull
@@ -60,8 +59,7 @@ public class BeregningsgrunnlagPeriodeDto {
 
     @JsonProperty(value = "periodeÅrsaker")
     @Size(min = 1)
-    @Valid
-    private List<PeriodeÅrsak> periodeÅrsaker;
+    private List<@Valid PeriodeÅrsak> periodeÅrsaker;
 
 
     /**

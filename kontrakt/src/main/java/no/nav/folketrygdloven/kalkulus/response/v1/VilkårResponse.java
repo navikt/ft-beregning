@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import no.nav.folketrygdloven.kalkulus.kodeverk.Vilkårsavslagsårsak;
+import no.nav.folketrygdloven.kalkulus.annoteringer.Fritekst;
 
 /**
  * Beskriver resultatet av vilkårsvurderingen samt sporing av både regelkjøring og input til denne vurderingen
@@ -29,16 +30,19 @@ public class VilkårResponse {
     @JsonProperty(value = "regelEvalueringSporing")
     @Valid
     @NotNull
+    @Fritekst
     private String regelEvalueringSporing;
 
 	@JsonProperty(value = "regelInputSporing")
     @Valid
     @NotNull
+    @Fritekst
 	private String regelInputSporing;
 
     @JsonProperty(value = "regelVersjon")
     @Valid
     @NotNull
+    @Fritekst
     private String regelVersjon;
 
 	@JsonProperty("avslagsÅrsak")

@@ -70,9 +70,8 @@ public class InntektArbeidYtelseGrunnlagDto {
      * Alle inntektsmeldinger som er registrert på fagsaken
      */
     @JsonProperty(value = "alleInntektsmeldingerPåSak")
-    @Valid
     @Size()
-    private Collection<InntektsmeldingDto> alleInntektsmeldingerPåSak;
+    private Collection<@Valid InntektsmeldingDto> alleInntektsmeldingerPåSak;
 
     public InntektArbeidYtelseGrunnlagDto() {
         // default ctor

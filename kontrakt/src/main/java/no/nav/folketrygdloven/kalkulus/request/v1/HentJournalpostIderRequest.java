@@ -20,10 +20,9 @@ import no.nav.folketrygdloven.kalkulus.felles.v1.Saksnummer;
 public class HentJournalpostIderRequest {
 
     @JsonProperty(value = "koblinger", required = true)
-    @Valid
     @NotNull
     @Size(min=1)
-    private List<UUID> koblinger;
+    private List<@Valid UUID> koblinger;
 
 
     @JsonProperty(value = "saksnummer", required = true)
@@ -36,7 +35,7 @@ public class HentJournalpostIderRequest {
         // default ctor
     }
 
-    public HentJournalpostIderRequest(@Valid @NotNull @Size(min = 1) List<UUID> koblinger,
+    public HentJournalpostIderRequest(@NotNull @Size(min = 1) List<@Valid UUID> koblinger,
                                       @JsonProperty(value = "saksnummer", required = true) @NotNull @Valid Saksnummer saksnummer) {
         this.koblinger = koblinger;
         this.saksnummer = saksnummer;
