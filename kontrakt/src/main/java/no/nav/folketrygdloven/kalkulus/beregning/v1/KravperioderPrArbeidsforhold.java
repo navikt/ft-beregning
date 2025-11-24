@@ -32,10 +32,9 @@ public class KravperioderPrArbeidsforhold {
     private InternArbeidsforholdRefDto internreferanse;
 
     @JsonProperty(value = "alleSøktePerioder")
-    @Valid
     @Size(min = 1)
     @NotNull
-    private List<PerioderForKrav> alleSøktePerioder;
+    private List<@Valid PerioderForKrav> alleSøktePerioder;
 
     @JsonProperty(value = "sisteSøktePerioder")
     @Valid

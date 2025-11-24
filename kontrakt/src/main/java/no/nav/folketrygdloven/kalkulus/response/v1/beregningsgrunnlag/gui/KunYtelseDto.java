@@ -18,10 +18,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonAutoDetect(fieldVisibility = NONE, getterVisibility = NONE, setterVisibility = NONE, isGetterVisibility = NONE, creatorVisibility = NONE)
 public class KunYtelseDto {
 
-    @Valid
     @JsonProperty(value = "andeler")
     @Size
-    private List<AndelMedBeløpDto> andeler = new ArrayList<>();
+    private List<@Valid AndelMedBeløpDto> andeler = new ArrayList<>();
 
     @Valid
     @JsonProperty(value = "fodendeKvinneMedDP")

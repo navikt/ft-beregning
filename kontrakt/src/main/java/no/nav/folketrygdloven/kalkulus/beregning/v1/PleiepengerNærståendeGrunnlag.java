@@ -22,8 +22,7 @@ public class PleiepengerNærståendeGrunnlag extends YtelsespesifiktGrunnlagDto 
 
     @JsonProperty(value = "utbetalingsgradPrAktivitet", required = true)
     @Size()
-    @Valid
-    private List<UtbetalingsgradPrAktivitetDto> utbetalingsgradPrAktivitet;
+    private List<@Valid UtbetalingsgradPrAktivitetDto> utbetalingsgradPrAktivitet;
 
     @JsonProperty(value = "tilkommetInntektHensyntasFom")
     @Valid
@@ -33,11 +32,11 @@ public class PleiepengerNærståendeGrunnlag extends YtelsespesifiktGrunnlagDto 
         // default ctor
     }
 
-    public PleiepengerNærståendeGrunnlag(@NotNull @Valid List<UtbetalingsgradPrAktivitetDto> utbetalingsgradPrAktivitet) {
+    public PleiepengerNærståendeGrunnlag(@NotNull List<@Valid UtbetalingsgradPrAktivitetDto> utbetalingsgradPrAktivitet) {
         this.utbetalingsgradPrAktivitet = utbetalingsgradPrAktivitet;
     }
 
-    public PleiepengerNærståendeGrunnlag(@NotNull @Valid List<UtbetalingsgradPrAktivitetDto> utbetalingsgradPrAktivitet, @Valid LocalDate tilkommetInntektHensyntasFom) {
+    public PleiepengerNærståendeGrunnlag(@NotNull List<@Valid UtbetalingsgradPrAktivitetDto> utbetalingsgradPrAktivitet, @Valid LocalDate tilkommetInntektHensyntasFom) {
         this.utbetalingsgradPrAktivitet = utbetalingsgradPrAktivitet;
         this.tilkommetInntektHensyntasFom = tilkommetInntektHensyntasFom;
     }

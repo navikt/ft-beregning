@@ -21,9 +21,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class VurderTilkomneInntektsforholdPeriodeDto {
 
     @JsonProperty("tilkomneInntektsforhold")
-    @Valid
     @Size(min = 1, max = 100)
-    private List<NyttInntektsforholdDto> tilkomneInntektsforhold;
+    private List<@Valid NyttInntektsforholdDto> tilkomneInntektsforhold;
 
     @JsonProperty("fom")
     @Valid

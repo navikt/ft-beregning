@@ -23,15 +23,14 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.AvklaringsbehovDefinisjon;
 public class VurderTilkommetInntektHåndteringDto extends HåndterBeregningDto {
 
     @JsonProperty("tilkomneInntektsforhold")
-    @Valid
     @Size(min = 1, max = 500)
-    private List<VurderTilkomneInntektsforholdPeriodeDto> tilkomneInntektsforholdPerioder;
+    private List<@Valid VurderTilkomneInntektsforholdPeriodeDto> tilkomneInntektsforholdPerioder;
 
     public VurderTilkommetInntektHåndteringDto() {
         super(AvklaringsbehovDefinisjon.VURDER_NYTT_INNTKTSFRHLD);
     }
 
-    public VurderTilkommetInntektHåndteringDto(@Valid @NotNull @Size() List<VurderTilkomneInntektsforholdPeriodeDto> tilkomneInntektsforholdPerioder) {
+    public VurderTilkommetInntektHåndteringDto(@NotNull @Size() List<@Valid VurderTilkomneInntektsforholdPeriodeDto> tilkomneInntektsforholdPerioder) {
         super(AvklaringsbehovDefinisjon.VURDER_NYTT_INNTKTSFRHLD);
         this.tilkomneInntektsforholdPerioder = tilkomneInntektsforholdPerioder;
     }

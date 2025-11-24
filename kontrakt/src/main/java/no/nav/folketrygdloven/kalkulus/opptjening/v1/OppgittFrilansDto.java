@@ -20,9 +20,8 @@ public class OppgittFrilansDto {
     private Boolean erNyoppstartet;
 
     @JsonProperty("oppgittFrilansInntekt")
-    @Valid
     @Size(min = 0)
-    private List<OppgittFrilansInntekt> oppgittFrilansInntekt;
+    private List<@Valid OppgittFrilansInntekt> oppgittFrilansInntekt;
 
     public OppgittFrilansDto() {
         // default ctor
@@ -32,7 +31,7 @@ public class OppgittFrilansDto {
         this.erNyoppstartet = erNyoppstartet;
     }
 
-    public OppgittFrilansDto(@Valid @NotNull Boolean erNyoppstartet, @Valid @NotNull List<OppgittFrilansInntekt> oppgittFrilansInntekt) {
+    public OppgittFrilansDto(@Valid @NotNull Boolean erNyoppstartet, @NotNull List<@Valid OppgittFrilansInntekt> oppgittFrilansInntekt) {
         this.erNyoppstartet = erNyoppstartet;
         this.oppgittFrilansInntekt = oppgittFrilansInntekt;
     }

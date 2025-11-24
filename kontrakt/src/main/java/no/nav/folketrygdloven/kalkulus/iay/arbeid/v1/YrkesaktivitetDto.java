@@ -36,14 +36,12 @@ public class YrkesaktivitetDto {
     private ArbeidType arbeidType;
 
     @JsonProperty("aktivitetsAvtaler")
-    @Valid
     @Size
-    private List<AktivitetsAvtaleDto> aktivitetsAvtaler;
+    private List<@Valid AktivitetsAvtaleDto> aktivitetsAvtaler;
 
     @JsonProperty("permisjoner")
-    @Valid
     @Size
-    private List<PermisjonDto> permisjoner;
+    private List<@Valid PermisjonDto> permisjoner;
 
     protected YrkesaktivitetDto() {
         // default ctor
@@ -52,7 +50,7 @@ public class YrkesaktivitetDto {
     public YrkesaktivitetDto(@Valid Aktør arbeidsgiver,
                              @Valid InternArbeidsforholdRefDto abakusReferanse,
                              @Valid @NotNull ArbeidType arbeidType,
-                             @Valid List<AktivitetsAvtaleDto> aktivitetsAvtaler) {
+                             List<@Valid AktivitetsAvtaleDto> aktivitetsAvtaler) {
 
         this.arbeidsgiver = arbeidsgiver;
         this.abakusReferanse = abakusReferanse;
@@ -63,8 +61,8 @@ public class YrkesaktivitetDto {
     public YrkesaktivitetDto(@Valid Aktør arbeidsgiver,
                              @Valid InternArbeidsforholdRefDto abakusReferanse,
                              @Valid @NotNull ArbeidType arbeidType,
-                             @Valid @Size List<AktivitetsAvtaleDto> aktivitetsAvtaler,
-                             @Valid @Size List<PermisjonDto> permisjoner) {
+                             @Size List<@Valid AktivitetsAvtaleDto> aktivitetsAvtaler,
+                             @Size List<@Valid PermisjonDto> permisjoner) {
         this.arbeidsgiver = arbeidsgiver;
         this.abakusReferanse = abakusReferanse;
         this.arbeidType = arbeidType;

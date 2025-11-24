@@ -31,17 +31,16 @@ public class InntektsgrunnlagMånedDto {
     @JsonProperty(value = "tom")
     private LocalDate tom;
 
-    @Valid
     @JsonProperty(value = "inntekter")
     @Size(max = 100)
-    private List<InntektsgrunnlagInntektDto> inntekter;
+    private List<@Valid InntektsgrunnlagInntektDto> inntekter;
 
     public InntektsgrunnlagMånedDto() {
     }
 
     public InntektsgrunnlagMånedDto(@Valid @NotNull LocalDate fom,
                                     @Valid @NotNull LocalDate tom,
-                                    @Valid @NotNull @Min(0) @Max(178956970) List<InntektsgrunnlagInntektDto> inntekter) {
+                                    @NotNull @Min(0) @Max(178956970) List<@Valid InntektsgrunnlagInntektDto> inntekter) {
         this.fom = fom;
         this.tom = tom;
         this.inntekter = inntekter;

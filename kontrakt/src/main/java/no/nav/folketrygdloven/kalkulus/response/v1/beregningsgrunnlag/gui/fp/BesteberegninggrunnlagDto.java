@@ -21,11 +21,10 @@ import no.nav.folketrygdloven.kalkulus.felles.v1.Beløp;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.NONE, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, isGetterVisibility = JsonAutoDetect.Visibility.NONE, creatorVisibility = JsonAutoDetect.Visibility.NONE)
 public class BesteberegninggrunnlagDto {
 
-    @Valid
     @JsonProperty("besteMåneder")
     @Size(min = 6, max = 6)
     @NotNull
-    private List<BesteberegningMånedGrunnlagDto> besteMåneder;
+    private List<@Valid BesteberegningMånedGrunnlagDto> besteMåneder;
 
     @Valid
     @JsonProperty("avvik")

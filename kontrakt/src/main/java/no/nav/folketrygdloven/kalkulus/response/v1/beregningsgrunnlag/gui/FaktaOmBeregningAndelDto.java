@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Objects;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -61,11 +64,10 @@ public class FaktaOmBeregningAndelDto {
     @JsonProperty("fastsattAvSaksbehandler")
     private Boolean fastsattAvSaksbehandler = false;
 
-    @Valid
     @JsonProperty("andelIArbeid")
     @Size(max = 100)
     @NotNull
-    private List<BigDecimal> andelIArbeid = new ArrayList<>();
+    private List<@DecimalMin(value = "0.00") @DecimalMax(value = "100.00") @Digits(integer = 3, fraction = 2) BigDecimal> andelIArbeid = new ArrayList<>();
 
     public FaktaOmBeregningAndelDto(Long andelsnr,
                                     BeregningsgrunnlagArbeidsforholdDto arbeidsforhold,

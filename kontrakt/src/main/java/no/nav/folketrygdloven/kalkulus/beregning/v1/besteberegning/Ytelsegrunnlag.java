@@ -21,16 +21,15 @@ public class Ytelsegrunnlag {
     private YtelseType ytelse;
 
     @JsonProperty(value = "perioder")
-    @Valid
     @NotNull
-    private List<Ytelseperiode> perioder;
+    private List<@Valid Ytelseperiode> perioder;
 
 	protected Ytelsegrunnlag() {
 		// default ctor
 	}
 
 	public Ytelsegrunnlag(@Valid @NotNull YtelseType ytelse,
-	                      @Valid @NotNull List<Ytelseperiode> perioder) {
+	                      @NotNull List<@Valid Ytelseperiode> perioder) {
         this.ytelse = ytelse;
         this.perioder = perioder;
     }

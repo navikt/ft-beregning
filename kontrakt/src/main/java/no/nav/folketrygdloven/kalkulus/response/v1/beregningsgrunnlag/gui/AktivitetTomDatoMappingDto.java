@@ -24,11 +24,10 @@ public class AktivitetTomDatoMappingDto {
     @NotNull
     private LocalDate tom;
 
-    @Valid
     @Size(max=100)
     @JsonProperty(value = "aktiviteter")
     @NotNull
-    private List<BeregningAktivitetDto> aktiviteter;
+    private List<@Valid BeregningAktivitetDto> aktiviteter;
 
     public LocalDate getTom() {
         return tom;

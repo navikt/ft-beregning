@@ -18,11 +18,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonAutoDetect(fieldVisibility = NONE, getterVisibility = NONE, setterVisibility = NONE, isGetterVisibility = NONE, creatorVisibility = NONE)
 public class VurderNyttInntektsforholdDto {
 
-    @Valid
     @JsonProperty(value = "vurderInntektsforholdPerioder")
     @Size(max = 50)
     @NotNull
-    private List<VurderInntektsforholdPeriodeDto> vurderInntektsforholdPerioder;
+    private List<@Valid VurderInntektsforholdPeriodeDto> vurderInntektsforholdPerioder;
 
     /**
      * Angir om bruker har mottatt Kommunal omsorgsstønad eller fosterhjemsgodtgjørelse etter skjæringstidspunktet

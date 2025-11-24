@@ -23,8 +23,7 @@ public class JournalpostIderResponse {
 	private UUID eksternReferanse;
 
 	@JsonProperty(value = "journalpostider")
-	@Valid
-	private List<JournalpostId> journalpostIder;
+	private List<@Valid JournalpostId> journalpostIder;
 
 	public JournalpostIderResponse() {
 	}

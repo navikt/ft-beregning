@@ -29,23 +29,20 @@ public class FrisinnGrunnlagDto extends YtelsespesifiktGrunnlagDto {
     @Valid
     private SøknadsopplysningerDto opplysningerSN;
 
-    @Valid
     @JsonProperty("perioderSøktFor")
     @NotNull
     @Size(min = 1)
-    private List<OpplystPeriodeDto> perioderSøktFor;
+    private List<@Valid OpplystPeriodeDto> perioderSøktFor;
 
-    @Valid
     @JsonProperty("frisinnPerioder")
     @NotNull
     @Size(min = 1)
-    private List<FrisinnPeriodeDto> frisinnPerioder;
+    private List<@Valid FrisinnPeriodeDto> frisinnPerioder;
 
-    @Valid
     @JsonProperty("avslagsårsakPrPeriode")
     @NotNull
     @Size()
-    private List<AvslagsårsakPrPeriodeDto> avslagsårsakPrPeriode;
+    private List<@Valid AvslagsårsakPrPeriodeDto> avslagsårsakPrPeriode;
 
     public FrisinnGrunnlagDto() {
         super();

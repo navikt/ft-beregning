@@ -25,15 +25,14 @@ public class MottarYtelseDto {
     private Boolean frilansMottarYtelse;
 
     @JsonProperty("arbeidstakerUtenIMMottarYtelse")
-    @Valid
     @NotNull
     @Size()
-    private List<ArbeidstakerandelUtenIMMottarYtelseDto> arbeidstakerUtenIMMottarYtelse;
+    private List<@Valid ArbeidstakerandelUtenIMMottarYtelseDto> arbeidstakerUtenIMMottarYtelse;
 
     public MottarYtelseDto() {
     }
 
-    public MottarYtelseDto(@Valid Boolean frilansMottarYtelse, @Valid @NotNull List<ArbeidstakerandelUtenIMMottarYtelseDto> arbeidstakerUtenIMMottarYtelse) {
+    public MottarYtelseDto(@Valid Boolean frilansMottarYtelse, @NotNull List<@Valid ArbeidstakerandelUtenIMMottarYtelseDto> arbeidstakerUtenIMMottarYtelse) {
         this.frilansMottarYtelse = frilansMottarYtelse;
         this.arbeidstakerUtenIMMottarYtelse = arbeidstakerUtenIMMottarYtelse;
     }

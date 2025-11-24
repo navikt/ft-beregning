@@ -36,11 +36,10 @@ public class FrisinnPeriodeDto {
     @JsonProperty("oppgittArbeidsinntekt")
     private Beløp oppgittArbeidsinntekt;
 
-    @Valid
     @JsonProperty("frisinnAndeler")
     @NotNull
     @Size(min = 1)
-    private List<FrisinnAndelDto> frisinnAndeler;
+    private List<@Valid FrisinnAndelDto> frisinnAndeler;
 
     public LocalDate getFom() {
         return fom;

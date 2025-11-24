@@ -18,9 +18,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class UtledetTilkommetAktivitetListe {
 
     @JsonProperty(value = "liste", required = true)
-    @Valid
     @NotNull
-    private List<UtledetTilkommetAktivitetPrReferanse> liste;
+    private List<@Valid UtledetTilkommetAktivitetPrReferanse> liste;
 
     public UtledetTilkommetAktivitetListe() {
     }

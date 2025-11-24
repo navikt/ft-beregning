@@ -15,6 +15,6 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningSteg;
 public record TilgjengeligeTilstanderDto(@Valid @NotNull TilgjengeligeTilstandDto behandlingMedTilstander, @Valid TilgjengeligeTilstandDto originalbehandlingMedTilstander){
 
     public record TilgjengeligeTilstandDto(@Valid @NotNull UUID behandlingUuid,
-                                         @Valid @NotNull @Size(max=15) List<BeregningSteg> tilgjengeligeSteg){}
+                                         @NotNull @Size(max=15) List<@Valid BeregningSteg> tilgjengeligeSteg){}
 }
 

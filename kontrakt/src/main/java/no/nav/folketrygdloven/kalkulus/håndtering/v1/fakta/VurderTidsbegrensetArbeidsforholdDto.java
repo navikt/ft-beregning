@@ -21,15 +21,14 @@ public class VurderTidsbegrensetArbeidsforholdDto {
 
 
     @JsonProperty("fastsatteArbeidsforhold")
-    @Valid
     @NotNull
     @Size(min = 1)
-    private List<VurderteArbeidsforholdDto> fastsatteArbeidsforhold;
+    private List<@Valid VurderteArbeidsforholdDto> fastsatteArbeidsforhold;
 
     public VurderTidsbegrensetArbeidsforholdDto() {
     }
 
-    public VurderTidsbegrensetArbeidsforholdDto(@Valid @NotNull @Size(min = 1) List<VurderteArbeidsforholdDto> fastsatteArbeidsforhold) {
+    public VurderTidsbegrensetArbeidsforholdDto(@NotNull @Size(min = 1) List<@Valid VurderteArbeidsforholdDto> fastsatteArbeidsforhold) {
         this.fastsatteArbeidsforhold = fastsatteArbeidsforhold;
     }
 

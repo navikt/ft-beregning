@@ -57,9 +57,8 @@ public class BeregnListeRequest implements KalkulusRequest {
 
     @JsonProperty(value = "beregnForListe", required = true)
     @Size(min = 1)
-    @Valid
     @NotNull
-    private List<BeregnForRequest> beregnForListe;
+    private List<@Valid BeregnForRequest> beregnForListe;
 
     protected BeregnListeRequest() {
     }

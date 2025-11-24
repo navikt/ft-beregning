@@ -22,11 +22,10 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.FaktaOmBeregningTilfelle;
 public class FaktaOmBeregningTilfelleDto {
 
     @JsonProperty(value = "tilfeller")
-    @Valid
     @Size(min = 1)
-    private List<FaktaOmBeregningTilfelle> tilfeller;
+    private List<@Valid FaktaOmBeregningTilfelle> tilfeller;
 
-    public FaktaOmBeregningTilfelleDto(@Valid @NotEmpty List<FaktaOmBeregningTilfelle> tilfeller) {
+    public FaktaOmBeregningTilfelleDto(@NotEmpty List<@Valid FaktaOmBeregningTilfelle> tilfeller) {
         this.tilfeller = tilfeller;
     }
 

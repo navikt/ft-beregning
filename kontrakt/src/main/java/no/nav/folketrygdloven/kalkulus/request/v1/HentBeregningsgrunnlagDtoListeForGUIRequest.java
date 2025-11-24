@@ -28,14 +28,12 @@ import no.nav.folketrygdloven.kalkulus.felles.v1.Saksnummer;
 public class HentBeregningsgrunnlagDtoListeForGUIRequest implements KalkulusRequest {
 
     @JsonProperty(value = "requestPrReferanse", required = true)
-    @Valid
     @NotNull
-    private List<HentBeregningsgrunnlagDtoForGUIRequest> requestPrReferanse;
+    private List<@Valid HentBeregningsgrunnlagDtoForGUIRequest> requestPrReferanse;
 
     /** Kalkulatorinput per ekstern kobling referanse. Brukes i tilfelle der input er utdatert */
     @JsonProperty(value = "kalkulatorInput")
-    @Valid
-    private Map<UUID, KalkulatorInputDto> kalkulatorInputPerKoblingReferanse;
+    private Map<@Valid UUID, @Valid KalkulatorInputDto> kalkulatorInputPerKoblingReferanse;
 
     @JsonProperty(value = "behandlingUuid", required = true)
     @Valid
@@ -51,8 +49,8 @@ public class HentBeregningsgrunnlagDtoListeForGUIRequest implements KalkulusRequ
         // default ctor
     }
 
-    public HentBeregningsgrunnlagDtoListeForGUIRequest(@Valid @NotNull List<HentBeregningsgrunnlagDtoForGUIRequest> requestPrReferanse,
-                                                       @Valid Map<UUID, KalkulatorInputDto> kalkulatorInputPerKoblingReferanse,
+    public HentBeregningsgrunnlagDtoListeForGUIRequest(@NotNull List<@Valid HentBeregningsgrunnlagDtoForGUIRequest> requestPrReferanse,
+                                                       Map<@Valid UUID, @Valid KalkulatorInputDto> kalkulatorInputPerKoblingReferanse,
                                                        @Valid Saksnummer saksnummer,
                                                        @Valid @NotNull UUID behandlingUuid) {
         this.requestPrReferanse = requestPrReferanse;
@@ -61,7 +59,7 @@ public class HentBeregningsgrunnlagDtoListeForGUIRequest implements KalkulusRequ
         this.behandlingUuid = behandlingUuid;
     }
 
-    public HentBeregningsgrunnlagDtoListeForGUIRequest(@Valid @NotNull List<HentBeregningsgrunnlagDtoForGUIRequest> requestPrReferanse,
+    public HentBeregningsgrunnlagDtoListeForGUIRequest(@NotNull List<@Valid HentBeregningsgrunnlagDtoForGUIRequest> requestPrReferanse,
                                                        @Valid @NotNull UUID behandlingUuid) {
         this.requestPrReferanse = requestPrReferanse;
         this.behandlingUuid = behandlingUuid;

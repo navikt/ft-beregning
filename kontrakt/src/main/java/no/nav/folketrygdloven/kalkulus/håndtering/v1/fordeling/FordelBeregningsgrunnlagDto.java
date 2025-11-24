@@ -19,9 +19,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class FordelBeregningsgrunnlagDto {
 
     @JsonProperty("endretBeregningsgrunnlagPerioder")
-    @Valid
     @Size(min = 1)
-    private List<FordelBeregningsgrunnlagPeriodeDto> endretBeregningsgrunnlagPerioder;
+    private List<@Valid FordelBeregningsgrunnlagPeriodeDto> endretBeregningsgrunnlagPerioder;
 
     public FordelBeregningsgrunnlagDto() {
         // For Json deserialisering

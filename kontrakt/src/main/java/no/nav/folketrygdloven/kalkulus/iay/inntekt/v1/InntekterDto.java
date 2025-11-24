@@ -22,8 +22,7 @@ public class InntekterDto {
 
     @JsonProperty("utbetalinger")
     @Size()
-    @Valid
-    private List<UtbetalingDto> utbetalinger;
+    private List<@Valid UtbetalingDto> utbetalinger;
 
     protected InntekterDto() {
         // default ctor

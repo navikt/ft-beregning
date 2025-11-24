@@ -24,8 +24,7 @@ public class TilstandListeResponse {
 
     @JsonProperty(value = "tilstand")
     @NotEmpty
-    @Valid
-    private List<TilstandResponse> tilstand;
+    private List<@Valid TilstandResponse> tilstand;
 
     @JsonProperty(value = "trengerNyInput")
     @Valid
@@ -36,7 +35,7 @@ public class TilstandListeResponse {
         // default ctor
     }
 
-    public TilstandListeResponse(@JsonProperty(value = "tilstand") @Valid @NotNull @NotEmpty List<TilstandResponse> tilstand) {
+    public TilstandListeResponse(@JsonProperty(value = "tilstand") @NotNull @NotEmpty List<@Valid TilstandResponse> tilstand) {
         this.tilstand = List.copyOf(tilstand);
     }
 

@@ -22,20 +22,18 @@ public class OmsorgspengerGrunnlag extends YtelsespesifiktGrunnlagDto {
 
     @JsonProperty(value = "utbetalingsgradPrAktivitet", required = true)
     @Size(min = 1)
-    @Valid
-    private List<UtbetalingsgradPrAktivitetDto> utbetalingsgradPrAktivitet;
+    private List<@Valid UtbetalingsgradPrAktivitetDto> utbetalingsgradPrAktivitet;
 
     @JsonProperty(value = "søktePerioder", required = false)
     @Size(min = 0, max = 365)
-    @Valid
-    private List<SøktPeriode> søktePerioder;
+    private List<@Valid SøktPeriode> søktePerioder;
 
     protected OmsorgspengerGrunnlag() {
         // default ctor
     }
 
 
-    public OmsorgspengerGrunnlag(@NotNull @Valid List<UtbetalingsgradPrAktivitetDto> utbetalingsgradPrAktivitet, List<SøktPeriode> søktePerioder) {
+    public OmsorgspengerGrunnlag(@NotNull List<@Valid UtbetalingsgradPrAktivitetDto> utbetalingsgradPrAktivitet, List<@Valid SøktPeriode> søktePerioder) {
         this.utbetalingsgradPrAktivitet = utbetalingsgradPrAktivitet;
         this.søktePerioder = søktePerioder;
     }

@@ -19,25 +19,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class ArbeidsforholdInformasjonDto {
 
     @JsonProperty(value = "overstyringer")
-    @Valid
     @Size(max = 100)
-    private List<ArbeidsforholdOverstyringDto> overstyringer;
+    private List<@Valid ArbeidsforholdOverstyringDto> overstyringer;
 
 	@JsonProperty(value = "referanser")
-	@Valid
-	@Size(max = 100)
-	private Set<ArbeidsforholdReferanseDto> referanser;
+    @Size(max = 100)
+	private Set<@Valid ArbeidsforholdReferanseDto> referanser;
 
     public ArbeidsforholdInformasjonDto() {
         // default ctor
     }
 
-    public ArbeidsforholdInformasjonDto(@Valid @NotEmpty List<ArbeidsforholdOverstyringDto> overstyringer) {
+    public ArbeidsforholdInformasjonDto(@NotEmpty List<@Valid ArbeidsforholdOverstyringDto> overstyringer) {
         this.overstyringer = overstyringer;
     }
 
-	public ArbeidsforholdInformasjonDto(@Valid @NotEmpty List<ArbeidsforholdOverstyringDto> overstyringer,
-	                                    @Valid Set<ArbeidsforholdReferanseDto> referanser) {
+	public ArbeidsforholdInformasjonDto(@NotEmpty List<@Valid ArbeidsforholdOverstyringDto> overstyringer,
+	                                    Set<@Valid ArbeidsforholdReferanseDto> referanser) {
 		this.overstyringer = overstyringer;
         this.referanser = referanser;
     }

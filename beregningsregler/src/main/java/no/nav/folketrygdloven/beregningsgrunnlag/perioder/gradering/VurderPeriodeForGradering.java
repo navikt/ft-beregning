@@ -48,6 +48,11 @@ class VurderPeriodeForGradering {
 		if ((totaltRefusjonskravStørreEnn6G || andelGradering.erNyAktivitetPåDato(dato)) && !harRefusjonPåDato) {
 			return true;
 		}
+
+        if (!harRefusjonPåDato && ErTotaltRefusjonskravStørreEnnEllerLikBrutto.vurder(input.getPeriodisertBruttoBeregningsgrunnlagList(), dato)) {
+            return true;
+        }
+
 		return !harRefusjonPåDato && ErbruttoinntektForGradertAndelLikNull.vurder(input, andelGradering, dato);
 	}
 

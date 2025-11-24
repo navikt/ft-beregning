@@ -53,8 +53,7 @@ public class KopierBeregningListeRequest implements KalkulusRequest {
     @JsonProperty(value = "fordelBeregningListe", required = true)
     @Size(min=1)
     @NotNull
-    @Valid
-    private List<KopierBeregningRequest> kopierBeregningListe;
+    private List<@Valid KopierBeregningRequest> kopierBeregningListe;
 
 
     protected KopierBeregningListeRequest() {

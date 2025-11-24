@@ -8,12 +8,15 @@ import java.util.Set;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import no.nav.folketrygdloven.kalkulus.annoteringer.Fritekst;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(value = JsonInclude.Include.NON_ABSENT, content = JsonInclude.Include.NON_EMPTY)
@@ -27,9 +30,8 @@ public class SimulertTilkommetInntekt {
     private long antallSakerMedAksjonspunkt;
 
     @JsonProperty(value = "saksnummerMedAksjonspunkt")
-    @Valid
     @Size(min = 0, max = 10000)
-    private Set<String> saksnummerMedAksjonspunkt;
+    private Set<@Pattern(regexp = "^[A-Za-z0-9]+$", message = "'${validatedValue}' matcher ikke tillatt pattern '{value}'") String> saksnummerMedAksjonspunkt;
 
     @JsonProperty(value = "antallSakerMedManuellFordelingOgTilkommetInntekt")
     @Valid
@@ -51,8 +53,7 @@ public class SimulertTilkommetInntekt {
     private long antallSakerSimulert;
 
     @JsonProperty(value = "antallSakerPrTilkommetStatus")
-    @Valid
-    private Map<String, Integer> antallSakerPrTilkommetStatus;
+    private Map<@Valid @Fritekst String, @Min(0) @Max(1000000) Integer> antallSakerPrTilkommetStatus;
 
 
     public SimulertTilkommetInntekt(long antallSakerMedAksjonspunkt,

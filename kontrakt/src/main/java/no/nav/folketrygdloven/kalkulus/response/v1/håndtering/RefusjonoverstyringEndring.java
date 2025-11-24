@@ -19,15 +19,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class RefusjonoverstyringEndring {
 
     @JsonProperty(value = "refusjonperiodeEndringer")
-    @Valid
     @Size(min = 1)
     @NotNull
-    private List<RefusjonoverstyringPeriodeEndring> refusjonperiodeEndringer;
+    private List<@Valid RefusjonoverstyringPeriodeEndring> refusjonperiodeEndringer;
 
     public RefusjonoverstyringEndring() {
     }
 
-    public RefusjonoverstyringEndring(@Valid @Size(min = 1) @NotNull List<RefusjonoverstyringPeriodeEndring> refusjonperiodeEndringer) {
+    public RefusjonoverstyringEndring(@Size(min = 1) @NotNull List<@Valid RefusjonoverstyringPeriodeEndring> refusjonperiodeEndringer) {
         this.refusjonperiodeEndringer = refusjonperiodeEndringer;
     }
 

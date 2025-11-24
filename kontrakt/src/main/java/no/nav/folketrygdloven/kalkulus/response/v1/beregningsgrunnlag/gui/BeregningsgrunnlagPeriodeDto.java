@@ -56,10 +56,9 @@ public class BeregningsgrunnlagPeriodeDto {
     @JsonProperty("redusertPrAar")
     private Beløp redusertPrAar;
 
-    @Valid
     @Size()
     @JsonProperty("periodeAarsaker")
-    private Set<PeriodeÅrsak> periodeAarsaker = new HashSet<>();
+    private Set<@Valid PeriodeÅrsak> periodeAarsaker = new HashSet<>();
 
     @Valid
     @JsonProperty("dagsats")
@@ -78,10 +77,9 @@ public class BeregningsgrunnlagPeriodeDto {
     @Digits(integer = 10, fraction = 4)
     private BigDecimal inntektsgradering;
 
-    @Valid
     @Size()
     @JsonProperty("beregningsgrunnlagPrStatusOgAndel")
-    private List<BeregningsgrunnlagPrStatusOgAndelDto> beregningsgrunnlagPrStatusOgAndel;
+    private List<@Valid BeregningsgrunnlagPrStatusOgAndelDto> beregningsgrunnlagPrStatusOgAndel;
 
     public BeregningsgrunnlagPeriodeDto() {
         // trengs for deserialisering av JSON

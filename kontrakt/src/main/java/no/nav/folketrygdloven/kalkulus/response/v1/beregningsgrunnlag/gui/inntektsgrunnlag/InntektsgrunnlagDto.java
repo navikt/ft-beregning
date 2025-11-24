@@ -20,37 +20,33 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonAutoDetect(fieldVisibility = NONE, getterVisibility = NONE, setterVisibility = NONE, isGetterVisibility = NONE, creatorVisibility = NONE)
 public class InntektsgrunnlagDto {
 
-    @Valid
     @NotNull
     @JsonProperty(value = "måneder")
     @Size(max = 12)
-    private List<InntektsgrunnlagMånedDto> måneder;
+    private List<@Valid InntektsgrunnlagMånedDto> måneder;
 
-    @Valid
     @NotNull
     @JsonProperty(value = "pgiGrunnlag")
     @Size(max = 3)
-    private List<PGIPrÅrDto> pgiGrunnlag;
+    private List<@Valid PGIPrÅrDto> pgiGrunnlag;
 
-	@Valid
 	@NotNull
 	@JsonProperty(value = "sammenligningsgrunnlagInntekter")
 	@Size(max = 12)
-	private List<InntektsgrunnlagMånedDto> sammenligningsgrunnlagInntekter;
+	private List<@Valid InntektsgrunnlagMånedDto> sammenligningsgrunnlagInntekter;
 
-	@Valid
 	@NotNull
 	@JsonProperty(value = "beregningsgrunnlagInntekter")
 	@Size(max = 3)
-	private List<InntektsgrunnlagMånedDto> beregningsgrunnlagInntekter;
+	private List<@Valid InntektsgrunnlagMånedDto> beregningsgrunnlagInntekter;
 
     public InntektsgrunnlagDto() {
     }
 
-    public InntektsgrunnlagDto(@Valid @NotNull @Min(0) @Max(12) List<InntektsgrunnlagMånedDto> måneder,
-                               @Valid @NotNull @Min(0) @Max(3) List<PGIPrÅrDto> pgiGrunnlag,
-                               @Valid @NotNull @Min(0) @Max(12) List<InntektsgrunnlagMånedDto> sammenligningsgrunnlagInntekter,
-                               @Valid @NotNull @Min(0) @Max(3) List<InntektsgrunnlagMånedDto> beregningsgrunnlagInntekter) {
+    public InntektsgrunnlagDto(@NotNull @Min(0) @Max(12) List<@Valid InntektsgrunnlagMånedDto> måneder,
+                               @NotNull @Min(0) @Max(3) List<@Valid PGIPrÅrDto> pgiGrunnlag,
+                               @NotNull @Min(0) @Max(12) List<@Valid InntektsgrunnlagMånedDto> sammenligningsgrunnlagInntekter,
+                               @NotNull @Min(0) @Max(3) List<@Valid InntektsgrunnlagMånedDto> beregningsgrunnlagInntekter) {
         this.måneder = måneder;
         this.pgiGrunnlag = pgiGrunnlag;
 		this.sammenligningsgrunnlagInntekter = sammenligningsgrunnlagInntekter;

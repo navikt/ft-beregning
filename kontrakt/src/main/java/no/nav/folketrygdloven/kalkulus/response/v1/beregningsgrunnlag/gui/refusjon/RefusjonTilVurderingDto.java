@@ -22,22 +22,20 @@ import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.Refusj
 @JsonAutoDetect(fieldVisibility = NONE, getterVisibility = NONE, setterVisibility = NONE, isGetterVisibility = NONE, creatorVisibility = NONE)
 public class RefusjonTilVurderingDto {
 
-    @Valid
     @JsonProperty("andeler")
     @Size
     @NotNull
-    private List<RefusjonAndelTilVurderingDto> andeler;
+    private List<@Valid RefusjonAndelTilVurderingDto> andeler;
 
-    @Valid
     @JsonProperty("refusjonskravForSentListe")
     @Size
     @NotNull
-    private List<RefusjonskravForSentDto> refusjonskravForSentListe;
+    private List<@Valid RefusjonskravForSentDto> refusjonskravForSentListe;
 
     public RefusjonTilVurderingDto() {
     }
 
-    public RefusjonTilVurderingDto(@Valid @NotNull List<RefusjonAndelTilVurderingDto> andeler, @Valid @NotNull List<RefusjonskravForSentDto> refusjonskravForSentListe) {
+    public RefusjonTilVurderingDto(@NotNull List<@Valid RefusjonAndelTilVurderingDto> andeler, @NotNull List<@Valid RefusjonskravForSentDto> refusjonskravForSentListe) {
         this.andeler = andeler;
         this.refusjonskravForSentListe = refusjonskravForSentListe;
     }

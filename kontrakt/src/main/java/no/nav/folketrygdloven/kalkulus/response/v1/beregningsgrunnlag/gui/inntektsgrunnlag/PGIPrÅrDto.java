@@ -27,16 +27,15 @@ public class PGIPrÅrDto {
     @Max(3000)
     private Integer år;
 
-    @Valid
     @JsonProperty(value = "inntekter")
     @Size(max = 3)
-    private List<PGIGrunnlagDto> inntekter;
+    private List<@Valid PGIGrunnlagDto> inntekter;
 
     public PGIPrÅrDto() {
     }
 
     public PGIPrÅrDto(@Valid @NotNull @Min(1900) @Max(3000) Integer år,
-                      @Valid @NotNull @Min(0) @Max(2) List<PGIGrunnlagDto> inntekter) {
+                      @NotNull @Min(0) @Max(2) List<@Valid PGIGrunnlagDto> inntekter) {
         this.år = år;
         this.inntekter = inntekter;
     }

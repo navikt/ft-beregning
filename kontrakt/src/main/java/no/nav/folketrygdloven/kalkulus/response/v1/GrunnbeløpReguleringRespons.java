@@ -20,15 +20,14 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.GrunnbeløpReguleringStatus;
 @JsonAutoDetect(fieldVisibility = NONE, getterVisibility = NONE, setterVisibility = NONE, isGetterVisibility = NONE, creatorVisibility = NONE)
 public class GrunnbeløpReguleringRespons {
 
-    @Valid
     @JsonProperty(value = "resultat")
     @NotNull
-    private Map<UUID, GrunnbeløpReguleringStatus> resultat;
+    private Map<UUID, @Valid GrunnbeløpReguleringStatus> resultat;
 
     public GrunnbeløpReguleringRespons() {
     }
 
-    public GrunnbeløpReguleringRespons(@Valid @NotNull Map<UUID, GrunnbeløpReguleringStatus> resultat) {
+    public GrunnbeløpReguleringRespons(@NotNull Map<UUID, @Valid GrunnbeløpReguleringStatus> resultat) {
         this.resultat = resultat;
     }
 
