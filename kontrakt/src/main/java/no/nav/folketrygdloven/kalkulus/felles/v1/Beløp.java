@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public record Beløp(@JsonValue
                     @Valid @NotNull
-                    @Min(0) @Max(Long.MAX_VALUE) @Digits(integer = 20, fraction = 2)
+                    @Min(Long.MIN_VALUE) @Max(Long.MAX_VALUE) @Digits(integer = 20, fraction = 2)
                     BigDecimal verdi) implements Comparable<Beløp> {
 
     public static final Beløp ZERO = Beløp.fra(BigDecimal.ZERO);
