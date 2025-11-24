@@ -92,7 +92,6 @@
         </dependencies>
     </dependencyManagement>
 
-
     <scm>
         <connection>scm:git:ssh://git@github.com:navikt/ft-beregning.git</connection>
         <developerConnection>scm:git:ssh://git@github.com:navikt/ft-beregning.git
