@@ -62,8 +62,8 @@ public class BeregningsaktivitetLagreDto {
     public BeregningsaktivitetLagreDto(@Valid @NotNull OpptjeningAktivitetType opptjeningAktivitetType,
                                        @Valid @NotNull LocalDate fom,
                                        @Valid @NotNull LocalDate tom,
-                                       @Valid @Pattern(regexp = "^[\\p{Graph}\\p{Space}\\p{Sc}\\p{L}\\p{M}\\p{N}]+$", message = "'${validatedValue}' matcher ikke tillatt pattern '{regexp}'") String oppdragsgiverOrg,
-                                       @Valid @Pattern(regexp = "^[\\p{Graph}\\p{Space}\\p{Sc}\\p{L}\\p{M}\\p{N}]+$", message = "'${validatedValue}' matcher ikke tillatt pattern '{regexp}'") String arbeidsgiverIdentifikator,
+                                       @Pattern(regexp = "^[\\p{Graph}\\p{Space}\\p{Sc}\\p{L}\\p{M}\\p{N}]+$", message = "'${validatedValue}' matcher ikke tillatt pattern '{regexp}'") String oppdragsgiverOrg,
+                                       @Pattern(regexp = "^[\\p{Graph}\\p{Space}\\p{Sc}\\p{L}\\p{M}\\p{N}]+$", message = "'${validatedValue}' matcher ikke tillatt pattern '{regexp}'") String arbeidsgiverIdentifikator,
                                        @Valid UUID arbeidsforholdRef,
                                        @Valid @NotNull boolean skalBrukes) {
         this.opptjeningAktivitetType = opptjeningAktivitetType;

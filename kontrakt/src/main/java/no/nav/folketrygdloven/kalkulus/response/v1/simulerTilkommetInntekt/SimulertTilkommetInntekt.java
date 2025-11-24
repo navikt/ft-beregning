@@ -31,7 +31,7 @@ public class SimulertTilkommetInntekt {
 
     @JsonProperty(value = "saksnummerMedAksjonspunkt")
     @Size(min = 0, max = 10000)
-    private Set<@Valid @Pattern(regexp = "^[A-Za-z0-9]+$", message = "'${validatedValue}' matcher ikke tillatt pattern '{value}'") String> saksnummerMedAksjonspunkt;
+    private Set<@Pattern(regexp = "^[A-Za-z0-9]+$", message = "'${validatedValue}' matcher ikke tillatt pattern '{value}'") String> saksnummerMedAksjonspunkt;
 
     @JsonProperty(value = "antallSakerMedManuellFordelingOgTilkommetInntekt")
     @Valid
