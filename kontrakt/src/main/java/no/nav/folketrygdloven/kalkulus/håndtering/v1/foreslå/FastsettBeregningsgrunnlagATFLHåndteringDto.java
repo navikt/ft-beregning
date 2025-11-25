@@ -16,7 +16,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import no.nav.folketrygdloven.kalkulus.håndtering.v1.HåndterBeregningDto;
-import no.nav.folketrygdloven.kalkulus.håndtering.v1.fakta.FastsattePerioderTidsbegrensetDto;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AvklaringsbehovDefinisjon;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -34,22 +33,15 @@ public class FastsettBeregningsgrunnlagATFLHåndteringDto extends HåndterBeregn
     @Max(100 * 1000 * 1000)
     private Integer inntektFrilanser;
 
-    @JsonProperty(value = "fastsatteTidsbegrensedePerioder")
-    @Size(max = 100)
-    private List<@Valid FastsattePerioderTidsbegrensetDto> fastsatteTidsbegrensedePerioder;
-
-
     protected FastsettBeregningsgrunnlagATFLHåndteringDto() {
         super(AvklaringsbehovDefinisjon.FASTSETT_BG_AT_FL);
     }
 
 	public FastsettBeregningsgrunnlagATFLHåndteringDto(@Size(max = 100) List<@Valid InntektPrAndelDto> inntektPrAndelList,
-                                                       @Valid @Min(0) @Max(100 * 1000 * 1000) Integer inntektFrilanser,
-                                                       @Size(max = 100) List<@Valid FastsattePerioderTidsbegrensetDto> fastsatteTidsbegrensedePerioder) {
+                                                       @Valid @Min(0) @Max(100 * 1000 * 1000) Integer inntektFrilanser) {
         super(AvklaringsbehovDefinisjon.FASTSETT_BG_AT_FL);
         this.inntektPrAndelList = inntektPrAndelList;
         this.inntektFrilanser = inntektFrilanser;
-        this.fastsatteTidsbegrensedePerioder = fastsatteTidsbegrensedePerioder;
     }
 
     public Integer getInntektFrilanser() {
@@ -59,13 +51,4 @@ public class FastsettBeregningsgrunnlagATFLHåndteringDto extends HåndterBeregn
     public List<InntektPrAndelDto> getInntektPrAndelList() {
         return inntektPrAndelList;
     }
-
-    public List<FastsattePerioderTidsbegrensetDto> getFastsatteTidsbegrensedePerioder() {
-        return fastsatteTidsbegrensedePerioder;
-    }
-
-    public boolean tidsbegrensetInntektErFastsatt() {
-        return fastsatteTidsbegrensedePerioder != null && !fastsatteTidsbegrensedePerioder.isEmpty();
-    }
-
 }
