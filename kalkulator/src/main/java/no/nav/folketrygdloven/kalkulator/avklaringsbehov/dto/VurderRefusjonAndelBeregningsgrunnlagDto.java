@@ -1,15 +1,19 @@
 package no.nav.folketrygdloven.kalkulator.avklaringsbehov.dto;
 
+import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
+import no.nav.folketrygdloven.kalkulus.typer.AktørId;
+
 import java.time.LocalDate;
+import java.util.Optional;
 
 public class VurderRefusjonAndelBeregningsgrunnlagDto {
 
-    private String arbeidsgiverOrgnr;
-    private String arbeidsgiverAktørId;
-    private String internArbeidsforholdRef;
-    private LocalDate fastsattRefusjonFom;
-    private Integer delvisRefusjonBeløpPrMnd;
-
+    private final String arbeidsgiverOrgnr;
+    private final String arbeidsgiverAktørId;
+    private final String internArbeidsforholdRef;
+    private final LocalDate fastsattRefusjonFom;
+    private final Integer delvisRefusjonBeløpPrMnd;
+    private Boolean erFristUtvidet;
 
     public VurderRefusjonAndelBeregningsgrunnlagDto(String arbeidsgiverOrgnr,
                                                     String arbeidsgiverAktørId,
@@ -27,6 +31,16 @@ public class VurderRefusjonAndelBeregningsgrunnlagDto {
         this.internArbeidsforholdRef = internArbeidsforholdRef;
         this.fastsattRefusjonFom = fastsattRefusjonFom;
         this.delvisRefusjonBeløpPrMnd = delvisRefusjonBeløpPrMnd;
+    }
+
+    public VurderRefusjonAndelBeregningsgrunnlagDto(String arbeidsgiverOrgnr,
+                                                    String arbeidsgiverAktørId,
+                                                    String internArbeidsforholdRef,
+                                                    LocalDate fastsattRefusjonFom,
+                                                    Integer delvisRefusjonBeløpPrMnd,
+                                                    Boolean erFristUtvidet) {
+        this(arbeidsgiverOrgnr, arbeidsgiverAktørId, internArbeidsforholdRef, fastsattRefusjonFom, delvisRefusjonBeløpPrMnd);
+        this.erFristUtvidet = erFristUtvidet;
     }
 
     public String getArbeidsgiverOrgnr() {
@@ -49,6 +63,10 @@ public class VurderRefusjonAndelBeregningsgrunnlagDto {
         return delvisRefusjonBeløpPrMnd;
     }
 
+    public Optional<Boolean> getErFristUtvidet() {
+        return Optional.ofNullable(erFristUtvidet);
+    }
+
     @Override
     public String toString() {
         return "VurderRefusjonAndelBeregningsgrunnlagDto{" +
@@ -57,6 +75,7 @@ public class VurderRefusjonAndelBeregningsgrunnlagDto {
                 ", internArbeidsforholdRef='" + internArbeidsforholdRef + '\'' +
                 ", fastsattRefusjonFom=" + fastsattRefusjonFom +
                 ", delvisRefusjonBeløpPrMnd=" + delvisRefusjonBeløpPrMnd +
+                ", erFristUtvidet=" + erFristUtvidet +
                 '}';
     }
 
@@ -71,4 +90,11 @@ public class VurderRefusjonAndelBeregningsgrunnlagDto {
         return "*".repeat(length - 3) + arbeidsgiverOrgnr.substring(length - 3);
     }
 
+    public Arbeidsgiver getArbeidsgiver() {
+        if (getArbeidsgiverOrgnr() != null) {
+            return Arbeidsgiver.virksomhet(getArbeidsgiverOrgnr());
+        } else {
+            return Arbeidsgiver.person(new AktørId(getArbeidsgiverAktørId()));
+        }
+    }
 }
