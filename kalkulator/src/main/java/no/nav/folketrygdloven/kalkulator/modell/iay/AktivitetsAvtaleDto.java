@@ -3,6 +3,7 @@ package no.nav.folketrygdloven.kalkulator.modell.iay;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import no.nav.folketrygdloven.kalkulator.modell.typer.Stillingsprosent;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 
 public class AktivitetsAvtaleDto {
@@ -10,6 +11,7 @@ public class AktivitetsAvtaleDto {
     private boolean erAnsettelsesPeriode = true;
     private Intervall periode;
     private LocalDate sisteLønnsendringsdato;
+    private Stillingsprosent stillingsprosent;
 
     /**
      * Setter en periode brukt til overstyring av angitt periode (avledet fra saksbehandlers vurderinger). Benyttes kun transient (ved filtrering av modellen)
@@ -27,6 +29,7 @@ public class AktivitetsAvtaleDto {
         this.sisteLønnsendringsdato = aktivitetsAvtale.getSisteLønnsendringsdato();
         this.periode = aktivitetsAvtale.getPeriodeUtenOverstyring();
         this.erAnsettelsesPeriode = aktivitetsAvtale.erAnsettelsesPeriode();
+        this.stillingsprosent = aktivitetsAvtale.getStillingsprosent();
     }
 
     public AktivitetsAvtaleDto(AktivitetsAvtaleDto avtale, Intervall overstyrtPeriode) {
@@ -84,6 +87,14 @@ public class AktivitetsAvtaleDto {
         this.sisteLønnsendringsdato = sisteLønnsendringsdato;
     }
 
+    public Stillingsprosent getStillingsprosent() {
+        return stillingsprosent;
+    }
+
+    public void setStillingsprosent(Stillingsprosent stillingsprosent) {
+        this.stillingsprosent = stillingsprosent;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -91,7 +102,8 @@ public class AktivitetsAvtaleDto {
 	    var that = (AktivitetsAvtaleDto) o;
         return Objects.equals(periode, that.periode) &&
             Objects.equals(sisteLønnsendringsdato, that.sisteLønnsendringsdato) &&
-            Objects.equals(erAnsettelsesPeriode, that.erAnsettelsesPeriode);
+            Objects.equals(erAnsettelsesPeriode, that.erAnsettelsesPeriode) &&
+            Objects.equals(stillingsprosent, that.stillingsprosent);
     }
 
     @Override
@@ -104,8 +116,9 @@ public class AktivitetsAvtaleDto {
         return getClass().getSimpleName() + "<" + //$NON-NLS-1$
             ", periode=" + periode + //$NON-NLS-1$
             ", overstyrtPeriode=" + overstyrtPeriode + //$NON-NLS-1$
-            ", sisteLønnsendringsdato="+sisteLønnsendringsdato + //$NON-NLS-1$
-            ", erAnsettelsesPeriode="+erAnsettelsesPeriode + //$NON-NLS-1$
+            ", sisteLønnsendringsdato=" + sisteLønnsendringsdato + //$NON-NLS-1$
+            ", erAnsettelsesPeriode=" + erAnsettelsesPeriode + //$NON-NLS-1$
+            ", stillingsprosent=" + stillingsprosent + //$NON-NLS-1$
             '>';
     }
 
