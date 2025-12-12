@@ -71,9 +71,8 @@ public class BeregningsgrunnlagArbeidsforholdDto {
     @JsonProperty(value = "naturalytelseTilkommetPrÅr")
     private Beløp naturalytelseTilkommetPrÅr;
 
-    @Valid
     @JsonProperty(value = "stillingsprosenter")
-    private List<StillingsprosentDto> stillingsprosenter;
+    private List<@Valid StillingsprosentDto> stillingsprosenter;
 
     @Valid
     @JsonProperty(value = "sisteLønnsendringsdato")
