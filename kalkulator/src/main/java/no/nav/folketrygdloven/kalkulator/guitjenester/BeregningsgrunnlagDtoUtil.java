@@ -15,6 +15,7 @@ import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.Beregningsgru
 import no.nav.folketrygdloven.kalkulator.modell.iay.AktivitetsAvtaleDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseGrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektsmeldingDto;
+import no.nav.folketrygdloven.kalkulator.modell.iay.YrkesaktivitetDto;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
 import no.nav.folketrygdloven.kalkulator.modell.typer.EksternArbeidsforholdRef;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
@@ -117,7 +118,7 @@ public class BeregningsgrunnlagDtoUtil {
             finnEksternArbeidsforholdId(andel, inntektArbeidYtelseGrunnlag).ifPresent(
                 ref -> arbeidsforhold.setEksternArbeidsforholdId(ref.getReferanse()));
             if (skjæringstidspunkt != null) {
-                mapStillingsprosenterOgSisteLønnsendringsdato(arbeidsforhold, inntektArbeidYtelseGrunnlag, skjæringstidspunkt, arbeidsgiver);
+                mapStillingsprosenterOgSisteLønnsendringsdato(arbeidsforhold, inntektArbeidYtelseGrunnlag, skjæringstidspunkt, bga);
             }
         });
     }
@@ -144,19 +145,20 @@ public class BeregningsgrunnlagDtoUtil {
     private static void mapStillingsprosenterOgSisteLønnsendringsdato(BeregningsgrunnlagArbeidsforholdDto arbeidsforhold,
                                                                       InntektArbeidYtelseGrunnlagDto inntektArbeidYtelseGrunnlag,
                                                                       Skjæringstidspunkt skjæringstidspunkt,
-                                                                      Arbeidsgiver arbeidsgiver) {
-        var aktørArbeid = inntektArbeidYtelseGrunnlag.getAktørArbeidFraRegister().orElse(null);
-        var intervall = getIntervallSisteÅrFørStp(skjæringstidspunkt);
-        if (aktørArbeid != null && intervall != null) {
-            aktørArbeid.hentAlleYrkesaktiviteter()
+                                                                      BGAndelArbeidsforholdDto bga) {
+        var aktørArbeid = inntektArbeidYtelseGrunnlag.getAktørArbeidFraRegister();
+        var stpOpt = getSkjæringstidspunkt(skjæringstidspunkt);
+        if (aktørArbeid.isPresent() && stpOpt.isPresent()) {
+            var stp = stpOpt.get();
+            var intervallSisteÅretFørStp = Intervall.fraOgMedTilOgMed(stp.minusMonths(12), stp);
+            aktørArbeid.get()
+                .hentAlleYrkesaktiviteter()
                 .stream()
-                .filter(ya -> ya.getArbeidsgiver().equals(arbeidsgiver) && ya.getArbeidsforholdRef()
-                    .getReferanse()
-                    .equals(arbeidsforhold.getArbeidsforholdId()))
+                .filter(ya -> matcherArbeidsforholdOgErAktivtPåSkjæringstidspunkt(bga, ya, stp))
                 .findFirst()
                 .ifPresent(ya -> {
-                    arbeidsforhold.setStillingsprosenter(getStillingsprosenter(ya.getAlleAktivitetsAvtaler(), intervall));
-                    arbeidsforhold.setSisteLønnsendringsdato(getSisteLønnsendringsdato(ya.getAlleAktivitetsAvtaler(), intervall));
+                    arbeidsforhold.setStillingsprosenter(getStillingsprosenter(ya.getAlleAktivitetsAvtaler(), intervallSisteÅretFørStp));
+                    arbeidsforhold.setSisteLønnsendringsdato(getSisteLønnsendringsdato(ya.getAlleAktivitetsAvtaler(), intervallSisteÅretFørStp));
                 });
         }
     }
@@ -177,15 +179,18 @@ public class BeregningsgrunnlagDtoUtil {
             .orElse(null);
     }
 
-    private static Intervall getIntervallSisteÅrFørStp(Skjæringstidspunkt skjæringstidspunkt) {
+    private static Optional<LocalDate> getSkjæringstidspunkt(Skjæringstidspunkt skjæringstidspunkt) {
         return Optional.ofNullable(skjæringstidspunkt)
-            .map(stp -> Optional.ofNullable(stp.getSkjæringstidspunktBeregning()).orElse(stp.getSkjæringstidspunktOpptjening()))
-            .map(stp -> Intervall.fraOgMedTilOgMed(stp.minusMonths(12).plusDays(1), stp))
-            .orElse(null);
+            .map(stp -> Optional.ofNullable(stp.getSkjæringstidspunktBeregning()).orElse(stp.getSkjæringstidspunktOpptjening()));
     }
 
     private static boolean erAvtaleIPeriode(AktivitetsAvtaleDto avtale, Intervall periode) {
         return !avtale.erAnsettelsesPeriode() && periode.overlapper(avtale.getPeriode());
+    }
+
+    private static boolean matcherArbeidsforholdOgErAktivtPåSkjæringstidspunkt(BGAndelArbeidsforholdDto bga, YrkesaktivitetDto ya, LocalDate stp) {
+        return ya.getArbeidsgiver().equals(bga.getArbeidsgiver()) && ya.getArbeidsforholdRef().gjelderFor(bga.getArbeidsforholdRef())
+            && ya.getAlleAnsettelsesperioder().stream().anyMatch(aa -> aa.getPeriode().inkluderer(stp));
     }
 
     private static LocalDate finnKorrektOpphørsdato(BeregningsgrunnlagPrStatusOgAndelDto andel) {

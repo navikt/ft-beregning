@@ -108,7 +108,7 @@ public class AktivitetsAvtaleDto {
 
     @Override
     public int hashCode() {
-        return Objects.hash(periode, sisteLønnsendringsdato, erAnsettelsesPeriode);
+        return Objects.hash(periode, sisteLønnsendringsdato, erAnsettelsesPeriode, stillingsprosent);
     }
 
     @Override
