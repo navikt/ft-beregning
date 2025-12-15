@@ -24,7 +24,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.Dekningsgrad;
 
 class FinnArbeidsprosenterFPTest {
     public static final Arbeidsgiver ARBEIDSGIVER = Arbeidsgiver.virksomhet("123456789");
-    private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.of(LocalDate.now().minusYears(1).getYear(), Month.MAY, 10);
+    private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.of(2023, Month.MAY, 10);
     private BeregningsgrunnlagPrStatusOgAndelDto arbeidstakerAndel;
 
     @BeforeEach
