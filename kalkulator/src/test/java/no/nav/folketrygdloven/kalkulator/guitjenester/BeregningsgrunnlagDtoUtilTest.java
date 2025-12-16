@@ -95,6 +95,86 @@ class BeregningsgrunnlagDtoUtilTest {
                 new StillingsprosentDto(stillingsprosentNy, periodeNy.getFomDato(), periodeNy.getTomDato()));
     }
 
+    @Test
+    void skal_gi_arbeidsforholdDto_uten_stillingsprosenter_og_sisteLønnsendringsdato_ved_ingen_arbeidsavtaler() {
+        var arbeidsforhold = BeregningsgrunnlagDtoUtil.lagUtvidetArbeidsforholdDto(
+            lagAndelMedArbeidsgiver(Arbeidsgiver.virksomhet("973093681"), InternArbeidsforholdRefDto.nyRef()), Optional.empty(), tomtIayGrunnlag,
+            Skjæringstidspunkt.builder().medSkjæringstidspunktBeregning(LocalDate.now()).build());
+
+        assertThat(arbeidsforhold).isPresent();
+        assertThat(arbeidsforhold.get().getSisteLønnsendringsdato()).isNull();
+        assertThat(arbeidsforhold.get().getStillingsprosenter()).isNull();
+    }
+
+    @Test
+    void skal_gi_arbeidsforholdDto_med_seneste_sisteLønnsendringsdato_ved_flere_avtaler() {
+        var stp = LocalDate.now();
+        var orgnr = "973093681";
+        var arbRef = InternArbeidsforholdRefDto.nyRef();
+        var periode = Intervall.fraOgMedTilOgMed(stp.minusMonths(10), stp.plusMonths(5));
+        var stillingsprosent = BigDecimal.valueOf(100);
+        var sisteLønnsendringsdato = stp.minusMonths(9);
+        var sisteLønnsendringsdatoNy = stp.minusMonths(2);
+
+        var registerBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
+        var aktørArbeidBuilder = registerBuilder.getAktørArbeidBuilder();
+        var yaBuilder = lagYrkesaktivitetBuilder(arbRef, orgnr);
+        leggTilAktivitet(yaBuilder, aktørArbeidBuilder, periode, sisteLønnsendringsdato, stillingsprosent);
+        leggTilAktivitet(yaBuilder, aktørArbeidBuilder, periode, sisteLønnsendringsdatoNy, stillingsprosent);
+        registerBuilder.leggTilAktørArbeid(aktørArbeidBuilder);
+        var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.oppdatere(Optional.empty()).medData(registerBuilder).build();
+
+        var arbeidsforhold = BeregningsgrunnlagDtoUtil.lagUtvidetArbeidsforholdDto(lagAndelMedArbeidsgiver(Arbeidsgiver.virksomhet(orgnr), arbRef),
+            Optional.empty(), iayGrunnlag, Skjæringstidspunkt.builder().medSkjæringstidspunktBeregning(stp).build());
+
+        assertThat(arbeidsforhold).isPresent();
+        assertThat(arbeidsforhold.get().getSisteLønnsendringsdato()).isEqualTo(sisteLønnsendringsdatoNy);
+    }
+
+    @Test
+    void skal_gi_arbeidsforholdDto_uten_stillingsprosenter_og_sisteLønnsendringsdato_ved_yrkesaktivitet_ikke_aktiv_på_skjæringstidspunkt() {
+        var stp = LocalDate.now();
+        var orgnr = "973093681";
+        var arbRef = InternArbeidsforholdRefDto.nyRef();
+        var periode = Intervall.fraOgMedTilOgMed(stp.minusYears(2), stp.minusMonths(8));
+
+        var registerBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
+        var aktørArbeidBuilder = registerBuilder.getAktørArbeidBuilder();
+        var yaBuilder = lagYrkesaktivitetBuilder(arbRef, orgnr);
+        leggTilAktivitet(yaBuilder, aktørArbeidBuilder, periode, stp.minusMonths(10), BigDecimal.valueOf(70));
+        registerBuilder.leggTilAktørArbeid(aktørArbeidBuilder);
+        var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.oppdatere(Optional.empty()).medData(registerBuilder).build();
+
+        var arbeidsforhold = BeregningsgrunnlagDtoUtil.lagUtvidetArbeidsforholdDto(lagAndelMedArbeidsgiver(Arbeidsgiver.virksomhet(orgnr), arbRef),
+            Optional.empty(), iayGrunnlag, Skjæringstidspunkt.builder().medSkjæringstidspunktBeregning(stp).build());
+
+        assertThat(arbeidsforhold).isPresent();
+        assertThat(arbeidsforhold.get().getSisteLønnsendringsdato()).isNull();
+        assertThat(arbeidsforhold.get().getStillingsprosenter()).isNull();
+    }
+
+    @Test
+    void skal_gi_arbeidsforholdDto_uten_stillingsprosenter_og_sisteLønnsendringsdato_ved_skjæringstidspunkt_null() {
+        var stp = LocalDate.now();
+        var orgnr = "973093681";
+        var arbRef = InternArbeidsforholdRefDto.nyRef();
+        var periode = Intervall.fraOgMedTilOgMed(stp.minusMonths(10), stp.minusMonths(2));
+
+        var registerBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
+        var aktørArbeidBuilder = registerBuilder.getAktørArbeidBuilder();
+        var yaBuilder = lagYrkesaktivitetBuilder(arbRef, orgnr);
+        leggTilAktivitet(yaBuilder, aktørArbeidBuilder, periode, stp.minusMonths(1), BigDecimal.valueOf(80));
+        registerBuilder.leggTilAktørArbeid(aktørArbeidBuilder);
+        var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.oppdatere(Optional.empty()).medData(registerBuilder).build();
+
+        var arbeidsforhold = BeregningsgrunnlagDtoUtil.lagUtvidetArbeidsforholdDto(lagAndelMedArbeidsgiver(Arbeidsgiver.virksomhet(orgnr), arbRef),
+            Optional.empty(), iayGrunnlag, null);
+
+        assertThat(arbeidsforhold).isPresent();
+        assertThat(arbeidsforhold.get().getSisteLønnsendringsdato()).isNull();
+        assertThat(arbeidsforhold.get().getStillingsprosenter()).isNull();
+    }
+
     private YrkesaktivitetDtoBuilder lagYrkesaktivitetBuilder(InternArbeidsforholdRefDto arbRef, String orgnr) {
         return YrkesaktivitetDtoBuilder.oppdatere(Optional.empty())
             .medArbeidType(ArbeidType.ORDINÆRT_ARBEIDSFORHOLD)
