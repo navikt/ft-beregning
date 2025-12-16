@@ -3,6 +3,7 @@ package no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui;
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 import jakarta.validation.Valid;
@@ -69,6 +70,13 @@ public class BeregningsgrunnlagArbeidsforholdDto {
     @Valid
     @JsonProperty(value = "naturalytelseTilkommetPrÅr")
     private Beløp naturalytelseTilkommetPrÅr;
+
+    @JsonProperty(value = "stillingsprosenter")
+    private List<@Valid StillingsprosentDto> stillingsprosenter;
+
+    @Valid
+    @JsonProperty(value = "sisteLønnsendringsdato")
+    private LocalDate sisteLønnsendringsdato;
 
     public BeregningsgrunnlagArbeidsforholdDto() {
         // Hibernate
@@ -150,6 +158,22 @@ public class BeregningsgrunnlagArbeidsforholdDto {
         this.eksternArbeidsforholdId = eksternArbeidsforholdId;
     }
 
+    public List<StillingsprosentDto> getStillingsprosenter() {
+        return stillingsprosenter;
+    }
+
+    public void setStillingsprosenter(List<StillingsprosentDto> stillingsprosenter) {
+        this.stillingsprosenter = stillingsprosenter;
+    }
+
+    public LocalDate getSisteLønnsendringsdato() {
+        return sisteLønnsendringsdato;
+    }
+
+    public void setSisteLønnsendringsdato(LocalDate sisteLønnsendringsdato) {
+        this.sisteLønnsendringsdato = sisteLønnsendringsdato;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -160,12 +184,15 @@ public class BeregningsgrunnlagArbeidsforholdDto {
                 Objects.equals(arbeidsforholdId, that.arbeidsforholdId) &&
                 Objects.equals(arbeidsgiverIdent, that.arbeidsgiverIdent) &&
                 Objects.equals(eksternArbeidsforholdId, that.eksternArbeidsforholdId) &&
-                Objects.equals(arbeidsforholdType, that.arbeidsforholdType);
+                Objects.equals(arbeidsforholdType, that.arbeidsforholdType) &&
+                Objects.equals(stillingsprosenter, that.stillingsprosenter) &&
+                Objects.equals(sisteLønnsendringsdato, that.sisteLønnsendringsdato);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(arbeidsgiverIdent, startdato, opphoersdato, arbeidsforholdId, eksternArbeidsforholdId, arbeidsforholdType);
+        return Objects.hash(arbeidsgiverIdent, startdato, opphoersdato, arbeidsforholdId, eksternArbeidsforholdId, arbeidsforholdType,
+            stillingsprosenter, sisteLønnsendringsdato);
     }
 
     public Beløp getBelopFraInntektsmeldingPrMnd() {
