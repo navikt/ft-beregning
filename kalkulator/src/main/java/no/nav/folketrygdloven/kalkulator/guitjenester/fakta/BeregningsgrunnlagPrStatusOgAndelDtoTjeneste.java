@@ -45,10 +45,11 @@ public class BeregningsgrunnlagPrStatusOgAndelDtoTjeneste {
         var iayGrunnlag = input.getIayGrunnlag();
         var inntektsmeldinger = input.getInntektsmeldinger();
         var ref = input.getKoblingReferanse();
+        var stp = input.getSkjæringstidspunkt();
         var faktaAggregat = input.getFaktaAggregat();
         var dto = LagTilpassetDtoTjeneste.opprettTilpassetDTO(ref, andel, iayGrunnlag, faktaAggregat);
         var inntektsmelding = FinnInntektsmeldingForAndel.finnInntektsmelding(andel, inntektsmeldinger);
-        BeregningsgrunnlagDtoUtil.lagArbeidsforholdDto(andel, inntektsmelding, iayGrunnlag).ifPresent(dto::setArbeidsforhold);
+        BeregningsgrunnlagDtoUtil.lagUtvidetArbeidsforholdDto(andel, inntektsmelding, iayGrunnlag, stp).ifPresent(dto::setArbeidsforhold);
         dto.setDagsats(andel.getDagsats());
         dto.setOriginalDagsatsFraTilstøtendeYtelse(andel.getOrginalDagsatsFraTilstøtendeYtelse());
         dto.setAndelsnr(andel.getAndelsnr());

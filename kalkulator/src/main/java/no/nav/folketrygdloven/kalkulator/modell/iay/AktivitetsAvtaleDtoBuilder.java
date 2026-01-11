@@ -3,6 +3,7 @@ package no.nav.folketrygdloven.kalkulator.modell.iay;
 import java.time.LocalDate;
 import java.util.Optional;
 
+import no.nav.folketrygdloven.kalkulator.modell.typer.Stillingsprosent;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 
 public class AktivitetsAvtaleDtoBuilder {
@@ -29,6 +30,11 @@ public class AktivitetsAvtaleDtoBuilder {
 
     public AktivitetsAvtaleDtoBuilder medErAnsettelsesPeriode(boolean erAnsettelsesPeriode) {
         this.aktivitetsAvtale.setErAnsettelsesPeriode(erAnsettelsesPeriode);
+        return this;
+    }
+
+    public AktivitetsAvtaleDtoBuilder medStillingsprosent(Stillingsprosent stillingsprosent) {
+        this.aktivitetsAvtale.setStillingsprosent(stillingsprosent);
         return this;
     }
 
