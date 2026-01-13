@@ -14,6 +14,7 @@ import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.Beregningsgru
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
+import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 
 /**
@@ -44,8 +45,12 @@ public final class FordelBeregningsgrunnlagTilfelleTjeneste {
         return andelTilfelleMap;
     }
 
-    private static Optional<FordelingTilfelle> utledTilfelleForAndel(BeregningsgrunnlagPeriodeDto periode, FordelBeregningsgrunnlagTilfelleInput input, BeregningsgrunnlagPrStatusOgAndelDto andel) {
-        if (FordelTilkommetArbeidsforholdTjeneste.erAktivitetLagtTilIPeriodisering(andel) && !erAutomatiskFordelt(andel)) {
+    private static Optional<FordelingTilfelle> utledTilfelleForAndel(BeregningsgrunnlagPeriodeDto periode,
+                                                                     FordelBeregningsgrunnlagTilfelleInput input,
+                                                                     BeregningsgrunnlagPrStatusOgAndelDto andel) {
+        boolean erNyAktivitet = FordelTilkommetArbeidsforholdTjeneste.erAktivitetLagtTilIPeriodisering(andel);
+        boolean skalManueltFordeles = !erAutomatiskFordelt(andel) || FagsakYtelseType.SVANGERSKAPSPENGER.equals(input.getFagsakYtelseType());
+        if (erNyAktivitet && skalManueltFordeles) {
             return Optional.of(FordelingTilfelle.NY_AKTIVITET);
         }
 

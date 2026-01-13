@@ -35,7 +35,9 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.AndelKilde;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AvklaringsbehovDefinisjon;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Dekningsgrad;
+import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FaktaOmBeregningTilfelle;
+import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 
 
@@ -65,7 +67,7 @@ class AvklaringsbehovUtlederFordelBeregningTest {
 
     @Test
     void skal_lage_avklaringsbehov_når_det_er_endring() {
-	    var grunnlag = lagGrunnlagMedNyttArbeidsforhold();
+	    var grunnlag = lagGrunnlagMedNyttArbeidsforhold(false);
 
 	    var avklaringsbehovResultats = utledAvklaringsbehov(koblingReferanse, grunnlag);
 
@@ -73,8 +75,26 @@ class AvklaringsbehovUtlederFordelBeregningTest {
         assertThat(avklaringsbehovResultats.get(0).getBeregningAvklaringsbehovDefinisjon()).isEqualTo(AvklaringsbehovDefinisjon.FORDEL_BG);
     }
 
+    @Test
+    void skal_lage_avklaringsbehov_når_det_er_tilkommet_arbeidsforhold_som_er_automatisk_fordelt_og_svp() {
+        var grunnlag = lagGrunnlagMedNyttArbeidsforhold(true);
+        var koblingReferanseSVP = new KoblingReferanseMock(SKJÆRINGSTIDSPUNKT_OPPTJENING, FagsakYtelseType.SVANGERSKAPSPENGER);
 
-    private BeregningsgrunnlagGrunnlagDto lagGrunnlagMedNyttArbeidsforhold(FaktaOmBeregningTilfelle... tilfeller) {
+        var avklaringsbehovResultats = utledAvklaringsbehov(koblingReferanseSVP, grunnlag);
+
+        assertThat(avklaringsbehovResultats).hasSize(1);
+        assertThat(avklaringsbehovResultats.get(0).getBeregningAvklaringsbehovDefinisjon()).isEqualTo(AvklaringsbehovDefinisjon.FORDEL_BG);
+    }
+
+    @Test
+    void skal_ikke_lage_avklaringsbehov_når_det_er_tilkommet_arbeidsforhold_som_er_automatisk_fordelt_og_fp() {
+        var grunnlag = lagGrunnlagMedNyttArbeidsforhold(true);
+        var avklaringsbehovResultats = utledAvklaringsbehov(koblingReferanse, grunnlag);
+
+        assertThat(avklaringsbehovResultats).isEmpty();
+    }
+
+    private BeregningsgrunnlagGrunnlagDto lagGrunnlagMedNyttArbeidsforhold(boolean erFordelt, FaktaOmBeregningTilfelle... tilfeller) {
 	    var listeMedTilfeller = Arrays.asList(tilfeller);
 	    var beregningsgrunnlag = BeregningsgrunnlagDto.builder()
                 .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING)
@@ -84,11 +104,15 @@ class AvklaringsbehovUtlederFordelBeregningTest {
 	    var periode = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_OPPTJENING, null)
                 .build(beregningsgrunnlag);
-        BeregningsgrunnlagPrStatusOgAndelDto.Builder.ny()
+        var andel = BeregningsgrunnlagPrStatusOgAndelDto.Builder.ny()
                 .medKilde(AndelKilde.PROSESS_PERIODISERING)
                 .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
-                .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder().medArbeidsgiver(Arbeidsgiver.virksomhet("1234534")))
-                .build(periode);
+                .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder().medArbeidsgiver(Arbeidsgiver.virksomhet("1234534")));
+        if (erFordelt) {
+            andel.medInntektskategori(Inntektskategori.ARBEIDSTAKER);
+            andel.medFordeltPrÅr(Beløp.fra(100_000));
+        }
+                andel.build(periode);
 	    var grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medBeregningsgrunnlag(beregningsgrunnlag)
                 .medRegisterAktiviteter(beregningAktivitetBuilder.build())

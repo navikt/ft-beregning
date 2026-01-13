@@ -29,6 +29,7 @@ import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
+import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Utfall;
@@ -80,7 +81,8 @@ class ManuellBehandlingRefusjonGraderingDtoTjenesteTest {
 
         // Act
         var kreverManuellBehandling = ManuellBehandlingRefusjonGraderingDtoTjeneste.skalSaksbehandlerRedigereInntekt(grunnlag,
-                new AktivitetGradering(graderinger), bgFørFordeling.getBeregningsgrunnlagPerioder().get(0), bgFørFordeling.getBeregningsgrunnlagPerioder(), inntektsmeldinger, Collections.emptyList());
+                new AktivitetGradering(graderinger), bgFørFordeling.getBeregningsgrunnlagPerioder().get(0),
+            bgFørFordeling.getBeregningsgrunnlagPerioder(), inntektsmeldinger, Collections.emptyList(), FagsakYtelseType.FORELDREPENGER);
 
         // Assert
         assertThat(kreverManuellBehandling).isTrue();
@@ -113,14 +115,16 @@ class ManuellBehandlingRefusjonGraderingDtoTjenesteTest {
                 new AktivitetGradering(graderingNæring),
                 periode,
                 bg.getBeregningsgrunnlagPerioder(),
-                List.of(), Collections.emptyList());
+                List.of(), Collections.emptyList(),
+            FagsakYtelseType.FORELDREPENGER);
 
         var kreverManuellBehandling2 = ManuellBehandlingRefusjonGraderingDtoTjeneste.skalSaksbehandlerRedigereInntekt(
                 grunnlag,
                 new AktivitetGradering(graderingNæring),
                 periode2,
                 bg.getBeregningsgrunnlagPerioder(),
-                List.of(), Collections.emptyList());
+                List.of(), Collections.emptyList(),
+            FagsakYtelseType.FORELDREPENGER);
 
 
         // Assert
