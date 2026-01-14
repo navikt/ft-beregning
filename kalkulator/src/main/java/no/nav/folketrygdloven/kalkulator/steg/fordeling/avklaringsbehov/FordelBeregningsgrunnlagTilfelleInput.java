@@ -22,7 +22,7 @@ public class FordelBeregningsgrunnlagTilfelleInput {
     private BeregningsgrunnlagDto beregningsgrunnlag;
     private AktivitetGradering aktivitetGradering;
     private Collection<InntektsmeldingDto> inntektsmeldinger;
-    private FagsakYtelseType fagsakYtelseType;
+    private final FagsakYtelseType fagsakYtelseType;
 
 
     public FordelBeregningsgrunnlagTilfelleInput(BeregningsgrunnlagDto beregningsgrunnlag,
