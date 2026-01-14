@@ -58,9 +58,10 @@ public class ManuellBehandlingRefusjonGraderingDtoTjeneste {
                                                             AktivitetGradering aktivitetGradering,
                                                             BeregningsgrunnlagPeriodeDto periode,
                                                             Collection<InntektsmeldingDto> inntektsmeldinger,
-                                                            Beløp grunnbeløp, List<Intervall> forlengelseperioder) {
+                                                            Beløp grunnbeløp, List<Intervall> forlengelseperioder,
+                                                            FagsakYtelseType fagsakYtelseType) {
         var periodeTilfelleMap = utledTilfellerForAndelerIPeriode(grunnlag, aktivitetGradering,
-                periode, inntektsmeldinger, forlengelseperioder, FagsakYtelseType.FORELDREPENGER);
+                periode, inntektsmeldinger, forlengelseperioder, fagsakYtelseType);
         return periode.getBeregningsgrunnlagPrStatusOgAndelList().stream().anyMatch(andelFraSteg -> andelLiggerITilfelleMap(andelFraSteg, periodeTilfelleMap)
                 && RefusjonDtoTjeneste.skalKunneEndreRefusjon(andelFraSteg, periode, aktivitetGradering, grunnbeløp));
     }

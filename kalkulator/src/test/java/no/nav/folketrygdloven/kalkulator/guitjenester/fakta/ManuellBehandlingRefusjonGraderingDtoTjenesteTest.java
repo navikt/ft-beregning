@@ -147,7 +147,8 @@ class ManuellBehandlingRefusjonGraderingDtoTjenesteTest {
         var kreverManuellBehandlingAvRefusjon = ManuellBehandlingRefusjonGraderingDtoTjeneste.skalSaksbehandlerRedigereRefusjon(
                 grunnlag,
             new AktivitetGradering(graderinger),
-            bgFørFordeling.getBeregningsgrunnlagPerioder().get(0), inntektsmeldinger, Beløp.fra(GRUNNBELØP), Collections.emptyList());
+            bgFørFordeling.getBeregningsgrunnlagPerioder().get(0), inntektsmeldinger, Beløp.fra(GRUNNBELØP), Collections.emptyList(),
+            FagsakYtelseType.FORELDREPENGER);
 
         // Assert
         assertThat(kreverManuellBehandlingAvRefusjon).isTrue();
