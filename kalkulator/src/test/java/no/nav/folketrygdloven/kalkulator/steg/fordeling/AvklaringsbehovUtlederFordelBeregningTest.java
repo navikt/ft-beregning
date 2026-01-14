@@ -78,9 +78,9 @@ class AvklaringsbehovUtlederFordelBeregningTest {
     @Test
     void skal_lage_avklaringsbehov_når_det_er_tilkommet_arbeidsforhold_som_er_automatisk_fordelt_og_svp() {
         var grunnlag = lagGrunnlagMedNyttArbeidsforhold(true);
-        var koblingReferanseSVP = new KoblingReferanseMock(SKJÆRINGSTIDSPUNKT_OPPTJENING, FagsakYtelseType.SVANGERSKAPSPENGER);
+        var koblingReferanseSvp = new KoblingReferanseMock(SKJÆRINGSTIDSPUNKT_OPPTJENING, FagsakYtelseType.SVANGERSKAPSPENGER);
 
-        var avklaringsbehovResultats = utledAvklaringsbehov(koblingReferanseSVP, grunnlag);
+        var avklaringsbehovResultats = utledAvklaringsbehov(koblingReferanseSvp, grunnlag);
 
         assertThat(avklaringsbehovResultats).hasSize(1);
         assertThat(avklaringsbehovResultats.get(0).getBeregningAvklaringsbehovDefinisjon()).isEqualTo(AvklaringsbehovDefinisjon.FORDEL_BG);
