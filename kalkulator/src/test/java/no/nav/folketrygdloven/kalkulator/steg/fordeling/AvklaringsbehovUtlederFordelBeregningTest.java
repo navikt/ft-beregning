@@ -95,56 +95,54 @@ class AvklaringsbehovUtlederFordelBeregningTest {
     }
 
     private BeregningsgrunnlagGrunnlagDto lagGrunnlagMedNyttArbeidsforhold(boolean erFordelt, FaktaOmBeregningTilfelle... tilfeller) {
-	    var listeMedTilfeller = Arrays.asList(tilfeller);
-	    var beregningsgrunnlag = BeregningsgrunnlagDto.builder()
-                .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING)
-                .medGrunnbeløp(Beløp.fra(GrunnbeløpTestKonstanter.GRUNNBELØP_2018))
-                .leggTilFaktaOmBeregningTilfeller(listeMedTilfeller)
-                .build();
-	    var periode = BeregningsgrunnlagPeriodeDto.ny()
-                .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_OPPTJENING, null)
-                .build(beregningsgrunnlag);
+        var listeMedTilfeller = Arrays.asList(tilfeller);
+        var beregningsgrunnlag = BeregningsgrunnlagDto.builder()
+            .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING)
+            .medGrunnbeløp(Beløp.fra(GrunnbeløpTestKonstanter.GRUNNBELØP_2018))
+            .leggTilFaktaOmBeregningTilfeller(listeMedTilfeller)
+            .build();
+        var periode = BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_OPPTJENING, null).build(beregningsgrunnlag);
         var andel = BeregningsgrunnlagPrStatusOgAndelDto.Builder.ny()
-                .medKilde(AndelKilde.PROSESS_PERIODISERING)
-                .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
-                .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder().medArbeidsgiver(Arbeidsgiver.virksomhet("1234534")));
+            .medKilde(AndelKilde.PROSESS_PERIODISERING)
+            .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
+            .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder().medArbeidsgiver(Arbeidsgiver.virksomhet("1234534")));
         if (erFordelt) {
             andel.medInntektskategori(Inntektskategori.ARBEIDSTAKER);
             andel.medFordeltPrÅr(Beløp.fra(100_000));
         }
-                andel.build(periode);
-	    var grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
-                .medBeregningsgrunnlag(beregningsgrunnlag)
-                .medRegisterAktiviteter(beregningAktivitetBuilder.build())
-                .build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER);
+        andel.build(periode);
+        var grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
+            .medBeregningsgrunnlag(beregningsgrunnlag)
+            .medRegisterAktiviteter(beregningAktivitetBuilder.build())
+            .build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER);
         return grunnlag;
     }
 
     private BeregningsgrunnlagGrunnlagDto lagGrunnlagutenNyttArbeidsforhold(FaktaOmBeregningTilfelle... tilfeller) {
-	    var listeMedTilfeller = Arrays.asList(tilfeller);
-	    var beregningsgrunnlag = BeregningsgrunnlagDto.builder()
-                .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING)
-                .medGrunnbeløp(Beløp.fra(GrunnbeløpTestKonstanter.GRUNNBELØP_2018))
-                .leggTilFaktaOmBeregningTilfeller(listeMedTilfeller)
-                .build();
-	    var periode = BeregningsgrunnlagPeriodeDto.ny()
-                .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_OPPTJENING, null)
-                .build(beregningsgrunnlag);
-	    var virksomhet = Arbeidsgiver.virksomhet("1234534");
+        var listeMedTilfeller = Arrays.asList(tilfeller);
+        var beregningsgrunnlag = BeregningsgrunnlagDto.builder()
+            .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING)
+            .medGrunnbeløp(Beløp.fra(GrunnbeløpTestKonstanter.GRUNNBELØP_2018))
+            .leggTilFaktaOmBeregningTilfeller(listeMedTilfeller)
+            .build();
+        var periode = BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_OPPTJENING, null).build(beregningsgrunnlag);
+        var virksomhet = Arbeidsgiver.virksomhet("1234534");
         BeregningsgrunnlagPrStatusOgAndelDto.Builder.ny()
-                .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
-                .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder().medArbeidsgiver(virksomhet))
-                .build(periode);
+            .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
+            .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder().medArbeidsgiver(virksomhet))
+            .build(periode);
 
         beregningAktivitetBuilder.leggTilAktivitet(BeregningAktivitetDto.builder()
-                .medPeriode(Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(1), SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(2)))
-                .medArbeidsgiver(virksomhet)
-                .medOpptjeningAktivitetType(OpptjeningAktivitetType.ARBEID).medArbeidsforholdRef(InternArbeidsforholdRefDto.nullRef()).build());
+            .medPeriode(Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(1), SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(2)))
+            .medArbeidsgiver(virksomhet)
+            .medOpptjeningAktivitetType(OpptjeningAktivitetType.ARBEID)
+            .medArbeidsforholdRef(InternArbeidsforholdRefDto.nullRef())
+            .build());
 
-	    var grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
-                .medBeregningsgrunnlag(beregningsgrunnlag)
-                .medRegisterAktiviteter(beregningAktivitetBuilder.build())
-                .build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER);
+        var grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
+            .medBeregningsgrunnlag(beregningsgrunnlag)
+            .medRegisterAktiviteter(beregningAktivitetBuilder.build())
+            .build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER);
         return grunnlag;
     }
 
