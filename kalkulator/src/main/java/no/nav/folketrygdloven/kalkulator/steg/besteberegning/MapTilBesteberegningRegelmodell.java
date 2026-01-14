@@ -71,7 +71,7 @@ public class MapTilBesteberegningRegelmodell {
         }
         return fpgrunnlag.getBesteberegningYtelsegrunnlag().stream()
                 .map(yg -> new Ytelsegrunnlag(mapYtelse(yg.ytelse()), mapYtelseperioder(yg.perioder())))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private static RelatertYtelseType mapYtelse(YtelseType ytelse) {
@@ -79,7 +79,8 @@ public class MapTilBesteberegningRegelmodell {
             case FORELDREPENGER -> RelatertYtelseType.FORELDREPENGER;
             case SVANGERSKAPSPENGER -> RelatertYtelseType.SVANGERSKAPSPENGER;
             case SYKEPENGER -> RelatertYtelseType.SYKEPENGER;
-	        case PLEIEPENGER_NÆRSTÅENDE, PLEIEPENGER_SYKT_BARN -> RelatertYtelseType.PLEIEPENGER;
+            case PLEIEPENGER_NÆRSTÅENDE, PLEIEPENGER_SYKT_BARN-> RelatertYtelseType.PLEIEPENGER;
+            case OPPLÆRINGSPENGER-> RelatertYtelseType.OPPLÆRINGSPENGER;
             default -> throw new IllegalStateException("Fikk inn ukjent ytelsetype under mapping til besteberegning " + ytelse);
         };
     }
@@ -87,13 +88,13 @@ public class MapTilBesteberegningRegelmodell {
     private static List<YtelsegrunnlagPeriode> mapYtelseperioder(List<Ytelseperiode> perioder) {
         return perioder.stream()
                 .map(p -> new YtelsegrunnlagPeriode(Periode.of(p.getPeriode().getFomDato(), p.getPeriode().getTomDato()), mapYtelseandeler(p.getAndeler())))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     static List<YtelsegrunnlagAndel> mapYtelseandeler(List<Ytelseandel> andeler) {
         return andeler.stream()
                 .map(a -> new YtelsegrunnlagAndel(mapTilYtelseAktivitetType(a), a.getDagsats() == null ? null : BigDecimal.valueOf(a.getDagsats())))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private static YtelseAktivitetType mapTilYtelseAktivitetType(Ytelseandel andel) {
@@ -142,7 +143,7 @@ public class MapTilBesteberegningRegelmodell {
         if (perioder.isEmpty()) {
             throw new IllegalStateException("Liste med perioder skal ikke vere tom");
         }
-        var førstePeriode = perioder.get(0);
+        var førstePeriode = perioder.getFirst();
         return Beløp.safeVerdi(førstePeriode.getBruttoPrÅr());
     }
 
@@ -151,7 +152,7 @@ public class MapTilBesteberegningRegelmodell {
                     .flatMap(oo -> oo.getEgenNæring().stream())
                     .map(OppgittEgenNæringDto::getPeriode)
                     .map(p -> Periode.of(p.getFomDato(), p.getTomDato()))
-                    .collect(Collectors.toList());
+                    .toList();
     }
 
     private static BigDecimal finnGrunnbeløp(ForeslåBesteberegningInput input) {
@@ -272,7 +273,7 @@ public class MapTilBesteberegningRegelmodell {
                 .filter(it -> it.getArbeidsgiver().getIdentifikator().equals(arbeidsgiver.getIdentifikator()))
                 .map(YrkesaktivitetDto::getArbeidType)
                 .distinct()
-                .collect(Collectors.toList());
+                .toList();
         var erFrilanser = yrkesaktiviteter.stream()
                 .map(YrkesaktivitetDto::getArbeidType)
                 .anyMatch(ArbeidType.FRILANSER::equals);
@@ -296,7 +297,7 @@ public class MapTilBesteberegningRegelmodell {
                         .medAktivitetStatus(AktivitetStatus.SN)
                         .medInntekt(inntektspost.getBeløp().verdi())
                         .medPeriode(Periode.of(inntektspost.getPeriode().getFomDato(), inntektspost.getPeriode().getTomDato()))
-                        .build()).collect(Collectors.toList());
+                        .build()).toList();
     }
 
 }
