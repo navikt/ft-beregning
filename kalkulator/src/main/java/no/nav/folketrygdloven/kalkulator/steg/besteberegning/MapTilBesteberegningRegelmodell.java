@@ -81,6 +81,7 @@ public class MapTilBesteberegningRegelmodell {
             case SYKEPENGER -> RelatertYtelseType.SYKEPENGER;
             case PLEIEPENGER_NÆRSTÅENDE, PLEIEPENGER_SYKT_BARN-> RelatertYtelseType.PLEIEPENGER;
             case OPPLÆRINGSPENGER-> RelatertYtelseType.OPPLÆRINGSPENGER;
+            case OMSORGSPENGER -> RelatertYtelseType.OMSORGSPENGER;
             default -> throw new IllegalStateException("Fikk inn ukjent ytelsetype under mapping til besteberegning " + ytelse);
         };
     }
