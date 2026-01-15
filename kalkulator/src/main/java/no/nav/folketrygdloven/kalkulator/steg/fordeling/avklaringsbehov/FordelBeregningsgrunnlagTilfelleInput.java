@@ -11,6 +11,7 @@ import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.Beregningsgru
 import no.nav.folketrygdloven.kalkulator.modell.gradering.AktivitetGradering;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektsmeldingDto;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
+import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
 
 /**
  * Input for å utlede tilfelle for fordel beregningsgrunnlag
@@ -21,15 +22,18 @@ public class FordelBeregningsgrunnlagTilfelleInput {
     private BeregningsgrunnlagDto beregningsgrunnlag;
     private AktivitetGradering aktivitetGradering;
     private Collection<InntektsmeldingDto> inntektsmeldinger;
+    private final FagsakYtelseType fagsakYtelseType;
 
 
     public FordelBeregningsgrunnlagTilfelleInput(BeregningsgrunnlagDto beregningsgrunnlag,
                                                  AktivitetGradering aktivitetGradering,
-                                                 Collection<InntektsmeldingDto> inntektsmeldinger, List<Intervall> forlengelseperioder) {
+                                                 Collection<InntektsmeldingDto> inntektsmeldinger, List<Intervall> forlengelseperioder,
+                                                 FagsakYtelseType fagsakYtelseType) {
         this.beregningsgrunnlag = beregningsgrunnlag;
         this.aktivitetGradering = aktivitetGradering;
         this.inntektsmeldinger = inntektsmeldinger;
         this.forlengelseperioder = forlengelseperioder;
+        this.fagsakYtelseType = fagsakYtelseType;
         verifyStateForBuild();
     }
 
@@ -45,6 +49,10 @@ public class FordelBeregningsgrunnlagTilfelleInput {
         return Collections.unmodifiableCollection(inntektsmeldinger);
     }
 
+    public FagsakYtelseType getFagsakYtelseType() {
+        return fagsakYtelseType;
+    }
+
     public List<Intervall> getForlengelseperioder() {
         return forlengelseperioder;
     }
@@ -55,14 +63,16 @@ public class FordelBeregningsgrunnlagTilfelleInput {
                 "beregningsgrunnlag=" + beregningsgrunnlag +
                 ", aktivitetGradering=" + aktivitetGradering +
                 ", inntektsmeldinger=" + inntektsmeldinger +
-                '}';
+                ", fagsakYtelseType=" + fagsakYtelseType +
+            '}';
     }
 
     public static FordelBeregningsgrunnlagTilfelleInput fraBeregningsgrunnlagRestInput(BeregningsgrunnlagGUIInput input) {
         var aktivitetGradering = input.getYtelsespesifiktGrunnlag() instanceof ForeldrepengerGrunnlag ?
                 ((ForeldrepengerGrunnlag) input.getYtelsespesifiktGrunnlag()).getAktivitetGradering() : AktivitetGradering.INGEN_GRADERING;
         var inntektsmeldinger = input.getInntektsmeldinger();
-        return new FordelBeregningsgrunnlagTilfelleInput(input.getBeregningsgrunnlag(), aktivitetGradering, inntektsmeldinger, input.getForlengelseperioder());
+        return new FordelBeregningsgrunnlagTilfelleInput(input.getBeregningsgrunnlag(), aktivitetGradering, inntektsmeldinger,
+            input.getForlengelseperioder(), input.getFagsakYtelseType());
     }
 
     private void verifyStateForBuild() {

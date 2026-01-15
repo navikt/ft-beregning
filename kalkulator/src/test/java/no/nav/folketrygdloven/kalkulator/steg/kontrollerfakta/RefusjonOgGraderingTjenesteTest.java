@@ -29,6 +29,7 @@ import no.nav.folketrygdloven.kalkulator.steg.fordeling.avklaringsbehov.Fordelin
 import no.nav.folketrygdloven.kalkulator.testutilities.BeregningInntektsmeldingTestUtil;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AndelKilde;
+import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.PeriodeÅrsak;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Utfall;
 
@@ -347,7 +348,8 @@ class RefusjonOgGraderingTjenesteTest {
             .build());
 
         // Act
-        var fordelingInput = new FordelBeregningsgrunnlagTilfelleInput(bg, aktivitetGradering, List.of(im1), Collections.emptyList());
+        var fordelingInput = new FordelBeregningsgrunnlagTilfelleInput(bg, aktivitetGradering, List.of(im1), Collections.emptyList(),
+            FagsakYtelseType.FORELDREPENGER);
         var andelerMedTilfeller = FordelBeregningsgrunnlagTilfelleTjeneste.vurderManuellBehandlingForPeriode(periode1, fordelingInput);
 
         // Assert
@@ -377,7 +379,7 @@ class RefusjonOgGraderingTjenesteTest {
 
 
     private Map<BeregningsgrunnlagPrStatusOgAndelDto, FordelingTilfelle> vurderManuellBehandling(BeregningsgrunnlagDto bg, AktivitetGradering aktivitetGradering, Collection<InntektsmeldingDto> inntektsmeldinger) {
-        var fordelingInput = new FordelBeregningsgrunnlagTilfelleInput(bg, aktivitetGradering, inntektsmeldinger, Collections.emptyList());
+        var fordelingInput = new FordelBeregningsgrunnlagTilfelleInput(bg, aktivitetGradering, inntektsmeldinger, Collections.emptyList(), FagsakYtelseType.FORELDREPENGER);
         return fordelingInput.getBeregningsgrunnlag().getBeregningsgrunnlagPerioder().stream()
                 .map(p -> FordelBeregningsgrunnlagTilfelleTjeneste.vurderManuellBehandlingForPeriode(p, fordelingInput))
                 .filter(r -> !r.isEmpty())
