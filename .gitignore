@@ -51,3 +51,4 @@ release.properties
 maven-eclipse.xml
 .mvn/maven.config
 .mvn/jvm.config
+.java-version
