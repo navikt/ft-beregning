@@ -125,10 +125,9 @@ public class MapRefusjonskravFraVLTilRegel {
         if (overstyrtStartdato.isPresent()) {
             return overstyrtStartdato.get();
         }
-        var inntektsmeldingType = inntektsmelding.getInntektsmeldingType().orElse(InntektsmeldingDto.InntektsmeldingType.INNTEKTSMELDING);
-        if(inntektsmeldingType.equals(InntektsmeldingDto.InntektsmeldingType.REFUSJONSKRAV)) {
-            return inntektsmelding.getStartDatoPermisjon().filter(startDato ->
-                startDato.isAfter(startdatoPermisjon)).orElse(startdatoPermisjon);
+        if (inntektsmelding.getInntektsmeldingType().equals(InntektsmeldingDto.InntektsmeldingType.REFUSJONSKRAV)) {
+            return inntektsmelding.getStartDatoPermisjon().filter(startDato
+                -> startDato.isAfter(startdatoPermisjon)).orElse(startdatoPermisjon);
         }
         return startdatoPermisjon;
     }

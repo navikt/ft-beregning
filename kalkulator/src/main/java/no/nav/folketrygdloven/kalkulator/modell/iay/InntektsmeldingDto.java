@@ -46,7 +46,7 @@ public class InntektsmeldingDto {
             return refusjon;
         }).collect(Collectors.toList());
         this.journalpostId = inntektsmelding.getJournalpostId();
-        this.inntektsmeldingType = inntektsmelding.getInntektsmeldingType().orElse(null);
+        this.inntektsmeldingType = inntektsmelding.getInntektsmeldingType();
     }
 
     /**
@@ -175,8 +175,8 @@ public class InntektsmeldingDto {
         return Collections.unmodifiableList(endringerRefusjon);
     }
 
-    public Optional<InntektsmeldingType> getInntektsmeldingType() {
-        return Optional.ofNullable(inntektsmeldingType) ;
+    public InntektsmeldingType getInntektsmeldingType() {
+        return inntektsmeldingType == null ? InntektsmeldingType.INNTEKTSMELDING : inntektsmeldingType;
     }
 
     public void setInntektsmeldingType(InntektsmeldingType inntektsmeldingType) {
