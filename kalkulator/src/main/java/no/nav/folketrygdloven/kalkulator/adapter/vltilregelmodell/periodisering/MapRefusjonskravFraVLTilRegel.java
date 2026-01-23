@@ -100,7 +100,7 @@ public class MapRefusjonskravFraVLTilRegel {
 
         var refusjonoverstyringForIM = finnOverstyringForInntektsmelding(inntektsmelding, listeMedOverstyringer);
         var overstyrtStartdato = refusjonoverstyringForIM.map(BeregningRefusjonPeriodeDto::getStartdatoRefusjon);
-        var gjeldendeStartdato = getStartdatoPermisjon(startdatoPermisjon, overstyrtStartdato, inntektsmelding);
+        var gjeldendeStartdato = getStartdatoRefusjon(startdatoPermisjon, overstyrtStartdato, inntektsmelding);
         refusjoner.put(gjeldendeStartdato, refusjonBeløpPerMnd);
         inntektsmelding.getEndringerRefusjon()
                 .stream()
@@ -119,9 +119,9 @@ public class MapRefusjonskravFraVLTilRegel {
         return refusjoner;
     }
 
-    private static LocalDate getStartdatoPermisjon(LocalDate startdatoPermisjon,
-                                                   Optional<LocalDate> overstyrtStartdato,
-                                                   InntektsmeldingDto inntektsmelding) {
+    private static LocalDate getStartdatoRefusjon(LocalDate startdatoPermisjon,
+                                                  Optional<LocalDate> overstyrtStartdato,
+                                                  InntektsmeldingDto inntektsmelding) {
         if (overstyrtStartdato.isPresent()) {
             return overstyrtStartdato.get();
         }
@@ -171,7 +171,7 @@ public class MapRefusjonskravFraVLTilRegel {
         var førsteUtbetalingsperiode = finnFørsteUtbetalingsgradPeriode(utbetalingsgrader, stp);
         var utbetalingsgradVedStart = førsteUtbetalingsperiode.map(PeriodeMedUtbetalingsgradDto::getUtbetalingsgrad)
                 .map(g -> g.verdi().divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_EVEN)).orElse(BigDecimal.ZERO);
-        var startdatoPermisjon = getStartdatoPermisjon(TIDENES_ENDE,
+        var startdatoPermisjon = getStartdatoRefusjon(TIDENES_ENDE,
             førsteUtbetalingsperiode.map(PeriodeMedUtbetalingsgradDto::getPeriode).map(Intervall::getFomDato), inntektsmelding);
         refusjoner.put(startdatoPermisjon, refusjonBeløpPerMnd.multipliser(utbetalingsgradVedStart));
         inntektsmelding.getEndringerRefusjon()
