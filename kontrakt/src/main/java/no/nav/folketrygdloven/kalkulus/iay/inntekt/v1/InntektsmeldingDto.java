@@ -68,7 +68,7 @@ public class InntektsmeldingDto {
 
     @JsonProperty(value = "type")
     @Valid
-    private InntektsmeldingType type;
+    private InntektsmeldingTypeDto type;
 
     protected InntektsmeldingDto() {
         // default ctor
@@ -83,7 +83,7 @@ public class InntektsmeldingDto {
                               @Valid LocalDate refusjonOpphører,
                               @Valid Beløp refusjonBeløpPerMnd,
                               @Valid JournalpostId journalpostId,
-                              @Valid InntektsmeldingType type) {
+                              @Valid InntektsmeldingTypeDto type) {
         this.arbeidsgiver = arbeidsgiver;
         this.inntektBeløp = inntektBeløp;
         this.naturalYtelser = naturalYtelser;
@@ -158,7 +158,7 @@ public class InntektsmeldingDto {
         return innsendingsdato;
     }
 
-    public InntektsmeldingType getType() {
+    public InntektsmeldingTypeDto getType() {
         return type;
     }
 }
