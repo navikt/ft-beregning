@@ -100,7 +100,7 @@ public class MapRefusjonskravFraVLTilRegel {
 
         var refusjonoverstyringForIM = finnOverstyringForInntektsmelding(inntektsmelding, listeMedOverstyringer);
         var overstyrtStartdato = refusjonoverstyringForIM.map(BeregningRefusjonPeriodeDto::getStartdatoRefusjon);
-        var gjeldendeStartdato = overstyrtStartdato.orElse(startdatoPermisjon);
+        var gjeldendeStartdato = getStartdatoPermisjon(startdatoPermisjon, overstyrtStartdato, inntektsmelding);
         refusjoner.put(gjeldendeStartdato, refusjonBeløpPerMnd);
         inntektsmelding.getEndringerRefusjon()
                 .stream()
@@ -117,6 +117,21 @@ public class MapRefusjonskravFraVLTilRegel {
             refusjoner.put(inntektsmelding.getRefusjonOpphører().plusDays(1), Beløp.ZERO);
         }
         return refusjoner;
+    }
+
+    private static LocalDate getStartdatoPermisjon(LocalDate startdatoPermisjon,
+                                                   Optional<LocalDate> overstyrtStartdato,
+                                                   InntektsmeldingDto inntektsmelding) {
+        if (overstyrtStartdato.isPresent()) {
+            return overstyrtStartdato.get();
+        }
+        if (inntektsmelding.getInntektsmeldingType().isPresent()
+            && inntektsmelding.getInntektsmeldingType().get().equals(InntektsmeldingDto.InntektsmeldingType.REFUSJONSKRAV)
+            && inntektsmelding.getStartDatoPermisjon().isPresent()
+            && inntektsmelding.getStartDatoPermisjon().get().isAfter(startdatoPermisjon)) {
+            return inntektsmelding.getStartDatoPermisjon().get();
+        }
+        return startdatoPermisjon;
     }
 
     private static LocalDate finnRefusjonFomDato(List<Intervall> gyldigeRefusjonPerioder, RefusjonDto endring) {
@@ -158,7 +173,8 @@ public class MapRefusjonskravFraVLTilRegel {
         var førsteUtbetalingsperiode = finnFørsteUtbetalingsgradPeriode(utbetalingsgrader, stp);
         var utbetalingsgradVedStart = førsteUtbetalingsperiode.map(PeriodeMedUtbetalingsgradDto::getUtbetalingsgrad)
                 .map(g -> g.verdi().divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_EVEN)).orElse(BigDecimal.ZERO);
-        var startdatoPermisjon = førsteUtbetalingsperiode.map(PeriodeMedUtbetalingsgradDto::getPeriode).map(Intervall::getFomDato).orElse(TIDENES_ENDE);
+        var startdatoPermisjon = getStartdatoPermisjon(TIDENES_ENDE,
+            førsteUtbetalingsperiode.map(PeriodeMedUtbetalingsgradDto::getPeriode).map(Intervall::getFomDato), inntektsmelding);
         refusjoner.put(startdatoPermisjon, refusjonBeløpPerMnd.multipliser(utbetalingsgradVedStart));
         inntektsmelding.getEndringerRefusjon()
                 .stream()

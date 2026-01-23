@@ -66,6 +66,10 @@ public class InntektsmeldingDto {
     @Valid
     private LocalDate innsendingsdato;
 
+    @JsonProperty(value = "type")
+    @Valid
+    private InntektsmeldingType type;
+
     protected InntektsmeldingDto() {
         // default ctor
     }
@@ -78,8 +82,8 @@ public class InntektsmeldingDto {
                               @Valid LocalDate startDatoPermisjon,
                               @Valid LocalDate refusjonOpphører,
                               @Valid Beløp refusjonBeløpPerMnd,
-                              @Valid JournalpostId journalpostId
-                              ) {
+                              @Valid JournalpostId journalpostId,
+                              @Valid InntektsmeldingType type) {
         this.arbeidsgiver = arbeidsgiver;
         this.inntektBeløp = inntektBeløp;
         this.naturalYtelser = naturalYtelser;
@@ -89,6 +93,7 @@ public class InntektsmeldingDto {
         this.refusjonOpphører = refusjonOpphører;
         this.refusjonBeløpPerMnd = refusjonBeløpPerMnd;
         this.journalpostId = journalpostId;
+        this.type = type;
     }
 
     public InntektsmeldingDto(Aktør arbeidsgiver,
@@ -151,5 +156,9 @@ public class InntektsmeldingDto {
 
     public LocalDate getInnsendingsdato() {
         return innsendingsdato;
+    }
+
+    public InntektsmeldingType getType() {
+        return type;
     }
 }
