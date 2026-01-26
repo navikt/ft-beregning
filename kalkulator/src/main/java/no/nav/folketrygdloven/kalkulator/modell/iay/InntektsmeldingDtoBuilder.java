@@ -121,7 +121,10 @@ public class InntektsmeldingDtoBuilder {
 
     public InntektsmeldingDtoBuilder medInntektsmeldingType(InntektsmeldingTypeDto inntektsmeldingTypeDto) {
         precondition();
-        kladd.setInntektsmeldingType(InntektsmeldingDto.InntektsmeldingType.valueOf(inntektsmeldingTypeDto.name()));
+        switch (inntektsmeldingTypeDto) {
+            case INNTEKTSMELDING -> kladd.setInntektsmeldingType(InntektsmeldingDto.InntektsmeldingType.INNTEKTSMELDING);
+            case REFUSJONSKRAV -> kladd.setInntektsmeldingType(InntektsmeldingDto.InntektsmeldingType.REFUSJONSKRAV);
+        }
         return this;
     }
 
