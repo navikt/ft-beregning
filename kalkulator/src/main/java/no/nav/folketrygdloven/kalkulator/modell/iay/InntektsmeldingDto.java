@@ -25,7 +25,7 @@ public class InntektsmeldingDto {
     private LocalDate refusjonOpphører;
     private List<RefusjonDto> endringerRefusjon = new ArrayList<>();
     private JournalpostId journalpostId;
-    private InntektsmeldingType inntektsmeldingType;
+    private InntektsmeldingTypeDto inntektsmeldingTypeDto;
 
     InntektsmeldingDto() {
     }
@@ -46,7 +46,7 @@ public class InntektsmeldingDto {
             return refusjon;
         }).collect(Collectors.toList());
         this.journalpostId = inntektsmelding.getJournalpostId();
-        this.inntektsmeldingType = inntektsmelding.getInntektsmeldingType();
+        this.inntektsmeldingTypeDto = inntektsmelding.getInntektsmeldingType();
     }
 
     /**
@@ -175,12 +175,12 @@ public class InntektsmeldingDto {
         return Collections.unmodifiableList(endringerRefusjon);
     }
 
-    public InntektsmeldingType getInntektsmeldingType() {
-        return inntektsmeldingType == null ? InntektsmeldingType.INNTEKTSMELDING : inntektsmeldingType;
+    public InntektsmeldingTypeDto getInntektsmeldingType() {
+        return inntektsmeldingTypeDto == null ? InntektsmeldingTypeDto.INNTEKTSMELDING : inntektsmeldingTypeDto;
     }
 
-    public void setInntektsmeldingType(InntektsmeldingType inntektsmeldingType) {
-        this.inntektsmeldingType = inntektsmeldingType;
+    public void setInntektsmeldingType(InntektsmeldingTypeDto inntektsmeldingTypeDto) {
+        this.inntektsmeldingTypeDto = inntektsmeldingTypeDto;
     }
 
     void leggTil(NaturalYtelseDto naturalYtelse) {
@@ -222,7 +222,7 @@ public class InntektsmeldingDto {
             '}';
     }
 
-    public enum InntektsmeldingType {
+    public enum InntektsmeldingTypeDto {
         INNTEKTSMELDING, REFUSJONSKRAV
     }
 

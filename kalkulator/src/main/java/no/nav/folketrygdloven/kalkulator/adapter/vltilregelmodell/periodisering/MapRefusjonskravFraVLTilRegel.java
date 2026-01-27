@@ -159,7 +159,7 @@ public class MapRefusjonskravFraVLTilRegel {
         var utbetalingsgradVedStart = førsteUtbetalingsperiode.map(PeriodeMedUtbetalingsgradDto::getUtbetalingsgrad)
                 .map(g -> g.verdi().divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_EVEN)).orElse(BigDecimal.ZERO);
         var startdatoPermisjon =  førsteUtbetalingsperiode.map(PeriodeMedUtbetalingsgradDto::getPeriode).map(Intervall::getFomDato);
-        var startdatoRefusjon = getStartdatoRefusjon(TIDENES_ENDE,startdatoPermisjon, inntektsmelding);
+        var startdatoRefusjon = getStartdatoRefusjon(TIDENES_ENDE, startdatoPermisjon, inntektsmelding);
         refusjoner.put(startdatoRefusjon, refusjonBeløpPerMnd.multipliser(utbetalingsgradVedStart));
         inntektsmelding.getEndringerRefusjon()
                 .stream()
@@ -185,7 +185,7 @@ public class MapRefusjonskravFraVLTilRegel {
         if (overstyrtStartdato.isPresent()) {
             return overstyrtStartdato.get();
         }
-        if (inntektsmelding.getInntektsmeldingType().equals(InntektsmeldingDto.InntektsmeldingType.REFUSJONSKRAV)) {
+        if (inntektsmelding.getInntektsmeldingType().equals(InntektsmeldingDto.InntektsmeldingTypeDto.REFUSJONSKRAV)) {
             return inntektsmelding.getStartDatoPermisjon().filter(startDato
                 -> startDato.isAfter(startdatoPermisjon)).orElse(startdatoPermisjon);
         }
