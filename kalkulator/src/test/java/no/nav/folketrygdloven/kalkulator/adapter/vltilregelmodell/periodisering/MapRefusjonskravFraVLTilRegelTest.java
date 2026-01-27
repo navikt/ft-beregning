@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import no.nav.folketrygdloven.kalkulator.modell.iay.InntektsmeldingDto;
 import no.nav.folketrygdloven.kalkulus.iay.inntekt.v1.InntektsmeldingTypeDto;
 
 import org.junit.jupiter.api.Test;
@@ -223,7 +224,7 @@ class MapRefusjonskravFraVLTilRegelTest {
             .medRefusjon(Beløp.fra(11))
             .medArbeidsgiver(ARBEIDSGIVER1)
             .medArbeidsforholdId(ref)
-            .medInntektsmeldingType(InntektsmeldingTypeDto.REFUSJONSKRAV)
+            .medInntektsmeldingType(InntektsmeldingDto.InntektsmeldingTypeDto.REFUSJONSKRAV)
             .medStartDatoPermisjon(startdatoPermisjon)
             .build();
 
@@ -252,7 +253,7 @@ class MapRefusjonskravFraVLTilRegelTest {
             .medRefusjon(Beløp.fra(11))
             .medArbeidsgiver(ARBEIDSGIVER1)
             .medArbeidsforholdId(ref)
-            .medInntektsmeldingType(InntektsmeldingTypeDto.REFUSJONSKRAV)
+            .medInntektsmeldingType(InntektsmeldingDto.InntektsmeldingTypeDto.INNTEKTSMELDING)
             .medStartDatoPermisjon(startdatoPermisjon)
             .build();
         lagRefusjonoverstyring(ARBEIDSGIVER1, ref, overstyrtDato);
@@ -281,7 +282,7 @@ class MapRefusjonskravFraVLTilRegelTest {
             .medRefusjon(Beløp.fra(11))
             .medArbeidsgiver(ARBEIDSGIVER1)
             .medArbeidsforholdId(ref)
-            .medInntektsmeldingType(InntektsmeldingTypeDto.REFUSJONSKRAV)
+            .medInntektsmeldingType(InntektsmeldingDto.InntektsmeldingTypeDto.INNTEKTSMELDING)
             .medStartDatoPermisjon(startdatoPermisjon)
             .build();
 
