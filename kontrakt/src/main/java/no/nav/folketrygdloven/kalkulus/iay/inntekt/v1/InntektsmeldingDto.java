@@ -17,6 +17,7 @@ import no.nav.folketrygdloven.kalkulus.felles.v1.Aktør;
 import no.nav.folketrygdloven.kalkulus.felles.v1.Beløp;
 import no.nav.folketrygdloven.kalkulus.felles.v1.InternArbeidsforholdRefDto;
 import no.nav.folketrygdloven.kalkulus.felles.v1.JournalpostId;
+import no.nav.folketrygdloven.kalkulus.kodeverk.InntektsmeldingType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(value = Include.ALWAYS, content = Include.ALWAYS)
@@ -68,7 +69,7 @@ public class InntektsmeldingDto {
 
     @JsonProperty(value = "type")
     @Valid
-    private InntektsmeldingTypeDto type;
+    private InntektsmeldingType type;
 
     protected InntektsmeldingDto() {
         // default ctor
@@ -83,7 +84,7 @@ public class InntektsmeldingDto {
                               @Valid LocalDate refusjonOpphører,
                               @Valid Beløp refusjonBeløpPerMnd,
                               @Valid JournalpostId journalpostId,
-                              @Valid InntektsmeldingTypeDto type) {
+                              @Valid InntektsmeldingType type) {
         this.arbeidsgiver = arbeidsgiver;
         this.inntektBeløp = inntektBeløp;
         this.naturalYtelser = naturalYtelser;
@@ -158,7 +159,7 @@ public class InntektsmeldingDto {
         return innsendingsdato;
     }
 
-    public InntektsmeldingTypeDto getType() {
+    public InntektsmeldingType getType() {
         return type;
     }
 }

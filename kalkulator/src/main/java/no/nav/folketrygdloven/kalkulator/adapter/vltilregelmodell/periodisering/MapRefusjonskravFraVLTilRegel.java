@@ -31,6 +31,7 @@ import no.nav.folketrygdloven.kalkulator.modell.svp.PeriodeMedUtbetalingsgradDto
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
+import no.nav.folketrygdloven.kalkulus.kodeverk.InntektsmeldingType;
 import no.nav.fpsak.tidsserie.LocalDateSegment;
 import no.nav.fpsak.tidsserie.LocalDateTimeline;
 import no.nav.fpsak.tidsserie.StandardCombinators;
@@ -185,7 +186,7 @@ public class MapRefusjonskravFraVLTilRegel {
         if (overstyrtStartdato.isPresent()) {
             return overstyrtStartdato.get();
         }
-        if (inntektsmelding.getInntektsmeldingType().equals(InntektsmeldingDto.InntektsmeldingTypeDto.REFUSJONSKRAV)) {
+        if (inntektsmelding.getInntektsmeldingType().equals(InntektsmeldingType.REFUSJONSKRAV)) {
             return inntektsmelding.getStartDatoPermisjon().filter(startDato
                 -> startDato.isAfter(startdatoPermisjon)).orElse(startdatoPermisjon);
         }

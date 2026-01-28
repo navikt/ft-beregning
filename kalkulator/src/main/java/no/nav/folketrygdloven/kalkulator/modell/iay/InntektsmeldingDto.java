@@ -12,6 +12,7 @@ import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
 import no.nav.folketrygdloven.kalkulus.felles.v1.JournalpostId;
+import no.nav.folketrygdloven.kalkulus.kodeverk.InntektsmeldingType;
 
 public class InntektsmeldingDto {
 
@@ -25,7 +26,7 @@ public class InntektsmeldingDto {
     private LocalDate refusjonOpphører;
     private List<RefusjonDto> endringerRefusjon = new ArrayList<>();
     private JournalpostId journalpostId;
-    private InntektsmeldingTypeDto inntektsmeldingTypeDto;
+    private InntektsmeldingType inntektsmeldingType;
 
     InntektsmeldingDto() {
     }
@@ -46,7 +47,7 @@ public class InntektsmeldingDto {
             return refusjon;
         }).collect(Collectors.toList());
         this.journalpostId = inntektsmelding.getJournalpostId();
-        this.inntektsmeldingTypeDto = inntektsmelding.getInntektsmeldingType();
+        this.inntektsmeldingType = inntektsmelding.getInntektsmeldingType();
     }
 
     /**
@@ -175,12 +176,12 @@ public class InntektsmeldingDto {
         return Collections.unmodifiableList(endringerRefusjon);
     }
 
-    public InntektsmeldingTypeDto getInntektsmeldingType() {
-        return inntektsmeldingTypeDto == null ? InntektsmeldingTypeDto.INNTEKTSMELDING : inntektsmeldingTypeDto;
+    public InntektsmeldingType getInntektsmeldingType() {
+        return inntektsmeldingType == null ? InntektsmeldingType.INNTEKTSMELDING : inntektsmeldingType;
     }
 
-    public void setInntektsmeldingType(InntektsmeldingTypeDto inntektsmeldingTypeDto) {
-        this.inntektsmeldingTypeDto = inntektsmeldingTypeDto;
+    public void setInntektsmeldingType(InntektsmeldingType inntektsmeldingType) {
+        this.inntektsmeldingType = inntektsmeldingType;
     }
 
     void leggTil(NaturalYtelseDto naturalYtelse) {
@@ -220,10 +221,6 @@ public class InntektsmeldingDto {
             ", refusjonOpphører=" + refusjonOpphører +
             ", endringerRefusjon=" + endringerRefusjon +
             '}';
-    }
-
-    public enum InntektsmeldingTypeDto {
-        INNTEKTSMELDING, REFUSJONSKRAV
     }
 
 }

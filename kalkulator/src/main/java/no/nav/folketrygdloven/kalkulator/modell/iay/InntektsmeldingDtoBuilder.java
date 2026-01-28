@@ -10,7 +10,7 @@ import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.modell.typer.EksternArbeidsforholdRef;
 import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
 import no.nav.folketrygdloven.kalkulus.felles.v1.JournalpostId;
-import no.nav.folketrygdloven.kalkulus.iay.inntekt.v1.InntektsmeldingTypeDto;
+import no.nav.folketrygdloven.kalkulus.kodeverk.InntektsmeldingType;
 
 public class InntektsmeldingDtoBuilder {
     private final InntektsmeldingDto kladd;
@@ -119,9 +119,9 @@ public class InntektsmeldingDtoBuilder {
         return this;
     }
 
-    public InntektsmeldingDtoBuilder medInntektsmeldingType(InntektsmeldingDto.InntektsmeldingTypeDto inntektsmeldingTypeDto) {
+    public InntektsmeldingDtoBuilder medInntektsmeldingType(InntektsmeldingType inntektsmeldingType) {
         precondition();
-        kladd.setInntektsmeldingType(inntektsmeldingTypeDto);
+        kladd.setInntektsmeldingType(inntektsmeldingType);
         return this;
     }
 
