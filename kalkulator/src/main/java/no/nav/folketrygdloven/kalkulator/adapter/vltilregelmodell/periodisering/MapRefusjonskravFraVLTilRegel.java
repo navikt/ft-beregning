@@ -31,6 +31,7 @@ import no.nav.folketrygdloven.kalkulator.modell.svp.PeriodeMedUtbetalingsgradDto
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
+import no.nav.folketrygdloven.kalkulus.kodeverk.InntektsmeldingType;
 import no.nav.fpsak.tidsserie.LocalDateSegment;
 import no.nav.fpsak.tidsserie.LocalDateTimeline;
 import no.nav.fpsak.tidsserie.StandardCombinators;
@@ -100,7 +101,7 @@ public class MapRefusjonskravFraVLTilRegel {
 
         var refusjonoverstyringForIM = finnOverstyringForInntektsmelding(inntektsmelding, listeMedOverstyringer);
         var overstyrtStartdato = refusjonoverstyringForIM.map(BeregningRefusjonPeriodeDto::getStartdatoRefusjon);
-        var gjeldendeStartdato = overstyrtStartdato.orElse(startdatoPermisjon);
+        var gjeldendeStartdato = getStartdatoRefusjon(startdatoPermisjon, overstyrtStartdato, inntektsmelding);
         refusjoner.put(gjeldendeStartdato, refusjonBeløpPerMnd);
         inntektsmelding.getEndringerRefusjon()
                 .stream()
@@ -158,16 +159,17 @@ public class MapRefusjonskravFraVLTilRegel {
         var førsteUtbetalingsperiode = finnFørsteUtbetalingsgradPeriode(utbetalingsgrader, stp);
         var utbetalingsgradVedStart = førsteUtbetalingsperiode.map(PeriodeMedUtbetalingsgradDto::getUtbetalingsgrad)
                 .map(g -> g.verdi().divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_EVEN)).orElse(BigDecimal.ZERO);
-        var startdatoPermisjon = førsteUtbetalingsperiode.map(PeriodeMedUtbetalingsgradDto::getPeriode).map(Intervall::getFomDato).orElse(TIDENES_ENDE);
-        refusjoner.put(startdatoPermisjon, refusjonBeløpPerMnd.multipliser(utbetalingsgradVedStart));
+        var startdatoPermisjon =  førsteUtbetalingsperiode.map(PeriodeMedUtbetalingsgradDto::getPeriode).map(Intervall::getFomDato);
+        var startdatoRefusjon = getStartdatoRefusjon(TIDENES_ENDE, startdatoPermisjon, inntektsmelding);
+        refusjoner.put(startdatoRefusjon, refusjonBeløpPerMnd.multipliser(utbetalingsgradVedStart));
         inntektsmelding.getEndringerRefusjon()
                 .stream()
                 .sorted(Comparator.comparing(RefusjonDto::getFom))
                 .forEach(endring -> {
-                    if (endring.getFom().isBefore(startdatoPermisjon)) {
-                        refusjoner.put(startdatoPermisjon, endring.getRefusjonsbeløp().multipliser(utbetalingsgradVedStart));
+                    if (endring.getFom().isBefore(startdatoRefusjon)) {
+                        refusjoner.put(startdatoRefusjon, endring.getRefusjonsbeløp().multipliser(utbetalingsgradVedStart));
                     } else {
-                        var utbetalingsgrad = finnUtbetalingsgradForDato(utbetalingsgrader, startdatoPermisjon);
+                        var utbetalingsgrad = finnUtbetalingsgradForDato(utbetalingsgrader, startdatoRefusjon);
                         refusjoner.put(endring.getFom(), endring.getRefusjonsbeløp().multipliser(utbetalingsgrad));
                     }
                 });
@@ -176,6 +178,19 @@ public class MapRefusjonskravFraVLTilRegel {
             refusjoner.put(inntektsmelding.getRefusjonOpphører().plusDays(1), Beløp.ZERO);
         }
         return lagForenkletRefusjonListe(refusjoner);
+    }
+
+    private static LocalDate getStartdatoRefusjon(LocalDate startdatoPermisjon,
+                                                  Optional<LocalDate> overstyrtStartdato,
+                                                  InntektsmeldingDto inntektsmelding) {
+        if (overstyrtStartdato.isPresent()) {
+            return overstyrtStartdato.get();
+        }
+        if (inntektsmelding.getInntektsmeldingType().equals(InntektsmeldingType.REFUSJONSKRAV)) {
+            return inntektsmelding.getStartDatoPermisjon().filter(startDato
+                -> startDato.isAfter(startdatoPermisjon)).orElse(startdatoPermisjon);
+        }
+        return startdatoPermisjon;
     }
 
     private static BigDecimal finnUtbetalingsgradForDato(List<PeriodeMedUtbetalingsgradDto> utbetalingsgrader, LocalDate startdatoPermisjon) {

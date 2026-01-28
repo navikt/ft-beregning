@@ -10,6 +10,7 @@ import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.modell.typer.EksternArbeidsforholdRef;
 import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
 import no.nav.folketrygdloven.kalkulus.felles.v1.JournalpostId;
+import no.nav.folketrygdloven.kalkulus.kodeverk.InntektsmeldingType;
 
 public class InntektsmeldingDtoBuilder {
     private final InntektsmeldingDto kladd;
@@ -115,6 +116,12 @@ public class InntektsmeldingDtoBuilder {
     public InntektsmeldingDtoBuilder medStartDatoPermisjon(LocalDate startPermisjon) {
         precondition();
         kladd.setStartDatoPermisjon(startPermisjon);
+        return this;
+    }
+
+    public InntektsmeldingDtoBuilder medInntektsmeldingType(InntektsmeldingType inntektsmeldingType) {
+        precondition();
+        kladd.setInntektsmeldingType(inntektsmeldingType);
         return this;
     }
 

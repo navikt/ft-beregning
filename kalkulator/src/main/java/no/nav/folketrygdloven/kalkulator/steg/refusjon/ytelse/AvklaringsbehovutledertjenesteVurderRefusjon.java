@@ -17,6 +17,7 @@ public class AvklaringsbehovutledertjenesteVurderRefusjon {
     public static List<BeregningAvklaringsbehovResultat> utledAvklaringsbehov(BeregningsgrunnlagInput input,
                                                                               BeregningsgrunnlagDto periodisertMedRefusjonOgGradering) {
         return AvklaringsbehovutlederVurderRefusjon.skalHaAvklaringsbehovVurderRefusjonskrav(input, periodisertMedRefusjonOgGradering) ? List.of(
-            BeregningAvklaringsbehovResultat.opprettFor(AvklaringsbehovDefinisjon.VURDER_REFUSJONSKRAV)) : List.of();
+            BeregningAvklaringsbehovResultat.opprettFor(AvklaringsbehovDefinisjon.
+                VURDER_REFUSJONSKRAV)) : List.of();
     }
 }

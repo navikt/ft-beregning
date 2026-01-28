@@ -12,6 +12,7 @@ import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
 import no.nav.folketrygdloven.kalkulus.felles.v1.JournalpostId;
+import no.nav.folketrygdloven.kalkulus.kodeverk.InntektsmeldingType;
 
 public class InntektsmeldingDto {
 
@@ -25,6 +26,7 @@ public class InntektsmeldingDto {
     private LocalDate refusjonOpphører;
     private List<RefusjonDto> endringerRefusjon = new ArrayList<>();
     private JournalpostId journalpostId;
+    private InntektsmeldingType inntektsmeldingType;
 
     InntektsmeldingDto() {
     }
@@ -45,6 +47,7 @@ public class InntektsmeldingDto {
             return refusjon;
         }).collect(Collectors.toList());
         this.journalpostId = inntektsmelding.getJournalpostId();
+        this.inntektsmeldingType = inntektsmelding.getInntektsmeldingType();
     }
 
     /**
@@ -171,6 +174,14 @@ public class InntektsmeldingDto {
      */
     public List<RefusjonDto> getEndringerRefusjon() {
         return Collections.unmodifiableList(endringerRefusjon);
+    }
+
+    public InntektsmeldingType getInntektsmeldingType() {
+        return inntektsmeldingType == null ? InntektsmeldingType.INNTEKTSMELDING : inntektsmeldingType;
+    }
+
+    public void setInntektsmeldingType(InntektsmeldingType inntektsmeldingType) {
+        this.inntektsmeldingType = inntektsmeldingType;
     }
 
     void leggTil(NaturalYtelseDto naturalYtelse) {

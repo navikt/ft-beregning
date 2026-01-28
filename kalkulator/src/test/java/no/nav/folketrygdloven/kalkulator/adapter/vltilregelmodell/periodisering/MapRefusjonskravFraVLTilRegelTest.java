@@ -9,6 +9,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import no.nav.folketrygdloven.kalkulator.modell.iay.InntektsmeldingDto;
+
+import no.nav.folketrygdloven.kalkulus.kodeverk.InntektsmeldingType;
+
 import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
@@ -206,6 +210,93 @@ class MapRefusjonskravFraVLTilRegelTest {
         assertThat(resultat).hasSize(2);
         assertThat(resultat).anySatisfy(start -> {
             assertThat(start.getPeriode()).isEqualTo(Periode.of(overstyrtDato, TIDENES_ENDE));
+            assertThat(start.getMånedsbeløp()).isEqualByComparingTo(BigDecimal.valueOf(11));
+        });
+    }
+
+
+    @Test
+    void skal_starte_refusjon_ved_startdato_permisjon_om_im_er_type_refusjonskrav() {
+        // Arrange
+        var skjæringstidspunkt = LocalDate.now();
+        var ref = InternArbeidsforholdRefDto.nyRef();
+        var startdatoPermisjon = skjæringstidspunkt.plusDays(10);
+        var inntektsmeldingEntitet = InntektsmeldingDtoBuilder.builder()
+            .medRefusjon(Beløp.fra(11))
+            .medArbeidsgiver(ARBEIDSGIVER1)
+            .medArbeidsforholdId(ref)
+            .medInntektsmeldingType(InntektsmeldingType.REFUSJONSKRAV)
+            .medStartDatoPermisjon(startdatoPermisjon)
+            .build();
+
+        // Act
+        var resultat = MapRefusjonskravFraVLTilRegel.periodiserRefusjonsbeløp(inntektsmeldingEntitet,
+            skjæringstidspunkt,
+            Optional.of(refusjonOverstyringer.build()),
+            List.of(Intervall.fraOgMed(skjæringstidspunkt.minusMonths(12))));
+
+        // Assert
+        assertThat(resultat).hasSize(2);
+        assertThat(resultat).anySatisfy(start -> {
+            assertThat(start.getPeriode()).isEqualTo(Periode.of(startdatoPermisjon, TIDENES_ENDE));
+            assertThat(start.getMånedsbeløp()).isEqualByComparingTo(BigDecimal.valueOf(11));
+        });
+    }
+
+    @Test
+    void skal_bruke_overstyrt_dato_også_ved_refusjonskrav() {
+        // Arrange
+        var skjæringstidspunkt = LocalDate.now();
+        var ref = InternArbeidsforholdRefDto.nyRef();
+        var overstyrtDato = skjæringstidspunkt.plusDays(15);
+        var startdatoPermisjon = skjæringstidspunkt.plusDays(10);
+        var inntektsmeldingEntitet = InntektsmeldingDtoBuilder.builder()
+            .medRefusjon(Beløp.fra(11))
+            .medArbeidsgiver(ARBEIDSGIVER1)
+            .medArbeidsforholdId(ref)
+            .medInntektsmeldingType(InntektsmeldingType.INNTEKTSMELDING)
+            .medStartDatoPermisjon(startdatoPermisjon)
+            .build();
+        lagRefusjonoverstyring(ARBEIDSGIVER1, ref, overstyrtDato);
+
+        // Act
+        var resultat = MapRefusjonskravFraVLTilRegel.periodiserRefusjonsbeløp(inntektsmeldingEntitet,
+            skjæringstidspunkt,
+            Optional.of(refusjonOverstyringer.build()),
+            List.of(Intervall.fraOgMed(skjæringstidspunkt.minusMonths(12))));
+
+        // Assert
+        assertThat(resultat).hasSize(2);
+        assertThat(resultat).anySatisfy(start -> {
+            assertThat(start.getPeriode()).isEqualTo(Periode.of(overstyrtDato, TIDENES_ENDE));
+            assertThat(start.getMånedsbeløp()).isEqualByComparingTo(BigDecimal.valueOf(11));
+        });
+    }
+
+    @Test
+    void skal_starte_refusjon_ved_stp_om_startdato_permisjon_er_før_stp() {
+        // Arrange
+        var skjæringstidspunkt = LocalDate.now();
+        var ref = InternArbeidsforholdRefDto.nyRef();
+        var startdatoPermisjon = skjæringstidspunkt.minusDays(10);
+        var inntektsmeldingEntitet = InntektsmeldingDtoBuilder.builder()
+            .medRefusjon(Beløp.fra(11))
+            .medArbeidsgiver(ARBEIDSGIVER1)
+            .medArbeidsforholdId(ref)
+            .medInntektsmeldingType(InntektsmeldingType.INNTEKTSMELDING)
+            .medStartDatoPermisjon(startdatoPermisjon)
+            .build();
+
+        // Act
+        var resultat = MapRefusjonskravFraVLTilRegel.periodiserRefusjonsbeløp(inntektsmeldingEntitet,
+            skjæringstidspunkt,
+            Optional.of(refusjonOverstyringer.build()),
+            List.of(Intervall.fraOgMed(skjæringstidspunkt.minusMonths(12))));
+
+        // Assert
+        assertThat(resultat).hasSize(1);
+        assertThat(resultat).anySatisfy(start -> {
+            assertThat(start.getPeriode()).isEqualTo(Periode.of(skjæringstidspunkt, TIDENES_ENDE));
             assertThat(start.getMånedsbeløp()).isEqualByComparingTo(BigDecimal.valueOf(11));
         });
     }
