@@ -5,6 +5,7 @@ import static no.nav.fpsak.tidsserie.LocalDateInterval.TIDENES_ENDE;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import no.nav.folketrygdloven.kalkulator.input.YtelsespesifiktGrunnlag;
@@ -189,7 +190,7 @@ public class BeregningsgrunnlagDtoUtil {
     }
 
     private static boolean matcherArbeidsforholdOgErAktivtPåSkjæringstidspunkt(BGAndelArbeidsforholdDto bga, YrkesaktivitetDto ya, LocalDate stp) {
-        return ya.getArbeidsgiver().equals(bga.getArbeidsgiver()) && ya.getArbeidsforholdRef().gjelderFor(bga.getArbeidsforholdRef())
+        return Objects.equals(ya.getArbeidsgiver(), bga.getArbeidsgiver()) && ya.getArbeidsforholdRef().gjelderFor(bga.getArbeidsforholdRef())
             && ya.getAlleAnsettelsesperioder().stream().anyMatch(aa -> aa.getPeriode().inkluderer(stp));
     }
 
