@@ -119,8 +119,7 @@ public class FordelBeregningsgrunnlagHåndterer {
     private static void settVerdierPåBuilder(BeregningsgrunnlagPrStatusOgAndelDto.Builder andelBuilder,
                                              FordelFastsatteVerdierDto verdierMedJustertRefusjon) {
         andelBuilder.medInntektskategoriManuellFordeling(verdierMedJustertRefusjon.getInntektskategori())
-                .medManueltFordeltPrÅr(verdierMedJustertRefusjon.finnEllerUtregnFastsattBeløpPrÅr())
-                .medFastsattAvSaksbehandler(true);
+                .medManueltFordeltPrÅr(verdierMedJustertRefusjon.finnEllerUtregnFastsattBeløpPrÅr());
         andelBuilder.oppdaterArbeidsforholdHvisFinnes()
                 .ifPresent(b -> b.medNaturalytelseBortfaltPrÅr(null) // Ved omfordeling må vi nulle ut naturalytelse og inkludere dette i det fordelt beløp
                         .medNaturalytelseTilkommetPrÅr(null)
