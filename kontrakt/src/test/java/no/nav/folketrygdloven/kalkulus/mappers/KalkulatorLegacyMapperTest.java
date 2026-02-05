@@ -1,7 +1,6 @@
 package no.nav.folketrygdloven.kalkulus.mappers;
 
 
-import static no.nav.folketrygdloven.kalkulus.mappers.JsonMapperUtil.READER_JSON;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
@@ -43,7 +42,7 @@ class KalkulatorLegacyMapperTest {
                 }
                 """;
 
-        var beløpReader = READER_JSON.forType(MedBeløp.class);
+        var beløpReader = KontraktTestJsonMapper.READER_JSON.forType(MedBeløp.class);
 
         var heltall = beløpReader.readValue(beløpMedHeltallsVerdi);
         var desimal = beløpReader.readValue(beløpMedDesimalVerdi);

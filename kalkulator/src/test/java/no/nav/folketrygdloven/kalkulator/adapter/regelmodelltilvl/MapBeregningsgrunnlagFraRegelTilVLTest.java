@@ -23,8 +23,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.RegelResultat;
@@ -49,8 +47,8 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.SammenligningsgrunnlagType;
-import no.nav.folketrygdloven.kalkulus.mappers.JsonMapper;
 import no.nav.folketrygdloven.kalkulus.typer.AktørId;
+import no.nav.folketrygdloven.regelmodelloversetter.RegelJsonMapper;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModell;
 
 class MapBeregningsgrunnlagFraRegelTilVLTest {
@@ -351,12 +349,7 @@ class MapBeregningsgrunnlagFraRegelTilVLTest {
     }
 
     private String toJson(AktivitetStatusModell grunnlag) {
-        try {
-            return JsonMapper.getMapper().writerWithDefaultPrettyPrinter().writeValueAsString(grunnlag);
-        } catch (JsonProcessingException e) {
-            throw new IllegalStateException("Jackson parsing", e);
-        }
-
+        return RegelJsonMapper.asJson(grunnlag);
     }
 
     private AktivitetStatusModell lagRegelModell(LocalDate skjæringstidspunkt, Arbeidsforhold arbeidsforhold) {
