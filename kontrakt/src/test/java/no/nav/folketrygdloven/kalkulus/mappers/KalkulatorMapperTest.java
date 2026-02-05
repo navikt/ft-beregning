@@ -1,8 +1,5 @@
 package no.nav.folketrygdloven.kalkulus.mappers;
 
-
-import static no.nav.folketrygdloven.kalkulus.mappers.JsonMapperUtil.READER_JSON;
-import static no.nav.folketrygdloven.kalkulus.mappers.JsonMapperUtil.WRITER_JSON;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
@@ -11,8 +8,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-
-import no.nav.folketrygdloven.kalkulus.kodeverk.InntektsmeldingType;
 
 import org.junit.jupiter.api.Test;
 
@@ -48,6 +43,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningSteg;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 import no.nav.folketrygdloven.kalkulus.kodeverk.InntektskildeType;
+import no.nav.folketrygdloven.kalkulus.kodeverk.InntektsmeldingType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.InntektspostType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.YtelseKilde;
@@ -69,9 +65,9 @@ class KalkulatorMapperTest {
 
         var grunnlag = byggKalkulatorInput();
 
-        var json = WRITER_JSON.writeValueAsString(grunnlag);
+        var json = KontraktTestJsonMapper.WRITER_JSON.writeValueAsString(grunnlag);
 
-        KalkulatorInputDto roundTripped = READER_JSON.forType(KalkulatorInputDto.class).readValue(json);
+        KalkulatorInputDto roundTripped = KontraktTestJsonMapper.READER_JSON.forType(KalkulatorInputDto.class).readValue(json);
 
         assertThat(roundTripped).isNotNull();
         assertThat(roundTripped.getIayGrunnlag()).isNotNull();
@@ -91,9 +87,9 @@ class KalkulatorMapperTest {
                 BeregningSteg.FASTSETT_STP_BER,
                 List.of(new BeregnForRequest(enUuid, List.of(UUID.randomUUID()), kalkulatorInputDto, null)));
 
-        var json = WRITER_JSON.writeValueAsString(spesifikasjon);
+        var json = KontraktTestJsonMapper.WRITER_JSON.writeValueAsString(spesifikasjon);
 
-        BeregnListeRequest roundTripped = READER_JSON.forType(BeregnListeRequest.class).readValue(json);
+        BeregnListeRequest roundTripped = KontraktTestJsonMapper.READER_JSON.forType(BeregnListeRequest.class).readValue(json);
 
         assertThat(roundTripped).isNotNull();
         assertThat(roundTripped.getAktør()).isEqualTo(dummy);

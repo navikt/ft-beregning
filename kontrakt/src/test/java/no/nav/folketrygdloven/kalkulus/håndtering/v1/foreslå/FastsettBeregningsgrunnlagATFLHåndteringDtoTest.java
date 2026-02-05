@@ -9,14 +9,14 @@ import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import no.nav.folketrygdloven.kalkulus.mappers.JsonMapper;
+import no.nav.folketrygdloven.kalkulus.mappers.KontraktTestJsonMapper;
 
 class FastsettBeregningsgrunnlagATFLHåndteringDtoTest {
 
     @Test
     void serTest() throws JsonProcessingException {
         var input = new FastsettBeregningsgrunnlagATFLHåndteringDto(List.of(new InntektPrAndelDto(100, 1L)), 1000);
-        var resultat = JsonMapper.getMapper().writeValueAsString(input);
+        var resultat = KontraktTestJsonMapper.getMapper().writeValueAsString(input);
         assertThat(resultat).isNotBlank();
     }
 
@@ -36,7 +36,7 @@ class FastsettBeregningsgrunnlagATFLHåndteringDtoTest {
             }
             """;
 
-        var resutat = JsonMapper.getMapper().readValue(input, FastsettBeregningsgrunnlagATFLHåndteringDto.class);
+        var resutat = KontraktTestJsonMapper.getMapper().readValue(input, FastsettBeregningsgrunnlagATFLHåndteringDto.class);
 
         assertThat(resutat).isNotNull();
         assertThat(resutat.getAvklaringsbehovDefinisjon()).isNotNull().isEqualTo(FASTSETT_BG_AT_FL);
