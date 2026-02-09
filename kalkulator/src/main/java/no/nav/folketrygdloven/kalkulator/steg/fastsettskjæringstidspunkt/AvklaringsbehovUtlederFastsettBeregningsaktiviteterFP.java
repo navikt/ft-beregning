@@ -93,8 +93,8 @@ public class AvklaringsbehovUtlederFastsettBeregningsaktiviteterFP implements Av
 
 	    var nyligsteVedtak = MeldekortUtils.sisteVedtakFørStpForType(ytelseFilter, skjæringstidspunkt, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER));
 	    var nyligsteMeldekort = nyligsteVedtak.flatMap(nv -> MeldekortUtils.sisteHeleMeldekortFørStp(ytelseFilter, nv, skjæringstidspunkt, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER)));
-	    boolean erVedtakFraKelvin = nyligsteVedtak.map(YtelseDto::harKildeKelvin).orElse(false);
-	    return harMaksUtbetalingsprosent(nyligsteMeldekort, erVedtakFraKelvin ? MeldekortUtils.MAX_UTBETALING_PROSENT_AAP_KELVIN : MeldekortUtils.MAX_UTBETALING_PROSENT_AAP_DAG_ARENA);
+	    boolean erVedtakFraKelvinEllerDpSak = nyligsteVedtak.map(YtelseDto::harKildeKelvinEllerDpSak).orElse(false);
+	    return harMaksUtbetalingsprosent(nyligsteMeldekort, erVedtakFraKelvinEllerDpSak ? MeldekortUtils.MAX_UTBETALING_PROSENT_KELVIN_DP_SAK : MeldekortUtils.MAX_UTBETALING_PROSENT_AAP_DAG_ARENA);
     }
 
     private static boolean harIngenAktivitetMedType(List<OpptjeningAktivitetType> opptjeningsaktivitetTyper, OpptjeningAktivitetType aktivitetType) {
