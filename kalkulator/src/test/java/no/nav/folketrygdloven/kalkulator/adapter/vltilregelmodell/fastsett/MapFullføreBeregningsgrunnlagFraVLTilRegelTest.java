@@ -75,15 +75,6 @@ class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
 				.medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT)
 				.leggTilFaktaOmBeregningTilfeller(FAKTA_OM_BEREGNING_TILFELLER)
 				.build();
-        var periode1 = BeregningsgrunnlagPeriodeDto.ny()
-				.medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT, tom)
-				.build(beregningsgrunnlag);
-		@SuppressWarnings("unused")
-		var frilansAndel = BeregningsgrunnlagPrStatusOgAndelDto.ny()
-				.medAndelsnr(1L)
-				.medInntektskategori(Inntektskategori.FRILANSER)
-				.medAktivitetStatus(AktivitetStatus.FRILANSER)
-				.build(periode1);
 		return BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty()).medBeregningsgrunnlag(beregningsgrunnlag).build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER);
 	}
 

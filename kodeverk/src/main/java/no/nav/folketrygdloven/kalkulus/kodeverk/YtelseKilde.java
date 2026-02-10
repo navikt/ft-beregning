@@ -8,8 +8,9 @@ public enum YtelseKilde implements Kodeverdi, KontraktKode {
     K9SAK, // Ytelse vedtatt i K9-sak (flere ytelser)
     VLSP, // Ytelse vedtatt i ny sykepengeløsning (kun sykepenger)
     INFOTRYGD, // Ytelse vedtatt i Infotrygd (mange ytelser)
-	ARENA, // Ytelse vedtatt i Arena (flere ytelser
+	ARENA, // Ytelse vedtatt i Arena (flere ytelser)
 	KELVIN, // Ytelse vedtatt i Kelvin (kun AAP)
+    DPSAK, // Ytelse vedtat i DP-sak (kun dagpenger)
 	@JsonEnumDefaultValue UDEFINERT, // Standard verdi - men kan også få null in
     ;
 

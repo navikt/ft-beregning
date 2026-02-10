@@ -128,7 +128,7 @@ public class MapInntektsgrunnlagVLTilRegelFRISINN implements MapInntektsgrunnlag
                 .forEach(ytelse -> ytelse.getYtelseAnvist().stream()
                         .filter(ytelseAnvistDto -> !ytelseAnvistDto.getAnvistTOM().isBefore(skjæringstidspunktOpptjening.minusMonths(MÅNEDER_FØR_STP)))
                         .filter(this::harHattUtbetalingForPeriode)
-                        .forEach(anvist -> inntektsgrunnlag.leggTilPeriodeinntekt(byggPeriodeinntektForYtelse(anvist, ytelse.getVedtaksDagsats(), ytelse.getYtelseType()))));
+                        .forEach(anvist -> inntektsgrunnlag.leggTilPeriodeinntekt(byggPeriodeinntektForYtelse(anvist, ytelse.getVedtaksDagsats(), ytelse.getYtelseType(), ytelse.harKildeKelvinEllerDpSak()))));
     }
 
     private boolean harHattUtbetalingForPeriode(YtelseAnvistDto ytelse) {
@@ -137,12 +137,13 @@ public class MapInntektsgrunnlagVLTilRegelFRISINN implements MapInntektsgrunnlag
                 .orElse(false);
     }
 
-    private Periodeinntekt byggPeriodeinntektForYtelse(YtelseAnvistDto anvist, Optional<Beløp> vedtaksDagsats, YtelseType ytelsetype) {
+    private Periodeinntekt byggPeriodeinntektForYtelse(YtelseAnvistDto anvist, Optional<Beløp> vedtaksDagsats, YtelseType ytelsetype, boolean harKildeKelvinEllerDpSak) {
+        var deletall = harKildeKelvinEllerDpSak ? MeldekortUtils.MAX_UTBETALING_PROSENT_KELVIN_DP_SAK : MeldekortUtils.MAX_UTBETALING_PROSENT_AAP_DAG_ARENA;
         return Periodeinntekt.builder()
                 .medInntektskildeOgPeriodeType(erAAPEllerDP(ytelsetype) ? Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP : Inntektskilde.ANNEN_YTELSE)
                 .medInntekt(Beløp.safeVerdi(finnBeløp(anvist, vedtaksDagsats)))
                 .medUtbetalingsfaktor(erAAPEllerDP(ytelsetype) ? anvist.getUtbetalingsgradProsent().map(Stillingsprosent::verdi)
-                        .map(s -> s.divide(MeldekortUtils.MAX_UTBETALING_PROSENT_AAP_DAG_ARENA, 10, RoundingMode.HALF_UP)).orElseThrow() : BigDecimal.ONE)
+                        .map(s -> s.divide(deletall, 10, RoundingMode.HALF_UP)).orElseThrow() : BigDecimal.ONE)
                 .medPeriode(Periode.of(anvist.getAnvistFOM(), anvist.getAnvistTOM()))
                 .build();
     }

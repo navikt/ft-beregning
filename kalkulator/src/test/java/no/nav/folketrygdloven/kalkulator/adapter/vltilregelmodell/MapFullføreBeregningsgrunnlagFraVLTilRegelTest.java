@@ -133,7 +133,7 @@ class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
 				skjæring.minusMonths(1).plusDays(1),
 				skjæring.plusMonths(6),
 				Beløp.fra(MELDEKORTSATS1),
-				MeldekortUtils.MAX_UTBETALING_PROSENT_AAP_KELVIN,
+				MeldekortUtils.MAX_UTBETALING_PROSENT_KELVIN_DP_SAK,
 				skjæring.minusMonths(1).plusDays(2),
 				skjæring.minusMonths(1).plusDays(16),
 				YtelseKilde.KELVIN);
@@ -142,7 +142,7 @@ class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
 				skjæring.minusMonths(3),
 				skjæring.minusMonths(1),
 				Beløp.fra(MELDEKORTSATS2),
-				MeldekortUtils.MAX_UTBETALING_PROSENT_AAP_KELVIN,
+				MeldekortUtils.MAX_UTBETALING_PROSENT_KELVIN_DP_SAK,
 				skjæring.minusMonths(1).minusDays(13),
 				skjæring.minusMonths(1).plusDays(1),
 				YtelseKilde.KELVIN);
