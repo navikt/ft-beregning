@@ -11,7 +11,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.BeregningsgrunnlagPrStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
 
-class JsonMapperTest {
+class RegelJsonMapperTest {
 
 	@Test
 	void skal_mappe_regelandel() {
@@ -25,7 +25,7 @@ class JsonMapperTest {
 				.medArbeidsforhold(afbfor)
 				.build();
 
-		var json = JsonMapper.asJson(andel);
+		var json = RegelJsonMapper.asJson(andel);
 		assertThat(json).isNotNull();
 	}
 
