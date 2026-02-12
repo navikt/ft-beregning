@@ -21,17 +21,17 @@ public class VurderRefusjonTilfelleOppdaterer {
 
     public static void oppdater(FaktaBeregningLagreDto dto, BeregningsgrunnlagInput input, BeregningsgrunnlagGrunnlagDtoBuilder grunnlagBuilder) {
         var gyldighetPrArbeidsgiver = dto.getRefusjonskravGyldighet();
-        var frist = input.getBeregningsgrunnlag().getSkjæringstidspunkt();
-        var beregningRefusjonOverstyringer = map(gyldighetPrArbeidsgiver, frist);
+        var skjæringstidspunkt = input.getBeregningsgrunnlag().getSkjæringstidspunkt();
+        var beregningRefusjonOverstyringer = map(gyldighetPrArbeidsgiver, skjæringstidspunkt);
         grunnlagBuilder.medRefusjonOverstyring(beregningRefusjonOverstyringer);
     }
 
-    private static BeregningRefusjonOverstyringerDto map(List<RefusjonskravPrArbeidsgiverVurderingDto> dto, LocalDate frist) {
+    private static BeregningRefusjonOverstyringerDto map(List<RefusjonskravPrArbeidsgiverVurderingDto> dto, LocalDate førsteRefusjonFom) {
         var builder = BeregningRefusjonOverstyringerDto.builder();
         for (var vurderingDto : dto) {
             var arbeidsgiver = finnArbeidsgiver(vurderingDto.getArbeidsgiverId());
             if (vurderingDto.isSkalUtvideGyldighet()) {
-                builder.leggTilOverstyring(new BeregningRefusjonOverstyringDto(arbeidsgiver, frist, true));
+                builder.leggTilOverstyring(new BeregningRefusjonOverstyringDto(arbeidsgiver, førsteRefusjonFom, true));
             } else {
                 builder.leggTilOverstyring(new BeregningRefusjonOverstyringDto(arbeidsgiver,false));
             }

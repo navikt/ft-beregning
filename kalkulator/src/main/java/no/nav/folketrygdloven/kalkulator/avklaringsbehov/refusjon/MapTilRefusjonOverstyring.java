@@ -30,7 +30,7 @@ public final class MapTilRefusjonOverstyring {
                 .orElse(Collections.emptyList());
         var nyttRefusjonAggregat = BeregningRefusjonOverstyringerDto.builder();
         var vurderingerSortertPåAG = dto.getAndeler().stream()
-                .collect(Collectors.groupingBy(MapTilRefusjonOverstyring::lagArbeidsgiver));
+                .collect(Collectors.groupingBy(VurderRefusjonAndelBeregningsgrunnlagDto::getArbeidsgiver));
 
         lagListeMedRefusjonOverstyringer(vurderingerSortertPåAG, eksisterendeOverstyringer)
                 .forEach(nyttRefusjonAggregat::leggTilOverstyring);
@@ -95,13 +95,4 @@ public final class MapTilRefusjonOverstyring {
     private static Optional<BeregningRefusjonOverstyringDto> finnKorrektOverstyring(Arbeidsgiver ag, List<BeregningRefusjonOverstyringDto> refusjonOverstyringer) {
         return refusjonOverstyringer.stream().filter(os -> os.getArbeidsgiver().equals(ag)).findFirst();
     }
-
-    private static Arbeidsgiver lagArbeidsgiver(VurderRefusjonAndelBeregningsgrunnlagDto fastsattAndel) {
-        if (fastsattAndel.getArbeidsgiverOrgnr() != null) {
-            return Arbeidsgiver.virksomhet(fastsattAndel.getArbeidsgiverOrgnr());
-        } else {
-            return Arbeidsgiver.person(new AktørId(fastsattAndel.getArbeidsgiverAktørId()));
-        }
-    }
-
 }

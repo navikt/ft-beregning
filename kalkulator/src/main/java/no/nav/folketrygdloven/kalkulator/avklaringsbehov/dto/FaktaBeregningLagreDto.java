@@ -21,6 +21,7 @@ public class FaktaBeregningLagreDto {
     private FastsettEtterlønnSluttpakkeDto fastsettEtterlønnSluttpakke;
     private MottarYtelseDto mottarYtelse;
     private VurderMilitærDto vurderMilitaer;
+    // TODO refusjon: Den neste linjen kan slettes når vi har flyttet aksjonspunktet og kjørt gjennom gamle saker, slett også steder den brukes
     private List<RefusjonskravPrArbeidsgiverVurderingDto> refusjonskravGyldighet;
 
     public FaktaBeregningLagreDto(VurderNyoppstartetFLDto vurderNyoppstartetFL,

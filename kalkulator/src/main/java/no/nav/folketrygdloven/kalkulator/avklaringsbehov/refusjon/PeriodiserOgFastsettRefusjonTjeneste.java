@@ -4,7 +4,6 @@ import static no.nav.fpsak.tidsserie.LocalDateInterval.TIDENES_ENDE;
 
 import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -12,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import no.nav.folketrygdloven.kalkulator.avklaringsbehov.dto.VurderRefusjonAndelBeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.konfig.KonfigTjeneste;
@@ -25,6 +25,9 @@ import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.PeriodeÅrsak;
 import no.nav.folketrygdloven.kalkulus.typer.AktørId;
+import no.nav.fpsak.tidsserie.LocalDateSegment;
+import no.nav.fpsak.tidsserie.LocalDateTimeline;
+import no.nav.fpsak.tidsserie.StandardCombinators;
 
 /**
  * Når beregningsgrunnlagene kommer hit skal de allerede ha satt refusjon fra den dagen refusjon kreves (som regel skjæringstidspunkt for beregning).
@@ -43,7 +46,7 @@ public final class PeriodiserOgFastsettRefusjonTjeneste {
                                                              List<VurderRefusjonAndelBeregningsgrunnlagDto> andeler) {
         // Lag refusjonsplittandeler som holder på data relatert til fastsetting av refusjon
         var splittAndeler = lagSplittAndeler(andeler).stream()
-                .sorted(Comparator.comparing(RefusjonSplittAndel::getStartdatoRefusjon))
+                .sorted(Comparator.comparing(RefusjonSplittAndel::startdatoRefusjon))
                 .collect(Collectors.toList());
 
         if (splittAndeler.isEmpty()) {
@@ -71,9 +74,9 @@ public final class PeriodiserOgFastsettRefusjonTjeneste {
                         .forEach(eksisterendeAndel -> {
                             var matchetSplittAndel = finnFastsattAndelForBGAndel(eksisterendeAndel, splittAndeler);
                             // Hvis saksbehandlet andel er tom er ikke andelens refusjon vurdert og den skal ha refusjon fra start
-                            if (matchetSplittAndel.isPresent() && refusjonSkalEndres(eksisterendePeriode, matchetSplittAndel.get().getStartdatoRefusjon())) {
+                            if (matchetSplittAndel.isPresent() && refusjonSkalEndres(eksisterendePeriode, matchetSplittAndel.get().startdatoRefusjon())) {
                                 var bgAndelArbforBuilder = BGAndelArbeidsforholdDto.Builder.oppdater(eksisterendeAndel.getBgAndelArbeidsforhold());
-                                bgAndelArbforBuilder.medSaksbehandletRefusjonPrÅr(matchetSplittAndel.get().getDelvisRefusjonBeløpPrÅr());
+                                bgAndelArbforBuilder.medSaksbehandletRefusjonPrÅr(matchetSplittAndel.get().delvisRefusjonBeløpPrÅr());
                             } else if (matchetSplittAndel.isPresent()) {
 								// Dersom refusjonen ikkje skal settes manuelt må vi sørge for at det ikkje ligger verdi i saksbehandletRefusjonPrÅr
 	                            // Dette kan skje ved kopiering/spoling av grunnlag til steg-ut grunnlaget i kopieringslogikken som kjører før lagring i kalkulus
@@ -102,7 +105,7 @@ public final class PeriodiserOgFastsettRefusjonTjeneste {
     private static BeregningsgrunnlagDto periodiserBeregningsgrunnlag(BeregningsgrunnlagDto eksisterendeGrunnlag, List<RefusjonSplittAndel> splittAndeler) {
         var eksisterendePerioder = eksisterendeGrunnlag.getBeregningsgrunnlagPerioder();
         var stp = eksisterendeGrunnlag.getSkjæringstidspunkt();
-        var refusjonstartDatoer = splittAndeler.stream().map(RefusjonSplittAndel::getStartdatoRefusjon).collect(Collectors.toList());
+        var refusjonstartDatoer = splittAndeler.stream().map(RefusjonSplittAndel::startdatoRefusjon).collect(Collectors.toList());
         var eksisterendeStartdatoer = eksisterendePerioder.stream().map(BeregningsgrunnlagPeriodeDto::getBeregningsgrunnlagPeriodeFom).collect(Collectors.toList());
 
         var perioderINyttGrunnlag = lagNyeIntervaller(eksisterendeStartdatoer, refusjonstartDatoer);
@@ -138,28 +141,21 @@ public final class PeriodiserOgFastsettRefusjonTjeneste {
     }
 
     private static List<Intervall> lagNyeIntervaller(List<LocalDate> eksisterendeStartdatoer, List<LocalDate> splittDatoer) {
-        Set<LocalDate> alleStartdatoer = new HashSet<>(eksisterendeStartdatoer);
+        var segments = Stream.concat(eksisterendeStartdatoer.stream(), splittDatoer.stream())
+            .distinct()
+            .map(dato -> LocalDateSegment.emptySegment(dato, TIDENES_ENDE))
+            .toList();
 
-        alleStartdatoer.addAll(splittDatoer);
+        var beregningsgrunnlagTidslinje = new LocalDateTimeline<>(segments, StandardCombinators::leftOnly);
 
-        var datoliste = new ArrayList<LocalDate>(alleStartdatoer);
-        Collections.sort(datoliste);
-
-        var iterator = datoliste.listIterator();
-
-        List<Intervall> intervaller = new ArrayList<>();
-
-        while (iterator.hasNext()) {
-            var fom = iterator.next();
-            var tom = iterator.hasNext() ? datoliste.get(iterator.nextIndex()).minusDays(1) : TIDENES_ENDE;
-            intervaller.add(Intervall.fraOgMedTilOgMed(fom, tom));
-        }
-        return intervaller;
+        return beregningsgrunnlagTidslinje.getLocalDateIntervals().stream()
+            .map(i -> Intervall.fraOgMedTilOgMed(i.getFomDato(), i.getTomDato()))
+            .toList();
     }
 
     private static List<RefusjonSplittAndel> lagSplittAndeler(List<VurderRefusjonAndelBeregningsgrunnlagDto> andeler) {
         return andeler.stream()
-                .map(andel -> new RefusjonSplittAndel(mapArbeidsgiver(andel), mapReferanse(andel), andel.getFastsattRefusjonFom(), mapÅrsbeløpRefusjon(andel)))
+                .map(andel -> new RefusjonSplittAndel(andel.getArbeidsgiver(), mapReferanse(andel), andel.getFastsattRefusjonFom(), mapÅrsbeløpRefusjon(andel)))
                 .collect(Collectors.toList());
     }
 
@@ -169,14 +165,6 @@ public final class PeriodiserOgFastsettRefusjonTjeneste {
 
     private static InternArbeidsforholdRefDto mapReferanse(VurderRefusjonAndelBeregningsgrunnlagDto andel) {
         return andel.getInternArbeidsforholdRef() == null ? InternArbeidsforholdRefDto.nullRef() : InternArbeidsforholdRefDto.ref(andel.getInternArbeidsforholdRef());
-    }
-
-    private static Arbeidsgiver mapArbeidsgiver(VurderRefusjonAndelBeregningsgrunnlagDto andel) {
-        if (andel.getArbeidsgiverOrgnr() != null) {
-            return Arbeidsgiver.virksomhet(andel.getArbeidsgiverOrgnr());
-        } else {
-            return Arbeidsgiver.person(new AktørId(andel.getArbeidsgiverAktørId()));
-        }
     }
 
     private static void validerGrunnlag(BeregningsgrunnlagDto gammeltGrunnlag, BeregningsgrunnlagDto nyttGrunnlag, List<VurderRefusjonAndelBeregningsgrunnlagDto> andeler) {
