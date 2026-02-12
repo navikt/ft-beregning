@@ -2,9 +2,13 @@ package no.nav.folketrygdloven.kalkulator.guitjenester.fakta;
 
 import static java.util.stream.Collectors.toList;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import no.nav.folketrygdloven.kalkulator.felles.FinnInntektsmeldingForAndel;
 import no.nav.folketrygdloven.kalkulator.guitjenester.BeregningsgrunnlagDtoUtil;
@@ -13,9 +17,16 @@ import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagGUIInput;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.FaktaAggregatDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.FaktaAktørDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.FaktaArbeidsforholdDto;
+import no.nav.folketrygdloven.kalkulator.modell.iay.AktørInntektDto;
+import no.nav.folketrygdloven.kalkulator.modell.iay.InntektsmeldingDto;
+import no.nav.folketrygdloven.kalkulator.modell.iay.InntektspostDto;
+import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
+import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AndelKilde;
+import no.nav.folketrygdloven.kalkulus.kodeverk.BeregnetPrAarKilde;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
+import no.nav.folketrygdloven.kalkulus.kodeverk.InntektskildeType;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.BeregningsgrunnlagPrStatusOgAndelDto;
 
 public class BeregningsgrunnlagPrStatusOgAndelDtoTjeneste {
@@ -78,6 +89,9 @@ public class BeregningsgrunnlagPrStatusOgAndelDtoTjeneste {
                 || andel.getAktivitetStatus().equals(AktivitetStatus.BRUKERS_ANDEL)) {
             dto.setSkalFastsetteGrunnlag(skalGrunnlagFastsettesForYtelse(input, andel));
         }
+        dto.setBeregnetPrAarKilde(
+            finnBeregnetPrAarKilde(andel.getArbeidsgiver(), andel.getBeregnetPrÅr(), inntektsmelding, iayGrunnlag.getAktørInntektFraRegister(),
+                andel.getFastsattAvSaksbehandler()));
         return dto;
     }
 
@@ -103,4 +117,47 @@ public class BeregningsgrunnlagPrStatusOgAndelDtoTjeneste {
                 .reversed();
     }
 
+    private BeregnetPrAarKilde finnBeregnetPrAarKilde(Optional<Arbeidsgiver> arbeidsgiver, Beløp beregnetPrÅr, Optional<InntektsmeldingDto> inntektsmelding, Optional<AktørInntektDto> aktørInntekt, Boolean erFastsattAvSb) {
+        if (Boolean.TRUE.equals(erFastsattAvSb)) {
+            if (inntektsmelding.isPresent()) {
+                return erBeregnetPrÅrLikInntektsmelding(beregnetPrÅr,
+                    inntektsmelding) ? BeregnetPrAarKilde.INNTEKTSMELDING : BeregnetPrAarKilde.SAKSBEHANDLER;
+            } else if (aktørInntekt.isPresent() && arbeidsgiver.isPresent()) {
+                Optional<Beløp> beregnetÅrsinntektFraBeregningsgrunnlaget = aktørInntekt.get()
+                    .getInntekt()
+                    .stream()
+                    .filter(inntekt -> inntekt.getInntektsKilde().equals(InntektskildeType.INNTEKT_BEREGNING)
+                        && inntekt.getArbeidsgiver().equals(arbeidsgiver.get()))
+                    .findFirst()
+                    .map(inntekt -> {
+                        var allePoster = inntekt.getAlleInntektsposter();
+                        // TODO: Filtrere på beregningsperioden fra andelen i stedet for dette
+                        var sammenlikningsgrunnlag = allePoster.stream()
+                            .skip(Math.max(0, allePoster.size() - 3))
+                            .toList();
+
+                        Beløp sum = sammenlikningsgrunnlag.stream()
+                            .map(InntektspostDto::getBeløp)
+                            .reduce(Beløp::adder)
+                            .orElse(Beløp.ZERO);
+
+                        return sum.divider(sammenlikningsgrunnlag.size(), 10, RoundingMode.HALF_UP).multipliser(12);
+                    });
+                if (beregnetÅrsinntektFraBeregningsgrunnlaget.isPresent() &&
+                    beregnetPrÅr.equals(beregnetÅrsinntektFraBeregningsgrunnlaget.get())) {
+                    return BeregnetPrAarKilde.A_ORDNING;
+                } else {
+                    return BeregnetPrAarKilde.SAKSBEHANDLER;
+                }
+            }
+            return BeregnetPrAarKilde.SAKSBEHANDLER;
+
+        } else {
+            return inntektsmelding.isPresent() ? BeregnetPrAarKilde.INNTEKTSMELDING : BeregnetPrAarKilde.A_ORDNING;
+        }
+    }
+
+    private boolean erBeregnetPrÅrLikInntektsmelding(Beløp beregnetPrÅr, Optional<InntektsmeldingDto> inntektsmelding) {
+        return inntektsmelding.filter(inntektsmeldingDto -> beregnetPrÅr.equals(inntektsmeldingDto.getInntektBeløp().multipliser(12))).isPresent();
+    }
 }

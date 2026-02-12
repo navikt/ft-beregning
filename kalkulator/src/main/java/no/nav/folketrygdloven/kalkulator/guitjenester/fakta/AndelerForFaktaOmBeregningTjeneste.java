@@ -54,6 +54,7 @@ public class AndelerForFaktaOmBeregningTjeneste {
         var inntektArbeidYtelseGrunnlag = input.getIayGrunnlag();
         dto.setSkalKunneEndreAktivitet(skalKunneEndreAktivitet(andel, input.getBeregningsgrunnlag().isOverstyrt()));
         dto.setLagtTilAvSaksbehandler(andel.erLagtTilAvSaksbehandler());
+        dto.setFastsattAvSaksbehandler(andel.getFastsattAvSaksbehandler());
         BeregningsgrunnlagDtoUtil.lagArbeidsforholdDto(andel, inntektsmeldingForAndel, inntektArbeidYtelseGrunnlag)
                 .ifPresent(dto::setArbeidsforhold);
         finnRefusjonskravFraInntektsmelding(inntektsmeldingForAndel).map(ModellTyperMapper::beløpTilDto).ifPresent(dto::setRefusjonskrav);

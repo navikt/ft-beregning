@@ -27,6 +27,7 @@ class SjekkÅrsinntektMotSammenligningsgrunnlag extends LeafSpecification<Beregn
 
     @Override
     public Evaluation evaluate(BeregningsgrunnlagPeriode grunnlag) {
+        // TODO: Ser ut som det kanskje er her man finner prosenten
         var sg = grunnlag.getSammenligningsGrunnlagForTypeEllerFeil(SammenligningGrunnlagType.AT_FL);
 	    if (sg.getRapportertPrÅr() == null) {
            throw new IllegalStateException("Utviklerfeil: Skal alltid ha rapportertPrÅr her.");

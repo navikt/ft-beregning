@@ -35,10 +35,11 @@ public class KravTjeneste {
                                                                                 YrkesaktivitetDto yrkesaktivitet,
                                                                                 BeregningAktivitetAggregatDto gjeldendeAktiviteter,
                                                                                 LocalDate skjæringstidspunktBeregning,
+                                                                                LocalDate førsteUttaksdato,
                                                                                 Optional<LocalDate> overstyrtGodkjentRefusjonFom,
                                                                                 FagsakYtelseType ytelseType) {
         return kravperioder.stream()
-                .map(krav -> finnFristvurdertTidslinje(krav, yrkesaktivitet, gjeldendeAktiviteter, skjæringstidspunktBeregning, overstyrtGodkjentRefusjonFom, ytelseType))
+                .map(krav -> finnFristvurdertTidslinje(krav, yrkesaktivitet, gjeldendeAktiviteter, skjæringstidspunktBeregning, førsteUttaksdato, overstyrtGodkjentRefusjonFom, ytelseType))
                 .reduce(KombinerRefusjonskravFristTidslinje::kombinerOgKompress)
                 .orElse(new LocalDateTimeline<>(Collections.emptyList()));
     }
@@ -47,9 +48,10 @@ public class KravTjeneste {
                                                                       YrkesaktivitetDto yrkesaktivitet,
                                                                       BeregningAktivitetAggregatDto gjeldendeAktiviteter,
                                                                       LocalDate skjæringstidspunktBeregning,
+                                                                      LocalDate førsteUttaksdato,
                                                                       Optional<LocalDate> overstyrtGodkjentRefusjonFom,
                                                                       FagsakYtelseType ytelseType) {
-        var kravTidslinje = finnKravTidslinje(krav, yrkesaktivitet, gjeldendeAktiviteter, skjæringstidspunktBeregning);
+        var kravTidslinje = finnKravTidslinje(krav, yrkesaktivitet, gjeldendeAktiviteter, skjæringstidspunktBeregning, førsteUttaksdato);
         var godkjentTidslinje = finnGodkjentTidslinje(krav, overstyrtGodkjentRefusjonFom, ytelseType);
         return kravTidslinje.combine(godkjentTidslinje, (intervall, lhs, rhs) -> {
             if (rhs == null) {
@@ -70,8 +72,9 @@ public class KravTjeneste {
     private static LocalDateTimeline<Beløp> finnKravTidslinje(PerioderForKravDto krav,
                                                               YrkesaktivitetDto yrkesaktivitet,
                                                               BeregningAktivitetAggregatDto gjeldendeAktiviteter,
-                                                              LocalDate skjæringstidspunktBeregning) {
-        var førsteMuligeRefusjonsdato = finnFørsteMuligeDagRefusjon(gjeldendeAktiviteter, skjæringstidspunktBeregning, yrkesaktivitet);
+                                                              LocalDate skjæringstidspunktBeregning,
+                                                              LocalDate førsteUttaksdato) {
+        var førsteMuligeRefusjonsdato = finnFørsteMuligeDagRefusjon(gjeldendeAktiviteter, skjæringstidspunktBeregning, førsteUttaksdato, yrkesaktivitet);
         return krav.getPerioder().stream()
                 .filter(p -> !p.periode().getTomDato().isBefore(førsteMuligeRefusjonsdato))
                 .map(p -> new LocalDateSegment<>(

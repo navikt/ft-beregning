@@ -1,5 +1,7 @@
 package no.nav.folketrygdloven.kalkulator.felles.frist;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -29,10 +31,11 @@ public class InntektsmeldingMedRefusjonTjeneste {
         var skjæringstidspunktBeregning = beregningsgrunnlagGrunnlag.getBeregningsgrunnlagHvisFinnes()
                 .map(BeregningsgrunnlagDto::getSkjæringstidspunkt)
                 .orElseThrow(() -> new IllegalStateException("Utviklerfeil: Skal ha beregningsgrunnlag"));
+        var førsteUttaksdato = LocalDate.now();
         var yrkesaktiviteter = FinnYrkesaktiviteterForBeregningTjeneste.finnYrkesaktiviteter(iayGrunnlag, beregningsgrunnlagGrunnlag, skjæringstidspunktBeregning);
 
         var harSøktForSentMap = ArbeidsgiverRefusjonskravTjeneste.lagFristTidslinjePrArbeidsgiver(yrkesaktiviteter, kravperioder,
-                beregningsgrunnlagGrunnlag.getGjeldendeAktiviteter(), skjæringstidspunktBeregning, Optional.empty(), ytelseType);
+                beregningsgrunnlagGrunnlag.getGjeldendeAktiviteter(), skjæringstidspunktBeregning, førsteUttaksdato, Optional.empty(), ytelseType);
         return finnArbeidsgivereMedUnderkjentPeriode(harSøktForSentMap);
     }
 

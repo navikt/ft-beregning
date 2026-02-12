@@ -16,6 +16,7 @@ import jakarta.validation.constraints.NotNull;
 
 import no.nav.folketrygdloven.kalkulus.felles.v1.Beløp;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
+import no.nav.folketrygdloven.kalkulus.kodeverk.BeregnetPrAarKilde;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 
 
@@ -135,6 +136,10 @@ public abstract class BeregningsgrunnlagPrStatusOgAndelDto {
     @Valid
     @JsonProperty("skalFastsetteGrunnlag")
     private Boolean skalFastsetteGrunnlag;
+
+    @Valid
+    @JsonProperty("beregnetPrAarKilde")
+    private BeregnetPrAarKilde beregnetPrAarKilde;
 
     public BeregningsgrunnlagPrStatusOgAndelDto() {
         // trengs for deserialisering av JSON
@@ -314,5 +319,13 @@ public abstract class BeregningsgrunnlagPrStatusOgAndelDto {
 
     public void setSkalFastsetteGrunnlag(Boolean skalFastsetteGrunnlag) {
         this.skalFastsetteGrunnlag = skalFastsetteGrunnlag;
+    }
+
+    public BeregnetPrAarKilde getBeregnetPrAarKilde() {
+        return beregnetPrAarKilde;
+    }
+
+    public void setBeregnetPrAarKilde(BeregnetPrAarKilde beregnetPrAarKilde) {
+        this.beregnetPrAarKilde = beregnetPrAarKilde;
     }
 }

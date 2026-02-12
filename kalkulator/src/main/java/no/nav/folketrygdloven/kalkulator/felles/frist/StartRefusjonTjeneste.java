@@ -25,8 +25,9 @@ class StartRefusjonTjeneste {
      * @return Første dag med søkt refusjon
      */
     static LocalDate finnFørsteMuligeDagRefusjon(BeregningAktivitetAggregatDto gjeldendeAktiviteter,
-                                                         LocalDate skjæringstidspunktBeregning,
-                                                         YrkesaktivitetDto yrkesaktivitet) {
+                                                 LocalDate skjæringstidspunktBeregning,
+                                                 LocalDate førsteUttaksdato,
+                                                 YrkesaktivitetDto yrkesaktivitet) {
         var erNyttArbeidsforhold = erTilkommetEtterBeregningstidspunkt(
                 yrkesaktivitet.getArbeidsgiver(),
                 yrkesaktivitet.getArbeidsforholdRef(),
@@ -38,10 +39,10 @@ class StartRefusjonTjeneste {
                     .map(AktivitetsAvtaleDto::getPeriode)
                     .map(Intervall::getFomDato)
                     .min(Comparator.naturalOrder())
-                    .orElse(skjæringstidspunktBeregning);
-            return førsteAnsattdato.isAfter(skjæringstidspunktBeregning) ? førsteAnsattdato : skjæringstidspunktBeregning;
+                    .orElse(førsteUttaksdato);
+            return førsteAnsattdato.isAfter(førsteUttaksdato) ? førsteAnsattdato : førsteUttaksdato;
         } else {
-            return skjæringstidspunktBeregning;
+            return førsteUttaksdato;
         }
     }
 

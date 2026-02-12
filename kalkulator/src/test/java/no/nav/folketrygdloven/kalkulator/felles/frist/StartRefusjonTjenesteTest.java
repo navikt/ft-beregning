@@ -20,6 +20,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 class StartRefusjonTjenesteTest {
 
     public static final LocalDate SKJÆRINGSTIDSPUNKT_BEREGNING = LocalDate.now();
+    public static final LocalDate FØRSTE_UTTAKSDATO = LocalDate.now();
     public static final Arbeidsgiver ARBEIDSGIVER1 = Arbeidsgiver.virksomhet("37432232");
     public static final Arbeidsgiver ARBEIDSGIVER2 = Arbeidsgiver.virksomhet("432342342");
 
@@ -43,6 +44,7 @@ class StartRefusjonTjenesteTest {
         var førsteDatoRefusjon = StartRefusjonTjeneste.finnFørsteMuligeDagRefusjon(
                 gjeldendeAktiviteter,
                 SKJÆRINGSTIDSPUNKT_BEREGNING,
+                FØRSTE_UTTAKSDATO,
                 yrkesaktivitet);
 
         // Assert
@@ -68,6 +70,7 @@ class StartRefusjonTjenesteTest {
         var førsteDatoRefusjon = StartRefusjonTjeneste.finnFørsteMuligeDagRefusjon(
                 gjeldendeAktiviteter,
                 SKJÆRINGSTIDSPUNKT_BEREGNING,
+                FØRSTE_UTTAKSDATO,
                 yrkesaktivitet);
 
         //Assert
@@ -95,6 +98,7 @@ class StartRefusjonTjenesteTest {
         var førsteDatoRefusjon = StartRefusjonTjeneste.finnFørsteMuligeDagRefusjon(
                 gjeldendeAktiviteter,
                 SKJÆRINGSTIDSPUNKT_BEREGNING,
+                FØRSTE_UTTAKSDATO,
                 yrkesaktivitet);
 
         //Assert
@@ -118,6 +122,7 @@ class StartRefusjonTjenesteTest {
         var førsteDatoRefusjon = StartRefusjonTjeneste.finnFørsteMuligeDagRefusjon(
                 gjeldendeAktiviteter,
                 SKJÆRINGSTIDSPUNKT_BEREGNING,
+                FØRSTE_UTTAKSDATO,
                 yrkesaktivitet);
 
         //Assert

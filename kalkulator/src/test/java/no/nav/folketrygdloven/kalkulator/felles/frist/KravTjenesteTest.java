@@ -27,6 +27,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.Utfall;
 class KravTjenesteTest {
 
     public static final LocalDate SKJÆRINGSTIDSPUNKT_BEREGNING = LocalDate.now();
+    public static final LocalDate FØRSTE_UTTAKSDATO = LocalDate.now();
     public static final Arbeidsgiver ARBEIDSGIVER1 = Arbeidsgiver.virksomhet("37432232");
 
     private static final Beløp BELØP_TEN = Beløp.fra(10);
@@ -43,6 +44,7 @@ class KravTjenesteTest {
                 yrkesaktivitet,
                 gjeldendeAktiviteter,
                 SKJÆRINGSTIDSPUNKT_BEREGNING,
+                FØRSTE_UTTAKSDATO,
                 Optional.empty(), FagsakYtelseType.FORELDREPENGER);
 
         assertThat(kravTidslinje.isEmpty()).isTrue();
@@ -62,6 +64,7 @@ class KravTjenesteTest {
                 yrkesaktivitet,
                 gjeldendeAktiviteter,
                 SKJÆRINGSTIDSPUNKT_BEREGNING,
+                FØRSTE_UTTAKSDATO,
                 Optional.empty(), FagsakYtelseType.FORELDREPENGER);
 
         assertThat(kravTidslinje.size()).isEqualTo(1);
@@ -86,6 +89,7 @@ class KravTjenesteTest {
                 yrkesaktivitet,
                 gjeldendeAktiviteter,
                 SKJÆRINGSTIDSPUNKT_BEREGNING,
+                FØRSTE_UTTAKSDATO,
                 Optional.empty(), FagsakYtelseType.FORELDREPENGER);
 
         assertThat(kravTidslinje.size()).isEqualTo(2);
@@ -120,6 +124,7 @@ class KravTjenesteTest {
                 yrkesaktivitet,
                 gjeldendeAktiviteter,
                 SKJÆRINGSTIDSPUNKT_BEREGNING,
+                FØRSTE_UTTAKSDATO,
                 Optional.empty(), FagsakYtelseType.FORELDREPENGER);
 
         assertThat(kravTidslinje.size()).isEqualTo(1);
@@ -147,6 +152,7 @@ class KravTjenesteTest {
                 yrkesaktivitet,
                 gjeldendeAktiviteter,
                 SKJÆRINGSTIDSPUNKT_BEREGNING,
+                FØRSTE_UTTAKSDATO,
                 Optional.empty(), FagsakYtelseType.FORELDREPENGER);
 
         assertThat(kravTidslinje.size()).isEqualTo(1);
@@ -177,6 +183,7 @@ class KravTjenesteTest {
                 yrkesaktivitet,
                 gjeldendeAktiviteter,
                 SKJÆRINGSTIDSPUNKT_BEREGNING,
+                FØRSTE_UTTAKSDATO,
                 Optional.empty(), FagsakYtelseType.FORELDREPENGER);
 
         assertThat(kravTidslinje.size()).isEqualTo(2);
@@ -213,6 +220,7 @@ class KravTjenesteTest {
                 yrkesaktivitet,
                 gjeldendeAktiviteter,
                 SKJÆRINGSTIDSPUNKT_BEREGNING,
+                FØRSTE_UTTAKSDATO,
                 Optional.empty(), FagsakYtelseType.FORELDREPENGER);
 
         assertThat(kravTidslinje.size()).isEqualTo(2);
@@ -245,6 +253,7 @@ class KravTjenesteTest {
                 yrkesaktivitet,
                 gjeldendeAktiviteter,
                 SKJÆRINGSTIDSPUNKT_BEREGNING,
+                FØRSTE_UTTAKSDATO,
                 overstyrtFom, FagsakYtelseType.FORELDREPENGER);
 
         assertThat(kravTidslinje.size()).isEqualTo(1);

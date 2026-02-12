@@ -120,6 +120,7 @@ public abstract class MapRefusjonPerioderFraVLTilRegel {
                 input.getKravPrArbeidsgiver(),
                 gjeldendeAktiviteter,
                 input.getSkjæringstidspunktForBeregning(),
+                input.getFørsteUttaksdato() != null ? input.getFørsteUttaksdato() : input.getSkjæringstidspunktOpptjening(),
                 refusjonOverstyringer,
                 input.getFagsakYtelseType());
         return fristvurdertTidslinjePrArbeidsgiver.entrySet().stream()

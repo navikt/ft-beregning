@@ -22,6 +22,7 @@ public class RegelBeregningsgrunnlagATFL implements RuleService<Beregningsgrunnl
     @SuppressWarnings("unchecked")
     @Override
     public Specification<BeregningsgrunnlagPeriode> getSpecification() {
+        // TODO: Tror det er inni her man avgjør om ap settes
         var rs = new Ruleset<BeregningsgrunnlagPeriode>();
 
         IkkeBeregnet fastsettesVedSkjønnUtenTidsbegrensetArbeidsforhold = new FastsettesVedSkjønnUtenTidsbegrensetArbeidsforhold();

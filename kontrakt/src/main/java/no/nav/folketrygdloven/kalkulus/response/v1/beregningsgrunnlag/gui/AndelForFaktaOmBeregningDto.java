@@ -58,6 +58,10 @@ public class AndelForFaktaOmBeregningDto {
     @JsonProperty(value = "lagtTilAvSaksbehandler")
     private Boolean lagtTilAvSaksbehandler;
 
+    @Valid
+    @JsonProperty(value = "fastsattAvSaksbehandler")
+    private Boolean fastsattAvSaksbehandler;
+
     public BeregningsgrunnlagArbeidsforholdDto getArbeidsforhold() {
         return arbeidsforhold;
     }
@@ -128,5 +132,13 @@ public class AndelForFaktaOmBeregningDto {
 
     public void setLagtTilAvSaksbehandler(Boolean lagtTilAvSaksbehandler) {
         this.lagtTilAvSaksbehandler = lagtTilAvSaksbehandler;
+    }
+
+    public Boolean getFastsattAvSaksbehandler() {
+        return fastsattAvSaksbehandler;
+    }
+
+    public void setFastsattAvSaksbehandler(Boolean fastsattAvSaksbehandler) {
+        this.fastsattAvSaksbehandler = fastsattAvSaksbehandler;
     }
 }
