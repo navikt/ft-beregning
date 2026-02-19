@@ -3,9 +3,9 @@ package no.nav.folketrygdloven.regelmodelloversetter;
 import no.nav.fpsak.nare.json.JsonOutput;
 import no.nav.fpsak.nare.json.NareJsonException;
 
-public class JsonMapper {
+public class RegelJsonMapper {
 
-    private JsonMapper() {
+    private RegelJsonMapper() {
         // skjul public constructor
     }
 
