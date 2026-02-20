@@ -47,10 +47,10 @@ class InntektsmeldingMedRefusjonTjenesteImplTest {
     private static final String ORGNR2 = "915933149";
 
     private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.now();
+    private static final LocalDate FØRSTE_UTTAKSDATO = SKJÆRINGSTIDSPUNKT.plusDays(1);
 
     @Test
     void skal_finne_arbeidsgiver_som_har_søkt_for_sent_med_flere_arbeidsforhold_et_som_tilkommer_etter_skjæringstidspunktet() {
-        // Arrange
         var registerBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
         var arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         var im1 = byggIM(arbeidsgiver, 1000, SKJÆRINGSTIDSPUNKT, 1000);
@@ -62,21 +62,19 @@ class InntektsmeldingMedRefusjonTjenesteImplTest {
                 .medInntektsmeldinger(List.of(im1, im2)).build();
         var kravperioder = lagKravperioder(Map.of(arbeidsgiver, List.of(im1, im2)), Map.of(arbeidsgiver, SKJÆRINGSTIDSPUNKT.plusMonths(4)), SKJÆRINGSTIDSPUNKT);
 
-        // Act
         var arbeidsgivereSomHarSøktForSent = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgivereSomHarSøktRefusjonForSent(
                 iayGrunnlag,
                 grunnlag.build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER),
                 kravperioder,
-                FagsakYtelseType.FORELDREPENGER);
+                FagsakYtelseType.FORELDREPENGER,
+                FØRSTE_UTTAKSDATO);
 
-        // Assert
         assertThat(arbeidsgivereSomHarSøktForSent).hasSize(1);
         assertThat(arbeidsgivereSomHarSøktForSent.iterator().next()).isEqualTo(arbeidsgiver);
     }
 
     @Test
     void skal_finne_arbeidsgivere_som_har_søkt_for_sent() {
-        // Arrange
         var registerBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
         var aktivitetAggregat = leggTilAktivitet(registerBuilder, List.of(ORGNR, ORGNR2));
         var arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
@@ -89,14 +87,13 @@ class InntektsmeldingMedRefusjonTjenesteImplTest {
                 .medInntektsmeldinger(List.of(im1, im2)).build();
         var kravperioder = lagKravperioder(Map.of(arbeidsgiver, List.of(im1), arbeidsgiver2, List.of(im2)), Map.of(arbeidsgiver, SKJÆRINGSTIDSPUNKT.plusMonths(4), arbeidsgiver2, SKJÆRINGSTIDSPUNKT.plusMonths(2)), SKJÆRINGSTIDSPUNKT);
 
-        // Act
         var arbeidsgivereSomHarSøktForSent = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgivereSomHarSøktRefusjonForSent(
                 iayGrunnlag,
                 grunnlag.build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER),
                 kravperioder,
-                FagsakYtelseType.FORELDREPENGER);
+                FagsakYtelseType.FORELDREPENGER,
+                FØRSTE_UTTAKSDATO);
 
-        // Assert
         assertThat(arbeidsgivereSomHarSøktForSent).hasSize(1);
         assertThat(arbeidsgivereSomHarSøktForSent.iterator().next()).isEqualTo(arbeidsgiver);
     }
@@ -104,7 +101,6 @@ class InntektsmeldingMedRefusjonTjenesteImplTest {
 
     @Test
     void skal_returnere_tomt_set_om_ingen_inntektsmeldinger_er_mottatt() {
-        // Arrange
         var registerBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
         var aktivitetAggregat = leggTilAktivitet(registerBuilder, List.of(ORGNR, ORGNR2));
         var arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
@@ -115,20 +111,18 @@ class InntektsmeldingMedRefusjonTjenesteImplTest {
                 .medInntektsmeldinger(List.of()).build();
         var kravperioder = lagKravperioder(Map.of(arbeidsgiver, List.of(), arbeidsgiver2, List.of()), Map.of(), SKJÆRINGSTIDSPUNKT);
 
-        // Act
         var arbeidsgivereSomHarSøktForSent = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgivereSomHarSøktRefusjonForSent(
                 iayGrunnlag,
                 grunnlag.build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER),
                 kravperioder,
-                FagsakYtelseType.FORELDREPENGER);
+                FagsakYtelseType.FORELDREPENGER,
+                FØRSTE_UTTAKSDATO);
 
-        // Assert
         assertThat(arbeidsgivereSomHarSøktForSent).isEmpty();
     }
 
     @Test
     void skal_returnere_tomt_set_om_ingen_inntektsmeldinger_er_mottatt_for_sent() {
-        // Arrange
         var registerBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
         var aktivitetAggregat = leggTilAktivitet(registerBuilder, List.of(ORGNR, ORGNR2));
         var arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
@@ -141,20 +135,18 @@ class InntektsmeldingMedRefusjonTjenesteImplTest {
                 .medInntektsmeldinger(List.of(im1, im2)).build();
         var kravperioder = lagKravperioder(Map.of(arbeidsgiver, List.of(im1), arbeidsgiver2, List.of(im2)), Map.of(arbeidsgiver, SKJÆRINGSTIDSPUNKT.plusMonths(1), arbeidsgiver2, SKJÆRINGSTIDSPUNKT.plusMonths(2)), SKJÆRINGSTIDSPUNKT);
 
-        // Act
         var arbeidsgivereSomHarSøktForSent = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgivereSomHarSøktRefusjonForSent(
                 iayGrunnlag,
                 grunnlag.build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER),
                 kravperioder,
-                FagsakYtelseType.FORELDREPENGER);
+                FagsakYtelseType.FORELDREPENGER,
+                FØRSTE_UTTAKSDATO);
 
-        // Assert
         assertThat(arbeidsgivereSomHarSøktForSent).isEmpty();
     }
 
     @Test
     void skal_bruke_tidligere_im_selv_om_den_har_ulik_id() {
-        // Arrange
         var registerBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
         var aktivitetAggregat = leggTilAktivitet(registerBuilder, List.of(ORGNR));
         var arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
@@ -166,14 +158,13 @@ class InntektsmeldingMedRefusjonTjenesteImplTest {
             .medInntektsmeldinger(List.of(im1, im2)).build();
         var kravperioder = lagKravperioder(Map.of(arbeidsgiver, List.of(im1, im2)), Map.of(arbeidsgiver, SKJÆRINGSTIDSPUNKT.minusMonths(3)), SKJÆRINGSTIDSPUNKT);
 
-        // Act
         var arbeidsgivereSomHarSøktForSent = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgivereSomHarSøktRefusjonForSent(
             iayGrunnlag,
             grunnlag.build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER),
             kravperioder,
-            FagsakYtelseType.FORELDREPENGER);
+            FagsakYtelseType.FORELDREPENGER,
+            FØRSTE_UTTAKSDATO);
 
-        // Assert
         assertThat(arbeidsgivereSomHarSøktForSent).isEmpty();
     }
 
@@ -197,7 +188,6 @@ class InntektsmeldingMedRefusjonTjenesteImplTest {
         );
         return bg;
     }
-
 
     private BeregningAktivitetAggregatDto leggTilAktivitet(InntektArbeidYtelseAggregatBuilder iayAggregatBuilder, String orgnr, List<InternArbeidsforholdRefDto> internArbeidsforholdRefDto) {
         var arbeidsperiode1 = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT.minusYears(2), TIDENES_ENDE);
@@ -246,8 +236,6 @@ class InntektsmeldingMedRefusjonTjenesteImplTest {
         aktørArbeidBuilder.leggTilYrkesaktivitet(yaBuilder);
         return arbeidsgiver;
     }
-
-
 
     private List<KravperioderPrArbeidsforholdDto> lagKravperioder(Map<Arbeidsgiver, List<InntektsmeldingDto>> agMap, Map<Arbeidsgiver, LocalDate> førsteInnsendingMap, LocalDate stp) {
         return agMap.entrySet().stream()

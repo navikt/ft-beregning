@@ -35,7 +35,8 @@ class VurderRefusjonTilfelleDtoTjeneste {
         var arbeidsgivere = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgivereSomHarSøktRefusjonForSent(input.getIayGrunnlag(),
 				input.getBeregningsgrunnlagGrunnlag(),
 				input.getKravperioderPrArbeidsgiver(),
-				input.getFagsakYtelseType());
+				input.getFagsakYtelseType(),
+                input.getFørsteUttaksdato());
 		return arbeidsgivere
 				.stream()
 				.map(arbeidsgiver -> {

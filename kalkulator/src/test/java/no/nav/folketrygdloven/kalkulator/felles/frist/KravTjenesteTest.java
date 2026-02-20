@@ -43,6 +43,7 @@ class KravTjenesteTest {
                 yrkesaktivitet,
                 gjeldendeAktiviteter,
                 SKJÆRINGSTIDSPUNKT_BEREGNING,
+                SKJÆRINGSTIDSPUNKT_BEREGNING,
                 Optional.empty(), FagsakYtelseType.FORELDREPENGER);
 
         assertThat(kravTidslinje.isEmpty()).isTrue();
@@ -62,6 +63,7 @@ class KravTjenesteTest {
                 yrkesaktivitet,
                 gjeldendeAktiviteter,
                 SKJÆRINGSTIDSPUNKT_BEREGNING,
+                startRefusjon,
                 Optional.empty(), FagsakYtelseType.FORELDREPENGER);
 
         assertThat(kravTidslinje.size()).isEqualTo(1);
@@ -86,6 +88,7 @@ class KravTjenesteTest {
                 yrkesaktivitet,
                 gjeldendeAktiviteter,
                 SKJÆRINGSTIDSPUNKT_BEREGNING,
+                startRefusjon,
                 Optional.empty(), FagsakYtelseType.FORELDREPENGER);
 
         assertThat(kravTidslinje.size()).isEqualTo(2);
@@ -120,6 +123,7 @@ class KravTjenesteTest {
                 yrkesaktivitet,
                 gjeldendeAktiviteter,
                 SKJÆRINGSTIDSPUNKT_BEREGNING,
+                startRefusjon,
                 Optional.empty(), FagsakYtelseType.FORELDREPENGER);
 
         assertThat(kravTidslinje.size()).isEqualTo(1);
@@ -147,6 +151,7 @@ class KravTjenesteTest {
                 yrkesaktivitet,
                 gjeldendeAktiviteter,
                 SKJÆRINGSTIDSPUNKT_BEREGNING,
+                startRefusjon,
                 Optional.empty(), FagsakYtelseType.FORELDREPENGER);
 
         assertThat(kravTidslinje.size()).isEqualTo(1);
@@ -177,6 +182,7 @@ class KravTjenesteTest {
                 yrkesaktivitet,
                 gjeldendeAktiviteter,
                 SKJÆRINGSTIDSPUNKT_BEREGNING,
+                startRefusjon,
                 Optional.empty(), FagsakYtelseType.FORELDREPENGER);
 
         assertThat(kravTidslinje.size()).isEqualTo(2);
@@ -213,6 +219,7 @@ class KravTjenesteTest {
                 yrkesaktivitet,
                 gjeldendeAktiviteter,
                 SKJÆRINGSTIDSPUNKT_BEREGNING,
+                startRefusjon,
                 Optional.empty(), FagsakYtelseType.FORELDREPENGER);
 
         assertThat(kravTidslinje.size()).isEqualTo(2);
@@ -245,6 +252,7 @@ class KravTjenesteTest {
                 yrkesaktivitet,
                 gjeldendeAktiviteter,
                 SKJÆRINGSTIDSPUNKT_BEREGNING,
+                startRefusjon,
                 overstyrtFom, FagsakYtelseType.FORELDREPENGER);
 
         assertThat(kravTidslinje.size()).isEqualTo(1);
@@ -285,6 +293,4 @@ class KravTjenesteTest {
                 .medArbeidsforholdRef(InternArbeidsforholdRefDto.nullRef())
                 .build();
     }
-
-
 }
