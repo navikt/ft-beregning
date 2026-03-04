@@ -110,7 +110,6 @@ public abstract class MapRefusjonPerioderFraVLTilRegel {
     }
 
     protected Map<no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.refusjon.Arbeidsgiver, LocalDateTimeline<Utfall>> mapRefusjonVurderingUtfallPrArbeidsgiver(BeregningsgrunnlagInput input) {
-
         var iayGrunnlag = input.getIayGrunnlag();
         var gjeldendeAktiviteter = input.getBeregningsgrunnlagGrunnlag().getGjeldendeAktiviteter();
         var refusjonOverstyringer = input.getBeregningsgrunnlagGrunnlag().getRefusjonOverstyringer();
@@ -120,6 +119,7 @@ public abstract class MapRefusjonPerioderFraVLTilRegel {
                 input.getKravPrArbeidsgiver(),
                 gjeldendeAktiviteter,
                 input.getSkjæringstidspunktForBeregning(),
+                input.getFørsteUttaksdato(),
                 refusjonOverstyringer,
                 input.getFagsakYtelseType());
         return fristvurdertTidslinjePrArbeidsgiver.entrySet().stream()

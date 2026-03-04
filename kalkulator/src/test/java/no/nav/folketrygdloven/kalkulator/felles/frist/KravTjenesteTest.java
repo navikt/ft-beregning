@@ -43,14 +43,16 @@ class KravTjenesteTest {
                 yrkesaktivitet,
                 gjeldendeAktiviteter,
                 SKJÆRINGSTIDSPUNKT_BEREGNING,
+                SKJÆRINGSTIDSPUNKT_BEREGNING,
                 Optional.empty(), FagsakYtelseType.FORELDREPENGER);
 
         assertThat(kravTidslinje.isEmpty()).isTrue();
     }
 
     @Test
-    void skal_lage_tidslinje_med_krav_fra_skjæringstidspunkt_innsendt_i_tide() {
+    void skal_lage_tidslinje_med_krav_fra_første_mulige_refusjonsdato_innsendt_i_tide() {
         var startRefusjon = SKJÆRINGSTIDSPUNKT_BEREGNING;
+        var førsteMuligeRefusjonsdato = SKJÆRINGSTIDSPUNKT_BEREGNING.plusDays(1);
         var kravperioder = List.of(new PerioderForKravDto(startRefusjon.plusMonths(2),
                 List.of(new RefusjonsperiodeDto(Intervall.fraOgMed(startRefusjon), BELØP_TEN))));
         var ansattPeriode = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_BEREGNING.minusMonths(12), SKJÆRINGSTIDSPUNKT_BEREGNING.plusMonths(12));
@@ -62,13 +64,14 @@ class KravTjenesteTest {
                 yrkesaktivitet,
                 gjeldendeAktiviteter,
                 SKJÆRINGSTIDSPUNKT_BEREGNING,
+                førsteMuligeRefusjonsdato,
                 Optional.empty(), FagsakYtelseType.FORELDREPENGER);
 
         assertThat(kravTidslinje.size()).isEqualTo(1);
         var kravSegment = kravTidslinje.iterator().next();
         assertThat(kravSegment.getValue().utfall()).isEqualTo(Utfall.GODKJENT);
         assertThat(kravSegment.getValue().refusjonskrav()).isEqualTo(BELØP_TEN);
-        assertThat(kravSegment.getFom()).isEqualTo(startRefusjon);
+        assertThat(kravSegment.getFom()).isEqualTo(førsteMuligeRefusjonsdato);
     }
 
     @Test
@@ -86,6 +89,7 @@ class KravTjenesteTest {
                 yrkesaktivitet,
                 gjeldendeAktiviteter,
                 SKJÆRINGSTIDSPUNKT_BEREGNING,
+                startRefusjon,
                 Optional.empty(), FagsakYtelseType.FORELDREPENGER);
 
         assertThat(kravTidslinje.size()).isEqualTo(2);
@@ -120,6 +124,7 @@ class KravTjenesteTest {
                 yrkesaktivitet,
                 gjeldendeAktiviteter,
                 SKJÆRINGSTIDSPUNKT_BEREGNING,
+                startRefusjon,
                 Optional.empty(), FagsakYtelseType.FORELDREPENGER);
 
         assertThat(kravTidslinje.size()).isEqualTo(1);
@@ -147,6 +152,7 @@ class KravTjenesteTest {
                 yrkesaktivitet,
                 gjeldendeAktiviteter,
                 SKJÆRINGSTIDSPUNKT_BEREGNING,
+                startRefusjon,
                 Optional.empty(), FagsakYtelseType.FORELDREPENGER);
 
         assertThat(kravTidslinje.size()).isEqualTo(1);
@@ -177,6 +183,7 @@ class KravTjenesteTest {
                 yrkesaktivitet,
                 gjeldendeAktiviteter,
                 SKJÆRINGSTIDSPUNKT_BEREGNING,
+                startRefusjon,
                 Optional.empty(), FagsakYtelseType.FORELDREPENGER);
 
         assertThat(kravTidslinje.size()).isEqualTo(2);
@@ -196,6 +203,7 @@ class KravTjenesteTest {
     @Test
     void skal_lage_tidslinje_med_for_sent_krav_sendt_inn_deler_av_kravet_i_tide_med_nullbeløp() {
         var startRefusjon = SKJÆRINGSTIDSPUNKT_BEREGNING;
+        var førsteMuligeRefusjonsdato = startRefusjon.plusDays(1);
         var refusjonskrav1 = Beløp.ZERO;
         var refusjonskrav2 = Beløp.fra(10_000);
         var innsendingsdato2 = startRefusjon.plusMonths(7);
@@ -213,6 +221,7 @@ class KravTjenesteTest {
                 yrkesaktivitet,
                 gjeldendeAktiviteter,
                 SKJÆRINGSTIDSPUNKT_BEREGNING,
+            førsteMuligeRefusjonsdato,
                 Optional.empty(), FagsakYtelseType.FORELDREPENGER);
 
         assertThat(kravTidslinje.size()).isEqualTo(2);
@@ -220,7 +229,7 @@ class KravTjenesteTest {
         var kravSegment1 = iterator.next();
         assertThat(kravSegment1.getValue().utfall()).isEqualTo(Utfall.UNDERKJENT);
         assertThat(kravSegment1.getValue().refusjonskrav()).isEqualTo(refusjonskrav2);
-        assertThat(kravSegment1.getFom()).isEqualTo(startRefusjon);
+        assertThat(kravSegment1.getFom()).isEqualTo(førsteMuligeRefusjonsdato);
 
         var kravSegment2 = iterator.next();
         assertThat(kravSegment2.getValue().utfall()).isEqualTo(Utfall.GODKJENT);
@@ -245,6 +254,7 @@ class KravTjenesteTest {
                 yrkesaktivitet,
                 gjeldendeAktiviteter,
                 SKJÆRINGSTIDSPUNKT_BEREGNING,
+                startRefusjon,
                 overstyrtFom, FagsakYtelseType.FORELDREPENGER);
 
         assertThat(kravTidslinje.size()).isEqualTo(1);
@@ -285,6 +295,4 @@ class KravTjenesteTest {
                 .medArbeidsforholdRef(InternArbeidsforholdRefDto.nullRef())
                 .build();
     }
-
-
 }

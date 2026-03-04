@@ -81,7 +81,7 @@ class FordelPerioderTjenesteTest {
     private final Arbeidsgiver arbeidsgiver = Arbeidsgiver.virksomhet(ORG_NUMMER);
     private final Arbeidsgiver arbeidsgiver2 = Arbeidsgiver.virksomhet(ORG_NUMMER_2);
     private final List<BeregningAktivitetDto> aktiviteter = new ArrayList<>();
-    private final KoblingReferanse behandlingRef = new KoblingReferanseMock(SKJÆRINGSTIDSPUNKT);
+    private final KoblingReferanse behandlingRef = new KoblingReferanseMock(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.minusDays(1));
     private BeregningAktivitetAggregatDto beregningAktivitetAggregat;
     private FordelPerioderTjeneste tjeneste;
     private InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlagBuilder;

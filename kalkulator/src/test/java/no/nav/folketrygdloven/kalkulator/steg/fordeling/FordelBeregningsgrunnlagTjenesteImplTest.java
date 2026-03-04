@@ -60,7 +60,7 @@ class FordelBeregningsgrunnlagTjenesteImplTest {
     private FordelBeregningsgrunnlagTjenesteImpl fordelBeregningsgrunnlagTjeneste;
     private List<BeregningAktivitetDto> aktiviteter = new ArrayList<>();
     private BeregningAktivitetAggregatDto beregningAktivitetAggregat;
-    private KoblingReferanse koblingReferanse = new KoblingReferanseMock(SKJÆRINGSTIDSPUNKT);
+    private final KoblingReferanse koblingReferanse = new KoblingReferanseMock(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.minusDays(1));
     private InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlagBuilder;
     private FordelPerioderTjeneste fordelPerioderTjeneste;
 

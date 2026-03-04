@@ -12,8 +12,9 @@ public class VurderRefusjonskravTilfelleUtleder implements TilfelleUtleder {
 
     @Override
     public Optional<FaktaOmBeregningTilfelle> utled(FaktaOmBeregningInput input, BeregningsgrunnlagGrunnlagDto beregningsgrunnlagGrunnlag) {
-        if (!input.isEnabled("refusjonsfrist.flytting", false) && !InntektsmeldingMedRefusjonTjeneste.finnArbeidsgivereSomHarSøktRefusjonForSent(input.getIayGrunnlag(), beregningsgrunnlagGrunnlag,
-            input.getKravPrArbeidsgiver(), input.getFagsakYtelseType()).isEmpty()) {
+        if (!input.isEnabled("refusjonsfrist.flytting", false) && !InntektsmeldingMedRefusjonTjeneste.finnArbeidsgivereSomHarSøktRefusjonForSent(
+            input.getIayGrunnlag(), beregningsgrunnlagGrunnlag, input.getKravPrArbeidsgiver(), input.getFagsakYtelseType(),
+            input.getFørsteUttaksdato()).isEmpty()) {
             return Optional.of(FaktaOmBeregningTilfelle.VURDER_REFUSJONSKRAV_SOM_HAR_KOMMET_FOR_SENT);
         }
         return Optional.empty();

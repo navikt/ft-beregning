@@ -80,7 +80,7 @@ public final class VurderRefusjonDtoTjeneste {
 
         var refusjonOverstyringer = hentRefusjonOverstyringer(input);
         var arbeidsgivere = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgivereSomHarSøktRefusjonForSent(input.getIayGrunnlag(),
-            input.getBeregningsgrunnlagGrunnlag(), input.getKravperioderPrArbeidsgiver(), input.getFagsakYtelseType());
+            input.getBeregningsgrunnlagGrunnlag(), input.getKravperioderPrArbeidsgiver(), input.getFagsakYtelseType(), input.getFørsteUttaksdato());
         return arbeidsgivere.stream().map(arbeidsgiver -> lagRefusjonskravForSentDto(input, arbeidsgiver, refusjonOverstyringer)).toList();
     }
 

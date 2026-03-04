@@ -1,5 +1,6 @@
 package no.nav.folketrygdloven.kalkulator.felles.frist;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -25,14 +26,17 @@ public class InntektsmeldingMedRefusjonTjeneste {
     public static Set<Arbeidsgiver> finnArbeidsgivereSomHarSøktRefusjonForSent(InntektArbeidYtelseGrunnlagDto iayGrunnlag,
                                                                                BeregningsgrunnlagGrunnlagDto beregningsgrunnlagGrunnlag,
                                                                                List<KravperioderPrArbeidsforholdDto> kravperioder,
-                                                                               FagsakYtelseType ytelseType) {
+                                                                               FagsakYtelseType ytelseType,
+                                                                               LocalDate førsteUttaksdato) {
         var skjæringstidspunktBeregning = beregningsgrunnlagGrunnlag.getBeregningsgrunnlagHvisFinnes()
-                .map(BeregningsgrunnlagDto::getSkjæringstidspunkt)
-                .orElseThrow(() -> new IllegalStateException("Utviklerfeil: Skal ha beregningsgrunnlag"));
-        var yrkesaktiviteter = FinnYrkesaktiviteterForBeregningTjeneste.finnYrkesaktiviteter(iayGrunnlag, beregningsgrunnlagGrunnlag, skjæringstidspunktBeregning);
+            .map(BeregningsgrunnlagDto::getSkjæringstidspunkt)
+            .orElseThrow(() -> new IllegalStateException("Utviklerfeil: Skal ha beregningsgrunnlag"));
+        var yrkesaktiviteter = FinnYrkesaktiviteterForBeregningTjeneste.finnYrkesaktiviteter(iayGrunnlag, beregningsgrunnlagGrunnlag,
+            skjæringstidspunktBeregning);
 
         var harSøktForSentMap = ArbeidsgiverRefusjonskravTjeneste.lagFristTidslinjePrArbeidsgiver(yrkesaktiviteter, kravperioder,
-                beregningsgrunnlagGrunnlag.getGjeldendeAktiviteter(), skjæringstidspunktBeregning, Optional.empty(), ytelseType);
+            beregningsgrunnlagGrunnlag.getGjeldendeAktiviteter(), skjæringstidspunktBeregning,
+            førsteUttaksdato != null ? førsteUttaksdato : skjæringstidspunktBeregning, Optional.empty(), ytelseType);
         return finnArbeidsgivereMedUnderkjentPeriode(harSøktForSentMap);
     }
 
