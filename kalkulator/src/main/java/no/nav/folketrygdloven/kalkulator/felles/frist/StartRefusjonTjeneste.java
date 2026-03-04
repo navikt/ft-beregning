@@ -21,7 +21,7 @@ class StartRefusjonTjeneste {
      *
      * @param gjeldendeAktiviteter        Alle gjeldende aktiviteter i beregning
      * @param skjæringstidspunktBeregning Skjæringstidspunkt for beregning
-     * @param refusjonsfristDato          Dato for refusjonsfrist
+     * @param refusjonsfristDato          Første mulige dato for refusjon
      * @param yrkesaktivitet              Arbeidsforholdreferanse
      * @return Første dag med søkt refusjon
      */

@@ -27,7 +27,7 @@ public class KravTjeneste {
      * @param yrkesaktivitet Yrkesaktivitet
      * @param gjeldendeAktiviteter  Alle aktiviteter som er benyttet i beregning
      * @param skjæringstidspunktBeregning   Skjæringstidspunkte
-     * @param refusjonsfristDato   Dato for refusjonsfrist
+     * @param refusjonsfristDato   Første mulige dato for refusjon
      * @param overstyrtGodkjentRefusjonFom  Overstyrt fom-dato for når refusjonskravet er ansett som godkjent
      * @param ytelseType
      * @return Tidslinje for mottatt krav og utfall av fristvurdering
