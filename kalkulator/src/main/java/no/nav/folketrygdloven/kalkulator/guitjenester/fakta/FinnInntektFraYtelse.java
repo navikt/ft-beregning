@@ -9,7 +9,6 @@ import no.nav.folketrygdloven.kalkulator.felles.MeldekortUtils;
 import no.nav.folketrygdloven.kalkulator.konfig.KonfigTjeneste;
 import no.nav.folketrygdloven.kalkulator.modell.behandling.KoblingReferanse;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
-import no.nav.folketrygdloven.kalkulator.modell.iay.YtelseAnvistDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YtelseDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YtelseFilterDto;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
@@ -49,10 +48,16 @@ class FinnInntektFraYtelse {
 				.collect(Collectors.toSet())
 				.size();
 
+        var dagsats = nyesteVedtak.flatMap(YtelseDto::getVedtaksDagsats)
+            .or(() -> nyesteMeldekort.flatMap(m -> m.utbetaling().getDagsats()))
+            .orElse(Beløp.ZERO);
+        var årsbeløp = finnÅrsbeløp(dagsats);
 		if (antallUnikeStatuserIPeriode > 1) {
-			return Optional.of(finnÅrsbeløpMedHensynTilUtbetalingsfaktor(nyesteVedtak.get(), nyesteMeldekort));
+			return nyesteMeldekort
+                .map(m -> finnÅrsbeløpMedHensynTilUtbetalingsfaktor(årsbeløp, m))
+                .or(() -> Optional.of(årsbeløp));
 		} else {
-			return Optional.of(finnÅrsbeløp(nyesteVedtak.get(), nyesteMeldekort));
+			return Optional.of(årsbeløp);
 		}
 
 	}
@@ -73,21 +78,14 @@ class FinnInntektFraYtelse {
 		return YtelseType.UDEFINERT;
 	}
 
-	private static Beløp finnÅrsbeløpMedHensynTilUtbetalingsfaktor(YtelseDto ytelse, Optional<YtelseAnvistDto> ytelseAnvist) {
-		var årsbeløpUtenHensynTilUtbetalingsfaktor = finnÅrsbeløp(ytelse, ytelseAnvist);
+	private static Beløp finnÅrsbeløpMedHensynTilUtbetalingsfaktor(Beløp årsbeløp,
+                                                                   MeldekortUtils.UtbetalingMedNormertUtbetalingsprosent utbetaling) {
+		var utbetalingsfaktor = utbetaling.normertUtbetalingsprosent().tilNormalisertGrad();
 
-		var utbetalingsfaktor = ytelseAnvist
-				.flatMap(YtelseAnvistDto::getUtbetalingsgradProsent)
-				.map(verdi -> ytelse.harKildeKelvinEllerDpSak() ? verdi.tilNormalisertGrad(MeldekortUtils.MAX_UTBETALING_PROSENT_KELVIN_DP_SAK)
-                    : verdi.tilNormalisertGrad(MeldekortUtils.MAX_UTBETALING_PROSENT_AAP_DAG_ARENA))
-				.orElse(BigDecimal.ONE);
-
-		return årsbeløpUtenHensynTilUtbetalingsfaktor.multipliser(utbetalingsfaktor);
+		return årsbeløp.multipliser(utbetalingsfaktor);
 	}
 
-	private static Beløp finnÅrsbeløp(YtelseDto ytelse, Optional<YtelseAnvistDto> ytelseAnvist) {
-		var dagsats = ytelse.getVedtaksDagsats()
-				.orElse(ytelseAnvist.flatMap(YtelseAnvistDto::getDagsats).orElse(Beløp.ZERO));
+	private static Beløp finnÅrsbeløp(Beløp dagsats) {
 		return dagsats.multipliser(VIRKEDAGER_I_1_ÅR);
 	}
 

@@ -2,7 +2,6 @@ package no.nav.folketrygdloven.kalkulator.steg.fastsettskjæringstidspunkt;
 
 import static java.util.Collections.emptyList;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -15,10 +14,7 @@ import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagInput;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningAktivitetAggregatDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningAktivitetDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.AktørYtelseDto;
-import no.nav.folketrygdloven.kalkulator.modell.iay.YtelseAnvistDto;
-import no.nav.folketrygdloven.kalkulator.modell.iay.YtelseDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YtelseFilterDto;
-import no.nav.folketrygdloven.kalkulator.modell.typer.Stillingsprosent;
 import no.nav.folketrygdloven.kalkulator.output.BeregningAvklaringsbehovResultat;
 import no.nav.folketrygdloven.kalkulator.output.BeregningsgrunnlagRegelResultat;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AvklaringsbehovDefinisjon;
@@ -93,20 +89,11 @@ public class AvklaringsbehovUtlederFastsettBeregningsaktiviteterFP implements Av
 
 	    var nyligsteVedtak = MeldekortUtils.sisteVedtakFørStpForType(ytelseFilter, skjæringstidspunkt, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER));
 	    var nyligsteMeldekort = nyligsteVedtak.flatMap(nv -> MeldekortUtils.sisteHeleMeldekortFørStp(ytelseFilter, nv, skjæringstidspunkt, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER)));
-	    boolean erVedtakFraKelvinEllerDpSak = nyligsteVedtak.map(YtelseDto::harKildeKelvinEllerDpSak).orElse(false);
-	    return harMaksUtbetalingsprosent(nyligsteMeldekort, erVedtakFraKelvinEllerDpSak ? MeldekortUtils.MAX_UTBETALING_PROSENT_KELVIN_DP_SAK : MeldekortUtils.MAX_UTBETALING_PROSENT_AAP_DAG_ARENA);
+	    return nyligsteMeldekort.map(MeldekortUtils.UtbetalingMedNormertUtbetalingsprosent::fullUtbetaling).orElse(true);
     }
 
     private static boolean harIngenAktivitetMedType(List<OpptjeningAktivitetType> opptjeningsaktivitetTyper, OpptjeningAktivitetType aktivitetType) {
         return opptjeningsaktivitetTyper.stream().noneMatch(type -> type.equals(aktivitetType));
-    }
-
-    private static boolean harMaksUtbetalingsprosent(Optional<YtelseAnvistDto> nyligsteMeldekort, BigDecimal maksGrad) {
-	    var utbetalingsprosent = Optional.of(nyligsteMeldekort.flatMap(YtelseAnvistDto::getUtbetalingsgradProsent)
-			    .map(Stillingsprosent::verdi)
-			    .orElse(maksGrad));
-
-	    return utbetalingsprosent.stream().anyMatch(verdi -> verdi.compareTo(maksGrad) == 0);
     }
 
     @Override
