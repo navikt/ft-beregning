@@ -26,6 +26,7 @@ import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Stillingsprosent;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
+import no.nav.folketrygdloven.kalkulus.kodeverk.YtelseKilde;
 import no.nav.folketrygdloven.utils.Tuple;
 
 
@@ -257,6 +258,7 @@ class AvklarAktiviteterTjenesteImplTest {
 	    var aktørYtelseBuilder = inntektArbeidYtelseAggregatBuilder.getAktørYtelseBuilder();
         var ytelseBuilder = YtelseDtoBuilder.ny()
                 .medPeriode(Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_BEREGNING.minusMonths(6), SKJÆRINGSTIDSPUNKT_BEREGNING.minusDays(1)))
+                .medYtelseKilde(YtelseKilde.ARENA)
                 .medYtelseType(ARBEIDSAVKLARINGSPENGER);
         if (meldekortPerioder != null && meldekortPerioder.length > 0) {
             Stream.of(meldekortPerioder).forEach(meldekort -> ytelseBuilder.leggTilYtelseAnvist(lagYtelseAnvist(ytelseBuilder, meldekort.getElement1(), meldekort.getElement2())));

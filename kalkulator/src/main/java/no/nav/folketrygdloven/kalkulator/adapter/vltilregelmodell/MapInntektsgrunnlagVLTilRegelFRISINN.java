@@ -1,7 +1,6 @@
 package no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,10 +30,10 @@ import no.nav.folketrygdloven.kalkulator.modell.iay.OppgittPeriodeInntekt;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YrkesaktivitetDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YrkesaktivitetFilterDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YtelseAnvistDto;
+import no.nav.folketrygdloven.kalkulator.modell.iay.YtelseDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YtelseFilterDto;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
-import no.nav.folketrygdloven.kalkulator.modell.typer.Stillingsprosent;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulator.ytelse.frisinn.FrisinnGrunnlag;
 import no.nav.folketrygdloven.kalkulus.kodeverk.ArbeidType;
@@ -128,7 +127,7 @@ public class MapInntektsgrunnlagVLTilRegelFRISINN implements MapInntektsgrunnlag
                 .forEach(ytelse -> ytelse.getYtelseAnvist().stream()
                         .filter(ytelseAnvistDto -> !ytelseAnvistDto.getAnvistTOM().isBefore(skjæringstidspunktOpptjening.minusMonths(MÅNEDER_FØR_STP)))
                         .filter(this::harHattUtbetalingForPeriode)
-                        .forEach(anvist -> inntektsgrunnlag.leggTilPeriodeinntekt(byggPeriodeinntektForYtelse(anvist, ytelse.getVedtaksDagsats(), ytelse.getYtelseType(), ytelse.harKildeKelvinEllerDpSak()))));
+                        .forEach(anvist -> inntektsgrunnlag.leggTilPeriodeinntekt(byggPeriodeinntektForYtelse(anvist, ytelse))));
     }
 
     private boolean harHattUtbetalingForPeriode(YtelseAnvistDto ytelse) {
@@ -137,13 +136,11 @@ public class MapInntektsgrunnlagVLTilRegelFRISINN implements MapInntektsgrunnlag
                 .orElse(false);
     }
 
-    private Periodeinntekt byggPeriodeinntektForYtelse(YtelseAnvistDto anvist, Optional<Beløp> vedtaksDagsats, YtelseType ytelsetype, boolean harKildeKelvinEllerDpSak) {
-        var deletall = harKildeKelvinEllerDpSak ? MeldekortUtils.MAX_UTBETALING_PROSENT_KELVIN_DP_SAK : MeldekortUtils.MAX_UTBETALING_PROSENT_AAP_DAG_ARENA;
+    private Periodeinntekt byggPeriodeinntektForYtelse(YtelseAnvistDto anvist, YtelseDto ytelse) {
         return Periodeinntekt.builder()
-                .medInntektskildeOgPeriodeType(erAAPEllerDP(ytelsetype) ? Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP : Inntektskilde.ANNEN_YTELSE)
-                .medInntekt(Beløp.safeVerdi(finnBeløp(anvist, vedtaksDagsats)))
-                .medUtbetalingsfaktor(erAAPEllerDP(ytelsetype) ? anvist.getUtbetalingsgradProsent().map(Stillingsprosent::verdi)
-                        .map(s -> s.divide(deletall, 10, RoundingMode.HALF_UP)).orElseThrow() : BigDecimal.ONE)
+                .medInntektskildeOgPeriodeType(erAAPEllerDP(ytelse.getYtelseType()) ? Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP : Inntektskilde.ANNEN_YTELSE)
+                .medInntekt(Beløp.safeVerdi(finnBeløp(anvist, ytelse.getVedtaksDagsats())))
+                .medUtbetalingsfaktor(erAAPEllerDP(ytelse.getYtelseType()) ? MeldekortUtils.getUtbetalingsGrad(ytelse, anvist) : BigDecimal.ONE)
                 .medPeriode(Periode.of(anvist.getAnvistFOM(), anvist.getAnvistTOM()))
                 .build();
     }

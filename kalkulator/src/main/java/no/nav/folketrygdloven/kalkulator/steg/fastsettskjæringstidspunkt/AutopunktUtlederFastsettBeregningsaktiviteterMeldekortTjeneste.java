@@ -42,6 +42,8 @@ public class AutopunktUtlederFastsettBeregningsaktiviteterMeldekortTjeneste {
             return Optional.empty();
         }
 
+        // TODO: Ovenfor sjekkes om det finnes utbetaling for STP. Vi skal vel sjekke om siste hele meldekort foreligger.
+        // Normalt finnes utbetalingsperiode tom søndag. Hvis siste utbetaling er mer enn 2 uker før STP, kan det ventes inntil 2 uker og sjekkes på nytt.
         return utledVenteFrist(skjæringstidspunkt, dagensdato);
     }
 
@@ -53,14 +55,14 @@ public class AutopunktUtlederFastsettBeregningsaktiviteterMeldekortTjeneste {
 
 
         if(BeregningstidspunktTjeneste.finnBeregningstidspunkt(skjæringstidspunkt).isBefore(skjæringstidspunkt) && opphørerYtelseDagenFørStp(nyligsteVedtak.get(), skjæringstidspunkt)){
-	        var meldekortOpphørtYtelse = MeldekortUtils.finnMeldekortSomInkludererGittDato(ytelseFilterMeldekort, nyligsteVedtak.get(),
+            var meldekortOpphørtYtelse = MeldekortUtils.finnesMeldekortSomInkludererGittDato(ytelseFilterMeldekort, nyligsteVedtak.get(),
                     Set.of(nyligsteVedtak.get().getYtelseType()), skjæringstidspunkt.minusDays(1));
-            return meldekortOpphørtYtelse.isPresent();
+            return meldekortOpphørtYtelse;
         }
 
-	    var meldekortLøpendeYtelse = MeldekortUtils.finnMeldekortSomInkludererGittDato(ytelseFilterMeldekort, nyligsteVedtak.get(),
+	    var meldekortLøpendeYtelse = MeldekortUtils.finnesMeldekortSomInkludererGittDato(ytelseFilterMeldekort, nyligsteVedtak.get(),
                 Set.of(nyligsteVedtak.get().getYtelseType()), skjæringstidspunkt);
-        return meldekortLøpendeYtelse.isPresent();
+        return meldekortLøpendeYtelse;
     }
 
     private static boolean harLøpendeVedtakOgSendtInnMeldekortNylig(Optional<AktørYtelseDto> aktørYtelse, LocalDate skjæringstidspunkt, Set<YtelseType> arenaytelseTyper) {
