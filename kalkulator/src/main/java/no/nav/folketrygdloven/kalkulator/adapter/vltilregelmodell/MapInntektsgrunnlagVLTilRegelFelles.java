@@ -3,7 +3,6 @@ package no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell;
 import static no.nav.folketrygdloven.kalkulator.felles.ytelseovergang.DirekteOvergangTjeneste.finnAnvisningerForDirekteOvergangFraKap8;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -198,11 +197,8 @@ public class MapInntektsgrunnlagVLTilRegelFelles implements MapInntektsgrunnlagV
 				Set.of(arenaYtelse));
 
 		utbetalingsfaktor = sisteUtbetalingFørStp
-				.flatMap(YtelseAnvistDto::getUtbetalingsgradProsent)
-				.map(Stillingsprosent::verdi)
-				.map(verdi -> nyesteVedtakForDagsats.harKildeKelvinEllerDpSak() ?
-                    verdi.divide(MeldekortUtils.MAX_UTBETALING_PROSENT_KELVIN_DP_SAK, 10, RoundingMode.HALF_UP) :
-                    verdi.divide(MeldekortUtils.MAX_UTBETALING_PROSENT_AAP_DAG_ARENA, 10, RoundingMode.HALF_UP))
+                .map(MeldekortUtils.UtbetalingMedNormertUtbetalingsprosent::normertUtbetalingsprosent)
+				.map(Stillingsprosent::tilNormalisertGrad)
 				.orElse(BigDecimal.ONE);
 
 		dagsats = nyesteVedtakForDagsats.getVedtaksDagsats().map(Beløp::verdi).orElseThrow();

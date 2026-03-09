@@ -33,7 +33,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Pe
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrArbeidsforhold;
 import no.nav.folketrygdloven.kalkulator.BeregningsgrunnlagInputTestUtil;
 import no.nav.folketrygdloven.kalkulator.KoblingReferanseMock;
-import no.nav.folketrygdloven.kalkulator.felles.MeldekortUtils;
 import no.nav.folketrygdloven.kalkulator.modell.behandling.KoblingReferanse;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDto;
@@ -107,7 +106,7 @@ class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
 				skjæring.minusMonths(1).plusDays(1),
 				skjæring.plusMonths(6),
 				Beløp.fra(MELDEKORTSATS1),
-				MeldekortUtils.MAX_UTBETALING_PROSENT_AAP_DAG_ARENA,
+				BigDecimal.valueOf(200), // Konvensjon for kilde Arena
 				skjæring.minusMonths(1).plusDays(2),
 				skjæring.minusMonths(1).plusDays(16),
 				YtelseKilde.ARENA);
@@ -116,7 +115,7 @@ class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
 				skjæring.minusMonths(3),
 				skjæring.minusMonths(1),
 				Beløp.fra(MELDEKORTSATS2),
-				new BigDecimal(100),
+				new BigDecimal(100), // Tilsvarer halv utbetaling pr konvensjon for kilde Arena
 				skjæring.minusMonths(1).minusDays(13),
 				skjæring.minusMonths(1).plusDays(1),
 				YtelseKilde.ARENA);
@@ -133,7 +132,7 @@ class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
 				skjæring.minusMonths(1).plusDays(1),
 				skjæring.plusMonths(6),
 				Beløp.fra(MELDEKORTSATS1),
-				MeldekortUtils.MAX_UTBETALING_PROSENT_KELVIN_DP_SAK,
+				Stillingsprosent.HUNDRED.verdi(),
 				skjæring.minusMonths(1).plusDays(2),
 				skjæring.minusMonths(1).plusDays(16),
 				YtelseKilde.KELVIN);
@@ -142,7 +141,7 @@ class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
 				skjæring.minusMonths(3),
 				skjæring.minusMonths(1),
 				Beløp.fra(MELDEKORTSATS2),
-				MeldekortUtils.MAX_UTBETALING_PROSENT_KELVIN_DP_SAK,
+                Stillingsprosent.HUNDRED.verdi(),
 				skjæring.minusMonths(1).minusDays(13),
 				skjæring.minusMonths(1).plusDays(1),
 				YtelseKilde.KELVIN);
@@ -159,7 +158,7 @@ class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
 				skjæring.minusWeeks(2),
 				skjæring.plusMonths(6),
 				Beløp.fra(MELDEKORTSATS1),
-				MeldekortUtils.MAX_UTBETALING_PROSENT_AAP_DAG_ARENA.subtract(BigDecimal.TEN),
+				BigDecimal.valueOf(190), // Tilsier 95% utbetaling pr konvensjon for kilde Arena
 				skjæring.minusDays(5),
 				skjæring.plusDays(9),
 				YtelseKilde.ARENA);

@@ -74,7 +74,7 @@ class BeregningUtilsTest {
         var ytelseAnvist = MeldekortUtils.sisteHeleMeldekortFørStp(filter, nyYtelse, SKJÆRINGSTIDSPUNKT, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER));
 
         assertThat(ytelseAnvist).isPresent();
-        assertThat(ytelseAnvist.get()).isEqualTo(nyttMeldekort);
+        assertThat(ytelseAnvist.get().utbetaling()).isEqualTo(nyttMeldekort);
     }
 
     @Test
@@ -92,7 +92,7 @@ class BeregningUtilsTest {
         var ytelseAnvist = MeldekortUtils.sisteHeleMeldekortFørStp(filter, nyYtelse, SKJÆRINGSTIDSPUNKT, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER));
 
         assertThat(ytelseAnvist).isPresent();
-        assertThat(ytelseAnvist.get()).isEqualTo(nyttMeldekort);
+        assertThat(ytelseAnvist.get().utbetaling()).isEqualTo(nyttMeldekort);
     }
 
     @Test
@@ -110,7 +110,7 @@ class BeregningUtilsTest {
         var ytelseAnvist = MeldekortUtils.sisteHeleMeldekortFørStp(filter, nyYtelse, SKJÆRINGSTIDSPUNKT, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER));
 
         assertThat(ytelseAnvist).isPresent();
-        assertThat(ytelseAnvist.get()).isEqualTo(meldekortFemti);
+        assertThat(ytelseAnvist.get().utbetaling()).isEqualTo(meldekortFemti);
     }
 
     @Test
@@ -131,7 +131,7 @@ class BeregningUtilsTest {
         var ytelseAnvist = MeldekortUtils.sisteHeleMeldekortFørStp(filter, nyYtelse, SKJÆRINGSTIDSPUNKT, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER));
 
         assertThat(ytelseAnvist).isPresent();
-        assertThat(ytelseAnvist.get()).isEqualTo(meldekortNytt);
+        assertThat(ytelseAnvist.get().utbetaling()).isEqualTo(meldekortNytt);
     }
 
     @Test
@@ -152,10 +152,9 @@ class BeregningUtilsTest {
                 .leggTilYtelseAnvist(meldekort4).build();
 
         var filter = new YtelseFilterDto(Arrays.asList(gammelYtelse, nyYtelse));
-        var ytelseAnvist = MeldekortUtils.finnMeldekortSomInkludererGittDato(filter, nyYtelse, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER), SKJÆRINGSTIDSPUNKT);
+        var ytelseAnvist = MeldekortUtils.finnesMeldekortSomInkludererGittDato(filter, nyYtelse, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER), SKJÆRINGSTIDSPUNKT);
 
-        assertThat(ytelseAnvist).isPresent();
-        assertThat(ytelseAnvist.get()).isEqualTo(meldekort3);
+        assertThat(ytelseAnvist).isTrue();
     }
 
     @Test
@@ -176,9 +175,9 @@ class BeregningUtilsTest {
                 .leggTilYtelseAnvist(meldekort4).build();
 
         var filter = new YtelseFilterDto(Arrays.asList(gammelYtelse, nyYtelse));
-        var ytelseAnvist = MeldekortUtils.finnMeldekortSomInkludererGittDato(filter, nyYtelse, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER), SKJÆRINGSTIDSPUNKT.plusDays(1));
+        var ytelseAnvist = MeldekortUtils.finnesMeldekortSomInkludererGittDato(filter, nyYtelse, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER), SKJÆRINGSTIDSPUNKT.plusDays(1));
 
-        assertThat(ytelseAnvist).isEmpty();
+        assertThat(ytelseAnvist).isFalse();
     }
 
     private YtelseAnvistDto lagMeldekort(BigDecimal utbetalingsgrad, LocalDate fom, LocalDate tom) {
