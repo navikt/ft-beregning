@@ -41,6 +41,8 @@ import no.nav.folketrygdloven.kalkulator.modell.typer.Stillingsprosent;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.ArbeidType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.YtelseType;
+import no.nav.fpsak.tidsserie.LocalDateSegment;
+import no.nav.fpsak.tidsserie.LocalDateTimeline;
 
 public class MapInntektsgrunnlagVLTilRegelFelles implements MapInntektsgrunnlagVLTilRegel {
 	private static final String INNTEKT_RAPPORTERING_FRIST_DATO = "inntekt.rapportering.frist.dato";
@@ -201,11 +203,48 @@ public class MapInntektsgrunnlagVLTilRegelFelles implements MapInntektsgrunnlagV
         if (nyesteVedtakForDagsats.isEmpty()) {
             return;
         }
-        var ytelseperiode = mapYtelseFraArenavedtak(ytelseFilter, skjæringstidspunkt, nyesteVedtakForDagsats.get(), ytelseType);
-        inntektsgrunnlag.leggTilPeriodeinntekt(ytelseperiode);
+        var nyesteVedtak = nyesteVedtakForDagsats.get();
+        if (nyesteVedtak.harKildeKelvinEllerDpSak()) {
+            var ytelsedager = mapTilEnkeltdagerMedInntekter(nyesteVedtak);
+            ytelsedager.forEach(inntektsgrunnlag::leggTilPeriodeinntekt);
+        } else {
+            var ytelseperiode = mapYtelseFraArenavedtak(ytelseFilter, skjæringstidspunkt, nyesteVedtak, ytelseType);
+            inntektsgrunnlag.leggTilPeriodeinntekt(ytelseperiode);
+        }
     }
 
-	private void lagInntektSammenligning(Inntektsgrunnlag inntektsgrunnlag, InntektFilterDto filter) {
+    private List<Periodeinntekt> mapTilEnkeltdagerMedInntekter(YtelseDto nyesteVedtak) {
+        sjekkForOverlapp(nyesteVedtak);
+        return nyesteVedtak.getYtelseAnvist()
+            .stream()
+            .map(this::mapAnvistPeriodeTilEnkeltdager)
+            .flatMap(Collection::stream)
+            .toList();
+    }
+
+    private static void sjekkForOverlapp(YtelseDto nyesteVedtak) {
+        var segmenter = nyesteVedtak.getYtelseAnvist().stream().map(a -> new LocalDateSegment<>(a.getAnvistFOM(), a.getAnvistTOM(), null)).toList();
+        try {
+            new LocalDateTimeline<>(segmenter);
+        } catch (Exception ex){
+            throw new IllegalStateException("Det finnes anviste perioder med overlapp, ugyldig tilstand " + ex);
+        }
+    }
+
+    private List<Periodeinntekt> mapAnvistPeriodeTilEnkeltdager(YtelseAnvistDto aa) {
+        var dagsats = aa.getDagsats().orElseThrow().verdi();
+        var utbetalingsgrad = aa.getUtbetalingsgradProsent().orElseThrow().tilNormalisertGrad();
+        var listeMedDager = aa.getAnvistFOM().datesUntil(aa.getAnvistTOM().plusDays(1)).toList();
+        return listeMedDager.stream().map(d -> Periodeinntekt.builder()
+            .medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP_ENKELTDAGER)
+            .medInntekt(dagsats)
+            .medDag(d)
+            .medUtbetalingsfaktor(utbetalingsgrad)
+            .build())
+            .toList();
+    }
+
+    private void lagInntektSammenligning(Inntektsgrunnlag inntektsgrunnlag, InntektFilterDto filter) {
         var månedsinntekter = filter.filterSammenligningsgrunnlag().getFiltrertInntektsposter().stream()
 				.collect(Collectors.groupingBy(ip -> ip.getPeriode().getFomDato(), Collectors.reducing(BigDecimal.ZERO,
 						ip -> ip.getBeløp().verdi(), BigDecimal::add)));
