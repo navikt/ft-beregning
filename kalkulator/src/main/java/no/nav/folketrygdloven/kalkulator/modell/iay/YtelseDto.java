@@ -17,7 +17,7 @@ public class YtelseDto {
 
     private Beløp vedtaksDagsats;
     private YtelseType ytelseType = YtelseType.UDEFINERT;
-	private YtelseKilde ytelseKilde = YtelseKilde.UDEFINERT;
+	private YtelseKilde ytelseKilde;
     private Intervall periode;
     // Brukes til å skille ulike ytelser med samme ytelsetype
     private Set<YtelseAnvistDto> ytelseAnvist = new LinkedHashSet<>();
@@ -28,7 +28,7 @@ public class YtelseDto {
 
     public YtelseDto(YtelseDto ytelse) {
         this.ytelseType = ytelse.getYtelseType();
-		this.ytelseKilde = ytelse.getYtelseKilde().orElse(YtelseKilde.UDEFINERT);
+		this.ytelseKilde = ytelse.getYtelseKilde();
         this.periode = ytelse.getPeriode();
         this.ytelseAnvist = ytelse.getYtelseAnvist().stream().map(YtelseAnvistDto::new).collect(Collectors.toCollection(LinkedHashSet::new));
         ytelse.getVedtaksDagsats().ifPresent(dagsats -> this.vedtaksDagsats = dagsats);
@@ -50,15 +50,16 @@ public class YtelseDto {
         this.ytelseType = ytelseType;
     }
 
-	public Optional<YtelseKilde> getYtelseKilde() {
-		return Optional.ofNullable(ytelseKilde).filter(k -> !k.equals(YtelseKilde.UDEFINERT));
+	public YtelseKilde getYtelseKilde() {
+		return ytelseKilde;
 	}
 
 	public boolean harKildeKelvinEllerDpSak() {
-		return getYtelseKilde().map(k -> (k.equals(YtelseKilde.KELVIN) || k.equals(YtelseKilde.DPSAK))).orElse(false);
+        return YtelseKilde.KELVIN.equals(getYtelseKilde()) || YtelseKilde.ARENA.equals(getYtelseKilde());
 	}
 
 	public void setYtelseKilde(YtelseKilde ytelseKilde) {
+        Objects.requireNonNull(ytelseKilde, "ytelseKilde");
 		this.ytelseKilde = ytelseKilde;
 	}
 
