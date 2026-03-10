@@ -55,7 +55,8 @@ public final class AvklaringsbehovutlederVurderRefusjon {
     }
 
     private static boolean skalHaAvklaringsbehovVurderRefusjonskravKommetForSent(BeregningsgrunnlagInput vurderInput) {
-        return !InntektsmeldingMedRefusjonTjeneste.finnArbeidsgivereSomHarSøktRefusjonForSent(vurderInput.getIayGrunnlag(), vurderInput.getBeregningsgrunnlagGrunnlag(), vurderInput.getKravPrArbeidsgiver(),
-                vurderInput.getFagsakYtelseType()).isEmpty();
+        return !InntektsmeldingMedRefusjonTjeneste.finnArbeidsgivereSomHarSøktRefusjonForSent(vurderInput.getIayGrunnlag(),
+            vurderInput.getBeregningsgrunnlagGrunnlag(), vurderInput.getKravPrArbeidsgiver(), vurderInput.getFagsakYtelseType(),
+            vurderInput.getFørsteUttaksdato()).isEmpty();
     }
 }

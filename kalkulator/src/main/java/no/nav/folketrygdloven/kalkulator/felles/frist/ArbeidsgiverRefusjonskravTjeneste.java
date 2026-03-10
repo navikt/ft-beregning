@@ -28,6 +28,7 @@ public class ArbeidsgiverRefusjonskravTjeneste {
                                                                                                      List<KravperioderPrArbeidsforholdDto> kravperioder,
                                                                                                      BeregningAktivitetAggregatDto gjeldendeAktiviteter,
                                                                                                      LocalDate skjæringstidspunktBeregning,
+                                                                                                     LocalDate refusjonsfristDato,
                                                                                                      Optional<BeregningRefusjonOverstyringerDto> refusjonOverstyringer,
                                                                                                      FagsakYtelseType ytelseType) {
         // TODO refusjon: Vurder å fjerne refusjonOverstyringer og heller håndtere dette i aksjonspunktoppdatereren
@@ -47,10 +48,10 @@ public class ArbeidsgiverRefusjonskravTjeneste {
                         yrkesaktivitet,
                         gjeldendeAktiviteter,
                         skjæringstidspunktBeregning,
+                        refusjonsfristDato,
                         overstyrtRefusjonFom, ytelseType);
                 tidslinjeMap.put(yrkesaktivitet.getArbeidsgiver(),
                         eksisterendeTidslinje == null ? tidslinje : KombinerRefusjonskravFristTidslinje.kombinerOgKompress(eksisterendeTidslinje, tidslinje));
-
             }
         }
         return tidslinjeMap;

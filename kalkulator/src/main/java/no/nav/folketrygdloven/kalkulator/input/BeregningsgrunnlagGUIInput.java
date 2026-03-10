@@ -135,6 +135,10 @@ public class BeregningsgrunnlagGUIInput {
         return getSkjæringstidspunkt().getSkjæringstidspunktOpptjening();
     }
 
+    public LocalDate getFørsteUttaksdato() {
+        return getSkjæringstidspunkt().getFørsteUttaksdato();
+    }
+
     public List<KravperioderPrArbeidsforholdDto> getKravperioderPrArbeidsgiver() {
         return kravperioderPrArbeidsgiver;
     }

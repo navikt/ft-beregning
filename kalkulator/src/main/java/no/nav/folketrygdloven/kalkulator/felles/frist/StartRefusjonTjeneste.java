@@ -21,27 +21,27 @@ class StartRefusjonTjeneste {
      *
      * @param gjeldendeAktiviteter        Alle gjeldende aktiviteter i beregning
      * @param skjæringstidspunktBeregning Skjæringstidspunkt for beregning
+     * @param refusjonsfristDato          Første mulige dato for refusjon
      * @param yrkesaktivitet              Arbeidsforholdreferanse
      * @return Første dag med søkt refusjon
      */
     static LocalDate finnFørsteMuligeDagRefusjon(BeregningAktivitetAggregatDto gjeldendeAktiviteter,
-                                                         LocalDate skjæringstidspunktBeregning,
-                                                         YrkesaktivitetDto yrkesaktivitet) {
-        var erNyttArbeidsforhold = erTilkommetEtterBeregningstidspunkt(
-                yrkesaktivitet.getArbeidsgiver(),
-                yrkesaktivitet.getArbeidsforholdRef(),
-                gjeldendeAktiviteter, skjæringstidspunktBeregning);
+                                                 LocalDate skjæringstidspunktBeregning,
+                                                 LocalDate refusjonsfristDato,
+                                                 YrkesaktivitetDto yrkesaktivitet) {
+        var erNyttArbeidsforhold = erTilkommetEtterBeregningstidspunkt(yrkesaktivitet.getArbeidsgiver(), yrkesaktivitet.getArbeidsforholdRef(),
+            gjeldendeAktiviteter, skjæringstidspunktBeregning);
         if (erNyttArbeidsforhold) {
-            var førsteAnsattdato = yrkesaktivitet.getAlleAnsettelsesperioder().stream()
-                    .filter(aa -> aa.getPeriode().inkluderer(skjæringstidspunktBeregning)
-                            || aa.getPeriode().getFomDato().isAfter(BeregningstidspunktTjeneste.finnBeregningstidspunkt(skjæringstidspunktBeregning)))
-                    .map(AktivitetsAvtaleDto::getPeriode)
-                    .map(Intervall::getFomDato)
-                    .min(Comparator.naturalOrder())
-                    .orElse(skjæringstidspunktBeregning);
-            return førsteAnsattdato.isAfter(skjæringstidspunktBeregning) ? førsteAnsattdato : skjæringstidspunktBeregning;
+            var førsteAnsattdato = yrkesaktivitet.getAlleAnsettelsesperioder()
+                .stream()
+                .map(AktivitetsAvtaleDto::getPeriode)
+                .map(Intervall::getFomDato)
+                .filter(fomDato -> fomDato.isAfter(BeregningstidspunktTjeneste.finnBeregningstidspunkt(skjæringstidspunktBeregning)))
+                .min(Comparator.naturalOrder())
+                .orElse(refusjonsfristDato);
+            return førsteAnsattdato.isAfter(refusjonsfristDato) ? førsteAnsattdato : refusjonsfristDato;
         } else {
-            return skjæringstidspunktBeregning;
+            return refusjonsfristDato;
         }
     }
 
