@@ -13,8 +13,6 @@ updates:
       interval: daily
     cooldown:
       default-days: 7
-      exclude:
-        - "no.nav.*"
     open-pull-requests-limit: 10
   - package-ecosystem: maven
     directory: "/"
@@ -24,4 +22,6 @@ updates:
       interval: weekly
     cooldown:
       default-days: 7
+      exclude:
+        - "no.nav.*"
     open-pull-requests-limit: 20
