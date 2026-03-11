@@ -214,32 +214,21 @@ public class MapInntektsgrunnlagVLTilRegelFelles implements MapInntektsgrunnlagV
     }
 
     private List<Periodeinntekt> mapTilEnkeltdagerMedInntekter(YtelseDto nyesteVedtak) {
-        sjekkForOverlapp(nyesteVedtak);
-        return nyesteVedtak.getYtelseAnvist()
+        var tidslinje = new LocalDateTimeline<>(nyesteVedtak.getYtelseAnvist()
             .stream()
-            .map(this::mapAnvistPeriodeTilEnkeltdager)
-            .flatMap(Collection::stream)
-            .toList();
+            .map(p -> new LocalDateSegment<>(p.getAnvistFOM(), p.getAnvistTOM(),
+                new DagsatsUtbetalingsgrad(p.getDagsats().orElseThrow().verdi(), p.getUtbetalingsgradProsent().orElseThrow().tilNormalisertGrad())))
+            .toList());
+        return tidslinje.stream().map(this::mapAnvistPeriodeTilEnkeltdager).flatMap(Collection::stream).toList();
     }
 
-    private static void sjekkForOverlapp(YtelseDto nyesteVedtak) {
-        var segmenter = nyesteVedtak.getYtelseAnvist().stream().map(a -> new LocalDateSegment<>(a.getAnvistFOM(), a.getAnvistTOM(), null)).toList();
-        try {
-            new LocalDateTimeline<>(segmenter);
-        } catch (Exception ex){
-            throw new IllegalStateException("Det finnes anviste perioder med overlapp, ugyldig tilstand " + ex);
-        }
-    }
-
-    private List<Periodeinntekt> mapAnvistPeriodeTilEnkeltdager(YtelseAnvistDto aa) {
-        var dagsats = aa.getDagsats().orElseThrow().verdi();
-        var utbetalingsgrad = aa.getUtbetalingsgradProsent().orElseThrow().tilNormalisertGrad();
-        var listeMedDager = aa.getAnvistFOM().datesUntil(aa.getAnvistTOM().plusDays(1)).toList();
+    private List<Periodeinntekt> mapAnvistPeriodeTilEnkeltdager(LocalDateSegment<DagsatsUtbetalingsgrad> segment) {
+        var listeMedDager = segment.getFom().datesUntil(segment.getTom().plusDays(1)).toList();
         return listeMedDager.stream().map(d -> Periodeinntekt.builder()
             .medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP_ENKELTDAGER)
-            .medInntekt(dagsats)
+            .medInntekt(segment.getValue().dagsats())
             .medDag(d)
-            .medUtbetalingsfaktor(utbetalingsgrad)
+            .medUtbetalingsfaktor(segment.getValue().utbetalingsgrad())
             .build())
             .toList();
     }
@@ -369,4 +358,5 @@ public class MapInntektsgrunnlagVLTilRegelFelles implements MapInntektsgrunnlagV
 				.build();
 	}
 
+    private record DagsatsUtbetalingsgrad(BigDecimal dagsats, BigDecimal utbetalingsgrad){}
 }
