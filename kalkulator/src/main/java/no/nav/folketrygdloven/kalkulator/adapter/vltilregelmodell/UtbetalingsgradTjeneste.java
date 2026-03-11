@@ -22,6 +22,10 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 
 public class UtbetalingsgradTjeneste {
 
+    private UtbetalingsgradTjeneste() {
+        // Skjuler default konstruktør
+    }
+
 	public static Beløp finnGradertBruttoForAndel(BeregningsgrunnlagPrStatusOgAndelDto andel,
 	                                              Intervall periode,
 	                                              YtelsespesifiktGrunnlag ytelsesSpesifiktGrunnlag) {

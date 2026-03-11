@@ -3,6 +3,10 @@ package no.nav.folketrygdloven.kalkulus.kodeverk;
 
 public class KodeKonstanter {
 
+    private KodeKonstanter() {
+        // Skjuler default konstruktør
+    }
+
     // Generell. Obs på bruk frontend, databaser, etc.
     public static final String UDEFINERT = "-";
 

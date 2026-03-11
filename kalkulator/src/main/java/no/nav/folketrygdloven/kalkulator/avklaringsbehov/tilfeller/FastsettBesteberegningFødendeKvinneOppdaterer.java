@@ -16,6 +16,10 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 
 public class FastsettBesteberegningFødendeKvinneOppdaterer  {
 
+    private FastsettBesteberegningFødendeKvinneOppdaterer() {
+        // Skjuler default konstruktør
+    }
+
     public static void oppdater(FaktaBeregningLagreDto dto,
                                 Optional<BeregningsgrunnlagDto> forrigeBg,
                                 BeregningsgrunnlagGrunnlagDtoBuilder grunnlagBuilder) {

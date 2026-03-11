@@ -12,6 +12,10 @@ import no.nav.folketrygdloven.kalkulator.modell.iay.InntektsmeldingDto;
 
 public class FastsettBeregningsperiodeTjeneste {
 
+    private FastsettBeregningsperiodeTjeneste() {
+        // Skjuler default konstruktør
+    }
+
     public static BeregningsgrunnlagDto fastsettBeregningsperiode(BeregningsgrunnlagDto beregningsgrunnlag,
                                                            InntektArbeidYtelseGrunnlagDto inntektArbeidYtelseGrunnlag,
                                                            Collection<InntektsmeldingDto> inntektsmeldinger) {

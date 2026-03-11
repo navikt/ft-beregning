@@ -49,8 +49,6 @@ class FastsettSkjæringstidspunktOgStatuserK14Test {
     private static final LocalDate STP_OPPTJENING = LocalDate.of(2022,3,1);
     private static final LocalDate FØRSTE_UTTAKSDAG = LocalDate.of(2022,3,2);
 
-    private final FastsettSkjæringstidspunktOgStatuserK14 fastsettSkjæringstidspunktOgStatuser = new FastsettSkjæringstidspunktOgStatuserK14();
-
     @Test
     void en_aktivitet_avsluttes_etter_stp() {
         // Arrange
@@ -65,7 +63,7 @@ class FastsettSkjæringstidspunktOgStatuserK14Test {
         var bgAktivitetAgg = lagBGAktivitetAggregat(Arrays.asList(lagBGAktivitet(OpptjeningAktivitetType.ARBEID, orgnr, førSTP(200), etterStp(5))));
 
         // Act
-        var resultat = fastsettSkjæringstidspunktOgStatuser.fastsett(bgInput, bgAktivitetAgg, G_VERDIER);
+        var resultat = FastsettSkjæringstidspunktOgStatuserK14.fastsett(bgInput, bgAktivitetAgg, G_VERDIER);
 
         // Assert
         assertStp(resultat, STP_OPPTJENING);
@@ -88,7 +86,7 @@ class FastsettSkjæringstidspunktOgStatuserK14Test {
         var bgAktivitetAgg = lagBGAktivitetAggregat(Arrays.asList(lagBGAktivitet(OpptjeningAktivitetType.ARBEID, orgnr, førSTP(365), førSTP(5))));
 
         // Act
-        var resultat = fastsettSkjæringstidspunktOgStatuser.fastsett(bgInput, bgAktivitetAgg, G_VERDIER);
+        var resultat = FastsettSkjæringstidspunktOgStatuserK14.fastsett(bgInput, bgAktivitetAgg, G_VERDIER);
 
         // Assert
         assertStp(resultat, førSTP(4));
@@ -114,7 +112,7 @@ class FastsettSkjæringstidspunktOgStatuserK14Test {
                 lagBGAktivitet(OpptjeningAktivitetType.MILITÆR_ELLER_SIVILTJENESTE, orgnr, førSTP(365), førSTP(5))));
 
         // Act
-        var resultat = fastsettSkjæringstidspunktOgStatuser.fastsett(bgInput, bgAktivitetAgg, G_VERDIER);
+        var resultat = FastsettSkjæringstidspunktOgStatuserK14.fastsett(bgInput, bgAktivitetAgg, G_VERDIER);
 
         // Assert
         assertStp(resultat, førSTP(14));
@@ -143,7 +141,7 @@ class FastsettSkjæringstidspunktOgStatuserK14Test {
                 lagBGAktivitet(OpptjeningAktivitetType.AAP, orgnr, førSTP(365), etterStp(5))));
 
         // Act
-        var resultat = fastsettSkjæringstidspunktOgStatuser.fastsett(bgInput, bgAktivitetAgg, G_VERDIER);
+        var resultat = FastsettSkjæringstidspunktOgStatuserK14.fastsett(bgInput, bgAktivitetAgg, G_VERDIER);
 
         // Assert
         assertStp(resultat, STP_OPPTJENING);
@@ -166,7 +164,7 @@ class FastsettSkjæringstidspunktOgStatuserK14Test {
         var bgAktivitetAgg = lagBGAktivitetAggregat(Arrays.asList(lagBGAktivitet(OpptjeningAktivitetType.MILITÆR_ELLER_SIVILTJENESTE, null, førSTP(365), førSTP(10))));
 
         // Act
-        var resultat = fastsettSkjæringstidspunktOgStatuser.fastsett(bgInput, bgAktivitetAgg, G_VERDIER);
+        var resultat = FastsettSkjæringstidspunktOgStatuserK14.fastsett(bgInput, bgAktivitetAgg, G_VERDIER);
 
         // Assert
         assertStp(resultat, førSTP(9));
@@ -192,7 +190,7 @@ class FastsettSkjæringstidspunktOgStatuserK14Test {
                 lagBGAktivitet(OpptjeningAktivitetType.FRILANS, null, førSTP(365), førSTP(15))));
 
         // Act
-        var resultat = fastsettSkjæringstidspunktOgStatuser.fastsett(bgInput, bgAktivitetAgg, G_VERDIER);
+        var resultat = FastsettSkjæringstidspunktOgStatuserK14.fastsett(bgInput, bgAktivitetAgg, G_VERDIER);
 
         // Assert
         assertStp(resultat, førSTP(14));
@@ -215,7 +213,7 @@ class FastsettSkjæringstidspunktOgStatuserK14Test {
                 lagBGAktivitet(OpptjeningAktivitetType.FRILANS, null, førSTP(365), førSTP(15))));
 
         // Act
-        var resultat = fastsettSkjæringstidspunktOgStatuser.fastsett(bgInput, bgAktivitetAgg, G_VERDIER);
+        var resultat = FastsettSkjæringstidspunktOgStatuserK14.fastsett(bgInput, bgAktivitetAgg, G_VERDIER);
 
         // Assert
         assertStp(resultat, førSTP(14));
@@ -242,7 +240,7 @@ class FastsettSkjæringstidspunktOgStatuserK14Test {
                 lagBGAktivitet(OpptjeningAktivitetType.ARBEID, orgnr2, førSTP(365), etterStp(15))));
 
         // Act
-        var resultat = fastsettSkjæringstidspunktOgStatuser.fastsett(bgInput, bgAktivitetAgg, G_VERDIER);
+        var resultat = FastsettSkjæringstidspunktOgStatuserK14.fastsett(bgInput, bgAktivitetAgg, G_VERDIER);
 
         // Assert
         assertStp(resultat, STP_OPPTJENING);
@@ -270,7 +268,7 @@ class FastsettSkjæringstidspunktOgStatuserK14Test {
                 lagBGAktivitet(OpptjeningAktivitetType.ARBEID, orgnr1, arbId2, førSTP(365), etterStp(15))));
 
         // Act
-        var resultat = fastsettSkjæringstidspunktOgStatuser.fastsett(bgInput, bgAktivitetAgg, G_VERDIER);
+        var resultat = FastsettSkjæringstidspunktOgStatuserK14.fastsett(bgInput, bgAktivitetAgg, G_VERDIER);
 
         // Assert
         assertStp(resultat, STP_OPPTJENING);
@@ -297,7 +295,7 @@ class FastsettSkjæringstidspunktOgStatuserK14Test {
                 lagBGAktivitet(OpptjeningAktivitetType.NÆRING, null, førSTP(365), førSTP(15))));
 
         // Act
-        var resultat = fastsettSkjæringstidspunktOgStatuser.fastsett(bgInput, bgAktivitetAgg, G_VERDIER);
+        var resultat = FastsettSkjæringstidspunktOgStatuserK14.fastsett(bgInput, bgAktivitetAgg, G_VERDIER);
 
         // Assert
         assertStp(resultat, førSTP(14));
@@ -334,7 +332,7 @@ class FastsettSkjæringstidspunktOgStatuserK14Test {
                 lagBGAktivitet(OpptjeningAktivitetType.MILITÆR_ELLER_SIVILTJENESTE, null, førSTP(365), etterStp(15))));
 
         // Act
-        var resultat = fastsettSkjæringstidspunktOgStatuser.fastsett(bgInput, bgAktivitetAgg, G_VERDIER);
+        var resultat = FastsettSkjæringstidspunktOgStatuserK14.fastsett(bgInput, bgAktivitetAgg, G_VERDIER);
 
         // Assert
         assertStp(resultat, STP_OPPTJENING);
@@ -357,7 +355,7 @@ class FastsettSkjæringstidspunktOgStatuserK14Test {
         var bgAktivitetAgg = lagBGAktivitetAggregat(Arrays.asList(lagBGAktivitet(OpptjeningAktivitetType.ARBEID, orgnr, førSTP(365), førSTP(30))));
 
         // Act
-        var resultat = fastsettSkjæringstidspunktOgStatuser.fastsett(bgInput, bgAktivitetAgg, G_VERDIER);
+        var resultat = FastsettSkjæringstidspunktOgStatuserK14.fastsett(bgInput, bgAktivitetAgg, G_VERDIER);
 
         // Assert
         assertStp(resultat, førSTP(29));

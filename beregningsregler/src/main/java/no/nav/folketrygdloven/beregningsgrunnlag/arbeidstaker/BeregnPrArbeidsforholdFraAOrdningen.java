@@ -27,11 +27,11 @@ class BeregnPrArbeidsforholdFraAOrdningen extends LeafSpecification<Beregningsgr
 
 	static final String ID = "FB_BR 14.3";
 	static final String BESKRIVELSE = "Rapportert inntekt = snitt av mnd-inntekter i beregningsperioden * 12";
-	private BeregningsgrunnlagPrArbeidsforhold arbeidsforhold;
+	private final BeregningsgrunnlagPrArbeidsforhold arbeidsforhold;
 
 	BeregnPrArbeidsforholdFraAOrdningen(BeregningsgrunnlagPrArbeidsforhold arbeidsforhold) {
-		super(ID, BESKRIVELSE);
 		Objects.requireNonNull(arbeidsforhold, "arbeidsforhold");
+		super(ID, BESKRIVELSE);
 		this.arbeidsforhold = arbeidsforhold;
 	}
 

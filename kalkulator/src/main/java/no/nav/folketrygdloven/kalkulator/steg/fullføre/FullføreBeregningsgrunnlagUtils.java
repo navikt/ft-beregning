@@ -16,9 +16,11 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagPeriodeRegelTy
 import no.nav.folketrygdloven.regelmodelloversetter.RegelJsonMapper;
 
 public class FullføreBeregningsgrunnlagUtils {
-
     private static final MapFastsattBeregningsgrunnlagFraRegelTilVL REGEL_TIL_VL = new MapFastsattBeregningsgrunnlagFraRegelTilVL();
 
+    private FullføreBeregningsgrunnlagUtils() {
+        // Skjuler default konstruktør
+    }
 
     public static BeregningsgrunnlagDto mapBeregningsgrunnlagFraRegelTilVL(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.Beregningsgrunnlag beregningsgrunnlagRegel,
                                                                            BeregningsgrunnlagDto beregningsgrunnlag) {

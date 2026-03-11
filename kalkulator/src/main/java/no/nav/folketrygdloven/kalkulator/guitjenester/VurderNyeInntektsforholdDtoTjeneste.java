@@ -32,6 +32,10 @@ import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.Vurder
 
 public class VurderNyeInntektsforholdDtoTjeneste {
 
+    private VurderNyeInntektsforholdDtoTjeneste() {
+        // Skjuler default konstruktør
+    }
+
     public static VurderNyttInntektsforholdDto lagDto(BeregningsgrunnlagGUIInput input) {
 
         if (input.getAvklaringsbehov().stream().noneMatch(a -> a.getDefinisjon().equals(AvklaringsbehovDefinisjon.VURDER_NYTT_INNTKTSFRHLD))) {

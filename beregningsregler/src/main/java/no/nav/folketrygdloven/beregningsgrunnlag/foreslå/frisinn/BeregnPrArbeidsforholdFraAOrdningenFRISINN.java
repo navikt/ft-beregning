@@ -31,11 +31,11 @@ class BeregnPrArbeidsforholdFraAOrdningenFRISINN extends LeafSpecification<Bereg
 	private static final LocalDate NYOPPSTARTET_FL_GRENSE = LocalDate.of(2019, 3, 1);
 	static final String ID = "FRISINN 2.3";
 	static final String BESKRIVELSE = "Rapportert inntekt = snitt av mnd-inntekter i beregningsperioden * 12";
-	private BeregningsgrunnlagPrArbeidsforhold arbeidsforhold;
+	private final BeregningsgrunnlagPrArbeidsforhold arbeidsforhold;
 
 	BeregnPrArbeidsforholdFraAOrdningenFRISINN(BeregningsgrunnlagPrArbeidsforhold arbeidsforhold) {
-		super(ID, BESKRIVELSE);
 		Objects.requireNonNull(arbeidsforhold, "arbeidsforhold");
+		super(ID, BESKRIVELSE);
 		this.arbeidsforhold = arbeidsforhold;
 	}
 

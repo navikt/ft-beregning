@@ -18,8 +18,8 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 
 public class BeregningFaktaOgOverstyringHåndterer {
 
-    public BeregningFaktaOgOverstyringHåndterer() {
-        // For CDI
+    private BeregningFaktaOgOverstyringHåndterer() {
+        // Skjuler default konstruktør
     }
 
     public static BeregningsgrunnlagGrunnlagDto håndter(HåndterBeregningsgrunnlagInput input, FaktaBeregningLagreDto faktaDto) {

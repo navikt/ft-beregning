@@ -6,6 +6,10 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
 
 public class FullføreBeregningsgrunnlagTjenesteVelger {
 
+    private FullføreBeregningsgrunnlagTjenesteVelger() {
+        // Skjuler default konstruktør
+    }
+
     public static FullføreBeregningsgrunnlag utledTjeneste(FagsakYtelseType ytelseType) {
         return switch (ytelseType) {
             case FORELDREPENGER -> new FullføreBeregningsgrunnlagFPImpl();

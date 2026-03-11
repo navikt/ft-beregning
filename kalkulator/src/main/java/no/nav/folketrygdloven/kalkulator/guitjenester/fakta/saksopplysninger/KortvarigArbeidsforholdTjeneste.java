@@ -12,6 +12,10 @@ import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.fakta.
 
 class KortvarigArbeidsforholdTjeneste {
 
+    private KortvarigArbeidsforholdTjeneste() {
+        // Skjuler default konstruktør
+    }
+
     static List<ArbeidsforholdDto> lagKortvarigeArbeidsforhold(BeregningsgrunnlagGUIInput input) {
         var tidsbegrensedeArbeidsforhold = input.getFaktaAggregat().stream()
                 .flatMap(f -> f.getFaktaArbeidsforhold().stream())

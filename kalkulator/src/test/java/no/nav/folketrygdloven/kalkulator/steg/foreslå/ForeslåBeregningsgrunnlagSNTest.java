@@ -47,7 +47,6 @@ class ForeslåBeregningsgrunnlagSNTest {
 
     private KoblingReferanse koblingReferanse = new KoblingReferanseMock(SKJÆRINGSTIDSPUNKT_BEREGNING);
 
-    private TestHjelper testHjelper = new TestHjelper();
     private FortsettForeslåBeregningsgrunnlag fortsettForeslåBeregningsgrunnlag = new FortsettForeslåBeregningsgrunnlag();
 
     @Test
@@ -60,7 +59,7 @@ class ForeslåBeregningsgrunnlagSNTest {
             .medRegisterAktiviteter(beregningAktiviteter)
             .medBeregningsgrunnlag(beregningsgrunnlag);
         var registerBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
-        testHjelper.lagBehandlingForSN(MÅNEDSINNTEKT1.multipliser(12), 2014, registerBuilder);
+        TestHjelper.lagBehandlingForSN(MÅNEDSINNTEKT1.multipliser(12), 2014, registerBuilder);
         Collection<InntektsmeldingDto> inntektsmeldinger = List.of();
         var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.oppdatere(Optional.empty())
             .medData(registerBuilder)

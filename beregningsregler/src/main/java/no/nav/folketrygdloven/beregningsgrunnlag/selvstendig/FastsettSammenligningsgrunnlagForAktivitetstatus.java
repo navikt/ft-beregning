@@ -26,10 +26,10 @@ public class FastsettSammenligningsgrunnlagForAktivitetstatus extends LeafSpecif
 	private final AktivitetStatus aktivitetStatus;
 
     public FastsettSammenligningsgrunnlagForAktivitetstatus(AktivitetStatus aktivitetStatus) {
-        super(ID, BESKRIVELSE);
 	    if (!AktivitetStatus.SN.equals(aktivitetStatus) && !AktivitetStatus.BA.equals(aktivitetStatus)) {
 		    throw new IllegalArgumentException("Kan ikke beregne avvik for aktivitetstatus " + aktivitetStatus);
 	    }
+        super(ID, BESKRIVELSE);
 		this.aktivitetStatus = aktivitetStatus;
     }
 

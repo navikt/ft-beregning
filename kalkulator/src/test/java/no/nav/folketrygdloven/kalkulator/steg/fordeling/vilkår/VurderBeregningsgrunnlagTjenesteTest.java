@@ -46,8 +46,6 @@ class VurderBeregningsgrunnlagTjenesteTest {
     private static final LocalDate SKJÆRINGSTIDSPUNKT_OPPTJENING = LocalDate.of(2018, Month.MAY, 10);
     private static final LocalDate SKJÆRINGSTIDSPUNKT_BEREGNING = SKJÆRINGSTIDSPUNKT_OPPTJENING;
 
-    private TestHjelper testHjelper = new TestHjelper();
-
     private Collection<InntektsmeldingDto> inntektsmeldinger = List.of();
 
     private KoblingReferanse koblingReferanse = new KoblingReferanseMock(SKJÆRINGSTIDSPUNKT_BEREGNING);
@@ -66,7 +64,7 @@ class VurderBeregningsgrunnlagTjenesteTest {
         var grunnlag = grunnlagDtoBuilder
                 .build(BeregningsgrunnlagTilstand.FORESLÅTT);
         var registerBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
-        testHjelper.lagBehandlingForSN(MÅNEDSINNTEKT1.multipliser(12), 2015, registerBuilder);
+        TestHjelper.lagBehandlingForSN(MÅNEDSINNTEKT1.multipliser(12), 2015, registerBuilder);
         var ref = lagReferanseMedSkjæringstidspunkt(koblingReferanse);
         var iayGrunnlagBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
         var iayGrunnlag = iayGrunnlagBuilder.medData(registerBuilder).medInntektsmeldinger(inntektsmeldinger).build();
@@ -101,7 +99,7 @@ class VurderBeregningsgrunnlagTjenesteTest {
         var grunnlag = grunnlagDtoBuilder
                 .build(BeregningsgrunnlagTilstand.FORESLÅTT);
         var registerBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
-        testHjelper.lagBehandlingForSN(MÅNEDSINNTEKT1.multipliser(12), 2015, registerBuilder);
+        TestHjelper.lagBehandlingForSN(MÅNEDSINNTEKT1.multipliser(12), 2015, registerBuilder);
 
         var ref = lagReferanseMedSkjæringstidspunkt(koblingReferanse);
         var iayGrunnlagBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();

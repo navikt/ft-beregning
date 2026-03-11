@@ -36,13 +36,7 @@ class BeregningFaktaOgOverstyringHåndtererTest {
 
     private static final LocalDate STP = LocalDate.of(2019, 1, 1);
 
-    private BeregningFaktaOgOverstyringHåndterer beregningFaktaOgOverstyringHåndterer;
-    private KoblingReferanse koblingReferanse = new KoblingReferanseMock(STP);
-
-    @BeforeEach
-    void setup() {
-        this.beregningFaktaOgOverstyringHåndterer = new BeregningFaktaOgOverstyringHåndterer();
-    }
+    private final KoblingReferanse koblingReferanse = new KoblingReferanseMock(STP);
 
     @Test
     void skal_sette_inntekt_for_en_andel_i_en_periode() {
@@ -55,7 +49,7 @@ class BeregningFaktaOgOverstyringHåndtererTest {
 	    var håndterBeregningsgrunnlagInput = new HåndterBeregningsgrunnlagInput(input, BeregningsgrunnlagTilstand.KOFAKBER_UT);
 
         // Act
-	    var nyttGrunnlag = beregningFaktaOgOverstyringHåndterer.håndterMedOverstyring(håndterBeregningsgrunnlagInput, overstyrDto);
+	    var nyttGrunnlag = BeregningFaktaOgOverstyringHåndterer.håndterMedOverstyring(håndterBeregningsgrunnlagInput, overstyrDto);
 
         // Assert
 	    var nyttBg = nyttGrunnlag.getBeregningsgrunnlagHvisFinnes();
@@ -84,7 +78,7 @@ class BeregningFaktaOgOverstyringHåndtererTest {
 	    var håndterBeregningsgrunnlagInput = new HåndterBeregningsgrunnlagInput(input, BeregningsgrunnlagTilstand.KOFAKBER_UT);
 
         // Act
-	    var nyttGrunnlag = beregningFaktaOgOverstyringHåndterer.håndterMedOverstyring(håndterBeregningsgrunnlagInput, overstyrDto);
+	    var nyttGrunnlag = BeregningFaktaOgOverstyringHåndterer.håndterMedOverstyring(håndterBeregningsgrunnlagInput, overstyrDto);
 
         // Assert
 	    var nyttBg = nyttGrunnlag.getBeregningsgrunnlagHvisFinnes();
@@ -113,7 +107,7 @@ class BeregningFaktaOgOverstyringHåndtererTest {
 	    var håndterBeregningsgrunnlagInput = new HåndterBeregningsgrunnlagInput(input, BeregningsgrunnlagTilstand.KOFAKBER_UT);
 
         // Act
-	    var nyttGrunnlag = beregningFaktaOgOverstyringHåndterer.håndterMedOverstyring(håndterBeregningsgrunnlagInput, overstyrDto);
+	    var nyttGrunnlag = BeregningFaktaOgOverstyringHåndterer.håndterMedOverstyring(håndterBeregningsgrunnlagInput, overstyrDto);
 
         // Assert
 	    var nyttBg = nyttGrunnlag.getBeregningsgrunnlagHvisFinnes();

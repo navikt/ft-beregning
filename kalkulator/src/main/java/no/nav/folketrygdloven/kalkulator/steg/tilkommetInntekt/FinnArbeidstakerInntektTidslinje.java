@@ -21,6 +21,9 @@ import no.nav.fpsak.tidsserie.StandardCombinators;
 // Lar denne ligge her enn så lenge i tilfelle det er noko vi skal ta i bruk som forbedring på tilkommet inntekt
 class FinnArbeidstakerInntektTidslinje {
 
+    private FinnArbeidstakerInntektTidslinje() {
+        // Skjuler default konstruktør
+    }
 
     /**
      * Lager tidslinje over periode der arbeidsfohold fra en arbeidsgiver anses å vere aktivt sett i kontekst av inntekt.

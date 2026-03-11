@@ -34,6 +34,10 @@ import no.nav.folketrygdloven.kalkulus.typer.AktørId;
 public final class PeriodiserOgFastsettRefusjonTjeneste {
 	private static final int MÅNEDER_I_ÅR = 12;
 
+    private PeriodiserOgFastsettRefusjonTjeneste() {
+        // Skjuler default konstruktør
+    }
+
     /**
      * @param beregningsgrunnlagDto - beregningsgrunnlaget som skal splittes.
      * @param andeler               - overstyringer avklart av saksbehandler som skal brukes til å bestemme splitten.

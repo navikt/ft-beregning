@@ -24,9 +24,6 @@ public class TestHjelper {
 
     static final LocalDate SKJÆRINGSTIDSPUNKT_OPPTJENING = LocalDate.of(2018, Month.APRIL, 10);
 
-    public TestHjelper() {
-    }
-
     private static InntektsmeldingDto lagInntektsmelding(Beløp beløp,
                                                   Arbeidsgiver arbeidsgiver,
                                                   Beløp refusjonskrav, NaturalYtelseDto naturalYtelse) {

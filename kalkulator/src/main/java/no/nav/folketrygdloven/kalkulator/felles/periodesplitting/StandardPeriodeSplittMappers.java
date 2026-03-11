@@ -11,6 +11,10 @@ import no.nav.fpsak.tidsserie.LocalDateTimeline;
 
 public class StandardPeriodeSplittMappers {
 
+    private StandardPeriodeSplittMappers() {
+        // Skjuler default konstruktør
+    }
+
     public static <V> BiFunction<LocalDateTimeline<BeregningsgrunnlagPeriodeDto>,LocalDateTimeline<V>,  LocalDateTimeline<BeregningsgrunnlagPeriodeDto>> settAvsluttetPeriodeårsak(List<Intervall> forlengelseperioder, PeriodeÅrsak avsluttetPeriodeårsak) {
 
         return (tidslinje, nyePerioderTidslinje) -> settAvsluttetPeriodeårsakMapper(nyePerioderTidslinje, forlengelseperioder, avsluttetPeriodeårsak, tidslinje);

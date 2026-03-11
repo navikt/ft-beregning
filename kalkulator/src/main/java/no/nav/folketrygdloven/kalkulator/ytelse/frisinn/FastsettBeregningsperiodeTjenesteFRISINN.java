@@ -12,6 +12,10 @@ import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 
 public class FastsettBeregningsperiodeTjenesteFRISINN {
 
+    private FastsettBeregningsperiodeTjenesteFRISINN() {
+        // Skjuler default konstruktør
+    }
+
     public static BeregningsgrunnlagDto fastsettBeregningsperiode(BeregningsgrunnlagDto beregningsgrunnlag,
                                                            InntektArbeidYtelseGrunnlagDto inntektArbeidYtelseGrunnlag,
                                                            Collection<InntektsmeldingDto> inntektsmeldinger) {

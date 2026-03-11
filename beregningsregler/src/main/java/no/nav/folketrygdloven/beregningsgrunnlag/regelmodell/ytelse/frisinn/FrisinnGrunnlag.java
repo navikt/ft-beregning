@@ -14,10 +14,10 @@ public class FrisinnGrunnlag extends YtelsesSpesifiktGrunnlag {
     private LocalDate skjæringstidspunktOpptjening;
 
     public FrisinnGrunnlag(List<FrisinnPeriode> frisinnPerioder, List<Periode> søknadsperioder, LocalDate skjæringstidspunktOpptjening) {
-        super("FRISINN");
         Objects.requireNonNull(frisinnPerioder, "frisinnPerioder");
         Objects.requireNonNull(skjæringstidspunktOpptjening, "skjæringstidspunktOpptjening");
         Objects.requireNonNull(søknadsperioder, "søknadsperioder");
+        super("FRISINN");
         this.søknadsperioder = søknadsperioder;
         this.frisinnPerioder = frisinnPerioder;
         this.skjæringstidspunktOpptjening = skjæringstidspunktOpptjening;

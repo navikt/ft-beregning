@@ -20,6 +20,10 @@ import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.NyPeri
  */
 class NyAktivitetMedSøktYtelseFordeling {
 
+    private NyAktivitetMedSøktYtelseFordeling() {
+        // Skjuler default konstruktør
+    }
+
     static List<NyPeriodeDto> lagPerioderForNyAktivitetMedSøktYtelse(YtelsespesifiktGrunnlag ytelsespesifiktGrunnlag,
                                                                      FordelingTilfelle tilfelle,
                                                                      BeregningsgrunnlagPrStatusOgAndelDto andel,

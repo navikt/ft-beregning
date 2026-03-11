@@ -37,7 +37,6 @@ class FastsettBesteberegningFødendeKvinneOppdatererTest {
     private final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.now();
     private final Beløp GRUNNBELØP = Beløp.fra(600000);
 
-    private FastsettBesteberegningFødendeKvinneOppdaterer fastsettBesteberegningFødendeKvinneOppdaterer;
     private BeregningsgrunnlagDto beregningsgrunnlag;
     private BeregningsgrunnlagPrStatusOgAndelDto dagpengeAndel;
     private BeregningsgrunnlagPrStatusOgAndelDto arbeidstakerAndel;
@@ -47,7 +46,6 @@ class FastsettBesteberegningFødendeKvinneOppdatererTest {
 
     @BeforeEach
     void setup() {
-        fastsettBesteberegningFødendeKvinneOppdaterer = new FastsettBesteberegningFødendeKvinneOppdaterer();
         beregningsgrunnlag = BeregningsgrunnlagDto.builder()
             .medGrunnbeløp(GRUNNBELØP)
             .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT)
@@ -85,7 +83,7 @@ class FastsettBesteberegningFødendeKvinneOppdatererTest {
 
         // Act);
         var builder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
-        fastsettBesteberegningFødendeKvinneOppdaterer.oppdater(dto, Optional.empty(), builder);
+        FastsettBesteberegningFødendeKvinneOppdaterer.oppdater(dto, Optional.empty(), builder);
 
         // Assert
         assertThat(dagpengeAndel.getBesteberegningPrÅr()).isEqualByComparingTo(Beløp.fra(dagpengerBeregnet*12));
@@ -111,7 +109,7 @@ class FastsettBesteberegningFødendeKvinneOppdatererTest {
 
         // Act
         var builder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
-        fastsettBesteberegningFødendeKvinneOppdaterer.oppdater(dto, Optional.empty(), builder);
+        FastsettBesteberegningFødendeKvinneOppdaterer.oppdater(dto, Optional.empty(), builder);
 
         // Assert
         var dpAndel = bg.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().stream()
@@ -148,7 +146,7 @@ class FastsettBesteberegningFødendeKvinneOppdatererTest {
 
         // Act
         var builder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
-        fastsettBesteberegningFødendeKvinneOppdaterer.oppdater(dto, Optional.of(beregningsgrunnlag), builder);
+        FastsettBesteberegningFødendeKvinneOppdaterer.oppdater(dto, Optional.of(beregningsgrunnlag), builder);
 
         // Assert
         var dpAndel = nyttBg.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().stream().filter(andel -> andel.erLagtTilAvSaksbehandler())

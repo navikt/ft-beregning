@@ -11,6 +11,10 @@ import no.nav.fpsak.tidsserie.LocalDateTimeline;
 
 public class ForlengelsePeriodeTjeneste {
 
+    private ForlengelsePeriodeTjeneste() {
+        // Skjuler default konstruktør
+    }
+
     public static BeregningsgrunnlagDto splittVedStartAvForlengelse(BeregningsgrunnlagInput input, BeregningsgrunnlagDto beregningsgrunnlag) {
         if (!input.getForlengelseperioder().isEmpty()) {
             var forlengelseSegmenter = input.getForlengelseperioder().stream()

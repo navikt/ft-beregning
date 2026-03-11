@@ -7,8 +7,8 @@ public class AktivitetStatusMedHjemmel implements Comparable<AktivitetStatusMedH
     private BeregningsgrunnlagHjemmel hjemmel;
 
     public AktivitetStatusMedHjemmel(AktivitetStatus aktivitetStatus, BeregningsgrunnlagHjemmel hjemmel) {
-        super();
         Objects.requireNonNull(aktivitetStatus, "aktivitetStatus");
+        super();
         this.aktivitetStatus = aktivitetStatus;
         this.hjemmel = hjemmel;
     }

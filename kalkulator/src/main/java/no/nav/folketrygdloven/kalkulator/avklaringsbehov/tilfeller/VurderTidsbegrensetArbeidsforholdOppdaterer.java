@@ -6,6 +6,10 @@ import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.Beregningsgru
 
 public class VurderTidsbegrensetArbeidsforholdOppdaterer {
 
+    private VurderTidsbegrensetArbeidsforholdOppdaterer() {
+        // Skjuler default konstruktør
+    }
+
     public static void oppdater(FaktaBeregningLagreDto dto, BeregningsgrunnlagGrunnlagDtoBuilder grunnlagBuilder) {
         var tidsbegrensetDto = dto.getVurderTidsbegrensetArbeidsforhold();
         var faktaAggregatBuilder = grunnlagBuilder.getFaktaAggregatBuilder();

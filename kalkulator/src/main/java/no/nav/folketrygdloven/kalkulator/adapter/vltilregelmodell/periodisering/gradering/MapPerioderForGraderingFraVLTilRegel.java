@@ -19,6 +19,10 @@ import no.nav.folketrygdloven.kalkulator.modell.iay.YrkesaktivitetFilterDto;
 
 public class MapPerioderForGraderingFraVLTilRegel {
 
+    private MapPerioderForGraderingFraVLTilRegel() {
+        // Skjuler default konstruktør
+    }
+
     public static PeriodeModellGradering map(BeregningsgrunnlagInput input,
                                              BeregningsgrunnlagDto beregningsgrunnlag) {
         var iayGrunnlag = input.getIayGrunnlag();

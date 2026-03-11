@@ -59,7 +59,6 @@ class FortsettForeslåBeregningsgrunnlagTest {
     private static final LocalDate ARBEIDSPERIODE_FOM = SKJÆRINGSTIDSPUNKT_OPPTJENING.minusYears(1);
     private static final LocalDate ARBEIDSPERIODE_TOM = SKJÆRINGSTIDSPUNKT_OPPTJENING.plusYears(2);
     private final KoblingReferanse koblingReferanse = new KoblingReferanseMock(SKJÆRINGSTIDSPUNKT_BEREGNING);
-    private final TestHjelper testHjelper = new TestHjelper();
     private InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlagBuilder;
     private final FortsettForeslåBeregningsgrunnlag fortsettForeslåBeregningsgrunnlag = new FortsettForeslåBeregningsgrunnlag();
 
@@ -129,7 +128,7 @@ class FortsettForeslåBeregningsgrunnlagTest {
     void skalGiEittAvklaringsbehovForSNNyIArbeidslivetOgKortvarigArbeidsforhold() {
         // Arrange
         var nyttGrunnlag = lagBeregningsgrunnlagATFL_SN();
-        var register = testHjelper.initBehandlingFor_AT_SN(MÅNEDSINNTEKT1.multipliser(12),
+        var register = TestHjelper.initBehandlingFor_AT_SN(MÅNEDSINNTEKT1.multipliser(12),
                 2014, SKJÆRINGSTIDSPUNKT_BEREGNING, ARBEIDSFORHOLD_ORGNR1,
                 MÅNEDSINNTEKT1, MÅNEDSINNTEKT1,
                 iayGrunnlagBuilder);

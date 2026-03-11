@@ -24,8 +24,8 @@ class BeregnFraYtelsevedtak extends LeafSpecification<BeregningsgrunnlagPeriode>
 	private final BeregningsgrunnlagPrStatus statusandel;
 
 	BeregnFraYtelsevedtak(BeregningsgrunnlagPrStatus statusandel) {
-		super(ID, BESKRIVELSE);
 		Objects.requireNonNull(statusandel, "statusandel");
+		super(ID, BESKRIVELSE);
 		this.statusandel = statusandel;
 
 	}

@@ -24,6 +24,9 @@ import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto
  */
 public class MapNaturalytelserFraVLTilRegel {
 
+    private MapNaturalytelserFraVLTilRegel() {
+        // Skjuler default konstruktør
+    }
 
     public static PeriodeModellNaturalytelse map(BeregningsgrunnlagInput input,
                                                  BeregningsgrunnlagDto beregningsgrunnlag) {

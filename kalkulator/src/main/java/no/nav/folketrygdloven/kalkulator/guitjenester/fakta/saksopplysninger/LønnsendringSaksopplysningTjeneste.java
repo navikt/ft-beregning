@@ -28,6 +28,10 @@ import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.fakta.
  */
 public class LønnsendringSaksopplysningTjeneste {
 
+    private LønnsendringSaksopplysningTjeneste() {
+        // Skjuler default konstruktør
+    }
+
     /**
      * Lager liste med dtoer for lønnsendring pr arbeidsforhold
      *

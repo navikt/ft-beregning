@@ -9,8 +9,8 @@ public class FrisinnGrunnlag extends YtelsesSpesifiktGrunnlag {
 	private final List<FrisinnPeriode> frisinnPerioder;
 
 	public FrisinnGrunnlag(List<FrisinnPeriode> frisinnPerioder) {
-		super("FRISINN");
 		Objects.requireNonNull(frisinnPerioder, "frisinnPerioder");
+		super("FRISINN");
 		this.frisinnPerioder = frisinnPerioder;
 	}
 

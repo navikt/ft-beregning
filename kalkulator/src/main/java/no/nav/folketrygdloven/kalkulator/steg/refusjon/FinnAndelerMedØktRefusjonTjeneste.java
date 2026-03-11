@@ -27,6 +27,10 @@ import no.nav.folketrygdloven.kalkulator.steg.refusjon.modell.RefusjonAndel;
 
 public class FinnAndelerMedØktRefusjonTjeneste {
 
+    private FinnAndelerMedØktRefusjonTjeneste() {
+        // Skjuler default konstruktør
+    }
+
     public static List<RefusjonAndel> finnAndelerPåSammeNøkkelMedØktRefusjon (List<RefusjonAndel> alleRevurderingAndeler, List<RefusjonAndel> alleOriginaleAndeler) {
         var finnesSpesifikkReferanse = alleRevurderingAndeler.stream().anyMatch(andel -> andel.getArbeidsforholdRef().gjelderForSpesifiktArbeidsforhold());
         var finnesGenerellReferanse = alleRevurderingAndeler.stream().anyMatch(andel -> !andel.getArbeidsforholdRef().gjelderForSpesifiktArbeidsforhold());
