@@ -27,8 +27,11 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.frisinn.Avslagsårsak;
 
 public class MapTilAvslagsårsakerFRISINN {
-
     private static final BigDecimal ANTALL_G_FOR_OPPFYLT_VILKÅR = BigDecimal.valueOf(0.75);
+
+    private MapTilAvslagsårsakerFRISINN() {
+        // Skjuler default konstruktør
+    }
 
     public static Optional<Avslagsårsak> map(BeregningsgrunnlagPrStatusOgAndelDto andel,
                                              List<BeregningsgrunnlagPrStatusOgAndelDto> andelerISammePeriode,

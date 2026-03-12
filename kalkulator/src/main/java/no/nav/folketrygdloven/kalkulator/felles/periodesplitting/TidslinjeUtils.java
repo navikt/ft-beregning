@@ -8,9 +8,11 @@ import no.nav.fpsak.tidsserie.LocalDateTimeline;
 
 public class TidslinjeUtils {
 
+    private TidslinjeUtils() {
+        // Skjuler default konstruktør
+    }
+
     public static LocalDateTimeline<Boolean> opprettTidslinje(List<Intervall> perioder) {
         return new LocalDateTimeline<>(perioder.stream().map(p -> new LocalDateSegment<>(p.getFomDato(), p.getTomDato(), Boolean.TRUE)).toList());
     }
-
-
 }

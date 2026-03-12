@@ -33,6 +33,10 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.UttakArbeidType;
 
 public class MapPerioderForUtbetalingsgradFraVLTilRegel {
 
+    private MapPerioderForUtbetalingsgradFraVLTilRegel() {
+        // Skjuler default konstruktør
+    }
+
     public static PeriodeModellUtbetalingsgrad map(BeregningsgrunnlagInput input,
                                                    BeregningsgrunnlagDto beregningsgrunnlag) {
         var iayGrunnlag = input.getIayGrunnlag();

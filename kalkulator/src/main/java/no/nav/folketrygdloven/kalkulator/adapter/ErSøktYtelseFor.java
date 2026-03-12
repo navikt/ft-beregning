@@ -17,6 +17,10 @@ import no.nav.folketrygdloven.kalkulator.tid.Intervall;
  */
 public class ErSøktYtelseFor {
 
+    private ErSøktYtelseFor() {
+        // Skjuler default konstruktør
+    }
+
 	public static boolean erSøktYtelseFor(BeregningsgrunnlagPrStatusOgAndelDto bgAndel, Intervall periode, YtelsespesifiktGrunnlag ytelsespesifiktGrunnlag, boolean skalIgnorereIkkeYrkesaktivStatus) {
 		return harOverNullProsentUtbetalingsgrad(finnUtbetalingsgradForAndel(bgAndel, periode, ytelsespesifiktGrunnlag, skalIgnorereIkkeYrkesaktivStatus)) ||
 				harMindreEnnHundreProsentAktivitetsgrad(finnAktivitetsgradForAndel(bgAndel, periode, ytelsespesifiktGrunnlag, skalIgnorereIkkeYrkesaktivStatus));

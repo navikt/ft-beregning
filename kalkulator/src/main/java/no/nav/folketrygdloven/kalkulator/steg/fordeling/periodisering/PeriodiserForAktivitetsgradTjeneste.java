@@ -23,6 +23,10 @@ import no.nav.fpsak.tidsserie.LocalDateTimeline;
 
 public class PeriodiserForAktivitetsgradTjeneste {
 
+    private PeriodiserForAktivitetsgradTjeneste() {
+        // Skjuler default konstruktør
+    }
+
     public static BeregningsgrunnlagDto splittVedEndringIAktivitetsgrad(BeregningsgrunnlagDto beregningsgrunnlag, YtelsespesifiktGrunnlag ytelsespesifiktGrunnlag) {
 
         if (ytelsespesifiktGrunnlag instanceof UtbetalingsgradGrunnlag utbetalingsgradGrunnlag) {

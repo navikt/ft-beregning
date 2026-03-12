@@ -11,8 +11,11 @@ import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.ArbeidType;
 
 public class AvklaringsbehovUtlederRepresentererStortinget {
-
     public static final String STORTINGET = "874707112";
+
+    private AvklaringsbehovUtlederRepresentererStortinget() {
+        // Skjuler default konstruktør
+    }
 
     public static boolean skalVurderePeriodeForStortingsrepresentasjon(BeregningsgrunnlagGrunnlagDto beregningsgrunnlagGrunnlag,
                                                                        InntektArbeidYtelseGrunnlagDto iayGrunnlag,

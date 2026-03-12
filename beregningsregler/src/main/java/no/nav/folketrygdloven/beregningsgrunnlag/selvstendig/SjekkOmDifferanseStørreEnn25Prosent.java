@@ -15,10 +15,10 @@ public class SjekkOmDifferanseStørreEnn25Prosent extends LeafSpecification<Bere
 	private final AktivitetStatus aktivitetStatus;
 
 	public SjekkOmDifferanseStørreEnn25Prosent(AktivitetStatus aktivitetStatus) {
-		super(ID, NAVN);
 		if (!AktivitetStatus.SN.equals(aktivitetStatus) && !AktivitetStatus.BA.equals(aktivitetStatus)) {
 			throw new IllegalArgumentException("Kan ikke beregne avvik for aktivitetstatus " + aktivitetStatus);
 		}
+		super(ID, NAVN);
 		this.aktivitetStatus = aktivitetStatus;
 	}
 

@@ -21,6 +21,10 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.AndelKilde;
 
 public class MapFraFordelingsmodell {
 
+    private MapFraFordelingsmodell() {
+        // Skjuler default konstruktør
+    }
+
     public static BeregningsgrunnlagDto map(List<FordelPeriodeModell> regelperioder,
                                             List<RegelResultat> regelResultater,
                                             BeregningsgrunnlagDto eksisterendeBG) {

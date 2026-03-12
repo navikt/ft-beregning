@@ -85,7 +85,6 @@ class ForeslåBeregningsgrunnlagTest {
     private KoblingReferanse koblingReferanse = new KoblingReferanseMock(SKJÆRINGSTIDSPUNKT_BEREGNING);
     private AktørId beregningsAkrød1 = AktørId.dummy();
     private BeregningsgrunnlagDto beregningsgrunnlag;
-    private TestHjelper testHjelper = new TestHjelper();
     private InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlagBuilder;
     private ForeslåBeregningsgrunnlag foreslåBeregningsgrunnlag = new ForeslåBeregningsgrunnlag();
 
@@ -140,14 +139,14 @@ class ForeslåBeregningsgrunnlagTest {
 
         var inntektArbeidYtelseBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
 
-        testHjelper.lagAktørArbeid(inntektArbeidYtelseBuilder, arbeidsgiver, fraOgMed, ArbeidType.ORDINÆRT_ARBEIDSFORHOLD);
-        testHjelper.lagAktørArbeid(inntektArbeidYtelseBuilder, Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR2), fraOgMed,
+        TestHjelper.lagAktørArbeid(inntektArbeidYtelseBuilder, arbeidsgiver, fraOgMed, ArbeidType.ORDINÆRT_ARBEIDSFORHOLD);
+        TestHjelper.lagAktørArbeid(inntektArbeidYtelseBuilder, Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR2), fraOgMed,
                 ArbeidType.ORDINÆRT_ARBEIDSFORHOLD);
 
         for (var dt = fraOgMed; dt.isBefore(tilOgMed); dt = dt.plusMonths(1)) {
-            testHjelper.lagInntektForSammenligning(inntektArbeidYtelseBuilder, dt, dt.plusMonths(1), inntektSammenligningsgrunnlag,
+            TestHjelper.lagInntektForSammenligning(inntektArbeidYtelseBuilder, dt, dt.plusMonths(1), inntektSammenligningsgrunnlag,
                     arbeidsgiver);
-            testHjelper.lagInntektForArbeidsforhold(inntektArbeidYtelseBuilder, dt, dt.plusMonths(1), inntektBeregningsgrunnlag,
+            TestHjelper.lagInntektForArbeidsforhold(inntektArbeidYtelseBuilder, dt, dt.plusMonths(1), inntektBeregningsgrunnlag,
                     arbeidsgiver);
         }
         iayGrunnlagBuilder.medData(inntektArbeidYtelseBuilder);
@@ -158,7 +157,7 @@ class ForeslåBeregningsgrunnlagTest {
         var fraOgMed = MINUS_YEARS_1.withDayOfMonth(1);
         var tilOgMed = fraOgMed.plusYears(1);
         var registerBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(iayGrunnlagBuilder.getKladd().getRegisterVersjon(), VersjonTypeDto.REGISTER);
-        testHjelper.initBehandlingFL(inntektSammenligningsgrunnlag, inntektFrilans, virksomhetOrgnr, fraOgMed, tilOgMed, registerBuilder);
+        TestHjelper.initBehandlingFL(inntektSammenligningsgrunnlag, inntektFrilans, virksomhetOrgnr, fraOgMed, tilOgMed, registerBuilder);
         iayGrunnlagBuilder.medData(registerBuilder);
     }
 
@@ -194,7 +193,7 @@ class ForeslåBeregningsgrunnlagTest {
         // Arrange
         lagBehandling(MÅNEDSINNTEKT1, MÅNEDSINNTEKT1,
                 Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR1), MINUS_YEARS_1.withDayOfMonth(1), MINUS_YEARS_1.withDayOfMonth(1).plusYears(2), iayGrunnlagBuilder);
-        var im1 = testHjelper.opprettInntektsmeldingMedRefusjonskrav(Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR1), MÅNEDSINNTEKT1.adder(Beløp.fra(1000)), null, null);
+        var im1 = TestHjelper.opprettInntektsmeldingMedRefusjonskrav(Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR1), MÅNEDSINNTEKT1.adder(Beløp.fra(1000)), null, null);
         var inntektsmeldinger = List.of(im1);
         // Act
         var resultat = act(beregningsgrunnlag, inntektsmeldinger, (FaktaAggregatDto) null);
@@ -558,7 +557,7 @@ class ForeslåBeregningsgrunnlagTest {
         var inntektSammenligningsgrunnlag = MÅNEDSINNTEKT1.multipliser(2);
         lagBehandling(inntektSammenligningsgrunnlag, inntektBeregnet,
                 Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR1), MINUS_YEARS_2.withDayOfMonth(1), MINUS_YEARS_1.withDayOfMonth(1).plusYears(2), iayGrunnlagBuilder);
-        var im1 = testHjelper.opprettInntektsmeldingMedRefusjonskrav(Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR1),
+        var im1 = TestHjelper.opprettInntektsmeldingMedRefusjonskrav(Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR1),
                 inntektBeregnet, null, inntektBeregnet);
         var inntektsmeldinger = List.of(im1);
         // Act
@@ -583,7 +582,7 @@ class ForeslåBeregningsgrunnlagTest {
         var inntektSammenligningsgrunnlag = Beløp.fra(40_000);
         lagBehandling(inntektSammenligningsgrunnlag, inntektBeregnet,
                 Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR1), MINUS_YEARS_2.withDayOfMonth(1), MINUS_YEARS_1.withDayOfMonth(1).plusYears(2), iayGrunnlagBuilder);
-        var im1 = testHjelper.opprettInntektsmeldingMedRefusjonskrav(Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR1),
+        var im1 = TestHjelper.opprettInntektsmeldingMedRefusjonskrav(Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR1),
                 inntektBeregnet, null, refusjon);
         var inntektsmeldinger = List.of(im1);
         // Act
@@ -608,7 +607,7 @@ class ForeslåBeregningsgrunnlagTest {
         var inntektSammenligningsgrunnlag = Beløp.fra(40_000);
         lagBehandling(inntektSammenligningsgrunnlag, inntektBeregnet,
                 Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR1), MINUS_YEARS_2.withDayOfMonth(1), MINUS_YEARS_1.withDayOfMonth(1).plusYears(2), iayGrunnlagBuilder);
-        var im1 = testHjelper.opprettInntektsmeldingMedRefusjonskrav(Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR1),
+        var im1 = TestHjelper.opprettInntektsmeldingMedRefusjonskrav(Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR1),
                 inntektBeregnet, null, refusjon);
         var inntektsmeldinger = List.of(im1);
         // Act
@@ -664,11 +663,11 @@ class ForeslåBeregningsgrunnlagTest {
         var inntektSammenligningsgrunnlag = MÅNEDSINNTEKT1.multipliser(2);
 
         var inntektArbeidYtelseBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
-        testHjelper.lagAktørArbeid(inntektArbeidYtelseBuilder, Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR1), MINUS_YEARS_2.withDayOfMonth(1), ArbeidType.FRILANSER_OPPDRAGSTAKER);
+        TestHjelper.lagAktørArbeid(inntektArbeidYtelseBuilder, Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR1), MINUS_YEARS_2.withDayOfMonth(1), ArbeidType.FRILANSER_OPPDRAGSTAKER);
         for (var dt = MINUS_YEARS_2.withDayOfMonth(1); dt.isBefore(MINUS_YEARS_1.withDayOfMonth(1).plusYears(2)); dt = dt.plusMonths(1)) {
-            testHjelper.lagInntektForSammenligning(inntektArbeidYtelseBuilder, dt, dt.plusMonths(1), inntektSammenligningsgrunnlag,
+            TestHjelper.lagInntektForSammenligning(inntektArbeidYtelseBuilder, dt, dt.plusMonths(1), inntektSammenligningsgrunnlag,
                     Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR1));
-            testHjelper.lagInntektForArbeidsforhold(inntektArbeidYtelseBuilder, dt, dt.plusMonths(1), inntektBeregnet,
+            TestHjelper.lagInntektForArbeidsforhold(inntektArbeidYtelseBuilder, dt, dt.plusMonths(1), inntektBeregnet,
                     Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR1));
         }
         iayGrunnlagBuilder.medData(inntektArbeidYtelseBuilder);
@@ -704,25 +703,25 @@ class ForeslåBeregningsgrunnlagTest {
 
         var inntektArbeidYtelseBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
 
-        testHjelper.lagAktørArbeid(inntektArbeidYtelseBuilder, Arbeidsgiver1, fraOgMed, ArbeidType.ORDINÆRT_ARBEIDSFORHOLD);
-        testHjelper.lagAktørArbeid(inntektArbeidYtelseBuilder, Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR2), fraOgMed,
+        TestHjelper.lagAktørArbeid(inntektArbeidYtelseBuilder, Arbeidsgiver1, fraOgMed, ArbeidType.ORDINÆRT_ARBEIDSFORHOLD);
+        TestHjelper.lagAktørArbeid(inntektArbeidYtelseBuilder, Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR2), fraOgMed,
                 ArbeidType.ORDINÆRT_ARBEIDSFORHOLD);
 
         for (var dt = fraOgMed; dt.isBefore(tilOgMed); dt = dt.plusMonths(1)) {
-            testHjelper.lagInntektForSammenligning(inntektArbeidYtelseBuilder, dt, dt.plusMonths(1), inntektSammenligningsgrunnlagArbeidsgiver1,
+            TestHjelper.lagInntektForSammenligning(inntektArbeidYtelseBuilder, dt, dt.plusMonths(1), inntektSammenligningsgrunnlagArbeidsgiver1,
                     Arbeidsgiver1);
-            testHjelper.lagInntektForArbeidsforhold(inntektArbeidYtelseBuilder, dt, dt.plusMonths(1), inntektBeregnetArbeidsgiver1,
+            TestHjelper.lagInntektForArbeidsforhold(inntektArbeidYtelseBuilder, dt, dt.plusMonths(1), inntektBeregnetArbeidsgiver1,
                     Arbeidsgiver1);
         }
         for (var dt = fraOgMed; dt.isBefore(tilOgMed); dt = dt.plusMonths(1)) {
-            testHjelper.lagInntektForSammenligning(inntektArbeidYtelseBuilder, dt, dt.plusMonths(1), inntektSammenligningsgrunnlagArbeidsgiver2,
+            TestHjelper.lagInntektForSammenligning(inntektArbeidYtelseBuilder, dt, dt.plusMonths(1), inntektSammenligningsgrunnlagArbeidsgiver2,
                     Arbeidsgiver2);
-            testHjelper.lagInntektForArbeidsforhold(inntektArbeidYtelseBuilder, dt, dt.plusMonths(1), inntektBeregnetArbeidsgiver2,
+            TestHjelper.lagInntektForArbeidsforhold(inntektArbeidYtelseBuilder, dt, dt.plusMonths(1), inntektBeregnetArbeidsgiver2,
                     Arbeidsgiver2);
         }
         iayGrunnlagBuilder.medData(inntektArbeidYtelseBuilder);
 
-        var im1 = testHjelper.opprettInntektsmeldingMedRefusjonskrav(Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR1),
+        var im1 = TestHjelper.opprettInntektsmeldingMedRefusjonskrav(Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR1),
                 inntektBeregnetArbeidsgiver1, null, refusjon);
         var inntektsmeldinger = List.of(im1);
         // Act
@@ -799,14 +798,14 @@ class ForeslåBeregningsgrunnlagTest {
 
     private InntektsmeldingDto opprettInntektsmeldingNaturalytelseBortfaller(Arbeidsgiver arbeidsgiver, Beløp inntektInntektsmelding, Beløp naturalytelseBortfaller,
                                                                              LocalDate naturalytelseBortfallerDato) {
-        return testHjelper.opprettInntektsmeldingMedRefusjonskrav(arbeidsgiver, inntektInntektsmelding,
+        return TestHjelper.opprettInntektsmeldingMedRefusjonskrav(arbeidsgiver, inntektInntektsmelding,
                 new NaturalYtelseDto(TIDENES_BEGYNNELSE, naturalytelseBortfallerDato.minusDays(1), naturalytelseBortfaller, NaturalYtelseType.ANNET),
                 null);
     }
 
     private InntektsmeldingDto opprettInntektsmeldingNaturalytelseTilkommer(Arbeidsgiver arbeidsgiver, Beløp inntektInntektsmelding, Beløp naturalytelseTilkommer,
                                                                             LocalDate naturalytelseTilkommerDato) {
-        return testHjelper.opprettInntektsmeldingMedRefusjonskrav(arbeidsgiver, inntektInntektsmelding,
+        return TestHjelper.opprettInntektsmeldingMedRefusjonskrav(arbeidsgiver, inntektInntektsmelding,
                 new NaturalYtelseDto(naturalytelseTilkommerDato, TIDENES_ENDE, naturalytelseTilkommer, NaturalYtelseType.ANNET), null);
     }
 

@@ -22,6 +22,10 @@ import no.nav.fpsak.tidsserie.StandardCombinators;
 
 public final class PermisjonPerYrkesaktivitet {
 
+    private PermisjonPerYrkesaktivitet() {
+        // Skjuler default konstruktør
+    }
+
     public static LocalDateTimeline<Boolean> utledPermisjonPerYrkesaktivitet(YrkesaktivitetDto yrkesaktivitet,
                                                                              Map<YtelseType, LocalDateTimeline<Boolean>> tidslinjePerYtelse, LocalDate skjæringstidspunkt) {
         var aktivPermisjonTidslinjer = yrkesaktivitet.getPermisjoner()

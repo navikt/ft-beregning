@@ -20,10 +20,10 @@ public class BeregnGjennomsnittligPGIForAktivitetstatus extends LeafSpecificatio
 	private final AktivitetStatus aktivitetStatus;
 
 	public BeregnGjennomsnittligPGIForAktivitetstatus(AktivitetStatus aktivitetStatus) {
-        super(ID, BESKRIVELSE);
 		if (!AktivitetStatus.SN.equals(aktivitetStatus) && !AktivitetStatus.BA.equals(aktivitetStatus)) {
 			throw new IllegalArgumentException("Kan ikke beregning gjennomsnittlig PGI for aktivitetstatus " + aktivitetStatus);
 		}
+        super(ID, BESKRIVELSE);
 		this.aktivitetStatus = aktivitetStatus;
 
 	}

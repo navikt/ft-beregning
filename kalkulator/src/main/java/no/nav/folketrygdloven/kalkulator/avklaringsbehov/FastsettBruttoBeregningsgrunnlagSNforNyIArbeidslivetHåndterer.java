@@ -11,6 +11,10 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
 
 public class FastsettBruttoBeregningsgrunnlagSNforNyIArbeidslivetHåndterer {
 
+    private FastsettBruttoBeregningsgrunnlagSNforNyIArbeidslivetHåndterer() {
+        // Skjuler default konstruktør
+    }
+
     public static BeregningsgrunnlagGrunnlagDto oppdater(BeregningsgrunnlagInput input, FastsettBruttoBeregningsgrunnlagSNforNyIArbeidslivetDto dto) {
         var bruttoBeregningsgrunnlag = dto.getBruttoBeregningsgrunnlag();
         var grunnlagBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());

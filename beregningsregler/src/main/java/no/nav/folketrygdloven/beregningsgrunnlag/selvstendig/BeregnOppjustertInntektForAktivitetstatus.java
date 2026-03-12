@@ -22,10 +22,10 @@ public class BeregnOppjustertInntektForAktivitetstatus extends LeafSpecification
 	private final AktivitetStatus aktivitetStatus;
 
 	public BeregnOppjustertInntektForAktivitetstatus(AktivitetStatus aktivitetStatus) {
-        super(ID, BESKRIVELSE);
 		if (!AktivitetStatus.SN.equals(aktivitetStatus) && !AktivitetStatus.BA.equals(aktivitetStatus)) {
 			throw new IllegalArgumentException("Kan ikke beregne oppjustert inntekt for aktivitetstatus " + aktivitetStatus);
 		}
+        super(ID, BESKRIVELSE);
 		this.aktivitetStatus = aktivitetStatus;
 
 	}

@@ -20,10 +20,10 @@ public class BeregnBruttoBeregningsgrunnlagFraPGI extends LeafSpecification<Bere
 	private final AktivitetStatus aktivitetStatus;
 
     public BeregnBruttoBeregningsgrunnlagFraPGI(AktivitetStatus aktivitetStatus) {
-        super(ID, BESKRIVELSE);
 	    if (!AktivitetStatus.SN.equals(aktivitetStatus) && !AktivitetStatus.BA.equals(aktivitetStatus)) {
 		    throw new IllegalArgumentException("Kan beregne burtto fra gjennomsnittlig PGI for aktivitetstatus " + aktivitetStatus);
 	    }
+        super(ID, BESKRIVELSE);
 		this.aktivitetStatus = aktivitetStatus;
     }
 

@@ -30,6 +30,10 @@ import no.nav.fpsak.tidsserie.StandardCombinators;
 
 public class DirekteOvergangTjeneste {
 
+    private DirekteOvergangTjeneste() {
+        // Skjuler default konstruktør
+    }
+
     private static final List<YtelseType> YTELSER_FRA_KAP_8 = List.of(
             YtelseType.PLEIEPENGER_NÆRSTÅENDE,
             YtelseType.PLEIEPENGER_SYKT_BARN,

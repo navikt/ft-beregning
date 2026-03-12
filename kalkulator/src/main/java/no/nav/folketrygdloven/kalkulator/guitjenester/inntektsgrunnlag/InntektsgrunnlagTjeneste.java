@@ -19,6 +19,10 @@ import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.inntek
 public class InntektsgrunnlagTjeneste {
     private static final List<ArbeidType> FRILANS_TYPER = Arrays.asList(ArbeidType.FRILANSER, ArbeidType.FRILANSER_OPPDRAGSTAKER);
 
+    private InntektsgrunnlagTjeneste() {
+        // Skjuler default konstruktør
+    }
+
     public static Optional<InntektsgrunnlagDto> lagDto(BeregningsgrunnlagGUIInput input) {
         var harStatusSomKreverDetaljertInntektsgrunnlag = input.getBeregningsgrunnlag() != null && input.getBeregningsgrunnlag().getAktivitetStatuser().stream()
                 .anyMatch(st -> st.getAktivitetStatus() != null && (st.getAktivitetStatus().erArbeidstaker()

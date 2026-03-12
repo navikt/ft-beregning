@@ -15,11 +15,11 @@ class BeregnRapportertInntektVedManuellFastsettelse extends LeafSpecification<Be
 
     static final String ID = "FB_BR 15.6";
     static final String BESKRIVELSE = "Rapportert inntekt = manuelt fastsatt månedsinntekt * 12";
-    private BeregningsgrunnlagPrArbeidsforhold arbeidsforhold;
+    private final BeregningsgrunnlagPrArbeidsforhold arbeidsforhold;
 
     BeregnRapportertInntektVedManuellFastsettelse(BeregningsgrunnlagPrArbeidsforhold arbeidsforhold) {
-        super(ID, BESKRIVELSE);
         Objects.requireNonNull(arbeidsforhold, "arbeidsforhold");
+        super(ID, BESKRIVELSE);
         this.arbeidsforhold = arbeidsforhold;
     }
 

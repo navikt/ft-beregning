@@ -16,6 +16,10 @@ import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 
 class StartRefusjonTjeneste {
 
+    private StartRefusjonTjeneste() {
+        // Skjuler default konstruktør
+    }
+
     /**
      * Finner første dato det er søkt refusjon for f
      *

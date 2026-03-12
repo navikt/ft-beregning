@@ -15,11 +15,11 @@ class BeregnGrunnlagNyoppstartetFrilanser extends LeafSpecification<Beregningsgr
 
     static final String ID = "FB_BR 14.10";
     static final String BESKRIVELSE = "Beregn grunnlag nyoppstartet frilanser = (avklart inntekt * 12)";
-    private BeregningsgrunnlagPrArbeidsforhold arbeidsforhold;
+    private final BeregningsgrunnlagPrArbeidsforhold arbeidsforhold;
 
     BeregnGrunnlagNyoppstartetFrilanser(BeregningsgrunnlagPrArbeidsforhold arbeidsforhold) {
-        super(ID, BESKRIVELSE);
         Objects.requireNonNull(arbeidsforhold, "arbeidsforhold");
+        super(ID, BESKRIVELSE);
         this.arbeidsforhold = arbeidsforhold;
     }
 

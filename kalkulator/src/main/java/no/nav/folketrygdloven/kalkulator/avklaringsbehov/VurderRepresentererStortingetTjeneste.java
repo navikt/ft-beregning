@@ -17,6 +17,10 @@ import no.nav.fpsak.tidsserie.LocalDateTimeline;
 
 public class VurderRepresentererStortingetTjeneste {
 
+    private VurderRepresentererStortingetTjeneste() {
+        // Skjuler default konstruktør
+    }
+
     public static BeregningsgrunnlagGrunnlagDto løsAvklaringsbehov(VurderRepresentererStortingetHåndteringDto vurderDto, HåndterBeregningsgrunnlagInput input) {
         var grunnlagBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
         if (vurderDto.getRepresentererStortinget()) {

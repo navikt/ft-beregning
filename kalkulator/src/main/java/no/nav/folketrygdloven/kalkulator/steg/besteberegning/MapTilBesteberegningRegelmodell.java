@@ -44,6 +44,10 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.YtelseType;
 
 public class MapTilBesteberegningRegelmodell {
 
+    private MapTilBesteberegningRegelmodell() {
+        // Skjuler default konstruktør
+    }
+
     public static BesteberegningRegelmodell map(ForeslåBesteberegningInput input) {
         var besteberegningInput = lagInput(input);
         return new BesteberegningRegelmodell(besteberegningInput);

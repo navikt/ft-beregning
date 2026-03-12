@@ -11,6 +11,10 @@ import no.nav.fpsak.tidsserie.LocalDateTimeline;
 
 public class AllePerioderGodkjentFristVurderer {
 
+    private AllePerioderGodkjentFristVurderer() {
+        // Skjuler default konstruktør
+    }
+
     public static LocalDateTimeline<Utfall> finnTidslinje() {
         return new LocalDateTimeline<>(List.of(new LocalDateSegment<>(TIDENES_BEGYNNELSE, TIDENES_ENDE, Utfall.GODKJENT)));
     }

@@ -24,6 +24,10 @@ import no.nav.fpsak.tidsserie.StandardCombinators;
 
 class RegisterInntektTidslinjeUtleder {
 
+    private RegisterInntektTidslinjeUtleder() {
+        // Skjuler default konstruktør
+    }
+
     /**
      * Utleder tidslinje for inntekter fra a-ordningen
      *

@@ -14,10 +14,13 @@ import no.nav.fpsak.tidsserie.LocalDateTimeline;
 
 public class TreMånedersFristVurderer {
 
+    private TreMånedersFristVurderer() {
+        // Skjuler default konstruktør
+    }
+
     public static LocalDateTimeline<Utfall> finnTidslinje(PerioderForKravDto krav, Optional<LocalDate> overstyrtRefusjonFom) {
         return new LocalDateTimeline<>(List.of(new LocalDateSegment<>(
                 overstyrtRefusjonFom.orElse(finnFørsteGyldigeDatoMedRefusjon(krav.getInnsendingsdato())),
                 TIDENES_ENDE, Utfall.GODKJENT)));
     }
-
 }

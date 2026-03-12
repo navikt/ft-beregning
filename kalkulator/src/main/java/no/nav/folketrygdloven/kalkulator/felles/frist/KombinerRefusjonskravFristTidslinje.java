@@ -10,6 +10,10 @@ import no.nav.fpsak.tidsserie.LocalDateTimeline;
 
 class KombinerRefusjonskravFristTidslinje {
 
+    private KombinerRefusjonskravFristTidslinje() {
+        // Skjuler default konstruktør
+    }
+
     static LocalDateTimeline<KravOgUtfall> kombinerOgKompress(LocalDateTimeline<KravOgUtfall> t1, LocalDateTimeline<KravOgUtfall> t2) {
         return t1.combine(t2, godkjentHvisEnGodkjentMedKrav(), LocalDateTimeline.JoinStyle.CROSS_JOIN).compress();
     }

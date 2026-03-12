@@ -11,6 +11,10 @@ import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivPeriode;
 
 public class LagAktivPeriodeForArbeidstakerFelles {
 
+    private LagAktivPeriodeForArbeidstakerFelles() {
+        // Skjuler default konstruktør
+    }
+
     public static AktivPeriode lagAktivPeriodeForArbeidstaker(Collection<InntektsmeldingDto> inntektsmeldinger,
                                                               Periode gjeldendePeriode,
                                                               String opptjeningArbeidsgiverAktørId,

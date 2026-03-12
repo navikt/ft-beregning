@@ -30,9 +30,11 @@ import no.nav.fpsak.tidsserie.LocalDateTimeline;
 import no.nav.fpsak.tidsserie.StandardCombinators;
 
 class UtvidetInntektsperiodeUtleder {
-
     private static final int MAKS_ANTALL_MÅNEDER_UTEN_INNTEKT = 2;
 
+    private UtvidetInntektsperiodeUtleder() {
+        // Skjuler default konstruktør
+    }
 
     /**
      * Lager tidslinje over periode der arbeidsfohold fra en arbeidsgiver anses å vere aktivt sett i kontekst av inntekt.

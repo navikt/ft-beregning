@@ -44,6 +44,7 @@ public class BeregningsgrunnlagPeriodeDto implements IndexKey {
     private BigDecimal reduksjonsfaktorInaktivTypeA;
 
     private BeregningsgrunnlagPeriodeDto() {
+        // Skjuler default konstruktør
     }
 
     public BeregningsgrunnlagPeriodeDto(BeregningsgrunnlagPeriodeDto kopiereFra) {

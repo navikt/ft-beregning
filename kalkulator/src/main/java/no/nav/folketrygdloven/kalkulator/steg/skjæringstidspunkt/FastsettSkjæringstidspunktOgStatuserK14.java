@@ -19,6 +19,10 @@ import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusMod
 
 public class FastsettSkjæringstidspunktOgStatuserK14 {
 
+    private FastsettSkjæringstidspunktOgStatuserK14() {
+        // Skjuler default konstruktør
+    }
+
     public static BeregningsgrunnlagRegelResultat fastsett(BeregningsgrunnlagInput input, BeregningAktivitetAggregatDto beregningAktivitetAggregat, List<Grunnbeløp> grunnbeløpSatser) {
         var regelmodell = MapBGStatuserFraVLTilRegel.map(beregningAktivitetAggregat);
 		input.getToggles().forEach(regelmodell::leggTilToggle);

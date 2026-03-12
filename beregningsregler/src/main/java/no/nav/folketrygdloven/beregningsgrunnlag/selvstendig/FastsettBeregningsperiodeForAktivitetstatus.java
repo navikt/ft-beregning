@@ -21,10 +21,10 @@ public class FastsettBeregningsperiodeForAktivitetstatus extends LeafSpecificati
 	private final AktivitetStatus aktivitetStatus;
 
 	public FastsettBeregningsperiodeForAktivitetstatus(AktivitetStatus aktivitetStatus) {
-        super(ID, BESKRIVELSE);
         if (!AktivitetStatus.SN.equals(aktivitetStatus) && !AktivitetStatus.BA.equals(aktivitetStatus)) {
         	throw new IllegalArgumentException("Kan ikke fastsette beregningsperiode fra ferdiglignede år for aktivitetstatus " + aktivitetStatus);
         }
+        super(ID, BESKRIVELSE);
 		this.aktivitetStatus = aktivitetStatus;
 	}
 

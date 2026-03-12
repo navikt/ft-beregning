@@ -14,6 +14,10 @@ import no.nav.fpsak.tidsserie.StandardCombinators;
 
 class UtledStartdato {
 
+    private UtledStartdato() {
+        // Skjuler default konstruktør
+    }
+
     /** Finner siste startdato før skjæringstidspunktet for arbeidsforholdet.
      *
      * @param arbeidsgiver Arbeidsgiver

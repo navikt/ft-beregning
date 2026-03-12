@@ -30,6 +30,10 @@ public class MapBesteberegningFraRegelTilVL {
     private static final List<Aktivitet> YTELSER_FRA_SAMMENLIGNINGSFILTERET = Arrays.asList(Aktivitet.SYKEPENGER_MOTTAKER, Aktivitet.FORELDREPENGER_MOTTAKER,
             Aktivitet.SVANGERSKAPSPENGER_MOTTAKER);
 
+    private MapBesteberegningFraRegelTilVL() {
+        // Skjuler default konstruktør
+    }
+
     public static BeregningsgrunnlagDto mapTilBeregningsgrunnlag(BeregningsgrunnlagGrunnlagDto beregningsgrunnlagGrunnlag,
                                                            BesteberegningOutput output) {
         var gammeltGrunnlag = beregningsgrunnlagGrunnlag.getBeregningsgrunnlagHvisFinnes().orElseThrow();
