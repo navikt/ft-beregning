@@ -237,7 +237,7 @@ class MapBeregningAktiviteterFraVLTilRegelFellesTest {
         assertThat(arbeidsforhold.getReferanseType())
                 .isEqualByComparingTo(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.ReferanseType.ORG_NR);
         assertThat(arbeidsforhold.getOrgnr()).isEqualTo(ARBEIDSGIVER_ORGNR);
-        assertThat(arbeidsforhold.getArbeidsforholdId()).isEqualTo(null);
+        assertThat(arbeidsforhold.getArbeidsforholdId()).isNull();
     }
 
     @Test

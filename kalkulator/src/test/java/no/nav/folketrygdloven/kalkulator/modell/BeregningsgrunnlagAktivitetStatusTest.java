@@ -52,7 +52,7 @@ class BeregningsgrunnlagAktivitetStatusTest {
 
     @Test
     void skal_håndtere_null_this_feilKlasse_i_equals() {
-        assertThat(beregningsgrunnlagAktivitetStatus).isNotEqualTo(null);
+        assertThat(beregningsgrunnlagAktivitetStatus).isNotNull();
         assertThat(beregningsgrunnlagAktivitetStatus).isNotEqualTo("blabla");
         assertThat(beregningsgrunnlagAktivitetStatus).isEqualTo(beregningsgrunnlagAktivitetStatus);
     }

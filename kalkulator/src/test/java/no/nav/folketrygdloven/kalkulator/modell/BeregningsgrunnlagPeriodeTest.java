@@ -55,7 +55,7 @@ class BeregningsgrunnlagPeriodeTest {
 
     @Test
     void skal_håndtere_null_this_feilKlasse_i_equals() {
-        assertThat(beregningsgrunnlagPeriode).isNotEqualTo(null);
+        assertThat(beregningsgrunnlagPeriode).isNotNull();
         assertThat(beregningsgrunnlagPeriode).isNotEqualTo("blabla");
         assertThat(beregningsgrunnlagPeriode).isEqualTo(beregningsgrunnlagPeriode);
     }
