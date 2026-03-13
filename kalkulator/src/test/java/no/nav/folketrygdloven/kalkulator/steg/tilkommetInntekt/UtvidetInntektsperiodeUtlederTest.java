@@ -1,7 +1,7 @@
 package no.nav.folketrygdloven.kalkulator.steg.tilkommetInntekt;
 
 import static no.nav.fpsak.tidsserie.LocalDateInterval.TIDENES_ENDE;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
@@ -32,7 +32,7 @@ class UtvidetInntektsperiodeUtlederTest {
     void skal_ikke_utvide_periode_dersom_tom_tidslinje() {
         var tidslinje = UtvidetInntektsperiodeUtleder.lagGodkjenteInntektsperiodeTidslinje(new LocalDateTimeline<>(List.of()), new PleiepengerSyktBarnGrunnlag(List.of()), 5);
 
-        assertThat(tidslinje.isEmpty()).isTrue();
+        assertThat(tidslinje).isEmpty();
     }
 
 
@@ -45,7 +45,7 @@ class UtvidetInntektsperiodeUtlederTest {
         var tidslinje = UtvidetInntektsperiodeUtleder.lagGodkjenteInntektsperiodeTidslinje(inntektTidslinje, new PleiepengerSyktBarnGrunnlag(List.of()), iDag.getDayOfMonth());
 
         var segmenter = tidslinje.compress().toSegments();
-        assertThat(segmenter.size()).isEqualTo(2);
+        assertThat(segmenter).hasSize(2);
         var iterator = segmenter.iterator();
         var førsteSegment = iterator.next();
         assertThat(førsteSegment.getFom()).isEqualTo(juli.getFom());
@@ -65,7 +65,7 @@ class UtvidetInntektsperiodeUtlederTest {
         var tidslinje = UtvidetInntektsperiodeUtleder.lagGodkjenteInntektsperiodeTidslinje(inntektTidslinje, new PleiepengerSyktBarnGrunnlag(List.of()), iDag.getDayOfMonth());
 
         var segmenter = tidslinje.compress().toSegments();
-        assertThat(segmenter.size()).isEqualTo(2);
+        assertThat(segmenter).hasSize(2);
         var iterator = segmenter.iterator();
         var førsteSegment = iterator.next();
         assertThat(førsteSegment.getFom()).isEqualTo(juli.getFom());
@@ -85,7 +85,7 @@ class UtvidetInntektsperiodeUtlederTest {
         var tidslinje = UtvidetInntektsperiodeUtleder.lagGodkjenteInntektsperiodeTidslinje(inntektTidslinje, new PleiepengerSyktBarnGrunnlag(List.of()), iDag.getDayOfMonth());
 
         var segmenter = tidslinje.compress().toSegments();
-        assertThat(segmenter.size()).isEqualTo(3);
+        assertThat(segmenter).hasSize(3);
         var iterator = segmenter.iterator();
         var førsteSegment = iterator.next();
         assertThat(førsteSegment.getFom()).isEqualTo(juli.getFom());
@@ -110,7 +110,7 @@ class UtvidetInntektsperiodeUtlederTest {
         var tidslinje = UtvidetInntektsperiodeUtleder.lagGodkjenteInntektsperiodeTidslinje(inntektTidslinje, new PleiepengerSyktBarnGrunnlag(List.of()), iDag.getDayOfMonth());
 
         var segmenter = tidslinje.compress().toSegments();
-        assertThat(segmenter.size()).isEqualTo(1);
+        assertThat(segmenter).hasSize(1);
         var iterator = segmenter.iterator();
         var førsteSegment = iterator.next();
         assertThat(førsteSegment.getFom()).isEqualTo(treMånederSiden.getFom());
@@ -130,7 +130,7 @@ class UtvidetInntektsperiodeUtlederTest {
         var tidslinje = UtvidetInntektsperiodeUtleder.lagGodkjenteInntektsperiodeTidslinje(inntektTidslinje, utbetalingsgradGrunnlag, iDag.getDayOfMonth());
 
         var segmenter = tidslinje.compress().toSegments();
-        assertThat(segmenter.size()).isEqualTo(1);
+        assertThat(segmenter).hasSize(1);
         var iterator = segmenter.iterator();
         var førsteSegment = iterator.next();
         assertThat(førsteSegment.getFom()).isEqualTo(juli.getFom());

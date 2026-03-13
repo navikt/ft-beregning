@@ -51,9 +51,7 @@ class BeregningsgrunnlagTest {
     void skal_håndtere_null_this_feilKlasse_i_equals() {
         var beregningsgrunnlag = lagMedPaakrevdeFelter();
 
-        assertThat(beregningsgrunnlag).isNotEqualTo(null);
-        assertThat(beregningsgrunnlag).isNotEqualTo("blabla");
-        assertThat(beregningsgrunnlag).isEqualTo(beregningsgrunnlag);
+        assertThat(beregningsgrunnlag).isNotNull().isNotEqualTo("blabla").isEqualTo(beregningsgrunnlag);
     }
 
     @Test
@@ -73,13 +71,11 @@ class BeregningsgrunnlagTest {
     void skal_bruke_skjaeringstidspunkt_i_equalsOgHashCode() {
         var beregningsgrunnlag2 = lagMedPaakrevdeFelter();
 
-        assertThat(beregningsgrunnlag).isEqualTo(beregningsgrunnlag2);
-        assertThat(beregningsgrunnlag.hashCode()).isEqualTo(beregningsgrunnlag2.hashCode());
+        assertThat(beregningsgrunnlag).isEqualTo(beregningsgrunnlag2).hasSameHashCodeAs(beregningsgrunnlag2);
 
         builder.medSkjæringstidspunkt(LocalDate.now().plusDays(1));
         beregningsgrunnlag2 = builder.build();
 
-        assertThat(beregningsgrunnlag).isNotEqualTo(beregningsgrunnlag2);
-        assertThat(beregningsgrunnlag.hashCode()).isNotEqualTo(beregningsgrunnlag2.hashCode());
+        assertThat(beregningsgrunnlag).isNotEqualTo(beregningsgrunnlag2).doesNotHaveSameHashCodeAs(beregningsgrunnlag2);
     }
 }

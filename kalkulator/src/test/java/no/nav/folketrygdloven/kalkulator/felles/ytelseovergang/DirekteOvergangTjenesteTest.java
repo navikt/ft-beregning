@@ -1,6 +1,6 @@
 package no.nav.folketrygdloven.kalkulator.felles.ytelseovergang;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -26,7 +26,7 @@ class DirekteOvergangTjenesteTest {
     void skal_returnere_tom_tidslinje_uten_ytelser() {
         var tidslinje = DirekteOvergangTjeneste.direkteUtbetalingTidslinje(List.of(), y -> alwaysTrue());
 
-        assertThat(tidslinje.isEmpty()).isTrue();
+        assertThat(tidslinje).isEmpty();
     }
 
     @Test
@@ -37,11 +37,11 @@ class DirekteOvergangTjenesteTest {
         var tidslinje = DirekteOvergangTjeneste.direkteUtbetalingTidslinje(List.of(ytelse), y -> alwaysTrue());
 
         var segmenter = tidslinje.toSegments();
-        assertThat(segmenter.size()).isEqualTo(1);
+        assertThat(segmenter).hasSize(1);
         var segment = segmenter.iterator().next();
         assertThat(segment.getFom()).isEqualTo(periode.getFomDato());
         assertThat(segment.getTom()).isEqualTo(periode.getTomDato());
-        assertThat(segment.getValue().size()).isEqualTo(1);
+        assertThat(segment.getValue()).hasSize(1);
         var value = segment.getValue().iterator().next();
         assertThat(value.arbeidsgiver()).isNull();
         assertThat(value.inntektskategori()).isEqualTo(Inntektskategori.FRILANSER);
@@ -56,11 +56,11 @@ class DirekteOvergangTjenesteTest {
         var tidslinje = DirekteOvergangTjeneste.direkteUtbetalingTidslinje(List.of(ytelse), y -> alwaysTrue());
 
         var segmenter = tidslinje.toSegments();
-        assertThat(segmenter.size()).isEqualTo(1);
+        assertThat(segmenter).hasSize(1);
         var segment = segmenter.iterator().next();
         assertThat(segment.getFom()).isEqualTo(periode.getFomDato());
         assertThat(segment.getTom()).isEqualTo(periode.getTomDato());
-        assertThat(segment.getValue().size()).isEqualTo(1);
+        assertThat(segment.getValue()).hasSize(1);
         var value = segment.getValue().iterator().next();
         assertThat(value.arbeidsgiver()).isEqualTo(arbeidsgiver);
         assertThat(value.inntektskategori()).isEqualTo(Inntektskategori.ARBEIDSTAKER);
@@ -75,11 +75,11 @@ class DirekteOvergangTjenesteTest {
         var tidslinje = DirekteOvergangTjeneste.direkteUtbetalingTidslinje(List.of(ytelse), y -> alwaysTrue());
 
         var segmenter = tidslinje.toSegments();
-        assertThat(segmenter.size()).isEqualTo(1);
+        assertThat(segmenter).hasSize(1);
         var segment = segmenter.iterator().next();
         assertThat(segment.getFom()).isEqualTo(periode.getFomDato());
         assertThat(segment.getTom()).isEqualTo(periode.getTomDato());
-        assertThat(segment.getValue().size()).isEqualTo(1);
+        assertThat(segment.getValue()).hasSize(1);
         var value = segment.getValue().iterator().next();
         assertThat(value.arbeidsgiver()).isEqualTo(arbeidsgiver);
         assertThat(value.inntektskategori()).isEqualTo(Inntektskategori.ARBEIDSTAKER);
@@ -93,7 +93,7 @@ class DirekteOvergangTjenesteTest {
         var ytelse = lagYtelse(periode, List.of(arbeidstakerAndel(arbeidsgiver, Stillingsprosent.HUNDRED)));
         var tidslinje = DirekteOvergangTjeneste.direkteUtbetalingTidslinje(List.of(ytelse), y -> alwaysTrue());
 
-        assertThat(tidslinje.isEmpty()).isTrue();
+        assertThat(tidslinje).isEmpty();
     }
 
     @Test
@@ -104,11 +104,11 @@ class DirekteOvergangTjenesteTest {
         var tidslinje = DirekteOvergangTjeneste.direkteUtbetalingTidslinje(List.of(ytelse), y -> alwaysTrue());
 
         var segmenter = tidslinje.toSegments();
-        assertThat(segmenter.size()).isEqualTo(1);
+        assertThat(segmenter).hasSize(1);
         var segment = segmenter.iterator().next();
         assertThat(segment.getFom()).isEqualTo(periode.getFomDato());
         assertThat(segment.getTom()).isEqualTo(periode.getTomDato());
-        assertThat(segment.getValue().size()).isEqualTo(1);
+        assertThat(segment.getValue()).hasSize(1);
         var value = segment.getValue().iterator().next();
         assertThat(value.arbeidsgiver()).isNull();
         assertThat(value.inntektskategori()).isEqualTo(Inntektskategori.UDEFINERT);
@@ -122,7 +122,7 @@ class DirekteOvergangTjenesteTest {
 
         var tidslinje = DirekteOvergangTjeneste.direkteUtbetalingTidslinje(List.of(ytelse), y -> !y.getYtelseType().equals(YtelseType.FORELDREPENGER));
 
-        assertThat(tidslinje.isEmpty()).isTrue();
+        assertThat(tidslinje).isEmpty();
     }
 
     @Test
@@ -136,11 +136,11 @@ class DirekteOvergangTjenesteTest {
         var tidslinje = DirekteOvergangTjeneste.direkteUtbetalingTidslinje(List.of(ytelse), y -> alwaysTrue());
 
         var segmenter = tidslinje.toSegments();
-        assertThat(segmenter.size()).isEqualTo(1);
+        assertThat(segmenter).hasSize(1);
         var segment = segmenter.iterator().next();
         assertThat(segment.getFom()).isEqualTo(periode.getFomDato());
         assertThat(segment.getTom()).isEqualTo(periode.getTomDato());
-        assertThat(segment.getValue().size()).isEqualTo(2);
+        assertThat(segment.getValue()).hasSize(2);
         var iterator = segment.getValue().iterator();
         var value1 = iterator.next();
         assertThat(value1.arbeidsgiver()).isEqualTo(arbeidsgiver1);
@@ -179,12 +179,12 @@ class DirekteOvergangTjenesteTest {
         var tidslinje = DirekteOvergangTjeneste.direkteUtbetalingTidslinje(List.of(ytelse), y -> alwaysTrue());
 
         var segmenter = tidslinje.toSegments();
-        assertThat(segmenter.size()).isEqualTo(2);
+        assertThat(segmenter).hasSize(2);
         var segmentIterator = segmenter.iterator();
         var segment1 = segmentIterator.next();
         assertThat(segment1.getFom()).isEqualTo(periode1.getFomDato());
         assertThat(segment1.getTom()).isEqualTo(periode1.getTomDato());
-        assertThat(segment1.getValue().size()).isEqualTo(2);
+        assertThat(segment1.getValue()).hasSize(2);
         var iterator = segment1.getValue().iterator();
         var value1 = iterator.next();
         assertThat(value1.arbeidsgiver()).isEqualTo(arbeidsgiver1);
@@ -198,7 +198,7 @@ class DirekteOvergangTjenesteTest {
         var segment2 = segmentIterator.next();
         assertThat(segment2.getFom()).isEqualTo(periode2.getFomDato());
         assertThat(segment2.getTom()).isEqualTo(periode2.getTomDato());
-        assertThat(segment2.getValue().size()).isEqualTo(1);
+        assertThat(segment2.getValue()).hasSize(1);
         var valueIterator = segment2.getValue().iterator();
         var value1Segment2 = valueIterator.next();
         assertThat(value1Segment2.arbeidsgiver()).isEqualTo(arbeidsgiver1);

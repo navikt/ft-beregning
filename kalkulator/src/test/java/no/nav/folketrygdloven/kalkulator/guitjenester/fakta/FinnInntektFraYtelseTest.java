@@ -59,7 +59,7 @@ class FinnInntektFraYtelseTest {
 
         // Assert
         assertTrue(result.isPresent(), "Expected a present årsbeløp when vedtak/meldekort exist");
-        assertThat(result.get()).isEqualTo(Beløp.fra(390000));
+        assertThat(result).contains(Beløp.fra(390000));
     }
 
     @Test

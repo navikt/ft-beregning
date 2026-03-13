@@ -99,8 +99,7 @@ class BeregningsperiodeTjenesteTest {
         var resultat = AutopunktUtlederFastsettBeregningsaktiviteterInntektrapporteringTjeneste.skalVentePåInnrapporteringAvInntektATFL(input, List.of(), dagensdato, beregningAktivitetAggregatDto, input.getSkjæringstidspunktForBeregning());
 
         // Assert
-        assertThat(resultat).isPresent();
-        assertThat(resultat).hasValue(LocalDate.of(2019,1,8));
+        assertThat(resultat).isPresent().hasValue(LocalDate.of(2019,1,8));
     }
 
     @Test
@@ -123,8 +122,7 @@ class BeregningsperiodeTjenesteTest {
         var resultat = AutopunktUtlederFastsettBeregningsaktiviteterInntektrapporteringTjeneste.skalVentePåInnrapporteringAvInntektATFL(input, List.of(), dagensdato, beregningAktivitetAggregatDto, input.getSkjæringstidspunktForBeregning());
 
         // Assert
-        assertThat(resultat).isPresent();
-        assertThat(resultat).hasValue(LocalDate.of(2019,1,8));
+        assertThat(resultat).isPresent().hasValue(LocalDate.of(2019,1,8));
     }
 
     @Test
@@ -137,8 +135,7 @@ class BeregningsperiodeTjenesteTest {
         var resultat = AutopunktUtlederFastsettBeregningsaktiviteterInntektrapporteringTjeneste.skalVentePåInnrapporteringAvInntektATFL(input, List.of(), dagensdato, beregningAktivitetAggregatDto, input.getSkjæringstidspunktForBeregning());
 
         // Assert
-        assertThat(resultat).isPresent();
-        assertThat(resultat).hasValue(LocalDate.of(2019,1,8));
+        assertThat(resultat).isPresent().hasValue(LocalDate.of(2019,1,8));
     }
 
     @Test
@@ -151,8 +148,7 @@ class BeregningsperiodeTjenesteTest {
         var resultat = AutopunktUtlederFastsettBeregningsaktiviteterInntektrapporteringTjeneste.skalVentePåInnrapporteringAvInntektATFL(input, List.of(arbeidsgiverA), dagensdato, beregningAktivitetAggregatDto, input.getSkjæringstidspunktForBeregning());
 
         // Assert
-        assertThat(resultat).isPresent();
-        assertThat(resultat).hasValue(LocalDate.of(2019,1,8));
+        assertThat(resultat).isPresent().hasValue(LocalDate.of(2019,1,8));
     }
 
     @Test
@@ -189,8 +185,7 @@ class BeregningsperiodeTjenesteTest {
         var frist = AutopunktUtlederFastsettBeregningsaktiviteterInntektrapporteringTjeneste.skalVentePåInnrapporteringAvInntektATFL(input, List.of(arbeidsgiverA), dagensdato, beregningAktivitetAggregatDto, input.getSkjæringstidspunktForBeregning());
 
         // Assert
-        assertThat(frist).isPresent();
-        assertThat(frist).hasValue(SKJÆRINGSTIDSPUNKT.plusDays(7));
+        assertThat(frist).isPresent().hasValue(SKJÆRINGSTIDSPUNKT.plusDays(7));
     }
 
     @Test
@@ -203,8 +198,7 @@ class BeregningsperiodeTjenesteTest {
         var frist = AutopunktUtlederFastsettBeregningsaktiviteterInntektrapporteringTjeneste.skalVentePåInnrapporteringAvInntektFL(input, dagensdato, beregningAktivitetAggregatDto, input.getSkjæringstidspunktForBeregning());
 
         // Assert
-        assertThat(frist).isPresent();
-        assertThat(frist).hasValue(SKJÆRINGSTIDSPUNKT.plusDays(7));
+        assertThat(frist).isPresent().hasValue(SKJÆRINGSTIDSPUNKT.plusDays(7));
     }
 
     private BeregningAktivitetAggregatDto lagAktivitetAggregat1FrilansAndel() {

@@ -1,6 +1,6 @@
 package no.nav.folketrygdloven.kalkulator.felles.frist;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -46,7 +46,7 @@ class KravTjenesteTest {
                 SKJÆRINGSTIDSPUNKT_BEREGNING,
                 Optional.empty(), FagsakYtelseType.FORELDREPENGER);
 
-        assertThat(kravTidslinje.isEmpty()).isTrue();
+        assertThat(kravTidslinje).isEmpty();
     }
 
     @Test
@@ -67,7 +67,7 @@ class KravTjenesteTest {
                 førsteMuligeRefusjonsdato,
                 Optional.empty(), FagsakYtelseType.FORELDREPENGER);
 
-        assertThat(kravTidslinje.size()).isEqualTo(1);
+        assertThat(kravTidslinje).hasSize(1);
         var kravSegment = kravTidslinje.iterator().next();
         assertThat(kravSegment.getValue().utfall()).isEqualTo(Utfall.GODKJENT);
         assertThat(kravSegment.getValue().refusjonskrav()).isEqualTo(BELØP_TEN);
@@ -92,7 +92,7 @@ class KravTjenesteTest {
                 startRefusjon,
                 Optional.empty(), FagsakYtelseType.FORELDREPENGER);
 
-        assertThat(kravTidslinje.size()).isEqualTo(2);
+        assertThat(kravTidslinje).hasSize(2);
         var iterator = kravTidslinje.iterator();
         var kravSegment1 = iterator.next();
         assertThat(kravSegment1.getValue().utfall()).isEqualTo(Utfall.UNDERKJENT);
@@ -127,7 +127,7 @@ class KravTjenesteTest {
                 startRefusjon,
                 Optional.empty(), FagsakYtelseType.FORELDREPENGER);
 
-        assertThat(kravTidslinje.size()).isEqualTo(1);
+        assertThat(kravTidslinje).hasSize(1);
         var iterator = kravTidslinje.iterator();
         var kravSegment1 = iterator.next();
         assertThat(kravSegment1.getValue().utfall()).isEqualTo(Utfall.GODKJENT);
@@ -155,7 +155,7 @@ class KravTjenesteTest {
                 startRefusjon,
                 Optional.empty(), FagsakYtelseType.FORELDREPENGER);
 
-        assertThat(kravTidslinje.size()).isEqualTo(1);
+        assertThat(kravTidslinje).hasSize(1);
         var iterator = kravTidslinje.iterator();
         var kravSegment1 = iterator.next();
         assertThat(kravSegment1.getValue().utfall()).isEqualTo(Utfall.GODKJENT);
@@ -186,7 +186,7 @@ class KravTjenesteTest {
                 startRefusjon,
                 Optional.empty(), FagsakYtelseType.FORELDREPENGER);
 
-        assertThat(kravTidslinje.size()).isEqualTo(2);
+        assertThat(kravTidslinje).hasSize(2);
         var iterator = kravTidslinje.iterator();
         var kravSegment1 = iterator.next();
         assertThat(kravSegment1.getValue().utfall()).isEqualTo(Utfall.UNDERKJENT);
@@ -224,7 +224,7 @@ class KravTjenesteTest {
             førsteMuligeRefusjonsdato,
                 Optional.empty(), FagsakYtelseType.FORELDREPENGER);
 
-        assertThat(kravTidslinje.size()).isEqualTo(2);
+        assertThat(kravTidslinje).hasSize(2);
         var iterator = kravTidslinje.iterator();
         var kravSegment1 = iterator.next();
         assertThat(kravSegment1.getValue().utfall()).isEqualTo(Utfall.UNDERKJENT);
@@ -257,7 +257,7 @@ class KravTjenesteTest {
                 startRefusjon,
                 overstyrtFom, FagsakYtelseType.FORELDREPENGER);
 
-        assertThat(kravTidslinje.size()).isEqualTo(1);
+        assertThat(kravTidslinje).hasSize(1);
         var iterator = kravTidslinje.iterator();
         var kravSegment1 = iterator.next();
         assertThat(kravSegment1.getValue().utfall()).isEqualTo(Utfall.GODKJENT);

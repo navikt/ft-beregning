@@ -1,6 +1,6 @@
 package no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
@@ -19,8 +19,8 @@ class BGAndelArbeidsforholdDtoTest {
 				.medSaksbehandletRefusjonPrÅr(Beløp.fra(100))
 				.build();
 
-		assertThat(arb.getRefusjon().isPresent()).isTrue();
-		assertThat(arb.getRefusjon().get().getSaksbehandletRefusjonPrÅr().compareTo(Beløp.fra(100))).isEqualTo(0);
+		assertThat(arb.getRefusjon()).isPresent();
+		assertThat(arb.getRefusjon().get().getSaksbehandletRefusjonPrÅr()).isEqualByComparingTo(Beløp.fra(100));
 	}
 
 
@@ -31,7 +31,7 @@ class BGAndelArbeidsforholdDtoTest {
 				.medSaksbehandletRefusjonPrÅr(null)
 				.build();
 
-		assertThat(arb.getRefusjon().isPresent()).isFalse();
+		assertThat(arb.getRefusjon()).isNotPresent();
 	}
 
 	@Test
@@ -43,7 +43,7 @@ class BGAndelArbeidsforholdDtoTest {
 
 		var ny = BGAndelArbeidsforholdDto.builder(arb).medSaksbehandletRefusjonPrÅr(null).build();
 
-		assertThat(ny.getRefusjon().isPresent()).isFalse();
+		assertThat(ny.getRefusjon()).isNotPresent();
 	}
 
 	@Test
@@ -56,7 +56,7 @@ class BGAndelArbeidsforholdDtoTest {
 
 		var ny = BGAndelArbeidsforholdDto.builder(arb).medSaksbehandletRefusjonPrÅr(null).build();
 
-		assertThat(ny.getRefusjon().isPresent()).isTrue();
+		assertThat(ny.getRefusjon()).isPresent();
 		assertThat(ny.getRefusjon().get().getSaksbehandletRefusjonPrÅr()).isNull();
 	}
 

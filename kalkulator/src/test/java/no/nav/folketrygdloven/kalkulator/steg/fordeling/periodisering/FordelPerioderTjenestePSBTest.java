@@ -112,17 +112,17 @@ class FordelPerioderTjenestePSBTest {
         var perioder = nyttBeregningsgrunnlag.getBeregningsgrunnlagPerioder();
         assertThat(perioder).hasSize(4);
         var bgPeriode1 = perioder.get(0);
-        assertThat(bgPeriode1.getBeregningsgrunnlagPrStatusOgAndelList().size()).isEqualTo(1);
+        assertThat(bgPeriode1.getBeregningsgrunnlagPrStatusOgAndelList()).hasSize(1);
         assertBeregningsgrunnlagPeriode(bgPeriode1, SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.plusDays(4));
         var bgPeriode2 = perioder.get(1);
-        assertThat(bgPeriode2.getBeregningsgrunnlagPrStatusOgAndelList().size()).isEqualTo(2);
+        assertThat(bgPeriode2.getBeregningsgrunnlagPrStatusOgAndelList()).hasSize(2);
         assertBeregningsgrunnlagPeriode(bgPeriode2, SKJÆRINGSTIDSPUNKT.plusDays(5), SKJÆRINGSTIDSPUNKT.plusDays(9), PeriodeÅrsak.ENDRING_I_AKTIVITETER_SØKT_FOR);
 
         var bgPeriode3 = perioder.get(2);
-        assertThat(bgPeriode3.getBeregningsgrunnlagPrStatusOgAndelList().size()).isEqualTo(1);
+        assertThat(bgPeriode3.getBeregningsgrunnlagPrStatusOgAndelList()).hasSize(1);
         assertBeregningsgrunnlagPeriode(bgPeriode3, SKJÆRINGSTIDSPUNKT.plusDays(10), SKJÆRINGSTIDSPUNKT.plusMonths(1), PeriodeÅrsak.ENDRING_I_AKTIVITETER_SØKT_FOR);
         var bgPeriode4 = perioder.get(3);
-        assertThat(bgPeriode4.getBeregningsgrunnlagPrStatusOgAndelList().size()).isEqualTo(1);
+        assertThat(bgPeriode4.getBeregningsgrunnlagPrStatusOgAndelList()).hasSize(1);
         assertBeregningsgrunnlagPeriode(bgPeriode4, SKJÆRINGSTIDSPUNKT.plusMonths(1).plusDays(1), TIDENES_ENDE, PeriodeÅrsak.ENDRING_I_AKTIVITETER_SØKT_FOR);
 
     }

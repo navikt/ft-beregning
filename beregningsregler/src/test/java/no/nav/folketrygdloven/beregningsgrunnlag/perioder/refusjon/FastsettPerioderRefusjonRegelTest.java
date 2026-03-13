@@ -85,9 +85,9 @@ class FastsettPerioderRefusjonRegelTest {
 		var match = perioder.stream().filter(p -> p.getPeriode().getFom().equals(fom) && p.getPeriode().getTom().equals(tom)).findFirst();
 		assertThat(match).isPresent();
 		if (utfall.equals(Utfall.UNDERKJENT)) {
-			assertThat(match.get().getNyeAndeler().stream().allMatch(andel -> andel.getInnvilgetRefusjonskravPrÅr().compareTo(BigDecimal.ZERO) == 0)).isTrue();
+			assertThat(match.get().getNyeAndeler()).allMatch(andel -> andel.getInnvilgetRefusjonskravPrÅr().compareTo(BigDecimal.ZERO) == 0);
 		} else {
-			assertThat(match.get().getNyeAndeler().stream().allMatch(andel -> andel.getInnvilgetRefusjonskravPrÅr().compareTo(BigDecimal.ZERO) == 1)).isTrue();
+			assertThat(match.get().getNyeAndeler()).allMatch(andel -> andel.getInnvilgetRefusjonskravPrÅr().compareTo(BigDecimal.ZERO) == 1);
 		}
 	}
 

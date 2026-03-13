@@ -1,7 +1,7 @@
 package no.nav.folketrygdloven.kalkulator.steg.fordeling.periodisering;
 
 import static no.nav.fpsak.tidsserie.LocalDateInterval.TIDENES_ENDE;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -39,10 +39,10 @@ class PeriodiserForAktivitetsgradTjenesteTest {
 
         // Assert
         var resultatperioder = resultat.getBeregningsgrunnlagPerioder();
-        assertThat(resultatperioder.size()).isEqualTo(1);
+        assertThat(resultatperioder).hasSize(1);
         assertThat(resultatperioder.get(0).getBeregningsgrunnlagPeriodeFom()).isEqualTo(stp);
         assertThat(resultatperioder.get(0).getBeregningsgrunnlagPeriodeTom()).isEqualTo(TIDENES_ENDE);
-        assertThat(resultatperioder.get(0).getPeriodeÅrsaker().size()).isEqualTo(0);
+        assertThat(resultatperioder.get(0).getPeriodeÅrsaker()).isEmpty();
     }
 
     @Test
@@ -60,13 +60,13 @@ class PeriodiserForAktivitetsgradTjenesteTest {
 
         // Assert
         var resultatperioder = resultat.getBeregningsgrunnlagPerioder();
-        assertThat(resultatperioder.size()).isEqualTo(2);
+        assertThat(resultatperioder).hasSize(2);
         assertThat(resultatperioder.get(0).getBeregningsgrunnlagPeriodeFom()).isEqualTo(stp);
         assertThat(resultatperioder.get(0).getBeregningsgrunnlagPeriodeTom()).isEqualTo(stp.plusMonths(1));
 
         assertThat(resultatperioder.get(1).getBeregningsgrunnlagPeriodeTom()).isEqualTo(TIDENES_ENDE);
         assertThat(resultatperioder.get(1).getBeregningsgrunnlagPeriodeFom()).isEqualTo(stp.plusMonths(1).plusDays(1));
-        assertThat(resultatperioder.get(1).getPeriodeÅrsaker().size()).isEqualTo(1);
+        assertThat(resultatperioder.get(1).getPeriodeÅrsaker()).hasSize(1);
     }
 
     @Test
@@ -84,13 +84,13 @@ class PeriodiserForAktivitetsgradTjenesteTest {
 
         // Assert
         var resultatperioder = resultat.getBeregningsgrunnlagPerioder();
-        assertThat(resultatperioder.size()).isEqualTo(2);
+        assertThat(resultatperioder).hasSize(2);
         assertThat(resultatperioder.get(0).getBeregningsgrunnlagPeriodeFom()).isEqualTo(stp);
         assertThat(resultatperioder.get(0).getBeregningsgrunnlagPeriodeTom()).isEqualTo(stp.plusMonths(1));
 
         assertThat(resultatperioder.get(1).getBeregningsgrunnlagPeriodeTom()).isEqualTo(TIDENES_ENDE);
         assertThat(resultatperioder.get(1).getBeregningsgrunnlagPeriodeFom()).isEqualTo(stp.plusMonths(1).plusDays(1));
-        assertThat(resultatperioder.get(1).getPeriodeÅrsaker().size()).isEqualTo(1);
+        assertThat(resultatperioder.get(1).getPeriodeÅrsaker()).hasSize(1);
     }
 
     @Test
@@ -109,17 +109,17 @@ class PeriodiserForAktivitetsgradTjenesteTest {
 
         // Assert
         var resultatperioder = resultat.getBeregningsgrunnlagPerioder();
-        assertThat(resultatperioder.size()).isEqualTo(3);
+        assertThat(resultatperioder).hasSize(3);
         assertThat(resultatperioder.get(0).getBeregningsgrunnlagPeriodeFom()).isEqualTo(stp);
         assertThat(resultatperioder.get(0).getBeregningsgrunnlagPeriodeTom()).isEqualTo(stp.plusMonths(1));
 
         assertThat(resultatperioder.get(1).getBeregningsgrunnlagPeriodeFom()).isEqualTo(stp.plusMonths(1).plusDays(1));
         assertThat(resultatperioder.get(1).getBeregningsgrunnlagPeriodeTom()).isEqualTo(stp.plusMonths(2));
-        assertThat(resultatperioder.get(1).getPeriodeÅrsaker().size()).isEqualTo(1);
+        assertThat(resultatperioder.get(1).getPeriodeÅrsaker()).hasSize(1);
 
         assertThat(resultatperioder.get(2).getBeregningsgrunnlagPeriodeFom()).isEqualTo(stp.plusMonths(2).plusDays(1));
         assertThat(resultatperioder.get(2).getBeregningsgrunnlagPeriodeTom()).isEqualTo(TIDENES_ENDE);
-        assertThat(resultatperioder.get(2).getPeriodeÅrsaker().size()).isEqualTo(1);
+        assertThat(resultatperioder.get(2).getPeriodeÅrsaker()).hasSize(1);
     }
 
 
@@ -142,17 +142,17 @@ class PeriodiserForAktivitetsgradTjenesteTest {
 
         // Assert
         var resultatperioder = resultat.getBeregningsgrunnlagPerioder();
-        assertThat(resultatperioder.size()).isEqualTo(3);
+        assertThat(resultatperioder).hasSize(3);
         assertThat(resultatperioder.get(0).getBeregningsgrunnlagPeriodeFom()).isEqualTo(stp);
         assertThat(resultatperioder.get(0).getBeregningsgrunnlagPeriodeTom()).isEqualTo(stp.plusMonths(1));
 
         assertThat(resultatperioder.get(1).getBeregningsgrunnlagPeriodeFom()).isEqualTo(stp.plusMonths(1).plusDays(1));
         assertThat(resultatperioder.get(1).getBeregningsgrunnlagPeriodeTom()).isEqualTo(stp.plusMonths(2));
-        assertThat(resultatperioder.get(1).getPeriodeÅrsaker().size()).isEqualTo(1);
+        assertThat(resultatperioder.get(1).getPeriodeÅrsaker()).hasSize(1);
 
         assertThat(resultatperioder.get(2).getBeregningsgrunnlagPeriodeFom()).isEqualTo(stp.plusMonths(2).plusDays(1));
         assertThat(resultatperioder.get(2).getBeregningsgrunnlagPeriodeTom()).isEqualTo(TIDENES_ENDE);
-        assertThat(resultatperioder.get(2).getPeriodeÅrsaker().size()).isEqualTo(1);
+        assertThat(resultatperioder.get(2).getPeriodeÅrsaker()).hasSize(1);
     }
 
 
@@ -176,25 +176,25 @@ class PeriodiserForAktivitetsgradTjenesteTest {
 
         // Assert
         var resultatperioder = resultat.getBeregningsgrunnlagPerioder();
-        assertThat(resultatperioder.size()).isEqualTo(5);
+        assertThat(resultatperioder).hasSize(5);
         assertThat(resultatperioder.get(0).getBeregningsgrunnlagPeriodeFom()).isEqualTo(stp);
         assertThat(resultatperioder.get(0).getBeregningsgrunnlagPeriodeTom()).isEqualTo(stp.plusMonths(1));
 
         assertThat(resultatperioder.get(1).getBeregningsgrunnlagPeriodeFom()).isEqualTo(stp.plusMonths(1).plusDays(1));
         assertThat(resultatperioder.get(1).getBeregningsgrunnlagPeriodeTom()).isEqualTo(stp.plusMonths(2));
-        assertThat(resultatperioder.get(1).getPeriodeÅrsaker().size()).isEqualTo(1);
+        assertThat(resultatperioder.get(1).getPeriodeÅrsaker()).hasSize(1);
 
         assertThat(resultatperioder.get(2).getBeregningsgrunnlagPeriodeFom()).isEqualTo(stp.plusMonths(2).plusDays(1));
         assertThat(resultatperioder.get(2).getBeregningsgrunnlagPeriodeTom()).isEqualTo(stp.plusMonths(3).minusDays(1));
-        assertThat(resultatperioder.get(2).getPeriodeÅrsaker().size()).isEqualTo(1);
+        assertThat(resultatperioder.get(2).getPeriodeÅrsaker()).hasSize(1);
 
         assertThat(resultatperioder.get(3).getBeregningsgrunnlagPeriodeFom()).isEqualTo(stp.plusMonths(3));
         assertThat(resultatperioder.get(3).getBeregningsgrunnlagPeriodeTom()).isEqualTo(stp.plusMonths(4));
-        assertThat(resultatperioder.get(3).getPeriodeÅrsaker().size()).isEqualTo(1);
+        assertThat(resultatperioder.get(3).getPeriodeÅrsaker()).hasSize(1);
 
         assertThat(resultatperioder.get(4).getBeregningsgrunnlagPeriodeFom()).isEqualTo(stp.plusMonths(4).plusDays(1));
         assertThat(resultatperioder.get(4).getBeregningsgrunnlagPeriodeTom()).isEqualTo(TIDENES_ENDE);
-        assertThat(resultatperioder.get(4).getPeriodeÅrsaker().size()).isEqualTo(1);
+        assertThat(resultatperioder.get(4).getPeriodeÅrsaker()).hasSize(1);
     }
 
     @Test
@@ -213,14 +213,14 @@ class PeriodiserForAktivitetsgradTjenesteTest {
 
         // Assert
         var resultatperioder = resultat.getBeregningsgrunnlagPerioder();
-        assertThat(resultatperioder.size()).isEqualTo(2);
+        assertThat(resultatperioder).hasSize(2);
         assertThat(resultatperioder.get(0).getBeregningsgrunnlagPeriodeFom()).isEqualTo(stp);
         assertThat(resultatperioder.get(0).getBeregningsgrunnlagPeriodeTom()).isEqualTo(stp.plusMonths(2));
-        assertThat(resultatperioder.get(0).getPeriodeÅrsaker().size()).isEqualTo(0);
+        assertThat(resultatperioder.get(0).getPeriodeÅrsaker()).isEmpty();
 
         assertThat(resultatperioder.get(1).getBeregningsgrunnlagPeriodeFom()).isEqualTo(stp.plusMonths(2).plusDays(1));
         assertThat(resultatperioder.get(1).getBeregningsgrunnlagPeriodeTom()).isEqualTo(TIDENES_ENDE);
-        assertThat(resultatperioder.get(1).getPeriodeÅrsaker().size()).isEqualTo(1);
+        assertThat(resultatperioder.get(1).getPeriodeÅrsaker()).hasSize(1);
     }
 
 

@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -55,14 +54,14 @@ class FastsettEtterlønnSluttpakkeOppdatererTest {
 
         // Assert
         var bgPerioder = oppdatere.getBeregningsgrunnlagBuilder().getBeregningsgrunnlag().getBeregningsgrunnlagPerioder();
-        Assertions.assertThat(bgPerioder).hasSize(1);
+        assertThat(bgPerioder).hasSize(1);
         assertThat(bgPerioder.get(0).getBeregningsgrunnlagPrStatusOgAndelList()).hasSize(2);
         var andel = bgPerioder.get(0).getBeregningsgrunnlagPrStatusOgAndelList()
             .stream()
             .filter(a -> a.getArbeidsforholdType().equals(OpptjeningAktivitetType.ETTERLØNN_SLUTTPAKKE))
             .findFirst()
             .orElseThrow(() -> new IllegalStateException("Finner ikke forventet andel etter å ha kjørt oppdaterer"));
-        Assertions.assertThat(andel.getBeregnetPrÅr().compareTo(Beløp.fra(120000)) == 0).isTrue();
+        assertThat(andel.getBeregnetPrÅr()).isEqualByComparingTo(Beløp.fra(120000));
         assertThat(andel.getFastsattAvSaksbehandler()).isTrue();
         assertThat(andel.getArbeidsforholdType()).isEqualTo(OpptjeningAktivitetType.ETTERLØNN_SLUTTPAKKE);
     }

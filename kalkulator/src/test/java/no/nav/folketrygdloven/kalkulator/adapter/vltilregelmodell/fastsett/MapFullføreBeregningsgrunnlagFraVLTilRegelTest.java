@@ -64,9 +64,9 @@ class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
 
 		// Assert
 		var beregningsGrunnlagPerioder = samletBeregningsgrunnlag.getBeregningsgrunnlagPerioder().iterator();
-		assertEquals(hentNesteAktivitetsgrad(beregningsGrunnlagPerioder), BigDecimal.valueOf(50));
-		assertEquals(hentNesteAktivitetsgrad(beregningsGrunnlagPerioder), BigDecimal.ZERO);
-		assertEquals(hentNesteAktivitetsgrad(beregningsGrunnlagPerioder), BigDecimal.valueOf(100));
+		assertEquals(BigDecimal.valueOf(50), hentNesteAktivitetsgrad(beregningsGrunnlagPerioder));
+		assertEquals(BigDecimal.ZERO, hentNesteAktivitetsgrad(beregningsGrunnlagPerioder));
+		assertEquals(BigDecimal.valueOf(100), hentNesteAktivitetsgrad(beregningsGrunnlagPerioder));
 	}
 
 	private BeregningsgrunnlagGrunnlagDto lagBeregningsgrunnlagDto() {

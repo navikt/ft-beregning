@@ -101,7 +101,7 @@ class RefusjonOgGraderingTjenesteTest {
                 AktivitetGradering.INGEN_GRADERING, List.of(im1));
 
         // Assert
-        assertThat(manuellBehandlingForEndringAvBG.isEmpty()).isTrue();
+        assertThat(manuellBehandlingForEndringAvBG).isEmpty();
     }
 
     // Gradering: Ja
@@ -158,7 +158,7 @@ class RefusjonOgGraderingTjenesteTest {
         var manuellBehandlingForEndringAvBG = vurderManuellBehandling(bg, aktivitetGradering, List.of(im1));
 
         // Assert
-        assertThat(manuellBehandlingForEndringAvBG.isEmpty()).isTrue();
+        assertThat(manuellBehandlingForEndringAvBG).isEmpty();
     }
 
     // Gradering: Ja
@@ -227,7 +227,7 @@ class RefusjonOgGraderingTjenesteTest {
         var manuellBehandlingForEndringAvBG = vurderManuellBehandling(bg, aktivitetGradering, List.of(im1, im2));
 
         // Assert
-        assertThat(manuellBehandlingForEndringAvBG.isEmpty()).isTrue();
+        assertThat(manuellBehandlingForEndringAvBG).isEmpty();
 
     }
     // Gradering: Ja
@@ -284,7 +284,7 @@ class RefusjonOgGraderingTjenesteTest {
         var manuellBehandlingForEndringAvBG = vurderManuellBehandling(bg, aktivitetGradering, List.of(im1));
 
         // Assert
-        assertThat(manuellBehandlingForEndringAvBG.isEmpty()).isTrue();
+        assertThat(manuellBehandlingForEndringAvBG).isEmpty();
     }
     // Gradering: Nei
     // Refusjon: Ja
@@ -324,7 +324,7 @@ class RefusjonOgGraderingTjenesteTest {
         var manuellBehandlingForEndringAvBG = vurderManuellBehandling(bg, AktivitetGradering.INGEN_GRADERING, List.of(im1));
 
         // Assert
-        assertThat(manuellBehandlingForEndringAvBG.isEmpty()).isTrue();
+        assertThat(manuellBehandlingForEndringAvBG).isEmpty();
     }
 
 
@@ -353,7 +353,7 @@ class RefusjonOgGraderingTjenesteTest {
         var andelerMedTilfeller = FordelBeregningsgrunnlagTilfelleTjeneste.vurderManuellBehandlingForPeriode(periode1, fordelingInput);
 
         // Assert
-        assertThat(andelerMedTilfeller.containsValue(FordelingTilfelle.GRADERT_ANDEL_SOM_VILLE_HA_BLITT_AVKORTET_TIL_0)).isTrue();
+        assertThat(andelerMedTilfeller).containsValue(FordelingTilfelle.GRADERT_ANDEL_SOM_VILLE_HA_BLITT_AVKORTET_TIL_0);
     }
 
     @Test
@@ -374,7 +374,7 @@ class RefusjonOgGraderingTjenesteTest {
         var manuellBehandlingForEndringAvBG = vurderManuellBehandling(bg, aktivitetGradering, List.of());
 
         // Assert
-        assertThat(manuellBehandlingForEndringAvBG.containsValue(FordelingTilfelle.FORESLÅTT_BG_PÅ_GRADERT_ANDEL_ER_0)).isTrue();
+        assertThat(manuellBehandlingForEndringAvBG).containsValue(FordelingTilfelle.FORESLÅTT_BG_PÅ_GRADERT_ANDEL_ER_0);
     }
 
 

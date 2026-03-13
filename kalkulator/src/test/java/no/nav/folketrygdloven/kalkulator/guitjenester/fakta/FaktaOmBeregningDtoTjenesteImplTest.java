@@ -98,7 +98,7 @@ class FaktaOmBeregningDtoTjenesteImplTest {
                 .medBeregningsgrunnlagGrunnlag(oppdatere.build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER));
 
         var dto = faktaOmBeregningDtoTjeneste.lagDto(input);
-        assertThat(dto.isPresent()).isTrue();
+        assertThat(dto).isPresent();
     }
 
     @Test

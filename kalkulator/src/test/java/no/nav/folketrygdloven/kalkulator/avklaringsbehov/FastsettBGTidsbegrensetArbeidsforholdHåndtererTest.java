@@ -6,7 +6,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -91,7 +90,7 @@ class FastsettBGTidsbegrensetArbeidsforholdHåndtererTest {
 
         //Assert
         var beregningsgrunnlag = grunnlag.getBeregningsgrunnlagHvisFinnes();
-        Assertions.assertThat(beregningsgrunnlag.isPresent()).isTrue();
+        assertThat(beregningsgrunnlag).isPresent();
         var førstePeriode = beregningsgrunnlag.get().getBeregningsgrunnlagPerioder().get(0);
         var andrePeriode = beregningsgrunnlag.get().getBeregningsgrunnlagPerioder().get(1);
         assertThat(førstePeriode.getBeregningsgrunnlagPrStatusOgAndelList().get(0).getOverstyrtPrÅr()).isEqualTo(Beløp.fra(FØRSTE_PERIODE_FØRSTE_ANDEL_INNTEKT));
