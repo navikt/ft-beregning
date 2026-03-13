@@ -1,6 +1,6 @@
 package no.nav.folketrygdloven.kalkulator.steg.tilkommetInntekt;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -74,15 +74,15 @@ class TilkommetInntektsforholdTjenesteTest {
 
 		var segmenter = tidslinje.toSegments();
 
-		assertThat(segmenter.size()).isEqualTo(2);
+		assertThat(segmenter).hasSize(2);
 		var iterator = segmenter.iterator();
 		var førsteSegment = iterator.next();
-		assertThat(førsteSegment.getValue().isEmpty()).isTrue();
+		assertThat(førsteSegment.getValue()).isEmpty();
 		assertThat(førsteSegment.getFom()).isEqualTo(STP);
 		assertThat(førsteSegment.getTom()).isEqualTo(tilkommetDato.minusDays(1));
 
 		var andreSegment = iterator.next();
-		assertThat(andreSegment.getValue().size()).isEqualTo(1);
+		assertThat(andreSegment.getValue()).hasSize(1);
 		assertThat(andreSegment.getFom()).isEqualTo(tilkommetDato);
 		assertThat(andreSegment.getTom()).isEqualTo(STP.plusDays(20));
 
@@ -119,10 +119,10 @@ class TilkommetInntektsforholdTjenesteTest {
 
 		var segmenter = tidslinje.toSegments();
 
-		assertThat(segmenter.size()).isEqualTo(1);
+		assertThat(segmenter).hasSize(1);
 		var iterator = segmenter.iterator();
 		var førsteSegment = iterator.next();
-		assertThat(førsteSegment.getValue().isEmpty()).isTrue();
+		assertThat(førsteSegment.getValue()).isEmpty();
 		assertThat(førsteSegment.getFom()).isEqualTo(STP);
 		assertThat(førsteSegment.getTom()).isEqualTo(STP.plusDays(20));
 	}

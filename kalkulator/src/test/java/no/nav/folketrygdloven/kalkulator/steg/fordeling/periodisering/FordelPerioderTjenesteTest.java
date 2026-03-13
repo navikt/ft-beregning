@@ -927,7 +927,7 @@ class FordelPerioderTjenesteTest {
         assertThat(perioder).hasSize(1);
         assertThat(perioder.get(0).getBeregningsgrunnlagPeriodeFom()).isEqualTo(SKJÆRINGSTIDSPUNKT);
         var andelerIFørstePeriode = perioder.get(0).getBeregningsgrunnlagPrStatusOgAndelList();
-        assertThat(andelerIFørstePeriode).hasSize(0);
+        assertThat(andelerIFørstePeriode).isEmpty();
     }
 
     @Test

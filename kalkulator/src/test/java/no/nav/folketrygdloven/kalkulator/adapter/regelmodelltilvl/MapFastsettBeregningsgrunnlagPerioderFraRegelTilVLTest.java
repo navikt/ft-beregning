@@ -60,7 +60,7 @@ class MapFastsettBeregningsgrunnlagPerioderFraRegelTilVLTest {
         var nyttBg = mapTilVlNaturalytelse.mapFraRegel(splittetPerioder, vlBeregningsgrunnlag);
 
         // Assert
-        assertThat(nyttBg.getBeregningsgrunnlagPerioder().size()).isEqualTo(vlBeregningsgrunnlag.getBeregningsgrunnlagPerioder().size());
+        assertThat(nyttBg.getBeregningsgrunnlagPerioder()).hasSize(vlBeregningsgrunnlag.getBeregningsgrunnlagPerioder().size());
     }
 
     @Test
@@ -80,7 +80,7 @@ class MapFastsettBeregningsgrunnlagPerioderFraRegelTilVLTest {
         var nyttBg = mapTilVlRefusjonOgGradering.mapFraRegel(splittetPerioder, vlBeregningsgrunnlag);
 
         // Assert
-        assertThat(nyttBg.getBeregningsgrunnlagPerioder().size()).isEqualTo(vlBeregningsgrunnlag.getBeregningsgrunnlagPerioder().size());
+        assertThat(nyttBg.getBeregningsgrunnlagPerioder()).hasSize(vlBeregningsgrunnlag.getBeregningsgrunnlagPerioder().size());
     }
 
 

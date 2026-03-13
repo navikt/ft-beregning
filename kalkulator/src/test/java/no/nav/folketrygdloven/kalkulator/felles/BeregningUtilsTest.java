@@ -28,8 +28,7 @@ class BeregningUtilsTest {
 
         var ytelse = MeldekortUtils.sisteVedtakFørStpForType(filter, SKJÆRINGSTIDSPUNKT, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER));
 
-        assertThat(ytelse).isPresent();
-        assertThat(ytelse.get()).isEqualTo(aapYtelse);
+        assertThat(ytelse).isPresent().contains(aapYtelse);
     }
 
     @Test
@@ -41,8 +40,7 @@ class BeregningUtilsTest {
 
         var ytelse = MeldekortUtils.sisteVedtakFørStpForType(filter, SKJÆRINGSTIDSPUNKT, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER));
 
-        assertThat(ytelse).isPresent();
-        assertThat(ytelse.get()).isEqualTo(aapYtelseNy);
+        assertThat(ytelse).isPresent().contains(aapYtelseNy);
     }
 
     @Test
@@ -55,8 +53,7 @@ class BeregningUtilsTest {
 
         var ytelse = MeldekortUtils.sisteVedtakFørStpForType(filter, SKJÆRINGSTIDSPUNKT, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER));
 
-        assertThat(ytelse).isPresent();
-        assertThat(ytelse.get()).isEqualTo(aapYtelseNy);
+        assertThat(ytelse).isPresent().contains(aapYtelseNy);
     }
 
     @Test

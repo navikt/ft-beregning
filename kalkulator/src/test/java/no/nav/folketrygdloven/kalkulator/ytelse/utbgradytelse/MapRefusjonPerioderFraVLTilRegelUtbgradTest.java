@@ -1,7 +1,7 @@
 package no.nav.folketrygdloven.kalkulator.ytelse.utbgradytelse;
 
 import static no.nav.fpsak.tidsserie.LocalDateInterval.TIDENES_ENDE;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.kalkulator.BeregningsgrunnlagInputTestUtil;
@@ -70,8 +69,7 @@ class MapRefusjonPerioderFraVLTilRegelUtbgradTest {
 
         var startdato = mapper.utledStartdatoEtterPermisjon(stp, inntektsmelding, relaterteYrkesaktiviteter, permisjonFilter, ytelsespesifiktGrunnlag);
 
-        assertThat(startdato.isPresent()).isTrue();
-        assertThat(startdato.get()).isEqualTo(permisjonsperiode.getTomDato().plusDays(1));
+        assertThat(startdato).isPresent().contains(permisjonsperiode.getTomDato().plusDays(1));
     }
 
     @Test
@@ -88,8 +86,7 @@ class MapRefusjonPerioderFraVLTilRegelUtbgradTest {
 
         var startdato = mapper.utledStartdatoEtterPermisjon(stp, inntektsmelding, relaterteYrkesaktiviteter, permisjonFilter, ytelsespesifiktGrunnlag);
 
-        assertThat(startdato.isPresent()).isTrue();
-        assertThat(startdato.get()).isEqualTo(stp);
+        assertThat(startdato).isPresent().contains(stp);
     }
 
     @Test
@@ -107,8 +104,7 @@ class MapRefusjonPerioderFraVLTilRegelUtbgradTest {
 
         var startdato = mapper.utledStartdatoEtterPermisjon(stp, inntektsmelding, relaterteYrkesaktiviteter, permisjonFilter, ytelsespesifiktGrunnlag);
 
-        assertThat(startdato.isPresent()).isTrue();
-        assertThat(startdato.get()).isEqualTo(utbetalingsperiode.getFomDato());
+        assertThat(startdato).isPresent().contains(utbetalingsperiode.getFomDato());
     }
 
     @Test
@@ -126,7 +122,7 @@ class MapRefusjonPerioderFraVLTilRegelUtbgradTest {
 
         var startdato = mapper.utledStartdatoEtterPermisjon(stp, inntektsmelding, relaterteYrkesaktiviteter, permisjonFilter, ytelsespesifiktGrunnlag);
 
-        assertThat(startdato.isPresent()).isFalse();
+        assertThat(startdato).isNotPresent();
     }
 
 
@@ -208,15 +204,15 @@ class MapRefusjonPerioderFraVLTilRegelUtbgradTest {
         var map = mapper.map(input, beregningsgrunnlagDto);
 
         // Assert
-        Assertions.assertThat(map.getArbeidsforholdOgInntektsmeldinger()).hasSize(1);
+        assertThat(map.getArbeidsforholdOgInntektsmeldinger()).hasSize(1);
         var arbeidsforholdOgInntektsmelding = map.getArbeidsforholdOgInntektsmeldinger().get(0);
-        Assertions.assertThat(arbeidsforholdOgInntektsmelding.getRefusjoner()).hasSize(2);
+        assertThat(arbeidsforholdOgInntektsmelding.getRefusjoner()).hasSize(2);
         var refusjonskrav = arbeidsforholdOgInntektsmelding.getRefusjoner().get(0);
-        Assertions.assertThat(refusjonskrav.getPeriode().getFom()).isEqualTo(stp);
+        assertThat(refusjonskrav.getPeriode().getFom()).isEqualTo(stp);
 
         var opphør = arbeidsforholdOgInntektsmelding.getRefusjoner().get(1);
-        Assertions.assertThat(opphør.getMånedsbeløp()).isEqualTo(BigDecimal.ZERO);
-        Assertions.assertThat(opphør.getPeriode().getFom()).isEqualTo(LocalDate.of(2020, 1, 19).plusDays(1));
+        assertThat(opphør.getMånedsbeløp()).isEqualTo(BigDecimal.ZERO);
+        assertThat(opphør.getPeriode().getFom()).isEqualTo(LocalDate.of(2020, 1, 19).plusDays(1));
     }
 
     @Test
@@ -238,7 +234,7 @@ class MapRefusjonPerioderFraVLTilRegelUtbgradTest {
         var avtaler = relaterteYrkesaktiviteter.iterator().next().getAlleAnsettelsesperioder().stream().toList();
         var perioder = mapper.finnGyldigeRefusjonPerioder(stp, ytelsespesifiktGrunnlag, inntektsmelding, avtaler, relaterteYrkesaktiviteter);
 
-        Assertions.assertThat(perioder).isEmpty();
+        assertThat(perioder).isEmpty();
     }
 
 
@@ -263,7 +259,7 @@ class MapRefusjonPerioderFraVLTilRegelUtbgradTest {
 		var avtaler = relaterteYrkesaktiviteter.iterator().next().getAlleAnsettelsesperioder().stream().toList();
 		var perioder = mapper.finnGyldigeRefusjonPerioder(stp, ytelsespesifiktGrunnlag, inntektsmelding, avtaler, relaterteYrkesaktiviteter);
 
-		assertThat(perioder.isEmpty()).isTrue();
+		assertThat(perioder).isEmpty();
 	}
 
 

@@ -42,7 +42,7 @@ class FastsettMånedsinntektUtenInntektsmeldingTilfelleUtlederTest {
         var grunnlag = lagGrunnlag(true);
         var faktaOmBeregningInput = lagFaktaOmBeregningInput(grunnlag, List.of());
         var tilfelle = new FastsettMånedsinntektUtenInntektsmeldingTilfelleUtleder().utled(faktaOmBeregningInput, grunnlag);
-        assertThat(tilfelle.get()).isEqualTo(FaktaOmBeregningTilfelle.FASTSETT_MÅNEDSLØNN_ARBEIDSTAKER_UTEN_INNTEKTSMELDING);
+        assertThat(tilfelle).contains(FaktaOmBeregningTilfelle.FASTSETT_MÅNEDSLØNN_ARBEIDSTAKER_UTEN_INNTEKTSMELDING);
     }
 
     @Test

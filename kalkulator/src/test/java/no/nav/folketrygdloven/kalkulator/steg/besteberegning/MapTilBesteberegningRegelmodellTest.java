@@ -23,7 +23,7 @@ class MapTilBesteberegningRegelmodellTest {
         //Act
         var grunnlagsandeler = MapTilBesteberegningRegelmodell.mapYtelseandeler(List.of(ytelseandelAktivitetsstatus, ytelseandelArbeidsKategori));
         //Assert
-        assertThat(grunnlagsandeler.size()).isEqualTo(2);
+        assertThat(grunnlagsandeler).hasSize(2);
         assertThat(grunnlagsandeler.get(0).getAktivitet()).isEqualTo(YtelseAktivitetType.YTELSE_FOR_ARBEID);
         assertThat(grunnlagsandeler.get(1).getAktivitet()).isEqualTo(YtelseAktivitetType.YTELSE_FOR_DAGPENGER);
     }

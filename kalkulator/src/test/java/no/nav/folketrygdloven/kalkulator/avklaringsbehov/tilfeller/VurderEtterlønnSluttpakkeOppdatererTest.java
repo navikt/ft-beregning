@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDate;
 import java.util.Collections;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -50,10 +49,10 @@ class VurderEtterlønnSluttpakkeOppdatererTest {
 
         // Assert
         var bgPerioder = oppdatere.getBeregningsgrunnlagBuilder().getBeregningsgrunnlag().getBeregningsgrunnlagPerioder();
-        Assertions.assertThat(bgPerioder).hasSize(1);
+        assertThat(bgPerioder).hasSize(1);
         assertThat(bgPerioder.get(0).getBeregningsgrunnlagPrStatusOgAndelList()).hasSize(1);
         var andel = bgPerioder.get(0).getBeregningsgrunnlagPrStatusOgAndelList().get(0);
-        Assertions.assertThat(andel.getBeregnetPrÅr().compareTo(Beløp.ZERO) == 0).isTrue();
+        assertThat(andel.getBeregnetPrÅr()).isEqualByComparingTo(Beløp.ZERO);
         assertThat(andel.getArbeidsforholdType()).isEqualTo(OpptjeningAktivitetType.ETTERLØNN_SLUTTPAKKE);
     }
 
@@ -71,7 +70,7 @@ class VurderEtterlønnSluttpakkeOppdatererTest {
         // Assert
         var nyttBg = oppdatere.getBeregningsgrunnlagBuilder().getBeregningsgrunnlag();
         var bgPerioder = nyttBg.getBeregningsgrunnlagPerioder();
-        Assertions.assertThat(bgPerioder).hasSize(1);
+        assertThat(bgPerioder).hasSize(1);
         assertThat(bgPerioder.get(0).getBeregningsgrunnlagPrStatusOgAndelList()).hasSize(1);
         var andel = bgPerioder.get(0).getBeregningsgrunnlagPrStatusOgAndelList().get(0);
         assertThat(andel.getBeregnetPrÅr()).isNull();

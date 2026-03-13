@@ -185,7 +185,7 @@ class MapBeregningsgrunnlagFraRegelTilVLTest {
         assertThat(vlBGPStatus.getBgAndelArbeidsforhold().flatMap(BGAndelArbeidsforholdDto::getNaturalytelseBortfaltPrÅr)).isEmpty();
         assertThat(vlBGPStatus.getAvkortetPrÅr().verdi().doubleValue()).isEqualTo(789.789, within(0.01));
         assertThat(vlBGPStatus.getRedusertPrÅr().verdi().doubleValue()).isEqualTo(901.901, within(0.01));
-        assertThat(vlBGPStatus.getDagsatsArbeidsgiver()).isEqualTo(0L);
+        assertThat(vlBGPStatus.getDagsatsArbeidsgiver()).isZero();
     }
 
     private void assertVLBGPStatusFL(BeregningsgrunnlagPrStatusOgAndelDto bgpsa) {

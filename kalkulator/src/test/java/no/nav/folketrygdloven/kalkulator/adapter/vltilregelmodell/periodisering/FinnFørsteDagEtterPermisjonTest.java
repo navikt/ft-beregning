@@ -30,8 +30,7 @@ class FinnFørsteDagEtterPermisjonTest {
         var filter = new PermisjonFilter(Collections.emptyList(), Collections.singletonList(ya), STP);
         var førsteAnsettelsesdagUtenPerm = FinnFørsteDagEtterPermisjon.finn(Collections.singletonList(ya), Periode.of(førStp(100), etterStp(100)), STP, filter);
 
-        assertThat(førsteAnsettelsesdagUtenPerm).isPresent();
-        assertThat(førsteAnsettelsesdagUtenPerm.get()).isEqualTo(førStp(100));
+        assertThat(førsteAnsettelsesdagUtenPerm).isPresent().contains(førStp(100));
     }
 
     @Test
@@ -40,8 +39,7 @@ class FinnFørsteDagEtterPermisjonTest {
         var filter = new PermisjonFilter(Collections.emptyList(), Collections.singletonList(ya), STP);
         var førsteAnsettelsesdagUtenPerm = FinnFørsteDagEtterPermisjon.finn(Collections.singletonList(ya), Periode.of(førStp(100), etterStp(100)), STP, filter);
 
-        assertThat(førsteAnsettelsesdagUtenPerm).isPresent();
-        assertThat(førsteAnsettelsesdagUtenPerm.get()).isEqualTo(etterStp(11));
+        assertThat(førsteAnsettelsesdagUtenPerm).isPresent().contains(etterStp(11));
     }
 
     @Test
@@ -51,8 +49,7 @@ class FinnFørsteDagEtterPermisjonTest {
         var filter = new PermisjonFilter(Collections.emptyList(), Arrays.asList(ya1, ya2), STP);
         var førsteAnsettelsesdagUtenPerm = FinnFørsteDagEtterPermisjon.finn(Arrays.asList(ya1, ya2), Periode.of(førStp(100), etterStp(100)), STP, filter);
 
-        assertThat(førsteAnsettelsesdagUtenPerm).isPresent();
-        assertThat(førsteAnsettelsesdagUtenPerm.get()).isEqualTo(førStp(100));
+        assertThat(førsteAnsettelsesdagUtenPerm).isPresent().contains(førStp(100));
     }
 
     private LocalDate førStp(int dager) {

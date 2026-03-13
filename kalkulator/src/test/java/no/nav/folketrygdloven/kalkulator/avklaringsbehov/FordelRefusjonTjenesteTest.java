@@ -100,7 +100,7 @@ class FordelRefusjonTjenesteTest {
         var map = FordelRefusjonTjeneste.getRefusjonPrÅrMap(endretPeriode, periode);
 
         // Assert
-        assertThat(map.get(fordeltAndel).intValue()).isEqualTo(0);
+        assertThat(map.get(fordeltAndel).intValue()).isZero();
     }
 
     @Test
@@ -186,7 +186,7 @@ class FordelRefusjonTjenesteTest {
 
 
         // Assert
-        assertThat(map.get(fordeltAndel).intValue()).isEqualTo(0);
+        assertThat(map.get(fordeltAndel).intValue()).isZero();
     }
 
     @Test

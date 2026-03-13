@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.kalkulator.BeregningsgrunnlagInputTestUtil;
@@ -55,8 +54,8 @@ class VurderMilitærOppdatererTest {
         var militærStatus = nyttBg.getAktivitetStatuser().stream().filter(a -> AktivitetStatus.MILITÆR_ELLER_SIVIL.equals(a.getAktivitetStatus())).findFirst();
         var militærAndel = nyttBg.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().stream()
             .filter(a -> AktivitetStatus.MILITÆR_ELLER_SIVIL.equals(a.getAktivitetStatus())).findAny();
-        Assertions.assertThat(militærAndel).isPresent();
-        Assertions.assertThat(militærStatus).isPresent();
+        assertThat(militærAndel).isPresent();
+        assertThat(militærStatus).isPresent();
         assertThat(militærStatus.get().getAktivitetStatus()).isEqualTo(AktivitetStatus.MILITÆR_ELLER_SIVIL);
         assertThat(militærStatus.get().getHjemmel()).isEqualTo(Hjemmel.F_14_7);
         assertThat(militærAndel.get().getArbeidsforholdType()).isEqualTo(OpptjeningAktivitetType.UDEFINERT);
@@ -80,8 +79,8 @@ class VurderMilitærOppdatererTest {
         var militærStatus = nyttBg.getAktivitetStatuser().stream().filter(a -> AktivitetStatus.MILITÆR_ELLER_SIVIL.equals(a.getAktivitetStatus())).collect(Collectors.toList());
         var militærAndeler = nyttBg.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().stream()
             .filter(a -> AktivitetStatus.MILITÆR_ELLER_SIVIL.equals(a.getAktivitetStatus())).collect(Collectors.toList());
-        Assertions.assertThat(militærAndeler).hasSize(1);
-        Assertions.assertThat(militærStatus).hasSize(1);
+        assertThat(militærAndeler).hasSize(1);
+        assertThat(militærStatus).hasSize(1);
     }
 
     @Test
@@ -102,8 +101,8 @@ class VurderMilitærOppdatererTest {
         var militærStatus = nyttBg.getAktivitetStatuser().stream().filter(a -> AktivitetStatus.MILITÆR_ELLER_SIVIL.equals(a.getAktivitetStatus())).collect(Collectors.toList());
         var militærAndeler = nyttBg.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().stream()
             .filter(a -> AktivitetStatus.MILITÆR_ELLER_SIVIL.equals(a.getAktivitetStatus())).collect(Collectors.toList());
-        Assertions.assertThat(militærAndeler).hasSize(0);
-        Assertions.assertThat(militærStatus).hasSize(0);
+        assertThat(militærAndeler).isEmpty();
+        assertThat(militærStatus).isEmpty();
         assertThat(nyttBg.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList()).hasSize(1);
     }
 
@@ -125,8 +124,8 @@ class VurderMilitærOppdatererTest {
         var militærStatus = nyttBg.getAktivitetStatuser().stream().filter(a -> AktivitetStatus.MILITÆR_ELLER_SIVIL.equals(a.getAktivitetStatus())).collect(Collectors.toList());
         var militærAndeler = nyttBg.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().stream()
             .filter(a -> AktivitetStatus.MILITÆR_ELLER_SIVIL.equals(a.getAktivitetStatus())).collect(Collectors.toList());
-        Assertions.assertThat(militærAndeler).hasSize(0);
-        Assertions.assertThat(militærStatus).hasSize(0);
+        assertThat(militærAndeler).isEmpty();
+        assertThat(militærStatus).isEmpty();
         assertThat(nyttBg.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList()).hasSize(1);
     }
 

@@ -1,6 +1,6 @@
 package no.nav.folketrygdloven.kalkulator.guitjenester.fakta;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -58,7 +58,7 @@ class VurderLønnsendringDtoTjenesteTest {
 
         tjeneste.lagDto(input, dto);
 
-        assertThat(dto.getArbeidsforholdMedLønnsendringUtenIM().size()).isEqualTo(1);
+        assertThat(dto.getArbeidsforholdMedLønnsendringUtenIM()).hasSize(1);
     }
 
     @Test

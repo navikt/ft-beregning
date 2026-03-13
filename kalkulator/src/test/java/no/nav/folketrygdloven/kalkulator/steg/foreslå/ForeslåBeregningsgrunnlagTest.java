@@ -746,7 +746,7 @@ class ForeslåBeregningsgrunnlagTest {
         assertThat(sammenligningsgrunnlag.getSammenligningsperiodeFom()).isEqualTo(fom);
         assertThat(sammenligningsgrunnlag.getSammenligningsperiodeTom()).isEqualTo(tom);
         assertThat(sammenligningsgrunnlag.getSammenligningsgrunnlagType()).isEqualTo(forventetType);
-        assertThat(sammenligningsgrunnlag.getAvvikPromilleNy().compareTo(avvikPromille)).isEqualTo(0);
+        assertThat(sammenligningsgrunnlag.getAvvikPromilleNy()).isEqualByComparingTo(avvikPromille);
     }
 
     private void verifiserBGAT(BeregningsgrunnlagPrStatusOgAndelDto bgpsa, Arbeidsgiver arbeidsgiver, Beløp årsinntekt,
