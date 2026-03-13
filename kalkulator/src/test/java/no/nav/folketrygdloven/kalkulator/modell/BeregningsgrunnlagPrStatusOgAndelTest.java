@@ -95,7 +95,7 @@ class BeregningsgrunnlagPrStatusOgAndelTest {
 
     @Test
     void skal_håndtere_null_this_feilKlasse_i_equals() {
-        assertThat(prStatusOgAndel).isNotEqualTo(null);
+        assertThat(prStatusOgAndel).isNotNull();
         assertThat(prStatusOgAndel).isNotEqualTo("blabla");
         assertThat(prStatusOgAndel).isEqualTo(prStatusOgAndel);
     }

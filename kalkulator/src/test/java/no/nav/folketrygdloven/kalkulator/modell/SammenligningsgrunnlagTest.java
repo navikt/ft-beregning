@@ -61,7 +61,7 @@ class SammenligningsgrunnlagTest {
 
     @Test
     void skal_håndtere_null_this_feilKlasse_i_equals() {
-        assertThat(sammenligningsgrunnlag).isNotEqualTo(null);
+        assertThat(sammenligningsgrunnlag).isNotNull();
         assertThat(sammenligningsgrunnlag).isNotEqualTo("blabla");
         assertThat(sammenligningsgrunnlag).isEqualTo(sammenligningsgrunnlag);
     }

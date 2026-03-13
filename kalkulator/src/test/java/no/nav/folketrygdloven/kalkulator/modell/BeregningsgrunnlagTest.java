@@ -51,7 +51,7 @@ class BeregningsgrunnlagTest {
     void skal_håndtere_null_this_feilKlasse_i_equals() {
         var beregningsgrunnlag = lagMedPaakrevdeFelter();
 
-        assertThat(beregningsgrunnlag).isNotEqualTo(null);
+        assertThat(beregningsgrunnlag).isNotNull();
         assertThat(beregningsgrunnlag).isNotEqualTo("blabla");
         assertThat(beregningsgrunnlag).isEqualTo(beregningsgrunnlag);
     }
