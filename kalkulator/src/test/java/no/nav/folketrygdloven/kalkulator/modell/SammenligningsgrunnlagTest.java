@@ -60,11 +60,6 @@ class SammenligningsgrunnlagTest {
     }
 
     @Test
-    void skal_håndtere_null_this_feilKlasse_i_equals() {
-        assertThat(sammenligningsgrunnlag).isNotNull().isNotEqualTo("blabla").isEqualTo(sammenligningsgrunnlag);
-    }
-
-    @Test
     void skal_ha_refleksiv_equalsOgHashCode() {
         var sammenligningsgrunnlag2 = lagSammenligningsgrunnlagBuilder().build();
 

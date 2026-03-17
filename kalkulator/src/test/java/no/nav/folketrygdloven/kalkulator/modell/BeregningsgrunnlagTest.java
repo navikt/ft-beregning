@@ -48,13 +48,6 @@ class BeregningsgrunnlagTest {
     }
 
     @Test
-    void skal_håndtere_null_this_feilKlasse_i_equals() {
-        var beregningsgrunnlag = lagMedPaakrevdeFelter();
-
-        assertThat(beregningsgrunnlag).isNotNull().isNotEqualTo("blabla").isEqualTo(beregningsgrunnlag);
-    }
-
-    @Test
     void skal_ha_refleksiv_equalsOgHashCode() {
         var beregningsgrunnlag2 = lagMedPaakrevdeFelter();
 

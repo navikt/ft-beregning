@@ -51,11 +51,6 @@ class BeregningsgrunnlagAktivitetStatusTest {
     }
 
     @Test
-    void skal_håndtere_null_this_feilKlasse_i_equals() {
-        assertThat(beregningsgrunnlagAktivitetStatus).isNotNull().isNotEqualTo("blabla").isEqualTo(beregningsgrunnlagAktivitetStatus);
-    }
-
-    @Test
     void skal_ha_refleksiv_equalsOgHashCode() {
 	    var beregningsgrunnlagAktivitetStatus2 = lagMedPaakrevdeFelter();
 

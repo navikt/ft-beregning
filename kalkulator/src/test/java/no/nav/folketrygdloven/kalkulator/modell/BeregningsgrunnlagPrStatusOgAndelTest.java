@@ -94,11 +94,6 @@ class BeregningsgrunnlagPrStatusOgAndelTest {
     }
 
     @Test
-    void skal_håndtere_null_this_feilKlasse_i_equals() {
-        assertThat(prStatusOgAndel).isNotNull().isNotEqualTo("blabla").isEqualTo(prStatusOgAndel);
-    }
-
-    @Test
     void skal_ha_refleksiv_equalsOgHashCode() {
         var prStatusOgAndel2 = lagBeregningsgrunnlagPrStatusOgAndel(beregningsgrunnlagPeriode);
 

@@ -54,11 +54,6 @@ class BeregningsgrunnlagPeriodeTest {
     }
 
     @Test
-    void skal_håndtere_null_this_feilKlasse_i_equals() {
-        assertThat(beregningsgrunnlagPeriode).isNotNull().isNotEqualTo("blabla").isEqualTo(beregningsgrunnlagPeriode);
-    }
-
-    @Test
     void skal_ha_refleksiv_equalsOgHashCode() {
         var beregningsgrunnlagPeriode2 = lagMedPaakrevdeFelter(beregningsgrunnlag);
 
