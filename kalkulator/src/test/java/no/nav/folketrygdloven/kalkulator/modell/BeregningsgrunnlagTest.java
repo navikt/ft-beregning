@@ -32,16 +32,14 @@ class BeregningsgrunnlagTest {
 
     @Test
     void skal_bygge_instans_med_påkrevde_felter() {
-        var beregningsgrunnlag = lagMedPaakrevdeFelter();
-
         assertThat(beregningsgrunnlag.getSkjæringstidspunkt()).isEqualTo(SKJÆRINGSTIDSPUNKT);
     }
 
     @Test
     void skal_ikke_bygge_instans_hvis_mangler_påkrevde_felter() {
-        var builder = BeregningsgrunnlagDto.builder();
+        var builderUtenPåkrevdeFelter = BeregningsgrunnlagDto.builder();
         try {
-            builder.build();
+            builderUtenPåkrevdeFelter.build();
         } catch (NullPointerException e) {
             assertThat(e.getMessage()).contains("skjæringstidspunkt");
         }

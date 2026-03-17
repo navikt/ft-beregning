@@ -44,12 +44,11 @@ class AvklaringsbehovUtlederFastsettBeregningsaktiviteterPleiepengerTest {
     private BeregningAktivitetAggregatDto beregningAktivitetAggregat;
     private KoblingReferanse ref;
 
-    private AvklaringsbehovUtlederFastsettBeregningsaktiviteterPleiepenger apUtleder = new AvklaringsbehovUtlederFastsettBeregningsaktiviteterPleiepenger();
+    private final AvklaringsbehovUtlederFastsettBeregningsaktiviteterPleiepenger apUtleder = new AvklaringsbehovUtlederFastsettBeregningsaktiviteterPleiepenger();
     private boolean erOverstyrt;
 
-    private OpptjeningAktiviteterDto opptjeningAktiviteter = new OpptjeningAktiviteterDto();
+    private final OpptjeningAktiviteterDto opptjeningAktiviteter = new OpptjeningAktiviteterDto();
 
-    private BeregningsgrunnlagInput input;
     private LocalDate tom;
     private BeregningsgrunnlagDto beregningsgrunnlag;
 
@@ -70,8 +69,6 @@ class AvklaringsbehovUtlederFastsettBeregningsaktiviteterPleiepengerTest {
                         .medPeriode(Intervall.fraOgMed(SKJÆRINGSTIDSPUNKT.minusMonths(10)))
                         .build())
             .build();
-        input = new BeregningsgrunnlagInput(ref, null, null, null, null);
-        input.leggTilKonfigverdi(INNTEKT_RAPPORTERING_FRIST_DATO, 100000);
     }
 
     @Test
@@ -128,13 +125,13 @@ class AvklaringsbehovUtlederFastsettBeregningsaktiviteterPleiepengerTest {
         BeregningsgrunnlagPrStatusOgAndelDto.Builder.ny()
                 .medAktivitetStatus(AktivitetStatus.BRUKERS_ANDEL)
                 .build(periode);
-	    var beregningAktivitetAggregat = lagBeregningAktivitetAggregatDto(skjæringstidspunkt,
+	    var beregningAktivitetAggregatForeldrepenger = lagBeregningAktivitetAggregatDto(skjæringstidspunkt,
                 OpptjeningAktivitetType.FORELDREPENGER, Intervall.fraOgMed(ytelsePeriodeFom));
 
 
         // Act
 	    var beregningsgrunnlagRegelResultat = new BeregningsgrunnlagRegelResultat(bgMedKunYtelse, Collections.emptyList());
-        beregningsgrunnlagRegelResultat.setRegisterAktiviteter(beregningAktivitetAggregat);
+        beregningsgrunnlagRegelResultat.setRegisterAktiviteter(beregningAktivitetAggregatForeldrepenger);
 	    var resultater = apUtleder.utledAvklaringsbehov(beregningsgrunnlagRegelResultat, lagMockBeregningsgrunnlagInput(ytelse), erOverstyrt);
 
         // Assert
@@ -161,13 +158,13 @@ class AvklaringsbehovUtlederFastsettBeregningsaktiviteterPleiepengerTest {
             .build(bgMedDagpenger);
         BeregningsgrunnlagPrStatusOgAndelDto.Builder.ny()
             .medAktivitetStatus(AktivitetStatus.DAGPENGER).build(periode);
-	    var beregningAktivitetAggregat = lagBeregningAktivitetAggregatDto(skjæringstidspunkt,
+	    var beregningAktivitetAggregatDagpenger = lagBeregningAktivitetAggregatDto(skjæringstidspunkt,
                 OpptjeningAktivitetType.DAGPENGER, Intervall.fraOgMed(ytelsePeriodeFom));
 
 
         // Act
 	    var beregningsgrunnlagRegelResultat = new BeregningsgrunnlagRegelResultat(bgMedDagpenger, Collections.emptyList());
-        beregningsgrunnlagRegelResultat.setRegisterAktiviteter(beregningAktivitetAggregat);
+        beregningsgrunnlagRegelResultat.setRegisterAktiviteter(beregningAktivitetAggregatDagpenger);
 	    var resultater = apUtleder.utledAvklaringsbehov(beregningsgrunnlagRegelResultat, lagMockBeregningsgrunnlagInput(ytelse), erOverstyrt);
 
         // Assert
@@ -223,12 +220,12 @@ class AvklaringsbehovUtlederFastsettBeregningsaktiviteterPleiepengerTest {
                 .build(bgMedDagpenger);
         BeregningsgrunnlagPrStatusOgAndelDto.Builder.ny()
                 .medAktivitetStatus(AktivitetStatus.DAGPENGER).build(periode);
-	    var beregningAktivitetAggregat = lagBeregningAktivitetAggregatDto(skjæringstidspunkt,
+	    var beregningAktivitetAggregatDagpenger = lagBeregningAktivitetAggregatDto(skjæringstidspunkt,
                 OpptjeningAktivitetType.DAGPENGER, Intervall.fraOgMed(ytelsePeriodeFom));
 
         // Act
 	    var beregningsgrunnlagRegelResultat = new BeregningsgrunnlagRegelResultat(bgMedDagpenger, Collections.emptyList());
-        beregningsgrunnlagRegelResultat.setRegisterAktiviteter(beregningAktivitetAggregat);
+        beregningsgrunnlagRegelResultat.setRegisterAktiviteter(beregningAktivitetAggregatDagpenger);
 	    var resultater = apUtleder.utledAvklaringsbehov(beregningsgrunnlagRegelResultat, lagMockBeregningsgrunnlagInput(ytelse), erOverstyrt);
 
         // Assert
@@ -255,12 +252,12 @@ class AvklaringsbehovUtlederFastsettBeregningsaktiviteterPleiepengerTest {
                 .build(bgMedDagpenger);
         BeregningsgrunnlagPrStatusOgAndelDto.Builder.ny()
                 .medAktivitetStatus(AktivitetStatus.ARBEIDSAVKLARINGSPENGER).build(periode);
-	    var beregningAktivitetAggregat = lagBeregningAktivitetAggregatDto(skjæringstidspunkt,
+	    var beregningAktivitetAggregatAAP = lagBeregningAktivitetAggregatDto(skjæringstidspunkt,
                 OpptjeningAktivitetType.AAP, periodeIntervallForAktivitet);
 
 
 	    var beregningsgrunnlagRegelResultat = new BeregningsgrunnlagRegelResultat(bgMedDagpenger, Collections.emptyList());
-        beregningsgrunnlagRegelResultat.setRegisterAktiviteter(beregningAktivitetAggregat);
+        beregningsgrunnlagRegelResultat.setRegisterAktiviteter(beregningAktivitetAggregatAAP);
 
         // Act
 	    var resultater = apUtleder.utledAvklaringsbehov(beregningsgrunnlagRegelResultat, lagMockBeregningsgrunnlagInput(ytelse), erOverstyrt);
@@ -289,12 +286,12 @@ class AvklaringsbehovUtlederFastsettBeregningsaktiviteterPleiepengerTest {
                 .build(bgMedDagpenger);
         BeregningsgrunnlagPrStatusOgAndelDto.Builder.ny()
                 .medAktivitetStatus(AktivitetStatus.DAGPENGER).build(periode);
-	    var beregningAktivitetAggregat = lagBeregningAktivitetAggregatDto(skjæringstidspunkt,
+	    var beregningAktivitetAggregatDagpenger = lagBeregningAktivitetAggregatDto(skjæringstidspunkt,
                 OpptjeningAktivitetType.DAGPENGER, periodeIntervallForAktivitet);
 
         // Act
 	    var beregningsgrunnlagRegelResultat = new BeregningsgrunnlagRegelResultat(bgMedDagpenger, Collections.emptyList());
-        beregningsgrunnlagRegelResultat.setRegisterAktiviteter(beregningAktivitetAggregat);
+        beregningsgrunnlagRegelResultat.setRegisterAktiviteter(beregningAktivitetAggregatDagpenger);
 	    var resultater = apUtleder.utledAvklaringsbehov(beregningsgrunnlagRegelResultat, lagMockBeregningsgrunnlagInput(ytelse), erOverstyrt);
 
         // Assert
@@ -324,12 +321,12 @@ class AvklaringsbehovUtlederFastsettBeregningsaktiviteterPleiepengerTest {
                 .build(bgMedDagpenger);
         BeregningsgrunnlagPrStatusOgAndelDto.Builder.ny()
                 .medAktivitetStatus(AktivitetStatus.ARBEIDSAVKLARINGSPENGER).build(periode);
-	    var beregningAktivitetAggregat = lagBeregningAktivitetAggregatDto(skjæringstidspunkt,
+	    var beregningAktivitetAggregatAAP = lagBeregningAktivitetAggregatDto(skjæringstidspunkt,
                 OpptjeningAktivitetType.AAP, periodeIntervallForAktivitet);
 
         // Act
 	    var beregningsgrunnlagRegelResultat = new BeregningsgrunnlagRegelResultat(bgMedDagpenger, Collections.emptyList());
-        beregningsgrunnlagRegelResultat.setRegisterAktiviteter(beregningAktivitetAggregat);
+        beregningsgrunnlagRegelResultat.setRegisterAktiviteter(beregningAktivitetAggregatAAP);
 	    var resultater = apUtleder.utledAvklaringsbehov(beregningsgrunnlagRegelResultat, lagMockBeregningsgrunnlagInput(ytelse), erOverstyrt);
 
         // Assert

@@ -15,7 +15,6 @@ import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
@@ -29,7 +28,7 @@ import no.nav.fpsak.nare.evaluation.Resultat;
 class BeregnPrArbeidsforholdFraAOrdningenTest {
 
 	private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.of(2021, 10, 15);
-	private Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(SKJÆRINGSTIDSPUNKT.minusYears(2), "12345");
+	private final Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(SKJÆRINGSTIDSPUNKT.minusYears(2), "12345");
 
 	@Test
 	void skalKasteExceptionNårBeregningperiodeErNull() {
@@ -115,18 +114,15 @@ class BeregnPrArbeidsforholdFraAOrdningenTest {
 		//Arrange
 		// 12 Virkedager gjenstående
         var startArbeidsforhold = SKJÆRINGSTIDSPUNKT.minusMonths(1).withDayOfMonth(15);
-        var arbeidsforhold = Arbeidsforhold.builder()
-				.medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT)
-				.medOrgnr("12345")
-				.medStartdato(startArbeidsforhold)
-				.build();
+        var arbeidsforholdHalvMåned = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(startArbeidsforhold, "12345");
+
         var beregningsperiode = Periode.of(startArbeidsforhold, SKJÆRINGSTIDSPUNKT.minusMonths(1).with(TemporalAdjusters.lastDayOfMonth()));
         var inntektsgrunnlag = new Inntektsgrunnlag();
-		inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder().medInntekt(BigDecimal.valueOf(20000)).medMåned(beregningsperiode.getTom()).medArbeidsgiver(arbeidsforhold).medInntektskildeOgPeriodeType(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING).build());
+		inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder().medInntekt(BigDecimal.valueOf(20000)).medMåned(beregningsperiode.getTom()).medArbeidsgiver(arbeidsforholdHalvMåned).medInntektskildeOgPeriodeType(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING).build());
 		//Inntekt utenfor beregningsperioden - skal ikke tas med
-		inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder().medInntekt(BigDecimal.valueOf(999999)).medMåned(beregningsperiode.getFom().minusMonths(1)).medArbeidsgiver(arbeidsforhold).medInntektskildeOgPeriodeType(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING).build());
+		inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder().medInntekt(BigDecimal.valueOf(999999)).medMåned(beregningsperiode.getFom().minusMonths(1)).medArbeidsgiver(arbeidsforholdHalvMåned).medInntektskildeOgPeriodeType(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING).build());
 
-        var grunnlag = settoppGrunnlagMedEnPeriode(LocalDate.now(), inntektsgrunnlag, List.of(AktivitetStatus.ATFL), List.of(arbeidsforhold));
+        var grunnlag = settoppGrunnlagMedEnPeriode(LocalDate.now(), inntektsgrunnlag, List.of(AktivitetStatus.ATFL), List.of(arbeidsforholdHalvMåned));
         var periode = grunnlag.getBeregningsgrunnlagPerioder().get(0);
         var arbeidstakerStatus = periode.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
 		BeregningsgrunnlagPrArbeidsforhold.builder(arbeidstakerStatus).medBeregningsperiode(beregningsperiode);
@@ -144,17 +140,8 @@ class BeregnPrArbeidsforholdFraAOrdningenTest {
 				utbetalt lønn i 2021-09 er 46332
 				utbetalt lønn i 2021-10 er 55809 (13 virkedager med 46332, 9 virkedager med 69498)
 		 */
-
-        var stp = LocalDate.of(2021, 10, 15);
         var lønnsendringdato = LocalDate.of(2021, 9, 20);
-        var beregningsperiode = Periode.of(lønnsendringdato, stp.minusMonths(1).with(TemporalAdjusters.lastDayOfMonth()));
-
-        var arbeidsforhold = Arbeidsforhold.builder()
-				.medAktivitet(Aktivitet.ARBEIDSTAKERINNTEKT)
-				.medOrgnr("12345")
-				.medStartdato(LocalDate.of(2020, 1, 1))
-				.build();
-
+        var beregningsperiode = Periode.of(lønnsendringdato, SKJÆRINGSTIDSPUNKT.minusMonths(1).with(TemporalAdjusters.lastDayOfMonth()));
         var inntektsgrunnlag = new Inntektsgrunnlag();
 		inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder().medInntekt(BigDecimal.valueOf(46332)).medMåned(YearMonth.of(2021, 8)).medArbeidsgiver(arbeidsforhold).medInntektskildeOgPeriodeType(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING).build());
 		inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder().medInntekt(BigDecimal.valueOf(55809)).medMåned(YearMonth.of(2021, 9)).medArbeidsgiver(arbeidsforhold).medInntektskildeOgPeriodeType(Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING).build());

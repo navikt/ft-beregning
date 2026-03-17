@@ -719,11 +719,11 @@ public class BeregningsgrunnlagPrStatusOgAndelDto implements IndexKey {
             Set<Long> andelsnrIBruk = new HashSet<>();
             kladd.beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndelList().stream()
                     .map(BeregningsgrunnlagPrStatusOgAndelDto::getAndelsnr)
-                    .forEach(andelsnr -> {
-                        if (andelsnrIBruk.contains(andelsnr)) {
+                    .forEach(nr -> {
+                        if (andelsnrIBruk.contains(nr)) {
                             throw new IllegalStateException("Utviklerfeil: Kan ikke bygge andel. Andelsnr eksisterer allerede på en annen andel i samme bgPeriode.");
                         }
-                        andelsnrIBruk.add(andelsnr);
+                        andelsnrIBruk.add(nr);
                     });
         }
 

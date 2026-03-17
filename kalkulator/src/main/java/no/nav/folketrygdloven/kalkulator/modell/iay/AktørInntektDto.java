@@ -23,11 +23,7 @@ public class AktørInntektDto {
      * Deep copy ctor
      */
     AktørInntektDto(AktørInntektDto aktørInntekt) {
-
-        this.inntekt = aktørInntekt.inntekt.stream().map(i -> {
-            var inntekt = new InntektDto(i);
-            return inntekt;
-        }).collect(Collectors.toCollection(LinkedHashSet::new));
+        this.inntekt = aktørInntekt.inntekt.stream().map(InntektDto::new).collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     /** Get alle inntekter */
