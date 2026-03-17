@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
@@ -40,12 +41,12 @@ class ForeslåBeregningsgrunnlagDPellerAAPKombinasjonMedAnnenStatus extends Leaf
 
         var dagsatsOgGrad = erInntektPåEnkeltdager(grunnlag, bgPerStatus.getAktivitetStatus()) ? regnUtSnittInntektOgGrad(grunnlag) : finnPeriodeInntektForDPEllerAAP(grunnlag, bgPerStatus.getAktivitetStatus());
         var dagsats = dagsatsOgGrad.dagsats();
-        var beregnetPrÅr = BigDecimal.valueOf(dagsats).multiply(dagsatsOgGrad.inntektPeriodeType().getAntallPrÅr()).multiply(dagsatsOgGrad.utbetalingsgrad());
+        var beregnetPrÅr = dagsats.multiply(dagsatsOgGrad.inntektPeriodeType().getAntallPrÅr()).multiply(dagsatsOgGrad.utbetalingsgrad());
 
 		BeregningsgrunnlagPrStatus.builder(bgPerStatus)
 				.medBeregnetPrÅr(beregnetPrÅr)
 				.medÅrsbeløpFraTilstøtendeYtelse(beregnetPrÅr)
-				.medOrginalDagsatsFraTilstøtendeYtelse(dagsats)
+				.medOrginalDagsatsFraTilstøtendeYtelse(dagsats.setScale(0, RoundingMode.HALF_EVEN).longValue())
 				.build();
 
         var hjemmel = AktivitetStatus.AAP.equals(bgPerStatus.getAktivitetStatus()) ?
@@ -87,14 +88,24 @@ class ForeslåBeregningsgrunnlagDPellerAAPKombinasjonMedAnnenStatus extends Leaf
         // TODO Diskuter hvordan vi regner ut gjennomsnitt utbetalingsfaktor
         var snittUtbetalingsfaktor = aggregertUtbetalingsgrad.divide(BigDecimal.valueOf(antallVirkedager), 2, RoundingMode.HALF_EVEN);
 
-        return new DagsatsOgGrad(snittDagsats.longValue(), snittUtbetalingsfaktor, Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP_ENKELTDAGER.getInntektPeriodeType());
+        return new DagsatsOgGrad(snittDagsats, snittUtbetalingsfaktor, Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP_ENKELTDAGER.getInntektPeriodeType());
     }
 
     private boolean erInntektPåEnkeltdager(BeregningsgrunnlagPeriode grunnlag, AktivitetStatus aktivitetStatus) {
         if (aktivitetStatus.erDPFraYtelse()) {
             return false;
         }
-        return grunnlag.getInntektsgrunnlag().getPeriodeinntekt(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP_ENKELTDAGER, grunnlag.getSkjæringstidspunkt()).isPresent();
+        return grunnlag.getInntektsgrunnlag()
+            .getPeriodeinntekter()
+            .stream()
+            .filter(p -> p.getFom().isBefore(grunnlag.getSkjæringstidspunkt()))
+            .filter(p -> Set.of(
+                Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP_ENKELTDAGER,
+                Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP
+            ).contains(p.getInntektskilde()))
+            .max(Comparator.comparing(Periodeinntekt::getTom))
+            .map(p -> p.getInntektskilde().equals(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP_ENKELTDAGER))
+            .orElseThrow();
     }
 
     private DagsatsOgGrad finnPeriodeInntektForDPEllerAAP(BeregningsgrunnlagPeriode grunnlag, AktivitetStatus aktivitetStatus) {
@@ -117,10 +128,10 @@ class ForeslåBeregningsgrunnlagDPellerAAPKombinasjonMedAnnenStatus extends Leaf
 	}
 
     private DagsatsOgGrad gjørOmTilDagsatsOgGrad(Periodeinntekt periodeinntekt) {
-        var dagsats = periodeinntekt.getInntekt().longValue();
+        var dagsats = periodeinntekt.getInntekt();
         var utbetalingsgrad = periodeinntekt.getUtbetalingsfaktor()
             .orElseThrow(() -> new IllegalStateException("Utbetalingsgrad for DP/AAP mangler."));
         return new DagsatsOgGrad(dagsats, utbetalingsgrad, periodeinntekt.getInntektPeriodeType());
     }
-    private record DagsatsOgGrad(long dagsats, BigDecimal utbetalingsgrad, InntektPeriodeType inntektPeriodeType){}
+    private record DagsatsOgGrad(BigDecimal dagsats, BigDecimal utbetalingsgrad, InntektPeriodeType inntektPeriodeType){}
 }
