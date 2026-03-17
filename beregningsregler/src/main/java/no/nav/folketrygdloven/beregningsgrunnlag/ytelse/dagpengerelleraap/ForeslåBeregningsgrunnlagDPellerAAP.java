@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
@@ -42,11 +43,12 @@ class ForeslåBeregningsgrunnlagDPellerAAP extends LeafSpecification<Beregningsg
             grunnlag) : finnDagsatsForDpEllerAap(grunnlag, bgPerStatus.getAktivitetStatus());
 
         var antallPerioderPrÅr = InntektPeriodeType.DAGLIG.getAntallPrÅr();
-        var beregnetPrÅr = BigDecimal.valueOf(dagsats).multiply(antallPerioderPrÅr);
+        var beregnetPrÅr = dagsats.multiply(antallPerioderPrÅr).setScale(0, RoundingMode.HALF_EVEN);
 		BeregningsgrunnlagPrStatus.builder(bgPerStatus)
 				.medBeregnetPrÅr(beregnetPrÅr)
 				.medÅrsbeløpFraTilstøtendeYtelse(beregnetPrÅr)
-				.medOrginalDagsatsFraTilstøtendeYtelse(dagsats)
+                // TODO Kan vi kvitte oss med feltet? Hvis nei, hva gir det mening å lagre i disse tilfellene?
+				.medOrginalDagsatsFraTilstøtendeYtelse(dagsats.setScale(0, RoundingMode.HALF_EVEN).longValue())
 				.build();
 
         var hjemmel = AktivitetStatus.AAP.equals(bgPerStatus.getAktivitetStatus()) ? BeregningsgrunnlagHjemmel.F_14_7
@@ -60,7 +62,7 @@ class ForeslåBeregningsgrunnlagDPellerAAP extends LeafSpecification<Beregningsg
 		return beregnet(resultater);
 	}
 
-    private long regnUtSnittInntekt(BeregningsgrunnlagPeriode grunnlag) {
+    private BigDecimal regnUtSnittInntekt(BeregningsgrunnlagPeriode grunnlag) {
         var stp = grunnlag.getSkjæringstidspunkt();
         var relevanteInntekter = grunnlag.getInntektsgrunnlag()
             .getPeriodeinntekter()
@@ -80,29 +82,38 @@ class ForeslåBeregningsgrunnlagDPellerAAP extends LeafSpecification<Beregningsg
             .reduce(BigDecimal::add)
             .orElse(BigDecimal.ZERO);
         var antallVirkedager = Virkedager.beregnAntallVirkedager(beregningsperiodeForYtelse);
-        var snittDagsats = aggregertDagsats.divide(BigDecimal.valueOf(antallVirkedager), 0, RoundingMode.HALF_EVEN);
-        return snittDagsats.longValue();
+        return aggregertDagsats.divide(BigDecimal.valueOf(antallVirkedager), 10, RoundingMode.HALF_EVEN);
     }
 
     private boolean erInntektPåEnkeltdager(BeregningsgrunnlagPeriode grunnlag, AktivitetStatus aktivitetStatus) {
         if (aktivitetStatus.erDPFraYtelse()) {
             return false;
         }
-        return grunnlag.getInntektsgrunnlag().getPeriodeinntekt(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP_ENKELTDAGER, grunnlag.getSkjæringstidspunkt()).isPresent();
+        return grunnlag.getInntektsgrunnlag()
+            .getPeriodeinntekter()
+            .stream()
+            .filter(p -> p.getFom().isBefore(grunnlag.getSkjæringstidspunkt()))
+            .filter(p -> Set.of(
+                Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP_ENKELTDAGER,
+                Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP
+            ).contains(p.getInntektskilde()))
+            .max(Comparator.comparing(Periodeinntekt::getTom))
+            .map(p -> p.getInntektskilde().equals(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP_ENKELTDAGER))
+            .orElseThrow();
     }
 
-    private long finnDagsatsForDpEllerAap(BeregningsgrunnlagPeriode grunnlag, AktivitetStatus aktivitetStatus) {
+    private BigDecimal finnDagsatsForDpEllerAap(BeregningsgrunnlagPeriode grunnlag, AktivitetStatus aktivitetStatus) {
 		if (aktivitetStatus.erDPFraYtelse()) {
 			var dagpengerFraYtelseVedtak = grunnlag.getInntektsgrunnlag()
 					.getSistePeriodeinntekterMedType(Inntektskilde.YTELSE_VEDTAK)
 					.stream().filter(i -> i.getInntektskategori().equals(Inntektskategori.DAGPENGER))
 					.findFirst();
 			if (dagpengerFraYtelseVedtak.isPresent()) {
-				return dagpengerFraYtelseVedtak.get().getInntekt().longValue();
+				return dagpengerFraYtelseVedtak.get().getInntekt();
 			}
 		}
 		return finnPeriodeInntektFraMeldekort(grunnlag)
-				.orElseThrow(() -> new IllegalStateException("Ingen inntekter fra tilstøtende ytelser funnet i siste måned med inntekt")).getInntekt().longValue();
+				.orElseThrow(() -> new IllegalStateException("Ingen inntekter fra tilstøtende ytelser funnet i siste måned med inntekt")).getInntekt();
 	}
 
 	private Optional<Periodeinntekt> finnPeriodeInntektFraMeldekort(BeregningsgrunnlagPeriode grunnlag) {

@@ -32,6 +32,7 @@ import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
 
     private LocalDate skjæringstidspunkt = LocalDate.of(2018, Month.JANUARY, 15);
+
     @Test
     void skalForeslåBeregningsgrunnlagForDagpenger() {
         //Arrange
@@ -232,6 +233,112 @@ class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
         assertThat(grunnlag.getBeregningsgrunnlag().getAktivitetStatus(AktivitetStatus.ATFL).getHjemmel()).isEqualTo(BeregningsgrunnlagHjemmel.F_14_7);
     }
 
+    @Test
+    void skalForeslåAAPGrunnlagNårUtbetalingerErBruttOppIDager() {
+        //Arrange
+        var p1 = lagPeriodeInntektForDag(1611, førStp(1));
+        var inntektsgrunnlag = new Inntektsgrunnlag();
+        inntektsgrunnlag.leggTilPeriodeinntekt(p1);
+        var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.AAP));
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+
+        //Act
+        var evaluation = new RegelFastsettBeregningsgrunnlagDPellerAAP().evaluer(grunnlag);
+
+        //Assert
+        var regelResultat = getRegelResultat(evaluation, "input");
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+
+        var periode = new Periode(skjæringstidspunkt, null);
+        assertThat(grunnlag.getBeregningsgrunnlagPeriode()).isEqualTo(periode);
+
+        var brutto = BigDecimal.valueOf(41_886);
+        verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.F_14_7, AktivitetStatus.AAP, brutto.doubleValue());
+        var bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.AAP);
+        assertThat(bgps.getBeregnetPrÅr()).isEqualByComparingTo(brutto);
+        assertThat(bgps.getÅrsbeløpFraTilstøtendeYtelse()).isEqualByComparingTo(brutto);
+        assertThat(bgps.getOrginalDagsatsFraTilstøtendeYtelse()).isEqualTo(161);
+    }
+
+    @Test
+    void skalForeslåAAPGrunnlagNårUtbetalingerErBruttOppIDagerFlereDagerUjevnSats() {
+        //Arrange
+        var inntektsgrunnlag = new Inntektsgrunnlag();
+        inntektsgrunnlag.leggTilPeriodeinntekt(lagPeriodeInntektForDag(1611, førStp(1)));
+        inntektsgrunnlag.leggTilPeriodeinntekt(lagPeriodeInntektForDag(1611, førStp(2)));
+        inntektsgrunnlag.leggTilPeriodeinntekt(lagPeriodeInntektForDag(1611, førStp(3)));
+        inntektsgrunnlag.leggTilPeriodeinntekt(lagPeriodeInntektForDag(2147, førStp(4)));
+
+        var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.AAP));
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+
+        //Act
+        var evaluation = new RegelFastsettBeregningsgrunnlagDPellerAAP().evaluer(grunnlag);
+
+        //Assert
+        var regelResultat = getRegelResultat(evaluation, "input");
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+
+        var periode = new Periode(skjæringstidspunkt, null);
+        assertThat(grunnlag.getBeregningsgrunnlagPeriode()).isEqualTo(periode);
+
+        var brutto = BigDecimal.valueOf(181_480);
+        verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.F_14_7, AktivitetStatus.AAP, brutto.doubleValue());
+        var bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.AAP);
+        assertThat(bgps.getBeregnetPrÅr()).isEqualByComparingTo(brutto);
+        assertThat(bgps.getÅrsbeløpFraTilstøtendeYtelse()).isEqualByComparingTo(brutto);
+        assertThat(bgps.getOrginalDagsatsFraTilstøtendeYtelse()).isEqualTo(698);
+    }
+
+    @Test
+    void skalForeslåAAPGrunnlagNårUtbetalingerErBruttOppIDagerFullPeriode() {
+        //Arrange
+        var inntektsgrunnlag = new Inntektsgrunnlag();
+        // Første uke
+        inntektsgrunnlag.leggTilPeriodeinntekt(lagPeriodeInntektForDag(1611, førStp(3)));
+        inntektsgrunnlag.leggTilPeriodeinntekt(lagPeriodeInntektForDag(2147, førStp(4)));
+        inntektsgrunnlag.leggTilPeriodeinntekt(lagPeriodeInntektForDag(2147, førStp(5)));
+        inntektsgrunnlag.leggTilPeriodeinntekt(lagPeriodeInntektForDag(2147, førStp(6)));
+        inntektsgrunnlag.leggTilPeriodeinntekt(lagPeriodeInntektForDag(2147, førStp(7)));
+
+        // Andre uke
+        inntektsgrunnlag.leggTilPeriodeinntekt(lagPeriodeInntektForDag(1750, førStp(10)));
+        inntektsgrunnlag.leggTilPeriodeinntekt(lagPeriodeInntektForDag(2500, førStp(11)));
+        inntektsgrunnlag.leggTilPeriodeinntekt(lagPeriodeInntektForDag(2500, førStp(12)));
+        inntektsgrunnlag.leggTilPeriodeinntekt(lagPeriodeInntektForDag(2500, førStp(13)));
+        inntektsgrunnlag.leggTilPeriodeinntekt(lagPeriodeInntektForDag(2500, førStp(14)));
+
+        // Tredje uke, skal ikke medregnes i snitt
+        inntektsgrunnlag.leggTilPeriodeinntekt(lagPeriodeInntektForDag(20, førStp(17)));
+        inntektsgrunnlag.leggTilPeriodeinntekt(lagPeriodeInntektForDag(20, førStp(18)));
+        inntektsgrunnlag.leggTilPeriodeinntekt(lagPeriodeInntektForDag(20, førStp(19)));
+        inntektsgrunnlag.leggTilPeriodeinntekt(lagPeriodeInntektForDag(20, førStp(20)));
+        inntektsgrunnlag.leggTilPeriodeinntekt(lagPeriodeInntektForDag(20, førStp(21)));
+
+        var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.AAP));
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+
+        //Act
+        var evaluation = new RegelFastsettBeregningsgrunnlagDPellerAAP().evaluer(grunnlag);
+
+        //Assert
+        var regelResultat = getRegelResultat(evaluation, "input");
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+
+        var periode = new Periode(skjæringstidspunkt, null);
+        assertThat(grunnlag.getBeregningsgrunnlagPeriode()).isEqualTo(periode);
+
+        var brutto = BigDecimal.valueOf(570_674);
+        verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.F_14_7, AktivitetStatus.AAP, brutto.doubleValue());
+        var bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.AAP);
+        assertThat(bgps.getBeregnetPrÅr()).isEqualByComparingTo(brutto);
+        assertThat(bgps.getÅrsbeløpFraTilstøtendeYtelse()).isEqualByComparingTo(brutto);
+        assertThat(bgps.getOrginalDagsatsFraTilstøtendeYtelse()).isEqualTo(2195);
+    }
+
+    private LocalDate førStp(int i) {
+        return skjæringstidspunkt.minusDays(i);
+    }
 
     private Inntektsgrunnlag lagInntektsgrunnlag(BigDecimal dagsats, LocalDate skjæringstidspunkt, double utbetalingsgrad) {
 
@@ -243,6 +350,15 @@ class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
             .medUtbetalingsfaktor(BigDecimal.valueOf(utbetalingsgrad))
             .build());
         return inntektsgrunnlag;
+    }
+
+    private Periodeinntekt lagPeriodeInntektForDag(int dagsats, LocalDate skjæringstidspunkt) {
+        return Periodeinntekt.builder()
+            .medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP_ENKELTDAGER)
+            .medDag(skjæringstidspunkt)
+            .medInntekt(BigDecimal.valueOf(dagsats))
+            .medUtbetalingsfaktor(BigDecimal.valueOf(1))
+            .build();
     }
 
 }
