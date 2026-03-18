@@ -27,9 +27,9 @@ public class InntektDto {
         this.inntektsKilde = inntektMal.getInntektsKilde();
         this.arbeidsgiver = inntektMal.getArbeidsgiver();
         this.inntektspost = inntektMal.getAlleInntektsposter().stream().map(ip -> {
-            var inntektspost = new InntektspostDto(ip);
-            inntektspost.setInntekt(this);
-            return inntektspost;
+            var inntektspostDto = new InntektspostDto(ip);
+            inntektspostDto.setInntekt(this);
+            return inntektspostDto;
         }).collect(Collectors.toCollection(ArrayList::new));
     }
 

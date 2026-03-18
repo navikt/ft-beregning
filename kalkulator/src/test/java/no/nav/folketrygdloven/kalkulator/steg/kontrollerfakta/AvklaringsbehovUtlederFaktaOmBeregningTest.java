@@ -57,12 +57,11 @@ class AvklaringsbehovUtlederFaktaOmBeregningTest {
     private AvklaringsbehovUtlederFaktaOmBeregning avklaringsbehovUtlederFaktaOmBeregning;
 
 
-    private BeregningAktivitetAggregatDto.Builder beregningAktivitetBuilder = BeregningAktivitetAggregatDto.builder()
+    private final BeregningAktivitetAggregatDto.Builder beregningAktivitetBuilder = BeregningAktivitetAggregatDto.builder()
             .medSkjæringstidspunktOpptjening(SKJÆRINGSTIDSPUNKT_OPPTJENING);
     private Arbeidsgiver arbeidsgiver;
-    private Arbeidsgiver arbeidsgiver2;
 
-    private KoblingReferanse koblingReferanse = new KoblingReferanseMock(SKJÆRINGSTIDSPUNKT_OPPTJENING);
+    private final KoblingReferanse koblingReferanse = new KoblingReferanseMock(SKJÆRINGSTIDSPUNKT_OPPTJENING);
 
     @BeforeEach
     void setup() {
@@ -90,7 +89,7 @@ class AvklaringsbehovUtlederFaktaOmBeregningTest {
         BeregningIAYTestUtil.byggArbeidForBehandling(
                 SKJÆRINGSTIDSPUNKT_OPPTJENING, SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(10),
                 SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(10), arbId, arbeidsgiver, iayGrunnlagBuilder);
-        arbeidsgiver2 = Arbeidsgiver.virksomhet(orgnr2);
+        Arbeidsgiver arbeidsgiver2 = Arbeidsgiver.virksomhet(orgnr2);
         BeregningIAYTestUtil.byggArbeidForBehandling(SKJÆRINGSTIDSPUNKT_OPPTJENING, SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(2),
                 SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(1), arbId2, arbeidsgiver2, iayGrunnlagBuilder);
 
@@ -149,7 +148,6 @@ class AvklaringsbehovUtlederFaktaOmBeregningTest {
     void skalUtledeAvklaringsbehovATFLSammeOrgLønnsendringNyoppstartetFL() {
         // Arrange
         var arbId3 = InternArbeidsforholdRefDto.namedRef("3");
-	    var arbeidsgiver = Arbeidsgiver.virksomhet(orgnr);
         final var orgnr3 = "567755757";
 	    var opptjeningMap = new HashMap<String, Periode>();
 	    var periode = Periode.månederFør(SKJÆRINGSTIDSPUNKT_OPPTJENING, 12);

@@ -104,8 +104,8 @@ class FordelPerioderTjenesteTest {
 
         var aktørArbeidBuilder = InntektArbeidYtelseAggregatBuilder.AktørArbeidBuilder.oppdatere(iayGrunnlagBuilder.getKladd().getAktørArbeidFraRegister());
         for (var orgnr : orgnrs) {
-            var arbeidsgiver = leggTilYrkesaktivitet(ARBEIDSPERIODE, aktørArbeidBuilder, orgnr, null);
-            fjernOgLeggTilNyBeregningAktivitet(ARBEIDSPERIODE.getFomDato(), ARBEIDSPERIODE.getTomDato(), arbeidsgiver, InternArbeidsforholdRefDto.nullRef());
+            var agMedOrgnr = leggTilYrkesaktivitet(ARBEIDSPERIODE, aktørArbeidBuilder, orgnr, null);
+            fjernOgLeggTilNyBeregningAktivitet(ARBEIDSPERIODE.getFomDato(), ARBEIDSPERIODE.getTomDato(), agMedOrgnr, InternArbeidsforholdRefDto.nullRef());
         }
 
         var inntektArbeidYtelseAggregatBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(iayGrunnlagBuilder.getKladd().getRegisterVersjon(), VersjonTypeDto.REGISTER)
@@ -115,18 +115,18 @@ class FordelPerioderTjenesteTest {
 
     private Arbeidsgiver leggTilYrkesaktivitet(Intervall arbeidsperiode, InntektArbeidYtelseAggregatBuilder.AktørArbeidBuilder aktørArbeidBuilder,
                                                String orgnr, Intervall permisjonperiode) {
-        var arbeidsgiver = Arbeidsgiver.virksomhet(orgnr);
+        var agMedOrgnr = Arbeidsgiver.virksomhet(orgnr);
         var aaBuilder1 = AktivitetsAvtaleDtoBuilder.ny()
                 .medPeriode(arbeidsperiode);
         var yaBuilder = YrkesaktivitetDtoBuilder.oppdatere(Optional.empty())
-                .medArbeidsgiver(arbeidsgiver)
+                .medArbeidsgiver(agMedOrgnr)
                 .medArbeidType(ArbeidType.ORDINÆRT_ARBEIDSFORHOLD)
                 .leggTilAktivitetsAvtale(aaBuilder1);
         if (permisjonperiode != null) {
             yaBuilder.leggTilPermisjon(PermisjonDtoBuilder.ny().medProsentsats(Stillingsprosent.HUNDRED).medPeriode(permisjonperiode).medPermisjonsbeskrivelseType(PermisjonsbeskrivelseType.VELFERDSPERMISJON));
         }
         aktørArbeidBuilder.leggTilYrkesaktivitet(yaBuilder);
-        return arbeidsgiver;
+        return agMedOrgnr;
     }
 
     private void fjernOgLeggTilNyBeregningAktivitet(LocalDate fom, LocalDate tom, Arbeidsgiver arbeidsgiver, InternArbeidsforholdRefDto arbeidsforholdRef) {
@@ -179,7 +179,6 @@ class FordelPerioderTjenesteTest {
                 .build(beregningsgrunnlag);
 
         var arbeidsforholdRef = InternArbeidsforholdRefDto.nyRef();
-        var arbeidsgiver = Arbeidsgiver.virksomhet(ORG_NUMMER);
         BeregningsgrunnlagPrStatusOgAndelDto.Builder.ny()
                 .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                 .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder().medArbeidsgiver(arbeidsgiver).medArbeidsforholdRef(arbeidsforholdRef))
@@ -709,7 +708,6 @@ class FordelPerioderTjenesteTest {
         var grunnlag = lagBeregningsgrunnlagMedOverstyring(List.of(), beregningAktivitetAggregat);
         var ansettelsesDato = SKJÆRINGSTIDSPUNKT.plusWeeks(2);
         var startDatoRefusjon = SKJÆRINGSTIDSPUNKT.plusWeeks(1);
-        var arbeidsgiver = Arbeidsgiver.virksomhet(ORG_NUMMER);
         var newGrunnlagBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
         BeregningIAYTestUtil.byggArbeidForBehandling(SKJÆRINGSTIDSPUNKT, ansettelsesDato, TIDENES_ENDE, arbId, arbeidsgiver,
                 Beløp.fra(10), newGrunnlagBuilder);
@@ -822,14 +820,14 @@ class FordelPerioderTjenesteTest {
     void skalSetteRefusjonskravForSøktRefusjonFraSkjæringstidspunktUtenOpphørsdatoPrivatpersonSomArbeidsgiver() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.namedRef("A");
-        var arbeidsgiver = Arbeidsgiver.person(ARBEIDSGIVER_AKTØR_ID);
+        var aktør = Arbeidsgiver.person(ARBEIDSGIVER_AKTØR_ID);
         BeregningIAYTestUtil.byggArbeidForBehandling(SKJÆRINGSTIDSPUNKT,
                 SKJÆRINGSTIDSPUNKT.minusYears(2),
-                TIDENES_ENDE, arbId, arbeidsgiver, iayGrunnlagBuilder);
+                TIDENES_ENDE, arbId, aktør, iayGrunnlagBuilder);
         var berPerioder = singletonList(new LocalDateInterval(SKJÆRINGSTIDSPUNKT, null));
         var beregningsgrunnlag = BeregningsgrunnlagTestUtil.lagGjeldendeBeregningsgrunnlag(SKJÆRINGSTIDSPUNKT, berPerioder, iayGrunnlagBuilder.getKladd());
         var aktivitetEntitet = BeregningAktivitetDto.builder().medOpptjeningAktivitetType(OpptjeningAktivitetType.ARBEID)
-                .medArbeidsgiver(arbeidsgiver)
+                .medArbeidsgiver(aktør)
                 .medArbeidsforholdRef(arbId)
                 .medPeriode(fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT.minusYears(2), TIDENES_ENDE)).build();
         beregningAktivitetAggregat = leggTilAktivitet(aktivitetEntitet);
@@ -840,7 +838,7 @@ class FordelPerioderTjenesteTest {
 
         var inntekt1 = Beløp.fra(90000);
         var refusjonskrav1 = inntekt1;
-        var im1 = BeregningInntektsmeldingTestUtil.opprettInntektsmelding(arbeidsgiver, arbId, SKJÆRINGSTIDSPUNKT,
+        var im1 = BeregningInntektsmeldingTestUtil.opprettInntektsmelding(aktør, arbId, SKJÆRINGSTIDSPUNKT,
                 refusjonskrav1, inntekt1, null, emptyList(), emptyList());
         iayGrunnlagBuilder.medInntektsmeldinger(im1);
 
@@ -867,7 +865,6 @@ class FordelPerioderTjenesteTest {
     void skalSetteRefusjonskravForSøktRefusjonFraSkjæringstidspunktMedOpphørsdato() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.namedRef("A");
-        var arbeidsgiver = Arbeidsgiver.virksomhet(ORG_NUMMER);
 
         BeregningIAYTestUtil.byggArbeidForBehandling(SKJÆRINGSTIDSPUNKT,
                 SKJÆRINGSTIDSPUNKT.minusYears(2), TIDENES_ENDE, arbId, arbeidsgiver, iayGrunnlagBuilder);
@@ -909,8 +906,6 @@ class FordelPerioderTjenesteTest {
     @Test
     void skalIkkeSetteRefusjonForAktivitetSomErFjernetIOverstyring() {
         // Arrange
-        var arbeidsgiver = Arbeidsgiver.virksomhet(ORG_NUMMER);
-
         var handlingIkkeBenytt = BeregningAktivitetHandlingType.IKKE_BENYTT;
         var overstyring = BeregningAktivitetOverstyringerDto.builder().leggTilOverstyring(lagOverstyringForAktivitet(InternArbeidsforholdRefDto.nullRef(), arbeidsgiver, handlingIkkeBenytt)).build();
         var grunnlag = lagBeregningsgrunnlag(List.of(), beregningAktivitetAggregat, overstyring);
@@ -958,8 +953,6 @@ class FordelPerioderTjenesteTest {
     void skalSetteRefusjonskravForSøktRefusjonFraEtterSkjæringstidspunktMedOpphørsdato() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.namedRef("A");
-        var arbeidsgiver = Arbeidsgiver.virksomhet(ORG_NUMMER);
-
         BeregningIAYTestUtil.byggArbeidForBehandling(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.minusYears(2), TIDENES_ENDE, arbId,
                 Arbeidsgiver.virksomhet(ORG_NUMMER), iayGrunnlagBuilder);
         var berPerioder = singletonList(new LocalDateInterval(SKJÆRINGSTIDSPUNKT, null));
@@ -1002,8 +995,6 @@ class FordelPerioderTjenesteTest {
     void skalSetteRefusjonskravForSøktRefusjonFraEtterSkjæringstidspunktUtenOpphørsdato() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.namedRef("A");
-        var arbeidsgiver = Arbeidsgiver.virksomhet(ORG_NUMMER);
-
         BeregningIAYTestUtil.byggArbeidForBehandling(SKJÆRINGSTIDSPUNKT, SKJÆRINGSTIDSPUNKT.minusYears(2), TIDENES_ENDE, arbId,
                 Arbeidsgiver.virksomhet(ORG_NUMMER), iayGrunnlagBuilder);
         var berPerioder = singletonList(new LocalDateInterval(SKJÆRINGSTIDSPUNKT, null));
@@ -1039,8 +1030,6 @@ class FordelPerioderTjenesteTest {
     void skalTesteEndringIRefusjon() {
         // Arrange
         var arbId = InternArbeidsforholdRefDto.namedRef("A");
-        var arbeidsgiver = Arbeidsgiver.virksomhet(ORG_NUMMER);
-
         var arbeidsperiode = fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT.minusYears(2), TIDENES_ENDE);
         List<String> orgnrs = List.of();
         var grunnlag = lagBeregningsgrunnlagMedOverstyring(orgnrs, beregningAktivitetAggregat);
@@ -1211,9 +1200,9 @@ class FordelPerioderTjenesteTest {
         var arbeidsperiode1 = fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT.minusYears(2), TIDENES_ENDE);
 
         var aktørArbeidBuilder = InntektArbeidYtelseAggregatBuilder.AktørArbeidBuilder.oppdatere(Optional.empty());
-        var arbeidsgiver = leggTilYrkesaktivitet(arbeidsperiode1, aktørArbeidBuilder, ORG_NUMMER, Intervall.fraOgMedTilOgMed(permisjonFom, permisjonTom));
-        fjernOgLeggTilNyBeregningAktivitet(arbeidsperiode1.getFomDato(), permisjonFom.minusDays(1), arbeidsgiver, InternArbeidsforholdRefDto.nullRef());
-        aktiviteter.add(lagAktivitet(arbeidsperiode1.getFomDato(), arbeidsperiode1.getTomDato(), arbeidsgiver, arbeidsforholdRef));
+        var arbeidsgiverMedPermisjon = leggTilYrkesaktivitet(arbeidsperiode1, aktørArbeidBuilder, ORG_NUMMER, Intervall.fraOgMedTilOgMed(permisjonFom, permisjonTom));
+        fjernOgLeggTilNyBeregningAktivitet(arbeidsperiode1.getFomDato(), permisjonFom.minusDays(1), arbeidsgiverMedPermisjon, InternArbeidsforholdRefDto.nullRef());
+        aktiviteter.add(lagAktivitet(arbeidsperiode1.getFomDato(), arbeidsperiode1.getTomDato(), arbeidsgiverMedPermisjon, arbeidsforholdRef));
 
         var registerBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
         registerBuilder.leggTilAktørArbeid(aktørArbeidBuilder);
@@ -1240,7 +1229,7 @@ class FordelPerioderTjenesteTest {
         assertThat(beregningsgrunnlagPeriode2.getPeriode().getFomDato()).isEqualTo(permisjonTom.plusDays(1));
         assertThat(beregningsgrunnlagPeriode2.getPeriodeÅrsaker()).containsExactly(PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV);
         assertThat(beregningsgrunnlagPeriode2.getBeregningsgrunnlagPrStatusOgAndelList()).hasSize(1);
-        var baaOpt = finnBGAndelArbeidsforhold(beregningsgrunnlagPeriode2, arbeidsgiver.getIdentifikator());
+        var baaOpt = finnBGAndelArbeidsforhold(beregningsgrunnlagPeriode2, arbeidsgiverMedPermisjon.getIdentifikator());
         assertThat(baaOpt).as("BGAndelArbeidsforhold")
                 .hasValueSatisfying(baa -> assertThat(baa.getRefusjonskravPrÅr()).as("RefusjonskravPrÅr").isEqualByComparingTo(Beløp.fra(480_000)));
     }
@@ -1303,7 +1292,6 @@ class FordelPerioderTjenesteTest {
     void skalLeggeTilAndelSomTilkommerPåSkjæringstidspunktOgSletteVedOpphør() {
         var inntekt = Beløp.fra(40000);
         var arbeidsperiode = fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT, TIDENES_ENDE);
-        var iayGrunnlagBuilder = InntektArbeidYtelseGrunnlagDtoBuilder.nytt();
         var aaBuilder2 = AktivitetsAvtaleDtoBuilder.ny()
                 .medPeriode(arbeidsperiode);
 
@@ -1577,7 +1565,6 @@ class FordelPerioderTjenesteTest {
 
         var arbeidsforholdRef = InternArbeidsforholdRefDto.nyRef();
         var arbeidsforholdRef2 = InternArbeidsforholdRefDto.nyRef();
-        var arbeidsgiver = Arbeidsgiver.virksomhet(ORG_NUMMER);
         BeregningsgrunnlagPrStatusOgAndelDto.Builder.ny()
                 .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                 .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder().medArbeidsgiver(arbeidsgiver).medArbeidsforholdRef(arbeidsforholdRef))
@@ -1658,11 +1645,9 @@ class FordelPerioderTjenesteTest {
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT, null)
                 .build(beregningsgrunnlag);
 
-        var arbeidsgiver1 = Arbeidsgiver.virksomhet(ORG_NUMMER);
-        var arbeidsgiver2 = Arbeidsgiver.virksomhet(ORG_NUMMER_2);
         BeregningsgrunnlagPrStatusOgAndelDto.Builder.ny()
                 .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
-                .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder().medArbeidsgiver(arbeidsgiver1))
+                .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder().medArbeidsgiver(arbeidsgiver))
                 .medBeregnetPrÅr(Beløp.fra(500_000))
                 .build(periode);
 
@@ -1685,7 +1670,7 @@ class FordelPerioderTjenesteTest {
         var aktørArbeidBuilder = oppdatere.getAktørArbeidBuilder();
         aktørArbeidBuilder
                 .leggTilYrkesaktivitet(YrkesaktivitetDtoBuilder.oppdatere(Optional.empty())
-                        .medArbeidsgiver(arbeidsgiver1)
+                        .medArbeidsgiver(arbeidsgiver)
                         .medArbeidType(ArbeidType.ORDINÆRT_ARBEIDSFORHOLD)
                         .leggTilAktivitetsAvtale(AktivitetsAvtaleDtoBuilder.ny().medPeriode(fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT.minusMonths(10), SKJÆRINGSTIDSPUNKT.plusYears(1)))))
                 .leggTilYrkesaktivitet(YrkesaktivitetDtoBuilder.oppdatere(Optional.empty())
@@ -1696,7 +1681,7 @@ class FordelPerioderTjenesteTest {
         iayGrunnlagBuilder.medData(oppdatere);
 
         var im1 = InntektsmeldingDtoBuilder.builder()
-                .medArbeidsgiver(arbeidsgiver1)
+                .medArbeidsgiver(arbeidsgiver)
                 .medStartDatoPermisjon(SKJÆRINGSTIDSPUNKT)
                 .medBeløp(Beløp.fra(500_000))
                 .build();
@@ -1748,7 +1733,6 @@ class FordelPerioderTjenesteTest {
 
         var arbeidsforholdRef = InternArbeidsforholdRefDto.nyRef();
         var arbeidsforholdRef2 = InternArbeidsforholdRefDto.nyRef();
-        var arbeidsgiver = Arbeidsgiver.virksomhet(ORG_NUMMER);
         BeregningsgrunnlagPrStatusOgAndelDto.Builder.ny()
                 .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                 .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder().medArbeidsgiver(arbeidsgiver).medArbeidsforholdRef(arbeidsforholdRef))
@@ -1873,7 +1857,7 @@ class FordelPerioderTjenesteTest {
 
     private BeregningsgrunnlagGrunnlagDto lagBeregningsgrunnlag(List<String> orgnrs,
                                                                 BeregningAktivitetAggregatDto beregningAktivitetAggregat,
-                                                                BeregningAktivitetOverstyringerDto BeregningAktivitetOverstyringer) {
+                                                                BeregningAktivitetOverstyringerDto beregningAktivitetOverstyringer) {
         var beregningsgrunnlagPeriodeBuilder = lagBeregningsgrunnlagPerioderBuilder(SKJÆRINGSTIDSPUNKT, null, orgnrs);
         var beregningsgrunnlagBuilder = BeregningsgrunnlagDto.builder()
                 .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT)
@@ -1884,18 +1868,18 @@ class FordelPerioderTjenesteTest {
         return BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medBeregningsgrunnlag(bg)
                 .medRegisterAktiviteter(beregningAktivitetAggregat)
-                .medOverstyring(BeregningAktivitetOverstyringer)
+                .medOverstyring(beregningAktivitetOverstyringer)
                 .build(BeregningsgrunnlagTilstand.FORESLÅTT);
     }
 
     private BeregningsgrunnlagPeriodeDto.Builder lagBeregningsgrunnlagPerioderBuilder(LocalDate fom, LocalDate tom, List<String> orgnrs) {
         var builder = BeregningsgrunnlagPeriodeDto.ny();
         for (var orgnr : orgnrs) {
-            var arbeidsgiver = Arbeidsgiver.virksomhet(orgnr);
+            var agForOrgnr = Arbeidsgiver.virksomhet(orgnr);
             var andelBuilder = BeregningsgrunnlagPrStatusOgAndelDto.ny()
                     .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                     .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder()
-                            .medArbeidsgiver(arbeidsgiver)
+                            .medArbeidsgiver(agForOrgnr)
                             .medArbeidsperiodeFom(SKJÆRINGSTIDSPUNKT.minusYears(1)));
             builder.leggTilBeregningsgrunnlagPrStatusOgAndel(andelBuilder);
         }

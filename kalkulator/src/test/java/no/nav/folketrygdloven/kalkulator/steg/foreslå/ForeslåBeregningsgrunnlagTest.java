@@ -82,11 +82,11 @@ class ForeslåBeregningsgrunnlagTest {
     private static final LocalDate MINUS_YEARS_1 = SKJÆRINGSTIDSPUNKT_OPPTJENING.minusYears(1);
     private static final LocalDate ARBEIDSPERIODE_FOM = SKJÆRINGSTIDSPUNKT_OPPTJENING.minusYears(1);
     private static final LocalDate ARBEIDSPERIODE_TOM = SKJÆRINGSTIDSPUNKT_OPPTJENING.plusYears(2);
-    private KoblingReferanse koblingReferanse = new KoblingReferanseMock(SKJÆRINGSTIDSPUNKT_BEREGNING);
-    private AktørId beregningsAkrød1 = AktørId.dummy();
+    private final KoblingReferanse koblingReferanse = new KoblingReferanseMock(SKJÆRINGSTIDSPUNKT_BEREGNING);
+    private final AktørId beregningsAktørId = AktørId.dummy();
     private BeregningsgrunnlagDto beregningsgrunnlag;
     private InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlagBuilder;
-    private ForeslåBeregningsgrunnlag foreslåBeregningsgrunnlag = new ForeslåBeregningsgrunnlag();
+    private final ForeslåBeregningsgrunnlag foreslåBeregningsgrunnlag = new ForeslåBeregningsgrunnlag();
 
     @BeforeEach
     void setup() {
@@ -105,7 +105,7 @@ class ForeslåBeregningsgrunnlagTest {
                 .leggTilBeregningsgrunnlagPrStatusOgAndel(BeregningsgrunnlagPrStatusOgAndelDto.Builder.ny()
                         .medArbforholdType(OpptjeningAktivitetType.ARBEID)
                         .medBGAndelArbeidsforhold(lagBgAndelArbeidsforhold(ARBEIDSPERIODE_FOM, ARBEIDSPERIODE_TOM,
-                                erArbeidsgiverVirksomhet ? Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR1) : Arbeidsgiver.person(beregningsAkrød1)))
+                                erArbeidsgiverVirksomhet ? Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR1) : Arbeidsgiver.person(beregningsAktørId)))
                         .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                         .medInntektskategori(Inntektskategori.ARBEIDSTAKER)
                         .medBeregningsperiode(SKJÆRINGSTIDSPUNKT_BEREGNING.minusMonths(3).withDayOfMonth(1),
@@ -253,7 +253,6 @@ class ForeslåBeregningsgrunnlagTest {
         var ompKobling = new KoblingReferanseMock(SKJÆRINGSTIDSPUNKT_BEREGNING, FagsakYtelseType.OMSORGSPENGER);
         var input = BeregningsgrunnlagInputTestUtil.lagForeslåttBeregningsgrunnlagInput(ompKobling, bgGrunnlagBuilder,
                 BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER, iayGrunnlag, omsorgspengerGrunnlag);
-        var foreslåBeregningsgrunnlag = new ForeslåBeregningsgrunnlag();
         return foreslåBeregningsgrunnlag.foreslåBeregningsgrunnlag(input);
     }
 
@@ -395,7 +394,7 @@ class ForeslåBeregningsgrunnlagTest {
     @Test
     void skal_lage_en_periode_for_private_arbeidsgiver() {
         // Arrange
-        var privateArbeidsgiver = Arbeidsgiver.person(beregningsAkrød1);
+        var privateArbeidsgiver = Arbeidsgiver.person(beregningsAktørId);
         var grunnlagAT = lagBeregningsgrunnlagAT(false);
         BeregningsgrunnlagPrStatusOgAndelDto.Builder.oppdatere(grunnlagAT.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList().get(0))
                 .build(grunnlagAT.getBeregningsgrunnlagPerioder().get(0));
@@ -486,24 +485,24 @@ class ForeslåBeregningsgrunnlagTest {
         var resultat = act(beregningsgrunnlag, inntektsmeldinger, (FaktaAggregatDto) null);
 
         // Assert
-        var beregningsgrunnlag = resultat.getBeregningsgrunnlag();
-        assertThat(beregningsgrunnlag).isNotNull();
+        var beregningsgrunnlagResultat = resultat.getBeregningsgrunnlag();
+        assertThat(beregningsgrunnlagResultat).isNotNull();
         assertThat(resultat.getAvklaringsbehov()).isEmpty();
-        assertThat(beregningsgrunnlag.getBeregningsgrunnlagPerioder()).hasSize(3);
+        assertThat(beregningsgrunnlagResultat.getBeregningsgrunnlagPerioder()).hasSize(3);
 
-        var periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var periode = beregningsgrunnlagResultat.getBeregningsgrunnlagPerioder().get(0);
         verifiserPeriode(periode, SKJÆRINGSTIDSPUNKT_BEREGNING, SKJÆRINGSTIDSPUNKT_BEREGNING.plusMonths(2).minusDays(1), 2);
         verifiserBGAT(periode.getBeregningsgrunnlagPrStatusOgAndelList().get(0), Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR1), ÅRSINNTEKT1, null, null);
         verifiserBGAT(periode.getBeregningsgrunnlagPrStatusOgAndelList().get(1), Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR2), ÅRSINNTEKT2, null, null);
 
-        periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(1);
+        periode = beregningsgrunnlagResultat.getBeregningsgrunnlagPerioder().get(1);
         verifiserPeriode(periode, SKJÆRINGSTIDSPUNKT_BEREGNING.plusMonths(2), SKJÆRINGSTIDSPUNKT_BEREGNING.plusMonths(4).minusDays(1), 2,
                 PeriodeÅrsak.NATURALYTELSE_BORTFALT);
         verifiserBGAT(periode.getBeregningsgrunnlagPrStatusOgAndelList().get(0), Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR1), ÅRSINNTEKT1, null, null);
         verifiserBGAT(periode.getBeregningsgrunnlagPrStatusOgAndelList().get(1), Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR2), ÅRSINNTEKT2,
                 NATURALYTELSE_I_PERIODE_2.multipliser(12), null);
 
-        periode = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(2);
+        periode = beregningsgrunnlagResultat.getBeregningsgrunnlagPerioder().get(2);
         verifiserPeriode(periode, SKJÆRINGSTIDSPUNKT_BEREGNING.plusMonths(4), TIDENES_ENDE, 2, PeriodeÅrsak.NATURALYTELSE_BORTFALT);
         verifiserBGAT(periode.getBeregningsgrunnlagPrStatusOgAndelList().get(0), Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR1), ÅRSINNTEKT1,
                 NATURALYTELSE_I_PERIODE_3.multipliser(12), null);
@@ -652,7 +651,7 @@ class ForeslåBeregningsgrunnlagTest {
     @Test
     void skalReturnereAvklaringsbehovNårOmsorgspengerOgFLMedOver25ProsentAvvik() {
         // Arrange
-        var beregningsgrunnlag = lagBeregningsgrunnlagFL();
+        var beregningsgrunnlagFrilans = lagBeregningsgrunnlagFL();
         var periodeMedUtbetalingsgradDto = new PeriodeMedUtbetalingsgradDto(Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_BEREGNING,
                 SKJÆRINGSTIDSPUNKT_BEREGNING.plusMonths(1)), Utbetalingsgrad.valueOf(100));
         var aktivitetDto = new AktivitetDto(Arbeidsgiver.virksomhet(ARBEIDSFORHOLD_ORGNR1),
@@ -673,7 +672,7 @@ class ForeslåBeregningsgrunnlagTest {
         iayGrunnlagBuilder.medData(inntektArbeidYtelseBuilder);
 
         // Act
-        var resultat = act(beregningsgrunnlag, List.of(), omsorgspengerGrunnlag);
+        var resultat = act(beregningsgrunnlagFrilans, List.of(), omsorgspengerGrunnlag);
         // Assert
         var aps = resultat.getAvklaringsbehov();
         var apDefs = aps.stream().map(BeregningAvklaringsbehovResultat::getBeregningAvklaringsbehovDefinisjon).collect(Collectors.toList());

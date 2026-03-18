@@ -58,8 +58,7 @@ class VurderMottarYtelseDtoTjenesteTest {
     private static final Beløp INNTEKT_SNITT = INNTEKT1.adder(INNTEKT2.adder(INNTEKT3)).divider(3, 10, RoundingMode.HALF_EVEN);
     private static final String FRILANS_ORGNR = "853498598934";
 
-    private KoblingReferanse koblingReferanse = new KoblingReferanseMock(SKJÆRINGSTIDSPUNKT_OPPTJENING);
-    private BeregningsgrunnlagDto beregningsgrunnlag;
+    private final KoblingReferanse koblingReferanse = new KoblingReferanseMock(SKJÆRINGSTIDSPUNKT_OPPTJENING);
     private BeregningsgrunnlagPeriodeDto periode;
     private VurderMottarYtelseDtoTjeneste dtoTjeneste;
     private BeregningsgrunnlagGrunnlagDto grunnlag;
@@ -68,11 +67,11 @@ class VurderMottarYtelseDtoTjenesteTest {
 
     @BeforeEach
     void setUp() {
-        beregningsgrunnlag = BeregningsgrunnlagDto.builder()
-                .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING)
-                .medGrunnbeløp(Beløp.fra(91425))
-                .leggTilFaktaOmBeregningTilfeller(Collections.singletonList(FaktaOmBeregningTilfelle.VURDER_MOTTAR_YTELSE))
-                .build();
+        BeregningsgrunnlagDto beregningsgrunnlag = BeregningsgrunnlagDto.builder()
+            .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING)
+            .medGrunnbeløp(Beløp.fra(91425))
+            .leggTilFaktaOmBeregningTilfeller(Collections.singletonList(FaktaOmBeregningTilfelle.VURDER_MOTTAR_YTELSE))
+            .build();
         periode = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_OPPTJENING, null)
                 .build(beregningsgrunnlag);
@@ -141,7 +140,7 @@ class VurderMottarYtelseDtoTjenesteTest {
     }
 
     private void byggFrilansAndel() {
-        var arbeidsgiver = Arbeidsgiver.virksomhet(FRILANS_ORGNR);
+        var arbeidsgiverFrilans = Arbeidsgiver.virksomhet(FRILANS_ORGNR);
         var oppdatere = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
         var frilansPeriode = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(10), SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(10));
         var aktørArbeidBuilder = oppdatere.getAktørArbeidBuilder();
@@ -149,11 +148,11 @@ class VurderMottarYtelseDtoTjenesteTest {
                 .getYrkesaktivitetBuilderForType(ArbeidType.FRILANSER_OPPDRAGSTAKER);
         yrkesaktivitetBuilderForType
                 .leggTilAktivitetsAvtale(AktivitetsAvtaleDtoBuilder.ny().medPeriode(frilansPeriode))
-                .medArbeidsgiver(arbeidsgiver);
+                .medArbeidsgiver(arbeidsgiverFrilans);
         aktørArbeidBuilder.leggTilYrkesaktivitet(yrkesaktivitetBuilderForType);
         oppdatere.leggTilAktørArbeid(aktørArbeidBuilder);
         BeregningIAYTestUtil.byggInntektForBehandling(
-                SKJÆRINGSTIDSPUNKT_OPPTJENING, oppdatere, INNTEKT_PR_MND, true, arbeidsgiver);
+                SKJÆRINGSTIDSPUNKT_OPPTJENING, oppdatere, INNTEKT_PR_MND, true, arbeidsgiverFrilans);
 
         inntektArbeidYtelseGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medData(oppdatere)
