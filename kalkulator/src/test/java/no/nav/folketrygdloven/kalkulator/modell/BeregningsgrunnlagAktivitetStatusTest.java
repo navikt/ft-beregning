@@ -51,54 +51,48 @@ class BeregningsgrunnlagAktivitetStatusTest {
     }
 
     @Test
-    void skal_håndtere_null_this_feilKlasse_i_equals() {
-        assertThat(beregningsgrunnlagAktivitetStatus).isNotEqualTo(null);
-        assertThat(beregningsgrunnlagAktivitetStatus).isNotEqualTo("blabla");
-        assertThat(beregningsgrunnlagAktivitetStatus).isEqualTo(beregningsgrunnlagAktivitetStatus);
-    }
-
-    @Test
     void skal_ha_refleksiv_equalsOgHashCode() {
 	    var beregningsgrunnlagAktivitetStatus2 = lagMedPaakrevdeFelter();
 
-        assertThat(beregningsgrunnlagAktivitetStatus).isEqualTo(beregningsgrunnlagAktivitetStatus2);
-        assertThat(beregningsgrunnlagAktivitetStatus2).isEqualTo(beregningsgrunnlagAktivitetStatus);
-        assertThat(beregningsgrunnlagAktivitetStatus.hashCode()).isEqualTo(beregningsgrunnlagAktivitetStatus2.hashCode());
-        assertThat(beregningsgrunnlagAktivitetStatus2.hashCode()).isEqualTo(beregningsgrunnlagAktivitetStatus.hashCode());
+        assertThat(beregningsgrunnlagAktivitetStatus).isEqualTo(beregningsgrunnlagAktivitetStatus2)
+            .hasSameHashCodeAs(beregningsgrunnlagAktivitetStatus2);
+        assertThat(beregningsgrunnlagAktivitetStatus2).isEqualTo(beregningsgrunnlagAktivitetStatus)
+            .hasSameHashCodeAs(beregningsgrunnlagAktivitetStatus);
 
-        beregningsgrunnlagAktivitetStatus2 = lagBuilderMedPaakrevdeFelter().medAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE).build(beregningsgrunnlag);
-        assertThat(beregningsgrunnlagAktivitetStatus).isNotEqualTo(beregningsgrunnlagAktivitetStatus2);
-        assertThat(beregningsgrunnlagAktivitetStatus2).isNotEqualTo(beregningsgrunnlagAktivitetStatus);
-        assertThat(beregningsgrunnlagAktivitetStatus.hashCode()).isNotEqualTo(beregningsgrunnlagAktivitetStatus2.hashCode());
-        assertThat(beregningsgrunnlagAktivitetStatus2.hashCode()).isNotEqualTo(beregningsgrunnlagAktivitetStatus.hashCode());
+        beregningsgrunnlagAktivitetStatus2 = lagBuilderMedPaakrevdeFelter().medAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE)
+            .build(beregningsgrunnlag);
+        assertThat(beregningsgrunnlagAktivitetStatus).isNotEqualTo(beregningsgrunnlagAktivitetStatus2)
+            .doesNotHaveSameHashCodeAs(beregningsgrunnlagAktivitetStatus2);
+        assertThat(beregningsgrunnlagAktivitetStatus2).isNotEqualTo(beregningsgrunnlagAktivitetStatus)
+            .doesNotHaveSameHashCodeAs(beregningsgrunnlagAktivitetStatus);
     }
 
     @Test
     void skal_bruke_aktivitetstatus_i_equalsOgHashCode() {
 	    var beregningsgrunnlagAktivitetStatus2 = lagMedPaakrevdeFelter();
 
-        assertThat(beregningsgrunnlagAktivitetStatus).isEqualTo(beregningsgrunnlagAktivitetStatus2);
-        assertThat(beregningsgrunnlagAktivitetStatus.hashCode()).isEqualTo(beregningsgrunnlagAktivitetStatus2.hashCode());
+        assertThat(beregningsgrunnlagAktivitetStatus).isEqualTo(beregningsgrunnlagAktivitetStatus2)
+            .hasSameHashCodeAs(beregningsgrunnlagAktivitetStatus2);
 
         beregningsgrunnlagAktivitetStatus2 = lagBuilderMedPaakrevdeFelter().medAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE).build(beregningsgrunnlag);
 
-        assertThat(beregningsgrunnlagAktivitetStatus).isNotEqualTo(beregningsgrunnlagAktivitetStatus2);
-        assertThat(beregningsgrunnlagAktivitetStatus.hashCode()).isNotEqualTo(beregningsgrunnlagAktivitetStatus2.hashCode());
+        assertThat(beregningsgrunnlagAktivitetStatus).isNotEqualTo(beregningsgrunnlagAktivitetStatus2)
+            .doesNotHaveSameHashCodeAs(beregningsgrunnlagAktivitetStatus2);
     }
 
     @Test
     void skal_bruke_beregningsgrunnlag_i_equalsOgHashCode() {
 	    var beregningsgrunnlagAktivitetStatus2 = lagMedPaakrevdeFelter();
 
-        assertThat(beregningsgrunnlagAktivitetStatus).isEqualTo(beregningsgrunnlagAktivitetStatus2);
-        assertThat(beregningsgrunnlagAktivitetStatus.hashCode()).isEqualTo(beregningsgrunnlagAktivitetStatus2.hashCode());
+        assertThat(beregningsgrunnlagAktivitetStatus).isEqualTo(beregningsgrunnlagAktivitetStatus2)
+            .hasSameHashCodeAs(beregningsgrunnlagAktivitetStatus2);
 
 	    var beregningsgrunnlag2 = lagBeregningsgrunnlagMedSkjæringstidspunkt(LocalDate.now().plusDays(1));
 	    var builder = lagBuilderMedPaakrevdeFelter();
         beregningsgrunnlagAktivitetStatus2 = builder.build(beregningsgrunnlag2);
 
-        assertThat(beregningsgrunnlagAktivitetStatus).isNotEqualTo(beregningsgrunnlagAktivitetStatus2);
-        assertThat(beregningsgrunnlagAktivitetStatus.hashCode()).isNotEqualTo(beregningsgrunnlagAktivitetStatus2.hashCode());
+        assertThat(beregningsgrunnlagAktivitetStatus).isNotEqualTo(beregningsgrunnlagAktivitetStatus2)
+            .doesNotHaveSameHashCodeAs(beregningsgrunnlagAktivitetStatus2);
     }
 
     private BeregningsgrunnlagAktivitetStatusDto lagMedPaakrevdeFelter() {

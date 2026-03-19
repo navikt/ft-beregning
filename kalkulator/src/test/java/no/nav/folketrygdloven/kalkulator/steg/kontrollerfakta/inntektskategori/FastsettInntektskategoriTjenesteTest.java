@@ -408,27 +408,27 @@ class FastsettInntektskategoriTjenesteTest {
     void skalReturnereFiskerSomHøgastPrioriterteInntektskategori() {
         var inntektskategoriList = List.of(Inntektskategori.FISKER, Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE, Inntektskategori.DAGMAMMA, Inntektskategori.JORDBRUKER);
         var prioritert = FastsettInntektskategoriTjeneste.finnHøyestPrioriterteInntektskategoriForSN(inntektskategoriList);
-        assertThat(prioritert.get()).isEqualTo(Inntektskategori.FISKER);
+        assertThat(prioritert).contains(Inntektskategori.FISKER);
     }
 
     @Test
     void skalReturnereJordbrukerSomHøgastPrioriterteInntektskategori() {
         var inntektskategoriList = List.of(Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE, Inntektskategori.DAGMAMMA, Inntektskategori.JORDBRUKER);
         var prioritert = FastsettInntektskategoriTjeneste.finnHøyestPrioriterteInntektskategoriForSN(inntektskategoriList);
-        assertThat(prioritert.get()).isEqualTo(Inntektskategori.JORDBRUKER);
+        assertThat(prioritert).contains(Inntektskategori.JORDBRUKER);
     }
 
     @Test
     void skalReturnereDagmammaSomHøgastPrioriterteInntektskategori() {
         var inntektskategoriList = List.of(Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE, Inntektskategori.DAGMAMMA);
         var prioritert = FastsettInntektskategoriTjeneste.finnHøyestPrioriterteInntektskategoriForSN(inntektskategoriList);
-        assertThat(prioritert.get()).isEqualTo(Inntektskategori.DAGMAMMA);
+        assertThat(prioritert).contains(Inntektskategori.DAGMAMMA);
     }
 
     @Test
     void skalReturnereSelvstendigNæringsdrivendeSomHøgastPrioriterteInntektskategori() {
         var inntektskategoriList = List.of(Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE);
         var prioritert = FastsettInntektskategoriTjeneste.finnHøyestPrioriterteInntektskategoriForSN(inntektskategoriList);
-        assertThat(prioritert.get()).isEqualTo(Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE);
+        assertThat(prioritert).contains(Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE);
     }
 }

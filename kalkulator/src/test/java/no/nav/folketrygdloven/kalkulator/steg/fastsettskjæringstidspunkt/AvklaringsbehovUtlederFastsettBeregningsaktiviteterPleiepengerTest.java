@@ -135,7 +135,7 @@ class AvklaringsbehovUtlederFastsettBeregningsaktiviteterPleiepengerTest {
 	    var resultater = apUtleder.utledAvklaringsbehov(beregningsgrunnlagRegelResultat, lagMockBeregningsgrunnlagInput(ytelse), erOverstyrt);
 
         // Assert
-        assertThat(resultater).hasSize(0);
+        assertThat(resultater).isEmpty();
     }
 
 
@@ -168,8 +168,7 @@ class AvklaringsbehovUtlederFastsettBeregningsaktiviteterPleiepengerTest {
 	    var resultater = apUtleder.utledAvklaringsbehov(beregningsgrunnlagRegelResultat, lagMockBeregningsgrunnlagInput(ytelse), erOverstyrt);
 
         // Assert
-        assertThat(resultater).hasSize(1);
-        assertThat(resultater).anySatisfy(resultat ->
+        assertThat(resultater).hasSize(1).anySatisfy(resultat ->
             assertThat(resultat.getBeregningAvklaringsbehovDefinisjon()).isEqualTo(AvklaringsbehovDefinisjon.AUTO_VENT_PÅ_SISTE_AAP_DP_MELDKRT)
         );
     }
@@ -188,8 +187,7 @@ class AvklaringsbehovUtlederFastsettBeregningsaktiviteterPleiepengerTest {
 	    var resultater = apUtleder.utledAvklaringsbehov(beregningsgrunnlagRegelResultat, lagBeregningsgrunnlagInput(rapporteringsfrist), erOverstyrt);
 
         // Assert
-        assertThat(resultater).hasSize(1);
-        assertThat(resultater).anySatisfy(resultat ->
+        assertThat(resultater).hasSize(1).anySatisfy(resultat ->
             assertThat(resultat.getBeregningAvklaringsbehovDefinisjon()).isEqualTo(AvklaringsbehovDefinisjon.AUTO_VENT_PÅ_INNTKT_RAP_FRST)
         );
     }
@@ -229,7 +227,7 @@ class AvklaringsbehovUtlederFastsettBeregningsaktiviteterPleiepengerTest {
 	    var resultater = apUtleder.utledAvklaringsbehov(beregningsgrunnlagRegelResultat, lagMockBeregningsgrunnlagInput(ytelse), erOverstyrt);
 
         // Assert
-        assertThat(resultater).hasSize(0);
+        assertThat(resultater).isEmpty();
     }
 
     @Test
@@ -263,7 +261,7 @@ class AvklaringsbehovUtlederFastsettBeregningsaktiviteterPleiepengerTest {
 	    var resultater = apUtleder.utledAvklaringsbehov(beregningsgrunnlagRegelResultat, lagMockBeregningsgrunnlagInput(ytelse), erOverstyrt);
 
         // Assert
-        assertThat(resultater).hasSize(0);
+        assertThat(resultater).isEmpty();
     }
 
     @Test
@@ -295,8 +293,7 @@ class AvklaringsbehovUtlederFastsettBeregningsaktiviteterPleiepengerTest {
 	    var resultater = apUtleder.utledAvklaringsbehov(beregningsgrunnlagRegelResultat, lagMockBeregningsgrunnlagInput(ytelse), erOverstyrt);
 
         // Assert
-        assertThat(resultater).hasSize(1);
-        assertThat(resultater).anySatisfy(resultat ->
+        assertThat(resultater).hasSize(1).anySatisfy(resultat ->
                 assertThat(resultat.getBeregningAvklaringsbehovDefinisjon()).isEqualTo(AvklaringsbehovDefinisjon.AUTO_VENT_PÅ_SISTE_AAP_DP_MELDKRT)
         );
     }
@@ -330,7 +327,7 @@ class AvklaringsbehovUtlederFastsettBeregningsaktiviteterPleiepengerTest {
 	    var resultater = apUtleder.utledAvklaringsbehov(beregningsgrunnlagRegelResultat, lagMockBeregningsgrunnlagInput(ytelse), erOverstyrt);
 
         // Assert
-        assertThat(resultater).hasSize(0);
+        assertThat(resultater).isEmpty();
     }
 
     private BeregningsgrunnlagInput lagBeregningsgrunnlagInput(int rapporteringsfrist) {

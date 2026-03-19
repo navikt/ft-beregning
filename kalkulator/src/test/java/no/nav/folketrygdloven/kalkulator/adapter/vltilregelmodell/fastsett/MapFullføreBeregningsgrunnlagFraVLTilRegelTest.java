@@ -1,7 +1,7 @@
 package no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.fastsett;
 
 import static no.nav.fpsak.tidsserie.LocalDateInterval.TIDENES_ENDE;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -32,7 +32,6 @@ import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FaktaOmBeregningTilfelle;
-import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 import no.nav.folketrygdloven.kalkulus.kodeverk.UttakArbeidType;
 
 class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
@@ -64,9 +63,9 @@ class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
 
 		// Assert
 		var beregningsGrunnlagPerioder = samletBeregningsgrunnlag.getBeregningsgrunnlagPerioder().iterator();
-		assertEquals(hentNesteAktivitetsgrad(beregningsGrunnlagPerioder), BigDecimal.valueOf(50));
-		assertEquals(hentNesteAktivitetsgrad(beregningsGrunnlagPerioder), BigDecimal.ZERO);
-		assertEquals(hentNesteAktivitetsgrad(beregningsGrunnlagPerioder), BigDecimal.valueOf(100));
+        assertThat(hentNesteAktivitetsgrad(beregningsGrunnlagPerioder)).isEqualTo(BigDecimal.valueOf(50));
+        assertThat(hentNesteAktivitetsgrad(beregningsGrunnlagPerioder)).isEqualTo(BigDecimal.ZERO);
+        assertThat(hentNesteAktivitetsgrad(beregningsGrunnlagPerioder)).isEqualTo(BigDecimal.valueOf(100));
 	}
 
 	private BeregningsgrunnlagGrunnlagDto lagBeregningsgrunnlagDto() {

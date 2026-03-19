@@ -1,6 +1,6 @@
 package no.nav.folketrygdloven.kalkulator.steg.fordeling.avklaringsbehov;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -75,7 +75,7 @@ class AvklaringsbehovUtlederTilkommetInntektTest {
 		var periode = Intervall.fraOgMedTilOgMed(STP.plusDays(10), STP.plusDays(15));
 		var tilkomneAndeler = finnTilkomneAndeler(periode, List.of(yrkesaktivitet), List.of(arbeidstakerandelFraStart), new PleiepengerSyktBarnGrunnlag(List.of(utbetalingsgradFraStart)), STP);
 
-		assertThat(tilkomneAndeler.isEmpty()).isTrue();
+		assertThat(tilkomneAndeler).isEmpty();
 
 	}
 
@@ -100,7 +100,7 @@ class AvklaringsbehovUtlederTilkommetInntektTest {
 		var periode = Intervall.fraOgMedTilOgMed(STP.plusDays(10), STP.plusDays(15));
 		var tilkomneAndeler = finnTilkomneAndeler(periode, List.of(yrkesaktivitet, nyYrkesaktivitet), List.of(arbeidstakerandelFraStart, nyAndel), utbetalingsgradGrunnlag, STP);
 
-		assertThat(tilkomneAndeler.size()).isEqualTo(1);
+		assertThat(tilkomneAndeler).hasSize(1);
 		assertThat(tilkomneAndeler.iterator().next().arbeidsgiver()).isEqualTo(arbeidsgiver2);
 	}
 
@@ -123,7 +123,7 @@ class AvklaringsbehovUtlederTilkommetInntektTest {
 
 		var tilkommetAktivitet = finnTilkomneAndeler(periode, List.of(yrkesaktivitet, nyYrkesaktivitet), List.of(arbeidstakerandelFraStart, nyAndel), new PleiepengerSyktBarnGrunnlag(List.of(utbetalingsgradFraStart, utbetalingsgradNyAndel)), STP);
 
-		assertThat(tilkommetAktivitet.size()).isEqualTo(1);
+		assertThat(tilkommetAktivitet).hasSize(1);
 		assertThat(tilkommetAktivitet.iterator().next().arbeidsgiver()).isEqualTo(arbeidsgiver2);
 	}
 
@@ -152,7 +152,7 @@ class AvklaringsbehovUtlederTilkommetInntektTest {
 
 		var tilkommetAktivitet = finnTilkomneAndeler(periode, List.of(yrkesaktivitet, nyYrkesaktivitet), List.of(arbeidstakerandelFraStart, nyAndel), new PleiepengerSyktBarnGrunnlag(List.of(utbetalingsgradFraStart, utbetalingsgradNyAndel)), STP);
 
-		assertThat(tilkommetAktivitet.size()).isEqualTo(1);
+		assertThat(tilkommetAktivitet).hasSize(1);
 		assertThat(tilkommetAktivitet.iterator().next().arbeidsgiver()).isEqualTo(arbeidsgiver2);
 	}
 
@@ -175,7 +175,7 @@ class AvklaringsbehovUtlederTilkommetInntektTest {
 
 		var tilkommetAktivitet = finnTilkomneAndeler(periode, List.of(yrkesaktivitet, nyYrkesaktivitet), List.of(arbeidstakerandelFraStart, nyAndel), new PleiepengerSyktBarnGrunnlag(List.of(utbetalingsgradFraStart, utbetalingsgradNyAndel)), STP);
 
-		assertThat(tilkommetAktivitet.isEmpty()).isTrue();
+		assertThat(tilkommetAktivitet).isEmpty();
 	}
 
 
@@ -201,7 +201,7 @@ class AvklaringsbehovUtlederTilkommetInntektTest {
 		var utbetalingsgradGrunnlag = new PleiepengerSyktBarnGrunnlag(List.of(utbetalingsgradFraStart, utbetalingsgradNyAndel));
 		var tilkomneAndeler = finnTilkomneAndeler(periode, yrkesaktiviteter, andelerFraStart, utbetalingsgradGrunnlag, STP);
 
-		assertThat(tilkomneAndeler.isEmpty()).isTrue();
+		assertThat(tilkomneAndeler).isEmpty();
 	}
 
 	@Test
@@ -228,7 +228,7 @@ class AvklaringsbehovUtlederTilkommetInntektTest {
 
 		var tilkommetAktivitet = finnTilkomneAndeler(periode, List.of(yrkesaktivitet, nyYrkesaktivitet, nyYrkesaktivitet2), List.of(arbeidstakerandelFraStart, nyAndel, nyAndel2), new PleiepengerSyktBarnGrunnlag(List.of(utbetalingsgradFraStart, utbetalingsgradNyAndel, utbetalingsgradNyAndel2)), STP);
 
-		assertThat(tilkommetAktivitet.size()).isEqualTo(2);
+		assertThat(tilkommetAktivitet).hasSize(2);
 		var iterator = tilkommetAktivitet.iterator();
 		assertThat(iterator.next().arbeidsgiver()).isEqualTo(arbeidsgiver2);
 		assertThat(iterator.next().arbeidsgiver()).isEqualTo(arbeidsgiver3);
@@ -254,7 +254,7 @@ class AvklaringsbehovUtlederTilkommetInntektTest {
 
 		var tilkomneAndeler = finnTilkomneAndeler(periode, List.of(yrkesaktivitet, nyYrkesaktivitet), List.of(arbeidstakerandelFraStart, nyAndel), new PleiepengerSyktBarnGrunnlag(List.of(utbetalingsgradFraStart, utbetalingsgradNyAndel)), STP);
 
-		assertThat(tilkomneAndeler.isEmpty()).isTrue();
+		assertThat(tilkomneAndeler).isEmpty();
 	}
 
 	@Test
@@ -281,7 +281,7 @@ class AvklaringsbehovUtlederTilkommetInntektTest {
 
 		var tilkommetAktivitet = finnTilkomneAndeler(periode, List.of(yrkesaktivitet, nyYrkesaktivitet, nyYrkesaktivitet2), List.of(arbeidstakerandelFraStart, nyAndel, nyAndel2), new PleiepengerSyktBarnGrunnlag(List.of(utbetalingsgradFraStart, utbetalingsgradNyAndel, utbetalingsgradNyAndel2)), STP);
 
-		assertThat(tilkommetAktivitet.size()).isEqualTo(2);
+		assertThat(tilkommetAktivitet).hasSize(2);
 		var iterator = tilkommetAktivitet.iterator();
 		assertThat(iterator.next().arbeidsgiver()).isEqualTo(arbeidsgiver2);
 		assertThat(iterator.next().arbeidsgiver()).isEqualTo(arbeidsgiver3);
@@ -296,7 +296,7 @@ class AvklaringsbehovUtlederTilkommetInntektTest {
 		var periode = Intervall.fraOgMedTilOgMed(STP.plusDays(10), STP.plusDays(15));
 		var tilkomneAndeler = finnTilkomneAndeler(periode, List.of(), List.of(frilansandelFraStart), new PleiepengerSyktBarnGrunnlag(List.of(utbetalingsgradFraStart)), STP);
 
-		assertThat(tilkomneAndeler.isEmpty()).isTrue();
+		assertThat(tilkomneAndeler).isEmpty();
 	}
 
 	@Test
@@ -324,7 +324,7 @@ class AvklaringsbehovUtlederTilkommetInntektTest {
 		var tilkommetAktivitet = finnTilkomneAndeler(periode, List.of(yrkesaktivitet, nyYrkesaktivitet), List.of(frilansandelFraStart, atFraStart, nyAndel),
 				new PleiepengerSyktBarnGrunnlag(List.of(utbetalingsgradFraStart, utbetalingsgradATFraStart, utbetalingsgradNyAndel)), STP);
 
-		assertThat(tilkommetAktivitet.size()).isEqualTo(1);
+		assertThat(tilkommetAktivitet).hasSize(1);
 		var iterator = tilkommetAktivitet.iterator();
 		assertThat(iterator.next().arbeidsgiver()).isEqualTo(arbeidsgiver2);
 	}
@@ -347,7 +347,7 @@ class AvklaringsbehovUtlederTilkommetInntektTest {
 		var periode = Intervall.fraOgMedTilOgMed(STP.plusDays(10), STP.plusDays(15));
 		var tilkommetAktivitet = finnTilkomneAndeler(periode, List.of(nyYrkesaktivitet), List.of(frilansandelFraStart, nyAndel), utbetalingsgradGrunnlag, STP);
 
-		assertThat(tilkommetAktivitet.size()).isEqualTo(1);
+		assertThat(tilkommetAktivitet).hasSize(1);
 		var iterator = tilkommetAktivitet.iterator();
 		assertThat(iterator.next().arbeidsgiver()).isEqualTo(arbeidsgiver2);
 	}
@@ -370,7 +370,7 @@ class AvklaringsbehovUtlederTilkommetInntektTest {
 
 		var tilkommetAktivitet = finnTilkomneAndeler(periode, List.of(yrkesaktivitet, yrkesaktivitet2), List.of(arbeidstakerandelFraStart, nyAndel), new PleiepengerSyktBarnGrunnlag(List.of(utbetalingsgradFraStart, utbetalingsgradNyAndel)), STP);
 
-		assertThat(tilkommetAktivitet.size()).isEqualTo(1);
+		assertThat(tilkommetAktivitet).hasSize(1);
 		assertThat(tilkommetAktivitet.iterator().next().aktivitetStatus()).isEqualTo(AktivitetStatus.FRILANSER);
 	}
 
@@ -391,7 +391,7 @@ class AvklaringsbehovUtlederTilkommetInntektTest {
 				List.of(arbeidstakerandelFraStart),
 				new PleiepengerSyktBarnGrunnlag(List.of(utbetalingsgradFraStart)), STP);
 
-		assertThat(tilkommetAktivitet.size()).isEqualTo(1);
+		assertThat(tilkommetAktivitet).hasSize(1);
 		assertThat(tilkommetAktivitet.iterator().next().aktivitetStatus()).isEqualTo(AktivitetStatus.DAGPENGER);
 	}
 
@@ -411,7 +411,7 @@ class AvklaringsbehovUtlederTilkommetInntektTest {
 
 		var tilkommetAktivitet = finnTilkomneAndeler(periode, List.of(yrkesaktivitet2), List.of(dagpengeandelFraStart, nyAndel), new PleiepengerSyktBarnGrunnlag(List.of(utbetalingsgradFraStart, utbetalingsgradNyAndel)), STP);
 
-		assertThat(tilkommetAktivitet.size()).isEqualTo(1);
+		assertThat(tilkommetAktivitet).hasSize(1);
 		assertThat(tilkommetAktivitet.iterator().next().aktivitetStatus()).isEqualTo(AktivitetStatus.FRILANSER);
 	}
 
@@ -435,7 +435,7 @@ class AvklaringsbehovUtlederTilkommetInntektTest {
 
 		var tilkommetAktivitet = finnTilkomneAndeler(periode, List.of(yrkesaktivitet, yrkesaktivitet2), List.of(), List.of(arbeidstakerandelFraStart, nyAndel), new PleiepengerSyktBarnGrunnlag(List.of(utbetalingsgradFraStart, utbetalingsgradNyAndel)), stp);
 
-		assertThat(tilkommetAktivitet.size()).isEqualTo(1);
+		assertThat(tilkommetAktivitet).hasSize(1);
 		assertThat(tilkommetAktivitet.iterator().next().aktivitetStatus()).isEqualTo(AktivitetStatus.FRILANSER);
 	}
 
@@ -459,7 +459,7 @@ class AvklaringsbehovUtlederTilkommetInntektTest {
 
 		var tilkommetAktivitet = finnTilkomneAndeler(periode, List.of(yrkesaktivitet, yrkesaktivitet2), List.of(), List.of(arbeidstakerandelFraStart, nyAndel), new PleiepengerSyktBarnGrunnlag(List.of(utbetalingsgradFraStart, utbetalingsgradNyAndel)), stp);
 
-		assertThat(tilkommetAktivitet.size()).isEqualTo(1);
+		assertThat(tilkommetAktivitet).hasSize(1);
 		assertThat(tilkommetAktivitet.iterator().next().aktivitetStatus()).isEqualTo(AktivitetStatus.FRILANSER);
 	}
 
@@ -483,7 +483,7 @@ class AvklaringsbehovUtlederTilkommetInntektTest {
 
 		var tilkommetAktivitet = finnTilkomneAndeler(periode, List.of(yrkesaktivitet, yrkesaktivitet2), List.of(), List.of(arbeidstakerandelFraStart, nyAndel), new PleiepengerSyktBarnGrunnlag(List.of(utbetalingsgradFraStart, utbetalingsgradNyAndel)), stp);
 
-		assertThat(tilkommetAktivitet.size()).isEqualTo(1);
+		assertThat(tilkommetAktivitet).hasSize(1);
 		assertThat(tilkommetAktivitet.iterator().next().aktivitetStatus()).isEqualTo(AktivitetStatus.FRILANSER);
 	}
 
@@ -509,7 +509,7 @@ class AvklaringsbehovUtlederTilkommetInntektTest {
 
 		var tilkommetAktivitet = finnTilkomneAndeler(periode, List.of(yrkesaktivitet, yrkesaktivitet2), List.of(), List.of(arbeidstakerandelFraStart, nyAndel), new PleiepengerSyktBarnGrunnlag(List.of(utbetalingsgradFraStart, utbetalingsgradNyAndel)), stp);
 
-		assertThat(tilkommetAktivitet.size()).isEqualTo(0);
+		assertThat(tilkommetAktivitet).isEmpty();
 	}
 
 
@@ -529,7 +529,7 @@ class AvklaringsbehovUtlederTilkommetInntektTest {
 		var tilkommetAktivitet = finnTilkomneAndeler(periode, List.of(yrkesaktivitet),
 				List.of(arbeidstakerandelFraStart, nyAndel), new PleiepengerSyktBarnGrunnlag(List.of(utbetalingsgradFraStart, utbetalingsgradNyAndel)), STP);
 
-		assertThat(tilkommetAktivitet.size()).isEqualTo(1);
+		assertThat(tilkommetAktivitet).hasSize(1);
 		assertThat(tilkommetAktivitet.iterator().next().aktivitetStatus()).isEqualTo(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE);
 	}
 
@@ -552,7 +552,7 @@ class AvklaringsbehovUtlederTilkommetInntektTest {
 				List.of(lagInntektsposterForYrkesaktivitet(nyYrkesaktivitet, utbetalingsgradNyAndel.getPeriodeMedUtbetalingsgrad())),
 				List.of(frilansandelFraStart, nyAndel), utbetalingsgradGrunnlag, STP);
 
-		assertThat(tilkommetAktivitet.size()).isEqualTo(1);
+		assertThat(tilkommetAktivitet).hasSize(1);
 		var iterator = tilkommetAktivitet.iterator();
 		assertThat(iterator.next().arbeidsgiver()).isEqualTo(arbeidsgiver2);
 	}

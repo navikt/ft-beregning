@@ -237,7 +237,7 @@ class MapBeregningAktiviteterFraVLTilRegelFellesTest {
         assertThat(arbeidsforhold.getReferanseType())
                 .isEqualByComparingTo(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.ReferanseType.ORG_NR);
         assertThat(arbeidsforhold.getOrgnr()).isEqualTo(ARBEIDSGIVER_ORGNR);
-        assertThat(arbeidsforhold.getArbeidsforholdId()).isEqualTo(null);
+        assertThat(arbeidsforhold.getArbeidsforholdId()).isNull();
     }
 
     @Test
@@ -521,7 +521,7 @@ class MapBeregningAktiviteterFraVLTilRegelFellesTest {
             var aktivPeriodeOpt = modell.getAktivePerioder().stream()
                     .filter(ap -> Objects.equals(ap.getArbeidsforhold().getArbeidsforholdId(), ref.getReferanse()))
                     .findFirst();
-            assertThat(aktivPeriodeOpt.isPresent()).isTrue();
+            assertThat(aktivPeriodeOpt).isPresent();
             var aktivPeriode = aktivPeriodeOpt.get();
             assertThat(aktivPeriode.getPeriode().getFom()).isEqualTo(fom);
             assertThat(aktivPeriode.getPeriode().getTom()).isEqualTo(tom);
@@ -805,7 +805,7 @@ class MapBeregningAktiviteterFraVLTilRegelFellesTest {
     private void assertSykepengerPeriode(AktivitetStatusModell modell, Intervall periode) {
         var aktivPeriodeOpt = modell.getAktivePerioder().stream()
                 .filter(ap -> ap.getPeriode().equals(Periode.of(periode.getFomDato(), periode.getTomDato()))).findFirst();
-        assertThat(aktivPeriodeOpt.isPresent()).isTrue();
+        assertThat(aktivPeriodeOpt).isPresent();
         var aktivPeriode = aktivPeriodeOpt.get();
         assertThat(aktivPeriode.getAktivitet()).isEqualByComparingTo(Aktivitet.SYKEPENGER_MOTTAKER);
         assertThat(aktivPeriode.getArbeidsforhold()).isNull();
@@ -814,7 +814,7 @@ class MapBeregningAktiviteterFraVLTilRegelFellesTest {
     private void assertNæringPeriode(AktivitetStatusModell modell, Intervall periode) {
         var aktivPeriodeOpt = modell.getAktivePerioder().stream()
                 .filter(ap -> ap.getPeriode().equals(Periode.of(periode.getFomDato(), periode.getTomDato()))).findFirst();
-        assertThat(aktivPeriodeOpt.isPresent()).isTrue();
+        assertThat(aktivPeriodeOpt).isPresent();
         var aktivPeriode = aktivPeriodeOpt.get();
         assertThat(aktivPeriode.getAktivitet()).isEqualByComparingTo(Aktivitet.NÆRINGSINNTEKT);
         assertThat(aktivPeriode.getArbeidsforhold()).isNull();
@@ -823,7 +823,7 @@ class MapBeregningAktiviteterFraVLTilRegelFellesTest {
     private void assertFrilansPeriode(AktivitetStatusModell modell, Intervall periode) {
         var aktivPeriodeOpt = modell.getAktivePerioder().stream()
                 .filter(ap -> ap.getPeriode().equals(Periode.of(periode.getFomDato(), periode.getTomDato()))).findFirst();
-        assertThat(aktivPeriodeOpt.isPresent()).isTrue();
+        assertThat(aktivPeriodeOpt).isPresent();
         var aktivPeriode = aktivPeriodeOpt.get();
         assertThat(aktivPeriode.getAktivitet()).isEqualByComparingTo(Aktivitet.FRILANSINNTEKT);
         assertThat(aktivPeriode.getArbeidsforhold().getAktivitet()).isEqualByComparingTo(Aktivitet.FRILANSINNTEKT);
@@ -840,7 +840,7 @@ class MapBeregningAktiviteterFraVLTilRegelFellesTest {
                         Objects.equals(ap.getArbeidsforhold().getArbeidsforholdId(), arbRef) &&
                         Objects.equals(ap.getArbeidsforhold().getAktivitet(), Aktivitet.ARBEIDSTAKERINNTEKT))
                 .findFirst();
-        assertThat(aktivPeriodeOpt.isPresent()).isTrue();
+        assertThat(aktivPeriodeOpt).isPresent();
         var aktivPeriode = aktivPeriodeOpt.get();
         assertThat(aktivPeriode.getPeriode().getFom()).isEqualTo(fom);
         assertThat(aktivPeriode.getPeriode().getTom()).isEqualTo(tom);

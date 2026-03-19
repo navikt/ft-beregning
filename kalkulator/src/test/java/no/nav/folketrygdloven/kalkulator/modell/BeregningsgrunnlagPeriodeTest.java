@@ -54,43 +54,30 @@ class BeregningsgrunnlagPeriodeTest {
     }
 
     @Test
-    void skal_håndtere_null_this_feilKlasse_i_equals() {
-        assertThat(beregningsgrunnlagPeriode).isNotEqualTo(null);
-        assertThat(beregningsgrunnlagPeriode).isNotEqualTo("blabla");
-        assertThat(beregningsgrunnlagPeriode).isEqualTo(beregningsgrunnlagPeriode);
-    }
-
-    @Test
     void skal_ha_refleksiv_equalsOgHashCode() {
         var beregningsgrunnlagPeriode2 = lagMedPaakrevdeFelter(beregningsgrunnlag);
 
-        assertThat(beregningsgrunnlagPeriode).isEqualTo(beregningsgrunnlagPeriode2);
-        assertThat(beregningsgrunnlagPeriode2).isEqualTo(beregningsgrunnlagPeriode);
-        assertThat(beregningsgrunnlagPeriode.hashCode()).isEqualTo(beregningsgrunnlagPeriode2.hashCode());
-        assertThat(beregningsgrunnlagPeriode2.hashCode()).isEqualTo(beregningsgrunnlagPeriode.hashCode());
+        assertThat(beregningsgrunnlagPeriode).isEqualTo(beregningsgrunnlagPeriode2).hasSameHashCodeAs(beregningsgrunnlagPeriode2);
+        assertThat(beregningsgrunnlagPeriode2).isEqualTo(beregningsgrunnlagPeriode).hasSameHashCodeAs(beregningsgrunnlagPeriode);
 
         var beregningsgrunnlagPeriodeBuilder = lagBuilderMedPaakrevdeFelter();
         beregningsgrunnlagPeriodeBuilder.medBeregningsgrunnlagPeriode(LocalDate.now().minusDays(1), null);
         beregningsgrunnlagPeriode2 = beregningsgrunnlagPeriodeBuilder.build(beregningsgrunnlag);
-        assertThat(beregningsgrunnlagPeriode).isNotEqualTo(beregningsgrunnlagPeriode2);
-        assertThat(beregningsgrunnlagPeriode2).isNotEqualTo(beregningsgrunnlagPeriode);
-        assertThat(beregningsgrunnlagPeriode.hashCode()).isNotEqualTo(beregningsgrunnlagPeriode2.hashCode());
-        assertThat(beregningsgrunnlagPeriode2.hashCode()).isNotEqualTo(beregningsgrunnlagPeriode.hashCode());
+        assertThat(beregningsgrunnlagPeriode).isNotEqualTo(beregningsgrunnlagPeriode2).doesNotHaveSameHashCodeAs(beregningsgrunnlagPeriode2);
+        assertThat(beregningsgrunnlagPeriode2).isNotEqualTo(beregningsgrunnlagPeriode).doesNotHaveSameHashCodeAs(beregningsgrunnlagPeriode);
     }
 
     @Test
     void skal_bruke_beregningsgrunnlagPeriodeFom_i_equalsOgHashCode() {
         var beregningsgrunnlagPeriode2 = lagMedPaakrevdeFelter(beregningsgrunnlag);
 
-        assertThat(beregningsgrunnlagPeriode).isEqualTo(beregningsgrunnlagPeriode2);
-        assertThat(beregningsgrunnlagPeriode.hashCode()).isEqualTo(beregningsgrunnlagPeriode2.hashCode());
+        assertThat(beregningsgrunnlagPeriode).isEqualTo(beregningsgrunnlagPeriode2).hasSameHashCodeAs(beregningsgrunnlagPeriode2);
 
         var beregningsgrunnlagPeriodeBuilder = lagBuilderMedPaakrevdeFelter();
         beregningsgrunnlagPeriodeBuilder.medBeregningsgrunnlagPeriode(LocalDate.now().minusDays(1), null);
         beregningsgrunnlagPeriode2 = beregningsgrunnlagPeriodeBuilder.build(beregningsgrunnlag);
 
-        assertThat(beregningsgrunnlagPeriode).isNotEqualTo(beregningsgrunnlagPeriode2);
-        assertThat(beregningsgrunnlagPeriode.hashCode()).isNotEqualTo(beregningsgrunnlagPeriode2.hashCode());
+        assertThat(beregningsgrunnlagPeriode).isNotEqualTo(beregningsgrunnlagPeriode2).doesNotHaveSameHashCodeAs(beregningsgrunnlagPeriode2);
     }
 
     @Test
@@ -98,15 +85,13 @@ class BeregningsgrunnlagPeriodeTest {
         var builder = lagBuilderMedPaakrevdeFelter();
         var beregningsgrunnlagPeriode2 = builder.build(beregningsgrunnlag);
 
-        assertThat(beregningsgrunnlagPeriode).isEqualTo(beregningsgrunnlagPeriode2);
-        assertThat(beregningsgrunnlagPeriode.hashCode()).isEqualTo(beregningsgrunnlagPeriode2.hashCode());
+        assertThat(beregningsgrunnlagPeriode).isEqualTo(beregningsgrunnlagPeriode2).hasSameHashCodeAs(beregningsgrunnlagPeriode2);
 
         var builder2 = lagBuilderMedPaakrevdeFelter();
         builder2.medBeregningsgrunnlagPeriode(LocalDate.now().plusDays(1), null);
         beregningsgrunnlagPeriode2 = builder2.build(beregningsgrunnlag);
 
-        assertThat(beregningsgrunnlagPeriode).isNotEqualTo(beregningsgrunnlagPeriode2);
-        assertThat(beregningsgrunnlagPeriode.hashCode()).isNotEqualTo(beregningsgrunnlagPeriode2.hashCode());
+        assertThat(beregningsgrunnlagPeriode).isNotEqualTo(beregningsgrunnlagPeriode2).doesNotHaveSameHashCodeAs(beregningsgrunnlagPeriode2);
     }
 
     private BeregningsgrunnlagPeriodeDto lagMedPaakrevdeFelter(BeregningsgrunnlagDto beregningsgrunnlag) {

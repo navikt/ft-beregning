@@ -171,8 +171,7 @@ class MapBesteberegningFraRegelTilVLTest {
         }
         bbOutput.setBesteMåneder(bbMåneder);
         var besteMåneder = MapBesteberegningFraRegelTilVL.mapSeksBesteMåneder(bbOutput);
-        assertThat(besteMåneder).isNotNull();
-        assertThat(besteMåneder).hasSize(6);
+        assertThat(besteMåneder).isNotNull().hasSize(6);
         besteMåneder.forEach(måned -> {
             assertThat(måned.getInntekter()).hasSize(2);
             var arbeidsandel = måned.getInntekter().stream().filter(innt -> innt.getArbeidsgiver().getIdentifikator().equals("123")).findFirst();

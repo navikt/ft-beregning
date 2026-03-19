@@ -1,12 +1,10 @@
 package no.nav.folketrygdloven.kalkulator.avklaringsbehov;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatusDto;
 
 import org.junit.jupiter.api.Test;
 
@@ -15,6 +13,7 @@ import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagInput;
 import no.nav.folketrygdloven.kalkulator.input.HåndterBeregningsgrunnlagInput;
 import no.nav.folketrygdloven.kalkulator.input.PleiepengerSyktBarnGrunnlag;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BGAndelArbeidsforholdDto;
+import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatusDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDtoBuilder;
@@ -88,10 +87,10 @@ class VurderTilkommetInntektTjenesteTest {
                 .getTilkomneInntekter();
 
         // Assert
-        assertThat(tilkomneInntekter.size()).isEqualTo(1);
-        assertThat(tilkomneInntekter.get(0).getArbeidsgiver().get()).isEqualTo(arbeidsgiver2);
+        assertThat(tilkomneInntekter).hasSize(1);
+        assertThat(tilkomneInntekter.get(0).getArbeidsgiver()).contains(arbeidsgiver2);
         assertThat(tilkomneInntekter.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.ARBEIDSTAKER);
-        assertThat(tilkomneInntekter.get(0).getBruttoInntektPrÅr().compareTo(Beløp.fra(100_000))).isEqualTo(0);
+        assertThat(tilkomneInntekter.get(0).getBruttoInntektPrÅr()).isEqualByComparingTo(Beløp.fra(100_000));
 
 
     }
@@ -134,21 +133,21 @@ class VurderTilkommetInntektTjenesteTest {
 
 
         // Assert
-        assertThat(nyttGr.getBeregningsgrunnlagPerioder().size()).isEqualTo(2);
+        assertThat(nyttGr.getBeregningsgrunnlagPerioder()).hasSize(2);
         var tilkomneInntekter1 = nyttGr.getBeregningsgrunnlagPerioder().get(0)
                 .getTilkomneInntekter();
-        assertThat(tilkomneInntekter1.size()).isEqualTo(1);
-        assertThat(tilkomneInntekter1.get(0).getArbeidsgiver().get()).isEqualTo(arbeidsgiver2);
+        assertThat(tilkomneInntekter1).hasSize(1);
+        assertThat(tilkomneInntekter1.get(0).getArbeidsgiver()).contains(arbeidsgiver2);
         assertThat(tilkomneInntekter1.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.ARBEIDSTAKER);
-        assertThat(tilkomneInntekter1.get(0).getBruttoInntektPrÅr().compareTo(Beløp.fra(100_000))).isEqualTo(0);
+        assertThat(tilkomneInntekter1.get(0).getBruttoInntektPrÅr()).isEqualByComparingTo(Beløp.fra(100_000));
 
         var periodeLagtTil = nyttGr.getBeregningsgrunnlagPerioder().get(1);
         var tilkomneInntekter2 = periodeLagtTil
                 .getTilkomneInntekter();
-        assertThat(periodeLagtTil.getPeriodeÅrsaker().contains(PeriodeÅrsak.TILKOMMET_INNTEKT_MANUELT)).isTrue();
-        assertThat(periodeLagtTil.getPeriodeÅrsaker().contains(PeriodeÅrsak.TILKOMMET_INNTEKT)).isTrue();
-        assertThat(tilkomneInntekter2.size()).isEqualTo(1);
-        assertThat(tilkomneInntekter2.get(0).getArbeidsgiver().get()).isEqualTo(arbeidsgiver2);
+        assertThat(periodeLagtTil.getPeriodeÅrsaker()).contains(PeriodeÅrsak.TILKOMMET_INNTEKT_MANUELT);
+        assertThat(periodeLagtTil.getPeriodeÅrsaker()).contains(PeriodeÅrsak.TILKOMMET_INNTEKT);
+        assertThat(tilkomneInntekter2).hasSize(1);
+        assertThat(tilkomneInntekter2.get(0).getArbeidsgiver()).contains(arbeidsgiver2);
         assertThat(tilkomneInntekter2.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.ARBEIDSTAKER);
         assertThat(tilkomneInntekter2.get(0).skalRedusereUtbetaling()).isFalse();
     }
@@ -191,21 +190,21 @@ class VurderTilkommetInntektTjenesteTest {
 
 
         // Assert
-        assertThat(nyttGr.getBeregningsgrunnlagPerioder().size()).isEqualTo(2);
+        assertThat(nyttGr.getBeregningsgrunnlagPerioder()).hasSize(2);
         var tilkomneInntekter1 = nyttGr.getBeregningsgrunnlagPerioder().get(0)
                 .getTilkomneInntekter();
-        assertThat(tilkomneInntekter1.size()).isEqualTo(1);
-        assertThat(tilkomneInntekter1.get(0).getArbeidsgiver().get()).isEqualTo(arbeidsgiver2);
+        assertThat(tilkomneInntekter1).hasSize(1);
+        assertThat(tilkomneInntekter1.get(0).getArbeidsgiver()).contains(arbeidsgiver2);
         assertThat(tilkomneInntekter1.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.ARBEIDSTAKER);
-        assertThat(tilkomneInntekter1.get(0).getBruttoInntektPrÅr().compareTo(Beløp.fra(100_000))).isEqualTo(0);
+        assertThat(tilkomneInntekter1.get(0).getBruttoInntektPrÅr()).isEqualByComparingTo(Beløp.fra(100_000));
 
         var periodeLagtTil = nyttGr.getBeregningsgrunnlagPerioder().get(1);
         var tilkomneInntekter2 = periodeLagtTil
                 .getTilkomneInntekter();
-        assertThat(tilkomneInntekter2.size()).isEqualTo(1);
-        assertThat(tilkomneInntekter2.get(0).getArbeidsgiver().get()).isEqualTo(arbeidsgiver2);
+        assertThat(tilkomneInntekter2).hasSize(1);
+        assertThat(tilkomneInntekter2.get(0).getArbeidsgiver()).contains(arbeidsgiver2);
         assertThat(tilkomneInntekter2.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.ARBEIDSTAKER);
-        assertThat(tilkomneInntekter2.get(0).getBruttoInntektPrÅr().compareTo(Beløp.fra(100_000))).isEqualTo(0);
+        assertThat(tilkomneInntekter2.get(0).getBruttoInntektPrÅr()).isEqualByComparingTo(Beløp.fra(100_000));
     }
 
 
@@ -245,10 +244,10 @@ class VurderTilkommetInntektTjenesteTest {
                 .getTilkomneInntekter();
 
         // Assert
-        assertThat(tilkomneInntekter.size()).isEqualTo(1);
+        assertThat(tilkomneInntekter).hasSize(1);
         assertThat(tilkomneInntekter.get(0).getArbeidsgiver()).isEmpty();
         assertThat(tilkomneInntekter.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE);
-        assertThat(tilkomneInntekter.get(0).getBruttoInntektPrÅr().compareTo(Beløp.fra(100_000))).isEqualTo(0);
+        assertThat(tilkomneInntekter.get(0).getBruttoInntektPrÅr()).isEqualByComparingTo(Beløp.fra(100_000));
 
 
     }

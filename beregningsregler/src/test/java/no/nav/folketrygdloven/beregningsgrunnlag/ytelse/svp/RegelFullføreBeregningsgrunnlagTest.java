@@ -1,7 +1,7 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.ytelse.svp;
 
 import static no.nav.folketrygdloven.beregningsgrunnlag.util.DateUtil.TIDENES_ENDE;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -267,11 +266,11 @@ class RegelFullføreBeregningsgrunnlagTest {
 		// Assert
 		assertPeriode(300_000, 300_000, 300_000);
 
-		Assertions.assertThat(snAndel.getAvkortetPrÅr().compareTo(BigDecimal.ZERO)).isZero();
-		Assertions.assertThat(snAndel.getRedusertPrÅr().compareTo(BigDecimal.ZERO)).isZero();
+		assertThat(snAndel.getAvkortetPrÅr()).isEqualByComparingTo(BigDecimal.ZERO);
+		assertThat(snAndel.getRedusertPrÅr()).isEqualByComparingTo(BigDecimal.ZERO);
 
-		Assertions.assertThat(andel.getAvkortetPrÅr().compareTo(BigDecimal.valueOf(300000))).isZero();
-		Assertions.assertThat(andel.getRedusertPrÅr().compareTo(BigDecimal.valueOf(300000))).isZero();
+		assertThat(andel.getAvkortetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(300000));
+		assertThat(andel.getRedusertPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(300000));
 
 
 		assertThat(grenseverdiRegelesultat).isNotNull();
@@ -684,16 +683,16 @@ class RegelFullføreBeregningsgrunnlagTest {
 	}
 
 	private void assertPeriode(BigDecimal brutto, BigDecimal avkortet, BigDecimal redusert) {
-		Assertions.assertThat(PERIODE.getBruttoPrÅr()).isEqualByComparingTo(brutto);
-		Assertions.assertThat(PERIODE.getAvkortetPrÅr()).isEqualByComparingTo(avkortet);
-		Assertions.assertThat(PERIODE.getRedusertPrÅr()).isEqualByComparingTo(redusert);
+		assertThat(PERIODE.getBruttoPrÅr()).isEqualByComparingTo(brutto);
+		assertThat(PERIODE.getAvkortetPrÅr()).isEqualByComparingTo(avkortet);
+		assertThat(PERIODE.getRedusertPrÅr()).isEqualByComparingTo(redusert);
 	}
 
 	private void assertAndel(BigDecimal bruker, BigDecimal avkortet) {
 		var andel = PERIODE.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN);
         var total = bruker.add(BigDecimal.ZERO);
-		Assertions.assertThat(andel.getAvkortetPrÅr()).isEqualByComparingTo(Objects.requireNonNullElse(avkortet, total));
-		Assertions.assertThat(andel.getRedusertPrÅr()).isEqualByComparingTo(total);
+		assertThat(andel.getAvkortetPrÅr()).isEqualByComparingTo(Objects.requireNonNullElse(avkortet, total));
+		assertThat(andel.getRedusertPrÅr()).isEqualByComparingTo(total);
 	}
 
 	private void assertFrilans(BigDecimal bruker, BigDecimal avkortet, Long dagsats) {
@@ -717,7 +716,7 @@ class RegelFullføreBeregningsgrunnlagTest {
 		assertThat(arbforOpt).isPresent();
         var arbfor = arbforOpt.get();
 
-		Assertions.assertThat(arbfor.getAvkortetPrÅr()).isEqualByComparingTo(Objects.requireNonNullElse(avkortet, total));
+		assertThat(arbfor.getAvkortetPrÅr()).isEqualByComparingTo(Objects.requireNonNullElse(avkortet, total));
 		assertThat(arbfor.getRedusertPrÅr()).isEqualByComparingTo(total);
 
         var dagsatsRefusjon = calcDagsats.apply(refusjon);

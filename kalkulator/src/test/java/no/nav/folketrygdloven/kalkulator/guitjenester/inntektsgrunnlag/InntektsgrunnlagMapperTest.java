@@ -94,7 +94,7 @@ class InntektsgrunnlagMapperTest {
                 .map(InntektsgrunnlagMånedDto::getInntekter)
                 .flatMap(Collection::stream)
                 .toList();
-        assertThat(alleInntekter.stream().allMatch(innt -> innt.getInntektAktivitetType().equals(InntektAktivitetType.YTELSEINNTEKT))).isTrue();
+        assertThat(alleInntekter).isNotEmpty().allMatch(innt -> innt.getInntektAktivitetType().equals(InntektAktivitetType.YTELSEINNTEKT));
     }
 
     @Test

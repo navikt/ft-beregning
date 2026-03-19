@@ -33,8 +33,7 @@ class AutopunktUtlederFastsettBeregningsaktiviteterTjenesteTest {
 	    var resultat = AutopunktUtlederFastsettBeregningsaktiviteterMeldekortTjeneste.skalVenteTilDatoPåMeldekortAAPellerDP(Optional.of(aktørYtelse), dagensdato, bg.getSkjæringstidspunkt(), Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER, YtelseType.DAGPENGER));
 
         //Assert
-        assertThat(resultat).isPresent();
-        assertThat(resultat.get()).isEqualTo(skjæringstidspunktOpptjening.plusDays(1));
+        assertThat(resultat).isPresent().contains(skjæringstidspunktOpptjening.plusDays(1));
     }
 
     @Test
@@ -53,8 +52,7 @@ class AutopunktUtlederFastsettBeregningsaktiviteterTjenesteTest {
 	    var resultat = AutopunktUtlederFastsettBeregningsaktiviteterMeldekortTjeneste.skalVenteTilDatoPåMeldekortAAPellerDP(Optional.of(aktørYtelse), dagensdato, bg.getSkjæringstidspunkt(), Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER, YtelseType.DAGPENGER));
 
         //Assert
-        assertThat(resultat).isPresent();
-        assertThat(resultat.get()).isEqualTo(skjæringstidspunktOpptjening.plusDays(1));
+        assertThat(resultat).isPresent().contains(skjæringstidspunktOpptjening.plusDays(1));
     }
 
     @Test
@@ -74,8 +72,7 @@ class AutopunktUtlederFastsettBeregningsaktiviteterTjenesteTest {
 	    var resultat = AutopunktUtlederFastsettBeregningsaktiviteterMeldekortTjeneste.skalVenteTilDatoPåMeldekortAAPellerDP(Optional.of(aktørYtelse), dagensdato, bg.getSkjæringstidspunkt(), Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER, YtelseType.DAGPENGER));
 
         //Assert
-        assertThat(resultat).isPresent();
-        assertThat(resultat.get()).isEqualTo(skjæringstidspunktOpptjening.plusDays(2));
+        assertThat(resultat).isPresent().contains(skjæringstidspunktOpptjening.plusDays(2));
     }
 
     @Test
@@ -96,8 +93,7 @@ class AutopunktUtlederFastsettBeregningsaktiviteterTjenesteTest {
 	    var resultat = AutopunktUtlederFastsettBeregningsaktiviteterMeldekortTjeneste.skalVenteTilDatoPåMeldekortAAPellerDP(Optional.of(aktørYtelse), dagensdato, bg.getSkjæringstidspunkt(), Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER, YtelseType.DAGPENGER));
 
         //Assert
-        assertThat(resultat).isPresent();
-        assertThat(resultat.get()).isEqualTo(dagensdato.plusDays(1));
+        assertThat(resultat).isPresent().contains(dagensdato.plusDays(1));
     }
 
     @Test
@@ -188,8 +184,7 @@ class AutopunktUtlederFastsettBeregningsaktiviteterTjenesteTest {
 	    var resultat = AutopunktUtlederFastsettBeregningsaktiviteterMeldekortTjeneste.skalVenteTilDatoPåMeldekortAAPellerDP(Optional.of(aktørYtelse), dagensdato, bg.getSkjæringstidspunkt(), Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER, YtelseType.DAGPENGER));
 
         //Assert
-        assertThat(resultat).isPresent();
-        assertThat(resultat.get()).isEqualTo(skjæringstidspunktOpptjening.plusDays(1));
+        assertThat(resultat).isPresent().contains(skjæringstidspunktOpptjening.plusDays(1));
     }
 
     @Test
@@ -209,8 +204,7 @@ class AutopunktUtlederFastsettBeregningsaktiviteterTjenesteTest {
 	    var resultat = AutopunktUtlederFastsettBeregningsaktiviteterMeldekortTjeneste.skalVenteTilDatoPåMeldekortAAPellerDP(Optional.of(aktørYtelse), dagensdato, bg.getSkjæringstidspunkt(), Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER, YtelseType.DAGPENGER));
 
         //Assert
-        assertThat(resultat).isPresent();
-        assertThat(resultat.get()).isEqualTo(dagensdato.plusDays(1));
+        assertThat(resultat).isPresent().contains(dagensdato.plusDays(1));
     }
 
     @Test
@@ -229,8 +223,7 @@ class AutopunktUtlederFastsettBeregningsaktiviteterTjenesteTest {
 	    var resultat = AutopunktUtlederFastsettBeregningsaktiviteterMeldekortTjeneste.skalVenteTilDatoPåMeldekortAAPellerDP(Optional.of(aktørYtelse), dagensdato, bg.getSkjæringstidspunkt(), Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER, YtelseType.DAGPENGER));
 
         //Assert
-        assertThat(resultat).isPresent();
-        assertThat(resultat.get()).isEqualTo(dagensdato.plusDays(1));
+        assertThat(resultat).isPresent().contains(dagensdato.plusDays(1));
     }
 
     @Test

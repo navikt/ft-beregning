@@ -32,8 +32,7 @@ class FinnAndelerMedØktRefusjonTjenesteTest {
         lagRefusjonandel(originaleAndeler, InternArbeidsforholdRefDto.nullRef(), BigDecimal.valueOf(500000));
         lagRefusjonandel(revurderingAndeler, InternArbeidsforholdRefDto.nyRef(), BigDecimal.valueOf(500001));
         var resultat = kjørTjeneste();
-        assertThat(resultat).hasSize(1);
-        assertThat(resultat).containsAll(revurderingAndeler);
+        assertThat(resultat).hasSize(1).containsAll(revurderingAndeler);
     }
 
     @Test
@@ -45,8 +44,7 @@ class FinnAndelerMedØktRefusjonTjenesteTest {
         lagRefusjonandel(revurderingAndeler, ref1, BigDecimal.valueOf(200000));
         var andel = lagRefusjonandel(revurderingAndeler, ref2, BigDecimal.valueOf(150000));
         var resultat = kjørTjeneste();
-        assertThat(resultat).hasSize(1);
-        assertThat(resultat).containsExactly(andel);
+        assertThat(resultat).hasSize(1).containsExactly(andel);
     }
 
     @Test
@@ -57,8 +55,7 @@ class FinnAndelerMedØktRefusjonTjenesteTest {
         lagRefusjonandel(originaleAndeler, ref2, BigDecimal.valueOf(100000));
         lagRefusjonandel(revurderingAndeler, InternArbeidsforholdRefDto.nullRef(), BigDecimal.valueOf(400000));
         var resultat = kjørTjeneste();
-        assertThat(resultat).hasSize(1);
-        assertThat(resultat).containsAll(revurderingAndeler);
+        assertThat(resultat).hasSize(1).containsAll(revurderingAndeler);
     }
 
     @Test
@@ -71,8 +68,7 @@ class FinnAndelerMedØktRefusjonTjenesteTest {
         var andel1 = lagRefusjonandel(revurderingAndeler, ref2, BigDecimal.valueOf(150000));
         var andel2 = lagRefusjonandel(revurderingAndeler, InternArbeidsforholdRefDto.nullRef(), BigDecimal.valueOf(100000));
         var resultat = kjørTjeneste();
-        assertThat(resultat).hasSize(2);
-        assertThat(resultat).containsAll(Arrays.asList(andel1, andel2));
+        assertThat(resultat).hasSize(2).containsAll(Arrays.asList(andel1, andel2));
     }
 
     @Test
@@ -86,8 +82,7 @@ class FinnAndelerMedØktRefusjonTjenesteTest {
         lagRefusjonandel(revurderingAndeler, ref2, BigDecimal.valueOf(100000));
         var andel = lagRefusjonandel(revurderingAndeler, InternArbeidsforholdRefDto.nyRef(), BigDecimal.valueOf(150000));
         var resultat = kjørTjeneste();
-        assertThat(resultat).hasSize(1);
-        assertThat(resultat).containsExactly(andel);
+        assertThat(resultat).hasSize(1).containsExactly(andel);
     }
 
     @Test
@@ -101,8 +96,7 @@ class FinnAndelerMedØktRefusjonTjenesteTest {
         var andel1 = lagRefusjonandel(revurderingAndeler, ref2, BigDecimal.valueOf(150000));
         var andel2 = lagRefusjonandel(revurderingAndeler, InternArbeidsforholdRefDto.nyRef(), BigDecimal.valueOf(150000));
         var resultat = kjørTjeneste();
-        assertThat(resultat).hasSize(2);
-        assertThat(resultat).containsAll(Arrays.asList(andel1, andel2));
+        assertThat(resultat).hasSize(2).containsAll(Arrays.asList(andel1, andel2));
     }
 
     @Test
@@ -113,8 +107,7 @@ class FinnAndelerMedØktRefusjonTjenesteTest {
         var andel1 = lagRefusjonandel(revurderingAndeler, ref1, BigDecimal.valueOf(250000));
         var andel2 = lagRefusjonandel(revurderingAndeler, InternArbeidsforholdRefDto.nullRef(), BigDecimal.valueOf(150000));
         var resultat = kjørTjeneste();
-        assertThat(resultat).hasSize(2);
-        assertThat(resultat).containsAll(Arrays.asList(andel1, andel2));
+        assertThat(resultat).hasSize(2).containsAll(Arrays.asList(andel1, andel2));
     }
 
     @Test
@@ -127,8 +120,7 @@ class FinnAndelerMedØktRefusjonTjenesteTest {
         var andel1 = lagRefusjonandel(revurderingAndeler, ref2, BigDecimal.valueOf(250000));
         var andel2 = lagRefusjonandel(revurderingAndeler, InternArbeidsforholdRefDto.nullRef(), BigDecimal.valueOf(150000));
         var resultat = kjørTjeneste();
-        assertThat(resultat).hasSize(2);
-        assertThat(resultat).containsAll(Arrays.asList(andel2, andel1));
+        assertThat(resultat).hasSize(2).containsAll(Arrays.asList(andel2, andel1));
     }
 
 

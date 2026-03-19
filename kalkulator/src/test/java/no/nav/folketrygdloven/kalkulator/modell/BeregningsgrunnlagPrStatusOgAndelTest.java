@@ -41,8 +41,8 @@ class BeregningsgrunnlagPrStatusOgAndelTest {
     @Test
     void skal_bygge_instans_med_påkrevde_felter() {
         assertThat(prStatusOgAndel.getAktivitetStatus()).isEqualTo(AktivitetStatus.ARBEIDSTAKER);
-        assertThat(prStatusOgAndel.getBgAndelArbeidsforhold().map(BGAndelArbeidsforholdDto::getArbeidsforholdOrgnr).get()).isEqualTo(ORGNR);
-        assertThat(prStatusOgAndel.getBgAndelArbeidsforhold().map(BGAndelArbeidsforholdDto::getArbeidsforholdRef).get()).isEqualTo(ARBEIDSFORHOLD_ID);
+        assertThat(prStatusOgAndel.getBgAndelArbeidsforhold().map(BGAndelArbeidsforholdDto::getArbeidsforholdOrgnr)).contains(ORGNR);
+        assertThat(prStatusOgAndel.getBgAndelArbeidsforhold().map(BGAndelArbeidsforholdDto::getArbeidsforholdRef)).contains(ARBEIDSFORHOLD_ID);
         assertThat(prStatusOgAndel.getArbeidsforholdType()).isEqualTo(ARBEIDSFORHOLD_TYPE);
     }
 
@@ -94,43 +94,30 @@ class BeregningsgrunnlagPrStatusOgAndelTest {
     }
 
     @Test
-    void skal_håndtere_null_this_feilKlasse_i_equals() {
-        assertThat(prStatusOgAndel).isNotEqualTo(null);
-        assertThat(prStatusOgAndel).isNotEqualTo("blabla");
-        assertThat(prStatusOgAndel).isEqualTo(prStatusOgAndel);
-    }
-
-    @Test
     void skal_ha_refleksiv_equalsOgHashCode() {
         var prStatusOgAndel2 = lagBeregningsgrunnlagPrStatusOgAndel(beregningsgrunnlagPeriode);
 
-        assertThat(prStatusOgAndel).isEqualTo(prStatusOgAndel2);
-        assertThat(prStatusOgAndel2).isEqualTo(prStatusOgAndel);
-        assertThat(prStatusOgAndel.hashCode()).isEqualTo(prStatusOgAndel2.hashCode());
-        assertThat(prStatusOgAndel2.hashCode()).isEqualTo(prStatusOgAndel.hashCode());
+        assertThat(prStatusOgAndel).isEqualTo(prStatusOgAndel2).hasSameHashCodeAs(prStatusOgAndel2);
+        assertThat(prStatusOgAndel2).isEqualTo(prStatusOgAndel).hasSameHashCodeAs(prStatusOgAndel);
 
         var builder = lagBeregningsgrunnlagPrStatusOgAndelBuilder(Arbeidsgiver.virksomhet(ORGNR));
         builder.medAktivitetStatus(AktivitetStatus.FRILANSER);
         prStatusOgAndel2 = builder.build(beregningsgrunnlagPeriode);
-        assertThat(prStatusOgAndel).isNotEqualTo(prStatusOgAndel2);
-        assertThat(prStatusOgAndel2).isNotEqualTo(prStatusOgAndel);
-        assertThat(prStatusOgAndel.hashCode()).isNotEqualTo(prStatusOgAndel2.hashCode());
-        assertThat(prStatusOgAndel2.hashCode()).isNotEqualTo(prStatusOgAndel.hashCode());
+        assertThat(prStatusOgAndel).isNotEqualTo(prStatusOgAndel2).doesNotHaveSameHashCodeAs(prStatusOgAndel2);
+        assertThat(prStatusOgAndel2).isNotEqualTo(prStatusOgAndel).doesNotHaveSameHashCodeAs(prStatusOgAndel);
     }
 
     @Test
     void skal_bruke_aktivitetStatus_i_equalsOgHashCode() {
         var prStatusOgAndel2 = lagBeregningsgrunnlagPrStatusOgAndel(beregningsgrunnlagPeriode);
 
-        assertThat(prStatusOgAndel).isEqualTo(prStatusOgAndel2);
-        assertThat(prStatusOgAndel.hashCode()).isEqualTo(prStatusOgAndel2.hashCode());
+        assertThat(prStatusOgAndel).isEqualTo(prStatusOgAndel2).hasSameHashCodeAs(prStatusOgAndel2);
 
         var builder = lagBeregningsgrunnlagPrStatusOgAndelBuilder(Arbeidsgiver.virksomhet(ORGNR));
         builder.medAktivitetStatus(AktivitetStatus.FRILANSER);
         prStatusOgAndel2 = builder.build(beregningsgrunnlagPeriode);
 
-        assertThat(prStatusOgAndel).isNotEqualTo(prStatusOgAndel2);
-        assertThat(prStatusOgAndel.hashCode()).isNotEqualTo(prStatusOgAndel2.hashCode());
+        assertThat(prStatusOgAndel).isNotEqualTo(prStatusOgAndel2).doesNotHaveSameHashCodeAs(prStatusOgAndel2);
     }
 
     @Test

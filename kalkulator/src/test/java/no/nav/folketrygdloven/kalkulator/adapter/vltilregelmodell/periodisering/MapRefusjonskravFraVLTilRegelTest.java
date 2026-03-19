@@ -56,12 +56,10 @@ class MapRefusjonskravFraVLTilRegelTest {
                 List.of(Intervall.fraOgMed(skjæringstidspunkt.minusMonths(12))));
 
         // Assert
-        assertThat(resultat).hasSize(2);
-        assertThat(resultat).anySatisfy(start -> {
+        assertThat(resultat).hasSize(2).anySatisfy(start -> {
             assertThat(start.getPeriode()).isEqualTo(Periode.of(skjæringstidspunkt, endringFom.minusDays(1)));
             assertThat(start.getMånedsbeløp()).isEqualByComparingTo(BigDecimal.ZERO);
-        });
-        assertThat(resultat).anySatisfy(endring -> {
+        }).anySatisfy(endring -> {
             assertThat(endring.getPeriode()).isEqualTo(Periode.of(endringFom, null));
             assertThat(endring.getMånedsbeløp()).isEqualByComparingTo(BigDecimal.valueOf(11));
         });
@@ -84,8 +82,7 @@ class MapRefusjonskravFraVLTilRegelTest {
                 List.of(Intervall.fraOgMed(skjæringstidspunkt.minusMonths(12))));
 
         // Assert
-        assertThat(resultat).hasSize(1);
-        assertThat(resultat).anySatisfy(start -> {
+        assertThat(resultat).hasSize(1).anySatisfy(start -> {
             assertThat(start.getPeriode()).isEqualTo(Periode.of(skjæringstidspunkt, null));
             assertThat(start.getMånedsbeløp()).isEqualByComparingTo(BigDecimal.ZERO);
         });
@@ -107,8 +104,7 @@ class MapRefusjonskravFraVLTilRegelTest {
                 List.of(Intervall.fraOgMed(skjæringstidspunkt.minusMonths(12))));
 
         // Assert
-        assertThat(resultat).hasSize(1);
-        assertThat(resultat).anySatisfy(start -> {
+        assertThat(resultat).hasSize(1).anySatisfy(start -> {
             assertThat(start.getPeriode()).isEqualTo(Periode.of(skjæringstidspunkt, null));
             assertThat(start.getMånedsbeløp()).isEqualByComparingTo(BigDecimal.ZERO);
         });
@@ -207,8 +203,7 @@ class MapRefusjonskravFraVLTilRegelTest {
                 List.of(Intervall.fraOgMed(skjæringstidspunkt.minusMonths(12))));
 
         // Assert
-        assertThat(resultat).hasSize(2);
-        assertThat(resultat).anySatisfy(start -> {
+        assertThat(resultat).hasSize(2).anySatisfy(start -> {
             assertThat(start.getPeriode()).isEqualTo(Periode.of(overstyrtDato, TIDENES_ENDE));
             assertThat(start.getMånedsbeløp()).isEqualByComparingTo(BigDecimal.valueOf(11));
         });
@@ -236,8 +231,7 @@ class MapRefusjonskravFraVLTilRegelTest {
             List.of(Intervall.fraOgMed(skjæringstidspunkt.minusMonths(12))));
 
         // Assert
-        assertThat(resultat).hasSize(2);
-        assertThat(resultat).anySatisfy(start -> {
+        assertThat(resultat).hasSize(2).anySatisfy(start -> {
             assertThat(start.getPeriode()).isEqualTo(Periode.of(startdatoPermisjon, TIDENES_ENDE));
             assertThat(start.getMånedsbeløp()).isEqualByComparingTo(BigDecimal.valueOf(11));
         });
@@ -266,8 +260,7 @@ class MapRefusjonskravFraVLTilRegelTest {
             List.of(Intervall.fraOgMed(skjæringstidspunkt.minusMonths(12))));
 
         // Assert
-        assertThat(resultat).hasSize(2);
-        assertThat(resultat).anySatisfy(start -> {
+        assertThat(resultat).hasSize(2).anySatisfy(start -> {
             assertThat(start.getPeriode()).isEqualTo(Periode.of(overstyrtDato, TIDENES_ENDE));
             assertThat(start.getMånedsbeløp()).isEqualByComparingTo(BigDecimal.valueOf(11));
         });
@@ -294,8 +287,7 @@ class MapRefusjonskravFraVLTilRegelTest {
             List.of(Intervall.fraOgMed(skjæringstidspunkt.minusMonths(12))));
 
         // Assert
-        assertThat(resultat).hasSize(1);
-        assertThat(resultat).anySatisfy(start -> {
+        assertThat(resultat).hasSize(1).anySatisfy(start -> {
             assertThat(start.getPeriode()).isEqualTo(Periode.of(skjæringstidspunkt, TIDENES_ENDE));
             assertThat(start.getMånedsbeløp()).isEqualByComparingTo(BigDecimal.valueOf(11));
         });
@@ -321,8 +313,7 @@ class MapRefusjonskravFraVLTilRegelTest {
                 List.of(Intervall.fraOgMed(skjæringstidspunkt.minusMonths(12))));
 
         // Assert
-        assertThat(resultat).hasSize(1);
-        assertThat(resultat).anySatisfy(start -> {
+        assertThat(resultat).hasSize(1).anySatisfy(start -> {
             assertThat(start.getPeriode()).isEqualTo(Periode.of(skjæringstidspunkt, TIDENES_ENDE));
             assertThat(start.getMånedsbeløp()).isEqualByComparingTo(BigDecimal.valueOf(11));
         });
@@ -349,16 +340,14 @@ class MapRefusjonskravFraVLTilRegelTest {
                 ));
 
         // Assert
-        assertThat(resultat).hasSize(3);
-        assertThat(resultat).anySatisfy(start -> {
+        assertThat(resultat).hasSize(3).anySatisfy(start -> {
             assertThat(start.getPeriode()).isEqualTo(Periode.of(skjæringstidspunkt, skjæringstidspunkt.plusWeeks(2)));
             assertThat(start.getMånedsbeløp()).isEqualByComparingTo(BigDecimal.valueOf(15));
-        });
-        assertThat(resultat).anySatisfy(endring -> {
-            assertThat(endring.getPeriode()).isEqualTo(Periode.of(skjæringstidspunkt.plusWeeks(2).plusDays(1), skjæringstidspunkt.plusMonths(2).minusDays(1)));
+        }).anySatisfy(endring -> {
+            assertThat(endring.getPeriode()).isEqualTo(
+                Periode.of(skjæringstidspunkt.plusWeeks(2).plusDays(1), skjæringstidspunkt.plusMonths(2).minusDays(1)));
             assertThat(endring.getMånedsbeløp()).isEqualByComparingTo(BigDecimal.ZERO);
-        });
-        assertThat(resultat).anySatisfy(endring -> {
+        }).anySatisfy(endring -> {
             assertThat(endring.getPeriode()).isEqualTo(Periode.of(skjæringstidspunkt.plusMonths(2), null));
             assertThat(endring.getMånedsbeløp()).isEqualByComparingTo(BigDecimal.valueOf(11));
         });
