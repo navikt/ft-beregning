@@ -171,7 +171,7 @@ public class MapInntektsgrunnlagVLTilRegelFelles implements MapInntektsgrunnlagV
 						.map(periode -> !periode.getTom().isBefore(skjæringstidspunktBeregning)).orElse(false));
 	}
 
-	private Periodeinntekt mapYtelseFraArenavedtak(YtelseFilterDto ytelseFilter, LocalDate skjæringstidspunkt, YtelseDto nyesteVedtakForDagsats, YtelseType arenaYtelse) {
+	private List<Periodeinntekt> mapYtelseFraArenavedtak(YtelseFilterDto ytelseFilter, LocalDate skjæringstidspunkt, YtelseDto nyesteVedtakForDagsats, YtelseType arenaYtelse) {
 		BigDecimal dagsats;
 		BigDecimal utbetalingsfaktor;
 
@@ -184,14 +184,13 @@ public class MapInntektsgrunnlagVLTilRegelFelles implements MapInntektsgrunnlagV
 				.map(Stillingsprosent::tilNormalisertGrad)
 				.orElse(BigDecimal.ONE);
 
+        // TODO Er det en bedre måte å gjøre dette på?
+        // Her antar man at en periode er 14 dager og man gjetter at faktor er 1
 		dagsats = nyesteVedtakForDagsats.getVedtaksDagsats().map(Beløp::verdi).orElseThrow();
-
-		return Periodeinntekt.builder()
-				.medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP)
-				.medInntekt(dagsats)
-				.medMåned(skjæringstidspunkt)
-				.medUtbetalingsfaktor(utbetalingsfaktor)
-				.build();
+        // TODO skal periode stoppe dagen før eller akkurat på stp?
+        var periode = sisteUtbetalingFørStp.map(p -> Periode.of(p.utbetaling().getAnvistFOM(), p.utbetaling().getAnvistTOM()))
+            .orElse(Periode.of(skjæringstidspunkt.minusDays(1), skjæringstidspunkt.minusDays(14)));
+        return mapAnvistPeriodeTilEnkeltdager(new LocalDateSegment<>(periode.getFom(), periode.getTom(), new DagsatsUtbetalingsgrad(dagsats, utbetalingsfaktor)));
 	}
 
     private void mapTilstøtendeYtelse(Inntektsgrunnlag inntektsgrunnlag,
@@ -205,17 +204,18 @@ public class MapInntektsgrunnlagVLTilRegelFelles implements MapInntektsgrunnlagV
         }
         var nyesteVedtak = nyesteVedtakForDagsats.get();
         if (nyesteVedtak.harKildeKelvinEllerDpSak()) {
-            var ytelsedager = mapTilEnkeltdagerMedInntekter(nyesteVedtak);
-            ytelsedager.forEach(inntektsgrunnlag::leggTilPeriodeinntekt);
+            mapTilEnkeltdagerMedInntekter(nyesteVedtak)
+                .forEach(inntektsgrunnlag::leggTilPeriodeinntekt);
         } else {
-            var ytelseperiode = mapYtelseFraArenavedtak(ytelseFilter, skjæringstidspunkt, nyesteVedtak, ytelseType);
-            inntektsgrunnlag.leggTilPeriodeinntekt(ytelseperiode);
+            mapYtelseFraArenavedtak(ytelseFilter, skjæringstidspunkt, nyesteVedtak, ytelseType)
+                .forEach(inntektsgrunnlag::leggTilPeriodeinntekt);
         }
     }
 
     private List<Periodeinntekt> mapTilEnkeltdagerMedInntekter(YtelseDto nyesteVedtak) {
         var tidslinje = new LocalDateTimeline<>(nyesteVedtak.getYtelseAnvist()
             .stream()
+            // TODO ikke hent ut alle anviste men begrens til en mnd / 14 dager???
             .map(p -> new LocalDateSegment<>(p.getAnvistFOM(), p.getAnvistTOM(),
                 new DagsatsUtbetalingsgrad(p.getDagsats().orElseThrow().verdi(), p.getUtbetalingsgradProsent().orElseThrow().tilNormalisertGrad())))
             .toList());
@@ -225,7 +225,7 @@ public class MapInntektsgrunnlagVLTilRegelFelles implements MapInntektsgrunnlagV
     private List<Periodeinntekt> mapAnvistPeriodeTilEnkeltdager(LocalDateSegment<DagsatsUtbetalingsgrad> segment) {
         var listeMedDager = segment.getFom().datesUntil(segment.getTom().plusDays(1)).toList();
         return listeMedDager.stream().map(d -> Periodeinntekt.builder()
-            .medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP_ENKELTDAGER)
+            .medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP)
             .medInntekt(segment.getValue().dagsats())
             .medDag(d)
             .medUtbetalingsfaktor(segment.getValue().utbetalingsgrad())

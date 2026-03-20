@@ -5,14 +5,11 @@ import java.math.RoundingMode;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.InntektPeriodeType;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
@@ -39,7 +36,7 @@ class ForeslåBeregningsgrunnlagDPellerAAPKombinasjonMedAnnenStatus extends Leaf
 				.findFirst()
 				.orElseThrow(() -> new IllegalStateException("Ingen aktivitetstatus av type DP eller AAP funnet."));
 
-        var dagsatsOgGrad = erInntektPåEnkeltdager(grunnlag, bgPerStatus.getAktivitetStatus()) ? regnUtSnittInntektOgGrad(grunnlag) : finnPeriodeInntektForDPEllerAAP(grunnlag, bgPerStatus.getAktivitetStatus());
+        var dagsatsOgGrad = regnUtSnittInntektOgGrad(grunnlag);
         var dagsats = dagsatsOgGrad.dagsats();
         var beregnetPrÅr = dagsats.multiply(dagsatsOgGrad.inntektPeriodeType().getAntallPrÅr()).multiply(dagsatsOgGrad.utbetalingsgrad());
 
@@ -65,7 +62,7 @@ class ForeslåBeregningsgrunnlagDPellerAAPKombinasjonMedAnnenStatus extends Leaf
         var relevanteInntekter = grunnlag.getInntektsgrunnlag()
             .getPeriodeinntekter()
             .stream()
-            .filter(pi -> pi.getInntektskilde().equals(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP_ENKELTDAGER))
+            .filter(pi -> pi.getInntektskilde().equals(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP))
             .filter(pi -> pi.getPeriode().getFom().isBefore(stp))
             .toList();
 
@@ -88,50 +85,8 @@ class ForeslåBeregningsgrunnlagDPellerAAPKombinasjonMedAnnenStatus extends Leaf
         // TODO Diskuter hvordan vi regner ut gjennomsnitt utbetalingsfaktor
         var snittUtbetalingsfaktor = aggregertUtbetalingsgrad.divide(BigDecimal.valueOf(antallVirkedager), 2, RoundingMode.HALF_EVEN);
 
-        return new DagsatsOgGrad(snittDagsats, snittUtbetalingsfaktor, Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP_ENKELTDAGER.getInntektPeriodeType());
+        return new DagsatsOgGrad(snittDagsats, snittUtbetalingsfaktor, Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP.getInntektPeriodeType());
     }
 
-    private boolean erInntektPåEnkeltdager(BeregningsgrunnlagPeriode grunnlag, AktivitetStatus aktivitetStatus) {
-        if (aktivitetStatus.erDPFraYtelse()) {
-            return false;
-        }
-        return grunnlag.getInntektsgrunnlag()
-            .getPeriodeinntekter()
-            .stream()
-            .filter(p -> p.getFom().isBefore(grunnlag.getSkjæringstidspunkt()))
-            .filter(p -> Set.of(
-                Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP_ENKELTDAGER,
-                Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP
-            ).contains(p.getInntektskilde()))
-            .max(Comparator.comparing(Periodeinntekt::getTom))
-            .map(p -> p.getInntektskilde().equals(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP_ENKELTDAGER))
-            .orElseThrow();
-    }
-
-    private DagsatsOgGrad finnPeriodeInntektForDPEllerAAP(BeregningsgrunnlagPeriode grunnlag, AktivitetStatus aktivitetStatus) {
-        if (aktivitetStatus.erDPFraYtelse()) {
-            var dagpengerFraYtelseVedtak = grunnlag.getInntektsgrunnlag()
-                .getSistePeriodeinntekterMedType(Inntektskilde.YTELSE_VEDTAK)
-                .stream()
-                .filter(i -> i.getInntektskategori().equals(Inntektskategori.DAGPENGER))
-                .findFirst();
-            if (dagpengerFraYtelseVedtak.isPresent()) {
-                return gjørOmTilDagsatsOgGrad(dagpengerFraYtelseVedtak.get());
-            }
-        }
-        return finnPeriodeInntektFraMeldekort(grunnlag).map(this::gjørOmTilDagsatsOgGrad)
-            .orElseThrow(() -> new IllegalStateException("Ingen inntekter fra tilstøtende ytelser funnet i siste måned med inntekt"));
-    }
-
-	private Optional<Periodeinntekt> finnPeriodeInntektFraMeldekort(BeregningsgrunnlagPeriode grunnlag) {
-		return grunnlag.getInntektsgrunnlag().getPeriodeinntekt(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP, grunnlag.getSkjæringstidspunkt());
-	}
-
-    private DagsatsOgGrad gjørOmTilDagsatsOgGrad(Periodeinntekt periodeinntekt) {
-        var dagsats = periodeinntekt.getInntekt();
-        var utbetalingsgrad = periodeinntekt.getUtbetalingsfaktor()
-            .orElseThrow(() -> new IllegalStateException("Utbetalingsgrad for DP/AAP mangler."));
-        return new DagsatsOgGrad(dagsats, utbetalingsgrad, periodeinntekt.getInntektPeriodeType());
-    }
     private record DagsatsOgGrad(BigDecimal dagsats, BigDecimal utbetalingsgrad, InntektPeriodeType inntektPeriodeType){}
 }
