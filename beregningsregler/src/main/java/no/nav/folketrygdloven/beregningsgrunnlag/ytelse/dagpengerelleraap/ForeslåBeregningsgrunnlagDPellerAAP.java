@@ -5,14 +5,11 @@ import java.math.RoundingMode;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.InntektPeriodeType;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
@@ -39,8 +36,7 @@ class ForeslåBeregningsgrunnlagDPellerAAP extends LeafSpecification<Beregningsg
 				.findFirst()
 				.orElseThrow(() -> new IllegalStateException("Ingen aktivitetstatus av type DP eller AAP funnet."));
 
-        var dagsats = erInntektPåEnkeltdager(grunnlag, bgPerStatus.getAktivitetStatus()) ? regnUtSnittInntekt(
-            grunnlag) : finnDagsatsForDpEllerAap(grunnlag, bgPerStatus.getAktivitetStatus());
+        var dagsats = regnUtSnittInntekt(grunnlag);
 
         var antallPerioderPrÅr = InntektPeriodeType.DAGLIG.getAntallPrÅr();
         var beregnetPrÅr = dagsats.multiply(antallPerioderPrÅr).setScale(0, RoundingMode.HALF_EVEN);
@@ -67,8 +63,8 @@ class ForeslåBeregningsgrunnlagDPellerAAP extends LeafSpecification<Beregningsg
         var relevanteInntekter = grunnlag.getInntektsgrunnlag()
             .getPeriodeinntekter()
             .stream()
-            .filter(pi -> pi.getInntektskilde().equals(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP_ENKELTDAGER))
-            .filter(pi -> pi.getPeriode().getFom().isBefore(stp))
+            .filter(pi -> pi.getInntektskilde().equals(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP))
+            .filter(pi -> !pi.getPeriode().getTom().isAfter(stp))
             .toList();
 
         var sisteDagMedYtelseUtbetaling = relevanteInntekter.stream()
@@ -85,38 +81,4 @@ class ForeslåBeregningsgrunnlagDPellerAAP extends LeafSpecification<Beregningsg
         return aggregertDagsats.divide(BigDecimal.valueOf(antallVirkedager), 10, RoundingMode.HALF_EVEN);
     }
 
-    private boolean erInntektPåEnkeltdager(BeregningsgrunnlagPeriode grunnlag, AktivitetStatus aktivitetStatus) {
-        if (aktivitetStatus.erDPFraYtelse()) {
-            return false;
-        }
-        return grunnlag.getInntektsgrunnlag()
-            .getPeriodeinntekter()
-            .stream()
-            .filter(p -> p.getFom().isBefore(grunnlag.getSkjæringstidspunkt()))
-            .filter(p -> Set.of(
-                Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP_ENKELTDAGER,
-                Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP
-            ).contains(p.getInntektskilde()))
-            .max(Comparator.comparing(Periodeinntekt::getTom))
-            .map(p -> p.getInntektskilde().equals(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP_ENKELTDAGER))
-            .orElseThrow();
-    }
-
-    private BigDecimal finnDagsatsForDpEllerAap(BeregningsgrunnlagPeriode grunnlag, AktivitetStatus aktivitetStatus) {
-		if (aktivitetStatus.erDPFraYtelse()) {
-			var dagpengerFraYtelseVedtak = grunnlag.getInntektsgrunnlag()
-					.getSistePeriodeinntekterMedType(Inntektskilde.YTELSE_VEDTAK)
-					.stream().filter(i -> i.getInntektskategori().equals(Inntektskategori.DAGPENGER))
-					.findFirst();
-			if (dagpengerFraYtelseVedtak.isPresent()) {
-				return dagpengerFraYtelseVedtak.get().getInntekt();
-			}
-		}
-		return finnPeriodeInntektFraMeldekort(grunnlag)
-				.orElseThrow(() -> new IllegalStateException("Ingen inntekter fra tilstøtende ytelser funnet i siste måned med inntekt")).getInntekt();
-	}
-
-	private Optional<Periodeinntekt> finnPeriodeInntektFraMeldekort(BeregningsgrunnlagPeriode grunnlag) {
-		return grunnlag.getInntektsgrunnlag().getPeriodeinntekt(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP, grunnlag.getSkjæringstidspunkt());
-	}
 }

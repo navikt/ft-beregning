@@ -3,6 +3,7 @@ package no.nav.folketrygdloven.beregningsgrunnlag.ytelse.dagpengerelleraap;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import java.math.BigDecimal;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -40,9 +41,7 @@ class ForeslåBeregningsgrunnlagDPellerAAPKombinasjonMedAnnenStatusTest {
 		var periode = lagPeriodeMedStatus(List.of(dpStatus, arbeid), p);
 		var dagsats = BigDecimal.valueOf(1000);
 		var utbetalingsgrad = BigDecimal.valueOf(1);
-		var periodeinntektDagpenger = lagPeriodeInntektFraMeldekort(p, dagsats, utbetalingsgrad);
-		var inntektsgrunnlag = new Inntektsgrunnlag();
-		inntektsgrunnlag.leggTilPeriodeinntekt(periodeinntektDagpenger);
+		var inntektsgrunnlag = lagInntektsgrunnlagFraMeldekort(dagsats, utbetalingsgrad);
 		byggBG(periode, inntektsgrunnlag);
 
 		// Act
@@ -62,9 +61,7 @@ class ForeslåBeregningsgrunnlagDPellerAAPKombinasjonMedAnnenStatusTest {
 		var periode = lagPeriodeMedStatus(List.of(dpStatus, arbeid), p);
 		var dagsats = BigDecimal.valueOf(1000);
 		var utbetalingsgrad = BigDecimal.valueOf(0.5);
-		var periodeinntektDagpenger = lagPeriodeInntektFraMeldekort(p, dagsats, utbetalingsgrad);
-		var inntektsgrunnlag = new Inntektsgrunnlag();
-		inntektsgrunnlag.leggTilPeriodeinntekt(periodeinntektDagpenger);
+		var inntektsgrunnlag = lagInntektsgrunnlagFraMeldekort(dagsats, utbetalingsgrad);
 		byggBG(periode, inntektsgrunnlag);
 
 		// Act
@@ -254,7 +251,7 @@ class ForeslåBeregningsgrunnlagDPellerAAPKombinasjonMedAnnenStatusTest {
 
     private Periodeinntekt lagPeriodeinntektFraYtelseEnkeltdag(LocalDate dag, int dagsats, BigDecimal utbetalingsgrad) {
         return Periodeinntekt.builder()
-            .medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP_ENKELTDAGER)
+            .medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP)
             .medDag(dag)
             .medInntekt(BigDecimal.valueOf(dagsats))
             .medUtbetalingsfaktor(utbetalingsgrad)
@@ -303,13 +300,19 @@ class ForeslåBeregningsgrunnlagDPellerAAPKombinasjonMedAnnenStatusTest {
 				.build();
 	}
 
-	private Periodeinntekt lagPeriodeInntektFraMeldekort(Periode p, BigDecimal dagsats, BigDecimal utbetalingsgrad) {
-		return Periodeinntekt.builder()
-				.medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP)
-				.medPeriode(p)
-				.medInntekt(dagsats)
-				.medUtbetalingsfaktor(utbetalingsgrad)
-				.build();
-	}
+	private Inntektsgrunnlag lagInntektsgrunnlagFraMeldekort(BigDecimal dagsats, BigDecimal utbetalingsgrad) {
+        var fom = STP.minusDays(14);
+        var inntektsgrunnlag = new Inntektsgrunnlag();
+        fom.datesUntil(STP.plusDays(1)).filter(d -> !(d.getDayOfWeek().equals(DayOfWeek.SATURDAY) || d.getDayOfWeek().equals(DayOfWeek.SUNDAY))).forEach(d -> {
+            inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
+                .medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP)
+                .medDag(d)
+                .medInntekt(dagsats)
+                .medUtbetalingsfaktor(utbetalingsgrad)
+                .build());
+
+        });
+        return inntektsgrunnlag;
+    }
 
 }
