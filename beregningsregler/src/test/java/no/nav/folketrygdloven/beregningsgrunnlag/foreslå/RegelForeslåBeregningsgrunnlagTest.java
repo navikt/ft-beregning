@@ -198,12 +198,14 @@ class RegelForeslåBeregningsgrunnlagTest {
 		// Arrange
         var dagsats = BigDecimal.valueOf(716);
         var inntektsgrunnlag = new Inntektsgrunnlag();
-		inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
-				.medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP)
-				.medMåned(skjæringstidspunkt)
-				.medInntekt(dagsats)
-				.medUtbetalingsfaktor(BigDecimal.ZERO)
-				.build());
+        skjæringstidspunkt.minusDays(15).datesUntil(skjæringstidspunkt).forEach(d -> {
+            inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
+                .medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP)
+                .medDag(d)
+                .medInntekt(dagsats)
+                .medUtbetalingsfaktor(BigDecimal.ZERO)
+                .build());
+        });
         var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.DP));
         var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 		// Act
@@ -222,12 +224,14 @@ class RegelForeslåBeregningsgrunnlagTest {
         var dagsats = BigDecimal.valueOf(900);
         var inntektsgrunnlag = settoppÅrsinntekter(skjæringstidspunkt,
 				årsinntekterFor3SisteÅr(5, 5, 5), Inntektskilde.SIGRUN);
-		inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
-				.medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP)
-				.medMåned(skjæringstidspunkt)
-				.medInntekt(dagsats)
-				.medUtbetalingsfaktor(utbetalingsfaktor)
-				.build());
+        skjæringstidspunkt.minusDays(15).datesUntil(skjæringstidspunkt).forEach(d -> {
+            inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
+                .medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP)
+                .medDag(d)
+                .medInntekt(dagsats)
+                .medUtbetalingsfaktor(utbetalingsfaktor)
+                .build());
+        });
         var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag,
 				List.of(AktivitetStatus.SN, AktivitetStatus.DP));
         var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
@@ -256,9 +260,14 @@ class RegelForeslåBeregningsgrunnlagTest {
 		inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
 				.medInntektskildeOgPeriodeType(Inntektskilde.INNTEKTSMELDING).medArbeidsgiver(arbeidsforhold)
 				.medInntekt(månedsinntektATFL).medMåned(skjæringstidspunkt).build());
-		inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
-				.medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP).medUtbetalingsfaktor(utbetalingsfaktor)
-				.medInntekt(dagsatsAAP).medMåned(skjæringstidspunkt).build());
+        skjæringstidspunkt.minusDays(15).datesUntil(skjæringstidspunkt).forEach(d -> {
+            inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
+                .medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP)
+                .medDag(d)
+                .medInntekt(dagsatsAAP)
+                .medUtbetalingsfaktor(utbetalingsfaktor)
+                .build());
+        });
         var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag,
 				List.of(AktivitetStatus.ATFL_SN, AktivitetStatus.AAP), Collections.singletonList(arbeidsforhold),
 				Collections.singletonList(månedsinntektATFL.multiply(BigDecimal.valueOf(12))));
