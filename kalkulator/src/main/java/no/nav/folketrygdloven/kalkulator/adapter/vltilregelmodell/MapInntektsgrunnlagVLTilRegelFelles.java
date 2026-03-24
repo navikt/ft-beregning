@@ -204,7 +204,7 @@ public class MapInntektsgrunnlagVLTilRegelFelles implements MapInntektsgrunnlagV
         }
         var nyesteVedtak = nyesteVedtakForDagsats.get();
         if (nyesteVedtak.harKildeKelvinEllerDpSak()) {
-            mapTilEnkeltdagerMedInntekter(nyesteVedtak)
+            mapTilEnkeltdagerMedInntekter(nyesteVedtak, skjæringstidspunkt)
                 .forEach(inntektsgrunnlag::leggTilPeriodeinntekt);
         } else {
             mapYtelseFraArenavedtak(ytelseFilter, skjæringstidspunkt, nyesteVedtak, ytelseType)
@@ -212,12 +212,13 @@ public class MapInntektsgrunnlagVLTilRegelFelles implements MapInntektsgrunnlagV
         }
     }
 
-    private List<Periodeinntekt> mapTilEnkeltdagerMedInntekter(YtelseDto nyesteVedtak) {
+    private List<Periodeinntekt> mapTilEnkeltdagerMedInntekter(YtelseDto nyesteVedtak, LocalDate skjæringstidspunkt) {
         var tidslinje = new LocalDateTimeline<>(nyesteVedtak.getYtelseAnvist()
             .stream()
-            // TODO ikke hent ut alle anviste men begrens til en mnd / 14 dager???
+            // Praksis for beregning av AAP / DP er å se på en periode på 14 dager så vi tar med anvisninger fra siste måned for å sikre at regel har nok data
+            .filter(a -> a.getAnvistTOM().isAfter(skjæringstidspunkt.minusMonths(1)))
             .map(p -> new LocalDateSegment<>(p.getAnvistFOM(), p.getAnvistTOM(),
-                new DagsatsUtbetalingsgrad(p.getDagsats().orElseThrow().verdi(), p.getUtbetalingsgradProsent().orElseThrow().tilNormalisertGrad())))
+                new DagsatsUtbetalingsgrad(nyesteVedtak.getVedtaksDagsats().orElseThrow().verdi(), p.getUtbetalingsgradProsent().orElseThrow().tilNormalisertGrad())))
             .toList());
         return tidslinje.stream().map(this::mapAnvistPeriodeTilEnkeltdager).flatMap(Collection::stream).toList();
     }
