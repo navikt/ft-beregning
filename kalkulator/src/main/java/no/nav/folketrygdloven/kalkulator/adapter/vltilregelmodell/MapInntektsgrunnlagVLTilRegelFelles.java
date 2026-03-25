@@ -187,9 +187,8 @@ public class MapInntektsgrunnlagVLTilRegelFelles implements MapInntektsgrunnlagV
         // TODO Er det en bedre måte å gjøre dette på?
         // Her antar man at en periode er 14 dager og man gjetter at faktor er 1
 		dagsats = nyesteVedtakForDagsats.getVedtaksDagsats().map(Beløp::verdi).orElseThrow();
-        // TODO skal periode stoppe dagen før eller akkurat på stp?
         var periode = sisteUtbetalingFørStp.map(p -> Periode.of(p.utbetaling().getAnvistFOM(), p.utbetaling().getAnvistTOM()))
-            .orElse(Periode.of(skjæringstidspunkt.minusDays(1), skjæringstidspunkt.minusDays(14)));
+            .orElseGet(() -> Periode.of(skjæringstidspunkt.minusDays(14), skjæringstidspunkt.minusDays(1)));
         return mapAnvistPeriodeTilEnkeltdager(new LocalDateSegment<>(periode.getFom(), periode.getTom(), new DagsatsUtbetalingsgrad(dagsats, utbetalingsfaktor)));
 	}
 
