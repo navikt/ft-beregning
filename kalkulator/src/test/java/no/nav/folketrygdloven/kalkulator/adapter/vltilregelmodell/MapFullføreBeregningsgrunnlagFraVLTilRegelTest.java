@@ -108,7 +108,7 @@ class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
 				Beløp.fra(MELDEKORTSATS1),
 				BigDecimal.valueOf(200), // Konvensjon for kilde Arena
 				skjæring.minusMonths(1).plusDays(2),
-				skjæring.minusMonths(1).plusDays(16),
+				skjæring.minusMonths(1).plusDays(15),
 				YtelseKilde.ARENA);
 		aktørYtelseBuilder.leggTilYtelse(ytelse);
 		ytelse = lagYtelse(YtelseType.DAGPENGER,
@@ -134,7 +134,7 @@ class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
 				Beløp.fra(MELDEKORTSATS1),
 				Stillingsprosent.HUNDRED.verdi(),
 				skjæring.minusMonths(1).plusDays(2),
-				skjæring.minusMonths(1).plusDays(16),
+				skjæring.minusMonths(1).plusDays(15),
 				YtelseKilde.KELVIN);
 		aktørYtelseBuilder.leggTilYtelse(ytelse);
 		ytelse = lagYtelse(YtelseType.ARBEIDSAVKLARINGSPENGER,
@@ -275,12 +275,11 @@ class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
         var aapInntekter = resultatBG.getInntektsgrunnlag().getPeriodeinntekter().stream()
 				.filter(mi -> mi.getInntektskilde().equals(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP))
 				.toList();
-		assertThat(aapInntekter).hasSize(1);
+		assertThat(aapInntekter).hasSize(14);
         var dagsats = BigDecimal.valueOf(MELDEKORTSATS1);
-		assertThat(aapInntekter.getFirst().getInntekt()).isEqualByComparingTo(dagsats);
-		assertThat(aapInntekter.getFirst().getUtbetalingsfaktor()).hasValueSatisfying(utbg ->
-				assertThat(utbg).isEqualByComparingTo(BigDecimal.ONE));
-	}
+        assertThat(aapInntekter.stream().allMatch(m ->m.getInntekt().compareTo(dagsats) == 0)).isTrue();
+        assertThat(aapInntekter.stream().allMatch(m ->m.getUtbetalingsfaktor().orElseThrow().compareTo(BigDecimal.ONE) == 0)).isTrue();
+    }
 
 	private no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag map(KoblingReferanse koblingReferanse, BeregningsgrunnlagGrunnlagDto grunnlag, InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlagBuilder) {
 		var iayGrunnlag = iayGrunnlagBuilder.medInntektsmeldinger(inntektsmeldinger).build();
@@ -465,11 +464,10 @@ class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
         var dpMånedsInntekter = resultatBG.getInntektsgrunnlag().getPeriodeinntekter().stream()
 				.filter(mi -> mi.getInntektskilde().equals(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP))
 				.toList();
-		assertThat(dpMånedsInntekter).hasSize(1);
+		assertThat(dpMånedsInntekter).hasSize(14);
         var dagsats = BigDecimal.valueOf(MELDEKORTSATS1);
-		assertThat(dpMånedsInntekter.getFirst().getInntekt()).isEqualByComparingTo(dagsats);
-		assertThat(dpMånedsInntekter.getFirst().getUtbetalingsfaktor()).hasValueSatisfying(utbg ->
-				assertThat(utbg).isEqualByComparingTo(BigDecimal.ONE));
+		assertThat(dpMånedsInntekter.stream().allMatch(m ->m.getInntekt().compareTo(dagsats) == 0)).isTrue();
+        assertThat(dpMånedsInntekter.stream().allMatch(m ->m.getUtbetalingsfaktor().orElseThrow().compareTo(BigDecimal.ONE) == 0)).isTrue();
 	}
 
 	@Test
@@ -488,11 +486,10 @@ class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
         var dpMånedsInntekter = resultatBG.getInntektsgrunnlag().getPeriodeinntekter().stream()
 				.filter(mi -> mi.getInntektskilde().equals(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP))
 				.toList();
-		assertThat(dpMånedsInntekter).hasSize(1);
+		assertThat(dpMånedsInntekter).hasSize(14);
         var dagsats = BigDecimal.valueOf(MELDEKORTSATS1);
-		assertThat(dpMånedsInntekter.getFirst().getInntekt()).isEqualByComparingTo(dagsats);
-		assertThat(dpMånedsInntekter.getFirst().getUtbetalingsfaktor()).hasValueSatisfying(utbg ->
-				assertThat(utbg).isEqualByComparingTo(BigDecimal.ONE));
+        assertThat(dpMånedsInntekter.stream().allMatch(m ->m.getInntekt().compareTo(dagsats) == 0)).isTrue();
+        assertThat(dpMånedsInntekter.stream().allMatch(m ->m.getUtbetalingsfaktor().orElseThrow().compareTo(BigDecimal.ONE) == 0)).isTrue();
 	}
 
 	@Test

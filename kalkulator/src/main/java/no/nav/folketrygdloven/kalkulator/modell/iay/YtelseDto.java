@@ -55,7 +55,7 @@ public class YtelseDto {
 	}
 
 	public boolean harKildeKelvinEllerDpSak() {
-        return YtelseKilde.KELVIN.equals(getYtelseKilde()) || YtelseKilde.ARENA.equals(getYtelseKilde());
+        return YtelseKilde.KELVIN.equals(getYtelseKilde()) || YtelseKilde.DPSAK.equals(getYtelseKilde());
 	}
 
 	public void setYtelseKilde(YtelseKilde ytelseKilde) {
