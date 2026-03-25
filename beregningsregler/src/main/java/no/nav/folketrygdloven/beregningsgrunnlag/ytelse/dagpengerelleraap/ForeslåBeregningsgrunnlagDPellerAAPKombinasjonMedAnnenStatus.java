@@ -97,7 +97,6 @@ class ForeslåBeregningsgrunnlagDPellerAAPKombinasjonMedAnnenStatus extends Leaf
             .map(pi -> pi.getUtbetalingsfaktor().orElseThrow())
             .reduce(BigDecimal::add)
             .orElse(BigDecimal.ZERO);
-        // TODO Diskuter hvordan vi regner ut gjennomsnitt utbetalingsfaktor
         var snittUtbetalingsfaktor = aggregertUtbetalingsgrad.divide(BigDecimal.valueOf(antallVirkedager), 2, RoundingMode.HALF_EVEN);
 
         return new DagsatsOgGrad(snittDagsats, snittUtbetalingsfaktor, Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP.getInntektPeriodeType());
