@@ -36,7 +36,7 @@ public enum AktivitetStatus {
     private static final List<AktivitetStatus> SELVSTENDIG_NÆRINGSDRIVENDE_STATUSER = Arrays.asList(SN, ATFL_SN);    //NOSONAR
     private static final List<AktivitetStatus> AAP_OG_DP_STATUSER = Arrays.asList(AAP, DP, SP_AV_DP, PSB_AV_DP);    //NOSONAR
 	private static final List<AktivitetStatus> DP_STATUSER = Arrays.asList(DP, SP_AV_DP, PSB_AV_DP);    //NOSONAR
-	private static final List<AktivitetStatus> DP_FRA_YTELSE_STATUSER = Arrays.asList(SP_AV_DP, PSB_AV_DP);    //NOSONAR // TODO undersøk: Gjør k9 fortsatt dette?
+	private static final List<AktivitetStatus> DP_FRA_YTELSE_STATUSER = Arrays.asList(SP_AV_DP, PSB_AV_DP);    //NOSONAR
 
     AktivitetStatus(String beskrivelse) {
         this.beskrivelse = beskrivelse;
