@@ -1,21 +1,13 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.ytelse.dagpengerelleraap;
 
-import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.InntektPeriodeType;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
-import no.nav.folketrygdloven.beregningsgrunnlag.util.Virkedager;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
@@ -37,10 +29,9 @@ class ForeslåBeregningsgrunnlagDPellerAAP extends LeafSpecification<Beregningsg
 				.findFirst()
 				.orElseThrow(() -> new IllegalStateException("Ingen aktivitetstatus av type DP eller AAP funnet."));
 
-        var dagsats = regnUtSnittInntekt(grunnlag, bgPerStatus.getAktivitetStatus());
-
-        var antallPerioderPrÅr = InntektPeriodeType.DAGLIG.getAntallPrÅr();
-        var beregnetPrÅr = dagsats.multiply(antallPerioderPrÅr).setScale(0, RoundingMode.HALF_EVEN);
+        var dagsatsOgBeregnetPrÅr = grunnlag.getInntektsgrunnlag().regnUtSnittInntektForDPellerAAP(bgPerStatus.getAktivitetStatus(), grunnlag.getSkjæringstidspunkt(), false);
+        var dagsats = dagsatsOgBeregnetPrÅr.dagsats();
+        var beregnetPrÅr = dagsatsOgBeregnetPrÅr.beregnetPrÅr();
 		BeregningsgrunnlagPrStatus.builder(bgPerStatus)
 				.medBeregnetPrÅr(beregnetPrÅr)
 				.medÅrsbeløpFraTilstøtendeYtelse(beregnetPrÅr)
@@ -57,39 +48,5 @@ class ForeslåBeregningsgrunnlagDPellerAAP extends LeafSpecification<Beregningsg
 		resultater.put("hjemmel", hjemmel);
 		return beregnet(resultater);
 	}
-
-    private BigDecimal regnUtSnittInntekt(BeregningsgrunnlagPeriode grunnlag, AktivitetStatus aktivitetStatus) {
-        if (aktivitetStatus.erDPFraYtelse()) {
-            var dagpengerFraYtelseVedtak = grunnlag.getInntektsgrunnlag()
-                .getSistePeriodeinntekterMedType(Inntektskilde.YTELSE_VEDTAK)
-                .stream().filter(i -> i.getInntektskategori().equals(Inntektskategori.DAGPENGER))
-                .findFirst();
-            if (dagpengerFraYtelseVedtak.isPresent()) {
-                return dagpengerFraYtelseVedtak.get().getInntekt();
-            }
-        }
-        var stp = grunnlag.getSkjæringstidspunkt();
-        var relevanteInntekter = grunnlag.getInntektsgrunnlag()
-            .getPeriodeinntekter()
-            .stream()
-            .filter(pi -> pi.getInntektskilde().equals(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP))
-            .filter(pi -> !pi.getPeriode().getTom().isAfter(stp))
-            .filter(pi -> pi.getFom().equals(pi.getTom())) // Skal kun ha endagersperioder
-            .toList();
-
-        var sisteDagMedYtelseUtbetaling = relevanteInntekter.stream()
-            .max(Comparator.comparing(pi -> pi.getPeriode().getFom()))
-            .orElseThrow()
-            .getFom();
-        var beregningsperiodeForYtelse = Periode.of(sisteDagMedYtelseUtbetaling.minusDays(13), sisteDagMedYtelseUtbetaling);
-        var aggregertDagsats = relevanteInntekter.stream()
-            .filter(inntekt -> inntekt.getPeriode().overlapper(beregningsperiodeForYtelse))
-            .filter(pi -> Virkedager.beregnAntallVirkedager(pi.getFom(), pi.getTom()) == 1)
-            .map(Periodeinntekt::getInntekt)
-            .reduce(BigDecimal::add)
-            .orElse(BigDecimal.ZERO);
-        var antallVirkedager = Virkedager.beregnAntallVirkedager(beregningsperiodeForYtelse);
-        return aggregertDagsats.divide(BigDecimal.valueOf(antallVirkedager), 10, RoundingMode.HALF_EVEN);
-    }
 
 }

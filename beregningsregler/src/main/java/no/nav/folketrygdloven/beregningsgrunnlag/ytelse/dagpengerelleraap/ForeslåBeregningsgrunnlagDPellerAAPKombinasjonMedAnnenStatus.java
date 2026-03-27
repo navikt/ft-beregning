@@ -1,21 +1,13 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.ytelse.dagpengerelleraap;
 
-import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.InntektPeriodeType;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
-import no.nav.folketrygdloven.beregningsgrunnlag.util.Virkedager;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
@@ -37,9 +29,9 @@ class ForeslåBeregningsgrunnlagDPellerAAPKombinasjonMedAnnenStatus extends Leaf
 				.findFirst()
 				.orElseThrow(() -> new IllegalStateException("Ingen aktivitetstatus av type DP eller AAP funnet."));
 
-        var dagsatsOgGrad = regnUtSnittInntektOgGrad(grunnlag, bgPerStatus.getAktivitetStatus());
-        var dagsats = dagsatsOgGrad.dagsats();
-        var beregnetPrÅr = dagsats.multiply(dagsatsOgGrad.inntektPeriodeType().getAntallPrÅr()).multiply(dagsatsOgGrad.utbetalingsgrad());
+        var dagsatsOgBeregnetPrÅr = grunnlag.getInntektsgrunnlag().regnUtSnittInntektForDPellerAAP(bgPerStatus.getAktivitetStatus(), grunnlag.getSkjæringstidspunkt(), true);
+        var dagsats = dagsatsOgBeregnetPrÅr.dagsats();
+        var beregnetPrÅr = dagsatsOgBeregnetPrÅr.beregnetPrÅr();
 
 		BeregningsgrunnlagPrStatus.builder(bgPerStatus)
 				.medBeregnetPrÅr(beregnetPrÅr)
@@ -57,50 +49,4 @@ class ForeslåBeregningsgrunnlagDPellerAAPKombinasjonMedAnnenStatus extends Leaf
 		resultater.put("hjemmel", hjemmel);
 		return beregnet(resultater);
 	}
-
-    private DagsatsOgGrad regnUtSnittInntektOgGrad(BeregningsgrunnlagPeriode grunnlag, AktivitetStatus aktivitetStatus) {
-        if (aktivitetStatus.erDPFraYtelse()) {
-            var dagpengerFraYtelseVedtak = grunnlag.getInntektsgrunnlag()
-                .getSistePeriodeinntekterMedType(Inntektskilde.YTELSE_VEDTAK)
-                .stream().filter(i -> i.getInntektskategori().equals(Inntektskategori.DAGPENGER))
-                .findFirst();
-            if (dagpengerFraYtelseVedtak.isPresent()) {
-                return new DagsatsOgGrad(dagpengerFraYtelseVedtak.get().getInntekt(), dagpengerFraYtelseVedtak.get().getUtbetalingsfaktor().orElseThrow(), Inntektskilde.YTELSE_VEDTAK.getInntektPeriodeType());
-            }
-        }
-        var stp = grunnlag.getSkjæringstidspunkt();
-        var relevanteInntekter = grunnlag.getInntektsgrunnlag()
-            .getPeriodeinntekter()
-            .stream()
-            .filter(pi -> pi.getInntektskilde().equals(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP))
-            .filter(pi -> pi.getPeriode().getFom().isBefore(stp))
-            .filter(pi -> pi.getFom().equals(pi.getTom())) // Skal kun ha endagersperioder
-            .toList();
-
-        var sisteDagMedYtelseUtbetaling = relevanteInntekter.stream()
-            .max(Comparator.comparing(pi -> pi.getPeriode().getFom()))
-            .orElseThrow()
-            .getFom();
-        var beregningsperiodeForYtelse = Periode.of(sisteDagMedYtelseUtbetaling.minusDays(13), sisteDagMedYtelseUtbetaling);
-        var inntekterIBeregningsperiode = relevanteInntekter.stream().filter(inntekt -> inntekt.getPeriode().overlapper(beregningsperiodeForYtelse)).toList();
-        var aggregertDagsats = relevanteInntekter.stream()
-            .filter(inntekt -> inntekt.getPeriode().overlapper(beregningsperiodeForYtelse))
-            .filter(pi -> Virkedager.beregnAntallVirkedager(pi.getFom(), pi.getTom()) == 1)
-            .map(Periodeinntekt::getInntekt)
-            .reduce(BigDecimal::add)
-            .orElse(BigDecimal.ZERO);
-        var antallVirkedager = Virkedager.beregnAntallVirkedager(beregningsperiodeForYtelse);
-        var snittDagsats = aggregertDagsats.divide(BigDecimal.valueOf(antallVirkedager), 0, RoundingMode.HALF_EVEN);
-        var aggregertUtbetalingsgrad = inntekterIBeregningsperiode.stream()
-            .filter(inntekt -> inntekt.getPeriode().overlapper(beregningsperiodeForYtelse))
-            .filter(pi -> Virkedager.beregnAntallVirkedager(pi.getFom(), pi.getTom()) == 1)
-            .map(pi -> pi.getUtbetalingsfaktor().orElseThrow())
-            .reduce(BigDecimal::add)
-            .orElse(BigDecimal.ZERO);
-        var snittUtbetalingsfaktor = aggregertUtbetalingsgrad.divide(BigDecimal.valueOf(antallVirkedager), 2, RoundingMode.HALF_EVEN);
-
-        return new DagsatsOgGrad(snittDagsats, snittUtbetalingsfaktor, Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP.getInntektPeriodeType());
-    }
-
-    private record DagsatsOgGrad(BigDecimal dagsats, BigDecimal utbetalingsgrad, InntektPeriodeType inntektPeriodeType){}
 }
