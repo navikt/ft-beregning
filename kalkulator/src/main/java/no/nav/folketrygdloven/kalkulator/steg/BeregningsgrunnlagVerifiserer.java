@@ -134,10 +134,8 @@ public final class BeregningsgrunnlagVerifiserer {
 
     private static void verifiserUtbetaling(BeregningsgrunnlagPrStatusOgAndelDto andel, Utbetalingsgrad utbetalingsgrad, Optional<Aktivitetsgrad> aktivitetsgrad) {
         var inaktivitetsgrad = aktivitetsgrad.map(ag -> ag.subtraher(Aktivitetsgrad.HUNDRE).verdi()).orElse(utbetalingsgrad.verdi());
-        if (inaktivitetsgrad.compareTo(BigDecimal.ZERO) == 0 && !harRefusjon(andel)) {
-            if (andel.getDagsats() > 0L) {
-                throw new IllegalStateException("Dagsats større enn 0 for andel uten krav");
-            }
+        if (inaktivitetsgrad.compareTo(BigDecimal.ZERO) == 0 && !harRefusjon(andel) && andel.getDagsats() > 0L) {
+            throw new IllegalStateException("Dagsats større enn 0 for andel uten krav");
         }
     }
 
@@ -177,10 +175,9 @@ public final class BeregningsgrunnlagVerifiserer {
     private static Consumer<BeregningsgrunnlagPrStatusOgAndelDto> verifiserForeslåttDel2Andel(BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode) {
         return (BeregningsgrunnlagPrStatusOgAndelDto andel) -> {
             Objects.requireNonNull(andel.getGjeldendeInntektskategori(), "Inntektskategori");
-            if (andel.getAktivitetStatus().equals(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE)) {
-                if (!periodeOppståttGrunnetGradering(beregningsgrunnlagPeriode.getPeriodeÅrsaker())) {
-                    verifiserPGI(andel);
-                }
+            if (andel.getAktivitetStatus().equals(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE) && !periodeOppståttGrunnetGradering(
+                beregningsgrunnlagPeriode.getPeriodeÅrsaker())) {
+                verifiserPGI(andel);
             }
 
             if (andel.getAktivitetStatus().equals(AktivitetStatus.BRUKERS_ANDEL)) {
@@ -223,11 +220,10 @@ public final class BeregningsgrunnlagVerifiserer {
                 Objects.requireNonNull(andel.getManueltFordeltPrÅr(), "manueltFordeltPrÅr");
             }
         }
-        if (andel.getKilde().equals(AndelKilde.PROSESS_START)) {
-            if (andel.getAktivitetStatus().equals(AktivitetStatus.DAGPENGER) || andel.getAktivitetStatus().equals(AktivitetStatus.ARBEIDSAVKLARINGSPENGER)) {
-                Objects.requireNonNull(andel.getÅrsbeløpFraTilstøtendeYtelse(), "ÅrsbeløpFraTilstøtendeYtelse");
-                Objects.requireNonNull(andel.getOrginalDagsatsFraTilstøtendeYtelse(), "originalDagsatsFraTilstøtendeYtelse");
-            }
+        if (andel.getKilde().equals(AndelKilde.PROSESS_START) && (andel.getAktivitetStatus().equals(AktivitetStatus.DAGPENGER)
+            || andel.getAktivitetStatus().equals(AktivitetStatus.ARBEIDSAVKLARINGSPENGER))) {
+            Objects.requireNonNull(andel.getÅrsbeløpFraTilstøtendeYtelse(), "ÅrsbeløpFraTilstøtendeYtelse");
+            Objects.requireNonNull(andel.getOrginalDagsatsFraTilstøtendeYtelse(), "originalDagsatsFraTilstøtendeYtelse");
         }
     }
 

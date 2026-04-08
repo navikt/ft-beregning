@@ -101,10 +101,8 @@ public final class BeregningRefusjonTjeneste {
 
         // Tilkommet arbeidsgiver
         var totalRefusjonRevurdering = totalRefusjon(revurderingAndeler);
-        if (nøkkel.getAktivitetStatus().erArbeidstaker() && forrigeAndelerPåNøkkel.isEmpty()) {
-            if (totalRefusjonRevurdering.compareTo(Beløp.ZERO) > 0) {
-                return revurderingAndeler;
-            }
+        if (nøkkel.getAktivitetStatus().erArbeidstaker() && forrigeAndelerPåNøkkel.isEmpty() && totalRefusjonRevurdering.compareTo(Beløp.ZERO) > 0) {
+            return revurderingAndeler;
         }
 
         var totalRefusjonForrige = totalRefusjon(forrigeAndelerPåNøkkel);

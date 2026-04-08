@@ -19,7 +19,7 @@ import no.nav.fpsak.nare.evaluation.Resultat;
 
 class SjekkOmBortfallAvNaturalytelseTest {
 
-    private final static LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.now();
+    private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.now();
     private Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet("12345");
 
     @Test

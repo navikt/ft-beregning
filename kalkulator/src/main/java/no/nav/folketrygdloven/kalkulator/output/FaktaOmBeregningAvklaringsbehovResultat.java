@@ -8,7 +8,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.FaktaOmBeregningTilfelle;
 
 public class FaktaOmBeregningAvklaringsbehovResultat {
 
-    public final static FaktaOmBeregningAvklaringsbehovResultat INGEN_AKSJONSPUNKTER = new FaktaOmBeregningAvklaringsbehovResultat();
+    public static final FaktaOmBeregningAvklaringsbehovResultat INGEN_AKSJONSPUNKTER = new FaktaOmBeregningAvklaringsbehovResultat();
 
     private List<BeregningAvklaringsbehovResultat> beregningAvklaringsbehovResultatList = new ArrayList<>();
 
