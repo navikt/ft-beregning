@@ -13,15 +13,11 @@ public final class KonfigurasjonVerdi {
     }
 
     public static synchronized void configure(KonfigurasjonVerdiProvider provider) {
-        var inst = INSTANCE;
-        inst = new KonfigurasjonVerdi(provider);
-        INSTANCE = inst;
+        INSTANCE = new KonfigurasjonVerdi(provider);
     }
 
     public static synchronized void clear() {
-        var inst = INSTANCE;
-        inst = null;
-        INSTANCE = inst;
+        INSTANCE = null;
     }
 
     public static synchronized KonfigurasjonVerdi instance() {

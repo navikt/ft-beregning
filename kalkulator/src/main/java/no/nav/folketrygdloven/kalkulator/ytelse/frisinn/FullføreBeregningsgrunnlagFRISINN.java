@@ -66,7 +66,6 @@ public class FullføreBeregningsgrunnlagFRISINN {
         var sporingerFinnGrenseverdi = finnGrenseverdi(beregningsgrunnlagRegel, beregningVilkårResultatListe, frisinnGrunnlag);
 
         // Fullfører grenseverdi
-        var inputNrTo = FullføreBeregningsgrunnlagUtils.toJson(beregningsgrunnlagRegel);
         var regelResultater = kjørRegelFullførberegningsgrunnlag(beregningsgrunnlagRegel);
 
         FullføreBeregningsgrunnlagUtils.leggTilSporingerForFinnGrenseverdi(input, sporingerFinnGrenseverdi, regelResultater);

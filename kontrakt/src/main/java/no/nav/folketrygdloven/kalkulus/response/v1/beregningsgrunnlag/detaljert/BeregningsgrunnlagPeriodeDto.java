@@ -104,6 +104,7 @@ public class BeregningsgrunnlagPeriodeDto {
 
 
     public BeregningsgrunnlagPeriodeDto() {
+        // For Jackson
     }
 
     public LocalDate getBeregningsgrunnlagPeriodeFom() {
