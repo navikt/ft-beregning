@@ -39,11 +39,11 @@ public class InntektsmeldingDto {
         this.refusjonBeløpPerMnd = inntektsmelding.getRefusjonBeløpPerMnd();
         this.refusjonOpphører = inntektsmelding.getRefusjonOpphører();
         this.naturalYtelser = inntektsmelding.getNaturalYtelser().stream().map(n -> {
-            final var naturalYtelse = new NaturalYtelseDto(n);
+            final var naturalYtelse = new NaturalYtelseDto(n);  // NOSONAR: java:S1488
             return naturalYtelse;
         }).collect(Collectors.toList());
         this.endringerRefusjon = inntektsmelding.getEndringerRefusjon().stream().map(r -> {
-            final var refusjon = new RefusjonDto(r);
+            final var refusjon = new RefusjonDto(r);  // NOSONAR: java:S1488
             return refusjon;
         }).collect(Collectors.toList());
         this.journalpostId = inntektsmelding.getJournalpostId();

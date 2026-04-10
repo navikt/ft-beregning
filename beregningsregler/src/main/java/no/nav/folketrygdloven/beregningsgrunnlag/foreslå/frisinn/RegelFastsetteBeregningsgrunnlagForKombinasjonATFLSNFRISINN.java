@@ -28,7 +28,7 @@ public class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNFRISINN impleme
             rs.beregningsRegel("FP_BR 2", "Fastsett beregningsperiode.",
                 new FastsettBeregningsperiodeSNFRISINN(), beregnBruttoSN);
 
-        var beregningsgrunnlagKombinasjon =
+        var beregningsgrunnlagKombinasjon = // NOSONAR: java:S1488
             rs.beregningsRegel("FP_BR_14-15-27-28", "Beregn beregningsgrunnlag for arbeidstaker/frilanser)",
                 new RegelBeregningsgrunnlagATFLFRISINN(regelmodell).getSpecification(), fastsettBeregningsperiode);
 

@@ -42,7 +42,7 @@ public class BeregningsgrunnlagDto {
 
         this.sammenligningsgrunnlagPrStatusListe = kopiereFra.getSammenligningsgrunnlagPrStatusListe().stream().map(s -> {
 	        var builder = SammenligningsgrunnlagPrStatusDto.Builder.kopier(s);
-	        var build = builder.build();
+	        var build = builder.build();  // NOSONAR: java:S1488
             return build;
         }).collect(Collectors.toList());
 

@@ -85,7 +85,7 @@ class MapFastsettBeregningsgrunnlagPerioderFraRegelTilVLTest {
 
 
     private BeregningsgrunnlagDto lagBeregningsgrunnlag() {
-        var vlBeregningsgrunnlag = BeregningsgrunnlagDto.builder()
+        var vlBeregningsgrunnlag = BeregningsgrunnlagDto.builder()  // NOSONAR: java:S1488
             .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT)
             .medOverstyring(true)
             .medGrunnbeløp(GRUNNBELØP)

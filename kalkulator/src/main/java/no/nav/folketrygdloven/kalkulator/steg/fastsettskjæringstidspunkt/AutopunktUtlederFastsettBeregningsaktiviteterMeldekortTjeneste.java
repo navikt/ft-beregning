@@ -55,12 +55,12 @@ public class AutopunktUtlederFastsettBeregningsaktiviteterMeldekortTjeneste {
 
 
         if(BeregningstidspunktTjeneste.finnBeregningstidspunkt(skjæringstidspunkt).isBefore(skjæringstidspunkt) && opphørerYtelseDagenFørStp(nyligsteVedtak.get(), skjæringstidspunkt)){
-            var meldekortOpphørtYtelse = MeldekortUtils.finnesMeldekortSomInkludererGittDato(ytelseFilterMeldekort, nyligsteVedtak.get(),
-                    Set.of(nyligsteVedtak.get().getYtelseType()), skjæringstidspunkt.minusDays(1));
+            var meldekortOpphørtYtelse = MeldekortUtils.finnesMeldekortSomInkludererGittDato(ytelseFilterMeldekort, // NOSONAR: java:S1488
+                nyligsteVedtak.get(), Set.of(nyligsteVedtak.get().getYtelseType()), skjæringstidspunkt.minusDays(1));
             return meldekortOpphørtYtelse;
         }
 
-	    var meldekortLøpendeYtelse = MeldekortUtils.finnesMeldekortSomInkludererGittDato(ytelseFilterMeldekort, nyligsteVedtak.get(),
+	    var meldekortLøpendeYtelse = MeldekortUtils.finnesMeldekortSomInkludererGittDato(ytelseFilterMeldekort, nyligsteVedtak.get(),  // NOSONAR: java:S1488
                 Set.of(nyligsteVedtak.get().getYtelseType()), skjæringstidspunkt);
         return meldekortLøpendeYtelse;
     }

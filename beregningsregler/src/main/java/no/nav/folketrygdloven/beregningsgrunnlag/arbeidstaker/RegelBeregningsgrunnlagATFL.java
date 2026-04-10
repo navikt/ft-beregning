@@ -87,7 +87,7 @@ public class RegelBeregningsgrunnlagATFL implements RuleService<Beregningsgrunnl
         // FP_BR X.X Ingen regelberegning hvis besteberegning gjelder
 
         var sjekkOmBesteberegning =
-                rs.beregningHvisRegel(new SjekkOmBesteberegning(), new Beregnet(), beregningsgrunnlagATFL);
+                rs.beregningHvisRegel(new SjekkOmBesteberegning(), new Beregnet(), beregningsgrunnlagATFL);  // NOSONAR: java:S1488
 
         return sjekkOmBesteberegning;
     }

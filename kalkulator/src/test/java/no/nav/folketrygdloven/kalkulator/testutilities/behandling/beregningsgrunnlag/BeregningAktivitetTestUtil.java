@@ -24,7 +24,7 @@ public class BeregningAktivitetTestUtil {
                 .build();
             builder.leggTilAktivitet(beregningAktivitet);
         }
-	    var aggregat = builder.build();
+	    var aggregat = builder.build();  // NOSONAR: java:S1488
         return aggregat;
     }
 

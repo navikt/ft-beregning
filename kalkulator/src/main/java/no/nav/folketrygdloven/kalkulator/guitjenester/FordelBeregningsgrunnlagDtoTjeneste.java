@@ -41,7 +41,7 @@ public class FordelBeregningsgrunnlagDtoTjeneste {
     private static List<FordelBeregningsgrunnlagPeriodeDto> lagPerioder(BeregningsgrunnlagGUIInput input) {
         var beregningsgrunnlag = input.getBeregningsgrunnlag();
         var bgPerioder = beregningsgrunnlag.getBeregningsgrunnlagPerioder();
-        var fordelPerioder = bgPerioder.stream()
+        var fordelPerioder = bgPerioder.stream()  // NOSONAR: java:S1488
                 .map(periode -> mapTilPeriodeDto(input, periode, beregningsgrunnlag.getGrunnbeløp()))
                 .sorted(Comparator.comparing(FordelBeregningsgrunnlagPeriodeDto::getFom)).collect(toList());
         return fordelPerioder;

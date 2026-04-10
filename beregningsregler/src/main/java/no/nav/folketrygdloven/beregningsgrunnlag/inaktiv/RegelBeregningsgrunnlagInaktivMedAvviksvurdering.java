@@ -82,7 +82,7 @@ public class RegelBeregningsgrunnlagInaktivMedAvviksvurdering implements RuleSer
 //      Beregn gjennomsnittlig PGI
 //      Beregn oppjustert inntekt for årene i beregningsperioden
 //      Fastsett beregningsperiode
-        var foreslåBeregningsgrunnlagForBrukersAndel =
+        var foreslåBeregningsgrunnlagForBrukersAndel =  // NOSONAR: java:S1488
 				rs.beregningsRegel("BR_8_47_1", "Foreslå beregningsgrunnlag for brukers andel",
 						Arrays.asList(new FastsettBeregningsperiodeForAktivitetstatus(AktivitetStatus.BA),
 								new SettHjemmelInaktiv(),

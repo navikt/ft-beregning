@@ -291,7 +291,7 @@ public class SimulerGraderingMotInntektTjeneste {
         if (antallPoster == 0) {
             return Beløp.ZERO;
         }
-        var beløp = aktuellePoster.stream()
+        var beløp = aktuellePoster.stream()  // NOSONAR: java:S1488
                 .map(post -> finnBruttoInntektFraInntektspost(arbeidsgiver, arbeidsforholdRef, ytelsespesifiktGrunnlag, post))
                 .filter(Objects::nonNull)
                 .reduce(Beløp::adder)

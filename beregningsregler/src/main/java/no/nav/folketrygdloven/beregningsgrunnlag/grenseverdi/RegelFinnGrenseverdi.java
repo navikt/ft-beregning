@@ -29,7 +29,7 @@ public class RegelFinnGrenseverdi implements EksportRegel<BeregningsgrunnlagPeri
 
 
 		// FP_BR_29.1 Skal finne grenseverdi uten å ta hensyn til fordeling?
-        var skalfinneGrenseverdiUtenFordeling = rs.beregningHvisRegel(
+        var skalfinneGrenseverdiUtenFordeling = rs.beregningHvisRegel(  // NOSONAR: java:S1488
 				new SkalFinneGrenseverdiUtenFordeling(),
 				new RegelFinnGrenseverdiUtenFordeling(regelmodell).getSpecification(),
 				new RegelFinnGrenseverdiMedFordeling(regelmodell).getSpecification());

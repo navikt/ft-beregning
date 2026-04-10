@@ -34,8 +34,7 @@ public class RegelFastsettUtenAvkortingATFL implements RuleService<Beregningsgru
         // FP_BR_29.5.2 Fastsett Avkortet pr år pr beregningsgrunnlagsandel OG Fastsett Avkortet per år
         Specification<BeregningsgrunnlagPeriode> fastsettAvkortet = new FastsettAvkortetLikBruttoBG();
 
-        var fastsettUtenAvkorting =
-                rs.beregningsRegel(ID, BESKRIVELSE, fastsettBrukersAndel, fastsettAvkortet);
+        var fastsettUtenAvkorting = rs.beregningsRegel(ID, BESKRIVELSE, fastsettBrukersAndel, fastsettAvkortet); // NOSONAR: java:S1488
 
         return fastsettUtenAvkorting;
     }

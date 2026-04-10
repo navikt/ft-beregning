@@ -150,19 +150,17 @@ public class RegelMapperTestDataHelper {
 
     public static BeregningsgrunnlagPrStatus buildRegelBGPeriode(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode regelBGP, no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus status, Periode periode) {
         if (no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus.erArbeidstakerEllerFrilanser(status)) {
-            final var regelBGPStatus = BeregningsgrunnlagPrStatus.builder(regelBGP.getBeregningsgrunnlagPrStatus(status))
+            return BeregningsgrunnlagPrStatus.builder(regelBGP.getBeregningsgrunnlagPrStatus(status))
                 .medBeregningsperiode(periode)
                 .build();
-            return regelBGPStatus;
         } else {
-            final var regelBGPStatus = BeregningsgrunnlagPrStatus.builder(regelBGP.getBeregningsgrunnlagPrStatus(status))
+            return BeregningsgrunnlagPrStatus.builder(regelBGP.getBeregningsgrunnlagPrStatus(status))
                 .medFordeltPrÅr(BigDecimal.valueOf(400000.42))
                 .medBeregnetPrÅr(BigDecimal.valueOf(400000.42))
                 .medAvkortetPrÅr(BigDecimal.valueOf(789.789))
                 .medRedusertPrÅr(BigDecimal.valueOf(901.901))
                 .medBeregningsperiode(periode)
                 .build();
-            return regelBGPStatus;
         }
     }
 

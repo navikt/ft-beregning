@@ -32,7 +32,7 @@ public class RegelBeregnBruttoYtelseAndel implements RuleService<Beregningsgrunn
 		// FP_BR 14.1 Er bruker arbeidstaker?
 
         var fastsettBruttoBeregningsgrunnlag =
-				rs.beregningHvisRegel(new SjekkHarSaksbehandlerSattInntektFraYtelseManuelt(statusAndel),
+				rs.beregningHvisRegel(new SjekkHarSaksbehandlerSattInntektFraYtelseManuelt(statusAndel),  // NOSONAR: java:S1488
 						new Beregnet(),
 						fastsettFraYtelsevedtak);
 

@@ -63,8 +63,8 @@ public class RegelFullføreBeregningsgrunnlag implements EksportRegel<Beregnings
         var beregnEventuellAvkorting = rs.beregningHvisRegel(new SjekkGradertBeregningsgrunnlagStørreEnnGrenseverdi(), sjekkMaksimaltRefusjonskrav, fastsettUtenAvkorting);
 
 		// FP_BR_29.3 3. For hver beregningsgrunnlagsandel: Fastsett Refusjonskrav for beregnings-grunnlagsandel
-        var fastsettMaksimalRefusjon = rs.beregningsRegel(FastsettMaksimalRefusjon.ID, FastsettMaksimalRefusjon.BESKRIVELSE,
-				new FastsettMaksimalRefusjon(), beregnEventuellAvkorting);
+        var fastsettMaksimalRefusjon = rs.beregningsRegel(FastsettMaksimalRefusjon.ID, FastsettMaksimalRefusjon.BESKRIVELSE, // NOSONAR: java:S1488
+            new FastsettMaksimalRefusjon(), beregnEventuellAvkorting);
 
 		return fastsettMaksimalRefusjon;
 	}

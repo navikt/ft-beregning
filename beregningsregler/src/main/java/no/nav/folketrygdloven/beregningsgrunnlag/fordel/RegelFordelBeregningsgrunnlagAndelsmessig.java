@@ -21,7 +21,8 @@ public class RegelFordelBeregningsgrunnlagAndelsmessig implements RuleService<Fo
 
         var bestemBeløpSomSkalFordeles = rs.beregningsRegel(FinnMålbeløpForFordelingenPrAndel.ID, FinnMålbeløpForFordelingenPrAndel.BESKRIVELSE, new FinnMålbeløpForFordelingenPrAndel(), utførFordeling);
 
-        var fastsettFraksjonPrAndel = rs.beregningsRegel(FinnFraksjonPrAndel.ID, FinnFraksjonPrAndel.BESKRIVELSE, new FinnFraksjonPrAndel(), bestemBeløpSomSkalFordeles);
+        var fastsettFraksjonPrAndel = // NOSONAR: java:S1488
+            rs.beregningsRegel(FinnFraksjonPrAndel.ID, FinnFraksjonPrAndel.BESKRIVELSE, new FinnFraksjonPrAndel(), bestemBeløpSomSkalFordeles);
 
 	    return fastsettFraksjonPrAndel;
     }

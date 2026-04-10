@@ -38,8 +38,8 @@ public class RegelForeslåBeregningsgrunnlagFRISINN implements EksportRegel<Bere
 				.map(AktivitetStatusMedHjemmel::getAktivitetStatus)
 				.map(this::velgSpecification)
 				.toList();
-        var foreslåBeregningsgrunnlag =
-				rs.beregningsRegel("FRISINN pr status", "Fastsett beregningsgrunnlag pr status", speclist, new Beregnet());
+        var foreslåBeregningsgrunnlag = // NOSONAR: java:S1488
+            rs.beregningsRegel("FRISINN pr status", "Fastsett beregningsgrunnlag pr status", speclist, new Beregnet());
 
 		return foreslåBeregningsgrunnlag;
     }

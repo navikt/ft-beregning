@@ -99,9 +99,8 @@ class VurderLønnsendringDtoTjenesteTest {
         var yrkesaktivitetBuilder = lagYrkesaktivitetMedLønnsendring(sisteLønnsendringsdato);
         aktørArbeidBuilder.leggTilYrkesaktivitet(yrkesaktivitetBuilder);
         dataBuilder.leggTilAktørArbeid(aktørArbeidBuilder);
-        var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.nytt()
+        return InntektArbeidYtelseGrunnlagDtoBuilder.nytt()
                 .medData(dataBuilder).build();
-        return iayGrunnlag;
     }
 
     private YrkesaktivitetDtoBuilder lagYrkesaktivitetMedLønnsendring(LocalDate sisteLønnsendringsdato) {

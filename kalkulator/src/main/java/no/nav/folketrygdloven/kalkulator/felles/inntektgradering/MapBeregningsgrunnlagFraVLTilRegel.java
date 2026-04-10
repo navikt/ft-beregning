@@ -113,7 +113,7 @@ public class MapBeregningsgrunnlagFraVLTilRegel {
     private static List<BeregningsgrunnlagPeriode> mapBeregningsgrunnlagPerioder(BeregningsgrunnlagDto vlBeregningsgrunnlag,
                                                                                  BeregningsgrunnlagInput input) {
         var perioderTilVurderingTjeneste = new PerioderTilVurderingTjeneste(input.getForlengelseperioder(), vlBeregningsgrunnlag);
-        var perioder = vlBeregningsgrunnlag.getBeregningsgrunnlagPerioder().stream()
+        var perioder = vlBeregningsgrunnlag.getBeregningsgrunnlagPerioder().stream()  // NOSONAR: java:S1488
                 .filter(p -> perioderTilVurderingTjeneste.erTilVurdering(p.getPeriode()))
                 .map(vlBGPeriode -> mapPeriode(vlBGPeriode, input)).toList();
 

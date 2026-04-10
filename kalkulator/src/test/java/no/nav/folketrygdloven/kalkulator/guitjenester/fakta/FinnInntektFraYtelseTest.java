@@ -106,7 +106,7 @@ class FinnInntektFraYtelseTest {
             .leggTilBeregningsgrunnlagPrStatusOgAndel(andel1)
             .build(bg);
 
-        var andel2 = BeregningsgrunnlagPrStatusOgAndelDto.Builder.ny()
+        var andel2 = BeregningsgrunnlagPrStatusOgAndelDto.Builder.ny()  // NOSONAR: java:S1488
             .medAktivitetStatus(AktivitetStatus.DAGPENGER)
             .medBeregnetPrÅr(Beløp.fra(5000))
             .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder().medArbeidsgiver(Arbeidsgiver.virksomhet("1234534")))

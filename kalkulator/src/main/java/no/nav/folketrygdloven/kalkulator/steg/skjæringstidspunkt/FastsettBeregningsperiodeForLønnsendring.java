@@ -96,7 +96,7 @@ public class FastsettBeregningsperiodeForLønnsendring {
 
 
     public static Map<BeregningsgrunnlagPrStatusOgAndelDto, List<YrkesaktivitetDto>> finnAndelAktivitetMap(List<YrkesaktivitetDto> yrkesaktiviteterMedLønnsendring, BeregningsgrunnlagPeriodeDto periode) {
-        var andelLønnsendringMap = periode.getBeregningsgrunnlagPrStatusOgAndelList().stream()
+        var andelLønnsendringMap = periode.getBeregningsgrunnlagPrStatusOgAndelList().stream()  // NOSONAR: java:S1488
                 .filter(a -> harLønnsendring(yrkesaktiviteterMedLønnsendring, a))
                 .collect(Collectors.toMap(a -> a, a -> finnMatchendeYrkesaktiviteterMedLønnsendring(yrkesaktiviteterMedLønnsendring, a)));
         return andelLønnsendringMap;

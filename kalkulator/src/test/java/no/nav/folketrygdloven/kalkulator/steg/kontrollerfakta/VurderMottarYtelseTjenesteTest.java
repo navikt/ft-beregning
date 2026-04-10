@@ -274,20 +274,18 @@ class VurderMottarYtelseTjenesteTest {
         var register = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
         register.leggTilAktørInntekt(lagAktørInntektMedYtelse()).build();
         register.leggTilAktørYtelse(lagAktørYtelseForFrilans());
-        var inntektArbeidYtelseGrunnlagDto = InntektArbeidYtelseGrunnlagDtoBuilder.nytt()
+        return InntektArbeidYtelseGrunnlagDtoBuilder.nytt()
                 .medData(register)
                 .build();
-        return inntektArbeidYtelseGrunnlagDto;
     }
 
     private InntektArbeidYtelseGrunnlagDto lagIAYMedYtelse(Arbeidsgiver arbeidsgiver, boolean fullRefusjon) {
         var register = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
         register.leggTilAktørInntekt(lagAktørInntektMedYtelse()).build();
         register.leggTilAktørYtelse(lagAktørYtelseForArbeidsgiver(arbeidsgiver, fullRefusjon));
-        var inntektArbeidYtelseGrunnlagDto = InntektArbeidYtelseGrunnlagDtoBuilder.nytt()
+        return InntektArbeidYtelseGrunnlagDtoBuilder.nytt()
                 .medData(register)
                 .build();
-        return inntektArbeidYtelseGrunnlagDto;
     }
 
 

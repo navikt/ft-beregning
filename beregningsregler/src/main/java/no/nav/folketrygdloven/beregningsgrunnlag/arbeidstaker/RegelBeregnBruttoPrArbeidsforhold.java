@@ -90,7 +90,7 @@ public class RegelBeregnBruttoPrArbeidsforhold implements RuleService<Beregnings
         // FP_BR 14.1 Er bruker arbeidstaker?
 
         var fastsettBruttoBeregningsgrunnlag =
-            rs.beregningHvisRegel(new SjekkOmBrukerErArbeidstaker(arbeidsforhold), manueltFastsattInntekt, sjekkOmNyoppstartetFrilanser);
+            rs.beregningHvisRegel(new SjekkOmBrukerErArbeidstaker(arbeidsforhold), manueltFastsattInntekt, sjekkOmNyoppstartetFrilanser);  // NOSONAR: java:S1488
 
         return fastsettBruttoBeregningsgrunnlag;
     }

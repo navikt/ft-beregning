@@ -1137,7 +1137,7 @@ class FullføreBeregningsgrunnlagUtbgradTest {
     }
 
     private SvangerskapspengerGrunnlag lagSvangerskapspengerGrunnlag(List<UtbetalingsgradPrAktivitetDto> tilretteleggingMedUtbelingsgrad) {
-        var svangerskapspengerGrunnlag = new SvangerskapspengerGrunnlag(
+        var svangerskapspengerGrunnlag = new SvangerskapspengerGrunnlag(  // NOSONAR: java:S1488
                 tilretteleggingMedUtbelingsgrad
         );
         return svangerskapspengerGrunnlag;

@@ -28,8 +28,8 @@ public class RegelFullføreBeregningsgrunnlagFRISINN implements EksportRegel<Ber
         var fastsettForFrilans = rs.beregningsRegel(FastsettForFrilans.ID, FastsettForFrilans.BESKRIVELSE,
                 new FastsettForFrilans(), fastsettForSN);
 
-        var fastsettIkkeSøktForTilNull = rs.beregningsRegel(FastsettIkkeSøktForTil0.ID, FastsettIkkeSøktForTil0.BESKRIVELSE,
-                new FastsettIkkeSøktForTil0(), fastsettForFrilans);
+        var fastsettIkkeSøktForTilNull =  // NOSONAR: java:S1488
+            rs.beregningsRegel(FastsettIkkeSøktForTil0.ID, FastsettIkkeSøktForTil0.BESKRIVELSE, new FastsettIkkeSøktForTil0(), fastsettForFrilans);
 
         return fastsettIkkeSøktForTilNull;
     }

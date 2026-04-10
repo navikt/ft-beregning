@@ -39,7 +39,7 @@ public class RegelBeregningsgrunnlagATFLFRISINN implements RuleService<Beregning
 			    .map(a -> new RegelBeregnBruttoPrArbeidsforholdFRISINN(a).getSpecification().medEvaluationProperty(new ServiceArgument("arbeidsforhold", a.getArbeidsforhold())))
 			    .toList();
         var beregningsgrunnlagATFL =
-			    rs.beregningsRegel("FRISINN 2.X", "Fastsett beregningsgrunnlag pr arbeidsforhold",
+			    rs.beregningsRegel("FRISINN 2.X", "Fastsett beregningsgrunnlag pr arbeidsforhold",  // NOSONAR: java:S1488
 					    speclist, harInntektForATFLBlittManueltFastsatt);
 
 

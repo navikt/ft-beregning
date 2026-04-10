@@ -53,8 +53,8 @@ public class RegelForeslåBeregningsgrunnlag implements EksportRegel<Beregningsg
 				.map(AktivitetStatusMedHjemmel::getAktivitetStatus)
 				.map(this::velgSpecification)
 				.toList();
-        var foreslåBeregningsgrunnlag =
-				rs.beregningsRegel("FP_BR pr status", "Fastsett beregningsgrunnlag pr status", speclist, new Beregnet());
+        var foreslåBeregningsgrunnlag = // NOSONAR: java:S1488
+            rs.beregningsRegel("FP_BR pr status", "Fastsett beregningsgrunnlag pr status", speclist, new Beregnet());
 
 		return foreslåBeregningsgrunnlag;
 	}
