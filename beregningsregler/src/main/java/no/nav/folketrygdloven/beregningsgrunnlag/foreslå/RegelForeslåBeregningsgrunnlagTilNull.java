@@ -29,8 +29,8 @@ public class RegelForeslåBeregningsgrunnlagTilNull implements RuleService<Bereg
         var rs = new Ruleset<BeregningsgrunnlagPeriode>();
 
         // FP_BR NULL Sett brutto BG til 0
-        var settTilNull =  // NOSONAR: java:S1488
-            rs.beregningsRegel("FP_BR NULL", "Beregn brutto beregingsgrunnlag for ukjent status", new FastsettTilNull(status), new Beregnet());
+        var settTilNull = rs.beregningsRegel( // NOSONAR: java:S1488
+            "FP_BR NULL", "Beregn brutto beregingsgrunnlag for ukjent status", new FastsettTilNull(status), new Beregnet());
 
         return settTilNull;
     }

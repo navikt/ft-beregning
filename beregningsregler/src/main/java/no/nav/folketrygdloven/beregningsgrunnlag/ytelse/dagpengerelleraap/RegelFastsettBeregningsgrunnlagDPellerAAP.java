@@ -36,8 +36,8 @@ public class RegelFastsettBeregningsgrunnlagDPellerAAP implements RuleService<Be
             new FastsettDagpengerManueltEtterBesteberegning(), foreslåBeregningsgrunnlag);
 
         //FP_BR 10.5 Er beregnngsgrunnlag for AAP fastsatt manuelt?
-        var aapFastsattManuelt = // NOSONAR: java:S1488
-            rs.beregningHvisRegel(new SjekkOmBGForAAPFastsattManuelt(), new FastsettAAPManuelt(), dagpengerFastsattManuelt);
+        var aapFastsattManuelt = rs.beregningHvisRegel( // NOSONAR: java:S1488
+            new SjekkOmBGForAAPFastsattManuelt(), new FastsettAAPManuelt(), dagpengerFastsattManuelt);
 
         return aapFastsattManuelt;
     }
