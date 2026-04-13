@@ -37,7 +37,6 @@ import no.nav.folketrygdloven.kalkulator.modell.iay.YtelseDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YtelseFilterDto;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
-import no.nav.folketrygdloven.kalkulator.modell.typer.Stillingsprosent;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.ArbeidType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.YtelseType;
@@ -171,27 +170,6 @@ public class MapInntektsgrunnlagVLTilRegelFelles implements MapInntektsgrunnlagV
 						.map(periode -> !periode.getTom().isBefore(skjæringstidspunktBeregning)).orElse(false));
 	}
 
-	private List<Periodeinntekt> mapYtelseFraArenavedtak(YtelseFilterDto ytelseFilter, LocalDate skjæringstidspunkt, YtelseDto nyesteVedtakForDagsats, YtelseType arenaYtelse) {
-		BigDecimal dagsats;
-		BigDecimal utbetalingsfaktor;
-
-        var sisteUtbetalingFørStp = MeldekortUtils.sisteHeleMeldekortFørStp(ytelseFilter, nyesteVedtakForDagsats,
-				skjæringstidspunkt,
-				Set.of(arenaYtelse));
-
-		utbetalingsfaktor = sisteUtbetalingFørStp
-                .map(MeldekortUtils.UtbetalingMedNormertUtbetalingsprosent::normertUtbetalingsprosent)
-				.map(Stillingsprosent::tilNormalisertGrad)
-				.orElse(BigDecimal.ONE);
-
-        // TODO Er det en bedre måte å gjøre dette på?
-        // Her antar man at en periode er 14 dager og man gjetter at faktor er 1
-		dagsats = nyesteVedtakForDagsats.getVedtaksDagsats().map(Beløp::verdi).orElseThrow();
-        var periode = sisteUtbetalingFørStp.map(p -> Periode.of(p.utbetaling().getAnvistFOM(), p.utbetaling().getAnvistTOM()))
-            .orElseGet(() -> Periode.of(skjæringstidspunkt.minusDays(14), skjæringstidspunkt.minusDays(1)));
-        return mapAnvistPeriodeTilEnkeltdager(new LocalDateSegment<>(periode.getFom(), periode.getTom(), new DagsatsUtbetalingsgrad(dagsats, utbetalingsfaktor)));
-	}
-
     private void mapTilstøtendeYtelse(Inntektsgrunnlag inntektsgrunnlag,
                                       YtelseFilterDto ytelseFilter,
                                       LocalDate skjæringstidspunkt,
@@ -201,25 +179,25 @@ public class MapInntektsgrunnlagVLTilRegelFelles implements MapInntektsgrunnlagV
         if (nyesteVedtakForDagsats.isEmpty()) {
             return;
         }
-        var nyesteVedtak = nyesteVedtakForDagsats.get();
-        if (nyesteVedtak.harKildeKelvinEllerDpSak()) {
-            mapTilEnkeltdagerMedInntekter(nyesteVedtak, skjæringstidspunkt)
-                .forEach(inntektsgrunnlag::leggTilPeriodeinntekt);
-        } else {
-            mapYtelseFraArenavedtak(ytelseFilter, skjæringstidspunkt, nyesteVedtak, ytelseType)
-                .forEach(inntektsgrunnlag::leggTilPeriodeinntekt);
-        }
+        mapTilEnkeltdagerMedInntekter(nyesteVedtakForDagsats.get(), skjæringstidspunkt)
+            .forEach(inntektsgrunnlag::leggTilPeriodeinntekt);
     }
 
     private List<Periodeinntekt> mapTilEnkeltdagerMedInntekter(YtelseDto nyesteVedtak, LocalDate skjæringstidspunkt) {
+        var tomGrense = skjæringstidspunkt.minusDays(1);
         var tidslinje = new LocalDateTimeline<>(nyesteVedtak.getYtelseAnvist()
             .stream()
             // Praksis for beregning av AAP / DP er å se på en periode på 14 dager så vi tar med anvisninger fra siste måned for å sikre at regel har nok data
             .filter(a -> a.getAnvistTOM().isAfter(skjæringstidspunkt.minusMonths(1)))
-            .map(p -> new LocalDateSegment<>(p.getAnvistFOM(), p.getAnvistTOM(),
-                new DagsatsUtbetalingsgrad(nyesteVedtak.getVedtaksDagsats().orElseThrow().verdi(), p.getUtbetalingsgradProsent().orElseThrow().tilNormalisertGrad())))
+            .filter(a -> a.getAnvistFOM().isBefore(skjæringstidspunkt))
+            .map(p -> new LocalDateSegment<>(p.getAnvistFOM(), minDato(p.getAnvistTOM(), tomGrense),
+                new DagsatsUtbetalingsgrad(nyesteVedtak.getVedtaksDagsats().orElseThrow().verdi(), MeldekortUtils.getUtbetalingsGrad(nyesteVedtak, p))))
             .toList());
         return tidslinje.stream().map(this::mapAnvistPeriodeTilEnkeltdager).flatMap(Collection::stream).toList();
+    }
+
+    private static LocalDate minDato(LocalDate a, LocalDate b) {
+        return a.isBefore(b) ? a : b;
     }
 
     private List<Periodeinntekt> mapAnvistPeriodeTilEnkeltdager(LocalDateSegment<DagsatsUtbetalingsgrad> segment) {
