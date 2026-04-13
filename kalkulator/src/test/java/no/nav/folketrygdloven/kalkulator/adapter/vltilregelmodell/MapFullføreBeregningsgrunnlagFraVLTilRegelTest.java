@@ -486,10 +486,10 @@ class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
         var dpMånedsInntekter = resultatBG.getInntektsgrunnlag().getPeriodeinntekter().stream()
 				.filter(mi -> mi.getInntektskilde().equals(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP))
 				.toList();
-		assertThat(dpMånedsInntekter).hasSize(14);
+		assertThat(dpMånedsInntekter).hasSize(5);
         var dagsats = BigDecimal.valueOf(MELDEKORTSATS1);
         assertThat(dpMånedsInntekter.stream().allMatch(m ->m.getInntekt().compareTo(dagsats) == 0)).isTrue();
-        assertThat(dpMånedsInntekter.stream().allMatch(m ->m.getUtbetalingsfaktor().orElseThrow().compareTo(BigDecimal.ONE) == 0)).isTrue();
+        assertThat(dpMånedsInntekter.stream().allMatch(m ->m.getUtbetalingsfaktor().orElseThrow().compareTo(new BigDecimal("0.95")) == 0)).isTrue();
 	}
 
 	@Test

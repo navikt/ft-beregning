@@ -29,10 +29,10 @@ class ForeslåBeregningsgrunnlagDPellerAAPKombinasjonMedAnnenStatus extends Leaf
 				.findFirst()
 				.orElseThrow(() -> new IllegalStateException("Ingen aktivitetstatus av type DP eller AAP funnet."));
 
-        var dagsatsOgBeregnetPrÅr = grunnlag.getInntektsgrunnlag().regnUtSnittInntektForDPellerAAP(bgPerStatus.getAktivitetStatus(), grunnlag.getSkjæringstidspunkt(), true);
+        var dagsatsOgBeregnetPrÅr = MapDagsatsOgBeregnetPrÅr.regnUtSnittInntektForDPellerAAP(grunnlag.getInntektsgrunnlag(),
+            bgPerStatus.getAktivitetStatus(), grunnlag.getSkjæringstidspunkt(), true);
         var dagsats = dagsatsOgBeregnetPrÅr.dagsats();
         var beregnetPrÅr = dagsatsOgBeregnetPrÅr.beregnetPrÅr();
-
 		BeregningsgrunnlagPrStatus.builder(bgPerStatus)
 				.medBeregnetPrÅr(beregnetPrÅr)
 				.medÅrsbeløpFraTilstøtendeYtelse(beregnetPrÅr)
