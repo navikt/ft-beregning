@@ -85,10 +85,10 @@ public class YrkesaktivitetFilterDto {
 
     public Collection<YrkesaktivitetDto> getYrkesaktiviteter() {
         return getYrkesaktiviteterInklusiveFiktive().stream()
-                .filter(this::erIkkeFrilansOppdrag)
-                .filter(this::skalBrukes)
-                .filter(it -> (erArbeidsforholdOgStarterPåRettSideAvSkjæringstidspunkt(it) || !getAktivitetsAvtalerForArbeid(it).isEmpty()))
-                .collect(Collectors.toUnmodifiableSet());
+            .filter(this::erIkkeFrilansOppdrag)
+            .filter(this::skalBrukes)
+            .filter(it -> (erArbeidsforholdOgStarterPåRettSideAvSkjæringstidspunkt(it) || !getAktivitetsAvtalerForArbeid(it).isEmpty()))
+            .collect(Collectors.toUnmodifiableSet());
     }
 
     /**
@@ -133,8 +133,7 @@ public class YrkesaktivitetFilterDto {
     }
 
     private boolean erArbeidsforholdOgStarterPåRettSideAvSkjæringstidspunkt(YrkesaktivitetDto it) {
-        return it.erArbeidsforhold()
-                && getAnsettelsesPerioder(it).stream().anyMatch(ap -> skalMedEtterSkjæringstidspunktVurdering(ap));
+        return it.erArbeidsforhold() && getAnsettelsesPerioder(it).stream().anyMatch(ap -> skalMedEtterSkjæringstidspunktVurdering(ap));
     }
 
     private boolean erFrilansOppdrag(YrkesaktivitetDto aktivitet) {

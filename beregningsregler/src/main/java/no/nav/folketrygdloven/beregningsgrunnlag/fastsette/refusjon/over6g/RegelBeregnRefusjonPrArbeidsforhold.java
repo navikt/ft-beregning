@@ -31,7 +31,7 @@ public class RegelBeregnRefusjonPrArbeidsforhold implements RuleService<Beregnin
         var rs = new Ruleset<BeregningsgrunnlagPeriode>();
 
         return rs.beregningsRegel(ID, BESKRIVELSE,
-                Arrays.asList(new BeregnArbeidsgiversAndeler(), new BeregnAvkortetRefusjon()),
-                new VurderOmAlleFerdig());
+            Arrays.asList(new BeregnArbeidsgiversAndeler(), new BeregnAvkortetRefusjon()),
+            new VurderOmAlleFerdig());
     }
 }

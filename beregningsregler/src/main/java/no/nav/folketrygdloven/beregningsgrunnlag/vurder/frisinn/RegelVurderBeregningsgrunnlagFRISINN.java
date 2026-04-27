@@ -21,7 +21,6 @@ public class RegelVurderBeregningsgrunnlagFRISINN implements EksportRegel<Beregn
     public Specification<BeregningsgrunnlagPeriode> getSpecification() {
         var rs = new Ruleset<BeregningsgrunnlagPeriode>();
         var sjekkMindreEnnTreKvartG = rs.beregningHvisRegel(new SjekkBeregningsgrunnlagFLSNMindreEnnFRISINN(), new AvslagUnderTreKvartG(), new Beregnet());
-        return rs.beregningHvisRegel(new SjekkFrilansUtenInntekt(), new AvslagFrilansUtenInntekt(),
-            sjekkMindreEnnTreKvartG);
+        return rs.beregningHvisRegel(new SjekkFrilansUtenInntekt(), new AvslagFrilansUtenInntekt(), sjekkMindreEnnTreKvartG);
     }
 }

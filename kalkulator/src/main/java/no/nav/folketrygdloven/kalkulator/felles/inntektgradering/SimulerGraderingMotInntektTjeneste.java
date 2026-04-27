@@ -292,11 +292,11 @@ public class SimulerGraderingMotInntektTjeneste {
             return Beløp.ZERO;
         }
         return aktuellePoster.stream()
-                .map(post -> finnBruttoInntektFraInntektspost(arbeidsgiver, arbeidsforholdRef, ytelsespesifiktGrunnlag, post))
-                .filter(Objects::nonNull)
-                .reduce(Beløp::adder)
-                .orElse(Beløp.ZERO)
-                .divider(antallPoster, 10, RoundingMode.HALF_UP);
+            .map(post -> finnBruttoInntektFraInntektspost(arbeidsgiver, arbeidsforholdRef, ytelsespesifiktGrunnlag, post))
+            .filter(Objects::nonNull)
+            .reduce(Beløp::adder)
+            .orElse(Beløp.ZERO)
+            .divider(antallPoster, 10, RoundingMode.HALF_UP);
     }
 
     private Beløp finnInntektForFrilans(Intervall periode,

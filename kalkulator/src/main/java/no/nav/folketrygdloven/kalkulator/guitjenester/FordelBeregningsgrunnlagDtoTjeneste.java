@@ -42,8 +42,8 @@ public class FordelBeregningsgrunnlagDtoTjeneste {
         var beregningsgrunnlag = input.getBeregningsgrunnlag();
         var bgPerioder = beregningsgrunnlag.getBeregningsgrunnlagPerioder();
         return bgPerioder.stream()
-                .map(periode -> mapTilPeriodeDto(input, periode, beregningsgrunnlag.getGrunnbeløp()))
-                .sorted(Comparator.comparing(FordelBeregningsgrunnlagPeriodeDto::getFom)).collect(toList());
+            .map(periode -> mapTilPeriodeDto(input, periode, beregningsgrunnlag.getGrunnbeløp()))
+            .sorted(Comparator.comparing(FordelBeregningsgrunnlagPeriodeDto::getFom)).collect(toList());
     }
 
     private static FordelBeregningsgrunnlagPeriodeDto mapTilPeriodeDto(BeregningsgrunnlagGUIInput input,
