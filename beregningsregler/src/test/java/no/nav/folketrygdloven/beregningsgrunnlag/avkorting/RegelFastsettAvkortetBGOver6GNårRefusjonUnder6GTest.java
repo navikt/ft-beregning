@@ -499,7 +499,7 @@ class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6GTest {
             .medArbeidsforhold(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(ORGNR4))
             .medBruttoPrÅr(BigDecimal.valueOf(bruttoBG.get(3)))
             .medRefusjonPrÅr(BigDecimal.valueOf(refusjonsKrav.get(3)))
-            .medAndelNr(andelNr++)
+            .medAndelNr(andelNr)
             .build();
         var bgpsATFL = BeregningsgrunnlagPrStatus.builder()
             .medAktivitetStatus(AktivitetStatus.ATFL)

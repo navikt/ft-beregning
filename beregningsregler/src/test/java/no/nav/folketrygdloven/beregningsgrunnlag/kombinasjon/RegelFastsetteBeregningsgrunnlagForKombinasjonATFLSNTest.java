@@ -77,7 +77,7 @@ class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
         var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         // Act
-        var evaluation = new RegelBeregningsgrunnlagATFL(grunnlag).getSpecification().evaluate(grunnlag);
+        new RegelBeregningsgrunnlagATFL(grunnlag).getSpecification().evaluate(grunnlag);
         var evaluation2 = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
 
         // Assert
@@ -121,7 +121,7 @@ class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
         var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         // Act
-        var evaluation = new RegelBeregningsgrunnlagATFL(grunnlag).getSpecification().evaluate(grunnlag);
+        new RegelBeregningsgrunnlagATFL(grunnlag).getSpecification().evaluate(grunnlag);
         var evaluation2 = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
 
         // Assert
@@ -164,7 +164,7 @@ class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
         var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         // Act
-        var evaluation = new RegelBeregningsgrunnlagATFL(grunnlag).getSpecification().evaluate(grunnlag);
+        new RegelBeregningsgrunnlagATFL(grunnlag).getSpecification().evaluate(grunnlag);
         var evaluation2 = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
 
         // Assert
@@ -221,7 +221,7 @@ class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
         var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 
         // Act
-        var evaluation = new RegelBeregningsgrunnlagATFL(grunnlag).getSpecification().evaluate(grunnlag);
+        new RegelBeregningsgrunnlagATFL(grunnlag).getSpecification().evaluate(grunnlag);
         var evaluation2 = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
 
         // Assert
@@ -291,10 +291,10 @@ class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
             .build();
 
         // Act
-        var evaluationp1 = new RegelBeregningsgrunnlagATFL(grunnlag).getSpecification().evaluate(grunnlag);
+        new RegelBeregningsgrunnlagATFL(grunnlag).getSpecification().evaluate(grunnlag);
         var evaluation2p1 = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
 
-        var evaluation1p2 = new RegelBeregningsgrunnlagATFL(andrePeriode).getSpecification().evaluate(andrePeriode);
+        new RegelBeregningsgrunnlagATFL(andrePeriode).getSpecification().evaluate(andrePeriode);
         var evaluation2p2 = new RegelBeregningsgrunnlagSN().evaluer(andrePeriode);
 
 
@@ -343,7 +343,7 @@ class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
 
         // Act
         var evaluation = new RegelBeregningsgrunnlagATFL(grunnlag).getSpecification().evaluate(grunnlag);
-        var evaluation2 = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
+        new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
 
         // Assert
         var regelResultat = getRegelResultat(evaluation, "input");
@@ -384,7 +384,7 @@ class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
         BeregningsgrunnlagPrStatus.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.AAP)).medBeregnetPrÅr(bruttoAAP).build();
 
         // Act
-        var evaluation = new RegelBeregningsgrunnlagATFL(grunnlag).getSpecification().evaluate(grunnlag);
+        new RegelBeregningsgrunnlagATFL(grunnlag).getSpecification().evaluate(grunnlag);
         var evaluation2 = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
 
         // Assert
@@ -426,7 +426,7 @@ class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
         BeregningsgrunnlagPrStatus.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP)).medBeregnetPrÅr(bruttoDP).build();
 
         // Act
-        var evaluation = new RegelBeregningsgrunnlagATFL(grunnlag).getSpecification().evaluate(grunnlag);
+        new RegelBeregningsgrunnlagATFL(grunnlag).getSpecification().evaluate(grunnlag);
         var evaluation2 = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
 
         // Assert
@@ -459,7 +459,7 @@ class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
         BeregningsgrunnlagPrStatus.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.SN)).medErNyIArbeidslivet(true);
 
         // Act
-        var evaluation = new RegelBeregningsgrunnlagATFL(grunnlag).getSpecification().evaluate(grunnlag);
+        new RegelBeregningsgrunnlagATFL(grunnlag).getSpecification().evaluate(grunnlag);
         var evaluation2 = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
 
         // Assert
@@ -488,7 +488,7 @@ class RegelFastsetteBeregningsgrunnlagForKombinasjonATFLSNTest {
 
         // Act
         var evaluation = new RegelBeregningsgrunnlagATFL(grunnlag).getSpecification().evaluate(grunnlag);
-        var evaluation2 = new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
+        new RegelBeregningsgrunnlagSN().evaluer(grunnlag);
 
         // Assert
         var regelResultat = getRegelResultat(evaluation, "input");

@@ -37,7 +37,7 @@ class RegelForeslåBeregningsgrunnlagTYTest {
 		var bg = byggBG(beregningsgrunnlagPeriode, inntektsgrunnlag);
 
 
-		var evaluation = kjørRegel(beregningsgrunnlagPeriode);
+		kjørRegel(beregningsgrunnlagPeriode);
 
 		var statuser = beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatuser(AktivitetStatus.BA);
 		var at = statuser.stream().filter(a -> a.getInntektskategori().equals(Inntektskategori.ARBEIDSTAKER)).findFirst().orElseThrow();
@@ -54,7 +54,7 @@ class RegelForeslåBeregningsgrunnlagTYTest {
 		var bg = byggBG(beregningsgrunnlagPeriode, inntektsgrunnlag);
 
 
-		var evaluation = kjørRegel(beregningsgrunnlagPeriode);
+		kjørRegel(beregningsgrunnlagPeriode);
 
 		var statuser = beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatuser(AktivitetStatus.BA);
 		var fl = statuser.stream().filter(a -> a.getInntektskategori().equals(Inntektskategori.FRILANSER)).findFirst().orElseThrow();
@@ -73,7 +73,7 @@ class RegelForeslåBeregningsgrunnlagTYTest {
 		var bg = byggBG(beregningsgrunnlagPeriode, inntektsgrunnlag);
 
 
-		var evaluation = kjørRegel(beregningsgrunnlagPeriode);
+		kjørRegel(beregningsgrunnlagPeriode);
 
 		var statuser = beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatuser(AktivitetStatus.BA);
 		var at = statuser.stream().filter(a -> a.getInntektskategori().equals(Inntektskategori.ARBEIDSTAKER)).findFirst().orElseThrow();
@@ -95,7 +95,7 @@ class RegelForeslåBeregningsgrunnlagTYTest {
 		var bg = byggBG(beregningsgrunnlagPeriode, inntektsgrunnlag);
 
 
-		var evaluation = kjørRegel(beregningsgrunnlagPeriode);
+		kjørRegel(beregningsgrunnlagPeriode);
 
 		var statuser = beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatuser(AktivitetStatus.BA);
 		var at = statuser.stream().filter(a -> a.getInntektskategori().equals(Inntektskategori.ARBEIDSTAKER)).findFirst().orElseThrow();
@@ -117,7 +117,7 @@ class RegelForeslåBeregningsgrunnlagTYTest {
 		var bg = byggBG(beregningsgrunnlagPeriode, inntektsgrunnlag);
 
 
-		var evaluation = kjørRegel(beregningsgrunnlagPeriode);
+		kjørRegel(beregningsgrunnlagPeriode);
 
 		var statuser = beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatuser(AktivitetStatus.BA);
 		var at = statuser.stream().filter(a -> a.getInntektskategori().equals(Inntektskategori.ARBEIDSTAKER)).findFirst().orElseThrow();

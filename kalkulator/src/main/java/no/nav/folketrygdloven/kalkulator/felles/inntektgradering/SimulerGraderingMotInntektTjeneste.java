@@ -60,7 +60,7 @@ public class SimulerGraderingMotInntektTjeneste {
     }
 
     public List<Intervall> finnTilkommetAktivitetPerioder(BeregningsgrunnlagInput beregningsgrunnlagInput) {
-        if (!(beregningsgrunnlagInput.getYtelsespesifiktGrunnlag() instanceof UtbetalingsgradGrunnlag utbetalingsgradGrunnlag)) {
+        if (!(beregningsgrunnlagInput.getYtelsespesifiktGrunnlag() instanceof UtbetalingsgradGrunnlag)) {
             return Collections.emptyList();
         }
         var tilkommetTidslinje = TilkommetInntektsforholdTjeneste.finnTilkommetInntektsforholdTidslinje(
