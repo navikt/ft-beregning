@@ -9,8 +9,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import no.nav.folketrygdloven.kalkulator.modell.iay.InntektsmeldingDto;
-
 import no.nav.folketrygdloven.kalkulus.kodeverk.InntektsmeldingType;
 
 import org.junit.jupiter.api.Test;

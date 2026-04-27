@@ -31,12 +31,11 @@ public class InntektsmeldingDtoBuilder {
 
     public InntektsmeldingDto build(boolean ignore) {
         var internRef = getInternArbeidsforholdRef();
-        if (internRef.isPresent() && !ignore) {
-            // magic - hvis har ekstern referanse må også intern referanse være spesifikk
-            if ((eksternArbeidsforholdId != null && eksternArbeidsforholdId.gjelderForSpesifiktArbeidsforhold()) && internRef.get().getReferanse() == null) {
-                throw new IllegalArgumentException(
-                        "Begge referanser må gjelde spesifikke arbeidsforhold. " + " Ekstern: " + eksternArbeidsforholdId + ", Intern: " + internRef);
-            }
+        // magic - hvis har ekstern referanse må også intern referanse være spesifikk
+        if (internRef.isPresent() && !ignore && (eksternArbeidsforholdId != null && eksternArbeidsforholdId.gjelderForSpesifiktArbeidsforhold())
+            && internRef.get().getReferanse() == null) {
+            throw new IllegalArgumentException(
+                "Begge referanser må gjelde spesifikke arbeidsforhold. " + " Ekstern: " + eksternArbeidsforholdId + ", Intern: " + internRef);
         }
         erBygget = true; // Kan ikke bygge mer med samme builder, vil bare returnere samme kladd.
         return kladd;

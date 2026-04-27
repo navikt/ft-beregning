@@ -33,11 +33,11 @@ class RefusjonDtoTjenesteImplTest {
 
     private static final LocalDate SKJÆRINGSTIDSPUNKT_OPPTJENING = LocalDate.of(2018, Month.MAY, 10);
 
-    private final static InternArbeidsforholdRefDto ARB_ID = InternArbeidsforholdRefDto.nyRef();
-    private final static String ORGNR = "123456780";
-    private final static Arbeidsgiver ARBEIDSGIVER = Arbeidsgiver.virksomhet(ORGNR);
-    private final static String ORGNR_2 = "3242521";
-    private final static Arbeidsgiver ARBEIDSGIVER2 = Arbeidsgiver.virksomhet(ORGNR_2);
+    private static final InternArbeidsforholdRefDto ARB_ID = InternArbeidsforholdRefDto.nyRef();
+    private static final String ORGNR = "123456780";
+    private static final Arbeidsgiver ARBEIDSGIVER = Arbeidsgiver.virksomhet(ORGNR);
+    private static final String ORGNR_2 = "3242521";
+    private static final Arbeidsgiver ARBEIDSGIVER2 = Arbeidsgiver.virksomhet(ORGNR_2);
     private static final Beløp GRUNNBELØP = Beløp.fra(100_000);
     private static final Beløp SEKS_G = GRUNNBELØP.multipliser(KonfigTjeneste.getAntallGØvreGrenseverdi());
 

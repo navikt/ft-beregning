@@ -14,7 +14,7 @@ import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto
 
 class FinnStartdatoPermisjonTest {
 
-    private final static String ORGNR = "123456780";
+    private static final String ORGNR = "123456780";
     private static final Arbeidsgiver ARBEIDSGIVER = Arbeidsgiver.virksomhet(ORGNR);
     private InternArbeidsforholdRefDto ref = InternArbeidsforholdRefDto.nyRef();
     private LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.now().minusMonths(1);

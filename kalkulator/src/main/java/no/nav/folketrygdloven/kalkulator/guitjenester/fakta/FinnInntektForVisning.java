@@ -44,10 +44,8 @@ public class FinnInntektForVisning {
             if (andel.getAktivitetStatus().erFrilanser()) {
                 return Optional.empty();
             }
-            if (andel.getAktivitetStatus().erArbeidstaker()) {
-                if (inntektsmeldingForAndel.isEmpty()) {
-                    return Optional.empty();
-                }
+            if (andel.getAktivitetStatus().erArbeidstaker() && inntektsmeldingForAndel.isEmpty()) {
+                return Optional.empty();
             }
         }
         if (andel.getAktivitetStatus().erArbeidstaker()) {

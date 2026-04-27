@@ -37,9 +37,9 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.Utfall;
 class ManuellBehandlingRefusjonGraderingDtoTjenesteTest {
 
     private static final LocalDate SKJÆRINGSTIDSPUNKT_OPPTJENING = LocalDate.now();
-    private final static String ORGNR = "123456780";
+    private static final String ORGNR = "123456780";
     private static final Arbeidsgiver ARBEIDSGIVER = Arbeidsgiver.virksomhet(ORGNR);
-    private final static String ORGNR2 = "123456781";
+    private static final String ORGNR2 = "123456781";
     private static final Arbeidsgiver ARBEIDSGIVER2 = Arbeidsgiver.virksomhet(ORGNR2);
     public static final int GRUNNBELØP = 90_000;
     private static final long ANDELSNR2 = 2L;

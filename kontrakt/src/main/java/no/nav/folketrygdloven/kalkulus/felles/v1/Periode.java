@@ -31,10 +31,8 @@ public class Periode {
     public Periode(@JsonProperty(value = "fom") LocalDate fom, @JsonProperty(value = "tom") LocalDate tom) {
         if (fom == null && tom == null) {
             throw new IllegalArgumentException("Både fom og tom er null");
-        } else if (fom != null && tom != null) {
-            if (fom.isAfter(tom)) {
-                throw new IllegalArgumentException("Input data gir umulig periode (fom > tom): [" + fom + ", " + tom + "]");
-            }
+        } else if (fom != null && tom != null && fom.isAfter(tom)) {
+            throw new IllegalArgumentException("Input data gir umulig periode (fom > tom): [" + fom + ", " + tom + "]");
         }
         this.fom = fom;
         this.tom = tom;
