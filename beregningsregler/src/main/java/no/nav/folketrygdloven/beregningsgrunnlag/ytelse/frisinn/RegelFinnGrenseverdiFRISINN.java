@@ -37,12 +37,9 @@ public class RegelFinnGrenseverdiFRISINN implements EksportRegel<Beregningsgrunn
         Specification<BeregningsgrunnlagPeriode> settGrenseverdiTilNull = new SettGrenseverdiTilNull();
 
         // FRISINN 6.10: Er vilkår oppfylt?
-        var erVilkårOppfylt = rs.beregningHvisRegel(  // NOSONAR: java:S1488
+        return rs.beregningHvisRegel(
             new ErVilkårOppfylt(),
             beregnEventuellAvkorting,
             settGrenseverdiTilNull);
-
-
-        return erVilkårOppfylt;
     }
 }

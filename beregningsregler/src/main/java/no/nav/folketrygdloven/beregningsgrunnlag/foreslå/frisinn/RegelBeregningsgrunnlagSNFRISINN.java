@@ -29,10 +29,7 @@ public class RegelBeregningsgrunnlagSNFRISINN implements RuleService<Beregningsg
                 new BeregnBruttoBeregningsgrunnlagSNFRISINN(), new FastsettBeregnetPrÅr(AktivitetStatus.SN));
 
 
-        var foreslåBeregningsgrunnlagForSelvstendigNæringsdrivende =  // NOSONAR: java:S1488
-            rs.beregningsRegel(FastsettBeregningsperiodeSNFRISINN.ID, "Foreslå beregningsgrunnlag for selvstendig næringsdrivende",
+        return rs.beregningsRegel(FastsettBeregningsperiodeSNFRISINN.ID, "Foreslå beregningsgrunnlag for selvstendig næringsdrivende",
                 new FastsettBeregningsperiodeSNFRISINN(), beregnBruttoSN);
-
-        return foreslåBeregningsgrunnlagForSelvstendigNæringsdrivende;
     }
 }

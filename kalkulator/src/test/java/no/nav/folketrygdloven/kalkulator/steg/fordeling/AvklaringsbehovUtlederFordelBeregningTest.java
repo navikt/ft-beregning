@@ -61,9 +61,8 @@ class AvklaringsbehovUtlederFordelBeregningTest {
 
     private List<BeregningAvklaringsbehovResultat> utledAvklaringsbehov(KoblingReferanse ref, BeregningsgrunnlagGrunnlagDto grunnlag) {
 	    var foreldrepengerGrunnlag = new ForeldrepengerGrunnlag(Dekningsgrad.DEKNINGSGRAD_100, false);
-        var avklaringsbehovResultats = AvklaringsbehovUtlederFordelBeregning.utledAvklaringsbehovFor(ref, grunnlag, // NOSONAR: java:S1488
+        return AvklaringsbehovUtlederFordelBeregning.utledAvklaringsbehovFor(ref, grunnlag,
             foreldrepengerGrunnlag, InntektArbeidYtelseGrunnlagDtoBuilder.nytt().build(), Collections.emptyList());
-        return avklaringsbehovResultats;
     }
 
     @Test
@@ -112,11 +111,10 @@ class AvklaringsbehovUtlederFordelBeregningTest {
             andel.medFordeltPrÅr(Beløp.fra(100_000));
         }
         andel.build(periode);
-        var grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty()) // NOSONAR: java:S1488
+        return BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
             .medBeregningsgrunnlag(beregningsgrunnlag)
             .medRegisterAktiviteter(beregningAktivitetBuilder.build())
             .build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER);
-        return grunnlag;
     }
 
     private BeregningsgrunnlagGrunnlagDto lagGrunnlagutenNyttArbeidsforhold(FaktaOmBeregningTilfelle... tilfeller) {
@@ -140,11 +138,10 @@ class AvklaringsbehovUtlederFordelBeregningTest {
             .medArbeidsforholdRef(InternArbeidsforholdRefDto.nullRef())
             .build());
 
-        var grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty()) // NOSONAR: java:S1488
+        return BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
             .medBeregningsgrunnlag(beregningsgrunnlag)
             .medRegisterAktiviteter(beregningAktivitetBuilder.build())
             .build(BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER);
-        return grunnlag;
     }
 
 

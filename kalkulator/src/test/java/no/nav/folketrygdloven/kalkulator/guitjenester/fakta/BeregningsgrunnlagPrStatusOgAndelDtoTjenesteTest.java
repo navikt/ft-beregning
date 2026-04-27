@@ -286,11 +286,9 @@ class BeregningsgrunnlagPrStatusOgAndelDtoTjenesteTest {
     }
 
     private BeregningsgrunnlagDto lagBeregningsgrunnlagUtenSammenligningsgrunnlag() {
-        var beregningsgrunnlag = BeregningsgrunnlagDto.builder()  // NOSONAR: java:S1488
+        return BeregningsgrunnlagDto.builder()
                 .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT)
                 .build();
-
-        return beregningsgrunnlag;
     }
 
     private BeregningsgrunnlagDto lagBeregningsgrunnlagMedAvvikUnder25ProsentMedKunSammenligningsgrunnlag() {

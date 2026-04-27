@@ -34,9 +34,8 @@ class FastsettNyFordeling implements RuleService<FordelModell> {
 			    .map(fam -> new OmfordelBeregningsgrunnlagTilArbeidsforhold(fam).getSpecification()
 					    .medEvaluationProperty(new ServiceArgument("arbeidsforhold", fam.getArbeidsforhold().map(Arbeidsforhold::toString).orElse("ukjent")))) // TODO (PE) hva er nyttig her?
 			    .toList();
-        var beregningsgrunnlagATFL = refOverstigerBgAktivitetListe.isEmpty() ? new SettAndelerUtenSøktYtelseTilNull() :  // NOSONAR: java:S1488
+        return refOverstigerBgAktivitetListe.isEmpty() ? new SettAndelerUtenSøktYtelseTilNull() :
 				        rs.beregningsRegel(ID, BESKRIVELSE, speclist, new SettAndelerUtenSøktYtelseTilNull());
-        return beregningsgrunnlagATFL;
     }
 
     private List<FordelAndelModell> finnListeMedAktiteterSomKreverFlyttingAvBeregningsgrunnlag(FordelPeriodeModell beregningsgrunnlagPeriode) {

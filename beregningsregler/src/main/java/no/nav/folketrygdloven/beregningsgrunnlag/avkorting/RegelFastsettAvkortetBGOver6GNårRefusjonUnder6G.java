@@ -56,10 +56,7 @@ public class RegelFastsettAvkortetBGOver6GNårRefusjonUnder6G implements RuleSer
             avkortAndelerSomIkkegjelderAFtil0, avkortAndelerAndelsmessigOgFastsettBrukersAndel);
 
         //FP_BR_29.8.1 For alle beregningsgrunnlagsandeler som gjelder arbeidsforhold, fastsett avkortet refusjon pr andel
-        var fastsettAvkortetBGOver6GNårRefusjonUnder6G = // NOSONAR: java:S1488
-            rs.beregningsRegel(ID, BESKRIVELSE, new FastsettAvkortetRefusjonPrAndel(), erTotaltBGFraArbeidforholdStørreEnn6G);
-
-        return fastsettAvkortetBGOver6GNårRefusjonUnder6G;
+        return rs.beregningsRegel(ID, BESKRIVELSE, new FastsettAvkortetRefusjonPrAndel(), erTotaltBGFraArbeidforholdStørreEnn6G);
     }
 
     private Specification<BeregningsgrunnlagPeriode> opprettRegelFastsettUtbetalingsbeløpTilBruker() {

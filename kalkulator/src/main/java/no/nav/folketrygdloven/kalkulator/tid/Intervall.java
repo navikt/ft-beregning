@@ -59,8 +59,7 @@ public class Intervall implements Comparable<Intervall> {
     public boolean overlapper(Intervall other) {
         var fomBeforeOrEqual = this.getFomDato().isBefore(other.getTomDato()) || this.getFomDato().isEqual(other.getTomDato());
         var tomAfterOrEqual = this.getTomDato().isAfter(other.getFomDato()) || this.getTomDato().isEqual(other.getFomDato());
-        var overlapper = fomBeforeOrEqual && tomAfterOrEqual;  // NOSONAR: java:S1488
-        return overlapper;
+        return fomBeforeOrEqual && tomAfterOrEqual;
     }
 
     public boolean inkluderer(Intervall other) {

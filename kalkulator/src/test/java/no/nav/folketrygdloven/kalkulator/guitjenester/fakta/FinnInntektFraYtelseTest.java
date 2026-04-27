@@ -106,14 +106,13 @@ class FinnInntektFraYtelseTest {
             .leggTilBeregningsgrunnlagPrStatusOgAndel(andel1)
             .build(bg);
 
-        var andel2 = BeregningsgrunnlagPrStatusOgAndelDto.Builder.ny()  // NOSONAR: java:S1488
+        return BeregningsgrunnlagPrStatusOgAndelDto.Builder.ny()
             .medAktivitetStatus(AktivitetStatus.DAGPENGER)
             .medBeregnetPrÅr(Beløp.fra(5000))
             .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder().medArbeidsgiver(Arbeidsgiver.virksomhet("1234534")))
             .medAndelsnr(1L)
             .medBeregningsperiode(fom, tom)
             .build(periode);
-        return andel2;
     }
 
     private YtelseDtoBuilder lagYtelse(YtelseType ytelsetype, LocalDate fom, LocalDate tom, YtelseKilde ytelseKilde) {

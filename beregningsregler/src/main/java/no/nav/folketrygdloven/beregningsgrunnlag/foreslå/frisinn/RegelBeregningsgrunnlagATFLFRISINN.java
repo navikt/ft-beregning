@@ -38,11 +38,7 @@ public class RegelBeregningsgrunnlagATFLFRISINN implements RuleService<Beregning
 	    var speclist = arbeidsforhold.stream()
 			    .map(a -> new RegelBeregnBruttoPrArbeidsforholdFRISINN(a).getSpecification().medEvaluationProperty(new ServiceArgument("arbeidsforhold", a.getArbeidsforhold())))
 			    .toList();
-        var beregningsgrunnlagATFL =
-			    rs.beregningsRegel("FRISINN 2.X", "Fastsett beregningsgrunnlag pr arbeidsforhold",  // NOSONAR: java:S1488
+        return rs.beregningsRegel("FRISINN 2.X", "Fastsett beregningsgrunnlag pr arbeidsforhold",
 					    speclist, harInntektForATFLBlittManueltFastsatt);
-
-
-        return beregningsgrunnlagATFL;
     }
 }

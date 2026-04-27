@@ -43,12 +43,7 @@ public class RegelFastsettStatusVedSkjæringstidspunkt implements EksportRegel<A
 //      FP_BR_19_1 Hent aktiviteter på skjæringstidspunkt
 //      FP_BR_19_2 Fastsett status per andel og periode
 
-        var startFastsettStatusVedSkjæringtidspunktForBeregning =  // NOSONAR: java:S1488
-            rs.beregningsRegel(FastsettStatusOgAndelPrPeriode.ID, FastsettStatusOgAndelPrPeriode.BESKRIVELSE, new FastsettStatusOgAndelPrPeriode(),
+        return rs.beregningsRegel(FastsettStatusOgAndelPrPeriode.ID, FastsettStatusOgAndelPrPeriode.BESKRIVELSE, new FastsettStatusOgAndelPrPeriode(),
                 sjekkAktuelleKombinasjoner);
-
-//      Start fastsett status ved skjæringstidspunkt for beregning
-
-        return startFastsettStatusVedSkjæringtidspunktForBeregning;
     }
 }

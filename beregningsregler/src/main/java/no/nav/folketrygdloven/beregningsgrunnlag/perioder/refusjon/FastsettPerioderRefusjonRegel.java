@@ -42,13 +42,11 @@ public class FastsettPerioderRefusjonRegel implements EksportRegel<PeriodeModell
 				new PeriodiserForRefusjon(),
 				new Periodisert());
 
-		var identifiserÅrsaker = rs.beregningsRegel(  // NOSONAR: java:S1488
+		return rs.beregningsRegel(
 				IdentifiserPeriodeÅrsakerRefusjon.ID,
 				IdentifiserPeriodeÅrsakerRefusjon.BESKRIVELSE,
 				new IdentifiserPeriodeÅrsakerRefusjon(),
 				periodiser);
-
-		return identifiserÅrsaker;
 
 	}
 

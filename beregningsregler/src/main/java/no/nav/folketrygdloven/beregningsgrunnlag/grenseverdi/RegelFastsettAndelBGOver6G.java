@@ -50,12 +50,10 @@ public class RegelFastsettAndelBGOver6G implements RuleService<Beregningsgrunnla
         }
 
         //FP_BR_29.8.2 Er totalt BG for beregningsgrunnlagsandeler fra arbeidsforhold > 6G?
-        var erTotaltBGFraArbeidforholdStørreEnn6G = rs.beregningHvisRegel( // NOSONAR: java:S1488
+        return rs.beregningHvisRegel(
             new SjekkOmTotaltBGForArbeidsforholdStørreEnnGrenseverdi(),
             avkortAndelerSomIkkegjelderAFtil0,
             avkortAndelerAndelsmessigOgFastsettBrukersAndel);
-
-        return erTotaltBGFraArbeidforholdStørreEnn6G;
     }
 
 }

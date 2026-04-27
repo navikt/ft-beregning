@@ -42,8 +42,7 @@ public class BeregningsgrunnlagDto {
 
         this.sammenligningsgrunnlagPrStatusListe = kopiereFra.getSammenligningsgrunnlagPrStatusListe().stream().map(s -> {
 	        var builder = SammenligningsgrunnlagPrStatusDto.Builder.kopier(s);
-	        var build = builder.build();  // NOSONAR: java:S1488
-            return build;
+	        return builder.build();
         }).collect(Collectors.toList());
 
         this.beregningsgrunnlagPerioder = kopiereFra.getBeregningsgrunnlagPerioder().stream().map(p -> {

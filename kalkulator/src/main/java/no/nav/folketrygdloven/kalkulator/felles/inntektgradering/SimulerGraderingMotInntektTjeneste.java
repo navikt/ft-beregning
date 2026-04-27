@@ -291,13 +291,12 @@ public class SimulerGraderingMotInntektTjeneste {
         if (antallPoster == 0) {
             return Beløp.ZERO;
         }
-        var beløp = aktuellePoster.stream()  // NOSONAR: java:S1488
+        return aktuellePoster.stream()
                 .map(post -> finnBruttoInntektFraInntektspost(arbeidsgiver, arbeidsforholdRef, ytelsespesifiktGrunnlag, post))
                 .filter(Objects::nonNull)
                 .reduce(Beløp::adder)
                 .orElse(Beløp.ZERO)
                 .divider(antallPoster, 10, RoundingMode.HALF_UP);
-        return beløp;
     }
 
     private Beløp finnInntektForFrilans(Intervall periode,

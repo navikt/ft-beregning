@@ -33,13 +33,11 @@ public class YrkesaktivitetDto {
 
         // NB må aksessere felt her heller en getter siden getter filtrerer
         this.aktivitetsAvtale = kopierFra.aktivitetsAvtale.stream().map(aa -> {
-            var aktivitetsAvtaleEntitet = new AktivitetsAvtaleDto(aa);  // NOSONAR: java:S1488
-            return aktivitetsAvtaleEntitet;
+            return new AktivitetsAvtaleDto(aa);
         }).collect(Collectors.toCollection(LinkedHashSet::new));
 
         this.permisjoner = kopierFra.permisjoner.stream().map(p -> {
-            var permisjon = new PermisjonDto(p);  // NOSONAR: java:S1488
-            return permisjon;
+            return new PermisjonDto(p);
         }).collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
@@ -90,8 +88,7 @@ public class YrkesaktivitetDto {
      */
     public boolean gjelderFor(Arbeidsgiver arbeidsgiver, InternArbeidsforholdRefDto arbeidsforholdRef) {
         var gjelderForArbeidsgiver = Objects.equals(getArbeidsgiver(), arbeidsgiver);
-        var gjelderFor = gjelderForArbeidsgiver && getArbeidsforholdRef().gjelderFor(arbeidsforholdRef);  // NOSONAR: java:S1488
-        return gjelderFor;
+        return gjelderForArbeidsgiver && getArbeidsforholdRef().gjelderFor(arbeidsforholdRef);
     }
 
     public boolean gjelderFor(InntektsmeldingDto im) {

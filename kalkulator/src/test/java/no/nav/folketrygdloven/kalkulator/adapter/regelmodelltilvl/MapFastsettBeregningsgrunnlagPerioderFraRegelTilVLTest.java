@@ -85,14 +85,13 @@ class MapFastsettBeregningsgrunnlagPerioderFraRegelTilVLTest {
 
 
     private BeregningsgrunnlagDto lagBeregningsgrunnlag() {
-        var vlBeregningsgrunnlag = BeregningsgrunnlagDto.builder()  // NOSONAR: java:S1488
+        return BeregningsgrunnlagDto.builder()
             .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT)
             .medOverstyring(true)
             .medGrunnbeløp(GRUNNBELØP)
             .leggTilFaktaOmBeregningTilfeller(FAKTA_OM_BEREGNING_TILFELLER)
             .leggTilSammenligningsgrunnlag(lagSammenligningsgrunnlagPrStatus())
             .build();
-        return vlBeregningsgrunnlag;
     }
 
     private BeregningsgrunnlagPrStatusOgAndelDto lagBeregnignsgrunnlagPrStatusOgAndel(BeregningsgrunnlagPeriodeDto periode) {

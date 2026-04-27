@@ -28,13 +28,11 @@ public class RegelForeslåBesteberegning implements EksportRegel<BesteberegningR
 				new ErSeksBesteMånederBedre());
 
 
-        var foreslåBesteberegning = rs.beregningsRegel(  // NOSONAR: java:S1488
+        return rs.beregningsRegel(
 				FinnBesteMåneder.ID,
 				FinnBesteMåneder.BESKRIVELSE,
 				new FinnBesteMåneder(),
 				fastsettBesteberegning);
-
-		return foreslåBesteberegning;
 	}
 
 

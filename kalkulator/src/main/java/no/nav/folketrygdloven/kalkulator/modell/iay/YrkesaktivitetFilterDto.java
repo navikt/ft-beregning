@@ -66,8 +66,7 @@ public class YrkesaktivitetFilterDto {
     }
 
     public Collection<AktivitetsAvtaleDto> getAktivitetsAvtalerForArbeid(YrkesaktivitetDto ya) {
-        var aktivitetsAvtaler = filterAktivitetsAvtaleOverstyring(ya, internGetAktivitetsAvtalerForArbeid(ya));  // NOSONAR: java:S1488
-        return aktivitetsAvtaler;
+        return filterAktivitetsAvtaleOverstyring(ya, internGetAktivitetsAvtalerForArbeid(ya));
     }
 
     private Set<AktivitetsAvtaleDto> internGetAktivitetsAvtalerForArbeid(YrkesaktivitetDto ya) {
@@ -85,12 +84,11 @@ public class YrkesaktivitetFilterDto {
     }
 
     public Collection<YrkesaktivitetDto> getYrkesaktiviteter() {
-        var ya = getYrkesaktiviteterInklusiveFiktive().stream()  // NOSONAR: java:S1488
+        return getYrkesaktiviteterInklusiveFiktive().stream()
                 .filter(this::erIkkeFrilansOppdrag)
                 .filter(this::skalBrukes)
                 .filter(it -> (erArbeidsforholdOgStarterPåRettSideAvSkjæringstidspunkt(it) || !getAktivitetsAvtalerForArbeid(it).isEmpty()))
                 .collect(Collectors.toUnmodifiableSet());
-        return ya;
     }
 
     /**
@@ -135,9 +133,8 @@ public class YrkesaktivitetFilterDto {
     }
 
     private boolean erArbeidsforholdOgStarterPåRettSideAvSkjæringstidspunkt(YrkesaktivitetDto it) {
-        var retval = it.erArbeidsforhold()  // NOSONAR: java:S1488
+        return it.erArbeidsforhold()
                 && getAnsettelsesPerioder(it).stream().anyMatch(ap -> skalMedEtterSkjæringstidspunktVurdering(ap));
-        return retval;
     }
 
     private boolean erFrilansOppdrag(YrkesaktivitetDto aktivitet) {
@@ -257,8 +254,7 @@ public class YrkesaktivitetFilterDto {
             var ansettelsesAvtaler = ya.getAlleAktivitetsAvtaler().stream()
                     .filter(AktivitetsAvtaleDto::erAnsettelsesPeriode)
                     .collect(Collectors.toList());
-            var filtrert = List.copyOf(filterAktivitetsAvtaleOverstyring(ya, ansettelsesAvtaler));  // NOSONAR: java:S1488
-            return filtrert;
+            return List.copyOf(filterAktivitetsAvtaleOverstyring(ya, ansettelsesAvtaler));
         }
         return Collections.emptyList();
     }
@@ -269,10 +265,9 @@ public class YrkesaktivitetFilterDto {
      * @see #getAnsettelsesPerioder(YrkesaktivitetDto)
      */
     public Collection<AktivitetsAvtaleDto> getAnsettelsesPerioder(Collection<YrkesaktivitetDto> yrkesaktiviteter) {
-        var aktivitetsavtaler = yrkesaktiviteter.stream()// NOSONAR: java:S1488
+        return yrkesaktiviteter.stream()
             .flatMap(ya -> getAnsettelsesPerioder(ya).stream())
             .collect(Collectors.toList());
-        return aktivitetsavtaler;
     }
 
     /**
@@ -281,10 +276,9 @@ public class YrkesaktivitetFilterDto {
      * @see #getAnsettelsesPerioder(YrkesaktivitetDto)
      */
     public Collection<AktivitetsAvtaleDto> getAnsettelsesPerioder() {
-        var ansettelsesPerioder = getYrkesaktiviteterInklusiveFiktive().stream() // NOSONAR: java:S1488
+        return getYrkesaktiviteterInklusiveFiktive().stream()
             .flatMap(ya -> getAnsettelsesPerioder(ya).stream())
             .collect(Collectors.toList());
-        return ansettelsesPerioder;
     }
 
 

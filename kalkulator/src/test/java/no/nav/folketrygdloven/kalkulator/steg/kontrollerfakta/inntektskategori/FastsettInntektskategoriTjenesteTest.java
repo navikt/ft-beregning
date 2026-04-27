@@ -90,8 +90,7 @@ class FastsettInntektskategoriTjenesteTest {
     private InntektArbeidYtelseGrunnlagDto lagIAY(InntektDtoBuilder inntektBuilder) {
         var aktørInntektBuilder = InntektArbeidYtelseAggregatBuilder.AktørInntektBuilder.oppdatere(Optional.empty()).leggTilInntekt(inntektBuilder);
         var data = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER).leggTilAktørInntekt(aktørInntektBuilder);
-        var iay = InntektArbeidYtelseGrunnlagDtoBuilder.nytt().medData(data).build();  // NOSONAR: java:S1488
-        return iay;
+        return InntektArbeidYtelseGrunnlagDtoBuilder.nytt().medData(data).build();
     }
 
     @Test

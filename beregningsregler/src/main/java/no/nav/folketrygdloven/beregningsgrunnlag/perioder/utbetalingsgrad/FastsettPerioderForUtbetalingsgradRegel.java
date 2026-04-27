@@ -42,13 +42,11 @@ public class FastsettPerioderForUtbetalingsgradRegel implements EksportRegel<Per
             new PeriodiserForUtbetalingsgrad(),
             new Periodisert());
 
-        var identifiserÅrsaker = rs.beregningsRegel(  // NOSONAR: java:S1488
+        return rs.beregningsRegel(
             IdentifiserPeriodeÅrsakForUtbetalingsgrad.ID,
             IdentifiserPeriodeÅrsakForUtbetalingsgrad.BESKRIVELSE,
             new IdentifiserPeriodeÅrsakForUtbetalingsgrad(),
             periodiser);
-
-        return identifiserÅrsaker;
 
     }
 
