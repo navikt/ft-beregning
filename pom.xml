@@ -45,7 +45,7 @@
 
     <properties>
         <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
-        <sonar.projectName>ft-berergning</sonar.projectName>
+        <sonar.projectName>ft-beregning</sonar.projectName>
         <sonar.projectKey>navikt_ft-beregning</sonar.projectKey>
 
     </properties>
