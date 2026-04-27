@@ -32,13 +32,11 @@ public class YrkesaktivitetDto {
         this.arbeidsforholdRef = kopierFra.arbeidsforholdRef;
 
         // NB må aksessere felt her heller en getter siden getter filtrerer
-        this.aktivitetsAvtale = kopierFra.aktivitetsAvtale.stream().map(aa -> {
-            return new AktivitetsAvtaleDto(aa);
-        }).collect(Collectors.toCollection(LinkedHashSet::new));
+        this.aktivitetsAvtale = kopierFra.aktivitetsAvtale.stream()
+            .map(AktivitetsAvtaleDto::new)
+            .collect(Collectors.toCollection(LinkedHashSet::new));
 
-        this.permisjoner = kopierFra.permisjoner.stream().map(p -> {
-            return new PermisjonDto(p);
-        }).collect(Collectors.toCollection(LinkedHashSet::new));
+        this.permisjoner = kopierFra.permisjoner.stream().map(PermisjonDto::new).collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     /**

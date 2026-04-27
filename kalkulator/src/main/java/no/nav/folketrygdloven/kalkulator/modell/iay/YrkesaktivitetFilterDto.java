@@ -133,7 +133,7 @@ public class YrkesaktivitetFilterDto {
     }
 
     private boolean erArbeidsforholdOgStarterPåRettSideAvSkjæringstidspunkt(YrkesaktivitetDto it) {
-        return it.erArbeidsforhold() && getAnsettelsesPerioder(it).stream().anyMatch(ap -> skalMedEtterSkjæringstidspunktVurdering(ap));
+        return it.erArbeidsforhold() && getAnsettelsesPerioder(it).stream().anyMatch(this::skalMedEtterSkjæringstidspunktVurdering);
     }
 
     private boolean erFrilansOppdrag(YrkesaktivitetDto aktivitet) {

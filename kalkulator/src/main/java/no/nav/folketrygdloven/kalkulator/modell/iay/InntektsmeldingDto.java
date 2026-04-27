@@ -38,12 +38,8 @@ public class InntektsmeldingDto {
         this.inntektBeløp = inntektsmelding.getInntektBeløp();
         this.refusjonBeløpPerMnd = inntektsmelding.getRefusjonBeløpPerMnd();
         this.refusjonOpphører = inntektsmelding.getRefusjonOpphører();
-        this.naturalYtelser = inntektsmelding.getNaturalYtelser().stream().map(n -> {
-            return new NaturalYtelseDto(n);
-        }).collect(Collectors.toList());
-        this.endringerRefusjon = inntektsmelding.getEndringerRefusjon().stream().map(r -> {
-            return new RefusjonDto(r);
-        }).collect(Collectors.toList());
+        this.naturalYtelser = inntektsmelding.getNaturalYtelser().stream().map(NaturalYtelseDto::new).collect(Collectors.toList());
+        this.endringerRefusjon = inntektsmelding.getEndringerRefusjon().stream().map(RefusjonDto::new).collect(Collectors.toList());
         this.journalpostId = inntektsmelding.getJournalpostId();
         this.inntektsmeldingType = inntektsmelding.getInntektsmeldingType();
     }
