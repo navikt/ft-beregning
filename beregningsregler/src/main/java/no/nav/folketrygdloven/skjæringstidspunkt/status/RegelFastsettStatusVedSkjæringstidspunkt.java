@@ -44,6 +44,6 @@ public class RegelFastsettStatusVedSkjæringstidspunkt implements EksportRegel<A
 //      FP_BR_19_2 Fastsett status per andel og periode
 
         return rs.beregningsRegel(FastsettStatusOgAndelPrPeriode.ID, FastsettStatusOgAndelPrPeriode.BESKRIVELSE, new FastsettStatusOgAndelPrPeriode(),
-                sjekkAktuelleKombinasjoner);
+            sjekkAktuelleKombinasjoner);
     }
 }

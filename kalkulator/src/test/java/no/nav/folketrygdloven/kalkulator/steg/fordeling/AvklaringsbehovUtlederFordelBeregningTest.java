@@ -61,8 +61,8 @@ class AvklaringsbehovUtlederFordelBeregningTest {
 
     private List<BeregningAvklaringsbehovResultat> utledAvklaringsbehov(KoblingReferanse ref, BeregningsgrunnlagGrunnlagDto grunnlag) {
 	    var foreldrepengerGrunnlag = new ForeldrepengerGrunnlag(Dekningsgrad.DEKNINGSGRAD_100, false);
-        return AvklaringsbehovUtlederFordelBeregning.utledAvklaringsbehovFor(ref, grunnlag,
-            foreldrepengerGrunnlag, InntektArbeidYtelseGrunnlagDtoBuilder.nytt().build(), Collections.emptyList());
+        return AvklaringsbehovUtlederFordelBeregning.utledAvklaringsbehovFor(ref, grunnlag, foreldrepengerGrunnlag,
+            InntektArbeidYtelseGrunnlagDtoBuilder.nytt().build(), Collections.emptyList());
     }
 
     @Test

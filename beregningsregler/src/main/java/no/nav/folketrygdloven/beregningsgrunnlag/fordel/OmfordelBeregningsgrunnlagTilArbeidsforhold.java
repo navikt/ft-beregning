@@ -32,5 +32,4 @@ public class OmfordelBeregningsgrunnlagTilArbeidsforhold implements RuleService<
 
         return rs.beregningsRegel(ID, BESKRIVELSE, new OmfordelFraAktiviteterUtenArbeidsforhold(andelMedHøyereRefEnnBG), skalOmfordeleFraFL);
     }
-
 }

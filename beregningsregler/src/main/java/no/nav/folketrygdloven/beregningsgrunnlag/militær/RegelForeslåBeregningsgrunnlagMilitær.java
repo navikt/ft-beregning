@@ -25,7 +25,7 @@ public class RegelForeslåBeregningsgrunnlagMilitær implements RuleService<Bere
         var rs = new Ruleset<BeregningsgrunnlagPeriode>();
 
         // FP_BR 32.6 Foreslå beregningsgrunnlag for status militær og sivilforsvarstjeneste
-        return rs.beregningsRegel(ForeslåBeregningsgrunnlagMS.ID,
-            ForeslåBeregningsgrunnlagMS.BESKRIVELSE, new ForeslåBeregningsgrunnlagMS(), new Beregnet());
+        return rs.beregningsRegel(ForeslåBeregningsgrunnlagMS.ID, ForeslåBeregningsgrunnlagMS.BESKRIVELSE, new ForeslåBeregningsgrunnlagMS(),
+            new Beregnet());
     }
 }

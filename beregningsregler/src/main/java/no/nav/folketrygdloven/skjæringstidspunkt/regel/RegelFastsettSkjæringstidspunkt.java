@@ -48,6 +48,6 @@ public class RegelFastsettSkjæringstidspunkt implements EksportRegel<AktivitetS
 //      FP_BR 21.8 Er siste aktivitet før skjæringstidspunkt for opptjening, militær eller obligatorisk sivilforvarstjeneste og er dette brukers eneste aktivitet på dette tidspunktet Og har bruker andre aktiviteter i opptjeningsperioden
 
         return rs.beregningHvisRegel(new SjekkOmMilitærErSisteOgEnesteAktivitet(), førsteDagEtterAktivitetSomIkkeErMilitær,
-                erDetAktivitetFremTilStpForOpptjening);
+            erDetAktivitetFremTilStpForOpptjening);
     }
 }

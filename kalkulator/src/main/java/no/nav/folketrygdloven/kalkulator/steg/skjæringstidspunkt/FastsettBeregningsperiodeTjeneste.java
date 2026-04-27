@@ -23,13 +23,9 @@ public class FastsettBeregningsperiodeTjeneste {
         var fastsattForATFL = fastsettBeregningsperiodeForATFL(beregningsgrunnlag, new BeregningsperiodeTjeneste().fastsettBeregningsperiodeForATFLAndeler(beregningsgrunnlag.getSkjæringstidspunkt()));
         // Fastsetter for arbeidsforhold med lønnsendring innenfor siste 3 måneder før skjæringstidspunktet
         if (KonfigurasjonVerdi.instance().get("AUTOMATISK_BEREGNE_LONNSENDRING", false) || KonfigurasjonVerdi.instance().get("AUTOMATISK_BEREGNE_LONNSENDRING_V2", false)) {
-            return fastsettBeregningsperiodeForLønnsendring(fastsattForATFL,
-                inntektArbeidYtelseGrunnlag, inntektsmeldinger);
-
+            return fastsettBeregningsperiodeForLønnsendring(fastsattForATFL, inntektArbeidYtelseGrunnlag, inntektsmeldinger);
         } else {
             return fastsattForATFL;
         }
     }
-
-
 }

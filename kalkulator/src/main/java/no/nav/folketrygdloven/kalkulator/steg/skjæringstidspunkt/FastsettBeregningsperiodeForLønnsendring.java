@@ -96,9 +96,10 @@ public class FastsettBeregningsperiodeForLønnsendring {
 
 
     public static Map<BeregningsgrunnlagPrStatusOgAndelDto, List<YrkesaktivitetDto>> finnAndelAktivitetMap(List<YrkesaktivitetDto> yrkesaktiviteterMedLønnsendring, BeregningsgrunnlagPeriodeDto periode) {
-        return periode.getBeregningsgrunnlagPrStatusOgAndelList().stream()
-                .filter(a -> harLønnsendring(yrkesaktiviteterMedLønnsendring, a))
-                .collect(Collectors.toMap(a -> a, a -> finnMatchendeYrkesaktiviteterMedLønnsendring(yrkesaktiviteterMedLønnsendring, a)));
+        return periode.getBeregningsgrunnlagPrStatusOgAndelList()
+            .stream()
+            .filter(a -> harLønnsendring(yrkesaktiviteterMedLønnsendring, a))
+            .collect(Collectors.toMap(a -> a, a -> finnMatchendeYrkesaktiviteterMedLønnsendring(yrkesaktiviteterMedLønnsendring, a)));
     }
 
     public static LocalDate finnSisteLønnsendringIBeregningsperioden(List<YrkesaktivitetDto> yrkesaktiviteter, Intervall beregningsperiode) {
