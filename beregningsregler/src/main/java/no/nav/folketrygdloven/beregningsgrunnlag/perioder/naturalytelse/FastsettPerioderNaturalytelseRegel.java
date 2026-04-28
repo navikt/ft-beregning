@@ -42,13 +42,11 @@ public class FastsettPerioderNaturalytelseRegel implements EksportRegel<PeriodeM
             new PeriodiserForNaturalytelse(),
             new Periodisert());
 
-        var identifiserÅrsaker = rs.beregningsRegel(
+        return rs.beregningsRegel(
             IdentifiserPeriodeÅrsakerNaturalytelse.ID,
             IdentifiserPeriodeÅrsakerNaturalytelse.BESKRIVELSE,
             new IdentifiserPeriodeÅrsakerNaturalytelse(),
             periodiser);
-
-        return identifiserÅrsaker;
 
     }
 

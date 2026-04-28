@@ -28,11 +28,7 @@ public class RegelBeregningsgrunnlagSNFRISINN implements RuleService<Beregningsg
             rs.beregningsRegel(BeregnBruttoBeregningsgrunnlagSNFRISINN.ID, "Beregn brutto beregningsgrunnlag selvstendig næringsdrivende",
                 new BeregnBruttoBeregningsgrunnlagSNFRISINN(), new FastsettBeregnetPrÅr(AktivitetStatus.SN));
 
-
-        var foreslåBeregningsgrunnlagForSelvstendigNæringsdrivende =
-            rs.beregningsRegel(FastsettBeregningsperiodeSNFRISINN.ID, "Foreslå beregningsgrunnlag for selvstendig næringsdrivende",
-                new FastsettBeregningsperiodeSNFRISINN(), beregnBruttoSN);
-
-        return foreslåBeregningsgrunnlagForSelvstendigNæringsdrivende;
+        return rs.beregningsRegel(FastsettBeregningsperiodeSNFRISINN.ID, "Foreslå beregningsgrunnlag for selvstendig næringsdrivende",
+            new FastsettBeregningsperiodeSNFRISINN(), beregnBruttoSN);
     }
 }

@@ -76,8 +76,7 @@ public class RegelFordelBeregningsgrunnlag implements EksportRegel<FordelPeriode
 
         var sjekkOmBruttoKanDekkeAllRefusjon = rs.beregningHvisRegel(new FinnesMerRefusjonEnnBruttoTilgjengeligOgFlereAndelerKreverRefusjon(), fordelBruttoAndelsmessig, sjekkRefusjonMotBeregningsgrunnlag);
 
-        var sjekkOmDetFinnesTilkommetRefkrav = rs.beregningHvisRegel(new FinnesTilkommetArbeidsandelMedRefusjonskrav(), sjekkOmBruttoKanDekkeAllRefusjon, sjekkRefusjonMotBeregningsgrunnlag);
-
-		return sjekkOmDetFinnesTilkommetRefkrav;
+        return rs.beregningHvisRegel(new FinnesTilkommetArbeidsandelMedRefusjonskrav(), sjekkOmBruttoKanDekkeAllRefusjon,
+            sjekkRefusjonMotBeregningsgrunnlag);
 	}
 }

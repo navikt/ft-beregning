@@ -286,11 +286,7 @@ class BeregningsgrunnlagPrStatusOgAndelDtoTjenesteTest {
     }
 
     private BeregningsgrunnlagDto lagBeregningsgrunnlagUtenSammenligningsgrunnlag() {
-        var beregningsgrunnlag = BeregningsgrunnlagDto.builder()
-                .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT)
-                .build();
-
-        return beregningsgrunnlag;
+        return BeregningsgrunnlagDto.builder() .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT) .build();
     }
 
     private BeregningsgrunnlagDto lagBeregningsgrunnlagMedAvvikUnder25ProsentMedKunSammenligningsgrunnlag() {

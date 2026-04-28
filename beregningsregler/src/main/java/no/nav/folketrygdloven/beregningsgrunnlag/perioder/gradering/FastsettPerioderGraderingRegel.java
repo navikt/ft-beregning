@@ -42,13 +42,11 @@ public class FastsettPerioderGraderingRegel implements EksportRegel<PeriodeModel
             new PeriodiserForGradering(),
             new Periodisert());
 
-        var identifiserÅrsaker = rs.beregningsRegel(
+        return rs.beregningsRegel(
             IdentifiserPeriodeÅrsakerGradering.ID,
 		        IdentifiserPeriodeÅrsakerGradering.BESKRIVELSE,
             new IdentifiserPeriodeÅrsakerGradering(),
             periodiser);
-
-        return identifiserÅrsaker;
 
     }
 

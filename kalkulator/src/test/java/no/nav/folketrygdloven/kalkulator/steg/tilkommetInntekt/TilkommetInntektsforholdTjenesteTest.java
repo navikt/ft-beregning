@@ -133,8 +133,7 @@ class TilkommetInntektsforholdTjenesteTest {
 		var aktørArbeid = InntektArbeidYtelseAggregatBuilder.AktørArbeidBuilder.oppdatere(Optional.empty());
 		yrkesaktiviteter.forEach(aktørArbeid::leggTilYrkesaktivitet);
 		oppdatere.leggTilAktørArbeid(aktørArbeid);
-		var iay = InntektArbeidYtelseGrunnlagDtoBuilder.nytt().medData(oppdatere).build();
-		return iay;
+        return InntektArbeidYtelseGrunnlagDtoBuilder.nytt().medData(oppdatere).build();
 	}
 
 	private BeregningsgrunnlagPrStatusOgAndelDto lagArbeidstakerandel(Arbeidsgiver arbeidsgiver2, long andelsnr, AndelKilde kilde, InternArbeidsforholdRefDto arbeidsforholdRef) {

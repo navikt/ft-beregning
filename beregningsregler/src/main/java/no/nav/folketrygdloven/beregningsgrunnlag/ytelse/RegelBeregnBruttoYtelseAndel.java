@@ -31,11 +31,6 @@ public class RegelBeregnBruttoYtelseAndel implements RuleService<Beregningsgrunn
 						new BeregnFraYtelsevedtak(statusAndel), new Beregnet());
 		// FP_BR 14.1 Er bruker arbeidstaker?
 
-        var fastsettBruttoBeregningsgrunnlag =
-				rs.beregningHvisRegel(new SjekkHarSaksbehandlerSattInntektFraYtelseManuelt(statusAndel),
-						new Beregnet(),
-						fastsettFraYtelsevedtak);
-
-		return fastsettBruttoBeregningsgrunnlag;
+        return rs.beregningHvisRegel(new SjekkHarSaksbehandlerSattInntektFraYtelseManuelt(statusAndel), new Beregnet(), fastsettFraYtelsevedtak);
 	}
 }

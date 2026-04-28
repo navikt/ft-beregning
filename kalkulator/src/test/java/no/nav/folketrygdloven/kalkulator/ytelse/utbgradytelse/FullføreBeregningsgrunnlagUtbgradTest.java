@@ -1137,10 +1137,6 @@ class FullføreBeregningsgrunnlagUtbgradTest {
     }
 
     private SvangerskapspengerGrunnlag lagSvangerskapspengerGrunnlag(List<UtbetalingsgradPrAktivitetDto> tilretteleggingMedUtbelingsgrad) {
-        var svangerskapspengerGrunnlag = new SvangerskapspengerGrunnlag(
-                tilretteleggingMedUtbelingsgrad
-        );
-        return svangerskapspengerGrunnlag;
+        return new SvangerskapspengerGrunnlag(tilretteleggingMedUtbelingsgrad);
     }
-
 }

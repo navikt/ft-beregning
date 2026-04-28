@@ -85,10 +85,9 @@ public class RegelBeregningsgrunnlagSN implements RuleService<Beregningsgrunnlag
 //      FP_BR 2.2 Beregn gjennomsnittlig PGI
 //      FP_BR 2.9 Beregn oppjustert inntekt for årene i beregningsperioden
 //      FP_BR 2.1 Fastsett beregningsperiode
-        var foreslåBeregningsgrunnlagForSelvstendigNæringsdrivende =
-            rs.beregningsRegel("FP_BR 2", "Foreslå beregningsgrunnlag for selvstendig næringsdrivende",
-                Arrays.asList(new FastsettBeregningsperiodeForAktivitetstatus(AktivitetStatus.SN), new SettHjemmelSN(), new BeregnOppjustertInntektForAktivitetstatus(AktivitetStatus.SN), new BeregnGjennomsnittligPGIForAktivitetstatus(AktivitetStatus.SN)), erBeregningsgrunnlagetBesteberegnet);
-
-        return foreslåBeregningsgrunnlagForSelvstendigNæringsdrivende;
+        return rs.beregningsRegel("FP_BR 2", "Foreslå beregningsgrunnlag for selvstendig næringsdrivende",
+            Arrays.asList(new FastsettBeregningsperiodeForAktivitetstatus(AktivitetStatus.SN), new SettHjemmelSN(),
+                new BeregnOppjustertInntektForAktivitetstatus(AktivitetStatus.SN),
+                new BeregnGjennomsnittligPGIForAktivitetstatus(AktivitetStatus.SN)), erBeregningsgrunnlagetBesteberegnet);
     }
 }

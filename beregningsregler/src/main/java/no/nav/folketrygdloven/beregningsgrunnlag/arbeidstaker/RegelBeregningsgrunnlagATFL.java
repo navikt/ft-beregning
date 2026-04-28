@@ -85,10 +85,6 @@ public class RegelBeregningsgrunnlagATFL implements RuleService<Beregningsgrunnl
                 rs.beregningsRegel("FP_BR 14.X", "Fastsett beregningsgrunnlag pr arbeidsforhold", speclist, fastsettBeregnetPrÅr);
 
         // FP_BR X.X Ingen regelberegning hvis besteberegning gjelder
-
-        var sjekkOmBesteberegning =
-                rs.beregningHvisRegel(new SjekkOmBesteberegning(), new Beregnet(), beregningsgrunnlagATFL);
-
-        return sjekkOmBesteberegning;
+        return rs.beregningHvisRegel(new SjekkOmBesteberegning(), new Beregnet(), beregningsgrunnlagATFL);
     }
 }

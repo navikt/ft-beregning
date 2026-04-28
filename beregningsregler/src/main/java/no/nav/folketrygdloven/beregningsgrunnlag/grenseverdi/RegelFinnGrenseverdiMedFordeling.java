@@ -47,11 +47,6 @@ public class RegelFinnGrenseverdiMedFordeling implements EksportRegel<Beregnings
             fastsettGrenseverdi);
 
         // FP_BR_29.4 4. Brutto beregnings-grunnlag totalt > 6G?
-        var beregnEventuellAvkorting = rs.beregningHvisRegel(
-            new SjekkBeregningsgrunnlagStørreEnnGrenseverdi(),
-            fastsettAvkortet,
-            fastsettUtenAvkorting);
-
-        return beregnEventuellAvkorting;
+        return rs.beregningHvisRegel(new SjekkBeregningsgrunnlagStørreEnnGrenseverdi(), fastsettAvkortet, fastsettUtenAvkorting);
     }
 }

@@ -628,8 +628,7 @@ class AvklaringsbehovUtlederTilkommetInntektTest {
 			oppdatere.leggTilAktørYtelse(aktørYtelse);
 
 		}
-		var iay = InntektArbeidYtelseGrunnlagDtoBuilder.nytt().medData(oppdatere).build();
-		return iay;
+		return InntektArbeidYtelseGrunnlagDtoBuilder.nytt().medData(oppdatere).build();
 	}
 
 	private List<InntektDtoBuilder> lagInntektForYrkesaktiviteter(List<YrkesaktivitetDto> yrkesaktiviteter, PleiepengerSyktBarnGrunnlag utbetalingsgradGrunnlag) {

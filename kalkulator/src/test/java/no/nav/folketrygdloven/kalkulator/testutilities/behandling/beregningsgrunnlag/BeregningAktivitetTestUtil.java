@@ -24,8 +24,7 @@ public class BeregningAktivitetTestUtil {
                 .build();
             builder.leggTilAktivitet(beregningAktivitet);
         }
-	    var aggregat = builder.build();
-        return aggregat;
+	    return builder.build();
     }
 
 }

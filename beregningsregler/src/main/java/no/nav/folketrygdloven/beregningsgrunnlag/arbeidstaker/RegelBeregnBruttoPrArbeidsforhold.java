@@ -88,10 +88,6 @@ public class RegelBeregnBruttoPrArbeidsforhold implements RuleService<Beregnings
                 new BeregnGrunnlagNyoppstartetFrilanser(arbeidsforhold), beregnPrArbeidsforholdFraAOrdningen);
 
         // FP_BR 14.1 Er bruker arbeidstaker?
-
-        var fastsettBruttoBeregningsgrunnlag =
-            rs.beregningHvisRegel(new SjekkOmBrukerErArbeidstaker(arbeidsforhold), manueltFastsattInntekt, sjekkOmNyoppstartetFrilanser);
-
-        return fastsettBruttoBeregningsgrunnlag;
+        return rs.beregningHvisRegel(new SjekkOmBrukerErArbeidstaker(arbeidsforhold), manueltFastsattInntekt, sjekkOmNyoppstartetFrilanser);
     }
 }

@@ -92,9 +92,9 @@ class UtledStartdatoTest {
     private static InntektArbeidYtelseGrunnlagDto lagIay(List<YrkesaktivitetDto> yrkesaktiviteter) {
         var aktørArbeidBuilder = InntektArbeidYtelseAggregatBuilder.AktørArbeidBuilder.oppdatere(Optional.empty());
         yrkesaktiviteter.forEach(aktørArbeidBuilder::leggTilYrkesaktivitet);
-        var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.nytt()
-                .medData(InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER).leggTilAktørArbeid(aktørArbeidBuilder)).build();
-        return iayGrunnlag;
+        return InntektArbeidYtelseGrunnlagDtoBuilder.nytt()
+            .medData(InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER).leggTilAktørArbeid(aktørArbeidBuilder))
+            .build();
     }
 
     private static YrkesaktivitetDto byggYrkesaktivitet(List<Intervall> ansettelsesperioder, InternArbeidsforholdRefDto ref, Arbeidsgiver arbeidsgiver) {
@@ -102,8 +102,7 @@ class UtledStartdatoTest {
                 .medArbeidsforholdId(ref)
                 .medArbeidsgiver(arbeidsgiver);
         ansettelsesperioder.forEach(p -> leggTilAnsettelsesperiode(yrkesaktivitetBuilder, p));
-        var yrkesaktivitet = yrkesaktivitetBuilder.build();
-        return yrkesaktivitet;
+        return yrkesaktivitetBuilder.build();
     }
 
     private static void leggTilAnsettelsesperiode(YrkesaktivitetDtoBuilder yrkesaktivitetBuilder, Intervall p) {

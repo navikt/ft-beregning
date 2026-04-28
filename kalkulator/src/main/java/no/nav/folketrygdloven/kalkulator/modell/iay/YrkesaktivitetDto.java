@@ -32,15 +32,11 @@ public class YrkesaktivitetDto {
         this.arbeidsforholdRef = kopierFra.arbeidsforholdRef;
 
         // NB må aksessere felt her heller en getter siden getter filtrerer
-        this.aktivitetsAvtale = kopierFra.aktivitetsAvtale.stream().map(aa -> {
-            var aktivitetsAvtaleEntitet = new AktivitetsAvtaleDto(aa);
-            return aktivitetsAvtaleEntitet;
-        }).collect(Collectors.toCollection(LinkedHashSet::new));
+        this.aktivitetsAvtale = kopierFra.aktivitetsAvtale.stream()
+            .map(AktivitetsAvtaleDto::new)
+            .collect(Collectors.toCollection(LinkedHashSet::new));
 
-        this.permisjoner = kopierFra.permisjoner.stream().map(p -> {
-            var permisjon = new PermisjonDto(p);
-            return permisjon;
-        }).collect(Collectors.toCollection(LinkedHashSet::new));
+        this.permisjoner = kopierFra.permisjoner.stream().map(PermisjonDto::new).collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     /**
@@ -90,8 +86,7 @@ public class YrkesaktivitetDto {
      */
     public boolean gjelderFor(Arbeidsgiver arbeidsgiver, InternArbeidsforholdRefDto arbeidsforholdRef) {
         var gjelderForArbeidsgiver = Objects.equals(getArbeidsgiver(), arbeidsgiver);
-        var gjelderFor = gjelderForArbeidsgiver && getArbeidsforholdRef().gjelderFor(arbeidsforholdRef);
-        return gjelderFor;
+        return gjelderForArbeidsgiver && getArbeidsforholdRef().gjelderFor(arbeidsforholdRef);
     }
 
     public boolean gjelderFor(InntektsmeldingDto im) {

@@ -38,8 +38,6 @@ public class RegelFastsettUtbetalingsbeløpTilBruker implements RuleService<Bere
         List<Specification<BeregningsgrunnlagPeriode>> liste = Arrays.asList(new FastsettAndelTilFordeling(),
                 new BeregnProsentvisAndel(),
                 new FastsettBrukersAndelFraArbeidsforholdSomIkkeErFordelt());
-        var fastsattUtbetalingsbeløpTilBruker = rs.beregningsRegel(ID, BESKRIVELSE, liste, vurderOmAndelerErFerdigFordelt);
-
-        return fastsattUtbetalingsbeløpTilBruker;
+        return rs.beregningsRegel(ID, BESKRIVELSE, liste, vurderOmAndelerErFerdigFordelt);
     }
 }
