@@ -1,6 +1,7 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.ytelse.dagpengerelleraap;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
@@ -88,8 +89,24 @@ class MapDagsatsOgBeregnetPrÅrTest {
 
         var resultat = MapDagsatsOgBeregnetPrÅr.regnUtSnittInntektForDPellerAAP(inntektsgrunnlag, AktivitetStatus.DP, STP, true);
 
-        assertThat(resultat.dagsats()).isEqualByComparingTo(BigDecimal.valueOf(912.7));
-        assertThat(resultat.beregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(83055.7));
+        // vektetDagsats = (1611*1 + 1611*1 + 1611*0.5 + 2147*0.5 + 2147*0.5) / 10 = 6174.5 / 10 = 617.45
+        assertThat(resultat.dagsats()).isEqualByComparingTo(BigDecimal.valueOf(617.45));
+        assertThat(resultat.beregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(160537.0));
+    }
+
+    @Test
+    void skal_kaste_exception_når_periodeinntekt_ikke_er_endagersperiode() {
+        inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
+            .medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP)
+            .medPeriode(Periode.of(førStp(5), førStp(2)))
+            .medInntekt(BigDecimal.valueOf(1000))
+            .medUtbetalingsfaktor(BigDecimal.ONE)
+            .medInntektskategori(Inntektskategori.DAGPENGER)
+            .build());
+
+        assertThatThrownBy(() -> MapDagsatsOgBeregnetPrÅr.regnUtSnittInntektForDPellerAAP(inntektsgrunnlag, AktivitetStatus.DP, STP, false))
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessageContaining("fom != tom");
     }
 
     @Test
