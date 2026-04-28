@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.fortsettForeslå.RegelFortsettForeslåBeregningsgrunnlag;
@@ -51,16 +52,24 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.ytelse.fp.Foreldrep
 
 class RegelForeslåBeregningsgrunnlagTest {
 
-	private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.of(2018, Month.JANUARY, 15);
-	private static final String ORGNR = "987";
-	private final Arbeidsforhold arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(SKJÆRINGSTIDSPUNKT.minusYears(2), ORGNR);
+	private LocalDate skjæringstidspunkt;
+	private String orgnr;
+	private Arbeidsforhold arbeidsforhold;
+
+	@BeforeEach
+	void setup() {
+		skjæringstidspunkt = LocalDate.of(2018, Month.JANUARY, 15);
+		orgnr = "987";
+        var arbeidsforholdStartdato = skjæringstidspunkt.minusYears(2);
+		arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(arbeidsforholdStartdato, orgnr);
+	}
 
 	@Test
 	void skalBeregneGrunnlagAGVedSammeFrilansInntektSisteTreMåneder() { // NOSONAR
 		// Arrange
         var månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
         var refusjonskrav = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
-        var beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektskomponenten(SKJÆRINGSTIDSPUNKT, månedsinntekt, refusjonskrav, true);
+        var beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektskomponenten(skjæringstidspunkt, månedsinntekt, refusjonskrav, true);
         var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 		// Act
 		@SuppressWarnings("unused") var resultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
@@ -76,7 +85,7 @@ class RegelForeslåBeregningsgrunnlagTest {
 		// Arrange
         var månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
         var refusjonskrav = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
-        var beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektskomponenten(SKJÆRINGSTIDSPUNKT, månedsinntekt, refusjonskrav, false);
+        var beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektskomponenten(skjæringstidspunkt, månedsinntekt, refusjonskrav, false);
         var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 		// Act
 		@SuppressWarnings("unused") var resultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
@@ -92,12 +101,12 @@ class RegelForeslåBeregningsgrunnlagTest {
 		// Arrange
         var månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
         var refusjonskrav = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
-        var inntektsgrunnlag = settoppÅrsinntekter(SKJÆRINGSTIDSPUNKT,
+        var inntektsgrunnlag = settoppÅrsinntekter(skjæringstidspunkt,
 				årsinntekterFor3SisteÅr(5, 3, 4), Inntektskilde.SIGRUN);
 
-		leggTilMånedsinntekter(inntektsgrunnlag, SKJÆRINGSTIDSPUNKT, List.of(månedsinntekt, månedsinntekt, månedsinntekt), Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold);
+		leggTilMånedsinntekter(inntektsgrunnlag, skjæringstidspunkt, List.of(månedsinntekt, månedsinntekt, månedsinntekt), Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold);
 
-        var grunnlag = settoppGrunnlagMedEnPeriode(SKJÆRINGSTIDSPUNKT, inntektsgrunnlag, List.of(AktivitetStatus.ATFL_SN),
+        var grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL_SN),
 				List.of(arbeidsforhold), Collections.singletonList(refusjonskrav.multiply(BigDecimal.valueOf(12)))).getBeregningsgrunnlagPerioder().get(0);
 		// Act
 		@SuppressWarnings("unused") var resultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
@@ -105,7 +114,7 @@ class RegelForeslåBeregningsgrunnlagTest {
 
 		// Assert
 		verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, AktivitetStatus.ATFL, 12 * månedsinntekt.doubleValue());
-        var beregningsperiode = Periode.heleÅrFør(SKJÆRINGSTIDSPUNKT, 3);
+        var beregningsperiode = Periode.heleÅrFør(skjæringstidspunkt, 3);
 		verifiserBeregningsperiode(AktivitetStatus.SN, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, grunnlag, beregningsperiode);
         var beløpSN = ((4.0d * GRUNNBELØP_2017) - (12 * månedsinntekt.doubleValue())); // Differanse siden SN > ATFL: SN - ATFL
 		verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.K14_HJEMMEL_ARBEIDSTAKER_OG_SELVSTENDIG, AktivitetStatus.SN, beløpSN, 4.0d * GRUNNBELØP_2017);
@@ -118,12 +127,12 @@ class RegelForeslåBeregningsgrunnlagTest {
 		// Arrange
         var månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 1.5);
         var refusjonskrav = BigDecimal.valueOf(GRUNNBELØP_2017 / 1.5);
-        var inntektsgrunnlag = settoppÅrsinntekter(SKJÆRINGSTIDSPUNKT,
+        var inntektsgrunnlag = settoppÅrsinntekter(skjæringstidspunkt,
 				årsinntekterFor3SisteÅr(5, 4, 6), Inntektskilde.SIGRUN);
 
-		leggTilMånedsinntekter(inntektsgrunnlag, SKJÆRINGSTIDSPUNKT, List.of(månedsinntekt, månedsinntekt, månedsinntekt), Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold);
+		leggTilMånedsinntekter(inntektsgrunnlag, skjæringstidspunkt, List.of(månedsinntekt, månedsinntekt, månedsinntekt), Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold);
 
-        var grunnlag = settoppGrunnlagMedEnPeriode(SKJÆRINGSTIDSPUNKT, inntektsgrunnlag, List.of(AktivitetStatus.ATFL_SN),
+        var grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL_SN),
 				List.of(arbeidsforhold), Collections.singletonList(refusjonskrav.multiply(BigDecimal.valueOf(12)))).getBeregningsgrunnlagPerioder().get(0);
 		// Act
 		@SuppressWarnings("unused") var resultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
@@ -142,12 +151,12 @@ class RegelForeslåBeregningsgrunnlagTest {
 		// Arrange
         var månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 3);
         var refusjonskrav = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 3);
-        var inntektsgrunnlag = settoppÅrsinntekter(SKJÆRINGSTIDSPUNKT,
+        var inntektsgrunnlag = settoppÅrsinntekter(skjæringstidspunkt,
 				årsinntekterFor3SisteÅr(7, 8, 6), Inntektskilde.SIGRUN);
 
-		leggTilMånedsinntekter(inntektsgrunnlag, SKJÆRINGSTIDSPUNKT, List.of(månedsinntekt, månedsinntekt, månedsinntekt), Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold);
+		leggTilMånedsinntekter(inntektsgrunnlag, skjæringstidspunkt, List.of(månedsinntekt, månedsinntekt, månedsinntekt), Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold);
 
-        var grunnlag = settoppGrunnlagMedEnPeriode(SKJÆRINGSTIDSPUNKT, inntektsgrunnlag, List.of(AktivitetStatus.ATFL_SN),
+        var grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL_SN),
 				List.of(arbeidsforhold), Collections.singletonList(refusjonskrav.multiply(BigDecimal.valueOf(12)))).getBeregningsgrunnlagPerioder().get(0);
 		// Act
 		@SuppressWarnings("unused") var resultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
@@ -168,9 +177,9 @@ class RegelForeslåBeregningsgrunnlagTest {
         var månedsinntekt = BigDecimal.valueOf(40000);
         var refusjonskrav = BigDecimal.valueOf(10000);
         var naturalytelse = BigDecimal.valueOf(2000);
-        var naturalytelseOpphørFom = SKJÆRINGSTIDSPUNKT;
-        var beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektsmelding(SKJÆRINGSTIDSPUNKT, månedsinntekt, refusjonskrav, naturalytelse, naturalytelseOpphørFom);
-		opprettSammenligningsgrunnlag(beregningsgrunnlag.getInntektsgrunnlag(), SKJÆRINGSTIDSPUNKT, BigDecimal.valueOf(30000));
+        var naturalytelseOpphørFom = skjæringstidspunkt;
+        var beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektsmelding(skjæringstidspunkt, månedsinntekt, refusjonskrav, naturalytelse, naturalytelseOpphørFom);
+		opprettSammenligningsgrunnlag(beregningsgrunnlag.getInntektsgrunnlag(), skjæringstidspunkt, BigDecimal.valueOf(30000));
         var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 		// Act
 		@SuppressWarnings("unused") var resultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
@@ -189,13 +198,15 @@ class RegelForeslåBeregningsgrunnlagTest {
 		// Arrange
         var dagsats = BigDecimal.valueOf(716);
         var inntektsgrunnlag = new Inntektsgrunnlag();
-		inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
-				.medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP)
-				.medMåned(SKJÆRINGSTIDSPUNKT)
-				.medInntekt(dagsats)
-				.medUtbetalingsfaktor(BigDecimal.ZERO)
-				.build());
-        var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(SKJÆRINGSTIDSPUNKT, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.DP));
+        skjæringstidspunkt.minusDays(15).datesUntil(skjæringstidspunkt).forEach(d -> {
+            inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
+                .medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP)
+                .medDag(d)
+                .medInntekt(dagsats)
+                .medUtbetalingsfaktor(BigDecimal.ZERO)
+                .build());
+        });
+        var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.DP));
         var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 		// Act
 		@SuppressWarnings("unused") var resultat = new RegelForeslåBeregningsgrunnlag(grunnlag).evaluerRegel(grunnlag);
@@ -211,15 +222,17 @@ class RegelForeslåBeregningsgrunnlagTest {
 		// Arrange
         var utbetalingsfaktor = BigDecimal.valueOf(0.75);
         var dagsats = BigDecimal.valueOf(900);
-        var inntektsgrunnlag = settoppÅrsinntekter(SKJÆRINGSTIDSPUNKT,
+        var inntektsgrunnlag = settoppÅrsinntekter(skjæringstidspunkt,
 				årsinntekterFor3SisteÅr(5, 5, 5), Inntektskilde.SIGRUN);
-		inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
-				.medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP)
-				.medMåned(SKJÆRINGSTIDSPUNKT)
-				.medInntekt(dagsats)
-				.medUtbetalingsfaktor(utbetalingsfaktor)
-				.build());
-        var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(SKJÆRINGSTIDSPUNKT, inntektsgrunnlag,
+        skjæringstidspunkt.minusDays(15).datesUntil(skjæringstidspunkt).forEach(d -> {
+            inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
+                .medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP)
+                .medDag(d)
+                .medInntekt(dagsats)
+                .medUtbetalingsfaktor(utbetalingsfaktor)
+                .build());
+        });
+        var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag,
 				List.of(AktivitetStatus.SN, AktivitetStatus.DP));
         var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 		// Act
@@ -241,16 +254,21 @@ class RegelForeslåBeregningsgrunnlagTest {
         var utbetalingsfaktor = new BigDecimal("1");
         var dagsatsAAP = BigDecimal.valueOf(700);
         var månedsinntektATFL = BigDecimal.valueOf(20000);
-        var inntektsgrunnlag = settoppÅrsinntekter(SKJÆRINGSTIDSPUNKT,
+        var inntektsgrunnlag = settoppÅrsinntekter(skjæringstidspunkt,
 				årsinntekterFor3SisteÅr(6, 6, 6), Inntektskilde.SIGRUN);
 
 		inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
 				.medInntektskildeOgPeriodeType(Inntektskilde.INNTEKTSMELDING).medArbeidsgiver(arbeidsforhold)
-				.medInntekt(månedsinntektATFL).medMåned(SKJÆRINGSTIDSPUNKT).build());
-		inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
-				.medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP).medUtbetalingsfaktor(utbetalingsfaktor)
-				.medInntekt(dagsatsAAP).medMåned(SKJÆRINGSTIDSPUNKT).build());
-        var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(SKJÆRINGSTIDSPUNKT, inntektsgrunnlag,
+				.medInntekt(månedsinntektATFL).medMåned(skjæringstidspunkt).build());
+        skjæringstidspunkt.minusDays(15).datesUntil(skjæringstidspunkt).forEach(d -> {
+            inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()
+                .medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP)
+                .medDag(d)
+                .medInntekt(dagsatsAAP)
+                .medUtbetalingsfaktor(utbetalingsfaktor)
+                .build());
+        });
+        var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag,
 				List.of(AktivitetStatus.ATFL_SN, AktivitetStatus.AAP), Collections.singletonList(arbeidsforhold),
 				Collections.singletonList(månedsinntektATFL.multiply(BigDecimal.valueOf(12))));
         var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
@@ -272,8 +290,8 @@ class RegelForeslåBeregningsgrunnlagTest {
 	@Test
 	void skalTesteNyoppstartetFrilanser() {
         var inntektsgrunnlag = new Inntektsgrunnlag();
-		opprettSammenligningsgrunnlag(inntektsgrunnlag, SKJÆRINGSTIDSPUNKT, BigDecimal.valueOf(25000));
-        var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(SKJÆRINGSTIDSPUNKT, inntektsgrunnlag,
+		opprettSammenligningsgrunnlag(inntektsgrunnlag, skjæringstidspunkt, BigDecimal.valueOf(25000));
+        var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag,
 				Collections.singletonList(AktivitetStatus.ATFL), Collections.singletonList(Arbeidsforhold.frilansArbeidsforhold()));
         var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 		BeregningsgrunnlagPrArbeidsforhold.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0))
@@ -288,8 +306,8 @@ class RegelForeslåBeregningsgrunnlagTest {
 		// Assert
 		assertThat(resultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
         var af = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
-        var fom = SKJÆRINGSTIDSPUNKT.minusMonths(3).withDayOfMonth(1);
-        var tom = SKJÆRINGSTIDSPUNKT.minusMonths(1).with(TemporalAdjusters.lastDayOfMonth());
+        var fom = skjæringstidspunkt.minusMonths(3).withDayOfMonth(1);
+        var tom = skjæringstidspunkt.minusMonths(1).with(TemporalAdjusters.lastDayOfMonth());
 		assertThat(af.getBeregningsperiode()).isEqualTo(Periode.of(fom, tom));
 		assertThat(af.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(300000));
 	}
@@ -297,9 +315,9 @@ class RegelForeslåBeregningsgrunnlagTest {
 	@Test
 	void skalTesteArbeidsforholdInntektSattAvSaksbehandlerNårIkkeInntektsmelding() {
         var inntektsgrunnlag = new Inntektsgrunnlag();
-        var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(SKJÆRINGSTIDSPUNKT, inntektsgrunnlag,
+        var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag,
 				Collections.singletonList(AktivitetStatus.ATFL), Collections.singletonList(arbeidsforhold));
-		opprettSammenligningsgrunnlag(inntektsgrunnlag, SKJÆRINGSTIDSPUNKT, BigDecimal.valueOf(18000));
+		opprettSammenligningsgrunnlag(inntektsgrunnlag, skjæringstidspunkt, BigDecimal.valueOf(18000));
         var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 		BeregningsgrunnlagPrArbeidsforhold.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0))
 				.medFastsattAvSaksbehandler(true)
@@ -313,8 +331,8 @@ class RegelForeslåBeregningsgrunnlagTest {
 		// Assert
 		assertThat(resultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
         var af = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0);
-        var fom = SKJÆRINGSTIDSPUNKT.minusMonths(3).withDayOfMonth(1);
-        var tom = SKJÆRINGSTIDSPUNKT.minusMonths(1).with(TemporalAdjusters.lastDayOfMonth());
+        var fom = skjæringstidspunkt.minusMonths(3).withDayOfMonth(1);
+        var tom = skjæringstidspunkt.minusMonths(1).with(TemporalAdjusters.lastDayOfMonth());
 		assertThat(af.getBeregningsperiode()).isEqualTo(Periode.of(fom, tom));
 		assertThat(af.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(200000));
 		assertThat(beregningsgrunnlag.getSammenligningsgrunnlagPrStatus()).isNotEmpty();
@@ -322,7 +340,7 @@ class RegelForeslåBeregningsgrunnlagTest {
 
 	@Test
 	void skalTesteKjøringAvKunYtelse() {
-        var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(SKJÆRINGSTIDSPUNKT, new Inntektsgrunnlag(),
+        var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, new Inntektsgrunnlag(),
 				Collections.singletonList(AktivitetStatus.KUN_YTELSE));
 		Beregningsgrunnlag.builder(beregningsgrunnlag).medYtelsesSpesifiktGrunnlag(new ForeldrepengerGrunnlag(false));
         var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
@@ -344,7 +362,7 @@ class RegelForeslåBeregningsgrunnlagTest {
 		// Arrange
         var månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
         var refusjonskrav = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
-        var beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektskomponenten(SKJÆRINGSTIDSPUNKT, månedsinntekt, refusjonskrav, true, true);
+        var beregningsgrunnlag = opprettBeregningsgrunnlagFraInntektskomponenten(skjæringstidspunkt, månedsinntekt, refusjonskrav, true, true);
 		leggtilStatus(beregningsgrunnlag, AktivitetStatus.UDEFINERT);
         var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
 		// Act
@@ -362,11 +380,11 @@ class RegelForeslåBeregningsgrunnlagTest {
 		// før skjæringstidspunktet (beregningsperioden)
         var månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
         var refusjonskrav = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
-        var inntektsgrunnlag = settoppMånedsinntekter(SKJÆRINGSTIDSPUNKT.minusMonths(3), List.of(månedsinntekt, månedsinntekt, månedsinntekt),
+        var inntektsgrunnlag = settoppMånedsinntekter(skjæringstidspunkt.minusMonths(3), List.of(månedsinntekt, månedsinntekt, månedsinntekt),
 				Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold);
-		leggTilMånedsinntekter(inntektsgrunnlag, SKJÆRINGSTIDSPUNKT, List.of(BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO),
+		leggTilMånedsinntekter(inntektsgrunnlag, skjæringstidspunkt, List.of(BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO),
 				Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold);
-        var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(SKJÆRINGSTIDSPUNKT, inntektsgrunnlag, List.of(AktivitetStatus.ATFL),
+        var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL),
 				List.of(arbeidsforhold), Collections.singletonList(refusjonskrav.multiply(BigDecimal.valueOf(12))));
 
         var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
@@ -378,8 +396,8 @@ class RegelForeslåBeregningsgrunnlagTest {
 		//SÅ skal brutto beregningsgrunnlag i beregningsperioden settes til 0
 		assertThat(grunnlag.getBruttoPrÅr()).isEqualByComparingTo(BigDecimal.ZERO);
 		// skal beregningsperioden settes til de tre siste månedene før skjæringstidspunktet for beregning
-        var fom = SKJÆRINGSTIDSPUNKT.minusMonths(3).withDayOfMonth(1);
-        var tom = SKJÆRINGSTIDSPUNKT.minusMonths(1).with(TemporalAdjusters.lastDayOfMonth());
+        var fom = skjæringstidspunkt.minusMonths(3).withDayOfMonth(1);
+        var tom = skjæringstidspunkt.minusMonths(1).with(TemporalAdjusters.lastDayOfMonth());
 		assertThat(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL).getArbeidsforhold().get(0)
 				.getBeregningsperiode()).isEqualTo(Periode.of(fom, tom));
 	}
@@ -394,9 +412,9 @@ class RegelForeslåBeregningsgrunnlagTest {
         var inntektsgrunnlag = new Inntektsgrunnlag();
         var månedsinntekter = List.of(månedsinntektGammel, månedsinntektGammel, månedsinntektGammel, månedsinntektGammel, månedsinntektGammel, månedsinntektGammel,
 				månedsinntektNy, månedsinntektNy, månedsinntektNy, månedsinntektNy, månedsinntektNy, månedsinntektNy);
-		leggTilMånedsinntekterPrStatus(inntektsgrunnlag, SKJÆRINGSTIDSPUNKT, månedsinntekter, Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, arbeidsforhold, AktivitetStatus.AT);
-		leggTilMånedsinntekterPrStatus(inntektsgrunnlag, SKJÆRINGSTIDSPUNKT, Collections.singletonList(månedsinntektInntektsmelding), Inntektskilde.INNTEKTSMELDING, arbeidsforhold, AktivitetStatus.AT);
-        var grunnlag = settOppGrunnlagMedEnPeriode(SKJÆRINGSTIDSPUNKT, inntektsgrunnlag, AktivitetStatus.ATFL,
+		leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, månedsinntekter, Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, arbeidsforhold, AktivitetStatus.AT);
+		leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, Collections.singletonList(månedsinntektInntektsmelding), Inntektskilde.INNTEKTSMELDING, arbeidsforhold, AktivitetStatus.AT);
+        var grunnlag = settOppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, AktivitetStatus.ATFL,
 				List.of(arbeidsforhold), Collections.singletonList(refusjonskravPrÅr), true).getBeregningsgrunnlagPerioder().get(0);
 
 		// Act
@@ -419,9 +437,9 @@ class RegelForeslåBeregningsgrunnlagTest {
         var inntektsgrunnlag = new Inntektsgrunnlag();
         var månedsinntekter = List.of(månedsinntektGammel, månedsinntektGammel, månedsinntektGammel, månedsinntektGammel, månedsinntektGammel, månedsinntektGammel,
 				månedsinntektNy, månedsinntektNy, månedsinntektNy, månedsinntektNy, månedsinntektNy, månedsinntektNy);
-		leggTilMånedsinntekterPrStatus(inntektsgrunnlag, SKJÆRINGSTIDSPUNKT, månedsinntekter, Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, arbeidsforhold, AktivitetStatus.AT);
-		leggTilMånedsinntekterPrStatus(inntektsgrunnlag, SKJÆRINGSTIDSPUNKT, Collections.singletonList(månedsinntektInntektsmelding), Inntektskilde.INNTEKTSMELDING, arbeidsforhold, AktivitetStatus.AT);
-        var grunnlag = settOppGrunnlagMedEnPeriode(SKJÆRINGSTIDSPUNKT, inntektsgrunnlag, AktivitetStatus.ATFL,
+		leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, månedsinntekter, Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, arbeidsforhold, AktivitetStatus.AT);
+		leggTilMånedsinntekterPrStatus(inntektsgrunnlag, skjæringstidspunkt, Collections.singletonList(månedsinntektInntektsmelding), Inntektskilde.INNTEKTSMELDING, arbeidsforhold, AktivitetStatus.AT);
+        var grunnlag = settOppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, AktivitetStatus.ATFL,
 				List.of(arbeidsforhold), Collections.singletonList(refusjonskravPrÅr), false).getBeregningsgrunnlagPerioder().get(0);
 
 		// Act
@@ -438,13 +456,15 @@ class RegelForeslåBeregningsgrunnlagTest {
 	void skalBeregneMilitærKombinertMedNæringOgArbeid() { // NOSONAR
 		// Arrange
         var månedsinntekt = BigDecimal.valueOf(GRUNNBELØP_2017 / 12 / 2);
+        var arbeidsforholStartdato = skjæringstidspunkt.minusYears(2);
+        var arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(arbeidsforholStartdato, orgnr);
         var refusjonskrav = BigDecimal.valueOf(4.0d * GSNITT_2017 / 12);
-        var inntektsgrunnlag = settoppÅrsinntekter(SKJÆRINGSTIDSPUNKT,
+        var inntektsgrunnlag = settoppÅrsinntekter(skjæringstidspunkt,
 				årsinntekterFor3SisteÅr(5, 3, 4), Inntektskilde.SIGRUN);
 
-		leggTilMånedsinntekter(inntektsgrunnlag, SKJÆRINGSTIDSPUNKT, List.of(månedsinntekt, månedsinntekt, månedsinntekt), Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold);
+		leggTilMånedsinntekter(inntektsgrunnlag, skjæringstidspunkt, List.of(månedsinntekt, månedsinntekt, månedsinntekt), Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold);
 
-        var grunnlag = settoppGrunnlagMedEnPeriode(SKJÆRINGSTIDSPUNKT, inntektsgrunnlag, Arrays.asList(AktivitetStatus.ATFL_SN, AktivitetStatus.MS),
+        var grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Arrays.asList(AktivitetStatus.ATFL_SN, AktivitetStatus.MS),
 				singletonList(arbeidsforhold), singletonList(refusjonskrav.multiply(BigDecimal.valueOf(12)))).getBeregningsgrunnlagPerioder().get(0);
 
 		// Act
@@ -458,7 +478,9 @@ class RegelForeslåBeregningsgrunnlagTest {
 	void skalBeregneAvvikPåArbeidNårPassertFomdatoForIndividuellSammenligning() {
 		// Arrange
         var månedsinntekt = BigDecimal.valueOf(20000);
-        var inntektsgrunnlag = settoppÅrsinntekter(SKJÆRINGSTIDSPUNKT,
+        var arbeidsforholStartdato = skjæringstidspunkt.minusYears(2);
+        var arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(arbeidsforholStartdato, orgnr);
+        var inntektsgrunnlag = settoppÅrsinntekter(skjæringstidspunkt,
 				årsinntekterFor3SisteÅr(5, 3, 4), Inntektskilde.SIGRUN);
 
 		List<BigDecimal> årsinntekter = new ArrayList<>();
@@ -466,13 +488,12 @@ class RegelForeslåBeregningsgrunnlagTest {
 			årsinntekter.add(månedsinntekt.add(månedsinntekt));
 		}
 
-		leggTilMånedsinntekter(inntektsgrunnlag, SKJÆRINGSTIDSPUNKT, List.of(månedsinntekt, månedsinntekt, månedsinntekt), Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold);
-		leggTilMånedsinntekter(inntektsgrunnlag, SKJÆRINGSTIDSPUNKT, årsinntekter, Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, arbeidsforhold);
+		leggTilMånedsinntekter(inntektsgrunnlag, skjæringstidspunkt, List.of(månedsinntekt, månedsinntekt, månedsinntekt), Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold);
+		leggTilMånedsinntekter(inntektsgrunnlag, skjæringstidspunkt, årsinntekter, Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, arbeidsforhold);
 
-        var grunnlag = settoppGrunnlagMedEnPeriode(SKJÆRINGSTIDSPUNKT, inntektsgrunnlag, List.of(AktivitetStatus.ATFL_SN),
+        var grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL_SN),
 				singletonList(arbeidsforhold));
-		var grunnlagMedFomForIndividuellRegelendring = Beregningsgrunnlag.builder(grunnlag).medFomDatoForIndividuellSammenligningATFLSN(
-            SKJÆRINGSTIDSPUNKT.minusMonths(1)).build();
+		var grunnlagMedFomForIndividuellRegelendring = Beregningsgrunnlag.builder(grunnlag).medFomDatoForIndividuellSammenligningATFLSN(skjæringstidspunkt.minusMonths(1)).build();
 		var førstePeriode = grunnlagMedFomForIndividuellRegelendring.getBeregningsgrunnlagPerioder().get(0);
 
 		// Act
@@ -489,7 +510,9 @@ class RegelForeslåBeregningsgrunnlagTest {
 	void skalIkkeBeregneAvvikPåArbeidNårPassertFomdatoForIndividuellSammenligning() {
 		// Arrange
         var månedsinntekt = BigDecimal.valueOf(20000);
-        var inntektsgrunnlag = settoppÅrsinntekter(SKJÆRINGSTIDSPUNKT,
+        var arbeidsforholStartdato = skjæringstidspunkt.minusYears(2);
+        var arbeidsforhold = Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(arbeidsforholStartdato, orgnr);
+        var inntektsgrunnlag = settoppÅrsinntekter(skjæringstidspunkt,
 				årsinntekterFor3SisteÅr(5, 3, 4), Inntektskilde.SIGRUN);
 
 		List<BigDecimal> årsinntekter = new ArrayList<>();
@@ -497,13 +520,12 @@ class RegelForeslåBeregningsgrunnlagTest {
 			årsinntekter.add(månedsinntekt.add(månedsinntekt));
 		}
 
-		leggTilMånedsinntekter(inntektsgrunnlag, SKJÆRINGSTIDSPUNKT, List.of(månedsinntekt, månedsinntekt, månedsinntekt), Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold);
-		leggTilMånedsinntekter(inntektsgrunnlag, SKJÆRINGSTIDSPUNKT, årsinntekter, Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, arbeidsforhold);
+		leggTilMånedsinntekter(inntektsgrunnlag, skjæringstidspunkt, List.of(månedsinntekt, månedsinntekt, månedsinntekt), Inntektskilde.INNTEKTSKOMPONENTEN_BEREGNING, arbeidsforhold);
+		leggTilMånedsinntekter(inntektsgrunnlag, skjæringstidspunkt, årsinntekter, Inntektskilde.INNTEKTSKOMPONENTEN_SAMMENLIGNING, arbeidsforhold);
 
-        var grunnlag = settoppGrunnlagMedEnPeriode(SKJÆRINGSTIDSPUNKT, inntektsgrunnlag, List.of(AktivitetStatus.ATFL_SN),
+        var grunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.ATFL_SN),
 				singletonList(arbeidsforhold));
-		var grunnlagMedFomForIndividuellRegelendring = Beregningsgrunnlag.builder(grunnlag).medFomDatoForIndividuellSammenligningATFLSN(
-            SKJÆRINGSTIDSPUNKT.plusDays(1)).build();
+		var grunnlagMedFomForIndividuellRegelendring = Beregningsgrunnlag.builder(grunnlag).medFomDatoForIndividuellSammenligningATFLSN(skjæringstidspunkt.plusDays(1)).build();
 		var førstePeriode = grunnlagMedFomForIndividuellRegelendring.getBeregningsgrunnlagPerioder().get(0);
 
 		// Act

@@ -34,18 +34,18 @@ class ForeslåBeregningsgrunnlagDPellerAAPTest {
 				.medAndelNr(1L)
 				.medAktivitetStatus(AktivitetStatus.DP)
 				.build();
-        var p = Periode.of(STP, STP.plusMonths(1));
+        var p = Periode.of(STP.minusDays(14), STP.minusDays(1));
         var periode = lagPeriodeMedStatus(dpStatus, p);
         var dagsats = BigDecimal.valueOf(1000);
         var utbetalingsgrad = BigDecimal.valueOf(1);
-		var periodeinntektDagpenger = Periodeinntekt.builder()
-				.medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP)
-				.medPeriode(p)
-				.medInntekt(dagsats)
-				.medUtbetalingsfaktor(utbetalingsgrad)
-				.build();
         var inntektsgrunnlag = new Inntektsgrunnlag();
-		inntektsgrunnlag.leggTilPeriodeinntekt(periodeinntektDagpenger);
+        p.getFom().datesUntil(p.getTom().plusDays(1)).map(d -> Periodeinntekt.builder()
+            .medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP)
+            .medDag(d)
+            .medInntekt(dagsats)
+            .medUtbetalingsfaktor(utbetalingsgrad)
+            .build())
+            .forEach(inntektsgrunnlag::leggTilPeriodeinntekt);
 		byggBG(periode, inntektsgrunnlag);
 
 		// Act
@@ -63,18 +63,18 @@ class ForeslåBeregningsgrunnlagDPellerAAPTest {
 				.medAndelNr(1L)
 				.medAktivitetStatus(AktivitetStatus.DP)
 				.build();
-        var p = Periode.of(STP, STP.plusMonths(1));
+        var p = Periode.of(STP.minusDays(14), STP.minusDays(1));
         var periode = lagPeriodeMedStatus(dpStatus, p);
         var dagsats = BigDecimal.valueOf(1000);
         var utbetalingsgrad = BigDecimal.valueOf(0.5);
-		var periodeinntektDagpenger = Periodeinntekt.builder()
-				.medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP)
-				.medPeriode(p)
-				.medInntekt(dagsats)
-				.medUtbetalingsfaktor(utbetalingsgrad)
-				.build();
         var inntektsgrunnlag = new Inntektsgrunnlag();
-		inntektsgrunnlag.leggTilPeriodeinntekt(periodeinntektDagpenger);
+        p.getFom().datesUntil(p.getTom().plusDays(1)).map(d -> Periodeinntekt.builder()
+                .medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP)
+                .medDag(d)
+                .medInntekt(dagsats)
+                .medUtbetalingsfaktor(utbetalingsgrad)
+                .build())
+            .forEach(inntektsgrunnlag::leggTilPeriodeinntekt);
 		byggBG(periode, inntektsgrunnlag);
 
 		// Act

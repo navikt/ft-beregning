@@ -128,6 +128,11 @@ public class Periodeinntekt {
             return this;
         }
 
+        public Builder medDag(LocalDate dag) {
+            kladd.periode = Periode.of(dag, dag);
+            return this;
+        }
+
 	    public Builder medYtelse(RelatertYtelseType ytelse) {
 		    kladd.ytelse = ytelse;
 		    return this;
