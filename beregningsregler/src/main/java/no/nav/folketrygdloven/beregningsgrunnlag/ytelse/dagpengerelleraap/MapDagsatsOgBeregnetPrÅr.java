@@ -35,10 +35,10 @@ public class MapDagsatsOgBeregnetPrÅr {
             .filter(pi -> Virkedager.beregnAntallVirkedager(pi.getFom(), pi.getTom()) == 1)
             .toList();
 
-        var dagsats = getSnittDagsats(inntekterIBeregningsperiode, antallVirkedager);
-        var snittUtbetalingsfaktor = medUtbetalingsfaktor ? getSnittUtbetalingsfaktor(inntekterIBeregningsperiode, antallVirkedager) : BigDecimal.ONE;
-        var beregnetPrÅr = dagsats.multiply(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP.getInntektPeriodeType().getAntallPrÅr())
-            .multiply(snittUtbetalingsfaktor);
+        var dagsats = medUtbetalingsfaktor
+            ? getSnittDagsatsMedUtbetalingsfaktor(inntekterIBeregningsperiode, antallVirkedager)
+            : getSnittDagsats(inntekterIBeregningsperiode, antallVirkedager);
+        var beregnetPrÅr = dagsats.multiply(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP.getInntektPeriodeType().getAntallPrÅr());
         return new MapDagsatsOgBeregnetPrÅr.DagsatsOgBeregnetPrÅr(dagsats, beregnetPrÅr);
     }
 
@@ -49,11 +49,14 @@ public class MapDagsatsOgBeregnetPrÅr {
     }
 
     private static List<Periodeinntekt> getInntekterForEnkeltdagerFørStpForDPellerAAP(Inntektsgrunnlag inntektsgrunnlag, LocalDate stp) {
-        return inntektsgrunnlag.getPeriodeinntekter().stream()
+        var perioder = inntektsgrunnlag.getPeriodeinntekter().stream()
             .filter(pi -> pi.getInntektPeriodeType().equals(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP.getInntektPeriodeType()))
             .filter(pi -> !pi.getPeriode().getTom().isAfter(stp))
-            .filter(pi -> pi.getFom().equals(pi.getTom())) // Skal kun ha endagersperioder
             .toList();
+        if (perioder.stream().anyMatch(pi -> !pi.getFom().equals(pi.getTom()))) {
+            throw new IllegalStateException("Forventet kun endagersperioder for DP/AAP-beregning, men fant perioder der fom != tom");
+        }
+        return perioder;
     }
 
     private static Periode getBeregningsperiodeForYtelse(List<Periodeinntekt> relevanteInntekter) {
@@ -65,20 +68,19 @@ public class MapDagsatsOgBeregnetPrÅr {
     }
 
     private static BigDecimal getSnittDagsats(List<Periodeinntekt> inntekterIBeregningsperiode, int antallVirkedager) {
-        var aggregertDagsats = inntekterIBeregningsperiode.stream()
+        return inntekterIBeregningsperiode.stream()
             .map(Periodeinntekt::getInntekt)
             .reduce(BigDecimal::add)
-            .orElse(BigDecimal.ZERO);
-        // TODO: Dobbeltsjekk at scalen er ok, den ene var 0 og den andre 10
-        return aggregertDagsats.divide(BigDecimal.valueOf(antallVirkedager), 10, RoundingMode.HALF_EVEN);
+            .orElse(BigDecimal.ZERO)
+            .divide(BigDecimal.valueOf(antallVirkedager), 10, RoundingMode.HALF_EVEN);
     }
 
-    private static BigDecimal getSnittUtbetalingsfaktor(List<Periodeinntekt> inntekterIBeregningsperiode, int antallVirkedager) {
-        var aggregertUtbetalingsgrad = inntekterIBeregningsperiode.stream()
-            .map(pi -> pi.getUtbetalingsfaktor().orElseThrow())
+    private static BigDecimal getSnittDagsatsMedUtbetalingsfaktor(List<Periodeinntekt> inntekterIBeregningsperiode, int antallVirkedager) {
+        return inntekterIBeregningsperiode.stream()
+            .map(pi -> pi.getInntekt().multiply(pi.getUtbetalingsfaktor().orElseThrow()))
             .reduce(BigDecimal::add)
-            .orElse(BigDecimal.ZERO);
-        return aggregertUtbetalingsgrad.divide(BigDecimal.valueOf(antallVirkedager), 2, RoundingMode.HALF_EVEN);
+            .orElse(BigDecimal.ZERO)
+            .divide(BigDecimal.valueOf(antallVirkedager), 10, RoundingMode.HALF_EVEN);
     }
 
     public record DagsatsOgBeregnetPrÅr(BigDecimal dagsats, BigDecimal beregnetPrÅr) {
