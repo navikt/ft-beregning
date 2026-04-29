@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Arbeidsforhold;
@@ -33,15 +34,17 @@ import no.nav.folketrygdloven.kalkulator.modell.iay.OppgittOpptjeningDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YrkesaktivitetDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YrkesaktivitetFilterDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YtelseAnvistDto;
-import no.nav.folketrygdloven.kalkulator.modell.iay.YtelseDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YtelseFilterDto;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
+import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.ArbeidType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.YtelseType;
+import no.nav.fpsak.tidsserie.LocalDateInterval;
 import no.nav.fpsak.tidsserie.LocalDateSegment;
 import no.nav.fpsak.tidsserie.LocalDateTimeline;
+import no.nav.fpsak.tidsserie.StandardCombinators;
 
 public class MapInntektsgrunnlagVLTilRegelFelles implements MapInntektsgrunnlagVLTilRegel {
 	private static final String INNTEKT_RAPPORTERING_FRIST_DATO = "inntekt.rapportering.frist.dato";
@@ -175,40 +178,46 @@ public class MapInntektsgrunnlagVLTilRegelFelles implements MapInntektsgrunnlagV
                                       LocalDate skjæringstidspunkt,
                                       AktivitetStatus aktivitetStatus) {
         var ytelseType = aktivitetStatus.equals(AktivitetStatus.ARBEIDSAVKLARINGSPENGER) ? YtelseType.ARBEIDSAVKLARINGSPENGER : YtelseType.DAGPENGER;
+        var inntektsintervall = Intervall.fraOgMedTilOgMed(skjæringstidspunkt.minusWeeks(4), skjæringstidspunkt);
         var nyesteVedtakForDagsats = MeldekortUtils.sisteVedtakFørStpForType(ytelseFilter, skjæringstidspunkt, Set.of(ytelseType));
         if (nyesteVedtakForDagsats.isEmpty()) {
             return;
         }
-        mapTilEnkeltdagerMedInntekter(nyesteVedtakForDagsats.get(), skjæringstidspunkt)
+        // Gjør denne øvelsen fordi eldre kilder vil ha gjeldende dagsats for gitt dato i vedtaket, ikke i anvisningen. Gjelder mai-regulering.
+        // Tidslinje for hele intervallet
+        var intervallTidslinje = new LocalDateTimeline<>(inntektsintervall.getFomDato(), inntektsintervall.getTomDato(), BigDecimal.ZERO);
+        // Dagsats fra vedtak fra overlappende vedtak
+        var dagsatsTidslinje = MeldekortUtils.vedtakForIntervallYtelse(ytelseFilter, inntektsintervall, Set.of(ytelseType)).stream()
+            .map(v -> new LocalDateSegment<>(v.getPeriode().getFomDato(), v.getPeriode().getTomDato(), v.getVedtaksDagsats().orElse(Beløp.ZERO).verdi()))
+            .collect(Collectors.collectingAndThen(Collectors.toList(), l -> new LocalDateTimeline<>(l, StandardCombinators::max)));
+        // Tidslinje for hele intervallet med garantert verdi for dagsats
+        var intervallDagsatsTidslinje = intervallTidslinje.combine(dagsatsTidslinje, StandardCombinators::max, LocalDateTimeline.JoinStyle.LEFT_JOIN);
+        // Tidslinje av utbetalingsgrad
+        var utbetalingsgradTidslinje = MeldekortUtils.utbetalingsgradForIntervallYtelse(ytelseFilter, inntektsintervall, Set.of(ytelseType)).stream()
+            .collect(Collectors.collectingAndThen(Collectors.toList(), l -> new LocalDateTimeline<>(l, StandardCombinators::max)));
+        // Kombinerer tidslinje av gjeldende dagsatser med tidslinje for utbetalingsgrad og sørger for avkorting til intervallet med Left
+        intervallDagsatsTidslinje.combine(utbetalingsgradTidslinje, MapInntektsgrunnlagVLTilRegelFelles::kombiner, LocalDateTimeline.JoinStyle.LEFT_JOIN)
+            .stream()
+            .flatMap(MapInntektsgrunnlagVLTilRegelFelles::mapAnvistPeriodeTilEnkeltdager)
             .forEach(inntektsgrunnlag::leggTilPeriodeinntekt);
     }
 
-    private List<Periodeinntekt> mapTilEnkeltdagerMedInntekter(YtelseDto nyesteVedtak, LocalDate skjæringstidspunkt) {
-        var tomGrense = skjæringstidspunkt.minusDays(1);
-        var tidslinje = new LocalDateTimeline<>(nyesteVedtak.getYtelseAnvist()
-            .stream()
-            // Praksis for beregning av AAP / DP er å se på en periode på 14 dager så vi tar med anvisninger fra siste måned for å sikre at regel har nok data
-            .filter(a -> a.getAnvistTOM().isAfter(skjæringstidspunkt.minusMonths(1)))
-            .filter(a -> a.getAnvistFOM().isBefore(skjæringstidspunkt))
-            .map(p -> new LocalDateSegment<>(p.getAnvistFOM(), minDato(p.getAnvistTOM(), tomGrense),
-                new DagsatsUtbetalingsgrad(nyesteVedtak.getVedtaksDagsats().orElseThrow().verdi(), MeldekortUtils.getUtbetalingsGrad(nyesteVedtak, p))))
-            .toList());
-        return tidslinje.stream().map(this::mapAnvistPeriodeTilEnkeltdager).flatMap(Collection::stream).toList();
+    private static LocalDateSegment<DagsatsUtbetalingsgrad> kombiner(LocalDateInterval i, LocalDateSegment<BigDecimal> dagsats, LocalDateSegment<BigDecimal> utbetalingsgrad) {
+        if (utbetalingsgrad == null || utbetalingsgrad.getValue() == null) {
+            return new LocalDateSegment<>(i, new DagsatsUtbetalingsgrad(dagsats.getValue(), BigDecimal.ZERO));
+        } else {
+            return new LocalDateSegment<>(i, new DagsatsUtbetalingsgrad(dagsats.getValue(), utbetalingsgrad.getValue()));
+        }
     }
 
-    private static LocalDate minDato(LocalDate a, LocalDate b) {
-        return a.isBefore(b) ? a : b;
-    }
-
-    private List<Periodeinntekt> mapAnvistPeriodeTilEnkeltdager(LocalDateSegment<DagsatsUtbetalingsgrad> segment) {
+    private static Stream<Periodeinntekt> mapAnvistPeriodeTilEnkeltdager(LocalDateSegment<DagsatsUtbetalingsgrad> segment) {
         var listeMedDager = segment.getFom().datesUntil(segment.getTom().plusDays(1)).toList();
         return listeMedDager.stream().map(d -> Periodeinntekt.builder()
             .medInntektskildeOgPeriodeType(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP)
             .medInntekt(segment.getValue().dagsats())
             .medDag(d)
             .medUtbetalingsfaktor(segment.getValue().utbetalingsgrad())
-            .build())
-            .toList();
+            .build());
     }
 
     private void lagInntektSammenligning(Inntektsgrunnlag inntektsgrunnlag, InntektFilterDto filter) {

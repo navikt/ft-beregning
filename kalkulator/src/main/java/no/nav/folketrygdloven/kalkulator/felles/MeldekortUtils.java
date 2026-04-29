@@ -9,13 +9,16 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import no.nav.folketrygdloven.kalkulator.konfig.KonfigTjeneste;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YtelseAnvistDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YtelseDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YtelseFilterDto;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Stillingsprosent;
+import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.YtelseType;
+import no.nav.fpsak.tidsserie.LocalDateSegment;
 
 public class MeldekortUtils {
 
@@ -31,6 +34,26 @@ public class MeldekortUtils {
             .filter(ytelse -> ytelseTyper.contains(ytelse.getYtelseType()))
             .filter(ytelse -> !skjæringstidspunkt.isBefore(ytelse.getPeriode().getFomDato()))
             .max(Comparator.comparing(YtelseDto::getPeriode).thenComparing(ytelse -> ytelse.getPeriode().getTomDato()));
+    }
+
+    public static List<YtelseDto> vedtakForIntervallYtelse(YtelseFilterDto ytelseFilter, Intervall intervall, Set<YtelseType> ytelseTyper) {
+        return ytelseFilter.getFiltrertYtelser().stream()
+            .filter(ytelse -> ytelseTyper.contains(ytelse.getYtelseType()))
+            .filter(a -> intervall.overlapper(a.getPeriode()))
+            .toList();
+    }
+
+    public static List<LocalDateSegment<BigDecimal>> utbetalingsgradForIntervallYtelse(YtelseFilterDto ytelseFilter, Intervall intervall, Set<YtelseType> ytelseTyper) {
+        return ytelseFilter.getFiltrertYtelser().stream()
+            .filter(ytelse -> ytelseTyper.contains(ytelse.getYtelseType()))
+            .flatMap(ytelse -> getUtbetalingsGrad(ytelse, intervall))
+            .toList();
+    }
+
+    private static Stream<LocalDateSegment<BigDecimal>> getUtbetalingsGrad(YtelseDto ytelse, Intervall intervall) {
+        return ytelse.getYtelseAnvist().stream()
+            .filter(a -> intervall.overlapper(a.getAnvistPeriode()))
+            .map(a -> new LocalDateSegment<>(a.getAnvistPeriode().getFomDato(), a.getAnvistPeriode().getTomDato(), getUtbetalingsGrad(ytelse, a)));
     }
 
     public static Optional<UtbetalingMedNormertUtbetalingsprosent> sisteHeleMeldekortFørStp(YtelseFilterDto ytelseFilter, YtelseDto sisteVedtak,
