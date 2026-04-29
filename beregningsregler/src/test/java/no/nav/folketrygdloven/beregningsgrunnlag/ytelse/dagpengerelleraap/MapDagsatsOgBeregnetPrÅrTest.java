@@ -89,8 +89,9 @@ class MapDagsatsOgBeregnetPrÅrTest {
 
         var resultat = MapDagsatsOgBeregnetPrÅr.regnUtSnittInntektForDPellerAAP(inntektsgrunnlag, AktivitetStatus.DP, STP, true);
 
-        // vektetDagsats = (1611*1 + 1611*1 + 1611*0.5 + 2147*0.5 + 2147*0.5) / 10 = 6174.5 / 10 = 617.45
-        assertThat(resultat.dagsats()).isEqualByComparingTo(BigDecimal.valueOf(617.45));
+        // vektetBeregnetPrÅr = (1611*1 + 1611*1 + 1611*0.5 + 2147*0.5 + 2147*0.5) / 10 * 260 = 617.45 * 260 = 160537.0
+        // snittDagsats (uvektet) = (1611+1611+1611+2147+2147) / 10 = 912.7
+        assertThat(resultat.dagsats()).isEqualByComparingTo(BigDecimal.valueOf(912.7));
         assertThat(resultat.beregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(160537.0));
     }
 

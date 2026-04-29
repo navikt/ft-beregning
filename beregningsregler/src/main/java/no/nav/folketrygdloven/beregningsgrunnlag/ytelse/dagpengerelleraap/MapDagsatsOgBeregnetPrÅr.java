@@ -35,10 +35,8 @@ public class MapDagsatsOgBeregnetPrÅr {
             .filter(pi -> Virkedager.beregnAntallVirkedager(pi.getFom(), pi.getTom()) == 1)
             .toList();
 
-        var dagsats = medUtbetalingsfaktor
-            ? getSnittDagsatsMedUtbetalingsfaktor(inntekterIBeregningsperiode, antallVirkedager)
-            : getSnittDagsats(inntekterIBeregningsperiode, antallVirkedager);
-        var beregnetPrÅr = dagsats.multiply(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP.getInntektPeriodeType().getAntallPrÅr());
+        var dagsats = getSnittDagsats(inntekterIBeregningsperiode, antallVirkedager);
+        var beregnetPrÅr = getBeregnetPrÅr(inntekterIBeregningsperiode, antallVirkedager, dagsats, medUtbetalingsfaktor);
         return new MapDagsatsOgBeregnetPrÅr.DagsatsOgBeregnetPrÅr(dagsats, beregnetPrÅr);
     }
 
@@ -73,6 +71,11 @@ public class MapDagsatsOgBeregnetPrÅr {
             .reduce(BigDecimal::add)
             .orElse(BigDecimal.ZERO)
             .divide(BigDecimal.valueOf(antallVirkedager), 10, RoundingMode.HALF_EVEN);
+    }
+
+    private static BigDecimal getBeregnetPrÅr(List<Periodeinntekt> inntekterIBeregningsperiode, int antallVirkedager, BigDecimal dagsats, boolean medUtbetalingsfaktor) {
+        var snittDagsats = medUtbetalingsfaktor ? getSnittDagsatsMedUtbetalingsfaktor(inntekterIBeregningsperiode, antallVirkedager) : dagsats;
+        return snittDagsats.multiply(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP.getInntektPeriodeType().getAntallPrÅr());
     }
 
     private static BigDecimal getSnittDagsatsMedUtbetalingsfaktor(List<Periodeinntekt> inntekterIBeregningsperiode, int antallVirkedager) {

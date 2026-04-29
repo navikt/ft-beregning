@@ -135,7 +135,7 @@ class ForeslåBeregningsgrunnlagDPellerAAPKombinasjonMedAnnenStatusTest {
         kjørRegel(periode);
 
         // Assert
-        assertThat(dpStatus.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(2600));
+        assertThat(dpStatus.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(26_000));
     }
 
     @Test
@@ -163,7 +163,7 @@ class ForeslåBeregningsgrunnlagDPellerAAPKombinasjonMedAnnenStatusTest {
         kjørRegel(periode);
 
         // Assert
-        assertThat(dpStatus.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(72_800));
+        assertThat(dpStatus.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(182_000));
     }
 
     @Test
@@ -190,10 +190,8 @@ class ForeslåBeregningsgrunnlagDPellerAAPKombinasjonMedAnnenStatusTest {
         // Act
         kjørRegel(periode);
 
-        // Snitt grad: 0,26
-        // Snitt dagsats: 700
         // Assert
-        assertThat(dpStatus.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(47_320));
+        assertThat(dpStatus.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(110_500));
     }
 
     @Test
@@ -229,10 +227,8 @@ class ForeslåBeregningsgrunnlagDPellerAAPKombinasjonMedAnnenStatusTest {
         // Act
         kjørRegel(periode);
 
-        // Snitt grad: 0,26
-        // Snitt dagsats: 700
         // Assert
-        assertThat(dpStatus.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(47_320));
+        assertThat(dpStatus.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(110_500));
     }
 
     private LocalDate førStp(int i) {
