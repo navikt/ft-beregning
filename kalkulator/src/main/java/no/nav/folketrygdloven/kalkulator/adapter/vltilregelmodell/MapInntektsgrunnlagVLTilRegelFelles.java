@@ -34,6 +34,7 @@ import no.nav.folketrygdloven.kalkulator.modell.iay.OppgittOpptjeningDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YrkesaktivitetDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YrkesaktivitetFilterDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YtelseAnvistDto;
+import no.nav.folketrygdloven.kalkulator.modell.iay.YtelseDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YtelseFilterDto;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
@@ -183,19 +184,15 @@ public class MapInntektsgrunnlagVLTilRegelFelles implements MapInntektsgrunnlagV
         if (nyesteVedtakForDagsats.isEmpty()) {
             return;
         }
-        // Gjør denne øvelsen fordi eldre kilder vil ha gjeldende dagsats for gitt dato i vedtaket, ikke i anvisningen. Gjelder mai-regulering.
-        // Tidslinje for hele intervallet
-        var intervallTidslinje = new LocalDateTimeline<>(inntektsintervall.getFomDato(), inntektsintervall.getTomDato(), BigDecimal.ZERO);
-        // Dagsats fra vedtak fra overlappende vedtak
-        var dagsatsTidslinje = MeldekortUtils.vedtakForIntervallYtelse(ytelseFilter, inntektsintervall, Set.of(ytelseType)).stream()
-            .map(v -> new LocalDateSegment<>(v.getPeriode().getFomDato(), v.getPeriode().getTomDato(), v.getVedtaksDagsats().orElse(Beløp.ZERO).verdi()))
-            .collect(Collectors.collectingAndThen(Collectors.toList(), l -> new LocalDateTimeline<>(l, StandardCombinators::max)));
-        // Tidslinje for hele intervallet med garantert verdi for dagsats
-        var intervallDagsatsTidslinje = intervallTidslinje.combine(dagsatsTidslinje, StandardCombinators::max, LocalDateTimeline.JoinStyle.LEFT_JOIN);
+        var vedtaksdagsatsSkjæringstidspunkt = nyesteVedtakForDagsats.flatMap(YtelseDto::getVedtaksDagsats).map(Beløp::verdi)
+            .or(() -> MeldekortUtils.sisteAnvisteDagsatsFørStpForType(ytelseFilter, skjæringstidspunkt, Set.of(ytelseType)))
+            .orElse(BigDecimal.ZERO);
+        // Tidslinje for hele intervallet vi ser på
+        var intervallDagsatsTidslinje = new LocalDateTimeline<>(inntektsintervall.getFomDato(), inntektsintervall.getTomDato(), vedtaksdagsatsSkjæringstidspunkt);
         // Tidslinje av utbetalingsgrad
         var utbetalingsgradTidslinje = MeldekortUtils.utbetalingsgradForIntervallYtelse(ytelseFilter, inntektsintervall, Set.of(ytelseType)).stream()
             .collect(Collectors.collectingAndThen(Collectors.toList(), l -> new LocalDateTimeline<>(l, StandardCombinators::max)));
-        // Kombinerer tidslinje av gjeldende dagsatser med tidslinje for utbetalingsgrad og sørger for avkorting til intervallet med Left
+        // Kombinerer tidslinje av gjeldende dagsatser med tidslinje for utbetalingsgrad og pad'er manglende utbetalinger med 0
         intervallDagsatsTidslinje.combine(utbetalingsgradTidslinje, MapInntektsgrunnlagVLTilRegelFelles::kombiner, LocalDateTimeline.JoinStyle.LEFT_JOIN)
             .stream()
             .flatMap(MapInntektsgrunnlagVLTilRegelFelles::mapAnvistPeriodeTilEnkeltdager)

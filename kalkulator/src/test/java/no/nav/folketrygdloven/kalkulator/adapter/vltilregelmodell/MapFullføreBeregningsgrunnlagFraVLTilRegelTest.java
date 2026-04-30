@@ -277,10 +277,8 @@ class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
                 .filter(mi -> mi.getUtbetalingsfaktor().filter(f -> f.compareTo(BigDecimal.ZERO) > 0).isPresent())
                 .toList();
 		assertThat(aapInntekter).hasSize(16);
-        var dagsats1 = BigDecimal.valueOf(MELDEKORTSATS1);
-        var dagsats2 = BigDecimal.valueOf(MELDEKORTSATS2);
-        assertThat(aapInntekter.stream().filter(m ->m.getInntekt().compareTo(dagsats1) == 0).toList()).hasSize(15);
-        assertThat(aapInntekter.stream().filter(m ->m.getInntekt().compareTo(dagsats2) == 0).toList()).hasSize(1);
+        var dagsats = BigDecimal.valueOf(MELDEKORTSATS1);
+        assertThat(aapInntekter.stream().allMatch(m ->m.getInntekt().compareTo(dagsats) == 0)).isTrue();
         assertThat(aapInntekter.stream().allMatch(m ->m.getUtbetalingsfaktor().orElseThrow().compareTo(BigDecimal.ONE) == 0)).isTrue();
     }
 
@@ -468,10 +466,9 @@ class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
 				.filter(mi -> mi.getInntektskilde().equals(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP))
                 .filter(mi -> mi.getUtbetalingsfaktor().filter(f -> f.compareTo(BigDecimal.ZERO) > 0).isPresent())
 				.toList();
-        var dagsats1 = BigDecimal.valueOf(MELDEKORTSATS1);
-        var dagsats2 = BigDecimal.valueOf(MELDEKORTSATS2);
-		assertThat(dpMånedsInntekter.stream().filter(m ->m.getInntekt().compareTo(dagsats1) == 0).toList()).hasSize(15);
-        assertThat(dpMånedsInntekter.stream().filter(m ->m.getInntekt().compareTo(dagsats2) == 0).toList()).hasSize(1);
+        assertThat(dpMånedsInntekter).hasSize(16);
+        var dagsats = BigDecimal.valueOf(MELDEKORTSATS1);
+        assertThat(dpMånedsInntekter.stream().allMatch(m ->m.getInntekt().compareTo(dagsats) == 0)).isTrue();
         assertThat(dpMånedsInntekter.stream().filter(m ->m.getUtbetalingsfaktor().orElseThrow().compareTo(BigDecimal.ONE) == 0).toList()).hasSize(14);
         assertThat(dpMånedsInntekter.stream().filter(m ->m.getUtbetalingsfaktor().orElseThrow().compareTo(BigDecimal.ONE) != 0).toList()).hasSize(2);
 	}

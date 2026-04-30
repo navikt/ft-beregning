@@ -4,6 +4,7 @@ package no.nav.folketrygdloven.kalkulator.felles;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -15,6 +16,7 @@ import no.nav.folketrygdloven.kalkulator.konfig.KonfigTjeneste;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YtelseAnvistDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YtelseDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YtelseFilterDto;
+import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Stillingsprosent;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.YtelseType;
@@ -41,6 +43,17 @@ public class MeldekortUtils {
             .filter(ytelse -> ytelseTyper.contains(ytelse.getYtelseType()))
             .filter(a -> intervall.overlapper(a.getPeriode()))
             .toList();
+    }
+
+    public static Optional<BigDecimal> sisteAnvisteDagsatsFørStpForType(YtelseFilterDto ytelseFilter, LocalDate skjæringstidspunkt, Set<YtelseType> ytelseTyper) {
+        return ytelseFilter.getFiltrertYtelser().stream()
+            .filter(ytelse -> ytelseTyper.contains(ytelse.getYtelseType()))
+            .map(YtelseDto::getYtelseAnvist)
+            .flatMap(Collection::stream)
+            .filter(a -> !skjæringstidspunkt.isBefore(a.getAnvistFOM()))
+            .max(Comparator.comparing(YtelseAnvistDto::getAnvistFOM))
+            .flatMap(YtelseAnvistDto::getDagsats)
+            .map(Beløp::verdi);
     }
 
     public static List<LocalDateSegment<BigDecimal>> utbetalingsgradForIntervallYtelse(YtelseFilterDto ytelseFilter, Intervall intervall, Set<YtelseType> ytelseTyper) {
