@@ -274,7 +274,6 @@ class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
 
         var aapInntekter = resultatBG.getInntektsgrunnlag().getPeriodeinntekter().stream()
 				.filter(mi -> mi.getInntektskilde().equals(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP))
-                .filter(mi -> mi.getUtbetalingsfaktor().filter(f -> f.compareTo(BigDecimal.ZERO) > 0).isPresent())
                 .toList();
 		assertThat(aapInntekter).hasSize(16);
         var dagsats = BigDecimal.valueOf(MELDEKORTSATS1);
@@ -464,7 +463,6 @@ class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
 
         var dpMånedsInntekter = resultatBG.getInntektsgrunnlag().getPeriodeinntekter().stream()
 				.filter(mi -> mi.getInntektskilde().equals(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP))
-                .filter(mi -> mi.getUtbetalingsfaktor().filter(f -> f.compareTo(BigDecimal.ZERO) > 0).isPresent())
 				.toList();
         assertThat(dpMånedsInntekter).hasSize(16);
         var dagsats = BigDecimal.valueOf(MELDEKORTSATS1);
@@ -487,7 +485,6 @@ class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
 		final var resultatBG = map(koblingReferanse, lagGrunnlag(beregningsgrunnlag), iayGrunnlagBuilder);
 
         var dpMånedsInntekter = resultatBG.getInntektsgrunnlag().getPeriodeinntekter().stream()
-				.filter(mi -> mi.getInntektskilde().equals(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP))
                 .filter(mi -> mi.getUtbetalingsfaktor().filter(f -> f.compareTo(BigDecimal.ZERO) > 0).isPresent())
 				.toList();
 		assertThat(dpMånedsInntekter).hasSize(6);

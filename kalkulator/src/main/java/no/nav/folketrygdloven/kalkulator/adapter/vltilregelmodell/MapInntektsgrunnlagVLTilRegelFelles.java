@@ -42,10 +42,7 @@ import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.ArbeidType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.YtelseType;
-import no.nav.fpsak.tidsserie.LocalDateInterval;
 import no.nav.fpsak.tidsserie.LocalDateSegment;
-import no.nav.fpsak.tidsserie.LocalDateTimeline;
-import no.nav.fpsak.tidsserie.StandardCombinators;
 
 public class MapInntektsgrunnlagVLTilRegelFelles implements MapInntektsgrunnlagVLTilRegel {
 	private static final String INNTEKT_RAPPORTERING_FRIST_DATO = "inntekt.rapportering.frist.dato";
@@ -187,24 +184,14 @@ public class MapInntektsgrunnlagVLTilRegelFelles implements MapInntektsgrunnlagV
         var vedtaksdagsatsSkjæringstidspunkt = nyesteVedtakForDagsats.flatMap(YtelseDto::getVedtaksDagsats).map(Beløp::verdi)
             .or(() -> MeldekortUtils.sisteAnvisteDagsatsFørStpForType(ytelseFilter, skjæringstidspunkt, Set.of(ytelseType)))
             .orElse(BigDecimal.ZERO);
-        // Tidslinje for hele intervallet vi ser på
-        var intervallDagsatsTidslinje = new LocalDateTimeline<>(inntektsintervall.getFomDato(), inntektsintervall.getTomDato(), vedtaksdagsatsSkjæringstidspunkt);
-        // Tidslinje av utbetalingsgrad
-        var utbetalingsgradTidslinje = MeldekortUtils.utbetalingsgradForIntervallYtelse(ytelseFilter, inntektsintervall, Set.of(ytelseType)).stream()
-            .collect(Collectors.collectingAndThen(Collectors.toList(), l -> new LocalDateTimeline<>(l, StandardCombinators::max)));
-        // Kombinerer tidslinje av gjeldende dagsatser med tidslinje for utbetalingsgrad og pad'er manglende utbetalinger med 0
-        intervallDagsatsTidslinje.combine(utbetalingsgradTidslinje, MapInntektsgrunnlagVLTilRegelFelles::kombiner, LocalDateTimeline.JoinStyle.LEFT_JOIN)
-            .stream()
+        // Legger til Periodeinntekt som består av vedtaksdagsats og utbetalingsgrad. Basert på anvisning/utbetaling.
+        // Dersom det finnes vedtak men ingen anvisning siste 4 uker, så brytes forutsetningen om aktiv ytelse opp til STP
+        MeldekortUtils.utbetalingsgradForIntervallYtelse(ytelseFilter, inntektsintervall, Set.of(ytelseType)).stream()
+            .map(s -> new LocalDateSegment<>(s.getLocalDateInterval(),
+                new DagsatsUtbetalingsgrad(vedtaksdagsatsSkjæringstidspunkt, s.getValue())))
             .flatMap(MapInntektsgrunnlagVLTilRegelFelles::mapAnvistPeriodeTilEnkeltdager)
+            .filter(pi -> inntektsintervall.inkluderer(pi.getPeriode().getFom()))
             .forEach(inntektsgrunnlag::leggTilPeriodeinntekt);
-    }
-
-    private static LocalDateSegment<DagsatsUtbetalingsgrad> kombiner(LocalDateInterval i, LocalDateSegment<BigDecimal> dagsats, LocalDateSegment<BigDecimal> utbetalingsgrad) {
-        if (utbetalingsgrad == null || utbetalingsgrad.getValue() == null) {
-            return new LocalDateSegment<>(i, new DagsatsUtbetalingsgrad(dagsats.getValue(), BigDecimal.ZERO));
-        } else {
-            return new LocalDateSegment<>(i, new DagsatsUtbetalingsgrad(dagsats.getValue(), utbetalingsgrad.getValue()));
-        }
     }
 
     private static Stream<Periodeinntekt> mapAnvistPeriodeTilEnkeltdager(LocalDateSegment<DagsatsUtbetalingsgrad> segment) {

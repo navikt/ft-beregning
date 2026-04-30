@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import no.nav.folketrygdloven.kalkulator.konfig.KonfigTjeneste;
@@ -21,6 +22,8 @@ import no.nav.folketrygdloven.kalkulator.modell.typer.Stillingsprosent;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.YtelseType;
 import no.nav.fpsak.tidsserie.LocalDateSegment;
+import no.nav.fpsak.tidsserie.LocalDateTimeline;
+import no.nav.fpsak.tidsserie.StandardCombinators;
 
 public class MeldekortUtils {
 
@@ -56,11 +59,11 @@ public class MeldekortUtils {
             .map(Beløp::verdi);
     }
 
-    public static List<LocalDateSegment<BigDecimal>> utbetalingsgradForIntervallYtelse(YtelseFilterDto ytelseFilter, Intervall intervall, Set<YtelseType> ytelseTyper) {
+    public static LocalDateTimeline<BigDecimal> utbetalingsgradForIntervallYtelse(YtelseFilterDto ytelseFilter, Intervall intervall, Set<YtelseType> ytelseTyper) {
         return ytelseFilter.getFiltrertYtelser().stream()
             .filter(ytelse -> ytelseTyper.contains(ytelse.getYtelseType()))
             .flatMap(ytelse -> getUtbetalingsGrad(ytelse, intervall))
-            .toList();
+            .collect(Collectors.collectingAndThen(Collectors.toList(), l -> new LocalDateTimeline<>(l, StandardCombinators::max)));
     }
 
     private static Stream<LocalDateSegment<BigDecimal>> getUtbetalingsGrad(YtelseDto ytelse, Intervall intervall) {
