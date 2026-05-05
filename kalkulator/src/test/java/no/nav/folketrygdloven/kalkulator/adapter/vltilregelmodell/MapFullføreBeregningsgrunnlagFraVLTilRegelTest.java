@@ -103,21 +103,21 @@ class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
         var iayBuilder = opprettForBehandling(iayGrunnlagBuilder);
         var aktørYtelseBuilder = iayBuilder.getAktørYtelseBuilder();
         var ytelse = lagYtelse(YtelseType.DAGPENGER,
-				skjæring.minusMonths(1).plusDays(1),
+                skjæring.minusWeeks(4).plusDays(1),
 				skjæring.plusMonths(6),
 				Beløp.fra(MELDEKORTSATS1),
 				BigDecimal.valueOf(200), // Konvensjon for kilde Arena
-				skjæring.minusMonths(1).plusDays(2),
-				skjæring.minusMonths(1).plusDays(16),
+                skjæring.minusWeeks(4).plusDays(2),
+                skjæring.minusWeeks(4).plusDays(15),
 				YtelseKilde.ARENA);
 		aktørYtelseBuilder.leggTilYtelse(ytelse);
 		ytelse = lagYtelse(YtelseType.DAGPENGER,
 				skjæring.minusMonths(3),
-				skjæring.minusMonths(1),
+                skjæring.minusWeeks(4),
 				Beløp.fra(MELDEKORTSATS2),
 				new BigDecimal(100), // Tilsvarer halv utbetaling pr konvensjon for kilde Arena
-				skjæring.minusMonths(1).minusDays(13),
-				skjæring.minusMonths(1).plusDays(1),
+                skjæring.minusWeeks(4).minusDays(13),
+                skjæring.minusWeeks(4).plusDays(1),
 				YtelseKilde.ARENA);
 		aktørYtelseBuilder.leggTilYtelse(ytelse);
 		iayBuilder.leggTilAktørYtelse(aktørYtelseBuilder);
@@ -129,21 +129,21 @@ class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
         var iayBuilder = opprettForBehandling(iayGrunnlagBuilder);
         var aktørYtelseBuilder = iayBuilder.getAktørYtelseBuilder();
         var ytelse = lagYtelse(YtelseType.ARBEIDSAVKLARINGSPENGER,
-				skjæring.minusMonths(1).plusDays(1),
+				skjæring.minusWeeks(4).plusDays(1),
 				skjæring.plusMonths(6),
 				Beløp.fra(MELDEKORTSATS1),
 				Stillingsprosent.HUNDRED.verdi(),
-				skjæring.minusMonths(1).plusDays(2),
-				skjæring.minusMonths(1).plusDays(16),
+				skjæring.minusWeeks(4).plusDays(2),
+				skjæring.minusWeeks(4).plusDays(15),
 				YtelseKilde.KELVIN);
 		aktørYtelseBuilder.leggTilYtelse(ytelse);
 		ytelse = lagYtelse(YtelseType.ARBEIDSAVKLARINGSPENGER,
 				skjæring.minusMonths(3),
-				skjæring.minusMonths(1),
+				skjæring.minusWeeks(4),
 				Beløp.fra(MELDEKORTSATS2),
                 Stillingsprosent.HUNDRED.verdi(),
-				skjæring.minusMonths(1).minusDays(13),
-				skjæring.minusMonths(1).plusDays(1),
+				skjæring.minusWeeks(4).minusDays(13),
+				skjæring.minusWeeks(4).plusDays(1),
 				YtelseKilde.KELVIN);
 		aktørYtelseBuilder.leggTilYtelse(ytelse);
 		iayBuilder.leggTilAktørYtelse(aktørYtelseBuilder);
@@ -274,13 +274,12 @@ class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
 
         var aapInntekter = resultatBG.getInntektsgrunnlag().getPeriodeinntekter().stream()
 				.filter(mi -> mi.getInntektskilde().equals(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP))
-				.toList();
-		assertThat(aapInntekter).hasSize(1);
+                .toList();
+		assertThat(aapInntekter).hasSize(16);
         var dagsats = BigDecimal.valueOf(MELDEKORTSATS1);
-		assertThat(aapInntekter.getFirst().getInntekt()).isEqualByComparingTo(dagsats);
-		assertThat(aapInntekter.getFirst().getUtbetalingsfaktor()).hasValueSatisfying(utbg ->
-				assertThat(utbg).isEqualByComparingTo(BigDecimal.ONE));
-	}
+        assertThat(aapInntekter.stream().allMatch(m ->m.getInntekt().compareTo(dagsats) == 0)).isTrue();
+        assertThat(aapInntekter.stream().allMatch(m ->m.getUtbetalingsfaktor().orElseThrow().compareTo(BigDecimal.ONE) == 0)).isTrue();
+    }
 
 	private no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregningsgrunnlag map(KoblingReferanse koblingReferanse, BeregningsgrunnlagGrunnlagDto grunnlag, InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlagBuilder) {
 		var iayGrunnlag = iayGrunnlagBuilder.medInntektsmeldinger(inntektsmeldinger).build();
@@ -465,11 +464,11 @@ class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
         var dpMånedsInntekter = resultatBG.getInntektsgrunnlag().getPeriodeinntekter().stream()
 				.filter(mi -> mi.getInntektskilde().equals(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP))
 				.toList();
-		assertThat(dpMånedsInntekter).hasSize(1);
+        assertThat(dpMånedsInntekter).hasSize(14);
         var dagsats = BigDecimal.valueOf(MELDEKORTSATS1);
-		assertThat(dpMånedsInntekter.getFirst().getInntekt()).isEqualByComparingTo(dagsats);
-		assertThat(dpMånedsInntekter.getFirst().getUtbetalingsfaktor()).hasValueSatisfying(utbg ->
-				assertThat(utbg).isEqualByComparingTo(BigDecimal.ONE));
+        assertThat(dpMånedsInntekter)
+            .allMatch(m ->m.getInntekt().compareTo(dagsats) == 0)
+            .allMatch(m ->m.getUtbetalingsfaktor().orElseThrow().compareTo(BigDecimal.ONE) == 0);
 	}
 
 	@Test
@@ -486,13 +485,13 @@ class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
 		final var resultatBG = map(koblingReferanse, lagGrunnlag(beregningsgrunnlag), iayGrunnlagBuilder);
 
         var dpMånedsInntekter = resultatBG.getInntektsgrunnlag().getPeriodeinntekter().stream()
-				.filter(mi -> mi.getInntektskilde().equals(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP))
+                .filter(mi -> mi.getUtbetalingsfaktor().filter(f -> f.compareTo(BigDecimal.ZERO) > 0).isPresent())
 				.toList();
-		assertThat(dpMånedsInntekter).hasSize(1);
+		assertThat(dpMånedsInntekter).hasSize(6);
         var dagsats = BigDecimal.valueOf(MELDEKORTSATS1);
-		assertThat(dpMånedsInntekter.getFirst().getInntekt()).isEqualByComparingTo(dagsats);
-		assertThat(dpMånedsInntekter.getFirst().getUtbetalingsfaktor()).hasValueSatisfying(utbg ->
-				assertThat(utbg).isEqualByComparingTo(BigDecimal.ONE));
+        assertThat(dpMånedsInntekter)
+            .allMatch(m ->m.getInntekt().compareTo(dagsats) == 0)
+            .allMatch(m ->m.getUtbetalingsfaktor().orElseThrow().compareTo(new BigDecimal("0.95")) == 0);
 	}
 
 	@Test

@@ -19,6 +19,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.util.Virkedager;
 public class Inntektsgrunnlag {
 	public static final int VIRKEDAGER_I_ET_ÅR = 260;
 	private int inntektRapporteringFristDag;
+    private Integer dagsatsYtelseDpAapVedSkjæringstidspunkt;
 	private final List<Periodeinntekt> periodeinntekter = new ArrayList<>();
 
 	public Inntektsgrunnlag() {
@@ -33,7 +34,19 @@ public class Inntektsgrunnlag {
 		this.inntektRapporteringFristDag = inntektRapporteringFristDag;
 	}
 
-	public void leggTilPeriodeinntekt(Periodeinntekt periodeinntekt) {
+    public Integer getDagsatsYtelseDpAapVedSkjæringstidspunkt() {
+        return dagsatsYtelseDpAapVedSkjæringstidspunkt;
+    }
+
+    public void setDagsatsYtelseDpAapVedSkjæringstidspunkt(BigDecimal dagsatsYtelseDpAapVedSkjæringstidspunkt) {
+        this.dagsatsYtelseDpAapVedSkjæringstidspunkt = dagsatsYtelseDpAapVedSkjæringstidspunkt.intValue();
+    }
+
+    public void setDagsatsYtelseDpAapVedSkjæringstidspunkt(int dagsatsYtelseDpAapVedSkjæringstidspunkt) {
+        this.dagsatsYtelseDpAapVedSkjæringstidspunkt = dagsatsYtelseDpAapVedSkjæringstidspunkt;
+    }
+
+    public void leggTilPeriodeinntekt(Periodeinntekt periodeinntekt) {
 		this.periodeinntekter.add(periodeinntekt);
 	}
 
@@ -264,5 +277,4 @@ public class Inntektsgrunnlag {
 				.filter(i -> i.getArbeidsgiver().isPresent())
 				.filter(i -> arbeidsforhold.equals(i.getArbeidsgiver().get())); //NOSONAR
 	}
-
 }
