@@ -86,7 +86,6 @@ class InntektsmeldingMedRefusjonTjenesteImplTest {
         var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medData(registerBuilder)
                 .medInntektsmeldinger(List.of(im1, im2)).build();
-        // TODO: var 4 mnd men feiler når STP = siste dag i mnd. Endret til STP-5mnd
         var kravperioder = lagKravperioder(Map.of(arbeidsgiver, List.of(im1), arbeidsgiver2, List.of(im2)), Map.of(arbeidsgiver, SKJÆRINGSTIDSPUNKT.plusMonths(5), arbeidsgiver2, SKJÆRINGSTIDSPUNKT.plusMonths(2)), SKJÆRINGSTIDSPUNKT);
 
         var arbeidsgivereSomHarSøktForSent = InntektsmeldingMedRefusjonTjeneste.finnArbeidsgivereSomHarSøktRefusjonForSent(

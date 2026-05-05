@@ -38,11 +38,11 @@ import no.nav.folketrygdloven.kalkulator.modell.iay.YtelseDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YtelseFilterDto;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
-import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.ArbeidType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.YtelseKilde;
 import no.nav.folketrygdloven.kalkulus.kodeverk.YtelseType;
+import no.nav.fpsak.tidsserie.LocalDateInterval;
 import no.nav.fpsak.tidsserie.LocalDateSegment;
 
 public class MapInntektsgrunnlagVLTilRegelFelles implements MapInntektsgrunnlagVLTilRegel {
@@ -184,24 +184,25 @@ public class MapInntektsgrunnlagVLTilRegelFelles implements MapInntektsgrunnlagV
                                       LocalDate skjæringstidspunkt,
                                       AktivitetStatus aktivitetStatus) {
         var ytelseType = aktivitetStatus.equals(AktivitetStatus.ARBEIDSAVKLARINGSPENGER) ? YtelseType.ARBEIDSAVKLARINGSPENGER : YtelseType.DAGPENGER;
-        var inntektsintervall = Intervall.fraOgMedTilOgMed(skjæringstidspunkt.minusWeeks(4), skjæringstidspunkt);
+        var inntektsintervall = new LocalDateInterval(skjæringstidspunkt.minusWeeks(4), skjæringstidspunkt);
         var nyesteVedtakForDagsats = MeldekortUtils.sisteVedtakFørStpForType(ytelseFilter, skjæringstidspunkt, Set.of(ytelseType));
         if (nyesteVedtakForDagsats.isEmpty()) {
             return;
         }
-        var vedtaksdagsatsSkjæringstidspunkt = nyesteVedtakForDagsats.flatMap(YtelseDto::getVedtaksDagsats).map(Beløp::verdi)
+        var vedtaksdagsatsSkjæringstidspunkt = nyesteVedtakForDagsats.flatMap(YtelseDto::getVedtaksDagsats)
             .or(() -> MeldekortUtils.sisteAnvisteDagsatsFørStpForType(ytelseFilter, skjæringstidspunkt, Set.of(ytelseType)))
-            .orElse(BigDecimal.ZERO);
+            .orElse(Beløp.ZERO)
+            .verdi();
         inntektsgrunnlag.setDagsatsYtelseDpAapVedSkjæringstidspunkt(vedtaksdagsatsSkjæringstidspunkt);
         var sisteHeleMeldekortDersomArena = nyesteVedtakForDagsats.filter(v -> YtelseKilde.ARENA.equals(v.getYtelseKilde()))
-            .flatMap(v -> MeldekortUtils.sisteHeleMeldekortFørStp(ytelseFilter, v, skjæringstidspunkt, Set.of(ytelseType)));
+            .flatMap(v -> MeldekortUtils.utbetalingsgradSistePeriodeFørStp(ytelseFilter, v, skjæringstidspunkt, Set.of(ytelseType)))
+            .filter(mk -> mk.getLocalDateInterval().overlaps(inntektsintervall));
         if (sisteHeleMeldekortDersomArena.isPresent() ) {
             // Bruker siste hele meldekortperiode for Arena: Kommer alltid i 2ukersperioder + STP vil påvirke utbetalingsgrad
             var mk = sisteHeleMeldekortDersomArena.get();
-            var segment = new LocalDateSegment<>(mk.utbetaling().getAnvistFOM(), mk.utbetaling().getAnvistTOM(),
-                new DagsatsUtbetalingsgrad(vedtaksdagsatsSkjæringstidspunkt, mk.normertUtbetalingsprosent().tilNormalisertGrad()));
+            var segment = new LocalDateSegment<>(mk.getLocalDateInterval(), new DagsatsUtbetalingsgrad(vedtaksdagsatsSkjæringstidspunkt, mk.getValue()));
             mapAnvistPeriodeTilEnkeltdager(segment)
-                .filter(pi -> inntektsintervall.inkluderer(pi.getPeriode().getFom()))
+                .filter(pi -> inntektsintervall.contains(pi.getPeriode().getFom()))
                 .forEach(inntektsgrunnlag::leggTilPeriodeinntekt);
         } else {
             // Legger til Periodeinntekt som består av vedtaksdagsats og utbetalingsgrad. Basert på anvisning/utbetaling.
@@ -210,7 +211,7 @@ public class MapInntektsgrunnlagVLTilRegelFelles implements MapInntektsgrunnlagV
                 .stream()
                 .map(s -> new LocalDateSegment<>(s.getLocalDateInterval(), new DagsatsUtbetalingsgrad(vedtaksdagsatsSkjæringstidspunkt, s.getValue())))
                 .flatMap(MapInntektsgrunnlagVLTilRegelFelles::mapAnvistPeriodeTilEnkeltdager)
-                .filter(pi -> inntektsintervall.inkluderer(pi.getPeriode().getFom()))
+                .filter(pi -> inntektsintervall.contains(pi.getPeriode().getFom()))
                 .forEach(inntektsgrunnlag::leggTilPeriodeinntekt);
         }
     }

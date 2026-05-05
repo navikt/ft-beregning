@@ -60,7 +60,7 @@ class VurderRefusjonTilfelleDtoTjenesteTest {
         var arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         var arbeidsgiver2 = Arbeidsgiver.virksomhet(ORGNR2);
         var im1 = BeregningInntektsmeldingTestUtil.opprettInntektsmelding(ORGNR, SKJÆRINGSTIDSPUNKT, Beløp.fra(10), Beløp.fra(10));
-        førsteInnsendingMap.put(arbeidsgiver, SKJÆRINGSTIDSPUNKT.plusMonths(5)); // TODO: var 4 mnd men feiler når STP = siste dag i mnd
+        førsteInnsendingMap.put(arbeidsgiver, SKJÆRINGSTIDSPUNKT.plusMonths(5));
         var im2 = BeregningInntektsmeldingTestUtil.opprettInntektsmelding(ORGNR2, SKJÆRINGSTIDSPUNKT, Beløp.fra(10), Beløp.fra(10));
         førsteInnsendingMap.put(arbeidsgiver2, SKJÆRINGSTIDSPUNKT.plusMonths(2));
         var grunnlag = lagBeregningsgrunnlagGrunnlagBuilder(aktivitetAggregat, List.of(arbeidsgiver, arbeidsgiver2));

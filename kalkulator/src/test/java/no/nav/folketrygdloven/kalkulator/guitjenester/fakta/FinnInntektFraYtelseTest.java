@@ -7,8 +7,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
 
-import no.nav.folketrygdloven.kalkulator.modell.typer.Stillingsprosent;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -24,6 +22,7 @@ import no.nav.folketrygdloven.kalkulator.modell.iay.YtelseDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YtelseFilterDto;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
+import no.nav.folketrygdloven.kalkulator.modell.typer.Stillingsprosent;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.YtelseKilde;
@@ -55,7 +54,7 @@ class FinnInntektFraYtelseTest {
         var beregningsgrunnlagPrStatusOgAndel = opprettBeregningsgrunnlagPrStatusOgAndelDto();
 
         // Act
-        var result = FinnInntektFraYtelse.finnÅrbeløpForDagpenger(ref, beregningsgrunnlagPrStatusOgAndel, ytelseFilter);
+        var result = FinnInntektFraYtelse.finnÅrbeløpFraMeldekortForAndel(ref, beregningsgrunnlagPrStatusOgAndel, ytelseFilter);
 
         // Assert
         assertTrue(result.isPresent(), "Expected a present årsbeløp when vedtak/meldekort exist");
@@ -77,7 +76,7 @@ class FinnInntektFraYtelseTest {
         var beregningsgrunnlagPrStatusOgAndel = opprettBeregningsgrunnlagPrStatusOgAndelDto();
 
         // Act
-        var result = FinnInntektFraYtelse.finnÅrbeløpForDagpenger(ref, beregningsgrunnlagPrStatusOgAndel, ytelseFilter);
+        var result = FinnInntektFraYtelse.finnÅrbeløpFraMeldekortForAndel(ref, beregningsgrunnlagPrStatusOgAndel, ytelseFilter);
 
         // Assert
         assertTrue(result.isPresent(), "Expected a present årsbeløp when vedtak/meldekort exist");

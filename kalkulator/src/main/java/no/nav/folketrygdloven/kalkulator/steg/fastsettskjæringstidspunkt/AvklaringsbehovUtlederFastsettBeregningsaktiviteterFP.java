@@ -2,6 +2,7 @@ package no.nav.folketrygdloven.kalkulator.steg.fastsettskjæringstidspunkt;
 
 import static java.util.Collections.emptyList;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -88,8 +89,10 @@ public class AvklaringsbehovUtlederFastsettBeregningsaktiviteterFP implements Av
 	    var ytelseFilter = new YtelseFilterDto(aktørYtelse).før(skjæringstidspunkt);
 
 	    var nyligsteVedtak = MeldekortUtils.sisteVedtakFørStpForType(ytelseFilter, skjæringstidspunkt, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER));
-	    var nyligsteMeldekort = nyligsteVedtak.flatMap(nv -> MeldekortUtils.sisteHeleMeldekortFørStp(ytelseFilter, nv, skjæringstidspunkt, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER)));
-	    return nyligsteMeldekort.map(MeldekortUtils.UtbetalingMedNormertUtbetalingsprosent::fullUtbetaling).orElse(true);
+	    var nyligsteMeldekortUtbetalingsgrad = nyligsteVedtak
+            .flatMap(nv -> MeldekortUtils.snittUtbetalingsgradSistePeriodeFørStp(ytelseFilter, nv, skjæringstidspunkt, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER)));
+        // Sann unntatt når siste 2ukersperiode før STP har utbetalingsgrad og den er mindre enn 1 (=100%)
+	    return nyligsteMeldekortUtbetalingsgrad.filter(u -> u.compareTo(BigDecimal.ONE) < 0).isEmpty();
     }
 
     private static boolean harIngenAktivitetMedType(List<OpptjeningAktivitetType> opptjeningsaktivitetTyper, OpptjeningAktivitetType aktivitetType) {
