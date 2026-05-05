@@ -2,6 +2,7 @@ package no.nav.folketrygdloven.beregningsgrunnlag.ytelse.dagpengerelleraap;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
@@ -28,7 +29,7 @@ public class MapDagsatsOgBeregnetPrÅr {
             }
         }
         var relevanteInntekter = getInntekterForEnkeltdagerFørStpForDPellerAAP(inntektsgrunnlag, stp);
-        var beregningsperiodeForYtelse = getBeregningsperiodeForYtelse(relevanteInntekter);
+        var beregningsperiodeForYtelse = getBeregningsperiodeForYtelse(relevanteInntekter, stp);
         var antallVirkedager = Virkedager.beregnAntallVirkedager(beregningsperiodeForYtelse);
         var inntekterIBeregningsperiode = relevanteInntekter.stream()
             .filter(pi -> pi.getPeriode().overlapper(beregningsperiodeForYtelse))
@@ -57,25 +58,25 @@ public class MapDagsatsOgBeregnetPrÅr {
         return perioder;
     }
 
-    private static Periode getBeregningsperiodeForYtelse(List<Periodeinntekt> relevanteInntekter) {
+    private static Periode getBeregningsperiodeForYtelse(List<Periodeinntekt> relevanteInntekter, LocalDate stp) {
+        var fikspunkt = stp.minusWeeks(1).with(DayOfWeek.SUNDAY);
         var sisteDagMedYtelseUtbetaling = relevanteInntekter.stream()
+            .filter(pi -> !pi.getPeriode().getTom().isAfter(fikspunkt))
             .max(Comparator.comparing(pi -> pi.getPeriode().getFom()))
+            .or(() -> relevanteInntekter.stream().max(Comparator.comparing(pi -> pi.getPeriode().getFom())))
             .orElseThrow()
             .getFom();
-        /*if (!DayOfWeek.SUNDAY.equals(sisteDagMedYtelseUtbetaling.getDayOfWeek())) {
-            sisteDagMedYtelseUtbetaling = sisteDagMedYtelseUtbetaling.minusWeeks(1).with(DayOfWeek.SUNDAY);
-        }*/
         return Periode.of(sisteDagMedYtelseUtbetaling.minusDays(13), sisteDagMedYtelseUtbetaling);
     }
 
     private static BigDecimal getBeregnetPrÅr(List<Periodeinntekt> inntekterIBeregningsperiode, int antallVirkedager, BigDecimal dagsats, boolean medUtbetalingsfaktor) {
-        var snittDagsats = medUtbetalingsfaktor ? getSnittDagsatsMedUtbetalingsfaktor(inntekterIBeregningsperiode, antallVirkedager) : dagsats;
+        var snittDagsats = medUtbetalingsfaktor ? getSnittDagsatsMedUtbetalingsfaktor(inntekterIBeregningsperiode, dagsats, antallVirkedager) : dagsats;
         return snittDagsats.multiply(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP.getInntektPeriodeType().getAntallPrÅr()).setScale(0, RoundingMode.HALF_EVEN);
     }
 
-    private static BigDecimal getSnittDagsatsMedUtbetalingsfaktor(List<Periodeinntekt> inntekterIBeregningsperiode, int antallVirkedager) {
+    private static BigDecimal getSnittDagsatsMedUtbetalingsfaktor(List<Periodeinntekt> inntekterIBeregningsperiode, BigDecimal dagsats, int antallVirkedager) {
         return inntekterIBeregningsperiode.stream()
-            .map(pi -> pi.getInntekt().multiply(pi.getUtbetalingsfaktor().orElseThrow()))
+            .map(pi -> dagsats.multiply(pi.getUtbetalingsfaktor().orElseThrow()))
             .reduce(BigDecimal::add)
             .orElse(BigDecimal.ZERO)
             .divide(BigDecimal.valueOf(antallVirkedager), 10, RoundingMode.HALF_EVEN);

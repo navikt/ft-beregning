@@ -48,9 +48,9 @@ class MapDagsatsOgBeregnetPrÅrTest {
 
     @Test
     void skal_bruke_enkeltdager_når_DP_fra_ytelse_men_ingen_ytelse_vedtak() {
-        leggTilPeriodeinntektFraYtelseEnkeltdag(1000, førStp(3));
-        leggTilPeriodeinntektFraYtelseEnkeltdag(1000, førStp(4));
         leggTilPeriodeinntektFraYtelseEnkeltdag(1000, førStp(5));
+        leggTilPeriodeinntektFraYtelseEnkeltdag(1000, førStp(6));
+        leggTilPeriodeinntektFraYtelseEnkeltdag(1000, førStp(7));
 
         leggTilPeriodeinntektFraYtelseEnkeltdag(1000, førStp(10));
         leggTilPeriodeinntektFraYtelseEnkeltdag(1000, førStp(11));
@@ -64,8 +64,8 @@ class MapDagsatsOgBeregnetPrÅrTest {
 
     @Test
     void skal_kun_bruke_inntekter_innenfor_beregningsperioden() {
-        leggTilPeriodeinntektFraYtelseEnkeltdag(20, førStp(17), 0.5);
-        leggTilPeriodeinntektFraYtelseEnkeltdag(20, førStp(18), 0.5);
+        leggTilPeriodeinntektFraYtelseEnkeltdag(1000, førStp(17), 0.5);
+        leggTilPeriodeinntektFraYtelseEnkeltdag(1000, førStp(18), 0.5);
 
         leggTilPeriodeinntektFraYtelseEnkeltdag(2000, førStp(3));
         leggTilPeriodeinntektFraYtelseEnkeltdag(2000, førStp(4));
@@ -73,13 +73,14 @@ class MapDagsatsOgBeregnetPrÅrTest {
         leggTilPeriodeinntektFraYtelseEnkeltdag(2000, førStp(10));
         leggTilPeriodeinntektFraYtelseEnkeltdag(2000, førStp(11));
 
-        leggTilPeriodeinntektFraYtelseEnkeltdag(9999, STP.plusDays(1), 0);
-        leggTilPeriodeinntektFraYtelseEnkeltdag(9999, STP.plusDays(2), 0);
+        leggTilPeriodeinntektFraYtelseEnkeltdag(2100, STP.plusDays(1), 0);
+        leggTilPeriodeinntektFraYtelseEnkeltdag(2100, STP.plusDays(2), 0);
         inntektsgrunnlag.setDagsatsYtelseDpAapVedSkjæringstidspunkt(2000);
 
         var resultat = MapDagsatsOgBeregnetPrÅr.regnUtSnittInntektForDPellerAAP(inntektsgrunnlag, AktivitetStatus.DP, STP, true);
 
         assertThat(resultat.dagsats()).isEqualByComparingTo(BigDecimal.valueOf(2000));
+        // 5 av 10 dager med inntekt gir 50% utbetaling
         assertThat(resultat.beregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(260000));
     }
 
@@ -94,7 +95,7 @@ class MapDagsatsOgBeregnetPrÅrTest {
 
         var resultat = MapDagsatsOgBeregnetPrÅr.regnUtSnittInntektForDPellerAAP(inntektsgrunnlag, AktivitetStatus.DP, STP, true);
 
-        // vektetBeregnetPrÅr = (1611*1 + 1611*1 + 1611*0.5 + 1611*0.5 + 1611*0.5) / 10 * 260 = 617.45 * 260 = 160537.0
+        // vektetBeregnetPrÅr = 1611 * (1 + 1 + 0.5 + 0.5 + 0.5) / 10 * 260 = 563,85 * 260 = 146601
         assertThat(resultat.dagsats()).isEqualByComparingTo(BigDecimal.valueOf(1611));
         assertThat(resultat.beregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(146601));
     }

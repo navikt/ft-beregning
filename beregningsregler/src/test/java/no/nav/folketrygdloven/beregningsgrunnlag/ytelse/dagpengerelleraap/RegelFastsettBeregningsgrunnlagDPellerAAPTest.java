@@ -32,7 +32,7 @@ import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 
 class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
 
-    private LocalDate skjæringstidspunkt = LocalDate.of(2018, Month.JANUARY, 15);
+    private final LocalDate skjæringstidspunkt = LocalDate.of(2018, Month.JANUARY, 15);
 
     @Test
     void skalForeslåBeregningsgrunnlagForDagpenger() {
@@ -42,7 +42,7 @@ class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
         inntektsgrunnlag.setDagsatsYtelseDpAapVedSkjæringstidspunkt(dagsats);
         var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag,
             Collections.singletonList(AktivitetStatus.DP));
-        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().getFirst();
 
         //Act
         var evaluation = new RegelFastsettBeregningsgrunnlagDPellerAAP().evaluer(grunnlag);
@@ -70,7 +70,7 @@ class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
         var inntektsgrunnlag = lagInntektsgrunnlagForMeldekortsperiode(dagsats, 0.75);
         inntektsgrunnlag.setDagsatsYtelseDpAapVedSkjæringstidspunkt(dagsats);
         var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.AAP));
-        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().getFirst();
 
         //Act
         var evaluation = new RegelFastsettBeregningsgrunnlagDPellerAAP().evaluer(grunnlag);
@@ -94,7 +94,7 @@ class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
     @Test
     void caseFraProd() {
         //Arrange
-        var dagsats = new BigDecimal("1611");
+        var dagsats = BigDecimal.valueOf(1611);
         var ig = new Inntektsgrunnlag();
         ig.leggTilPeriodeinntekt(lagInntektsgrunnlagForDag(1611, LocalDate.of(2024,6,17)));
         ig.leggTilPeriodeinntekt(lagInntektsgrunnlagForDag(1611, LocalDate.of(2024,6,18)));
@@ -112,7 +112,7 @@ class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
         ig.leggTilPeriodeinntekt(lagInntektsgrunnlagForDag(1611, LocalDate.of(2024,6,30)));
         ig.setDagsatsYtelseDpAapVedSkjæringstidspunkt(dagsats);
         var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(LocalDate.of(2024,7,1), ig, Collections.singletonList(AktivitetStatus.AAP));
-        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().getFirst();
 
         //Act
         var evaluation = new RegelFastsettBeregningsgrunnlagDPellerAAP().evaluer(grunnlag);
@@ -122,8 +122,7 @@ class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
         var regelResultat = getRegelResultat(evaluation, "input");
         assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
 
-        var periode = new Periode(skjæringstidspunkt, null);
-
+        // Forventer dagsats ved stp (1611) * 260
         var brutto = BigDecimal.valueOf(418_860);
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.F_14_7, AktivitetStatus.AAP, brutto.doubleValue());
         var bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.AAP);
@@ -139,7 +138,7 @@ class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
         var beregnetPrÅr = new BigDecimal(324423);
         var inntektsgrunnlag = lagInntektsgrunnlagForMeldekortsperiode(dagsats, 0.75);
         var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.AAP));
-        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().getFirst();
         BeregningsgrunnlagPrStatus.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.AAP))
             .medBeregnetPrÅr(beregnetPrÅr)
             .medFastsattAvSaksbehandler(true)
@@ -171,7 +170,7 @@ class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
         var inntektsgrunnlag = lagInntektsgrunnlagForMeldekortsperiode(dagsats, 0.75);
         inntektsgrunnlag.setDagsatsYtelseDpAapVedSkjæringstidspunkt(dagsats);
         var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.AAP, AktivitetStatus.SN));
-        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().getFirst();
 
         //Act
         var evaluation = new RegelFastsettBeregningsgrunnlagDPellerAAP().evaluer(grunnlag);
@@ -202,7 +201,7 @@ class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
         var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.DP));
         var bgPrStatus = beregningsgrunnlag.getBeregningsgrunnlagPerioder().stream().map(p -> p.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP)).findFirst().get();//NOSONAR
         BeregningsgrunnlagPrStatus.builder(bgPrStatus).medFastsattAvSaksbehandler(true).medBesteberegningPrÅr(brutto).build();
-        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().getFirst();
 
         //Act
         var evaluation = new RegelFastsettBeregningsgrunnlagDPellerAAP().evaluer(grunnlag);
@@ -226,7 +225,7 @@ class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
         var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, List.of(AktivitetStatus.DP, AktivitetStatus.SN));
         var bgPrStatus = beregningsgrunnlag.getBeregningsgrunnlagPerioder().stream().map(p -> p.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP)).findFirst().get();//NOSONAR
         BeregningsgrunnlagPrStatus.builder(bgPrStatus).medFastsattAvSaksbehandler(true).medBesteberegningPrÅr(brutto).build();
-        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().getFirst();
 
         //Act
         var evaluation = new RegelFastsettBeregningsgrunnlagDPellerAAP().evaluer(grunnlag);
@@ -251,7 +250,7 @@ class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
         var beregningsgrunnlag = Beregningsgrunnlag.builder(settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag,
             List.of(AktivitetStatus.DP, AktivitetStatus.ATFL), Collections.singletonList(Arbeidsforhold.nyttArbeidsforholdHosVirksomhet(skjæringstidspunkt.minusYears(1), "12345"))))
             .medYtelsesSpesifiktGrunnlag(new ForeldrepengerGrunnlag(true)).build();
-        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().getFirst();
         var dp = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP);
         BeregningsgrunnlagPrStatus.builder(dp).medFastsattAvSaksbehandler(true).medBesteberegningPrÅr(besteberegning).build();
         var atfl = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.ATFL);
@@ -317,7 +316,7 @@ class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
         inntektsgrunnlag.setDagsatsYtelseDpAapVedSkjæringstidspunkt(1650);
 
         var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.AAP));
-        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().getFirst();
 
         //Act
         var evaluation = new RegelFastsettBeregningsgrunnlagDPellerAAP().evaluer(grunnlag);
@@ -329,6 +328,7 @@ class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
         var periode = new Periode(skjæringstidspunkt, null);
         assertThat(grunnlag.getBeregningsgrunnlagPeriode()).isEqualTo(periode);
 
+        // Forventer dagsats ved stp (1650) * 260
         var brutto = BigDecimal.valueOf(429000);
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.F_14_7, AktivitetStatus.AAP, brutto.doubleValue());
         var bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.AAP);
@@ -364,7 +364,7 @@ class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
 
         inntektsgrunnlag.setDagsatsYtelseDpAapVedSkjæringstidspunkt(2000);
         var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.AAP));
-        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().getFirst();
 
         //Act
         var evaluation = new RegelFastsettBeregningsgrunnlagDPellerAAP().evaluer(grunnlag);
@@ -376,6 +376,7 @@ class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
         var periode = new Periode(skjæringstidspunkt, null);
         assertThat(grunnlag.getBeregningsgrunnlagPeriode()).isEqualTo(periode);
 
+        // Forventer dagsats ved stp (2000) * 260
         var brutto = BigDecimal.valueOf(520000);
         verifiserBeregningsgrunnlagBruttoPrPeriodeType(grunnlag, BeregningsgrunnlagHjemmel.F_14_7, AktivitetStatus.AAP, brutto.doubleValue());
         var bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.AAP);

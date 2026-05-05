@@ -128,7 +128,7 @@ class ForeslåBeregningsgrunnlagDPellerAAPKombinasjonMedAnnenStatusTest {
         var p = Periode.of(STP, STP.plusMonths(1));
         var periode = lagPeriodeMedStatus(List.of(dpStatus, arbeid), p);
         var utbetalingsgrad = BigDecimal.valueOf(1);
-        var periodeinntektDagpenger = lagPeriodeinntektFraYtelseEnkeltdag(førStp(1), 1000, utbetalingsgrad);
+        var periodeinntektDagpenger = lagPeriodeinntektFraYtelseEnkeltdag(førStp(5), 1000, utbetalingsgrad);
         var periodeinntektArbeid = lagPeriodeinntektFraYtelse(p, BigDecimal.TEN, utbetalingsgrad, Inntektskategori.ARBEIDSTAKER);
         var inntektsgrunnlag = new Inntektsgrunnlag();
         inntektsgrunnlag.leggTilPeriodeinntekt(periodeinntektDagpenger);
@@ -144,16 +144,45 @@ class ForeslåBeregningsgrunnlagDPellerAAPKombinasjonMedAnnenStatusTest {
     }
 
     @Test
-    void skal_beregne_pr_dag_fra_en_periode_som_ikke_er_14_dager_med_varierende_dagsats() {
+    void skal_beregne_pr_dag_fra_en_periode_som_ikke_er_14_dager_full_aap_utbetaling_med_økt_dagsats_stp() {
         // Arrange
         var dpStatus = lagStatus(AktivitetStatus.DP);
         var arbeid = lagArbeid();
         var p = Periode.of(STP, STP.plusMonths(1));
         var periode = lagPeriodeMedStatus(List.of(dpStatus, arbeid), p);
-        var p1 = lagPeriodeinntektFraYtelseEnkeltdag(førStp(1), 500, BigDecimal.valueOf(1));
-        var p2 = lagPeriodeinntektFraYtelseEnkeltdag(førStp(2), 2000, BigDecimal.valueOf(1));
-        var p3 = lagPeriodeinntektFraYtelseEnkeltdag(førStp(5), 2000, BigDecimal.valueOf(1));
-        var p4 = lagPeriodeinntektFraYtelseEnkeltdag(førStp(6), 2500, BigDecimal.valueOf(1));
+        var p1 = lagPeriodeinntektFraYtelseEnkeltdag(førStp(5), 1900, BigDecimal.valueOf(1));
+        var p2 = lagPeriodeinntektFraYtelseEnkeltdag(førStp(6), 1900, BigDecimal.valueOf(1));
+        var p3 = lagPeriodeinntektFraYtelseEnkeltdag(førStp(7), 1900, BigDecimal.valueOf(1));
+        var p4 = lagPeriodeinntektFraYtelseEnkeltdag(førStp(8), 1900, BigDecimal.valueOf(1));
+        var periodeinntektArbeid = lagPeriodeinntektFraYtelse(p, BigDecimal.TEN, BigDecimal.valueOf(1), Inntektskategori.ARBEIDSTAKER);
+        var inntektsgrunnlag = new Inntektsgrunnlag();
+        inntektsgrunnlag.leggTilPeriodeinntekt(p1);
+        inntektsgrunnlag.leggTilPeriodeinntekt(p2);
+        inntektsgrunnlag.leggTilPeriodeinntekt(p3);
+        inntektsgrunnlag.leggTilPeriodeinntekt(p4);
+
+        inntektsgrunnlag.leggTilPeriodeinntekt(periodeinntektArbeid);
+        inntektsgrunnlag.setDagsatsYtelseDpAapVedSkjæringstidspunkt(2000);
+        byggBG(periode, inntektsgrunnlag);
+
+        // Act
+        kjørRegel(periode);
+
+        // Assert - forventer DP = 40% (4/10 dager) av full utbetaling 2000 kr/dag * 260
+        assertThat(dpStatus.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(208000));
+    }
+
+    @Test
+    void skal_beregne_pr_dag_fra_en_periode_som_ikke_er_14_dager_med_varierende_grad() {
+        // Arrange
+        var dpStatus = lagStatus(AktivitetStatus.DP);
+        var arbeid = lagArbeid();
+        var p = Periode.of(STP, STP.plusMonths(1));
+        var periode = lagPeriodeMedStatus(List.of(dpStatus, arbeid), p);
+        var p1 = lagPeriodeinntektFraYtelseEnkeltdag(førStp(5), 500, BigDecimal.valueOf(1));
+        var p2 = lagPeriodeinntektFraYtelseEnkeltdag(førStp(6), 500, BigDecimal.valueOf(0.5));
+        var p3 = lagPeriodeinntektFraYtelseEnkeltdag(førStp(7), 500, BigDecimal.valueOf(0.25));
+        var p4 = lagPeriodeinntektFraYtelseEnkeltdag(førStp(8), 500, BigDecimal.valueOf(0.9));
         var periodeinntektArbeid = lagPeriodeinntektFraYtelse(p, BigDecimal.TEN, BigDecimal.valueOf(1), Inntektskategori.ARBEIDSTAKER);
         var inntektsgrunnlag = new Inntektsgrunnlag();
         inntektsgrunnlag.leggTilPeriodeinntekt(p1);
@@ -168,55 +197,26 @@ class ForeslåBeregningsgrunnlagDPellerAAPKombinasjonMedAnnenStatusTest {
         // Act
         kjørRegel(periode);
 
-        // Assert
-        assertThat(dpStatus.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(182_000));
+        // Assert - forventer DP = 26,5% (2,65/10 dager) av full utbetaling 500 kr/dag * 260
+        assertThat(dpStatus.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(34450));
     }
 
     @Test
-    void skal_beregne_pr_dag_fra_en_periode_som_ikke_er_14_dager_med_varierende_dagsats_og_grad() {
+    void skal_beregne_pr_dag_fra_en_periode_som_ikke_er_14_dager_med_varierende_grad_utenfor_14_dagers_periode() {
         // Arrange
         var dpStatus = lagStatus(AktivitetStatus.DP);
         var arbeid = lagArbeid();
         var p = Periode.of(STP, STP.plusMonths(1));
         var periode = lagPeriodeMedStatus(List.of(dpStatus, arbeid), p);
-        var p1 = lagPeriodeinntektFraYtelseEnkeltdag(førStp(1), 500, BigDecimal.valueOf(1));
-        var p2 = lagPeriodeinntektFraYtelseEnkeltdag(førStp(2), 2000, BigDecimal.valueOf(0.5));
-        var p3 = lagPeriodeinntektFraYtelseEnkeltdag(førStp(5), 2000, BigDecimal.valueOf(0.25));
-        var p4 = lagPeriodeinntektFraYtelseEnkeltdag(førStp(6), 2500, BigDecimal.valueOf(0.9));
-        var periodeinntektArbeid = lagPeriodeinntektFraYtelse(p, BigDecimal.TEN, BigDecimal.valueOf(1), Inntektskategori.ARBEIDSTAKER);
-        var inntektsgrunnlag = new Inntektsgrunnlag();
-        inntektsgrunnlag.leggTilPeriodeinntekt(p1);
-        inntektsgrunnlag.leggTilPeriodeinntekt(p2);
-        inntektsgrunnlag.leggTilPeriodeinntekt(p3);
-        inntektsgrunnlag.leggTilPeriodeinntekt(p4);
-
-        inntektsgrunnlag.leggTilPeriodeinntekt(periodeinntektArbeid);
-        inntektsgrunnlag.setDagsatsYtelseDpAapVedSkjæringstidspunkt(500);
-        byggBG(periode, inntektsgrunnlag);
-
-        // Act
-        kjørRegel(periode);
-
-        // Assert
-        assertThat(dpStatus.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(110_500));
-    }
-
-    @Test
-    void skal_beregne_pr_dag_fra_en_periode_som_ikke_er_14_dager_med_varierende_dagsats_og_grad_og_inntekter_utenfor_14_dagers_periode() {
-        // Arrange
-        var dpStatus = lagStatus(AktivitetStatus.DP);
-        var arbeid = lagArbeid();
-        var p = Periode.of(STP, STP.plusMonths(1));
-        var periode = lagPeriodeMedStatus(List.of(dpStatus, arbeid), p);
-        var p1 = lagPeriodeinntektFraYtelseEnkeltdag(førStp(1), 500, BigDecimal.valueOf(1));
-        var p2 = lagPeriodeinntektFraYtelseEnkeltdag(førStp(2), 2000, BigDecimal.valueOf(0.5));
-        var p3 = lagPeriodeinntektFraYtelseEnkeltdag(førStp(5), 2000, BigDecimal.valueOf(0.25));
-        var p4 = lagPeriodeinntektFraYtelseEnkeltdag(førStp(6), 2500, BigDecimal.valueOf(0.9));
+        var p1 = lagPeriodeinntektFraYtelseEnkeltdag(førStp(5), 500, BigDecimal.valueOf(1));
+        var p2 = lagPeriodeinntektFraYtelseEnkeltdag(førStp(6), 500, BigDecimal.valueOf(0.5));
+        var p3 = lagPeriodeinntektFraYtelseEnkeltdag(førStp(7), 500, BigDecimal.valueOf(0.25));
+        var p4 = lagPeriodeinntektFraYtelseEnkeltdag(førStp(8), 500, BigDecimal.valueOf(0.9));
 
         // Inntekter som ikke skal medregnes i snitt
-        var p5 = lagPeriodeinntektFraYtelseEnkeltdag(førStp(20), 2500, BigDecimal.valueOf(0.9));
-        var p6 = lagPeriodeinntektFraYtelseEnkeltdag(førStp(21), 2500, BigDecimal.valueOf(0.9));
-        var p7 = lagPeriodeinntektFraYtelseEnkeltdag(førStp(22), 2500, BigDecimal.valueOf(0.9));
+        var p5 = lagPeriodeinntektFraYtelseEnkeltdag(førStp(20), 500, BigDecimal.valueOf(0.9));
+        var p6 = lagPeriodeinntektFraYtelseEnkeltdag(førStp(21), 500, BigDecimal.valueOf(0.9));
+        var p7 = lagPeriodeinntektFraYtelseEnkeltdag(førStp(22), 500, BigDecimal.valueOf(0.9));
 
         var periodeinntektArbeid = lagPeriodeinntektFraYtelse(p, BigDecimal.TEN, BigDecimal.valueOf(1), Inntektskategori.ARBEIDSTAKER);
         var inntektsgrunnlag = new Inntektsgrunnlag();
@@ -235,8 +235,8 @@ class ForeslåBeregningsgrunnlagDPellerAAPKombinasjonMedAnnenStatusTest {
         // Act
         kjørRegel(periode);
 
-        // Assert
-        assertThat(dpStatus.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(110_500));
+        // Assert  - forventer DP = 26,5% (2,65/10 dager) av full utbetaling 500 kr/dag * 260
+        assertThat(dpStatus.getBeregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(34450));
     }
 
     private LocalDate førStp(int i) {
@@ -305,7 +305,7 @@ class ForeslåBeregningsgrunnlagDPellerAAPKombinasjonMedAnnenStatusTest {
 	}
 
 	private Inntektsgrunnlag lagInntektsgrunnlagFraMeldekort(BigDecimal dagsats, BigDecimal utbetalingsgrad) {
-        var fom = STP.minusDays(14);
+        var fom = STP.minusDays(21);
         var inntektsgrunnlag = new Inntektsgrunnlag();
         fom.datesUntil(STP.plusDays(1)).filter(d -> !(d.getDayOfWeek().equals(DayOfWeek.SATURDAY) || d.getDayOfWeek().equals(DayOfWeek.SUNDAY))).forEach(d -> {
             inntektsgrunnlag.leggTilPeriodeinntekt(Periodeinntekt.builder()

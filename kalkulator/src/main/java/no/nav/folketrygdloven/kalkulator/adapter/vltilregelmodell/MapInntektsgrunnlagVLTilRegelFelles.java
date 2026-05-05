@@ -41,6 +41,7 @@ import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.ArbeidType;
+import no.nav.folketrygdloven.kalkulus.kodeverk.YtelseKilde;
 import no.nav.folketrygdloven.kalkulus.kodeverk.YtelseType;
 import no.nav.fpsak.tidsserie.LocalDateSegment;
 
@@ -191,15 +192,27 @@ public class MapInntektsgrunnlagVLTilRegelFelles implements MapInntektsgrunnlagV
         var vedtaksdagsatsSkjæringstidspunkt = nyesteVedtakForDagsats.flatMap(YtelseDto::getVedtaksDagsats).map(Beløp::verdi)
             .or(() -> MeldekortUtils.sisteAnvisteDagsatsFørStpForType(ytelseFilter, skjæringstidspunkt, Set.of(ytelseType)))
             .orElse(BigDecimal.ZERO);
-        // Legger til Periodeinntekt som består av vedtaksdagsats og utbetalingsgrad. Basert på anvisning/utbetaling.
-        // Dersom det finnes vedtak men ingen anvisning siste 4 uker, så brytes forutsetningen om aktiv ytelse opp til STP
-        MeldekortUtils.utbetalingsgradForIntervallYtelse(ytelseFilter, inntektsintervall, Set.of(ytelseType)).stream()
-            .map(s -> new LocalDateSegment<>(s.getLocalDateInterval(),
-                new DagsatsUtbetalingsgrad(vedtaksdagsatsSkjæringstidspunkt, s.getValue())))
-            .flatMap(MapInntektsgrunnlagVLTilRegelFelles::mapAnvistPeriodeTilEnkeltdager)
-            .filter(pi -> inntektsintervall.inkluderer(pi.getPeriode().getFom()))
-            .forEach(inntektsgrunnlag::leggTilPeriodeinntekt);
         inntektsgrunnlag.setDagsatsYtelseDpAapVedSkjæringstidspunkt(vedtaksdagsatsSkjæringstidspunkt);
+        var sisteHeleMeldekortDersomArena = nyesteVedtakForDagsats.filter(v -> YtelseKilde.ARENA.equals(v.getYtelseKilde()))
+            .flatMap(v -> MeldekortUtils.sisteHeleMeldekortFørStp(ytelseFilter, v, skjæringstidspunkt, Set.of(ytelseType)));
+        if (sisteHeleMeldekortDersomArena.isPresent() ) {
+            // Bruker siste hele meldekortperiode for Arena: Kommer alltid i 2ukersperioder + STP vil påvirke utbetalingsgrad
+            var mk = sisteHeleMeldekortDersomArena.get();
+            var segment = new LocalDateSegment<>(mk.utbetaling().getAnvistFOM(), mk.utbetaling().getAnvistTOM(),
+                new DagsatsUtbetalingsgrad(vedtaksdagsatsSkjæringstidspunkt, mk.normertUtbetalingsprosent().tilNormalisertGrad()));
+            mapAnvistPeriodeTilEnkeltdager(segment)
+                .filter(pi -> inntektsintervall.inkluderer(pi.getPeriode().getFom()))
+                .forEach(inntektsgrunnlag::leggTilPeriodeinntekt);
+        } else {
+            // Legger til Periodeinntekt som består av vedtaksdagsats og utbetalingsgrad. Basert på anvisning/utbetaling.
+            // Dersom det finnes vedtak men ingen anvisning siste 4 uker, så brytes forutsetningen om aktiv ytelse opp til STP
+            MeldekortUtils.utbetalingsgradForIntervallYtelse(ytelseFilter, inntektsintervall, Set.of(ytelseType))
+                .stream()
+                .map(s -> new LocalDateSegment<>(s.getLocalDateInterval(), new DagsatsUtbetalingsgrad(vedtaksdagsatsSkjæringstidspunkt, s.getValue())))
+                .flatMap(MapInntektsgrunnlagVLTilRegelFelles::mapAnvistPeriodeTilEnkeltdager)
+                .filter(pi -> inntektsintervall.inkluderer(pi.getPeriode().getFom()))
+                .forEach(inntektsgrunnlag::leggTilPeriodeinntekt);
+        }
     }
 
     private static Stream<Periodeinntekt> mapAnvistPeriodeTilEnkeltdager(LocalDateSegment<DagsatsUtbetalingsgrad> segment) {

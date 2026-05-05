@@ -464,11 +464,11 @@ class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
         var dpMånedsInntekter = resultatBG.getInntektsgrunnlag().getPeriodeinntekter().stream()
 				.filter(mi -> mi.getInntektskilde().equals(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP))
 				.toList();
-        assertThat(dpMånedsInntekter).hasSize(16);
+        assertThat(dpMånedsInntekter).hasSize(14);
         var dagsats = BigDecimal.valueOf(MELDEKORTSATS1);
-        assertThat(dpMånedsInntekter.stream().allMatch(m ->m.getInntekt().compareTo(dagsats) == 0)).isTrue();
-        assertThat(dpMånedsInntekter.stream().filter(m ->m.getUtbetalingsfaktor().orElseThrow().compareTo(BigDecimal.ONE) == 0).toList()).hasSize(14);
-        assertThat(dpMånedsInntekter.stream().filter(m ->m.getUtbetalingsfaktor().orElseThrow().compareTo(BigDecimal.ONE) != 0).toList()).hasSize(2);
+        assertThat(dpMånedsInntekter)
+            .allMatch(m ->m.getInntekt().compareTo(dagsats) == 0)
+            .allMatch(m ->m.getUtbetalingsfaktor().orElseThrow().compareTo(BigDecimal.ONE) == 0);
 	}
 
 	@Test
@@ -489,8 +489,9 @@ class MapFullføreBeregningsgrunnlagFraVLTilRegelTest {
 				.toList();
 		assertThat(dpMånedsInntekter).hasSize(6);
         var dagsats = BigDecimal.valueOf(MELDEKORTSATS1);
-        assertThat(dpMånedsInntekter.stream().allMatch(m ->m.getInntekt().compareTo(dagsats) == 0)).isTrue();
-        assertThat(dpMånedsInntekter.stream().allMatch(m ->m.getUtbetalingsfaktor().orElseThrow().compareTo(new BigDecimal("0.95")) == 0)).isTrue();
+        assertThat(dpMånedsInntekter)
+            .allMatch(m ->m.getInntekt().compareTo(dagsats) == 0)
+            .allMatch(m ->m.getUtbetalingsfaktor().orElseThrow().compareTo(new BigDecimal("0.95")) == 0);
 	}
 
 	@Test
