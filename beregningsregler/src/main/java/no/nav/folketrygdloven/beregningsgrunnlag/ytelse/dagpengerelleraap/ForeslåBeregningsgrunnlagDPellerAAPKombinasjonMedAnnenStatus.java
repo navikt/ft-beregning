@@ -29,6 +29,7 @@ class ForeslåBeregningsgrunnlagDPellerAAPKombinasjonMedAnnenStatus extends Leaf
 				.findFirst()
 				.orElseThrow(() -> new IllegalStateException("Ingen aktivitetstatus av type DP eller AAP funnet."));
 
+        // For dette tilfellet skal man bruke dagsats på skjæringstidspunktet for FP/SVP * snitt utbetalingsgrad i forutgående periode
         var dagsatsOgBeregnetPrÅr = MapDagsatsOgBeregnetPrÅr.regnUtSnittInntektForDPellerAAP(grunnlag.getInntektsgrunnlag(),
             bgPerStatus.getAktivitetStatus(), grunnlag.getSkjæringstidspunkt(), true);
         var dagsats = dagsatsOgBeregnetPrÅr.dagsats();

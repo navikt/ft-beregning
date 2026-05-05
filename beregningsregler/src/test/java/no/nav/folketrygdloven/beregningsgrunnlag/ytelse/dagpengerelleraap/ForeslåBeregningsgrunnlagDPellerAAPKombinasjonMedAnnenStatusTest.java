@@ -42,6 +42,7 @@ class ForeslåBeregningsgrunnlagDPellerAAPKombinasjonMedAnnenStatusTest {
 		var dagsats = BigDecimal.valueOf(1000);
 		var utbetalingsgrad = BigDecimal.valueOf(1);
 		var inntektsgrunnlag = lagInntektsgrunnlagFraMeldekort(dagsats, utbetalingsgrad);
+        inntektsgrunnlag.setDagsatsYtelseDpAapVedSkjæringstidspunkt(dagsats);
 		byggBG(periode, inntektsgrunnlag);
 
 		// Act
@@ -62,6 +63,7 @@ class ForeslåBeregningsgrunnlagDPellerAAPKombinasjonMedAnnenStatusTest {
 		var dagsats = BigDecimal.valueOf(1000);
 		var utbetalingsgrad = BigDecimal.valueOf(0.5);
 		var inntektsgrunnlag = lagInntektsgrunnlagFraMeldekort(dagsats, utbetalingsgrad);
+        inntektsgrunnlag.setDagsatsYtelseDpAapVedSkjæringstidspunkt(dagsats);
 		byggBG(periode, inntektsgrunnlag);
 
 		// Act
@@ -84,6 +86,7 @@ class ForeslåBeregningsgrunnlagDPellerAAPKombinasjonMedAnnenStatusTest {
 		var periodeinntekt = lagPeriodeinntektFraYtelse(p, dagsats, utbetalingsgrad, Inntektskategori.DAGPENGER);
 		var inntektsgrunnlag = new Inntektsgrunnlag();
 		inntektsgrunnlag.leggTilPeriodeinntekt(periodeinntekt);
+        inntektsgrunnlag.setDagsatsYtelseDpAapVedSkjæringstidspunkt(dagsats);
 		byggBG(periode, inntektsgrunnlag);
 
 		// Act
@@ -107,6 +110,7 @@ class ForeslåBeregningsgrunnlagDPellerAAPKombinasjonMedAnnenStatusTest {
 		var inntektsgrunnlag = new Inntektsgrunnlag();
 		inntektsgrunnlag.leggTilPeriodeinntekt(periodeinntektDagpenger);
 		inntektsgrunnlag.leggTilPeriodeinntekt(periodeinntektArbeid);
+        inntektsgrunnlag.setDagsatsYtelseDpAapVedSkjæringstidspunkt(dagsats);
 		byggBG(periode, inntektsgrunnlag);
 
 		// Act
@@ -129,6 +133,7 @@ class ForeslåBeregningsgrunnlagDPellerAAPKombinasjonMedAnnenStatusTest {
         var inntektsgrunnlag = new Inntektsgrunnlag();
         inntektsgrunnlag.leggTilPeriodeinntekt(periodeinntektDagpenger);
         inntektsgrunnlag.leggTilPeriodeinntekt(periodeinntektArbeid);
+        inntektsgrunnlag.setDagsatsYtelseDpAapVedSkjæringstidspunkt(1000);
         byggBG(periode, inntektsgrunnlag);
 
         // Act
@@ -157,6 +162,7 @@ class ForeslåBeregningsgrunnlagDPellerAAPKombinasjonMedAnnenStatusTest {
         inntektsgrunnlag.leggTilPeriodeinntekt(p4);
 
         inntektsgrunnlag.leggTilPeriodeinntekt(periodeinntektArbeid);
+        inntektsgrunnlag.setDagsatsYtelseDpAapVedSkjæringstidspunkt(500);
         byggBG(periode, inntektsgrunnlag);
 
         // Act
@@ -185,6 +191,7 @@ class ForeslåBeregningsgrunnlagDPellerAAPKombinasjonMedAnnenStatusTest {
         inntektsgrunnlag.leggTilPeriodeinntekt(p4);
 
         inntektsgrunnlag.leggTilPeriodeinntekt(periodeinntektArbeid);
+        inntektsgrunnlag.setDagsatsYtelseDpAapVedSkjæringstidspunkt(500);
         byggBG(periode, inntektsgrunnlag);
 
         // Act
@@ -222,6 +229,7 @@ class ForeslåBeregningsgrunnlagDPellerAAPKombinasjonMedAnnenStatusTest {
         inntektsgrunnlag.leggTilPeriodeinntekt(p7);
 
         inntektsgrunnlag.leggTilPeriodeinntekt(periodeinntektArbeid);
+        inntektsgrunnlag.setDagsatsYtelseDpAapVedSkjæringstidspunkt(500);
         byggBG(periode, inntektsgrunnlag);
 
         // Act

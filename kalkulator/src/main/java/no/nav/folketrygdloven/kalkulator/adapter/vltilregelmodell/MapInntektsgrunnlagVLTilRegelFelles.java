@@ -171,6 +171,13 @@ public class MapInntektsgrunnlagVLTilRegelFelles implements MapInntektsgrunnlagV
 						.map(periode -> !periode.getTom().isBefore(skjæringstidspunktBeregning)).orElse(false));
 	}
 
+    /*
+     * Mapper vedtak og anvisninger/utbetalinger av Dagpenger og Arbeidsavklaringspenger til Periodeinntekt.
+     * Konvensjoner:
+     * - Ser på intervall siste 4 uker før STP - da er vi stabile mhp forsinket/manglende meldekort
+     * - Endagsperioder med dagsats = gjeldende dagsats på STP og utbetalingsgrad for aktuell dag
+     * - Basert på regelverk om at ytelse på STP legges til grunn for beregningen, samt krav om rapportering fram til STP
+     */
     private void mapTilstøtendeYtelse(Inntektsgrunnlag inntektsgrunnlag,
                                       YtelseFilterDto ytelseFilter,
                                       LocalDate skjæringstidspunkt,
@@ -192,6 +199,7 @@ public class MapInntektsgrunnlagVLTilRegelFelles implements MapInntektsgrunnlagV
             .flatMap(MapInntektsgrunnlagVLTilRegelFelles::mapAnvistPeriodeTilEnkeltdager)
             .filter(pi -> inntektsintervall.inkluderer(pi.getPeriode().getFom()))
             .forEach(inntektsgrunnlag::leggTilPeriodeinntekt);
+        inntektsgrunnlag.setDagsatsYtelseDpAapVedSkjæringstidspunkt(vedtaksdagsatsSkjæringstidspunkt);
     }
 
     private static Stream<Periodeinntekt> mapAnvistPeriodeTilEnkeltdager(LocalDateSegment<DagsatsUtbetalingsgrad> segment) {

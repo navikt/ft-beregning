@@ -46,6 +46,7 @@ class ForeslåBeregningsgrunnlagDPellerAAPTest {
             .medUtbetalingsfaktor(utbetalingsgrad)
             .build())
             .forEach(inntektsgrunnlag::leggTilPeriodeinntekt);
+        inntektsgrunnlag.setDagsatsYtelseDpAapVedSkjæringstidspunkt(dagsats);
 		byggBG(periode, inntektsgrunnlag);
 
 		// Act
@@ -75,6 +76,7 @@ class ForeslåBeregningsgrunnlagDPellerAAPTest {
                 .medUtbetalingsfaktor(utbetalingsgrad)
                 .build())
             .forEach(inntektsgrunnlag::leggTilPeriodeinntekt);
+        inntektsgrunnlag.setDagsatsYtelseDpAapVedSkjæringstidspunkt(dagsats);
 		byggBG(periode, inntektsgrunnlag);
 
 		// Act
@@ -105,6 +107,7 @@ class ForeslåBeregningsgrunnlagDPellerAAPTest {
 				.build();
         var inntektsgrunnlag = new Inntektsgrunnlag();
 		inntektsgrunnlag.leggTilPeriodeinntekt(periodeinntekt);
+        inntektsgrunnlag.setDagsatsYtelseDpAapVedSkjæringstidspunkt(dagsats);
 		byggBG(periode, inntektsgrunnlag);
 
 		// Act
@@ -142,6 +145,7 @@ class ForeslåBeregningsgrunnlagDPellerAAPTest {
         var inntektsgrunnlag = new Inntektsgrunnlag();
 		inntektsgrunnlag.leggTilPeriodeinntekt(periodeinntektDagpenger);
 		inntektsgrunnlag.leggTilPeriodeinntekt(periodeinntektArbeid);
+        inntektsgrunnlag.setDagsatsYtelseDpAapVedSkjæringstidspunkt(dagsats);
 		byggBG(periode, inntektsgrunnlag);
 
 		// Act

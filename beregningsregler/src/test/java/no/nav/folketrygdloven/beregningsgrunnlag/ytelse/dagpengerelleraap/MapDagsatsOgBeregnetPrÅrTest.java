@@ -1,22 +1,22 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.ytelse.dagpengerelleraap;
 
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.NoSuchElementException;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
 
 class MapDagsatsOgBeregnetPrÅrTest {
 
@@ -35,6 +35,7 @@ class MapDagsatsOgBeregnetPrÅrTest {
         var dagsats = BigDecimal.valueOf(1200);
         var utbetalingsfaktor = BigDecimal.valueOf(0.8);
         leggTilPeriodeinntektForDPfraYtelse(dagsats, utbetalingsfaktor);
+        inntektsgrunnlag.setDagsatsYtelseDpAapVedSkjæringstidspunkt(dagsats);
 
         var resultatMedFaktor = MapDagsatsOgBeregnetPrÅr.regnUtSnittInntektForDPellerAAP(inntektsgrunnlag, AktivitetStatus.SP_AV_DP, STP, true);
         var resultatUtenFaktor = MapDagsatsOgBeregnetPrÅr.regnUtSnittInntektForDPellerAAP(inntektsgrunnlag, AktivitetStatus.SP_AV_DP, STP, false);
@@ -50,19 +51,21 @@ class MapDagsatsOgBeregnetPrÅrTest {
         leggTilPeriodeinntektFraYtelseEnkeltdag(1000, førStp(3));
         leggTilPeriodeinntektFraYtelseEnkeltdag(1000, førStp(4));
         leggTilPeriodeinntektFraYtelseEnkeltdag(1000, førStp(5));
+
         leggTilPeriodeinntektFraYtelseEnkeltdag(1000, førStp(10));
         leggTilPeriodeinntektFraYtelseEnkeltdag(1000, førStp(11));
+        inntektsgrunnlag.setDagsatsYtelseDpAapVedSkjæringstidspunkt(1000);
 
-        var resultat = MapDagsatsOgBeregnetPrÅr.regnUtSnittInntektForDPellerAAP(inntektsgrunnlag, AktivitetStatus.SP_AV_DP, STP, false);
+        var resultat = MapDagsatsOgBeregnetPrÅr.regnUtSnittInntektForDPellerAAP(inntektsgrunnlag, AktivitetStatus.SP_AV_DP, STP, true);
 
-        assertThat(resultat.dagsats()).isEqualByComparingTo(BigDecimal.valueOf(500));
+        assertThat(resultat.dagsats()).isEqualByComparingTo(BigDecimal.valueOf(1000));
         assertThat(resultat.beregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(500).multiply(ANTALL_VIRKEDAGER_I_ÅR));
     }
 
     @Test
     void skal_kun_bruke_inntekter_innenfor_beregningsperioden() {
-        leggTilPeriodeinntektFraYtelseEnkeltdag(20, førStp(17));
-        leggTilPeriodeinntektFraYtelseEnkeltdag(20, førStp(18));
+        leggTilPeriodeinntektFraYtelseEnkeltdag(20, førStp(17), 0.5);
+        leggTilPeriodeinntektFraYtelseEnkeltdag(20, førStp(18), 0.5);
 
         leggTilPeriodeinntektFraYtelseEnkeltdag(2000, førStp(3));
         leggTilPeriodeinntektFraYtelseEnkeltdag(2000, førStp(4));
@@ -70,29 +73,30 @@ class MapDagsatsOgBeregnetPrÅrTest {
         leggTilPeriodeinntektFraYtelseEnkeltdag(2000, førStp(10));
         leggTilPeriodeinntektFraYtelseEnkeltdag(2000, førStp(11));
 
-        leggTilPeriodeinntektFraYtelseEnkeltdag(9999, STP.plusDays(1));
-        leggTilPeriodeinntektFraYtelseEnkeltdag(9999, STP.plusDays(2));
+        leggTilPeriodeinntektFraYtelseEnkeltdag(9999, STP.plusDays(1), 0);
+        leggTilPeriodeinntektFraYtelseEnkeltdag(9999, STP.plusDays(2), 0);
+        inntektsgrunnlag.setDagsatsYtelseDpAapVedSkjæringstidspunkt(2000);
 
-        var resultat = MapDagsatsOgBeregnetPrÅr.regnUtSnittInntektForDPellerAAP(inntektsgrunnlag, AktivitetStatus.DP, STP, false);
+        var resultat = MapDagsatsOgBeregnetPrÅr.regnUtSnittInntektForDPellerAAP(inntektsgrunnlag, AktivitetStatus.DP, STP, true);
 
-        assertThat(resultat.dagsats()).isEqualByComparingTo(BigDecimal.valueOf(1000));
+        assertThat(resultat.dagsats()).isEqualByComparingTo(BigDecimal.valueOf(2000));
         assertThat(resultat.beregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(260000));
     }
 
     @Test
-    void skal_beregne_snitt_med_varierende_dagsats_og_utbetalingsfaktor() {
+    void skal_beregne_snitt_med_varierende_utbetalingsfaktor() {
         leggTilPeriodeinntektFraYtelseEnkeltdag(1611, førStp(3), 1);
         leggTilPeriodeinntektFraYtelseEnkeltdag(1611, førStp(4), 1);
         leggTilPeriodeinntektFraYtelseEnkeltdag(1611, førStp(5), 0.5);
-        leggTilPeriodeinntektFraYtelseEnkeltdag(2147, førStp(10), 0.5);
-        leggTilPeriodeinntektFraYtelseEnkeltdag(2147, førStp(11), 0.5);
+        leggTilPeriodeinntektFraYtelseEnkeltdag(1611, førStp(10), 0.5);
+        leggTilPeriodeinntektFraYtelseEnkeltdag(1611, førStp(11), 0.5);
+        inntektsgrunnlag.setDagsatsYtelseDpAapVedSkjæringstidspunkt(1611);
 
         var resultat = MapDagsatsOgBeregnetPrÅr.regnUtSnittInntektForDPellerAAP(inntektsgrunnlag, AktivitetStatus.DP, STP, true);
 
-        // vektetBeregnetPrÅr = (1611*1 + 1611*1 + 1611*0.5 + 2147*0.5 + 2147*0.5) / 10 * 260 = 617.45 * 260 = 160537.0
-        // snittDagsats (uvektet) = (1611+1611+1611+2147+2147) / 10 = 912.7
-        assertThat(resultat.dagsats()).isEqualByComparingTo(BigDecimal.valueOf(912.7));
-        assertThat(resultat.beregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(160537.0));
+        // vektetBeregnetPrÅr = (1611*1 + 1611*1 + 1611*0.5 + 1611*0.5 + 1611*0.5) / 10 * 260 = 617.45 * 260 = 160537.0
+        assertThat(resultat.dagsats()).isEqualByComparingTo(BigDecimal.valueOf(1611));
+        assertThat(resultat.beregnetPrÅr()).isEqualByComparingTo(BigDecimal.valueOf(146601));
     }
 
     @Test
@@ -104,6 +108,7 @@ class MapDagsatsOgBeregnetPrÅrTest {
             .medUtbetalingsfaktor(BigDecimal.ONE)
             .medInntektskategori(Inntektskategori.DAGPENGER)
             .build());
+        inntektsgrunnlag.setDagsatsYtelseDpAapVedSkjæringstidspunkt(1000);
 
         assertThatThrownBy(() -> MapDagsatsOgBeregnetPrÅr.regnUtSnittInntektForDPellerAAP(inntektsgrunnlag, AktivitetStatus.DP, STP, false))
             .isInstanceOf(IllegalStateException.class)
@@ -113,6 +118,8 @@ class MapDagsatsOgBeregnetPrÅrTest {
     @Test
     void skal_kaste_exception_når_ingen_inntekter_finnes() {
         assertThatThrownBy(() -> MapDagsatsOgBeregnetPrÅr.regnUtSnittInntektForDPellerAAP(inntektsgrunnlag, AktivitetStatus.DP, STP, false)).isInstanceOf(
+            NoSuchElementException.class);
+        assertThatThrownBy(() -> MapDagsatsOgBeregnetPrÅr.regnUtSnittInntektForDPellerAAP(inntektsgrunnlag, AktivitetStatus.DP, STP, true)).isInstanceOf(
             NoSuchElementException.class);
     }
 

@@ -1,5 +1,12 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.ytelse.dagpengerelleraap;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektsgrunnlag;
@@ -7,13 +14,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.In
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
 import no.nav.folketrygdloven.beregningsgrunnlag.util.Virkedager;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.time.LocalDate;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
 
 public class MapDagsatsOgBeregnetPrÅr {
 
@@ -35,7 +35,7 @@ public class MapDagsatsOgBeregnetPrÅr {
             .filter(pi -> Virkedager.beregnAntallVirkedager(pi.getFom(), pi.getTom()) == 1)
             .toList();
 
-        var dagsats = getSnittDagsats(inntekterIBeregningsperiode, antallVirkedager);
+        var dagsats = BigDecimal.valueOf(inntektsgrunnlag.getDagsatsYtelseDpAapVedSkjæringstidspunkt());
         var beregnetPrÅr = getBeregnetPrÅr(inntekterIBeregningsperiode, antallVirkedager, dagsats, medUtbetalingsfaktor);
         return new MapDagsatsOgBeregnetPrÅr.DagsatsOgBeregnetPrÅr(dagsats, beregnetPrÅr);
     }
@@ -62,20 +62,15 @@ public class MapDagsatsOgBeregnetPrÅr {
             .max(Comparator.comparing(pi -> pi.getPeriode().getFom()))
             .orElseThrow()
             .getFom();
+        /*if (!DayOfWeek.SUNDAY.equals(sisteDagMedYtelseUtbetaling.getDayOfWeek())) {
+            sisteDagMedYtelseUtbetaling = sisteDagMedYtelseUtbetaling.minusWeeks(1).with(DayOfWeek.SUNDAY);
+        }*/
         return Periode.of(sisteDagMedYtelseUtbetaling.minusDays(13), sisteDagMedYtelseUtbetaling);
-    }
-
-    private static BigDecimal getSnittDagsats(List<Periodeinntekt> inntekterIBeregningsperiode, int antallVirkedager) {
-        return inntekterIBeregningsperiode.stream()
-            .map(Periodeinntekt::getInntekt)
-            .reduce(BigDecimal::add)
-            .orElse(BigDecimal.ZERO)
-            .divide(BigDecimal.valueOf(antallVirkedager), 10, RoundingMode.HALF_EVEN);
     }
 
     private static BigDecimal getBeregnetPrÅr(List<Periodeinntekt> inntekterIBeregningsperiode, int antallVirkedager, BigDecimal dagsats, boolean medUtbetalingsfaktor) {
         var snittDagsats = medUtbetalingsfaktor ? getSnittDagsatsMedUtbetalingsfaktor(inntekterIBeregningsperiode, antallVirkedager) : dagsats;
-        return snittDagsats.multiply(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP.getInntektPeriodeType().getAntallPrÅr());
+        return snittDagsats.multiply(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP.getInntektPeriodeType().getAntallPrÅr()).setScale(0, RoundingMode.HALF_EVEN);
     }
 
     private static BigDecimal getSnittDagsatsMedUtbetalingsfaktor(List<Periodeinntekt> inntekterIBeregningsperiode, int antallVirkedager) {
