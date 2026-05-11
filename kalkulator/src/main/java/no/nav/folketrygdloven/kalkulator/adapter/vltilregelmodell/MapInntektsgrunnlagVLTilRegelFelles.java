@@ -274,7 +274,6 @@ public class MapInntektsgrunnlagVLTilRegelFelles implements MapInntektsgrunnlagV
 
         List<BeregningsgrunnlagAktivitetStatusDto> statuserPåGrunnlag =
             input.getBeregningsgrunnlag() == null ? Collections.emptyList() : input.getBeregningsgrunnlag().getAktivitetStatuser();
-        // TODO Dobbeltsjekk at findFirst er ok her (at det ikke er mulig å ha både DP / AAP samtidig)
         statuserPåGrunnlag.stream()
             .filter(s -> YTELSER_MED_EGEN_BEREGNING.contains(s.getAktivitetStatus()))
             .findFirst()
