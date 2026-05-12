@@ -76,6 +76,7 @@ public class KravTjeneste {
                                                               BeregningAktivitetAggregatDto gjeldendeAktiviteter,
                                                               LocalDate skjæringstidspunktBeregning,
                                                               LocalDate refusjonsfristDato) {
+        // TODO: undersøke metoden når STP er siste dag i mnd og kravet kommer 4 mnd senere. Gir perioder fra 1 i neste måned og sammenfall med godkjent
         var førsteMuligeRefusjonsdato = finnFørsteMuligeDagRefusjon(gjeldendeAktiviteter, skjæringstidspunktBeregning, refusjonsfristDato,
             yrkesaktivitet);
         return krav.getPerioder().stream()

@@ -54,14 +54,12 @@ public class AutopunktUtlederFastsettBeregningsaktiviteterMeldekortTjeneste {
         var ytelseFilterMeldekort = new YtelseFilterDto(aktørYtelse);
 
 
-        if (BeregningstidspunktTjeneste.finnBeregningstidspunkt(skjæringstidspunkt).isBefore(skjæringstidspunkt) && opphørerYtelseDagenFørStp(
-            nyligsteVedtak.get(), skjæringstidspunkt)) {
-            return MeldekortUtils.finnesMeldekortSomInkludererGittDato(ytelseFilterMeldekort, nyligsteVedtak.get(),
-                Set.of(nyligsteVedtak.get().getYtelseType()), skjæringstidspunkt.minusDays(1));
+        if(BeregningstidspunktTjeneste.finnBeregningstidspunkt(skjæringstidspunkt).isBefore(skjæringstidspunkt) && opphørerYtelseDagenFørStp(nyligsteVedtak.get(), skjæringstidspunkt)){
+            return MeldekortUtils.finnesMeldekortSomInkludererGittDato(ytelseFilterMeldekort,
+                    Set.of(nyligsteVedtak.get().getYtelseType()), skjæringstidspunkt.minusDays(1));
         }
 
-        return MeldekortUtils.finnesMeldekortSomInkludererGittDato(ytelseFilterMeldekort, nyligsteVedtak.get(),
-            Set.of(nyligsteVedtak.get().getYtelseType()), skjæringstidspunkt);
+	    return MeldekortUtils.finnesMeldekortSomInkludererGittDato(ytelseFilterMeldekort, Set.of(nyligsteVedtak.get().getYtelseType()), skjæringstidspunkt);
     }
 
     private static boolean harLøpendeVedtakOgSendtInnMeldekortNylig(Optional<AktørYtelseDto> aktørYtelse, LocalDate skjæringstidspunkt, Set<YtelseType> arenaytelseTyper) {

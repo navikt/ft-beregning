@@ -37,7 +37,7 @@ class FinnInntektFraYtelse {
 			return Optional.empty();
 		}
 
-        var nyesteMeldekort = MeldekortUtils.sisteHeleMeldekortFørStp(ytelseFilter, nyesteVedtak.get(),
+        var nyesteMeldekortUtbetalingsgrad = MeldekortUtils.snittUtbetalingsgradSistePeriodeFørStp(ytelseFilter, nyesteVedtak.get(),
 				skjæringstidspunkt,
 				Set.of(mapTilYtelseType(andel.getAktivitetStatus()))
 		);
@@ -49,24 +49,17 @@ class FinnInntektFraYtelse {
 				.size();
 
         var dagsats = nyesteVedtak.flatMap(YtelseDto::getVedtaksDagsats)
-            .or(() -> nyesteMeldekort.flatMap(m -> m.utbetaling().getDagsats()))
+            .or(() -> MeldekortUtils.sisteAnvisteDagsatsFørStpForType(ytelseFilter, skjæringstidspunkt, Set.of(mapTilYtelseType(andel.getAktivitetStatus()))))
             .orElse(Beløp.ZERO);
         var årsbeløp = finnÅrsbeløp(dagsats);
 		if (antallUnikeStatuserIPeriode > 1) {
-			return nyesteMeldekort
-                .map(m -> finnÅrsbeløpMedHensynTilUtbetalingsfaktor(årsbeløp, m))
+			return nyesteMeldekortUtbetalingsgrad.map(årsbeløp::multipliser)
                 .or(() -> Optional.of(årsbeløp));
 		} else {
 			return Optional.of(årsbeløp);
 		}
 
 	}
-
-	static Optional<Beløp> finnÅrbeløpForDagpenger(KoblingReferanse ref, BeregningsgrunnlagPrStatusOgAndelDto andel,
-	                                               YtelseFilterDto ytelseFilter) {
-		return finnÅrbeløpFraMeldekortForAndel(ref, andel, ytelseFilter);
-	}
-
 
 	private static YtelseType mapTilYtelseType(AktivitetStatus aktivitetStatus) {
 		if (AktivitetStatus.DAGPENGER.equals(aktivitetStatus)) {
@@ -76,13 +69,6 @@ class FinnInntektFraYtelse {
 			return YtelseType.ARBEIDSAVKLARINGSPENGER;
 		}
 		return YtelseType.UDEFINERT;
-	}
-
-	private static Beløp finnÅrsbeløpMedHensynTilUtbetalingsfaktor(Beløp årsbeløp,
-                                                                   MeldekortUtils.UtbetalingMedNormertUtbetalingsprosent utbetaling) {
-		var utbetalingsfaktor = utbetaling.normertUtbetalingsprosent().tilNormalisertGrad();
-
-		return årsbeløp.multipliser(utbetalingsfaktor);
 	}
 
 	private static Beløp finnÅrsbeløp(Beløp dagsats) {

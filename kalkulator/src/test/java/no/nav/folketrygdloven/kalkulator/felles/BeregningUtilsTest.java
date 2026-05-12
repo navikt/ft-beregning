@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,7 @@ import no.nav.folketrygdloven.kalkulator.modell.iay.YtelseDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YtelseFilterDto;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Stillingsprosent;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
+import no.nav.folketrygdloven.kalkulus.kodeverk.YtelseKilde;
 import no.nav.folketrygdloven.kalkulus.kodeverk.YtelseType;
 
 class BeregningUtilsTest {
@@ -68,10 +70,9 @@ class BeregningUtilsTest {
         var nyYtelse = aapYtelseNyBuilder.leggTilYtelseAnvist(nyttMeldekort).build();
 
         var filter = new YtelseFilterDto(Arrays.asList(gammelYtelse, nyYtelse));
-        var ytelseAnvist = MeldekortUtils.sisteHeleMeldekortFørStp(filter, nyYtelse, SKJÆRINGSTIDSPUNKT, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER));
+        var snittUtbetaling = MeldekortUtils.snittUtbetalingsgradSistePeriodeFørStp(filter, nyYtelse, SKJÆRINGSTIDSPUNKT, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER));
 
-        assertThat(ytelseAnvist).isPresent();
-        assertThat(ytelseAnvist.get().utbetaling()).isEqualTo(nyttMeldekort);
+        assertThat(snittUtbetaling).isPresent().hasValueSatisfying(v -> assertThat(v).isEqualByComparingTo(BigDecimal.valueOf(0.5)));
     }
 
     @Test
@@ -86,10 +87,9 @@ class BeregningUtilsTest {
         var nyYtelse = aapYtelseNyBuilder.leggTilYtelseAnvist(gammeltMeldekort).build();
 
         var filter = new YtelseFilterDto(Arrays.asList(gammelYtelse, nyYtelse));
-        var ytelseAnvist = MeldekortUtils.sisteHeleMeldekortFørStp(filter, nyYtelse, SKJÆRINGSTIDSPUNKT, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER));
+        var snittUtbetaling = MeldekortUtils.snittUtbetalingsgradSistePeriodeFørStp(filter, nyYtelse, SKJÆRINGSTIDSPUNKT, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER));
 
-        assertThat(ytelseAnvist).isPresent();
-        assertThat(ytelseAnvist.get().utbetaling()).isEqualTo(nyttMeldekort);
+        assertThat(snittUtbetaling).isPresent().hasValueSatisfying(v -> assertThat(v).isEqualByComparingTo(BigDecimal.valueOf(0.5)));
     }
 
     @Test
@@ -104,10 +104,9 @@ class BeregningUtilsTest {
         var nyYtelse = aapYtelseNyBuilder.leggTilYtelseAnvist(meldekortFemti).build();
 
         var filter = new YtelseFilterDto(Arrays.asList(gammelYtelse, nyYtelse));
-        var ytelseAnvist = MeldekortUtils.sisteHeleMeldekortFørStp(filter, nyYtelse, SKJÆRINGSTIDSPUNKT, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER));
+        var snittUtbetaling = MeldekortUtils.snittUtbetalingsgradSistePeriodeFørStp(filter, nyYtelse, SKJÆRINGSTIDSPUNKT, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER));
 
-        assertThat(ytelseAnvist).isPresent();
-        assertThat(ytelseAnvist.get().utbetaling()).isEqualTo(meldekortFemti);
+        assertThat(snittUtbetaling).isPresent().hasValueSatisfying(v -> assertThat(v).isEqualByComparingTo(BigDecimal.valueOf(0.25)));
     }
 
     @Test
@@ -125,10 +124,9 @@ class BeregningUtilsTest {
         var ytelseEtterStp = aapYtelseEtterStpBuilder.leggTilYtelseAnvist(meldekortNyest).build();
 
         var filter = new YtelseFilterDto(Arrays.asList(gammelYtelse, nyYtelse, ytelseEtterStp));
-        var ytelseAnvist = MeldekortUtils.sisteHeleMeldekortFørStp(filter, nyYtelse, SKJÆRINGSTIDSPUNKT, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER));
+        var snittUtbetaling = MeldekortUtils.snittUtbetalingsgradSistePeriodeFørStp(filter, nyYtelse, SKJÆRINGSTIDSPUNKT, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER));
 
-        assertThat(ytelseAnvist).isPresent();
-        assertThat(ytelseAnvist.get().utbetaling()).isEqualTo(meldekortNytt);
+        assertThat(snittUtbetaling).isPresent().hasValueSatisfying(v -> assertThat(v).isEqualByComparingTo(BigDecimal.valueOf(0.25)));
     }
 
     @Test
@@ -149,7 +147,7 @@ class BeregningUtilsTest {
                 .leggTilYtelseAnvist(meldekort4).build();
 
         var filter = new YtelseFilterDto(Arrays.asList(gammelYtelse, nyYtelse));
-        var ytelseAnvist = MeldekortUtils.finnesMeldekortSomInkludererGittDato(filter, nyYtelse, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER), SKJÆRINGSTIDSPUNKT);
+        var ytelseAnvist = MeldekortUtils.finnesMeldekortSomInkludererGittDato(filter, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER), SKJÆRINGSTIDSPUNKT);
 
         assertThat(ytelseAnvist).isTrue();
     }
@@ -172,7 +170,7 @@ class BeregningUtilsTest {
                 .leggTilYtelseAnvist(meldekort4).build();
 
         var filter = new YtelseFilterDto(Arrays.asList(gammelYtelse, nyYtelse));
-        var ytelseAnvist = MeldekortUtils.finnesMeldekortSomInkludererGittDato(filter, nyYtelse, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER), SKJÆRINGSTIDSPUNKT.plusDays(1));
+        var ytelseAnvist = MeldekortUtils.finnesMeldekortSomInkludererGittDato(filter, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER), SKJÆRINGSTIDSPUNKT.plusDays(1));
 
         assertThat(ytelseAnvist).isFalse();
     }
@@ -187,8 +185,93 @@ class BeregningUtilsTest {
     private YtelseDtoBuilder lagYtelse(YtelseType ytelsetype, LocalDate fom, LocalDate tom) {
         return YtelseDtoBuilder.ny()
                 .medPeriode(Intervall.fraOgMedTilOgMed(fom, tom))
-                .medYtelseType(ytelsetype);
+                .medYtelseType(ytelsetype)
+                .medYtelseKilde(YtelseKilde.ARENA);
     }
 
+    @Test
+    void skalFinneRiktigUtbetalingsprosentForSisteHelePeriodeFastProsent() {
+        var aapYtelseBuilder = YtelseDtoBuilder.ny().medYtelseType(YtelseType.ARBEIDSAVKLARINGSPENGER)
+            .medPeriode(Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT.minusMonths(5), SKJÆRINGSTIDSPUNKT.plusMonths(1)))
+            .medYtelseKilde(YtelseKilde.KELVIN);
+
+        var meldekort1 = lagMeldekort(BigDecimal.valueOf(50), SKJÆRINGSTIDSPUNKT.minusWeeks(6), SKJÆRINGSTIDSPUNKT.minusWeeks(4));
+        var meldekort2 = lagMeldekort(BigDecimal.valueOf(50), SKJÆRINGSTIDSPUNKT.minusWeeks(4), SKJÆRINGSTIDSPUNKT.minusWeeks(2));
+        var meldekort3 = lagMeldekort(BigDecimal.valueOf(50), SKJÆRINGSTIDSPUNKT.minusWeeks(2), SKJÆRINGSTIDSPUNKT.minusWeeks(0));
+        var meldekort4 = lagMeldekort(BigDecimal.valueOf(50), SKJÆRINGSTIDSPUNKT.minusWeeks(10), SKJÆRINGSTIDSPUNKT.minusWeeks(8));
+
+        var nyYtelse = aapYtelseBuilder.leggTilYtelseAnvist(meldekort1)
+            .leggTilYtelseAnvist(meldekort2)
+            .leggTilYtelseAnvist(meldekort3)
+            .leggTilYtelseAnvist(meldekort4).build();
+
+        var filter = new YtelseFilterDto(List.of(nyYtelse));
+        var utbetalingsgrad = MeldekortUtils.snittUtbetalingsgradSistePeriodeFørStp(filter, nyYtelse, SKJÆRINGSTIDSPUNKT, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER));
+
+        assertThat(utbetalingsgrad).isPresent().hasValueSatisfying(v -> assertThat(v).isEqualByComparingTo(BigDecimal.valueOf(0.5)));
+    }
+
+    @Test
+    void skalFinneRiktigUtbetalingsprosentForSisteHelePeriodeVariabelProsent() {
+        var aapYtelseBuilder = YtelseDtoBuilder.ny().medYtelseType(YtelseType.ARBEIDSAVKLARINGSPENGER)
+            .medPeriode(Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT.minusMonths(5), SKJÆRINGSTIDSPUNKT.plusMonths(1)))
+            .medYtelseKilde(YtelseKilde.KELVIN);
+
+        var meldekort1 = lagMeldekort(BigDecimal.valueOf(50), SKJÆRINGSTIDSPUNKT.minusWeeks(6), SKJÆRINGSTIDSPUNKT.minusWeeks(4));
+        var meldekort2 = lagMeldekort(BigDecimal.valueOf(40), SKJÆRINGSTIDSPUNKT.minusWeeks(4), SKJÆRINGSTIDSPUNKT.minusWeeks(2));
+        var meldekort3 = lagMeldekort(BigDecimal.valueOf(60), SKJÆRINGSTIDSPUNKT.minusWeeks(2), SKJÆRINGSTIDSPUNKT);
+        var meldekort4 = lagMeldekort(BigDecimal.valueOf(50), SKJÆRINGSTIDSPUNKT.minusWeeks(10), SKJÆRINGSTIDSPUNKT.minusWeeks(8));
+
+        var nyYtelse = aapYtelseBuilder.leggTilYtelseAnvist(meldekort1)
+            .leggTilYtelseAnvist(meldekort2)
+            .leggTilYtelseAnvist(meldekort3)
+            .leggTilYtelseAnvist(meldekort4).build();
+
+        var filter = new YtelseFilterDto(List.of(nyYtelse));
+        var utbetalingsgrad = MeldekortUtils.snittUtbetalingsgradSistePeriodeFørStp(filter, nyYtelse, SKJÆRINGSTIDSPUNKT, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER));
+        // Forventer 9 dager * 60% og 1 dag 40% = 580 / 10 = 58%
+        assertThat(utbetalingsgrad).isPresent().hasValueSatisfying(v -> assertThat(v).isEqualByComparingTo(BigDecimal.valueOf(0.58)));
+    }
+
+    @Test
+    void skalFinneRiktigUtbetalingsprosentForSisteHelePeriodeLangPeriodeOverStp() {
+        var aapYtelseBuilder = YtelseDtoBuilder.ny().medYtelseType(YtelseType.ARBEIDSAVKLARINGSPENGER)
+            .medPeriode(Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT.minusMonths(5), SKJÆRINGSTIDSPUNKT.plusMonths(1)))
+            .medYtelseKilde(YtelseKilde.KELVIN);
+
+        var meldekort1 = lagMeldekort(BigDecimal.valueOf(75), SKJÆRINGSTIDSPUNKT.minusWeeks(3), SKJÆRINGSTIDSPUNKT.plusWeeks(1));
+
+        var nyYtelse = aapYtelseBuilder.leggTilYtelseAnvist(meldekort1).build();
+
+        var filter = new YtelseFilterDto(List.of(nyYtelse));
+        var utbetalingsgrad = MeldekortUtils.snittUtbetalingsgradSistePeriodeFørStp(filter, nyYtelse, SKJÆRINGSTIDSPUNKT, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER));
+
+        assertThat(utbetalingsgrad).isPresent().hasValueSatisfying(v -> assertThat(v).isEqualByComparingTo(BigDecimal.valueOf(0.75)));
+    }
+
+    @Test
+    void skalFinneRiktigUtbetalingsprosentForSisteHelePeriodeVariabelPeriodeSamtProsent() {
+        var aapYtelseBuilder = YtelseDtoBuilder.ny().medYtelseType(YtelseType.ARBEIDSAVKLARINGSPENGER)
+            .medPeriode(Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT.minusMonths(5), SKJÆRINGSTIDSPUNKT.plusMonths(1)))
+            .medYtelseKilde(YtelseKilde.KELVIN);
+
+        var meldekort1 = lagMeldekort(BigDecimal.valueOf(50), SKJÆRINGSTIDSPUNKT.minusWeeks(6), SKJÆRINGSTIDSPUNKT.minusWeeks(4));
+        var meldekort2 = lagMeldekort(BigDecimal.valueOf(40), SKJÆRINGSTIDSPUNKT.minusWeeks(4), SKJÆRINGSTIDSPUNKT.minusWeeks(3));
+        var meldekort3 = lagMeldekort(BigDecimal.valueOf(80), SKJÆRINGSTIDSPUNKT.minusWeeks(3), SKJÆRINGSTIDSPUNKT.minusWeeks(2));
+        var meldekort4 = lagMeldekort(BigDecimal.valueOf(30), SKJÆRINGSTIDSPUNKT.minusWeeks(2), SKJÆRINGSTIDSPUNKT.minusWeeks(1));
+        var meldekort5 = lagMeldekort(BigDecimal.valueOf(100), SKJÆRINGSTIDSPUNKT.minusWeeks(1), SKJÆRINGSTIDSPUNKT.plusDays(6));
+
+        var nyYtelse = aapYtelseBuilder.leggTilYtelseAnvist(meldekort1)
+            .leggTilYtelseAnvist(meldekort2)
+            .leggTilYtelseAnvist(meldekort3)
+            .leggTilYtelseAnvist(meldekort4)
+            .leggTilYtelseAnvist(meldekort5)
+            .build();
+
+        var filter = new YtelseFilterDto(List.of(nyYtelse));
+        var utbetalingsgrad = MeldekortUtils.snittUtbetalingsgradSistePeriodeFørStp(filter, nyYtelse, SKJÆRINGSTIDSPUNKT, Set.of(YtelseType.ARBEIDSAVKLARINGSPENGER));
+        // Skal finne 4 dager a 100%, 4 dager a 30%, 2 dager a 80% = 680 / 10 / 100 = 0.68
+        assertThat(utbetalingsgrad).isPresent().hasValueSatisfying(v -> assertThat(v).isEqualByComparingTo(BigDecimal.valueOf(0.68)));
+    }
 
 }

@@ -1,14 +1,11 @@
 package no.nav.folketrygdloven.beregningsgrunnlag.ytelse.dagpengerelleraap;
 
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskategori;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
@@ -32,18 +29,15 @@ class ForeslåBeregningsgrunnlagDPellerAAPKombinasjonMedAnnenStatus extends Leaf
 				.findFirst()
 				.orElseThrow(() -> new IllegalStateException("Ingen aktivitetstatus av type DP eller AAP funnet."));
 
-        var inntekt = finnPeriodeInntektForDPEllerAAP(grunnlag, bgPerStatus.getAktivitetStatus());
-        var utbetalingsFaktor = inntekt.getUtbetalingsfaktor()
-				.orElseThrow(() -> new IllegalStateException("Utbetalingsgrad for DP/AAP mangler."));
-
-        var antallPerioderPrÅr = inntekt.getInntektPeriodeType().getAntallPrÅr();
-        var beregnetPrÅr = inntekt.getInntekt().multiply(antallPerioderPrÅr).multiply(utbetalingsFaktor);
-		Long originalDagsats = inntekt.getInntekt().longValue();
-
+        // For dette tilfellet skal man bruke dagsats på skjæringstidspunktet for FP/SVP * snitt utbetalingsgrad i forutgående periode
+        var dagsatsOgBeregnetPrÅr = MapDagsatsOgBeregnetPrÅr.regnUtSnittInntektForDPellerAAP(grunnlag.getInntektsgrunnlag(),
+            bgPerStatus.getAktivitetStatus(), grunnlag.getSkjæringstidspunkt(), true);
+        var dagsats = dagsatsOgBeregnetPrÅr.dagsats();
+        var beregnetPrÅr = dagsatsOgBeregnetPrÅr.beregnetPrÅr();
 		BeregningsgrunnlagPrStatus.builder(bgPerStatus)
 				.medBeregnetPrÅr(beregnetPrÅr)
 				.medÅrsbeløpFraTilstøtendeYtelse(beregnetPrÅr)
-				.medOrginalDagsatsFraTilstøtendeYtelse(originalDagsats)
+				.medOrginalDagsatsFraTilstøtendeYtelse(dagsats.setScale(0, RoundingMode.HALF_EVEN).longValue())
 				.build();
 
         var hjemmel = AktivitetStatus.AAP.equals(bgPerStatus.getAktivitetStatus()) ?
@@ -56,23 +50,4 @@ class ForeslåBeregningsgrunnlagDPellerAAPKombinasjonMedAnnenStatus extends Leaf
 		resultater.put("hjemmel", hjemmel);
 		return beregnet(resultater);
 	}
-
-	private Periodeinntekt finnPeriodeInntektForDPEllerAAP(BeregningsgrunnlagPeriode grunnlag, AktivitetStatus aktivitetStatus) {
-		if (aktivitetStatus.erDPFraYtelse()) {
-			var dagpengerFraYtelseVedtak = grunnlag.getInntektsgrunnlag()
-					.getSistePeriodeinntekterMedType(Inntektskilde.YTELSE_VEDTAK)
-					.stream().filter(i -> i.getInntektskategori().equals(Inntektskategori.DAGPENGER))
-					.findFirst();
-			if (dagpengerFraYtelseVedtak.isPresent()) {
-				return dagpengerFraYtelseVedtak.get();
-			}
-		}
-		return finnPeriodeInntektFraMeldekort(grunnlag)
-				.orElseThrow(() -> new IllegalStateException("Ingen inntekter fra tilstøtende ytelser funnet i siste måned med inntekt"));
-	}
-
-	private Optional<Periodeinntekt> finnPeriodeInntektFraMeldekort(BeregningsgrunnlagPeriode grunnlag) {
-		return grunnlag.getInntektsgrunnlag().getPeriodeinntekt(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP, grunnlag.getSkjæringstidspunkt());
-	}
-
 }
