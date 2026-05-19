@@ -85,7 +85,6 @@ public class Inntektsgrunnlag {
 		}
 	}
 
-
 	public Optional<LocalDate> sistePeriodeMedInntektFørDato(Inntektskilde inntektskilde, LocalDate dato) {
         var perioder = getPeriodeinntektMedKilde(inntektskilde)
 				.filter(pi -> dato.isAfter(pi.getTom()))
@@ -101,11 +100,16 @@ public class Inntektsgrunnlag {
         return getPeriodeinntektMedKilde(kilde).anyMatch(i -> i.getPeriode().inneholder(dato));
     }
 
-
     public Optional<Periodeinntekt> getSistePeriodeinntektMedType(Inntektskilde kilde) {
 		return getPeriodeinntektMedKilde(kilde)
 				.max(Comparator.comparing(Periodeinntekt::getFom));
 	}
+
+    public Optional<Periodeinntekt> getSistePeriodeinntektMedTypeIPeriode(Inntektskilde kilde, Periode periode) {
+        return getSistePeriodeinntektMedType(kilde).stream()
+            .filter(pi -> periode.getFom().isBefore(pi.getTom()) && periode.getTom().isAfter(pi.getTom()))
+            .findFirst();
+    }
 
 	public List<Periodeinntekt> getSistePeriodeinntekterMedType(Inntektskilde kilde) {
 		var inntekter = getPeriodeinntektMedKilde(kilde).toList();

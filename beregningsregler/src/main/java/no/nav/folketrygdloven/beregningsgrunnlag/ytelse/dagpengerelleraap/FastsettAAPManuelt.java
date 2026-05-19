@@ -5,6 +5,7 @@ import java.util.Map;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
@@ -28,8 +29,12 @@ class FastsettAAPManuelt extends LeafSpecification<BeregningsgrunnlagPeriode> {
             .filter(bgps -> bgps.getAktivitetStatus().erAAPellerDP())
             .findFirst()
             .orElseThrow(() -> new IllegalStateException("Ingen aktivitetstatus av type DP eller AAP funnet."));
-        var inntekt = grunnlag.getInntektsgrunnlag().getPeriodeinntekt(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP, grunnlag.getSkjæringstidspunkt())
-            .orElseThrow(() -> new IllegalStateException("Ingen inntekter fra tilstøtende ytelser funnet i siste måned med inntekt"));
+
+        var aktuellInntektsperiode = Periode.of(grunnlag.getSkjæringstidspunkt().minusDays(8), grunnlag.getSkjæringstidspunkt().plusDays(1));
+        var inntekt = grunnlag.getInntektsgrunnlag()
+            .getSistePeriodeinntektMedTypeIPeriode(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP, aktuellInntektsperiode)
+            .orElseThrow(() -> new IllegalStateException("Ingen inntekter fra tilstøtende ytelser funnet i siste uke med inntekt"));
+
         var beregnetPrÅr = bgPerStatus.getBeregnetPrÅr();
         Long originalDagsats = inntekt.getInntekt().longValue();
         BeregningsgrunnlagPrStatus.builder(bgPerStatus)

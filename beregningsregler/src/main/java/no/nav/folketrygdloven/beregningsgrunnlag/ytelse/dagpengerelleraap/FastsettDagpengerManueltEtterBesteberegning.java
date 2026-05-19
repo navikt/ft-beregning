@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Periodeinntekt;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
@@ -39,8 +40,9 @@ class FastsettDagpengerManueltEtterBesteberegning extends LeafSpecification<Bere
         // TODO (PFP-8687): Migrere vekk BeregningsgrunnlagPrStatus#besteberegningPrÅr
         var beregnetPrÅr = dpStatus.getBesteberegningPrÅr() != null ? dpStatus.getBesteberegningPrÅr() : dpStatus.getBeregnetPrÅr();
 
+        var aktuellInntektsperiode = Periode.of(grunnlag.getSkjæringstidspunkt().minusDays(8), grunnlag.getSkjæringstidspunkt().plusDays(1));
         var dagsats = grunnlag.getInntektsgrunnlag()
-            .getPeriodeinntekt(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP, grunnlag.getSkjæringstidspunkt())
+            .getSistePeriodeinntektMedTypeIPeriode(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP, aktuellInntektsperiode)
             .map(Periodeinntekt::getInntekt)
             .orElse(BigDecimal.ZERO);
 

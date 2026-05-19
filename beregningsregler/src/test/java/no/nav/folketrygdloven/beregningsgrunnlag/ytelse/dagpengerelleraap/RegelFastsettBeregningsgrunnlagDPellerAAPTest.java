@@ -5,6 +5,7 @@ import static no.nav.folketrygdloven.beregningsgrunnlag.BeregningsgrunnlagScenar
 import static no.nav.folketrygdloven.beregningsgrunnlag.VerifiserBeregningsgrunnlag.verifiserBeregningsgrunnlagBruttoPrPeriodeType;
 import static no.nav.folketrygdloven.regelmodelloversetter.RegelmodellOversetter.getRegelResultat;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.math.BigDecimal;
 import java.time.DayOfWeek;
@@ -383,6 +384,39 @@ class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
         assertThat(bgps.getBeregnetPrÅr()).isEqualByComparingTo(brutto);
         assertThat(bgps.getÅrsbeløpFraTilstøtendeYtelse()).isEqualByComparingTo(brutto);
         assertThat(bgps.getOrginalDagsatsFraTilstøtendeYtelse()).isEqualTo(2000);
+    }
+
+    @Test
+    void skalFeileForAAPGrunnlagUtenInntektSisteUkeFørSTP() {
+        var inntektsgrunnlag = new Inntektsgrunnlag();
+        inntektsgrunnlag.leggTilPeriodeinntekt(lagInntektsgrunnlagForDag(1611, skjæringstidspunkt.minusDays(8)));
+        var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.AAP));
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().getFirst();
+        BeregningsgrunnlagPrStatus.builder(grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.AAP))
+            .medBeregnetPrÅr(new BigDecimal(324423))
+            .medFastsattAvSaksbehandler(true)
+            .build();
+
+        var regel = new RegelFastsettBeregningsgrunnlagDPellerAAP();
+        assertThatThrownBy(() -> regel.evaluer(grunnlag)).isInstanceOf(IllegalStateException.class)
+            .hasMessageContaining("Ingen inntekter fra tilstøtende ytelser funnet i siste uke med inntekt");
+    }
+
+    @Test
+    void skalGiIngenDagsatsForDPGrunnlagUtenInntektSisteUkeFørSTP() {
+        var inntektsgrunnlag = new Inntektsgrunnlag();
+        inntektsgrunnlag.leggTilPeriodeinntekt(lagInntektsgrunnlagForDag(600, skjæringstidspunkt.minusDays(8)));
+        var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.DP));
+        var bgPrStatus = beregningsgrunnlag.getBeregningsgrunnlagPerioder().stream().map(p -> p.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP)).findFirst().get();//NOSONAR
+        BeregningsgrunnlagPrStatus.builder(bgPrStatus).medFastsattAvSaksbehandler(true).medBesteberegningPrÅr(BigDecimal.valueOf(260000)).build();
+        var grunnlag = beregningsgrunnlag.getBeregningsgrunnlagPerioder().getFirst();
+
+        var evaluation = new RegelFastsettBeregningsgrunnlagDPellerAAP().evaluer(grunnlag);
+
+        var regelResultat = getRegelResultat(evaluation, "input");
+        assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
+        var bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP);
+        assertThat(bgps.getOrginalDagsatsFraTilstøtendeYtelse()).isEqualTo(0L);
     }
 
     private LocalDate førStp(int i) {
