@@ -416,7 +416,7 @@ class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
         var regelResultat = getRegelResultat(evaluation, "input");
         assertThat(regelResultat.beregningsresultat()).isEqualTo(ResultatBeregningType.BEREGNET);
         var bgps = grunnlag.getBeregningsgrunnlagPrStatus(AktivitetStatus.DP);
-        assertThat(bgps.getOrginalDagsatsFraTilstøtendeYtelse()).isEqualTo(0L);
+        assertThat(bgps.getOrginalDagsatsFraTilstøtendeYtelse()).isZero();
     }
 
     private LocalDate førStp(int i) {
