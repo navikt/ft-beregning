@@ -398,12 +398,12 @@ class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
             .build();
 
         var regel = new RegelFastsettBeregningsgrunnlagDPellerAAP();
-        assertThatThrownBy(() -> regel.evaluer(grunnlag)).isInstanceOf(IllegalStateException.class)
-            .hasMessageContaining("Ingen inntekter fra tilstøtende ytelser funnet i siste uke med inntekt");
+        assertThatThrownBy(() -> regel.evaluer(grunnlag)).isInstanceOf(NullPointerException.class)
+            .hasMessageContaining("Ingen dagsats funnet for AAP ved skjæringstidspunkt");
     }
 
     @Test
-    void skalGiIngenDagsatsForDPGrunnlagUtenInntektSisteUkeFørSTP() {
+    void skalGiIngenDagsatsForDPGrunnlagUtenDagsatsPåStp() {
         var inntektsgrunnlag = new Inntektsgrunnlag();
         inntektsgrunnlag.leggTilPeriodeinntekt(lagInntektsgrunnlagForDag(600, skjæringstidspunkt.minusDays(8)));
         var beregningsgrunnlag = settoppGrunnlagMedEnPeriode(skjæringstidspunkt, inntektsgrunnlag, Collections.singletonList(AktivitetStatus.DP));
@@ -435,6 +435,7 @@ class RegelFastsettBeregningsgrunnlagDPellerAAPTest {
                 .build());
 
         });
+        inntektsgrunnlag.setDagsatsYtelseDpAapVedSkjæringstidspunkt(dagsats);
         return inntektsgrunnlag;
     }
 

@@ -105,12 +105,6 @@ public class Inntektsgrunnlag {
 				.max(Comparator.comparing(Periodeinntekt::getFom));
 	}
 
-    public Optional<Periodeinntekt> getSistePeriodeinntektMedTypeIPeriode(Inntektskilde kilde, Periode periode) {
-        return getSistePeriodeinntektMedType(kilde).stream()
-            .filter(pi -> periode.getFom().isBefore(pi.getTom()) && periode.getTom().isAfter(pi.getTom()))
-            .findFirst();
-    }
-
 	public List<Periodeinntekt> getSistePeriodeinntekterMedType(Inntektskilde kilde) {
 		var inntekter = getPeriodeinntektMedKilde(kilde).toList();
 		var sisteTomDato = inntekter.stream()
