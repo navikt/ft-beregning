@@ -85,7 +85,6 @@ public class Inntektsgrunnlag {
 		}
 	}
 
-
 	public Optional<LocalDate> sistePeriodeMedInntektFørDato(Inntektskilde inntektskilde, LocalDate dato) {
         var perioder = getPeriodeinntektMedKilde(inntektskilde)
 				.filter(pi -> dato.isAfter(pi.getTom()))
@@ -100,7 +99,6 @@ public class Inntektsgrunnlag {
     public boolean finnesPeriodeinntektFraKildePåDato(Inntektskilde kilde, LocalDate dato) {
         return getPeriodeinntektMedKilde(kilde).anyMatch(i -> i.getPeriode().inneholder(dato));
     }
-
 
     public Optional<Periodeinntekt> getSistePeriodeinntektMedType(Inntektskilde kilde) {
 		return getPeriodeinntektMedKilde(kilde)
