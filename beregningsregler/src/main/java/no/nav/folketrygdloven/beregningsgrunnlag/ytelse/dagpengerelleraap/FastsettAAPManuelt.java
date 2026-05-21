@@ -2,10 +2,10 @@ package no.nav.folketrygdloven.beregningsgrunnlag.ytelse.dagpengerelleraap;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.AktivitetStatus;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.BeregningsgrunnlagHjemmel;
-import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Inntektskilde;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPrStatus;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
@@ -28,10 +28,11 @@ class FastsettAAPManuelt extends LeafSpecification<BeregningsgrunnlagPeriode> {
             .filter(bgps -> bgps.getAktivitetStatus().erAAPellerDP())
             .findFirst()
             .orElseThrow(() -> new IllegalStateException("Ingen aktivitetstatus av type DP eller AAP funnet."));
-        var inntekt = grunnlag.getInntektsgrunnlag().getPeriodeinntekt(Inntektskilde.TILSTØTENDE_YTELSE_DP_AAP, grunnlag.getSkjæringstidspunkt())
-            .orElseThrow(() -> new IllegalStateException("Ingen inntekter fra tilstøtende ytelser funnet i siste måned med inntekt"));
+
+        var originalDagsats = Objects.requireNonNull(grunnlag.getInntektsgrunnlag().getDagsatsYtelseDpAapVedSkjæringstidspunkt(),
+            "Ingen dagsats funnet for AAP ved skjæringstidspunkt").longValue();
         var beregnetPrÅr = bgPerStatus.getBeregnetPrÅr();
-        Long originalDagsats = inntekt.getInntekt().longValue();
+
         BeregningsgrunnlagPrStatus.builder(bgPerStatus)
             .medBeregnetPrÅr(beregnetPrÅr)
             .medÅrsbeløpFraTilstøtendeYtelse(beregnetPrÅr)
