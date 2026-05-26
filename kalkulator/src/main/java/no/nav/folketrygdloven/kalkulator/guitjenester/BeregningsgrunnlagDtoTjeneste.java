@@ -21,11 +21,9 @@ import no.nav.folketrygdloven.kalkulator.guitjenester.ytelsegrunnlag.Ytelsespesi
 import no.nav.folketrygdloven.kalkulator.guitjenester.ytelsegrunnlag.YtelsespesifiktGrunnlagTjenesteOMP;
 import no.nav.folketrygdloven.kalkulator.guitjenester.ytelsegrunnlag.YtelsespesifiktGrunnlagTjenesteSVP;
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagGUIInput;
-import no.nav.folketrygdloven.kalkulator.input.ForeldrepengerGrunnlag;
 import no.nav.folketrygdloven.kalkulator.konfig.KonfigTjeneste;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.SammenligningsgrunnlagPrStatusDto;
-import no.nav.folketrygdloven.kalkulator.modell.gradering.AktivitetGradering;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulus.felles.v1.Periode;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
@@ -59,7 +57,6 @@ public class BeregningsgrunnlagDtoTjeneste {
             mapBeregningsgrunnlagAktivitetStatus(input, dto);
             mapBeregningsgrunnlagPerioder(input, dto);
             mapBeløp(input, dto);
-            mapAktivitetGradering(input, dto);
             mapDekningsgrad(input, dto);
             mapYtelsesspesifiktGrunnlag(input, dto);
             mapInntektsgrunnlag(input, dto);
@@ -113,7 +110,7 @@ public class BeregningsgrunnlagDtoTjeneste {
     }
 
     private void mapDekningsgrad(BeregningsgrunnlagGUIInput input, BeregningsgrunnlagDto dto) {
-        var dekningsgradProsentverdi = Dekningsgradtjeneste.finnDekningsgradProsentverdi(input.getYtelsespesifiktGrunnlag(), Optional.of(dto.getSkjæringstidspunkt()));
+        var dekningsgradProsentverdi = Dekningsgradtjeneste.finnDekningsgradProsentverdi(input.getYtelsespesifiktGrunnlag(), Optional.of(input.getSkjæringstidspunktForBeregning()));
         dto.setDekningsgrad(dekningsgradProsentverdi);
     }
 
@@ -141,30 +138,13 @@ public class BeregningsgrunnlagDtoTjeneste {
     }
 
     private void mapSkjæringstidspunkt(BeregningsgrunnlagGUIInput input, BeregningsgrunnlagDto dto) {
-        var skjæringstidspunktForBeregning = input.getSkjæringstidspunktForBeregning();
-        dto.setSkjaeringstidspunktBeregning(skjæringstidspunktForBeregning);
-        dto.setSkjæringstidspunkt(skjæringstidspunktForBeregning);
+        dto.setSkjaeringstidspunktBeregning(input.getSkjæringstidspunktForBeregning());
     }
 
     private void mapBeløp(BeregningsgrunnlagGUIInput input, BeregningsgrunnlagDto dto) {
         var beregningsgrunnlag = input.getBeregningsgrunnlag();
         var grunnbeløp = Optional.ofNullable(beregningsgrunnlag.getGrunnbeløp()).orElse(Beløp.ZERO);
-        var halvG = grunnbeløp.map(g -> g.divide(BigDecimal.valueOf(2), RoundingMode.HALF_UP));
-        dto.setHalvG(ModellTyperMapper.beløpTilDto(halvG));
         dto.setGrunnbeløp(ModellTyperMapper.beløpTilDto(grunnbeløp));
-        dto.setHjemmel(beregningsgrunnlag.getHjemmel());
-    }
-
-    private void mapAktivitetGradering(BeregningsgrunnlagGUIInput input, BeregningsgrunnlagDto dto) {
-        var beregningsgrunnlag = input.getBeregningsgrunnlag();
-        var aktivitetGradering = input.getYtelsespesifiktGrunnlag() instanceof ForeldrepengerGrunnlag ?
-                ((ForeldrepengerGrunnlag) input.getYtelsespesifiktGrunnlag()).getAktivitetGradering() : AktivitetGradering.INGEN_GRADERING;
-        var andelerMedGraderingUtenBG = GraderingUtenBeregningsgrunnlagTjeneste.finnAndelerMedGraderingUtenBG(beregningsgrunnlag,
-                aktivitetGradering);
-
-        if (!andelerMedGraderingUtenBG.isEmpty()) {
-            dto.setAndelerMedGraderingUtenBG(beregningsgrunnlagPrStatusOgAndelDtoTjeneste.lagBeregningsgrunnlagPrStatusOgAndelDto(input, andelerMedGraderingUtenBG));
-        }
     }
 
     private List<SammenligningsgrunnlagDto> lagSammenligningsgrunnlagDtoPrStatus(no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto beregningsgrunnlag) {

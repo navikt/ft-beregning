@@ -20,7 +20,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import no.nav.folketrygdloven.kalkulus.felles.v1.Beløp;
 import no.nav.folketrygdloven.kalkulus.felles.v1.Periode;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
-import no.nav.folketrygdloven.kalkulus.kodeverk.Hjemmel;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.inntektsgrunnlag.InntektsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.refusjon.RefusjonTilVurderingDto;
 
@@ -39,11 +38,6 @@ public class BeregningsgrunnlagDto {
     @Valid
     private LocalDate skjaeringstidspunktBeregning;
 
-    @JsonProperty(value = "skjæringstidspunkt")
-    @NotNull
-    @Valid
-    private LocalDate skjæringstidspunkt;
-
     @JsonProperty(value = "aktivitetStatus")
     @Size(min = 1)
     private List<@Valid AktivitetStatus> aktivitetStatus;
@@ -57,10 +51,6 @@ public class BeregningsgrunnlagDto {
     @Size
     private List<@Valid SammenligningsgrunnlagDto> sammenligningsgrunnlagPrStatus;
 
-    @JsonProperty(value = "halvG")
-    @Valid
-    private Beløp halvG;
-
     @JsonProperty(value = "grunnbeløp")
     @Valid
     private Beløp grunnbeløp;
@@ -68,14 +58,6 @@ public class BeregningsgrunnlagDto {
     @JsonProperty(value = "faktaOmBeregning")
     @Valid
     private FaktaOmBeregningDto faktaOmBeregning;
-
-    @JsonProperty(value = "andelerMedGraderingUtenBG")
-    @Size
-    private List<@Valid BeregningsgrunnlagPrStatusOgAndelDto> andelerMedGraderingUtenBG;
-
-    @JsonProperty(value = "hjemmel")
-    @Valid
-    private Hjemmel hjemmel;
 
     @JsonProperty(value = "faktaOmFordeling")
     @Valid
@@ -94,10 +76,6 @@ public class BeregningsgrunnlagDto {
     @JsonProperty(value = "refusjonTilVurdering")
     @Valid
     private RefusjonTilVurderingDto refusjonTilVurdering;
-
-    @JsonProperty(value = "refusjonskravSomKommerForSentListe")
-    @Size
-    private List<@Valid RefusjonskravForSentDto> refusjonskravSomKommerForSentListe;
 
     @JsonProperty(value = "erOverstyrtInntekt")
     @NotNull
@@ -123,19 +101,14 @@ public class BeregningsgrunnlagDto {
     public BeregningsgrunnlagDto(BeregningsgrunnlagDto beregningsgrunnlagDto) {
         this.aktivitetStatus = beregningsgrunnlagDto.aktivitetStatus;
         this.beregningsgrunnlagPeriode = beregningsgrunnlagDto.beregningsgrunnlagPeriode;
-        this.andelerMedGraderingUtenBG = beregningsgrunnlagDto.andelerMedGraderingUtenBG;
         this.faktaOmBeregning = beregningsgrunnlagDto.faktaOmBeregning;
         this.dekningsgrad = beregningsgrunnlagDto.dekningsgrad;
         this.erOverstyrtInntekt = beregningsgrunnlagDto.erOverstyrtInntekt;
         this.faktaOmFordeling = beregningsgrunnlagDto.faktaOmFordeling;
         this.grunnbeløp = beregningsgrunnlagDto.grunnbeløp;
-        this.halvG = beregningsgrunnlagDto.halvG;
-        this.hjemmel = beregningsgrunnlagDto.hjemmel;
         this.refusjonTilVurdering = beregningsgrunnlagDto.refusjonTilVurdering;
-        this.refusjonskravSomKommerForSentListe = beregningsgrunnlagDto.refusjonskravSomKommerForSentListe;
         this.sammenligningsgrunnlagPrStatus = beregningsgrunnlagDto.sammenligningsgrunnlagPrStatus;
         this.skjaeringstidspunktBeregning = beregningsgrunnlagDto.skjaeringstidspunktBeregning;
-        this.skjæringstidspunkt = beregningsgrunnlagDto.skjæringstidspunkt;
         this.vilkårsperiodeFom = beregningsgrunnlagDto.vilkårsperiodeFom;
         this.ytelsesspesifiktGrunnlag = beregningsgrunnlagDto.ytelsesspesifiktGrunnlag;
         this.inntektsgrunnlag = beregningsgrunnlagDto.inntektsgrunnlag;
@@ -155,20 +128,12 @@ public class BeregningsgrunnlagDto {
         return beregningsgrunnlagPeriode;
     }
 
-    public Beløp getHalvG() {
-        return halvG;
-    }
-
     public FordelingDto getFaktaOmFordeling() {
         return faktaOmFordeling;
     }
 
     public FaktaOmBeregningDto getFaktaOmBeregning() {
         return faktaOmBeregning;
-    }
-
-    public Hjemmel getHjemmel() {
-        return hjemmel;
     }
 
     public List<SammenligningsgrunnlagDto> getSammenligningsgrunnlagPrStatus() {
@@ -187,24 +152,8 @@ public class BeregningsgrunnlagDto {
         this.beregningsgrunnlagPeriode = perioder;
     }
 
-    public void setHalvG(Beløp halvG) {
-        this.halvG = halvG;
-    }
-
     public void setFaktaOmBeregning(FaktaOmBeregningDto faktaOmBeregning) {
         this.faktaOmBeregning = faktaOmBeregning;
-    }
-
-    public List<BeregningsgrunnlagPrStatusOgAndelDto> getAndelerMedGraderingUtenBG() {
-        return andelerMedGraderingUtenBG;
-    }
-
-    public void setAndelerMedGraderingUtenBG(List<BeregningsgrunnlagPrStatusOgAndelDto> andelerMedGraderingUtenBG) {
-        this.andelerMedGraderingUtenBG = andelerMedGraderingUtenBG;
-    }
-
-    public void setHjemmel(Hjemmel hjemmel) {
-        this.hjemmel = hjemmel;
     }
 
     public void setFaktaOmFordeling(FordelingDto faktaOmFordelingDto) {
@@ -217,14 +166,6 @@ public class BeregningsgrunnlagDto {
 
     public void setDekningsgrad(int dekningsgrad) {
         this.dekningsgrad = dekningsgrad;
-    }
-
-    public LocalDate getSkjæringstidspunkt() {
-        return skjæringstidspunkt;
-    }
-
-    public void setSkjæringstidspunkt(LocalDate skjæringstidspunkt) {
-        this.skjæringstidspunkt = skjæringstidspunkt;
     }
 
     public Beløp getGrunnbeløp() {
@@ -269,14 +210,6 @@ public class BeregningsgrunnlagDto {
 
     public void setRefusjonTilVurdering(RefusjonTilVurderingDto refusjonTilVurdering) {
         this.refusjonTilVurdering = refusjonTilVurdering;
-    }
-
-    public List<RefusjonskravForSentDto> getRefusjonskravSomKommerForSentListe() {
-        return refusjonskravSomKommerForSentListe;
-    }
-
-    public void setRefusjonskravSomKommerForSentListe(List<RefusjonskravForSentDto> refusjonskravSomKommerForSentListe) {
-        this.refusjonskravSomKommerForSentListe = refusjonskravSomKommerForSentListe;
     }
 
     public InntektsgrunnlagDto getInntektsgrunnlag() {
