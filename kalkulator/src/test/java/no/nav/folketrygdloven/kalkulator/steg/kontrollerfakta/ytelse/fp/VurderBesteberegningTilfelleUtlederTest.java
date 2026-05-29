@@ -22,14 +22,27 @@ import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.Beregningsgru
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
+import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseAggregatBuilder;
+import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseGrunnlagDtoBuilder;
+import no.nav.folketrygdloven.kalkulator.modell.iay.InntektspostDtoBuilder;
+import no.nav.folketrygdloven.kalkulator.modell.iay.OpptjeningsnøkkelDto;
+import no.nav.folketrygdloven.kalkulator.modell.iay.VersjonTypeDto;
+import no.nav.folketrygdloven.kalkulator.modell.iay.YtelseDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.opptjening.OpptjeningAktiviteterDto;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
+import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Dekningsgrad;
+import no.nav.folketrygdloven.kalkulus.kodeverk.FaktaOmBeregningTilfelle;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
+import no.nav.folketrygdloven.kalkulus.kodeverk.InntektYtelseType;
+import no.nav.folketrygdloven.kalkulus.kodeverk.InntektskildeType;
+import no.nav.folketrygdloven.kalkulus.kodeverk.InntektspostType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
+import no.nav.folketrygdloven.kalkulus.kodeverk.YtelseKilde;
+import no.nav.folketrygdloven.kalkulus.kodeverk.YtelseType;
 
 class VurderBesteberegningTilfelleUtlederTest {
 
@@ -176,6 +189,187 @@ class VurderBesteberegningTilfelleUtlederTest {
 
         // Assert
         assertThat(tilfelle).isNotEmpty();
+    }
+
+    @Test
+    void skal_få_besteberegning_kun_arbeidstaker_og_dagpenger_når_vlsp_ytelse_siste_10_måneder() {
+        // Arrange
+        var virksomhet = Arbeidsgiver.virksomhet("28794923");
+        var bg = BeregningsgrunnlagDto.builder()
+                .medSkjæringstidspunkt(STP)
+                .leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
+                .build();
+        var periode = BeregningsgrunnlagPeriodeDto.ny()
+                .medBeregningsgrunnlagPeriode(STP, null)
+                .build(bg);
+        BeregningsgrunnlagPrStatusOgAndelDto.ny()
+                .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
+                .medInntektskategori(Inntektskategori.ARBEIDSTAKER)
+                .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder().medArbeidsgiver(virksomhet))
+                .build(periode);
+        var grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
+                .medRegisterAktiviteter(BeregningAktivitetAggregatDto.builder()
+                        .medSkjæringstidspunktOpptjening(STP)
+                        .leggTilAktivitet(BeregningAktivitetDto.builder()
+                                .medPeriode(Intervall.fraOgMedTilOgMed(STP.minusMonths(12), STP))
+                                .medOpptjeningAktivitetType(OpptjeningAktivitetType.DAGPENGER)
+                                .build())
+                        .leggTilAktivitet(BeregningAktivitetDto.builder()
+                                .medPeriode(Intervall.fraOgMedTilOgMed(STP.minusMonths(12), STP))
+                                .medOpptjeningAktivitetType(OpptjeningAktivitetType.ARBEID)
+                                .medArbeidsgiver(virksomhet)
+                                .build())
+                        .build())
+                .medBeregningsgrunnlag(bg)
+                .build(BeregningsgrunnlagTilstand.FASTSATT_BEREGNINGSAKTIVITETER);
+        var opptjeningAktiviteter = new OpptjeningAktiviteterDto(List.of(
+                OpptjeningAktiviteterDto.nyPeriodeOrgnr(OpptjeningAktivitetType.ARBEID, Intervall.fraOgMed(STP.minusMonths(10)), virksomhet.getIdentifikator()),
+                OpptjeningAktiviteterDto.nyPeriode(OpptjeningAktivitetType.DAGPENGER, Intervall.fraOgMed(STP.minusMonths(10)))));
+
+        // Sett opp IAY med VLSP ytelse og SP inntekt innenfor siste 10 måneder
+        var iayGrunnlag = lagIayMedVlspYtelseOgSPInntekt(STP.minusMonths(3), STP.minusMonths(1));
+
+        var input = new BeregningsgrunnlagInput(koblingReferanse, iayGrunnlag, opptjeningAktiviteter, null, new ForeldrepengerGrunnlag(Dekningsgrad.DEKNINGSGRAD_100, true));
+        input = input.medBeregningsgrunnlagGrunnlag(grunnlag);
+
+        // Act
+        var tilfelle = new VurderBesteberegningTilfelleUtleder().utled(new FaktaOmBeregningInput(new StegProsesseringInput(input, BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER)), grunnlag);
+
+        // Assert
+        assertThat(tilfelle).contains(FaktaOmBeregningTilfelle.VURDER_BESTEBEREGNING);
+    }
+
+    @Test
+    void skal_ikke_få_besteberegning_kun_arbeidstaker_og_dagpenger_når_vlsp_ytelse_utenfor_10_måneder() {
+        // Arrange
+        var virksomhet = Arbeidsgiver.virksomhet("28794923");
+        var bg = BeregningsgrunnlagDto.builder()
+                .medSkjæringstidspunkt(STP)
+                .leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
+                .build();
+        var periode = BeregningsgrunnlagPeriodeDto.ny()
+                .medBeregningsgrunnlagPeriode(STP, null)
+                .build(bg);
+        BeregningsgrunnlagPrStatusOgAndelDto.ny()
+                .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
+                .medInntektskategori(Inntektskategori.ARBEIDSTAKER)
+                .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder().medArbeidsgiver(virksomhet))
+                .build(periode);
+        var grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
+                .medRegisterAktiviteter(BeregningAktivitetAggregatDto.builder()
+                        .medSkjæringstidspunktOpptjening(STP)
+                        .leggTilAktivitet(BeregningAktivitetDto.builder()
+                                .medPeriode(Intervall.fraOgMedTilOgMed(STP.minusMonths(12), STP))
+                                .medOpptjeningAktivitetType(OpptjeningAktivitetType.DAGPENGER)
+                                .build())
+                        .leggTilAktivitet(BeregningAktivitetDto.builder()
+                                .medPeriode(Intervall.fraOgMedTilOgMed(STP.minusMonths(12), STP))
+                                .medOpptjeningAktivitetType(OpptjeningAktivitetType.ARBEID)
+                                .medArbeidsgiver(virksomhet)
+                                .build())
+                        .build())
+                .medBeregningsgrunnlag(bg)
+                .build(BeregningsgrunnlagTilstand.FASTSATT_BEREGNINGSAKTIVITETER);
+        var opptjeningAktiviteter = new OpptjeningAktiviteterDto(List.of(
+                OpptjeningAktiviteterDto.nyPeriodeOrgnr(OpptjeningAktivitetType.ARBEID, Intervall.fraOgMed(STP.minusMonths(10)), virksomhet.getIdentifikator()),
+                OpptjeningAktiviteterDto.nyPeriode(OpptjeningAktivitetType.DAGPENGER, Intervall.fraOgMed(STP.minusMonths(10)))));
+
+        // Sett opp IAY med VLSP ytelse utenfor siste 10 måneder (mer enn 11 måneder tilbake)
+        var iayGrunnlag = lagIayMedVlspYtelseOgSPInntekt(STP.minusMonths(14), STP.minusMonths(12));
+
+        var input = new BeregningsgrunnlagInput(koblingReferanse, iayGrunnlag, opptjeningAktiviteter, null, new ForeldrepengerGrunnlag(Dekningsgrad.DEKNINGSGRAD_100, true));
+        input = input.medBeregningsgrunnlagGrunnlag(grunnlag);
+
+        // Act
+        var tilfelle = new VurderBesteberegningTilfelleUtleder().utled(new FaktaOmBeregningInput(new StegProsesseringInput(input, BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER)), grunnlag);
+
+        // Assert
+        assertThat(tilfelle).isEmpty();
+    }
+
+    @Test
+    void skal_ikke_få_besteberegning_når_vlsp_ytelse_men_ingen_sp_inntekt_i_perioden() {
+        // Arrange
+        var virksomhet = Arbeidsgiver.virksomhet("28794923");
+        var bg = BeregningsgrunnlagDto.builder()
+                .medSkjæringstidspunkt(STP)
+                .leggTilAktivitetStatus(BeregningsgrunnlagAktivitetStatusDto.builder().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
+                .build();
+        var periode = BeregningsgrunnlagPeriodeDto.ny()
+                .medBeregningsgrunnlagPeriode(STP, null)
+                .build(bg);
+        BeregningsgrunnlagPrStatusOgAndelDto.ny()
+                .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
+                .medInntektskategori(Inntektskategori.ARBEIDSTAKER)
+                .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder().medArbeidsgiver(virksomhet))
+                .build(periode);
+        var grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
+                .medRegisterAktiviteter(BeregningAktivitetAggregatDto.builder()
+                        .medSkjæringstidspunktOpptjening(STP)
+                        .leggTilAktivitet(BeregningAktivitetDto.builder()
+                                .medPeriode(Intervall.fraOgMedTilOgMed(STP.minusMonths(12), STP))
+                                .medOpptjeningAktivitetType(OpptjeningAktivitetType.DAGPENGER)
+                                .build())
+                        .leggTilAktivitet(BeregningAktivitetDto.builder()
+                                .medPeriode(Intervall.fraOgMedTilOgMed(STP.minusMonths(12), STP))
+                                .medOpptjeningAktivitetType(OpptjeningAktivitetType.ARBEID)
+                                .medArbeidsgiver(virksomhet)
+                                .build())
+                        .build())
+                .medBeregningsgrunnlag(bg)
+                .build(BeregningsgrunnlagTilstand.FASTSATT_BEREGNINGSAKTIVITETER);
+        var opptjeningAktiviteter = new OpptjeningAktiviteterDto(List.of(
+                OpptjeningAktiviteterDto.nyPeriodeOrgnr(OpptjeningAktivitetType.ARBEID, Intervall.fraOgMed(STP.minusMonths(10)), virksomhet.getIdentifikator()),
+                OpptjeningAktiviteterDto.nyPeriode(OpptjeningAktivitetType.DAGPENGER, Intervall.fraOgMed(STP.minusMonths(10)))));
+
+        // Sett opp IAY med VLSP ytelse, men UTEN SP inntekt
+        var iayGrunnlag = lagIayMedKunVlspYtelse(STP.minusMonths(3), STP.minusMonths(1));
+
+        var input = new BeregningsgrunnlagInput(koblingReferanse, iayGrunnlag, opptjeningAktiviteter, null, new ForeldrepengerGrunnlag(Dekningsgrad.DEKNINGSGRAD_100, true));
+        input = input.medBeregningsgrunnlagGrunnlag(grunnlag);
+
+        // Act
+        var tilfelle = new VurderBesteberegningTilfelleUtleder().utled(new FaktaOmBeregningInput(new StegProsesseringInput(input, BeregningsgrunnlagTilstand.OPPDATERT_MED_ANDELER)), grunnlag);
+
+        // Assert
+        assertThat(tilfelle).isEmpty();
+    }
+
+    private no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseGrunnlagDto lagIayMedVlspYtelseOgSPInntekt(LocalDate fom, LocalDate tom) {
+        var ytelseBuilder = YtelseDtoBuilder.ny()
+                .medYtelseType(YtelseType.SYKEPENGER)
+                .medYtelseKilde(YtelseKilde.VLSP)
+                .medPeriode(Intervall.fraOgMedTilOgMed(fom, tom));
+        var registerBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
+        var aktørYtelseBuilder = registerBuilder.getAktørYtelseBuilder();
+        aktørYtelseBuilder.leggTilYtelse(ytelseBuilder);
+        registerBuilder.leggTilAktørYtelse(aktørYtelseBuilder);
+        var aktørInntektBuilder = registerBuilder.getAktørInntektBuilder();
+        var inntektBuilder = aktørInntektBuilder.getInntektBuilder(InntektskildeType.INNTEKT_BEREGNING, null);
+        inntektBuilder.leggTilInntektspost(InntektspostDtoBuilder.ny()
+                .medInntektspostType(InntektspostType.YTELSE)
+                .medInntektYtelse(InntektYtelseType.SYKEPENGER)
+                .medPeriode(fom, tom)
+                .medBeløp(Beløp.fra(30000)));
+        aktørInntektBuilder.leggTilInntekt(inntektBuilder);
+        registerBuilder.leggTilAktørInntekt(aktørInntektBuilder);
+        return InntektArbeidYtelseGrunnlagDtoBuilder.nytt()
+                .medData(registerBuilder)
+                .build();
+    }
+
+    private no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseGrunnlagDto lagIayMedKunVlspYtelse(LocalDate fom, LocalDate tom) {
+        var ytelseBuilder = YtelseDtoBuilder.ny()
+                .medYtelseType(YtelseType.SYKEPENGER)
+                .medYtelseKilde(YtelseKilde.VLSP)
+                .medPeriode(Intervall.fraOgMedTilOgMed(fom, tom));
+        var registerBuilder = InntektArbeidYtelseAggregatBuilder.oppdatere(Optional.empty(), VersjonTypeDto.REGISTER);
+        var aktørYtelseBuilder = registerBuilder.getAktørYtelseBuilder();
+        aktørYtelseBuilder.leggTilYtelse(ytelseBuilder);
+        registerBuilder.leggTilAktørYtelse(aktørYtelseBuilder);
+        return InntektArbeidYtelseGrunnlagDtoBuilder.nytt()
+                .medData(registerBuilder)
+                .build();
     }
 
 }
