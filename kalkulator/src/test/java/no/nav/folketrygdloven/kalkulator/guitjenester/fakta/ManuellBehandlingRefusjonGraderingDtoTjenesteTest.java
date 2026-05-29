@@ -11,6 +11,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import no.nav.folketrygdloven.kalkulator.input.ForeldrepengerGrunnlag;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BGAndelArbeidsforholdDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningAktivitetAggregatDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningAktivitetDto;
@@ -29,6 +30,7 @@ import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
+import no.nav.folketrygdloven.kalkulus.kodeverk.Dekningsgrad;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
@@ -71,6 +73,9 @@ class ManuellBehandlingRefusjonGraderingDtoTjenesteTest {
     void skalKunneEndreInntektEtterRedusertRefusjonTilUnder6G() {
         // Arrange
         var graderinger = lagGradering();
+        var aktivitetGradering = new AktivitetGradering(graderinger);
+        var foreldrepengeGrunnlag = new ForeldrepengerGrunnlag(Dekningsgrad.DEKNINGSGRAD_100, false, aktivitetGradering);
+
         var bgFørFordeling = lagBeregningsgrunnlagFørFordeling();
 
         var inntektsmeldinger = lagInntektsmeldingOver6GRefusjon();
@@ -81,7 +86,7 @@ class ManuellBehandlingRefusjonGraderingDtoTjenesteTest {
 
         // Act
         var kreverManuellBehandling = ManuellBehandlingRefusjonGraderingDtoTjeneste.skalSaksbehandlerRedigereInntekt(grunnlag,
-                new AktivitetGradering(graderinger), bgFørFordeling.getBeregningsgrunnlagPerioder().get(0),
+                foreldrepengeGrunnlag, bgFørFordeling.getBeregningsgrunnlagPerioder().get(0),
             bgFørFordeling.getBeregningsgrunnlagPerioder(), inntektsmeldinger, Collections.emptyList(), FagsakYtelseType.FORELDREPENGER);
 
         // Assert
@@ -94,6 +99,9 @@ class ManuellBehandlingRefusjonGraderingDtoTjenesteTest {
         // Arrange
         var graderingTom = SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(1);
         var graderingNæring = lagGraderingForNæringFraSTP(graderingTom);
+        var aktivitetGradering = new AktivitetGradering(graderingNæring);
+        var foreldrepengeGrunnlag = new ForeldrepengerGrunnlag(Dekningsgrad.DEKNINGSGRAD_100, false, aktivitetGradering);
+
         var bg = BeregningsgrunnlagDto.builder()
                 .medSkjæringstidspunkt(SKJÆRINGSTIDSPUNKT_OPPTJENING)
                 .medGrunnbeløp(Beløp.fra(GRUNNBELØP))
@@ -112,7 +120,7 @@ class ManuellBehandlingRefusjonGraderingDtoTjenesteTest {
         // Act
         var kreverManuellBehandling1 = ManuellBehandlingRefusjonGraderingDtoTjeneste.skalSaksbehandlerRedigereInntekt(
                 grunnlag,
-                new AktivitetGradering(graderingNæring),
+                foreldrepengeGrunnlag,
                 periode,
                 bg.getBeregningsgrunnlagPerioder(),
                 List.of(), Collections.emptyList(),
@@ -120,7 +128,7 @@ class ManuellBehandlingRefusjonGraderingDtoTjenesteTest {
 
         var kreverManuellBehandling2 = ManuellBehandlingRefusjonGraderingDtoTjeneste.skalSaksbehandlerRedigereInntekt(
                 grunnlag,
-                new AktivitetGradering(graderingNæring),
+                foreldrepengeGrunnlag,
                 periode2,
                 bg.getBeregningsgrunnlagPerioder(),
                 List.of(), Collections.emptyList(),
@@ -136,6 +144,8 @@ class ManuellBehandlingRefusjonGraderingDtoTjenesteTest {
     void skalKunneEndreRefusjonEtterRedusertRefusjonTilUnder6G() {
         // Arrange
         var graderinger = lagGradering();
+        var aktivitetGradering = new AktivitetGradering(graderinger);
+        var foreldrepengeGrunnlag = new ForeldrepengerGrunnlag(Dekningsgrad.DEKNINGSGRAD_100, false, aktivitetGradering);
         var bgFørFordeling = lagBeregningsgrunnlagFørFordeling();
         var inntektsmeldinger = lagInntektsmeldingOver6GRefusjon();
 
@@ -146,7 +156,7 @@ class ManuellBehandlingRefusjonGraderingDtoTjenesteTest {
         // Act
         var kreverManuellBehandlingAvRefusjon = ManuellBehandlingRefusjonGraderingDtoTjeneste.skalSaksbehandlerRedigereRefusjon(
                 grunnlag,
-            new AktivitetGradering(graderinger),
+            foreldrepengeGrunnlag,
             bgFørFordeling.getBeregningsgrunnlagPerioder().get(0), inntektsmeldinger, Beløp.fra(GRUNNBELØP), Collections.emptyList(),
             FagsakYtelseType.FORELDREPENGER);
 

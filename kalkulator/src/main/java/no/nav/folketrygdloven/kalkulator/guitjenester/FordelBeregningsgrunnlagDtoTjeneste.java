@@ -10,9 +10,7 @@ import no.nav.folketrygdloven.kalkulator.guitjenester.fakta.ManuellBehandlingRef
 import no.nav.folketrygdloven.kalkulator.guitjenester.fakta.RefusjonDtoTjeneste;
 import no.nav.folketrygdloven.kalkulator.guitjenester.fakta.RefusjonEllerGraderingArbeidsforholdDtoTjeneste;
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagGUIInput;
-import no.nav.folketrygdloven.kalkulator.input.ForeldrepengerGrunnlag;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
-import no.nav.folketrygdloven.kalkulator.modell.gradering.AktivitetGradering;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.FordelBeregningsgrunnlagAndelDto;
@@ -67,23 +65,22 @@ public class FordelBeregningsgrunnlagDtoTjeneste {
                                                                              BeregningsgrunnlagGUIInput input,
                                                                              BeregningsgrunnlagPeriodeDto periode,
                                                                              Beløp grunnbeløp) {
-        var aktivitetGradering = input.getYtelsespesifiktGrunnlag() instanceof ForeldrepengerGrunnlag ? ((ForeldrepengerGrunnlag) input.getYtelsespesifiktGrunnlag()).getAktivitetGradering() : AktivitetGradering.INGEN_GRADERING;
         var fordelAndeler = FordelBeregningsgrunnlagAndelDtoTjeneste.lagEndretBgAndelListe(input, periode);
 
         fordelBGPeriode.setHarPeriodeAarsakGraderingEllerRefusjon(
-            ManuellBehandlingRefusjonGraderingDtoTjeneste.skalSaksbehandlerRedigereInntekt(input.getBeregningsgrunnlagGrunnlag(), aktivitetGradering,
+            ManuellBehandlingRefusjonGraderingDtoTjeneste.skalSaksbehandlerRedigereInntekt(input.getBeregningsgrunnlagGrunnlag(), input.getYtelsespesifiktGrunnlag(),
                 periode, input.getBeregningsgrunnlag().getBeregningsgrunnlagPerioder(), input.getInntektsmeldinger(), input.getForlengelseperioder(),
                 input.getFagsakYtelseType()));
         fordelBGPeriode.setSkalRedigereInntekt(
-            ManuellBehandlingRefusjonGraderingDtoTjeneste.skalSaksbehandlerRedigereInntekt(input.getBeregningsgrunnlagGrunnlag(), aktivitetGradering,
+            ManuellBehandlingRefusjonGraderingDtoTjeneste.skalSaksbehandlerRedigereInntekt(input.getBeregningsgrunnlagGrunnlag(), input.getYtelsespesifiktGrunnlag(),
                 periode, input.getBeregningsgrunnlag().getBeregningsgrunnlagPerioder(), input.getInntektsmeldinger(), input.getForlengelseperioder(),
                 input.getFagsakYtelseType()));
         fordelBGPeriode.setSkalPreutfyllesMedBeregningsgrunnlag(
             ManuellBehandlingRefusjonGraderingDtoTjeneste.skalRedigereGrunnetTidligerePerioder(input.getBeregningsgrunnlagGrunnlag(),
-                aktivitetGradering, periode, input.getBeregningsgrunnlag().getBeregningsgrunnlagPerioder(), input.getInntektsmeldinger(),
+                input.getYtelsespesifiktGrunnlag(), periode, input.getBeregningsgrunnlag().getBeregningsgrunnlagPerioder(), input.getInntektsmeldinger(),
                 input.getForlengelseperioder(), input.getFagsakYtelseType()));
         fordelBGPeriode.setSkalKunneEndreRefusjon(
-            ManuellBehandlingRefusjonGraderingDtoTjeneste.skalSaksbehandlerRedigereRefusjon(input.getBeregningsgrunnlagGrunnlag(), aktivitetGradering,
+            ManuellBehandlingRefusjonGraderingDtoTjeneste.skalSaksbehandlerRedigereRefusjon(input.getBeregningsgrunnlagGrunnlag(), input.getYtelsespesifiktGrunnlag(),
                 periode, input.getInntektsmeldinger(), grunnbeløp, input.getForlengelseperioder(),
                 input.getFagsakYtelseType()));
         RefusjonDtoTjeneste.slåSammenRefusjonForAndelerISammeArbeidsforhold(fordelAndeler);
