@@ -1,6 +1,6 @@
 # ft-beregning
 
-Cross-team rule library for the beregning process supporting Folketrygdloven 14-4, 14-7, and 9 (using chapter 8 beregning). 
+Cross-team rule library for beregning (income calculation for benefits). 
 
 ## Shared context
 
@@ -8,39 +8,17 @@ Cross-team rule library for the beregning process supporting Folketrygdloven 14-
 - Copilot Space: `navikt/TeamForeldrepenger`
 
 ## Repo-specific context
+| Topic      | Details                                                                |
+|------------|------------------------------------------------------------------------|
+| Role       | Owns beregningsgrunnlag model and rules                                |
+| Consumers  | `fp-kalkulus`, `fp-sak` (frontend/letters), `ft-kalkulus` (K9)         |
+| Tech stack | Java SemVer library using `fp-nare` rule framework                     |
+| Modules    | `kodeverk`, `kontrakt`, `beregningsregler`, `kalkulator`               |
+| API        | `KalkulatorInterface` (operation), `KalkulatorGuiInterface` (frontend) |
 
-| Topic      | Details                                                                   |
-|------------|---------------------------------------------------------------------------|
-| Role       | Owns the common beregningsgrunnlag model and rules                        |
-| Consumers  | `fp-kalkulus`, `fp-sak` (frontend and letters), `ft-kalkulus` (K9)        |
-| Tech stack | Java SemVer library using `fp-nare` rule framework                        |
-| API        | `KalkulatorInterface` operation and `KalkulatorGuiInterface` for frontend |
-
-Code is shared between teams `teamforeldrepenger` and `k9saksbehandling`
-
-Modules:
-- `kodeverk`: enums used by this repo and consumers
-- `kontrakt`: models for API input and output + frontend models used by `ft-frontend-saksbehandling`
-- `beregningsregler`: the nare beregning rules
-- `kalkulator`: API and mapping data to and from rules
-
-## Beregning flow and steps
-
-Phase 1: define and calculate the beregning baseline (beregningsgrunnlag)
-- Finding calculation data (skjæringstidspunkt) and income sources (aktiviteter)
-- Check factual basis before calculation
-- Calculate based in Folketrygdloven chapter 8.
-- Calculate other aktiviteter depending on previous step
-- Foreldrepenger only: rules for the pregnant unemployed (receiving dagpenger)
-- Evaluate vilkår: deny if gross calculated income less than defined minimum
-
-Phase 2: distribute the beregningsgrunnlag over aktiviteter based on reimbursement claims
-- K9/Pleiepenger: evaluate effect of new income sources
-- Evaluate reimbursment claims and identify needs for manual evaluation (avklaringsbehov)
-- Distribute over aktiviteter
-- Finalize and limit to 6 * grunnbeløp
-
-Most steps may identifiy needs for manual evaluation (avklaringsbehov) - handled by consumers.
+Shared with team `k9saksbehandling`. 
+Two-phase pipeline: (1) calculate beregningsgrunnlag from aktiviteter per ftrl. kap. 8, 9 and 14, (2) distribute over aktiviteter based on refusjon (reimbursement). 
+Steps may produce avklaringsbehov - adressed by case workers though aksjonspunkt in  `fp-sak` or `k9-sak`.
 
 ## Verification
 
