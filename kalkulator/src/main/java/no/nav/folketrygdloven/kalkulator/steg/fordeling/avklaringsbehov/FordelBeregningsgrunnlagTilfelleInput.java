@@ -6,9 +6,8 @@ import java.util.List;
 import java.util.Objects;
 
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagGUIInput;
-import no.nav.folketrygdloven.kalkulator.input.ForeldrepengerGrunnlag;
+import no.nav.folketrygdloven.kalkulator.input.YtelsespesifiktGrunnlag;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
-import no.nav.folketrygdloven.kalkulator.modell.gradering.AktivitetGradering;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektsmeldingDto;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
@@ -20,17 +19,17 @@ public class FordelBeregningsgrunnlagTilfelleInput {
 
     private final List<Intervall> forlengelseperioder;
     private BeregningsgrunnlagDto beregningsgrunnlag;
-    private AktivitetGradering aktivitetGradering;
+    private YtelsespesifiktGrunnlag ytelsespesifiktGrunnlag;
     private Collection<InntektsmeldingDto> inntektsmeldinger;
     private final FagsakYtelseType fagsakYtelseType;
 
 
     public FordelBeregningsgrunnlagTilfelleInput(BeregningsgrunnlagDto beregningsgrunnlag,
-                                                 AktivitetGradering aktivitetGradering,
+                                                 YtelsespesifiktGrunnlag ytelsespesifiktGrunnlag,
                                                  Collection<InntektsmeldingDto> inntektsmeldinger, List<Intervall> forlengelseperioder,
                                                  FagsakYtelseType fagsakYtelseType) {
         this.beregningsgrunnlag = beregningsgrunnlag;
-        this.aktivitetGradering = aktivitetGradering;
+        this.ytelsespesifiktGrunnlag = ytelsespesifiktGrunnlag;
         this.inntektsmeldinger = inntektsmeldinger;
         this.forlengelseperioder = forlengelseperioder;
         this.fagsakYtelseType = fagsakYtelseType;
@@ -41,8 +40,8 @@ public class FordelBeregningsgrunnlagTilfelleInput {
         return beregningsgrunnlag;
     }
 
-    public AktivitetGradering getAktivitetGradering() {
-        return aktivitetGradering;
+    public YtelsespesifiktGrunnlag ytelsespesifiktGrunnlag() {
+        return ytelsespesifiktGrunnlag;
     }
 
     public Collection<InntektsmeldingDto> getInntektsmeldinger() {
@@ -61,17 +60,15 @@ public class FordelBeregningsgrunnlagTilfelleInput {
     public String toString() {
         return "FordelBeregningsgrunnlagTilfelleInput{" +
                 "beregningsgrunnlag=" + beregningsgrunnlag +
-                ", aktivitetGradering=" + aktivitetGradering +
+                ", ytelsespesifiktGrunnlag=" + ytelsespesifiktGrunnlag +
                 ", inntektsmeldinger=" + inntektsmeldinger +
                 ", fagsakYtelseType=" + fagsakYtelseType +
             '}';
     }
 
     public static FordelBeregningsgrunnlagTilfelleInput fraBeregningsgrunnlagRestInput(BeregningsgrunnlagGUIInput input) {
-        var aktivitetGradering = input.getYtelsespesifiktGrunnlag() instanceof ForeldrepengerGrunnlag ?
-                ((ForeldrepengerGrunnlag) input.getYtelsespesifiktGrunnlag()).getAktivitetGradering() : AktivitetGradering.INGEN_GRADERING;
         var inntektsmeldinger = input.getInntektsmeldinger();
-        return new FordelBeregningsgrunnlagTilfelleInput(input.getBeregningsgrunnlag(), aktivitetGradering, inntektsmeldinger,
+        return new FordelBeregningsgrunnlagTilfelleInput(input.getBeregningsgrunnlag(), input.getYtelsespesifiktGrunnlag(), inntektsmeldinger,
             input.getForlengelseperioder(), input.getFagsakYtelseType());
     }
 

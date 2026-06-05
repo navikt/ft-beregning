@@ -11,6 +11,7 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
+import no.nav.folketrygdloven.kalkulator.input.ForeldrepengerGrunnlag;
 import no.nav.folketrygdloven.kalkulator.konfig.KonfigTjeneste;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BGAndelArbeidsforholdDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatusDto;
@@ -28,6 +29,7 @@ import no.nav.folketrygdloven.kalkulator.steg.fordeling.avklaringsbehov.FordelBe
 import no.nav.folketrygdloven.kalkulator.steg.fordeling.avklaringsbehov.FordelingTilfelle;
 import no.nav.folketrygdloven.kalkulator.testutilities.BeregningInntektsmeldingTestUtil;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
+import no.nav.folketrygdloven.kalkulus.kodeverk.Dekningsgrad;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AndelKilde;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.PeriodeÅrsak;
@@ -348,7 +350,7 @@ class RefusjonOgGraderingTjenesteTest {
             .build());
 
         // Act
-        var fordelingInput = new FordelBeregningsgrunnlagTilfelleInput(bg, aktivitetGradering, List.of(im1), Collections.emptyList(),
+        var fordelingInput = new FordelBeregningsgrunnlagTilfelleInput(bg, new ForeldrepengerGrunnlag(Dekningsgrad.DEKNINGSGRAD_100, false, aktivitetGradering), List.of(im1), Collections.emptyList(),
             FagsakYtelseType.FORELDREPENGER);
         var andelerMedTilfeller = FordelBeregningsgrunnlagTilfelleTjeneste.vurderManuellBehandlingForPeriode(periode1, fordelingInput);
 
@@ -379,7 +381,7 @@ class RefusjonOgGraderingTjenesteTest {
 
 
     private Map<BeregningsgrunnlagPrStatusOgAndelDto, FordelingTilfelle> vurderManuellBehandling(BeregningsgrunnlagDto bg, AktivitetGradering aktivitetGradering, Collection<InntektsmeldingDto> inntektsmeldinger) {
-        var fordelingInput = new FordelBeregningsgrunnlagTilfelleInput(bg, aktivitetGradering, inntektsmeldinger, Collections.emptyList(), FagsakYtelseType.FORELDREPENGER);
+        var fordelingInput = new FordelBeregningsgrunnlagTilfelleInput(bg, new ForeldrepengerGrunnlag(Dekningsgrad.DEKNINGSGRAD_100, false, aktivitetGradering), inntektsmeldinger, Collections.emptyList(), FagsakYtelseType.FORELDREPENGER);
         return fordelingInput.getBeregningsgrunnlag().getBeregningsgrunnlagPerioder().stream()
                 .map(p -> FordelBeregningsgrunnlagTilfelleTjeneste.vurderManuellBehandlingForPeriode(p, fordelingInput))
                 .filter(r -> !r.isEmpty())

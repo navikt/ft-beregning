@@ -5,11 +5,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import no.nav.folketrygdloven.kalkulator.input.ForeldrepengerGrunnlag;
 import no.nav.folketrygdloven.kalkulator.input.YtelsespesifiktGrunnlag;
 import no.nav.folketrygdloven.kalkulator.modell.behandling.KoblingReferanse;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDto;
-import no.nav.folketrygdloven.kalkulator.modell.gradering.AktivitetGradering;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseGrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektsmeldingAggregatDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektsmeldingDto;
@@ -51,12 +49,8 @@ public class AvklaringsbehovUtlederFordelBeregning {
                                                                         List<Intervall> forlengelseperioder) {
 	    var beregningsgrunnlag = beregningsgrunnlagGrunnlag.getBeregningsgrunnlagHvisFinnes()
                 .orElseThrow(() -> new IllegalStateException("Utviklerfeil: Mangler beregningsgrunnlagGrunnlag"));
-	    var fordelingInput = new FordelBeregningsgrunnlagTilfelleInput(beregningsgrunnlag, finnGraderinger(ytelsespesifiktGrunnlag),
+	    var fordelingInput = new FordelBeregningsgrunnlagTilfelleInput(beregningsgrunnlag, ytelsespesifiktGrunnlag,
             inntektsmeldinger, forlengelseperioder, ref.getFagsakYtelseType());
         return FordelBeregningsgrunnlagTilfelleTjeneste.finnPerioderMedBehovForManuellVurdering(fordelingInput);
-    }
-
-    private static AktivitetGradering finnGraderinger(YtelsespesifiktGrunnlag ytelsespesifiktGrunnlag) {
-        return ytelsespesifiktGrunnlag instanceof ForeldrepengerGrunnlag ? ((ForeldrepengerGrunnlag) ytelsespesifiktGrunnlag).getAktivitetGradering() : AktivitetGradering.INGEN_GRADERING;
     }
 }

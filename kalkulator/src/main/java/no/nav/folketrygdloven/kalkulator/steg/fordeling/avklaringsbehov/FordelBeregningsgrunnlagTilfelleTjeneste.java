@@ -8,10 +8,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.kalkulator.avklaringsbehov.PerioderTilVurderingTjeneste;
+import no.nav.folketrygdloven.kalkulator.input.ForeldrepengerGrunnlag;
+import no.nav.folketrygdloven.kalkulator.input.SvangerskapspengerGrunnlag;
+import no.nav.folketrygdloven.kalkulator.input.YtelsespesifiktGrunnlag;
 import no.nav.folketrygdloven.kalkulator.konfig.KonfigTjeneste;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BGAndelArbeidsforholdDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
+import no.nav.folketrygdloven.kalkulator.modell.gradering.AktivitetGradering;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
@@ -49,13 +53,19 @@ public final class FordelBeregningsgrunnlagTilfelleTjeneste {
                                                                      FordelBeregningsgrunnlagTilfelleInput input,
                                                                      BeregningsgrunnlagPrStatusOgAndelDto andel) {
         boolean erNyAktivitet = FordelTilkommetArbeidsforholdTjeneste.erAktivitetLagtTilIPeriodisering(andel);
-        boolean skalManueltFordeles = !erAutomatiskFordelt(andel) || FagsakYtelseType.SVANGERSKAPSPENGER.equals(input.getFagsakYtelseType());
-        if (erNyAktivitet && skalManueltFordeles) {
+        var erSvp = FagsakYtelseType.SVANGERSKAPSPENGER.equals(input.getFagsakYtelseType());
+        boolean skalManueltFordeles = !erAutomatiskFordelt(andel) || erSvp;
+
+        var arbeidsforholdErSplittetSvp = erManueltSpittetArbeidsforhold(input.ytelsespesifiktGrunnlag()) && erSvp;
+
+        if (arbeidsforholdErSplittetSvp || (erNyAktivitet && skalManueltFordeles)) {
             return Optional.of(FordelingTilfelle.NY_AKTIVITET);
         }
 
         boolean andelHarRefusjonIPerioden = harInnvilgetRefusjon(andel);
-        var harGraderingIBGPeriode = FordelingGraderingTjeneste.harGraderingForAndelIPeriode(andel, input.getAktivitetGradering(), periode.getPeriode());
+        var aktivitetGradering = input.ytelsespesifiktGrunnlag() instanceof ForeldrepengerGrunnlag ?
+            ((ForeldrepengerGrunnlag) input.ytelsespesifiktGrunnlag()).getAktivitetGradering() : AktivitetGradering.INGEN_GRADERING;
+        var harGraderingIBGPeriode = FordelingGraderingTjeneste.harGraderingForAndelIPeriode(andel, aktivitetGradering, periode.getPeriode());
         if (!harGraderingIBGPeriode && !andelHarRefusjonIPerioden) {
             return Optional.empty();
         }
@@ -75,6 +85,15 @@ public final class FordelBeregningsgrunnlagTilfelleTjeneste {
             }
         }
         return Optional.empty();
+    }
+
+    private static boolean erManueltSpittetArbeidsforhold(YtelsespesifiktGrunnlag ytelsespesifiktGrunnlag) {
+        if (ytelsespesifiktGrunnlag instanceof SvangerskapspengerGrunnlag svpGrunnlag) {
+            return svpGrunnlag.getUtbetalingsgradPrAktivitet()
+                .stream()
+                .anyMatch(t -> t.getUtbetalingsgradArbeidsforhold().getArbeidsforholdErSplittet());
+        }
+        return false;
     }
 
     private static Boolean harInnvilgetRefusjon(BeregningsgrunnlagPrStatusOgAndelDto andel) {
