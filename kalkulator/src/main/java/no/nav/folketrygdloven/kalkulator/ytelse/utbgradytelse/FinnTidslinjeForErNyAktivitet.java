@@ -42,7 +42,7 @@ public class FinnTidslinjeForErNyAktivitet {
                             var andelAG = a.getBgAndelArbeidsforhold().map(BGAndelArbeidsforholdDto::getArbeidsgiver).orElse(null);
                             var arbeidsgiverMatcher = Objects.equals(andelAG, tilretteleggingArbeidsgiver);
                             var andelRef = a.getBgAndelArbeidsforhold().map(BGAndelArbeidsforholdDto::getArbeidsforholdRef).orElse(InternArbeidsforholdRefDto.nullRef());
-                            var arbeidsforholdRefMatcher = andelRef.gjelderFor(internArbeidsforholdRef);
+                            var arbeidsforholdRefMatcher = Objects.equals(andelRef.getReferanse(), internArbeidsforholdRef.getReferanse());
                             return statusMatcher && arbeidsgiverMatcher && arbeidsforholdRefMatcher;
                         }))
                 .map(p -> new LocalDateSegment<>(p.getBeregningsgrunnlagPeriodeFom(), p.getBeregningsgrunnlagPeriodeTom(), false))
