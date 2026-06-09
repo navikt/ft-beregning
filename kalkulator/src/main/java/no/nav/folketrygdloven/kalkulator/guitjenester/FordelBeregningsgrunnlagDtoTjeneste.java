@@ -83,7 +83,7 @@ public class FordelBeregningsgrunnlagDtoTjeneste {
                 aktivitetGradering, periode, input.getBeregningsgrunnlag().getBeregningsgrunnlagPerioder(), input.getInntektsmeldinger(),
                 input.getForlengelseperioder(), input.getFagsakYtelseType()));
         fordelBGPeriode.setSkalKunneEndreRefusjon(
-            ManuellBehandlingRefusjonGraderingDtoTjeneste.skalSaksbehandlerRedigereRefusjon(input.getBeregningsgrunnlagGrunnlag(), aktivitetGradering,
+            ManuellBehandlingRefusjonGraderingDtoTjeneste.skalSaksbehandlerRedigereRefusjon(input.getBeregningsgrunnlagGrunnlag(), input.getYtelsespesifiktGrunnlag(),
                 periode, input.getInntektsmeldinger(), grunnbeløp, input.getForlengelseperioder(),
                 input.getFagsakYtelseType()));
         RefusjonDtoTjeneste.slåSammenRefusjonForAndelerISammeArbeidsforhold(fordelAndeler);

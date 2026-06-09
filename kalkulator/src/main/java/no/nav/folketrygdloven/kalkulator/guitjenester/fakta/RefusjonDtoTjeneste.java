@@ -8,12 +8,16 @@ import java.util.Objects;
 import java.util.Optional;
 
 import no.nav.folketrygdloven.kalkulator.guitjenester.ModellTyperMapper;
+import no.nav.folketrygdloven.kalkulator.input.ForeldrepengerGrunnlag;
+import no.nav.folketrygdloven.kalkulator.input.UtbetalingsgradGrunnlag;
+import no.nav.folketrygdloven.kalkulator.input.YtelsespesifiktGrunnlag;
 import no.nav.folketrygdloven.kalkulator.konfig.KonfigTjeneste;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BGAndelArbeidsforholdDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
 import no.nav.folketrygdloven.kalkulator.modell.gradering.AktivitetGradering;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
+import no.nav.folketrygdloven.kalkulator.modell.typer.Utbetalingsgrad;
 import no.nav.folketrygdloven.kalkulator.steg.fordeling.avklaringsbehov.FordelingGraderingTjeneste;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AndelKilde;
 import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.BeregningsgrunnlagArbeidsforholdDto;
@@ -33,15 +37,52 @@ public class RefusjonDtoTjeneste {
      *
      * @param andelFraOppdatert Beregnignsgrunnlagsandel fra oppdatert grunnlag
      * @param periode
-     * @param aktivitetGradering Graderinger for behandling
+     * @param ytelsegrunnlag Graderinger for behandling
      * @param grunnbeløp
      * @return Returnerer true om andel har gradering (uten refusjon) og total refusjon i perioden er større enn 6G, ellers false
      */
-    static boolean skalKunneEndreRefusjon(BeregningsgrunnlagPrStatusOgAndelDto andelFraOppdatert,
-                                          BeregningsgrunnlagPeriodeDto periode, AktivitetGradering aktivitetGradering,
-                                          Beløp grunnbeløp) {
-        if (harGraderingOgIkkeRefusjon(andelFraOppdatert, periode, aktivitetGradering)) {
+    static boolean  skalKunneEndreRefusjon(BeregningsgrunnlagPrStatusOgAndelDto andelFraOppdatert,
+                                           BeregningsgrunnlagPeriodeDto periode,
+                                           YtelsespesifiktGrunnlag ytelsegrunnlag,
+                                           Beløp grunnbeløp) {
+        var aktivitetgradering = ytelsegrunnlag instanceof ForeldrepengerGrunnlag fg ? fg.getAktivitetGradering() : AktivitetGradering.INGEN_GRADERING;
+        if (harGraderingOgIkkeRefusjon(andelFraOppdatert, periode, aktivitetgradering)) {
             return grunnbeløp.multipliser(KonfigTjeneste.getAntallGØvreGrenseverdi()).compareTo(finnTotalRefusjonPrÅr(periode)) <= 0;
+        }
+        if (harFlereTilretteleggingerHosSammeAGMenUtenFullRefusjon(andelFraOppdatert, periode, ytelsegrunnlag)) {
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean harFlereTilretteleggingerHosSammeAGMenUtenFullRefusjon(BeregningsgrunnlagPrStatusOgAndelDto andelFraOppdatert,
+                                                                                  BeregningsgrunnlagPeriodeDto periode, YtelsespesifiktGrunnlag ytelsegrunnlag) {
+        var alleAndelerMedSammeAG = periode.getBeregningsgrunnlagPrStatusOgAndelList()
+            .stream()
+            .filter(a -> a.getBgAndelArbeidsforhold()
+                .map(BGAndelArbeidsforholdDto::getArbeidsgiver)
+                .equals(andelFraOppdatert.getBgAndelArbeidsforhold().map(BGAndelArbeidsforholdDto::getArbeidsgiver)))
+            .toList();
+        if (alleAndelerMedSammeAG.size() == 1) {
+            return false;
+        }
+        var totalBrutto = alleAndelerMedSammeAG.stream()
+            .map(BeregningsgrunnlagPrStatusOgAndelDto::getBruttoPrÅr)
+            .filter(Objects::nonNull)
+            .reduce(Beløp::adder).orElse(Beløp.ZERO);
+        var totalRefusjon = alleAndelerMedSammeAG.stream()
+            .map(a -> a.getBgAndelArbeidsforhold().map(BGAndelArbeidsforholdDto::getGjeldendeRefusjonPrÅr).orElse(Beløp.ZERO))
+            .reduce(Beløp::adder).orElse(Beløp.ZERO);
+        if (totalBrutto.compareTo(totalRefusjon) <= 0) {
+            return false;
+        }
+        if (ytelsegrunnlag instanceof UtbetalingsgradGrunnlag ug) {
+            var tilretteleggingerHosSammeAG = ug.getUtbetalingsgradPrAktivitet()
+                .stream()
+                .filter(ua -> ua.getUtbetalingsgradArbeidsforhold().getArbeidsgiver().equals(andelFraOppdatert.getArbeidsgiver()))
+                .toList();
+            return tilretteleggingerHosSammeAG.stream().anyMatch(t -> t.getPeriodeMedUtbetalingsgrad().stream().anyMatch(u -> u.getUtbetalingsgrad().compareTo(
+                Utbetalingsgrad.ZERO) > 0));
         }
         return false;
     }

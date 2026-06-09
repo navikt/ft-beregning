@@ -4,7 +4,6 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.AktivitetStatusV2;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SplittetAndel;
@@ -33,19 +32,16 @@ public class MapFastsettBeregningsgrunnlagPerioderFraRegelTilVLGraderingOgUtbeta
     @Override
     protected void mapAndeler(SplittetPeriode splittetPeriode,
                               List<BeregningsgrunnlagPrStatusOgAndelDto> andelListe, BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode) {
-        var gammelAndelNyAndelMap = lagSplittetAndelTilNyAndelMap(andelListe, splittetPeriode.getNyeAndeler());
-        andelListe.stream().filter(a -> !gammelAndelNyAndelMap.containsKey(a))
-            .forEach(eksisterendeAndel -> leggTilEksisterende(beregningsgrunnlagPeriode, eksisterendeAndel));
+        andelListe.forEach(eksisterendeAndel -> leggTilEksisterende(beregningsgrunnlagPeriode, eksisterendeAndel));
         try {
-            splittetPeriode.getNyeAndeler().forEach(nyAndel -> mapNyAndel(beregningsgrunnlagPeriode, nyAndel, gammelAndelNyAndelMap));
+            splittetPeriode.getNyeAndeler().forEach(nyAndel -> mapNyAndel(beregningsgrunnlagPeriode, nyAndel));
         } catch (Exception e) {
             var error = String.format("Klarte ikke mappe nye andeler %s. Fullstendig feilmelding: %s", splittetPeriode.getNyeAndeler(), e);
             throw new IllegalStateException(error);
         }
     }
 
-    private void mapNyAndel(BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode, SplittetAndel nyAndel,
-                            Map<BeregningsgrunnlagPrStatusOgAndelDto, SplittetAndel> gammelAndelNyAndelMap) {
+    private void mapNyAndel(BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode, SplittetAndel nyAndel) {
         // Antar at vi ikkje får nye andeler for ytelse FRISINN
         if (nyAndelErSNFlDP(nyAndel)) {
             var aktivitetStatus = mapAktivitetStatus(nyAndel.getAktivitetStatus());
@@ -53,41 +49,28 @@ public class MapFastsettBeregningsgrunnlagPerioderFraRegelTilVLGraderingOgUtbeta
                 throw new IllegalStateException("Klarte ikke identifisere aktivitetstatus under periodesplitt. Status var " + nyAndel.getAktivitetStatus());
             }
             var eksisterende = beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndelList().stream()
-                    .anyMatch(a -> a.getAktivitetStatus().equals(aktivitetStatus) && a.getArbeidsforholdType().equals(aktivitetTypeMap.get(aktivitetStatus)));
+                .anyMatch(a -> a.getAktivitetStatus().equals(aktivitetStatus) && a.getArbeidsforholdType().equals(aktivitetTypeMap.get(aktivitetStatus)));
             if (!eksisterende) {
                 BeregningsgrunnlagPrStatusOgAndelDto.ny()
-                        .medKilde(AndelKilde.PROSESS_PERIODISERING)
-                        .medAktivitetStatus(aktivitetStatus)
-                        .medArbforholdType(aktivitetTypeMap.get(aktivitetStatus))
-                        .build(beregningsgrunnlagPeriode);
+                    .medKilde(AndelKilde.PROSESS_PERIODISERING)
+                    .medAktivitetStatus(aktivitetStatus)
+                    .medArbforholdType(aktivitetTypeMap.get(aktivitetStatus))
+                    .build(beregningsgrunnlagPeriode);
             }
         } else {
-            var gammelAndel = gammelAndelNyAndelMap.entrySet().stream()
-                    .filter(e -> e.getValue().equals(nyAndel))
-                    .map(Map.Entry::getKey)
-                    .findFirst();
             var arbeidsgiver = MapArbeidsforholdFraRegelTilVL.map(nyAndel.getArbeidsforhold().getReferanseType(), nyAndel.getArbeidsforhold().getOrgnr(), nyAndel.getArbeidsforhold().getAktørId());
             var iaRef = InternArbeidsforholdRefDto.ref(nyAndel.getArbeidsforhold().getArbeidsforholdId());
             var andelArbeidsforholdBuilder = BGAndelArbeidsforholdDto.builder()
-                    .medArbeidsgiver(arbeidsgiver)
-                    .medArbeidsforholdRef(iaRef)
-                    .medArbeidsperiodeFom(nyAndel.getArbeidsperiodeFom())
-                    .medArbeidsperiodeTom(nyAndel.getArbeidsperiodeTom());
-            if (gammelAndel.isPresent()) {
-                BeregningsgrunnlagPrStatusOgAndelDto.kopier(gammelAndel.get())
-                    .medKilde(AndelKilde.PROSESS_START)
-                    .medBGAndelArbeidsforhold(andelArbeidsforholdBuilder)
-                    .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
-                    .medArbforholdType(OpptjeningAktivitetType.ARBEID)
-                    .build(beregningsgrunnlagPeriode);
-            } else {
-                BeregningsgrunnlagPrStatusOgAndelDto.ny()
-                    .medKilde(AndelKilde.PROSESS_PERIODISERING)
-                    .medBGAndelArbeidsforhold(andelArbeidsforholdBuilder)
-                    .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
-                    .medArbforholdType(OpptjeningAktivitetType.ARBEID)
-                    .build(beregningsgrunnlagPeriode);
-            }
+                .medArbeidsgiver(arbeidsgiver)
+                .medArbeidsforholdRef(iaRef)
+                .medArbeidsperiodeFom(nyAndel.getArbeidsperiodeFom())
+                .medArbeidsperiodeTom(nyAndel.getArbeidsperiodeTom());
+            BeregningsgrunnlagPrStatusOgAndelDto.ny()
+                .medKilde(AndelKilde.PROSESS_PERIODISERING)
+                .medBGAndelArbeidsforhold(andelArbeidsforholdBuilder)
+                .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
+                .medArbforholdType(OpptjeningAktivitetType.ARBEID)
+                .build(beregningsgrunnlagPeriode);
         }
     }
 
@@ -98,51 +81,22 @@ public class MapFastsettBeregningsgrunnlagPerioderFraRegelTilVLGraderingOgUtbeta
         var status = statusMap.get(aktivitetStatusV2);
         if (status == null) {
             throw new IllegalStateException(
-                    "Mangler mapping til " + AktivitetStatus.class.getName() + " fra " + AktivitetStatusV2.class.getName() + "." + aktivitetStatusV2);
+                "Mangler mapping til " + AktivitetStatus.class.getName() + " fra " + AktivitetStatusV2.class.getName() + "." + aktivitetStatusV2);
         }
         return status;
     }
 
     private boolean nyAndelErSNFlDP(SplittetAndel nyAndel) {
         return nyAndel.getAktivitetStatus() != null
-                && (nyAndel.getAktivitetStatus().equals(AktivitetStatusV2.SN)
-                || nyAndel.getAktivitetStatus().equals(AktivitetStatusV2.FL)
-                || nyAndel.getAktivitetStatus().equals(AktivitetStatusV2.DP));
+            && (nyAndel.getAktivitetStatus().equals(AktivitetStatusV2.SN)
+            || nyAndel.getAktivitetStatus().equals(AktivitetStatusV2.FL)
+            || nyAndel.getAktivitetStatus().equals(AktivitetStatusV2.DP));
     }
 
     private void leggTilEksisterende(BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode,
                                      BeregningsgrunnlagPrStatusOgAndelDto eksisterendeAndel) {
         var andelBuilder = BeregningsgrunnlagPrStatusOgAndelDto.kopier(eksisterendeAndel);
         andelBuilder.build(beregningsgrunnlagPeriode);
-    }
-
-    /**
-     * Lager en map fra eksisterende andel til den nye andelen (fra SplittetPeriode) som tilhører samme arbeidsgiver.
-     * Matcher på arbeidsgiver (orgnr/aktørId) uavhengig av arbeidsforholdRef.
-     * Dersom flere nye andeler matcher samme eksisterende andel, velges den første (laveste arbeidsforholdId)
-     * da dette typisk er den opprinnelige/primære andelen.
-     */
-    private Map<BeregningsgrunnlagPrStatusOgAndelDto, SplittetAndel> lagSplittetAndelTilNyAndelMap(
-            List<BeregningsgrunnlagPrStatusOgAndelDto> eksisterendeAndeler,
-            List<SplittetAndel> nyeAndeler) {
-        Map<BeregningsgrunnlagPrStatusOgAndelDto, SplittetAndel> map = new HashMap<>();
-        for (SplittetAndel nyAndel : nyeAndeler) {
-            if (nyAndel.getArbeidsforhold() == null) {
-                continue;
-            }
-            var arbeidsgiver = MapArbeidsforholdFraRegelTilVL.map(
-                    nyAndel.getArbeidsforhold().getReferanseType(),
-                    nyAndel.getArbeidsforhold().getOrgnr(),
-                    nyAndel.getArbeidsforhold().getAktørId());
-            eksisterendeAndeler.stream()
-                    .filter(andel -> andel.getBgAndelArbeidsforhold()
-                            .map(BGAndelArbeidsforholdDto::getArbeidsgiver)
-                            .filter(ag -> Objects.equals(ag, arbeidsgiver))
-                            .isPresent())
-                    .findFirst()
-                    .ifPresent(matchendeAndel -> map.putIfAbsent(matchendeAndel, nyAndel));
-        }
-        return map;
     }
 
 }
