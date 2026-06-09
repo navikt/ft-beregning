@@ -13,6 +13,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import no.nav.folketrygdloven.kalkulus.felles.Beløp;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 
+import java.math.BigDecimal;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(value = JsonInclude.Include.NON_ABSENT, content = JsonInclude.Include.NON_EMPTY)
 @JsonAutoDetect(fieldVisibility = NONE, getterVisibility = NONE, setterVisibility = NONE, isGetterVisibility = NONE, creatorVisibility = NONE)
@@ -46,6 +48,11 @@ public class FordelBeregningsgrunnlagAndelDto extends FaktaOmBeregningAndelDto {
     @JsonProperty(value = "arbeidsforholdType")
     @NotNull
     private OpptjeningAktivitetType arbeidsforholdType;
+
+    @Valid
+    @JsonProperty(value = "utbetalingsgrad")
+    @NotNull
+    private BigDecimal utbetalingsgrad;
 
     public FordelBeregningsgrunnlagAndelDto() {
         super();
@@ -112,5 +119,14 @@ public class FordelBeregningsgrunnlagAndelDto extends FaktaOmBeregningAndelDto {
 
     public void setFordeltPrAar(Beløp fordeltPrAar) {
         this.fordeltPrAar = fordeltPrAar;
+    }
+
+
+    public BigDecimal getUtbetalingsgrad() {
+        return utbetalingsgrad;
+    }
+
+    public void setUtbetalingsgrad(BigDecimal utbetalingsgrad) {
+        this.utbetalingsgrad = utbetalingsgrad;
     }
 }

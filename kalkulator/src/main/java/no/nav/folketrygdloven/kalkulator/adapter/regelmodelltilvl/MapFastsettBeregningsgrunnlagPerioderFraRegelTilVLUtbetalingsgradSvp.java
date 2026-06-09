@@ -12,10 +12,14 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SplittetPe
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BGAndelArbeidsforholdDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
+import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
+import no.nav.folketrygdloven.kalkulator.modell.typer.Refusjon;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AndelKilde;
+import no.nav.folketrygdloven.kalkulus.kodeverk.Hjemmel;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
+import no.nav.folketrygdloven.kalkulus.kodeverk.Utfall;
 
 public class MapFastsettBeregningsgrunnlagPerioderFraRegelTilVLUtbetalingsgradSvp extends MapFastsettBeregningsgrunnlagPerioderFraRegelTilVL {
 
@@ -62,33 +66,30 @@ public class MapFastsettBeregningsgrunnlagPerioderFraRegelTilVLUtbetalingsgradSv
                         .build(beregningsgrunnlagPeriode);
             }
         } else {
-            var harGenerellAndel = gammelAndelNyAndelMap.entrySet().stream()
+            var andelUtenId = gammelAndelNyAndelMap.entrySet().stream()
                     .filter(e -> e.getValue().equals(nyAndel))
                     .map(Map.Entry::getKey)
                     .findFirst();
             var arbeidsgiver = MapArbeidsforholdFraRegelTilVL.map(nyAndel.getArbeidsforhold().getReferanseType(), nyAndel.getArbeidsforhold().getOrgnr(), nyAndel.getArbeidsforhold().getAktørId());
             var iaRef = InternArbeidsforholdRefDto.ref(nyAndel.getArbeidsforhold().getArbeidsforholdId());
-            var andelArbeidsforholdBuilder = BGAndelArbeidsforholdDto.builder()
-                    .medArbeidsgiver(arbeidsgiver)
-                    .medArbeidsforholdRef(iaRef)
-                    .medArbeidsperiodeFom(nyAndel.getArbeidsperiodeFom())
-                    .medArbeidsperiodeTom(nyAndel.getArbeidsperiodeTom());
-            if (harGenerellAndel.isPresent()) {
-                var arbeidsforhold = harGenerellAndel.get().getBgAndelArbeidsforhold()
+            if (andelUtenId.isPresent()) {
+                var arbeidsforhold = andelUtenId.get().getBgAndelArbeidsforhold()
                     .map(bga -> BGAndelArbeidsforholdDto.builder(bga).medArbeidsforholdRef(iaRef)).orElse(BGAndelArbeidsforholdDto.builder()
                     .medArbeidsgiver(arbeidsgiver)
                     .medArbeidsforholdRef(iaRef)
                     .medArbeidsperiodeFom(nyAndel.getArbeidsperiodeFom())
                     .medArbeidsperiodeTom(nyAndel.getArbeidsperiodeTom()));
-                andelArbeidsforholdBuilder.medRefusjon(harGenerellAndel.get().getBgAndelArbeidsforhold().get().getRefusjon())
-                BGAndelArbeidsforholdDto.builder(harGenerellAndel.map(BeregningsgrunnlagPrStatusOgAndelDto::getBgAndelArbeidsforhold))
-                BeregningsgrunnlagPrStatusOgAndelDto.kopier(harGenerellAndel.get())
-                    .medBGAndelArbeidsforhold(andelArbeidsforholdBuilder)
+                BeregningsgrunnlagPrStatusOgAndelDto.kopier(andelUtenId.get())
+                    .medBGAndelArbeidsforhold(arbeidsforhold)
                     .build(beregningsgrunnlagPeriode);
             } else {
                 BeregningsgrunnlagPrStatusOgAndelDto.ny()
                     .medKilde(AndelKilde.PROSESS_PERIODISERING)
-                    .medBGAndelArbeidsforhold(andelArbeidsforholdBuilder)
+                    .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder()
+                        .medArbeidsgiver(arbeidsgiver)
+                        .medArbeidsforholdRef(iaRef)
+                        .medArbeidsperiodeFom(nyAndel.getArbeidsperiodeFom())
+                        .medArbeidsperiodeTom(nyAndel.getArbeidsperiodeTom()))
                     .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                     .medArbforholdType(OpptjeningAktivitetType.ARBEID)
                     .build(beregningsgrunnlagPeriode);

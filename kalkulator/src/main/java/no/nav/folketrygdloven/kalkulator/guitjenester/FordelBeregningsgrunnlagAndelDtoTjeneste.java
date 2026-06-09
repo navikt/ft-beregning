@@ -1,5 +1,6 @@
 package no.nav.folketrygdloven.kalkulator.guitjenester;
 
+import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,8 +9,11 @@ import java.util.Optional;
 
 import no.nav.folketrygdloven.kalkulator.felles.FinnInntektsmeldingForAndel;
 import no.nav.folketrygdloven.kalkulator.felles.MatchBeregningsgrunnlagTjeneste;
+import no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.UtbetalingsgradTjeneste;
 import no.nav.folketrygdloven.kalkulator.guitjenester.fakta.RefusjonDtoTjeneste;
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagGUIInput;
+import no.nav.folketrygdloven.kalkulator.input.SvangerskapspengerGrunnlag;
+import no.nav.folketrygdloven.kalkulator.input.YtelsespesifiktGrunnlag;
 import no.nav.folketrygdloven.kalkulator.konfig.KonfigTjeneste;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BGAndelArbeidsforholdDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDto;
@@ -19,6 +23,7 @@ import no.nav.folketrygdloven.kalkulator.modell.iay.InntektsmeldingDto;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
 import no.nav.folketrygdloven.kalkulator.steg.fordeling.avklaringsbehov.FordelTilkommetArbeidsforholdTjeneste;
+import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.FordelBeregningsgrunnlagAndelDto;
 
 class FordelBeregningsgrunnlagAndelDtoTjeneste {
@@ -36,9 +41,18 @@ class FordelBeregningsgrunnlagAndelDtoTjeneste {
             RefusjonDtoTjeneste.settRefusjonskrav(andel, endringAndel);
             endringAndel.setNyttArbeidsforhold(FordelTilkommetArbeidsforholdTjeneste.erAktivitetLagtTilIPeriodisering(andel));
             endringAndel.setArbeidsforholdType(andel.getArbeidsforholdType());
+            endringAndel.setUtbetalingsgrad(finnUtbetalingsgrad(andel, input.getYtelsespesifiktGrunnlag(), periode.getPeriode()));
             endringAndeler.add(endringAndel);
         }
         return endringAndeler;
+    }
+
+    private static BigDecimal finnUtbetalingsgrad(BeregningsgrunnlagPrStatusOgAndelDto andel, YtelsespesifiktGrunnlag ytelsespesifiktGrunnlag,
+                                                  Intervall periode) {
+        if (ytelsespesifiktGrunnlag instanceof SvangerskapspengerGrunnlag) {
+            return UtbetalingsgradTjeneste.finnUtbetalingsgradForAndel(andel, periode, ytelsespesifiktGrunnlag, false).verdi();
+        }
+        return null;
     }
 
     private static FordelBeregningsgrunnlagAndelDto lagEndretBGAndel(BeregningsgrunnlagGUIInput input,
