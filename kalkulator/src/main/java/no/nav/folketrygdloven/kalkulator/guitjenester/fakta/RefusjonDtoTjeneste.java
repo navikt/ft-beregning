@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import no.nav.folketrygdloven.kalkulator.guitjenester.ModellTyperMapper;
 import no.nav.folketrygdloven.kalkulator.input.ForeldrepengerGrunnlag;
+import no.nav.folketrygdloven.kalkulator.input.SvangerskapspengerGrunnlag;
 import no.nav.folketrygdloven.kalkulator.input.UtbetalingsgradGrunnlag;
 import no.nav.folketrygdloven.kalkulator.input.YtelsespesifiktGrunnlag;
 import no.nav.folketrygdloven.kalkulator.konfig.KonfigTjeneste;
@@ -49,40 +50,23 @@ public class RefusjonDtoTjeneste {
         if (harGraderingOgIkkeRefusjon(andelFraOppdatert, periode, aktivitetgradering)) {
             return grunnbeløp.multipliser(KonfigTjeneste.getAntallGØvreGrenseverdi()).compareTo(finnTotalRefusjonPrÅr(periode)) <= 0;
         }
-        if (harFlereTilretteleggingerHosSammeAGMenUtenFullRefusjon(andelFraOppdatert, periode, ytelsegrunnlag)) {
+        // For å håndtere tilrettelegginger i SVP som splittes på flere andeler når det er flere arbeidsforhold i samme bedrift må refusjon fritt kunne fordeles mellom andelene hos samme arbeidsgiver
+        if (harFlereAndelerISammeVirksomhetSVP(andelFraOppdatert, periode, ytelsegrunnlag)) {
             return true;
         }
         return false;
     }
 
-    private static boolean harFlereTilretteleggingerHosSammeAGMenUtenFullRefusjon(BeregningsgrunnlagPrStatusOgAndelDto andelFraOppdatert,
-                                                                                  BeregningsgrunnlagPeriodeDto periode, YtelsespesifiktGrunnlag ytelsegrunnlag) {
-        var alleAndelerMedSammeAG = periode.getBeregningsgrunnlagPrStatusOgAndelList()
-            .stream()
-            .filter(a -> a.getBgAndelArbeidsforhold()
-                .map(BGAndelArbeidsforholdDto::getArbeidsgiver)
-                .equals(andelFraOppdatert.getBgAndelArbeidsforhold().map(BGAndelArbeidsforholdDto::getArbeidsgiver)))
-            .toList();
-        if (alleAndelerMedSammeAG.size() == 1) {
-            return false;
-        }
-        var totalBrutto = alleAndelerMedSammeAG.stream()
-            .map(BeregningsgrunnlagPrStatusOgAndelDto::getBruttoPrÅr)
-            .filter(Objects::nonNull)
-            .reduce(Beløp::adder).orElse(Beløp.ZERO);
-        var totalRefusjon = alleAndelerMedSammeAG.stream()
-            .map(a -> a.getBgAndelArbeidsforhold().map(BGAndelArbeidsforholdDto::getGjeldendeRefusjonPrÅr).orElse(Beløp.ZERO))
-            .reduce(Beløp::adder).orElse(Beløp.ZERO);
-        if (totalBrutto.compareTo(totalRefusjon) <= 0) {
-            return false;
-        }
-        if (ytelsegrunnlag instanceof UtbetalingsgradGrunnlag ug) {
-            var tilretteleggingerHosSammeAG = ug.getUtbetalingsgradPrAktivitet()
+    private static boolean harFlereAndelerISammeVirksomhetSVP(BeregningsgrunnlagPrStatusOgAndelDto andelFraOppdatert,
+                                                              BeregningsgrunnlagPeriodeDto periode, YtelsespesifiktGrunnlag ytelsegrunnlag) {
+        if (ytelsegrunnlag instanceof SvangerskapspengerGrunnlag) {
+            var alleAndelerMedSammeAG = periode.getBeregningsgrunnlagPrStatusOgAndelList()
                 .stream()
-                .filter(ua -> ua.getUtbetalingsgradArbeidsforhold().getArbeidsgiver().equals(andelFraOppdatert.getArbeidsgiver()))
+                .filter(a -> a.getBgAndelArbeidsforhold()
+                    .map(BGAndelArbeidsforholdDto::getArbeidsgiver)
+                    .equals(andelFraOppdatert.getBgAndelArbeidsforhold().map(BGAndelArbeidsforholdDto::getArbeidsgiver)))
                 .toList();
-            return tilretteleggingerHosSammeAG.stream().anyMatch(t -> t.getPeriodeMedUtbetalingsgrad().stream().anyMatch(u -> u.getUtbetalingsgrad().compareTo(
-                Utbetalingsgrad.ZERO) > 0));
+            return alleAndelerMedSammeAG.size() > 1;
         }
         return false;
     }

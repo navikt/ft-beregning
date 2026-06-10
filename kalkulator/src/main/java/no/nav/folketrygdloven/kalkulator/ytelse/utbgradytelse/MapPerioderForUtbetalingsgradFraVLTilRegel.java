@@ -28,6 +28,7 @@ import no.nav.folketrygdloven.kalkulator.modell.svp.AktivitetDto;
 import no.nav.folketrygdloven.kalkulator.modell.svp.PeriodeMedUtbetalingsgradDto;
 import no.nav.folketrygdloven.kalkulator.modell.svp.UtbetalingsgradPrAktivitetDto;
 import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
+import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.UttakArbeidType;
 
 
@@ -104,7 +105,8 @@ public class MapPerioderForUtbetalingsgradFraVLTilRegel {
 
         var builder = no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.utbetalingsgrad.AndelUtbetalingsgrad.builder()
                 .medAktivitetStatus(tilretteleggingAktivitetStatus)
-                .medNyAktivitetTidslinje(finnTidslinjeForNyAktivitet(beregningsgrunnlagDto, aktivitet.getUttakArbeidType(), aktivitet.getInternArbeidsforholdRef(), aktivitet.getArbeidsgiver()));
+                .medNyAktivitetTidslinje(finnTidslinjeForNyAktivitet(beregningsgrunnlagDto, aktivitet.getUttakArbeidType(), aktivitet.getInternArbeidsforholdRef(), aktivitet.getArbeidsgiver(),
+                    ref.getFagsakYtelseType()));
 
         mapArbeidsforholdMedPeriode(ref, filter, aktivitet)
                 .ifPresent(builder::medArbeidsforhold);
