@@ -3,6 +3,9 @@ package no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui;
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -52,6 +55,9 @@ public class FordelBeregningsgrunnlagAndelDto extends FaktaOmBeregningAndelDto {
     @Valid
     @JsonProperty(value = "utbetalingsgrad")
     @NotNull
+    @DecimalMin("0.00")
+    @DecimalMax("100.00")
+    @Digits(integer = 3, fraction = 2)
     private BigDecimal utbetalingsgrad;
 
     public FordelBeregningsgrunnlagAndelDto() {
