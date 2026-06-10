@@ -123,6 +123,8 @@ public class MapFastsettBeregningsgrunnlagPerioderFraRegelTilVLUtbetalingsgradSv
     }
 
     /**
+     * Trengs fordi tilrettelegginger kan splitte en generell andel i flere andeler med arbeidsforholdId.
+     * Beregning har kun opprettet en generell andel da det kun har kommet IM uten arbeidsforholdId, så her må vi matche gammel generell andel mot nye spesifikke andeler
      * Lager en map fra eksisterende andel til den nye andelen (fra SplittetPeriode) som tilhører samme arbeidsgiver.
      * Matcher på arbeidsgiver (orgnr/aktørId) uavhengig av arbeidsforholdRef.
      * Dersom flere nye andeler matcher samme eksisterende andel, velges den første (laveste arbeidsforholdId)
