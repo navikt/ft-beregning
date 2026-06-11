@@ -4,7 +4,7 @@ import static no.nav.folketrygdloven.kalkulator.guitjenester.fakta.saksopplysnin
 import static no.nav.folketrygdloven.kalkulator.guitjenester.fakta.saksopplysninger.KortvarigArbeidsforholdTjeneste.lagKortvarigeArbeidsforhold;
 
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagGUIInput;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.fakta.Saksopplysninger;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.fakta.Saksopplysninger;
 
 public class SaksopplysningerTjeneste {
 

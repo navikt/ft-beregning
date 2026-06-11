@@ -24,9 +24,9 @@ import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Utfall;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.BeregningsgrunnlagArbeidsforholdDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.FaktaOmBeregningAndelDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.FordelBeregningsgrunnlagAndelDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.BeregningsgrunnlagArbeidsforholdDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.FaktaOmBeregningAndelDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.FordelBeregningsgrunnlagAndelDto;
 import no.nav.folketrygdloven.utils.Tuple;
 
 class RefusjonDtoTjenesteImplTest {

@@ -38,7 +38,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.ArbeidType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FaktaOmBeregningTilfelle;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.FaktaOmBeregningDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.FaktaOmBeregningDto;
 
 class VurderRefusjonTilfelleDtoTjenesteTest {
     // TODO refusjon: Denne filen kan slettes når vi har flyttet aksjonspunktet og kjørt gjennom gamle saker

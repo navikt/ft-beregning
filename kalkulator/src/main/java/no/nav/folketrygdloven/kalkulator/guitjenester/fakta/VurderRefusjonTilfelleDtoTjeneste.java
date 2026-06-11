@@ -11,8 +11,8 @@ import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagGUIInput;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningRefusjonOverstyringDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningRefusjonOverstyringerDto;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FaktaOmBeregningTilfelle;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.FaktaOmBeregningDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.RefusjonskravForSentDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.FaktaOmBeregningDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.RefusjonskravForSentDto;
 
 class VurderRefusjonTilfelleDtoTjeneste {
     // TODO refusjon: Denne filen kan slettes når vi har flyttet aksjonspunktet og kjørt gjennom gamle saker

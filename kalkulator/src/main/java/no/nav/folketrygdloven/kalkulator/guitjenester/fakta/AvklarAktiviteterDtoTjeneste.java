@@ -10,9 +10,9 @@ import java.util.stream.Collectors;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningAktivitetAggregatDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningAktivitetDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.ArbeidsforholdInformasjonDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.AktivitetTomDatoMappingDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.AvklarAktiviteterDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.FaktaOmBeregningDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.AktivitetTomDatoMappingDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.AvklarAktiviteterDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.FaktaOmBeregningDto;
 
 public class AvklarAktiviteterDtoTjeneste {
 

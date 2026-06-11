@@ -47,9 +47,9 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.AvklaringsbehovDefinisjon;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.RefusjonskravForSentDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.refusjon.RefusjonAndelTilVurderingDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.refusjon.TidligereUtbetalingDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.RefusjonskravForSentDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.refusjon.RefusjonAndelTilVurderingDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.refusjon.TidligereUtbetalingDto;
 
 class VurderRefusjonDtoTjenesteTest {
     private static final String ORGNR1 = "974760673";

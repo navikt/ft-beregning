@@ -11,7 +11,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.AvklaringsbehovDefinisjon;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AvklaringsbehovStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
 import no.nav.folketrygdloven.kalkulus.kodeverk.PeriodeÅrsak;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.VurderRepresentererStortingetDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.VurderRepresentererStortingetDto;
 
 class VurderStortingsperiodeDtoTjeneste {
 

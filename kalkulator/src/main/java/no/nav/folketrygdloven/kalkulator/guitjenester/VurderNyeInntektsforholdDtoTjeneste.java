@@ -22,13 +22,13 @@ import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.modell.typer.EksternArbeidsforholdRef;
 import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
-import no.nav.folketrygdloven.kalkulus.felles.v1.Periode;
+import no.nav.folketrygdloven.kalkulus.felles.Periode;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AvklaringsbehovDefinisjon;
 import no.nav.folketrygdloven.kalkulus.kodeverk.InntektskildeType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.LønnsinntektBeskrivelse;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.InntektsforholdDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.VurderInntektsforholdPeriodeDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.VurderNyttInntektsforholdDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.InntektsforholdDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.VurderInntektsforholdPeriodeDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.VurderNyttInntektsforholdDto;
 
 public class VurderNyeInntektsforholdDtoTjeneste {
 

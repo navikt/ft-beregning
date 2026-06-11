@@ -19,7 +19,7 @@ import no.nav.folketrygdloven.kalkulator.modell.iay.InntektsmeldingDto;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
 import no.nav.folketrygdloven.kalkulator.steg.fordeling.avklaringsbehov.FordelTilkommetArbeidsforholdTjeneste;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.FordelBeregningsgrunnlagAndelDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.FordelBeregningsgrunnlagAndelDto;
 
 class FordelBeregningsgrunnlagAndelDtoTjeneste {
 

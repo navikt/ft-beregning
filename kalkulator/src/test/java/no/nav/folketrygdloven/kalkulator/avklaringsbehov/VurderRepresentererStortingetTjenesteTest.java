@@ -10,6 +10,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.kalkulator.KoblingReferanseMock;
+import no.nav.folketrygdloven.kalkulator.avklaringsbehov.stortinget.VurderRepresentererStortingetDto;
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagInput;
 import no.nav.folketrygdloven.kalkulator.input.HåndterBeregningsgrunnlagInput;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
@@ -19,7 +20,6 @@ import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.Beregningsgru
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
-import no.nav.folketrygdloven.kalkulus.håndtering.v1.fordeling.VurderRepresentererStortingetHåndteringDto;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AndelKilde;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
@@ -33,7 +33,7 @@ class VurderRepresentererStortingetTjenesteTest {
 
     @Test
     void skal_ikke_sette_periodeårsak_på_periode_dersom_ikke_representerer_stortinget() {
-        var dto = new VurderRepresentererStortingetHåndteringDto(STP, STP.plusDays(10), false);
+        var dto = new VurderRepresentererStortingetDto(STP, STP.plusDays(10), false);
         var input = lagInput(List.of(
                 Intervall.fraOgMedTilOgMed(STP, STP.plusDays(10)),
                 Intervall.fraOgMedTilOgMed(STP.plusDays(11), TIDENES_ENDE)
@@ -51,7 +51,7 @@ class VurderRepresentererStortingetTjenesteTest {
 
     @Test
     void skal_sette_periodeårsak_på_periode() {
-        var dto = new VurderRepresentererStortingetHåndteringDto(STP, STP.plusDays(10), true);
+        var dto = new VurderRepresentererStortingetDto(STP, STP.plusDays(10), true);
         var input = lagInput(List.of(
                 Intervall.fraOgMedTilOgMed(STP, STP.plusDays(10)),
                 Intervall.fraOgMedTilOgMed(STP.plusDays(11), TIDENES_ENDE)
@@ -73,7 +73,7 @@ class VurderRepresentererStortingetTjenesteTest {
 
     @Test
     void skal_sette_periodeårsak_på_siste_periode() {
-        var dto = new VurderRepresentererStortingetHåndteringDto(STP.plusDays(11), TIDENES_ENDE, true);
+        var dto = new VurderRepresentererStortingetDto(STP.plusDays(11), TIDENES_ENDE, true);
         var input = lagInput(List.of(
                 Intervall.fraOgMedTilOgMed(STP, STP.plusDays(10)),
                 Intervall.fraOgMedTilOgMed(STP.plusDays(11), TIDENES_ENDE)
@@ -92,7 +92,7 @@ class VurderRepresentererStortingetTjenesteTest {
 
     @Test
     void skal_sette_periodeårsak_og_splitte_ved_start_av_periode() {
-        var dto = new VurderRepresentererStortingetHåndteringDto(STP, STP.plusDays(10), true);
+        var dto = new VurderRepresentererStortingetDto(STP, STP.plusDays(10), true);
         var input = lagInput(List.of(
                 Intervall.fraOgMedTilOgMed(STP, TIDENES_ENDE)
         ));
@@ -117,7 +117,7 @@ class VurderRepresentererStortingetTjenesteTest {
 
     @Test
     void skal_sette_periodeårsak_og_splitte_ved_slutt_av_periode() {
-        var dto = new VurderRepresentererStortingetHåndteringDto(STP.plusDays(5), STP.plusDays(10), true);
+        var dto = new VurderRepresentererStortingetDto(STP.plusDays(5), STP.plusDays(10), true);
         var input = lagInput(List.of(
                 Intervall.fraOgMedTilOgMed(STP, STP.plusDays(10))
         ));
@@ -140,7 +140,7 @@ class VurderRepresentererStortingetTjenesteTest {
 
     @Test
     void skal_sette_periodeårsak_og_splitte_ved_midt_i_periode() {
-        var dto = new VurderRepresentererStortingetHåndteringDto(STP.plusDays(5), STP.plusDays(8), true);
+        var dto = new VurderRepresentererStortingetDto(STP.plusDays(5), STP.plusDays(8), true);
         var input = lagInput(List.of(
                 Intervall.fraOgMedTilOgMed(STP, STP.plusDays(10))
         ));
@@ -169,7 +169,7 @@ class VurderRepresentererStortingetTjenesteTest {
 
     @Test
     void skal_sette_periodeårsak_og_dersom_hele_perioden_faller_innenfor_stortingsperioden() {
-        var dto = new VurderRepresentererStortingetHåndteringDto(STP, STP.plusDays(10), true);
+        var dto = new VurderRepresentererStortingetDto(STP, STP.plusDays(10), true);
         var input = lagInput(List.of(
                 Intervall.fraOgMedTilOgMed(STP, STP.plusDays(2)),
                 Intervall.fraOgMedTilOgMed(STP.plusDays(3), STP.plusDays(5)),

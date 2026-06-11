@@ -19,11 +19,11 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.InntektAktivitetType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.InntektskildeType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.InntektspostType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.PGIType;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.inntektsgrunnlag.InntektsgrunnlagDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.inntektsgrunnlag.InntektsgrunnlagInntektDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.inntektsgrunnlag.InntektsgrunnlagMånedDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.inntektsgrunnlag.PGIGrunnlagDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.inntektsgrunnlag.PGIPrÅrDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.inntektsgrunnlag.InntektsgrunnlagDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.inntektsgrunnlag.InntektsgrunnlagInntektDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.inntektsgrunnlag.InntektsgrunnlagMånedDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.inntektsgrunnlag.PGIGrunnlagDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.inntektsgrunnlag.PGIPrÅrDto;
 
 public class InntektsgrunnlagMapper {
     private final Optional<Intervall> sammenligningsperiode;

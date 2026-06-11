@@ -5,7 +5,6 @@ import java.math.RoundingMode;
 import java.util.Objects;
 import java.util.Optional;
 
-import no.nav.folketrygdloven.kalkulus.iay.IayProsent;
 
 /**
  * Stillingsprosent slik det er oppgitt i arbeidsavtalen
@@ -28,10 +27,6 @@ public record Stillingsprosent(BigDecimal verdi) implements Comparable<Stillings
 
     public static Stillingsprosent fra(Integer grad) {
         return grad != null ? new Stillingsprosent(BigDecimal.valueOf(grad)) : null;
-    }
-
-    public static Stillingsprosent fra(IayProsent grad) {
-        return Optional.ofNullable(grad).map(IayProsent::verdi).map(Stillingsprosent::fra).orElse(null);
     }
 
 	public BigDecimal tilNormalisertGrad() {

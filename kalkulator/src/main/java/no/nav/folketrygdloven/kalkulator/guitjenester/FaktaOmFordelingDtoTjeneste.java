@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagGUIInput;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.FordelingDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.FordelingDto;
 
 public class FaktaOmFordelingDtoTjeneste {
 
