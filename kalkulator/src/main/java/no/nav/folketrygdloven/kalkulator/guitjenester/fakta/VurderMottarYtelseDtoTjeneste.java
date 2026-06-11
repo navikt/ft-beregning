@@ -20,9 +20,9 @@ import no.nav.folketrygdloven.kalkulator.steg.kontrollerfakta.ArbeidstakerUtenIn
 import no.nav.folketrygdloven.kalkulator.steg.kontrollerfakta.VurderMottarYtelseTjeneste;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AndelKilde;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FaktaOmBeregningTilfelle;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.ArbeidstakerUtenInntektsmeldingAndelDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.FaktaOmBeregningDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.VurderMottarYtelseDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.ArbeidstakerUtenInntektsmeldingAndelDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.FaktaOmBeregningDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.VurderMottarYtelseDto;
 
 public class VurderMottarYtelseDtoTjeneste {
 

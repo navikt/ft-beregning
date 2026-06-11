@@ -3,8 +3,8 @@ package no.nav.folketrygdloven.kalkulator.guitjenester.ytelsegrunnlag;
 import java.util.Optional;
 
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagGUIInput;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.SvangerskapspengerGrunnlagDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.YtelsespesifiktGrunnlagDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.SvangerskapspengerGrunnlagDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.YtelsespesifiktGrunnlagDto;
 
 public class YtelsespesifiktGrunnlagTjenesteSVP implements YtelsespesifiktGrunnlagTjeneste {
 

@@ -2,7 +2,7 @@ package no.nav.folketrygdloven.kalkulator.guitjenester.fakta;
 
 import no.nav.folketrygdloven.kalkulator.guitjenester.ModellTyperMapper;
 import no.nav.folketrygdloven.kalkulator.modell.iay.OppgittEgenNæringDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.EgenNæringDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.EgenNæringDto;
 
 public final class EgenNæringMapper {
 

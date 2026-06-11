@@ -1,9 +1,9 @@
 package no.nav.folketrygdloven.kalkulator.guitjenester.ytelsegrunnlag;
 
-import static no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.frisinn.Avslagsårsak.AVKORTET_GRUNNET_ANNEN_INNTEKT;
-import static no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.frisinn.Avslagsårsak.AVKORTET_GRUNNET_LØPENDE_INNTEKT;
-import static no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.frisinn.Avslagsårsak.FOR_LAVT_BG;
-import static no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.frisinn.Avslagsårsak.INGEN_FRILANS_I_PERIODE_UTEN_YTELSE;
+import static no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.frisinn.Avslagsårsak.AVKORTET_GRUNNET_ANNEN_INNTEKT;
+import static no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.frisinn.Avslagsårsak.AVKORTET_GRUNNET_LØPENDE_INNTEKT;
+import static no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.frisinn.Avslagsårsak.FOR_LAVT_BG;
+import static no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.frisinn.Avslagsårsak.INGEN_FRILANS_I_PERIODE_UTEN_YTELSE;
 import static no.nav.fpsak.tidsserie.LocalDateInterval.TIDENES_BEGYNNELSE;
 
 import java.math.BigDecimal;
@@ -24,7 +24,7 @@ import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulator.ytelse.frisinn.EffektivÅrsinntektTjenesteFRISINN;
 import no.nav.folketrygdloven.kalkulator.ytelse.frisinn.FrisinnGrunnlag;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.frisinn.Avslagsårsak;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.frisinn.Avslagsårsak;
 
 public class MapTilAvslagsårsakerFRISINN {
     private static final BigDecimal ANTALL_G_FOR_OPPFYLT_VILKÅR = BigDecimal.valueOf(0.75);

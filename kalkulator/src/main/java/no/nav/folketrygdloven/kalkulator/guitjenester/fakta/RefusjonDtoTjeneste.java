@@ -16,8 +16,8 @@ import no.nav.folketrygdloven.kalkulator.modell.gradering.AktivitetGradering;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.steg.fordeling.avklaringsbehov.FordelingGraderingTjeneste;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AndelKilde;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.BeregningsgrunnlagArbeidsforholdDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.FordelBeregningsgrunnlagAndelDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.BeregningsgrunnlagArbeidsforholdDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.FordelBeregningsgrunnlagAndelDto;
 
 /**
  * Tjeneste som henter ut informasjon relatert til refusjon fra beregnigsgrunnlag og setter det på dto-objekt
@@ -71,7 +71,7 @@ public class RefusjonDtoTjeneste {
     public static void settRefusjonskrav(BeregningsgrunnlagPrStatusOgAndelDto andel,
                                          FordelBeregningsgrunnlagAndelDto endringAndel) {
         if (andel.erLagtTilAvSaksbehandler()) {
-            endringAndel.setRefusjonskravFraInntektsmeldingPrÅr(no.nav.folketrygdloven.kalkulus.felles.v1.Beløp.ZERO);
+            endringAndel.setRefusjonskravFraInntektsmeldingPrÅr(no.nav.folketrygdloven.kalkulus.felles.Beløp.ZERO);
         } else {
             andel.getBgAndelArbeidsforhold().map(BGAndelArbeidsforholdDto::getRefusjonskravPrÅr)
                     .map(b -> b.map(v -> v.setScale(0, RoundingMode.HALF_UP)))
@@ -81,7 +81,7 @@ public class RefusjonDtoTjeneste {
             .map(BGAndelArbeidsforholdDto::getGjeldendeRefusjonPrÅr)
             .map(b -> b.map(v -> v.setScale(0, RoundingMode.HALF_UP)))
             .map(ModellTyperMapper::beløpTilDto)
-            .orElse(no.nav.folketrygdloven.kalkulus.felles.v1.Beløp.ZERO));
+            .orElse(no.nav.folketrygdloven.kalkulus.felles.Beløp.ZERO));
     }
 
 

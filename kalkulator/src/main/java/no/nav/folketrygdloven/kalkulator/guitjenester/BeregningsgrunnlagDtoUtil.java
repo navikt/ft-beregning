@@ -22,10 +22,10 @@ import no.nav.folketrygdloven.kalkulator.modell.typer.EksternArbeidsforholdRef;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Organisasjonstype;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.BeregningsgrunnlagArbeidsforholdDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.FaktaOmBeregningAndelDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.FordelBeregningsgrunnlagArbeidsforholdDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.StillingsprosentDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.BeregningsgrunnlagArbeidsforholdDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.FaktaOmBeregningAndelDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.FordelBeregningsgrunnlagArbeidsforholdDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.StillingsprosentDto;
 import no.nav.folketrygdloven.kalkulus.typer.OrgNummer;
 
 public class BeregningsgrunnlagDtoUtil {

@@ -16,7 +16,7 @@ import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.FaktaArbeidsf
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AndelKilde;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.BeregningsgrunnlagPrStatusOgAndelDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.BeregningsgrunnlagPrStatusOgAndelDto;
 
 public class BeregningsgrunnlagPrStatusOgAndelDtoTjeneste {
 

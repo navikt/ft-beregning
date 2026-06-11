@@ -26,9 +26,9 @@ import no.nav.folketrygdloven.kalkulator.steg.refusjon.modell.RefusjonAndel;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulator.tid.TimelineWeekendCompressor;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
-import no.nav.folketrygdloven.kalkulus.response.v1.Arbeidsgiver;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.refusjon.RefusjonAndelTilVurderingDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.refusjon.TidligereUtbetalingDto;
+import no.nav.folketrygdloven.kalkulus.felles.Arbeidsgiver;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.refusjon.RefusjonAndelTilVurderingDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.refusjon.TidligereUtbetalingDto;
 import no.nav.fpsak.tidsserie.LocalDateSegment;
 
 public final class RefusjonAndelTilVurderingDtoTjeneste {

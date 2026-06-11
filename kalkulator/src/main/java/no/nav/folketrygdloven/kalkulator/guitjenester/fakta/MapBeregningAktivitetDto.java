@@ -13,10 +13,10 @@ class MapBeregningAktivitetDto {
         // skjul
     }
 
-    static no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.BeregningAktivitetDto mapBeregningAktivitet(BeregningAktivitetDto beregningAktivitet,
-                                                                                                                          List<BeregningAktivitetDto> saksbehandletAktiviteter,
-                                                                                                                          Optional<ArbeidsforholdInformasjonDto> arbeidsforholdInformasjon) {
-        var dto = new no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.BeregningAktivitetDto();
+    static no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.BeregningAktivitetDto mapBeregningAktivitet(BeregningAktivitetDto beregningAktivitet,
+                                                                                                                       List<BeregningAktivitetDto> saksbehandletAktiviteter,
+                                                                                                                       Optional<ArbeidsforholdInformasjonDto> arbeidsforholdInformasjon) {
+        var dto = new no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.BeregningAktivitetDto();
         if (beregningAktivitet.getArbeidsgiver() != null) {
             if (beregningAktivitet.getArbeidsgiver() != null) {
                 dto.setArbeidsgiverIdent(beregningAktivitet.getArbeidsgiver().getIdentifikator());

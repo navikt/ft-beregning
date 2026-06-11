@@ -37,7 +37,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.UttakArbeidType;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.OmsorgspengeGrunnlagDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.OmsorgspengeGrunnlagDto;
 import no.nav.folketrygdloven.kalkulus.typer.AktørId;
 
 class YtelsespesifiktGrunnlagTjenesteOMPTest {

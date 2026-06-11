@@ -9,7 +9,7 @@ import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.modell.typer.EksternArbeidsforholdRef;
 import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
-import no.nav.folketrygdloven.kalkulus.felles.v1.JournalpostId;
+import no.nav.folketrygdloven.kalkulus.felles.JournalpostId;
 import no.nav.folketrygdloven.kalkulus.kodeverk.InntektsmeldingType;
 
 public class InntektsmeldingDtoBuilder {

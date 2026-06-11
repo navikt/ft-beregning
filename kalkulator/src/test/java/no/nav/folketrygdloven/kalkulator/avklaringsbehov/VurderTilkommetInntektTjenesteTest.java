@@ -6,6 +6,11 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import no.nav.folketrygdloven.kalkulator.avklaringsbehov.tilkommetinntekt.NyttInntektsforholdDto;
+import no.nav.folketrygdloven.kalkulator.avklaringsbehov.tilkommetinntekt.VurderTilkommetInntektDto;
+
+import no.nav.folketrygdloven.kalkulator.avklaringsbehov.tilkommetinntekt.VurderTilkomneInntektsforholdPeriodeDto;
+
 import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.kalkulator.KoblingReferanseMock;
@@ -35,9 +40,6 @@ import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Utbetalingsgrad;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
-import no.nav.folketrygdloven.kalkulus.håndtering.v1.fordeling.NyttInntektsforholdDto;
-import no.nav.folketrygdloven.kalkulus.håndtering.v1.fordeling.VurderTilkommetInntektHåndteringDto;
-import no.nav.folketrygdloven.kalkulus.håndtering.v1.fordeling.VurderTilkomneInntektsforholdPeriodeDto;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AndelKilde;
 import no.nav.folketrygdloven.kalkulus.kodeverk.ArbeidType;
@@ -76,7 +78,7 @@ class VurderTilkommetInntektTjenesteTest {
 
         var vudertPeride = new VurderTilkomneInntektsforholdPeriodeDto(vurderteInntektsforhold, periode.getFomDato(), periode.getTomDato());
 
-        var dto = new VurderTilkommetInntektHåndteringDto(List.of(vudertPeride));
+        var dto = new VurderTilkommetInntektDto(List.of(vudertPeride));
 
         var input = lagInput(periode, yrkesaktiviteter, utbetalingsgrader, andeler, vurderteInntektsforhold);
 
@@ -124,7 +126,7 @@ class VurderTilkommetInntektTjenesteTest {
 
         var vurdertPeriode2 = new VurderTilkomneInntektsforholdPeriodeDto(vurderteInntektsforhold2, periode.getTomDato().minusDays(2), periode.getTomDato());
 
-        var dto = new VurderTilkommetInntektHåndteringDto(List.of(vurdertPeriode1, vurdertPeriode2));
+        var dto = new VurderTilkommetInntektDto(List.of(vurdertPeriode1, vurdertPeriode2));
 
         var input = lagInput(periode, yrkesaktiviteter, utbetalingsgrader, andeler, vurderteInntektsforhold);
 
@@ -181,7 +183,7 @@ class VurderTilkommetInntektTjenesteTest {
 
         var vurdertPeriode2 = new VurderTilkomneInntektsforholdPeriodeDto(vurderteInntektsforhold, periode.getTomDato().minusDays(2), periode.getTomDato());
 
-        var dto = new VurderTilkommetInntektHåndteringDto(List.of(vurdertPeriode1, vurdertPeriode2));
+        var dto = new VurderTilkommetInntektDto(List.of(vurdertPeriode1, vurdertPeriode2));
 
         var input = lagInput(periode, yrkesaktiviteter, utbetalingsgrader, andeler, vurderteInntektsforhold);
 
@@ -233,7 +235,7 @@ class VurderTilkommetInntektTjenesteTest {
 
         var vudertPeride = new VurderTilkomneInntektsforholdPeriodeDto(vurderteInntektsforhold, periode.getFomDato(), periode.getTomDato());
 
-        var dto = new VurderTilkommetInntektHåndteringDto(List.of(vudertPeride));
+        var dto = new VurderTilkommetInntektDto(List.of(vudertPeride));
 
         var input = lagInput(periode, yrkesaktiviteter, utbetalingsgrader, andeler, vurderteInntektsforhold);
 
@@ -252,8 +254,8 @@ class VurderTilkommetInntektTjenesteTest {
 
     }
 
-    private static BeregningsgrunnlagDto løsAvklaringsbehov(VurderTilkommetInntektHåndteringDto dto,
-                                                                                                     BeregningsgrunnlagInput input) {
+    private static BeregningsgrunnlagDto løsAvklaringsbehov(VurderTilkommetInntektDto dto,
+                                                            BeregningsgrunnlagInput input) {
         return VurderTilkommetInntektTjeneste.løsAvklaringsbehov(dto,
             new HåndterBeregningsgrunnlagInput(input, BeregningsgrunnlagTilstand.FASTSATT_INN)).grunnlag().getBeregningsgrunnlag();
     }
@@ -293,7 +295,7 @@ class VurderTilkommetInntektTjenesteTest {
         if (!vurderteInntektsforhold.isEmpty()) {
             periodeBuilder.leggTilPeriodeÅrsak(PeriodeÅrsak.TILKOMMET_INNTEKT);
         }
-        vurderteInntektsforhold.stream().map(v -> new TilkommetInntektDto(v.getAktivitetStatus(), v.getArbeidsgiverIdentifikator() != null ? Arbeidsgiver.virksomhet(v.getArbeidsgiverIdentifikator()) : null, InternArbeidsforholdRefDto.ref(v.getArbeidsforholdId()), null, null, null))
+        vurderteInntektsforhold.stream().map(v -> new TilkommetInntektDto(v.aktivitetStatus(), v.arbeidsgiverIdentifikator() != null ? Arbeidsgiver.virksomhet(v.arbeidsgiverIdentifikator()) : null, InternArbeidsforholdRefDto.ref(v.arbeidsforholdId()), null, null, null))
                 .forEach(periodeBuilder::leggTilTilkommetInntekt);
         return BeregningsgrunnlagGrunnlagDtoBuilder.nytt()
                 .medBeregningsgrunnlag(BeregningsgrunnlagDto.builder()

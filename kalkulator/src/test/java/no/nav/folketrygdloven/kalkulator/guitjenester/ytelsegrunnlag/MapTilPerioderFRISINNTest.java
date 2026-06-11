@@ -20,8 +20,8 @@ import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulator.ytelse.frisinn.FrisinnPeriode;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.frisinn.FrisinnAndelDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.frisinn.FrisinnPeriodeDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.frisinn.FrisinnAndelDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.frisinn.FrisinnPeriodeDto;
 
 class MapTilPerioderFRISINNTest {
 

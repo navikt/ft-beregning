@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 
 import org.junit.jupiter.api.Test;
 
-import no.nav.folketrygdloven.kalkulus.felles.v1.Beløp;
+import no.nav.folketrygdloven.kalkulus.felles.Beløp;
 
 class KalkulatorLegacyMapperTest {
 

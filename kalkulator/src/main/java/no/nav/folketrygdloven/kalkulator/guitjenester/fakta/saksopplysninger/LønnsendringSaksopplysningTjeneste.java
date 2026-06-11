@@ -20,8 +20,8 @@ import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto
 import no.nav.folketrygdloven.kalkulator.steg.skjæringstidspunkt.BeregningsperiodeTjeneste;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AndelKilde;
 import no.nav.folketrygdloven.kalkulus.kodeverk.LønnsendringScenario;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.fakta.ArbeidsforholdDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.fakta.LønnsendringSaksopplysningDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.fakta.ArbeidsforholdDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.fakta.LønnsendringSaksopplysningDto;
 
 /**
  * Tjeneste for å mappe dto for lønnsendring

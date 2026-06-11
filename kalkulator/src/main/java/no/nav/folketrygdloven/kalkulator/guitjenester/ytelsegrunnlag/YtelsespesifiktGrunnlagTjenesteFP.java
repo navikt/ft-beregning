@@ -9,11 +9,11 @@ import no.nav.folketrygdloven.kalkulator.input.ForeldrepengerGrunnlag;
 import no.nav.folketrygdloven.kalkulator.steg.besteberegning.BesteberegningMånedGrunnlag;
 import no.nav.folketrygdloven.kalkulator.steg.besteberegning.BesteberegningVurderingGrunnlag;
 import no.nav.folketrygdloven.kalkulator.steg.besteberegning.Inntekt;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.YtelsespesifiktGrunnlagDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.fp.BesteberegningInntektDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.fp.BesteberegningMånedGrunnlagDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.fp.BesteberegninggrunnlagDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.fp.ForeldrepengerGrunnlagDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.YtelsespesifiktGrunnlagDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.fp.BesteberegningInntektDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.fp.BesteberegningMånedGrunnlagDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.fp.BesteberegninggrunnlagDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.fp.ForeldrepengerGrunnlagDto;
 
 public class YtelsespesifiktGrunnlagTjenesteFP implements YtelsespesifiktGrunnlagTjeneste {
 

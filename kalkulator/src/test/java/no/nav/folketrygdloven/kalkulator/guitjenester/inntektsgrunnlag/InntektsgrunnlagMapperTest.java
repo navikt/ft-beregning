@@ -25,10 +25,10 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.InntektAktivitetType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.InntektskildeType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.InntektspostType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.PGIType;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.inntektsgrunnlag.InntektsgrunnlagDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.inntektsgrunnlag.InntektsgrunnlagMånedDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.inntektsgrunnlag.PGIGrunnlagDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.inntektsgrunnlag.PGIPrÅrDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.inntektsgrunnlag.InntektsgrunnlagDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.inntektsgrunnlag.InntektsgrunnlagMånedDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.inntektsgrunnlag.PGIGrunnlagDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.inntektsgrunnlag.PGIPrÅrDto;
 
 class InntektsgrunnlagMapperTest {
     private static final LocalDate STP = LocalDate.now();
@@ -116,21 +116,21 @@ class InntektsgrunnlagMapperTest {
         assertThat(dto.get().getSammenligningsgrunnlagInntekter().get(0).getInntekter()).hasSize(2);
         assertThat(dto.get().getSammenligningsgrunnlagInntekter().get(0).getInntekter().stream()
                 .anyMatch(innt -> innt.getInntektAktivitetType().equals(InntektAktivitetType.FRILANSINNTEKT)
-                        && innt.getBeløp().compareTo(no.nav.folketrygdloven.kalkulus.felles.v1.Beløp.fra(3000)) == 0))
+                        && innt.getBeløp().compareTo(no.nav.folketrygdloven.kalkulus.felles.Beløp.fra(3000)) == 0))
                 .isTrue();
         assertThat(dto.get().getSammenligningsgrunnlagInntekter().get(0).getInntekter().stream()
                 .anyMatch(innt -> innt.getInntektAktivitetType().equals(InntektAktivitetType.ARBEIDSTAKERINNTEKT)
-                        && innt.getBeløp().compareTo(no.nav.folketrygdloven.kalkulus.felles.v1.Beløp.fra(5000)) == 0))
+                        && innt.getBeløp().compareTo(no.nav.folketrygdloven.kalkulus.felles.Beløp.fra(5000)) == 0))
                 .isTrue();
 
         assertThat(dto.get().getSammenligningsgrunnlagInntekter().get(1).getInntekter()).hasSize(2);
         assertThat(dto.get().getSammenligningsgrunnlagInntekter().get(1).getInntekter().stream()
                 .anyMatch(innt -> innt.getInntektAktivitetType().equals(InntektAktivitetType.FRILANSINNTEKT)
-                        && innt.getBeløp().compareTo(no.nav.folketrygdloven.kalkulus.felles.v1.Beløp.fra(3000)) == 0))
+                        && innt.getBeløp().compareTo(no.nav.folketrygdloven.kalkulus.felles.Beløp.fra(3000)) == 0))
                 .isTrue();
         assertThat(dto.get().getSammenligningsgrunnlagInntekter().get(1).getInntekter().stream()
                 .anyMatch(innt -> innt.getInntektAktivitetType().equals(InntektAktivitetType.ARBEIDSTAKERINNTEKT)
-                        && innt.getBeløp().compareTo(no.nav.folketrygdloven.kalkulus.felles.v1.Beløp.fra(5000)) == 0))
+                        && innt.getBeløp().compareTo(no.nav.folketrygdloven.kalkulus.felles.Beløp.fra(5000)) == 0))
                 .isTrue();
     }
 

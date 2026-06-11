@@ -5,12 +5,12 @@ import static no.nav.folketrygdloven.kalkulus.kodeverk.PeriodeÅrsak.REPRESENTER
 
 import java.util.List;
 
+import no.nav.folketrygdloven.kalkulator.avklaringsbehov.stortinget.VurderRepresentererStortingetDto;
 import no.nav.folketrygdloven.kalkulator.felles.periodesplitting.PeriodeSplitter;
 import no.nav.folketrygdloven.kalkulator.felles.periodesplitting.SplittPeriodeConfig;
 import no.nav.folketrygdloven.kalkulator.input.HåndterBeregningsgrunnlagInput;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDtoBuilder;
-import no.nav.folketrygdloven.kalkulus.håndtering.v1.fordeling.VurderRepresentererStortingetHåndteringDto;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
 import no.nav.fpsak.tidsserie.LocalDateSegment;
 import no.nav.fpsak.tidsserie.LocalDateTimeline;
@@ -21,10 +21,10 @@ public class VurderRepresentererStortingetTjeneste {
         // Skjuler default konstruktør
     }
 
-    public static BeregningsgrunnlagGrunnlagDto løsAvklaringsbehov(VurderRepresentererStortingetHåndteringDto vurderDto, HåndterBeregningsgrunnlagInput input) {
+    public static BeregningsgrunnlagGrunnlagDto løsAvklaringsbehov(VurderRepresentererStortingetDto vurderDto, HåndterBeregningsgrunnlagInput input) {
         var grunnlagBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
-        if (vurderDto.getRepresentererStortinget()) {
-            var stortingsperiodeTidslinje = new LocalDateTimeline<>(List.of(new LocalDateSegment<>(vurderDto.getFom(), vurderDto.getTom(), true)));
+        if (vurderDto.representererStortinget()) {
+            var stortingsperiodeTidslinje = new LocalDateTimeline<>(List.of(new LocalDateSegment<>(vurderDto.fom(), vurderDto.tom(), true)));
             var nyttBg = getPeriodeSplitter(input).splittPerioder(input.getBeregningsgrunnlag(), stortingsperiodeTidslinje);
             grunnlagBuilder.medBeregningsgrunnlag(nyttBg);
         }
@@ -32,7 +32,8 @@ public class VurderRepresentererStortingetTjeneste {
     }
 
     private static PeriodeSplitter<Boolean> getPeriodeSplitter(HåndterBeregningsgrunnlagInput input) {
-        SplittPeriodeConfig<Boolean> splittPeriodeConfig = SplittPeriodeConfig.medAvsluttetPeriodeårsakConfig(REPRESENTERER_STORTINGET, REPRESENTERER_STORTINGET_AVSLUTTET, input.getForlengelseperioder());
+        SplittPeriodeConfig<Boolean> splittPeriodeConfig = SplittPeriodeConfig.medAvsluttetPeriodeårsakConfig(REPRESENTERER_STORTINGET,
+            REPRESENTERER_STORTINGET_AVSLUTTET, input.getForlengelseperioder());
         return new PeriodeSplitter<>(splittPeriodeConfig);
     }
 

@@ -14,7 +14,7 @@ import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.ArbeidType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.SammenligningsgrunnlagType;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.inntektsgrunnlag.InntektsgrunnlagDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.inntektsgrunnlag.InntektsgrunnlagDto;
 
 public class InntektsgrunnlagTjeneste {
     private static final List<ArbeidType> FRILANS_TYPER = Arrays.asList(ArbeidType.FRILANSER, ArbeidType.FRILANSER_OPPDRAGSTAKER);

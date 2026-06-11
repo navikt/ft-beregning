@@ -25,8 +25,8 @@ import no.nav.folketrygdloven.kalkulator.steg.kontrollerfakta.KontrollerFaktaBer
 import no.nav.folketrygdloven.kalkulator.steg.kontrollerfakta.LønnsendringTjeneste;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FaktaVurderingKilde;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.ATogFLISammeOrganisasjonDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.FaktaOmBeregningAndelDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.ATogFLISammeOrganisasjonDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.FaktaOmBeregningAndelDto;
 
 // TODO (Safir) Denne bør splittes opp til tre klasser: ei klasse for ATFL i samme org, ei for frilanser og ei for AT med lønnsendring (uten inntektsmelding)
 public class FaktaOmBeregningAndelDtoTjeneste {
