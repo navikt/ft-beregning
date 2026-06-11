@@ -54,7 +54,6 @@ public class FordelBeregningsgrunnlagAndelDto extends FaktaOmBeregningAndelDto {
 
     @Valid
     @JsonProperty(value = "utbetalingsgrad")
-    @NotNull
     @DecimalMin("0.00")
     @DecimalMax("100.00")
     @Digits(integer = 3, fraction = 2)
