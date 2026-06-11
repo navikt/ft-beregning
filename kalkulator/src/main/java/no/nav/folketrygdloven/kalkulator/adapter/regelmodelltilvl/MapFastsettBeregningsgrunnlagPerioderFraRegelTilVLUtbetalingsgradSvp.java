@@ -12,14 +12,10 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SplittetPe
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BGAndelArbeidsforholdDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
-import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
-import no.nav.folketrygdloven.kalkulator.modell.typer.Refusjon;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AndelKilde;
-import no.nav.folketrygdloven.kalkulus.kodeverk.Hjemmel;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
-import no.nav.folketrygdloven.kalkulus.kodeverk.Utfall;
 
 public class MapFastsettBeregningsgrunnlagPerioderFraRegelTilVLUtbetalingsgradSvp extends MapFastsettBeregningsgrunnlagPerioderFraRegelTilVL {
 
