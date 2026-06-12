@@ -11,6 +11,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import no.nav.folketrygdloven.kalkulator.input.ForeldrepengerGrunnlag;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BGAndelArbeidsforholdDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningAktivitetAggregatDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningAktivitetDto;
@@ -29,6 +30,7 @@ import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
+import no.nav.folketrygdloven.kalkulus.kodeverk.Dekningsgrad;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
@@ -136,6 +138,7 @@ class ManuellBehandlingRefusjonGraderingDtoTjenesteTest {
     void skalKunneEndreRefusjonEtterRedusertRefusjonTilUnder6G() {
         // Arrange
         var graderinger = lagGradering();
+        var ytelsegrunnlag = new ForeldrepengerGrunnlag(Dekningsgrad.DEKNINGSGRAD_100, false, new AktivitetGradering(graderinger));
         var bgFørFordeling = lagBeregningsgrunnlagFørFordeling();
         var inntektsmeldinger = lagInntektsmeldingOver6GRefusjon();
 
@@ -146,7 +149,7 @@ class ManuellBehandlingRefusjonGraderingDtoTjenesteTest {
         // Act
         var kreverManuellBehandlingAvRefusjon = ManuellBehandlingRefusjonGraderingDtoTjeneste.skalSaksbehandlerRedigereRefusjon(
                 grunnlag,
-            new AktivitetGradering(graderinger),
+            ytelsegrunnlag,
             bgFørFordeling.getBeregningsgrunnlagPerioder().get(0), inntektsmeldinger, Beløp.fra(GRUNNBELØP), Collections.emptyList(),
             FagsakYtelseType.FORELDREPENGER);
 

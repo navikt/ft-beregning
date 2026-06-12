@@ -3,6 +3,9 @@ package no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui;
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -12,6 +15,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import no.nav.folketrygdloven.kalkulus.felles.Beløp;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
+
+import java.math.BigDecimal;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(value = JsonInclude.Include.NON_ABSENT, content = JsonInclude.Include.NON_EMPTY)
@@ -46,6 +51,13 @@ public class FordelBeregningsgrunnlagAndelDto extends FaktaOmBeregningAndelDto {
     @JsonProperty(value = "arbeidsforholdType")
     @NotNull
     private OpptjeningAktivitetType arbeidsforholdType;
+
+    @Valid
+    @JsonProperty(value = "utbetalingsgrad")
+    @DecimalMin("0.00")
+    @DecimalMax("100.00")
+    @Digits(integer = 3, fraction = 2)
+    private BigDecimal utbetalingsgrad;
 
     public FordelBeregningsgrunnlagAndelDto() {
         super();
@@ -112,5 +124,14 @@ public class FordelBeregningsgrunnlagAndelDto extends FaktaOmBeregningAndelDto {
 
     public void setFordeltPrAar(Beløp fordeltPrAar) {
         this.fordeltPrAar = fordeltPrAar;
+    }
+
+
+    public BigDecimal getUtbetalingsgrad() {
+        return utbetalingsgrad;
+    }
+
+    public void setUtbetalingsgrad(BigDecimal utbetalingsgrad) {
+        this.utbetalingsgrad = utbetalingsgrad;
     }
 }

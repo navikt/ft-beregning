@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.kalkulator.guitjenester.ModellTyperMapper;
+import no.nav.folketrygdloven.kalkulator.input.ForeldrepengerGrunnlag;
 import no.nav.folketrygdloven.kalkulator.konfig.KonfigTjeneste;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BGAndelArbeidsforholdDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
@@ -23,6 +24,7 @@ import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
+import no.nav.folketrygdloven.kalkulus.kodeverk.Dekningsgrad;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Utfall;
 import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.BeregningsgrunnlagArbeidsforholdDto;
 import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.FaktaOmBeregningAndelDto;
@@ -63,7 +65,8 @@ class RefusjonDtoTjenesteImplTest {
         .build(periode);
 
         // Act
-        var skalKunneEndreRefusjon = RefusjonDtoTjeneste.skalKunneEndreRefusjon(andel, periode, AktivitetGradering.INGEN_GRADERING, GRUNNBELØP);
+        var skalKunneEndreRefusjon = RefusjonDtoTjeneste.skalKunneEndreRefusjon(andel, periode,
+            lagForeldrepengerGrunnlag(AktivitetGradering.INGEN_GRADERING), GRUNNBELØP);
 
         // Assert
         assertThat(skalKunneEndreRefusjon).isFalse();
@@ -91,7 +94,8 @@ class RefusjonDtoTjenesteImplTest {
                 .medRefusjonskravPrÅr(SEKS_G.adder(Beløp.fra(100)), Utfall.GODKJENT))
             .build(periode);
         // Act
-        var skalKunneEndreRefusjon = RefusjonDtoTjeneste.skalKunneEndreRefusjon(andel, periode, AktivitetGradering.INGEN_GRADERING, GRUNNBELØP);
+        var skalKunneEndreRefusjon = RefusjonDtoTjeneste.skalKunneEndreRefusjon(andel, periode,
+            lagForeldrepengerGrunnlag(AktivitetGradering.INGEN_GRADERING), GRUNNBELØP);
 
         // Assert
         assertThat(skalKunneEndreRefusjon).isFalse();
@@ -119,7 +123,8 @@ class RefusjonDtoTjenesteImplTest {
             .build(periode);
 
         // Act
-        var skalKunneEndreRefusjon = RefusjonDtoTjeneste.skalKunneEndreRefusjon(andel, periode, AktivitetGradering.INGEN_GRADERING, GRUNNBELØP);
+        var skalKunneEndreRefusjon = RefusjonDtoTjeneste.skalKunneEndreRefusjon(andel, periode,
+            lagForeldrepengerGrunnlag(AktivitetGradering.INGEN_GRADERING), GRUNNBELØP);
 
         // Assert
         assertThat(skalKunneEndreRefusjon).isFalse();
@@ -156,7 +161,7 @@ class RefusjonDtoTjenesteImplTest {
 
         // Act
         var skalKunneEndreRefusjon = RefusjonDtoTjeneste.skalKunneEndreRefusjon(andel,
-                periode, new AktivitetGradering(andelGradering), GRUNNBELØP);
+                periode, lagForeldrepengerGrunnlag(new AktivitetGradering(andelGradering)), GRUNNBELØP);
 
         // Assert
         assertThat(skalKunneEndreRefusjon).isTrue();
@@ -193,7 +198,7 @@ class RefusjonDtoTjenesteImplTest {
 
         // Act
         var skalKunneEndreRefusjon = RefusjonDtoTjeneste.skalKunneEndreRefusjon(andel,
-                periode, new AktivitetGradering(andelGradering), GRUNNBELØP);
+                periode, lagForeldrepengerGrunnlag(new AktivitetGradering(andelGradering)), GRUNNBELØP);
 
         // Assert
         assertThat(skalKunneEndreRefusjon).isTrue();
@@ -227,5 +232,9 @@ class RefusjonDtoTjenesteImplTest {
             }
             return andel;
         }).collect(Collectors.toList());
+    }
+
+    private ForeldrepengerGrunnlag lagForeldrepengerGrunnlag(AktivitetGradering aktivitetGradering) {
+        return new ForeldrepengerGrunnlag(Dekningsgrad.DEKNINGSGRAD_100, false, aktivitetGradering);
     }
 }

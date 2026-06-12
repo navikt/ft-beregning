@@ -21,6 +21,7 @@ import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.Beregningsgru
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektsmeldingDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.YrkesaktivitetFilterDto;
 import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
+import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.UttakArbeidType;
 import no.nav.fpsak.tidsserie.LocalDateSegment;
 import no.nav.fpsak.tidsserie.LocalDateTimeline;
@@ -58,7 +59,8 @@ public final class MapAndelGradering {
                 beregningsgrunnlag,
                 UttakArbeidType.ORDINÆRT_ARBEID,
                 finnArbeidsforholdReferanse(inntektsmeldinger, andelGradering),
-                Optional.of(andelGradering.getArbeidsgiver())
+                Optional.of(andelGradering.getArbeidsgiver()),
+                    FagsakYtelseType.FORELDREPENGER
         ));
         var arbeidsforhold = lagArbeidsforhold(inntektsmeldinger, andelGradering, filter, skjæringstidspunktBeregning);
         return builder.medAktivitetStatus(AktivitetStatusV2.AT)

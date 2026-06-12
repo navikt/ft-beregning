@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import no.nav.folketrygdloven.kalkulator.input.ForeldrepengerGrunnlag;
+import no.nav.folketrygdloven.kalkulator.input.YtelsespesifiktGrunnlag;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
@@ -55,15 +57,16 @@ public class ManuellBehandlingRefusjonGraderingDtoTjeneste {
     }
 
     public static boolean skalSaksbehandlerRedigereRefusjon(BeregningsgrunnlagGrunnlagDto grunnlag,
-                                                            AktivitetGradering aktivitetGradering,
+                                                            YtelsespesifiktGrunnlag ytelsegrunnlag,
                                                             BeregningsgrunnlagPeriodeDto periode,
                                                             Collection<InntektsmeldingDto> inntektsmeldinger,
                                                             Beløp grunnbeløp, List<Intervall> forlengelseperioder,
                                                             FagsakYtelseType fagsakYtelseType) {
-        var periodeTilfelleMap = utledTilfellerForAndelerIPeriode(grunnlag, aktivitetGradering,
+        var aktivitetgradering = ytelsegrunnlag instanceof ForeldrepengerGrunnlag fg ? fg.getAktivitetGradering() : AktivitetGradering.INGEN_GRADERING;
+        var periodeTilfelleMap = utledTilfellerForAndelerIPeriode(grunnlag, aktivitetgradering,
                 periode, inntektsmeldinger, forlengelseperioder, fagsakYtelseType);
         return periode.getBeregningsgrunnlagPrStatusOgAndelList().stream().anyMatch(andelFraSteg -> andelLiggerITilfelleMap(andelFraSteg, periodeTilfelleMap)
-                && RefusjonDtoTjeneste.skalKunneEndreRefusjon(andelFraSteg, periode, aktivitetGradering, grunnbeløp));
+                && RefusjonDtoTjeneste.skalKunneEndreRefusjon(andelFraSteg, periode, ytelsegrunnlag, grunnbeløp));
     }
 
     private static Map<BeregningsgrunnlagPrStatusOgAndelDto, FordelingTilfelle> utledTilfellerForAndelerIPeriode(BeregningsgrunnlagGrunnlagDto grunnlag,

@@ -49,28 +49,28 @@ public class MapFastsettBeregningsgrunnlagPerioderFraRegelTilVLGraderingOgUtbeta
                 throw new IllegalStateException("Klarte ikke identifisere aktivitetstatus under periodesplitt. Status var " + nyAndel.getAktivitetStatus());
             }
             var eksisterende = beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndelList().stream()
-                    .anyMatch(a -> a.getAktivitetStatus().equals(aktivitetStatus) && a.getArbeidsforholdType().equals(aktivitetTypeMap.get(aktivitetStatus)));
+                .anyMatch(a -> a.getAktivitetStatus().equals(aktivitetStatus) && a.getArbeidsforholdType().equals(aktivitetTypeMap.get(aktivitetStatus)));
             if (!eksisterende) {
                 BeregningsgrunnlagPrStatusOgAndelDto.ny()
-                        .medKilde(AndelKilde.PROSESS_PERIODISERING)
-                        .medAktivitetStatus(aktivitetStatus)
-                        .medArbforholdType(aktivitetTypeMap.get(aktivitetStatus))
-                        .build(beregningsgrunnlagPeriode);
+                    .medKilde(AndelKilde.PROSESS_PERIODISERING)
+                    .medAktivitetStatus(aktivitetStatus)
+                    .medArbforholdType(aktivitetTypeMap.get(aktivitetStatus))
+                    .build(beregningsgrunnlagPeriode);
             }
         } else {
             var arbeidsgiver = MapArbeidsforholdFraRegelTilVL.map(nyAndel.getArbeidsforhold().getReferanseType(), nyAndel.getArbeidsforhold().getOrgnr(), nyAndel.getArbeidsforhold().getAktørId());
             var iaRef = InternArbeidsforholdRefDto.ref(nyAndel.getArbeidsforhold().getArbeidsforholdId());
             var andelArbeidsforholdBuilder = BGAndelArbeidsforholdDto.builder()
-                    .medArbeidsgiver(arbeidsgiver)
-                    .medArbeidsforholdRef(iaRef)
-                    .medArbeidsperiodeFom(nyAndel.getArbeidsperiodeFom())
-                    .medArbeidsperiodeTom(nyAndel.getArbeidsperiodeTom());
+                .medArbeidsgiver(arbeidsgiver)
+                .medArbeidsforholdRef(iaRef)
+                .medArbeidsperiodeFom(nyAndel.getArbeidsperiodeFom())
+                .medArbeidsperiodeTom(nyAndel.getArbeidsperiodeTom());
             BeregningsgrunnlagPrStatusOgAndelDto.ny()
-                    .medKilde(AndelKilde.PROSESS_PERIODISERING)
-                    .medBGAndelArbeidsforhold(andelArbeidsforholdBuilder)
-                    .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
-                    .medArbforholdType(OpptjeningAktivitetType.ARBEID)
-                    .build(beregningsgrunnlagPeriode);
+                .medKilde(AndelKilde.PROSESS_PERIODISERING)
+                .medBGAndelArbeidsforhold(andelArbeidsforholdBuilder)
+                .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
+                .medArbforholdType(OpptjeningAktivitetType.ARBEID)
+                .build(beregningsgrunnlagPeriode);
         }
     }
 
@@ -81,16 +81,16 @@ public class MapFastsettBeregningsgrunnlagPerioderFraRegelTilVLGraderingOgUtbeta
         var status = statusMap.get(aktivitetStatusV2);
         if (status == null) {
             throw new IllegalStateException(
-                    "Mangler mapping til " + AktivitetStatus.class.getName() + " fra " + AktivitetStatusV2.class.getName() + "." + aktivitetStatusV2);
+                "Mangler mapping til " + AktivitetStatus.class.getName() + " fra " + AktivitetStatusV2.class.getName() + "." + aktivitetStatusV2);
         }
         return status;
     }
 
     private boolean nyAndelErSNFlDP(SplittetAndel nyAndel) {
         return nyAndel.getAktivitetStatus() != null
-                && (nyAndel.getAktivitetStatus().equals(AktivitetStatusV2.SN)
-                || nyAndel.getAktivitetStatus().equals(AktivitetStatusV2.FL)
-                || nyAndel.getAktivitetStatus().equals(AktivitetStatusV2.DP));
+            && (nyAndel.getAktivitetStatus().equals(AktivitetStatusV2.SN)
+            || nyAndel.getAktivitetStatus().equals(AktivitetStatusV2.FL)
+            || nyAndel.getAktivitetStatus().equals(AktivitetStatusV2.DP));
     }
 
     private void leggTilEksisterende(BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode,

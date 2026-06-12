@@ -12,6 +12,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.utbet
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SplittetPeriode;
 import no.nav.folketrygdloven.kalkulator.adapter.regelmodelltilvl.MapFastsettBeregningsgrunnlagPerioderFraRegelTilVLGraderingOgUtbetalingsgrad;
 import no.nav.folketrygdloven.kalkulator.adapter.regelmodelltilvl.MapFastsettBeregningsgrunnlagPerioderFraRegelTilVLRefusjon;
+import no.nav.folketrygdloven.kalkulator.adapter.regelmodelltilvl.MapFastsettBeregningsgrunnlagPerioderFraRegelTilVLUtbetalingsgradSvp;
 import no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.periodisering.gradering.MapPerioderForGraderingFraVLTilRegel;
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagInput;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
@@ -33,6 +34,7 @@ import no.nav.folketrygdloven.regelmodelloversetter.KalkulusRegler;
 public class FordelPerioderTjeneste {
     private final MapFastsettBeregningsgrunnlagPerioderFraRegelTilVLGraderingOgUtbetalingsgrad oversetterFraRegelGraderingOgUtbetalingsgrad = new MapFastsettBeregningsgrunnlagPerioderFraRegelTilVLGraderingOgUtbetalingsgrad();
     private final MapFastsettBeregningsgrunnlagPerioderFraRegelTilVLRefusjon oversetterFraRegelRefusjon = new MapFastsettBeregningsgrunnlagPerioderFraRegelTilVLRefusjon();
+    private final MapFastsettBeregningsgrunnlagPerioderFraRegelTilVLUtbetalingsgradSvp oversetterFraRegelUtbetalingsgradSvp = new MapFastsettBeregningsgrunnlagPerioderFraRegelTilVLUtbetalingsgradSvp();
 
 
     public BeregningsgrunnlagRegelResultat fastsettPerioderForRefusjon(BeregningsgrunnlagInput input) {
@@ -66,7 +68,7 @@ public class FordelPerioderTjeneste {
     private BeregningsgrunnlagRegelResultat fastsettPerioderForUtbetalingsgrad(BeregningsgrunnlagInput input,
                                                                                BeregningsgrunnlagDto beregningsgrunnlag) {
         var periodeModell = MapPerioderForUtbetalingsgradFraVLTilRegel.map(input, beregningsgrunnlag);
-        return kjørRegelOgMapTilVLUtbetalingsgrad(beregningsgrunnlag, periodeModell);
+        return kjørRegelOgMapTilVLUtbetalingsgrad(beregningsgrunnlag, periodeModell, input.getFagsakYtelseType());
     }
 
     private BeregningsgrunnlagRegelResultat fastsettPerioderForGradering(BeregningsgrunnlagInput input,
@@ -97,10 +99,12 @@ public class FordelPerioderTjeneste {
     }
 
     private BeregningsgrunnlagRegelResultat kjørRegelOgMapTilVLUtbetalingsgrad(BeregningsgrunnlagDto beregningsgrunnlag,
-                                                                               PeriodeModellUtbetalingsgrad input) {
+                                                                               PeriodeModellUtbetalingsgrad input, FagsakYtelseType fagsakYtelseType) {
         List<SplittetPeriode> splittedePerioder = new ArrayList<>();
         var regelResultat = KalkulusRegler.fastsettPerioderForUtbetalingsgrad(input, splittedePerioder);
-        var nyttBeregningsgrunnlag = oversetterFraRegelGraderingOgUtbetalingsgrad.mapFraRegel(splittedePerioder, beregningsgrunnlag);
+        var nyttBeregningsgrunnlag = fagsakYtelseType.equals(FagsakYtelseType.SVANGERSKAPSPENGER)
+            ? oversetterFraRegelUtbetalingsgradSvp.mapFraRegel(splittedePerioder, beregningsgrunnlag)
+            : oversetterFraRegelGraderingOgUtbetalingsgrad.mapFraRegel(splittedePerioder, beregningsgrunnlag);
         return new BeregningsgrunnlagRegelResultat(
                 nyttBeregningsgrunnlag,
                 new RegelSporingAggregat(mapRegelSporingGrunnlag(regelResultat, BeregningsgrunnlagRegelType.PERIODISERING_UTBETALINGSGRAD)));

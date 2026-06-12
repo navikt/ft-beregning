@@ -9,6 +9,7 @@ import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BGAndelArbeid
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
 import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
+import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.UttakArbeidType;
 import no.nav.fpsak.tidsserie.LocalDateSegment;
 import no.nav.fpsak.tidsserie.LocalDateTimeline;
@@ -21,17 +22,21 @@ public class FinnTidslinjeForErNyAktivitet {
     }
 
 
-    /** Finner tidslinje for perioder der gitt arbeidsforhold har en matchende andel i beregningsgrunnlaget.
-     * @param vlBeregningsgrunnlag Beregningsgrunnlag
+    /**
+     * Finner tidslinje for perioder der gitt arbeidsforhold har en matchende andel i beregningsgrunnlaget.
+     *
+     * @param vlBeregningsgrunnlag    Beregningsgrunnlag
      * @param uttakArbeidType
      * @param internArbeidsforholdRef
      * @param arbeidsgiver
+     * @param ytelse
      * @return Tidslinje som angir om aktivitet ikke eksisterer (er ny) i beregningsgrunnlaget
      */
     public static LocalDateTimeline<Boolean> finnTidslinjeForNyAktivitet(BeregningsgrunnlagDto vlBeregningsgrunnlag,
-                                                                  UttakArbeidType uttakArbeidType,
-                                                                  InternArbeidsforholdRefDto internArbeidsforholdRef,
-                                                                  Optional<Arbeidsgiver> arbeidsgiver) {
+                                                                         UttakArbeidType uttakArbeidType,
+                                                                         InternArbeidsforholdRefDto internArbeidsforholdRef,
+                                                                         Optional<Arbeidsgiver> arbeidsgiver,
+                                                                         FagsakYtelseType ytelse) {
         var tilretteleggingArbeidsgiver = arbeidsgiver.orElse(null);
 
         var eksisterendeAndelSegmenter = vlBeregningsgrunnlag.getBeregningsgrunnlagPerioder().stream()
@@ -42,7 +47,8 @@ public class FinnTidslinjeForErNyAktivitet {
                             var andelAG = a.getBgAndelArbeidsforhold().map(BGAndelArbeidsforholdDto::getArbeidsgiver).orElse(null);
                             var arbeidsgiverMatcher = Objects.equals(andelAG, tilretteleggingArbeidsgiver);
                             var andelRef = a.getBgAndelArbeidsforhold().map(BGAndelArbeidsforholdDto::getArbeidsforholdRef).orElse(InternArbeidsforholdRefDto.nullRef());
-                            var arbeidsforholdRefMatcher = andelRef.gjelderFor(internArbeidsforholdRef);
+                            // For svangerskapspenger har vi startet å legge til andeler i tilrettelegging med arbeidsforholdId som skal oppfattes som nye når det ligger andeler uten arbeidsforholdId på grunnlag fra før
+                            var arbeidsforholdRefMatcher = ytelse.equals(FagsakYtelseType.SVANGERSKAPSPENGER) ? Objects.equals(andelRef.getReferanse(), internArbeidsforholdRef.getReferanse()) : andelRef.gjelderFor(internArbeidsforholdRef);
                             return statusMatcher && arbeidsgiverMatcher && arbeidsforholdRefMatcher;
                         }))
                 .map(p -> new LocalDateSegment<>(p.getBeregningsgrunnlagPeriodeFom(), p.getBeregningsgrunnlagPeriodeTom(), false))
