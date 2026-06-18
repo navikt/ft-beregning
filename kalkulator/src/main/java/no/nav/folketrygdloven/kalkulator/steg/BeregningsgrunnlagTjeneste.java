@@ -14,6 +14,7 @@ import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.Beregningsgru
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.output.BeregningResultatAggregat;
 import no.nav.folketrygdloven.kalkulator.output.BeregningResultatAggregat.Builder;
+import no.nav.folketrygdloven.kalkulator.output.BeregningsgrunnlagRegelResultat;
 import no.nav.folketrygdloven.kalkulator.output.RegelSporingAggregat;
 import no.nav.folketrygdloven.kalkulator.steg.besteberegning.BesteberegningResultat;
 import no.nav.folketrygdloven.kalkulator.steg.besteberegning.ForeslåBesteberegning;
@@ -26,6 +27,7 @@ import no.nav.folketrygdloven.kalkulator.steg.fordeling.vilkår.VurderBeregnings
 import no.nav.folketrygdloven.kalkulator.steg.foreslå.ForeslåBeregningsgrunnlag;
 import no.nav.folketrygdloven.kalkulator.steg.fortsettForeslå.FortsettForeslåBeregningsgrunnlag;
 import no.nav.folketrygdloven.kalkulator.steg.fullføre.FullføreBeregningsgrunnlagTjenesteVelger;
+import no.nav.folketrygdloven.kalkulator.steg.inntektsgradering.FastsettInntektsgraderingTjeneste;
 import no.nav.folketrygdloven.kalkulator.steg.kontrollerfakta.AvklaringsbehovUtlederFaktaOmBeregning;
 import no.nav.folketrygdloven.kalkulator.steg.kontrollerfakta.OpprettBeregningsgrunnlagTjeneste;
 import no.nav.folketrygdloven.kalkulator.steg.refusjon.VurderRefusjonBeregningsgrunnlagFelles;
@@ -146,6 +148,16 @@ public class BeregningsgrunnlagTjeneste implements KalkulatorInterface {
                 .medAvklaringsbehov(avklaringsbehov)
                 .medBeregningsgrunnlag(bg, input.getStegTilstand())
                 .build();
+    }
+
+    @Override
+    public BeregningResultatAggregat fastsettInntektsgradering(StegProsesseringInput input) {
+        BeregningsgrunnlagRegelResultat resultat = FastsettInntektsgraderingTjeneste.fastsettInntektsgradering(input);
+        return Builder.fra(input)
+            .medAvklaringsbehov(resultat.getAvklaringsbehov())
+            .medBeregningsgrunnlag(resultat.getBeregningsgrunnlag(), input.getStegTilstand())
+            .medRegelSporingAggregat(resultat.getRegelsporinger().orElse(null))
+            .build();
     }
 
 

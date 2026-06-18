@@ -80,6 +80,9 @@ public class TilkommetInntektDto implements IndexKey {
         return skalRedusereUtbetaling;
     }
 
+    public void setTilkommetInntektPrÅr(Beløp tilkommetInntektPrÅr) {
+        this.tilkommetInntektPrÅr = tilkommetInntektPrÅr;
+    }
 
     public boolean matcher(TilkommetInntektDto annet) {
         return this.aktivitetStatus.equals(annet.getAktivitetStatus()) &&
