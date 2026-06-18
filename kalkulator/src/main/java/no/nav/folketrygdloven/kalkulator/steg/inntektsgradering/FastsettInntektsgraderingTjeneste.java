@@ -20,6 +20,9 @@ import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 
 public class FastsettInntektsgraderingTjeneste {
 
+    private FastsettInntektsgraderingTjeneste() {
+    }
+
     public static BeregningsgrunnlagRegelResultat fastsettInntektsgradering(BeregningsgrunnlagInput input) {
         var grunnlagBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
 
@@ -37,7 +40,7 @@ public class FastsettInntektsgraderingTjeneste {
                 BeregningsgrunnlagPeriodeDto.Builder periodeBuilderFor = beregningsgrunnlagBuilder.getPeriodeBuilderFor(p.getPeriode())
                     .orElseThrow(() -> new IllegalStateException("Forventer å finne periode"));
                 for (var t : tilkomneInntekter) {
-                    if (t.skalRedusereUtbetaling()) {
+                    if (t.skalRedusereUtbetaling() == true) {
                         Beløp tilkommetBeløp = utledTilkommetFraBrutto(t, p.getPeriode(), input.getYtelsespesifiktGrunnlag());
                         TilkommetInntektDto ny = new TilkommetInntektDto(t);
                         ny.setTilkommetInntektPrÅr(tilkommetBeløp);
