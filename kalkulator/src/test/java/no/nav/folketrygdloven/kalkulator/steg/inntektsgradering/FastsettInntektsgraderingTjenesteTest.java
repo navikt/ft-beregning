@@ -5,6 +5,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
+import no.nav.folketrygdloven.kalkulator.modell.behandling.KoblingReferanse;
+
+import no.nav.folketrygdloven.kalkulator.modell.behandling.Skjæringstidspunkt;
+import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
+
+import no.nav.folketrygdloven.kalkulus.typer.AktørId;
 
 import org.junit.jupiter.api.Test;
 
@@ -46,21 +54,19 @@ class FastsettInntektsgraderingTjenesteTest {
     void skal_sette_tilkommet_inntekt_for_arbeidstaker_og_ignorere_tilkommet_inntekt_som_ikke_skal_redusere_utbetaling() {
         var arbeidsgiver = Arbeidsgiver.virksomhet(ARBEIDSGIVER_ORGNR);
         var arbeidsgiver2 = Arbeidsgiver.virksomhet(ARBEIDSGIVER_ORGNR2);
-        var ytelsespesifiktGrunnlag = new PleiepengerSyktBarnGrunnlag(List.of(
-            new UtbetalingsgradPrAktivitetDto(
-                new AktivitetDto(arbeidsgiver, InternArbeidsforholdRefDto.nullRef(), UttakArbeidType.ORDINÆRT_ARBEID),
-                List.of(new PeriodeMedUtbetalingsgradDto(PERIODE, Utbetalingsgrad.valueOf(50), Aktivitetsgrad.fra(50)))
-            ),
-            new UtbetalingsgradPrAktivitetDto(
-                new AktivitetDto(arbeidsgiver2, InternArbeidsforholdRefDto.nullRef(), UttakArbeidType.ORDINÆRT_ARBEID),
-                List.of(new PeriodeMedUtbetalingsgradDto(PERIODE, Utbetalingsgrad.valueOf(0), Aktivitetsgrad.fra(50)))
-            )));
+        var arbeidsgiver3 = Arbeidsgiver.virksomhet(ARBEIDSGIVER_ORGNR3);
+        List<UtbetalingsgradPrAktivitetDto> utbetalingsgrader = List.of(
+            new UtbetalingsgradPrAktivitetDto(new AktivitetDto(arbeidsgiver, InternArbeidsforholdRefDto.nullRef(), UttakArbeidType.ORDINÆRT_ARBEID),
+                List.of(new PeriodeMedUtbetalingsgradDto(PERIODE, Utbetalingsgrad.valueOf(100), Aktivitetsgrad.fra(0)))),
+            new UtbetalingsgradPrAktivitetDto(new AktivitetDto(arbeidsgiver2, InternArbeidsforholdRefDto.nullRef(), UttakArbeidType.ORDINÆRT_ARBEID),
+                List.of(new PeriodeMedUtbetalingsgradDto(PERIODE, Utbetalingsgrad.valueOf(0), Aktivitetsgrad.fra(50)))));
+        var ytelsespesifiktGrunnlag = new PleiepengerSyktBarnGrunnlag(utbetalingsgrader, PERIODE.getFomDato());
 
         var beregningsgrunnlag = lagBeregningsgrunnlag(
             List.of(AktivitetStatus.ARBEIDSTAKER),
             List.of(lagArbeidstakerAndel(1L, arbeidsgiver, 100_000)),
             List.of(
-                new TilkommetInntektDto(AktivitetStatus.ARBEIDSTAKER, Arbeidsgiver.virksomhet(ARBEIDSGIVER_ORGNR3), InternArbeidsforholdRefDto.nullRef(), Beløp.fra(25_000), null, false),
+                new TilkommetInntektDto(AktivitetStatus.ARBEIDSTAKER, arbeidsgiver3, InternArbeidsforholdRefDto.nullRef(), Beløp.fra(25_000), null, false),
                 new TilkommetInntektDto(AktivitetStatus.ARBEIDSTAKER, arbeidsgiver2, InternArbeidsforholdRefDto.nullRef(), Beløp.fra(100_000), null, true)
             )
         );
@@ -68,8 +74,8 @@ class FastsettInntektsgraderingTjenesteTest {
         var resultat = fastsettInntektsgradering(beregningsgrunnlag, ytelsespesifiktGrunnlag);
 
         var periodeResultat = resultat.getBeregningsgrunnlag().getBeregningsgrunnlagPerioder().get(0);
-        assertThat(periodeResultat.getTilkomneInntekter()).hasSize(1);
-        var tilkommetInntekt = periodeResultat.getTilkomneInntekter().get(0);
+        assertThat(periodeResultat.getTilkomneInntekter()).hasSize(2);
+        var tilkommetInntekt = periodeResultat.getTilkomneInntekter().stream().filter(it -> it.getArbeidsgiver().get().equals(arbeidsgiver2)).findFirst().orElseThrow();
         assertThat(tilkommetInntekt.getAktivitetStatus()).isEqualTo(AktivitetStatus.ARBEIDSTAKER);
         assertThat(tilkommetInntekt.getTilkommetInntektPrÅr()).isEqualByComparingTo(Beløp.fra(50_000));
         assertThat(periodeResultat.getInntektgraderingsprosentBrutto()).isEqualByComparingTo("50");
@@ -77,7 +83,8 @@ class FastsettInntektsgraderingTjenesteTest {
 
     private static BeregningsgrunnlagRegelResultat fastsettInntektsgradering(BeregningsgrunnlagDto beregningsgrunnlag,
                                                                             YtelsespesifiktGrunnlag ytelsespesifiktGrunnlag) {
-        var input = new BeregningsgrunnlagInput(new KoblingReferanseMock(SKJÆRINGSTIDSPUNKT), null, null, List.of(), ytelsespesifiktGrunnlag);
+        KoblingReferanse koblingReferanse = KoblingReferanse.fra(FagsakYtelseType.PLEIEPENGER_SYKT_BARN, AktørId.dummy(), 1L, UUID.randomUUID(), Optional.empty(),  Skjæringstidspunkt.builder().medSkjæringstidspunktBeregning(SKJÆRINGSTIDSPUNKT).build());
+        var input = new BeregningsgrunnlagInput(koblingReferanse, null, null, List.of(), ytelsespesifiktGrunnlag);
         var grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.empty())
             .medBeregningsgrunnlag(beregningsgrunnlag)
             .build(BeregningsgrunnlagTilstand.FASTSATT_INN);
