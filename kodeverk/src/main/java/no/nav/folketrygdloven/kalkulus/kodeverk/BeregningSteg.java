@@ -16,6 +16,7 @@ public enum BeregningSteg implements Kodeverdi, KontraktKode {
     VURDER_VILKAR_BERGRUNN, // Vurder beregningsgrunnlagsvilkår
 
     VURDER_TILKOMMET_INNTEKT, // Vurder tilkommet inntekt
+    FASTSETT_INNTEKTSGRADERING, // Fastsett inntektsgradering
 
     VURDER_REF_BERGRUNN, // Vurder refusjon for beregningsgrunnlaget
     FORDEL_BERGRUNN, // Fordel beregningsgrunnlag
@@ -34,6 +35,7 @@ public enum BeregningSteg implements Kodeverdi, KontraktKode {
             FORS_BESTEBEREGNING,
             VURDER_VILKAR_BERGRUNN,
             VURDER_TILKOMMET_INNTEKT,
+            FASTSETT_INNTEKTSGRADERING,
             VURDER_REF_BERGRUNN,
             FORDEL_BERGRUNN,
             FAST_BERGRUNN);
