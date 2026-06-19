@@ -60,7 +60,8 @@ public class FastsettInntektsgraderingTjeneste {
     }
 
     private static boolean harPeriodeMedReduksjon(List<BeregningsgrunnlagPeriodeDto> perioder) {
-        return perioder.stream().anyMatch(p -> p.getTilkomneInntekter().stream().anyMatch(TilkommetInntektDto::skalRedusereUtbetaling));
+        return perioder.stream()
+            .anyMatch(p -> p.getTilkomneInntekter().stream().anyMatch(t -> Boolean.TRUE.equals(t.skalRedusereUtbetaling())));
     }
 
     private static Beløp utledTilkommetFraBrutto(TilkommetInntektDto tilkommetInntektDto,
