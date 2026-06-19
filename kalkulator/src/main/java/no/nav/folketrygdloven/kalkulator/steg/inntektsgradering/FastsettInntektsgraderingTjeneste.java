@@ -40,7 +40,7 @@ public class FastsettInntektsgraderingTjeneste {
                 BeregningsgrunnlagPeriodeDto.Builder periodeBuilderFor = beregningsgrunnlagBuilder.getPeriodeBuilderFor(p.getPeriode())
                     .orElseThrow(() -> new IllegalStateException("Forventer å finne periode"));
                 for (var t : tilkomneInntekter) {
-                    boolean skalRedusereUtbetaling = t.skalRedusereUtbetaling() == true;
+                    boolean skalRedusereUtbetaling = Boolean.TRUE.equals(t.skalRedusereUtbetaling());
                     if (skalRedusereUtbetaling) {
                         Beløp tilkommetBeløp = utledTilkommetFraBrutto(t, p.getPeriode(), input.getYtelsespesifiktGrunnlag());
                         TilkommetInntektDto ny = new TilkommetInntektDto(t);
