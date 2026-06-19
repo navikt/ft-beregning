@@ -73,17 +73,17 @@ public class FastsettInntektsgraderingTjeneste {
                     tilkommetInntektDto.getArbeidsforholdRef(), periode, ytelsespesifiktGrunnlag, true);
                 var utbetalingsprosent = UtbetalingsgradTjeneste.finnUtbetalingsgradForArbeid(tilkommetInntektDto.getArbeidsgiver().orElseThrow(),
                     tilkommetInntektDto.getArbeidsforholdRef(), periode, ytelsespesifiktGrunnlag, true);
-                var tilommetGrad = aktivitetsProsent.map(grad -> grad.verdi().divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP))
+                var tilkommetGrad = aktivitetsProsent.map(grad -> grad.verdi().divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP))
                     .orElse(BigDecimal.valueOf(1).subtract(utbetalingsprosent.verdi().divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP)));
-                return tilkommetInntektDto.getBruttoInntektPrÅr().multipliser(tilommetGrad);
+                return tilkommetInntektDto.getBruttoInntektPrÅr().multipliser(tilkommetGrad);
             } else {
                 var utbetalingsprosent = UtbetalingsgradTjeneste.finnUtbetalingsgradForStatus(tilkommetInntektDto.getAktivitetStatus(), periode,
                     ytelsespesifiktGrunnlag);
                 var aktivitetsProsent = UtbetalingsgradTjeneste.finnAktivitetsgradForStatus(tilkommetInntektDto.getAktivitetStatus(), periode,
                     ytelsespesifiktGrunnlag);
-                var tilommetGrad = aktivitetsProsent.map(grad -> grad.verdi().divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP))
+                var tilkommetGrad = aktivitetsProsent.map(grad -> grad.verdi().divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP))
                     .orElse(BigDecimal.valueOf(1).subtract(utbetalingsprosent.verdi().divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP)));
-                return tilkommetInntektDto.getBruttoInntektPrÅr().multipliser(tilommetGrad);
+                return tilkommetInntektDto.getBruttoInntektPrÅr().multipliser(tilkommetGrad);
             }
         }
         throw new IllegalStateException("Kun gyldig ved utbetalingsgradgrunnlag");
