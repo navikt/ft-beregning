@@ -128,6 +128,11 @@ public class BeregningsgrunnlagFRISINNTjeneste implements KalkulatorInterface {
         throw new IllegalStateException("Utviklerfeil: Frisinn skal ikke vurdere tilkommet inntekt");
     }
 
+    @Override
+    public BeregningResultatAggregat fastsettInntektsgradering(StegProsesseringInput input) {
+        throw new IllegalStateException("Utviklerfeil: Frisinn skal ikke fastsette inntektsgradering");
+    }
+
 
     /**
      * Vurderer peridoder med refusjon

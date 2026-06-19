@@ -80,6 +80,12 @@ public class TilkommetInntektDto implements IndexKey {
         return skalRedusereUtbetaling;
     }
 
+    public void setTilkommetInntektPrÅr(Beløp tilkommetInntektPrÅr) {
+        if (skalRedusereUtbetaling != null && !skalRedusereUtbetaling && tilkommetInntektPrÅr != null) {
+            throw new IllegalStateException("Skal ikke sette tilkommet inntekt når ikke redusert utbetaling");
+        }
+        this.tilkommetInntektPrÅr = tilkommetInntektPrÅr;
+    }
 
     public boolean matcher(TilkommetInntektDto annet) {
         return this.aktivitetStatus.equals(annet.getAktivitetStatus()) &&
