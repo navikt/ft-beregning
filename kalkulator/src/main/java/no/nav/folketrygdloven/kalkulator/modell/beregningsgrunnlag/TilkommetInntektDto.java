@@ -81,6 +81,9 @@ public class TilkommetInntektDto implements IndexKey {
     }
 
     public void setTilkommetInntektPrÅr(Beløp tilkommetInntektPrÅr) {
+        if (skalRedusereUtbetaling != null && !skalRedusereUtbetaling && tilkommetInntektPrÅr != null) {
+            throw new IllegalStateException("Skal ikke sette tilkommet inntekt når ikke redusert utbetaling");
+        }
         this.tilkommetInntektPrÅr = tilkommetInntektPrÅr;
     }
 
