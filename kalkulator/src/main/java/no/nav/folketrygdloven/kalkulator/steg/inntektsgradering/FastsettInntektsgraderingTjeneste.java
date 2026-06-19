@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.UtbetalingsgradTjeneste;
 import no.nav.folketrygdloven.kalkulator.felles.inntektgradering.FinnUttaksgradInntektsgradering;
@@ -40,8 +41,10 @@ public class FastsettInntektsgraderingTjeneste {
                 BeregningsgrunnlagPeriodeDto.Builder periodeBuilderFor = beregningsgrunnlagBuilder.getPeriodeBuilderFor(p.getPeriode())
                     .orElseThrow(() -> new IllegalStateException("Forventer å finne periode"));
                 for (var t : tilkomneInntekter) {
+                    Objects.requireNonNull(t.skalRedusereUtbetaling(), "Forventer at skalRedusereUtbetaling er satt for alle tilkomne inntekter ved fastsetting av inntektsgradering");
                     boolean skalRedusereUtbetaling = Boolean.TRUE.equals(t.skalRedusereUtbetaling());
                     if (skalRedusereUtbetaling) {
+                        Objects.requireNonNull(t.getBruttoInntektPrÅr(), "Forventer at brutto inntekt pr år er satt når skalRedusereUtbetaling er true");
                         Beløp tilkommetBeløp = utledTilkommetFraBrutto(t, p.getPeriode(), input.getYtelsespesifiktGrunnlag());
                         TilkommetInntektDto ny = new TilkommetInntektDto(t);
                         ny.setTilkommetInntektPrÅr(tilkommetBeløp);
