@@ -40,7 +40,8 @@ public class FastsettInntektsgraderingTjeneste {
                 BeregningsgrunnlagPeriodeDto.Builder periodeBuilderFor = beregningsgrunnlagBuilder.getPeriodeBuilderFor(p.getPeriode())
                     .orElseThrow(() -> new IllegalStateException("Forventer å finne periode"));
                 for (var t : tilkomneInntekter) {
-                    if (t.skalRedusereUtbetaling() == true) {
+                    boolean skalRedusereUtbetaling = t.skalRedusereUtbetaling() == true;
+                    if (skalRedusereUtbetaling) {
                         Beløp tilkommetBeløp = utledTilkommetFraBrutto(t, p.getPeriode(), input.getYtelsespesifiktGrunnlag());
                         TilkommetInntektDto ny = new TilkommetInntektDto(t);
                         ny.setTilkommetInntektPrÅr(tilkommetBeløp);
@@ -64,9 +65,9 @@ public class FastsettInntektsgraderingTjeneste {
                                                  YtelsespesifiktGrunnlag ytelsespesifiktGrunnlag) {
         if (ytelsespesifiktGrunnlag instanceof UtbetalingsgradGrunnlag) {
             if (tilkommetInntektDto.getAktivitetStatus().erArbeidstaker() && tilkommetInntektDto.getArbeidsgiver().isPresent()) {
-                var aktivitetsProsent = UtbetalingsgradTjeneste.finnAktivitetsgradForArbeid(tilkommetInntektDto.getArbeidsgiver().get(),
+                var aktivitetsProsent = UtbetalingsgradTjeneste.finnAktivitetsgradForArbeid(tilkommetInntektDto.getArbeidsgiver().orElseThrow(),
                     tilkommetInntektDto.getArbeidsforholdRef(), periode, ytelsespesifiktGrunnlag, true);
-                var utbetalingsprosent = UtbetalingsgradTjeneste.finnUtbetalingsgradForArbeid(tilkommetInntektDto.getArbeidsgiver().get(),
+                var utbetalingsprosent = UtbetalingsgradTjeneste.finnUtbetalingsgradForArbeid(tilkommetInntektDto.getArbeidsgiver().orElseThrow(),
                     tilkommetInntektDto.getArbeidsforholdRef(), periode, ytelsespesifiktGrunnlag, true);
                 var tilommetGrad = aktivitetsProsent.map(grad -> grad.verdi().divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP))
                     .orElse(BigDecimal.valueOf(1).subtract(utbetalingsprosent.verdi().divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP)));
