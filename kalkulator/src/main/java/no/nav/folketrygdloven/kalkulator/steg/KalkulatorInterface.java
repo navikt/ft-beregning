@@ -75,7 +75,7 @@ public interface KalkulatorInterface {
     BeregningResultatAggregat vurderTilkommetInntekt(StegProsesseringInput input);
 
 
-    /** Steg 7 FInner gradering mot inntekt
+    /** Steg 7 Finner gradering mot inntekt
      *
      * @param input Input til steget
      * @return Finner gradering mot inntekt
