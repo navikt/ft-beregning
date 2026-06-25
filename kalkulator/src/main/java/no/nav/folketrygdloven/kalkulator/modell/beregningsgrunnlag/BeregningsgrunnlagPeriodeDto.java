@@ -36,7 +36,7 @@ public class BeregningsgrunnlagPeriodeDto implements IndexKey {
     private Beløp avkortetPrÅr;
     private Beløp redusertPrÅr;
     private Long dagsats;
-    @SjekkVedKopiering
+    // Ikkje legg til @SjekkVedKopiering her. Det ødelegger difflogikk ved forlengelse
     private List<BeregningsgrunnlagPeriodeÅrsakDto> beregningsgrunnlagPeriodeÅrsaker = new ArrayList<>();
     private BigDecimal inntektgraderingsprosentBrutto;
     private BigDecimal totalUtbetalingsgradFraUttak;
