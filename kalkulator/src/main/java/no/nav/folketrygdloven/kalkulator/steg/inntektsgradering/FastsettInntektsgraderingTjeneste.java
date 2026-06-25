@@ -27,7 +27,7 @@ public class FastsettInntektsgraderingTjeneste {
     public static BeregningsgrunnlagRegelResultat fastsettInntektsgradering(BeregningsgrunnlagInput input) {
         var grunnlagBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
 
-        BeregningsgrunnlagDto.Builder beregningsgrunnlagBuilder = grunnlagBuilder.getBeregningsgrunnlagBuilder();
+        BeregningsgrunnlagDto.Builder beregningsgrunnlagBuilder = BeregningsgrunnlagDto.builder(input.getBeregningsgrunnlag());
         List<BeregningsgrunnlagPeriodeDto> perioder = input.getBeregningsgrunnlagGrunnlag().getBeregningsgrunnlag().getBeregningsgrunnlagPerioder();
 
         if (!harPeriodeMedReduksjon(perioder)) {

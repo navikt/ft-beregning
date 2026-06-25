@@ -1,6 +1,7 @@
 package no.nav.folketrygdloven.kalkulator.steg.inntektsgradering;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -76,6 +77,30 @@ class FastsettInntektsgraderingTjenesteTest {
         assertThat(tilkommetInntekt.getAktivitetStatus()).isEqualTo(AktivitetStatus.ARBEIDSTAKER);
         assertThat(tilkommetInntekt.getTilkommetInntektPrÅr()).isEqualByComparingTo(Beløp.fra(50_000));
         assertThat(periodeResultat.getInntektgraderingsprosentBrutto()).isEqualByComparingTo("50");
+    }
+
+    @Test
+    void skal_ikke_kaste_exception_nar_tilkommet_inntekt_oppdateres_under_iterasjon() {
+        var arbeidsgiver = Arbeidsgiver.virksomhet(ARBEIDSGIVER_ORGNR);
+        var arbeidsgiver2 = Arbeidsgiver.virksomhet(ARBEIDSGIVER_ORGNR2);
+        List<UtbetalingsgradPrAktivitetDto> utbetalingsgrader = List.of(
+            new UtbetalingsgradPrAktivitetDto(new AktivitetDto(arbeidsgiver, InternArbeidsforholdRefDto.nullRef(), UttakArbeidType.ORDINÆRT_ARBEID),
+                List.of(new PeriodeMedUtbetalingsgradDto(PERIODE, Utbetalingsgrad.valueOf(100), Aktivitetsgrad.fra(0)))),
+            new UtbetalingsgradPrAktivitetDto(new AktivitetDto(arbeidsgiver2, InternArbeidsforholdRefDto.nullRef(), UttakArbeidType.ORDINÆRT_ARBEID),
+                List.of(new PeriodeMedUtbetalingsgradDto(PERIODE, Utbetalingsgrad.valueOf(100), Aktivitetsgrad.fra(0)))));
+        var ytelsespesifiktGrunnlag = new PleiepengerSyktBarnGrunnlag(utbetalingsgrader, PERIODE.getFomDato());
+
+        var beregningsgrunnlag = lagBeregningsgrunnlag(
+            List.of(AktivitetStatus.ARBEIDSTAKER),
+            List.of(lagArbeidstakerAndel(1L, arbeidsgiver, 100_000)),
+            List.of(
+                new TilkommetInntektDto(AktivitetStatus.ARBEIDSTAKER, arbeidsgiver, InternArbeidsforholdRefDto.nullRef(), Beløp.fra(25_000), null, true),
+                new TilkommetInntektDto(AktivitetStatus.ARBEIDSTAKER, arbeidsgiver2, InternArbeidsforholdRefDto.nullRef(), Beløp.fra(15_000), null, false)
+            )
+        );
+
+        assertThatCode(() -> fastsettInntektsgradering(beregningsgrunnlag, ytelsespesifiktGrunnlag))
+            .doesNotThrowAnyException();
     }
 
     private static BeregningsgrunnlagRegelResultat fastsettInntektsgradering(BeregningsgrunnlagDto beregningsgrunnlag,
