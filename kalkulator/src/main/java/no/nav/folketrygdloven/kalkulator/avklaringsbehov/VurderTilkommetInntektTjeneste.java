@@ -82,7 +82,7 @@ public class VurderTilkommetInntektTjeneste {
                 rhs.getValue().stream().map(inntektsforhold -> {
                     var tilkommetInntektDto = finnTilkommetInntektTilVurdering(lhs.getValue().getTilkomneInntekter(), inntektsforhold).orElseThrow(
                         () -> new IllegalStateException(
-                            String.format("Fant ikke inntektsforhold %s i liste med tilkomne inntektsforhold %s", inntektsforhold,
+                            String.format("Fant ikke inntektsforhold %s i periode %s med liste med tilkomne inntektsforhold %s", inntektsforhold,   di,
                                 lhs.getValue().getTilkomneInntekter())));
                     return new TilkommetInntektDto(tilkommetInntektDto.getAktivitetStatus(), tilkommetInntektDto.getArbeidsgiver().orElse(null),
                         tilkommetInntektDto.getArbeidsforholdRef(),
