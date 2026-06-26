@@ -43,7 +43,9 @@ public class VurderTilkommetInntektTjeneste {
     public static VurdertTilkommetInntektResultat løsAvklaringsbehov(VurderTilkommetInntektDto vurderDto, HåndterBeregningsgrunnlagInput input) {
         var grunnlagBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
         var vurderteInntektsforholdPerioder = vurderDto.tilkomneInntektsforholdPerioder();
-        var segmenter = vurderteInntektsforholdPerioder.stream().map(p -> new LocalDateSegment<>(p.fom(), p.tom(), p.tilkomneInntektsforhold())).toList();
+        var segmenter = vurderteInntektsforholdPerioder.stream()
+            .map(p -> new LocalDateSegment<>(p.fom(), p.tom(), p.tilkomneInntektsforhold()))
+            .toList();
         var tidslinje = new LocalDateTimeline<>(segmenter);
         var splittPeriodeConfig = new SplittPeriodeConfig<>(settVurderingCombinator(input));
         splittPeriodeConfig.setLikhetsPredikatForCompress(StandardPeriodeCompressLikhetspredikat::aldriKomprimer);
@@ -54,9 +56,8 @@ public class VurderTilkommetInntektTjeneste {
         if (harPeriodeMedReduksjon(vurderDto)) {
             var inputMedTilkommetInntekt = input.medBeregningsgrunnlagGrunnlag(grunnlagBuilder.buildUtenIdOgTilstand());
             var beregningsgrunnlagMedGradering = FinnUttaksgradInntektsgradering.finnInntektsgradering(inputMedTilkommetInntekt);
-            return new VurdertTilkommetInntektResultat(
-                grunnlagBuilder.medBeregningsgrunnlag(beregningsgrunnlagMedGradering.getBeregningsgrunnlag()).build(BeregningsgrunnlagTilstand.VURDERT_TILKOMMET_INNTEKT_UT),
-                beregningsgrunnlagMedGradering.getRegelsporinger().orElseThrow());
+            return new VurdertTilkommetInntektResultat(grunnlagBuilder.medBeregningsgrunnlag(beregningsgrunnlagMedGradering.getBeregningsgrunnlag())
+                .build(BeregningsgrunnlagTilstand.VURDERT_TILKOMMET_INNTEKT_UT), beregningsgrunnlagMedGradering.getRegelsporinger().orElseThrow());
         } else {
             return new VurdertTilkommetInntektResultat(grunnlagBuilder.build(BeregningsgrunnlagTilstand.VURDERT_TILKOMMET_INNTEKT_UT), null);
         }
@@ -70,28 +71,39 @@ public class VurderTilkommetInntektTjeneste {
             .anyMatch(p -> p.tilkomneInntektsforhold().stream().anyMatch(NyttInntektsforholdDto::skalRedusereUtbetaling));
     }
 
-    private static LocalDateSegmentCombinator<BeregningsgrunnlagPeriodeDto, List<NyttInntektsforholdDto>, BeregningsgrunnlagPeriodeDto> settVurderingCombinator(HåndterBeregningsgrunnlagInput input) {
+    private static LocalDateSegmentCombinator<BeregningsgrunnlagPeriodeDto, List<NyttInntektsforholdDto>, BeregningsgrunnlagPeriodeDto> settVurderingCombinator(
+        HåndterBeregningsgrunnlagInput input) {
         return (LocalDateInterval di, LocalDateSegment<BeregningsgrunnlagPeriodeDto> lhs, LocalDateSegment<List<NyttInntektsforholdDto>> rhs) -> {
             if (lhs != null && rhs != null) {
-                var nyPeriode = BeregningsgrunnlagPeriodeDto.kopier(lhs.getValue())
-                        .medBeregningsgrunnlagPeriode(di.getFomDato(), di.getTomDato());
+                var nyPeriode = BeregningsgrunnlagPeriodeDto.kopier(lhs.getValue()).medBeregningsgrunnlagPeriode(di.getFomDato(), di.getTomDato());
                 if (erLagtTilAvSaksbehandler(di, lhs.getValue().getPeriode()) && !rhs.getValue().isEmpty()) {
                     nyPeriode.leggTilPeriodeÅrsak(PeriodeÅrsak.TILKOMMET_INNTEKT_MANUELT);
                 }
-                rhs.getValue().stream().map(i -> {
-                    var tilkommetInntektDto = finnTilkommetInntektTilVurdering(lhs.getValue().getTilkomneInntekter(), i).orElseThrow();
-                    return new TilkommetInntektDto(tilkommetInntektDto.getAktivitetStatus(), tilkommetInntektDto.getArbeidsgiver().orElse(null), tilkommetInntektDto.getArbeidsforholdRef(), i.skalRedusereUtbetaling() ? finnBruttoPrÅr(i, input.getIayGrunnlag()) : null, i.skalRedusereUtbetaling() ? utledTilkommetFraBrutto(i, Intervall.fraOgMedTilOgMed(di.getFomDato(), di.getTomDato()), input.getYtelsespesifiktGrunnlag()) : null, i.skalRedusereUtbetaling());
+                rhs.getValue().stream().map(inntektsforhold -> {
+                    var tilkommetInntektDto = finnTilkommetInntektTilVurdering(lhs.getValue().getTilkomneInntekter(), inntektsforhold).orElseThrow(
+                        () -> new IllegalStateException(
+                            String.format("Fant ikke inntektsforhold %s i periode %s med liste med tilkomne inntektsforhold %s", inntektsforhold,   di,
+                                lhs.getValue().getTilkomneInntekter())));
+                    return new TilkommetInntektDto(tilkommetInntektDto.getAktivitetStatus(), tilkommetInntektDto.getArbeidsgiver().orElse(null),
+                        tilkommetInntektDto.getArbeidsforholdRef(),
+                        inntektsforhold.skalRedusereUtbetaling() ? finnBruttoPrÅr(inntektsforhold, input.getIayGrunnlag()) : null,
+                        inntektsforhold.skalRedusereUtbetaling() ? utledTilkommetFraBrutto(inntektsforhold,
+                            Intervall.fraOgMedTilOgMed(di.getFomDato(), di.getTomDato()), input.getYtelsespesifiktGrunnlag()) : null,
+                        inntektsforhold.skalRedusereUtbetaling());
                 }).forEach(nyPeriode::leggTilTilkommetInntekt);
 
                 var build = nyPeriode.build();
 
                 if (build.getTilkomneInntekter().stream().anyMatch(it -> it.skalRedusereUtbetaling() == null)) {
-                    throw new IllegalStateException(String.format("Periode %s har tilkomne inntektsforhold som ikke har blitt vurdert", build.getPeriode()));
+                    throw new IllegalStateException(
+                        String.format("Periode %s har tilkomne inntektsforhold som ikke har blitt vurdert", build.getPeriode()));
                 }
 
                 return new LocalDateSegment<>(di, build);
             } else if (lhs != null) {
-                var nyPeriode = BeregningsgrunnlagPeriodeDto.kopier(lhs.getValue()).medBeregningsgrunnlagPeriode(di.getFomDato(), di.getTomDato()).build();
+                var nyPeriode = BeregningsgrunnlagPeriodeDto.kopier(lhs.getValue())
+                    .medBeregningsgrunnlagPeriode(di.getFomDato(), di.getTomDato())
+                    .build();
                 return new LocalDateSegment<>(di, nyPeriode);
             }
             throw new IllegalStateException("Fant inntektsforhold utenfor gyldig periode. Periode var " + di);
@@ -102,8 +114,12 @@ public class VurderTilkommetInntektTjeneste {
         return !di.getFomDato().equals(periode.getFomDato());
     }
 
-    private static Optional<TilkommetInntektDto> finnTilkommetInntektTilVurdering(Collection<TilkommetInntektDto> vurderInntektsforhold, NyttInntektsforholdDto i) {
-        return vurderInntektsforhold.stream().filter(v -> v.getAktivitetStatus().equals(i.aktivitetStatus()) && (ingenHarArbeidsgiver(i, v) || harLikArbeidsgiver(i, v)) && v.getArbeidsforholdRef().gjelderFor(InternArbeidsforholdRefDto.ref(i.arbeidsforholdId()))).findFirst();
+    private static Optional<TilkommetInntektDto> finnTilkommetInntektTilVurdering(Collection<TilkommetInntektDto> vurderInntektsforhold,
+                                                                                  NyttInntektsforholdDto i) {
+        return vurderInntektsforhold.stream()
+            .filter(v -> v.getAktivitetStatus().equals(i.aktivitetStatus()) && (ingenHarArbeidsgiver(i, v) || harLikArbeidsgiver(i, v))
+                && v.getArbeidsforholdRef().gjelderFor(InternArbeidsforholdRefDto.ref(i.arbeidsforholdId())))
+            .findFirst();
     }
 
     private static boolean harLikArbeidsgiver(NyttInntektsforholdDto i, TilkommetInntektDto v) {
@@ -124,7 +140,12 @@ public class VurderTilkommetInntektTjeneste {
     }
 
     private static Optional<InntektsmeldingDto> finnInntektsmelding(NyttInntektsforholdDto i, InntektArbeidYtelseGrunnlagDto iayGrunnlag) {
-        return iayGrunnlag.getInntektsmeldinger().stream().flatMap(ims -> ims.getAlleInntektsmeldinger().stream()).filter(im -> Objects.equals(im.getArbeidsgiver().getIdentifikator(), i.arbeidsgiverIdentifikator()) && InternArbeidsforholdRefDto.ref(i.arbeidsforholdId()).gjelderFor(im.getArbeidsforholdRef())).findFirst();
+        return iayGrunnlag.getInntektsmeldinger()
+            .stream()
+            .flatMap(ims -> ims.getAlleInntektsmeldinger().stream())
+            .filter(im -> Objects.equals(im.getArbeidsgiver().getIdentifikator(), i.arbeidsgiverIdentifikator()) && InternArbeidsforholdRefDto.ref(
+                i.arbeidsforholdId()).gjelderFor(im.getArbeidsforholdRef()))
+            .findFirst();
     }
 
     private static Beløp mapTilÅrsinntekt(InntektsmeldingDto inntektsmeldingDto) {
@@ -135,34 +156,37 @@ public class VurderTilkommetInntektTjeneste {
         if (i.arbeidsgiverIdentifikator() == null) {
             return null;
         }
-        return OrgNummer.erGyldigOrgnr(i.arbeidsgiverIdentifikator()) ? Arbeidsgiver.virksomhet(i.arbeidsgiverIdentifikator()) : Arbeidsgiver.person(new AktørId(i.arbeidsgiverIdentifikator()));
+        return OrgNummer.erGyldigOrgnr(i.arbeidsgiverIdentifikator()) ? Arbeidsgiver.virksomhet(i.arbeidsgiverIdentifikator()) : Arbeidsgiver.person(
+            new AktørId(i.arbeidsgiverIdentifikator()));
     }
 
     private static Beløp utledTilkommetFraBrutto(NyttInntektsforholdDto inntektsforhold,
-                                                      Intervall periode,
-                                                      YtelsespesifiktGrunnlag ytelsespesifiktGrunnlag) {
+                                                 Intervall periode,
+                                                 YtelsespesifiktGrunnlag ytelsespesifiktGrunnlag) {
         if (ytelsespesifiktGrunnlag instanceof UtbetalingsgradGrunnlag) {
             if (inntektsforhold.aktivitetStatus().erArbeidstaker() && inntektsforhold.arbeidsgiverIdentifikator() != null) {
-                var aktivitetsProsent = UtbetalingsgradTjeneste.finnAktivitetsgradForArbeid(mapArbeidsgiver(inntektsforhold), InternArbeidsforholdRefDto.ref(inntektsforhold.arbeidsforholdId()), periode, ytelsespesifiktGrunnlag, true);
-                var utbetalingsprosent = UtbetalingsgradTjeneste.finnUtbetalingsgradForArbeid(mapArbeidsgiver(inntektsforhold), InternArbeidsforholdRefDto.ref(inntektsforhold.arbeidsforholdId()), periode, ytelsespesifiktGrunnlag, true);
+                var aktivitetsProsent = UtbetalingsgradTjeneste.finnAktivitetsgradForArbeid(mapArbeidsgiver(inntektsforhold),
+                    InternArbeidsforholdRefDto.ref(inntektsforhold.arbeidsforholdId()), periode, ytelsespesifiktGrunnlag, true);
+                var utbetalingsprosent = UtbetalingsgradTjeneste.finnUtbetalingsgradForArbeid(mapArbeidsgiver(inntektsforhold),
+                    InternArbeidsforholdRefDto.ref(inntektsforhold.arbeidsforholdId()), periode, ytelsespesifiktGrunnlag, true);
                 var tilommetGrad = aktivitetsProsent.map(grad -> grad.verdi().divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP))
-                        .orElse(BigDecimal.valueOf(1).subtract(utbetalingsprosent.verdi().divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP)));
+                    .orElse(BigDecimal.valueOf(1).subtract(utbetalingsprosent.verdi().divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP)));
                 return Beløp.fra(inntektsforhold.bruttoInntektPrÅr()).multipliser(tilommetGrad);
             } else {
-                var utbetalingsprosent = UtbetalingsgradTjeneste.finnUtbetalingsgradForStatus(inntektsforhold.aktivitetStatus(), periode, ytelsespesifiktGrunnlag);
-                var aktivitetsProsent = UtbetalingsgradTjeneste.finnAktivitetsgradForStatus(inntektsforhold.aktivitetStatus(), periode, ytelsespesifiktGrunnlag);
+                var utbetalingsprosent = UtbetalingsgradTjeneste.finnUtbetalingsgradForStatus(inntektsforhold.aktivitetStatus(), periode,
+                    ytelsespesifiktGrunnlag);
+                var aktivitetsProsent = UtbetalingsgradTjeneste.finnAktivitetsgradForStatus(inntektsforhold.aktivitetStatus(), periode,
+                    ytelsespesifiktGrunnlag);
                 var tilommetGrad = aktivitetsProsent.map(grad -> grad.verdi().divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP))
-                        .orElse(BigDecimal.valueOf(1).subtract(utbetalingsprosent.verdi().divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP)));
+                    .orElse(BigDecimal.valueOf(1).subtract(utbetalingsprosent.verdi().divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP)));
                 return Beløp.fra(inntektsforhold.bruttoInntektPrÅr()).multipliser(tilommetGrad);
             }
         }
         throw new IllegalStateException("Kun gyldig ved utbetalingsgradgrunnlag");
     }
 
-    public record VurdertTilkommetInntektResultat(
-        BeregningsgrunnlagGrunnlagDto grunnlag,
-        RegelSporingAggregat regelSporingAggregat
-    ) {}
+    public record VurdertTilkommetInntektResultat(BeregningsgrunnlagGrunnlagDto grunnlag, RegelSporingAggregat regelSporingAggregat) {
+    }
 
 
 }
