@@ -313,18 +313,21 @@ public class MapInntektsgrunnlagVLTilRegelFelles implements MapInntektsgrunnlagV
 	                                    Inntektsgrunnlag inntektsgrunnlag) {
 		finnAnvisningerForDirekteOvergangFraKap8(iayGrunnlag, skjæringstidspunktBeregning).stream()
 				.flatMap(ya -> ya.getAnvisteAndeler()
-						.stream().map(a -> mapTilPeriodeInntekt(ya, a)))
+						.stream().flatMap(a -> mapTilPeriodeInntekt(ya, a)))
 				.forEach(inntektsgrunnlag::leggTilPeriodeinntekt);
 	}
 
-	private Periodeinntekt mapTilPeriodeInntekt(YtelseAnvistDto ya, AnvistAndel a) {
-		return Periodeinntekt.builder().medInntekt(Beløp.safeVerdi(a.getDagsats()))
-				.medInntektskildeOgPeriodeType(Inntektskilde.YTELSE_VEDTAK)
-				.medInntektskategori(Inntektskategori.valueOf(a.getInntektskategori().getKode()))
-				.medPeriode(Periode.of(ya.getAnvistFOM(), ya.getAnvistTOM()))
-				.medUtbetalingsfaktor(BigDecimal.ONE)
-				.build();
-	}
+    private Stream<Periodeinntekt> mapTilPeriodeInntekt(YtelseAnvistDto ytelse, AnvistAndel andel) {
+        var dager = ytelse.getAnvistFOM().datesUntil(ytelse.getAnvistTOM().plusDays(1)).toList();
+        return dager.stream()
+            .map(d -> Periodeinntekt.builder()
+                .medInntekt(Beløp.safeVerdi(andel.getDagsats()))
+                .medInntektskildeOgPeriodeType(Inntektskilde.YTELSE_VEDTAK)
+                .medInntektskategori(Inntektskategori.valueOf(andel.getInntektskategori().getKode()))
+                .medDag(d)
+                .medUtbetalingsfaktor(BigDecimal.ONE)
+                .build());
+    }
 
 	void mapOppgittOpptjening(Inntektsgrunnlag inntektsgrunnlag, OppgittOpptjeningDto oppgittOpptjening) {
 		oppgittOpptjening.getEgenNæring().stream()
