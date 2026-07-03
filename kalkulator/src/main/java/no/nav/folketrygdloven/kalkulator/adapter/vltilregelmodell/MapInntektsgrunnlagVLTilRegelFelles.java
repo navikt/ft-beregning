@@ -144,7 +144,6 @@ public class MapInntektsgrunnlagVLTilRegelFelles implements MapInntektsgrunnlagV
 
 	private Periodeinntekt mapInntektOgNaturalytelser(InntektsmeldingDto im, Collection<YrkesaktivitetDto> yrkesaktiviteter) {
 
-
 		try {
             var arbeidsforhold = MapArbeidsforholdFraVLTilRegel.mapForInntektsmelding(im);
 			settAnsettelsesperiode(im.getArbeidsgiver(), yrkesaktiviteter, arbeidsforhold);
