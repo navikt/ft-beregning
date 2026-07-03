@@ -179,7 +179,7 @@ class MapInntektsgrunnlagVLTilRegelTest {
         assertThat(ytelsePeriodeinntekter).hasSize(1);
         assertThat(ytelsePeriodeinntekter.get(0).getInntekt()).isEqualTo(dagsats.verdi());
         assertThat(ytelsePeriodeinntekter.get(0).getUtbetalingsfaktor()).isPresent();
-        assertThat(ytelsePeriodeinntekter.get(0).getUtbetalingsfaktor().get()).isEqualTo(BigDecimal.ONE);
+        assertThat(ytelsePeriodeinntekter.get(0).getUtbetalingsfaktor()).contains(BigDecimal.ONE);
     }
 
     @Test
