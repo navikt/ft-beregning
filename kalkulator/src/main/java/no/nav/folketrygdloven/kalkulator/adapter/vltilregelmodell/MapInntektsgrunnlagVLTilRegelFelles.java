@@ -144,6 +144,7 @@ public class MapInntektsgrunnlagVLTilRegelFelles implements MapInntektsgrunnlagV
 
 	private Periodeinntekt mapInntektOgNaturalytelser(InntektsmeldingDto im, Collection<YrkesaktivitetDto> yrkesaktiviteter) {
 
+
 		try {
             var arbeidsforhold = MapArbeidsforholdFraVLTilRegel.mapForInntektsmelding(im);
 			settAnsettelsesperiode(im.getArbeidsgiver(), yrkesaktiviteter, arbeidsforhold);
@@ -216,6 +217,7 @@ public class MapInntektsgrunnlagVLTilRegelFelles implements MapInntektsgrunnlagV
         }
     }
 
+    // Inntektsperioder med InntektPeriodeType.DAGLIG normaliseres til endagersperioder, slik at periodelengden er forutsigbar senere i prosesseringen
     private static Stream<Periodeinntekt> mapAnvistPeriodeTilEnkeltdager(LocalDateSegment<DagsatsUtbetalingsgrad> segment) {
         var listeMedDager = segment.getFom().datesUntil(segment.getTom().plusDays(1)).toList();
         return listeMedDager.stream().map(d -> Periodeinntekt.builder()
@@ -317,6 +319,7 @@ public class MapInntektsgrunnlagVLTilRegelFelles implements MapInntektsgrunnlagV
 				.forEach(inntektsgrunnlag::leggTilPeriodeinntekt);
 	}
 
+    // Inntektsperioder med InntektPeriodeType.DAGLIG normaliseres til endagersperioder, slik at periodelengden er forutsigbar senere i prosesseringen
     private Stream<Periodeinntekt> mapTilPeriodeInntekt(YtelseAnvistDto ytelse, AnvistAndel andel) {
         var dager = ytelse.getAnvistFOM().datesUntil(ytelse.getAnvistTOM().plusDays(1)).toList();
         return dager.stream()
