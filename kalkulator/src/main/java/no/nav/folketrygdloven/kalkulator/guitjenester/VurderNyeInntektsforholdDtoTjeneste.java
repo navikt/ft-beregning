@@ -23,7 +23,6 @@ import no.nav.folketrygdloven.kalkulator.modell.typer.EksternArbeidsforholdRef;
 import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.felles.Periode;
-import no.nav.folketrygdloven.kalkulus.kodeverk.AvklaringsbehovDefinisjon;
 import no.nav.folketrygdloven.kalkulus.kodeverk.InntektskildeType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.LønnsinntektBeskrivelse;
 import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.InntektsforholdDto;
@@ -37,10 +36,6 @@ public class VurderNyeInntektsforholdDtoTjeneste {
     }
 
     public static VurderNyttInntektsforholdDto lagDto(BeregningsgrunnlagGUIInput input) {
-
-        if (input.getAvklaringsbehov().stream().noneMatch(a -> a.getDefinisjon().equals(AvklaringsbehovDefinisjon.VURDER_NYTT_INNTKTSFRHLD))) {
-            return null;
-        }
         var beregningsgrunnlag = input.getBeregningsgrunnlag();
         var iayGrunnlag = input.getIayGrunnlag();
 
