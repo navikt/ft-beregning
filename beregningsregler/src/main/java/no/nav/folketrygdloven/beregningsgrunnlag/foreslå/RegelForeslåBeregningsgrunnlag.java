@@ -13,6 +13,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.ytelse.dagpengerelleraap.RegelF
 import no.nav.folketrygdloven.regelmodelloversetter.EksportRegel;
 import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.ServiceArgument;
+import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.Specification;
 
@@ -28,6 +29,7 @@ import no.nav.fpsak.nare.specification.Specification;
  * DP beregnes etter §8-49
  * MIDL_INAKTIV beregnes etter §8-47
  */
+@RuleDocumentation(RegelForeslåBeregningsgrunnlag.ID)
 public class RegelForeslåBeregningsgrunnlag implements EksportRegel<BeregningsgrunnlagPeriode> {
 
 	public static final String ID = "BG-FORESLÅ";

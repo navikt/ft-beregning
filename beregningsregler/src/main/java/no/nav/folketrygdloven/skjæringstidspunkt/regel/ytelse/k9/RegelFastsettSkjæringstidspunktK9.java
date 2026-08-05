@@ -3,6 +3,7 @@ package no.nav.folketrygdloven.skjæringstidspunkt.regel.ytelse.k9;
 import no.nav.folketrygdloven.regelmodelloversetter.EksportRegel;
 import no.nav.folketrygdloven.skjæringstidspunkt.regel.FastsettSkjæringstidspunktLikOpptjening;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModell;
+import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.Specification;
 
@@ -10,6 +11,7 @@ import no.nav.fpsak.nare.specification.Specification;
 /**
  * Fastsetter sjæringstidspunkt for beregning lik skjæringstidspunkt for opptjening for alle k9 ytelser.
  */
+@RuleDocumentation(FastsettSkjæringstidspunktLikOpptjening.ID)
 public class RegelFastsettSkjæringstidspunktK9 implements EksportRegel<AktivitetStatusModell> {
 
 	@Override

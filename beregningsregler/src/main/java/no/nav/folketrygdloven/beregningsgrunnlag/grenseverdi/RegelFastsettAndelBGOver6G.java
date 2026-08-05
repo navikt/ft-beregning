@@ -5,8 +5,10 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.Fastsatt;
 import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
+import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.specification.Specification;
 
+@RuleDocumentation(RegelFastsettAndelBGOver6G.ID)
 public class RegelFastsettAndelBGOver6G implements RuleService<BeregningsgrunnlagPeriode> {
     public static final String ID = "FP_BR_29.8_med_fordeling";
     public static final String BESKRIVELSE = "Fastsett avkortet BG over 6G når refusjon under 6G";

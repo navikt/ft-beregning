@@ -11,9 +11,11 @@ import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelPeriodeMode
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelteAndelerModell;
 import no.nav.folketrygdloven.regelmodelloversetter.EksportRegel;
 import no.nav.fpsak.nare.Ruleset;
+import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.Specification;
 
+@RuleDocumentation(RegelFordelBeregningsgrunnlag.ID)
 public class RegelFordelBeregningsgrunnlag implements EksportRegel<FordelPeriodeModell> {
 
 	public static final String ID = "FP_BR 22.3";
