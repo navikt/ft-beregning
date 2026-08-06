@@ -8,8 +8,10 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.Fastsatt;
 import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
+import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.specification.Specification;
 
+@RuleDocumentation(RegelFastsettAvkortetVedRefusjonOver6G.ID)
 public class RegelFastsettAvkortetVedRefusjonOver6G implements RuleService<BeregningsgrunnlagPeriode> {
 
     public static final String ID = "FP_BR_29.13";

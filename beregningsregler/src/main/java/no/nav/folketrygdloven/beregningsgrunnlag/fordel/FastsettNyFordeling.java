@@ -11,11 +11,13 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.grunnlag.inntekt.Ar
 import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.ServiceArgument;
+import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.specification.Specification;
 
+@RuleDocumentation(FastsettNyFordeling.ID)
 class FastsettNyFordeling implements RuleService<FordelModell> {
 
-    private static final String ID = "FP_BR 22.3.4";
+    static final String ID = "FP_BR 22.3.4";
     private static final String BESKRIVELSE = "Fastsett fordeling for arbeidstakerandeler der refusjon overstiger beregningsgrunnlag?";
 
     private FordelModell modell;

@@ -3,10 +3,12 @@ package no.nav.folketrygdloven.besteberegning;
 import no.nav.folketrygdloven.besteberegning.modell.BesteberegningRegelmodell;
 import no.nav.folketrygdloven.regelmodelloversetter.EksportRegel;
 import no.nav.fpsak.nare.Ruleset;
+import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.Specification;
 
 
+@RuleDocumentation(RegelForeslåBesteberegning.ID)
 public class RegelForeslåBesteberegning implements EksportRegel<BesteberegningRegelmodell> {
 
 	public static final String ID = "14-7-3";

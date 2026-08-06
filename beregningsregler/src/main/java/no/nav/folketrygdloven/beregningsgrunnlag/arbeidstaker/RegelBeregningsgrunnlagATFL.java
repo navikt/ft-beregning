@@ -7,8 +7,10 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.Beregnings
 import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.ServiceArgument;
+import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.specification.Specification;
 
+@RuleDocumentation(RegelBeregningsgrunnlagATFL.ID)
 public class RegelBeregningsgrunnlagATFL implements RuleService<BeregningsgrunnlagPeriode> {
 
     public static final String ID = "FP_BR_14-15-27-28";

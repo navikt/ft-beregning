@@ -14,6 +14,7 @@ import no.nav.folketrygdloven.beregningsgrunnlag.selvstendig.RegelBeregningsgrun
 import no.nav.folketrygdloven.regelmodelloversetter.EksportRegel;
 import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.ServiceArgument;
+import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.Specification;
 
@@ -27,6 +28,7 @@ import no.nav.fpsak.nare.specification.Specification;
  * MS beregnes etter §14-7 4.ledd
  * MIDL_INAKTIV beregnes etter §8-47
  * */
+@RuleDocumentation(RegelFortsettForeslåBeregningsgrunnlag.ID)
 public class RegelFortsettForeslåBeregningsgrunnlag implements EksportRegel<BeregningsgrunnlagPeriode> {
 
     public static final String ID = "BG-FORTSETT-FORESLÅ";

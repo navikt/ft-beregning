@@ -9,8 +9,10 @@ import no.nav.folketrygdloven.beregningsgrunnlag.ytelse.sykepenger.SjekkOmBortfa
 import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.ServiceArgument;
+import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.specification.Specification;
 
+@RuleDocumentation(RegelBeregnBruttoPrArbeidsforhold.ID)
 public class RegelBeregnBruttoPrArbeidsforhold implements RuleService<BeregningsgrunnlagPeriode> {
 
     public static final String ID = "FP_BR 14.1";

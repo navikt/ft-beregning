@@ -4,11 +4,13 @@ import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelAndelModell
 import no.nav.folketrygdloven.beregningsgrunnlag.fordel.modell.FordelModell;
 import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
+import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.specification.Specification;
 
+@RuleDocumentation(OmfordelBeregningsgrunnlagTilArbeidsforhold.ID)
 public class OmfordelBeregningsgrunnlagTilArbeidsforhold implements RuleService<FordelModell> {
 
-    private static final String ID = "FP_BR 22.3.5";
+    static final String ID = "FP_BR 22.3.5";
     private static final String BESKRIVELSE = "Regelen skal omfordele beregningsgrunnlag fra arbeidsforhold som krever mer i refusjon enn det har i beregningsgrunnlag.";
 
 	private FordelAndelModell andelMedHøyereRefEnnBG;

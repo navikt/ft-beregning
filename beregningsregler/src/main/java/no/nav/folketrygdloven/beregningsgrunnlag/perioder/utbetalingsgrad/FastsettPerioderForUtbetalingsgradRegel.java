@@ -7,12 +7,14 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.utbet
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.SplittetPeriode;
 import no.nav.folketrygdloven.regelmodelloversetter.EksportRegel;
 import no.nav.fpsak.nare.Ruleset;
+import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.Specification;
 
 /**
  * Splitter beregningsgrunnlaget i perioder på grunn av endring i utbetalingsgrad
  */
+@RuleDocumentation(FastsettPerioderForUtbetalingsgradRegel.ID)
 public class FastsettPerioderForUtbetalingsgradRegel implements EksportRegel<PeriodeModellUtbetalingsgrad> {
 
     static final String ID = "FT_40";

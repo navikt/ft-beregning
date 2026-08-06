@@ -5,9 +5,11 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.Beregnings
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.fastsett.Fastsatt;
 import no.nav.folketrygdloven.regelmodelloversetter.EksportRegel;
 import no.nav.fpsak.nare.Ruleset;
+import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.Specification;
 
+@RuleDocumentation(RegelFinnGrenseverdiMedFordeling.ID)
 public class RegelFinnGrenseverdiMedFordeling implements EksportRegel<BeregningsgrunnlagPeriode> {
 
     public static final String ID = "FP_BR_29_med_fordeling";
