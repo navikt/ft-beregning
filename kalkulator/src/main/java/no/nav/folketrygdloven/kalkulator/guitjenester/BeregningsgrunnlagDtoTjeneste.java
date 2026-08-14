@@ -48,6 +48,7 @@ public class BeregningsgrunnlagDtoTjeneste {
     private BeregningsgrunnlagDto lagDto(BeregningsgrunnlagGUIInput input) {
 	    var dto = new BeregningsgrunnlagDto();
         mapAvklaringsbehov(input, dto);
+        mapAvklaringsbehovOriginalBehandling(input, dto);
         mapFaktaOmBeregning(input, dto);
         mapForlengelsePerioder(input, dto);
         if (input.getBeregningsgrunnlagGrunnlag().getBeregningsgrunnlagHvisFinnes().isPresent()) {
@@ -75,9 +76,21 @@ public class BeregningsgrunnlagDtoTjeneste {
 
     private void mapAvklaringsbehov(BeregningsgrunnlagGUIInput input, BeregningsgrunnlagDto dto) {
         dto.setAvklaringsbehov(input.getAvklaringsbehov().stream()
-                .filter(ab -> !ab.getStatus().equals(AvklaringsbehovStatus.AVBRUTT) && !ab.getErTrukket())
-                .map(a -> new AvklaringsbehovDto(a.getDefinisjon(), a.getStatus(), kanLøses(a, input),
-                        a.getErTrukket(), a.getBegrunnelse(), a.getVurdertAv(), a.getVurdertTidspunkt())).collect(Collectors.toList()));
+            .filter(ab -> !ab.getStatus().equals(AvklaringsbehovStatus.AVBRUTT) && !ab.getErTrukket())
+            .map(a -> new AvklaringsbehovDto(a.getDefinisjon(), a.getStatus(), kanLøses(a, input),
+                a.getErTrukket(), a.getBegrunnelse(), a.getVurdertAv(), a.getVurdertTidspunkt()))
+            .collect(Collectors.toList()));
+    }
+
+    private void mapAvklaringsbehovOriginalBehandling(BeregningsgrunnlagGUIInput input, BeregningsgrunnlagDto dto) {
+        var avklaringsbehov = input.getAvklaringsbehovFraForrigeBehandling().stream()
+            .filter(ab -> !ab.getStatus().equals(AvklaringsbehovStatus.AVBRUTT) && !ab.getErTrukket())
+            .map(a -> new AvklaringsbehovDto(a.getDefinisjon(), a.getStatus(), kanLøses(a, input),
+                a.getErTrukket(), a.getBegrunnelse(), a.getVurdertAv(), a.getVurdertTidspunkt()))
+            .collect(Collectors.toList());
+        if (!avklaringsbehov.isEmpty()) {
+            dto.setAvklaringsbehovOriginalBehandling(avklaringsbehov);
+        }
     }
 
     private boolean kanLøses(no.nav.folketrygdloven.kalkulator.modell.avklaringsbehov.AvklaringsbehovDto a, BeregningsgrunnlagGUIInput input) {

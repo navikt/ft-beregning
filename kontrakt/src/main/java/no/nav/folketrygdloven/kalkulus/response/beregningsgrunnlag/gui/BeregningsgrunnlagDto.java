@@ -34,6 +34,10 @@ public class BeregningsgrunnlagDto {
     @NotNull
     private List<@Valid AvklaringsbehovDto> avklaringsbehov = Collections.emptyList();
 
+    @JsonProperty(value = "avklaringsbehovOriginalBehandling")
+    @Size(max = 10)
+    private List<@Valid AvklaringsbehovDto> avklaringsbehovOriginalBehandling = Collections.emptyList();
+
     @JsonProperty(value = "skjaeringstidspunktBeregning")
     @NotNull
     @Valid
@@ -140,6 +144,7 @@ public class BeregningsgrunnlagDto {
         this.ytelsesspesifiktGrunnlag = beregningsgrunnlagDto.ytelsesspesifiktGrunnlag;
         this.inntektsgrunnlag = beregningsgrunnlagDto.inntektsgrunnlag;
         this.forlengelseperioder = beregningsgrunnlagDto.forlengelseperioder;
+        this.avklaringsbehovOriginalBehandling = beregningsgrunnlagDto.avklaringsbehovOriginalBehandling;
     }
 
 
@@ -293,6 +298,14 @@ public class BeregningsgrunnlagDto {
 
     public void setAvklaringsbehov(List<AvklaringsbehovDto> avklaringsbehov) {
         this.avklaringsbehov = avklaringsbehov;
+    }
+
+    public List<AvklaringsbehovDto> getAvklaringsbehovOriginalBehandling() {
+        return avklaringsbehovOriginalBehandling;
+    }
+
+    public void setAvklaringsbehovOriginalBehandling(List<AvklaringsbehovDto> avklaringsbehovOriginalBehandling) {
+        this.avklaringsbehovOriginalBehandling = avklaringsbehovOriginalBehandling;
     }
 
     public List<Periode> getForlengelseperioder() {

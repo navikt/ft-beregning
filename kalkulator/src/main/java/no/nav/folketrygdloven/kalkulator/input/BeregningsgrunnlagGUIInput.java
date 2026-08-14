@@ -44,6 +44,9 @@ public class BeregningsgrunnlagGUIInput {
     /** Grunnlag for Beregningsgrunnlg opprettet eller modifisert av modulen i original behandling. Settes på av modulen. */
     private List<BeregningsgrunnlagGrunnlagDto> beregningsgrunnlagGrunnlagFraForrigeBehandling = new ArrayList<>();
 
+    /** Avklaringsbehov fra original behandling */
+    private List<AvklaringsbehovDto> avklaringsbehovFraForrigeBehandling;
+
     /** Datoer for innsending og oppstart av refusjon for alle arbeidsgivere */
     private List<KravperioderPrArbeidsforholdDto> kravperioderPrArbeidsgiver;
 
@@ -87,6 +90,10 @@ public class BeregningsgrunnlagGUIInput {
 
     public List<AvklaringsbehovDto> getAvklaringsbehov() {
         return avklaringsbehov == null ? Collections.emptyList() : avklaringsbehov;
+    }
+
+    public List<AvklaringsbehovDto> getAvklaringsbehovFraForrigeBehandling() {
+        return avklaringsbehovFraForrigeBehandling == null ? Collections.emptyList() : avklaringsbehovFraForrigeBehandling;
     }
 
     public KoblingReferanse getKoblingReferanse() {
@@ -177,6 +184,11 @@ public class BeregningsgrunnlagGUIInput {
             throw new IllegalStateException("Listen med avklaringsbehov kan ikke endres.");
         }
         this.avklaringsbehov = Collections.unmodifiableList(avklaringsbehov);
+        return this;
+    }
+
+    public BeregningsgrunnlagGUIInput medAvklaringsbehovFraForrigeBehandling(List<AvklaringsbehovDto> avklaringsbehov) {
+        this.avklaringsbehovFraForrigeBehandling = Collections.unmodifiableList(avklaringsbehov);
         return this;
     }
 
