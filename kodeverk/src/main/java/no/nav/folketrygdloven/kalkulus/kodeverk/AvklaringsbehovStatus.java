@@ -11,12 +11,14 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * OPPRETTET - Avklaringsbehovet er opprettet og ligger uløst på koblingen
  * UTFØRT - Avklaringsbehovet er opprettet og løst av saksbehandler
  * AVBRUTT - Avklaringsbehovet var før opprettet men er blitt avbrutt
+ * SPOLT - Avklaringsbehovet ble opprettet ved spoling og trenger ikke løses
  */
 public enum AvklaringsbehovStatus implements Kodeverdi, DatabaseKode, KontraktKode {
 
     OPPRETTET("OPPR"),
     UTFØRT("UTFO"),
-    AVBRUTT("AVBR");
+    AVBRUTT("AVBR"),
+    SPOLT("SPOL");
 
     private static final Map<String, AvklaringsbehovStatus> KODER = new LinkedHashMap<>();
 
