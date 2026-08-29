@@ -61,7 +61,7 @@ public final class PermisjonPerYrkesaktivitet {
 		            .disjoint(vilkårsperiodeTidslinje);
 
             return permisjonstidslinje.compress()
-                    .toSegments()
+                    .segmenter()
                     .stream()
                     .map(LocalDateSegment::getLocalDateInterval)
                     .map(p -> Intervall.fraOgMedTilOgMed(p.getFomDato(), p.getTomDato()))
@@ -73,7 +73,7 @@ public final class PermisjonPerYrkesaktivitet {
                 permisjonstidslinje = permisjonstidslinje.disjoint(ytelsesTidslinje);
             }
             return permisjonstidslinje.compress()
-                    .toSegments()
+                    .segmenter()
                     .stream()
                     .map(LocalDateSegment::getLocalDateInterval)
                     .map(p -> Intervall.fraOgMedTilOgMed(p.getFomDato(), p.getTomDato()))

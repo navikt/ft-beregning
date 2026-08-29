@@ -71,7 +71,7 @@ public class SimulerGraderingMotInntektTjeneste {
         );
         var tidlinjeMedTilkommetAktivitet = tilkommetTidslinje.filterValue(v -> !v.isEmpty()).compress();
 
-        return tidlinjeMedTilkommetAktivitet.toSegments().stream()
+        return tidlinjeMedTilkommetAktivitet.segmenter().stream()
                 .map(s -> Intervall.fraOgMedTilOgMed(s.getFom(), s.getTom()))
                 .toList();
     }

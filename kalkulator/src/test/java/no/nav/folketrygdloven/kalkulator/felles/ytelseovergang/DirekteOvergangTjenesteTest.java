@@ -36,7 +36,7 @@ class DirekteOvergangTjenesteTest {
         var ytelse = lagYtelse(periode, List.of(frilansAndel()));
         var tidslinje = DirekteOvergangTjeneste.direkteUtbetalingTidslinje(List.of(ytelse), y -> alwaysTrue());
 
-        var segmenter = tidslinje.toSegments();
+        var segmenter = tidslinje.segmenter();
         assertThat(segmenter).hasSize(1);
         var segment = segmenter.iterator().next();
         assertThat(segment.getFom()).isEqualTo(periode.getFomDato());
@@ -55,7 +55,7 @@ class DirekteOvergangTjenesteTest {
         var ytelse = lagYtelse(periode, List.of(arbeidstakerAndel(arbeidsgiver, Stillingsprosent.ZERO)));
         var tidslinje = DirekteOvergangTjeneste.direkteUtbetalingTidslinje(List.of(ytelse), y -> alwaysTrue());
 
-        var segmenter = tidslinje.toSegments();
+        var segmenter = tidslinje.segmenter();
         assertThat(segmenter).hasSize(1);
         var segment = segmenter.iterator().next();
         assertThat(segment.getFom()).isEqualTo(periode.getFomDato());
@@ -74,7 +74,7 @@ class DirekteOvergangTjenesteTest {
         var ytelse = lagYtelse(periode, List.of(arbeidstakerAndel(arbeidsgiver, Stillingsprosent.fra(50))));
         var tidslinje = DirekteOvergangTjeneste.direkteUtbetalingTidslinje(List.of(ytelse), y -> alwaysTrue());
 
-        var segmenter = tidslinje.toSegments();
+        var segmenter = tidslinje.segmenter();
         assertThat(segmenter).hasSize(1);
         var segment = segmenter.iterator().next();
         assertThat(segment.getFom()).isEqualTo(periode.getFomDato());
@@ -103,7 +103,7 @@ class DirekteOvergangTjenesteTest {
         var ytelse = lagYtelse(periode, null);
         var tidslinje = DirekteOvergangTjeneste.direkteUtbetalingTidslinje(List.of(ytelse), y -> alwaysTrue());
 
-        var segmenter = tidslinje.toSegments();
+        var segmenter = tidslinje.segmenter();
         assertThat(segmenter).hasSize(1);
         var segment = segmenter.iterator().next();
         assertThat(segment.getFom()).isEqualTo(periode.getFomDato());
@@ -135,7 +135,7 @@ class DirekteOvergangTjenesteTest {
         var ytelse = lagYtelse(periode, List.of(arbeidstakerAndel(arbeidsgiver1, Stillingsprosent.ZERO), arbeidstakerAndel(arbeidsgiver2, Stillingsprosent.ZERO)));
         var tidslinje = DirekteOvergangTjeneste.direkteUtbetalingTidslinje(List.of(ytelse), y -> alwaysTrue());
 
-        var segmenter = tidslinje.toSegments();
+        var segmenter = tidslinje.segmenter();
         assertThat(segmenter).hasSize(1);
         var segment = segmenter.iterator().next();
         assertThat(segment.getFom()).isEqualTo(periode.getFomDato());
@@ -178,7 +178,7 @@ class DirekteOvergangTjenesteTest {
 
         var tidslinje = DirekteOvergangTjeneste.direkteUtbetalingTidslinje(List.of(ytelse), y -> alwaysTrue());
 
-        var segmenter = tidslinje.toSegments();
+        var segmenter = tidslinje.segmenter();
         assertThat(segmenter).hasSize(2);
         var segmentIterator = segmenter.iterator();
         var segment1 = segmentIterator.next();

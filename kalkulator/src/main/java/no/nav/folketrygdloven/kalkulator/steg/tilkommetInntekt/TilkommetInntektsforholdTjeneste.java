@@ -97,7 +97,7 @@ public class TilkommetInntektsforholdTjeneste {
 
 	private static <T> LocalDateTimeline<T> slåSammenOverHelgDersomLike(LocalDateTimeline<T> tidslinje) {
 		var factory = new TimelineWeekendCompressor.CompressorFactory<T>(Objects::equals, (i, lhs, rhs) -> new LocalDateSegment<>(i, lhs.getValue()));
-        var compressor = tidslinje.toSegments().stream()
+        var compressor = tidslinje.segmenter().stream()
 				.collect(factory::get, TimelineWeekendCompressor::accept, TimelineWeekendCompressor::combine);
 		return new LocalDateTimeline<>(compressor.getSegmenter());
 	}
@@ -165,7 +165,7 @@ public class TilkommetInntektsforholdTjeneste {
 				.flatMap(ya -> {
 							var ansettelsesTidslinje = finnAnsettelseTidslinje(ya);
 							return ansettelsesTidslinje
-									.toSegments().stream()
+									.segmenter().stream()
 									.map(LocalDateSegment::getLocalDateInterval)
 									.filter(p -> p.getTomDato().isAfter(BeregningstidspunktTjeneste.finnBeregningstidspunkt(skjæringstidspunkt)))
 									.map(p -> new LocalDateSegment<>(

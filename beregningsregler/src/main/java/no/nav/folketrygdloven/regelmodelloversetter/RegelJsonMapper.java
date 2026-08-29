@@ -13,7 +13,7 @@ public class RegelJsonMapper {
         try {
             return JsonOutput.asJson(object);
         } catch (NareJsonException e) {
-            throw new BeregningsregelException("Kunne ikke serialisere regelinput for beregningsgrunnlag.");
+            throw new BeregningsregelException("Kunne ikke serialisere regelinput for beregningsgrunnlag.", e);
         }
     }
 

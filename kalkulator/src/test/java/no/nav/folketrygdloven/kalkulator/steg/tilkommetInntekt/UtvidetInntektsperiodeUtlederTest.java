@@ -44,7 +44,7 @@ class UtvidetInntektsperiodeUtlederTest {
         var iDag = LocalDate.now();
         var tidslinje = UtvidetInntektsperiodeUtleder.lagGodkjenteInntektsperiodeTidslinje(inntektTidslinje, new PleiepengerSyktBarnGrunnlag(List.of()), iDag.getDayOfMonth());
 
-        var segmenter = tidslinje.compress().toSegments();
+        var segmenter = tidslinje.compress().segmenter();
         assertThat(segmenter).hasSize(2);
         var iterator = segmenter.iterator();
         var førsteSegment = iterator.next();
@@ -64,7 +64,7 @@ class UtvidetInntektsperiodeUtlederTest {
         var iDag = LocalDate.now();
         var tidslinje = UtvidetInntektsperiodeUtleder.lagGodkjenteInntektsperiodeTidslinje(inntektTidslinje, new PleiepengerSyktBarnGrunnlag(List.of()), iDag.getDayOfMonth());
 
-        var segmenter = tidslinje.compress().toSegments();
+        var segmenter = tidslinje.compress().segmenter();
         assertThat(segmenter).hasSize(2);
         var iterator = segmenter.iterator();
         var førsteSegment = iterator.next();
@@ -84,7 +84,7 @@ class UtvidetInntektsperiodeUtlederTest {
         var iDag = LocalDate.now();
         var tidslinje = UtvidetInntektsperiodeUtleder.lagGodkjenteInntektsperiodeTidslinje(inntektTidslinje, new PleiepengerSyktBarnGrunnlag(List.of()), iDag.getDayOfMonth());
 
-        var segmenter = tidslinje.compress().toSegments();
+        var segmenter = tidslinje.compress().segmenter();
         assertThat(segmenter).hasSize(3);
         var iterator = segmenter.iterator();
         var førsteSegment = iterator.next();
@@ -109,7 +109,7 @@ class UtvidetInntektsperiodeUtlederTest {
         var inntektTidslinje = new LocalDateTimeline<>(List.of(treMånederSiden));
         var tidslinje = UtvidetInntektsperiodeUtleder.lagGodkjenteInntektsperiodeTidslinje(inntektTidslinje, new PleiepengerSyktBarnGrunnlag(List.of()), iDag.getDayOfMonth());
 
-        var segmenter = tidslinje.compress().toSegments();
+        var segmenter = tidslinje.compress().segmenter();
         assertThat(segmenter).hasSize(1);
         var iterator = segmenter.iterator();
         var førsteSegment = iterator.next();
@@ -129,7 +129,7 @@ class UtvidetInntektsperiodeUtlederTest {
         ));
         var tidslinje = UtvidetInntektsperiodeUtleder.lagGodkjenteInntektsperiodeTidslinje(inntektTidslinje, utbetalingsgradGrunnlag, iDag.getDayOfMonth());
 
-        var segmenter = tidslinje.compress().toSegments();
+        var segmenter = tidslinje.compress().segmenter();
         assertThat(segmenter).hasSize(1);
         var iterator = segmenter.iterator();
         var førsteSegment = iterator.next();

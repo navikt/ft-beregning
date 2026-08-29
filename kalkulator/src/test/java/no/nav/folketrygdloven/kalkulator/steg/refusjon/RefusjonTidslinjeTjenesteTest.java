@@ -81,7 +81,7 @@ class RefusjonTidslinjeTjenesteTest {
         var refusjonsdataLocalDateTimeline = RefusjonTidslinjeTjeneste.lagTidslinje(forrigeGrunnlag, true, YTELSESPESIFIKT_GRUNNLAG);
         var refusjonsdataLocalDateTimeline1 = RefusjonTidslinjeTjeneste.lagTidslinje(beregningsgrunnlag, false, YTELSESPESIFIKT_GRUNNLAG);
         var tidslinje = RefusjonTidslinjeTjeneste.kombinerTidslinjer(refusjonsdataLocalDateTimeline, refusjonsdataLocalDateTimeline1);
-        assertThat(tidslinje.toSegments()).hasSize(1);
+        assertThat(tidslinje.segmenter()).hasSize(1);
     }
 
     @Test
@@ -100,7 +100,7 @@ class RefusjonTidslinjeTjenesteTest {
         var refusjonsdataLocalDateTimeline = RefusjonTidslinjeTjeneste.lagTidslinje(forrigeGrunnlag, true, YTELSESPESIFIKT_GRUNNLAG);
         var refusjonsdataLocalDateTimeline1 = RefusjonTidslinjeTjeneste.lagTidslinje(beregningsgrunnlag, false, YTELSESPESIFIKT_GRUNNLAG);
         var tidslinje = RefusjonTidslinjeTjeneste.kombinerTidslinjer(refusjonsdataLocalDateTimeline, refusjonsdataLocalDateTimeline1);
-        assertThat(tidslinje.toSegments()).hasSize(1);
+        assertThat(tidslinje.segmenter()).hasSize(1);
         var segment = tidslinje.getSegment(new LocalDateInterval(beregningsgrunnlagPeriode1.getBeregningsgrunnlagPeriodeFom(), beregningsgrunnlagPeriode1.getBeregningsgrunnlagPeriodeTom()));
         assertThat(segment).isNotNull();
         var periodeEndring = segment.getValue();
@@ -127,7 +127,7 @@ class RefusjonTidslinjeTjenesteTest {
         var refusjonsdataLocalDateTimeline = RefusjonTidslinjeTjeneste.lagTidslinje(forrigeGrunnlag, true, YTELSESPESIFIKT_GRUNNLAG);
         var refusjonsdataLocalDateTimeline1 = RefusjonTidslinjeTjeneste.lagTidslinje(beregningsgrunnlag, false, YTELSESPESIFIKT_GRUNNLAG);
         var tidslinje = RefusjonTidslinjeTjeneste.kombinerTidslinjer(refusjonsdataLocalDateTimeline, refusjonsdataLocalDateTimeline1);
-        assertThat(tidslinje.toSegments()).hasSize(1);
+        assertThat(tidslinje.segmenter()).hasSize(1);
         var segment = tidslinje.getSegment(new LocalDateInterval(beregningsgrunnlagPeriode1.getBeregningsgrunnlagPeriodeFom(), beregningsgrunnlagPeriode1.getBeregningsgrunnlagPeriodeTom()));
         assertThat(segment).isNotNull();
         var periodeEndring = segment.getValue();
