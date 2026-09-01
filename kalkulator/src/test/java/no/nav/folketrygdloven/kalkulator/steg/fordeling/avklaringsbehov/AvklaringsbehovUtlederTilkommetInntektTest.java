@@ -597,7 +597,7 @@ class AvklaringsbehovUtlederTilkommetInntektTest {
 		var iay = lagIAY(yrkesaktiviteter, dagpengePerioder, inntekter);
 		var tidslinje = TilkommetInntektsforholdTjeneste.finnTilkommetInntektsforholdTidslinje(skjæringstidspunkt,
 				andelerFraStart, utbetalingsgradGrunnlag, iay);
-		var segmenter = tidslinje.intersection(new LocalDateInterval(periode.getFomDato(), periode.getTomDato())).compress().toSegments();
+		var segmenter = tidslinje.intersection(new LocalDateInterval(periode.getFomDato(), periode.getTomDato())).compress().segmenter();
 		return segmenter.isEmpty() ? new LinkedHashSet<>() : segmenter.stream().map(LocalDateSegment::getValue)
 				.filter(s -> !s.isEmpty()).findFirst().orElse(Set.of());
 	}

@@ -72,7 +72,7 @@ class TilkommetInntektsforholdTjenesteTest {
 				List.of(arbeidstakerandelFraStart),
 				utbetalingsgradGrunnlag, iay);
 
-		var segmenter = tidslinje.toSegments();
+		var segmenter = tidslinje.segmenter();
 
 		assertThat(segmenter).hasSize(2);
 		var iterator = segmenter.iterator();
@@ -117,7 +117,7 @@ class TilkommetInntektsforholdTjenesteTest {
 				List.of(arbeidstakerandelFraStart),
 				utbetalingsgradGrunnlag, iay);
 
-		var segmenter = tidslinje.toSegments();
+		var segmenter = tidslinje.segmenter();
 
 		assertThat(segmenter).hasSize(1);
 		var iterator = segmenter.iterator();

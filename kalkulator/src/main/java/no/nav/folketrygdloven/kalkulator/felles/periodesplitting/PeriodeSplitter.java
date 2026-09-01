@@ -39,7 +39,7 @@ public class PeriodeSplitter<V> {
         var nyttBg = BeregningsgrunnlagDto.builder(beregningsgrunnlag).fjernAllePerioder().build();
 
         config.getPeriodeTidslinjeMapper().apply(resultatPerioder, nyePerioderTidslinje)
-                .toSegments()
+                .segmenter()
                 .forEach(s -> {
                     if (s.getValue() != null) {
                         BeregningsgrunnlagPeriodeDto.oppdater(s.getValue()).build(nyttBg);

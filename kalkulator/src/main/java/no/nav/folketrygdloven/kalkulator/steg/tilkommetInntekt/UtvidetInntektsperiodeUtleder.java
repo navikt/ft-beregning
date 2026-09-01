@@ -73,7 +73,7 @@ class UtvidetInntektsperiodeUtleder {
     }
 
     private static HashSet<Arbeidsgiver> getArbeidsgivereFraInntekttidslinje(LocalDateTimeline<Set<DagsatsPrKategoriOgArbeidsgiver>> registerInntektTidslinje) {
-        return registerInntektTidslinje.toSegments().stream()
+        return registerInntektTidslinje.segmenter().stream()
                 .flatMap(s -> s.getValue().stream().map(DagsatsPrKategoriOgArbeidsgiver::arbeidsgiver))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toCollection(HashSet::new));
@@ -108,7 +108,7 @@ class UtvidetInntektsperiodeUtleder {
     }
 
     private static List<LocalDateSegment<Boolean>> godkjennGrunnetKortereOppholdAvInntekt(LocalDateTimeline<Beløp> inntektTidslinje) {
-        return fyllMellomromFraDato(inntektTidslinje.getMinLocalDate(), inntektTidslinje).compress((e1, e2) -> e1.compareTo(e2) == 0, StandardCombinators::leftOnly).toSegments().stream()
+        return fyllMellomromFraDato(inntektTidslinje.getMinLocalDate(), inntektTidslinje).compress((e1, e2) -> e1.compareTo(e2) == 0, StandardCombinators::leftOnly).segmenter().stream()
                 .map(UtvidetInntektsperiodeUtleder::godkjennInntektEllerHullPåMindreEnnTreMåneder)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
@@ -167,7 +167,7 @@ class UtvidetInntektsperiodeUtleder {
 
     private static LocalDateSegment<Boolean> godkjennGrunnetIkkePassertFrist(LocalDateTimeline<Beløp> inntektTidslinje, int inntektRapporteringsfristDag) {
         var førsteMånedUtenPassertFrist = finnFørsteMånedUtenPassertRapporteringsfrist(inntektRapporteringsfristDag);
-        var overlappendeInntektSegment = fyllMellomromFraDato(inntektTidslinje.getMinLocalDate(), inntektTidslinje).toSegments()
+        var overlappendeInntektSegment = fyllMellomromFraDato(inntektTidslinje.getMinLocalDate(), inntektTidslinje).segmenter()
                 .stream().filter(s -> s.getLocalDateInterval().contains(førsteMånedUtenPassertFrist))
                 .findFirst().orElseThrow();
         if (overlappendeInntektSegment.getFom().isEqual(førsteMånedUtenPassertFrist)) {

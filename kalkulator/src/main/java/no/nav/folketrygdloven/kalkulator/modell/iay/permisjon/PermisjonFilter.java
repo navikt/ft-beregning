@@ -95,7 +95,7 @@ public class PermisjonFilter {
 
     private static LocalDateTimeline<Boolean> komprimerForHelg(LocalDateTimeline<Boolean> tidslinje) {
         var factory = new TimelineWeekendCompressor.CompressorFactory<Boolean>(Objects::equals, (i, lhs, rhs) -> new LocalDateSegment<>(i, lhs.getValue()));
-        var compressor = tidslinje.toSegments().stream()
+        var compressor = tidslinje.segmenter().stream()
                 .collect(factory::get, TimelineWeekendCompressor::accept, TimelineWeekendCompressor::combine);
         return new LocalDateTimeline<>(compressor.getSegmenter());
     }

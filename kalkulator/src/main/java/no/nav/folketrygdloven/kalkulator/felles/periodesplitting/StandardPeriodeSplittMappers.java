@@ -24,7 +24,7 @@ public class StandardPeriodeSplittMappers {
                                                                                                        List<Intervall> forlengelseperioder,
                                                                                                        PeriodeÅrsak avsluttetPeriodeårsak,
                                                                                                        LocalDateTimeline<BeregningsgrunnlagPeriodeDto> tidslinje) {
-        var perioderTilVurderingTjeneste = new PerioderTilVurderingTjeneste(forlengelseperioder, tidslinje.toSegments().stream().map(s -> Intervall.fraOgMedTilOgMed(s.getFom(), s.getTom())).toList());
+        var perioderTilVurderingTjeneste = new PerioderTilVurderingTjeneste(forlengelseperioder, tidslinje.segmenter().stream().map(s -> Intervall.fraOgMedTilOgMed(s.getFom(), s.getTom())).toList());
         var gamleperioder = tidslinje.disjoint(nyePerioderTidslinje);
         gamleperioder.stream()
                 .filter(perioderTilVurderingTjeneste::erTilVurdering)

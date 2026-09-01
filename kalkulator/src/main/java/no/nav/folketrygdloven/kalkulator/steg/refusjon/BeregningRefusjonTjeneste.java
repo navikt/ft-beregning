@@ -60,7 +60,7 @@ public final class BeregningRefusjonTjeneste {
 
     private static LocalDateTimeline<RefusjonPeriodeEndring> komprimerForHelg(LocalDateTimeline<RefusjonPeriodeEndring> endringTidslinje) {
         var factory = new TimelineWeekendCompressor.CompressorFactory<RefusjonPeriodeEndring>(Objects::equals, (i, lhs, rhs) -> new LocalDateSegment<>(i, lhs.getValue()));
-	    var compressor = endringTidslinje.toSegments().stream()
+	    var compressor = endringTidslinje.segmenter().stream()
                 .collect(factory::get, TimelineWeekendCompressor::accept, TimelineWeekendCompressor::combine);
         return new LocalDateTimeline<>(compressor.getSegmenter());
     }
@@ -74,7 +74,7 @@ public final class BeregningRefusjonTjeneste {
 
     private static Map<Intervall, List<RefusjonAndel>> vurderPerioder(LocalDateTimeline<RefusjonPeriodeEndring> endringTidslinje, Beløp grenseverdi) {
         Map<Intervall, List<RefusjonAndel>> andelerIPeriode = new HashMap<>();
-        endringTidslinje.toSegments().forEach(segment -> {
+        endringTidslinje.segmenter().forEach(segment -> {
 	        var refusjonsendring = segment.getValue();
             if (erMindreAndelTilgjengeligForBruker(refusjonsendring, grenseverdi)) {
                 // Bruker vil få mindre andel av beregningsgrunnlaget, sjekk om noen andeler har fått økt refusjon
