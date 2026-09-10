@@ -1,6 +1,7 @@
 package no.nav.folketrygdloven.kalkulator.steg.refusjon;
 
 import java.util.List;
+import java.util.Optional;
 
 import no.nav.folketrygdloven.kalkulator.avklaringsbehov.PerioderTilVurderingTjeneste;
 import no.nav.folketrygdloven.kalkulator.felles.frist.InntektsmeldingMedRefusjonTjeneste;
@@ -8,6 +9,8 @@ import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagInput;
 import no.nav.folketrygdloven.kalkulator.input.VurderRefusjonBeregningsgrunnlagInput;
 import no.nav.folketrygdloven.kalkulator.konfig.KonfigTjeneste;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
+import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDto;
+import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
 
 public final class AvklaringsbehovutlederVurderRefusjon {
@@ -34,7 +37,30 @@ public final class AvklaringsbehovutlederVurderRefusjon {
             return false;
         }
 
+        if (revurdererRefusjonsperiodeSomTidligereVarVurdert(vurderInput, periodisertMedRefusjonOgGradering)) {
+            return true;
+        }
+
         return harAndelerMedØktRefusjonIUtbetaltPeriode(input, periodisertMedRefusjonOgGradering, forrigeGrunnlagListe);
+    }
+
+    private static boolean revurdererRefusjonsperiodeSomTidligereVarVurdert(VurderRefusjonBeregningsgrunnlagInput vurderInput,
+                                                                           BeregningsgrunnlagDto periodisertMedRefusjonOgGradering) {
+        var forlengelseperioder = vurderInput.getForlengelseperioder();
+        if (forlengelseperioder.isEmpty()) {
+            return false;
+        }
+        boolean koblingenVarTidligereVurdertForRefusjon = vurderInput.getBeregningsgrunnlagGrunnlagFraForrigeBehandling().stream()
+            .map(BeregningsgrunnlagGrunnlagDto::getRefusjonOverstyringer)
+            .flatMap(Optional::stream)
+            .anyMatch(overstyringer -> !overstyringer.getRefusjonOverstyringer().isEmpty());
+        if (!koblingenVarTidligereVurdertForRefusjon) {
+            return false;
+        }
+        // AP 5059 gjelder hele perioden fra STP, jf. STP-forankringen i VurderRefusjonDtoTjeneste. Uten dette
+        // ville økt-refusjon-utledningen filtrere bort STP-forankret refusjon når forlengelsen ligger etter STP.
+        var refusjonsperiodeFraSkjæringstidspunkt = Intervall.fraOgMed(periodisertMedRefusjonOgGradering.getSkjæringstidspunkt());
+        return forlengelseperioder.stream().anyMatch(refusjonsperiodeFraSkjæringstidspunkt::overlapper);
     }
 
     private static boolean harAndelerMedØktRefusjonIUtbetaltPeriode(BeregningsgrunnlagInput input,
