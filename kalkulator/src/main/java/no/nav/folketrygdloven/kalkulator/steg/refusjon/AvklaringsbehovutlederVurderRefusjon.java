@@ -57,8 +57,6 @@ public final class AvklaringsbehovutlederVurderRefusjon {
         if (!koblingenVarTidligereVurdertForRefusjon) {
             return false;
         }
-        // AP 5059 gjelder hele perioden fra STP, jf. STP-forankringen i VurderRefusjonDtoTjeneste. Uten dette
-        // ville økt-refusjon-utledningen filtrere bort STP-forankret refusjon når forlengelsen ligger etter STP.
         var refusjonsperiodeFraSkjæringstidspunkt = Intervall.fraOgMed(periodisertMedRefusjonOgGradering.getSkjæringstidspunkt());
         return forlengelseperioder.stream().anyMatch(refusjonsperiodeFraSkjæringstidspunkt::overlapper);
     }
