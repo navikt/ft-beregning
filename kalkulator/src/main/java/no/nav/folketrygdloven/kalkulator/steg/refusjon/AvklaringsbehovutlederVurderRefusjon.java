@@ -1,6 +1,5 @@
 package no.nav.folketrygdloven.kalkulator.steg.refusjon;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,18 +10,10 @@ import no.nav.folketrygdloven.kalkulator.input.VurderRefusjonBeregningsgrunnlagI
 import no.nav.folketrygdloven.kalkulator.konfig.KonfigTjeneste;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDto;
-import no.nav.folketrygdloven.kalkulator.steg.refusjon.modell.RefusjonAndel;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
 
 public final class AvklaringsbehovutlederVurderRefusjon {
-
-    /**
-     * Når skrudd på: økt utbetalt refusjon i allerede utbetalt periode gir kun avklaringsbehov
-     * dersom selve refusjonskravet fra inntektsmelding faktisk har økt inn i perioden. Skiller
-     * reelle kravsendringer fra rene utbetalingsgrad-svingninger (f.eks. gjenopptakelse etter ferie).
-     */
-    static final String TOGGLE_KREV_ENDRET_KRAV = "refusjon.avklaringsbehov.krev-endret-krav";
 
     private AvklaringsbehovutlederVurderRefusjon() {
         // Skjuler default
@@ -75,24 +66,11 @@ public final class AvklaringsbehovutlederVurderRefusjon {
                                                                     List<BeregningsgrunnlagDto> forrigeGrunnlagListe) {
         var perioderTilVurderingTjeneste = new PerioderTilVurderingTjeneste(input.getForlengelseperioder(), periodisertMedRefusjonOgGradering);
         var grenseverdi = periodisertMedRefusjonOgGradering.getGrunnbeløp().multipliser(KonfigTjeneste.getAntallGØvreGrenseverdi());
-        var krevEndretKrav = input.isEnabled(TOGGLE_KREV_ENDRET_KRAV, false);
-        var skjæringstidspunkt = periodisertMedRefusjonOgGradering.getSkjæringstidspunkt();
+        var krevEndretKrav = input.isEnabled(AndelerMedØktRefusjonTjeneste.TOGGLE_KREV_ENDRET_KRAV, false);
         return forrigeGrunnlagListe.stream()
-            .flatMap(
-                forrigeGrunnlag -> AndelerMedØktRefusjonTjeneste.finnAndelerMedØktRefusjon(periodisertMedRefusjonOgGradering, forrigeGrunnlag, grenseverdi,
-                    input.getYtelsespesifiktGrunnlag()).entrySet().stream())
-            .filter(e -> perioderTilVurderingTjeneste.erTilVurdering(e.getKey()))
-            .anyMatch(e -> !krevEndretKrav || refusjonskravHarØktForNoenAndel(input, skjæringstidspunkt, e.getKey(), e.getValue()));
-    }
-
-    private static boolean refusjonskravHarØktForNoenAndel(BeregningsgrunnlagInput input,
-                                                           LocalDate skjæringstidspunkt,
-                                                           Intervall periode,
-                                                           List<RefusjonAndel> andelerMedØktRefusjon) {
-        return andelerMedØktRefusjon.stream()
-            .map(RefusjonAndel::getArbeidsgiver)
-            .anyMatch(arbeidsgiver -> RefusjonskravFraInntektsmeldingTjeneste.refusjonskravHarØktInnIPeriode(
-                input.getKravPrArbeidsgiver(), arbeidsgiver, periode, skjæringstidspunkt));
+            .flatMap(forrigeGrunnlag -> AndelerMedØktRefusjonTjeneste.finnAndelerMedØktRefusjon(periodisertMedRefusjonOgGradering, forrigeGrunnlag,
+                grenseverdi, input.getYtelsespesifiktGrunnlag(), input.getKravPrArbeidsgiver(), krevEndretKrav).entrySet().stream())
+            .anyMatch(e -> perioderTilVurderingTjeneste.erTilVurdering(e.getKey()));
     }
 
     private static boolean erFPEllerSVP(VurderRefusjonBeregningsgrunnlagInput vurderInput) {

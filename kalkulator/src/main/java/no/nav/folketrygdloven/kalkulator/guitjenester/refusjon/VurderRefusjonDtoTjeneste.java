@@ -11,7 +11,6 @@ import java.util.stream.Stream;
 
 import no.nav.folketrygdloven.kalkulator.felles.frist.InntektsmeldingMedRefusjonTjeneste;
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagGUIInput;
-import no.nav.folketrygdloven.kalkulator.input.YtelsespesifiktGrunnlag;
 import no.nav.folketrygdloven.kalkulator.konfig.KonfigTjeneste;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningRefusjonOverstyringDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningRefusjonOverstyringerDto;
@@ -49,7 +48,7 @@ public final class VurderRefusjonDtoTjeneste {
         if (!forrigeGrunnlagListe.isEmpty() && beregningsgrunnlag.getGrunnbeløp() != null) {
             var refusjonOverstyringer = hentRefusjonOverstyringer(input);
 
-            var andelerMedØktRefusjonFraTidligereBehandlinger = hentAndelerMedØktRefusjonFraTidligereBehandlinger(input.getYtelsespesifiktGrunnlag(),
+            var andelerMedØktRefusjonFraTidligereBehandlinger = hentAndelerMedØktRefusjonFraTidligereBehandlinger(input,
                 forrigeGrunnlagListe, beregningsgrunnlag);
             if (!andelerMedØktRefusjonFraTidligereBehandlinger.isEmpty()) {
                 return Optional.of(new RefusjonTilVurderingDto(
@@ -94,13 +93,14 @@ public final class VurderRefusjonDtoTjeneste {
             arbeidsforholdInformasjon);
     }
 
-    private static Map<Intervall, List<RefusjonAndel>> hentAndelerMedØktRefusjonFraTidligereBehandlinger(YtelsespesifiktGrunnlag ytelsespesifiktGrunnlag,
+    private static Map<Intervall, List<RefusjonAndel>> hentAndelerMedØktRefusjonFraTidligereBehandlinger(BeregningsgrunnlagGUIInput input,
                                                                                                          List<BeregningsgrunnlagDto> forrigeGrunnlagListe,
                                                                                                          BeregningsgrunnlagDto beregningsgrunnlag) {
         var grenseverdi = beregningsgrunnlag.getGrunnbeløp().multipliser(KonfigTjeneste.getAntallGØvreGrenseverdi());
+        var krevEndretKrav = input.isEnabled(AndelerMedØktRefusjonTjeneste.TOGGLE_KREV_ENDRET_KRAV, false);
         return forrigeGrunnlagListe.stream()
             .flatMap(forrigeGrunnlag -> AndelerMedØktRefusjonTjeneste.finnAndelerMedØktRefusjon(beregningsgrunnlag, forrigeGrunnlag, grenseverdi,
-                ytelsespesifiktGrunnlag).entrySet().stream())
+                input.getYtelsespesifiktGrunnlag(), input.getKravperioderPrArbeidsgiver(), krevEndretKrav).entrySet().stream())
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, unikeElementer()));
     }
 
