@@ -101,12 +101,12 @@ public final class BeregningRefusjonTjeneste {
 
         // Tilkommet arbeidsgiver
         var totalRefusjonRevurdering = totalRefusjon(revurderingAndeler);
-        if (nøkkel.getAktivitetStatus().erArbeidstaker() && forrigeAndelerPåNøkkel.isEmpty() && totalRefusjonRevurdering.compareTo(Beløp.ZERO) > 0) {
+        if (nøkkel.getAktivitetStatus().erArbeidstaker() && forrigeAndelerPåNøkkel.isEmpty() && totalRefusjonRevurdering > 0) {
             return revurderingAndeler;
         }
 
         var totalRefusjonForrige = totalRefusjon(forrigeAndelerPåNøkkel);
-	    var refusjonINøkkelHarØkt = totalRefusjonRevurdering.compareTo(totalRefusjonForrige) > 0;
+	    var refusjonINøkkelHarØkt = totalRefusjonRevurdering > totalRefusjonForrige;
         if (refusjonINøkkelHarØkt) {
             return FinnAndelerMedØktRefusjonTjeneste.finnAndelerPåSammeNøkkelMedØktRefusjon(revurderingAndeler, forrigeAndelerPåNøkkel);
         }
@@ -114,12 +114,13 @@ public final class BeregningRefusjonTjeneste {
         return Collections.emptyList();
     }
 
-    private static Beløp totalRefusjon(List<RefusjonAndel> andeler) {
+    private static int totalRefusjon(List<RefusjonAndel> andeler) {
         return andeler.stream()
                 .map(RefusjonAndel::getRefusjon)
                 .filter(Objects::nonNull)
                 .reduce(Beløp::adder)
-                .orElse(Beløp.ZERO);
+                .map(Beløp::intValue)
+                .orElse(0);
     }
 
     private static boolean erMindreAndelTilgjengeligForBruker(RefusjonPeriodeEndring refusjonsendring, Beløp grenseverdi) {
