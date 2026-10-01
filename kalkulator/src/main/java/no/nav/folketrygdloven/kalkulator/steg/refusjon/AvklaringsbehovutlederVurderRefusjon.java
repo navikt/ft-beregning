@@ -3,6 +3,7 @@ package no.nav.folketrygdloven.kalkulator.steg.refusjon;
 import java.util.List;
 import java.util.Optional;
 
+import no.nav.folketrygdloven.kalkulator.KonfigurasjonVerdi;
 import no.nav.folketrygdloven.kalkulator.avklaringsbehov.PerioderTilVurderingTjeneste;
 import no.nav.folketrygdloven.kalkulator.felles.frist.InntektsmeldingMedRefusjonTjeneste;
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagInput;
@@ -14,6 +15,8 @@ import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
 
 public final class AvklaringsbehovutlederVurderRefusjon {
+
+    static final String TOGGLE_REVURDER_REFUSJON_VED_FORLENGELSE = "REVURDER_REFUSJON_VED_FORLENGELSE_ENABLED";
 
     private AvklaringsbehovutlederVurderRefusjon() {
         // Skjuler default
@@ -46,6 +49,9 @@ public final class AvklaringsbehovutlederVurderRefusjon {
 
     private static boolean revurdererRefusjonsperiodeSomTidligereVarVurdert(VurderRefusjonBeregningsgrunnlagInput vurderInput,
                                                                            BeregningsgrunnlagDto periodisertMedRefusjonOgGradering) {
+        if (!KonfigurasjonVerdi.instance().get(TOGGLE_REVURDER_REFUSJON_VED_FORLENGELSE, false)) {
+            return false;
+        }
         var forlengelseperioder = vurderInput.getForlengelseperioder();
         if (forlengelseperioder.isEmpty()) {
             return false;
