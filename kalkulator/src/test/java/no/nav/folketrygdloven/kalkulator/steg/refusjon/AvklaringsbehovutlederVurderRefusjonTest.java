@@ -6,9 +6,12 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.kalkulator.KoblingReferanseMock;
+import no.nav.folketrygdloven.kalkulator.KonfigurasjonVerdi;
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagInput;
 import no.nav.folketrygdloven.kalkulator.input.StegProsesseringInput;
 import no.nav.folketrygdloven.kalkulator.input.VurderRefusjonBeregningsgrunnlagInput;
@@ -24,9 +27,11 @@ import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
+import no.nav.folketrygdloven.utils.TestKonfigurasjonVerdiProvider;
 
 class AvklaringsbehovutlederVurderRefusjonTest {
 
+    private static final TestKonfigurasjonVerdiProvider TEST_KONFIG = new TestKonfigurasjonVerdiProvider();
     private static final LocalDate SKJÆRINGSTIDSPUNKT = LocalDate.of(2024, 1, 1);
     private static final Beløp GRUNNBELØP = Beløp.fra(125000);
     private static final Arbeidsgiver ARBEIDSGIVER = Arbeidsgiver.virksomhet("974760673");
@@ -37,6 +42,29 @@ class AvklaringsbehovutlederVurderRefusjonTest {
     // Delvis revurdering av en periode som i sin helhet ligger før skjæringstidspunktet.
     private static final Intervall FORLENGELSE_FØR_STP = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT.minusMonths(2),
         SKJÆRINGSTIDSPUNKT.minusMonths(1));
+
+    @BeforeEach
+    void setUp() {
+        TEST_KONFIG.clear();
+        TEST_KONFIG.put(AvklaringsbehovutlederVurderRefusjon.TOGGLE_REVURDER_REFUSJON_VED_FORLENGELSE, "true");
+        KonfigurasjonVerdi.configure(TEST_KONFIG);
+    }
+
+    @AfterEach
+    void tearDown() {
+        KonfigurasjonVerdi.clear();
+        TEST_KONFIG.clear();
+    }
+
+    @Test
+    void delvis_revurdering_etter_stp_skal_ikke_gi_ap_naar_toggle_er_av() {
+        TEST_KONFIG.remove(AvklaringsbehovutlederVurderRefusjon.TOGGLE_REVURDER_REFUSJON_VED_FORLENGELSE);
+        var input = lagInput(List.of(FORLENGELSE_ETTER_STP), lagForrigeGrunnlag(true));
+
+        var resultat = AvklaringsbehovutlederVurderRefusjon.skalHaAvklaringsbehovVurderRefusjonskrav(input, lagBeregningsgrunnlag());
+
+        assertThat(resultat).isFalse();
+    }
 
     @Test
     void delvis_revurdering_etter_stp_skal_gi_ap_naar_koblingen_tidligere_var_refusjonsvurdert() {
