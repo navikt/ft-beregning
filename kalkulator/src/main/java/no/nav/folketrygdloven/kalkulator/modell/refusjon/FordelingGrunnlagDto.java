@@ -9,6 +9,10 @@ import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
 import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
 import no.nav.folketrygdloven.kalkulus.kodeverk.RefusjonKilde;
 
+/**
+ * Grunnlag som inneholder informasjon om fordeling av beregningsgrunnlaget
+ * (kun refusjon oktober 2026, på sikt er tanken gradering og utbetalingsperioder)
+ */
 public record FordelingGrunnlagDto(List<RefusjonsandelDto> refusjonsandeler) {
 
     public FordelingGrunnlagDto {

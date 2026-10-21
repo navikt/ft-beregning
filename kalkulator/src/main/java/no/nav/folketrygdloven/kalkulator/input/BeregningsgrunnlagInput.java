@@ -39,6 +39,9 @@ public class BeregningsgrunnlagInput {
      */
     private BeregningsgrunnlagGrunnlagDto beregningsgrunnlagGrunnlag;
 
+    /**
+     * Grunnlag som inneholder informasjon om fordeling av beregningsgrunnlaget
+     */
     private FordelingGrunnlagDto fordelingGrunnlag;
 
     /**

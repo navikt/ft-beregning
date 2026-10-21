@@ -90,13 +90,13 @@ class RefusjonsmodellTest {
         var personandelTekst = "RefusjonsandelDto[kilde=INNTEKTSMELDING, refusjonsperioder=["
                 + tredjePeriodeTekst + ", " + andrePeriodeTekst + "]]";
 
-        assertThat(førstePeriode.toString()).isEqualTo(førstePeriodeTekst);
-        assertThat(andrePeriode.toString()).isEqualTo(andrePeriodeTekst);
-        assertThat(tredjePeriode.toString()).isEqualTo(tredjePeriodeTekst);
-        assertThat(virksomhetsandel.toString()).isEqualTo(virksomhetsandelTekst);
-        assertThat(personandel.toString()).isEqualTo(personandelTekst);
-        assertThat(grunnlag.toString())
-                .isEqualTo("FordelingGrunnlagDto[refusjonsandeler=[" + virksomhetsandelTekst + ", " + personandelTekst + "]]");
+        assertThat(førstePeriode).hasToString(førstePeriodeTekst);
+        assertThat(andrePeriode).hasToString(andrePeriodeTekst);
+        assertThat(tredjePeriode).hasToString(tredjePeriodeTekst);
+        assertThat(virksomhetsandel).hasToString(virksomhetsandelTekst);
+        assertThat(personandel).hasToString(personandelTekst);
+        assertThat(grunnlag)
+                .hasToString("FordelingGrunnlagDto[refusjonsandeler=[" + virksomhetsandelTekst + ", " + personandelTekst + "]]");
 
         var utdata = List.of(førstePeriode.toString(), andrePeriode.toString(), tredjePeriode.toString(), virksomhetsandel.toString(),
                 personandel.toString(), grunnlag.toString());
@@ -115,8 +115,9 @@ class RefusjonsmodellTest {
         var grunnlag = new FordelingGrunnlagDto(andeler);
         andeler.add(null);
 
-        assertThat(grunnlag.refusjonsandeler()).isEmpty();
-        assertThatThrownBy(() -> grunnlag.refusjonsandeler().clear()).isInstanceOf(UnsupportedOperationException.class);
+        var refusjonsandeler = grunnlag.refusjonsandeler();
+        assertThat(refusjonsandeler).isEmpty();
+        assertThatThrownBy(refusjonsandeler::clear).isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Nested
@@ -151,13 +152,13 @@ class RefusjonsmodellTest {
         void samme_triple_avvises_også_når_journalpostene_er_ulike() {
             var inntektsmelding = andel("A-1", RefusjonKilde.INNTEKTSMELDING, JOURNALPOST);
             var saksbehandler = andel("A-1", RefusjonKilde.SAKSBEHANDLER, null);
+            var inntektsmeldingsandeler = List.of(inntektsmelding, andel("A-1", RefusjonKilde.INNTEKTSMELDING, ANNEN_JOURNALPOST));
+            var saksbehandlerandeler = List.of(saksbehandler, andel("A-1", RefusjonKilde.SAKSBEHANDLER, null));
 
-            assertThatThrownBy(() -> new FordelingGrunnlagDto(
-                    List.of(inntektsmelding, andel("A-1", RefusjonKilde.INNTEKTSMELDING, ANNEN_JOURNALPOST))))
+            assertThatThrownBy(() -> new FordelingGrunnlagDto(inntektsmeldingsandeler))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("Flere refusjonsandeler med samme arbeidsgiver, arbeidsforholdsreferanse og kilde.");
-            assertThatThrownBy(() -> new FordelingGrunnlagDto(List.of(saksbehandler,
-                    andel("A-1", RefusjonKilde.SAKSBEHANDLER, null))))
+            assertThatThrownBy(() -> new FordelingGrunnlagDto(saksbehandlerandeler))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("Flere refusjonsandeler med samme arbeidsgiver, arbeidsforholdsreferanse og kilde.");
         }
@@ -168,8 +169,9 @@ class RefusjonsmodellTest {
             var andreRef = InternArbeidsforholdRefDto.ref(førsteRef.getUUIDReferanse());
             var førsteAndel = new RefusjonsandelDto(ARBEIDSGIVER, førsteRef, RefusjonKilde.SAKSBEHANDLER, null, List.of());
             var andreAndel = new RefusjonsandelDto(ARBEIDSGIVER, andreRef, RefusjonKilde.SAKSBEHANDLER, null, List.of());
+            var andeler = List.of(førsteAndel, andreAndel);
 
-            assertThatThrownBy(() -> new FordelingGrunnlagDto(List.of(førsteAndel, andreAndel)))
+            assertThatThrownBy(() -> new FordelingGrunnlagDto(andeler))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("Flere refusjonsandeler med samme arbeidsgiver, arbeidsforholdsreferanse og kilde.");
         }
@@ -180,9 +182,10 @@ class RefusjonsmodellTest {
                     RefusjonKilde.SAKSBEHANDLER, null, List.of());
             var spesifiktArbeidsforhold = andel("A-1", RefusjonKilde.SAKSBEHANDLER, null);
             var grunnlag = new FordelingGrunnlagDto(List.of(utenSpesifiktArbeidsforhold, spesifiktArbeidsforhold));
+            var duplikateAndeler = List.of(utenSpesifiktArbeidsforhold, utenSpesifiktArbeidsforhold);
 
             assertThat(grunnlag.refusjonsandeler()).containsExactly(utenSpesifiktArbeidsforhold, spesifiktArbeidsforhold);
-            assertThatThrownBy(() -> new FordelingGrunnlagDto(List.of(utenSpesifiktArbeidsforhold, utenSpesifiktArbeidsforhold)))
+            assertThatThrownBy(() -> new FordelingGrunnlagDto(duplikateAndeler))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("Flere refusjonsandeler med samme arbeidsgiver, arbeidsforholdsreferanse og kilde.");
         }
@@ -225,8 +228,10 @@ class RefusjonsmodellTest {
             assertThat(februar.refusjonPrMnd()).isEqualByComparingTo(Beløp.fra(new BigDecimal("4321.09")));
             assertThat(grunnlag.refusjonsandeler()).containsExactly(andel);
             assertThat(kopi.refusjonsandeler()).containsExactly(andel);
-            assertThatThrownBy(() -> grunnlag.refusjonsandeler().clear()).isInstanceOf(UnsupportedOperationException.class);
-            assertThatThrownBy(() -> andel.refusjonsperioder().clear()).isInstanceOf(UnsupportedOperationException.class);
+            var refusjonsandeler = grunnlag.refusjonsandeler();
+            var refusjonsperioder = andel.refusjonsperioder();
+            assertThatThrownBy(refusjonsandeler::clear).isInstanceOf(UnsupportedOperationException.class);
+            assertThatThrownBy(refusjonsperioder::clear).isInstanceOf(UnsupportedOperationException.class);
         }
 
         private RefusjonsandelDto andel(String referanseSeed, RefusjonKilde kilde, JournalpostId journalpostId) {

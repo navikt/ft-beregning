@@ -1,14 +1,7 @@
 package no.nav.folketrygdloven.kalkulus.kodeverk;
 
-public enum RefusjonUtfall implements Kodeverdi {
-
+public enum RefusjonUtfall {
     INNVILGET,
     AVSLÅTT,
-    REDUSERT,
-    ;
-
-    @Override
-    public String getKode() {
-        return name();
-    }
+    REDUSERT
 }
