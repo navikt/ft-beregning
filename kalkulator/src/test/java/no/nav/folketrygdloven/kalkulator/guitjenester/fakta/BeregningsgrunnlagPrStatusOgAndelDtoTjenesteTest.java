@@ -32,6 +32,7 @@ import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
+import no.nav.folketrygdloven.kalkulus.kodeverk.AndelKilde;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Dekningsgrad;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
@@ -256,6 +257,38 @@ class BeregningsgrunnlagPrStatusOgAndelDtoTjenesteTest {
 		assertThat(beregningsgrunnlagPrStatusOgAndelDtos).isNotEmpty();
     }
 
+
+    @Test
+    void skalKunMarkereAndelerFraFordelingSomTilkommet() {
+        var arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
+        var beregningsgrunnlag = lagBeregningsgrunnlagMedAvvikUnder25ProsentMedKunSammenligningsgrunnlag();
+        var bgPeriode = buildBeregningsgrunnlagPeriode(beregningsgrunnlag);
+        byggAndelAt(bgPeriode, arbeidsgiver, 1L);
+        BeregningsgrunnlagPrStatusOgAndelDto.ny()
+            .medAndelsnr(2L)
+            .medAktivitetStatus(AktivitetStatus.DAGPENGER)
+            .medInntektskategori(Inntektskategori.DAGPENGER)
+            .medKilde(AndelKilde.SAKSBEHANDLER_KOFAKBER)
+            .build(bgPeriode);
+        BeregningsgrunnlagPrStatusOgAndelDto.ny()
+            .medAndelsnr(3L)
+            .medAktivitetStatus(AktivitetStatus.ARBEIDSAVKLARINGSPENGER)
+            .medInntektskategori(Inntektskategori.ARBEIDSAVKLARINGSPENGER)
+            .medKilde(AndelKilde.SAKSBEHANDLER_FORDELING)
+            .build(bgPeriode);
+        lagBehandling(beregningsgrunnlag, arbeidsgiver, null);
+        var ytelsespesifiktGrunnlag = new ForeldrepengerGrunnlag(Dekningsgrad.DEKNINGSGRAD_100, false);
+        var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.nytt().medInntektsmeldinger(Collections.emptyList()).build();
+        var input = new BeregningsgrunnlagGUIInput(lagReferanseMedStp(koblingReferanse), iayGrunnlag, List.of(), ytelsespesifiktGrunnlag)
+            .medBeregningsgrunnlagGrunnlag(grunnlag);
+
+        var dtoer = new BeregningsgrunnlagPrStatusOgAndelDtoTjeneste().lagBeregningsgrunnlagPrStatusOgAndelDto(input,
+            grunnlag.getBeregningsgrunnlagHvisFinnes().get().getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList());
+
+        assertThat(dtoer).extracting(d -> d.getAndelsnr(), d -> d.getErTilkommetAndel())
+            .containsExactlyInAnyOrder(org.assertj.core.groups.Tuple.tuple(1L, false), org.assertj.core.groups.Tuple.tuple(2L, false),
+                org.assertj.core.groups.Tuple.tuple(3L, true));
+    }
 
     private BeregningsgrunnlagDto lagBeregningsgrunnlagMedAvvikOver25Prosent(SammenligningsgrunnlagType sammenligningsgrunnlagType) {
         return BeregningsgrunnlagDto.builder()
