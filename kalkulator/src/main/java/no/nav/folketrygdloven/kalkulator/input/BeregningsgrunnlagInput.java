@@ -29,6 +29,8 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
  */
 public class BeregningsgrunnlagInput {
 
+    public static final String REFUSJON_TOGGLE = "refusjon.toggle";
+
     /**
      * Data som referer behandlingen beregningsgrunnlag inngår i.
      */
