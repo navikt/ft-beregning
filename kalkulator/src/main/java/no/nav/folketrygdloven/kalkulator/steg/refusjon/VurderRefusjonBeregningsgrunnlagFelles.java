@@ -10,18 +10,15 @@ public class VurderRefusjonBeregningsgrunnlagFelles {
 
 
     public BeregningsgrunnlagRegelResultat vurderRefusjon(BeregningsgrunnlagInput input) {
-        BeregningsgrunnlagRegelResultat resultatFraRefusjonPeriodisering;
-        if (input.isEnabled(BeregningsgrunnlagInput.REFUSJON_TOGGLE, false)) {
-            resultatFraRefusjonPeriodisering = new RefusjonsgrunnlagTjeneste().fastsettPerioderForRefusjon(input);
-        } else {
-            resultatFraRefusjonPeriodisering = new FordelPerioderTjeneste().fastsettPerioderForRefusjon(input);
-        }
+        var refusjonsperiodisering = RefusjonsperiodiseringTjeneste.fastsettPerioderForRefusjon(input);
+        var resultatFraRefusjonPeriodisering = refusjonsperiodisering.regelResultat();
 
         var resultatFraPeriodisering = new FordelPerioderTjeneste().fastsettPerioderForUtbetalingsgradEllerGradering(input, resultatFraRefusjonPeriodisering.getBeregningsgrunnlag());
         var splittetVedForlengelse = ForlengelsePeriodeTjeneste.splittVedStartAvForlengelse(input, resultatFraPeriodisering.getBeregningsgrunnlag());
         var avklaringsbehov = AvklaringsbehovutledertjenesteVurderRefusjon.utledAvklaringsbehov(input, splittetVedForlengelse);
         return new BeregningsgrunnlagRegelResultat(splittetVedForlengelse,
                 avklaringsbehov,
-                RegelSporingAggregat.konkatiner(resultatFraRefusjonPeriodisering.getRegelsporinger().orElse(null), resultatFraPeriodisering.getRegelsporinger().orElse(null)));
+                RegelSporingAggregat.konkatiner(resultatFraRefusjonPeriodisering.getRegelsporinger().orElse(null), resultatFraPeriodisering.getRegelsporinger().orElse(null)),
+                refusjonsperiodisering.fordelingGrunnlag());
     }
 }

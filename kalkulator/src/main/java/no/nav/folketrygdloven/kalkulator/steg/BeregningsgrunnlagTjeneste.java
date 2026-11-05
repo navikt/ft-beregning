@@ -178,6 +178,7 @@ public class BeregningsgrunnlagTjeneste implements KalkulatorInterface {
         return Builder.fra(input)
                 .medAvklaringsbehov(vurderRefusjonResultat.getAvklaringsbehov())
                 .medBeregningsgrunnlag(vurderRefusjonResultat.getBeregningsgrunnlag(), input.getStegTilstand())
+                .medFordelingGrunnlag(vurderRefusjonResultat.getFordelingGrunnlag().orElse(null))
                 .medRegelSporingAggregat(vurderRefusjonResultat.getRegelsporinger().orElse(null))
                 .build();
     }

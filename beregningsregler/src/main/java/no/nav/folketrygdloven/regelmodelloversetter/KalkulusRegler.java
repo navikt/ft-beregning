@@ -10,11 +10,14 @@ import no.nav.folketrygdloven.beregningsgrunnlag.grenseverdi.RegelFinnGrenseverd
 import no.nav.folketrygdloven.beregningsgrunnlag.perioder.gradering.FastsettPerioderGraderingRegel;
 import no.nav.folketrygdloven.beregningsgrunnlag.perioder.naturalytelse.FastsettPerioderNaturalytelseRegel;
 import no.nav.folketrygdloven.beregningsgrunnlag.perioder.refusjon.FastsettPerioderRefusjonRegel;
+import no.nav.folketrygdloven.beregningsgrunnlag.perioder.refusjon.FastsettRefusjonsgrunnlagRegel;
 import no.nav.folketrygdloven.beregningsgrunnlag.perioder.utbetalingsgrad.FastsettPerioderForUtbetalingsgradRegel;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.RegelResultat;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.gradering.PeriodeModellGradering;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.naturalytelse.PeriodeModellNaturalytelse;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.refusjon.PeriodeModellRefusjon;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.refusjon.RefusjonsgrunnlagModell;
+import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.refusjon.RefusjonsgrunnlagResultat;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.utbetalingsgrad.PeriodeModellUtbetalingsgrad;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.resultat.BeregningsgrunnlagPeriode;
 import no.nav.folketrygdloven.beregningsgrunnlag.vurder.RegelVurderBeregningsgrunnlag;
@@ -74,6 +77,10 @@ public final class KalkulusRegler {
 
 	public static RegelResultat fastsettPerioderRefusjon(PeriodeModellRefusjon input, Object perioder) {
 		return new FastsettPerioderRefusjonRegel().evaluerRegel(input, perioder);
+	}
+
+	public static RefusjonsgrunnlagResultat fastsettRefusjonsgrunnlag(RefusjonsgrunnlagModell input) {
+		return new FastsettRefusjonsgrunnlagRegel().fastsett(input);
 	}
 
 	public static RegelResultat fastsettPerioderForUtbetalingsgrad(PeriodeModellUtbetalingsgrad input, Object perioder) {

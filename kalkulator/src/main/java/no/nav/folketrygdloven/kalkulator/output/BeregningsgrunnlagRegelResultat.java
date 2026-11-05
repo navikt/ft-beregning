@@ -7,6 +7,7 @@ import java.util.Optional;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningAktivitetAggregatDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.FaktaAggregatDto;
+import no.nav.folketrygdloven.kalkulator.modell.refusjon.FordelingGrunnlagDto;
 
 public class BeregningsgrunnlagRegelResultat {
     private BeregningsgrunnlagDto beregningsgrunnlag;
@@ -15,6 +16,7 @@ public class BeregningsgrunnlagRegelResultat {
     private List<BeregningAvklaringsbehovResultat> avklaringsbehov = new ArrayList<>();
     private List<BeregningVilkårResultat> vilkårsresultat = new ArrayList<>();
     private RegelSporingAggregat regelsporinger;
+    private FordelingGrunnlagDto fordelingGrunnlag;
 
     public BeregningsgrunnlagRegelResultat(BeregningAktivitetAggregatDto registerAktiviteter) {
         this.registerAktiviteter = registerAktiviteter;
@@ -47,8 +49,20 @@ public class BeregningsgrunnlagRegelResultat {
         this.regelsporinger = regelsporinger;
     }
 
+    public BeregningsgrunnlagRegelResultat(BeregningsgrunnlagDto beregningsgrunnlag,
+                                           List<BeregningAvklaringsbehovResultat> avklaringsbehov,
+                                           RegelSporingAggregat regelsporinger,
+                                           FordelingGrunnlagDto fordelingGrunnlag) {
+        this(beregningsgrunnlag, avklaringsbehov, regelsporinger);
+        this.fordelingGrunnlag = fordelingGrunnlag;
+    }
+
     public BeregningsgrunnlagDto getBeregningsgrunnlag() {
         return beregningsgrunnlag;
+    }
+
+    public Optional<FordelingGrunnlagDto> getFordelingGrunnlag() {
+        return Optional.ofNullable(fordelingGrunnlag);
     }
 
     public Optional<BeregningsgrunnlagDto> getBeregningsgrunnlagHvisFinnes() {
