@@ -23,6 +23,7 @@ import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseGrunnlagD
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseGrunnlagDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektsmeldingDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.KravperioderPrArbeidsforholdDto;
+import no.nav.folketrygdloven.kalkulator.modell.refusjon.FordelingGrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
 
@@ -40,6 +41,9 @@ public class BeregningsgrunnlagGUIInput {
 
     /** Grunnlag fra fordelsteget. Brukes i visning av automatisk fordeling og utledning av andeler som skal redigeres */
     private BeregningsgrunnlagGrunnlagDto fordelBeregningsgrunnlagGrunnlag;
+
+    /** Grunnlag som inneholder informasjon om fordeling av beregningsgrunnlaget */
+    private FordelingGrunnlagDto fordelingGrunnlag;
 
     /** Grunnlag for Beregningsgrunnlg opprettet eller modifisert av modulen i original behandling. Settes på av modulen. */
     private List<BeregningsgrunnlagGrunnlagDto> beregningsgrunnlagGrunnlagFraForrigeBehandling = new ArrayList<>();
@@ -72,7 +76,9 @@ public class BeregningsgrunnlagGUIInput {
                 input.getKravperioderPrArbeidsgiver(), input.getYtelsespesifiktGrunnlag());
         this.beregningsgrunnlagGrunnlag = input.getBeregningsgrunnlagGrunnlag();
         this.fordelBeregningsgrunnlagGrunnlag = input.fordelBeregningsgrunnlagGrunnlag;
+        this.fordelingGrunnlag = input.fordelingGrunnlag;
         this.beregningsgrunnlagGrunnlagFraForrigeBehandling = input.beregningsgrunnlagGrunnlagFraForrigeBehandling;
+        this.avklaringsbehov = input.avklaringsbehov;
         this.toggles = input.getToggles();
         this.forlengelseperioder = input.getForlengelseperioder();
     }
@@ -95,6 +101,10 @@ public class BeregningsgrunnlagGUIInput {
 
     public BeregningsgrunnlagGrunnlagDto getBeregningsgrunnlagGrunnlag() {
         return beregningsgrunnlagGrunnlag;
+    }
+
+    public Optional<FordelingGrunnlagDto> getFordelingGrunnlag() {
+        return Optional.ofNullable(fordelingGrunnlag);
     }
 
     public BeregningsgrunnlagDto getBeregningsgrunnlag() {
@@ -169,6 +179,12 @@ public class BeregningsgrunnlagGUIInput {
             .map(BeregningsgrunnlagDto::getSkjæringstidspunkt)
             .map(newInput::medSkjæringstidspunktForBeregning)
             .orElse(newInput);
+        return newInput;
+    }
+
+    public BeregningsgrunnlagGUIInput medFordelingGrunnlag(FordelingGrunnlagDto grunnlag) {
+        var newInput = new BeregningsgrunnlagGUIInput(this);
+        newInput.fordelingGrunnlag = grunnlag;
         return newInput;
     }
 
