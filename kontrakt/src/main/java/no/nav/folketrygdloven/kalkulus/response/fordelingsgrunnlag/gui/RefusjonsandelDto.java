@@ -21,7 +21,9 @@ public record RefusjonsandelDto(
         @Pattern(regexp = "^[\\p{Graph}\\p{Space}\\p{Sc}\\p{L}\\p{M}\\p{N}]+$", message = "Arbeidsgiverident har ugyldig format")
         @NotNull
         String arbeidsgiverIdent,
-        @Valid InternArbeidsforholdRefDto arbeidsforholdRef,
+        @Pattern(regexp = "^[\\p{Graph}\\p{Space}\\p{Sc}\\p{L}\\p{M}\\p{N}]+$", message = "'${validatedValue}' matcher ikke tillatt pattern '{regexp}'")
+        @Valid
+        String arbeidsforholdId,
         @Valid @NotNull RefusjonKilde kilde,
         @Valid JournalpostId journalpostId,
         @NotNull List<@Valid RefusjonsperiodeDto> refusjonsperioder) {}
