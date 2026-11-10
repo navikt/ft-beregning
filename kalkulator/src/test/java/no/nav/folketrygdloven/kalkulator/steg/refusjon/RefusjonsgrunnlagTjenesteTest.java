@@ -9,10 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.EnumSource;
-import org.junit.jupiter.params.provider.ValueSource;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.refusjon.Arbeidsgiver;
@@ -22,7 +18,6 @@ import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.refus
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.refusjon.RefusjonsgrunnlagModell.Refusjonskrav;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.refusjon.Utfall;
 import no.nav.folketrygdloven.kalkulator.KoblingReferanseMock;
-import no.nav.folketrygdloven.kalkulator.OpprettKravPerioderFraInntektsmeldingerForTest;
 import no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.periodisering.refusjon.MapRefusjonsgrunnlagFraVLTilRegel;
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagInput;
 import no.nav.folketrygdloven.kalkulator.input.ForeldrepengerGrunnlag;
@@ -43,6 +38,8 @@ import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseGrunnlagD
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektsmeldingDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektsmeldingDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.iay.RefusjonDto;
+import no.nav.folketrygdloven.kalkulator.modell.refusjon.FordelingGrunnlagDto;
+import no.nav.folketrygdloven.kalkulator.modell.refusjon.RefusjonsandelDto;
 import no.nav.folketrygdloven.kalkulator.modell.refusjon.RefusjonsperiodeDto;
 import no.nav.folketrygdloven.kalkulator.modell.svp.AktivitetDto;
 import no.nav.folketrygdloven.kalkulator.modell.svp.PeriodeMedUtbetalingsgradDto;
@@ -51,23 +48,22 @@ import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Utbetalingsgrad;
 import no.nav.folketrygdloven.kalkulator.steg.BeregningsgrunnlagTjeneste;
-import no.nav.folketrygdloven.kalkulator.steg.fordeling.periodisering.FordelPerioderTjeneste;
 import no.nav.folketrygdloven.kalkulator.testutilities.BeregningIAYTestUtil;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.felles.JournalpostId;
 import no.nav.folketrygdloven.kalkulus.kodeverk.RefusjonKilde;
 import no.nav.folketrygdloven.kalkulus.kodeverk.RefusjonUtfall;
-import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagRegelType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Dekningsgrad;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
+import no.nav.folketrygdloven.kalkulus.kodeverk.InntektsmeldingType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.UttakArbeidType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
+import no.nav.folketrygdloven.kalkulus.kodeverk.AndelKilde;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.PeriodeÅrsak;
 import no.nav.folketrygdloven.kalkulus.typer.AktørId;
 import no.nav.folketrygdloven.regelmodelloversetter.KalkulusRegler;
-import tools.jackson.databind.json.JsonMapper;
 
 class RefusjonsgrunnlagTjenesteTest {
 
@@ -75,23 +71,18 @@ class RefusjonsgrunnlagTjenesteTest {
     private static final InternArbeidsforholdRefDto REF = InternArbeidsforholdRefDto.namedRef("første");
     private final RefusjonsgrunnlagTjeneste tjeneste = new RefusjonsgrunnlagTjeneste();
 
-    @ParameterizedTest
-    @ValueSource(booleans = {false, true})
-    void skal_gi_samme_sluttresultat_som_gammel_flyt_for_innvilget_refusjon_med_eksisterende_eller_ny_andel(boolean eksisterendeAndel) {
+    @Test
+    void skal_periodisere_refusjon_på_eksisterende_andel() {
         var arbeidsgiver = virksomhet("999999999");
-        var opprinnelig = input(inntektsmelding(arbeidsgiver, REF, "101", "1234.56")
+        var input = input(inntektsmelding(arbeidsgiver, REF, "101", "1234.56")
             .leggTil(new RefusjonDto(Beløp.fra(2000), FOM.plusMonths(3)))
             .medRefusjon(Beløp.fra(new BigDecimal("1234.56")), FOM.plusMonths(4).minusDays(1)).build());
-        var bg = opprinnelig.getBeregningsgrunnlag();
+        var bg = input.getBeregningsgrunnlag();
         var første = bg.getBeregningsgrunnlagPerioder().getFirst();
-        if (eksisterendeAndel) {
-            BeregningsgrunnlagPrStatusOgAndelDto.ny().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
-                .medArbforholdType(OpptjeningAktivitetType.ARBEID).medBeregnetPrÅr(Beløp.fra(400000))
-                .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder().medArbeidsgiver(arbeidsgiver)
-                    .medArbeidsforholdRef(REF).medArbeidsperiodeFom(FOM.minusYears(1))).build(første);
-        } else {
-            BeregningsgrunnlagPeriodeDto.oppdater(første).medBruttoPrÅr(Beløp.ZERO).build();
-        }
+        BeregningsgrunnlagPrStatusOgAndelDto.ny().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
+            .medArbforholdType(OpptjeningAktivitetType.ARBEID).medBeregnetPrÅr(Beløp.fra(400000))
+            .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder().medArbeidsgiver(arbeidsgiver)
+                .medArbeidsforholdRef(REF).medArbeidsperiodeFom(FOM.minusYears(1))).build(første);
         BeregningsgrunnlagPeriodeDto.oppdater(første).medBeregningsgrunnlagPeriode(FOM, FOM.plusMonths(2).minusDays(1)).build();
         BeregningsgrunnlagPeriodeDto.kopier(første).medBeregningsgrunnlagPeriode(FOM.plusMonths(2), null)
             .leggTilPeriodeÅrsak(PeriodeÅrsak.GRADERING).build(bg);
@@ -99,35 +90,140 @@ class RefusjonsgrunnlagTjenesteTest {
             .leggTilAktivitet(BeregningAktivitetDto.builder().medArbeidsgiver(arbeidsgiver).medArbeidsforholdRef(REF)
                 .medOpptjeningAktivitetType(OpptjeningAktivitetType.ARBEID).medPeriode(Intervall.fraOgMed(FOM.minusYears(1))).build())
             .build();
-        var grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.of(opprinnelig.getBeregningsgrunnlagGrunnlag()))
+        var grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.of(input.getBeregningsgrunnlagGrunnlag()))
             .medRegisterAktiviteter(aktiviteter).build(BeregningsgrunnlagTilstand.FORESLÅTT);
-        var krav = OpprettKravPerioderFraInntektsmeldingerForTest.opprett(opprinnelig.getIayGrunnlag(), FOM);
-        var input = new BeregningsgrunnlagInput(opprinnelig.getKoblingReferanse(), opprinnelig.getIayGrunnlag(), null,
-            krav, opprinnelig.getYtelsespesifiktGrunnlag()).medBeregningsgrunnlagGrunnlag(grunnlag);
-
-        var gammelt = new FordelPerioderTjeneste().fastsettPerioderForRefusjon(input).getBeregningsgrunnlag();
-        var nytt = tjeneste.fastsettRefusjonsgrunnlag(input);
-
-        assertThat(nytt.beregningsgrunnlag()).usingRecursiveComparison()
-            .ignoringFieldsMatchingRegexes(".*hjemmelForRefusjonskravfrist").isEqualTo(gammelt);
-        assertThat(nytt.beregningsgrunnlag().getBeregningsgrunnlagPerioder()).hasSize(4);
-        if (!eksisterendeAndel) {
-            var andel = nytt.beregningsgrunnlag().getBeregningsgrunnlagPerioder().getFirst()
-                .getBeregningsgrunnlagPrStatusOgAndelList().getFirst().getBgAndelArbeidsforhold().orElseThrow();
-            assertThat(andel.getArbeidsperiodeFom()).isEqualTo(FOM.minusYears(1));
-            assertThat(andel.getHjemmelForRefusjonskravfrist()).isNull();
-        }
+        input = input.medBeregningsgrunnlagGrunnlag(grunnlag);
         input.leggTilToggle(BeregningsgrunnlagInput.REFUSJON_TOGGLE, true);
         var stegInput = new VurderRefusjonBeregningsgrunnlagInput(new StegProsesseringInput(input, BeregningsgrunnlagTilstand.FORESLÅTT));
 
-        var stegResultat = new BeregningsgrunnlagTjeneste().vurderRefusjonskravForBeregninggrunnlag(stegInput);
+        var resultat = new BeregningsgrunnlagTjeneste().vurderRefusjonskravForBeregninggrunnlag(stegInput);
 
-        assertThat(stegResultat.getFordelingGrunnlag().orElseThrow()).usingRecursiveComparison().isEqualTo(nytt.fordelingGrunnlag());
-        assertThat(stegResultat.getBeregningsgrunnlag()).usingRecursiveComparison().isEqualTo(nytt.beregningsgrunnlag());
+        var perioder = resultat.getBeregningsgrunnlag().getBeregningsgrunnlagPerioder();
+        assertThat(perioder).extracting(BeregningsgrunnlagPeriodeDto::getPeriode).containsExactly(
+            Intervall.fraOgMedTilOgMed(FOM, FOM.plusMonths(2).minusDays(1)),
+            Intervall.fraOgMedTilOgMed(FOM.plusMonths(2), FOM.plusMonths(3).minusDays(1)),
+            Intervall.fraOgMedTilOgMed(FOM.plusMonths(3), FOM.plusMonths(4).minusDays(1)),
+            Intervall.fraOgMed(FOM.plusMonths(4)));
+        assertThat(perioder).extracting(p -> p.getBeregningsgrunnlagPrStatusOgAndelList().getFirst()
+            .getBgAndelArbeidsforhold().orElseThrow().getRefusjonskravPrÅr()).containsExactly(
+                Beløp.fra(new BigDecimal("14814.72")), Beløp.fra(new BigDecimal("14814.72")),
+                Beløp.fra(24000), Beløp.ZERO);
+        assertThat(perioder).allSatisfy(p -> {
+            assertThat(p.getBeregningsgrunnlagPrStatusOgAndelList()).singleElement().satisfies(andel -> {
+                assertThat(andel.getArbeidsgiver()).contains(arbeidsgiver);
+                assertThat(andel.getArbeidsforholdRef()).contains(REF);
+                assertThat(andel.getBeregnetPrÅr()).isEqualTo(Beløp.fra(400000));
+            });
+        });
+        assertThat(resultat.getFordelingGrunnlag().orElseThrow().refusjonsandeler()).singleElement().satisfies(andel -> {
+            assertThat(andel.arbeidsgiver()).isEqualTo(arbeidsgiver);
+            assertThat(andel.arbeidsforholdRef()).isEqualTo(REF);
+            assertThat(andel.journalpostId()).isEqualTo(new JournalpostId("101"));
+            assertThat(andel.kilde()).isEqualTo(RefusjonKilde.INNTEKTSMELDING);
+            assertThat(andel.refusjonsperioder()).containsExactly(
+                periode(FOM, FOM.plusMonths(3).minusDays(1), "1234.56"),
+                periode(FOM.plusMonths(3), FOM.plusMonths(4).minusDays(1), "2000"),
+                periode(FOM.plusMonths(4), new Periode(FOM, null).getTom(), "0"));
+        });
+        assertThat(bg.getBeregningsgrunnlagPerioder()).hasSize(2);
+        assertThat(første.getBeregningsgrunnlagPrStatusOgAndelList().getFirst()
+            .getBgAndelArbeidsforhold().orElseThrow().getRefusjon()).isEmpty();
     }
 
     @Test
-    void skal_bevare_endring_og_opphør_med_månedsbeløp_uten_bg_eller_fristutfall_i_regelinput() {
+    void skal_opprette_og_periodisere_ny_andel_for_refusjon() {
+        var arbeidsgiver = virksomhet("999999999");
+        var input = input(inntektsmelding(arbeidsgiver, REF, "101", "1234.56")
+            .leggTil(new RefusjonDto(Beløp.fra(2000), FOM.plusMonths(3)))
+            .medRefusjon(Beløp.fra(new BigDecimal("1234.56")), FOM.plusMonths(4).minusDays(1)).build());
+        var bg = input.getBeregningsgrunnlag();
+        var første = bg.getBeregningsgrunnlagPerioder().getFirst();
+        BeregningsgrunnlagPeriodeDto.oppdater(første).medBruttoPrÅr(Beløp.ZERO).build();
+        BeregningsgrunnlagPeriodeDto.oppdater(første).medBeregningsgrunnlagPeriode(FOM, FOM.plusMonths(2).minusDays(1)).build();
+        BeregningsgrunnlagPeriodeDto.kopier(første).medBeregningsgrunnlagPeriode(FOM.plusMonths(2), null)
+            .leggTilPeriodeÅrsak(PeriodeÅrsak.GRADERING).build(bg);
+        var aktiviteter = BeregningAktivitetAggregatDto.builder().medSkjæringstidspunktOpptjening(FOM)
+            .leggTilAktivitet(BeregningAktivitetDto.builder().medArbeidsgiver(arbeidsgiver).medArbeidsforholdRef(REF)
+                .medOpptjeningAktivitetType(OpptjeningAktivitetType.ARBEID).medPeriode(Intervall.fraOgMed(FOM.minusYears(1))).build())
+            .build();
+        var grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.of(input.getBeregningsgrunnlagGrunnlag()))
+            .medRegisterAktiviteter(aktiviteter).build(BeregningsgrunnlagTilstand.FORESLÅTT);
+        input = input.medBeregningsgrunnlagGrunnlag(grunnlag);
+
+        var resultat = tjeneste.fastsettRefusjonsgrunnlag(input);
+
+        var perioder = resultat.beregningsgrunnlag().getBeregningsgrunnlagPerioder();
+        assertThat(perioder).extracting(BeregningsgrunnlagPeriodeDto::getPeriode).containsExactly(
+            Intervall.fraOgMedTilOgMed(FOM, FOM.plusMonths(2).minusDays(1)),
+            Intervall.fraOgMedTilOgMed(FOM.plusMonths(2), FOM.plusMonths(3).minusDays(1)),
+            Intervall.fraOgMedTilOgMed(FOM.plusMonths(3), FOM.plusMonths(4).minusDays(1)),
+            Intervall.fraOgMed(FOM.plusMonths(4)));
+        assertThat(perioder).extracting(p -> p.getBeregningsgrunnlagPrStatusOgAndelList().size())
+            .containsExactly(1, 1, 1, 0);
+        assertThat(perioder.subList(0, 3)).extracting(p -> p.getBeregningsgrunnlagPrStatusOgAndelList().getFirst()
+            .getBgAndelArbeidsforhold().orElseThrow().getRefusjonskravPrÅr()).containsExactly(
+                Beløp.fra(new BigDecimal("14814.72")), Beløp.fra(new BigDecimal("14814.72")), Beløp.fra(24000));
+        assertThat(perioder.subList(0, 3)).allSatisfy(p -> {
+            assertThat(p.getBeregningsgrunnlagPrStatusOgAndelList()).singleElement().satisfies(a -> {
+                assertThat(a.getArbeidsgiver()).contains(arbeidsgiver);
+                assertThat(a.getArbeidsforholdRef()).contains(REF);
+                assertThat(a.getKilde()).isEqualTo(AndelKilde.PROSESS_PERIODISERING);
+            });
+        });
+        var andel = perioder.getFirst()
+            .getBeregningsgrunnlagPrStatusOgAndelList().getFirst().getBgAndelArbeidsforhold().orElseThrow();
+        assertThat(andel.getArbeidsperiodeFom()).isEqualTo(FOM.minusYears(1));
+        assertThat(andel.getHjemmelForRefusjonskravfrist()).isNull();
+        assertThat(resultat.fordelingGrunnlag().refusjonsandeler()).singleElement().satisfies(refusjonsandel -> {
+            assertThat(refusjonsandel.arbeidsgiver()).isEqualTo(arbeidsgiver);
+            assertThat(refusjonsandel.arbeidsforholdRef()).isEqualTo(REF);
+            assertThat(refusjonsandel.journalpostId()).isEqualTo(new JournalpostId("101"));
+            assertThat(refusjonsandel.kilde()).isEqualTo(RefusjonKilde.INNTEKTSMELDING);
+            assertThat(refusjonsandel.refusjonsperioder()).containsExactly(
+                periode(FOM, FOM.plusMonths(3).minusDays(1), "1234.56"),
+                periode(FOM.plusMonths(3), FOM.plusMonths(4).minusDays(1), "2000"),
+                periode(FOM.plusMonths(4), new Periode(FOM, null).getTom(), "0"));
+        });
+        assertThat(bg.getBeregningsgrunnlagPerioder()).hasSize(2);
+        assertThat(første.getBeregningsgrunnlagPrStatusOgAndelList()).isEmpty();
+    }
+
+    @Test
+    void skal_opprette_ny_andel_for_inntektsmelding_med_referanse_når_bg_andelen_mangler_referanse() {
+        var arbeidsgiver = virksomhet("999999999");
+        var utenReferanse = InternArbeidsforholdRefDto.nullRef();
+        var input = input(
+            inntektsmelding(arbeidsgiver, utenReferanse, "101", "1000").build(),
+            inntektsmelding(arbeidsgiver, REF, "102", "2000").build());
+        var førstePeriode = input.getBeregningsgrunnlag().getBeregningsgrunnlagPerioder().getFirst();
+        BeregningsgrunnlagPrStatusOgAndelDto.ny().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
+            .medArbforholdType(OpptjeningAktivitetType.ARBEID).medBeregnetPrÅr(Beløp.fra(400000))
+            .medBGAndelArbeidsforhold(BGAndelArbeidsforholdDto.builder().medArbeidsgiver(arbeidsgiver)
+                .medArbeidsforholdRef(utenReferanse).medArbeidsperiodeFom(FOM.minusYears(1))).build(førstePeriode);
+        var resultat = tjeneste.fastsettRefusjonsgrunnlag(input);
+
+        var andeler = resultat.beregningsgrunnlag().getBeregningsgrunnlagPerioder().getFirst()
+            .getBeregningsgrunnlagPrStatusOgAndelList();
+        assertThat(andeler).hasSize(2);
+        assertThat(andeler).filteredOn(a -> a.getArbeidsforholdRef().orElseThrow().equals(utenReferanse))
+            .singleElement().satisfies(a -> {
+                assertThat(a.getBeregnetPrÅr()).isEqualTo(Beløp.fra(400000));
+                assertThat(a.getBgAndelArbeidsforhold().orElseThrow().getRefusjonskravPrÅr())
+                    .isEqualTo(Beløp.fra(12000));
+            });
+        assertThat(andeler).filteredOn(a -> a.getArbeidsforholdRef().orElseThrow().equals(REF))
+            .singleElement().satisfies(a -> {
+                assertThat(a.getKilde()).isEqualTo(AndelKilde.PROSESS_PERIODISERING);
+                assertThat(a.getBgAndelArbeidsforhold().orElseThrow().getRefusjonskravPrÅr())
+                    .isEqualTo(Beløp.fra(24000));
+            });
+        assertThat(resultat.fordelingGrunnlag().refusjonsandeler()).hasSize(2);
+        assertThat(førstePeriode.getBeregningsgrunnlagPrStatusOgAndelList()).singleElement()
+            .satisfies(a -> assertThat(a.getBgAndelArbeidsforhold().orElseThrow().getRefusjon()).isEmpty());
+    }
+
+    @Test
+    void skal_bevare_endring_og_opphør_med_månedsbeløp() {
         var im = inntektsmelding(virksomhet("999999999"), REF, "JP-101", "30000.25")
             .leggTil(new RefusjonDto(Beløp.fra(new BigDecimal("1234.56")), FOM.plusMonths(1)))
             .medRefusjon(Beløp.fra(new BigDecimal("30000.25")), FOM.plusMonths(2).minusDays(1))
@@ -156,11 +252,6 @@ class RefusjonsgrunnlagTjenesteTest {
         assertThat(resultat.beregningsgrunnlag()).isNotSameAs(input.getBeregningsgrunnlag());
         assertThat(resultat.beregningsgrunnlag().getBeregningsgrunnlagPerioder()).hasSize(3);
         assertThat(input.getBeregningsgrunnlag().getBeregningsgrunnlagPerioder()).hasSize(1);
-        assertThat(resultat.regelsporinger().regelsporingerGrunnlag()).singleElement().satisfies(sporing -> {
-            assertThat(sporing.regelType()).isEqualTo(BeregningsgrunnlagRegelType.PERIODISERING_REFUSJON);
-            assertThat(sporing.regelVersjon()).isNotBlank();
-            assertThat(sporing.regelInput()).doesNotContain("eksisterendePerioder", "utfallPrArbeidsgiver", "refusjonskravFrist");
-        });
     }
 
     @Test
@@ -196,45 +287,30 @@ class RefusjonsgrunnlagTjenesteTest {
     }
 
     @Test
-    void skal_spore_både_regelinput_og_resultat_fra_nare() {
-        var input = input(inntektsmelding(virksomhet("999999999"), REF, "101", "1234.56")
-            .medRefusjon(Beløp.fra(new BigDecimal("1234.56")), FOM.plusDays(10)).build());
-
-        var resultat = tjeneste.fastsettRefusjonsgrunnlag(input);
-
-        var sporing = resultat.regelsporinger().regelsporingerGrunnlag().getFirst();
-        var json = JsonMapper.builder().build().readTree(sporing.regelInput());
-        var krav = json.path("refusjonskravListe").get(0);
-        assertThat(krav.path("journalpostId").asString()).isEqualTo("101");
-        assertThat(krav.path("arbeidsforholdsinformasjon").path("arbeidsforholdId").asString()).isEqualTo(REF.getReferanse());
-        assertThat(krav.has("periode")).isFalse();
-        assertThat(krav.path("kravperioder").size()).isEqualTo(2);
-        assertThat(krav.path("kravperioder").get(0).path("refusjonPerMnd").decimalValue()).isEqualByComparingTo("1234.56");
-        assertThat(sporing.regelEvaluering()).contains("FT_44.1", "refusjonsandeler", "1234.56",
-            "journalpostId", "101", REF.getReferanse(), "2026-01-11");
-        var output = JsonMapper.builder().build().readTree(sporing.regelEvaluering()).findValues("refusjonsandeler");
-        assertThat(output).isNotEmpty().allSatisfy(andeler -> {
-            assertThat(andeler.size()).isEqualTo(1);
-            var andel = andeler.get(0);
-            assertThat(andel.path("arbeidsgiver").path("orgnr").asString()).isEqualTo("999999999");
-            assertThat(andel.has("arbeidsforholdsinformasjon")).isFalse();
-            assertThat(andel.path("internArbeidsforholdId").asString()).isEqualTo(REF.getReferanse());
-            assertThat(andel.path("journalpostId").asString()).isEqualTo("101");
-            assertThat(andel.path("refusjonKilde").asString()).isEqualTo("INNTEKTSMELDING");
-            assertThat(andel.path("refusjonskrav").size()).isEqualTo(2);
-            assertThat(andel.path("refusjonskrav").get(0).path("refusjonPrMnd").decimalValue()).isEqualByComparingTo("1234.56");
-            assertThat(andel.path("refusjonskrav").get(0).path("utfall").asString()).isEqualTo("GODKJENT");
-            assertThat(andel.path("refusjonskrav").get(0).path("journalpostId").asString()).isEqualTo("101");
-        });
-    }
-
-    @Test
-    void skal_gi_tomt_fordelingsgrunnlag_med_sporing_når_det_ikke_er_krav() {
+    void skal_gi_tomt_fordelingsgrunnlag_når_det_ikke_er_krav() {
         var resultat = tjeneste.fastsettRefusjonsgrunnlag(input());
 
         assertThat(resultat.fordelingGrunnlag().refusjonsandeler()).isEmpty();
-        assertThat(resultat.regelsporinger().regelsporingerGrunnlag()).singleElement()
-            .satisfies(s -> assertThat(s.regelEvaluering()).contains("refusjonsandeler"));
+    }
+
+    @Test
+    void skal_avvise_input_med_tomt_fordelingsgrunnlag() {
+        var input = input().medFordelingGrunnlag(new FordelingGrunnlagDto(List.of()));
+
+        assertThatThrownBy(() -> tjeneste.fastsettRefusjonsgrunnlag(input))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("Fordelingsgrunnlag skal ikke være satt ved fastsetting av refusjonsgrunnlag.");
+    }
+
+    @Test
+    void skal_avvise_input_med_fordelingsgrunnlag_som_inneholder_refusjon() {
+        var refusjonsandel = new RefusjonsandelDto(virksomhet("999999999"), REF, RefusjonKilde.INNTEKTSMELDING,
+            new JournalpostId("101"), List.of(periode(FOM, new Periode(FOM, null).getTom(), "1000")));
+        var input = input().medFordelingGrunnlag(new FordelingGrunnlagDto(List.of(refusjonsandel)));
+
+        assertThatThrownBy(() -> tjeneste.fastsettRefusjonsgrunnlag(input))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("Fordelingsgrunnlag skal ikke være satt ved fastsetting av refusjonsgrunnlag.");
     }
 
     @Test
@@ -307,7 +383,7 @@ class RefusjonsgrunnlagTjenesteTest {
     }
 
     @Test
-    void skal_returnere_uendret_bg_uten_regelkjøring_for_ytelser_uten_refusjonsperiodisering() {
+    void skal_returnere_uendret_bg_for_ytelser_uten_refusjonsperiodisering() {
         var input = input();
         var ikkeStøttet = new BeregningsgrunnlagInput(new KoblingReferanseMock(FOM, FagsakYtelseType.FRISINN),
             input.getIayGrunnlag(), null, List.of(), null).medBeregningsgrunnlagGrunnlag(input.getBeregningsgrunnlagGrunnlag());
@@ -316,13 +392,34 @@ class RefusjonsgrunnlagTjenesteTest {
 
         assertThat(resultat.beregningsgrunnlag()).isSameAs(input.getBeregningsgrunnlag());
         assertThat(resultat.fordelingGrunnlag().refusjonsandeler()).isEmpty();
-        assertThat(resultat.regelsporinger().regelsporingerGrunnlag()).isEmpty();
     }
 
-    @ParameterizedTest
-    @EnumSource(value = FagsakYtelseType.class, names = {
-        "SVANGERSKAPSPENGER", "OMSORGSPENGER", "PLEIEPENGER_SYKT_BARN", "OPPLÆRINGSPENGER", "PLEIEPENGER_NÆRSTÅENDE"})
-    void skal_bruke_gyldige_utbetalingsperioder_uten_å_gradere_månedsbeløpet(FagsakYtelseType ytelseType) {
+    @Test
+    void skal_bruke_gyldige_utbetalingsperioder_for_svangerskapspenger() {
+        sjekkGyldigeUtbetalingsperioder(FagsakYtelseType.SVANGERSKAPSPENGER);
+    }
+
+    @Test
+    void skal_bruke_gyldige_utbetalingsperioder_for_omsorgspenger() {
+        sjekkGyldigeUtbetalingsperioder(FagsakYtelseType.OMSORGSPENGER);
+    }
+
+    @Test
+    void skal_bruke_gyldige_utbetalingsperioder_for_pleiepenger_sykt_barn() {
+        sjekkGyldigeUtbetalingsperioder(FagsakYtelseType.PLEIEPENGER_SYKT_BARN);
+    }
+
+    @Test
+    void skal_bruke_gyldige_utbetalingsperioder_for_opplæringspenger() {
+        sjekkGyldigeUtbetalingsperioder(FagsakYtelseType.OPPLÆRINGSPENGER);
+    }
+
+    @Test
+    void skal_bruke_gyldige_utbetalingsperioder_for_pleiepenger_nærstående() {
+        sjekkGyldigeUtbetalingsperioder(FagsakYtelseType.PLEIEPENGER_NÆRSTÅENDE);
+    }
+
+    private void sjekkGyldigeUtbetalingsperioder(FagsakYtelseType ytelseType) {
         var arbeidsgiver = virksomhet("999999999");
         var originalInput = input(inntektsmelding(arbeidsgiver, REF, "JP-101", "1234.56").build());
         var aktivitet = new AktivitetDto(arbeidsgiver, REF, UttakArbeidType.ORDINÆRT_ARBEID);
@@ -346,9 +443,22 @@ class RefusjonsgrunnlagTjenesteTest {
         });
     }
 
-    @ParameterizedTest
-    @CsvSource({"10.82, 0", "10.83, 0", "10.84, 10.84"})
-    void skal_bevare_utbetalingsterskel_i_selvstendig_normalisering(String beløp, String forventetBeløp) {
+    @Test
+    void skal_nullstille_beløp_under_utbetalingsterskelen() {
+        sjekkUtbetalingsterskel("10.82", "0");
+    }
+
+    @Test
+    void skal_nullstille_beløp_på_utbetalingsterskelen() {
+        sjekkUtbetalingsterskel("10.83", "0");
+    }
+
+    @Test
+    void skal_bevare_beløp_over_utbetalingsterskelen() {
+        sjekkUtbetalingsterskel("10.84", "10.84");
+    }
+
+    private void sjekkUtbetalingsterskel(String beløp, String forventetBeløp) {
         var input = input(inntektsmelding(virksomhet("999999999"), REF, "101", beløp)
             .leggTil(new RefusjonDto(Beløp.fra(new BigDecimal("20")), FOM.plusDays(10))).build());
 
@@ -358,29 +468,34 @@ class RefusjonsgrunnlagTjenesteTest {
                 periode(FOM.plusDays(10), new Periode(FOM, null).getTom(), "20")));
     }
 
-    @ParameterizedTest
-    @CsvSource({"true, 10", "false, 0"})
-    void skal_kun_bruke_overstyrt_startdato_for_matchende_arbeidsforhold(boolean matchendeReferanse, int dagerUtenRefusjon) {
+    @Test
+    void skal_ikke_bruke_overstyrt_startdato_for_matchende_arbeidsforhold() {
         var arbeidsgiver = virksomhet("999999999");
         var originalInput = input(inntektsmelding(arbeidsgiver, REF, "101", "1000").build());
-        var overstyrtRef = matchendeReferanse ? REF : InternArbeidsforholdRefDto.namedRef("annet");
         var overstyringer = BeregningRefusjonOverstyringerDto.builder()
             .leggTilOverstyring(new BeregningRefusjonOverstyringDto(arbeidsgiver, null,
-                List.of(new BeregningRefusjonPeriodeDto(overstyrtRef, FOM.plusDays(10))), null)).build();
+                List.of(new BeregningRefusjonPeriodeDto(REF, FOM.plusDays(10))), null)).build();
         var grunnlag = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(Optional.of(originalInput.getBeregningsgrunnlagGrunnlag()))
             .medRefusjonOverstyring(overstyringer).build(BeregningsgrunnlagTilstand.FORESLÅTT);
         var input = originalInput.medBeregningsgrunnlagGrunnlag(grunnlag);
 
-        var perioder = tjeneste.fastsettRefusjonsgrunnlag(input).fordelingGrunnlag().refusjonsandeler()
-            .getFirst().refusjonsperioder();
+        assertThat(tjeneste.fastsettRefusjonsgrunnlag(input).fordelingGrunnlag().refusjonsandeler())
+            .singleElement().satisfies(andel -> assertThat(andel.refusjonsperioder()).containsExactly(
+                periode(FOM, new Periode(FOM, null).getTom(), "1000")));
+    }
 
-        assertThat(perioder.getLast()).isEqualTo(periode(FOM.plusDays(dagerUtenRefusjon),
-            new Periode(FOM, null).getTom(), "1000"));
-        if (matchendeReferanse) {
-            assertThat(perioder).containsExactly(periode(FOM, FOM.plusDays(9), "0"), perioder.getLast());
-        } else {
-            assertThat(perioder).hasSize(1);
-        }
+    @Test
+    void skal_ikke_bruke_senere_permisjonsstart_for_refusjonskrav() {
+        var arbeidsgiver = virksomhet("999999999");
+        var startdatoPermisjon = FOM.plusDays(10);
+        var inntektsmelding = inntektsmelding(arbeidsgiver, REF, "101", "1000")
+            .medStartDatoPermisjon(startdatoPermisjon)
+            .medInntektsmeldingType(InntektsmeldingType.REFUSJONSKRAV)
+            .build();
+
+        assertThat(tjeneste.fastsettRefusjonsgrunnlag(input(inntektsmelding)).fordelingGrunnlag().refusjonsandeler())
+            .singleElement().satisfies(andel -> assertThat(andel.refusjonsperioder()).containsExactly(
+                periode(FOM, new Periode(FOM, null).getTom(), "1000")));
     }
 
     @Test
@@ -405,35 +520,6 @@ class RefusjonsgrunnlagTjenesteTest {
                 periode(FOM.plusDays(11), FOM.plusDays(20), "0"),
                 periode(FOM.plusDays(21), FOM.plusDays(25), "3000"),
                 periode(FOM.plusDays(26), new Periode(FOM, null).getTom(), "0")));
-    }
-
-    @ParameterizedTest
-    @CsvSource({"FORELDREPENGER, true", "FORELDREPENGER, false", "PLEIEPENGER_SYKT_BARN, true", "PLEIEPENGER_SYKT_BARN, false"})
-    void skal_bevare_toggle_og_konkatinere_refusjonssporing_med_gradering_eller_utbetalingsgrad(FagsakYtelseType ytelseType,
-                                                                                            boolean nyRefusjon) {
-        var originalInput = input();
-        var ytelsegrunnlag = ytelseType == FagsakYtelseType.FORELDREPENGER
-            ? originalInput.getYtelsespesifiktGrunnlag() : new SvangerskapspengerGrunnlag(List.of());
-        var grunnlagInput = new BeregningsgrunnlagInput(new KoblingReferanseMock(FOM, ytelseType),
-            originalInput.getIayGrunnlag(), null, List.of(), ytelsegrunnlag)
-            .medBeregningsgrunnlagGrunnlag(originalInput.getBeregningsgrunnlagGrunnlag());
-        grunnlagInput.leggTilToggle(BeregningsgrunnlagInput.REFUSJON_TOGGLE, nyRefusjon);
-        var input = new VurderRefusjonBeregningsgrunnlagInput(new StegProsesseringInput(grunnlagInput, BeregningsgrunnlagTilstand.FORESLÅTT));
-
-        var resultat = new BeregningsgrunnlagTjeneste().vurderRefusjonskravForBeregninggrunnlag(input);
-
-        var sporing = resultat.getRegelSporingAggregat().orElseThrow().regelsporingerGrunnlag();
-        assertThat(sporing).hasSize(2);
-        assertThat(sporing.getFirst().regelType()).isEqualTo(BeregningsgrunnlagRegelType.PERIODISERING_REFUSJON);
-        if (nyRefusjon) {
-            assertThat(sporing.getFirst().regelEvaluering()).contains("FT_44.1");
-            assertThat(resultat.getFordelingGrunnlag().orElseThrow().refusjonsandeler()).isEmpty();
-        } else {
-            assertThat(sporing.getFirst().regelEvaluering()).doesNotContain("FT_44.1");
-            assertThat(resultat.getFordelingGrunnlag()).isEmpty();
-        }
-        assertThat(sporing.getLast().regelType()).isEqualTo(ytelseType == FagsakYtelseType.FORELDREPENGER
-            ? BeregningsgrunnlagRegelType.PERIODISERING_GRADERING : BeregningsgrunnlagRegelType.PERIODISERING_UTBETALINGSGRAD);
     }
 
     private static BeregningsgrunnlagInput input(InntektsmeldingDto... inntektsmeldinger) {

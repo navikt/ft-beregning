@@ -68,6 +68,11 @@ final class RefusjonsgrunnlagGyldigePerioder {
             .orElse(skjæringstidspunkt);
     }
 
+    /**
+     * FORELDREPENGER: Alle perioder fra startdato til tidenes ende er gyldige perioder for refusjon
+     * ALLE ANDRE YTELSER: Kun perioder der det er søkt om ytelse er gyldige peridoer
+     * @return
+     */
     static List<Intervall> finnGyldigePerioder(BeregningsgrunnlagInput input, InntektsmeldingDto im,
                                               LocalDate startdato, List<AktivitetsAvtaleDto> ansattperioder) {
         if (im.getRefusjonOpphører() != null && im.getRefusjonOpphører().isBefore(startdato)) {

@@ -16,6 +16,9 @@ import no.nav.folketrygdloven.regelmodelloversetter.KalkulusRegler;
 public class RefusjonsgrunnlagTjeneste {
 
     public RefusjonsgrunnlagResultat fastsettRefusjonsgrunnlag(BeregningsgrunnlagInput input) {
+        if (input.getFordelingGrunnlag().isPresent()) {
+            throw new IllegalArgumentException("Fordelingsgrunnlag skal ikke være satt ved fastsetting av refusjonsgrunnlag.");
+        }
         var modell = MapRefusjonsgrunnlagFraVLTilRegel.map(input);
         if (modell.isEmpty()) {
             return new RefusjonsgrunnlagResultat(input.getBeregningsgrunnlag(), new FordelingGrunnlagDto(List.of()),

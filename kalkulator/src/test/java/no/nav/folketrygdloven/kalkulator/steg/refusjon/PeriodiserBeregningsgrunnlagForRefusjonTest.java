@@ -133,6 +133,28 @@ class PeriodiserBeregningsgrunnlagForRefusjonTest {
     }
 
     @Test
+    void skal_skille_krav_med_og_uten_referanse_uavhengig_av_rekkefølge() {
+        var bg = bg();
+        var p = BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(FOM, null).build(bg);
+        var utenReferanse = InternArbeidsforholdRefDto.nullRef();
+        leggTilAndel(p, AG, utenReferanse, 1L, 100000);
+        var grunnlag = new FordelingGrunnlagDto(List.of(
+            refusjonsandel(AG, REF, periode(FOM, null, "2000", RefusjonUtfall.INNVILGET)),
+            refusjonsandel(AG, utenReferanse, periode(FOM, null, "1000", RefusjonUtfall.INNVILGET))));
+
+        var resultat = PeriodiserBeregningsgrunnlagForRefusjon.periodiser(input(bg), grunnlag);
+
+        var andeler = resultat.getBeregningsgrunnlagPerioder().getFirst().getBeregningsgrunnlagPrStatusOgAndelList();
+        assertThat(andeler).hasSize(2);
+        assertThat(andeler).filteredOn(a -> a.getArbeidsforholdRef().orElseThrow().equals(utenReferanse))
+            .singleElement().satisfies(a -> assertThat(a.getBgAndelArbeidsforhold().orElseThrow().getRefusjonskravPrÅr())
+                .isEqualTo(Beløp.fra(12000)));
+        assertThat(andeler).filteredOn(a -> a.getArbeidsforholdRef().orElseThrow().equals(REF))
+            .singleElement().satisfies(a -> assertThat(a.getBgAndelArbeidsforhold().orElseThrow().getRefusjonskravPrÅr())
+                .isEqualTo(Beløp.fra(24000)));
+    }
+
+    @Test
     void skal_opprette_ny_andel_kun_med_positivt_krav_og_bruke_faktisk_arbeidsperiode() {
         var bg = bg();
         BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(FOM, null).build(bg);
@@ -201,7 +223,7 @@ class PeriodiserBeregningsgrunnlagForRefusjonTest {
         assertThatThrownBy(() -> PeriodiserBeregningsgrunnlagForRefusjon.periodiser(input(bg), new FordelingGrunnlagDto(List.of(
             refusjonsandel(AG, REF, periode(FOM, null, "1000", RefusjonUtfall.INNVILGET)),
             refusjonsandel(AG, null, periode(FOM, null, "2000", RefusjonUtfall.INNVILGET))))))
-            .isInstanceOf(IllegalArgumentException.class).hasMessageContaining("Overlappende");
+            .isInstanceOf(IllegalArgumentException.class).hasMessage("Overlappende refusjonsperioder treffer samme BG-andel.");
         var tomtBg = bg();
         BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(FOM, null).build(tomtBg);
         var annenKilde = new RefusjonsandelDto(AG, REF, RefusjonKilde.INNTEKTSMELDING,

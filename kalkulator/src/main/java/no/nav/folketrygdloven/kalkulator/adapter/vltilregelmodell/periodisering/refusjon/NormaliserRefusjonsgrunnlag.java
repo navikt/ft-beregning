@@ -8,20 +8,15 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.TreeMap;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.refusjon.RefusjonsgrunnlagModell.Kravperioder;
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningRefusjonOverstyringDto;
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningRefusjonOverstyringerDto;
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningRefusjonPeriodeDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektsmeldingDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.RefusjonDto;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
-import no.nav.folketrygdloven.kalkulus.kodeverk.InntektsmeldingType;
 import no.nav.fpsak.tidsserie.LocalDateSegment;
 import no.nav.fpsak.tidsserie.LocalDateTimeline;
 import no.nav.fpsak.tidsserie.StandardCombinators;
@@ -33,13 +28,11 @@ final class NormaliserRefusjonsgrunnlag {
     private NormaliserRefusjonsgrunnlag() {
     }
 
-    static List<Kravperioder> periodiser(InntektsmeldingDto im, LocalDate startdato,
-                                       Optional<BeregningRefusjonOverstyringerDto> overstyringer,
-                                       List<Intervall> gyldigePerioder) {
+    static List<Kravperioder> periodiser(InntektsmeldingDto im, LocalDate startdato, List<Intervall> gyldigePerioder) {
         if (gyldigePerioder.isEmpty()) {
             return List.of();
         }
-        var endringer = finnEndringer(im, startdato, overstyringer, gyldigePerioder);
+        var endringer = finnEndringer(im, startdato, gyldigePerioder);
         var tidslinje = lagTidslinje(endringer);
         var gyldigTidslinje = new LocalDateTimeline<>(gyldigePerioder.stream()
             .map(p -> LocalDateSegment.emptySegment(p.getFomDato(), p.getTomDato())).toList());
@@ -52,26 +45,14 @@ final class NormaliserRefusjonsgrunnlag {
     }
 
     private static Map<LocalDate, Beløp> finnEndringer(InntektsmeldingDto im, LocalDate startdato,
-                                                     Optional<BeregningRefusjonOverstyringerDto> overstyringer,
                                                      List<Intervall> gyldigePerioder) {
-        var overstyrtStartdato = overstyringer.map(BeregningRefusjonOverstyringerDto::getRefusjonOverstyringer)
-            .orElse(List.of()).stream()
-            .filter(o -> o.getArbeidsgiver().equals(im.getArbeidsgiver()))
-            .findFirst()
-            .map(BeregningRefusjonOverstyringDto::getRefusjonPerioder).orElse(List.of()).stream()
-            .filter(p -> Objects.equals(p.getArbeidsforholdRef().getReferanse(), im.getArbeidsforholdRef().getReferanse()))
-            .findFirst().map(BeregningRefusjonPeriodeDto::getStartdatoRefusjon);
-        var gjeldendeStartdato = overstyrtStartdato.orElseGet(() ->
-            im.getInntektsmeldingType().equals(InntektsmeldingType.REFUSJONSKRAV)
-                ? im.getStartDatoPermisjon().filter(dato -> dato.isAfter(startdato)).orElse(startdato)
-                : startdato);
         Map<LocalDate, Beløp> endringer = new TreeMap<>();
-        endringer.put(gjeldendeStartdato, Optional.ofNullable(im.getRefusjonBeløpPerMnd()).orElse(Beløp.ZERO));
+        endringer.put(startdato, Optional.ofNullable(im.getRefusjonBeløpPerMnd()).orElse(Beløp.ZERO));
         im.getEndringerRefusjon().stream().sorted(Comparator.comparing(RefusjonDto::getFom))
             .forEach(endring -> {
                 var fom = finnEndringsdato(gyldigePerioder, endring.getFom());
-                if (fom.isBefore(gjeldendeStartdato)) {
-                    endringer.put(gjeldendeStartdato, endring.getRefusjonsbeløp());
+                if (fom.isBefore(startdato)) {
+                    endringer.put(startdato, endring.getRefusjonsbeløp());
                 } else if (fom.isBefore(TIDENES_ENDE)) {
                     endringer.put(fom, endring.getRefusjonsbeløp());
                 }

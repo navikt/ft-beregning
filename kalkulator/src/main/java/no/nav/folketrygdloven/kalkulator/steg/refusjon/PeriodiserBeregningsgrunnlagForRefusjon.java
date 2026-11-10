@@ -58,7 +58,7 @@ public final class PeriodiserBeregningsgrunnlagForRefusjon {
             var refusjonstidslinje = lagTidslinje(refusjonsandel);
             if (refusjonstidslinjerPerAndel.entrySet().stream()
                 .anyMatch(eksisterende -> eksisterende.getKey().arbeidsgiver().equals(refusjonsandel.arbeidsgiver())
-                    && eksisterende.getKey().arbeidsforholdRef().gjelderFor(refusjonsandel.arbeidsforholdRef())
+                    && eksisterende.getKey().arbeidsforholdRef().equals(refusjonsandel.arbeidsforholdRef())
                     && !eksisterende.getValue().intersection(refusjonstidslinje).isEmpty())) {
                 throw new IllegalArgumentException("Overlappende refusjonsperioder for samme arbeidsforhold.");
             }
