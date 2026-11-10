@@ -43,13 +43,14 @@ public final class PeriodiserBeregningsgrunnlagForRefusjon {
     public static BeregningsgrunnlagDto periodiser(BeregningsgrunnlagInput input, FordelingGrunnlagDto fordelingGrunnlag) {
         var refusjonstidslinjerPerAndel = lagTidslinjer(fordelingGrunnlag);
         var periodeÅrsakerPerDato = finnPeriodeÅrsaker(refusjonstidslinjerPerAndel);
-        var ekisterendeBeregningsgrunnlag = input.getBeregningsgrunnlag();
-        var nyttPeriodisertBeregningsgrunnlag = BeregningsgrunnlagDto.builder(ekisterendeBeregningsgrunnlag).fjernAllePerioder().build();
+        var eksisterendeBeregningsgrunnlag = input.getBeregningsgrunnlag();
+        var grunnlagBuilder = BeregningsgrunnlagDto.builder(eksisterendeBeregningsgrunnlag).fjernAllePerioder();
 
-        ekisterendeBeregningsgrunnlag.getBeregningsgrunnlagPerioder()
-            .forEach(opprinneligPeriode -> periodiserPeriode(input, nyttPeriodisertBeregningsgrunnlag, opprinneligPeriode,
-                refusjonstidslinjerPerAndel, periodeÅrsakerPerDato));
-        return nyttPeriodisertBeregningsgrunnlag;
+        eksisterendeBeregningsgrunnlag.getBeregningsgrunnlagPerioder().stream()
+            .flatMap(periode -> periodiserPeriode(input, periode, refusjonstidslinjerPerAndel, periodeÅrsakerPerDato).stream())
+            .forEach(grunnlagBuilder::leggTilBeregningsgrunnlagPeriode);
+
+        return grunnlagBuilder.build();
     }
 
     private static Map<RefusjonsandelDto, LocalDateTimeline<RefusjonsperiodeDto>> lagTidslinjer(FordelingGrunnlagDto fordelingGrunnlag) {
@@ -103,32 +104,32 @@ public final class PeriodiserBeregningsgrunnlagForRefusjon {
         });
     }
 
-    private static void periodiserPeriode(BeregningsgrunnlagInput input,
-                                          BeregningsgrunnlagDto periodisertBeregningsgrunnlag,
-                                          BeregningsgrunnlagPeriodeDto opprinneligPeriode,
-                                          Map<RefusjonsandelDto, LocalDateTimeline<RefusjonsperiodeDto>> refusjonstidslinjerPerAndel,
-                                          Map<LocalDate, List<PeriodeÅrsak>> periodeÅrsakerPerDato) {
+    private static List<BeregningsgrunnlagPeriodeDto.Builder> periodiserPeriode(
+        BeregningsgrunnlagInput input,
+        BeregningsgrunnlagPeriodeDto opprinneligPeriode,
+        Map<RefusjonsandelDto, LocalDateTimeline<RefusjonsperiodeDto>> refusjonstidslinjerPerAndel,
+        Map<LocalDate, List<PeriodeÅrsak>> periodeÅrsakerPerDato) {
         var refusjonsandelerPerAndelsnummer = finnMatchendeAndeler(opprinneligPeriode, refusjonstidslinjerPerAndel);
         var periodestartdatoer = new TreeSet<LocalDate>();
         periodestartdatoer.add(opprinneligPeriode.getBeregningsgrunnlagPeriodeFom());
         periodeÅrsakerPerDato.keySet().stream().filter(opprinneligPeriode.getPeriode()::inkluderer).forEach(periodestartdatoer::add);
-        periodestartdatoer.forEach(periodeFom -> {
+        return periodestartdatoer.stream().map(periodeFom -> {
             var nestePeriodestartdato = periodestartdatoer.higher(periodeFom);
             var periodeTom = nestePeriodestartdato == null
                 ? opprinneligPeriode.getBeregningsgrunnlagPeriodeTom() : nestePeriodestartdato.minusDays(1);
-            leggTilPeriode(input, periodisertBeregningsgrunnlag, opprinneligPeriode, periodeFom, periodeTom,
+            return lagPeriode(input, opprinneligPeriode, periodeFom, periodeTom,
                 refusjonsandelerPerAndelsnummer, refusjonstidslinjerPerAndel, periodeÅrsakerPerDato);
-        });
+        }).toList();
     }
 
-    private static void leggTilPeriode(BeregningsgrunnlagInput input, BeregningsgrunnlagDto periodisertBeregningsgrunnlag,
-                                       BeregningsgrunnlagPeriodeDto opprinneligPeriode, LocalDate periodeFom, LocalDate periodeTom,
-                                       Map<Long, List<RefusjonsandelDto>> refusjonsandelerPerAndelsnummer,
-                                       Map<RefusjonsandelDto, LocalDateTimeline<RefusjonsperiodeDto>> refusjonstidslinjerPerAndel,
-                                       Map<LocalDate, List<PeriodeÅrsak>> periodeÅrsakerPerDato) {
+    private static BeregningsgrunnlagPeriodeDto.Builder lagPeriode(
+        BeregningsgrunnlagInput input, BeregningsgrunnlagPeriodeDto opprinneligPeriode, LocalDate periodeFom, LocalDate periodeTom,
+        Map<Long, List<RefusjonsandelDto>> refusjonsandelerPerAndelsnummer,
+        Map<RefusjonsandelDto, LocalDateTimeline<RefusjonsperiodeDto>> refusjonstidslinjerPerAndel,
+        Map<LocalDate, List<PeriodeÅrsak>> periodeÅrsakerPerDato) {
         var periodeBuilder = BeregningsgrunnlagPeriodeDto.kopier(opprinneligPeriode).fjernAlleBeregningsgrunnlagPrStatusOgAndeler()
             .medBeregningsgrunnlagPeriode(periodeFom, periodeTom);
-        if (!periodeFom.equals(periodisertBeregningsgrunnlag.getSkjæringstidspunkt())) {
+        if (!periodeFom.equals(input.getBeregningsgrunnlag().getSkjæringstidspunkt())) {
             periodeBuilder.leggTilPeriodeÅrsaker(periodeÅrsakerPerDato.getOrDefault(periodeFom, List.of()));
         }
         opprinneligPeriode.getBeregningsgrunnlagPrStatusOgAndelList().stream()
@@ -140,7 +141,7 @@ public final class PeriodiserBeregningsgrunnlagForRefusjon {
             .forEach(refusjonsandel -> leggTilNyAndel(input, periodeBuilder, refusjonsandel, refusjonstidslinjerPerAndel, periodeFom));
 
         // Andelsbuilderen summerer brutto på nytt. Periodens øvrige beregningsdata skal beholdes.
-        periodeBuilder.medBruttoPrÅr(opprinneligPeriode.getBruttoPrÅr()).build(periodisertBeregningsgrunnlag);
+        return periodeBuilder.medBruttoPrÅr(opprinneligPeriode.getBruttoPrÅr());
     }
 
     private static BeregningsgrunnlagPrStatusOgAndelDto.Builder kopierAndelMedRefusjon(
