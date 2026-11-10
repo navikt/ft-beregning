@@ -46,6 +46,18 @@ class PeriodiserBeregningsgrunnlagForRefusjonTest {
     private static final InternArbeidsforholdRefDto REF = InternArbeidsforholdRefDto.namedRef("første");
 
     @Test
+    void skal_avvise_manglende_beregningsgrunnlag() {
+        var originalInput = input(bg());
+        var inputUtenBeregningsgrunnlag = new BeregningsgrunnlagInput(originalInput.getKoblingReferanse(),
+            originalInput.getIayGrunnlag(), null, List.of(), originalInput.getYtelsespesifiktGrunnlag());
+        var tomtFordelingsgrunnlag = new FordelingGrunnlagDto(List.of());
+
+        assertThatThrownBy(() -> PeriodiserBeregningsgrunnlagForRefusjon.periodiser(inputUtenBeregningsgrunnlag, tomtFordelingsgrunnlag))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("Beregningsgrunnlag må være satt.");
+    }
+
+    @Test
     void skal_bevare_original_splitt_og_data_med_endring_i_april_og_nullstille_fra_mai_uten_mutasjon() {
         var bg = bg();
         var første = BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(FOM, FOM.plusMonths(2).minusDays(1)).build(bg);
@@ -220,17 +232,22 @@ class PeriodiserBeregningsgrunnlagForRefusjonTest {
         assertThat(af.getRefusjon().orElseThrow().getRefusjonskravFristUtfall()).isEqualTo(Utfall.UNDERKJENT);
         assertThat(af.getHjemmelForRefusjonskravfrist()).isEqualTo(Hjemmel.F_22_13_6);
         assertThat(nytt.getPeriodeÅrsaker()).containsExactly(PeriodeÅrsak.REFUSJON_AVSLÅTT);
-        assertThatThrownBy(() -> PeriodiserBeregningsgrunnlagForRefusjon.periodiser(input(bg), new FordelingGrunnlagDto(List.of(
+        var overlappendeInput = input(bg);
+        var overlappendeFordelingsgrunnlag = new FordelingGrunnlagDto(List.of(
             refusjonsandel(AG, REF, periode(FOM, null, "1000", RefusjonUtfall.INNVILGET)),
-            refusjonsandel(AG, null, periode(FOM, null, "2000", RefusjonUtfall.INNVILGET))))))
+            refusjonsandel(AG, null, periode(FOM, null, "2000", RefusjonUtfall.INNVILGET))));
+        assertThatThrownBy(() -> PeriodiserBeregningsgrunnlagForRefusjon.periodiser(overlappendeInput, overlappendeFordelingsgrunnlag))
             .isInstanceOf(IllegalArgumentException.class).hasMessage("Overlappende refusjonsperioder treffer samme BG-andel.");
         var tomtBg = bg();
         BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(FOM, null).build(tomtBg);
         var annenKilde = new RefusjonsandelDto(AG, REF, RefusjonKilde.INNTEKTSMELDING,
             new no.nav.folketrygdloven.kalkulus.felles.JournalpostId("101"),
             List.of(periode(FOM, null, "1000", RefusjonUtfall.INNVILGET)));
-        assertThatThrownBy(() -> PeriodiserBeregningsgrunnlagForRefusjon.periodiser(input(tomtBg), new FordelingGrunnlagDto(List.of(
-            annenKilde, refusjonsandel(AG, REF, periode(FOM, null, "2000", RefusjonUtfall.INNVILGET))))))
+        var tomtBgInput = input(tomtBg);
+        var overlappendeFordelingsgrunnlagFraUlikeKilder = new FordelingGrunnlagDto(List.of(
+            annenKilde, refusjonsandel(AG, REF, periode(FOM, null, "2000", RefusjonUtfall.INNVILGET))));
+        assertThatThrownBy(() -> PeriodiserBeregningsgrunnlagForRefusjon.periodiser(tomtBgInput,
+            overlappendeFordelingsgrunnlagFraUlikeKilder))
             .isInstanceOf(IllegalArgumentException.class).hasMessageContaining("Overlappende");
     }
 

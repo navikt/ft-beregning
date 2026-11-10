@@ -317,10 +317,11 @@ class RefusjonsgrunnlagTjenesteTest {
     void skal_avvise_duplikate_arbeidsforhold_uavhengig_av_journalpost_startdato_og_perioder() {
         var arbeidsforhold = new Arbeidsforholdsinformasjon(Arbeidsgiver.medOrgnr("999999999"), REF.getReferanse(), null);
         var sammeArbeidsforhold = new Arbeidsforholdsinformasjon(Arbeidsgiver.medOrgnr("999999999"), REF.getReferanse(), FOM);
-
-        assertThatThrownBy(() -> new RefusjonsgrunnlagModell(List.of(
+        var duplikateKrav = List.of(
             krav(arbeidsforhold, "101", kravperiode(FOM, FOM.plusDays(9), "1000")),
-            krav(sammeArbeidsforhold, "102", kravperiode(FOM.plusDays(10), null, "2000"))), FOM))
+            krav(sammeArbeidsforhold, "102", kravperiode(FOM.plusDays(10), null, "2000")));
+
+        assertThatThrownBy(() -> new RefusjonsgrunnlagModell(duplikateKrav, FOM))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("Flere refusjonskrav med samme arbeidsgiver og arbeidsforholdsreferanse.");
     }
@@ -329,10 +330,11 @@ class RefusjonsgrunnlagTjenesteTest {
     void skal_avvise_duplikater_uten_arbeidsforholdsreferanse() {
         var arbeidsforhold = new Arbeidsforholdsinformasjon(Arbeidsgiver.medOrgnr("999999999"), null, null);
         var sammeArbeidsforhold = new Arbeidsforholdsinformasjon(Arbeidsgiver.medOrgnr("999999999"), null, FOM);
-
-        assertThatThrownBy(() -> new RefusjonsgrunnlagModell(List.of(
+        var duplikateKrav = List.of(
             krav(arbeidsforhold, "101", kravperiode(FOM, null, "1000")),
-            krav(sammeArbeidsforhold, "102", kravperiode(FOM, null, "2000"))), FOM))
+            krav(sammeArbeidsforhold, "102", kravperiode(FOM, null, "2000")));
+
+        assertThatThrownBy(() -> new RefusjonsgrunnlagModell(duplikateKrav, FOM))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessageContaining("samme arbeidsgiver og arbeidsforholdsreferanse");
     }
