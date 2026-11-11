@@ -27,8 +27,15 @@ import no.nav.fpsak.tidsserie.LocalDateInterval;
 
 public class MapBeregningAktiviteterFraVLTilRegelFelles implements MapBeregningAktiviteterFraVLTilRegel {
 
+    /**
+     * Når togglen er aktiv, brukes opptjeningsaktivitetens periode uten ny justering av tom-dato for permisjon.
+     * Togglen er av som standard, slik at konsumenter som ikke tar den i bruk beholder permisjonsjusteringen.
+     */
+    private static final String BRUK_OPPTJENINGSPERIODE_TOGGLE = "beregningsaktiviteter.bruk.opptjeningsperiode";
+
     public AktivitetStatusModell mapForSkjæringstidspunkt(FastsettBeregningsaktiviteterInput input) {
         var opptjeningSkjæringstidspunkt = input.getSkjæringstidspunktOpptjening();
+        var brukOpptjeningsperiode = input.isEnabled(BRUK_OPPTJENINGSPERIODE_TOGGLE, false);
 
         var modell = new AktivitetStatusModell();
         modell.setSkjæringstidspunktForOpptjening(opptjeningSkjæringstidspunkt);
@@ -56,7 +63,8 @@ public class MapBeregningAktiviteterFraVLTilRegelFelles implements MapBeregningA
                                     opptjeningsperiode,
                                     relevanteAktiviteter,
                                     input.getSkjæringstidspunktOpptjening(),
-                                    permisjonFilter)
+                                    permisjonFilter,
+                                    brukOpptjeningsperiode)
                                     .stream()
                     ).collect(Collectors.toList());
             aktivePerioder.forEach(modell::leggTilEllerOppdaterAktivPeriode);
@@ -69,7 +77,8 @@ public class MapBeregningAktiviteterFraVLTilRegelFelles implements MapBeregningA
                                                    OpptjeningAktiviteterDto.OpptjeningPeriodeDto opptjeningsperiode,
                                                    Collection<OpptjeningAktiviteterDto.OpptjeningPeriodeDto> relevanteAktiviteter,
                                                    LocalDate skjæringstidspunktOpptjening,
-                                                   PermisjonFilter permisjonFilter) {
+                                                   PermisjonFilter permisjonFilter,
+                                                   boolean brukOpptjeningsperiode) {
         var aktivitetType = MapOpptjeningAktivitetTypeFraVLTilRegel.map(opptjeningsperiode.getOpptjeningAktivitetType());
         var gjeldendePeriode = opptjeningsperiode.getPeriode();
         if (Aktivitet.FRILANSINNTEKT.equals(aktivitetType)) {
@@ -77,7 +86,9 @@ public class MapBeregningAktiviteterFraVLTilRegelFelles implements MapBeregningA
                     Periode.of(gjeldendePeriode.getFomDato(), gjeldendePeriode.getTomDato())));
         } else if (Aktivitet.ARBEIDSTAKERINNTEKT.equals(aktivitetType)) {
             var arbeidsgiver = opptjeningsperiode.getArbeidsgiver().orElseThrow(() -> new IllegalStateException("Forventer arbeidsgiver"));
-            var tomDato = finnTomdatoTaHensynTilPermisjon(opptjeningsperiode, skjæringstidspunktOpptjening, arbeidsgiver, permisjonFilter);
+            var tomDato = brukOpptjeningsperiode
+                    ? gjeldendePeriode.getTomDato()
+                    : finnTomdatoTaHensynTilPermisjon(opptjeningsperiode, skjæringstidspunktOpptjening, arbeidsgiver, permisjonFilter);
             if (!tomDato.isBefore(gjeldendePeriode.getFomDato())) {
                 return Optional.of(lagAktivPeriodeForArbeidstaker(inntektsmeldinger,
                         Periode.of(gjeldendePeriode.getFomDato(), tomDato),
