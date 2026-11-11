@@ -12,6 +12,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Aktivitet;
 import no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.Periode;
@@ -46,6 +48,7 @@ import no.nav.folketrygdloven.kalkulus.typer.AktørId;
 import no.nav.folketrygdloven.skjæringstidspunkt.regelmodell.AktivitetStatusModell;
 
 class MapBeregningAktiviteterFraVLTilRegelFellesTest {
+    private static final String BRUK_OPPTJENINGSPERIODE_TOGGLE = "beregningsaktiviteter.bruk.opptjeningsperiode";
     private static final String ORGNR = "974242931";
     private static final String ORGNR2 = "999999999";
     private static final AktørId aktørId = AktørId.dummy();
@@ -114,6 +117,42 @@ class MapBeregningAktiviteterFraVLTilRegelFellesTest {
         assertThat(aktivitet.getArbeidsforhold().getOrgnr()).isEqualTo(ARBEIDSGIVER_ORGNR);
         assertThat(aktivitet.getArbeidsforhold().getArbeidsforholdId()).isNull();
         assertThat(aktivitet.getPeriode().getTom()).isEqualTo(permisjonsPeriode.getFomDato().minusDays(1));
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = {false, true})
+    void skal_velge_opptjeningsperiode_eller_permisjonsjustert_periode(boolean brukOpptjeningsperiode) {
+        var ansettelsesDato = SKJÆRINGSTIDSPUNKT.minusYears(1);
+        var permisjonsPeriode = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT.minusMonths(1), SKJÆRINGSTIDSPUNKT.plusDays(1));
+        var permisjonDtoBuilders = List.of(PermisjonDtoBuilder.ny().medPeriode(permisjonsPeriode).medProsentsats(Stillingsprosent.HUNDRED)
+                .medPermisjonsbeskrivelseType(PermisjonsbeskrivelseType.ANNEN_PERMISJON_LOVFESTET));
+        var iayGrunnlagBuilder = lagIAY(ansettelsesDato, ARBEIDSFORHOLD_ID, permisjonDtoBuilders);
+        var opptjeningAktiviteterDto = lagOpptjeningsAktivitet(ansettelsesDato, ARBEIDSFORHOLD_ID);
+
+        var aktivitetStatusModell = mapForSkjæringstidspunkt(iayGrunnlagBuilder, opptjeningAktiviteterDto, brukOpptjeningsperiode);
+
+        var forventetTom = brukOpptjeningsperiode ? TIDENES_ENDE : permisjonsPeriode.getFomDato().minusDays(1);
+        assertAktivPeriode(aktivitetStatusModell, ARBEIDSGIVER_ORGNR, ansettelsesDato, forventetTom, ARBEIDSFORHOLD_ID.getReferanse());
+    }
+
+    @Test
+    void skal_beholde_opptjeningsperiodens_sluttdato_for_avkortet_periode_med_permisjon() {
+        var ansettelsesDato = SKJÆRINGSTIDSPUNKT.minusYears(1);
+        var sluttdato = SKJÆRINGSTIDSPUNKT.minusMonths(1).minusDays(16);
+        var permisjonsPeriode = Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT.minusMonths(1), SKJÆRINGSTIDSPUNKT.plusDays(1));
+        var permisjonDtoBuilders = List.of(PermisjonDtoBuilder.ny().medPeriode(permisjonsPeriode).medProsentsats(Stillingsprosent.HUNDRED)
+                .medPermisjonsbeskrivelseType(PermisjonsbeskrivelseType.ANNEN_PERMISJON_LOVFESTET));
+        var iayGrunnlagBuilder = lagIAY(ansettelsesDato, ARBEIDSFORHOLD_ID, permisjonDtoBuilders);
+        var opptjeningAktiviteterDto = new OpptjeningAktiviteterDto(List.of(OpptjeningAktiviteterDto.nyPeriode(
+                OpptjeningAktivitetType.ARBEID,
+                Intervall.fraOgMedTilOgMed(ansettelsesDato, sluttdato),
+                ARBEIDSGIVER_ORGNR,
+                null,
+                ARBEIDSFORHOLD_ID)));
+
+        var aktivitetStatusModell = mapForSkjæringstidspunkt(iayGrunnlagBuilder, opptjeningAktiviteterDto, true);
+
+        assertAktivPeriode(aktivitetStatusModell, ARBEIDSGIVER_ORGNR, ansettelsesDato, sluttdato, ARBEIDSFORHOLD_ID.getReferanse());
     }
 
     @Test
@@ -848,7 +887,16 @@ class MapBeregningAktiviteterFraVLTilRegelFellesTest {
 
 
     private AktivitetStatusModell mapForSkjæringstidspunkt(InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlagBuilder, OpptjeningAktiviteterDto opptjeningAktiviteterDto) {
+        return mapForSkjæringstidspunkt(iayGrunnlagBuilder, opptjeningAktiviteterDto, null);
+    }
+
+    private AktivitetStatusModell mapForSkjæringstidspunkt(InntektArbeidYtelseGrunnlagDtoBuilder iayGrunnlagBuilder,
+                                                           OpptjeningAktiviteterDto opptjeningAktiviteterDto,
+                                                           Boolean brukOpptjeningsperiode) {
         var beregningsgrunnlaginput = new BeregningsgrunnlagInput(KOBLING_REFERANSE, iayGrunnlagBuilder.build(), opptjeningAktiviteterDto, null, null);
+        if (brukOpptjeningsperiode != null) {
+            beregningsgrunnlaginput.leggTilToggle(BRUK_OPPTJENINGSPERIODE_TOGGLE, brukOpptjeningsperiode);
+        }
         var stegInput = new StegProsesseringInput(beregningsgrunnlaginput, BeregningsgrunnlagTilstand.OPPRETTET);
         var input = new FastsettBeregningsaktiviteterInput(stegInput);
         return mapper.mapForSkjæringstidspunkt(input);
