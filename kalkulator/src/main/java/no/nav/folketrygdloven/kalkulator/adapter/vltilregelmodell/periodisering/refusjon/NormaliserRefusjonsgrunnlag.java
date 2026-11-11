@@ -4,7 +4,6 @@ import static no.nav.fpsak.tidsserie.LocalDateInterval.TIDENES_ENDE;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -72,15 +71,13 @@ final class NormaliserRefusjonsgrunnlag {
     }
 
     private static LocalDateTimeline<BigDecimal> lagTidslinje(Map<LocalDate, Beløp> endringer) {
-        var liste = new ArrayList<>(endringer.entrySet());
-        List<LocalDateSegment<BigDecimal>> segmenter = new ArrayList<>();
-        for (int i = 0; i < liste.size(); i++) {
-            var endring = liste.get(i);
-            var tom = i + 1 < liste.size() ? liste.get(i + 1).getKey().minusDays(1) : TIDENES_ENDE;
-            var beløp = endring.getValue().verdi();
-            segmenter.add(new LocalDateSegment<>(endring.getKey(), tom,
-                beløp.compareTo(MINSTE_UTBETALTE_REFUSJONSKRAV_PR_MÅNED) > 0 ? beløp : BigDecimal.ZERO));
-        }
-        return new LocalDateTimeline<>(segmenter);
+        var segmenter = endringer.entrySet().stream()
+            .map(endring -> {
+                var beløp = endring.getValue().verdi();
+                return new LocalDateSegment<>(endring.getKey(), TIDENES_ENDE,
+                    beløp.compareTo(MINSTE_UTBETALTE_REFUSJONSKRAV_PR_MÅNED) > 0 ? beløp : BigDecimal.ZERO);
+            })
+            .toList();
+        return new LocalDateTimeline<>(segmenter, StandardCombinators::coalesceRightHandSide);
     }
 }
