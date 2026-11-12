@@ -20,6 +20,7 @@ import no.nav.fpsak.tidsserie.LocalDateSegment;
 import no.nav.fpsak.tidsserie.LocalDateTimeline;
 import no.nav.fpsak.tidsserie.StandardCombinators;
 
+// TODO Vi tenker denne klassen bør flyttes inn i reglene i løpet av arbeidet med TFP-6403
 /**
  * Normaliserer refusjonskravet fra en inntektsmelding til sammenhengende, ikke-overlappende
  * kravperioder innenfor de gyldige utbetalingsperiodene.
@@ -33,11 +34,11 @@ import no.nav.fpsak.tidsserie.StandardCombinators;
  *     fordi Nav ikke utbetaler refusjon under denne terskelen.</li>
  * </ul>
  */
-final class NormaliserRefusjonsgrunnlag {
+final class PeriodiserRefusjonskrav {
 
     private static final BigDecimal MINSTE_UTBETALTE_REFUSJONSKRAV_PR_MÅNED = BigDecimal.valueOf(10.83);
 
-    private NormaliserRefusjonsgrunnlag() {
+    private PeriodiserRefusjonskrav() {
     }
 
     static List<Kravperioder> periodiser(InntektsmeldingDto im, LocalDate startdato, List<Intervall> gyldigePerioder) {

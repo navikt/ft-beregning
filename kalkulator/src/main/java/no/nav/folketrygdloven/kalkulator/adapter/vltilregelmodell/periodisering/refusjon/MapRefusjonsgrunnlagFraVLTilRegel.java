@@ -44,7 +44,7 @@ public final class MapRefusjonsgrunnlagFraVLTilRegel {
                 var startdato = RefusjonsgrunnlagGyldigePerioder.utledStartdato(input, im, aktiviteterForIm,
                     ansattperioder, permisjonFilter);
                 var gyldigePerioder = RefusjonsgrunnlagGyldigePerioder.finnGyldigePerioder(input, im, startdato, ansattperioder);
-                var perioder = NormaliserRefusjonsgrunnlag.periodiser(im, startdato, gyldigePerioder);
+                var perioder = PeriodiserRefusjonskrav.periodiser(im, startdato, gyldigePerioder);
                 var arbeidsgiver = im.getArbeidsgiver();
                 var arbeidsforhold = new Arbeidsforholdsinformasjon(arbeidsgiver.getErVirksomhet()
                     ? Arbeidsgiver.medOrgnr(arbeidsgiver.getIdentifikator()) : Arbeidsgiver.medAktørId(arbeidsgiver.getIdentifikator()),

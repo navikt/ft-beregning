@@ -27,6 +27,8 @@ import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
 import no.nav.fpsak.tidsserie.LocalDateTimeline;
 
+// TODO Vi tenker denne klassen bør flyttes inn i reglene i løpet av arbeidet med TFP-6403
+
 final class RefusjonsgrunnlagGyldigePerioder {
 
     private RefusjonsgrunnlagGyldigePerioder() {
