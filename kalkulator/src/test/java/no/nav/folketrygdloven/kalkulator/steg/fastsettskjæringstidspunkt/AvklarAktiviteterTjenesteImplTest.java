@@ -171,7 +171,7 @@ class AvklarAktiviteterTjenesteImplTest {
         var aktivitetAggregat = lagBeregningAktivitetAggregatMedType(ARBEID);
 
         //Act
-	    var harFullAAPMedAndreAktiviteter = AvklaringsbehovUtlederFastsettBeregningsaktiviteterFP.harFullAAPITilleggTilAnnenAktivitet(aktivitetAggregat, Optional.empty(), false);
+	    var harFullAAPMedAndreAktiviteter = AvklaringsbehovUtlederFastsettBeregningsaktiviteterFP.harFullAAPITilleggTilAnnenAktivitet(aktivitetAggregat, Optional.empty());
 
         //Assert
         assertThat(harFullAAPMedAndreAktiviteter).isFalse();
@@ -183,7 +183,7 @@ class AvklarAktiviteterTjenesteImplTest {
         var aktivitetAggregat = lagBeregningAktivitetAggregatMedType(OpptjeningAktivitetType.AAP);
 
         //Act
-	    var harFullAAPMedAndreAktiviteter = AvklaringsbehovUtlederFastsettBeregningsaktiviteterFP.harFullAAPITilleggTilAnnenAktivitet(aktivitetAggregat, Optional.empty(), false);
+	    var harFullAAPMedAndreAktiviteter = AvklaringsbehovUtlederFastsettBeregningsaktiviteterFP.harFullAAPITilleggTilAnnenAktivitet(aktivitetAggregat, Optional.empty());
 
         //Assert
         assertThat(harFullAAPMedAndreAktiviteter).isFalse();
@@ -192,14 +192,14 @@ class AvklarAktiviteterTjenesteImplTest {
     @Test
     void skal_returnere_false_når_AAP_med_andre_aktiviteter_på_stp_med_siste_meldekort_uten_full_utbetaling() {
         //Arrange
-        var aktivitetAggregatDto = lagBeregningAktivitetAggregatMedType(OpptjeningAktivitetType.AAP, ARBEID);
+        var aktivitetAggregatDto = lagBeregningAktivitetAggregatMedType(OpptjeningAktivitetType.AAP, OpptjeningAktivitetType.NÆRING);
 
 	    var meldekort1 = lagMeldekort(SKJÆRINGSTIDSPUNKT_BEREGNING.minusDays(15), 200);
 	    var meldekort2 = lagMeldekort(SKJÆRINGSTIDSPUNKT_BEREGNING.minusDays(1), 180);
 	    var iayGrunnlag = lagAktørYtelse(meldekort1, meldekort2);
 
         //Act
-	    var harFullAAPMedAndreAktiviteter = AvklaringsbehovUtlederFastsettBeregningsaktiviteterFP.harFullAAPITilleggTilAnnenAktivitet(aktivitetAggregatDto, getAktørYtelseFraRegister(iayGrunnlag), false);
+	    var harFullAAPMedAndreAktiviteter = AvklaringsbehovUtlederFastsettBeregningsaktiviteterFP.harFullAAPITilleggTilAnnenAktivitet(aktivitetAggregatDto, getAktørYtelseFraRegister(iayGrunnlag));
 
         //Assert
         assertThat(harFullAAPMedAndreAktiviteter).isFalse();
@@ -216,22 +216,22 @@ class AvklarAktiviteterTjenesteImplTest {
 	    var iayGrunnlag = lagAktørYtelse(meldekort1, meldekort2, meldekort3);
 
         //Act
-	    var harFullAAPMedAndreAktiviteter = AvklaringsbehovUtlederFastsettBeregningsaktiviteterFP.harFullAAPITilleggTilAnnenAktivitet(aktivitetAggregatDto, getAktørYtelseFraRegister(iayGrunnlag), false);
+	    var harFullAAPMedAndreAktiviteter = AvklaringsbehovUtlederFastsettBeregningsaktiviteterFP.harFullAAPITilleggTilAnnenAktivitet(aktivitetAggregatDto, getAktørYtelseFraRegister(iayGrunnlag));
 
         //Assert
         assertThat(harFullAAPMedAndreAktiviteter).isTrue();
     }
 
     @Test
-    void skal_returnere_true_når_AAP_med_andre_aktiviteter_på_stp_for_næring_med_aktiv_toggle() {
-        var aktivitetAggregatDto = lagBeregningAktivitetAggregatMedType(OpptjeningAktivitetType.AAP, OpptjeningAktivitetType.NÆRING);
+    void skal_returnere_false_når_AAP_med_full_utbetaling_uten_næring() {
+        var aktivitetAggregatDto = lagBeregningAktivitetAggregatMedType(OpptjeningAktivitetType.AAP, ARBEID);
         var meldekort1 = lagMeldekort(SKJÆRINGSTIDSPUNKT_BEREGNING.minusDays(15), 99);
         var meldekort2 = lagMeldekort(SKJÆRINGSTIDSPUNKT_BEREGNING.minusDays(1), 200);
         var iayGrunnlag = lagAktørYtelse(meldekort1, meldekort2);
 
-        var harFullAAPMedAndreAktiviteter = AvklaringsbehovUtlederFastsettBeregningsaktiviteterFP.harFullAAPITilleggTilAnnenAktivitet(aktivitetAggregatDto, getAktørYtelseFraRegister(iayGrunnlag), true);
+        var harFullAAPMedAndreAktiviteter = AvklaringsbehovUtlederFastsettBeregningsaktiviteterFP.harFullAAPITilleggTilAnnenAktivitet(aktivitetAggregatDto, getAktørYtelseFraRegister(iayGrunnlag));
 
-        assertThat(harFullAAPMedAndreAktiviteter).isTrue();
+        assertThat(harFullAAPMedAndreAktiviteter).isFalse();
     }
 
     private BeregningAktivitetAggregatDto lagBeregningAktivitetAggregatMedType(OpptjeningAktivitetType... typer) {

@@ -42,7 +42,7 @@ public class AvklaringsbehovUtlederFastsettBeregningsaktiviteterFP implements Av
             return emptyList();
         }
 
-        if (skalAvklareAktiviteter(beregningAktivitetAggregat, aktørYtelse, input)) {
+        if (skalAvklareAktiviteter(beregningAktivitetAggregat, aktørYtelse)) {
             return List.of(BeregningAvklaringsbehovResultat.opprettFor(AvklaringsbehovDefinisjon.AVKLAR_AKTIVITETER));
         }
         return emptyList();
@@ -53,9 +53,9 @@ public class AvklaringsbehovUtlederFastsettBeregningsaktiviteterFP implements Av
     }
 
     private static boolean skalAvklareAktiviteter(BeregningAktivitetAggregatDto beregningAktivitetAggregat,
-                                                  Optional<AktørYtelseDto> aktørYtelse, BeregningsgrunnlagInput input) {
+                                                  Optional<AktørYtelseDto> aktørYtelse) {
         return harVentelønnEllerVartpengerSomSisteAktivitetIOpptjeningsperioden(beregningAktivitetAggregat)
-                || harFullAAPITilleggTilAnnenAktivitet(beregningAktivitetAggregat, aktørYtelse, input.isEnabled("aap.praksisendring", false));
+                || harFullAAPITilleggTilAnnenAktivitet(beregningAktivitetAggregat, aktørYtelse);
     }
 
     public static boolean harVentelønnEllerVartpengerSomSisteAktivitetIOpptjeningsperioden(BeregningAktivitetAggregatDto beregningAktivitetAggregat) {
@@ -70,13 +70,12 @@ public class AvklaringsbehovUtlederFastsettBeregningsaktiviteterFP implements Av
     }
 
     public static boolean harFullAAPITilleggTilAnnenAktivitet(BeregningAktivitetAggregatDto beregningAktivitetAggregat,
-                                                              Optional<AktørYtelseDto> aktørYtelse,
-                                                              boolean aapPraksisendringEnabled) {
+                                                              Optional<AktørYtelseDto> aktørYtelse) {
 	    var skjæringstidspunkt = beregningAktivitetAggregat.getSkjæringstidspunktOpptjening();
 	    var opptjeningsaktivitetTyper = beregningAktivitetAggregat.getAktiviteterPåDato(skjæringstidspunkt).stream()
                 .map(BeregningAktivitetDto::getOpptjeningAktivitetType).toList();
 
-        if (aapPraksisendringEnabled && harIngenAktivitetMedType(opptjeningsaktivitetTyper, OpptjeningAktivitetType.NÆRING)) {
+        if (harIngenAktivitetMedType(opptjeningsaktivitetTyper, OpptjeningAktivitetType.NÆRING)) {
             return false;
         }
 
