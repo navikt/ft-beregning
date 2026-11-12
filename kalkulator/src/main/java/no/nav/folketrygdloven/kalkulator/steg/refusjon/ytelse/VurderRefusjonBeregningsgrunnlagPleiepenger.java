@@ -6,11 +6,13 @@ import no.nav.folketrygdloven.kalkulator.output.RegelSporingAggregat;
 import no.nav.folketrygdloven.kalkulator.steg.fordeling.periodisering.FordelPerioderTjeneste;
 import no.nav.folketrygdloven.kalkulator.steg.fordeling.periodisering.PeriodiserForAktivitetsgradTjeneste;
 import no.nav.folketrygdloven.kalkulator.steg.refusjon.ForlengelsePeriodeTjeneste;
+import no.nav.folketrygdloven.kalkulator.steg.refusjon.RefusjonsperiodiseringTjeneste;
 
 public class VurderRefusjonBeregningsgrunnlagPleiepenger {
 
     public BeregningsgrunnlagRegelResultat vurderRefusjon(BeregningsgrunnlagInput input) {
-        var resultatFraRefusjonPeriodisering = new FordelPerioderTjeneste().fastsettPerioderForRefusjon(input);
+        var refusjonsperiodisering = RefusjonsperiodiseringTjeneste.fastsettPerioderForRefusjon(input);
+        var resultatFraRefusjonPeriodisering = refusjonsperiodisering.regelResultat();
         var resultatFraPeriodisering = new FordelPerioderTjeneste().fastsettPerioderForUtbetalingsgradEllerGradering(input, resultatFraRefusjonPeriodisering.getBeregningsgrunnlag());
         var splittetVedForlengelse = ForlengelsePeriodeTjeneste.splittVedStartAvForlengelse(input, resultatFraPeriodisering.getBeregningsgrunnlag());
         // Kjører splitt pga aktivitetsgrad her i tillegg til vurder tilkommet inntekt siden det ikke er alle som kjører det steget
@@ -18,6 +20,7 @@ public class VurderRefusjonBeregningsgrunnlagPleiepenger {
         var avklaringsbehov = AvklaringsbehovutledertjenesteVurderRefusjon.utledAvklaringsbehov(input, splittetVedForlengelse);
         return new BeregningsgrunnlagRegelResultat(splittForAktivitetsgrad,
                 avklaringsbehov,
-                RegelSporingAggregat.konkatiner(resultatFraRefusjonPeriodisering.getRegelsporinger().orElse(null), resultatFraPeriodisering.getRegelsporinger().orElse(null)));
+                RegelSporingAggregat.konkatiner(resultatFraRefusjonPeriodisering.getRegelsporinger().orElse(null), resultatFraPeriodisering.getRegelsporinger().orElse(null)),
+                refusjonsperiodisering.fordelingGrunnlag());
     }
 }

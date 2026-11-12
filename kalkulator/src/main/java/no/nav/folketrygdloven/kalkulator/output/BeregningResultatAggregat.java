@@ -12,6 +12,7 @@ import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.Beregningsgru
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.FaktaAggregatDto;
+import no.nav.folketrygdloven.kalkulator.modell.refusjon.FordelingGrunnlagDto;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagTilstand;
 
 
@@ -24,6 +25,8 @@ public class BeregningResultatAggregat {
     protected BeregningVilkårResultat beregningVilkårResultat;
 
     protected RegelSporingAggregat regelSporingAggregat;
+
+    protected FordelingGrunnlagDto fordelingGrunnlag;
 
     public Set<BeregningAvklaringsbehovResultat> getBeregningAvklaringsbehovResultater() {
         return beregningAvklaringsbehovResultater;
@@ -44,6 +47,10 @@ public class BeregningResultatAggregat {
 
     public Optional<RegelSporingAggregat> getRegelSporingAggregat() {
         return Optional.ofNullable(regelSporingAggregat);
+    }
+
+    public Optional<FordelingGrunnlagDto> getFordelingGrunnlag() {
+        return Optional.ofNullable(fordelingGrunnlag);
     }
 
 
@@ -106,6 +113,11 @@ public class BeregningResultatAggregat {
 
         public Builder medRegelSporingAggregat(RegelSporingAggregat regelsporing) {
             this.kladd.regelSporingAggregat = regelsporing;
+            return this;
+        }
+
+        public Builder medFordelingGrunnlag(FordelingGrunnlagDto fordelingGrunnlag) {
+            this.kladd.fordelingGrunnlag = fordelingGrunnlag;
             return this;
         }
 
