@@ -20,6 +20,19 @@ import no.nav.fpsak.tidsserie.LocalDateSegment;
 import no.nav.fpsak.tidsserie.LocalDateTimeline;
 import no.nav.fpsak.tidsserie.StandardCombinators;
 
+/**
+ * Normaliserer refusjonskravet fra en inntektsmelding til sammenhengende, ikke-overlappende
+ * kravperioder innenfor de gyldige utbetalingsperiodene.
+ *
+ * <p>Normaliseringen gjør følgende:
+ * <ul>
+ *     <li>Endringer som faller før startdato slås sammen til å gjelde fra startdato.</li>
+ *     <li>Endringer som faller i et hull mellom gyldige perioder flyttes til starten av neste gyldige periode.</li>
+ *     <li>Eventuelt opphørsdato nuller ut kravet fra dagen etter opphør.</li>
+ *     <li>Beløp på eller under {@value #MINSTE_UTBETALTE_REFUSJONSKRAV_PR_MÅNED} nullstilles,
+ *     fordi Nav ikke utbetaler refusjon under denne terskelen.</li>
+ * </ul>
+ */
 final class NormaliserRefusjonsgrunnlag {
 
     private static final BigDecimal MINSTE_UTBETALTE_REFUSJONSKRAV_PR_MÅNED = BigDecimal.valueOf(10.83);
