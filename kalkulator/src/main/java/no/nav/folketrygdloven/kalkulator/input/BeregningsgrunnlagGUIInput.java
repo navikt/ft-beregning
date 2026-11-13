@@ -78,7 +78,6 @@ public class BeregningsgrunnlagGUIInput {
         this.fordelBeregningsgrunnlagGrunnlag = input.fordelBeregningsgrunnlagGrunnlag;
         this.fordelingGrunnlag = input.fordelingGrunnlag;
         this.beregningsgrunnlagGrunnlagFraForrigeBehandling = input.beregningsgrunnlagGrunnlagFraForrigeBehandling;
-        this.avklaringsbehov = input.avklaringsbehov;
         this.toggles = input.getToggles();
         this.forlengelseperioder = input.getForlengelseperioder();
     }
