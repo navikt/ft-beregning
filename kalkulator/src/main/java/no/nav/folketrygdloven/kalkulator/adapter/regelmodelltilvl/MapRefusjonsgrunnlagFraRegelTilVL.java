@@ -36,7 +36,7 @@ public final class MapRefusjonsgrunnlagFraRegelTilVL {
                     case GODKJENT -> RefusjonUtfall.INNVILGET;
                     case UNDERKJENT -> RefusjonUtfall.AVSLÅTT;
                     case IKKE_VURDERT -> throw new IllegalStateException("Refusjonsperioden mangler utfall.");
-                }, null, null))
+                }, null))
             .toList();
         return new RefusjonsandelDto(arbeidsgiverDto, InternArbeidsforholdRefDto.ref(andel.internArbeidsforholdId()),
             switch (andel.refusjonKilde()) {

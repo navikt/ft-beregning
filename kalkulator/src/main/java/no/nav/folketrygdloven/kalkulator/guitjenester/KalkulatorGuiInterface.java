@@ -8,6 +8,7 @@ import no.nav.folketrygdloven.kalkulator.input.YtelsespesifiktGrunnlag;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.BeregningsgrunnlagDto;
+import no.nav.folketrygdloven.kalkulus.response.fordelingsgrunnlag.gui.FordelingGrunnlagDto;
 
 /**
  * Interface ut fra kalkulus. Metoder i dette interfacet tas i bruk av BeregningStegTjeneste i kalkulus og fp-sak.
@@ -18,13 +19,21 @@ import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.Beregning
 @SuppressWarnings("unused")
 public interface KalkulatorGuiInterface {
 
-    /** Hent Dto til ekstern bruk
+    /** Hent dto for Beregningsgrunnlag til ekstern bruk
      *
      * @param input Input til produksjon av dto
      * @return Dto som representerer hele beregningsgrunnlaget
      */
 
     BeregningsgrunnlagDto lagBeregningsgrunnlagDto(BeregningsgrunnlagGUIInput input);
+
+    /** Hent for over Fordelingsgrunnlag til ekstern bruk
+     *
+     * @param input Input til produksjon av dto
+     * @return dto som representerer fordelingsgrunnlaget
+     */
+
+    FordelingGrunnlagDto lagFordelingsgrunnlagDto(BeregningsgrunnlagGUIInput input);
 
     /** Finn arbeidsprosenter for en andel for en tidsperiode. Foreldrepenger har egen logikk her.
      *

@@ -304,6 +304,6 @@ class PeriodiserBeregningsgrunnlagForRefusjonTest {
 
     private static RefusjonsperiodeDto periode(LocalDate fom, LocalDate tom, String beløp, RefusjonUtfall utfall) {
         return new RefusjonsperiodeDto(Intervall.fraOgMedTilOgMed(fom, tom == null ? TIDENES_ENDE : tom),
-            Beløp.fra(new BigDecimal(beløp)), utfall, null, null);
+            Beløp.fra(new BigDecimal(beløp)), utfall, null);
     }
 }
