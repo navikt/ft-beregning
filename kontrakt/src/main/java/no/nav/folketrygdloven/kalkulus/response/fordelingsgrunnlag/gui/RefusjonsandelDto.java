@@ -10,7 +10,6 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import no.nav.folketrygdloven.kalkulus.felles.InternArbeidsforholdRefDto;
 import no.nav.folketrygdloven.kalkulus.felles.JournalpostId;
 import no.nav.folketrygdloven.kalkulus.kodeverk.RefusjonKilde;
 
