@@ -41,11 +41,8 @@ public class FordelingsgrunnlagDtoTjeneste {
                 periode.utfallBegrunnelse());
     }
 
-    private static no.nav.folketrygdloven.kalkulus.felles.InternArbeidsforholdRefDto mapArbeidsforholdRef(
-            InternArbeidsforholdRefDto arbeidsforholdRef) {
-        return arbeidsforholdRef == null || arbeidsforholdRef.getReferanse() == null
-                ? null
-                : new no.nav.folketrygdloven.kalkulus.felles.InternArbeidsforholdRefDto(arbeidsforholdRef.getReferanse());
+    private static String mapArbeidsforholdRef(InternArbeidsforholdRefDto arbeidsforholdRef) {
+        return arbeidsforholdRef == null ? null : arbeidsforholdRef.getReferanse();
     }
 
 }

@@ -81,7 +81,7 @@ class FordelingsgrunnlagDtoTjenesteTest {
         assertThat(resultat.refusjonsandeler()).hasSize(2);
         var virksomhetsDto = resultat.refusjonsandeler().get(0);
         assertThat(virksomhetsDto.arbeidsgiverIdent()).isEqualTo(ORGNR);
-        assertThat(virksomhetsDto.arbeidsforholdRef().getAbakusReferanse()).isEqualTo(virksomhetsref.getReferanse());
+        assertThat(virksomhetsDto.arbeidsforholdId()).isEqualTo(virksomhetsref.getReferanse());
         assertThat(virksomhetsDto.kilde()).isEqualTo(RefusjonKilde.SAKSBEHANDLER);
         assertThat(virksomhetsDto.journalpostId()).isNull();
         assertThat(virksomhetsDto.refusjonsperioder()).hasSize(2);
@@ -104,7 +104,7 @@ class FordelingsgrunnlagDtoTjenesteTest {
 
         var personDto = resultat.refusjonsandeler().get(1);
         assertThat(personDto.arbeidsgiverIdent()).isEqualTo(aktørId.getId());
-        assertThat(personDto.arbeidsforholdRef()).isNull();
+        assertThat(personDto.arbeidsforholdId()).isNull();
         assertThat(personDto.kilde()).isEqualTo(RefusjonKilde.INNTEKTSMELDING);
         assertThat(personDto.journalpostId()).isEqualTo(journalpostId);
         assertThat(personDto.refusjonsperioder()).hasSize(1);
