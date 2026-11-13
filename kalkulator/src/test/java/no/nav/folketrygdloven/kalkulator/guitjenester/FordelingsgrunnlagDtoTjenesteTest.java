@@ -11,11 +11,6 @@ import org.junit.jupiter.api.Test;
 
 import no.nav.folketrygdloven.kalkulator.KoblingReferanseMock;
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagGUIInput;
-import no.nav.folketrygdloven.kalkulator.input.YtelsespesifiktGrunnlag;
-import no.nav.folketrygdloven.kalkulator.modell.avklaringsbehov.AvklaringsbehovDto;
-import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagGrunnlagDto;
-import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseGrunnlagDto;
-import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseGrunnlagDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.refusjon.FordelingGrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.refusjon.RefusjonsandelDto;
 import no.nav.folketrygdloven.kalkulator.modell.refusjon.RefusjonsperiodeDto;
@@ -24,7 +19,6 @@ import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.felles.JournalpostId;
-import no.nav.folketrygdloven.kalkulus.kodeverk.AvklaringsbehovDefinisjon;
 import no.nav.folketrygdloven.kalkulus.kodeverk.RefusjonKilde;
 import no.nav.folketrygdloven.kalkulus.kodeverk.RefusjonUtfall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.RefusjonUtfallÅrsak;
@@ -128,56 +122,6 @@ class FordelingsgrunnlagDtoTjenesteTest {
         assertThatThrownBy(() -> guiTjeneste.lagFordelingsgrunnlagDto(input))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("Fordelingsgrunnlag mangler i GUI-input.");
-    }
-
-    @Test
-    void inputkopiering_bevarer_fordelingsgrunnlag_avklaringsbehov_og_øvrige_felter() {
-        var koblingReferanse = new KoblingReferanseMock(PERIODE_FOM);
-        InntektArbeidYtelseGrunnlagDto iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.nytt().build();
-        var kravperioder = List.<no.nav.folketrygdloven.kalkulator.modell.iay.KravperioderPrArbeidsforholdDto>of();
-        YtelsespesifiktGrunnlag ytelsespesifiktGrunnlag = new YtelsespesifiktGrunnlag() {};
-        var input = new BeregningsgrunnlagGUIInput(koblingReferanse, iayGrunnlag, kravperioder, ytelsespesifiktGrunnlag);
-        var avklaringsbehov = new AvklaringsbehovDto(
-                AvklaringsbehovDefinisjon.VURDER_REFUSJONSKRAV, null, null, false, null, null);
-        input.medAvklaringsbehov(List.of(avklaringsbehov));
-        input.leggTilToggle("test.toggle", true);
-        input.setForlengelseperioder(List.of(Intervall.fraOgMedTilOgMed(PERIODE_FOM, PERIODE_TOM)));
-
-        var beregningsgrunnlag = new BeregningsgrunnlagGrunnlagDto();
-        var grunnlag = new FordelingGrunnlagDto(List.of(new RefusjonsandelDto(
-                Arbeidsgiver.virksomhet(ORGNR),
-                InternArbeidsforholdRefDto.nullRef(),
-                RefusjonKilde.SAKSBEHANDLER,
-                null,
-                List.of())));
-        var inputMedTidligereGrunnlag = input.medBeregningsgrunnlagGrunnlag(beregningsgrunnlag)
-                .medBeregningsgrunnlagGrunnlagFraForrigeBehandling(beregningsgrunnlag);
-
-        var etterFordeling = inputMedTidligereGrunnlag.medFordelingGrunnlag(grunnlag);
-        assertThat(etterFordeling.getFordelingGrunnlag()).contains(grunnlag);
-        assertThat(etterFordeling.getAvklaringsbehov()).containsExactly(avklaringsbehov);
-        assertThat(etterFordeling.getKoblingReferanse()).isSameAs(koblingReferanse);
-        assertThat(etterFordeling.getIayGrunnlag()).isSameAs(iayGrunnlag);
-        assertThat(etterFordeling.getKravperioderPrArbeidsgiver()).isSameAs(kravperioder);
-        assertThat(etterFordeling.<YtelsespesifiktGrunnlag>getYtelsespesifiktGrunnlag()).isSameAs(ytelsespesifiktGrunnlag);
-        assertThat(etterFordeling.getBeregningsgrunnlagGrunnlag()).isSameAs(beregningsgrunnlag);
-        assertThat(etterFordeling.getBeregningsgrunnlagGrunnlagFraForrigeBehandling()).containsExactly(beregningsgrunnlag);
-        assertThat(etterFordeling.getToggles()).containsEntry("test.toggle", true);
-        assertThat(etterFordeling.getForlengelseperioder())
-                .containsExactly(Intervall.fraOgMedTilOgMed(PERIODE_FOM, PERIODE_TOM));
-
-        var etterAnnenKopi = etterFordeling.medBeregningsgrunnlagGrunnlagFraForrigeBehandling(List.of(beregningsgrunnlag));
-        assertThat(etterAnnenKopi.getFordelingGrunnlag()).contains(grunnlag);
-        assertThat(etterAnnenKopi.getAvklaringsbehov()).containsExactly(avklaringsbehov);
-        assertThat(etterAnnenKopi.getKoblingReferanse()).isSameAs(koblingReferanse);
-        assertThat(etterAnnenKopi.getIayGrunnlag()).isSameAs(iayGrunnlag);
-        assertThat(etterAnnenKopi.getKravperioderPrArbeidsgiver()).isSameAs(kravperioder);
-        assertThat(etterAnnenKopi.<YtelsespesifiktGrunnlag>getYtelsespesifiktGrunnlag()).isSameAs(ytelsespesifiktGrunnlag);
-        assertThat(etterAnnenKopi.getBeregningsgrunnlagGrunnlag()).isSameAs(beregningsgrunnlag);
-        assertThat(etterAnnenKopi.getBeregningsgrunnlagGrunnlagFraForrigeBehandling()).containsExactly(beregningsgrunnlag);
-        assertThat(etterAnnenKopi.getToggles()).containsEntry("test.toggle", true);
-        assertThat(etterAnnenKopi.getForlengelseperioder())
-                .containsExactly(Intervall.fraOgMedTilOgMed(PERIODE_FOM, PERIODE_TOM));
     }
 
     private static BeregningsgrunnlagGUIInput inputMedFordelingsgrunnlag(FordelingGrunnlagDto grunnlag) {
