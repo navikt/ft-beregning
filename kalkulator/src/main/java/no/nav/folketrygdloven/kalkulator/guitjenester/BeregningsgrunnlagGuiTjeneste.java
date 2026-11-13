@@ -7,6 +7,7 @@ import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagGUIInput;
 import no.nav.folketrygdloven.kalkulator.input.ForeldrepengerGrunnlag;
 import no.nav.folketrygdloven.kalkulator.input.YtelsespesifiktGrunnlag;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
+import no.nav.folketrygdloven.kalkulator.modell.refusjon.FordelingGrunnlag;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.BeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulus.response.fordelingsgrunnlag.gui.FordelingGrunnlagDto;
@@ -24,7 +25,7 @@ public class BeregningsgrunnlagGuiTjeneste implements KalkulatorGuiInterface {
     }
 
     @Override
-    public FordelingGrunnlagDto lagFordelingsgrunnlagDto(BeregningsgrunnlagGUIInput input) {
+    public FordelingGrunnlagDto lagFordelingsgrunnlagDto(FordelingGrunnlag input) {
         return FORDELINGSGRUNNLAG_DTO_TJENESTE.lagFordelingsgrunnlagDto(input);
     }
 

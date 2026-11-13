@@ -20,9 +20,9 @@ import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.Beregningsgru
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseGrunnlagDtoBuilder;
-import no.nav.folketrygdloven.kalkulator.modell.refusjon.FordelingGrunnlagDto;
-import no.nav.folketrygdloven.kalkulator.modell.refusjon.RefusjonsandelDto;
-import no.nav.folketrygdloven.kalkulator.modell.refusjon.RefusjonsperiodeDto;
+import no.nav.folketrygdloven.kalkulator.modell.refusjon.FordelingGrunnlag;
+import no.nav.folketrygdloven.kalkulator.modell.refusjon.Refusjonsandel;
+import no.nav.folketrygdloven.kalkulator.modell.refusjon.Refusjonsperiode;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
@@ -50,7 +50,7 @@ class PeriodiserBeregningsgrunnlagForRefusjonTest {
         var originalInput = input(bg());
         var inputUtenBeregningsgrunnlag = new BeregningsgrunnlagInput(originalInput.getKoblingReferanse(),
             originalInput.getIayGrunnlag(), null, List.of(), originalInput.getYtelsespesifiktGrunnlag());
-        var tomtFordelingsgrunnlag = new FordelingGrunnlagDto(List.of());
+        var tomtFordelingsgrunnlag = new FordelingGrunnlag(List.of());
 
         assertThatThrownBy(() -> PeriodiserBeregningsgrunnlagForRefusjon.periodiser(inputUtenBeregningsgrunnlag, tomtFordelingsgrunnlag))
             .isInstanceOf(NullPointerException.class)
@@ -69,7 +69,7 @@ class PeriodiserBeregningsgrunnlagForRefusjonTest {
             .medAvkortetPrÅr(Beløp.fra(390000)).medRedusertPrÅr(Beløp.fra(195000))
             .medTotalUtbetalingsgradFraUttak(BigDecimal.valueOf(50)).build();
         var før = BeregningsgrunnlagDto.builder(bg).build();
-        var grunnlag = new FordelingGrunnlagDto(List.of(refusjonsandel(AG, REF,
+        var grunnlag = new FordelingGrunnlag(List.of(refusjonsandel(AG, REF,
             periode(FOM, FOM.plusMonths(3).minusDays(1), "1234.56", RefusjonUtfall.INNVILGET),
             periode(FOM.plusMonths(3), FOM.plusMonths(4).minusDays(1), "2000", RefusjonUtfall.INNVILGET),
             periode(FOM.plusMonths(4), null, "0", RefusjonUtfall.INNVILGET))));
@@ -111,7 +111,7 @@ class PeriodiserBeregningsgrunnlagForRefusjonTest {
         leggTilAndel(p, AG, ref2, 2L, 200000);
         leggTilAndel(p, ag2, REF, 3L, 300000);
         leggTilAndel(p, ag2, ref2, 4L, 400000);
-        var grunnlag = new FordelingGrunnlagDto(List.of(
+        var grunnlag = new FordelingGrunnlag(List.of(
             refusjonsandel(AG, REF, periode(FOM, null, "1000", RefusjonUtfall.INNVILGET)),
             refusjonsandel(AG, ref2, periode(FOM, null, "2000", RefusjonUtfall.INNVILGET)),
             refusjonsandel(ag2, REF, periode(FOM, null, "3000", RefusjonUtfall.INNVILGET))));
@@ -128,7 +128,7 @@ class PeriodiserBeregningsgrunnlagForRefusjonTest {
         var p = BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(FOM, null).build(bg);
         leggTilAndel(p, AG, REF, 1L, 100000);
         leggTilAndel(p, AG, InternArbeidsforholdRefDto.namedRef("andre"), 2L, 200000);
-        var nytt = PeriodiserBeregningsgrunnlagForRefusjon.periodiser(input(bg), new FordelingGrunnlagDto(List.of(
+        var nytt = PeriodiserBeregningsgrunnlagForRefusjon.periodiser(input(bg), new FordelingGrunnlag(List.of(
             refusjonsandel(AG, null, periode(FOM, null, "1000", RefusjonUtfall.INNVILGET)))));
         assertThat(arbeidsforhold(nytt.getBeregningsgrunnlagPerioder().getFirst(), 0).getRefusjonskravPrÅr()).isEqualTo(Beløp.fra(12000));
         assertThat(arbeidsforhold(nytt.getBeregningsgrunnlagPerioder().getFirst(), 1).getRefusjonskravPrÅr()).isEqualTo(Beløp.fra(999));
@@ -136,7 +136,7 @@ class PeriodiserBeregningsgrunnlagForRefusjonTest {
         var bgUtenRef = bg();
         var utenRef = BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(FOM, null).build(bgUtenRef);
         leggTilAndel(utenRef, AG, InternArbeidsforholdRefDto.nullRef(), 1L, 100000);
-        var medNy = PeriodiserBeregningsgrunnlagForRefusjon.periodiser(input(bgUtenRef), new FordelingGrunnlagDto(List.of(
+        var medNy = PeriodiserBeregningsgrunnlagForRefusjon.periodiser(input(bgUtenRef), new FordelingGrunnlag(List.of(
             refusjonsandel(AG, REF, periode(FOM, null, "1000", RefusjonUtfall.INNVILGET)))));
         var andeler = medNy.getBeregningsgrunnlagPerioder().getFirst().getBeregningsgrunnlagPrStatusOgAndelList();
         assertThat(andeler).hasSize(2);
@@ -150,7 +150,7 @@ class PeriodiserBeregningsgrunnlagForRefusjonTest {
         var p = BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(FOM, null).build(bg);
         var utenReferanse = InternArbeidsforholdRefDto.nullRef();
         leggTilAndel(p, AG, utenReferanse, 1L, 100000);
-        var grunnlag = new FordelingGrunnlagDto(List.of(
+        var grunnlag = new FordelingGrunnlag(List.of(
             refusjonsandel(AG, REF, periode(FOM, null, "2000", RefusjonUtfall.INNVILGET)),
             refusjonsandel(AG, utenReferanse, periode(FOM, null, "1000", RefusjonUtfall.INNVILGET))));
 
@@ -171,10 +171,10 @@ class PeriodiserBeregningsgrunnlagForRefusjonTest {
         var bg = bg();
         BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(FOM, null).build(bg);
         var arbeidsperiode = Intervall.fraOgMedTilOgMed(FOM.minusYears(2), FOM.plusYears(1));
-        var refusjon = new RefusjonsandelDto(AG, REF, RefusjonKilde.SAKSBEHANDLER, null, List.of(
+        var refusjon = new Refusjonsandel(AG, REF, RefusjonKilde.SAKSBEHANDLER, null, List.of(
             periode(FOM.plusMonths(1), FOM.plusMonths(2).minusDays(1), "1000", RefusjonUtfall.INNVILGET)));
 
-        var nytt = PeriodiserBeregningsgrunnlagForRefusjon.periodiser(input(bg, arbeidsperiode), new FordelingGrunnlagDto(List.of(refusjon)));
+        var nytt = PeriodiserBeregningsgrunnlagForRefusjon.periodiser(input(bg, arbeidsperiode), new FordelingGrunnlag(List.of(refusjon)));
 
         var perioder = nytt.getBeregningsgrunnlagPerioder();
         assertThat(perioder).hasSize(3);
@@ -206,7 +206,7 @@ class PeriodiserBeregningsgrunnlagForRefusjonTest {
         var originalInput = input(bg);
         var input = new BeregningsgrunnlagInput(originalInput.getKoblingReferanse(), iay.build(), null, List.of(),
             originalInput.getYtelsespesifiktGrunnlag()).medBeregningsgrunnlagGrunnlag(originalInput.getBeregningsgrunnlagGrunnlag());
-        var grunnlag = new FordelingGrunnlagDto(List.of(refusjonsandel(AG, REF,
+        var grunnlag = new FordelingGrunnlag(List.of(refusjonsandel(AG, REF,
             periode(FOM, null, "1000", RefusjonUtfall.INNVILGET))));
 
         var nytt = PeriodiserBeregningsgrunnlagForRefusjon.periodiser(input, grunnlag);
@@ -221,7 +221,7 @@ class PeriodiserBeregningsgrunnlagForRefusjonTest {
         var bg = bg();
         var p = BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(FOM, null).build(bg);
         leggTilAndel(p, AG, REF, 1L, 100000);
-        var avslag = new FordelingGrunnlagDto(List.of(refusjonsandel(AG, REF,
+        var avslag = new FordelingGrunnlag(List.of(refusjonsandel(AG, REF,
             periode(FOM.plusDays(10), null, "1000", RefusjonUtfall.AVSLÅTT))));
 
         var nytt = PeriodiserBeregningsgrunnlagForRefusjon.periodiser(input(bg), avslag).getBeregningsgrunnlagPerioder().getLast();
@@ -233,18 +233,18 @@ class PeriodiserBeregningsgrunnlagForRefusjonTest {
         assertThat(af.getHjemmelForRefusjonskravfrist()).isEqualTo(Hjemmel.F_22_13_6);
         assertThat(nytt.getPeriodeÅrsaker()).containsExactly(PeriodeÅrsak.REFUSJON_AVSLÅTT);
         var overlappendeInput = input(bg);
-        var overlappendeFordelingsgrunnlag = new FordelingGrunnlagDto(List.of(
+        var overlappendeFordelingsgrunnlag = new FordelingGrunnlag(List.of(
             refusjonsandel(AG, REF, periode(FOM, null, "1000", RefusjonUtfall.INNVILGET)),
             refusjonsandel(AG, null, periode(FOM, null, "2000", RefusjonUtfall.INNVILGET))));
         assertThatThrownBy(() -> PeriodiserBeregningsgrunnlagForRefusjon.periodiser(overlappendeInput, overlappendeFordelingsgrunnlag))
             .isInstanceOf(IllegalArgumentException.class).hasMessage("Overlappende refusjonsperioder treffer samme BG-andel.");
         var tomtBg = bg();
         BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(FOM, null).build(tomtBg);
-        var annenKilde = new RefusjonsandelDto(AG, REF, RefusjonKilde.INNTEKTSMELDING,
+        var annenKilde = new Refusjonsandel(AG, REF, RefusjonKilde.INNTEKTSMELDING,
             new no.nav.folketrygdloven.kalkulus.felles.JournalpostId("101"),
             List.of(periode(FOM, null, "1000", RefusjonUtfall.INNVILGET)));
         var tomtBgInput = input(tomtBg);
-        var overlappendeFordelingsgrunnlagFraUlikeKilder = new FordelingGrunnlagDto(List.of(
+        var overlappendeFordelingsgrunnlagFraUlikeKilder = new FordelingGrunnlag(List.of(
             annenKilde, refusjonsandel(AG, REF, periode(FOM, null, "2000", RefusjonUtfall.INNVILGET))));
         assertThatThrownBy(() -> PeriodiserBeregningsgrunnlagForRefusjon.periodiser(tomtBgInput,
             overlappendeFordelingsgrunnlagFraUlikeKilder))
@@ -257,7 +257,7 @@ class PeriodiserBeregningsgrunnlagForRefusjonTest {
         var p = BeregningsgrunnlagPeriodeDto.ny().medBeregningsgrunnlagPeriode(FOM, null).build(bg);
         leggTilAndel(p, AG, REF, 1L, 100000);
         var redusert = periode(FOM, null, "1000", RefusjonUtfall.REDUSERT);
-        var fordelingsgrunnlag = new FordelingGrunnlagDto(List.of(refusjonsandel(AG, REF, redusert)));
+        var fordelingsgrunnlag = new FordelingGrunnlag(List.of(refusjonsandel(AG, REF, redusert)));
 
         var nytt = PeriodiserBeregningsgrunnlagForRefusjon.periodiser(input(bg), fordelingsgrunnlag);
 
@@ -298,12 +298,12 @@ class PeriodiserBeregningsgrunnlagForRefusjonTest {
         return p.getBeregningsgrunnlagPrStatusOgAndelList().get(indeks).getBgAndelArbeidsforhold().orElseThrow();
     }
 
-    private static RefusjonsandelDto refusjonsandel(Arbeidsgiver ag, InternArbeidsforholdRefDto ref, RefusjonsperiodeDto... perioder) {
-        return new RefusjonsandelDto(ag, ref, RefusjonKilde.SAKSBEHANDLER, null, List.of(perioder));
+    private static Refusjonsandel refusjonsandel(Arbeidsgiver ag, InternArbeidsforholdRefDto ref, Refusjonsperiode... perioder) {
+        return new Refusjonsandel(ag, ref, RefusjonKilde.SAKSBEHANDLER, null, List.of(perioder));
     }
 
-    private static RefusjonsperiodeDto periode(LocalDate fom, LocalDate tom, String beløp, RefusjonUtfall utfall) {
-        return new RefusjonsperiodeDto(Intervall.fraOgMedTilOgMed(fom, tom == null ? TIDENES_ENDE : tom),
+    private static Refusjonsperiode periode(LocalDate fom, LocalDate tom, String beløp, RefusjonUtfall utfall) {
+        return new Refusjonsperiode(Intervall.fraOgMedTilOgMed(fom, tom == null ? TIDENES_ENDE : tom),
             Beløp.fra(new BigDecimal(beløp)), utfall, null);
     }
 }

@@ -8,7 +8,7 @@ import no.nav.folketrygdloven.kalkulator.adapter.regelmodelltilvl.MapRefusjonsgr
 import no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.periodisering.refusjon.MapRefusjonsgrunnlagFraVLTilRegel;
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagInput;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
-import no.nav.folketrygdloven.kalkulator.modell.refusjon.FordelingGrunnlagDto;
+import no.nav.folketrygdloven.kalkulator.modell.refusjon.FordelingGrunnlag;
 import no.nav.folketrygdloven.kalkulator.output.RegelSporingAggregat;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningsgrunnlagRegelType;
 import no.nav.folketrygdloven.regelmodelloversetter.KalkulusRegler;
@@ -21,7 +21,7 @@ public class RefusjonsgrunnlagTjeneste {
         }
         var modell = MapRefusjonsgrunnlagFraVLTilRegel.map(input);
         if (modell.isEmpty()) {
-            return new RefusjonsgrunnlagResultat(input.getBeregningsgrunnlag(), new FordelingGrunnlagDto(List.of()),
+            return new RefusjonsgrunnlagResultat(input.getBeregningsgrunnlag(), new FordelingGrunnlag(List.of()),
                 new RegelSporingAggregat(List.of()));
         }
         var resultat = KalkulusRegler.fastsettRefusjonsgrunnlag(modell.get());
@@ -33,7 +33,7 @@ public class RefusjonsgrunnlagTjeneste {
     }
 
     public record RefusjonsgrunnlagResultat(BeregningsgrunnlagDto beregningsgrunnlag,
-                                           FordelingGrunnlagDto fordelingGrunnlag,
+                                           FordelingGrunnlag fordelingGrunnlag,
                                            RegelSporingAggregat regelsporinger) {
     }
 }

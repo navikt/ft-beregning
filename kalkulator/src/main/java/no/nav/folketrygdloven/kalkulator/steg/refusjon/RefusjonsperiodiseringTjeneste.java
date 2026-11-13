@@ -1,7 +1,7 @@
 package no.nav.folketrygdloven.kalkulator.steg.refusjon;
 
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagInput;
-import no.nav.folketrygdloven.kalkulator.modell.refusjon.FordelingGrunnlagDto;
+import no.nav.folketrygdloven.kalkulator.modell.refusjon.FordelingGrunnlag;
 import no.nav.folketrygdloven.kalkulator.output.BeregningsgrunnlagRegelResultat;
 import no.nav.folketrygdloven.kalkulator.steg.fordeling.periodisering.FordelPerioderTjeneste;
 
@@ -20,6 +20,6 @@ public final class RefusjonsperiodiseringTjeneste {
         }
     }
 
-    public record Resultat(BeregningsgrunnlagRegelResultat regelResultat, FordelingGrunnlagDto fordelingGrunnlag) {
+    public record Resultat(BeregningsgrunnlagRegelResultat regelResultat, FordelingGrunnlag fordelingGrunnlag) {
     }
 }

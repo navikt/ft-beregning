@@ -1,24 +1,25 @@
 package no.nav.folketrygdloven.kalkulator.guitjenester;
 
-import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagGUIInput;
+import no.nav.folketrygdloven.kalkulator.modell.refusjon.FordelingGrunnlag;
+import no.nav.folketrygdloven.kalkulator.modell.refusjon.Refusjonsandel;
+import no.nav.folketrygdloven.kalkulator.modell.refusjon.Refusjonsperiode;
 import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
+import no.nav.folketrygdloven.kalkulus.response.fordelingsgrunnlag.gui.FordelingGrunnlagDto;
 import no.nav.folketrygdloven.kalkulus.response.fordelingsgrunnlag.gui.RefusjonsandelDto;
 import no.nav.folketrygdloven.kalkulus.response.fordelingsgrunnlag.gui.RefusjonsperiodeDto;
 
 public class FordelingsgrunnlagDtoTjeneste {
 
-    public no.nav.folketrygdloven.kalkulus.response.fordelingsgrunnlag.gui.FordelingGrunnlagDto lagFordelingsgrunnlagDto(
-            BeregningsgrunnlagGUIInput input) {
-        var grunnlag = input.getFordelingGrunnlag()
-                .orElseThrow(() -> new IllegalStateException("Fordelingsgrunnlag mangler i GUI-input."));
-        var refusjonsandeler = grunnlag.refusjonsandeler().stream()
+    public FordelingGrunnlagDto lagFordelingsgrunnlagDto(
+        FordelingGrunnlag fordelingsgrunnlag) {
+        var refusjonsandeler = fordelingsgrunnlag.refusjonsandeler().stream()
                 .map(FordelingsgrunnlagDtoTjeneste::mapRefusjonsandel)
                 .toList();
-        return new no.nav.folketrygdloven.kalkulus.response.fordelingsgrunnlag.gui.FordelingGrunnlagDto(refusjonsandeler);
+        return new FordelingGrunnlagDto(refusjonsandeler);
     }
 
     private static RefusjonsandelDto mapRefusjonsandel(
-            no.nav.folketrygdloven.kalkulator.modell.refusjon.RefusjonsandelDto andel) {
+            Refusjonsandel andel) {
         var refusjonsperioder = andel.refusjonsperioder().stream()
                 .map(FordelingsgrunnlagDtoTjeneste::mapRefusjonsperiode)
                 .toList();
@@ -31,7 +32,7 @@ public class FordelingsgrunnlagDtoTjeneste {
     }
 
     private static RefusjonsperiodeDto mapRefusjonsperiode(
-            no.nav.folketrygdloven.kalkulator.modell.refusjon.RefusjonsperiodeDto periode) {
+            Refusjonsperiode periode) {
         return new RefusjonsperiodeDto(
                 periode.periode().getFomDato(),
                 periode.periode().getTomDato(),

@@ -32,9 +32,9 @@ class RefusjonsmodellTest {
     void periode_bevarer_verdier_ved_kopiering() {
         var periode = Intervall.fraOgMedTilOgMed(LocalDate.of(2026, 1, 1), LocalDate.of(2026, 1, 31));
         var refusjonPrMnd = Beløp.fra(new BigDecimal("1234.56"));
-        var original = new RefusjonsperiodeDto(periode, refusjonPrMnd, RefusjonUtfall.REDUSERT,
+        var original = new Refusjonsperiode(periode, refusjonPrMnd, RefusjonUtfall.REDUSERT,
                 RefusjonUtfallÅrsak.ALLEREDE_DIREKTE_UTBETALT);
-        var kopi = new RefusjonsperiodeDto(original.periode(), original.refusjonPrMnd(), original.utfall(),
+        var kopi = new Refusjonsperiode(original.periode(), original.refusjonPrMnd(), original.utfall(),
                 original.utfallÅrsak());
 
         assertThat(original.periode()).isEqualTo(periode);
@@ -50,26 +50,26 @@ class RefusjonsmodellTest {
 
     @Test
     void toString_viser_perioder_rekursivt_uten_sensitive_felter() {
-        var førstePeriode = new RefusjonsperiodeDto(
+        var førstePeriode = new Refusjonsperiode(
                 Intervall.fraOgMedTilOgMed(LocalDate.of(2026, 1, 1), LocalDate.of(2026, 1, 31)),
                 Beløp.fra(new BigDecimal("1234.56")), RefusjonUtfall.REDUSERT,
                 RefusjonUtfallÅrsak.ALLEREDE_DIREKTE_UTBETALT);
-        var andrePeriode = new RefusjonsperiodeDto(
+        var andrePeriode = new Refusjonsperiode(
                 Intervall.fraOgMedTilOgMed(LocalDate.of(2026, 2, 1), LocalDate.of(2026, 2, 28)),
                 Beløp.fra(new BigDecimal("4321.09")), RefusjonUtfall.INNVILGET,
                 RefusjonUtfallÅrsak.UTMELDT);
-        var tredjePeriode = new RefusjonsperiodeDto(
+        var tredjePeriode = new Refusjonsperiode(
                 Intervall.fraOgMedTilOgMed(LocalDate.of(2026, 3, 1), LocalDate.of(2026, 3, 31)),
                 Beløp.fra(new BigDecimal("9876.54")), RefusjonUtfall.AVSLÅTT,
                 RefusjonUtfallÅrsak.IKKE_INNENFOR_FRIST);
         var virksomhetsref = InternArbeidsforholdRefDto.namedRef("SENSITIV-REF-1");
         var personref = InternArbeidsforholdRefDto.namedRef("SENSITIV-REF-2");
-        var virksomhetsandel = new RefusjonsandelDto(ARBEIDSGIVER, virksomhetsref, RefusjonKilde.SAKSBEHANDLER, null,
+        var virksomhetsandel = new Refusjonsandel(ARBEIDSGIVER, virksomhetsref, RefusjonKilde.SAKSBEHANDLER, null,
                 List.of(førstePeriode, andrePeriode));
-        var personandel = new RefusjonsandelDto(Arbeidsgiver.person(new AktørId("1111111111111")), personref,
+        var personandel = new Refusjonsandel(Arbeidsgiver.person(new AktørId("1111111111111")), personref,
                 RefusjonKilde.INNTEKTSMELDING, new JournalpostId("SENSITIV-JOURNALPOST"),
                 List.of(tredjePeriode, andrePeriode));
-        var grunnlag = new FordelingGrunnlagDto(List.of(virksomhetsandel, personandel));
+        var grunnlag = new FordelingGrunnlag(List.of(virksomhetsandel, personandel));
 
         var førstePeriodeTekst = "RefusjonsperiodeDto[periode="
                 + Intervall.fraOgMedTilOgMed(LocalDate.of(2026, 1, 1), LocalDate.of(2026, 1, 31))
@@ -105,9 +105,9 @@ class RefusjonsmodellTest {
 
     @Test
     void grunnlagsconstructor_tar_uforanderlig_snapshot_av_liste() {
-        var andeler = new ArrayList<RefusjonsandelDto>();
+        var andeler = new ArrayList<Refusjonsandel>();
 
-        var grunnlag = new FordelingGrunnlagDto(andeler);
+        var grunnlag = new FordelingGrunnlag(andeler);
         andeler.add(null);
 
         var refusjonsandeler = grunnlag.refusjonsandeler();
@@ -138,7 +138,7 @@ class RefusjonsmodellTest {
             var inntektsmelding = andel("A-1", RefusjonKilde.INNTEKTSMELDING, JOURNALPOST);
             var saksbehandler = andel("A-1", RefusjonKilde.SAKSBEHANDLER, null);
 
-            var grunnlag = new FordelingGrunnlagDto(List.of(inntektsmelding, saksbehandler));
+            var grunnlag = new FordelingGrunnlag(List.of(inntektsmelding, saksbehandler));
 
             assertThat(grunnlag.refusjonsandeler()).containsExactly(inntektsmelding, saksbehandler);
         }
@@ -150,10 +150,10 @@ class RefusjonsmodellTest {
             var inntektsmeldingsandeler = List.of(inntektsmelding, andel("A-1", RefusjonKilde.INNTEKTSMELDING, ANNEN_JOURNALPOST));
             var saksbehandlerandeler = List.of(saksbehandler, andel("A-1", RefusjonKilde.SAKSBEHANDLER, null));
 
-            assertThatThrownBy(() -> new FordelingGrunnlagDto(inntektsmeldingsandeler))
+            assertThatThrownBy(() -> new FordelingGrunnlag(inntektsmeldingsandeler))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("Flere refusjonsandeler med samme arbeidsgiver, arbeidsforholdsreferanse og kilde.");
-            assertThatThrownBy(() -> new FordelingGrunnlagDto(saksbehandlerandeler))
+            assertThatThrownBy(() -> new FordelingGrunnlag(saksbehandlerandeler))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("Flere refusjonsandeler med samme arbeidsgiver, arbeidsforholdsreferanse og kilde.");
         }
@@ -162,35 +162,35 @@ class RefusjonsmodellTest {
         void like_referanseverdier_i_ulike_objekter_regnes_som_duplikater() {
             var førsteRef = InternArbeidsforholdRefDto.namedRef("A-1");
             var andreRef = InternArbeidsforholdRefDto.ref(førsteRef.getUUIDReferanse());
-            var førsteAndel = new RefusjonsandelDto(ARBEIDSGIVER, førsteRef, RefusjonKilde.SAKSBEHANDLER, null, List.of());
-            var andreAndel = new RefusjonsandelDto(ARBEIDSGIVER, andreRef, RefusjonKilde.SAKSBEHANDLER, null, List.of());
+            var førsteAndel = new Refusjonsandel(ARBEIDSGIVER, førsteRef, RefusjonKilde.SAKSBEHANDLER, null, List.of());
+            var andreAndel = new Refusjonsandel(ARBEIDSGIVER, andreRef, RefusjonKilde.SAKSBEHANDLER, null, List.of());
             var andeler = List.of(førsteAndel, andreAndel);
 
-            assertThatThrownBy(() -> new FordelingGrunnlagDto(andeler))
+            assertThatThrownBy(() -> new FordelingGrunnlag(andeler))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("Flere refusjonsandeler med samme arbeidsgiver, arbeidsforholdsreferanse og kilde.");
         }
 
         @Test
         void nullreferanse_er_en_egen_nøkkel_ikke_et_vilkårlig_arbeidsforhold() {
-            var utenSpesifiktArbeidsforhold = new RefusjonsandelDto(ARBEIDSGIVER, InternArbeidsforholdRefDto.nullRef(),
+            var utenSpesifiktArbeidsforhold = new Refusjonsandel(ARBEIDSGIVER, InternArbeidsforholdRefDto.nullRef(),
                     RefusjonKilde.SAKSBEHANDLER, null, List.of());
             var spesifiktArbeidsforhold = andel("A-1", RefusjonKilde.SAKSBEHANDLER, null);
-            var grunnlag = new FordelingGrunnlagDto(List.of(utenSpesifiktArbeidsforhold, spesifiktArbeidsforhold));
+            var grunnlag = new FordelingGrunnlag(List.of(utenSpesifiktArbeidsforhold, spesifiktArbeidsforhold));
             var duplikateAndeler = List.of(utenSpesifiktArbeidsforhold, utenSpesifiktArbeidsforhold);
 
             assertThat(grunnlag.refusjonsandeler()).containsExactly(utenSpesifiktArbeidsforhold, spesifiktArbeidsforhold);
-            assertThatThrownBy(() -> new FordelingGrunnlagDto(duplikateAndeler))
+            assertThatThrownBy(() -> new FordelingGrunnlag(duplikateAndeler))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("Flere refusjonsandeler med samme arbeidsgiver, arbeidsforholdsreferanse og kilde.");
         }
 
         @Test
         void ulike_arbeidsgivere_og_arbeidsforhold_godtas() {
-            var sammeArbeidsforholdUlikArbeidsgiver = new FordelingGrunnlagDto(List.of(
+            var sammeArbeidsforholdUlikArbeidsgiver = new FordelingGrunnlag(List.of(
                     andel(ARBEIDSGIVER, "A-1", RefusjonKilde.SAKSBEHANDLER, null),
                     andel(ANNEN_ARBEIDSGIVER, "A-1", RefusjonKilde.SAKSBEHANDLER, null)));
-            var sammeArbeidsgiverUliktArbeidsforhold = new FordelingGrunnlagDto(List.of(
+            var sammeArbeidsgiverUliktArbeidsforhold = new FordelingGrunnlag(List.of(
                     andel(ARBEIDSGIVER, "A-1", RefusjonKilde.SAKSBEHANDLER, null),
                     andel(ARBEIDSGIVER, "A-2", RefusjonKilde.SAKSBEHANDLER, null)));
 
@@ -203,13 +203,13 @@ class RefusjonsmodellTest {
             var januar = periode("2026-01-01", "2026-01-31", "1234.56");
             var februar = periode("2026-02-01", "2026-02-28", "4321.09");
             var perioder = new ArrayList<>(List.of(januar));
-            var andel = new RefusjonsandelDto(ARBEIDSGIVER, InternArbeidsforholdRefDto.namedRef("A-1"),
+            var andel = new Refusjonsandel(ARBEIDSGIVER, InternArbeidsforholdRefDto.namedRef("A-1"),
                     RefusjonKilde.INNTEKTSMELDING, JOURNALPOST, perioder);
             var andeler = new ArrayList<>(List.of(andel));
-            var grunnlag = new FordelingGrunnlagDto(andeler);
-            var kopiertAndel = new RefusjonsandelDto(andel.arbeidsgiver(), andel.arbeidsforholdRef(), andel.kilde(),
+            var grunnlag = new FordelingGrunnlag(andeler);
+            var kopiertAndel = new Refusjonsandel(andel.arbeidsgiver(), andel.arbeidsforholdRef(), andel.kilde(),
                     andel.journalpostId(), andel.refusjonsperioder());
-            var kopi = new FordelingGrunnlagDto(grunnlag.refusjonsandeler());
+            var kopi = new FordelingGrunnlag(grunnlag.refusjonsandeler());
 
             perioder.add(februar);
             andeler.clear();
@@ -229,18 +229,18 @@ class RefusjonsmodellTest {
             assertThatThrownBy(refusjonsperioder::clear).isInstanceOf(UnsupportedOperationException.class);
         }
 
-        private RefusjonsandelDto andel(String referanseSeed, RefusjonKilde kilde, JournalpostId journalpostId) {
+        private Refusjonsandel andel(String referanseSeed, RefusjonKilde kilde, JournalpostId journalpostId) {
             return andel(ARBEIDSGIVER, referanseSeed, kilde, journalpostId);
         }
 
-        private RefusjonsandelDto andel(Arbeidsgiver arbeidsgiver, String referanseSeed, RefusjonKilde kilde,
-                JournalpostId journalpostId) {
-            return new RefusjonsandelDto(arbeidsgiver, InternArbeidsforholdRefDto.namedRef(referanseSeed), kilde,
+        private Refusjonsandel andel(Arbeidsgiver arbeidsgiver, String referanseSeed, RefusjonKilde kilde,
+                                     JournalpostId journalpostId) {
+            return new Refusjonsandel(arbeidsgiver, InternArbeidsforholdRefDto.namedRef(referanseSeed), kilde,
                     journalpostId, List.of());
         }
 
-        private RefusjonsperiodeDto periode(String fom, String tom, String refusjonPrMnd) {
-            return new RefusjonsperiodeDto(Intervall.fraOgMedTilOgMed(LocalDate.parse(fom), LocalDate.parse(tom)),
+        private Refusjonsperiode periode(String fom, String tom, String refusjonPrMnd) {
+            return new Refusjonsperiode(Intervall.fraOgMedTilOgMed(LocalDate.parse(fom), LocalDate.parse(tom)),
                     Beløp.fra(new BigDecimal(refusjonPrMnd)), RefusjonUtfall.INNVILGET, RefusjonUtfallÅrsak.UTMELDT);
         }
 

@@ -1,7 +1,6 @@
 package no.nav.folketrygdloven.kalkulator.guitjenester;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -9,11 +8,9 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import no.nav.folketrygdloven.kalkulator.KoblingReferanseMock;
-import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagGUIInput;
-import no.nav.folketrygdloven.kalkulator.modell.refusjon.FordelingGrunnlagDto;
-import no.nav.folketrygdloven.kalkulator.modell.refusjon.RefusjonsandelDto;
-import no.nav.folketrygdloven.kalkulator.modell.refusjon.RefusjonsperiodeDto;
+import no.nav.folketrygdloven.kalkulator.modell.refusjon.FordelingGrunnlag;
+import no.nav.folketrygdloven.kalkulator.modell.refusjon.Refusjonsandel;
+import no.nav.folketrygdloven.kalkulator.modell.refusjon.Refusjonsperiode;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
@@ -36,37 +33,37 @@ class FordelingsgrunnlagDtoTjenesteTest {
     @Test
     void mapper_fordelingsgrunnlag_med_andeler_perioder_og_valgfrie_felt() {
         var virksomhetsref = InternArbeidsforholdRefDto.namedRef("test-virksomhet");
-        var virksomhetsandel = new RefusjonsandelDto(
+        var virksomhetsandel = new Refusjonsandel(
                 Arbeidsgiver.virksomhet(ORGNR),
                 virksomhetsref,
                 RefusjonKilde.SAKSBEHANDLER,
                 null,
                 List.of(
-                        new RefusjonsperiodeDto(
+                        new Refusjonsperiode(
                                 Intervall.fraOgMedTilOgMed(PERIODE_FOM, PERIODE_MELLOM),
                                 Beløp.fra(new BigDecimal("1250.50")),
                                 RefusjonUtfall.REDUSERT,
                                 RefusjonUtfallÅrsak.ALLEREDE_DIREKTE_UTBETALT),
-                        new RefusjonsperiodeDto(
+                        new Refusjonsperiode(
                                 Intervall.fraOgMedTilOgMed(PERIODE_MELLOM.plusDays(1), PERIODE_TOM),
                                 Beløp.fra(new BigDecimal("875.25")),
                                 RefusjonUtfall.INNVILGET,
                                 null)));
         var journalpostId = new JournalpostId("JP-test-1");
         var aktørId = AktørId.dummy();
-        var personandel = new RefusjonsandelDto(
+        var personandel = new Refusjonsandel(
                 Arbeidsgiver.person(aktørId),
                 InternArbeidsforholdRefDto.nullRef(),
                 RefusjonKilde.INNTEKTSMELDING,
                 journalpostId,
-                List.of(new RefusjonsperiodeDto(
+                List.of(new Refusjonsperiode(
                         Intervall.fraOgMedTilOgMed(PERIODE_FOM, PERIODE_TOM),
                         Beløp.fra(new BigDecimal("640.00")),
                         null,
                         null)));
-        var grunnlag = new FordelingGrunnlagDto(List.of(virksomhetsandel, personandel));
+        var grunnlag = new FordelingGrunnlag(List.of(virksomhetsandel, personandel));
 
-        var resultat = guiTjeneste.lagFordelingsgrunnlagDto(inputMedFordelingsgrunnlag(grunnlag));
+        var resultat = guiTjeneste.lagFordelingsgrunnlagDto(grunnlag);
 
         assertThat(resultat.refusjonsandeler()).hasSize(2);
         var virksomhetsDto = resultat.refusjonsandeler().get(0);
@@ -106,22 +103,8 @@ class FordelingsgrunnlagDtoTjenesteTest {
 
     @Test
     void tomt_fordelingsgrunnlag_mappes_til_tom_liste() {
-        var resultat = guiTjeneste.lagFordelingsgrunnlagDto(inputMedFordelingsgrunnlag(new FordelingGrunnlagDto(List.of())));
+        var resultat = guiTjeneste.lagFordelingsgrunnlagDto(new FordelingGrunnlag(List.of()));
 
         assertThat(resultat.refusjonsandeler()).isEmpty();
-    }
-
-    @Test
-    void manglende_fordelingsgrunnlag_gir_tydelig_feil_uten_sensitive_verdier() {
-        var input = new BeregningsgrunnlagGUIInput(new KoblingReferanseMock(PERIODE_FOM), null, List.of(), null);
-
-        assertThatThrownBy(() -> guiTjeneste.lagFordelingsgrunnlagDto(input))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("Fordelingsgrunnlag mangler i GUI-input.");
-    }
-
-    private static BeregningsgrunnlagGUIInput inputMedFordelingsgrunnlag(FordelingGrunnlagDto grunnlag) {
-        var input = new BeregningsgrunnlagGUIInput(new KoblingReferanseMock(PERIODE_FOM), null, List.of(), null);
-        return input.medFordelingGrunnlag(grunnlag);
     }
 }

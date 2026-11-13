@@ -38,9 +38,9 @@ import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseGrunnlagD
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektsmeldingDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektsmeldingDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.iay.RefusjonDto;
-import no.nav.folketrygdloven.kalkulator.modell.refusjon.FordelingGrunnlagDto;
-import no.nav.folketrygdloven.kalkulator.modell.refusjon.RefusjonsandelDto;
-import no.nav.folketrygdloven.kalkulator.modell.refusjon.RefusjonsperiodeDto;
+import no.nav.folketrygdloven.kalkulator.modell.refusjon.FordelingGrunnlag;
+import no.nav.folketrygdloven.kalkulator.modell.refusjon.Refusjonsandel;
+import no.nav.folketrygdloven.kalkulator.modell.refusjon.Refusjonsperiode;
 import no.nav.folketrygdloven.kalkulator.modell.svp.AktivitetDto;
 import no.nav.folketrygdloven.kalkulator.modell.svp.PeriodeMedUtbetalingsgradDto;
 import no.nav.folketrygdloven.kalkulator.modell.svp.UtbetalingsgradPrAktivitetDto;
@@ -295,7 +295,7 @@ class RefusjonsgrunnlagTjenesteTest {
 
     @Test
     void skal_avvise_input_med_tomt_fordelingsgrunnlag() {
-        var input = input().medFordelingGrunnlag(new FordelingGrunnlagDto(List.of()));
+        var input = input().medFordelingGrunnlag(new FordelingGrunnlag(List.of()));
 
         assertThatThrownBy(() -> tjeneste.fastsettRefusjonsgrunnlag(input))
             .isInstanceOf(IllegalArgumentException.class)
@@ -304,9 +304,9 @@ class RefusjonsgrunnlagTjenesteTest {
 
     @Test
     void skal_avvise_input_med_fordelingsgrunnlag_som_inneholder_refusjon() {
-        var refusjonsandel = new RefusjonsandelDto(virksomhet("999999999"), REF, RefusjonKilde.INNTEKTSMELDING,
+        var refusjonsandel = new Refusjonsandel(virksomhet("999999999"), REF, RefusjonKilde.INNTEKTSMELDING,
             new JournalpostId("101"), List.of(periode(FOM, new Periode(FOM, null).getTom(), "1000")));
-        var input = input().medFordelingGrunnlag(new FordelingGrunnlagDto(List.of(refusjonsandel)));
+        var input = input().medFordelingGrunnlag(new FordelingGrunnlag(List.of(refusjonsandel)));
 
         assertThatThrownBy(() -> tjeneste.fastsettRefusjonsgrunnlag(input))
             .isInstanceOf(IllegalArgumentException.class)
@@ -559,8 +559,8 @@ class RefusjonsgrunnlagTjenesteTest {
         return new Kravperioder(new Periode(fom, tom), new BigDecimal(månedsbeløp));
     }
 
-    private static RefusjonsperiodeDto periode(LocalDate fom, LocalDate tom, String månedsbeløp) {
-        return new RefusjonsperiodeDto(Intervall.fraOgMedTilOgMed(fom, tom),
+    private static Refusjonsperiode periode(LocalDate fom, LocalDate tom, String månedsbeløp) {
+        return new Refusjonsperiode(Intervall.fraOgMedTilOgMed(fom, tom),
             Beløp.fra(new BigDecimal(månedsbeløp)), RefusjonUtfall.INNVILGET, null);
     }
 }
