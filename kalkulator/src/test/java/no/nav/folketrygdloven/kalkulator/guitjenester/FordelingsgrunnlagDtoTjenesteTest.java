@@ -92,7 +92,6 @@ class FordelingsgrunnlagDtoTjenesteTest {
         assertThat(førstePeriode.refusjonPrMnd().verdi()).isEqualByComparingTo("1250.50");
         assertThat(førstePeriode.utfall()).isEqualTo(RefusjonUtfall.REDUSERT);
         assertThat(førstePeriode.utfallÅrsak()).isEqualTo(RefusjonUtfallÅrsak.ALLEREDE_DIREKTE_UTBETALT);
-        assertThat(førstePeriode.utfallBegrunnelse()).isEqualTo(BEGRUNNELSE);
 
         var andrePeriode = virksomhetsDto.refusjonsperioder().get(1);
         assertThat(andrePeriode.fom()).isEqualTo(PERIODE_MELLOM.plusDays(1));
@@ -100,7 +99,6 @@ class FordelingsgrunnlagDtoTjenesteTest {
         assertThat(andrePeriode.refusjonPrMnd().verdi()).isEqualByComparingTo("875.25");
         assertThat(andrePeriode.utfall()).isEqualTo(RefusjonUtfall.INNVILGET);
         assertThat(andrePeriode.utfallÅrsak()).isNull();
-        assertThat(andrePeriode.utfallBegrunnelse()).isNull();
 
         var personDto = resultat.refusjonsandeler().get(1);
         assertThat(personDto.arbeidsgiverIdent()).isEqualTo(aktørId.getId());
@@ -114,7 +112,6 @@ class FordelingsgrunnlagDtoTjenesteTest {
         assertThat(personperiode.refusjonPrMnd().verdi()).isEqualByComparingTo("640.00");
         assertThat(personperiode.utfall()).isNull();
         assertThat(personperiode.utfallÅrsak()).isNull();
-        assertThat(personperiode.utfallBegrunnelse()).isNull();
     }
 
     @Test

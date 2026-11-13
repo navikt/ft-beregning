@@ -9,7 +9,6 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import no.nav.folketrygdloven.kalkulus.annoteringer.Fritekst;
 import no.nav.folketrygdloven.kalkulus.felles.Beløp;
 import no.nav.folketrygdloven.kalkulus.kodeverk.RefusjonUtfall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.RefusjonUtfallÅrsak;
@@ -22,5 +21,4 @@ public record RefusjonsperiodeDto(
         @NotNull LocalDate tom,
         @NotNull @Valid Beløp refusjonPrMnd,
         @NotNull @Valid RefusjonUtfall utfall,
-        @Valid RefusjonUtfallÅrsak utfallÅrsak,
-        @Fritekst String utfallBegrunnelse) {}
+        @Valid RefusjonUtfallÅrsak utfallÅrsak) {}

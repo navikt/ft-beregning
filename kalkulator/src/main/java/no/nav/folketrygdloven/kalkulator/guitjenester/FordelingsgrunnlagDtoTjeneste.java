@@ -37,8 +37,7 @@ public class FordelingsgrunnlagDtoTjeneste {
                 periode.periode().getTomDato(),
                 periode.refusjonPrMnd() == null ? null : ModellTyperMapper.beløpTilDto(periode.refusjonPrMnd()),
                 periode.utfall(),
-                periode.utfallÅrsak(),
-                periode.utfallBegrunnelse());
+                periode.utfallÅrsak());
     }
 
     private static String mapArbeidsforholdRef(InternArbeidsforholdRefDto arbeidsforholdRef) {
