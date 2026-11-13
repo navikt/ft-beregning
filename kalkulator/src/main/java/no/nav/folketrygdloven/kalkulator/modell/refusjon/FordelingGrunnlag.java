@@ -13,9 +13,9 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.RefusjonKilde;
  * Grunnlag som inneholder informasjon om fordeling av beregningsgrunnlaget
  * (kun refusjon oktober 2026, på sikt er tanken gradering og utbetalingsperioder)
  */
-public record FordelingGrunnlagDto(List<RefusjonsandelDto> refusjonsandeler) {
+public record FordelingGrunnlag(List<Refusjonsandel> refusjonsandeler) {
 
-    public FordelingGrunnlagDto {
+    public FordelingGrunnlag {
         refusjonsandeler = Collections.unmodifiableList(new ArrayList<>(refusjonsandeler));
         validerDomeneregler(refusjonsandeler);
     }
@@ -25,7 +25,7 @@ public record FordelingGrunnlagDto(List<RefusjonsandelDto> refusjonsandeler) {
         return "FordelingGrunnlagDto[refusjonsandeler=" + refusjonsandeler + "]";
     }
 
-    private static void validerDomeneregler(List<RefusjonsandelDto> refusjonsandeler) {
+    private static void validerDomeneregler(List<Refusjonsandel> refusjonsandeler) {
         var nøkler = new HashSet<RefusjonsandelNøkkel>();
         for (var andel : refusjonsandeler) {
             var nøkkel = new RefusjonsandelNøkkel(andel.arbeidsgiver(), andel.arbeidsforholdRef(), andel.kilde());

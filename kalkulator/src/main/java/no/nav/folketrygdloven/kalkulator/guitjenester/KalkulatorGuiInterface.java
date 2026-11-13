@@ -6,6 +6,7 @@ import java.util.List;
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagGUIInput;
 import no.nav.folketrygdloven.kalkulator.input.YtelsespesifiktGrunnlag;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
+import no.nav.folketrygdloven.kalkulator.modell.refusjon.FordelingGrunnlag;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.BeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulus.response.fordelingsgrunnlag.gui.FordelingGrunnlagDto;
@@ -33,7 +34,7 @@ public interface KalkulatorGuiInterface {
      * @return dto som representerer fordelingsgrunnlaget
      */
 
-    FordelingGrunnlagDto lagFordelingsgrunnlagDto(BeregningsgrunnlagGUIInput input);
+    FordelingGrunnlagDto lagFordelingsgrunnlagDto(FordelingGrunnlag input);
 
     /** Finn arbeidsprosenter for en andel for en tidsperiode. Foreldrepenger har egen logikk her.
      *

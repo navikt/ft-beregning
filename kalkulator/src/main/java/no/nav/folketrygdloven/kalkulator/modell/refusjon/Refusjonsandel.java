@@ -9,10 +9,10 @@ import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto
 import no.nav.folketrygdloven.kalkulus.felles.JournalpostId;
 import no.nav.folketrygdloven.kalkulus.kodeverk.RefusjonKilde;
 
-public record RefusjonsandelDto(Arbeidsgiver arbeidsgiver, InternArbeidsforholdRefDto arbeidsforholdRef, RefusjonKilde kilde,
-        JournalpostId journalpostId, List<RefusjonsperiodeDto> refusjonsperioder) {
+public record Refusjonsandel(Arbeidsgiver arbeidsgiver, InternArbeidsforholdRefDto arbeidsforholdRef, RefusjonKilde kilde,
+                             JournalpostId journalpostId, List<Refusjonsperiode> refusjonsperioder) {
 
-    public RefusjonsandelDto {
+    public Refusjonsandel {
         arbeidsforholdRef = arbeidsforholdRef != null ? arbeidsforholdRef : InternArbeidsforholdRefDto.nullRef();
         refusjonsperioder = Collections.unmodifiableList(new ArrayList<>(refusjonsperioder));
         if (kilde == RefusjonKilde.INNTEKTSMELDING && journalpostId == null) {

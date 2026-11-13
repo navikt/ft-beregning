@@ -20,7 +20,7 @@ import no.nav.folketrygdloven.kalkulator.modell.iay.InntektsmeldingDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.KravperioderPrArbeidsforholdDto;
 import no.nav.folketrygdloven.kalkulator.modell.opptjening.OpptjeningAktiviteterDto;
 import no.nav.folketrygdloven.kalkulator.modell.opptjening.OpptjeningAktiviteterDto.OpptjeningPeriodeDto;
-import no.nav.folketrygdloven.kalkulator.modell.refusjon.FordelingGrunnlagDto;
+import no.nav.folketrygdloven.kalkulator.modell.refusjon.FordelingGrunnlag;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
 
@@ -44,7 +44,7 @@ public class BeregningsgrunnlagInput {
     /**
      * Grunnlag som inneholder informasjon om fordeling av beregningsgrunnlaget
      */
-    private FordelingGrunnlagDto fordelingGrunnlag;
+    private FordelingGrunnlag fordelingGrunnlag;
 
     /**
      * Refusjonsperioder pr mottattt krav pr Arbeidsgiver
@@ -140,7 +140,7 @@ public class BeregningsgrunnlagInput {
         return beregningsgrunnlagGrunnlag;
     }
 
-    public Optional<FordelingGrunnlagDto> getFordelingGrunnlag() {
+    public Optional<FordelingGrunnlag> getFordelingGrunnlag() {
         return Optional.ofNullable(fordelingGrunnlag);
     }
 
@@ -224,7 +224,7 @@ public class BeregningsgrunnlagInput {
         return newInput;
     }
 
-    public BeregningsgrunnlagInput medFordelingGrunnlag(FordelingGrunnlagDto grunnlag) {
+    public BeregningsgrunnlagInput medFordelingGrunnlag(FordelingGrunnlag grunnlag) {
         var newInput = new BeregningsgrunnlagInput(this);
         newInput.fordelingGrunnlag = grunnlag;
         return newInput;

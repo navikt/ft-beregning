@@ -23,7 +23,7 @@ import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseGrunnlagD
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektArbeidYtelseGrunnlagDtoBuilder;
 import no.nav.folketrygdloven.kalkulator.modell.iay.InntektsmeldingDto;
 import no.nav.folketrygdloven.kalkulator.modell.iay.KravperioderPrArbeidsforholdDto;
-import no.nav.folketrygdloven.kalkulator.modell.refusjon.FordelingGrunnlagDto;
+import no.nav.folketrygdloven.kalkulator.modell.refusjon.FordelingGrunnlag;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
 
@@ -43,7 +43,7 @@ public class BeregningsgrunnlagGUIInput {
     private BeregningsgrunnlagGrunnlagDto fordelBeregningsgrunnlagGrunnlag;
 
     /** Grunnlag som inneholder informasjon om fordeling av beregningsgrunnlaget */
-    private FordelingGrunnlagDto fordelingGrunnlag;
+    private FordelingGrunnlag fordelingGrunnlag;
 
     /** Grunnlag for Beregningsgrunnlg opprettet eller modifisert av modulen i original behandling. Settes på av modulen. */
     private List<BeregningsgrunnlagGrunnlagDto> beregningsgrunnlagGrunnlagFraForrigeBehandling = new ArrayList<>();
@@ -102,7 +102,7 @@ public class BeregningsgrunnlagGUIInput {
         return beregningsgrunnlagGrunnlag;
     }
 
-    public Optional<FordelingGrunnlagDto> getFordelingGrunnlag() {
+    public Optional<FordelingGrunnlag> getFordelingGrunnlag() {
         return Optional.ofNullable(fordelingGrunnlag);
     }
 
@@ -181,7 +181,7 @@ public class BeregningsgrunnlagGUIInput {
         return newInput;
     }
 
-    public BeregningsgrunnlagGUIInput medFordelingGrunnlag(FordelingGrunnlagDto grunnlag) {
+    public BeregningsgrunnlagGUIInput medFordelingGrunnlag(FordelingGrunnlag grunnlag) {
         var newInput = new BeregningsgrunnlagGUIInput(this);
         newInput.fordelingGrunnlag = grunnlag;
         return newInput;

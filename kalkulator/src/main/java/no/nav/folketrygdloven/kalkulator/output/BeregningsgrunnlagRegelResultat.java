@@ -7,7 +7,7 @@ import java.util.Optional;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningAktivitetAggregatDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.FaktaAggregatDto;
-import no.nav.folketrygdloven.kalkulator.modell.refusjon.FordelingGrunnlagDto;
+import no.nav.folketrygdloven.kalkulator.modell.refusjon.FordelingGrunnlag;
 
 public class BeregningsgrunnlagRegelResultat {
     private BeregningsgrunnlagDto beregningsgrunnlag;
@@ -16,7 +16,7 @@ public class BeregningsgrunnlagRegelResultat {
     private List<BeregningAvklaringsbehovResultat> avklaringsbehov = new ArrayList<>();
     private List<BeregningVilkårResultat> vilkårsresultat = new ArrayList<>();
     private RegelSporingAggregat regelsporinger;
-    private FordelingGrunnlagDto fordelingGrunnlag;
+    private FordelingGrunnlag fordelingGrunnlag;
 
     public BeregningsgrunnlagRegelResultat(BeregningAktivitetAggregatDto registerAktiviteter) {
         this.registerAktiviteter = registerAktiviteter;
@@ -52,7 +52,7 @@ public class BeregningsgrunnlagRegelResultat {
     public BeregningsgrunnlagRegelResultat(BeregningsgrunnlagDto beregningsgrunnlag,
                                            List<BeregningAvklaringsbehovResultat> avklaringsbehov,
                                            RegelSporingAggregat regelsporinger,
-                                           FordelingGrunnlagDto fordelingGrunnlag) {
+                                           FordelingGrunnlag fordelingGrunnlag) {
         this(beregningsgrunnlag, avklaringsbehov, regelsporinger);
         this.fordelingGrunnlag = fordelingGrunnlag;
     }
@@ -61,7 +61,7 @@ public class BeregningsgrunnlagRegelResultat {
         return beregningsgrunnlag;
     }
 
-    public Optional<FordelingGrunnlagDto> getFordelingGrunnlag() {
+    public Optional<FordelingGrunnlag> getFordelingGrunnlag() {
         return Optional.ofNullable(fordelingGrunnlag);
     }
 
