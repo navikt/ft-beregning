@@ -561,6 +561,6 @@ class RefusjonsgrunnlagTjenesteTest {
 
     private static RefusjonsperiodeDto periode(LocalDate fom, LocalDate tom, String månedsbeløp) {
         return new RefusjonsperiodeDto(Intervall.fraOgMedTilOgMed(fom, tom),
-            Beløp.fra(new BigDecimal(månedsbeløp)), RefusjonUtfall.INNVILGET, null, null);
+            Beløp.fra(new BigDecimal(månedsbeløp)), RefusjonUtfall.INNVILGET, null);
     }
 }

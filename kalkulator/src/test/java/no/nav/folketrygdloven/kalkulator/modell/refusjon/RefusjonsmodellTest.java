@@ -32,25 +32,20 @@ class RefusjonsmodellTest {
     void periode_bevarer_verdier_ved_kopiering() {
         var periode = Intervall.fraOgMedTilOgMed(LocalDate.of(2026, 1, 1), LocalDate.of(2026, 1, 31));
         var refusjonPrMnd = Beløp.fra(new BigDecimal("1234.56"));
-        var begrunnelse = "Refusjon er redusert for perioden.";
         var original = new RefusjonsperiodeDto(periode, refusjonPrMnd, RefusjonUtfall.REDUSERT,
-                RefusjonUtfallÅrsak.ALLEREDE_DIREKTE_UTBETALT, begrunnelse);
+                RefusjonUtfallÅrsak.ALLEREDE_DIREKTE_UTBETALT);
         var kopi = new RefusjonsperiodeDto(original.periode(), original.refusjonPrMnd(), original.utfall(),
-                original.utfallÅrsak(), original.utfallBegrunnelse());
+                original.utfallÅrsak());
 
         assertThat(original.periode()).isEqualTo(periode);
         assertThat(original.refusjonPrMnd()).isEqualByComparingTo(refusjonPrMnd);
         assertThat(original.refusjonPrMnd().verdi()).isEqualByComparingTo("1234.56");
         assertThat(original.utfall()).isEqualTo(RefusjonUtfall.REDUSERT);
         assertThat(original.utfallÅrsak()).isEqualTo(RefusjonUtfallÅrsak.ALLEREDE_DIREKTE_UTBETALT);
-        assertThat(original.utfallBegrunnelse()).isEqualTo(begrunnelse);
         assertThat(kopi.periode()).isEqualTo(periode);
         assertThat(kopi.refusjonPrMnd()).isEqualByComparingTo(refusjonPrMnd);
         assertThat(kopi.utfall()).isEqualTo(RefusjonUtfall.REDUSERT);
         assertThat(kopi.utfallÅrsak()).isEqualTo(RefusjonUtfallÅrsak.ALLEREDE_DIREKTE_UTBETALT);
-        assertThat(kopi.utfallBegrunnelse()).isEqualTo(begrunnelse);
-        assertThat(original.toString()).doesNotContain(begrunnelse);
-        assertThat(kopi.toString()).doesNotContain(begrunnelse);
     }
 
     @Test
@@ -58,15 +53,15 @@ class RefusjonsmodellTest {
         var førstePeriode = new RefusjonsperiodeDto(
                 Intervall.fraOgMedTilOgMed(LocalDate.of(2026, 1, 1), LocalDate.of(2026, 1, 31)),
                 Beløp.fra(new BigDecimal("1234.56")), RefusjonUtfall.REDUSERT,
-                RefusjonUtfallÅrsak.ALLEREDE_DIREKTE_UTBETALT, "SENSITIV FRITEKST 1");
+                RefusjonUtfallÅrsak.ALLEREDE_DIREKTE_UTBETALT);
         var andrePeriode = new RefusjonsperiodeDto(
                 Intervall.fraOgMedTilOgMed(LocalDate.of(2026, 2, 1), LocalDate.of(2026, 2, 28)),
                 Beløp.fra(new BigDecimal("4321.09")), RefusjonUtfall.INNVILGET,
-                RefusjonUtfallÅrsak.UTMELDT, "SENSITIV FRITEKST 2");
+                RefusjonUtfallÅrsak.UTMELDT);
         var tredjePeriode = new RefusjonsperiodeDto(
                 Intervall.fraOgMedTilOgMed(LocalDate.of(2026, 3, 1), LocalDate.of(2026, 3, 31)),
                 Beløp.fra(new BigDecimal("9876.54")), RefusjonUtfall.AVSLÅTT,
-                RefusjonUtfallÅrsak.IKKE_INNENFOR_FRIST, "SENSITIV FRITEKST 3");
+                RefusjonUtfallÅrsak.IKKE_INNENFOR_FRIST);
         var virksomhetsref = InternArbeidsforholdRefDto.namedRef("SENSITIV-REF-1");
         var personref = InternArbeidsforholdRefDto.namedRef("SENSITIV-REF-2");
         var virksomhetsandel = new RefusjonsandelDto(ARBEIDSGIVER, virksomhetsref, RefusjonKilde.SAKSBEHANDLER, null,
@@ -246,7 +241,7 @@ class RefusjonsmodellTest {
 
         private RefusjonsperiodeDto periode(String fom, String tom, String refusjonPrMnd) {
             return new RefusjonsperiodeDto(Intervall.fraOgMedTilOgMed(LocalDate.parse(fom), LocalDate.parse(tom)),
-                    Beløp.fra(new BigDecimal(refusjonPrMnd)), RefusjonUtfall.INNVILGET, RefusjonUtfallÅrsak.UTMELDT, null);
+                    Beløp.fra(new BigDecimal(refusjonPrMnd)), RefusjonUtfall.INNVILGET, RefusjonUtfallÅrsak.UTMELDT);
         }
 
     }

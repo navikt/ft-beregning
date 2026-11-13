@@ -30,7 +30,6 @@ class FordelingsgrunnlagDtoTjenesteTest {
     private static final LocalDate PERIODE_MELLOM = LocalDate.of(2026, 1, 31);
     private static final LocalDate PERIODE_TOM = LocalDate.of(2026, 2, 28);
     private static final String ORGNR = "000000000";
-    private static final String BEGRUNNELSE = "Vurdert etter dokumentasjon.";
 
     private final BeregningsgrunnlagGuiTjeneste guiTjeneste = new BeregningsgrunnlagGuiTjeneste();
 
@@ -47,13 +46,11 @@ class FordelingsgrunnlagDtoTjenesteTest {
                                 Intervall.fraOgMedTilOgMed(PERIODE_FOM, PERIODE_MELLOM),
                                 Beløp.fra(new BigDecimal("1250.50")),
                                 RefusjonUtfall.REDUSERT,
-                                RefusjonUtfallÅrsak.ALLEREDE_DIREKTE_UTBETALT,
-                                BEGRUNNELSE),
+                                RefusjonUtfallÅrsak.ALLEREDE_DIREKTE_UTBETALT),
                         new RefusjonsperiodeDto(
                                 Intervall.fraOgMedTilOgMed(PERIODE_MELLOM.plusDays(1), PERIODE_TOM),
                                 Beløp.fra(new BigDecimal("875.25")),
                                 RefusjonUtfall.INNVILGET,
-                                null,
                                 null)));
         var journalpostId = new JournalpostId("JP-test-1");
         var aktørId = AktørId.dummy();
@@ -65,7 +62,6 @@ class FordelingsgrunnlagDtoTjenesteTest {
                 List.of(new RefusjonsperiodeDto(
                         Intervall.fraOgMedTilOgMed(PERIODE_FOM, PERIODE_TOM),
                         Beløp.fra(new BigDecimal("640.00")),
-                        null,
                         null,
                         null)));
         var grunnlag = new FordelingGrunnlagDto(List.of(virksomhetsandel, personandel));

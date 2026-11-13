@@ -5,8 +5,7 @@ import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.RefusjonUtfall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.RefusjonUtfallÅrsak;
 
-public record RefusjonsperiodeDto(Intervall periode, Beløp refusjonPrMnd, RefusjonUtfall utfall, RefusjonUtfallÅrsak utfallÅrsak,
-        String utfallBegrunnelse) {
+public record RefusjonsperiodeDto(Intervall periode, Beløp refusjonPrMnd, RefusjonUtfall utfall, RefusjonUtfallÅrsak utfallÅrsak) {
 
     @Override
     public String toString() {
