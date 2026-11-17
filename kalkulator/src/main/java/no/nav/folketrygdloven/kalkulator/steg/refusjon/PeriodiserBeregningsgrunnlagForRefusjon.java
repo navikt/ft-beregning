@@ -75,7 +75,7 @@ public final class PeriodiserBeregningsgrunnlagForRefusjon {
     private static LocalDateTimeline<Refusjonsperiode> lagTidslinje(Refusjonsandel refusjonsandel) {
         var refusjonssegmenter = refusjonsandel.refusjonsperioder().stream().map(refusjonsperiode -> {
             mapUtfall(refusjonsperiode);
-            if (refusjonsperiode.refusjonPrMnd() == null || refusjonsperiode.refusjonPrMnd().compareTo(Beløp.ZERO) < 0) {
+            if (refusjonsperiode.refusjonsbeløpPrMnd() == null || refusjonsperiode.refusjonsbeløpPrMnd().compareTo(Beløp.ZERO) < 0) {
                 throw new IllegalArgumentException("Refusjonsperioden må ha et ikke-negativt månedsbeløp.");
             }
             return new LocalDateSegment<>(refusjonsperiode.periode().getFomDato(), refusjonsperiode.periode().getTomDato(), refusjonsperiode);
@@ -96,7 +96,7 @@ public final class PeriodiserBeregningsgrunnlagForRefusjon {
         var førsteDatoITidslinjen = refusjonstidslinje.isEmpty() ? null : refusjonstidslinje.getMinLocalDate();
         refusjonstidslinje.segmenter().forEach(refusjonssegment -> {
             var refusjonsperiode = refusjonssegment.getValue();
-            if (!(refusjonssegment.getFom().equals(førsteDatoITidslinjen) && refusjonsperiode.refusjonPrMnd().erNullEller0())) {
+            if (!(refusjonssegment.getFom().equals(førsteDatoITidslinjen) && refusjonsperiode.refusjonsbeløpPrMnd().erNullEller0())) {
                 periodeÅrsakerPerDato.computeIfAbsent(refusjonssegment.getFom(), dato -> new ArrayList<>()).add(utledÅrsak(refusjonsperiode));
             }
             if (refusjonssegment.getTom().isBefore(TIDENES_ENDE)
@@ -170,7 +170,7 @@ public final class PeriodiserBeregningsgrunnlagForRefusjon {
                                        Map<Refusjonsandel, LocalDateTimeline<Refusjonsperiode>> refusjonstidslinjerPerAndel,
                                        LocalDate periodeFom, LocalDate skjæringstidspunkt) {
         var refusjonsperiode = finnKrav(List.of(refusjonsandel), refusjonstidslinjerPerAndel, periodeFom);
-        if (refusjonsperiode == null || refusjonsperiode.refusjonPrMnd().compareTo(Beløp.ZERO) <= 0) {
+        if (refusjonsperiode == null || refusjonsperiode.refusjonsbeløpPrMnd().compareTo(Beløp.ZERO) <= 0) {
             return;
         }
         var arbeidsperiode = finnArbeidsperiode(input, refusjonsandel);
@@ -225,7 +225,7 @@ public final class PeriodiserBeregningsgrunnlagForRefusjon {
     }
 
     private static Refusjon lagRefusjon(Refusjonsperiode refusjonsperiode, Optional<Refusjon> eksisterendeRefusjon) {
-        var refusjonskravPrÅr = refusjonsperiode == null ? Beløp.ZERO : refusjonsperiode.refusjonPrMnd().multipliser(12);
+        var refusjonskravPrÅr = refusjonsperiode == null ? Beløp.ZERO : refusjonsperiode.refusjonsbeløpPrMnd().multipliser(12);
         var refusjonsutfall = refusjonsperiode == null ? Utfall.UDEFINERT : mapUtfall(refusjonsperiode);
         var skalNullstilleRefusjon = refusjonskravPrÅr.erNullEller0() || refusjonsutfall == Utfall.UNDERKJENT;
         return new Refusjon(refusjonskravPrÅr,
@@ -252,6 +252,6 @@ public final class PeriodiserBeregningsgrunnlagForRefusjon {
         if (periode.utfall() == RefusjonUtfall.AVSLÅTT) {
             return PeriodeÅrsak.REFUSJON_AVSLÅTT;
         }
-        return periode.refusjonPrMnd().erNullEller0() ? PeriodeÅrsak.REFUSJON_OPPHØRER : PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV;
+        return periode.refusjonsbeløpPrMnd().erNullEller0() ? PeriodeÅrsak.REFUSJON_OPPHØRER : PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV;
     }
 }

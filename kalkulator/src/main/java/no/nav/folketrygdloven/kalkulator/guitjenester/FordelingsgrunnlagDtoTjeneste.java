@@ -36,7 +36,7 @@ public class FordelingsgrunnlagDtoTjeneste {
         return new RefusjonsperiodeDto(
                 periode.periode().getFomDato(),
                 periode.periode().getTomDato(),
-                periode.refusjonPrMnd() == null ? null : ModellTyperMapper.beløpTilDto(periode.refusjonPrMnd()),
+                periode.refusjonsbeløpPrMnd() == null ? null : ModellTyperMapper.beløpTilDto(periode.refusjonsbeløpPrMnd()),
                 periode.utfall(),
                 periode.utfallÅrsak());
     }

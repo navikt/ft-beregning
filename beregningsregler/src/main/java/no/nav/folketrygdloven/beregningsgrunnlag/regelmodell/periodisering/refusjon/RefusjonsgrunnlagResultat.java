@@ -15,6 +15,6 @@ public record RefusjonsgrunnlagResultat(List<Refusjonsandel> refusjonsandeler, R
     public record Refusjonsandel(Arbeidsgiver arbeidsgiver, String internArbeidsforholdId, String journalpostId,  RefusjonKilde refusjonKilde,
                                 List<Refusjonsperiode> refusjonskrav) {
 
-        public record Refusjonsperiode(Periode periode, BigDecimal refusjonPrMnd, Utfall utfall, String journalpostId) {}
+        public record Refusjonsperiode(Periode periode, BigDecimal refusjonsbeløpPrMnd, Utfall utfall, String journalpostId) {}
     }
 }

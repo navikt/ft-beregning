@@ -76,14 +76,14 @@ class FordelingsgrunnlagDtoTjenesteTest {
         var førstePeriode = virksomhetsDto.refusjonsperioder().get(0);
         assertThat(førstePeriode.fom()).isEqualTo(PERIODE_FOM);
         assertThat(førstePeriode.tom()).isEqualTo(PERIODE_MELLOM);
-        assertThat(førstePeriode.refusjonPrMnd().verdi()).isEqualByComparingTo("1250.50");
+        assertThat(førstePeriode.refusjonsbeløpPrMnd().verdi()).isEqualByComparingTo("1250.50");
         assertThat(førstePeriode.utfall()).isEqualTo(RefusjonUtfall.REDUSERT);
         assertThat(førstePeriode.utfallÅrsak()).isEqualTo(RefusjonUtfallÅrsak.ALLEREDE_DIREKTE_UTBETALT);
 
         var andrePeriode = virksomhetsDto.refusjonsperioder().get(1);
         assertThat(andrePeriode.fom()).isEqualTo(PERIODE_MELLOM.plusDays(1));
         assertThat(andrePeriode.tom()).isEqualTo(PERIODE_TOM);
-        assertThat(andrePeriode.refusjonPrMnd().verdi()).isEqualByComparingTo("875.25");
+        assertThat(andrePeriode.refusjonsbeløpPrMnd().verdi()).isEqualByComparingTo("875.25");
         assertThat(andrePeriode.utfall()).isEqualTo(RefusjonUtfall.INNVILGET);
         assertThat(andrePeriode.utfallÅrsak()).isNull();
 
@@ -96,7 +96,7 @@ class FordelingsgrunnlagDtoTjenesteTest {
         var personperiode = personDto.refusjonsperioder().get(0);
         assertThat(personperiode.fom()).isEqualTo(PERIODE_FOM);
         assertThat(personperiode.tom()).isEqualTo(PERIODE_TOM);
-        assertThat(personperiode.refusjonPrMnd().verdi()).isEqualByComparingTo("640.00");
+        assertThat(personperiode.refusjonsbeløpPrMnd().verdi()).isEqualByComparingTo("640.00");
         assertThat(personperiode.utfall()).isNull();
         assertThat(personperiode.utfallÅrsak()).isNull();
     }
