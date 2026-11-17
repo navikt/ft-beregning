@@ -366,7 +366,7 @@ class RefusjonsgrunnlagTjenesteTest {
             assertThat(andel.refusjonKilde())
                 .isEqualTo(no.nav.folketrygdloven.beregningsgrunnlag.regelmodell.periodisering.refusjon.RefusjonKilde.INNTEKTSMELDING);
             assertThat(andel.refusjonskrav()).extracting(p -> p.periode().getFom()).containsExactly(FOM, FOM.plusDays(10));
-            assertThat(andel.refusjonskrav()).extracting(p -> p.refusjonsbeløpPrMnd())
+            assertThat(andel.refusjonskrav()).extracting(p -> p.refusjonPrMnd())
                 .containsExactly(new BigDecimal("1234.56"), BigDecimal.ZERO);
             assertThat(andel.refusjonskrav()).allSatisfy(p -> {
                 assertThat(p.journalpostId()).isEqualTo("101");

@@ -19,6 +19,6 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.RefusjonUtfallÅrsak;
 public record RefusjonsperiodeDto(
         @NotNull LocalDate fom,
         @NotNull LocalDate tom,
-        @NotNull @Valid Beløp refusjonsbeløpPrMnd,
+        @NotNull @Valid Beløp refusjonPrMnd,
         @NotNull @Valid RefusjonUtfall utfall,
         @Valid RefusjonUtfallÅrsak utfallÅrsak) {}
