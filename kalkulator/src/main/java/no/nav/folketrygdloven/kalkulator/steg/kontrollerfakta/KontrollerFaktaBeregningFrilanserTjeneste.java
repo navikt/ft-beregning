@@ -2,6 +2,7 @@ package no.nav.folketrygdloven.kalkulator.steg.kontrollerfakta;
 
 import static no.nav.fpsak.tidsserie.LocalDateInterval.TIDENES_BEGYNNELSE;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
@@ -48,7 +49,7 @@ public class KontrollerFaktaBeregningFrilanserTjeneste {
                     .stream().filter(ba -> ba.getOpptjeningAktivitetType().equals(OpptjeningAktivitetType.FRILANS))
                     .map(BeregningAktivitetDto::getPeriode)
                     .map(Intervall::getFomDato)
-                    .findFirst()
+                    .min(LocalDate::compareTo)
                     .orElse(TIDENES_BEGYNNELSE);
 
             var bg = beregningsgrunnlagGrunnlag.getBeregningsgrunnlagHvisFinnes()
