@@ -31,7 +31,7 @@ public final class MapRefusjonsgrunnlagFraRegelTilVL {
         var perioder = andel.refusjonskrav().stream()
             .map(krav -> new Refusjonsperiode(
                 Intervall.fraOgMedTilOgMed(krav.periode().getFom(), krav.periode().getTom()),
-                Beløp.fra(krav.refusjonsbeløpPrMnd()), switch (krav.utfall()) {
+                Beløp.fra(krav.refusjonPrMnd()), switch (krav.utfall()) {
                     case GODKJENT -> RefusjonUtfall.INNVILGET;
                     case UNDERKJENT -> RefusjonUtfall.AVSLÅTT;
                     case IKKE_VURDERT -> throw new IllegalStateException("Refusjonsperioden mangler utfall.");

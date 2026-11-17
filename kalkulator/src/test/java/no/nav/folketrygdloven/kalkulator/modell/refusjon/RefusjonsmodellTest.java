@@ -31,21 +31,76 @@ class RefusjonsmodellTest {
     @Test
     void periode_bevarer_verdier_ved_kopiering() {
         var periode = Intervall.fraOgMedTilOgMed(LocalDate.of(2026, 1, 1), LocalDate.of(2026, 1, 31));
-        var refusjonsbeløpPrMnd = Beløp.fra(new BigDecimal("1234.56"));
-        var original = new Refusjonsperiode(periode, refusjonsbeløpPrMnd, RefusjonUtfall.REDUSERT,
+        var refusjonPrMnd = Beløp.fra(new BigDecimal("1234.56"));
+        var original = new Refusjonsperiode(periode, refusjonPrMnd, RefusjonUtfall.REDUSERT,
                 RefusjonUtfallÅrsak.ALLEREDE_DIREKTE_UTBETALT);
-        var kopi = new Refusjonsperiode(original.periode(), original.refusjonsbeløpPrMnd(), original.utfall(),
+        var kopi = new Refusjonsperiode(original.periode(), original.refusjonPrMnd(), original.utfall(),
                 original.utfallÅrsak());
 
         assertThat(original.periode()).isEqualTo(periode);
-        assertThat(original.refusjonsbeløpPrMnd()).isEqualByComparingTo(refusjonsbeløpPrMnd);
-        assertThat(original.refusjonsbeløpPrMnd().verdi()).isEqualByComparingTo("1234.56");
+        assertThat(original.refusjonPrMnd()).isEqualByComparingTo(refusjonPrMnd);
+        assertThat(original.refusjonPrMnd().verdi()).isEqualByComparingTo("1234.56");
         assertThat(original.utfall()).isEqualTo(RefusjonUtfall.REDUSERT);
         assertThat(original.utfallÅrsak()).isEqualTo(RefusjonUtfallÅrsak.ALLEREDE_DIREKTE_UTBETALT);
         assertThat(kopi.periode()).isEqualTo(periode);
-        assertThat(kopi.refusjonsbeløpPrMnd()).isEqualByComparingTo(refusjonsbeløpPrMnd);
+        assertThat(kopi.refusjonPrMnd()).isEqualByComparingTo(refusjonPrMnd);
         assertThat(kopi.utfall()).isEqualTo(RefusjonUtfall.REDUSERT);
         assertThat(kopi.utfallÅrsak()).isEqualTo(RefusjonUtfallÅrsak.ALLEREDE_DIREKTE_UTBETALT);
+    }
+
+    @Test
+    void toString_viser_perioder_rekursivt_uten_sensitive_felter() {
+        var førstePeriode = new Refusjonsperiode(
+                Intervall.fraOgMedTilOgMed(LocalDate.of(2026, 1, 1), LocalDate.of(2026, 1, 31)),
+                Beløp.fra(new BigDecimal("1234.56")), RefusjonUtfall.REDUSERT,
+                RefusjonUtfallÅrsak.ALLEREDE_DIREKTE_UTBETALT);
+        var andrePeriode = new Refusjonsperiode(
+                Intervall.fraOgMedTilOgMed(LocalDate.of(2026, 2, 1), LocalDate.of(2026, 2, 28)),
+                Beløp.fra(new BigDecimal("4321.09")), RefusjonUtfall.INNVILGET,
+                RefusjonUtfallÅrsak.UTMELDT);
+        var tredjePeriode = new Refusjonsperiode(
+                Intervall.fraOgMedTilOgMed(LocalDate.of(2026, 3, 1), LocalDate.of(2026, 3, 31)),
+                Beløp.fra(new BigDecimal("9876.54")), RefusjonUtfall.AVSLÅTT,
+                RefusjonUtfallÅrsak.IKKE_INNENFOR_FRIST);
+        var virksomhetsref = InternArbeidsforholdRefDto.namedRef("SENSITIV-REF-1");
+        var personref = InternArbeidsforholdRefDto.namedRef("SENSITIV-REF-2");
+        var virksomhetsandel = new Refusjonsandel(ARBEIDSGIVER, virksomhetsref, RefusjonKilde.SAKSBEHANDLER, null,
+                List.of(førstePeriode, andrePeriode));
+        var personandel = new Refusjonsandel(Arbeidsgiver.person(new AktørId("1111111111111")), personref,
+                RefusjonKilde.INNTEKTSMELDING, new JournalpostId("SENSITIV-JOURNALPOST"),
+                List.of(tredjePeriode, andrePeriode));
+        var grunnlag = new FordelingGrunnlag(List.of(virksomhetsandel, personandel));
+
+        var førstePeriodeTekst = "RefusjonsperiodeDto[periode="
+                + Intervall.fraOgMedTilOgMed(LocalDate.of(2026, 1, 1), LocalDate.of(2026, 1, 31))
+                + ", utfall=REDUSERT, utfallÅrsak=ALLEREDE_DIREKTE_UTBETALT]";
+        var andrePeriodeTekst = "RefusjonsperiodeDto[periode="
+                + Intervall.fraOgMedTilOgMed(LocalDate.of(2026, 2, 1), LocalDate.of(2026, 2, 28))
+                + ", utfall=INNVILGET, utfallÅrsak=UTMELDT]";
+        var tredjePeriodeTekst = "RefusjonsperiodeDto[periode="
+                + Intervall.fraOgMedTilOgMed(LocalDate.of(2026, 3, 1), LocalDate.of(2026, 3, 31))
+                + ", utfall=AVSLÅTT, utfallÅrsak=IKKE_INNENFOR_FRIST]";
+        var virksomhetsandelTekst = "RefusjonsandelDto[kilde=SAKSBEHANDLER, refusjonsperioder=["
+                + førstePeriodeTekst + ", " + andrePeriodeTekst + "]]";
+        var personandelTekst = "RefusjonsandelDto[kilde=INNTEKTSMELDING, refusjonsperioder=["
+                + tredjePeriodeTekst + ", " + andrePeriodeTekst + "]]";
+
+        assertThat(førstePeriode).hasToString(førstePeriodeTekst);
+        assertThat(andrePeriode).hasToString(andrePeriodeTekst);
+        assertThat(tredjePeriode).hasToString(tredjePeriodeTekst);
+        assertThat(virksomhetsandel).hasToString(virksomhetsandelTekst);
+        assertThat(personandel).hasToString(personandelTekst);
+        assertThat(grunnlag)
+                .hasToString("FordelingGrunnlagDto[refusjonsandeler=[" + virksomhetsandelTekst + ", " + personandelTekst + "]]");
+
+        var utdata = List.of(førstePeriode.toString(), andrePeriode.toString(), tredjePeriode.toString(), virksomhetsandel.toString(),
+                personandel.toString(), grunnlag.toString());
+        var sensitiveVerdier = List.of("123456789", "1111111111111", virksomhetsref.getUUIDReferanse().toString(),
+                personref.getUUIDReferanse().toString(), "SENSITIV-JOURNALPOST", "1234.56", "4321.09", "9876.54",
+                "SENSITIV FRITEKST 1", "SENSITIV FRITEKST 2", "SENSITIV FRITEKST 3");
+        for (var tekst : utdata) {
+            assertThat(tekst).doesNotContain(sensitiveVerdier.toArray(String[]::new));
+        }
     }
 
     @Test
@@ -164,8 +219,8 @@ class RefusjonsmodellTest {
             assertThat(andel.kilde()).isEqualTo(RefusjonKilde.INNTEKTSMELDING);
             assertThat(andel.journalpostId()).isEqualTo(JOURNALPOST);
             assertThat(andel.refusjonsperioder()).containsExactly(januar);
-            assertThat(januar.refusjonsbeløpPrMnd()).isEqualByComparingTo(Beløp.fra(new BigDecimal("1234.56")));
-            assertThat(februar.refusjonsbeløpPrMnd()).isEqualByComparingTo(Beløp.fra(new BigDecimal("4321.09")));
+            assertThat(januar.refusjonPrMnd()).isEqualByComparingTo(Beløp.fra(new BigDecimal("1234.56")));
+            assertThat(februar.refusjonPrMnd()).isEqualByComparingTo(Beløp.fra(new BigDecimal("4321.09")));
             assertThat(grunnlag.refusjonsandeler()).containsExactly(andel);
             assertThat(kopi.refusjonsandeler()).containsExactly(andel);
             var refusjonsandeler = grunnlag.refusjonsandeler();
@@ -184,9 +239,9 @@ class RefusjonsmodellTest {
                     journalpostId, List.of());
         }
 
-        private Refusjonsperiode periode(String fom, String tom, String refusjonsbeløpPrMnd) {
+        private Refusjonsperiode periode(String fom, String tom, String refusjonPrMnd) {
             return new Refusjonsperiode(Intervall.fraOgMedTilOgMed(LocalDate.parse(fom), LocalDate.parse(tom)),
-                    Beløp.fra(new BigDecimal(refusjonsbeløpPrMnd)), RefusjonUtfall.INNVILGET, RefusjonUtfallÅrsak.UTMELDT);
+                    Beløp.fra(new BigDecimal(refusjonPrMnd)), RefusjonUtfall.INNVILGET, RefusjonUtfallÅrsak.UTMELDT);
         }
 
     }
