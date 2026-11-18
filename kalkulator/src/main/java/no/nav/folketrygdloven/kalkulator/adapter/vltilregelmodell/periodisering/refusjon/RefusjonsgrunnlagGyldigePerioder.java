@@ -1,6 +1,7 @@
 package no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.periodisering.refusjon;
 
 import static no.nav.fpsak.tidsserie.LocalDateInterval.TIDENES_ENDE;
+import static no.nav.fpsak.tidsserie.LocalDateInterval.withPeriodBeforeDate;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -25,6 +26,7 @@ import no.nav.folketrygdloven.kalkulator.modell.typer.Aktivitetsgrad;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Utbetalingsgrad;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
+import no.nav.folketrygdloven.kalkulus.kodeverk.InntektsmeldingType;
 import no.nav.fpsak.tidsserie.LocalDateTimeline;
 
 // TODO Vi tenker denne klassen bør flyttes inn i reglene i løpet av arbeidet med TFP-6403
@@ -42,19 +44,20 @@ final class RefusjonsgrunnlagGyldigePerioder {
             .toList();
     }
 
-    static LocalDate utledStartdato(BeregningsgrunnlagInput input, InntektsmeldingDto im,
-                                   Set<YrkesaktivitetDto> yrkesaktiviteter, List<AktivitetsAvtaleDto> ansattperioder,
-                                   PermisjonFilter permisjonFilter) {
+    static LocalDate utledStartdato(BeregningsgrunnlagInput input,
+                                    InntektsmeldingDto im,
+                                    Set<YrkesaktivitetDto> yrkesaktiviteter,
+                                    List<AktivitetsAvtaleDto> ansattperioder,
+                                    PermisjonFilter permisjonFilter) {
         var skjæringstidspunkt = input.getSkjæringstidspunktForBeregning();
         var ansettelsesperiode = FinnAnsettelsesPeriode.getMinMaksPeriode(ansattperioder, skjæringstidspunkt);
-        var førsteDagEtterPermisjon = FinnFørsteDagEtterPermisjon.finn(yrkesaktiviteter, ansettelsesperiode,
-            skjæringstidspunkt, permisjonFilter);
-        if (førsteDagEtterPermisjon.isEmpty()) {
+        var førsteDagEtterPermisjon = FinnFørsteDagEtterPermisjon.finn(yrkesaktiviteter, ansettelsesperiode, skjæringstidspunkt, permisjonFilter);
+        if (førsteDagEtterPermisjon.isEmpty() && !im.getInntektsmeldingType().equals(InntektsmeldingType.REFUSJONSKRAV)) {
             return skjæringstidspunkt;
         }
         if (input.getFagsakYtelseType() == FagsakYtelseType.FORELDREPENGER) {
-            return FinnStartdatoPermisjon.finnStartdatoPermisjon(Optional.of(im), skjæringstidspunkt,
-                førsteDagEtterPermisjon.get());
+            return FinnStartdatoPermisjon.finnStartdatoPermisjon(Optional.of(im), skjæringstidspunkt, førsteDagEtterPermisjon
+                .orElseThrow(() -> new IllegalStateException("Foreldrepenger skal ikke ha inntektsmelding av typen REFUSJONSKRAV")));
         }
         var utbetalingsgradGrunnlag = (UtbetalingsgradGrunnlag) input.getYtelsespesifiktGrunnlag();
         var førsteDatoMedUtbetaling = yrkesaktiviteter.stream()
@@ -64,10 +67,11 @@ final class RefusjonsgrunnlagGyldigePerioder {
             .map(PeriodeMedUtbetalingsgradDto::getPeriode)
             .map(Intervall::getFomDato)
             .min(Comparator.naturalOrder());
-        return førsteDatoMedUtbetaling
-            .map(dato -> førsteDagEtterPermisjon.get().isAfter(dato) ? førsteDagEtterPermisjon.get() : dato)
-            .map(dato -> skjæringstidspunkt.isAfter(dato) ? skjæringstidspunkt : dato)
-            .orElse(skjæringstidspunkt);
+        var refusjonsstartdato = finnSisteAv(førsteDatoMedUtbetaling, førsteDagEtterPermisjon, skjæringstidspunkt);
+        if (im.getInntektsmeldingType().equals(InntektsmeldingType.REFUSJONSKRAV)) {
+            return im.getStartDatoPermisjon().filter(permisjonsstartDato -> permisjonsstartDato.isAfter(refusjonsstartdato)).orElse(refusjonsstartdato);
+        }
+        return refusjonsstartdato;
     }
 
     /**
@@ -110,5 +114,15 @@ final class RefusjonsgrunnlagGyldigePerioder {
 
     private static boolean harUtbetalingsgrad(PeriodeMedUtbetalingsgradDto periode) {
         return periode.getUtbetalingsgrad() != null && periode.getUtbetalingsgrad().compareTo(Utbetalingsgrad.ZERO) > 0;
+    }
+
+    private static LocalDate finnSisteAv(Optional<LocalDate> førsteDatoMedUtbetaling,
+                                         Optional<LocalDate> førsteDagEtterPermisjon,
+                                         LocalDate skjæringstidspunkt) {
+        var senesteStartdato = førsteDagEtterPermisjon
+            .filter(dagEtterPermisjon -> dagEtterPermisjon.isAfter(skjæringstidspunkt))
+            .orElse(skjæringstidspunkt);
+        return førsteDatoMedUtbetaling.filter(utbetalingDato -> utbetalingDato.isAfter(senesteStartdato))
+            .orElse(senesteStartdato);
     }
 }

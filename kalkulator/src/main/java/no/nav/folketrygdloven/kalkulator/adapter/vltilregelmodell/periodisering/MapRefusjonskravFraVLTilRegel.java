@@ -1,4 +1,4 @@
-package no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.periodisering;
+    package no.nav.folketrygdloven.kalkulator.adapter.vltilregelmodell.periodisering;
 
 
 import static no.nav.fpsak.tidsserie.LocalDateInterval.TIDENES_ENDE;
