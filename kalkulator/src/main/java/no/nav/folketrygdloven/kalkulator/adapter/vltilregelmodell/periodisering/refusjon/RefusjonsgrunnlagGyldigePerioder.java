@@ -119,10 +119,10 @@ final class RefusjonsgrunnlagGyldigePerioder {
     private static LocalDate finnSisteAv(Optional<LocalDate> førsteDatoMedUtbetaling,
                                          Optional<LocalDate> førsteDagEtterPermisjon,
                                          LocalDate skjæringstidspunkt) {
-        var senesteStartdato = førsteDagEtterPermisjon
-            .filter(dagEtterPermisjon -> dagEtterPermisjon.isAfter(skjæringstidspunkt))
+        return førsteDatoMedUtbetaling
+            .flatMap(dato -> førsteDagEtterPermisjon
+                .map(dagEtterPermisjon -> dagEtterPermisjon.isAfter(dato) ? dagEtterPermisjon : dato))
+            .map(dato -> skjæringstidspunkt.isAfter(dato) ? skjæringstidspunkt : dato)
             .orElse(skjæringstidspunkt);
-        return førsteDatoMedUtbetaling.filter(utbetalingDato -> utbetalingDato.isAfter(senesteStartdato))
-            .orElse(senesteStartdato);
     }
 }
