@@ -9,12 +9,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import no.nav.folketrygdloven.kalkulator.KonfigurasjonVerdi;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BGAndelArbeidsforholdDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
@@ -40,29 +37,14 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 import no.nav.folketrygdloven.kalkulus.kodeverk.InntektskildeType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.InntektspostType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.YtelseType;
-import no.nav.folketrygdloven.utils.TestKonfigurasjonVerdiProvider;
 
 class VurderMottarYtelseTjenesteTest {
 
-    private static final TestKonfigurasjonVerdiProvider TEST_KONFIG = new TestKonfigurasjonVerdiProvider();
     private static final LocalDate SKJÆRINGSTIDSPUNKT_OPPTJENING = LocalDate.of(2018, 9, 30);
     private static final String ORGNR = "3482934982384";
     private static final InternArbeidsforholdRefDto ARB_ID = InternArbeidsforholdRefDto.namedRef("TEST-REF");
     private BeregningsgrunnlagDto beregningsgrunnlag;
     private BeregningsgrunnlagPeriodeDto periode;
-
-    @BeforeAll
-    public static void initAll() {
-        TEST_KONFIG.clear();
-        KonfigurasjonVerdi.clear();
-        KonfigurasjonVerdi.configure(TEST_KONFIG);
-    }
-
-    @AfterAll
-    public static void teardownAll() {
-        KonfigurasjonVerdi.clear();
-        TEST_KONFIG.clear();
-    }
 
     @BeforeEach
     void setUp() {
@@ -73,8 +55,6 @@ class VurderMottarYtelseTjenesteTest {
         periode = BeregningsgrunnlagPeriodeDto.ny()
                 .medBeregningsgrunnlagPeriode(SKJÆRINGSTIDSPUNKT_OPPTJENING, null)
                 .build(beregningsgrunnlag);
-        TEST_KONFIG.put("VURDER_MOTTAR_YTELSE_AT_FILTRERING", "false");
-        TEST_KONFIG.put("VURDER_MOTTAR_YTELSE_FL_FILTRERING", "false");
     }
 
     @Test
@@ -143,8 +123,6 @@ class VurderMottarYtelseTjenesteTest {
 
     @Test
     void skal_ikke_vurdere_mottar_ytelse_for_frilans_uten_mottatt_ytelse_for_frilans() {
-        TEST_KONFIG.put("VURDER_MOTTAR_YTELSE_FL_FILTRERING", "true");
-
         // Arrange
         BeregningsgrunnlagPrStatusOgAndelDto.ny()
                 .medAktivitetStatus(AktivitetStatus.FRILANSER)
@@ -162,8 +140,6 @@ class VurderMottarYtelseTjenesteTest {
 
     @Test
     void skal_vurdere_mottar_ytelse_for_frilans_med_mottatt_ytelse_for_frilans() {
-        TEST_KONFIG.put("VURDER_MOTTAR_YTELSE_FL_FILTRERING", "true");
-
         // Arrange
         BeregningsgrunnlagPrStatusOgAndelDto.ny()
                 .medAktivitetStatus(AktivitetStatus.FRILANSER)
@@ -199,6 +175,7 @@ class VurderMottarYtelseTjenesteTest {
         var aktørArbeidBuilder = oppdatere.getAktørArbeidBuilder();
         leggTilAktivitet(ARB_ID, ORGNR, Intervall.fraOgMedTilOgMed(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(10), SKJÆRINGSTIDSPUNKT_OPPTJENING.plusMonths(10)), aktørArbeidBuilder, Optional.of(SKJÆRINGSTIDSPUNKT_OPPTJENING.minusMonths(2L)));
         oppdatere.leggTilAktørInntekt(lagAktørInntektMedYtelse());
+        oppdatere.leggTilAktørYtelse(lagAktørYtelseForFrilans());
         var iayGrunnlag = InntektArbeidYtelseGrunnlagDtoBuilder.oppdatere(Optional.empty())
                 .medData(oppdatere)
                 .build();
@@ -213,8 +190,6 @@ class VurderMottarYtelseTjenesteTest {
 
     @Test
     void skal_vurdere_mottar_ytelse_for_arbeidstaker_uten_inntektsmelding_med_ytelse() {
-        TEST_KONFIG.put("VURDER_MOTTAR_YTELSE_AT_FILTRERING", "true");
-
         // Arrange
         var arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         BeregningsgrunnlagPrStatusOgAndelDto.ny()
@@ -242,8 +217,6 @@ class VurderMottarYtelseTjenesteTest {
 
     @Test
     void skal_ikke_vurdere_mottar_ytelse_for_arbeidstaker_uten_inntektsmelding_når_ytelse_er_utbetalt_til_arbeidsgiver() {
-        TEST_KONFIG.put("VURDER_MOTTAR_YTELSE_AT_FILTRERING", "true");
-
         // Arrange
         var arbeidsgiver = Arbeidsgiver.virksomhet(ORGNR);
         BeregningsgrunnlagPrStatusOgAndelDto.ny()
