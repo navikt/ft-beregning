@@ -26,6 +26,7 @@ public class KodeKonstanter {
     // Overstyring
     public static final String OVST_BEREGNINGSAKTIVITETER = "OVST_BEREGNINGSAKTIVITETER";
     public static final String OVST_INNTEKT = "OVST_INNTEKT";
+    public static final String OVST_REFUSJON = "OVST_REFUSJON";
 
     // Ytelsetyper som kan beregnes av kalkulator
     public static final String YT_PLEIEPENGER_SYKT_BARN = "PSB";
