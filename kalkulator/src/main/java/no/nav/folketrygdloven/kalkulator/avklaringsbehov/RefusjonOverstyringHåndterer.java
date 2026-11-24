@@ -9,6 +9,7 @@ import no.nav.folketrygdloven.kalkulator.modell.refusjon.FordelingGrunnlag;
 import no.nav.folketrygdloven.kalkulator.modell.refusjon.Refusjonsandel;
 import no.nav.folketrygdloven.kalkulator.modell.refusjon.Refusjonsperiode;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
+import no.nav.folketrygdloven.kalkulator.steg.refusjon.PeriodiserBeregningsgrunnlagForRefusjon;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.RefusjonKilde;
 import no.nav.folketrygdloven.kalkulus.kodeverk.RefusjonUtfall;
@@ -22,14 +23,14 @@ public class RefusjonOverstyringHåndterer {
         // Skjuler default konstruktør
     }
 
-    public static BeregningsgrunnlagGrunnlagDto håndter(HåndterBeregningsgrunnlagInput input, OverstyrRefusjonDto refusjonDto) {
+    public static RefusjonOverstyringResultat håndter(HåndterBeregningsgrunnlagInput input, OverstyrRefusjonDto refusjonDto) {
         var grunnlagBuilder = BeregningsgrunnlagGrunnlagDtoBuilder.oppdatere(input.getBeregningsgrunnlagGrunnlag());
         var forrigeFordelingsGrunnlag = input.getFordelingGrunnlag().orElseThrow();
         var nyttFordelingGrunnlag = lagNyttFordelingGrunnlag(forrigeFordelingsGrunnlag, refusjonDto);
+        var nyttPeriodisertBeregningsgrunnlag = PeriodiserBeregningsgrunnlagForRefusjon.periodiser(input, nyttFordelingGrunnlag);
 
-        //TODO lagre den overstyrte refusjonen som et nytt fordelingsgrunnlag og oppdatere beregningsgrunnlaget med nye refusjonsperioder ?
-        //FaktaOmBeregningTilfellerOppdaterer.oppdater(refusjonDto, forrigeBg, input, grunnlagBuilder);
-        return grunnlagBuilder.build(input.getHåndteringTilstand());
+        grunnlagBuilder.medBeregningsgrunnlag(nyttPeriodisertBeregningsgrunnlag);
+        return new RefusjonOverstyringResultat(nyttFordelingGrunnlag, grunnlagBuilder.build(input.getHåndteringTilstand()));
     }
 
     static FordelingGrunnlag lagNyttFordelingGrunnlag(FordelingGrunnlag forrigeFordelingsGrunnlag, OverstyrRefusjonDto refusjonDto) {
@@ -58,4 +59,6 @@ public class RefusjonOverstyringHåndterer {
             && andel.arbeidsforholdRef().equals(annen.arbeidsforholdRef())
             && andel.kilde().equals(annen.kilde());
     }
+
+    public record RefusjonOverstyringResultat(FordelingGrunnlag fordelingGrunnlag, BeregningsgrunnlagGrunnlagDto beregningsgrunnlagGrunnlag) {}
 }

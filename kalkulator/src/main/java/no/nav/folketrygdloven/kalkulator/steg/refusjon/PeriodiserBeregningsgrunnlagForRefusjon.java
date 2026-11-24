@@ -59,7 +59,7 @@ public final class PeriodiserBeregningsgrunnlagForRefusjon {
 
     private static Map<Refusjonsandel, LocalDateTimeline<Refusjonsperiode>> lagTidslinjer(FordelingGrunnlag fordelingGrunnlag) {
         var refusjonstidslinjerPerAndel = new LinkedHashMap<Refusjonsandel, LocalDateTimeline<Refusjonsperiode>>();
-        fordelingGrunnlag.refusjonsandeler().forEach(refusjonsandel -> {
+        fordelingGrunnlag.hentGjeldendeAndeler().forEach(refusjonsandel -> {
             var refusjonstidslinje = lagTidslinje(refusjonsandel);
             if (refusjonstidslinjerPerAndel.entrySet().stream()
                 .anyMatch(eksisterende -> eksisterende.getKey().arbeidsgiver().equals(refusjonsandel.arbeidsgiver())
@@ -235,7 +235,8 @@ public final class PeriodiserBeregningsgrunnlagForRefusjon {
                 .map(beløp -> skalNullstilleRefusjon ? Beløp.ZERO : beløp).orElse(null),
             eksisterendeRefusjon.map(Refusjon::getManueltFordeltRefusjonPrÅr)
                 .map(beløp -> skalNullstilleRefusjon ? Beløp.ZERO : beløp).orElse(null),
-            eksisterendeRefusjon.map(Refusjon::getHjemmelForRefusjonskravfrist).orElse(null), refusjonsutfall);
+            eksisterendeRefusjon.map(Refusjon::getHjemmelForRefusjonskravfrist).orElse(null),
+            refusjonsutfall);
     }
 
     private static Utfall mapUtfall(Refusjonsperiode periode) {

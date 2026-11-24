@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
+import no.nav.folketrygdloven.kalkulator.avklaringsbehov.RefusjonOverstyringHåndterer;
 import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
 import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
 import no.nav.folketrygdloven.kalkulus.kodeverk.RefusjonKilde;
@@ -18,6 +19,18 @@ public record FordelingGrunnlag(List<Refusjonsandel> refusjonsandeler) {
     public FordelingGrunnlag {
         refusjonsandeler = Collections.unmodifiableList(new ArrayList<>(refusjonsandeler));
         validerDomeneregler(refusjonsandeler);
+    }
+
+    public List<Refusjonsandel> hentGjeldendeAndeler() {
+        var gjeldendeAndeler = new ArrayList<Refusjonsandel>();
+        refusjonsandeler.stream().filter(andel -> andel.kilde().equals(RefusjonKilde.SAKSBEHANDLER)).forEach(gjeldendeAndeler::add);
+        refusjonsandeler.stream()
+            .filter(andel -> andel.kilde().equals(RefusjonKilde.INNTEKTSMELDING))
+            .filter(andel -> gjeldendeAndeler.stream()
+                .noneMatch(sbhAndel -> sbhAndel.arbeidsgiver().equals(andel.arbeidsgiver())
+                    && sbhAndel.arbeidsforholdRef().equals(andel.arbeidsforholdRef())))
+            .forEach(gjeldendeAndeler::add);
+        return gjeldendeAndeler;
     }
 
     @Override

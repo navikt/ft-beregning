@@ -27,7 +27,8 @@ public class Refusjon implements Comparable<Refusjon> {
                     Beløp saksbehandletRefusjonPrÅr,
                     Beløp fordeltRefusjonPrÅr,
                     Beløp manueltFordeltRefusjonPrÅr,
-                    Hjemmel hjemmelForRefusjonskravfrist, Utfall refusjonskravFristUtfall) {
+                    Hjemmel hjemmelForRefusjonskravfrist,
+                    Utfall refusjonskravFristUtfall) {
         if (refusjonskravPrÅr == null && saksbehandletRefusjonPrÅr == null && fordeltRefusjonPrÅr == null && hjemmelForRefusjonskravfrist == null && manueltFordeltRefusjonPrÅr == null) {
             throw new IllegalStateException("refusjonskrav må Være satt");
         }
