@@ -37,17 +37,10 @@ public class DiffForKopieringResult {
     }
 
     private void calcLeafDiffs(Map<Node, Pair> diffs, boolean returnOnFirstDiff) {
-        calcDiffs(diffs, returnOnFirstDiff, result1, result2);
-    }
-
-    private void calcDiffs(Map<Node, Pair> diffs,
-                           boolean returnOnFirstDiff,
-                           TraverseGraph.TraverseResult traverseResult1,
-                           TraverseGraph.TraverseResult traverseResult2) {
         // kan vel lages mer effektivt...
-        traverseResult1.getValues().forEach((key, value) -> diffs.put(key, new Pair(value, null)));
+        result1.getValues().forEach((key, value) -> diffs.put(key, new Pair(value, null)));
 
-        traverseResult2.getValues().forEach((key, value) -> {
+        result2.getValues().forEach((key, value) -> {
             // bruker tomt element for at elementer der alle sporede felter er null skal regnes som forskjellig fra ikke-eksisterende element i collection
             var elem1 = diffs.containsKey(key) ? diffs.get(key).getElement1() : TOMT_ELEMENT;
             if (!areEqual(key, elem1, value)) {
