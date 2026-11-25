@@ -16,7 +16,7 @@ import java.util.TreeMap;
  */
 public class DiffForKopieringResult {
 
-    public static final DummyElement TOMT_ELEMENT = new DummyElement();
+    private static final DummyElement TOMT_ELEMENT = new DummyElement();
     private TraverseGraph.TraverseResult result1;
     private TraverseGraph.TraverseResult result2;
     @SuppressWarnings("unused")
@@ -40,7 +40,10 @@ public class DiffForKopieringResult {
         calcDiffs(diffs, returnOnFirstDiff, result1, result2);
     }
 
-    private void calcDiffs(Map<Node, Pair> diffs, boolean returnOnFirstDiff, TraverseGraph.TraverseResult traverseResult1, TraverseGraph.TraverseResult traverseResult2) {
+    private void calcDiffs(Map<Node, Pair> diffs,
+                           boolean returnOnFirstDiff,
+                           TraverseGraph.TraverseResult traverseResult1,
+                           TraverseGraph.TraverseResult traverseResult2) {
         // kan vel lages mer effektivt...
         traverseResult1.getValues().forEach((key, value) -> diffs.put(key, new Pair(value, null)));
 
@@ -58,7 +61,7 @@ public class DiffForKopieringResult {
         });
     }
 
-    @SuppressWarnings({ "rawtypes" })
+    @SuppressWarnings({"rawtypes"})
     private boolean areEqual(Node key, Object left, Object right) {
         if (Objects.equals(left, right)) {
             return true;
@@ -74,17 +77,19 @@ public class DiffForKopieringResult {
         return false;
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private boolean areEqualListsOutOfOrder(Node key, List lhsList, List rhsList) {
         Set lhsSet = new HashSet<>(lhsList);
         Set rhsSet = new HashSet<>(rhsList);
 
         if (lhsSet.size() != lhsList.size()) {
-            throw new IllegalArgumentException("Bad Equals eller duplikater i List.  lhsList har forskjellig størrelse fra lhsSet. Key=\"" + key //$NON-NLS-1$
-                + "\"\n,\"lhsList\"=" + lhsList + "\n,\"rhsList\"=" + rhsList); //$NON-NLS-1$ //$NON-NLS-2$
+            throw new IllegalArgumentException(
+                "Bad Equals eller duplikater i List.  lhsList har forskjellig størrelse fra lhsSet. Key=\"" + key //$NON-NLS-1$
+                    + "\"\n,\"lhsList\"=" + lhsList + "\n,\"rhsList\"=" + rhsList); //$NON-NLS-1$ //$NON-NLS-2$
         } else if (rhsSet.size() != rhsList.size()) {
-            throw new IllegalArgumentException("Bad Equals eller duplikater i List.  rhsList har forskjellig størrelse fra rhsSet. Key=\"" + key //$NON-NLS-1$
-                + "\"\n,\"lhsList\"=" + lhsList + "\n,\"rhsList\"=" + rhsList); //$NON-NLS-1$ //$NON-NLS-2$
+            throw new IllegalArgumentException(
+                "Bad Equals eller duplikater i List.  rhsList har forskjellig størrelse fra rhsSet. Key=\"" + key //$NON-NLS-1$
+                    + "\"\n,\"lhsList\"=" + lhsList + "\n,\"rhsList\"=" + rhsList); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
         return Objects.equals(lhsSet, rhsSet);
@@ -96,5 +101,6 @@ public class DiffForKopieringResult {
         return diffs.isEmpty();
     }
 
-    private record DummyElement(){}
+    private record DummyElement() {
+    }
 }
