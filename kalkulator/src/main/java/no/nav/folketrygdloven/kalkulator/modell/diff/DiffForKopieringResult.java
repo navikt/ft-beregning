@@ -16,7 +16,7 @@ import java.util.TreeMap;
  */
 public class DiffForKopieringResult {
 
-    private static final DummyElement TOMT_ELEMENT = new DummyElement();
+    private static final Object IKKE_EKSISTERENDE_ELEMENT = new Object();;
     private TraverseGraph.TraverseResult result1;
     private TraverseGraph.TraverseResult result2;
     @SuppressWarnings("unused")
@@ -41,8 +41,8 @@ public class DiffForKopieringResult {
         result1.getValues().forEach((key, value) -> diffs.put(key, new Pair(value, null)));
 
         result2.getValues().forEach((key, value) -> {
-            // bruker tomt element for at elementer der alle sporede felter er null skal regnes som forskjellig fra ikke-eksisterende element i collection
-            var elem1 = diffs.containsKey(key) ? diffs.get(key).getElement1() : TOMT_ELEMENT;
+            // bruker IKKE_EKSISTERENDE_ELEMENT for at elementer der alle sporede felter er null skal regnes som forskjellig fra ikke-eksisterende element i collection
+            var elem1 = diffs.containsKey(key) ? diffs.get(key).getElement1() : IKKE_EKSISTERENDE_ELEMENT;
             if (!areEqual(key, elem1, value)) {
                 diffs.put(key, new Pair(elem1, value));
                 if (returnOnFirstDiff) {
@@ -94,6 +94,4 @@ public class DiffForKopieringResult {
         return diffs.isEmpty();
     }
 
-    private record DummyElement() {
-    }
 }
