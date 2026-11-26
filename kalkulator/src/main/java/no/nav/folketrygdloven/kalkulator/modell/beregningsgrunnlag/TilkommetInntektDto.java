@@ -12,8 +12,11 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 
 public class TilkommetInntektDto implements IndexKey {
 
+    @SjekkVedKopiering
     private final AktivitetStatus aktivitetStatus;
+    @SjekkVedKopiering
     private final Arbeidsgiver arbeidsgiver;
+    @SjekkVedKopiering
     private final InternArbeidsforholdRefDto arbeidsforholdRef;
     @SjekkVedKopiering
     private Beløp bruttoInntektPrÅr;
