@@ -1,8 +1,7 @@
 package no.nav.folketrygdloven.kalkulator.modell.refusjon;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
 import no.nav.folketrygdloven.kalkulator.modell.typer.InternArbeidsforholdRefDto;
@@ -14,7 +13,10 @@ public record Refusjonsandel(Arbeidsgiver arbeidsgiver, InternArbeidsforholdRefD
 
     public Refusjonsandel {
         arbeidsforholdRef = arbeidsforholdRef != null ? arbeidsforholdRef : InternArbeidsforholdRefDto.nullRef();
-        refusjonsperioder = Collections.unmodifiableList(new ArrayList<>(refusjonsperioder));
+        if (refusjonsperioder.stream().anyMatch(Objects::isNull)) {
+            throw new IllegalArgumentException("Refusjonsperioder kan ikke inneholde null.");
+        }
+        refusjonsperioder = List.copyOf(refusjonsperioder);
         if (kilde == RefusjonKilde.INNTEKTSMELDING && journalpostId == null) {
             throw new IllegalArgumentException("Journalpost er påkrevd for kilde INNTEKTSMELDING.");
         }
