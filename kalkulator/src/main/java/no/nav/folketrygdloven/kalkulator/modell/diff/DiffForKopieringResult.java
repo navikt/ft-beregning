@@ -16,7 +16,7 @@ import java.util.TreeMap;
  */
 public class DiffForKopieringResult {
 
-    private static final Object IKKE_EKSISTERENDE_ELEMENT = new Object();;
+    private static final Object IKKE_EKSISTERENDE_ELEMENT = new Object();
     private TraverseGraph.TraverseResult result1;
     private TraverseGraph.TraverseResult result2;
     @SuppressWarnings("unused")
