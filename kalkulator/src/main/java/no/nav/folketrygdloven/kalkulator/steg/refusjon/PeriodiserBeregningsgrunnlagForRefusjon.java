@@ -5,7 +5,6 @@ import static no.nav.fpsak.tidsserie.LocalDateInterval.TIDENES_ENDE;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -30,6 +29,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AndelKilde;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
 import no.nav.folketrygdloven.kalkulus.kodeverk.PeriodeÅrsak;
+import no.nav.folketrygdloven.kalkulus.kodeverk.RefusjonKilde;
 import no.nav.folketrygdloven.kalkulus.kodeverk.RefusjonUtfall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Utfall;
 import no.nav.fpsak.tidsserie.LocalDateInterval;
@@ -45,31 +45,16 @@ public final class PeriodiserBeregningsgrunnlagForRefusjon {
         var eksisterendeBeregningsgrunnlag = Objects.requireNonNull(input.getBeregningsgrunnlag(),
             "Beregningsgrunnlag må være satt.");
         var skjæringstidspunkt = eksisterendeBeregningsgrunnlag.getSkjæringstidspunkt();
-        var refusjonstidslinjerPerAndel = lagTidslinjer(fordelingGrunnlag);
-        var periodeÅrsakerPerDato = finnPeriodeÅrsaker(refusjonstidslinjerPerAndel);
+        var gjeldendeRefusjonAndeler = fordelingGrunnlag.hentGjeldendeAndeler();
+        var periodeÅrsakerPerDato = finnPeriodeÅrsaker(gjeldendeRefusjonAndeler);
         var grunnlagBuilder = BeregningsgrunnlagDto.builder(eksisterendeBeregningsgrunnlag).fjernAllePerioder();
 
         eksisterendeBeregningsgrunnlag.getBeregningsgrunnlagPerioder().stream()
-            .flatMap(periode -> periodiserPeriode(input, periode, refusjonstidslinjerPerAndel, periodeÅrsakerPerDato,
+            .flatMap(periode -> periodiserPeriode(input, periode, gjeldendeRefusjonAndeler, periodeÅrsakerPerDato,
                 skjæringstidspunkt).stream())
             .forEach(grunnlagBuilder::leggTilBeregningsgrunnlagPeriode);
 
         return grunnlagBuilder.build();
-    }
-
-    private static Map<Refusjonsandel, LocalDateTimeline<Refusjonsperiode>> lagTidslinjer(FordelingGrunnlag fordelingGrunnlag) {
-        var refusjonstidslinjerPerAndel = new LinkedHashMap<Refusjonsandel, LocalDateTimeline<Refusjonsperiode>>();
-        fordelingGrunnlag.refusjonsandeler().forEach(refusjonsandel -> {
-            var refusjonstidslinje = lagTidslinje(refusjonsandel);
-            if (refusjonstidslinjerPerAndel.entrySet().stream()
-                .anyMatch(eksisterende -> eksisterende.getKey().arbeidsgiver().equals(refusjonsandel.arbeidsgiver())
-                    && eksisterende.getKey().arbeidsforholdRef().equals(refusjonsandel.arbeidsforholdRef())
-                    && !eksisterende.getValue().intersection(refusjonstidslinje).isEmpty())) {
-                throw new IllegalArgumentException("Overlappende refusjonsperioder for samme arbeidsforhold.");
-            }
-            refusjonstidslinjerPerAndel.put(refusjonsandel, refusjonstidslinje);
-        });
-        return refusjonstidslinjerPerAndel;
     }
 
     private static LocalDateTimeline<Refusjonsperiode> lagTidslinje(Refusjonsandel refusjonsandel) {
@@ -83,10 +68,10 @@ public final class PeriodiserBeregningsgrunnlagForRefusjon {
         return new LocalDateTimeline<>(refusjonssegmenter);
     }
 
-    private static Map<LocalDate, List<PeriodeÅrsak>> finnPeriodeÅrsaker(
-        Map<Refusjonsandel, LocalDateTimeline<Refusjonsperiode>> refusjonstidslinjerPerAndel) {
+    private static Map<LocalDate, List<PeriodeÅrsak>> finnPeriodeÅrsaker(List<Refusjonsandel> gjeldendeAndeler) {
         var periodeÅrsakerPerDato = new TreeMap<LocalDate, List<PeriodeÅrsak>>();
-        refusjonstidslinjerPerAndel.values()
+        gjeldendeAndeler.stream()
+            .map(PeriodiserBeregningsgrunnlagForRefusjon::lagTidslinje)
             .forEach(refusjonstidslinje -> leggTilPeriodeÅrsaker(refusjonstidslinje, periodeÅrsakerPerDato));
         return periodeÅrsakerPerDato;
     }
@@ -111,10 +96,10 @@ public final class PeriodiserBeregningsgrunnlagForRefusjon {
     private static List<BeregningsgrunnlagPeriodeDto.Builder> periodiserPeriode(
         BeregningsgrunnlagInput input,
         BeregningsgrunnlagPeriodeDto opprinneligPeriode,
-        Map<Refusjonsandel, LocalDateTimeline<Refusjonsperiode>> refusjonstidslinjerPerAndel,
+        List<Refusjonsandel> gjeldendeAndeler,
         Map<LocalDate, List<PeriodeÅrsak>> periodeÅrsakerPerDato,
         LocalDate skjæringstidspunkt) {
-        var refusjonsandelerPerAndelsnummer = finnMatchendeAndeler(opprinneligPeriode, refusjonstidslinjerPerAndel);
+        var refusjonsandelerPerAndelsnummer = finnMatchendeAndeler(opprinneligPeriode, gjeldendeAndeler);
         var periodestartdatoer = new TreeSet<LocalDate>();
         periodestartdatoer.add(opprinneligPeriode.getBeregningsgrunnlagPeriodeFom());
         periodeÅrsakerPerDato.keySet().stream().filter(opprinneligPeriode.getPeriode()::inkluderer).forEach(periodestartdatoer::add);
@@ -123,14 +108,14 @@ public final class PeriodiserBeregningsgrunnlagForRefusjon {
             var periodeTom = nestePeriodestartdato == null
                 ? opprinneligPeriode.getBeregningsgrunnlagPeriodeTom() : nestePeriodestartdato.minusDays(1);
             return lagPeriode(input, opprinneligPeriode, periodeFom, periodeTom,
-                refusjonsandelerPerAndelsnummer, refusjonstidslinjerPerAndel, periodeÅrsakerPerDato, skjæringstidspunkt);
+                refusjonsandelerPerAndelsnummer, gjeldendeAndeler, periodeÅrsakerPerDato, skjæringstidspunkt);
         }).toList();
     }
 
     private static BeregningsgrunnlagPeriodeDto.Builder lagPeriode(
         BeregningsgrunnlagInput input, BeregningsgrunnlagPeriodeDto opprinneligPeriode, LocalDate periodeFom, LocalDate periodeTom,
         Map<Long, List<Refusjonsandel>> refusjonsandelerPerAndelsnummer,
-        Map<Refusjonsandel, LocalDateTimeline<Refusjonsperiode>> refusjonstidslinjerPerAndel,
+        List<Refusjonsandel> gjeldendeAndeler,
         Map<LocalDate, List<PeriodeÅrsak>> periodeÅrsakerPerDato,
         LocalDate skjæringstidspunkt) {
         var periodeBuilder = BeregningsgrunnlagPeriodeDto.kopier(opprinneligPeriode).fjernAlleBeregningsgrunnlagPrStatusOgAndeler()
@@ -138,14 +123,15 @@ public final class PeriodiserBeregningsgrunnlagForRefusjon {
         if (!periodeFom.equals(skjæringstidspunkt)) {
             periodeBuilder.leggTilPeriodeÅrsaker(periodeÅrsakerPerDato.getOrDefault(periodeFom, List.of()));
         }
+        //eksisterende bgandel kopieres med oppdatert refusjon, hvis ingen endring blir refusjonen uendret
         opprinneligPeriode.getBeregningsgrunnlagPrStatusOgAndelList().stream()
-            .map(bgAndel -> kopierAndelMedRefusjon(bgAndel, refusjonsandelerPerAndelsnummer, refusjonstidslinjerPerAndel, periodeFom))
+            .map(bgAndel -> kopierAndelMedRefusjon(bgAndel, refusjonsandelerPerAndelsnummer, periodeFom))
             .forEach(periodeBuilder::leggTilBeregningsgrunnlagPrStatusOgAndel);
-        refusjonstidslinjerPerAndel.keySet().stream()
+        //Hvis refusjonsandel ikke finnes fra før, opprettes ny bgAndel med ny refusjon
+        gjeldendeAndeler.stream()
             .filter(refusjonsandel -> refusjonsandelerPerAndelsnummer.values().stream()
-                .noneMatch(matchendeAndeler -> matchendeAndeler.contains(refusjonsandel)))
-            .forEach(refusjonsandel -> leggTilNyAndel(input, periodeBuilder, refusjonsandel, refusjonstidslinjerPerAndel,
-                periodeFom, skjæringstidspunkt));
+                .noneMatch(refusjonPerAndelsnummer -> refusjonPerAndelsnummer.contains(refusjonsandel)))
+            .forEach(refusjonsandel -> leggTilNyAndel(input, periodeBuilder, refusjonsandel, periodeFom, skjæringstidspunkt));
 
         // Andelsbuilderen summerer brutto på nytt. Periodens øvrige beregningsdata skal beholdes.
         return periodeBuilder.medBruttoPrÅr(opprinneligPeriode.getBruttoPrÅr());
@@ -153,24 +139,22 @@ public final class PeriodiserBeregningsgrunnlagForRefusjon {
 
     private static BeregningsgrunnlagPrStatusOgAndelDto.Builder kopierAndelMedRefusjon(
         BeregningsgrunnlagPrStatusOgAndelDto bgAndel, Map<Long, List<Refusjonsandel>> refusjonsandelerPerAndelsnummer,
-        Map<Refusjonsandel, LocalDateTimeline<Refusjonsperiode>> refusjonstidslinjerPerAndel, LocalDate periodeFom) {
+        LocalDate periodeFom) {
         var andelBuilder = BeregningsgrunnlagPrStatusOgAndelDto.kopier(bgAndel);
         var matchendeRefusjonsandeler = refusjonsandelerPerAndelsnummer.getOrDefault(bgAndel.getAndelsnr(), List.of());
         if (!matchendeRefusjonsandeler.isEmpty()) {
-            var refusjonsperiode = finnKrav(matchendeRefusjonsandeler, refusjonstidslinjerPerAndel, periodeFom);
+            var refusjonskrav = finnRefusjonskrav(matchendeRefusjonsandeler, periodeFom);
             var arbeidsforholdBuilder = andelBuilder.getBgAndelArbeidsforholdDtoBuilder();
-            arbeidsforholdBuilder.medRefusjon(lagRefusjon(refusjonsperiode, bgAndel.getBgAndelArbeidsforhold().orElseThrow().getRefusjon()));
+            arbeidsforholdBuilder.medRefusjon(lagRefusjon(refusjonskrav, bgAndel.getBgAndelArbeidsforhold().orElseThrow().getRefusjon()));
             andelBuilder.medBGAndelArbeidsforhold(arbeidsforholdBuilder);
         }
         return andelBuilder;
     }
 
     private static void leggTilNyAndel(BeregningsgrunnlagInput input, BeregningsgrunnlagPeriodeDto.Builder periodeBuilder,
-                                       Refusjonsandel refusjonsandel,
-                                       Map<Refusjonsandel, LocalDateTimeline<Refusjonsperiode>> refusjonstidslinjerPerAndel,
-                                       LocalDate periodeFom, LocalDate skjæringstidspunkt) {
-        var refusjonsperiode = finnKrav(List.of(refusjonsandel), refusjonstidslinjerPerAndel, periodeFom);
-        if (refusjonsperiode == null || refusjonsperiode.refusjonPrMnd().compareTo(Beløp.ZERO) <= 0) {
+                                       Refusjonsandel refusjonsandel, LocalDate periodeFom, LocalDate skjæringstidspunkt) {
+        var refusjonskrav = finnRefusjonskrav(List.of(refusjonsandel), periodeFom);
+        if (refusjonskrav.periode() == null || refusjonskrav.periode().refusjonPrMnd().compareTo(Beløp.ZERO) <= 0) {
             return;
         }
         var arbeidsperiode = finnArbeidsperiode(input, refusjonsandel);
@@ -179,7 +163,7 @@ public final class PeriodiserBeregningsgrunnlagForRefusjon {
         }
         var arbeidsforholdBuilder = BGAndelArbeidsforholdDto.builder().medArbeidsgiver(refusjonsandel.arbeidsgiver())
             .medArbeidsforholdRef(refusjonsandel.arbeidsforholdRef())
-            .medRefusjon(lagRefusjon(refusjonsperiode, Optional.empty()));
+            .medRefusjon(lagRefusjon(refusjonskrav, Optional.empty()));
         arbeidsperiode.ifPresent(periode -> arbeidsforholdBuilder.medArbeidsperiodeFom(periode.getFom()).medArbeidsperiodeTom(periode.getTom()));
         periodeBuilder.leggTilBeregningsgrunnlagPrStatusOgAndel(BeregningsgrunnlagPrStatusOgAndelDto.ny()
             .medBGAndelArbeidsforhold(arbeidsforholdBuilder).medKilde(AndelKilde.PROSESS_PERIODISERING)
@@ -197,9 +181,9 @@ public final class PeriodiserBeregningsgrunnlagForRefusjon {
     }
 
     private static Map<Long, List<Refusjonsandel>> finnMatchendeAndeler(BeregningsgrunnlagPeriodeDto opprinneligPeriode,
-                                                                        Map<Refusjonsandel, ?> refusjonstidslinjerPerAndel) {
+                                                                        List<Refusjonsandel> gjeldendeAndeler) {
         var refusjonsandelerPerAndelsnummer = new HashMap<Long, List<Refusjonsandel>>();
-        refusjonstidslinjerPerAndel.keySet().forEach(refusjonsandel -> {
+        gjeldendeAndeler.forEach(refusjonsandel -> {
             // Som den gamle inputmapperen: uspesifisert IM-ref treffer første andel, spesifisert ref krever likhet.
             opprinneligPeriode.getBeregningsgrunnlagPrStatusOgAndelList().stream()
                 .filter(bgAndel -> bgAndel.getArbeidsgiver().filter(refusjonsandel.arbeidsgiver()::equals).isPresent())
@@ -211,31 +195,60 @@ public final class PeriodiserBeregningsgrunnlagForRefusjon {
         return refusjonsandelerPerAndelsnummer;
     }
 
-    private static Refusjonsperiode finnKrav(List<Refusjonsandel> refusjonsandeler,
-                                             Map<Refusjonsandel, LocalDateTimeline<Refusjonsperiode>> refusjonstidslinjerPerAndel,
-                                             LocalDate dato) {
-        var refusjonsperioder = refusjonsandeler.stream()
-            .map(refusjonsandel -> refusjonstidslinjerPerAndel.get(refusjonsandel).getSegment(new LocalDateInterval(dato, dato)))
-            .filter(Objects::nonNull)
-            .map(LocalDateSegment::getValue).toList();
-        if (refusjonsperioder.size() > 1) {
-            throw new IllegalArgumentException("Overlappende refusjonsperioder treffer samme BG-andel.");
-        }
-        return refusjonsperioder.isEmpty() ? null : refusjonsperioder.getFirst();
+    private static Refusjonskrav finnRefusjonskrav(List<Refusjonsandel> refusjonsandeler, LocalDate dato) {
+        return refusjonsandeler.stream()
+            .flatMap(andel -> andel.refusjonsperioder().stream()
+                .filter(periode -> periode.periode().inkluderer(dato))
+                .map(periode -> new Refusjonskrav(periode, andel.kilde())))
+            .reduce((_, _) -> {
+                throw new IllegalArgumentException("Overlappende refusjonsperioder treffer samme BG-andel.");
+            })
+            .orElseGet(() -> new Refusjonskrav(null, finnRefusjonKilde(refusjonsandeler)));
     }
 
-    private static Refusjon lagRefusjon(Refusjonsperiode refusjonsperiode, Optional<Refusjon> eksisterendeRefusjon) {
-        var refusjonskravPrÅr = refusjonsperiode == null ? Beløp.ZERO : refusjonsperiode.refusjonPrMnd().multipliser(12);
-        var refusjonsutfall = refusjonsperiode == null ? Utfall.UDEFINERT : mapUtfall(refusjonsperiode);
-        var skalNullstilleRefusjon = refusjonskravPrÅr.erNullEller0() || refusjonsutfall == Utfall.UNDERKJENT;
-        return new Refusjon(refusjonskravPrÅr,
-            eksisterendeRefusjon.map(Refusjon::getSaksbehandletRefusjonPrÅr)
-                .map(beløp -> skalNullstilleRefusjon ? Beløp.ZERO : beløp).orElse(null),
-            eksisterendeRefusjon.map(Refusjon::getFordeltRefusjonPrÅr)
-                .map(beløp -> skalNullstilleRefusjon ? Beløp.ZERO : beløp).orElse(null),
-            eksisterendeRefusjon.map(Refusjon::getManueltFordeltRefusjonPrÅr)
-                .map(beløp -> skalNullstilleRefusjon ? Beløp.ZERO : beløp).orElse(null),
-            eksisterendeRefusjon.map(Refusjon::getHjemmelForRefusjonskravfrist).orElse(null), refusjonsutfall);
+    private static RefusjonKilde finnRefusjonKilde(List<Refusjonsandel> refusjonsandeler) {
+        return refusjonsandeler.stream()
+            .map(Refusjonsandel::kilde)
+            .filter(RefusjonKilde.SAKSBEHANDLER::equals)
+            .findFirst()
+            .orElse(RefusjonKilde.INNTEKTSMELDING);
+    }
+
+    private record Refusjonskrav(Refusjonsperiode periode, RefusjonKilde kilde) {
+        Beløp beløpPrÅr() {
+            return periode == null ? Beløp.ZERO : periode.refusjonPrMnd().multipliser(12);
+        }
+
+        Utfall utfall() {
+            return periode == null ? Utfall.UDEFINERT : mapUtfall(periode);
+        }
+
+        boolean skalNullstille() {
+            return beløpPrÅr().erNullEller0() || utfall() == Utfall.UNDERKJENT;
+        }
+    }
+
+    private static Refusjon lagRefusjon(Refusjonskrav nyttRefusjonskrav, Optional<Refusjon> eksisterendeRefusjonBgAndel) {
+        var nyttRefusjonsbeløpPrÅr = nyttRefusjonskrav.beløpPrÅr();
+        var skalNullstilles = nyttRefusjonskrav.skalNullstille();
+        var fordeltRefusjonBeløp = videreførEllerNullstill(eksisterendeRefusjonBgAndel.map(Refusjon::getFordeltRefusjonPrÅr), skalNullstilles);
+        var manueltFordeltRefusjon = videreførEllerNullstill(eksisterendeRefusjonBgAndel.map(Refusjon::getManueltFordeltRefusjonPrÅr), skalNullstilles);
+        var hjemmel = eksisterendeRefusjonBgAndel.map(Refusjon::getHjemmelForRefusjonskravfrist).orElse(null);
+
+        return switch (nyttRefusjonskrav.kilde()) {
+            case INNTEKTSMELDING -> new Refusjon(
+                nyttRefusjonsbeløpPrÅr,
+                videreførEllerNullstill(eksisterendeRefusjonBgAndel.map(Refusjon::getSaksbehandletRefusjonPrÅr), skalNullstilles),
+                fordeltRefusjonBeløp, manueltFordeltRefusjon, hjemmel, nyttRefusjonskrav.utfall());
+            case SAKSBEHANDLER -> new Refusjon(
+                eksisterendeRefusjonBgAndel.map(Refusjon::getRefusjonskravPrÅr).orElse(null),
+                skalNullstilles ? Beløp.ZERO : nyttRefusjonsbeløpPrÅr,
+                fordeltRefusjonBeløp, manueltFordeltRefusjon, hjemmel, nyttRefusjonskrav.utfall());
+        };
+    }
+
+    private static Beløp videreførEllerNullstill(Optional<Beløp> beløp, boolean skalNullstille) {
+        return beløp.map(b -> skalNullstille ? Beløp.ZERO : b).orElse(null);
     }
 
     private static Utfall mapUtfall(Refusjonsperiode periode) {

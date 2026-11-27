@@ -20,6 +20,18 @@ public record FordelingGrunnlag(List<Refusjonsandel> refusjonsandeler) {
         validerDomeneregler(refusjonsandeler);
     }
 
+    public List<Refusjonsandel> hentGjeldendeAndeler() {
+        var gjeldendeAndeler = new ArrayList<Refusjonsandel>();
+        refusjonsandeler.stream().filter(andel -> andel.kilde().equals(RefusjonKilde.SAKSBEHANDLER)).forEach(gjeldendeAndeler::add);
+        refusjonsandeler.stream()
+            .filter(andel -> andel.kilde().equals(RefusjonKilde.INNTEKTSMELDING))
+            .filter(andel -> gjeldendeAndeler.stream()
+                .noneMatch(sbhAndel -> sbhAndel.arbeidsgiver().equals(andel.arbeidsgiver())
+                    && sbhAndel.arbeidsforholdRef().equals(andel.arbeidsforholdRef())))
+            .forEach(gjeldendeAndeler::add);
+        return gjeldendeAndeler;
+    }
+
     @Override
     public String toString() {
         return "FordelingGrunnlagDto[refusjonsandeler=" + refusjonsandeler + "]";
