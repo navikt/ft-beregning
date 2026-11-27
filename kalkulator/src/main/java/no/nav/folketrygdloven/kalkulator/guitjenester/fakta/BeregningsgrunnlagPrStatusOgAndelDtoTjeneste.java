@@ -4,9 +4,7 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.EnumSet;
 import java.util.List;
-import java.util.Set;
 
 import no.nav.folketrygdloven.kalkulator.felles.FinnInntektsmeldingForAndel;
 import no.nav.folketrygdloven.kalkulator.guitjenester.BeregningsgrunnlagDtoUtil;
@@ -16,14 +14,10 @@ import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.FaktaAggregat
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.FaktaAktørDto;
 import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.FaktaArbeidsforholdDto;
 import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
-import no.nav.folketrygdloven.kalkulus.kodeverk.AndelKilde;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
 import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.BeregningsgrunnlagPrStatusOgAndelDto;
 
 public class BeregningsgrunnlagPrStatusOgAndelDtoTjeneste {
-
-    private static final Set<AndelKilde> TILKOMNE_ANDELER = EnumSet.of(AndelKilde.PROSESS_PERIODISERING,
-        AndelKilde.PROSESS_PERIODISERING_TILKOMMET_INNTEKT, AndelKilde.SAKSBEHANDLER_FORDELING, AndelKilde.PROSESS_OMFORDELING);
 
     public List<BeregningsgrunnlagPrStatusOgAndelDto> lagBeregningsgrunnlagPrStatusOgAndelDto(BeregningsgrunnlagGUIInput input,
                                                                                               List<no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto> beregningsgrunnlagPrStatusOgAndelList) {
@@ -76,7 +70,7 @@ public class BeregningsgrunnlagPrStatusOgAndelDtoTjeneste {
         faktaAggregat.flatMap(fa -> fa.getFaktaArbeidsforhold(andel))
                 .map(FaktaArbeidsforholdDto::getHarLønnsendringIBeregningsperiodenVurdering).ifPresent(dto::setLonnsendringIBeregningsperioden);
         dto.setLagtTilAvSaksbehandler(andel.erLagtTilAvSaksbehandler());
-        dto.setErTilkommetAndel(erTilkommetAndel(andel));
+        dto.setErTilkommetAndel(BeregningsgrunnlagDtoUtil.erTilkommetAndel(andel));
         if (andel.getAktivitetStatus().erFrilanser()
                 || andel.getAktivitetStatus().erArbeidstaker()
                 || andel.getAktivitetStatus().erSelvstendigNæringsdrivende()
@@ -84,10 +78,6 @@ public class BeregningsgrunnlagPrStatusOgAndelDtoTjeneste {
             dto.setSkalFastsetteGrunnlag(skalGrunnlagFastsettesForYtelse(input, andel));
         }
         return dto;
-    }
-
-    private boolean erTilkommetAndel(no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto andel) {
-        return TILKOMNE_ANDELER.contains(andel.getKilde());
     }
 
     private boolean skalGrunnlagFastsettesForYtelse(BeregningsgrunnlagGUIInput input,

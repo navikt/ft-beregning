@@ -25,4 +25,11 @@ public record RefusjonsandelDto(
         String arbeidsforholdId,
         @Valid @NotNull RefusjonKilde kilde,
         @Valid JournalpostId journalpostId,
-        @NotNull List<@Valid RefusjonsperiodeDto> refusjonsperioder) {}
+        @NotNull List<@Valid RefusjonsperiodeDto> refusjonsperioder,
+        boolean erTilkommetArbeidsforhold) {
+
+    public RefusjonsandelDto(String arbeidsgiverIdent, String arbeidsforholdId, RefusjonKilde kilde,
+                            JournalpostId journalpostId, List<RefusjonsperiodeDto> refusjonsperioder) {
+        this(arbeidsgiverIdent, arbeidsforholdId, kilde, journalpostId, refusjonsperioder, false);
+    }
+}

@@ -4,9 +4,11 @@ import static no.nav.fpsak.tidsserie.LocalDateInterval.TIDENES_ENDE;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 import no.nav.folketrygdloven.kalkulator.input.YtelsespesifiktGrunnlag;
 import no.nav.folketrygdloven.kalkulator.modell.behandling.Skjæringstidspunkt;
@@ -21,6 +23,7 @@ import no.nav.folketrygdloven.kalkulator.modell.typer.Arbeidsgiver;
 import no.nav.folketrygdloven.kalkulator.modell.typer.EksternArbeidsforholdRef;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.OpptjeningAktivitetType;
+import no.nav.folketrygdloven.kalkulus.kodeverk.AndelKilde;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Organisasjonstype;
 import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.BeregningsgrunnlagArbeidsforholdDto;
 import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.FaktaOmBeregningAndelDto;
@@ -30,10 +33,17 @@ import no.nav.folketrygdloven.kalkulus.typer.OrgNummer;
 
 public class BeregningsgrunnlagDtoUtil {
 
+    private static final Set<AndelKilde> TILKOMNE_ANDELER = EnumSet.of(AndelKilde.PROSESS_PERIODISERING,
+        AndelKilde.PROSESS_PERIODISERING_TILKOMMET_INNTEKT, AndelKilde.SAKSBEHANDLER_FORDELING, AndelKilde.PROSESS_OMFORDELING);
+
     private static final KalkulatorGuiInterface GUI_TJENESTE = new BeregningsgrunnlagGuiTjeneste();
 
     private BeregningsgrunnlagDtoUtil() {
         // Skjul
+    }
+
+    public static boolean erTilkommetAndel(BeregningsgrunnlagPrStatusOgAndelDto andel) {
+        return TILKOMNE_ANDELER.contains(andel.getKilde());
     }
 
     static FaktaOmBeregningAndelDto lagFaktaOmBeregningAndel(BeregningsgrunnlagPrStatusOgAndelDto andel,

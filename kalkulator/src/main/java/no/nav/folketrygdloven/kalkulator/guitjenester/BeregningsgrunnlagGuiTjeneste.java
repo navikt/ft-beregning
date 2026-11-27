@@ -2,6 +2,7 @@ package no.nav.folketrygdloven.kalkulator.guitjenester;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import no.nav.folketrygdloven.kalkulator.input.BeregningsgrunnlagGUIInput;
 import no.nav.folketrygdloven.kalkulator.input.ForeldrepengerGrunnlag;
@@ -27,6 +28,12 @@ public class BeregningsgrunnlagGuiTjeneste implements KalkulatorGuiInterface {
     @Override
     public FordelingGrunnlagDto lagFordelingsgrunnlagDto(FordelingGrunnlag input) {
         return FORDELINGSGRUNNLAG_DTO_TJENESTE.lagFordelingsgrunnlagDto(input);
+    }
+
+    @Override
+    public FordelingGrunnlagDto lagFordelingsgrunnlagDto(FordelingGrunnlag input,
+        Optional<no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto> beregningsgrunnlag) {
+        return FORDELINGSGRUNNLAG_DTO_TJENESTE.lagFordelingsgrunnlagDto(input, beregningsgrunnlag);
     }
 
     @Override

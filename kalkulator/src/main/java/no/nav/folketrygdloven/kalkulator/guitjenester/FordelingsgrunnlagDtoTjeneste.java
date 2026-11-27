@@ -1,5 +1,9 @@
 package no.nav.folketrygdloven.kalkulator.guitjenester;
 
+import java.util.Objects;
+import java.util.Optional;
+
+import no.nav.folketrygdloven.kalkulator.modell.beregningsgrunnlag.BeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulator.modell.refusjon.FordelingGrunnlag;
 import no.nav.folketrygdloven.kalkulator.modell.refusjon.Refusjonsandel;
 import no.nav.folketrygdloven.kalkulator.modell.refusjon.Refusjonsperiode;
@@ -12,14 +16,19 @@ public class FordelingsgrunnlagDtoTjeneste {
 
     public FordelingGrunnlagDto lagFordelingsgrunnlagDto(
         FordelingGrunnlag fordelingsgrunnlag) {
+        return lagFordelingsgrunnlagDto(fordelingsgrunnlag, Optional.empty());
+    }
+
+    public FordelingGrunnlagDto lagFordelingsgrunnlagDto(
+        FordelingGrunnlag fordelingsgrunnlag, Optional<BeregningsgrunnlagDto> beregningsgrunnlag) {
         var refusjonsandeler = fordelingsgrunnlag.refusjonsandeler().stream()
-                .map(FordelingsgrunnlagDtoTjeneste::mapRefusjonsandel)
+                .map(andel -> mapRefusjonsandel(andel, beregningsgrunnlag))
                 .toList();
         return new FordelingGrunnlagDto(refusjonsandeler);
     }
 
     private static RefusjonsandelDto mapRefusjonsandel(
-            Refusjonsandel andel) {
+            Refusjonsandel andel, Optional<BeregningsgrunnlagDto> beregningsgrunnlag) {
         var refusjonsperioder = andel.refusjonsperioder().stream()
                 .map(FordelingsgrunnlagDtoTjeneste::mapRefusjonsperiode)
                 .toList();
@@ -28,7 +37,21 @@ public class FordelingsgrunnlagDtoTjeneste {
                 mapArbeidsforholdRef(andel.arbeidsforholdRef()),
                 andel.kilde(),
                 andel.journalpostId(),
-                refusjonsperioder);
+                refusjonsperioder,
+                erTilkommetArbeidsforhold(andel, beregningsgrunnlag));
+    }
+
+    private static boolean erTilkommetArbeidsforhold(Refusjonsandel refusjonsandel,
+                                                    Optional<BeregningsgrunnlagDto> beregningsgrunnlag) {
+        return beregningsgrunnlag.stream()
+            .flatMap(bg -> bg.getBeregningsgrunnlagPerioder().stream())
+            .flatMap(periode -> periode.getBeregningsgrunnlagPrStatusOgAndelList().stream())
+            .filter(BeregningsgrunnlagDtoUtil::erTilkommetAndel)
+            .anyMatch(andel -> Objects.equals(
+                    andel.getArbeidsgiver().map(arbeidsgiver -> arbeidsgiver.getIdentifikator()).orElse(null),
+                    refusjonsandel.arbeidsgiver().getIdentifikator())
+                && Objects.equals(andel.getArbeidsforholdRef().map(InternArbeidsforholdRefDto::getReferanse).orElse(null),
+                    mapArbeidsforholdRef(refusjonsandel.arbeidsforholdRef())));
     }
 
     private static RefusjonsperiodeDto mapRefusjonsperiode(
