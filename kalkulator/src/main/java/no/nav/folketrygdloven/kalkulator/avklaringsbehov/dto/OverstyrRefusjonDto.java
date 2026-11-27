@@ -4,7 +4,7 @@ import java.util.List;
 
 public class OverstyrRefusjonDto {
 
-    private List<RefusjonOverstyringAndel> overstyrteAndeler;
+    private final List<RefusjonOverstyringAndel> overstyrteAndeler;
 
     public OverstyrRefusjonDto(List<RefusjonOverstyringAndel> overstyrteAndeler) {
         this.overstyrteAndeler = overstyrteAndeler;

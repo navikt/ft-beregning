@@ -12,10 +12,8 @@ import no.nav.folketrygdloven.kalkulator.modell.typer.Beløp;
 import no.nav.folketrygdloven.kalkulator.steg.refusjon.PeriodiserBeregningsgrunnlagForRefusjon;
 import no.nav.folketrygdloven.kalkulator.tid.Intervall;
 import no.nav.folketrygdloven.kalkulus.kodeverk.RefusjonKilde;
-import no.nav.folketrygdloven.kalkulus.kodeverk.RefusjonUtfall;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class RefusjonOverstyringHåndterer {
 

@@ -114,9 +114,9 @@ class RefusjonOverstyringHåndtererTest {
         leggTilAndel(p, ARBEIDSGIVER, ref2, 2L, 200000);
         leggTilAndel(p, ARBEIDSGIVER, ref3, 3L, 300000);
         var gammelOverstyring = saksbehandlerAndel(ARBEIDSGIVER, ref1, periode(FOM, null, "1000"));
-        var inntektsmelding = new Refusjonsandel(ARBEIDSGIVER, ref3, RefusjonKilde.INNTEKTSMELDING, new JournalpostId("101"),
+        var inntektsmeldingAndel = new Refusjonsandel(ARBEIDSGIVER, ref3, RefusjonKilde.INNTEKTSMELDING, new JournalpostId("101"),
             List.of(periode(FOM, null, "3000")));
-        var forrigeFordelingsgrunnlag = new FordelingGrunnlag(List.of(gammelOverstyring, inntektsmelding));
+        var forrigeFordelingsgrunnlag = new FordelingGrunnlag(List.of(gammelOverstyring, inntektsmeldingAndel));
         var eksisterendeBg = PeriodiserBeregningsgrunnlagForRefusjon.periodiser(input(bg), forrigeFordelingsgrunnlag);
         assertThat(arbeidsforhold(eksisterendeBg.getBeregningsgrunnlagPerioder().getFirst(), 0).getSaksbehandletRefusjonPrÅr())
             .isEqualTo(Beløp.fra(12000));
@@ -137,7 +137,7 @@ class RefusjonOverstyringHåndtererTest {
                 periode(FOM, endringsdato.minusDays(1), "4000"),
                 periode(endringsdato, null, "5000")),
             saksbehandlerAndel(ARBEIDSGIVER, ref2, periode(FOM, null, "6000")),
-            inntektsmelding);
+            inntektsmeldingAndel);
         var perioder = resultat.beregningsgrunnlagGrunnlag().getBeregningsgrunnlag().getBeregningsgrunnlagPerioder();
         assertThat(perioder).extracting(BeregningsgrunnlagPeriodeDto::getPeriode).containsExactly(
             Intervall.fraOgMedTilOgMed(FOM, endringsdato.minusDays(1)), Intervall.fraOgMed(endringsdato));
@@ -148,7 +148,7 @@ class RefusjonOverstyringHåndtererTest {
             assertThat(arbeidsforhold(periode, 1).getSaksbehandletRefusjonPrÅr()).isEqualTo(Beløp.fra(72000));
             assertThat(arbeidsforhold(periode, 2).getRefusjonskravPrÅr()).isEqualTo(Beløp.fra(36000));
         });
-        assertThat(forrigeFordelingsgrunnlag.refusjonsandeler()).containsExactly(gammelOverstyring, inntektsmelding);
+        assertThat(forrigeFordelingsgrunnlag.refusjonsandeler()).containsExactly(gammelOverstyring, inntektsmeldingAndel);
         assertThat(arbeidsforhold(eksisterendeBg.getBeregningsgrunnlagPerioder().getFirst(), 0).getSaksbehandletRefusjonPrÅr())
             .isEqualTo(Beløp.fra(12000));
     }
@@ -169,14 +169,14 @@ class RefusjonOverstyringHåndtererTest {
                 .medArbeidsperiodeFom(FOM.minusYears(1))
                 .medRefusjon(new Refusjon(Beløp.fra(24000), Beløp.fra(36000), null, null, null, Utfall.GODKJENT)))
             .build(opprinneligPeriode);
-        var inntektsmelding = new Refusjonsandel(ARBEIDSGIVER, REF, RefusjonKilde.INNTEKTSMELDING, new JournalpostId("101"),
+        var inntektsmeldingAndel = new Refusjonsandel(ARBEIDSGIVER, REF, RefusjonKilde.INNTEKTSMELDING, new JournalpostId("101"),
             List.of(periode(FOM, null, "1000")));
         var overstyrtInntektsmelding = new Refusjonsandel(ANNEN_ARBEIDSGIVER, REF, RefusjonKilde.INNTEKTSMELDING, new JournalpostId("102"),
             List.of(periode(FOM, null, "2000")));
         var gammelOverstyring = saksbehandlerAndel(ANNEN_ARBEIDSGIVER, REF,
             new Refusjonsperiode(Intervall.fraOgMed(FOM), Beløp.fra(3000), RefusjonUtfall.INNVILGET,
                 RefusjonUtfallÅrsak.AVTALT_MED_ARBEIDSGIVER));
-        var forrigeFordelingsgrunnlag = new FordelingGrunnlag(List.of(inntektsmelding, overstyrtInntektsmelding, gammelOverstyring));
+        var forrigeFordelingsgrunnlag = new FordelingGrunnlag(List.of(inntektsmeldingAndel, overstyrtInntektsmelding, gammelOverstyring));
         var håndterInput = new HåndterBeregningsgrunnlagInput(
             input(bg).medFordelingGrunnlag(forrigeFordelingsgrunnlag), BeregningsgrunnlagTilstand.FASTSATT_INN);
         var endringsdato = FOM.plusMonths(1);
@@ -209,10 +209,10 @@ class RefusjonOverstyringHåndtererTest {
         assertThat(perioder).allSatisfy(p -> assertThat(p.getBeregningsgrunnlagPrStatusOgAndelList())
             .extracting(BeregningsgrunnlagPrStatusOgAndelDto::getAndelsnr).containsExactly(1L, 2L));
         assertThat(resultat.fordelingGrunnlag().refusjonsandeler()).hasSize(4)
-            .contains(inntektsmelding, overstyrtInntektsmelding).doesNotContain(gammelOverstyring);
+            .contains(inntektsmeldingAndel, overstyrtInntektsmelding).doesNotContain(gammelOverstyring);
         assertThat(resultat.fordelingGrunnlag().refusjonsandeler())
             .filteredOn(a -> a.kilde() == RefusjonKilde.SAKSBEHANDLER).hasSize(2)
-            .allSatisfy(a -> assertThat(a.refusjonsperioder()).allSatisfy(p ->
+            .allSatisfy(a -> assertThat(a.refusjonsperioder()).isNotEmpty().allSatisfy(p ->
                 assertThat(p.utfallÅrsak()).isEqualTo(RefusjonUtfallÅrsak.AVTALT_MED_ARBEIDSGIVER)));
         assertSoftly(softly -> {
             softly.assertThat(perioder).as("IM-beløpet på den tidligere ikke-overstyrte andelen")
