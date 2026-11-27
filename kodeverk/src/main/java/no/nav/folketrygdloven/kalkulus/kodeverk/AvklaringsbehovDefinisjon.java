@@ -34,6 +34,7 @@ enum AvklaringsbehovDefinisjon implements Kodeverdi, DatabaseKode, KontraktKode 
     // 6000 overstyring
     OVST_BEREGNINGSAKTIVITETER(KodeKonstanter.OVST_BEREGNINGSAKTIVITETER, OVERSTYRING, BeregningSteg.FASTSETT_STP_BER), // Overstyring av beregningsaktiviteter
     OVST_INNTEKT(KodeKonstanter.OVST_INNTEKT, OVERSTYRING, BeregningSteg.KOFAKBER), // Overstyring av beregningsgrunnlag
+    OVST_REFUSJON(KodeKonstanter.OVST_REFUSJON, OVERSTYRING, BeregningSteg.VURDER_REF_BERGRUNN), // Overstyring av refusjon
 
     // 7000 automatisk satt på vent
     AUTO_VENT_PÅ_INNTKT_RAP_FRST("AUTO_VENT_PAA_INNTKT_RAP_FRST", AUTOPUNKT, BeregningSteg.FASTSETT_STP_BER), // Vent på rapporteringsfrist for inntekt
